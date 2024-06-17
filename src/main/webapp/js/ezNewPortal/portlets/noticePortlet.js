@@ -21,9 +21,9 @@ function initNoticePortletInfo(noticePortletId) {
 }
 
 // 2024-05-30 조수빈 - 공지사항이 보여질 수 있는 개수에 비해 작은 경우 처리하기 위해 전역변수로 선언
-var notiCount = 0;
 
 function getNoticePagePerCount(noticePortletId) {
+	var notiCount = 0;
 	var portletSize = getPortletSize(noticePortletId);
 	
 	if (portletSize == GridSize.TWO_BY_ONE) {
@@ -40,7 +40,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access, totalCnt, 
 	/* HTMLColllection에도 forEach 추가*/
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
 	var str = '';
-	var viewCnt = notiCount; // 보여주는 공지사항 갯수
+	var viewCnt = getNoticePagePerCount(noticePortletObj.portletId); // 보여주는 공지사항 갯수
 	var boardId = '';
 	
 	var noticeDetail = function() {
