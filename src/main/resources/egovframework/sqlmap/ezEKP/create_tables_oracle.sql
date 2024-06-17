@@ -17867,20 +17867,14 @@ END;
 --  Ref Constraints for Table JAMES_MAIL_PROPERTY
 --------------------------------------------------------
 
-  ALTER TABLE "JAMES_MAIL_PROPERTY" ADD FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE DEFERRABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JAMES_MAIL_SEARCH
 --------------------------------------------------------
 
-  ALTER TABLE "JAMES_MAIL_SEARCH" ADD CONSTRAINT "TMP_JAMES_MAIL_SEARCH_FK1" FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE ENABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JAMES_MAIL_USERFLAG
 --------------------------------------------------------
 
-  ALTER TABLE "JAMES_MAIL_USERFLAG" ADD FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE DEFERRABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JMOCHA_DISTRIBUTION
 --------------------------------------------------------
@@ -17921,8 +17915,6 @@ END;
 --  Ref Constraints for Table JMOCHA_MAIL_SECURE
 --------------------------------------------------------
 
-  ALTER TABLE "JMOCHA_MAIL_SECURE" ADD CONSTRAINT "FK_JMOCHA_MAIL_SECURE" FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE ENABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JMOCHA_MAIL_SECURE_READ
 --------------------------------------------------------

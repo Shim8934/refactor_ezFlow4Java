@@ -1508,6 +1508,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    			
 	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
 	    		}
+				// 메일 자동 전달, 자동분류 설정 삭제
+				rc = ezEmailUserAdminService.removeUserMailSetting(mailAddr);
+				logger.debug("removeUserMailSetting rc=" + rc);
 			}
 
 
