@@ -43,7 +43,7 @@
 			
 			/*.switch {margin-top:15px;} */
 			.flipster__container {margin-left:-20px;}
-			.mCSB_container {margin-right:10px !important;}
+			.mCSB_container {margin-right:10px !important; padding:0;}
 			.flipster__button {height:65px;}
 			.fixed_span {width:67%; display:inline-block; margin-top: 12px;}
 			.fixed_span img { vertical-align: top; margin: 3px 5px 0px 0px;}
@@ -78,6 +78,7 @@
 			}
 
 			._mCS_2 {overflow: auto;}
+
 		</style>
 	</head>
 	<body id="set-body">
@@ -343,7 +344,7 @@
 							});
 							
 							var usedPaging = window.parent.parent[2].usePaging == 1 ? "checked" : "";
-							var pagingSetting = '<div style="position: relative; display: inline-block; left: 230px;">';
+							var pagingSetting = '<div style="position: relative; display: inline-block; float:right; margin:9px 25px 0 0;">';
 							pagingSetting += '<input type="checkbox" ' + usedPaging + ' style="vertical-align: middle; margin: 0 10px;" id="pagingSetting">';
 							pagingSetting += '<label for="pagingSetting" style="vertical-align: middle;">' + "<spring:message code='ezNewPortal.usePaging' />" + '</label>';
 							pagingSetting += '</div>';
