@@ -126,7 +126,7 @@
 				async: false,
 				method: "post",
 				url: "/ezEmail/setTagName.do",
-				data: { tagIdx: session.tagIdx, name: newName },
+				data: { tagIdx: session.tagIdx, name: newName, shareId: '${shareId}' },
 				success: function(result) {
 					if (result.status == "ok") {
 						// 이미 존재하는 이름의 태그가 있을 때 구분
@@ -199,7 +199,8 @@
 	}
 
 	function onChangeEnable() {
-		save(leftMenu.reloadWithoutSelectNode);
+		//save(leftMenu.reloadWithoutSelectNode);
+		save(leftMenu.reloadTags());
 
 		if (getEnable()) {
 			$(document.head.querySelector("#disable_style")).remove();
@@ -232,7 +233,7 @@
 			cache: false,
 			method: "post",
 			url: "/ezEmail/deleteTag.do",
-			data: { tagIdx: tagIdx },
+			data: { tagIdx: tagIdx, shareId: '${shareId}' },
 			success: function(result) {
 				if (result.status == "ok") {
 					leftMenu.reloadTags();
@@ -254,7 +255,7 @@
 			cache: false,
 			method: "get",
 			url: "/ezEmail/getUserTagList.do",
-			data: { orderBy: getOrderBy() },
+			data: { orderBy: getOrderBy(), shareId: '${shareId}' },
 			success: function(result) {
 				if (result.status == "error") {
 					alert(strLang321);
@@ -282,7 +283,7 @@
 			cache: false,
 			method: "post",
 			url: "/ezEmail/setTagConfig.do",
-			data: { enable: getEnable(), orderBy: getOrderBy() },
+			data: { enable: getEnable(), orderBy: getOrderBy(), shareId: '${shareId}'},
 			success: function(result) {
 				if (result.status == "error") {
 					alert(strLang321);

@@ -2309,7 +2309,7 @@ function onEnterPreviewTagInput() {
 		async: false,
 		method: 'post',
 		url: "/ezEmail/addMailTag.do",
-		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
+		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName, shareId: shareId },
 		success: function(result) {
 			if (result.status == "error") {
 				alert(strLang321);

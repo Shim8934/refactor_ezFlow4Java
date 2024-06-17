@@ -163,12 +163,11 @@ public class EzEmailMailListController {
 		String userTimeSet = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
 		String serverName = userInfo.getServerName();
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
 		
 		if (useSharedMailbox.equals("YES")) {
-			String shareId = request.getParameter("shareId");
-			logger.debug("shareId=" + shareId);
-			
-			if (shareId != null) {
+			if (StringUtils.isNotBlank(shareId)) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, tenantId)) {
 					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
 					
@@ -249,6 +248,11 @@ public class EzEmailMailListController {
 			try {
 				logger.debug("jgw getTagConfig started.");
 				String userEmail = userInfo.getId() + "@" + domainName;
+
+				if(StringUtils.isNotBlank(shareId)) {
+					userEmail = shareId + "@" + domainName;
+				}
+
 				JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
 				logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
 
@@ -2635,8 +2639,8 @@ public class EzEmailMailListController {
 
 	@PostMapping("ezEmail/addMailTag.do")
 	@ResponseBody
-	public Result addMailTag(@CookieValue String loginCookie, @RequestParam String folderPath, @RequestParam int mailUid, @RequestParam String tagName) {
-		logger.debug("addMailTag started. folderPath: {}, mailUid: {}, tagName: {}", folderPath, mailUid, tagName);
+	public Result addMailTag(@CookieValue String loginCookie, @RequestParam String folderPath, @RequestParam int mailUid, @RequestParam String tagName, @RequestParam(required = false) String shareId) {
+		logger.debug("addMailTag started. folderPath: {}, mailUid: {}, tagName: {}, shareId: {}", folderPath, mailUid, tagName, shareId);
 
 		if (StringUtils.isBlank(tagName)) {
 			logger.debug("addMailTag ended. tagName must not be blank.");
@@ -2653,6 +2657,11 @@ public class EzEmailMailListController {
 		try {
 			LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 			String userAccount = user.getId() + "@" + ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+
+			if (StringUtils.isNotBlank(shareId)) {
+				userAccount = shareId +  "@" + ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+			}
+
 			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, jspw, egovMessageSource, Locale.KOREAN, ezEmailUtil);
 			Folder mailbox = ia.getFolder(folderPath);
 
@@ -2677,13 +2686,18 @@ public class EzEmailMailListController {
 
 	@PostMapping("ezEmail/deleteMailTag.do")
 	@ResponseBody
-	public Result deleteMailTag(@CookieValue String loginCookie, @RequestParam String folderPath, @RequestParam int mailUid, @RequestParam String tagName) {
-		logger.debug("deleteMailTag started. folderPath: {}, mailUid: {}, tagName: {}", folderPath, mailUid, tagName);
+	public Result deleteMailTag(@CookieValue String loginCookie, @RequestParam String folderPath, @RequestParam int mailUid, @RequestParam String tagName, @RequestParam(required = false) String shareId) {
+		logger.debug("deleteMailTag started. folderPath: {}, mailUid: {}, tagName: {}, shareId: {}", folderPath, mailUid, tagName, shareId);
 		Result result = null;
 
 		try {
 			LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 			String userAccount = user.getId() + "@" + ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+
+			if (StringUtils.isNotBlank(shareId)) {
+				userAccount = shareId + "@" + ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+			}
+
 			JgwResult deleteResult = rest.jgw().url("/jMochaEzEmail/deleteTagFromMail")
 					.formParam("userAccount", userAccount)
 					.formParam("folderPath", folderPath)
@@ -2703,8 +2717,8 @@ public class EzEmailMailListController {
 
 	@GetMapping("ezEmail/getUserTagList.do")
 	@ResponseBody
-	public Result getUserTagList(@CookieValue String loginCookie, @RequestParam(required = false) String orderBy) {
-		logger.debug("getUserTagList started. orderBy: {}", orderBy);
+	public Result getUserTagList(@CookieValue String loginCookie, @RequestParam(required = false) String orderBy, @RequestParam(required = false) String shareId) {
+		logger.debug("getUserTagList started. orderBy: {}, shareId: {}", orderBy, shareId);
 		Result result = null;
 
 		try {
@@ -2715,6 +2729,11 @@ public class EzEmailMailListController {
 
 			LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 			String userAccount = user.getId() + "@" + ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+
+			if (StringUtils.isNotBlank(shareId)) {
+				userAccount = shareId + "@" + ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+			}
+
 			Rest.RestBuilder jgwRestBuilder = rest.jgw().url("/jMochaEzEmail/getUserTagList").formParam("userAccount", userAccount);
 			if (orderBy != null) {
 				jgwRestBuilder.formParam("orderBy", orderBy);
