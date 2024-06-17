@@ -342,6 +342,14 @@
 								}
 							});
 							
+							var usedPaging = window.parent.parent[2].usePaging == 1 ? "checked" : "";
+							var pagingSetting = '<div style="position: relative; display: inline-block; left: 230px;">';
+							pagingSetting += '<input type="checkbox" ' + usedPaging + ' style="vertical-align: middle; margin: 0 10px;" id="pagingSetting">';
+							pagingSetting += '<label for="pagingSetting" style="vertical-align: middle;">' + "<spring:message code='ezNewPortal.usePaging' />" + '</label>';
+							pagingSetting += '</div>';
+							
+							document.getElementById("fixBoardList").innerHTML += pagingSetting; 
+							
 							//event setting
 							$(".switch").find("input").on("change", checkIsFixed);
 							
@@ -350,14 +358,6 @@
 								mouseWheelPixels: 70, 
 								//scrollInertia: 60,
 							});						
-							
-							var usedPaging = window.parent.parent[2].usePaging == 1 ? "checked" : "";
-							var pagingSetting = '<div style="position: relative; display: inline-block; left: 230px;">';
-							pagingSetting += '<input type="checkbox" ' + usedPaging + ' style="vertical-align: middle; margin: 0 10px;" id="pagingSetting">';
-							pagingSetting += '<label for="pagingSetting" style="vertical-align: middle;">' + "<spring:message code='ezNewPortal.usePaging' />" + '</label>';
-							pagingSetting += '</div>';
-							
-							document.getElementById("fixBoardList").firstChild.firstChild.innerHTML += pagingSetting; 
 						} else {
 							console.error(xhr.responseText);	
 						}
