@@ -4525,7 +4525,7 @@
             ADD
                 COMPANYID varchar(20) NOT NULL
     </statement>
-    
+
     <select id="EzCommonDAO.checkUserThemePagination">
 		SELECT	USEPAGING
 		FROM	TBL_PORTAL_THEME_USER
@@ -4538,7 +4538,7 @@
 		ADD
 			USEPAGING	TINYINT	DEFAULT	1	NOT NULL	COMMENT '페이징 사용 여부'
     </statement>
-    
+
     <select id="EzCommonDAO.checkThemeInformation" resultClass="string">
     	SELECT
     		THEME_CONTENT
@@ -4547,21 +4547,21 @@
     	WHERE
     		THEME_ID=1
     </select>
-    
+
     <update id="EzCommonDAO.alterThemeInformation" parameterClass="Map">
     	<![CDATA[
-			UPDATE  
+			UPDATE
 					TBL_PORTAL_THEME
-			SET		
+			SET
 					THEME_CONTENT = #themeContent1#,
 					THEME_CONTENT2 = #themeContent2#,
 					THEME_CONTENT3 = #themeContent3#,
 					THEME_CONTENT4 = #themeContent4#,
 					THEME_CONTENT5 = #themeContent5#,
 					THEME_CONTENT6 = #themeContent6#
-			WHERE 	
+			WHERE
 					THEME_ID = #themeId#
-		]]>	
+		]]>
     </update>
 
 	<select id="EzCommonDAO.checkCompanyMenuIconUrl">
@@ -4576,5 +4576,24 @@
 			ADD
 				ICON_URL varchar(200) DEFAULT NULL COMMENT '회사별 기본 아이콘 변경'
 	</statement>
-	
+
+	<!-- 2024-07-17 이주원 - 일정관리 > 상단표시 컬럼 추가 -->
+	<select id="EzCommonDAO.checkTblScheduleForShowtop" resultClass="String">
+		<![CDATA[
+		SELECT
+			SHOWTOP
+		FROM
+			tbl_schedule
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblScheduleForShowtop">
+		<![CDATA[
+		ALTER TABLE
+			tbl_schedule
+		ADD
+		    COLUMN SHOWTOP VARCHAR(2) DEFAULT 'N'
+		]]>
+	</statement>
 </sqlMap>
