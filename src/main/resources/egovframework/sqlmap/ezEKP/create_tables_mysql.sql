@@ -113,8 +113,7 @@ CREATE TABLE `james_mail_property` (
   PRIMARY KEY (`PROPERTY_ID`),
   KEY `INDEX_PROPERTY_LINE_NUMBER` (`PROPERTY_LINE_NUMBER`),
   KEY `INDEX_PROPERTY_MSG_ID` (`PROPERTY_ID`),
-  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
-  CONSTRAINT `james_mail_property_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
+  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -145,8 +144,7 @@ CREATE TABLE `james_mail_search` (
   KEY `IDX_SENDER` (`SENDER`(191)),
   KEY `IDX_RECIPIENT` (`RECIPIENT`(191)),
   KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`(191)),
-  KEY `IDX_SUBJECT` (`SUBJECT`(191)),
-  CONSTRAINT `james_mail_search_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
+  KEY `IDX_SUBJECT` (`SUBJECT`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -164,8 +162,7 @@ CREATE TABLE `james_mail_userflag` (
   `MAIL_UID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`USERFLAG_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
-  KEY `james_mail_userflag_NAME_IDX` (`USERFLAG_NAME`),
-  CONSTRAINT `james_mail_userflag_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
+  KEY `james_mail_userflag_NAME_IDX` (`USERFLAG_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -845,8 +842,7 @@ CREATE TABLE `jmocha_mail_secure` (
   `max_read_count` int(11) DEFAULT NULL,
   `max_read_date` datetime DEFAULT NULL,
   PRIMARY KEY (`secure_id`),
-  KEY `fk_mail_secure_idx` (`mailbox_id`,`mail_uid`),
-  CONSTRAINT `fk_mail_secure` FOREIGN KEY (`mailbox_id`, `mail_uid`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `fk_mail_secure_idx` (`mailbox_id`,`mail_uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
