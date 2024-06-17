@@ -1822,7 +1822,7 @@ div.orbit img{border-radius: 5px;}
 .quick_menu_list ul li:nth-child(-n+3){margin-top:0;}
 .quick_menu_list ul li .quick_img{width:100%; height:50px; border:1px solid #CECECE; border-radius:5px; box-sizing:border-box; overflow:hidden;}
 .quick_menu_list ul li .quick_img img{width:100%; height:100%;}
-.quick_menu_list ul li span{display:block; width:auto; margin-top:8px; text-align:center; color:#3B3B3B; font-size:13px;}
+.quick_menu_list ul li span{display:block; width:auto; margin-top:8px; text-align:center; color:#3B3B3B; font-size:13px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 
 /* 2024-05-02 한태훈 > 통합알림 */
 .total_alarm_frame{position:absolute; width:390px; height:600px; right:0; top:57px; display:none;}
@@ -1907,8 +1907,8 @@ div.orbit img{border-radius: 5px;}
 .profile_div .profile_img {width: 58px; height: 58px; overflow: hidden; border-radius: 50%; margin: 0 auto 10px;}
 .profile_div .profile_img img {width: 100%; height: 100%;}
 .profile_div dl {text-align: center; margin: 0; padding: 0;}
-.profile_div dl dt {margin: 0 0 2px; padding: 0; font-size: 15px; font-weight: bold; color: #333;}
-.profile_div dl dd {margin: 0; padding: 0; font-size: 14px; color: #888888;}
+.profile_div dl dt {margin: 0 0 2px; padding: 0; font-size: 15px; font-weight: bold; color: #333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.profile_div dl dd {margin: 0; padding: 0; font-size: 14px; color: #888888; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .profile_div .select_div {display: block; position: relative; margin-top: 15px;}
 .profile_div .select_div .select_box {display: inline-block; padding: 0 20px 0 10px; width: 100%; height: 32px; line-height: 30px; border: 1px solid #EFEFEF; border-radius: 5px; box-sizing: border-box; background: url(/images/ezNewPortal/select_div_arrow.png) no-repeat right 6px center #fff; cursor: pointer; margin: 0;}
 .profile_div .select_div ul {position: absolute; top: calc(100% + 2px); right: 0; display: none; z-index: 50; border: 1px solid #d1d1d1; border-radius: 5px; width:auto; min-width:100%; background:#fff; overflow:hidden; padding:0;}
