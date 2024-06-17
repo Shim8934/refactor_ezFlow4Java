@@ -87,6 +87,7 @@
 	        var strListInfo = "";
 	        var arrListSetForMove = new Set();
 	        var arrListStrForMove = "";
+	        var isOpenWindow;
 	        
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
@@ -589,11 +590,11 @@
 	
 	            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
 	            	pLeft = (pwidth - 790) / 2;
-	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=790,top=" + pTop + ",left=" + pLeft, "");
+					isOpenWindow = window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=790,top=" + pTop + ",left=" + pLeft, "");
 	            } else if (obj.getAttribute("DATA10") == "7") {
-					window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
+					isOpenWindow = window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
 	            } else {
-                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	            	isOpenWindow = window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 	            }
 	            
 	            /* 2018-07-09 홍승비 - 나의 게시물 읽기 시 즉각적으로 폰트 변화하도록 수정 */
@@ -1171,6 +1172,32 @@
 	            	document.getElementById("ifrmPreViewW").style.minHeight = "";
 	            }
 		    }
+			
+		    /* 2023-04-06 기민혁 - itemview창이 열려있을때 미리보기 창이 열려 있으면  미리보기에서 좋아요 싫어요 이미지 및 개수 변경  */
+	    	function refreshLikeAndDisLike(result,checked,gubun) {
+	    		if($("#PreviewRayerH").css("display") == "none" && $("#PreviewRayerW").css("display") == "none"){
+					return;
+	    		}else if ($("#PreviewRayerH").css("display") != "none" && $("#PreviewRayerW").css("display") == "none"){
+					if($("#ifrmPreViewH").css("display") != "none"){
+						var refreshLikeAndDisLikeH = document.getElementById("ifrmPreViewH");
+					}else{
+						var refreshLikeAndDisLikeH = document.getElementById("ifrmPreViewH_photo");
+					}
+	    			refreshLikeAndDisLikeH.contentWindow.refreshLikeAndDisLike(result,checked,gubun);
+	    		}else if ($("#PreviewRayerW").css("display") != "none" && $("#PreviewRayerH").css("display") == "none"){
+					var refreshLikeAndDisLikeW = document.getElementById("ifrmPreViewW");
+	    			refreshLikeAndDisLikeW.contentWindow.refreshLikeAndDisLike(result,checked,gubun);
+	    		}
+	    	}
+		    
+	    	/* 2023-04-06 기민혁 - itemview창이 열려있을때 미리보기 에서 좋아요 싫어요 클릭시 itemview 이미지 및 개수 변경  */
+	    	function refreshLikeAndDisLikeOpen(result,checked,gubun) {
+	    		if(isOpenWindow != undefined ){
+	    			isOpenWindow.refreshLikeAndDisLikeOpen(result,checked,gubun);
+	    		}else{
+	    			return;
+	    		}
+	    	}
 			
 	    </script>
 	</head>

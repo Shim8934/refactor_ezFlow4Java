@@ -2442,6 +2442,7 @@
 		          	APPRFLAG = #v_PAPPRFLAG#,
 		          	APPRMAILFLAG = #v_PAPPRMAILFLAG#,
 		          	LIKEFLAG = #v_LIKEFLAG#,
+		          	DISLIKEFLAG = #v_DISLIKEFLAG#,
 					MAILFG_POST = #v_MAILFG_POST#,
 		          	MAILFG_MOD = #v_MAILFG_MOD#,
 		          	MAILFG_COMMENT = #v_MAILFG_COMMENT#,

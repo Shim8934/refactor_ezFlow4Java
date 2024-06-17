@@ -17,6 +17,9 @@
 	<typeAlias  alias="BoardDeleteItemVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO"/>
 	<typeAlias  alias="BoardPollConfigVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO"/> <!-- baonk added -->
 	<typeAlias  alias="OrganUserVO" 			type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
+	<typeAlias  alias="BoardLikeListVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardLikeListVO"/>
+	<typeAlias  alias="BoardDisLikeListVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO"/>
+	<typeAlias  alias="BoardItemVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardItemVO"/>
 	
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
@@ -87,6 +90,7 @@
 		<result property="oneLineReply" 		column="ONELINEREPLY" 		columnIndex="37"/>
 		<result property="notiStart" 		column="NTSTARTDATE" 		columnIndex="38"/>
 		<result property="notiEnd" 		column="NTENDDATE" 		columnIndex="39"/>
+		<result property="disLikeCount" 			column="DISLIKECOUNT" 			columnIndex="40"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -136,7 +140,31 @@
 		<result property="targetDepts" 				column="TARGET_DEPTS" 			columnIndex="4"/>
 		<result property="targetUsers" 				column="TARGET_USERS" 			columnIndex="5"/>
 		<result property="tenantId" 				column="TENANT_ID" 				columnIndex="6"/>
-	</resultMap> 
+	</resultMap>
+
+	<resultMap id="likeList" class="BoardLikeListVO">
+		<result property="itemID" 					column="ITEMID" 				columnIndex="1"/>
+		<result property="userID" 		            column="USERID" 			    columnIndex="2"/>
+		<result property="likeDate"      			column="LIKEDATE" 		        columnIndex="3"/>
+		<result property="tenantID" 				column="TENANT_ID" 				columnIndex="4"/>
+		<result property="displayName" 				column="DISPLAYNAME" 			columnIndex="5"/>
+		<result property="writerID" 				column="WRITERID"			    columnIndex="6"/>
+		<result property="title" 					column="TITLE"			  	    columnIndex="7"/>
+		<result property="likeListCount" 			column="LIKELISTCOUNT"			columnIndex="8"/>
+		<result property="displayName2" 			column="DISPLAYNAME2"			columnIndex="9"/>
+	</resultMap>
+
+	<resultMap id="disLikeList" class="BoardDisLikeListVO">
+		<result property="itemID" 					column="ITEMID" 				columnIndex="1"/>
+		<result property="userID" 		            column="USERID" 			    columnIndex="2"/>
+		<result property="disLikeDate"      		column="DISLIKEDATE" 		    columnIndex="3"/>
+		<result property="tenantID" 				column="TENANT_ID"			    columnIndex="4"/>
+		<result property="displayName" 				column="DISPLAYNAME"			columnIndex="5"/>
+		<result property="writerID" 				column="WRITERID"			    columnIndex="6"/>
+		<result property="title" 					column="TITLE"			    	columnIndex="7"/>
+		<result property="disLikeListCount" 		column="DISLIKELISTCOUNT"		columnIndex="8"/>
+		<result property="displayName2" 			column="DISPLAYNAME2"			columnIndex="9"/>
+	</resultMap>
 	<!-- end -->
 	
 	<select id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
@@ -1301,7 +1329,8 @@
 	                          B.TENANT_ID = #v_TENANTID#
 	                      AND 
 	                          B.BOARDID = A.BOARDID ) as GUBUN,
-						NVL(LIKECOUNT, 0) as LIKECOUNT
+						NVL(LIKECOUNT, 0) as LIKECOUNT,
+						NVL(DISLIKECOUNT, 0) as DISLIKECOUNT
 	   				  FROM 
 	   				  	TBL_BOARD_ITEM A 
 	   				  LEFT OUTER JOIN 
@@ -1323,21 +1352,44 @@
 	   				  	A.TENANT_ID = D.TENANT_ID
 	   				  AND
 	   				  	A.ITEMID = D.ITEMID
-					LEFT OUTER JOIN
+	   				LEFT OUTER JOIN
 						(SELECT
-                            COUNT(ITEMID) as LIKECOUNT,
-                            ITEMID,
-                            TENANT_ID
+                            COUNT(G.ITEMID) as LIKECOUNT,
+                            G.ITEMID,
+                            G.TENANT_ID
                         FROM
-                            TBL_BOARD_LIKE
+                            TBL_BOARD_LIKE G
+                        INNER JOIN
+						  	TBL_USERMASTER H
+                        ON 
+                            G.USERID = H.CN 
                         WHERE 
-                            TENANT_ID = #v_TENANTID#
+                            G.TENANT_ID = #v_TENANTID#
 						GROUP BY
-							ITEMID, TENANT_ID ) L
+							G.ITEMID, G.TENANT_ID ) L
 						ON
 							A.TENANT_ID = L.TENANT_ID
                         AND
                             A.ITEMID = L.ITEMID
+                    LEFT OUTER JOIN
+						(SELECT
+                            COUNT(K.ITEMID) as DISLIKECOUNT,
+                            K.ITEMID,
+                            K.TENANT_ID
+                        FROM
+                            TBL_BOARD_DISLIKE K
+                        INNER JOIN
+						  	TBL_USERMASTER J
+                        ON 
+                            K.USERID = J.CN
+                        WHERE 
+                            K.TENANT_ID = #v_TENANTID#
+						GROUP BY
+							K.ITEMID, K.TENANT_ID ) M
+						ON
+							A.TENANT_ID = M.TENANT_ID
+                        AND
+                            A.ITEMID = M.ITEMID
 	   				  WHERE
 	   				  	A.TENANT_ID = #v_TENANTID#
 	   				  AND 
@@ -1426,7 +1478,8 @@
 		   				A.EXTENSIONATTRIBUTE8,
 		   				A.EXTENSIONATTRIBUTE9,
 		   				A.EXTENSIONATTRIBUTE10,
-		  				NVL(LIKECOUNT, 0) as LIKECOUNT
+		  				NVL(LIKECOUNT, 0) as LIKECOUNT,
+		  				NVL(DISLIKECOUNT, 0) as DISLIKECOUNT
 	   				FROM 
 	   					TBL_BOARD_ITEM A 
 	   				LEFT OUTER JOIN 
@@ -1450,19 +1503,42 @@
 	   					A.ITEMID = D.ITEMID
 	   				LEFT OUTER JOIN
 						(SELECT
-                            COUNT(ITEMID) as LIKECOUNT,
-                            ITEMID,
-                            TENANT_ID
+                            COUNT(G.ITEMID) as LIKECOUNT,
+                            G.ITEMID,
+                            G.TENANT_ID
                         FROM
-                            TBL_BOARD_LIKE
+                            TBL_BOARD_LIKE G
+                        INNER JOIN
+						  	TBL_USERMASTER H
+                        ON 
+                            G.USERID = H.CN 
                         WHERE 
-                            TENANT_ID = #v_TENANTID#
+                            G.TENANT_ID = #v_TENANTID#
 						GROUP BY
-							ITEMID, TENANT_ID ) L
+							G.ITEMID, G.TENANT_ID ) L
 						ON
 							A.TENANT_ID = L.TENANT_ID
                         AND
                             A.ITEMID = L.ITEMID
+                    LEFT OUTER JOIN
+						(SELECT
+                            COUNT(K.ITEMID) as DISLIKECOUNT,
+                            K.ITEMID,
+                            K.TENANT_ID
+                        FROM
+                            TBL_BOARD_DISLIKE K
+                        INNER JOIN
+						  	TBL_USERMASTER J
+                        ON 
+                            K.USERID = J.CN
+                        WHERE 
+                            K.TENANT_ID = #v_TENANTID#
+						GROUP BY
+							K.ITEMID, K.TENANT_ID ) M
+						ON
+							A.TENANT_ID = M.TENANT_ID
+                        AND
+                            A.ITEMID = M.ITEMID
 	   				WHERE
 	   					A.TENANT_ID = #v_TENANTID#
 	   				AND 
@@ -1566,11 +1642,27 @@
 						(SELECT 
 		                	NVL(COUNT(*), 0)  
 		    			FROM 
-		    				TBL_Board_Like
+		    				TBL_Board_Like G
+		    			INNER JOIN
+    						TBL_usermaster H
+    					ON
+                  			G.USERID = H.CN
 		   				WHERE  
-		   					TENANT_ID = A.TENANT_ID
+		   					G.TENANT_ID = A.TENANT_ID
 		   				AND
-		   					ITEMID = A.ItemID) as LIKECOUNT
+		   					G.ITEMID = A.ItemID) as LIKECOUNT,
+		   				(SELECT 
+		                	NVL(COUNT(*), 0)  
+		    			FROM 
+		    				TBL_Board_DisLike K
+		    			INNER JOIN
+    						TBL_usermaster J
+    					ON
+    					    K.USERID = J.CN
+		   				WHERE  
+		   					K.TENANT_ID = A.TENANT_ID
+		   				AND
+		   					K.ITEMID = A.ItemID) as DISLIKECOUNT
 		              FROM 
 		              	TBL_Board_Item A
 		              WHERE  
@@ -2084,7 +2176,8 @@
 		   				A.MAINCONTENT,
 		   				B.FILEPATH,
 		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
-		   				NVL(LIKECOUNT, 0) as LIKECOUNT
+		   				NVL(LIKECOUNT, 0) as LIKECOUNT,
+		   				NVL(DISLIKECOUNT, 0) as DISLIKECOUNT
 	   				  FROM 
 	   				  	TBL_BOARD_ITEM A 
 	   				  INNER JOIN 
@@ -2115,19 +2208,42 @@
 	   				  	A.ITEMID = D.ITEMID
 					LEFT OUTER JOIN
 						(SELECT
-                            COUNT(ITEMID) as LIKECOUNT,
-                            ITEMID,
-                            TENANT_ID
+                            COUNT(G.ITEMID) as LIKECOUNT,
+                            G.ITEMID,
+                            G.TENANT_ID
                         FROM
-                            TBL_BOARD_LIKE
+                            TBL_BOARD_LIKE G
+                        INNER JOIN
+						  	TBL_USERMASTER H
+                        ON 
+                            G.USERID = H.CN 
                         WHERE 
-                            TENANT_ID = #v_TENANTID#
+                            G.TENANT_ID = #v_TENANTID#
 						GROUP BY
-							ITEMID, TENANT_ID ) L
+							G.ITEMID, G.TENANT_ID ) L
 						ON
 							A.TENANT_ID = L.TENANT_ID
                         AND
                             A.ITEMID = L.ITEMID
+                    LEFT OUTER JOIN
+						(SELECT
+                            COUNT(K.ITEMID) as DISLIKECOUNT,
+                            K.ITEMID,
+                            K.TENANT_ID
+                        FROM
+                            TBL_BOARD_DISLIKE K
+                        INNER JOIN
+						  	TBL_USERMASTER J
+                        ON 
+                            K.USERID = J.CN
+                        WHERE 
+                            K.TENANT_ID = #v_TENANTID#
+						GROUP BY
+							K.ITEMID, K.TENANT_ID ) M
+						ON
+							A.TENANT_ID = M.TENANT_ID
+                        AND
+                            A.ITEMID = M.ITEMID
 	   				WHERE 
 	   					A.TENANT_ID = #v_TENANTID#
 	   				AND
@@ -2196,7 +2312,8 @@
 		   				A.MAINCONTENT,
 		   				B.FILEPATH,
 		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
-		   				NVL(LIKECOUNT, 0) as LIKECOUNT
+						NVL(LIKECOUNT, 0) as LIKECOUNT,
+						NVL(DISLIKECOUNT, 0) as DISLIKECOUNT
 		   			  FROM 
 		   			  	TBL_BOARD_ITEM A 
 		   			  INNER JOIN 
@@ -2225,22 +2342,45 @@
 		   			  	A.TENANT_ID = D.TENANT_ID
 		   			  AND
 		   			  	A.ITEMID = D.ITEMID
-		   			  LEFT OUTER JOIN
+					  LEFT OUTER JOIN
 						(SELECT
-                            COUNT(ITEMID) as LIKECOUNT,
-                            ITEMID,
-                            TENANT_ID
-                        FROM
-                            TBL_BOARD_LIKE
-                        WHERE 
-                            TENANT_ID = #v_TENANTID#
-						GROUP BY
-							ITEMID, TENANT_ID ) L
-						ON
+							 COUNT(G.ITEMID) as LIKECOUNT,
+							 G.ITEMID,
+							 G.TENANT_ID
+						 FROM
+							 TBL_BOARD_LIKE G
+						 INNER JOIN
+							 TBL_USERMASTER H
+						 ON
+							 G.USERID = H.CN
+						 WHERE
+							 G.TENANT_ID = #v_TENANTID#
+						 GROUP BY
+							 G.ITEMID, G.TENANT_ID ) L
+						 ON
 							A.TENANT_ID = L.TENANT_ID
-                        AND
-                            A.ITEMID = L.ITEMID
-		   			  WHERE  
+						AND
+							A.ITEMID = L.ITEMID
+					  LEFT OUTER JOIN
+						(SELECT
+							 COUNT(K.ITEMID) as DISLIKECOUNT,
+							 K.ITEMID,
+							 K.TENANT_ID
+						 FROM
+							 TBL_BOARD_DISLIKE K
+								 INNER JOIN
+							 TBL_USERMASTER J
+							 ON
+								 K.USERID = J.CN
+						 WHERE
+							 K.TENANT_ID = #v_TENANTID#
+						 GROUP BY
+							 K.ITEMID, K.TENANT_ID ) M
+						 ON
+							A.TENANT_ID = M.TENANT_ID
+						 AND
+							A.ITEMID = M.ITEMID
+					  WHERE  
 		   			  	A.TENANT_ID = #v_TENANTID#
 		   			  AND
 		   			  	$v_PWHEREBOARD$ 
@@ -2369,7 +2509,8 @@
        					A.EXTENSIONATTRIBUTE10,
 	   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
 	   				  	I.GUBUN,
-	   				  	NVL(LIKECOUNT, 0) as LIKECOUNT
+						NVL(LIKECOUNT, 0) as LIKECOUNT,
+						NVL(DISLIKECOUNT, 0) as DISLIKECOUNT
 	   				  FROM 
 	   				  	TBL_BOARD_ITEM A 
 	   				  LEFT OUTER JOIN 
@@ -2390,22 +2531,45 @@
 	   				  	A.TENANT_ID = D.TENANT_ID
 	   				  AND
 	   				  	A.ITEMID = D.ITEMID
-	   				  LEFT OUTER JOIN
+					  LEFT OUTER JOIN
 						(SELECT
-                            COUNT(ITEMID) as LIKECOUNT,
-                            ITEMID,
-                            TENANT_ID
-                        FROM
-                            TBL_BOARD_LIKE
-                        WHERE 
-                            TENANT_ID = #v_TENANTID#
-						GROUP BY
-							ITEMID, TENANT_ID ) L
-						ON
+							 COUNT(G.ITEMID) as LIKECOUNT,
+							 G.ITEMID,
+							 G.TENANT_ID
+						 FROM
+							 TBL_BOARD_LIKE G
+						 INNER JOIN
+							 TBL_USERMASTER H
+						 ON
+							 G.USERID = H.CN
+						 WHERE
+							 G.TENANT_ID = #v_TENANTID#
+						 GROUP BY
+							 G.ITEMID, G.TENANT_ID ) L
+						 ON
 							A.TENANT_ID = L.TENANT_ID
-                        AND
-                            A.ITEMID = L.ITEMID
-	   				  INNER JOIN 
+						 AND
+							A.ITEMID = L.ITEMID
+					  LEFT OUTER JOIN
+						(SELECT
+							 COUNT(K.ITEMID) as DISLIKECOUNT,
+							 K.ITEMID,
+							 K.TENANT_ID
+						 FROM
+							 TBL_BOARD_DISLIKE K
+						 INNER JOIN
+							 TBL_USERMASTER J
+						 ON
+							 K.USERID = J.CN
+						 WHERE
+							 K.TENANT_ID = #v_TENANTID#
+						 GROUP BY
+							 K.ITEMID, K.TENANT_ID ) M
+						ON
+							A.TENANT_ID = M.TENANT_ID
+						AND
+							A.ITEMID = M.ITEMID
+					  INNER JOIN
 	   				  	TBL_BOARD_BOARDINFO I  
 	   				  ON 
 	   				  	A.TENANT_ID = I.TENANT_ID
@@ -2796,14 +2960,30 @@
 				NTSTARTDATE,
 				NTENDDATE,
 	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE,
-	            (SELECT 
-                	NVL(COUNT(*), 0)  
-    			FROM 
-    				TBL_Board_Like
-   				WHERE  
-   					TENANT_ID = A.TENANT_ID
-   				AND
-   					ITEMID = A.ItemID) as LIKECOUNT,
+				(SELECT
+					 NVL(COUNT(*), 0)
+				 FROM
+					 TBL_Board_Like G
+				 INNER JOIN
+					 TBL_usermaster H
+				 ON
+					 G.USERID = H.CN
+				 WHERE
+					 G.TENANT_ID = A.TENANT_ID
+			   	 AND
+					 G.ITEMID = A.ItemID) as LIKECOUNT,
+				(SELECT
+					 NVL(COUNT(*), 0)
+				 FROM
+					 TBL_Board_DisLike K
+				 INNER JOIN
+					 TBL_usermaster J
+				 ON
+					 K.USERID = J.CN
+				 WHERE
+					 K.TENANT_ID = A.TENANT_ID
+			   	 AND
+					 K.ITEMID = A.ItemID) as DISLIKECOUNT,
 	            B.ONELINEREPLY
 	        FROM 
 	        	TBL_Board_Item A
@@ -5773,12 +5953,18 @@
 			SELECT
 				NVL(COUNT(*), 0)
 			FROM
-				TBL_Board_Like
+				TBL_Board_Like A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				A.USERID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
 			WHERE
-	       		TENANT_ID = #v_tenantID#
-	       	AND
-	       		ITEMID = #v_itemID#
-       	]]>
+				A.TENANT_ID = #v_tenantID#
+			AND
+				A.ITEMID = #v_itemID#
+		]]>
 	</select>
 	
 	<select id="EzBoardDAO.likeCheck" parameterClass="Map" resultClass="String">
@@ -6674,6 +6860,132 @@
 			BOARDID = #boardID#
 		AND
 			TENANT_ID = #tenantID#
+	</select>
+	
+
+	<select id="EzBoardDAO.getDisLikeCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(*), 0)
+			FROM
+				TBL_Board_disLike A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				A.USERID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				A.TENANT_ID = #v_tenantID#
+			  AND
+				A.ITEMID = #v_itemID#
+		]]>
+	</select>
+
+	<select id="EzBoardDAO.disLikeCheck" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM
+				TBL_Board_disLike
+			WHERE
+				TENANT_ID = #v_tenantID#
+			AND
+				USERID = #v_userID#
+			AND
+				ITEMID = #v_itemID#
+		]]>
+	</select>
+
+	<delete id="EzBoardDAO.disLikeDelete" parameterClass="Map">
+  		<![CDATA[
+			DELETE FROM TBL_Board_disLike
+			WHERE
+				TENANT_ID = #v_tenantID#
+			AND
+				USERID = #v_userID#
+			AND
+				ITEMID = #v_itemID#
+		]]>
+    </delete>
+
+	<insert id="EzBoardDAO.disLikeInsert" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_disLike (
+				ITEMID, USERID, DISLIKEDATE, TENANT_ID
+			)
+			VALUES (
+				#v_itemID#, #v_userID#, #v_disLikeDate#, #v_tenantID#
+				   )
+		]]>
+	</insert>
+
+	<select id="EzBoardDAO.getLikeList" parameterClass="Map" resultMap="likeList">
+		<![CDATA[
+			SELECT A.ITEMID,
+				   A.USERID,
+				   A.LIKEDATE,
+				   A.TENANT_ID,
+				   B.DISPLAYNAME,
+				   C.WRITERID,
+				   C.TITLE,
+				   B.DISPLAYNAME2,
+				   (SELECT COUNT(*) LIKELISTCOUNT
+						FROM TBL_BOARD_LIKE D
+					 	INNER JOIN TBL_USERMASTER E
+						ON D.USERID = E.CN
+						AND D.TENANT_ID = E.TENANT_ID
+						WHERE ITEMID = #itemID#) AS LIKELISTCOUNT
+			FROM
+				(TBL_BOARD_LIKE A
+			INNER JOIN TBL_USERMASTER B
+			ON A.USERID=B.CN
+			AND A.TENANT_ID = B.TENANT_ID)
+			INNER JOIN TBL_BOARD_ITEM C
+			ON A.ITEMID=C.ITEMID
+			WHERE
+				A.ITEMID = #itemID#
+		]]>
+	</select>
+
+	<select id="EzBoardDAO.getDisLikeList" parameterClass="Map" resultMap="disLikeList">
+		<![CDATA[
+			SELECT
+				A.ITEMID,
+				A.USERID,
+				A.DISLIKEDATE,
+				A.TENANT_ID,
+				B.DISPLAYNAME,
+				C.WRITERID,
+				C.TITLE,
+				B.DISPLAYNAME2,
+				(SELECT COUNT(*) DISLIKELISTCOUNT
+				 	FROM TBL_BOARD_DISLIKE D
+				  	INNER JOIN TBL_USERMASTER E
+				 	ON D.USERID = E.CN
+				 	AND D.TENANT_ID = E.TENANT_ID
+				 	WHERE ITEMID = #itemID#) AS DISLIKELISTCOUNT
+			FROM
+				(TBL_BOARD_DISLIKE A
+				INNER JOIN TBL_USERMASTER B
+				ON A.USERID=B.CN
+				AND A.TENANT_ID = B.TENANT_ID)
+				INNER JOIN TBL_BOARD_ITEM C
+				ON A.ITEMID=C.ITEMID
+			WHERE
+				A.ITEMID = #itemID#
+		]]>
+	</select>
+
+	<select id="EzBoardDAO.getItemInfoList" parameterClass="Map" resultClass="BoardItemVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_BOARD_ITEM
+			WHERE
+				ITEMID = #itemID#
+		]]>
 	</select>
 
 	<!-- 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 답글을 저장하는 쿼리 -->

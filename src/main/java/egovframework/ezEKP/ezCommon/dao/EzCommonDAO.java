@@ -1758,6 +1758,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblSerialNoRollback");
 		}
 	}
+
+	public void createTblBoardDisLike() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardDisLike");
+		} catch (Exception e) {
+			logger.debug("tbl_board_dislike doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblBoardDisLike");
+		}
+	}
 	
 	public void insertHWPSecurityConfig() throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkHWPDownSecurityConfig");
@@ -2759,6 +2769,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_board_onelinereply imageContent doesn't exit. creatin the column...");
 
 			update("EzCommonDAO.insertTblBoardOneReplyImageContentColumn");
+		}
+	}
+	public void addBoardDisLikeFlag() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardInfoDisLikeFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info dislikeFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardDisLikeFlag");
 		}
 	}
 }

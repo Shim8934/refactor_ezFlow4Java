@@ -539,7 +539,7 @@ function ListView() {
                     objTd.setAttribute("writerindex", i);
                 }
 
-                if (strColName == "ATTACHMENTS" || strColName == "READCOUNT" || strColName == "TITLE" || strColName == "LIKECOUNT") {
+                if (strColName == "ATTACHMENTS" || strColName == "READCOUNT" || strColName == "TITLE" || strColName == "LIKECOUNT" || strColName == "DISLIKECOUNT") {
                     objTd.style.textAlign = "CENTER";
                 }
 
@@ -830,7 +830,7 @@ function ListView() {
                 }
                 else {
 
-                    if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "LIKECOUNT") {
+                    if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "LIKECOUNT" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "DISLIKECOUNT"){
                         objTd.style.textAlign = "center";
                     }
 

@@ -6052,4 +6052,44 @@
 		]]>
 	</statement>
 	
+	
+	<select id="EzCommonDAO.checkTblBoardInfoDisLikeFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				DISLIKEFLAG
+			FROM 
+				TBL_BOARD_BOARDINFO
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addBoardDisLikeFlag"> 
+		ALTER TABLE 
+			TBL_BOARD_BOARDINFO
+		ADD 
+			DISLIKEFLAG NCHAR(1) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardDisLike" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARD_DISLIKE
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardDisLike"> 
+		CREATE TABLE "EZEKP2017"."TBL_BOARD_DISLIKE" (
+		 	"ITEMID" NVARCHAR2(40) NOT NULL ENABLE, 
+			"USERID" NVARCHAR2(20) NOT NULL ENABLE, 
+			"DISLIKEDATE" NVARCHAR2(20), 
+			"TENANT_ID" NUMBER(5,0) NOT NULL ENABLE, 
+			CONSTRAINT "TBL_BOARD_DISLIKE_PK" PRIMARY KEY ("ITEMID", "USERID", "TENANT_ID")
+		)
+	</statement>
+
 </sqlMap>

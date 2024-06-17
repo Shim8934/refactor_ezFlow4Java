@@ -5640,4 +5640,42 @@
 			IMAGECONTENT varchar(600) NULL
 		]]>
 	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardInfoDisLikeFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				DISLIKEFLAG
+			FROM 
+				TBL_BOARD_BOARDINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addBoardDisLikeFlag"> 
+		ALTER TABLE 
+			TBL_BOARD_BOARDINFO
+		ADD 
+			DISLIKEFLAG VARCHAR(2) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardDisLike" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARD_DISLIKE
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardDisLike"> 
+		CREATE TABLE `tbl_board_dislike` (
+		  `ITEMID` varchar(80) NOT NULL,
+		  `USERID` varchar(80) NOT NULL,
+		  `DISLIKEDATE` varchar(40) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  PRIMARY KEY (`ITEMID`,`USERID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+    
 </sqlMap>

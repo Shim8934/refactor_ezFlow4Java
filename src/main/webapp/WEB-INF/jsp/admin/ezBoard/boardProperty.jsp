@@ -24,6 +24,7 @@
 	        var primary = "<c:out value='${primary}'/>";
 	        var isAllGroupBoard = "<c:out value='${isAllGroupBoard}'/>";
 	        var useBoardLike = "<c:out value='${model.likeFlag}'/>";
+	        var useBoardDisLike = "<c:out value='${model.disLikeFlag}'/>";
 	        var noticeBoardID = $.trim("<c:out value='${noticeBoardID}'/>"); // 공지사항 게시판ID(없다면 ""으로 전달됨)
 	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
@@ -63,6 +64,10 @@
 	            } else if ($("#chkOneLineNone").is(":checked")) {
 					$("#chkBoardReplyReact").prop("disabled", true);
 				}
+				/* 2023-04-06 기민혁 - 게시판 싫어요 기능 추가  */
+	            if (useBoardDisLike == "Y") {
+					$("#chkBoardDisLike").prop("checked", true);
+	            }
 	            if (pAdminType == "y") {
 	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";
 	            }
@@ -134,6 +139,11 @@
 	                	$("#chkMailFG_Post").prop("checked", false);
 	                    $("#chkMailFG_Mod").prop("checked", false);
 	                    $("#chkMailFG_Comment").prop("checked", false);
+	                    
+	                    // 2024-10-04 전인하 - 관리자 > 게시판 > 일반설정 > 익명게시판일 경우 댓글/게시글 좋아요 싫어요 기능 비활성화
+	                    $("#chkBoardLike").prop("disabled", true);
+                        $("#chkBoardDisLike").prop("disabled", true);
+                        $("#chkBoardReplyReact").prop("disabled", true);
 	                }
 	                /* 2018-07-13 홍승비 - 일반설정 화면 온로드 시 URL게시판 구분 추가 */
 	                /* 2021-12-31 홍승비 - 홈페이지 게시판 유형 추가 */
@@ -159,7 +169,8 @@
 	                    $("#chkApprBoard").prop("disabled", true);
 	                    $("#chkBoardLike").prop("disabled", true);
 	                    $("#chkBoardReplyReact").prop("disabled", true);
-
+	                    $("#chkBoardDisLike").prop("disabled", true);
+	                    
 	                    $("#chkNotify").prop("checked", false);
 	                    $("#chkMailFG_Post").prop("checked", false);
 	                    $("#chkMailFG_Mod").prop("checked", false);
@@ -169,6 +180,7 @@
 	                    $("#chkApprBoard").prop("checked", false);
 	                    $("#chkBoardLike").prop("checked", false);
 						$("#chkBoardReplyReact").prop("checked", false);
+	                    $("#chkBoardDisLike").prop("checked", false);
 	                    
 						/* 2020-05-27 홍승비 - URL 게시판인 경우, 댓글 disabled 처리 */
 						$("#chkOneLineBottom").prop("disabled", true);
@@ -284,6 +296,12 @@
 	            	useBoardReplyReact = "Y";
 	            } else {
 					useBoardReplyReact = "N";
+				}
+	            
+	            if ($("#chkBoardDisLike").is(":checked")) {
+	            	useBoardDisLike = "Y";
+	            } else {
+	            	useBoardDisLike = "N";
 				}
 	            
 	            // 게시만료일 /* 2019-03-04 홍승비 - 게시판그룹인 경우 게시만료일 체크 분기 타지 않도록 수정 */
@@ -426,7 +444,7 @@
 	            		boardColor:brd_color, portlet:"N", backGround:background,
 	            		formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG,
 	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID,
-	            		likeFlag:useBoardLike, noticeBoardMod:pNoticeBoardMod,
+	            		likeFlag:useBoardLike,disLikeFlag:useBoardDisLike,noticeBoardMod:pNoticeBoardMod,noticeBoardMod:pNoticeBoardMod,
 						tabBoardMod1:ptabBoardMod1,tabBoardMod2:ptabBoardMod2,tabBoardMod3:ptabBoardMod3,
 						mailFG_Post : mailFG_Post, mailFG_Mod : mailFG_Mod, mailFG_Comment : mailFG_Comment,
 						reactFlag:useBoardReplyReact,
@@ -598,6 +616,7 @@
 					$("#chkApprBoard").prop("disabled", true);
 					$("#chkBoardLike").prop("disabled", true);
 					$("#chkBoardReplyReact").prop("disabled", true);
+					$("#chkBoardDisLike").prop("disabled", true);
 					/* 2020-05-27 홍승비 - URL 게시판인 경우, 댓글 사용안함 고정 + disabled 처리 */
 					$("#chkOneLineBottom").prop("disabled", true);
 					$("#chkOneLineLayer").prop("disabled", true);
@@ -620,6 +639,7 @@
                     document.getElementById("chkMailFG_Comment").checked = false;
                     document.getElementById("chkBoardLike").checked = false;
                     document.getElementById("chkBoardReplyReact").checked = false;
+                    document.getElementById("chkBoardDisLike").checked = false;
                    // document.getElementById("chkOneLine").checked = false;
                     document.getElementById("chkOneLineBottom").checked = false;
                     document.getElementById("chkOneLineLayer").checked = false;
@@ -648,8 +668,24 @@
 	                    $("#chkApprBoard").prop("disabled", false);
 					}
 					
-					$("#chkBoardLike").prop("disabled", false);
-					$("#chkBoardReplyReact").prop("disabled", false);
+					// 2024-10-04 전인하 - 관리자 > 게시판 > 일반설정 > 익명게시판일 경우 댓글/게시글 좋아요 싫어요 기능 비활성화
+                    if (chkAnonyBoard.checked) {
+                        $("#chkBoardLike").prop("checked", false);
+                        $("#chkBoardDisLike").prop("checked", false);
+                        $("#chkBoardReplyReact").prop("checked", false);
+                        $("#chkBoardLike").prop("disabled", true);
+                        $("#chkBoardDisLike").prop("disabled", true);
+                        $("#chkBoardReplyReact").prop("disabled", true);
+                    } else {
+                        $("#chkBoardLike").prop("disabled", false);
+                        $("#chkBoardDisLike").prop("disabled", false);
+                        if ($("#chkOneLineNone").is(":checked")) {
+                            $("#chkBoardReplyReact").prop("checked", false);
+                            $("#chkBoardReplyReact").prop("disabled", true);
+                        } else {
+                            $("#chkBoardReplyReact").prop("disabled", false);
+                        }
+					}
 					/* 2020-05-27 홍승비 - URL 게시판이 아닌 경우, 댓글 disabled 해제 */
 					$("#chkOneLineBottom").prop("disabled", false);
 					$("#chkOneLineLayer").prop("disabled", false);
@@ -695,6 +731,13 @@
 	            } else if (chkURLBoard.checked == false && chkHomePageBoard.checked == false) {
 	            	$("#chkbackgroundimage").prop("disabled", false);
 	            	$("#chkform").prop("disabled", false);
+	            }
+	            
+	            // 2024-10-04 전인하 - 모든 게시판구분 설정을 제거한다면 일반게시판을 체크하도록 함
+	            if (chkGeneralBoard.checked == false && chkAnonyBoard.checked == false && chkPhotoBoard.checked == false && chkThumbBoard.checked == false && 
+	            chkMovieBoard.checked == false && chkQnABoard.checked == false && chkURLBoard.checked == false && chkHomePageBoard.checked == false) {
+	                chkGeneralBoard.checked = true;
+	                checkboardtype();
 	            }
 			}
 			
@@ -1194,6 +1237,7 @@
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t999020" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.hsb10" />&nbsp;</span>
 					<span style="display:inline-block;"><input type="checkbox" id="chkBoardReplyReact" onclick="checkboardtype()" /><spring:message code="ezBoard.LJE01" />&nbsp;</span>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardDisLike"><spring:message code="ezBoard.kmh07" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011_1" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkform" onclick="checkboardtype()" /><spring:message code="ezBoard.t999027" />&nbsp;</span>
 	        	</td>

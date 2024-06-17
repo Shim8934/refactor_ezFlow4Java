@@ -427,4 +427,19 @@ public interface EzBoardService {
 
 	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식이 존재하는 부모댓글 삭제할 경우 해당 댓글 정보를 NULL로 변경해주는 메서드 */
 	public void updateDelParentReply(String replyID, String itemID, String boardID, int tenantID) throws Exception;
+
+	/* 2023-04-06 기민혁 - 싫어요 삽입 */
+	public void disLikeInsert(String userID, String itemID, int tenantID) throws Exception;
+	
+	/* 2023-04-06 기민혁 - 싫어요 삭제 */
+	public void disLikeDelete(String userID, String itemID, int tenantID) throws Exception;
+	
+	/* 2023-04-06 기민혁 - 싫어요 여부 체크 */
+	public String disLikeCheck(String userID, String itemID, int tenantID) throws Exception;
+	
+	/* 2023-04-06 기민혁 - 싫어요 갯수 가져오기 */
+	public int getDisLikeCount(String itemID, int tenantID) throws Exception;
+
+	/* 2023-04-06 기민혁 - 좋아요/싫어요 명단 호출 메서드 */
+	public String boardLikeAndDisLikeList(LoginVO userInfo, String pBoardID, String[] itemIDs) throws Exception;
 }

@@ -2450,6 +2450,7 @@
 		          	BACKGROUND = #v_PBACKGROUND#,
 		          	FORMFLAG = #v_PFORM#,
 		          	APPRFLAG = #v_PAPPRFLAG#,
+		          	DISLIKEFLAG = #v_DISLIKEFLAG#,
 		          	APPRMAILFLAG = #v_PAPPRMAILFLAG#,
 		          	LIKEFLAG = #v_LIKEFLAG#,
 		          	MAILFG_POST = #v_MAILFG_POST#,

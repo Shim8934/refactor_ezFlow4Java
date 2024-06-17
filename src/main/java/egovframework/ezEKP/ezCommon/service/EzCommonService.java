@@ -458,4 +458,9 @@ public interface EzCommonService {
 
 	// 2023-11-07 전인하 - 댓글 이모티콘 관련 컬럼 추가
 	public void insertBoardReplyCommentEmoticon() throws Exception;
+		
+	public void createTblBoardDisLike() throws Exception;
+	
+	public void addBoardDisLikeFlag() throws Exception;
+	
 }

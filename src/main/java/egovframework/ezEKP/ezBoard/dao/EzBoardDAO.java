@@ -10,6 +10,9 @@ import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -893,5 +896,42 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식있는 부모댓글 삭제할 경우 해당 댓글 값 NULL로 변경하는 쿼리 */
 	public void updateDelParentReply(Map<String, Object> map) throws Exception {
 		update("EzBoardDAO.updateDelParentReply", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 삽입 쿼리*/
+	public void disLikeInsert(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.disLikeInsert", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 삭제 쿼리*/
+	public void disLikeDelete(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.disLikeDelete", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 체크 여부 확인 쿼리 */
+	public String disLikeCheck(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.disLikeCheck", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 갯수 count 쿼리 */
+	public int getDisLikeCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getDisLikeCount", map);
+	}
+	/* 2023-04-06 기민혁 - 좋아요 리스트 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardLikeListVO> getLikeList(Map<String, String> map) throws Exception {
+		return (List<BoardLikeListVO>) list("EzBoardDAO.getLikeList",map);
+	}
+
+	/* 2023-04-06 기민혁 - 싫어요 리스트 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardDisLikeListVO> getDisLikeList(Map<String, String> map) throws Exception {
+		return (List<BoardDisLikeListVO>) list("EzBoardDAO.getDisLikeList",map);
+	}
+	
+	/* 2023-04-06 기민혁 - 좋아요/싫어요 정보 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardItemVO> getItemInfoList(Map<String, String> map) throws Exception {
+		return (List<BoardItemVO>) list("EzBoardDAO.getItemInfoList",map);
 	}
 }

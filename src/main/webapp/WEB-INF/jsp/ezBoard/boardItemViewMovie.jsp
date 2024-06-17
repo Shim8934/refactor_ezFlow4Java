@@ -36,6 +36,17 @@
 				background-color:#f1f8ff;
 				border:1px solid #6793d8;
 			}
+			.disLikeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.disLikeButton:hover {
+				background-color:#ffd9ec;
+				border:1px solid #f44336;
+			}
 		</style>
 		<script type="text/javascript">
 				window.offscreenBuffering = true;
@@ -72,6 +83,10 @@
 				var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
 				var likeCount = "${boardItem.likeCount}";
 				var likeCountAfter = 0;
+				var isDisLikeChecked = "<c:out value='${isDisLikeChecked}'/>";
+				var disLikeFlag = "<c:out value='${boardInfo.disLikeFlag}'/>";
+				var disLikeCount = "${boardItem.disLikeCount}";
+				var disLikeCountAfter = 0;
 				var refreshFlag = "N";
 				var commentCount = "${commentCount}";
 			    var nowCommentCount = ""; // 댓글 옵션처리를 위해 전역변수로 변경
@@ -141,7 +156,7 @@
 		        
 		        $(document).ready(function() {
 					/* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩 조절 */
-		            if (likeFlag != null && likeFlag == "Y") {
+		            if ((likeFlag != null && likeFlag == "Y") || (disLikeFlag != null && disLikeFlag == "Y")) {
 						$(".movieTR").css("padding" , "20px 0px 0px 0px");
 		            }
 		        });
@@ -296,6 +311,7 @@
 					if (refreshFlag == "Y") {
 						window.opener.getBoardList();
 					}
+					opener.isOpenWindow = undefined;
 			    };
 			    
 				function btnClose_onclick()
@@ -665,9 +681,32 @@
 		        }
 		    	
 		        /* 2019-04-05 홍승비 - 좋아요 버튼 클릭 동작 */
+		        /* 2023-04-06 기민혁 - 좋아요 버튼 클릭 동작 (수정) */
 			    function clickLikeButton() {
 			    	var mod = "";
-			    	if (isLikeChecked == "Y") {
+
+			    	if(isDisLikeChecked == "Y"){
+			    		mod = "DELETE";
+			    		$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezBoard/clickDisLikeMod.do",
+							data : {
+								mod: mod,
+								itemID : pItemID
+							},
+							success: function(result){
+								isDisLikeChecked = result;
+
+								if($("#disLikeDiv").length > 0){
+									updateDisLikeCountImg(isDisLikeChecked);
+								}
+							}
+						});
+			    	}
+			    	
+			    	if (isLikeChecked == "Y" && isDisLikeChecked != "Y") {
 			    		mod = "DELETE";
 			    	} else {
 			    		mod = "INSERT";
@@ -712,6 +751,8 @@
 					    	} else {
 					    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
 					    	}
+							try {opener.refreshLikeAndDisLike(result,isLikeChecked,"like");}catch (e) {}
+
 						}
 					});
 			    }
@@ -725,7 +766,7 @@
 			    	var opnenerHref = window.opener.location.href;
 			    	
 			    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
-			    	if (((likeCount != likeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+			    	if (((likeCount != likeCountAfter) || (disLikeCount != disLikeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
 			    		refreshFlag = "Y";
 			    	} else {
 			    		refreshFlag = "N";
@@ -761,6 +802,111 @@
 						}
 					});
 				}
+			    
+			    /* 2023-04-06 기민혁 - 싫어요 버튼 클릭 동작 */
+			    function clickDisLikeButton() {
+			    	var mod = "";
+			    	
+			    	if(isLikeChecked == "Y"){
+			    		mod = "delect";
+			    		$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezBoard/clickLikeMod.do",
+							data : {
+								mod: mod,
+								itemID : pItemID
+							},
+							success: function(result){
+								isLikeChecked = result;
+
+								if($("#likeDiv").length > 0){
+									updateLikeCountImg(isLikeChecked);
+								}
+							}
+						});
+			    	}
+			    		
+			    	if (isDisLikeChecked == "Y" && isLikeChecked != "Y") {
+			    		mod = "DELETE";
+			    	} else {
+			    		mod = "INSERT";
+			    	}
+			    	
+			    	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/clickDisLikeMod.do",
+						data : {
+							mod: mod,
+							itemID : pItemID
+						},
+						success: function(result){
+							isDisLikeChecked = result;
+							updateDisLikeCountImg(isDisLikeChecked);
+						}
+					});
+			    }
+			    
+			    /* 2023-04-06 기민혁 - 싫어요 버튼 이미지 및 좋아요 갯수 업데이트 */
+			    function updateDisLikeCountImg(isDisLikeChecked) {
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						cache : false,
+						url : "/ezBoard/getDisLikeCount.do",
+						data : {
+							itemID : pItemID
+						},
+						success: function(result){
+							disLikeCountAfter = result;
+							if (parseInt(result) > 0) {
+								document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+							} else {
+								document.getElementById("disLikeCountSpan").innerText = "";
+							}
+							if (isDisLikeChecked == "Y") {
+					    		document.getElementById("disLikeButtonImg").src = "/images/disLike_on.png";
+					    	} else {
+					    		document.getElementById("disLikeButtonImg").src = "/images/disLike_off.png";
+					    	}
+							try {opener.refreshLikeAndDisLike(result,isDisLikeChecked,"disLike");}catch (e) {}
+
+						}
+					});
+				}
+			    
+			    /* 2023-04-06 기민혁 - 미리보기 에서  좋아요/싫어요 버튼 클릭시  이미지 및  개수 업데이트 */
+			    function refreshLikeAndDisLikeOpen(result,checked,gubun){
+			    	if(gubun === "disLike"){
+			    		isDisLikeChecked = checked ;
+				    	if (parseInt(result) > 0) {
+							document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("disLikeCountSpan").innerText = "";
+						}
+						if (isDisLikeChecked == "Y") {
+				    		document.getElementById("disLikeButtonImg").src = "/images/disLike_on.png";
+				    	} else {
+				    		document.getElementById("disLikeButtonImg").src = "/images/disLike_off.png";
+				    	}
+			    	}else if(gubun === "like"){
+			    		isLikeChecked = checked;
+			    		if (parseInt(result) > 0) {
+							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("likeCountSpan").innerText = "";
+						}
+						if (isLikeChecked == "Y") {
+				    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+				    	} else {
+				    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+				    	}
+			    	}
+			    };
 			    
 		</script>
 	</head>
@@ -860,20 +1006,43 @@
 		            </td>
 		        </tr>
 				<%-- 2019-04-05 홍승비 - 본문 하단에 좋아요 버튼 추가 --%>
-				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+				<%-- 2023-04-06 기민혁 - 싫어요 버튼 추가 --%>
+				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
 					<tr>
-						<td style="text-align:center; padding-bottom:5px;">
-						  	<span class="likeButton" style="cursor:pointer;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
-							  	<c:choose>
-							  		<c:when test="${isLikeChecked == 'Y'}">
-							  			<img id="likeButtonImg" src="/images/like_on.png"/>
-							  		</c:when>
-							  		<c:otherwise>
-							  			<img id="likeButtonImg" src="/images/like_off.png"/>
-							  		</c:otherwise>
-							  	</c:choose>
-						  		<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
-						  	</span>
+						<td style="text-align:center; padding-bottom:8px;" colspan="3">
+					  		<div style="display: flex; justify-content: center;">
+								<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+									<div id="likeDiv" style="text-align:center; padding:5px 0px 7px 0px; margin-right: 5px">	
+						  				<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>" style="height:20px">
+							  				<c:choose>
+							  					<c:when test="${isLikeChecked == 'Y'}">
+							  						<img id="likeButtonImg" src="/images/like_on.png"/>
+							  					</c:when>
+							  				<c:otherwise>
+							  						<img id="likeButtonImg" src="/images/like_off.png"/>
+							  				</c:otherwise>
+							  				</c:choose>
+							  					<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
+						  				</span>
+									</div>
+								</c:if>
+					
+								<c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
+									<div id="disLikeDiv" style="text-align:center; padding:5px 0px 7px 0px;">	
+						  				<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" style="height:20px">
+							  				<c:choose>
+							  					<c:when test="${isDisLikeChecked == 'Y'}">
+							  						<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
+							  					</c:when>
+							  					<c:otherwise>
+							  						<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
+							  					</c:otherwise>
+							  				</c:choose>
+							  					<span id="disLikeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.disLikeCount > 0}"> (<c:out value="${boardItem.disLikeCount}"/>)</c:if></span>
+						  				</span>
+									</div>
+								</c:if>
+                			</div>
 						</td>
 					</tr>
 				</c:if>

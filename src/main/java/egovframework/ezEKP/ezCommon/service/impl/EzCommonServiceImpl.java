@@ -4333,4 +4333,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void insertBoardReplyCommentEmoticon() throws Exception {
         ezCommonDAO.insertBoardReplyCommentEmoticon();
     }
+	
+	@Override
+	public void createTblBoardDisLike() throws Exception{
+		ezCommonDAO.createTblBoardDisLike();
+	}
+	
+	@Override
+	public void addBoardDisLikeFlag() throws Exception{
+		ezCommonDAO.addBoardDisLikeFlag();
+	}
 }

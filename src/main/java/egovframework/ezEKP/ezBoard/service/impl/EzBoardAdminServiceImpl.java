@@ -707,6 +707,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PAPPRFLAG", boardPropertyVO.getApprFlag());
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
 		map.put("v_LIKEFLAG", boardPropertyVO.getLikeFlag());
+		map.put("v_DISLIKEFLAG", boardPropertyVO.getDisLikeFlag());
 		map.put("v_MAILFG_POST", boardPropertyVO.getMailFG_Post());
 		map.put("v_MAILFG_MOD", boardPropertyVO.getMailFG_Mod());
 		map.put("v_MAILFG_COMMENT", boardPropertyVO.getMailFG_Comment());

@@ -61,7 +61,9 @@ import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -300,6 +302,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			likeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.hsb10", userInfo.getLocale()));
 			likeAddListHeaderVO.setWidth("50");
 			listHeaderListVO.add(likeAddListHeaderVO);
+		}
+		
+		/* 2023-04-06 기민혁 - 싫어요 사용 게시판의 경우 임의로 헤더 조정 */
+		if (ezBoardVO.getDisLikeFlag() != null && ezBoardVO.getDisLikeFlag().equals("Y")) {
+			BoardListHeaderVO disLikeAddListHeaderVO = new BoardListHeaderVO();
+			disLikeAddListHeaderVO.setColName("DISLIKECOUNT");
+			disLikeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.kmh07", userInfo.getLocale()));
+			disLikeAddListHeaderVO.setWidth("50");
+			listHeaderListVO.add(disLikeAddListHeaderVO);
 		}
 
 		logger.debug("getListHeader ended");
@@ -809,6 +820,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			likeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.hsb10", userInfo.getLocale()));
 			likeAddListHeaderVO.setWidth("50");
 			listHeaderListVO.add(likeAddListHeaderVO);
+		}
+		
+		/* 2023-04-06 기민혁 - 싫어요 사용 게시판의 경우 임의로 헤더 조정 */
+		if (ezBoardVO.getDisLikeFlag() != null && ezBoardVO.getDisLikeFlag().equals("Y")) {
+			BoardListHeaderVO disLikeAddListHeaderVO = new BoardListHeaderVO();
+			disLikeAddListHeaderVO.setColName("DISLIKECOUNT");
+			disLikeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.kmh07", userInfo.getLocale()));
+			disLikeAddListHeaderVO.setWidth("50");
+			listHeaderListVO.add(disLikeAddListHeaderVO);
 		}
 		
 		return listHeaderListVO;
@@ -2072,6 +2092,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
 			sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
 			sb.append("<LikeCount>" + itemInfo.getLikeCount() + "</LikeCount>");
+			sb.append("<DisLikeCount>" + itemInfo.getDisLikeCount() + "</DisLikeCount>");
 			
 			/* 2018-12-03 홍승비 - 게시물 정보에 사원이미지 추가 */
 			if (itemInfo.getUserImageFile() != null && !itemInfo.getUserImageFile().equals("")) {
@@ -5397,5 +5418,148 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("updateDelParentReply ended");
 		ezBoardDAO.updateDelParentReply(map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 버튼 클릭시 정보 insert 메서드 */
+	@Override
+	public void disLikeInsert(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("disLikeInsert started.");
+
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+		map.put("v_disLikeDate",commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+
+		ezBoardDAO.disLikeInsert(map);
+		logger.debug("disLikeInsert ended.");
+
+	}
+
+	/* 2023-04-06 기민혁 - 싫어요 버튼 클릭시 정보 delete 메서드 */
+	@Override
+	public void disLikeDelete(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("disLikeDelete started.");
+
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+
+		ezBoardDAO.disLikeDelete(map);
+		logger.debug("disLikeDelete ended.");
+
+	}
+
+	/* 2023-04-06 기민혁 - 싫어요 버튼을 클릭했는데 체크 메소드 */
+	@Override
+	public String disLikeCheck(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("dislikeCheck started.");
+
+		String isDisLikeChecked = "";
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+
+		isDisLikeChecked = ezBoardDAO.disLikeCheck(map);
+
+		if (isDisLikeChecked != null && !isDisLikeChecked.equals("")) {
+			isDisLikeChecked = "Y";
+		} else {
+			isDisLikeChecked = "N";
+		}
+
+		logger.debug("dislikeCheck ended.");
+		return isDisLikeChecked;
+	}
+
+	/* 2023-04-06 기민혁 - 싫어요를 누른 사용자 count 메서드 */
+	@Override
+	public int getDisLikeCount(String itemID, int tenantID) throws Exception {
+		logger.debug("getDisLikeCount started.");
+
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+
+		logger.debug("getDisLikeCount ended.");
+		return ezBoardDAO.getDisLikeCount(map);
+	}
+	
+	/* 2023-04-06 기민혁 - 좋아요/싫어요 를 누른 명단 list 호출 메서드 */
+	@Override
+	public String boardLikeAndDisLikeList(LoginVO userInfo, String pBoardID, String[] itemIDs) throws Exception {
+		logger.debug("boardLikeAndDisLikeList started.");
+
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		for (String itemID : itemIDs) {
+			Map<String, String> map = new HashMap<>();
+			map.put("itemID", itemID);
+			sb.append("<ROW>");
+			sb.append("<ITEMINFO>");
+
+			List<BoardItemVO> itemInfo = ezBoardDAO.getItemInfoList(map);// 해당 boardItem 정보
+
+			for (BoardItemVO itemInfoList : itemInfo) {
+				sb.append("<ITEMID>" + itemInfoList.getItemID() + "</ITEMID>");
+				sb.append("<TITLE>" + commonUtil.cleanValue(itemInfoList.getTitle()) + "</TITLE>");
+				sb.append("<TENANTID>" + itemInfoList.getTenantID() + "</TENANTID>");
+				sb.append("<BOARDID>" + itemInfoList.getBoardID() + "</BOARDID>");
+			}
+
+			sb.append("</ITEMINFO>");
+			sb.append("<LIKELIST>");
+
+			List<BoardLikeListVO> likeListData = ezBoardDAO.getLikeList(map); // 선택한 리스트의 좋아요 체크한 정보
+
+			for (BoardLikeListVO BoardLikeList : likeListData) {
+				sb.append("<ITEMID>" + BoardLikeList.getItemID() + "</ITEMID>");
+				sb.append("<USERID>" + BoardLikeList.getUserID() + "</USERID>");
+				sb.append("<LIKEDATE>" + commonUtil.getDateStringInUTC(BoardLikeList.getLikeDate(), userInfo.getOffset(), false) + "</LIKEDATE>");
+				sb.append("<TENANTID>" + BoardLikeList.getTenantID() + "</TENANTID>");
+				if(userInfo.getLang().equals("1")){
+					sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(BoardLikeList.getDisplayName()) + "</DISPLAYNAME>");
+				}else{
+					sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(BoardLikeList.getDisplayName2()) + "</DISPLAYNAME>");
+				}
+				sb.append("<WRITER>" + BoardLikeList.getWriterID() + "</WRITER>");
+				sb.append("<TITLE>" + commonUtil.cleanValue(BoardLikeList.getTitle()) + "</TITLE>");
+				sb.append("<LIKELISTCOUNT>" + BoardLikeList.getLikeListCount() + "</LIKELISTCOUNT>");
+
+			}
+			sb.append("</LIKELIST>");
+			sb.append("<DISLIKELIST>");
+
+			List<BoardDisLikeListVO> disLikeListData = ezBoardDAO.getDisLikeList(map);// 선택한 리스트의 싫어요 체크한 정보
+
+			for (BoardDisLikeListVO BoardDisLikeList : disLikeListData) {
+				sb.append("<D_ITEMID>" + BoardDisLikeList.getItemID() + "</D_ITEMID>");
+				sb.append("<D_USERID>" + BoardDisLikeList.getUserID() + "</D_USERID>");
+				sb.append("<D_DISLIKEDATE>" + commonUtil.getDateStringInUTC(BoardDisLikeList.getDisLikeDate(), userInfo.getOffset(), false) + "</D_DISLIKEDATE>");
+				sb.append("<D_TENANTID>" + BoardDisLikeList.getTenantID() + "</D_TENANTID>");
+				if(userInfo.getLang().equals("1")){
+					sb.append("<D_DISPLAYNAME>" + commonUtil.cleanValue(BoardDisLikeList.getDisplayName()) + "</D_DISPLAYNAME>");
+				}else{
+					sb.append("<D_DISPLAYNAME>" + commonUtil.cleanValue(BoardDisLikeList.getDisplayName2()) + "</D_DISPLAYNAME>");
+				}
+				sb.append("<D_WRITER>" + BoardDisLikeList.getWriterID() + "</D_WRITER>");
+				sb.append("<D_TITLE>" + commonUtil.cleanValue(BoardDisLikeList.getTitle()) + "</D_TITLE>");
+				sb.append("<DISLIKELISTCOUNT>" + BoardDisLikeList.getDisLikeListCount() + "</DISLIKELISTCOUNT>");
+			}
+			sb.append("</DISLIKELIST>");
+			sb.append("</ROW>");
+		}
+
+		sb.append("</DATA>");
+
+		logger.debug("boardLikeAndDisLikeList ended.");
+
+		return sb.toString();
 	}
 }
