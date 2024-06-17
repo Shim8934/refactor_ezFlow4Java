@@ -70,12 +70,12 @@ import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList; 
 import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape; 
 import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader; 
-import kr.dogfoot.hwplib.object.docinfo.BinData; 
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress; 
+import kr.dogfoot.hwplib.object.docinfo.BinData;
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress;
 import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataState; 
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType; 
-import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation; 
-import kr.dogfoot.hwplib.reader.HWPReader; 
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType;
+import kr.dogfoot.hwplib.org.apache.poi.hpsf.SummaryInformation;
+import kr.dogfoot.hwplib.reader.HWPReader;
 import kr.dogfoot.hwplib.writer.HWPWriter; 
 
 import org.apache.commons.codec.binary.Base64; 
@@ -6467,7 +6467,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int streamIdx = hwpFile.getBinData().getEmbeddedBinaryDataList().size() + 1;
 		String streamName = "Bin" + String.format("%04X", streamIdx) + "." + imageFileExt;
 		byte[] fileBinary = loadFile(filePath);
-		BinDataCompress compressMethod = BinDataCompress.ByStroageDefault;
+		BinDataCompress compressMethod = BinDataCompress.ByStorageDefault;
 		
 		hwpFile.getBinData().addNewEmbeddedBinaryData(streamName, fileBinary, compressMethod);
 		addBinDataInDocInfo(hwpFile, streamIdx, compressMethod, imageFileExt);
@@ -6499,7 +6499,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		BinData bd = new BinData();
 		bd.getProperty().setType(BinDataType.Embedding);
 		bd.getProperty().setCompress(compressMethod);
-		bd.getProperty().setState(BinDataState.NotAcceess);
+		bd.getProperty().setState(BinDataState.NotAccess);
 		bd.setBinDataID(streamIndex);
 		bd.setExtensionForEmbedding(imageFileExt);
 		hwpFile.getDocInfo().getBinDataList().add(bd);
