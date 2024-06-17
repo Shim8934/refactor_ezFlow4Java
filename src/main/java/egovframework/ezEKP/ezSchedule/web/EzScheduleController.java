@@ -2301,7 +2301,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         String importance	= doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent();
         String ispublic		= doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
         String datetype		= doc.getElementsByTagName("DATETYPE").item(0).getTextContent();
-        String showtop		= doc.getElementsByTagName("SHOWTOP").item(0).getTextContent();
+        String showtop		= doc.getElementsByTagName("SHOWTOP").item(0) == null ? "N": doc.getElementsByTagName("SHOWTOP").item(0).getTextContent();
         /* 2021-11-25 홍승비 - 일정 수정 시 일정완료 관련 데이터 추가 */
         String completeFG	= "";
         String repeatCount	= "";

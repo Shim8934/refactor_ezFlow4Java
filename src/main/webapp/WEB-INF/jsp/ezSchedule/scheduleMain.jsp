@@ -628,6 +628,9 @@
 		        // 상단표시
 		        else if (GetAttribute(srcEl, "id").indexOf("TOP") !== -1) {
 		            showtop = "Y"
+		            datetype = "1";
+                    sdate = GetAttribute(srcEl, "dispdate");
+                    edate = sdate;
 		        }
 		        // 일보기, 주보기의 종일일정 클릭
 		        else {

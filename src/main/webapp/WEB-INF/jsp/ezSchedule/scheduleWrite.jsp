@@ -92,9 +92,37 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        // 상단표시
+		        // 상단표시로 바로 작성할 때
                 if (showtop == 'Y') {
                     document.getElementById("topcheck").checked = true;
+                    var now = new Date();
+
+                    //시작시간
+                    var startTime;
+                    var hour = now.getHours();
+                    var time = now.getMinutes();
+
+                    if (parseInt(time) < 30) {
+                        startTime = hour + ":00:00";
+                    } else {
+                        startTime = hour + ":30:00";
+                    }
+
+                    //종료시간
+                    var endTime;
+                    now.setMinutes(now.getMinutes() + 30);
+
+                    hour = now.getHours();
+                    time = now.getMinutes();
+
+                    if (parseInt(time) < 30) {
+                        endTime = hour + ":00:00";
+                    } else {
+                        endTime = hour + ":30:00";
+                    }
+
+                    $('#Stimepicker').timepicker('setTime', startTime);
+                    $('#Etimepicker').timepicker('setTime', endTime);
                 }
 		        if (scheduleid != "") {
 		            document.getElementById("importantSelect").value = importance;
