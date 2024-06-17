@@ -3238,9 +3238,16 @@ public class CommonUtil {
 	public OrganAuth makeOrganAuth(String userId, int tenantId) throws Exception {
 		List<OrganUserVO> allUserinfo = ezOrganService.getAllUserinfo(userId, tenantId);
 		OrganAuth organAuth = new OrganAuth();
-		for (OrganUserVO user : allUserinfo) {
+		boolean permissionBasisDeptYN = "Y".equalsIgnoreCase(ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantId));
+
+		if (permissionBasisDeptYN) {
+			for (OrganUserVO user : allUserinfo) {
+				organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
+			}
+		} else {
+            OrganUserVO user = allUserinfo.get(0);
             organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
         }
-		return organAuth;
+        return organAuth;
 	}
 }
