@@ -36,7 +36,7 @@ function getNoticePagePerCount(noticePortletId) {
 }
 
 /* 공지사항 데이터 조합 */
-var assembleNoticeList = function(noticeList, portletBoardId, access, totalCnt, currentPage) {
+var assembleNoticeList = function(noticeList, noticePortletId, access, totalCnt, currentPage) {
 	/* HTMLColllection에도 forEach 추가*/
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
 	var str = '';
@@ -128,7 +128,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access, totalCnt, 
 			str += "</dl>";
 		}
 	} else {
-		if (portletBoardId == null || portletBoardId == "") {
+		if (noticePortletId == null || noticePortletId == "") {
 //			str += "<ul class='portlet_list'>";
 			str += "<dl class='nodata'>";
 			str += "<dt>";
@@ -151,6 +151,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access, totalCnt, 
 	
 	// 2024-05-30 조수빈 - 불러온 공지사항의 개수가 최대 개수보다 작고, 3 혹은 6의 배수가 아닐 때 남는 자리에 대한 처리
 	// 현재 한 페이지에 보여야 하는 개수와 일치하지 않는 경우 '(한 페이지에 보일 개수) - (공지사항글 개수) % (한 페이지에 보일 개수)'만큼 빈 ui 생성
+	var noticeCnt = getNoticePagePerCount(noticePortletObj.portletId);
 	if (noticeCnt && (noticeCnt.length < noticePorletPagingCnt)) {
 		var cnt = noticeCnt === null ? 0 : noticeCnt.length;
 		if (cnt % notiCount != 0) {
