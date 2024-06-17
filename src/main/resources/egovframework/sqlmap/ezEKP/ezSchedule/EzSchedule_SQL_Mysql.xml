@@ -296,7 +296,7 @@
 				b.groupname,
 				a.companyid,
 				b.groupcolor,
-				showtop
+	            showtop
         	from 
         		tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid
        		where  
@@ -2018,7 +2018,8 @@
 				contentpath,
 				b.groupname,
 				a.companyid,
-				b.groupcolor
+				b.groupcolor,
+	            showtop
         	from
         		tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid
        		where
