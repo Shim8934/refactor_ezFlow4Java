@@ -1277,11 +1277,13 @@
     		popupDiv.appendChild(formElement);
     		 
     		parent.document.getElementById("popupArea").querySelector("#noticePopupLayer").appendChild(popupDiv);
-    		
-    		parent.document.getElementById("surv_popup").style.height = wHeight - 40 + "px";
-    		parent.document.getElementById("surv_popup").style.width = wWidth - 40 + "px";
-    		parent.document.getElementById("surv_popup").style.left = wLeft + "px";
-    		parent.document.getElementById("surv_popup").style.top = wTop + "px";
+
+			// parent.document.getElementById("surv_popup").style.height = wHeight - 40 + "px";
+			parent.document.getElementById("surv_popup").style.height = wHeight + "px";
+			// parent.document.getElementById("surv_popup").style.width = wWidth - 40 + "px";
+			parent.document.getElementById("surv_popup").style.width = wWidth + "px";
+			parent.document.getElementById("surv_popup").style.left = wLeft + "px";
+			parent.document.getElementById("surv_popup").style.top = wTop + "px";
     		parent.document.getElementById("surv_popup").style.zIndex = index + 1;
     		parent.document.getElementById("surv_popup").addEventListener("click", changeZIndex);
     		parent.document.getElementById("surv_inp_noticeCheck").addEventListener("change", function() {
