@@ -559,7 +559,7 @@ public interface EzApprovalGService {
 
     public String getNonElecInfoSusinInit(String orgDocID, String companyID, int tenantID) throws Exception;
 
-    public void setNonElecRecCabID(String docID, String orgDocID, String cabinetID, String companyID, int tenantID) throws Exception;
+    public void setNonElecRecCabID(String docID, String orgDocID, String cabinetID, String companyID, int tenantID, Locale locale) throws Exception;
 
     /**
      * 결재완료문서에서 첨부파일로 쓰이는지 여부를 반환

@@ -30986,7 +30986,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public void setNonElecRecCabID(String docID, String orgDocID, String nonElecRecXML, String companyID, int tenantID) throws Exception {
+	public void setNonElecRecCabID(String docID, String orgDocID, String nonElecRecXML, String companyID, int tenantID, Locale locale) throws Exception {
 		logger.debug("setNonElecRecCabID started.");
 		Document docXML = commonUtil.convertStringToDocument(nonElecRecXML);
 		
@@ -30995,21 +30995,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 	    map.put("docID", docID);
 	    map.put("orgDocID", orgDocID);
-	    map.put("cabinetID", cabinetID);
-	    map.put("sepAttachNO", formatSepSerialNum("00"));
+	    map.put("v_CABID", cabinetID);
+	    map.put("v_SepAttachNo", formatSepSerialNum("00"));
    	    map.put("companyID", companyID);
-	    map.put("tenantID", tenantID);
+	    map.put("v_TENANTID", tenantID);
 	    
 	    ezApprovalGDAO.setNonElecRecCabID(map);
 	    
 	    if (docXML.getElementsByTagName("SEPERATEATTACH").getLength() > 0) {
 	    	int sepLength = docXML.getElementsByTagName("ROW").getLength();
-	    	
+
+            /* 2024-06-18 양지혜 - 비전자문서 > 분리첨부 > 결재 중 분리첨부 추가 시 테이블에 데이터가 반영되도록 수정 */
 	    	for (int i = 0; i < sepLength; i++) {
-	    		map.put("cabinetID", docXML.getElementsByTagName("ROWS").item(0).getChildNodes().item(i).getChildNodes().item(6).getTextContent());
-	    		map.put("sepAttachNO", formatSepSerialNum(String.valueOf(i+1)));
-	    		
-	    		ezApprovalGDAO.setNonElecRecCabID(map);
+	    		map.put("v_CABID", docXML.getElementsByTagName("ROWS").item(0).getChildNodes().item(i).getChildNodes().item(6).getTextContent());
+	    		map.put("v_SepAttachNo", formatSepSerialNum(String.valueOf(i+1)));
+                String recordID = ezApprovalGDAO.chkNonElecRec(map);
+                if (recordID.equals("existence")) { // 등록되어 있으면 update
+                    ezApprovalGDAO.setNonElecRecCabID(map);
+                } else { // 추가되었으면 insert
+                    map.put("v_DOCID", orgDocID);
+                    map.put("v_RecordID", recordID);
+                    map.put("v_REGTYPE", docXML.getElementsByTagName("ROWS").item(0).getChildNodes().item(i).getChildNodes().item(1).getTextContent());
+                    map.put("v_TITLE", docXML.getElementsByTagName("ROWS").item(0).getChildNodes().item(i).getChildNodes().item(2).getTextContent());
+                    map.put("v_NUMOFPAGE", docXML.getElementsByTagName("ROWS").item(0).getChildNodes().item(i).getChildNodes().item(3).getTextContent());
+                    map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+                    map.put("v_UserRight", "1");
+                    map.put("v_UserName2", messageSource.getMessage("ezApprovalG.hyj01", locale));
+                    map.put("v_NONELECRECYN", "Y");
+
+                    ezApprovalGDAO.insertRegSeperateAttach(map); // 분리첨부
+                    ezApprovalGDAO.insertRecRoleInfo(map);       // 기록물 권한
+                }
 	    	}
 	    }
 		

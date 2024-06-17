@@ -30728,15 +30728,15 @@
     	UPDATE 
     		TBL_SEPERATEATTACH_TEMP
     	SET
-    		CABINETID = #cabinetID#
+    		CABINETID = #v_CABID#
     	WHERE
     		DOCID = #orgDocID#
     	AND
-    		SEPERATEATTACHNO = #sepAttachNO#
+    		SEPERATEATTACHNO = #v_SepAttachNo#
     	AND 
 			COMPANYID = #companyID# 
 		AND 
-			TENANT_ID = #tenantID#
+			TENANT_ID = #v_TENANTID#
     </update>
     <update id="EzApprovalG.setEndNonElecRecDocDel" parameterClass="Map">
     	UPDATE 
@@ -36450,4 +36450,42 @@
             #companyID#
         )
     </insert>
+
+    <!-- 2024-06-18 양지혜 - 비전자문서의 분리첨부 유무 및 RECORDID 확인 -->
+    <select id = "EzApprovalG.chkNonElecRec" parameterClass="Map" resultClass="String">
+        SELECT
+            CASE
+                WHEN (
+                    SELECT
+                        COUNT(1)
+                    FROM
+                        TBL_SEPERATEATTACH_TEMP
+                    WHERE
+                        DOCID = #orgDocID#
+                      AND
+                        SEPERATEATTACHNO = #v_SepAttachNo#
+                      AND
+                        COMPANYID = #companyID#
+                      AND
+                        TENANT_ID = #v_TENANTID#
+                    ) = 0
+                THEN (
+                    SELECT
+                        RECORDID
+                    FROM
+                        TBL_SEPERATEATTACH_TEMP
+                    WHERE
+                        DOCID = #orgDocID#
+                      AND
+                        SEPERATEATTACHNO = '00'
+                      AND
+                        COMPANYID = #companyID#
+                      AND
+                        TENANT_ID = #v_TENANTID#
+                    )
+                ELSE 'existence'
+            END AS RECORDID
+        FROM
+            DUAL
+    </select>
 </sqlMap>

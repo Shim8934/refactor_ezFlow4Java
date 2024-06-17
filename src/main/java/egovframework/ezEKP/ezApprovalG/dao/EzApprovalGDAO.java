@@ -3924,4 +3924,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void insertDocAttachInfo(ApprGDocAttachInfoVO vo) throws Exception {
 		insert("EzApprovalGDAO.insertDocAttachInfo", vo);
 	}
+
+	/* 2024-06-18 양지혜 - 비전자문서의 분리첨부 유무 및 RECORDID 확인 */
+	public String chkNonElecRec(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.chkNonElecRec", map);
+	}
 }
