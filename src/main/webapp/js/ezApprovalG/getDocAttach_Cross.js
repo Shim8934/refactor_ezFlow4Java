@@ -265,7 +265,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 	
                 } else {
                     openLocation = "/ezApprovalG/contDocView.do";
-                    openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=";
+                    openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=&docAttachParent=" + escapenew(tempDocID);
                     strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
                     strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
                     strDocAttach = strDocAttach + FileName + "</a> &nbsp; ";
