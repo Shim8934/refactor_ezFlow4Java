@@ -61,6 +61,7 @@
 	        window.onload = function () {
 	        	detailView();
 				attachTagClickEvent();
+				openTagFolder("on");
 		    	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -1664,14 +1665,7 @@
                         <div class="tag_area">
                             <span>
                                 <div id="tagtitle" class="on" onclick='openTagFolder();'>
-                                    <c:choose>
-                                        <c:when test="${tags != null}">
-                                            <span class="sub_iconLNB tree_minus"></span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="sub_iconLNB tree_blank"></span>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <span class="sub_iconLNB tree_blank"></span>
                                     <span class="tag_normal" style="width: 156px; text-align: justify;"><spring:message code="ezEmail.tag" /></span>
                                 </div>
                                 <ul class="lnbUL" id="tagcontent">
