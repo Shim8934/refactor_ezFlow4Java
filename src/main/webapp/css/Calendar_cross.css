@@ -19,7 +19,7 @@
 .calendar_month table.sun td{color:#ee1c25;} /* 휴무일시 근태내용에 글씨색 변경을 없애기위해 변경*/
 .calendar_month table.sat td{color:rgb(0, 72, 149);} /* 휴무일시 근태내용에 글씨색 변경을 없애기위해 변경*/
 .calendar_month .span_list{display:block; height:69px; overflow:auto;}
-.calendar_month .td_list{table-layout:fixed; display:block; width:100%; overflow:hidden;}
+.calendar_month .td_list{table-layout:fixed; /* display:block; */ width:100%; overflow:hidden;}
 .calendar_month .td_list td{height:21px; line-height:21px; border:0 none; padding:0px 0px 0px 7px; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;}
 
 /* 개인,부서,회사 색상 */

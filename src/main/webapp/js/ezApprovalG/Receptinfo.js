@@ -776,7 +776,6 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
         GetXml += "<DATA name='AprMemberDeptName'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA10")) + "</DATA>";
         GetXml += "<DATA name='AprMemberDeptName2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA11")) + "</DATA>";
         GetXml += "<DATA name='ReceiptMemberName2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA12")) + "</DATA>";
-        //여기
 
        /* if (GetAttribute(AprDeptRow[i], "DATA12") != null)
             GetXml += "<DATA name='ReceiptMemberName2'></DATA>";
@@ -1452,7 +1451,7 @@ function event_getDeptFullTree() {
             treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
         }
         else {
-            alert(strLang249 + g_xmlHTTP.statusText);
+            alert(strLang249 + g_xmlHTTP.status);
             g_xmlHTTP = null;
         }
     }

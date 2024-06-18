@@ -6,6 +6,7 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="shortcut icon" href="/images/favicon.ico">
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <%-- 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css"> --%>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">

@@ -394,7 +394,6 @@ function GetTableMiniBodyObj() {
     return oTbody;
 }
 
-// 그냥 Top 전용함수 똑같은거 하나 더 만듬
 function GetTableMiniBodyObjTop() {
     var year = document.getElementById("iYearTop").value;
     var month = parseInt(document.getElementById("iMonTop").value);
@@ -455,7 +454,6 @@ function GetTableMiniBodyObjTop() {
     //Month Start
     for (var i = 0; i < 6; i++) {
         var objTr = document.createElement("TR");
-        //이거 그냥 이름정해놓고 그대로 갖다 쓰는거 같은데 TR뒤에 TOP만 붙여봄
         objTr.setAttribute("id", "TR_TOP" + oThisMonth + "_" + i);
 
         for (var j = 0; j < 7; j++) {
@@ -515,7 +513,6 @@ function MonthMiniData(oThisDate) {
     }
 
     var oDiv = document.createElement("DIV");
-    //이건 This라서 그대로 써도 될것같다
     oDiv.setAttribute("onclick", "DayOnMouseClick(this);");
 //    oDiv.setAttribute("ondblclick", "MonthMiniDbClick()");
 

@@ -98,7 +98,7 @@
 	                    treeView.DataBind("TreeView");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
+	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.status);
 	                    xmlHTTP = null;
 	                }
 	            }

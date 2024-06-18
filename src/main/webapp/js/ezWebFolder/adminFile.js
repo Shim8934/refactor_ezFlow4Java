@@ -320,9 +320,33 @@ function fileDownload() {
 	var filesList = getCheckedRowInfo();
 	
 	if (filesList == null) {alert(strLang38); return;}
-	
-	var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
-	AttachDownFrame.location.href = downloadUrl;
+
+    $.ajax({
+        type: "POST",
+        url: "/ezWebFolder/checkPermission_y.do",
+        data: {
+            "fileList" : filesList.toString(),
+            "folderList" : ""
+        },
+        dataType: "JSON",
+        async: true,
+        success : function(data) {
+            var result = data.status;
+
+            if (result != "ok" && data.code == "3") {
+                alert(messages.strLang25);
+            } else if (data.code == "1") {
+                alert(messages.strLang7);
+            } else {
+                var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
+                AttachDownFrame.location.href = downloadUrl;
+            }
+        },
+        error : function(error) {
+            alert(messages.strLang7 + error);
+        }
+    });
+
 }
 
 function fileUpload() {

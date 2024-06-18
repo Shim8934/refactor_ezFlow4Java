@@ -38,9 +38,7 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzNewPortalDAO")
 public class EzNewPortalDAO extends EgovAbstractDAO {
-	
-	/* 박종균 시작 */
-	
+		
 	// 공지사항 리스트
 	@SuppressWarnings("unchecked")
 	public List<BoardListVO> getNoticePortletList (Map<String, Object> map) throws Exception {
@@ -115,8 +113,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void insertUserUsedPortlet(Map<String, Object> map) throws Exception {
 		insert("ezNewPortal.insertUserUsedPortlet", map);
 	}
-	
-	/* 박종균 끝 */
 	
 	/**
 	 * 유은정
@@ -344,7 +340,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (int) select("ezNewPortal.getThemeId", map);
 	}
 	
-	//여기서부터 관리잔데 걍 다만들고 dao옮기자
 	@SuppressWarnings("unchecked")
 	public List<ThemeInfoVO> getCompanyThemes(Map<String, Object> map) throws Exception {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getCompanyThemes", map);
@@ -576,7 +571,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<String> getCityCodeList(String primaryLang) {
-		// TODO Auto-generated method stub
 		return (List<String>) list("ezNewPortal.getCityCodeList", primaryLang);
 	}
 
@@ -590,7 +584,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getWeather(Map<String, Object> map) {
-		// TODO Auto-generated method stub
 		return (Map<String, Object>) select("ezNewPortal.getWeather", map);
 	}
 

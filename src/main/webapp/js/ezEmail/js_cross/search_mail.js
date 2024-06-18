@@ -146,6 +146,7 @@ function selafterBlock_one() {
 //skyblue0o0 - end
 
 function start_search() {
+    searchMode = true;
     listContentArry = new Array();
     listEventCheckbox = false;
     PressShiftKey = false;
@@ -165,7 +166,7 @@ function start_search() {
     var sYear, sMonth, sDay, eYear, eMonth, eDay, sTime, eTime;
     var i;
     var bError = false;
-    var startDate = "", endDate = "";
+    //var startDate = "", endDate = "";
 
     if (usepostDate) {
         startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
@@ -378,7 +379,7 @@ function resultView(xmlDoc) {
     var tempText;
     var webserver;
 
-    var fromemail, datereceived, parentname, subject, importance, fromname, hasattachment, read, href, displayto, ItemClass, Size, Flag;
+    var fromemail, datereceived, parentname, subject, importance, fromname, hasattachment, read, href, displayto, ItemClass, Size, Flag, msgto;
 
     var ChildCnt = 0;
     
@@ -445,6 +446,7 @@ function resultView(xmlDoc) {
     resultTable.id = "maillist";
     resultTable.className = "mainlist";
     resultTable.style.width = "100%";
+    resultTable.setAttribute("maxcount",totalCount);
 
     resultTD.innerHTML = "";
     resultTD.appendChild(resultTable);
@@ -453,7 +455,7 @@ function resultView(xmlDoc) {
     var XmlRows = SelectNodes(xmlDoc, "DATA/ROWS/ROW");
     var loopCount = XmlRows.length;
     recordCount = totalCount;
-    
+
     for (i = 0; i < loopCount; i++) {
         fromemail = SelectSingleNodeValue(XmlRows[i], "FROMEMAIL");
         datereceived = SelectSingleNodeValue(XmlRows[i], "DATERECEIVED");
@@ -466,6 +468,7 @@ function resultView(xmlDoc) {
         securemail = SelectSingleNodeValue(XmlRows[i], "SECUREMAIL");
         id = SelectSingleNodeValue(XmlRows[i], "ITEMID");
         displayto = SelectSingleNodeValue(XmlRows[i], "DISPLAYTO");
+        msgto = SelectSingleNodeValue(XmlRows[i], "MSGTO");
         ItemClass = SelectSingleNodeValue(XmlRows[i], "CONTENTCLASS");
         Size = SelectSingleNodeValue(XmlRows[i], "SIZE");
         Flag = SelectSingleNodeValue(XmlRows[i], "FLAG");
@@ -531,7 +534,7 @@ function resultView(xmlDoc) {
         preparedTD(tr, "26px", "center", "middle", tempText, "", "", true);
 
         if (tofromname.innerText == strLang160) {
-            preparedTD(tr, "100px", "left", "middle", fromname, fromname, 1, false, readStyle);
+            preparedTD(tr, "100px", "left", "middle", fromname, msgto, 1, false, readStyle);
             tr.recvFrom = fromname;
         } else {
             preparedTD(tr, "100px", "left", "middle", displayto, displayto, 1, false);
@@ -917,4 +920,82 @@ function event_toggle_flag_end() {
     } else {
     	start_search();
     }
+}
+
+function searchedMailExportZip() {
+    var ContentObject = document.getElementById("maillist");
+    var attachStatus = "all";
+	var andorStatus = "and";
+	var end = parseInt(ContentObject.getAttribute("maxcount"));
+	var maxCount = end;
+	socketUserkey = mailbox_getUserKey();
+
+    if(document.querySelector("input[name=attachment]:checked").value != null ){
+        attachStatus = document.querySelector("input[name=attachment]:checked").value;
+    }
+
+    if(document.querySelector("input[name=andor]:checked").value != null ){
+        andorStatus = document.querySelector("input[name=andor]:checked").value;
+    }
+
+	for (var i = 0 ; i < searchCArray.length; i++ ){
+        searchKArray[i] = ReplaceText(searchKArray[i], "&", "&amp;");
+        searchKArray[i] = ReplaceText(searchKArray[i], "<", "&lt;");
+        searchKArray[i] = ReplaceText(searchKArray[i], ">", "&gt;");
+        searchKArray[i] = ReplaceText(searchKArray[i], "'", "''");
+        searchRequiredKeyword.push(searchKArray[i]);
+        searchRequiredCategory.push(searchCArray[i]);
+    }
+
+	var jsonData = {"MAILFOLDER" : document.getElementById('select2').value,
+					"KEYWORD" : searchRequiredKeyword,
+					"CATEGORY" : searchRequiredCategory,
+					"STARTDATE" : startDate,
+					"ENDDATE" : endDate,
+					"ATTACHSTATUS" : attachStatus,
+					"ANDORSTATUS" : andorStatus,
+					"SHAREID" : shareId,
+					"MAXCOUNT" : maxCount,
+					"USERKEY" : socketUserkey
+					};
+
+    var _url = "/ezEmail/searchedMailExportZipForAll.do";
+
+ 	ShowMailProgressNew();
+	ShowPercent(0);
+	mailboxProgressFun(true, socketUserkey);
+
+	$.ajax({
+		cache: false,
+		method: "post",
+		url: _url,
+		data: JSON.stringify(jsonData),
+		contentType : "application/json",
+		complete: function(){
+			HiddenMailProgress();
+		},
+		success: function(result){
+			if (result == "CANCEL") {
+				console.log('User Cancel');
+			} else if (result != "") {
+				var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + "";
+
+				if (typeof(shareId) != "undefined" && shareId != "") {
+					fullpath += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+
+				AttachDownFrame.location.href = fullpath;
+				AttachDownFrame.target = "_blank";
+			} else {
+				alert(strLang104);
+			}
+		},
+		error: function() {
+			alert(strLang321);
+		},
+		complete : function() {
+        	HiddenMailProgressNew();
+            mailboxProgressFun(false); // progress percent
+		}
+	});
 }

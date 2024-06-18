@@ -2012,19 +2012,6 @@ public class EzNewPortalGWController {
 			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 			String lang = "";
 			
-			// 2020-04-28 jwseo99 이거 안 쓰는 것 같음 왜 이런 코드를? 
-			// 이 주석이 내년 21년 될 때 까지 오류가 안 난다면 걍 폐기한다
-			/* if (userId == null) {
-				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
-				primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-				lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
-				
-				if (lang == null || lang.equals("")) {
-					lang = "1";
-				}
-				
-				result.put("lang", lang);
-			} else { */
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 			tenantId = userInfo.getTenantId();
@@ -2155,7 +2142,7 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			//이효진 jsonParam 캐스팅 잘되면 냅두고 안되면 나중에 고쳐야지
+
 			JSONParser jp = new JSONParser();
 			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
 			
@@ -3169,9 +3156,9 @@ public class EzNewPortalGWController {
 				PortalBoardTreeVO boardInfo= boardTree.get(i);
 				
 				if (lang.equals("")) {
-					boardInfo.setText(boardInfo.getBoardName1());
+					boardInfo.setText(boardInfo.getBoardName1().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("</", "&lt;/"));
 				} else {
-					boardInfo.setText(boardInfo.getBoardName2());
+					boardInfo.setText(boardInfo.getBoardName2().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("</", "&lt;/"));
 				}
 				
 				if (!boardInfo.getParent().equals("top")) {

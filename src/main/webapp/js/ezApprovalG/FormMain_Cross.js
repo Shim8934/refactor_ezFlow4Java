@@ -229,7 +229,6 @@ function MakeFormInfoXML_Detail() {
     formOptTypeAtr = formOptArr.join(",");
 
     createNodeAndInsertText(xmlpara, objNode, "APPROPTION", formOptTypeAtr);    
-    //      
 
     return getXmlString(xmlpara.childNodes[0]);
 }

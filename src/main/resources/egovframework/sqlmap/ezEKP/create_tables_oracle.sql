@@ -1787,19 +1787,6 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"COMPANYID" VARCHAR2(20 BYTE)
    ) ;
 --------------------------------------------------------
---  DDL for Table TBL_APRDRAFTALLGROUP
---------------------------------------------------------
-
-  CREATE TABLE "TBL_APRDRAFTALLGROUP" 
-   (	"MAINDOCID" CHAR(20 CHAR), 
-	"SUBDOCID" CHAR(20 CHAR), 
-	"TENANT_ID" NUMBER(5,0), 
-	"COMPANYID" VARCHAR2(20 BYTE), 
-	"ORDERNUM" NUMBER(5,0), 
-	"CREATEDATE" DATE, 
-	"APRMEMBERID" VARCHAR2(100 CHAR)
-   ) ;
---------------------------------------------------------
 --  DDL for Table TBL_APRLINEINFO
 --------------------------------------------------------
 
@@ -6478,7 +6465,8 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"BRD_UPPER2" NVARCHAR2(4), 
 	"APPROVEFLAG" NCHAR(1) DEFAULT TO_NCHAR('0'), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
-	"RETURNFLAG" NCHAR(1) DEFAULT TO_NCHAR('0')
+	"RETURNFLAG" NCHAR(1) DEFAULT TO_NCHAR('0'),
+    "REPEATFLAG" NCHAR(1) DEFAULT TO_NCHAR('1')
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_RS_FAVORITE
@@ -8954,6 +8942,8 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE INDEX "IDX_JAMES_MAIL_USERFLAG" ON "JAMES_MAIL_USERFLAG" ("MAILBOX_ID", "MAIL_UID") 
+  ;
+  CREATE INDEX "JAMES_MAIL_USERFLAG_NAME_IDX" ON "JAMES_MAIL_USERFLAG" ("USERFLAG_NAME")
   ;
 --------------------------------------------------------
 --  DDL for Index IDX_JAMES_PROPERTY_LINE_NUMBER
@@ -17879,20 +17869,14 @@ END;
 --  Ref Constraints for Table JAMES_MAIL_PROPERTY
 --------------------------------------------------------
 
-  ALTER TABLE "JAMES_MAIL_PROPERTY" ADD FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE DEFERRABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JAMES_MAIL_SEARCH
 --------------------------------------------------------
 
-  ALTER TABLE "JAMES_MAIL_SEARCH" ADD CONSTRAINT "TMP_JAMES_MAIL_SEARCH_FK1" FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE ENABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JAMES_MAIL_USERFLAG
 --------------------------------------------------------
 
-  ALTER TABLE "JAMES_MAIL_USERFLAG" ADD FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE DEFERRABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JMOCHA_DISTRIBUTION
 --------------------------------------------------------
@@ -17933,8 +17917,6 @@ END;
 --  Ref Constraints for Table JMOCHA_MAIL_SECURE
 --------------------------------------------------------
 
-  ALTER TABLE "JMOCHA_MAIL_SECURE" ADD CONSTRAINT "FK_JMOCHA_MAIL_SECURE" FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE ENABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JMOCHA_MAIL_SECURE_READ
 --------------------------------------------------------

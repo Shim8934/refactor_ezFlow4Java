@@ -84,9 +84,17 @@
 			// 배부대장 문서 진행/완료 여부 플래그 (APR/END)
 			var docAprEnd = "<c:out value ='${docAprEnd}'/>";
 
+			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
+			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
+			
+			// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
+
+			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
+
 		    $(function () {
 		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
-			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
+			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 		    		QuitWindow();
 			    }
 			    
@@ -110,7 +118,6 @@
 					}
 					var val = parseInt($("#selectImg option:selected").val());
 					var divImg = $("#message").contents().find(".divImg");
-					$(divImg).children().css("zoom",100+"%");
 					var pages = $(divImg).children().length;
 					if(selectOp==1){
 						for(var i=1; i<=pages; i++){
@@ -131,20 +138,16 @@
 						var selectNum = $("#message").contents().find(".divImg").find(".imgDiv").index();
 						$("#selectImg option:eq("+ selectNum +")").prop('selected', true);
 					}
-					
-					var imgMove = $("#message").contents().find(".divImg").find(".imgDiv");
-					$(imgMove).find(".office-image").css("zoom", 100+"%");
-					if(imgMove.length == 0){
-						$("#zoomIn").css("display","none");
-						$("#zoomOut").css("display","none");
-						$("#zoomReset").css("display","none");
-						$("#prev").css("display","none");
-						$("#next").css("display","none");
-						$("#prevAll").css("display","none");
-						$("#nextAll").css("display","none");
-						$("#selectImg").css("display","none");
-						$("#all").attr("src", "/images/icviewer_downsize.png");
-						
+
+					if(divImg.length > 0){
+					    imgTag = divImg.find("img").get(0);
+                        if(typeof imgTag != "undefined"){
+                            imgTag.onload = function() {
+                                officeImgExist = true;
+                            }
+                        }
+                        setTimeout(satImgCheck,3000);
+
 					}
 				});
 		      	
@@ -204,22 +207,61 @@
                     btnClose_onclick();
 		        }
 		    }
+			/* 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴 */
+			function getAprOrEndStr() {
+				var result = "";
+
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getAprOrEndStr.do",
+					data : {
+						docID : pDocID,
+						orgCompanyID : orgCompanyID
+					},
+					success: function(text){
+						result = text;
+					}
+				});
+
+				return result;
+			}
 		    function CheckOpinionInfo() {
 		    	var result = "";
-		    	
-		    	$.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezApprovalG/getEndOpinionInfo.do",
-		    		data : {
-		    			docID : pDocID,
-		    			orgCompanyID : orgCompanyID
-		    		},
-		    		success: function(xml){
-		    			result = loadXMLString(xml);
-		    		}
-		    	});
+		    	var url = "";
+		    	var sendData = "";
+				var aprOrEndStr = getAprOrEndStr();
+				if (aprOrEndStr == "APR") {
+					$.ajax({
+						type: "POST",
+						dataType: "text",
+						async: false,
+						url: "/ezApprovalG/opinionRequest.do",
+						data: {
+							docID: pDocID,
+							orgCompanyID: orgCompanyID,
+							state : aprOrEndStr
+						},
+						success: function (xml) {
+							result = loadXMLString(xml);
+						}
+					});
+				} else {
+					$.ajax({
+						type: "POST",
+						dataType: "text",
+						async: false,
+						url: "/ezApprovalG/getEndOpinionInfo.do",
+						data: {
+							docID: pDocID,
+							orgCompanyID: orgCompanyID
+						},
+						success: function (xml) {
+							result = loadXMLString(xml);
+						}
+					});
+				}
 		
 		        Resultxml = result;
 		
@@ -265,6 +307,8 @@
 		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" +"<spring:message code='ezApprovalG.t170'/>";
 		            OpenInformationUI(pInformationContent, btnOpinion_onclick_Complete);
 		        }
+		        
+		        checkHeaderAction();
 		    }
 	
 		    function btnOpinion_onclick_Complete(Ans) {
@@ -278,7 +322,8 @@
 		
 		    var PrtBodyContent;
 		    function btnPrint_onclick() {
-		        PrintClick("Cross", pDocID, "END");
+		        headerAction("open");
+		    	PrintClick("Cross", pDocID, "END");
 		    }
 		    function btnClose_onclick() {	    
                 window.close();
@@ -383,7 +428,8 @@
 
 			// 2018-07-10 황윤호
 		    function btnMail_onclick() {	   
-		    	if(hasOpinion) {
+		    	headerAction("open");
+				if(hasOpinion) {
 		    		SendMailClick("Cross", pDocID, "END");
 		    	} else {
 		    		attachAppr();
@@ -439,12 +485,12 @@
 		    function btnDocInfo_onclick() {
 		        ezdocinfog_view_cross_dialogArguments[0] = "";
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
-		
+
                 // 2023-10-16 전인하 - 전자결재G > 기록물배부대장 > 배부대장 문서정보 오류
                 // 문서정보를 무조건 완료문서 DB에서 가져와, 진행문서를 배부대장에서 조회하는 경우 발생하는 문서정보 조회불가 현상을 수정함
                 var initFlag = docAprEnd == "APR" ? "APR" : "END";
 		        //DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END"); 문서정보 새로 구현해서 주석
-		        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + initFlag);
+		        DivPopUpShow(430, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + initFlag);
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
@@ -948,14 +994,47 @@
 
 			window.onbeforeunload = function () {
 				try {
-					if ((window.opener.g_sFlag == undefined) || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01")) {
-						// 전자결재 > 완료문서, 기록물등록대장에만 적용 되도록 조건 추가
+					if ((window.opener.g_sFlag == undefined && isDocAttach == "false") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "docShare")) {
+						// 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
 						window.opener.openergetDocInfo();
 					} else {
 						return;
 					}
 				} catch (e) { }
 			}
+			
+			function checkHeaderAction() {
+				if (useHideHeaderArea == "YES" && message.GetListItem(message.GetFieldsList(), "headerArea") != null) {
+					document.getElementById("headerTabTR").style.display = "";
+					$('#headerMenu').hover(function() {
+						$('#headerMenu').css('border-bottom', '3px black solid');
+						$('#headerHide').css({'color':'black', 'font-weight':'bold'});
+					}, function() {
+						$('#headerMenu').css('border-bottom', 'solid 1px #eaeaea');
+						$('#headerHide').css({'color':'#8f8e93', 'font-weight':'normal'});
+					}) 
+				} else if (document.getElementById("headerTabTR") != null) {
+					document.getElementById("headerTabTR").style.display = "none";
+				}
+			}
+			
+			function headerAction(action) {
+	    		if (useHideHeaderArea == "YES") {
+	    			var fields = message.GetFieldsList();
+		    	    var field = message.GetListItem(fields, "headerArea");
+		    	    
+		    	    if (field) {
+		    	        if (field.style.display == "none" || action == "open") {
+		    	        	field.style.display = "";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 숨기기";
+		    	        } else {
+		    	            field.style.display = "none";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 펼치기";
+		    	        }
+		    	    }
+	    		}
+	    	}
+			
 		</script>
 	</head>
 	<body class="popup" style="OVERFLOW:hidden;height:100%">
@@ -1000,6 +1079,17 @@
 		        </ul>
 		      </div></td>
 		  </tr>
+			<c:if test="${useHideHeaderArea == 'YES'}">
+			  <tr id="headerTabTR" style="display:none;">
+				<td>
+					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
+						<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
+							<span id="headerHide" style="color:#8f8e93; font-size:14px;">헤더 숨기기</span>
+						</div>
+					  </div>
+				</td>
+			  </tr>
+			</c:if>
 		  <tr>
 		    <td style="padding-bottom:10px;height:90%"> 
 		          <iframe id="message" name="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" style="width: 100%; height:100%" src="ConDocViewContent.do" frameborder="0"></iframe>                

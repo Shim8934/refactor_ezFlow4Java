@@ -449,7 +449,7 @@
 	                treeView = null;
 	            }
 	            else {
-	                alert("<spring:message code='ezTask.t193' />" + g_xmlHTTP.statusText)
+	                alert("<spring:message code='ezTask.t193' />" + g_xmlHTTP.status)
 	                g_xmlHTTP = null;
 	            }
 	        }

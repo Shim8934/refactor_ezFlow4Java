@@ -98,7 +98,7 @@
 				success:function(data) {
 					makeDlList(data);
 				}, error:function(er) {
-					alert("<spring:message code='ezEmail.t574' />" + er.status + er.statusText);
+					alert("<spring:message code='ezEmail.t574' />" + er.status);
 				}
 			})
 		}

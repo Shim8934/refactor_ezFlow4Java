@@ -1256,6 +1256,10 @@
 		        if (rtn[0] == "TRUE") {
 		            g_SepAttachLVXml = rtn[1];
 		            SetDocumentElement("sepattachlvxml", g_SepAttachLVXml);
+		            
+		            if (pDraftFlag == "REDRAFT") {
+		            	GetHTML(before_saveFile);	            	
+		            }
 		        }
 			}
 			
@@ -1633,7 +1637,7 @@
 		    	if (result != "N") {
 		    		chk_Passwd();
 		    	} else {
-		    		 if (IsSkipDrafter == "FALSE") {
+		    		 if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
 	                    //var ret;
 	                    var parameter = new Array();
 	
@@ -1731,7 +1735,7 @@
                     return;
                 }
 	    		
-	    		if (IsSkipDrafter == "FALSE") {
+	    		if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
                 	//if (nonElecRec != "Y") {
 	                    //var ret;
 	                    var parameter = new Array();
@@ -1882,6 +1886,11 @@
 
 				var numberFormat = message3.GetFieldText("docnumber");
 				message.PutFieldText("docnumber", getDocNumByFormat(numberFormat));
+			}
+			
+			function before_saveFile(html) {
+				pSaveHtml = html;
+				SaveFile();
 			}
 	    </script>
 	</head>

@@ -25,6 +25,11 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.streaming.SXSSFCell;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -601,7 +606,8 @@ public class EzEmailAdminController {
 				// 화면에 보여줄 값들을 정렬하기 위해 distributionSortList에 데이터를 담아주는 반복문
 				for (int i = 0; i < resultArray.size(); i++) {
 					JSONObject address = (JSONObject) resultArray.get(i);
-					String pCn = (String) address.get("cn"); // 공용배포그룹 주소
+					String pCn = (String) address.get("cn"); // 메일 주소
+					String primaryMail = (String) address.get("primaryMail"); // primary 메일주소
 					String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
 					String pClass = (String) address.get("class");
 					String displayName = (String) address.get("displayName");
@@ -634,7 +640,7 @@ public class EzEmailAdminController {
 						} else {	// 공용배포그룹일 때
 							map.put("CLASS", "distribution");
 							map.put("DISPLAYNAME", commonUtil.cleanValue(displayName));
-							map.put("MAIL", commonUtil.cleanValue(cn));
+							map.put("MAIL", commonUtil.cleanValue(primaryMail));
 							map.put("COMPANY", "");
 							map.put("DEPT", egovMessageSource.getMessage("ezEmail.t57", locale));
 							map.put("TITLE", "");
@@ -657,7 +663,7 @@ public class EzEmailAdminController {
 							
 							distributionSortList.add(map);
 							
-						} else {	// 직위, 직책
+						} else if (pCn.substring(0,1).equalsIgnoreCase("_")) {	// 직위, 직책
 							String jobId = pCn.split("__")[1]; // 직위,직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
 							OrganJobVO jobVO = ezOrganAdminService.getTitleByJobID(jobId, userLang, userInfo.getTenantId());
 							
@@ -1044,6 +1050,201 @@ public class EzEmailAdminController {
 		return returnData;
 	}
 
+
+	/**
+	 * 공용배포그룹 엑셀 다운로드 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/mailExcelExportDistributionList.do", method = RequestMethod.GET)
+	@ResponseBody
+	public void mailExcelExportDistributionList(@CookieValue("loginCookie") String loginCookie, 
+												  HttpServletRequest request, 
+												  HttpServletResponse response, 
+												  Locale locale) throws Exception {
+		
+		logger.debug("mailExcelExportDistributionList started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		int tenantId = userInfo.getTenantId();
+		String primaryLang = userInfo.getPrimary();
+		String userLang = userInfo.getPrimary();
+		String companyId = request.getParameter("companyID");
+		String[] dvGroupList = request.getParameterValues("dvGroupList");
+		List<Map<String, String>> mailDistributionList = new ArrayList<>();
+
+		for(int i=0; i<dvGroupList.length; i++) {
+			String mail = null;
+			String dlName = null;
+			String dlCn = dvGroupList[i];
+			JSONArray resultArray = null;
+			JSONObject responseObj = ezEmailService.getDistributionMemberList(domain, dlCn);
+			List<Map<String, String>> mailDistributionSortList = new ArrayList<>();
+
+			if (responseObj != null) {
+				String resultCode = (String) responseObj.get("resultCode");
+
+				if (resultCode.equalsIgnoreCase("OK")) {
+					resultArray = (JSONArray) responseObj.get("result");
+					mail = (String) responseObj.get("mail");
+					dlName = (String) responseObj.get("dlName");
+				}
+			}
+
+			for (int j = 0; j < resultArray.size(); j++) {
+				JSONObject info = (JSONObject) resultArray.get(j);
+				String pCn = (String) info.get("cn"); // 메일주소
+				String primaryMail = (String) info.get("primaryMail"); // primary 메일주소
+				String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
+				String pClass = (String) info.get("class");
+				String displayName = (String) info.get("displayName");
+
+				if (domain.equals(pCnDomain)) {
+					pCn = pCn.substring(0, pCn.indexOf("@"));
+				} else {
+					pClass = "distributionSub";
+				}
+
+				Map<String, String> map = new HashMap<>();
+				map.put("DLCN", dlCn); // 공용배포그룹 ID
+				map.put("DLNM", dlName); // 공용배포그룹 이름
+				map.put("DLMAIL", mail); // 공용배포그룹 Mail
+
+				if ("group".equals(pClass)) { // 부서, 공용배포그룹
+					map.put("CN", pCn);
+					map.put("MAIL", primaryMail);
+					map.put("DISPLAYNAME", displayName);
+					mailDistributionSortList.add(map);
+
+				} else if ("user".equals(pClass)) { // user or jobmst
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, primaryLang, tenantId);
+
+					if (user != null) {    // 사원
+						map.put("CN", pCn);
+						map.put("DISPLAYNAME", user.getDisplayName());
+						map.put("MAIL", user.getMail());
+						mailDistributionSortList.add(map);
+					} else if (pCn.substring(0,1).equalsIgnoreCase("_")) {	// 직위, 직책
+						String jobId = pCn.split("__")[1]; // 직위,직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
+						OrganJobVO jobVO = ezOrganAdminService.getTitleByJobID(jobId, userLang, tenantId);
+
+						String jobType = jobVO.getType(); // 001직위, 002직책
+						String jobMail = pCn + "@" + pCnDomain;
+						String jobTitle = jobType.equals("001") ? "main.t77" : "ezPersonal.t175";
+
+						if (jobVO != null && !"".equals(jobVO.getJobID())) {    // 겸직
+							map.put("CN", jobVO.getJobID());
+							map.put("DISPLAYNAME", jobVO.getDisplayName());
+							map.put("MAIL", jobMail);
+							mailDistributionSortList.add(map);
+						}
+					}
+
+				} else {    // 주소록, 직접입력(distribution_sub에서 가져오기)
+					MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(dlCn, pCn, companyId, userInfo.getTenantId());
+
+					if (distributionSubVO != null) {
+						map.put("CN", pCn);
+						map.put("DISPLAYNAME", distributionSubVO.getName());
+						map.put("MAIL", distributionSubVO.getMail());
+						mailDistributionSortList.add(map);
+					}
+				}
+			}
+
+			mailDistributionSortList.sort(Comparator.comparing((Map<String, String> map) -> map.get("DISPLAYNAME")));
+		
+			for (Map<String, String> map : mailDistributionSortList) {
+				Map<String, String> newMap = new HashMap<>(map);
+				mailDistributionList.add(newMap);
+			}
+			
+		}
+
+		/* 엑셀 생성 */
+		try (SXSSFWorkbook workbook = new SXSSFWorkbook()) {
+			SXSSFSheet sheet = workbook.createSheet("MailDistributionList");
+			SXSSFRow row = null;
+			SXSSFCell cell = null;
+			String[] dlHeaderArr = egovMessageSource.getMessage("ezEmail.khj01", locale).split(";");
+			CellStyle headerStyle = workbook.createCellStyle();
+			CellStyle bodyStyle = workbook.createCellStyle();
+
+			String fileName = "MailDistributionList";
+			
+			// 시트 기본 열 넓이
+			for(int c = 0 ; c < dlHeaderArr.length; c++){
+				sheet.isColumnTrackedForAutoSizing(c);
+				sheet.setColumnWidth(c, (sheet.getColumnWidth(c))+4000); //너비 더 넓게
+			}
+
+			// 폰트 설정
+			Font font = workbook.createFont();
+			font.setFontHeightInPoints((short) 11);
+			font.setBold(Boolean.TRUE);
+			headerStyle.setFont(font);
+
+			// 헤더 스타일
+			headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(CellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(CellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(CellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(CellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment((short) 1);
+
+			// 바디 스타일
+			bodyStyle.setBorderBottom(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(CellStyle.BORDER_THIN);
+
+			// 헤더 삽입
+			row = sheet.createRow(0);
+			for (int head = 0; head < dlHeaderArr.length; head++) {
+				cell = row.createCell(head);
+				cell.setCellStyle(headerStyle);
+				cell.setCellValue(dlHeaderArr[head]);
+			}
+
+			// 바디 입력
+			for (int nRow = 1; nRow < mailDistributionList.toArray().length + 1; nRow++) {
+				row = sheet.createRow(nRow);
+
+				Map<String, String> distributionSortGetI = mailDistributionList.get(nRow -1);
+
+				String dlId = distributionSortGetI.get("DLCN");
+				String dlNm = distributionSortGetI.get("DLNM");
+				String dlMail = distributionSortGetI.get("DLMAIL");
+				String userId = distributionSortGetI.get("CN");
+				String userNm = distributionSortGetI.get("DISPLAYNAME");
+				String userMail = distributionSortGetI.get("MAIL");
+
+
+				String[] distributionList =  {dlId, dlNm, dlMail, userId, userNm, userMail};
+
+				for (int nCell = 0; nCell < dlHeaderArr.length; nCell++) {
+					cell = row.createCell(nCell);
+					cell.setCellStyle(bodyStyle);
+					cell.setCellValue(distributionList[nCell]);
+				}
+			}
+
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xlsx");
+			response.setContentType("application/vnd.ms-excel");
+
+			workbook.write(response.getOutputStream());
+			workbook.close();
+
+			logger.debug("mailExcelExportDistributionList ended.");
+		} 
+		
+		catch (IllegalArgumentException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 
 	/**
 	 * 메일 기본설정 (관리자) 화면 호출 함수

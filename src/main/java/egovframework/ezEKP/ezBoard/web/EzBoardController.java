@@ -433,7 +433,7 @@ public class EzBoardController extends EgovFileMngUtil{
         if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
         	memoFlag = "YES";
         }
-        else {	// 개발 끝나면 NO로 변경
+        else {
         	memoFlag = "NO";
         }
         
@@ -2393,7 +2393,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getSearchQuery().indexOf("SEARCHSUBBOARD;") != -1) {
 			boardVO.setSubFlag("Y");
 		}
-		//혜정 추가
+		
 		if (boardVO.getSearchQuery().indexOf("SEARCHSUBSUBBOARD;") != -1) {
 			boardVO.setSubFlag("YY");
 		}
@@ -2405,7 +2405,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getSearchQuery().indexOf("SEARCHALLBOARD;") != -1) {
 			boardVO.setSubFlag("A");
 		}
-		//혜정 끝
 		
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
 			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
@@ -2451,7 +2450,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else if (boardVO.getBoardType().equals("A")) {
 			boardXML = getSearchApprListItemXML(userInfo, boardVO);
 		} else {
-			//혜정  추가
 			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) {
 				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO);
 			} else {
@@ -3992,6 +3990,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String browser = ClientUtil.getClientInfo(request, "browser");
 		String orgCompanyID = request.getParameter("orgCompanyID");
+		/* 2024-05-21 김유진 - 일정 > 게시판 게시에 사용 */
+		String scheduleId = request.getParameter("scheduleId") != null ? request.getParameter("scheduleId") : "";
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
@@ -4252,7 +4252,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("HwpSecurityNum", HwpSecurityNum);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
-		
+		model.addAttribute("scheduleId", scheduleId);
+
 		logger.debug("newBoardItem ended");
 		return requestURL;
 	}
@@ -7716,7 +7717,84 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("uploadApprovFile ended");
 		return strXML;
 	}
-	
+
+	/**
+	 * 게시판 게시판게시하기 일정 첨부파일업로드 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/uploadScheduleFile.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String uploadScheduleFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody String xmlPara) throws Exception {
+		logger.debug("uploadScheduleFile started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String strXML = "<ROOT><NODES>";
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+
+		String boardID = commonUtil.detectPathTraversal(xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent());
+		String realPath = commonUtil.getRealPath(request);
+		int cnt = xmlDom.getElementsByTagName("ROW").getLength();
+
+		String[] fileNames = new String[cnt];
+		String[] fileSizes = new String[cnt];
+		String[] fileLocations = new String[cnt];
+		String[] uploadSN = new String[cnt];
+		String[] downUrl = new String[cnt];
+
+		for (int k = 0; k < cnt; k++) {
+			fileNames[k] = xmlDom.getElementsByTagName("FILENAME").item(k).getTextContent();
+			fileLocations[k] = xmlDom.getElementsByTagName("FILEPATH").item(k).getTextContent();
+			fileSizes[k] = xmlDom.getElementsByTagName("FILESIZE").item(k).getTextContent();
+			uploadSN[k] = "{" + UUID.randomUUID().toString() + "}";
+		}
+
+		String dirPath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath2 = realPath + commonUtil.getUploadPath("upload_schedule.ROOT", userInfo.getTenantId());
+
+		File file = new File(dirPath + boardID);
+
+		if (!file.exists()) {
+			file.mkdirs();
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
+		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+		}
+
+		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+
+		for (int k = 0; k < cnt; k++) {
+			String fileName = fileNames[k];
+			String fileLocation = fileLocations[k];
+			String fileSize = fileSizes[k];
+			String puploadSN;
+			String uploadLocation;
+
+			fileLocation = commonUtil.detectPathTraversal(fileLocations[k]);
+
+			int extIndex = fileLocation.lastIndexOf(".");
+			String fileExt = fileLocation.substring(extIndex);
+			fileName = commonUtil.getUniqueFileName(fileNames[k], fileNameMap);
+			file = new File(dirPath2 + commonUtil.separator + fileLocation);
+			uploadLocation = dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName;
+			puploadSN = uploadSN[k] + "_" + fileName;
+
+			if (file.exists()) {
+				FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(uploadLocation)));
+			}
+
+			strXML += "<NODE><PUPLOADSN><![CDATA[" + puploadSN + "]]></PUPLOADSN>";
+			strXML += "<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>";
+			strXML += "<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>";
+			strXML += "<FILESIZE>" + fileSize + "</FILESIZE>";
+			strXML += "<FILELOCATION><![CDATA[" + uploadLocation + "]]></FILELOCATION>";
+			strXML += "</NODE>";
+		}
+
+		strXML += "</NODES></ROOT>";
+
+		logger.debug("uploadScheduleFile ended");
+		return strXML;
+	}
 	/**
 	 * 포탈 포토갤러리 포틀릿 표출 Method
 	 */

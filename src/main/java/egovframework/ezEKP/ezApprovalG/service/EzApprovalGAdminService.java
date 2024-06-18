@@ -86,7 +86,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskHistory(String taskCode, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID) throws Exception;
+	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID, String title, String code, String flag, String orderOption1, String orderOption2) throws Exception;
 	
 	public String getSealList(String realPath, String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 
@@ -271,5 +271,5 @@ public interface EzApprovalGAdminService {
 	public int cloneMultipleCabinets(String regYear, List<Map<String, Object>> cabinetList, String strLang, String companyID, int tenantID) throws Exception;
 	
 	/* 2024-04-05 전인하 - 전자결재G > 기록물관리 > 단위업무 관리 > 총 단위업무 갯수 카운트 호출 */
-	public int getTaskListCount(String deptCode, String companyID, int tenantID) throws Exception;
+	public int getTaskListCount(String deptCode, String companyID, int tenantID, String title, String code, String flag) throws Exception;
 }

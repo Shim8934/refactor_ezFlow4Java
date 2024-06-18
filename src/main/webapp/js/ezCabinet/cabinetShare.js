@@ -457,8 +457,8 @@ var CabinetShareItem = function() {
 	function addDeptToShareList() {
 		var selectedTable = document.getElementById("sharedTable");
 		var organTreeElmt = document.getElementById("treeView");
-		var selectedNode  = organTreeElmt.querySelector("span[class='selectedNode']");
-		if (!selectedNode) {alert(CabinetMessages.strError); return;}
+		var selectedNode  = organTreeElmt.querySelector("span.selectedNode");
+		if (!selectedNode) {alert(CabinetMessages.strLangLYJEx01); return;}
 		
 		var deptName      = selectedNode.textContent;
 		var deptId        = selectedNode.getAttribute("role");

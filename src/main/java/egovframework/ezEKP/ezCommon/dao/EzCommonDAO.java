@@ -1992,4 +1992,56 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterFileNameForWebfolderHistory");
 		}
 	}
+	
+	/** 2023-06-26 한태훈 - 통합 PC 저장 이력 남기는 tbl_total_history 테이블 만들기(차후 다른 목적으로도 쓰일 수 있음.) */
+	public void createTblTotalHistory() {
+		try {
+			select("EzCommonDAO.chkTblTotalHistory");
+		} catch (Exception e) {
+			logger.debug("TBL_TOTAL_HISTORY table doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblTotalHistory");
+		}
+	}
+
+	/* 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부 */
+	public void insertdelAttachByOthersConfing(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkDelAttachByOthersConfing", map);
+
+		if (propertyValue == null) {				
+			logger.debug("delAttachByOthers tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertDelAttachByOthersConfing", map);
+		}
+	}
+
+	// 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+	public void alterRepeatFlagForResourceInfo() {
+		try {
+			select(("EzCommonDAO.checkRepeatFlagColumnForResourceInfo"));
+		} catch (Exception e) {
+			logger.debug("TBL_RS_BRD REPEATFLAG column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterRepeatFlagForResourceInfo");
+		}
+	}
+	
+	// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부 테넌트 컨피그 추가
+	public void insertUseHideHeaderArea(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkUseHideHeaderArea", map);
+		
+		if (propertyValue == null) {
+			logger.debug("useHideHeaderArea tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseHideHeaderArea", map);
+		}
+	}
+
+	/* 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 */
+	public void insertApprNonElecRecTypeConfing(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkApprNonElecRecTypeConfing", map);
+
+		if (propertyValue == null) {
+			logger.debug("apprNonElecRecType tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertApprNonElecRecTypeConfing", map);
+		}
+	}
 }

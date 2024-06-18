@@ -672,7 +672,6 @@
 			 function saveSuSinDocInfo(html) {
 		     	pOrgHtml = html;
 	          	var rtnval = true;
-	              //mht는 G일때만 수신채번하게 되잇는데
                 rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
                 if (!rtnval) {
                     UndoSignInfo(rtnSignInfo);
@@ -1006,9 +1005,6 @@
 			          window.opener.Refresh_Window();
 			      }
 			      catch (e) { }
-			
-			      //사용하지 않는게 좋을듯 엑티브엑스를 이용하여 템프파일 생성 후 지우는거 
-// 			      DeleteLocalFiles();
 			  }
 		
 			  function DeleteLocalFiles() {

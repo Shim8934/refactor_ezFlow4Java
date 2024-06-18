@@ -1570,9 +1570,9 @@
 			    	</td> 
 			  	</tr> 
 			</table> 
-			<!-- 2023-09-06 조소정 - 참석자 일정조회 및 취소 버튼 추가 -->
+			<!-- 2023-09-06 조소정 - 그룹 구성원 일정조회 및 취소 버튼 추가 -->
 			<div class="btnposition btnpositionNew">
-				<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="margin-left: -125px;"><span><spring:message code='ezSchedule.t123' /></span></a>
+				<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="margin-left: -125px;"><span><spring:message code='ezSchedule.groupSchedule.csj01' /></span></a>
 			    <a class="imgbtn" onClick="close_onclick()"><span><spring:message code='ezSchedule.t4' /></span></a>
 			    <a class="imgbtn" onClick="window.close()" ><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>

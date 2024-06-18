@@ -234,3 +234,186 @@ var nowZoom = 100;
 				}
 			
 
+            var imgTag;
+            var officeImgExist = false;
+			function satImgCheck(){
+			    if(!officeImgExist){
+                    var tmpsrc = imgTag.src;
+                    var formData = new FormData();
+                    formData.append("docId", pDocID);
+                    formData.append("tenantId", tenantID);
+                    formData.append("companyId", orgCompanyID);
+                    formData.append("userId", pUserID);
+                    const regex = /fileext=([^&]*)/;
+                    const match = tmpsrc.match(regex);
+                    formData.append("ext", match[1]);
+                    $.ajax({
+                        type : "post",
+                        data : formData,
+                        url : "/ezApprovalG/officeUpload.do",
+                        processData: false,
+                        contentType: false,
+                        success : function(result) {
+                            setConvertedImg(result);
+                            officeSaveFile();
+                        },
+                        error : function() {
+                            alert("변환에 실패하였습니다.");
+                        }
+                    });
+			    }
+			}
+
+			function officeSaveFile() {
+				var result = "";
+				var mhtBody = "";
+				mhtBody = message.Get_EditorBodyHTML();
+				officeEmbedContentIntoXML(mhtBody);
+				mhtBody = ConvertHTMLtoMHT(mhtBody);
+
+				var data = {
+					docID : pDocID,
+					html  : mhtBody,
+					orgCompanyID : orgCompanyID
+				}
+
+				var url = location.href.indexOf("contDocView") == -1 ? "/ezApprovalG/saveFile.do" : "/ezApprovalG/saveEndFile.do";
+
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : url,
+					contentType : "application/json",
+					data : JSON.stringify(data),
+					success: function(text){
+						result = text;
+					}
+				});
+
+				return result;
+			}
+
+			function officeEmbedContentIntoXML(bodyhtml) {
+				var tempDiv = document.createElement("DIV");
+				tempDiv.innerHTML = bodyhtml;
+
+				var imgColl = tempDiv.getElementsByTagName("IMG");
+				for (var i = 0; i < imgColl.length; i++) {
+					if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 && !imgColl.item(i).src.toLowerCase().indexOf(".tmp")) {
+						var OrgSrc = imgColl.item(i).src;
+						var ImgHeight = "0";
+						var ImgWidth = "0";
+						if (imgColl.item(i).outerHTML.toLowerCase().match(/width="?([^>'"]+)['"]/) == null) {
+							if (imgColl.item(i).style.width != "")
+								ImgWidth = imgColl.item(i).style.width.replace("px", "");
+							if (imgColl.item(i).style.height != "")
+								ImgHeight = imgColl.item(i).style.height.replace("px", "");
+						}
+						else {
+							var result = imgColl.item(i).outerHTML.toLowerCase().match(/width="?([^>'"]+)['"]/);
+							if (result.length == 2)
+								ImgWidth = result[1];
+							var result = imgColl.item(i).outerHTML.toLowerCase().match(/height="?([^>'"]+)['"]/);
+							if (result.length == 2)
+								ImgHeight = result[1];
+						}
+						officeConvertSaveImageFile(OrgSrc, ImgWidth, ImgHeight);
+					}
+				}
+				return bodyhtml;
+			}
+
+			function officeConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
+				$.ajax({
+					url : "/ezCommon/convertSaveImage.do",
+					type : "POST",
+					async : false,
+					data : {
+						"url" : encodeURI(pUrl),
+						"height" : pImgHeight,
+						"width" : pImgWidth,
+						"type" : 2
+					}
+				});
+			}
+
+			function setConvertedImg(convertedImgInfo) {
+				var divLength = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
+				if(divLength >0){
+					$("#message").contents().find(".divImg").remove();
+					var body = parent.document.getElementById("message").contentWindow.document.getElementById("body");
+					var divImg = body.getElementsByClassName("divImg");
+					$(divImg).remove();
+				}
+				var div = document.createElement('div');
+				$(div).addClass("divImg");
+				$(div).css("overflow", "hidden");
+				parent.document.getElementById("message").contentWindow.document.getElementById("body").appendChild(div);
+
+				var imgURL = convertedImgInfo;
+
+				// 2021-01-14 이혁진 이미지 URL 가공
+				var pagesIndexOf = imgURL.indexOf("pages");
+				var pagesURL = imgURL.substr(pagesIndexOf);
+				var pagesIndexOf2 = pagesURL.indexOf("&");
+				var pagesURL2 = pagesURL.substr(0, pagesIndexOf2);
+				var pagesIndexOf3 = pagesURL2.indexOf("=")+1;
+				var pages = pagesURL2.substr(pagesIndexOf3); // PDF 페이지 수
+
+				var fileIndexOf = imgURL.indexOf("filename");  // 이미지 filenm을 for문에서 대입해서 넣어주기위해 이미지URL을 자르기 위한 index값
+				var fileURL = imgURL.substr(fileIndexOf);
+				var fileIndexOf2 = fileURL.indexOf(".png");
+
+				var imgURLF = imgURL.substr(0, fileIndexOf); // 이미지URL 이미지 순서 정해지기 전
+				var imgURLL = fileURL.substr(fileIndexOf2); // 이미지URL 이미지 순서 정해진 후
+
+				var body = $(parent.document).find('body');
+				var selectBox = body.find("#selectImg");
+				$(selectBox).children('option').remove();
+				for(var i = 1; i <= pages; i++) {
+					var imgSrc = document.createElement('img');
+					var fileNm;
+
+					if(i<10){
+						fileNm = "filename=0000" + i;
+					}else if(i<100){
+						fileNm = "filename=000" + i;
+					}else{
+						fileNm = "filename=00" + i;
+					}
+
+					imgSrc.src = imgURLF + fileNm + imgURLL;
+					imgSrc.style.width = "654px";
+					imgSrc.style.border = "1px solid rgb(200, 200, 200)";
+					imgSrc.style.boxSizing = "border-box";
+					$(imgSrc).addClass("office-image");
+					$(imgSrc).css("position", "relative");
+					$(imgSrc).attr("z-index", 100);
+
+
+					imgDiv = document.createElement('div');
+					$(imgDiv).css("overflow", "hidden");
+					$(imgDiv).css("page-break-before", "always");
+					$(imgDiv).css("text-align", "center");
+
+					if(i>1){
+						$(imgDiv).css("display", "none");
+					}else{
+						$(imgDiv).addClass("imgDiv");
+					}
+
+
+					if(i == pages) {
+						$(imgDiv).css("page-break-after", "always");
+					}
+					imgDiv.appendChild(imgSrc);
+					div.appendChild(imgDiv);
+
+					if(i <= pages){
+						$(selectBox).append("<option value='" + i + "'>" + i +" / "+pages+ " Page</option>");
+					}
+				}
+				var imgMove = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("office-image");
+				officeBtn.style.display = "";
+			}

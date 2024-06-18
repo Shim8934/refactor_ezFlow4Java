@@ -125,7 +125,7 @@
 										  FROM 
 											 VAPRDOINGDOCLIST 
 										]]>
-										<isEqual property="v_LISTTYPE" compareValue="1">
+										<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 											LEFT OUTER JOIN
 												TBL_APRDOCGROUPINFO GRP
 											ON
@@ -136,7 +136,7 @@
 												VAPRDOINGDOCLIST.DOCID = GRP.DOCID
 										</isEqual>
 										  WHERE 
-										  <isEqual property="v_LISTTYPE" compareValue="1">
+										  <isEqual property="v_ISDOORREJECTFG" compareValue="true">
 <!-- 					      					 aprmemberid IN ($v_USERIDS$)  -->
 					      					 aprmemberid = #v_USERID# 
 										  </isEqual>
@@ -145,13 +145,27 @@
 										  </isEqual>
 										  <![CDATA[
 					      				  AND 
-					      					 aprtype <> '015'  
+					      					 aprtype <> '015'
+										  ]]>
+										  <isEqual property="v_LISTTYPE" compareValue="1">
+                                          <![CDATA[
+                                          AND
+											FUNCTIONTYPE <> '004'
+                                          ]]>
+                                          </isEqual>
+                                          <isEqual property="v_LISTTYPE" compareValue="24">
+                                          <![CDATA[
+										  AND
+                                          	FUNCTIONTYPE = '004'
+                                          ]]>
+                                          </isEqual>
+                                            <![CDATA[
 					      				  AND 
 					      					 VAPRDOINGDOCLIST.tenant_id = #v_TENANTID#
 					      				  AND
 											VAPRDOINGDOCLIST.COMPANYID = #companyID#
 						      				]]>
-											<isEqual property="v_LISTTYPE" compareValue="1">
+											<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 										AND
 					      					IFNULL(GRP.TABSN, 1) = 1
 										GROUP BY
@@ -176,7 +190,7 @@
 									]]>
 										  FROM 
 											 VENDCHAMJODOCINFO 
-										<isEqual property="v_LISTTYPE" compareValue="1">
+										<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 											LEFT OUTER JOIN
 												TBL_APRDOCGROUPINFO GRP
 											ON
@@ -187,7 +201,7 @@
 												VENDCHAMJODOCINFO.DOCID = GRP.DOCID
 										</isEqual>
 										  WHERE 
-										  <isEqual property="v_LISTTYPE" compareValue="1">
+										  <isEqual property="v_ISDOORREJECTFG" compareValue="true">
 <!-- 					      					 aprmemberid IN ($v_USERIDS$)  -->
 					      					 aprmemberid = #v_USERID# 
 										  </isEqual>
@@ -196,13 +210,27 @@
 										  </isEqual>
 										  <![CDATA[ 
 					      				  AND 
-					      					aprtype <> '015'  
+					      					aprtype <> '015'
+										  ]]>
+                                            <isEqual property="v_LISTTYPE" compareValue="1">
+                                            <![CDATA[
+                                            AND
+                                                FUNCTIONTYPE <> '004'
+                                            ]]>
+                                            </isEqual>
+                                            <isEqual property="v_LISTTYPE" compareValue="24">
+                                            <![CDATA[
+                                            AND
+                                                FUNCTIONTYPE = '004'
+                                            ]]>
+                                            </isEqual>
+                                            <![CDATA[
 					      				  AND 
 					      					VENDCHAMJODOCINFO.tenant_id = #v_TENANTID#
 					      				  AND
 											VENDCHAMJODOCINFO.COMPANYID = #companyID#
 					      					]]>
-										<isEqual property="v_LISTTYPE" compareValue="1">
+										<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 											AND
 												IFNULL(GRP.TABSN, 1) = 1
 											GROUP BY
@@ -216,7 +244,7 @@
 							      		 	$v_SPSUBQUERY$
 				      					</isGreaterThan>
 			      					<!-- 부재자설정한 유저의 결재할문서 리스트 -->
-									<isEqual property="v_LISTTYPE" compareValue="1"> 
+									<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 									<isNotEmpty property="proxyList">
 									<iterate property="proxyList">
 									UNION ALL
@@ -245,6 +273,20 @@
 										<![CDATA[
 										AND 
 											APRTYPE <> '015'
+                                        ]]>
+                                        <isEqual property="v_LISTTYPE" compareValue="1">
+                                            <![CDATA[
+                                            AND
+                                                FUNCTIONTYPE <> '004'
+                                            ]]>
+                                        </isEqual>
+                                        <isEqual property="v_LISTTYPE" compareValue="24">
+                                            <![CDATA[
+                                            AND
+                                                FUNCTIONTYPE = '004'
+                                            ]]>
+                                        </isEqual>
+                                        <![CDATA[
 										AND
 											VAPRDOINGDOCLIST.TENANT_ID = #v_TENANTID#
 										AND
@@ -287,6 +329,20 @@
                 							APRMEMBERJOBTITLE = #proxyList[].title#
 										AND 
 											APRTYPE <> '015'
+								]]>
+                                        <isEqual property="v_LISTTYPE" compareValue="1">
+                                            <![CDATA[
+                                            AND
+                                                FUNCTIONTYPE <> '004'
+                                            ]]>
+                                        </isEqual>
+                                        <isEqual property="v_LISTTYPE" compareValue="24">
+                                            <![CDATA[
+                                            AND
+                                                FUNCTIONTYPE = '004'
+                                            ]]>
+                                        </isEqual>
+                                    <![CDATA[
 										AND
 											VENDCHAMJODOCINFO.TENANT_ID = #v_TENANTID#
 										AND
@@ -396,6 +452,8 @@
 		         						APRTYPE <> '015' 
 		         					AND 
 		         						DocState <> '017'
+                                    AND
+		         					    FUNCTIONTYPE <> '004'
 		         					AND 
 					      				VAPRWILLDOCLIST.TENANT_ID = #v_TENANTID# 
 					      			AND
@@ -550,6 +608,8 @@
 							<![CDATA[
 									AND
 			            				AprType <> '015'
+			            			AND
+			            			    FUNCTIONTYPE <> '004'
 			            	]]>
 			            			AND 
 					      				VAPRWILLDOCLIST.TENANT_ID = #v_TENANTID# 
@@ -958,64 +1018,69 @@
 							* 
 						FROM 
 							(
-								SELECT  
-									A.SN, 
-									CONCAT(A.OWNERID, '@', A.SN) AS DOCID ,
-									A.FORMID,
-									A.ORGDOCID, 
-		                     		A.DOCTYPE,
-		                     		A.DOCSTATE,
-		                     		A.FUNCTIONTYPE,
-		                     		A.HREF,
-		                     		A.DOCTITLE,
-		                     		A.DOCNO,
-		                     		A.HASATTACHYN, 
-		                     		A.HASOPINIONYN, 
-		                     		A.STARTDATE,
-		                     		A.ENDDATE,
-		                     		A.WRITERID,
-		                     		A.WRITERNAME,
-		                     		A.WRITERJOBTITLE,	
-		                     		A.WRITERDEPTID,
-		                     		A.WRITERDEPTNAME,
-		                     		A.ISPUBLIC,
-		                     		A.WriterName2, 
-		                     		A.WriterJobTitle2, 
-		                     		A.WriterDeptName2,
-		                     		B.FORMNAME, 
-		                     		B.FORMNAME2,
-		                     		B.URGENTAPPROVAL
-		                     FROM
-		                     	  TBL_TMPAPRDOCINFO A  
-		                     INNER JOIN 
-		                         TBL_TMPEXPAPRDOCINFO B  
-		                     ON 
-		                         A.OWNERID = B.OWNERID
-		                     AND 
-		                     	 A.TENANT_ID = B.TENANT_ID
-		                     AND
-		                     	 A.COMPANYID = B.COMPANYID
-		                     AND 
-		                     	 A.SN = B.SN
-							LEFT OUTER JOIN
-								TBL_APRDOCGROUPINFO GRP
-							ON
-								A.TENANT_ID = GRP.TENANT_ID
-							AND
-								A.COMPANYID = GRP.COMPANYID
-							AND
-								CONCAT(A.OWNERID, '@', A.SN) = GRP.DOCID
-		                     WHERE 
-		                         A.OWNERID= #v_USERID#
-		                     AND 
-		                     	A.TENANT_ID = #v_TENANTID#
-		                     AND
-								A.COMPANYID = #companyID#
-							AND
-								IFNULL(GRP.TABSN, 1) = 1
+								SELECT
+								    *
+								FROM
+								    (
+                                        SELECT
+                                            A.SN,
+                                            CONCAT(A.OWNERID, '@', A.SN) AS DOCID ,
+                                            A.FORMID,
+                                            A.ORGDOCID,
+                                            A.DOCTYPE,
+                                            A.DOCSTATE,
+                                            A.FUNCTIONTYPE,
+                                            A.HREF,
+                                            A.DOCTITLE,
+                                            A.DOCNO,
+                                            A.HASATTACHYN,
+                                            A.HASOPINIONYN,
+                                            A.STARTDATE,
+                                            A.ENDDATE,
+                                            A.WRITERID,
+                                            A.WRITERNAME,
+                                            A.WRITERJOBTITLE,
+                                            A.WRITERDEPTID,
+                                            A.WRITERDEPTNAME,
+                                            A.ISPUBLIC,
+                                            A.WriterName2,
+                                            A.WriterJobTitle2,
+                                            A.WriterDeptName2,
+                                            B.FORMNAME,
+                                            B.FORMNAME2,
+                                            B.URGENTAPPROVAL
+                                     FROM
+                                          TBL_TMPAPRDOCINFO A
+                                     INNER JOIN
+                                         TBL_TMPEXPAPRDOCINFO B
+                                     ON
+                                         A.OWNERID = B.OWNERID
+                                     AND
+                                         A.TENANT_ID = B.TENANT_ID
+                                     AND
+                                         A.COMPANYID = B.COMPANYID
+                                     AND
+                                         A.SN = B.SN
+                                    LEFT OUTER JOIN
+                                        TBL_APRDOCGROUPINFO GRP
+                                    ON
+                                        A.TENANT_ID = GRP.TENANT_ID
+                                    AND
+                                        A.COMPANYID = GRP.COMPANYID
+                                    AND
+                                        CONCAT(A.OWNERID, '@', A.SN) = GRP.DOCID
+                                     WHERE
+                                         A.OWNERID= #v_USERID#
+                                     AND
+                                        A.TENANT_ID = #v_TENANTID#
+                                     AND
+                                        A.COMPANYID = #companyID#
+                                    AND
+                                        IFNULL(GRP.TABSN, 1) = 1
+		                       ) E
                  ]]>
 		                 <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
-			      		 	AND 
+                             WHERE
 			      		 		$v_SPSUBQUERY$
 			      		</isGreaterThan>
 			      		<isNotEmpty property="v_ORDEROPTION"> 
@@ -1076,6 +1141,7 @@
 							<isNotEqual property="v_LISTTYPE" compareValue="10">
 								<isNotEqual property="v_LISTTYPE" compareValue="21">
 									<isNotEqual property="v_LISTTYPE" compareValue="11">
+                                        <isNotEqual property="v_LISTTYPE" compareValue="24">
 									<![CDATA[
 									SELECT 
 										* 
@@ -1176,6 +1242,7 @@
 															LIMIT #v_PAGESIZE2#
 															)D 
 															]]>
+                                        </isNotEqual>
 									</isNotEqual>
                      			</isNotEqual>
                      		</isNotEqual>
@@ -4913,21 +4980,31 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getLineTempletDetailInfo" parameterClass="Map" resultClass="ApprGLineTempletVO">
 		SELECT 
-		  * 
+	        A.*,
+            CASE
+                WHEN B.CN IS NULL THEN 'N'
+		        ELSE 'Y'
+		    END AS RETIRECHK
 		FROM 
-		  TBL_LINTEMPLETDETAIL 
+		    TBL_LINTEMPLETDETAIL A
+		LEFT OUTER JOIN
+		    TBL_USERMASTER_RETIRE B
+		ON
+            A.APRMEMBERID = B.CN
+        AND
+            A.TENANT_ID = B.TENANT_ID
 		WHERE  
-		  FORMID = #v_FORMID#
+		    A.FORMID = #v_FORMID#
 		AND 
-		  USERID = #v_USERID#
+		    A.USERID = #v_USERID#
 		AND 
-		  APRLINESN = #v_APRLINESN#
+		    A.APRLINESN = #v_APRLINESN#
 		AND
-		  TENANT_ID = #v_TENANTID#
+		    A.TENANT_ID = #v_TENANTID#
 		AND
-		  COMPANYID = #companyID#
+		    A.COMPANYID = #companyID#
 		ORDER BY 
-		  APRMEMBERSN 
+		    A.APRMEMBERSN
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormInfoDetail" parameterClass="Map" resultClass="ApprGFormVO"> -->
@@ -5035,9 +5112,16 @@
 	             NULL PROCESSDATE  ,
 	             NULL REASONDONOTAPPROV  ,
 	             'N' ISPROPOSERYN  ,
-	             'N' ISBRIEFUSERYN  
+	             'N' ISBRIEFUSERYN,
+                 B.CN
 	        FROM 
-	        	 TBL_LINTEMPLETDETAIL 
+	        	 TBL_LINTEMPLETDETAIL A
+	        LEFT OUTER JOIN
+                 TBL_USERMASTER_RETIRE B
+            ON
+                 A.APRMEMBERID = B.CN
+            AND
+                 A.TENANT_ID = B.TENANT_ID
 	        WHERE  
 	        	 USERID = #v_USERID#
 	        AND 
@@ -5045,11 +5129,13 @@
 	        AND 
 	        	 APRLINESN = #v_APRLINESN#
 	        AND 
-	        	 TENANT_ID = #v_TENANTID#
+	        	 A.TENANT_ID = #v_TENANTID#
 	        AND
         		 COMPANYID = #companyID#
+	        AND
+                 B.CN IS NULL
 	        ORDER BY 
-	        	  APRMEMBERSN DESC 
+	        	 APRMEMBERSN DESC
 	</select>
 <!-- 	<procedure id="EzApprovalG.getReceiptTempletInfo" parameterClass="Map" resultClass="ApprGDeptTempletVO"> -->
 <!-- 		{CALL EZSP_GETRECEIPTTEMPLETINFO(#v_FORMID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -5089,22 +5175,41 @@
 <!-- 		{CALL EZSP_GETRECEIPTTEMPLETDETAILIF(#v_FORMID#, #v_USERID#, #v_APRDEPTSN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getReceiptTempletDetailInfo" parameterClass="Map" resultClass="ApprGDeptTempletVO">
-		 SELECT 
-		 	* 
-	     FROM 
-	     	TBL_DEPTTEMPLETDETAIL 
-	     WHERE  
-	     	TRIM(FORMID) = #v_FORMID#
-	     AND 
-	     	USERID = #v_USERID#
-	     AND 
-	     	APRDEPTSN = #v_APRDEPTSN#
+		 SELECT
+            A.*,
+            D.DEPT_CD_PATH,
+            CASE
+                WHEN B.CN IS NULL THEN 'N'
+                ELSE 'Y'
+            END AS RETIRECHK
+         FROM 
+	     	TBL_DEPTTEMPLETDETAIL A
+	     INNER JOIN
+	     	TBL_DEPTMASTER D
+	     ON
+	        A.APRMEMBERDEPTID = D.CN
+         AND
+	        A.APRMEMBERDEPTNAME = D.DISPLAYNAME
 	     AND
-	     	TENANT_ID = #v_TENANTID#
+	        A.TENANT_ID = D.TENANT_ID
+         LEFT OUTER JOIN
+            TBL_USERMASTER_RETIRE B
+         ON
+            A.APRMEMBERID = B.CN
+         AND
+            A.TENANT_ID = B.TENANT_ID
+         WHERE  
+	     	TRIM(A.FORMID) = #v_FORMID#
+	     AND 
+	     	A.USERID = #v_USERID#
+	     AND 
+	     	A.APRDEPTSN = #v_APRDEPTSN#
 	     AND
-       		COMPANYID = #companyID#
+	     	A.TENANT_ID = #v_TENANTID#
+	     AND
+       		A.COMPANYID = #companyID#
 	     ORDER BY 
-	     	APRDEPTMEMBERSN DESC
+	     	A.APRDEPTMEMBERSN
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTempListDB" parameterClass="Map" resultClass="ApprGAdminReceiveVO" remapResults="true"> -->
@@ -5204,21 +5309,41 @@
 		            APRMEMBERNAME2 RECEIPTMEMBERNAME2  ,
 		            APRMEMBERJOBTITLE RECEIPTMEMBERJOBTITLE  ,
 		            APRMEMBERJOBTITLE2 RECEIPTMEMBERJOBTITLE2  ,
-		            NULL PROCESSDATE  
-		     FROM
-		      		TBL_DEPTTEMPLETDETAIL 
-		     WHERE  
-		     		USERID = #v_USERID#
-		     AND 
-		     		FORMID = #v_FORMID#
-		     AND 
-		     		APRDEPTSN = #v_APRDEPTSN#
-		     AND
-		     		TENANT_ID = #v_TENANTID#
-		     AND
-		     		COMPANYID = #companyID#
-		     ORDER BY 
-		     		APRDEPTMEMBERSN DESC
+		            NULL PROCESSDATE,
+                    D.DEPT_CD_PATH,
+                    B.CN
+            FROM
+                TBL_DEPTTEMPLETDETAIL A
+            INNER JOIN
+                TBL_DEPTMASTER D
+            ON
+                A.APRMEMBERDEPTID = D.CN
+            AND
+                A.APRMEMBERDEPTNAME = D.DISPLAYNAME
+            AND
+                A.TENANT_ID = D.TENANT_ID
+            LEFT OUTER JOIN
+                TBL_USERMASTER_RETIRE B
+            ON
+                A.APRMEMBERID = B.CN
+            AND
+                A.TENANT_ID = B.TENANT_ID
+		    WHERE
+		     	A.USERID = #v_USERID#
+		    AND
+		     	A.FORMID = #v_FORMID#
+		    AND
+		     	A.APRDEPTSN = #v_APRDEPTSN#
+		    AND
+		     	A.TENANT_ID = #v_TENANTID#
+		    AND
+		     	A.COMPANYID = #companyID#
+            AND
+		        D.DEPT_CD_PATH NOT LIKE '%trash_dept_%'
+		    AND
+		        B.CN IS NULL
+		    ORDER BY
+		     	APRDEPTMEMBERSN DESC
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
@@ -13140,7 +13265,7 @@
 				VAPRDOINGDOCLIST 
 		]]>
 		<!-- 2022-02-11 홍승비 - 일괄기안인 경우, 결재할문서 조인 분기 추가 -->
-		<isEqual property="v_LISTTYPE" compareValue="1">
+		<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 			LEFT OUTER JOIN
 				TBL_APRDOCGROUPINFO GRP
 			ON
@@ -13151,7 +13276,7 @@
 				VAPRDOINGDOCLIST.DOCID = GRP.DOCID
 		</isEqual>
 			WHERE 
-			<isEqual property="v_LISTTYPE" compareValue="1">
+			<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 <!-- 				APRMEMBERID IN ($v_USERIDS$) -->
 					aprmemberid = #v_USERID# 
 			</isEqual>
@@ -13161,12 +13286,26 @@
 			<![CDATA[
 			AND 
 				APRTYPE <> '015'
+			]]>
+			<isEqual property="v_LISTTYPE" compareValue="1">
+                <![CDATA[
+			    AND
+				    FUNCTIONTYPE <> '004'
+			    ]]>
+			</isEqual>
+			<isEqual property="v_LISTTYPE" compareValue="24">
+                <![CDATA[
+                AND
+				    FUNCTIONTYPE = '004'
+			    ]]>
+            </isEqual>
+            <![CDATA[
 			AND
 				VAPRDOINGDOCLIST.TENANT_ID = #v_TENANTID#
 			AND
 				VAPRDOINGDOCLIST.COMPANYID = #companyID#
 			]]>
-			<isEqual property="v_LISTTYPE" compareValue="1">
+			<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 					AND
 						IFNULL(GRP.TABSN, 1) = 1
 			</isEqual>
@@ -13178,7 +13317,7 @@
 			FROM 
 				VENDCHAMJODOCINFO 
 			]]>
-		<isEqual property="v_LISTTYPE" compareValue="1">
+		<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 			LEFT OUTER JOIN
 				TBL_APRDOCGROUPINFO GRP
 			ON
@@ -13189,7 +13328,7 @@
 				VENDCHAMJODOCINFO.DOCID = GRP.DOCID
 		</isEqual>
 			WHERE 
-			<isEqual property="v_LISTTYPE" compareValue="1">
+			<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 <!-- 				APRMEMBERID IN ($v_USERIDS$) -->
 					aprmemberid = #v_USERID# 
 			</isEqual>
@@ -13199,17 +13338,31 @@
 			<![CDATA[ 
 			AND 
 				APRTYPE <> '015'
+			]]>
+            <isEqual property="v_LISTTYPE" compareValue="1">
+                <![CDATA[
+			    AND
+				    FUNCTIONTYPE <> '004'
+			    ]]>
+            </isEqual>
+            <isEqual property="v_LISTTYPE" compareValue="24">
+                <![CDATA[
+                AND
+				    FUNCTIONTYPE = '004'
+			    ]]>
+            </isEqual>
+            <![CDATA[
 			AND
 				VENDCHAMJODOCINFO.TENANT_ID = #v_TENANTID#
 			AND
 				VENDCHAMJODOCINFO.COMPANYID = #companyID#
 				]]>
-			<isEqual property="v_LISTTYPE" compareValue="1">
+			<isEqual property="v_ISDOORREJECTFG" compareValue="true">
                     AND
                     	IFNULL(GRP.TABSN, 1) = 1
 			</isEqual>
 			<!-- 부재자설정한 유저의 결재할문서 리스트 -->
-			<isEqual property="v_LISTTYPE" compareValue="1"> 
+			<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 			<isNotEmpty property="proxyList">
 			<iterate property="proxyList">
 			UNION ALL
@@ -13235,6 +13388,20 @@
 			<![CDATA[
 			AND 
 				APRTYPE <> '015'
+            ]]>
+            <isEqual property="v_LISTTYPE" compareValue="1">
+            <![CDATA[
+            AND
+                FUNCTIONTYPE <> '004'
+            ]]>
+            </isEqual>
+            <isEqual property="v_LISTTYPE" compareValue="24">
+            <![CDATA[
+            AND
+                FUNCTIONTYPE = '004'
+            ]]>
+            </isEqual>
+            <![CDATA[
 			AND
 				VAPRDOINGDOCLIST.TENANT_ID = #v_TENANTID#
 			AND
@@ -13263,6 +13430,20 @@
    				APRMEMBERJOBTITLE = #proxyList[].title#
 			AND 
 				APRTYPE <> '015'
+            ]]>
+            <isEqual property="v_LISTTYPE" compareValue="1">
+            <![CDATA[
+            AND
+                FUNCTIONTYPE <> '004'
+            ]]>
+            </isEqual>
+            <isEqual property="v_LISTTYPE" compareValue="24">
+            <![CDATA[
+            AND
+                FUNCTIONTYPE = '004'
+            ]]>
+            </isEqual>
+            <![CDATA[
 			AND
 				VENDCHAMJODOCINFO.TENANT_ID = #v_TENANTID#
 			AND
@@ -13305,6 +13486,8 @@
          		APRTYPE <> '015' 
          	AND 
          		DocState <> '017'
+         	AND
+         	    FUNCTIONTYPE <> '004'
          	AND
 				VAPRWILLDOCLIST.TENANT_ID = #v_TENANTID#
 			AND
@@ -13364,7 +13547,9 @@
            	AND 
            		AprType <> '015'
            	AND 
-         		DocState <> '017' 
+         		DocState <> '017'
+           	AND
+           	    FUNCTIONTYPE <> '004'
           ]]>
           <isEqual property="MineViewYN" compareValue="YES">
 			AND	    
@@ -13634,6 +13819,7 @@
 		<isNotEqual property="v_LISTTYPE" compareValue="10">	
 		<isNotEqual property="v_LISTTYPE" compareValue="21">
 		<isNotEqual property="v_LISTTYPE" compareValue="11">
+        <isNotEqual property="v_LISTTYPE" compareValue="24">
 			SELECT 
 				COUNT(DOCID) 
 			FROM (
@@ -13711,6 +13897,7 @@
 					) AS B
 					WHERE 
 						1 = 1
+        </isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
@@ -22690,11 +22877,12 @@
              ORGDOCNUMCODE ,
              SEPERATEATTACHXML ,
              SUMMARY ,
-             SECURITYAPPROVAL 
-        FROM 
-        	 TBL_EXPENDAPRDOCINFO 
+             SECURITYAPPROVAL ,
+             PUBLICITYYN
+        FROM
+        	 TBL_EXPENDAPRDOCINFO
         WHERE  
-         	 DOCID = #v_DOCID#
+         	 DOCID = #v_orgDocID#
         AND
         	 TENANT_ID = #v_TENANTID#
         AND
@@ -32628,12 +32816,19 @@
 		SELECT 
 			*
 		FROM (SELECT
-				SUM(CASE WHEN 
-						(A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005') AND A.APRTYPE != '015')
+				SUM(CASE WHEN
+						(A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005') AND A.APRTYPE != '015' AND A.functiontype != '004')
 					OR
-						(A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015')
+						(A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015' AND A.functiontype != '004')
 					THEN A.COUNT ELSE 0 END
 				) AS 'count1', <!-- 결재할 문서, 공람문서는 제외한다. AprType <> ''015'' -->
+                <!-- 2023-03-13 양지혜 - 반송된문서함 추가 > 결재할문서에서 반송 상태 제외-->
+                SUM(CASE WHEN
+                        (A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005') AND A.APRTYPE != '015' AND A.functiontype = '004')
+                    OR
+                        (A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015' AND A.functiontype = '004')
+                    THEN A.COUNT ELSE 0 END
+                ) AS 'count24', <!-- 2023-03-22 양지혜 - 반송된문서함 카운트 쿼리 추가 -->
 	        	(
        	<![CDATA[
         	SELECT 
@@ -32653,7 +32848,9 @@
            	AND 
            		AprType != '015'
            	AND 
-         		DocState != '017'      
+         		DocState != '017'
+            AND
+                FUNCTIONTYPE <> '004'
       		]]>    
           <isEqual property="MineViewYN" compareValue="YES">
 			AND	    
@@ -32765,6 +32962,8 @@
 				L.`APRMEMBERID` = #v_USERID#	  
 	   		AND 
 	   			D.DocState <> '017'
+		    AND
+		        D.FUNCTIONTYPE <> '004'
 	   		AND 
 	   			D.STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
@@ -35530,4 +35729,124 @@
 			]]>
         </isEqual>
     </select>
+	
+	<select id="EzApprovalG.getTotalDownloadAll" parameterClass="Map" resultClass="ApprGAttachInfoVO">
+		<isEqual property="v_PMODE" compareValue="END">
+			SELECT 
+				'DOC' TYPE,
+				DOCID,
+				ENDDATE,
+				DocTitle FILENAME,
+				Href FILEPATH,
+				1 AS TYPESN,
+				1 AS VIEWSN,
+				1 AS ATTACHFILESN
+			FROM 
+				TBL_ENDAPRDOCINFO
+			WHERE  
+				TBL_ENDAPRDOCINFO.DOCID IN
+			 	<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
+			 		#vDocIDMap[]#
+				</iterate>
+		    AND
+		    	TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+			AND
+		   		TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+			
+			UNION ALL 
+			
+			SELECT 
+				'ATT' TYPE,
+				TBL_ENDAPRDOCINFO.DOCID,
+				ENDDATE,
+		        DISPLAYNAME FILENAME,
+		        AttachFileHref FILEPATH,
+				2 AS TYPESN,
+	       	 	IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	       	 	ATTACHFILESN
+			FROM 
+				TBL_ENDATTACHINFO
+		    INNER JOIN
+	    		TBL_ENDAPRDOCINFO
+		    ON
+		    	TBL_ENDATTACHINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+			AND
+				TBL_ENDATTACHINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+		    AND
+		    	TBL_ENDATTACHINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+			WHERE  
+				TBL_ENDAPRDOCINFO.DOCID IN
+				<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
+			 		#vDocIDMap[]#
+				</iterate>
+	        AND
+	        	TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		    AND
+		    	TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		    	
+			UNION ALL 
+			
+			SELECT 
+				'ATTDOC' TYPE,
+				TBL_ENDAPRDOCINFO.DOCID,
+				ENDDATE,
+		        AttachDocName FILENAME,
+		        AttachDocURL FILEPATH,
+				3 AS TYPESN,
+	        	ATTACHSN AS VIEWSN,
+	        	1 AS ATTACHFILESN
+			FROM 
+				TBL_ENDAPRDOCATTACHINFO
+		    INNER JOIN
+	    		TBL_ENDAPRDOCINFO
+		    ON
+		    	TBL_ENDAPRDOCATTACHINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+	        AND
+	        	TBL_ENDAPRDOCATTACHINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+		    AND
+		    	TBL_ENDAPRDOCATTACHINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+			WHERE  
+				TBL_ENDAPRDOCINFO.DOCID IN
+				<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
+			 		#vDocIDMap[]#
+				</iterate>
+	        AND
+	        	TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		    AND
+		    	TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		    ORDER BY
+		    	ENDDATE DESC, TYPESN ASC, ATTACHFILESN ASC, VIEWSN ASC
+		 </isEqual>
+	</select>
+	
+	<select id="EzApprovalG.getDocsOpinionInfo" parameterClass="Map" resultClass="ApprGOpinionVO"> 
+		SELECT 
+			DOCID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID 
+		FROM 
+			TBL_ENDAPROPINIONINFO  
+		WHERE 
+			DOCID IN
+			<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
+				#vDocIDMap[]#
+			</iterate>
+		AND 
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#	
+		ORDER BY
+			DOCID DESC, OPINIONSN DESC
+	</select>
+		
+	<insert id="EzApprovalG.insertTotalSaveHistory" parameterClass="Map">
+		INSERT INTO	
+		    TBL_TOTAL_HISTORY(DOCID, USERID, REGDATE, GUBUN, USERJOBTITLE, USERDEPTID, USERDEPTNAME, 
+		                        USERNAME, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID)
+		<dynamic>
+			<iterate prepend="VALUES" property="v_DOCIDlist" conjunction="," >
+		    	(#v_DOCIDlist[]#, #v_USERID#, #v_SYSDATE#, #v_GUBUN#, #v_USERJOBTITLE#, #v_USERDEPTID#, #v_USERDEPTNAME#,
+	            #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE2#, #v_USERDEPTNAME2#, #v_TENANT_ID#, #v_COMPANYID#)
+			</iterate>                       
+		</dynamic>
+	</insert>
+	
 </sqlMap>

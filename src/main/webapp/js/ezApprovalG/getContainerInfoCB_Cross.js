@@ -36,6 +36,7 @@ function getDataInfo() {
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var selRow = DocList.GetSelectedRows()[0];
+    
     //DocList_Flag 지워도 되면 삭제
     if (DocList_Flag == "RECORD" && selRow != undefined) {
         if (trim_Cross(selRow.getAttribute("DATA14")) != "null" && trim_Cross(selRow.getAttribute("DATA14")) != "" && trim_Cross(selRow.getAttribute("DATA14")) >= GetTodayDate()) {
@@ -453,11 +454,11 @@ function lvtDoclist_SelChange() {
 
 function processRowClick(tr) {
     if (DocList_Flag == "RECORD") {
-        DocID = GetAttribute(tr,"DATA1");
-        pURL = GetAttribute(tr,"DATA2");
+        DocID = GetAttribute(tr, "DATA1");
+        pURL = GetAttribute(tr, "DATA2");
         WriterDeptID = GetAttribute(tr, "DATA11");
-        WriterID = GetAttribute(tr,"DATA3");
-        publicityYN = GetAttribute(tr,"DATA16");
+        WriterID = GetAttribute(tr, "DATA3");
+        publicityYN = GetAttribute(tr, "DATA16");
         
         ChkCabRoleInfo(tr);
         

@@ -150,7 +150,7 @@
 		</isNotEmpty>
 	</sql>
 	
-	<!-- 2021-07-12 김은실 - 선택지가 3개 밖에 없어서.. 최대한 쿼리줄이고자 이렇게 짠건데, 더 추가된다면 아예 걍 바꿔주세요.ㅎㅎㅎ  여기서 변형하기에는 여간 복잡한게 아닐거에여ㅠ -->
+	<!-- 2021-07-12 김은실 - 필요시 변경하여 사용 -->
 	<sql id="EzOrganAdminDAO.searchForQuery">
 		<isNotEqual property="searchForAll" compareValue="true" open="and (" close=")">
 			CN <isEqual property="retired" compareValue="false"> NOT </isEqual> IN 
@@ -7416,7 +7416,7 @@
 					USERID,				USERNM,					USERNM2,				DEPTID,					DEPTNM,
 					DEPTNM2,			TITLE,       			TITLE2,					COMPANYID,				COMPANYNM,
 					COMPANYNM2,			AUTHORIZEDTIME,			ADMINTYPE,				STATUS,					AUTHORIZERID,
-					AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP
+					AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP,			TENANT_ID
                  )
 			SELECT
 				SEQ_TBL_PERMISSION_CHANGE_INFO.NEXTVAL,
@@ -7454,7 +7454,7 @@
 				 u.COMPANY2,		to_date(#authorizedTime#, 'yyyy-MM-dd HH24:MI:SS'),		#adminType#,			#status#,				#authorizerId#,
 				 (SELECT ua.DISPLAYNAME 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
 				 (SELECT ua.DISPLAYNAME2 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
-				 #authorizerIp#
+				 #authorizerIp#, u.TENANT_ID
 			FROM TBL_USERMASTER u
 			WHERE 	u.CN = #userId#
 			AND 	u.TENANT_ID = #tenant_id#

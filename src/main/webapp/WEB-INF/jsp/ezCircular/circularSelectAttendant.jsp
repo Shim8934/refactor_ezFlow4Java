@@ -780,7 +780,7 @@
 	 		                    var IsInsert = CheckMailReceiver(strId, "3");
 	 		                    
 	 		                    if (strId == "<c:out value='${userID}' />") {
-	 		                        alert("<spring:message code='ezCircular.t149' />");
+	 		                        // alert("<spring:message code='ezCircular.t149' />");
 	 		                        continue;
 	 		                    }
 	 		

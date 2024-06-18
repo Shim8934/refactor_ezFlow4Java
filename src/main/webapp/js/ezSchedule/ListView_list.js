@@ -1360,7 +1360,6 @@ function ListView() {
 
     function ListView_ToString() {
         return "KAONI ListView";
-        //return "영준이가 자바스크립트로 만든 리스트 뷰 v0.5";
     }    
 } // ListView 클래스 끝
 
@@ -1605,7 +1604,6 @@ function getOriginXML(pTagetID)
             width = width.substring(0, width.length - 2);            
         }        
         xmlHeader += "<WIDTH>" + width + "</WIDTH>";
-        //colname 어떻게 할까?
         xmlHeader += "<COLNAME></COLNAME>";
         xmlHeader += "</HEADER>";
     }

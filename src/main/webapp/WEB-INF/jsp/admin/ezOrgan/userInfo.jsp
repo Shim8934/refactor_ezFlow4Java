@@ -181,6 +181,7 @@
 			                document.getElementById("DeptName").value = SelectSingleNodeValueNew(xmlDom, "DATA/DESCRIPTION1").trim();
 			                document.getElementById("DeptName2").value = SelectSingleNodeValueNew(xmlDom, "DATA/DESCRIPTION2").trim();
 			                document.getElementById("SocialNum").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE14").trim();
+			                document.getElementById("CompanyName").value = SelectSingleNodeValueNew(xmlDom, "DATA/COMPANY").trim();
 			                document.getElementById("txtBirth").value = SelectSingleNodeValueNew(xmlDom, "DATA/BIRTH").trim();
 			                document.getElementById("userPhotoYN").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2").trim();
 			                document.getElementById("furigana").value = SelectSingleNodeValueNew(xmlDom, "DATA/FURIGANA").trim();
@@ -879,8 +880,9 @@
 	        </tr>
 	        </tr>
 			<tr>
-				<th style="width: 71px; text-align:center"></th>
+				<th style="width: 71px; text-align:center"><spring:message code='ezOrgan.khj002' /></th>
 				<td style="width: 240px;">
+					<input id="CompanyName" style="width: 100%" readonly="readonly" maxlength="50"/>
 				</td>
 				<th class="treeFlag" style="width: 71px; text-align:center"><spring:message code='ezOrgan.kdh07' /></th>
 				<td class="treeFlag" style="width: 240px;">

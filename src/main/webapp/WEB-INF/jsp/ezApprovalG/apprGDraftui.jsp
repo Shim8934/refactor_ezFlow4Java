@@ -203,6 +203,9 @@
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 			
+			// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
+			
 		    window.onload = function ()
 		    {
 		    	if(officeFlag == 'Y'){
@@ -296,7 +299,6 @@
 		            */
 		            if (pDraftFlag == "REDRAFT") {
 		            	if (ListType == "21") {
-		            		//임시보관함일경우 사인 초기화??
 		            		setFirstDrafter(isUsed, "");
 		            	} else {
 		            		if(approvalFlag == "G") {
@@ -350,6 +352,7 @@
 	     	            }
 			        }
 	                
+	                checkHeaderAction();
 		        }
 		    }
 		    
@@ -953,7 +956,7 @@
 		            chk_Passwd();
 		        }
 		        else {
-		            if (IsSkipDrafter == "FALSE") {
+		            if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
 		                var ret;
 		                var parameter = new Array();
 		
@@ -979,7 +982,7 @@
 		            return;
 		        }
 		
-		        if (IsSkipDrafter == "FALSE") {
+		        if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
 		            var ret;
 		            var parameter = new Array();
 		
@@ -1331,7 +1334,8 @@
 		    }
 		    var PrtBodyContent;
 		    function btnPrint_onclick() {
-		        PrintClick("Cross", pDocID, "ING");
+		    	headerAction("open");
+		    	PrintClick("Cross", pDocID, "ING");
 		    }
 		    function btnClose_onclick() {
 		        bAttachProcess = false;
@@ -1614,6 +1618,10 @@
 		        if (rtn[0] == "TRUE") {
 		            g_SepAttachLVXml = rtn[1];
 		            message.DocumentBodySetAttribute("SepAttachLVXml", g_SepAttachLVXml);
+
+		            if (pDraftFlag == "REDRAFT") {
+		            	SaveFile();
+		            }
 		        }
 		    }
 		    function GetSepAttParamXml(g_SepAttachLVXml) {
@@ -1978,9 +1986,9 @@
 		                	//회람
 		                	if (ret[22] == "noItem") {
 		                		delAprLineInfoCC();
-		                		//없으니깐 암것도 안해도되려나 싶은데 기존꺼를 뺏을수도 있으니까 무조건 삭제
+		                		// ret[22] 값이 "noItem"일 경우 기존 데이터가 있을 수 있으므로 삭제함
 		                	} else if (ret[22] == "sameItem") {
-		                		//같으니깐 암것도 안해도 되려나
+		                		// ret[22] 값이 "sameItem"일 경우 동작 없음
 		                	} else {
 		                		//회람 저장
 		                		SaveAprLineInfoCC(ret[22]);
@@ -2270,6 +2278,38 @@
 				}
 			}
 	    	
+	    	function checkHeaderAction() {
+	    		if (useHideHeaderArea == "YES" && message.GetListItem(message.GetFieldsList(), "headerArea") != null) {
+                	document.getElementById("headerTabTR").style.display = "";
+                	$('#headerMenu').hover(function() {
+                		$('#headerMenu').css('border-bottom', '3px black solid');
+                		$('#headerHide').css({'color':'black', 'font-weight':'bold'});
+                	}, function() {
+                		$('#headerMenu').css('border-bottom', 'solid 1px #eaeaea');
+                		$('#headerHide').css({'color':'#8f8e93', 'font-weight':'normal'});
+                	}) 
+                } else if (document.getElementById("headerTabTR") != null) {
+                	document.getElementById("headerTabTR").style.display = "none";
+                }
+	    	}
+	    	
+	    	function headerAction(action) {
+	    		if (useHideHeaderArea == "YES") {
+	    			var fields = message.GetFieldsList();
+		    	    var field = message.GetListItem(fields, "headerArea");
+		    	    
+		    	    if (field) {
+		    	        if (field.style.display == "none" || action == "open") {
+		    	        	field.style.display = "";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 숨기기";
+		    	        } else {
+		    	            field.style.display = "none";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 펼치기";
+		    	        }
+		    	    }
+	    		}
+	    	}
+	    	
 		</script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" style="height:100%;">
@@ -2329,6 +2369,17 @@
 		        </ul>
 		      </div></td>
 		  </tr>
+		  <c:if test="${useHideHeaderArea == 'YES'}">
+			  <tr id="headerTabTR" style="display:none;">
+			  	<td>
+					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
+					  	<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
+					  		<span id="headerHide" style="color:#8f8e93; font-size:14px;">헤더 숨기기</span>
+					  	</div>
+					  </div>
+			  	</td>
+			  </tr>
+		  </c:if>
 		  <tr>
 		    <td  style="padding-bottom:10px;height:86%;" >
 		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>

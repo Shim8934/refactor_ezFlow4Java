@@ -124,7 +124,8 @@
 			    var approvalFlag = "<c:out value = '${approvalFlag}'/>";
 		    	var share = "";
 				var selectYear = "ALL";
-
+		        var ezapralert_cross_dialogArguments = [];
+		        
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {
@@ -1683,45 +1684,270 @@
 		        idistbox_onclick();
 		    }
 		
-		    var pSaveDocID = ""; // 통합PC저장을 위한 전역변수
-		    function TotalSave_onclick() {
+	    var pSaveDocIDlist = []; // 통합PC저장할 문서docID를 담는 전역변수
+	    var havingReadRightRows =[]; // 문서 열람권한이 있는 rows
+	    var noRight = false; // 열람권한이 없는 문서가 하나라도 존재하면 noRight = true
+	    var failDocNums = "";
+	    var failDocCount = 0;
+	    var secDocRows = []; // 보안결재 설정한 문서들의 rows (결재선 포함 여부 확인에 필요함.)
+	    var secDocIDsInAprLine =[]; // 보안결재 포함 문서 docID 배열
+		var sepaAttSet = null; // 분리첨부 제외 문서번호 집합
+	    function TotalSave_onclick() {
+		    	noRight = false;
+		    	pSaveDocIDlist = [];
+		    	secDocIDsInAprLine = [];
+		    	secDocRows = [];
+		    	failDocNums = "";
+				failDocCount = 0;
+				sepaAttSet = new Set();
+		    	
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
-		        var tr = DocList.GetSelectedRows();
 
-		        if (tr.length == 0) {
+		        var selRows = DocList.GetSelectedRows();
+		        
+		        if (selRows.length == 0) {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>");
 		        }
-		        else {
-		            if (DocList_Flag == "RECORD") {
+		        // 단일 문서 저장 시엔 팝업창 띄워서 다운로드할 파일 선택. (단일 다운로드 시 hwp파일 배포문서 전환 대응)
+		        else if (selRows.length == 1) {
+		        	
+	        		if (DocList_Flag == "RECORD") {
 		                if (AdminYN != "TRUE" && (!g_bRecAdmin)) {
-		                    if (!HasRecReadRight(trim_Cross(tr[0].getAttribute("DATA6")), trim_Cross(tr[0].getAttribute("DATA8")), UserID)) {
+		                    if (!HasRecReadRight(trim_Cross(selRows[0].getAttribute("DATA6")), trim_Cross(selRows[0].getAttribute("DATA8")), UserID)) {
 		                        OpenAlertUI(strLang580);
 		                        return "";
 		                    }
 		                }
-		                if (tr[0].getAttribute("DATA8") != "00") {
+		                if (selRows[0].getAttribute("DATA8") != "00") {
 		                    OpenAlertUI(strLang260);
 		                    return "";
 		                }
 		            }
-		            pSaveDocID = tr[0].getAttribute("DATA1");
+		            
+			        /* 2021-10-21 홍승비 - 결재완료문서 통합 PC 저장 시 보안결재 확인동작 추가 */
+					if (selRows[0].getAttribute("DATA14") != "" && selRows[0].getAttribute("DATA14") >= GetTodayDate()) {
+			            if (CheckAprLine(selRows[0].getAttribute("DATA1")) == "TRUE") {
+			            	secDocIDsInAprLine.push(selRows[0].getAttribute("DATA1"));
+			            	chk_Passwd(UserID, chk_Passwd_CompleteSave);
+			            	
+			            } else {
+			                OpenAlertUI(strLang580, "OPEN", "");
+			                return;
+			            }
+			        } else {
+			        	pSaveDocIDlist.push(selRows[0].getAttribute("DATA1"));
+			        	TotalSave_onclick_complete(pSaveDocIDlist, noRight);
+			        }
 		        }
-
-		        /* 2021-10-21 홍승비 - 결재완료문서 통합 PC 저장 시 보안결재 확인동작 추가 */
-				if (tr[0].getAttribute("DATA14") != "" && tr[0].getAttribute("DATA14") >= GetTodayDate()) {
-		            if (CheckAprLine(tr[0].getAttribute("DATA1")) == "TRUE") {
-		            	chk_Passwd(UserID, chk_Passwd_CompleteSave);
-		            } else {
-		                OpenAlertUI(strLang580,"OPEN","");
-		                return;
-		            }
-		        } else {
-		        	TotalSave_onclick_complete(pSaveDocID);
+		        // 다중 문서 통합 PC 저장 시 팝업창 없이 선택한 문서 바로 압축하여 다운로드. (다중 다운로드 시 hwp파일 배포문서 전환 대응하지 않음)
+		        else {
+		        	var pRightChkDocIDs = '';
+		        	havingReadRightRows = [];
+		        	
+		        	for (var i = 0; i < selRows.length; i++) {
+		        		if (selRows[i].getAttribute("DATA8") != "00") { // 문서 내용이 없다면 제외.
+		        			sepaAttSet.add(selRows[i].getElementsByTagName("td").item(5).getAttribute("title"));
+		        			selRows[i] = null;
+		        			noRight = true;
+		        		} else {
+		        			pRightChkDocIDs += selRows[i].getAttribute("DATA1") + "|||";
+			        		havingReadRightRows.push(selRows[i]); // 모든 문서의 열람 권한이 있을 시 선택되었던 행들을 파라미터로 보내기 위해 담아둠.
+		        		}
+		        	}
+		        	
+		        	checkRightTotalSave(pRightChkDocIDs, selRows);
 		        }
 		    }
 		    
-		    // 통합 PC 저장 시 보안결재 > 패스워드 확인 후 동작
+			// 2023-07-05 한태훈 - 열람권한이 있는 문서인지 아닌지 확인하는 함수.    
+	    	function checkRightTotalSave(pRightChkDocIDs, selRows) {
+	    		$.ajax ({
+	    			url : "/ezApprovalG/checkRightTotalSave.do",
+	    			type: 'POST',
+	    			dataType: 'text',
+	    			async: false,
+	    			data: {
+	    				docIDstr : pRightChkDocIDs,
+	    				orgCompanyID : CompanyID
+	    			},
+	    			success: function(resultXMLstr) {
+	    				if (resultXMLstr == "<RESULT>TRUE</RESULT>") {
+	    					chkSecAppr(havingReadRightRows);
+	    				} else {
+	    					havingReadRightRows = [];
+	    					var resultXML = loadXMLString(resultXMLstr);
+	    					var failDocIDStr = SelectSingleNodeValue(resultXML, "RESULT");
+	    					var failDocIDarr = failDocIDStr.split("|||");
+	    					// failDocIDarr 의 마지막 값이 공백이라면 제거한다.
+	    					if (failDocIDarr.length > 0 && failDocIDarr[failDocIDarr.length - 1] == "") {
+	    						failDocIDarr.pop();
+	    					}
+	    					
+	    					for (var k = 0; k < selRows.length; k++) {
+	    						if (selRows[k] == null) {
+	    							continue;
+	    						}
+	    						var selDocID = selRows[k].getAttribute("DATA1");
+	    						
+	    						if (failDocIDarr.indexOf(selDocID) >= 0) {
+	    							var failDocNum = selRows[k].getElementsByTagName("td").item(5).getAttribute("title");
+	    							if (k != selRows.length - 1) {
+	    								failDocNums = failDocNums + failDocNum + "/ ";
+	    							} else {
+	    								failDocNums = failDocNums + failDocNum;
+	    							}
+	    							
+	    							failDocCount = failDocCount + 1;
+	    							noRight = true;
+	    						} else {
+	    							havingReadRightRows.push(selRows[k]);
+	    						}
+	    					}
+	    					
+	    					if (havingReadRightRows.length > 0) {
+	    						chkSecAppr(havingReadRightRows);
+	    		        	} else if (havingReadRightRows.length == 0) {
+	    		        		if (noRight) {
+	    		        			OpenAlertUI("<spring:message code='ezApprovalG.t00016'/>");
+	    		        		}
+	    		        	}
+	    				}
+	    			}, error: function() {
+	    				OpenAlertUI("<spring:message code='ezApprovalG.t00017'/>");
+	    				return;
+	    			}
+    			});
+	    	}
+				    
+		    // 열람권한이 있는 문서들을 대상으로 보안 결재 설정 여부 확인 및
+		    // 보안 결재 설정된 문서 다운로드 시도자가 해당 문서의 결재선에 포함여부 확인 (보안결재 문서 열람 권한 여부 확인).
+		    function chkSecAppr(havingReadRightRows) {
+		    	var pSecApprDocIDs = "";
+		    	
+		    	for (var i = 0; i < havingReadRightRows.length; i++) {
+		    		var tempDocID = havingReadRightRows[i].getAttribute("DATA1");
+		    		
+		    		if (havingReadRightRows[i].getAttribute("DATA14") != "" && havingReadRightRows[i].getAttribute("DATA14") >= GetTodayDate()) {
+		    			pSecApprDocIDs += tempDocID + "|||";
+		    			secDocRows.push(havingReadRightRows[i]);
+			        } else {
+			        	pSaveDocIDlist.push(tempDocID);
+			        }
+		    	}
+		    	
+		    	if (pSecApprDocIDs != "") {
+		    		$.ajax ({
+		    			url : "/ezApprovalG/chkSecDocInAprLine.do",
+		    			type: 'POST',
+		    			dataType: 'text',
+		    			async: false,
+		    			data: {
+		    				companyID : CompanyID,
+		    				docIDStr  : pSecApprDocIDs,
+		    				mode  	  : "END",
+		    				userID    : UserID
+		    			},
+		    			success: function(resultXMLstr) {
+		    				var resultXML = "";
+		  		            var pohamIDs = "";
+		  		            var mipohamIDs = "";
+		    				resultXML = loadXMLString(resultXMLstr);
+		    				pohamIDsStr = getNodeText(SelectNodes(resultXML, "RESULT/INAPRLINE")[0]);
+		  		            secDocIDsNotInAprLineStr = getNodeText(SelectNodes(resultXML, "RESULT/NOTINARPLINE")[0]);
+		  		            secDocIDsInAprLine = pohamIDsStr.split("|||");
+		  		            
+		  		            if (secDocIDsInAprLine.length > 0 && secDocIDsInAprLine[secDocIDsInAprLine.length - 1] == "") {
+		  		            	secDocIDsInAprLine.pop();
+		  		            }
+		  		            
+		  		            if (secDocIDsNotInAprLineStr != "") {
+		  		            	noRight = true;
+		  		           	    var secDocIDsNotInAprLine = secDocIDsNotInAprLineStr.split("|||");
+		  		           	    if (secDocIDsNotInAprLine.length > 0 && secDocIDsNotInAprLine[secDocIDsNotInAprLine.length - 1] == "") {
+		  		           	    	secDocIDsNotInAprLine.pop();
+		  		           	    }
+		  		           	    
+		  		            	for (var d = 0; d < secDocRows.length; d++) {
+		  		            		var tempSecDocID = secDocRows[d].getAttribute("DATA1");
+		  		            		 
+		  		            		if (secDocIDsNotInAprLine.indexOf(tempSecDocID.trim()) >= 0){
+		  		            			failDocNums += secDocRows[d].getElementsByTagName("td").item(5).getAttribute("title") + "/ ";
+				  		           	    failDocCount = failDocCount + 1;
+		  		            		}
+		  		            	}
+		  		            }
+		  					
+		  		          chkNeedNorightAlert();
+					    
+		    			}, error : function() {
+		    				OpenAlertUI("<spring:message code='ezApprovalG.t00017'/>");
+		    			}
+			    	});
+		    	} else {
+		    		chkNeedNorightAlert();
+		    	}
+		    }
+		    
+		    function noRightOpenAlertUI_Complete() {
+		    	ezapralert_cross_dialogArguments = [];
+		    	chkNeedPassword();
+		    }
+		    
+		    // 열람권한이 없는 문서가 포함된 경우 알림창을 포출하는 함수.
+		    function chkNeedNorightAlert() {
+		    	
+		    	if (pSaveDocIDlist.length <= 0 && secDocIDsInAprLine.length <= 0) {
+		    		OpenAlertUI("<spring:message code='ezApprovalG.t00016'/>");
+		    		return;
+		    	}
+		    	
+				if (failDocCount > 0 || sepaAttSet.size > 0) {
+					var pAlertContent = "";
+					if (failDocCount > 0) {
+						pAlertContent += "<spring:message code='ezApprovalG.t00019'/>";
+						pAlertContent += " (";
+						pAlertContent += failDocNums+" " + failDocCount + "<spring:message code='ezApprovalG.t00020'/>" + ")";
+					}
+					
+					if (failDocCount > 0 && sepaAttSet.size > 0) {
+						pAlertContent += " <spring:message code='ezApprovalG.t00018'/> "
+					}
+					
+					if (sepaAttSet.size > 0) {
+						pAlertContent += "("
+						var index = 0;
+						for (var item of sepaAttSet) {
+							if (index != sepaAttSet.size - 1) {
+								pAlertContent += item + "/ ";
+							} else{
+								pAlertContent += item + ")";
+							}
+							index += 1;
+						}
+						
+						pAlertContent += "<spring:message code='ezApprovalG.t00023'/>"
+					}
+					
+					pAlertContent += "<spring:message code='ezApprovalG.t00024'/>"
+					ezapralert_cross_dialogArguments[1] = noRightOpenAlertUI_Complete;
+					ezapralert_cross_dialogArguments[2] = true;
+	 				OpenAlertUI(pAlertContent, noRightOpenAlertUI_Complete);
+				} else {
+					chkNeedPassword();
+				}
+			}
+		    
+		    // 보안결재 설정을 한 문서가 포함되어 있는 경우 암호창 표출하는 함수.
+		    function chkNeedPassword() {
+		    	if (secDocIDsInAprLine.length > 0) {
+		    		chk_Passwd(UserID, chk_Passwd_CompleteSave);
+		    	} else {
+		    		TotalSave_onclick_complete(pSaveDocIDlist, noRight);
+		    	}
+		    }
+		    
+		    // 2023-06-23 한태훈 - 통합 PC 저장 시 보안결재 설정 문서 존재 시 패스워드 확인 후 동작
 			function chk_Passwd_CompleteSave(Rtn) {
 		        if (Rtn == "FALSE") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
@@ -1729,19 +1955,69 @@
 		        }
 		        else if (Rtn == "cancel") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+		            var boAhnKyulDocStr = "";
+		            if (secDocRows.length > 0) {
+			            for (var i = 0; i < secDocRows.length; i++) {
+			            	if (i != secDocRows.length - 1) {
+				                boAhnKyulDocStr += secDocRows[i].getElementsByTagName("td").item(5).getAttribute("title") + "/ ";
+			            	} else {
+				                boAhnKyulDocStr += secDocRows[i].getElementsByTagName("td").item(5).getAttribute("title") + " ";
+			            	}
+			                
+			            }
+			            pAlertContent = pAlertContent + "\n <spring:message code='ezApprovalG.t00021'/> \n" + boAhnKyulDocStr + " <spring:message code='ezApprovalG.t00022'/>"
+		            }
 		            OpenAlertUI(pAlertContent);
 		        }
 		        else {
-		        	TotalSave_onclick_complete(pSaveDocID);
+		            if (secDocIDsInAprLine.length > 0) {
+		                for (var c = 0; c < secDocIDsInAprLine.length; c++) {
+			        		pSaveDocIDlist.push(secDocIDsInAprLine[c]);
+		        	    }
+		        	}
+		        	TotalSave_onclick_complete(pSaveDocIDlist, noRight);
 		        }
 		    }
 		    
 		    // 실제 통합 PC 저장 동작 분리 (기록물대장)
-		    function TotalSave_onclick_complete(pDocID) {
-		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
-		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
-		        feature = feature + GetOpenPosition(580, 480);
-		        window.open(url, "", feature);
+		    function TotalSave_onclick_complete(pDocIDarr, noRight) {
+		    	if (!noRight && pDocIDarr.length == 1) {
+		    		 var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocIDarr[0] + "&type=END" + "&orgCompanyID=" + CompanyID;
+				        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
+				        feature = feature + GetOpenPosition(580, 480);
+				        window.open(url, "", feature);
+				        
+		    	} else if (noRight && pDocIDarr.length == 1 || pDocIDarr.length > 1) {
+		    		//열람권한이 없는 문서와 열람권한이 있는 문서를 같이 선택했는데, 열람권한이 있는 문서가 딱 하나인 경우(위의 로직을 타지 않게 하기 위해 추가) || 열람권한이 가능한 문서를 여러개 선택된 경우
+			    	
+		    		var pDocIDstr = "";
+		    		for (var k = 0; k < pDocIDarr.length; k++) {
+		    			pDocIDstr += pDocIDarr[k] + "|||"
+		    		}
+		    		
+		    		$.ajax ({
+		    			url: "/ezApprovalG/totalSaveFileAll.do",
+		    			type: 'POST',
+		    			dataType: 'text',
+		    			async: false,
+		    			data: {
+		    				docIDstr : pDocIDstr,
+		    				type : "END",
+		    				orgCompanyID : CompanyID
+		    			},
+		    			success: function(result) {
+		    				if (result == "FALSE") {
+		    					OpenAlertUI("<spring:message code='ezApprovalG.t00017'/>");
+		    				} else {
+		    					var URL = result;
+		    					AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(URL);
+		    					DivPopUpHidden();
+		    				}
+		    			}, error: function() {
+		    				OpenAlertUI("<spring:message code='ezApprovalG.t00017'/>");
+		    			}
+		    		});
+		    	}
 		    }
 		
 		    window.onresize = function() {
@@ -2281,5 +2557,7 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		
+		 <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 	</body>
 </html>

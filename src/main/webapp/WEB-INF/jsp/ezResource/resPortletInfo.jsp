@@ -134,6 +134,15 @@
 						} else {
 							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
 						}
+
+						// 반복예약허용 Flag
+						var repeatFlag = result.resBrd.repeatFlag;
+
+						if (repeatFlag == "1") {
+							$("#repeatFlag").html("<spring:message code="ezResource.lyj02"/>");
+						} else {
+							$("#repeatFlag").html("<spring:message code="ezResource.lyj03"/>");
+						}
 						
 						$("#resDate").html(result.resBrd.makeDate);
 						
@@ -210,7 +219,11 @@
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
 						<td colspan="2" style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
-					</tr>							
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code="ezResource.lyj01"/></th>
+						<td colspan="2" id="repeatFlag"></td>
+					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
 						<td colspan="2" id="approveFlag"></td>

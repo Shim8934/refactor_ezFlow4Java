@@ -300,6 +300,9 @@
 		        else if (pListTypeValue == "21") {
 		            getDocList();
 		        }
+				else if (pListTypeValue == "24") {
+					getDocList();
+				}
 		        else if (pListTypeValue == "99") {
 		            getDocList();
 		        }
@@ -586,13 +589,13 @@
 		        if (pListTypeValue == "1") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
-		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+					<%-- AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004"); // 2023-03-13 양지혜 - 반송된문서 추가 > 결재할문서에서 반송 상태 제외 --%>
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
 		        } else if (pListTypeValue == "2" || pListTypeValue == "3") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
-		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+		        	<%-- AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004"); // 2023-04-12 양지혜 - 반송된문서 추가 > 결재진행문서, 기안한문서에서 반송 상태 제외 --%>
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
 		        } else if (pListTypeValue == "4") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.garm06"/>', "011");
@@ -693,6 +696,9 @@
 		        else if (pListTypeValue == "11") {
 		        	getDocList();
 		        }
+				else if (pListTypeValue == "24") {
+					getDocList();
+				}
 		    }
 		    
 		    function onSelect_Status() {

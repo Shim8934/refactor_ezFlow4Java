@@ -94,6 +94,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", userIDS);
+		/* 2024-05-22 양지혜 - SQL Injection 처리 */
+		String[] userIds = userIDS.replace(" ", "").replace("\'", "").split(",");
+		map.put("userIds", userIds);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffSet()));
@@ -131,6 +134,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", userIDS);
+		/* 2024-05-22 양지혜 - SQL Injection 처리 */
+		String[] userIds = userIDS.replace(" ", "").replace("\'", "").split(",");
+		map.put("userIds", userIds);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		map.put("searchText", searchText);
@@ -440,6 +446,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", userIDS);
+		/* 2024-05-22 양지혜 - SQL Injection 처리 */
+		String[] userIds = userIDS.replace(" ", "").replace("\'", "").split(",");
+		map.put("userIds", userIds);
 		map.put("userId", userId);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
@@ -549,8 +558,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
 						targetUserId = targetVo.getAprMemberId();
 
-						if (!ezPersonalService.canReceiveNotification(targetUserId, tenantId)
-								|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantId)) {
+						if (ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantId)) {
 							break;
 						}
 
@@ -577,8 +585,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
 						targetUserId = targetVo.getAprMemberId();
 
-						if (!ezPersonalService.canReceiveNotification(targetUserId, tenantId)
-								|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantId)) {
+						if (ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantId)) {
 							break;
 						}
 
@@ -674,7 +681,6 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 						// 결재유형이 참조인 경우에만 메일을 보내는 오류 분기 수정 (!"007".equalsIgnoreCase(vo.getAprType()) OR조건에서 제거)
 						if (!"002".equals(vo.getAprState())
-								|| !ezPersonalService.canReceiveNotification(targetUserId, tenantId)
 								|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, tenantId)) {
 							continue;
 						}
@@ -745,8 +751,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
 				targetUserId = targetVo.getAprMemberId();
 
-				if (!ezPersonalService.canReceiveNotification(targetUserId, tenantId)
-						|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_REJECT, NotiPlatform.MAIL, tenantId)) {
+				if (ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_REJECT, NotiPlatform.MAIL, tenantId)) {
 					break;
 				}
 
@@ -832,7 +837,6 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 					// 회수알림 발송 대상자에서 기안자(회수자)를 제외하고, 현재 결재진행/승인상태가 아닌 경우도 제외함
 					if ((!"002".equals(vo.getAprState()) && !"003".equals(vo.getAprState()))
 							|| approvalGAprLineInfoVOs.indexOf(vo) == approvalGAprLineInfoVOs.size() - 1
-							|| !ezPersonalService.canReceiveNotification(targetUserId, tenantId)
 							|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_RETURN, NotiPlatform.MAIL, tenantId)) {
 						continue;
 					}

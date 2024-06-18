@@ -225,6 +225,8 @@
 	   				APRTYPE <> '015'
 	   			AND 
 		         	DocState <> '017'
+		        AND
+	   			    FUNCTIONTYPE <> '004'
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
@@ -296,6 +298,8 @@
 	   				APRMEMBERID = #userId# 
 	   			AND 
 	   				APRTYPE <> '015'
+	   			AND
+	   			    FUNCTIONTYPE <> '004'
 			]]>
 			<isEqual property="mainViewYN" compareValue="YES">
 				AND	    
@@ -339,6 +343,8 @@
 						exb.DOCID as MAX_DOCID
 					FROM
 						tbl_endaprlineinfo exb
+					WHERE
+						exb.APRMEMBERID = #userId#
 					GROUP BY
 						DOCID
 				) as exc
@@ -715,6 +721,172 @@
 				LIMIT
 					#listSize#
 		</isEqual>
+		<isEqual property="type" compareValue="BAN">
+			SELECT * FROM (
+				SELECT
+					VAPRDOINGDOCLIST.DOCID,
+					DOCTITLE,
+					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE,
+					<isEqual property="lang" compareValue="2">
+						WRITERNAME2 WRITERNAME,
+						WRITERDEPTNAME2 WRITERDEPTNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						WRITERNAME WRITERNAME,
+						WRITERDEPTNAME WRITERDEPTNAME,
+					</isNotEqual>
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'APR' as MODE,
+					VAPRDOINGDOCLIST.companyID
+				FROM
+					VAPRDOINGDOCLIST
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+				AND
+					VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+				AND
+					VAPRDOINGDOCLIST.DOCID = GRP.DOCID
+	   			WHERE
+	   				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
+	   			AND
+					VAPRDOINGDOCLIST.COMPANYID IN (
+							SELECT
+								EXTENSIONATTRIBUTE2
+							FROM
+								TBL_DEPTMASTER
+							INNER JOIN
+								TBL_ADDJOBMASTER
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+								AND
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+							WHERE
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID#
+							AND
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID#
+							)
+				AND
+					IFNULL(GRP.TABSN, 1) = 1
+				<isNotEmpty property="userIds" prepend="AND">
+					<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+						#userIds[]#
+					</iterate>
+				</isNotEmpty>
+			<![CDATA[
+	   			AND
+	   				STARTDATE < #lastDate#
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   			    FUNCTIONTYPE = '004'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%')
+				OR
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
+			</isNotEmpty>
+				UNION ALL
+
+				SELECT
+					VENDCHAMJODOCINFO.DOCID,
+					DOCTITLE,
+					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE,
+					<isEqual property="lang" compareValue="2">
+						WRITERNAME2 WRITERNAME,
+						WRITERDEPTNAME2 WRITERDEPTNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						WRITERNAME WRITERNAME,
+						WRITERDEPTNAME WRITERDEPTNAME,
+					</isNotEqual>
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'END' as MODE,
+					VENDCHAMJODOCINFO.companyID
+				FROM
+					VENDCHAMJODOCINFO
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+				AND
+					VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+				AND
+					VENDCHAMJODOCINFO.DOCID = GRP.DOCID
+	   			WHERE
+	   				VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
+	   			AND
+					VENDCHAMJODOCINFO.COMPANYID IN (
+							SELECT
+								EXTENSIONATTRIBUTE2
+							FROM
+								TBL_DEPTMASTER
+							INNER JOIN
+								TBL_ADDJOBMASTER
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+								AND
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+							WHERE
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID#
+							AND
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID#
+							)
+				AND
+					IFNULL(GRP.TABSN, 1) = 1
+				<isNotEmpty property="userIds" prepend="AND">
+					<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+						#userIds[]#
+					</iterate>
+				</isNotEmpty>
+			<![CDATA[
+	   			AND
+	   				STARTDATE < #lastDate#
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   			    FUNCTIONTYPE = '004'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%')
+				OR
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
+			</isNotEmpty>
+			) as LIST
+			ORDER BY
+			STARTDATE DESC
+			LIMIT
+			#listSize#
+		</isEqual>
 	</select>
 	
 	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer" remapResults="true">
@@ -894,6 +1066,8 @@
 	   				APRTYPE <> '015'
 	   			AND 
 		         	DocState <> '017'
+		        AND
+	   			    FUNCTIONTYPE <> '004'
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
@@ -951,6 +1125,8 @@
 	   				STARTDATE < #nowDate#
 	   			AND
 	   				APRTYPE <> '015'
+	   			AND
+	   			    FUNCTIONTYPE <> '004'
 			]]>
 			<isEqual property="mainViewYN" compareValue="YES">
 				AND	    
@@ -979,6 +1155,8 @@
 						exb.DOCID as MAX_DOCID
 					FROM
 						tbl_endaprlineinfo exb
+					WHERE
+						exb.APRMEMBERID = #userId#
 					GROUP BY
 						DOCID
 				) as exc
@@ -1288,6 +1466,134 @@
 				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
 			</isNotEmpty>
 		</isEqual>
+		<isEqual property="type" compareValue="BAN">
+				SELECT
+					COUNT(*)
+				FROM (
+				SELECT
+					VAPRDOINGDOCLIST.*
+				FROM
+					VAPRDOINGDOCLIST
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+				AND
+					VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+				AND
+					VAPRDOINGDOCLIST.DOCID = GRP.DOCID
+	   			WHERE
+	   				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
+	   			 AND
+					VAPRDOINGDOCLIST.COMPANYID IN (
+							SELECT
+								EXTENSIONATTRIBUTE2
+							FROM
+								TBL_DEPTMASTER
+							INNER JOIN
+								TBL_ADDJOBMASTER
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+								AND
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+							WHERE
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID#
+							AND
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID#
+							)
+				AND
+					IFNULL(GRP.TABSN, 1) = 1
+	   			<isNotEmpty property="userIds" prepend="AND">
+				    <iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+					    #userIds[]#
+				    </iterate>
+			    </isNotEmpty>
+			<![CDATA[
+	   			AND
+	   				STARTDATE < #nowDate#
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   			    FUNCTIONTYPE = '004'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%')
+				OR
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
+			</isNotEmpty>
+				UNION ALL
+
+				SELECT
+					VENDCHAMJODOCINFO.*
+				FROM
+					VENDCHAMJODOCINFO
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+				AND
+					VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+				AND
+					VENDCHAMJODOCINFO.DOCID = GRP.DOCID
+	   			WHERE
+	   				VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
+	   			AND
+					VENDCHAMJODOCINFO.COMPANYID IN (
+							SELECT
+								EXTENSIONATTRIBUTE2
+							FROM
+								TBL_DEPTMASTER
+							INNER JOIN
+								TBL_ADDJOBMASTER
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+								AND
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+							WHERE
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID#
+							AND
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID#
+							)
+				AND
+					IFNULL(GRP.TABSN, 1) = 1
+				<isNotEmpty property="userIds" prepend="AND">
+					<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+						#userIds[]#
+					</iterate>
+				</isNotEmpty>
+			<![CDATA[
+	   			AND
+	   				STARTDATE < #nowDate#
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   			    FUNCTIONTYPE = '004'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%')
+				OR
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
+			</isNotEmpty>
+			) as LIST
+		</isEqual>
 	</select>
 	
 	<select id="MApprovalG.getLeftCount" parameterClass="Map" resultClass="MApprGLeftVO">
@@ -1377,6 +1683,8 @@
 		   				APRTYPE <> '015'
 		   			AND 
 			         	DocState <> '017'
+		   			AND
+		   			    FUNCTIONTYPE <> '004'
 					AND
 						IFNULL(GRP.TABSN, 1) = 1 ) as aprDraftCount,
 				(SELECT 
@@ -1402,6 +1710,8 @@
 		   			AND
 		   				APRTYPE <> '015'
 		   			AND
+		   			    FUNCTIONTYPE <> '004'
+		   			AND
 						IFNULL(GRP.TABSN, 1) = 1
 			]]>
 					<isEqual property="mainViewYN" compareValue="YES">
@@ -1415,7 +1725,27 @@
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
-	   			TBL_ENDAPRLINEINFO B
+			(
+				SELECT
+					*
+				FROM
+					tbl_endaprlineinfo exa
+				JOIN (
+					SELECT
+						MAX(exb.APRMEMBERSN) as MAX_APRMEMBERSN,
+						exb.DOCID as MAX_DOCID
+					FROM
+						tbl_endaprlineinfo exb
+					WHERE
+						exb.APRMEMBERID = #userId#
+					GROUP BY
+						DOCID
+				) as exc
+				ON
+					exa.APRMEMBERSN = exc.MAX_APRMEMBERSN
+				AND
+					exa.DOCID = exc.MAX_DOCID
+			) B
 		   	ON
 	   			A.DOCID = B.DOCID
 		   	AND
@@ -1586,6 +1916,74 @@
 								AND
 									TENANT_ID = #tenantID#)) as gongRamEndCount
 			]]>
+				, ( SELECT
+						COUNT(*)
+					FROM
+					(SELECT
+						VAPRDOINGDOCLIST.*
+					FROM
+						VAPRDOINGDOCLIST
+					LEFT OUTER JOIN
+						TBL_APRDOCGROUPINFO GRP
+					ON
+						VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+					AND
+						VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+					AND
+						VAPRDOINGDOCLIST.DOCID = GRP.DOCID
+		   			WHERE
+		   				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
+		   			AND
+		   				VAPRDOINGDOCLIST.COMPANYID = #companyID#
+					<isNotEmpty property="userIds" prepend="AND">
+						<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+							#userIds[]#
+						</iterate>
+					</isNotEmpty>
+				<![CDATA[
+					AND
+		   				STARTDATE < #nowDate#
+		   			AND
+		   				APRTYPE <> '015'
+				]]>
+		   			AND
+		   				FUNCTIONTYPE = '004'
+		   			AND
+						IFNULL(GRP.TABSN, 1) = 1
+
+		   			UNION ALL
+
+					SELECT
+						VENDCHAMJODOCINFO.*
+					FROM
+						VENDCHAMJODOCINFO
+					LEFT OUTER JOIN
+						TBL_APRDOCGROUPINFO GRP
+					ON
+						VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+					AND
+						VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+					AND
+						VENDCHAMJODOCINFO.DOCID = GRP.DOCID
+		   			WHERE
+		   				VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
+		   			AND
+		   				VENDCHAMJODOCINFO.COMPANYID = #companyID#
+					<isNotEmpty property="userIds" prepend="AND">
+						<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+							#userIds[]#
+						</iterate>
+					</isNotEmpty>
+				<![CDATA[
+					AND
+		   				STARTDATE < #nowDate#
+					AND
+		   				APRTYPE <> '015'
+				]]>
+		   			AND
+		   			    FUNCTIONTYPE = '004'
+		   			AND
+						IFNULL(GRP.TABSN, 1) = 1 ) as LIST ) as aprBanCount
 	</select>
 	
 	<select id="MApprovalG.getAprLineInfo" parameterClass="Map" resultClass="MApprGAprLineInfoVO">
@@ -1858,6 +2256,22 @@
 	   				DOCID = #docID#
 	   			LIMIT
 	   				1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="BAN">
+			<![CDATA[
+				SELECT
+					HREF
+				FROM
+					VAPRDOINGDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				LIMIT
+					1
 			]]>
 		</isEqual>
 	</select>
@@ -2505,6 +2919,50 @@
 				LIMIT
 					1
 			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="BAN">
+				SELECT
+					DOCID,
+					ORGDOCID,
+					FORMID,
+					HREF,
+					HASATTACHYN,
+					APRMEMBERID,
+					APRMEMBERNAME,
+					APRMEMBERNAME2,
+					APRMEMBERDEPTID,
+					DOCSTATE,
+					DOCTITLE,
+				<isEqual property="lang" compareValue="2">
+					CASE
+						WHEN (WRITERNAME2 IS NULL OR WRITERNAME2 = '') THEN WRITERNAME
+						ELSE WRITERNAME2
+					END AS WRITERNAME,
+					CASE
+						WHEN (WRITERDEPTNAME2 IS NULL OR WRITERDEPTNAME2 = '') THEN WRITERDEPTNAME
+						ELSE WRITERDEPTNAME2
+					END AS WRITERDEPTNAME,
+					CASE
+						WHEN (WRITERJOBTITLE2 IS NULL OR WRITERJOBTITLE2 = '') THEN WRITERJOBTITLE
+						ELSE WRITERJOBTITLE2
+					END AS WRITERJOBTITLE,
+				</isEqual>
+                <isNotEqual property="lang" compareValue="2">
+                    WRITERNAME,
+                    WRITERDEPTNAME,
+                    WRITERJOBTITLE,
+                </isNotEqual>
+					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE
+				FROM
+					VAPRDOINGDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				LIMIT
+					1
 		</isEqual>
 	</select>
 

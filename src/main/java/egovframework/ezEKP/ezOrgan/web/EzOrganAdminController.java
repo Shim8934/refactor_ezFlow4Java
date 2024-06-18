@@ -226,6 +226,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addAttitudeFormFormHtml2Column(); // 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
 			ezCommonService.addTblBoardItemNoti(); /* 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 */
 			ezCommonService.addTblBoardItemTempNoti(); /* 2023-09-25 민지수 - 게시판 > 임시저장 > 공지게시물 > 기간설정 컬럼 추가 */
+	    	ezCommonService.alterRepeatFlagForResourceInfo(); // 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
 
 			// tenant config
 	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
@@ -241,6 +242,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertPermissionBasisDeptYN_Config(); // 2023-08-16 전인하 - PermissionBasisDeptYN 테넌트 컨피그 추가
 			ezCommonService.insertTenantConfigLangTertiary(); // 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가
 			ezCommonService.insertTenantConfigLangQuaternary(); // 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
+			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
+			ezCommonService.insertUseHideHeaderArea(); // 2024-05-23 김우철 - 헤더 숨기기 기능 사용여부 테넌트 컨피그 추가
 
 	    	ezCommonService.insertPortalThemePortletInitdata();
 	    	ezCommonService.updateTaskUrl();
@@ -267,6 +270,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createTblDeptChangeInfo(); // 2024-02-20 장혜연 - tbl_dept_change_info 테이블 추가
 			ezCommonService.insertSurveyPostingMaxPeriodConfig(); // 2024-03-26 - 전자설문 종료 후 게시기간 설정 추가
 			ezCommonService.alterFileNameForWebfolderHistory(); // 2023-10-18 남진구 - 웹폴더 > 버전관리 > 파일 복원시 파일명 복원을 위한 FILE_NAME 칼럼 추가
+			ezCommonService.createTblTotalHistory(); // 2023-06-04 - 통합 PC 다중 파일 저장시 다운로드 로그 남기는 테이블
+			ezCommonService.insertdelAttachByOthersConfing(); // 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부
+			ezCommonService.insertApprNonElecRecTypeConfing(); // 2024-05-29 김유진 - 전자결재G 비전자문서등록 양식 확장자 정보
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

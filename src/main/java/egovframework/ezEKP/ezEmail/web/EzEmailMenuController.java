@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -35,6 +36,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -76,7 +78,10 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.rest.JgwResult;
 import egovframework.let.utl.rest.Rest;
 import net.lingala.zip4j.core.ZipFile;
-/** 
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+/**
  * @Description [Controller] 메일 메뉴
  * @author 오픈솔루션팀 이효민
  * @Modification Information
@@ -1607,6 +1612,141 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		}
 
 		logger.debug("searchedMailExportZip ended.");
+		return returnValue;
+	}
+
+	/**
+	 * 2024-05-20 이사라
+	 * 메일검색에서 검색된 메일파일을 zip파일로 서버에 저장하기 실행 함수
+	 */
+	@RequestMapping(value = "/ezEmail/searchedMailExportZipForAll.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String searchedMailExportZipForAll(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject requestObject, Locale locale, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("searchedMailExportZipForAll started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
+
+		String mailFolder = (String) requestObject.get("MAILFOLDER");
+		String startDate = (String) requestObject.get("STARTDATE");
+		String endDate = (String) requestObject.get("ENDDATE");
+		String andorStatus = (String) requestObject.get("ANDORSTATUS");
+		String attachStatus = (String) requestObject.get("ATTACHSTATUS");
+		String userkey = (String) requestObject.get("USERKEY");
+		int maxCount = requestObject.get("MAXCOUNT") == null ? 0 : (Integer) requestObject.get("MAXCOUNT");
+		int startIndex = 0;
+		String shareId = (String) requestObject.get("SHAREID");
+
+		if (useSharedMailbox.equals("YES")) {
+			logger.debug("searchedMailExportZipForAll shareId=" + shareId);
+
+			if (!StringUtils.isBlank(shareId)) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("searchedMailExportZipForAll ended.");
+
+					return "";
+				} else {
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+		}
+
+		logger.debug("searchedMailExportZipForAll userId=" + userInfo.getId() + ",userEmail=" + userEmail);
+
+		List listCategory = (ArrayList) requestObject.get("CATEGORY");
+		List listKeyword = (ArrayList) requestObject.get("KEYWORD");
+		String[] categoryArray = new String[listCategory.size()];
+		String[] keywordArray = new String[listKeyword.size()];
+
+		for (int i = 0; i < listCategory.size(); i++) {
+			categoryArray[i] = (String) listCategory.get(i);
+		}
+
+		for (int i = 0; i < listKeyword.size(); i++) {
+			keywordArray[i] = (String) listKeyword.get(i);
+		}
+
+		if (startDate == null) {
+			return "";
+		}
+
+		if (endDate == null) {
+			return "";
+		}
+
+		startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
+		endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
+
+		SimpleDateFormat sdfForParsing = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdfForParsing.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
+		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
+
+		// 가온누리에서 분석 결과 endDate가 없는 경우 null보다 현재 시각으로 지정하는 것이 성능이 훨씬 좋게 나와 추가함.
+		if (endDateObj == null) {
+			endDateObj = new Date();
+		}
+
+		String returnValue = "";
+		IMAPAccess ia = null;
+
+		try {
+			int totalCount = 0;
+
+			Map<String, Object> extraMap = new HashMap<String, Object>();
+			extraMap.put("andorStatus", andorStatus);
+			extraMap.put("attachStatus", attachStatus);
+
+			if (useRDBOnlyMailList.equals("YES")) {
+				String folderPath = "";
+
+				if (!mailFolder.equals("ALL")) {
+					folderPath = mailFolder;
+				}
+
+				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderPath, categoryArray, keywordArray, startDateObj, endDateObj, true,
+						false, false, "receivedDate", true, startIndex, maxCount, false, extraMap, userInfo.getTenantId(), false, "");
+
+				totalCount = (int) extraMap.get("totalCount");
+				logger.debug("searchedMailExportZipForAll totalCount=" + totalCount);
+
+				Map<String, String[]> urlMap = new HashMap<>();
+				Map<String, String> mailMap = new HashMap<>();
+
+				for (Map<String, String> mail : mailList) {
+					String mailIdInfo = mail.get("MAIL_ID");
+					String mailbox = mailIdInfo.substring(0, mailIdInfo.lastIndexOf("/"));
+					String mailId = mailIdInfo.substring(mailIdInfo.lastIndexOf("/") + 1);
+
+					if (StringUtils.isBlank(mailMap.get(mailbox))) {
+						mailMap.put(mailbox, mailId);
+					} else {
+						String mailIds = mailMap.get(mailbox);
+						mailIds += ("," + mailId);
+						mailMap.put(mailbox, mailIds);
+					}
+				}
+
+				for (Entry<String, String> elem : mailMap.entrySet()) {
+					String[] mailMapValue = { elem.getValue() };
+					urlMap.put(elem.getKey(), mailMapValue);
+				}
+
+				String realPath = commonUtil.getRealPath(request);
+
+				returnValue = mailExportZipExcute(loginCookie, locale, shareId, urlMap, realPath, maxCount, userkey);
+			}
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("searchedMailExportZipForAll ended.");
 		return returnValue;
 	}
 

@@ -43,7 +43,7 @@
 				
 				if(xmlHTTP.status < 200 || xmlHTTP.status > 300)
 				{
-					alert("<spring:message code='ezEmail.t603' />" + xmlHTTP.statusText);
+					alert("<spring:message code='ezEmail.t603' />" + xmlHTTP.status);
 					xmlHTTP = null;
 				}
 				else 

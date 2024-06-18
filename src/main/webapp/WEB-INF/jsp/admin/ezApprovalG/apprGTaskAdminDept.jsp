@@ -48,6 +48,9 @@
 		    var curpage = 1;
 		    var PageSize = 20;
 		    var totalPage = Math.ceil(taskCount/PageSize);
+            var searchTitle = '';
+            var searchCode = '';
+            var searchFlag = '';
 		    
 		    $(document).ready(function(){
 		        document.getElementById("ListCompany").value = CompanyID;
@@ -109,7 +112,7 @@
 		        DeptID = treeNode.GetNodeData("CN");
 		        deptName = treeNode.GetNodeData("VALUE");
 		        curpage = 1;
-		        makePagenationBar();
+		        makePagenationBar(null, null, 0);
 		    }
 		    
 		    function TreeViewNodeDbClick() {

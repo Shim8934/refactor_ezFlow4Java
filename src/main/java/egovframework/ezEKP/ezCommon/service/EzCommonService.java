@@ -327,4 +327,15 @@ public interface EzCommonService {
 
 	public void alterFileNameForWebfolderHistory() throws Exception;
 
+	/** 2023-06-26 한태훈 - 통합 PC 저장 이력 남기는 테이블(차후 다른 목적으로도 쓰일 수 있음) 추가 */
+	public void createTblTotalHistory() throws Exception;
+    
+	public void insertdelAttachByOthersConfing() throws Exception;
+
+	public void insertUseHideHeaderArea() throws Exception;
+
+	// 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+	public void alterRepeatFlagForResourceInfo() throws Exception;
+
+	public void insertApprNonElecRecTypeConfing() throws Exception;
 }

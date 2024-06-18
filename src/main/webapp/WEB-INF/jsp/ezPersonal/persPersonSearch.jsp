@@ -25,6 +25,8 @@
 	    	.countColor {
 	    		color:#017BEC;
 	    	}
+
+	    	.mainlist tr td[style*="display: none"]:first-child.none + td{padding-left:15px;}
 	    </style>
 		<title><spring:message code='ezPersonal.t210'/></title>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -106,10 +108,8 @@
 	        	selTab = "orgJobMstListView" + tabType;
 		        selSpan = "orgJobMstSpan" + tabType;
 		        
-		        $(".txtlist_DeptTD").css("display", "table-cell");
-		        $(".txtlist_DeptTD").css("padding-left", "15px");
-		        $(".mainlist tr td:nth-child(2)").css("padding-left", "4px");
-		        
+		        $(".none").css("display", "table-cell");
+
 		        clearOrgTab("orgJobMst");
 		        m_selectedTree = orglistView;
 		        orgJobMasterListSet(tabType);
@@ -607,15 +607,8 @@
 		        }
 	        	
 	        	if (selTab == "orglistView" && $(".txtlist_DeptTD").length > 0) {
-			        $(".txtlist_DeptTD").css("display", "none");
-			        $(".txtlist_DeptTD").css("padding-left", "4px");
-					//2023-06-02 김대현 조직도 리스트 보기에서 직위 테이블 헤더와 바디 값 줄이 안맞는 현상 수정
-					//$(".mainlist tr td:nth-child(2)").css("padding-left", "15px");
-					$(".mainlist tr .td_gray:nth-child(2)").css("padding-left", "15px");
-					// 검색시 이름이 밀리는 현상 수정
-					if ($("#Search_txtlist_table tr .td_gray:nth-child(2)").css("padding-left") == "15px") {
-						$("#Search_txtlist_table tr .td_gray:nth-child(2)").css("padding-left", "4px");
-					}
+			        $(".none").css("display", "none");
+
 		        }
 	    	}
 	    	
@@ -836,7 +829,7 @@
 	                	treeView.DataSource(g_xmlHTTP.responseXML);
 	                	treeView.DataBind("TreeView");
 	            	} else {
-	                	alert("<spring:message code='ezPersonal.t17'/>" + g_xmlHTTP.statusText)
+	                	alert("<spring:message code='ezPersonal.t17'/>" + g_xmlHTTP.status)
 	                	g_xmlHTTP = null;
 	            	}
 	        	}
@@ -1377,7 +1370,7 @@
           			<div style="vertical-align:top;height:67vh;overflow:auto;width:100%;" id="txtlist_Layer">   
           				<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
               				<tr>
-              					<td style="width:110px;color:#333;background-color: #f8f8fa" class="td_gray txtlist_DeptTD"><spring:message code='ezPersonal.t305'/></td>
+              					<td style="width:110px;color:#333;background-color: #f8f8fa" class="td_gray txtlist_DeptTD none"><spring:message code='ezPersonal.t305'/></td>
                   				<td style="width:110px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
                   				<td style="width:80px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
                   				<td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezPersonal.t177'/></td>

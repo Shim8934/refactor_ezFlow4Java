@@ -760,7 +760,7 @@
 							 AND 
 							 	S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
 		]]>
-<!-- 		테스트해보고 안되면 이걸로 대체 -->
+<!-- 		오류 발생시 이것으로 대체 -->
 <!--             	A.StartDate > DATE_SUB(DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL 5 DAY) -->
 	</select>
 	
@@ -2108,7 +2108,7 @@
             AND 
             	STARTDATE <= #nowDate#
             AND 
-            	ENDDATE > #nowDate#
+            	NTENDDATE > #nowDate#
             AND 
             	extensionAttribute1 = '0'
             AND 

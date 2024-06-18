@@ -34,6 +34,9 @@
 		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var taskCount = "<c:out value='${taskCount}'/>"; // 단위업무 전체 갯수
 		    var pageAdminFlag = 'user'
+		    var searchTitle = '';
+            var searchCode = '';
+            var searchFlag = '';
 		    
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -47,7 +50,7 @@
 		        PageSize = 20; // 한 페이지에서 표출하는 항목 갯수
 		        curpage = 1; // 현재 페이지
 		        totalPage = Math.ceil(taskCount/PageSize); // 총 페이지 수
-		        makePagenationBar();
+		        makePagenationBar(null, null, 0);
 		        DocList_Resizer();
 		    };
 		    window.onresize = function () {
@@ -79,6 +82,32 @@
      			   }
 		        }
 		    }
+		    function lvtDoclist_HeaderClick(pHeader) {
+                if (OrderCell == pHeader) {
+                    if (OrderOption == "")
+                        OrderOption = "DESC";
+                    else
+                        OrderOption = "";
+                }
+                else {
+                    OrderCell = pHeader;
+                    OrderOption = "";
+                }
+                    SortList(pHeader);
+            }
+
+            function SortList(szField) {
+                if (g_SortField == szField)
+                {
+                    g_SortType = GetToggledSotrType();
+                }
+                else {
+                    g_SortType = "ASC";
+                }
+                g_SortField = szField;
+
+                GetTaskFullList(searchTitle, searchCode, searchFlag);
+            }
 		    function btnClose_onclick() {
 		        window.close();
 		    }

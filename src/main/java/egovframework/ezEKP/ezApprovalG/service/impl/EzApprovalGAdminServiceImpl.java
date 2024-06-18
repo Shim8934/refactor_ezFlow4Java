@@ -1516,12 +1516,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID) throws Exception {
+	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID, String title, String code, String flag, String orderOption1, String orderOption2) throws Exception {
 		logger.debug("getTaskFullList started.");
 		StringBuilder sb = new StringBuilder();
 		
 		int startRow = (Integer.parseInt(pageNo) - 1) * Integer.parseInt(pageSize);
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DEPTCODE", deptCode);
 		map.put("companyID", companyID);
@@ -1530,8 +1530,20 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("startRow", startRow);
 		map.put("startRowForOracle", startRow + 1);
 		map.put("endRowForOracle", startRow + Integer.parseInt(pageSize));
-		
-		
+
+		if (!title.isEmpty()) {
+			map.put("title", title);
+		}
+		if (!code.isEmpty()) {
+			map.put("code", code);
+		}
+		if (!orderOption1.isEmpty()) {
+			map.put("v_ORDEROPTION1", orderOption1);
+			if ("DESC".equals(orderOption2.toUpperCase())) {
+				map.put("v_ORDEROPTION2", "DESC");
+			}
+		}
+
 		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskFullList(map);
 		
 		sb.append("<DATA>");
@@ -2577,7 +2589,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			recevGroupXML = formRecevGroup;
 		}
 		
-		// 안 쓰고 있음 혹시 모르니 유지
+		// 현재 사용하지 않는 것으로 추정되나 일단 유지함
 		@SuppressWarnings("unused")
 		boolean isUpdate = false;
 		String saveFileFolder = "";
@@ -5924,16 +5936,25 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return "TRUE";
 	}
 
-	public int getTaskListCount(String deptCode, String companyID, int tenantID) throws Exception {
+	public int getTaskListCount(String deptCode, String companyID, int tenantID, String title, String code, String flag) throws Exception {
 		logger.debug("getTaskListCount started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DEPTCODE", deptCode);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
-
-		int result = ezApprovalGAdminDAO.getTaskListCount(map);
 		
+		if (flag.equals("1")) {
+			if (!title.isEmpty()) {
+				map.put("title", title);
+			}
+			if (!code.isEmpty()) {
+				map.put("code", code);
+			}
+		}
+	
+		int result = ezApprovalGAdminDAO.getTaskListCount(map);
+
 		logger.debug("getTaskListCount ended.");
 		return result;
 	}

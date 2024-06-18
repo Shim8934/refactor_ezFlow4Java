@@ -158,7 +158,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String dept = request.getParameter("dept");
 		String buJaeId = request.getParameter("buJaeId");
 //		String proxyInfo2 = "";
-		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
+		// 전자결재만 존재하면 아래와 같이 "user"로 하드코딩이 가능하나, 다른 모듈 존재 시 수정 필요함
 		String pClass = "user";
 		if (buJaeInfo != null && !buJaeInfo.equals("")) {
 			if (buJaeInfo.split(":").length >= 5) {
@@ -294,7 +294,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String newTempPass = EgovFileScrty.decryptRsa(pk, newPass);
 		String newPassword = EgovFileScrty.encryptPassword(newTempPass, userID);
 		
-		//결재 암호 나 로그인 암호가 같으면 인증되게--이사님이...
+		// 결재 암호나 로그인 암호가 같으면 인증되게 처리
 		if (loginPass.trim().equals(newPassword) || oldPass.trim().equals(newPassword)) {
 			result = "OK";
 		} else {

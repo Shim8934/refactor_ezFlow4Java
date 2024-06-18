@@ -141,9 +141,10 @@
 		    function OpenAlertUI(pAlertContent) {
 		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = pAlertContent;
-		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
-		            try { ezAPRALERT_Cross.focus(); } catch (e) {
-		            }
+		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		            //var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
+		            var url = "/ezApprovalG/ezAprAlert.do";
+		            DivPopUpShow(330, 205, url);
 		        } else {
 		            var parameter = pAlertContent;
 		            var url = "/ezApprovalG/ezAPRALERT.do";
@@ -153,6 +154,7 @@
 		    }
 		    
 		    function OpenAlertUI_Complete() {
+		    	DivPopUpHidden();
 		    }
 		    
 		    window.onbeforeunload = function () {
@@ -329,4 +331,8 @@
 	<c:if test="${!isCrossBrowser}">
 	    <script type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</script>
 	</c:if>
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	</div>
 </html>

@@ -218,8 +218,8 @@
                 xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", false);
                 xmlHTTP.send(xmlDOM);
     
-                if (xmlHTTP.statusText != "OK") {
-                    alert("" + strLang16 + "" + xmlHTTP.statusText);
+                if (xmlHTTP.status != 200) {
+                    alert("" + strLang16 + "" + xmlHTTP.status);
                     xmlDOM = null;
                     xmlHTTP = null;
                     continue;

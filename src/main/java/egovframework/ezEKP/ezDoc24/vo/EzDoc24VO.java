@@ -2,14 +2,14 @@ package egovframework.ezEKP.ezDoc24.vo;
 
 public class EzDoc24VO {
 	
-	private String orgcd;    //
-	private String cmpnynm;    //
-	private String sendernm;    //
-	private String bizrno;    //
-	private String adres;    //
-	private String deleteflag;    //
-	private String updatede;    //
-	private String deletede;    //
+	private String orgcd;
+	private String cmpnynm;
+	private String sendernm;
+	private String bizrno;
+	private String adres;
+	private String deleteflag;
+	private String updatede;
+	private String deletede;
 	public String getOrgcd() {
 		return orgcd;
 	}

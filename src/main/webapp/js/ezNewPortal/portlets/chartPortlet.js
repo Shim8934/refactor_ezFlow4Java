@@ -188,6 +188,9 @@ function EzChartPortlet() {
         _data.labels = barLabel;
         _data.datasets = datasets;
         _option = _stackBarOptions;
+        /* 2024-04-30 position 속성 추가 */
+        var parentElement = _canvas.parentElement;
+        if (!parentElement.style.position) parentElement.style.position = 'relative';
     }
 
     var _initDoughnut = function () {

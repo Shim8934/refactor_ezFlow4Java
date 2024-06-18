@@ -471,7 +471,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	mailSignSel = "0";
         }
         
-        //TODO: setting
   		String useMultiLangMail = "1";
   		String pSecurity = "1";
   		String charsetCheck = "1";
@@ -803,7 +802,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		                unread = orgMessage.isSet(Flags.Flag.SEEN) ? "1" : "0";
 		                
-		                //TODO: Sensitivity?
 		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
 		        		
 		                //메일 재전송할 때에는 서명사용안함이 default.
@@ -1349,6 +1347,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 		
 		boolean useAdditionalInfo = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId()));
+
+		// 2024-02-01 장혜연 : 개별발신 디폴트 사용여부 값을 가져옴
+        String useEachMailDefault = ezCommonService.getTenantConfig("useEachMailDefault", loginInfo.getTenantId());
+        isEach = useEachMailDefault.equals("YES") ? "true" : isEach;
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
@@ -5442,7 +5444,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useSecureMail", useSecureMail);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("useReceiptExternal", useReceiptExternal);
-		
+
 		logger.debug("mailLetterOption ended.");
 		return "ezEmail/mailLetterOption";
 	}

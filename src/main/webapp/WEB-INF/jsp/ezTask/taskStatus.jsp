@@ -30,7 +30,7 @@
 	        var repeatCount = "<c:out value = '${repeatCount}' />";
 	        var realDate = "<c:out value = '${realDate}' />";
 	        var duration = 500;
-			/* 필요하면 주석제거하고 하나씩 빼쓰자
+			/* 필요 시 주석 제거 후 사용
 	        var importance = "${taskInfoVO.importance }";
 	        var personContentpath = "${taskInfoVO.personContentPath }"; */
 	        

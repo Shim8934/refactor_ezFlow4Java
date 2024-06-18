@@ -57,8 +57,13 @@
 		        if (RetValue[2])
 		            g_InitFlag = RetValue[2];
 		        if (g_InitFlag == "1") {
-		            document.getElementById("trChangeCabinet").style.display = "";
-		            document.getElementById("trModify").style.display = "none";
+					if (g_CabinetID != null) {
+						document.getElementById("trChangeCabinet").style.display = "none";
+						document.getElementById("trModify").style.display = "";
+					} else {
+						document.getElementById("trChangeCabinet").style.display = "";
+						document.getElementById("trModify").style.display = "none";
+					}
 		
 		            InitCabinetInfo(GetCabinetClassInfo(g_CabinetID));
 		        } else if (g_InitFlag == "2") {

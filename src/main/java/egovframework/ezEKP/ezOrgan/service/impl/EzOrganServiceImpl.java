@@ -719,7 +719,6 @@ public class EzOrganServiceImpl implements EzOrganService {
     						isAbsence = true;
     					}
     				} catch (ParseException e) {
-    					// TODO Auto-generated catch block
     					logger.error("dateFormat.parse(dateFormat.format(new Date())) error :: " + e);
     					logger.error(e.getMessage(), e);
     				} catch (Exception ee) {
