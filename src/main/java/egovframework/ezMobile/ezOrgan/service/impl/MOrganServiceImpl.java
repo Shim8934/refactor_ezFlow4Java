@@ -97,7 +97,7 @@ public class MOrganServiceImpl implements MOrganService {
 	}
 
 	@Override
-	public List<MOrganListVO> getDeptInfo(String organType, String companyID, String deptId, String lang, int tenantId) throws Exception {
+	public List<MOrganListVO> getDeptInfo(String organType, String companyID, String deptId, String lang, int tenantId, String userSearch) throws Exception {
 		logger.debug("getDeptInfo started");
 
 		//결과 조직도 리스트
@@ -172,6 +172,7 @@ public class MOrganServiceImpl implements MOrganService {
 			map.put("organType", "company");
 			map.put("lang", commonUtil.getMultiData(lang, tenantId));
 			map.put("tenantID", tenantId);
+			map.put("userSearch", userSearch);
 			
 			resultOrganListVOs = mOrganDAO.getOrganList(map);
 			
@@ -186,7 +187,7 @@ public class MOrganServiceImpl implements MOrganService {
 	}
 
 	@Override
-	public List<MOrganListVO> getDeptMemberList(String deptID, String searchFlag, String selectType, String lang, int tenantId, String companyId) throws Exception {
+	public List<MOrganListVO> getDeptMemberList(String deptID, String searchFlag, String selectType, String lang, int tenantId, String companyId, String userSearch) throws Exception {
 		logger.debug("getDeptMemberList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -197,9 +198,14 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
 		map.put("companyId", companyId);
-		
-		map.put("useShowAllCompanies", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAllCompanies", tenantId)));
-		
+		map.put("userSearch", userSearch);
+
+		if(userSearch.equals("userSearch")){
+			map.put("useShowAllCompanies", "false");
+		}else{
+			map.put("useShowAllCompanies", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAllCompanies", tenantId)));
+		}
+
 		logger.debug("deptId : " + deptID.replace("%", "\\%").replace("_", "\\_"));
 		logger.debug("lang : " + commonUtil.getMultiData(lang, tenantId));
 		
@@ -226,13 +232,14 @@ public class MOrganServiceImpl implements MOrganService {
 	}
 
 	@Override
-	public List<MOrganListVO> getLowDeptInfo(String deptID, String lang, int tenantId) throws Exception {
+	public List<MOrganListVO> getLowDeptInfo(String deptID, String lang, int tenantId, String userSearch) throws Exception {
 		logger.debug("getLowDeptInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("deptID", deptID);
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
+		map.put("userSearch", userSearch);
 
 		List<MOrganListVO> resultOrganListVOs = mOrganDAO.getLowDeptInfo(map);
 		
@@ -242,7 +249,7 @@ public class MOrganServiceImpl implements MOrganService {
 	}
 
 	@Override
-	public List<MOrganListVO> getHighDeptInfo(String deptID, String deptType, String organType, String lang, String companyID, int tenantId) throws Exception {
+	public List<MOrganListVO> getHighDeptInfo(String deptID, String deptType, String organType, String lang, String companyID, int tenantId, String userSearch) throws Exception {
 		logger.debug("getHighDeptInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -252,6 +259,7 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantId);
+		map.put("userSearch", userSearch);
 		
 		List<MOrganListVO> resultOrganListVOs = mOrganDAO.getHighDeptInfo(map);
 

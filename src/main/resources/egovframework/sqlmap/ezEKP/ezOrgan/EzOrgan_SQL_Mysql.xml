@@ -84,6 +84,7 @@
 		<result property="role" 						  	    column="role" 						    columnIndex="45"  nullValue=""/>	
 		<result property="role1" 							    column="role1" 						    columnIndex="46"  nullValue=""/>
 		<result property="role2" 							    column="role2" 						    columnIndex="47"  nullValue=""/>
+		<result property="physicalDeliveryOfficeName1" 			column="physicalDeliveryOfficeName1" 	columnIndex="44"/>
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
@@ -1270,6 +1271,7 @@
 	            'user' TYPE  ,
 	            SIPURI ,
 	            POSITIONCD ,
+	            PHYSICALDELIVERYOFFICENAME AS PHYSICALDELIVERYOFFICENAME1 ,
 	            'user' USERTYPE
 	        FROM
 	        	TBL_USERMASTER 
@@ -1313,6 +1315,7 @@
 	         C.DISPLAYNAME DESCRIPTION1  ,
      	     C.DISPLAYNAME2 DESCRIPTION2  ,
           	 A.PHYSICALDELIVERYOFFICENAME ,
+          	 C.EXTENSIONATTRIBUTE2 AS PHYSICALDELIVERYOFFICENAME1  ,
              CASE
              	#v_LANGDATA#
              WHEN

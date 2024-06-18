@@ -1980,5 +1980,133 @@
 		]]>
 	</update>
 
+	<select id="EzScheduleDAO.getUserSearchScheduleList" parameterClass="Map" resultMap="scheduleListVO">
+		<![CDATA[
+			select
+				scheduleid,
+				parentid,
+				ownerid,
+				ownername,
+				ownername2,
+				a.creatorid,
+				a.creatorname,
+				a.creatorname2,
+				date_add(a.createdate, interval +#v_OFFSETMIN# minute) as createdate,
+				a.modifierid,
+				a.modifiername,
+				a.modifiername2,
+				date_add(a.modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
+				scheduletype,
+				importance,
+				hasattendant,
+				hasattach,
+				hascomment,
+				isreadonly,
+				ispublic,
+				datetype,
+				date_add(a.startdate, interval +#v_OFFSETMIN# minute) as startdate,
+				date_add(a.enddate, interval +#v_OFFSETMIN# minute) as enddate,
+				repetition,
+				repetitiondelete,
+				title,
+				location,
+				contentpath,
+				b.groupname,
+				a.companyid,
+				b.groupcolor
+        	from
+        		tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid
+       		where
+       			(a.ownerid in 
+		]]>	    
+       			 	<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
+	                            #v_INDILIST[]#
+	            	</iterate>
+		<![CDATA[        	
+       		and
+				ispublic = #v_ISPUBLIIC#
+            and
+            	(
+            		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#)
+            		or
+            		(a.enddate >= #v_PSTARTDATE# and a.enddate < #v_PENDDATE#)
+            		or
+            		(a.startdate < #v_PSTARTDATE# and a.enddate >= #v_PENDDATE#)
+            		or
+            		(a.datetype='3')
+            	)
+            and
+            	a.tenant_id = #v_TENANTID#
+            ]]>
+		<isNotEmpty property="v_SEARCHTITLE">
+			<![CDATA[
+            and
+            	a.title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
+            ]]>
+		</isNotEmpty>
+		<![CDATA[
+        	)
+        	or
+       			(a.ownerid in
+        ]]>			    
+       			 <iterate property="v_PIDLIST" open="(" close=")" conjunction=",">
+	                            #v_PIDLIST[]#
+	            </iterate>
+		<![CDATA[     
+       		and
+        		a.companyid = #v_COMPANYID#
+        	and
+        		((a.scheduletype = '2' and a.ownerid in (SELECT
+														deptid
+													FROM
+														TBL_ADDJOBMASTER
+													WHERE
+														TENANT_ID = #v_TENANTID#
+													AND
+														CN = #v_USERID#
+													UNION ALL
+													SELECT
+														department
+													FROM
+														TBL_USERMASTER
+													WHERE
+														CN = #v_USERID#
+													AND
+														TENANT_ID = #v_TENANTID#
+													UNION ALL
+													SELECT
+														DEPARTMENTCN
+													FROM
+														tbl_schedule_public_dept
+													WHERE
+														USERCN = #v_USERID#
+													AND
+														TENANT_ID = #v_TENANTID#
+													 ))
+					or
+					(a.scheduletype <> '2'))
+            and
+            	(
+            		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#)
+            		or
+            		(a.enddate >= #v_PSTARTDATE# and a.enddate < #v_PENDDATE#)
+            		or
+            		(a.startdate < #v_PSTARTDATE# and a.enddate >= #v_PENDDATE#)
+            		or
+            		(a.datetype='3')
+            	)
+            and
+            	a.tenant_id = #v_TENANTID#
+            ]]>
+		<isNotEmpty property="v_SEARCHTITLE">
+			<![CDATA[
+            and
+            	a.title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
+            ]]>
+		</isNotEmpty>
+		)
+		order by a.startdate asc
+	</select>
+
 </sqlMap>
 

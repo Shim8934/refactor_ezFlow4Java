@@ -370,5 +370,10 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void updateGoogleTokenInfo(Map<String, Object> map) throws Exception {
 		update("EzScheduleDAO.updateGoogleTokenInfo", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ScheduleInfoVO> getUserSearchScheduleList(Map<String, Object> map) throws Exception  {
+		return (List<ScheduleInfoVO>) list("EzScheduleDAO.getUserSearchScheduleList", map);
+	}
 }
 

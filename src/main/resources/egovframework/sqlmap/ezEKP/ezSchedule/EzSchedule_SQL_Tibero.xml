@@ -2005,6 +2005,136 @@
 				companyid = #v_COMPANYID#
 		]]>
 	</update>
+
+	<select id="EzScheduleDAO.getUserSearchScheduleList" parameterClass="Map" resultMap="scheduleListVO">
+		<![CDATA[
+			SELECT C.* FROM
+			(
+			SELECT
+				SCHEDULEID,
+				PARENTID,
+				OWNERID,
+				OWNERNAME,
+				OWNERNAME2,
+				A.CREATORID,
+				A.CREATORNAME,
+				A.CREATORNAME2,
+				(A.CREATEDATE + #v_OFFSETMIN#/(24*60)) AS CREATEDATE,
+				A.MODIFIERID,
+				A.MODIFIERNAME,
+				A.MODIFIERNAME2,
+				(A.MODIFYDATE + #v_OFFSETMIN#/(24*60)) AS MODIFYDATE,
+				SCHEDULETYPE,
+				IMPORTANCE,
+				HASATTENDANT,
+				HASATTACH,
+				HASCOMMENT,
+				ISREADONLY,
+				ISPUBLIC,
+				DATETYPE,
+				(A.STARTDATE + #v_OFFSETMIN#/(24*60)) AS STARTDATE,
+				(A.ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE,
+				REPETITION,
+				REPETITIONDELETE,
+				TITLE,
+				LOCATION,
+				CONTENTPATH,
+				B.GROUPNAME,
+				A.COMPANYID,
+				B.GROUPCOLOR
+        	FROM
+        		TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID
+       		WHERE
+       			(A.OWNERID IN 
+		]]>
+		<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
+			#v_INDILIST[]#
+		</iterate>
+		<![CDATA[        	
+       		AND
+				ispublic = #v_ISPUBLIIC#
+            AND
+            	(
+            		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+            		OR
+            		(A.ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+            		OR
+            		(A.STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+            		OR
+            		(A.DATETYPE='3')
+            	)
+            AND
+            	A.TENANT_ID = #v_TENANTID#
+            ]]>
+		<isNotEmpty property="v_SEARCHTITLE">
+			<![CDATA[
+            and
+            	A.title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
+            ]]>
+		</isNotEmpty>
+		<![CDATA[
+            )
+            or
+       			(A.OWNERID IN 
+		]]>
+		<iterate property="v_PIDLIST" open="(" close=")" conjunction=",">
+			#v_PIDLIST[]#
+		</iterate>
+		<![CDATA[
+       		and
+        		A.companyid = #v_COMPANYID#
+        	and
+        		((A.scheduletype = '2' and A.ownerid in (SELECT
+														deptid
+													FROM
+														TBL_ADDJOBMASTER
+													WHERE
+														TENANT_ID = #v_TENANTID#
+													AND
+														CN = #v_USERID#
+													UNION ALL
+													SELECT
+														department
+													FROM
+														TBL_USERMASTER
+													WHERE
+														CN = #v_USERID#
+													AND
+														TENANT_ID = #v_TENANTID#
+													UNION ALL
+													SELECT
+														UNISTR(DEPARTMENTCN)
+													FROM
+														tbl_schedule_public_dept
+													WHERE
+														USERCN = #v_USERID#
+													AND
+														TENANT_ID = #v_TENANTID#
+													 ))
+					or
+					(A.scheduletype <> '2'))
+            AND
+            	(
+            		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+            		OR
+            		(A.ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+            		OR
+            		(A.STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+            		OR
+            		(A.DATETYPE='3')
+            	)
+            AND
+            	A.TENANT_ID = #v_TENANTID#
+            ]]>
+		<isNotEmpty property="v_SEARCHTITLE">
+			<![CDATA[
+            and
+            	A.title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
+            ]]>
+		</isNotEmpty>
+		) ) C
+		ORDER BY C.STARTDATE ASC
+	</select>
 	
 </sqlMap>
 

@@ -267,7 +267,8 @@
 					    'dept' as TYPE,
 						'' as mobile,
 						'' as telephoneNumber,
-						'' as jobId
+						'' as jobId,
+						EXTENSIONATTRIBUTE2 as userCompanyID
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -300,7 +301,8 @@
 					'user' as TYPE,
 					mobile,
 					telephoneNumber,
-					'' as jobId
+					'' as jobId,
+					PHYSICALDELIVERYOFFICENAME as userCompanyID
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -331,6 +333,11 @@
 									</isEqual>
 				<![CDATA[
 								)
+				 ]]> 
+				<isEqual property="userSearch" compareValue="userSearch" prepend="and">
+					PHYSICALDELIVERYOFFICENAME = #companyId#
+				</isEqual>
+				<![CDATA[
 				)
 				UNION ALL
 				
@@ -347,7 +354,8 @@
 					'addJobUser' as TYPE,
 					B.mobile,
 					B.telephoneNumber,
-					A.JOBID as jobId
+					A.JOBID as jobId,
+		    		D.EXTENSIONATTRIBUTE2 as userCompanyID
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
@@ -364,11 +372,16 @@
 					(B.DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%')
 					OR
 					D.DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%'))	
+		 	]]>
+				<isEqual property="userSearch" compareValue="userSearch" prepend="and">
+					D.EXTENSIONATTRIBUTE2 = #companyId#
+				</isEqual>
+			<![CDATA[
 				AND
 					B.TENANT_ID = #tenantID#
 		    	AND 
 		    		B.PHYSICALDELIVERYOFFICENAME = #companyId# 
-		    	AND 
+		    	AND
 		    		D.DEPT_CD_PATH NOT LIKE '%trash\_dept%')
 				ORDER BY 
 					EXTENSIONATTRIBUTE15,
@@ -391,7 +404,8 @@
 					    'dept' as TYPE,
 						'' as mobile,
 						'' as telephoneNumber,
-						'' as jobId
+						'' as jobId,
+						EXTENSIONATTRIBUTE2 as userCompanyID
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -418,7 +432,8 @@
 					'user' as TYPE,
 					mobile,
 					telephoneNumber,
-					'' as jobId
+					'' as jobId,
+	    		    PHYSICALDELIVERYOFFICENAME as userCompanyID
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -451,7 +466,8 @@
 					'addJobUser' as TYPE,
 					B.mobile,
 					B.telephoneNumber,
-					A.JOBID as jobId
+					A.JOBID as jobId,
+				    D.EXTENSIONATTRIBUTE2 as userCompanyID
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
@@ -559,7 +575,11 @@
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
 	  				END DEPTNAME,
-				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    CASE
+					    WHEN #userSearch# = 'userSearch'
+					    THEN (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN AND DEPTLEVEL != '1'))
+					    ELSE (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN))
+					END ISLAST,
 				    0 AS EXPAND,
 				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -568,6 +588,11 @@
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
+			]]>
+				<isEqual property="userSearch" compareValue="userSearch" prepend="and">
+					DEPTLEVEL != '1'
+				</isEqual>
+			<![CDATA[
 				AND
 					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 				AND
@@ -612,7 +637,11 @@
   					THEN DISPLAYNAME
   					ELSE DISPLAYNAME$lang$
   				END DEPTNAME,
-			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+    		    CASE
+					WHEN #userSearch# = 'userSearch'
+					THEN (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN AND DEPTLEVEL != '1'))
+					ELSE (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN))
+				END ISLAST,
 			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
 			    DEPTLEVEL as DEPTTYPE,
 	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -621,6 +650,11 @@
 				TBL_DEPTMASTER A
 			WHERE
 				TENANT_ID = #tenantID#
+		]]>
+			<isEqual property="userSearch" compareValue="userSearch" prepend="and">
+				DEPTLEVEL != '1'
+			</isEqual>
+		<![CDATA[
 			AND
 				DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 			AND
@@ -774,8 +808,12 @@
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
 	  				END DEPTNAME,
-				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
-				    0 AS EXPAND,
+					CASE
+					    WHEN (#userSearch# = 'userSearch' AND #deptType# = '2')
+					    THEN (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN AND DEPTLEVEL != '1'))
+					    ELSE (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN))
+					END ISLAST,
+					0 AS EXPAND,
 				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
 		   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
@@ -783,6 +821,11 @@
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
+			]]>
+				<isEqual property="userSearch" compareValue="userSearch" prepend="and">
+					DEPTLEVEL != '1'
+				</isEqual>
+			<![CDATA[
 				AND
 					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 				AND

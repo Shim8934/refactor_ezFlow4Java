@@ -30,5 +30,7 @@ public interface MScheduleService {
 	public List<ScheduleInfoVO> scheduleListForWorkspace(MCommonVO info, String startDate, String endDate, String searchTitle) throws Exception;
 	
 	public JSONObject scheduleMainList(MCommonVO info, String listCnt) throws Exception;
-	
+
+	public List<ScheduleInfoVO> scheduleUserSearchList(MCommonVO info, String startDate, String endDate, String searchTitle, String searchColumn, String searchData) throws Exception;
+
 }

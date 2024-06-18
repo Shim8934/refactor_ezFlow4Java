@@ -406,14 +406,37 @@ public class EzScheduleController extends EgovFileMngUtil {
 		if(startDate == null || endDate == null || idList == null) {
 			return "";
 		}
-		
-		
+
+		String chk_usersearch = request.getParameter("chk_usersearch");
+		String resultUserID = request.getParameter("resultUserID");
+		String resultDeptName = request.getParameter("resultDeptName");
+		String resultDeptID = request.getParameter("resultDeptID");
+		String resultCompanyID = request.getParameter("resultCompanyID");
+
+		if(chk_usersearch !=null) {
+			if (chk_usersearch.equals("UserSearch") && "".equals(resultUserID)) {
+				return "";
+			} else {
+				userInfo.setId(resultUserID);
+				userInfo.setDeptName(resultDeptName);
+				userInfo.setDeptID(resultDeptID);
+				userInfo.setCompanyID(resultCompanyID);
+			}
+		}
+
 		String groupID = request.getParameter("GROUPID");	
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
+
+		List<ScheduleInfoVO> sList;
+
 		//일정관리 데이터 호출 함수
-		List<ScheduleInfoVO> sList = scheduleListData(startDate, endDate, idList, groupID, offSetMin, userInfo);
-		
+		if(chk_usersearch !=null) {
+			sList = scheduleUserSearchListData(startDate, endDate, idList, groupID, offSetMin, userInfo);
+		}else {
+			sList = scheduleListData(startDate, endDate, idList, groupID, offSetMin, userInfo);
+		}
+
 		Collections.sort(sList, new EzScheduleCompareUtil());
 		
 		
@@ -2686,6 +2709,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         String pageFrom = request.getParameter("pageFrom");
         String otherid = request.getParameter("otherid");
         String _scheduleid = request.getParameter("id");
+		String chk_usersearch = request.getParameter("chk_usersearch");
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
         String companyID = loginVO.getCompanyID();
@@ -2815,7 +2839,14 @@ public class EzScheduleController extends EgovFileMngUtil {
         		model.addAttribute("repetitionInfo", vo.getRepetition());
         	}
         }
-        
+
+        //사용자일정검색 시 권한 N 고정
+		if(chk_usersearch != null && chk_usersearch.equals("UserSearch")){
+			_admin = "N";
+			_editPosible = "N";
+			use_cabinet = "NO";
+		}
+
         model.addAttribute("companyID", companyID);
         model.addAttribute("scheduleInfo", vo);        
         model.addAttribute("_date", _date);
@@ -5176,6 +5207,254 @@ public class EzScheduleController extends EgovFileMngUtil {
 		logger.debug("ezScheduleReadBoard ended.");
 		return sb.toString();
 	}
+	
+	/**
+	 * 2023-10-11 기민혁 - 일정관리 > 사용자일정검색
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSchedule/scheduleUserCalendarSearch.do", method = RequestMethod.GET)
+	public String  scheduleUserCalendarSearch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {
 
+		logger.debug("============ scheduleUserCalendarSearch started ============");
+
+		int	timeZone = 0;
+		String deptAdmin = "N";
+		String companyAdmin = "N";
+		String pOffset = "";
+		String idList = "";
+		String idType = "T";
+		//사용자 일정 검색 타이틀 고정
+		String defaultTitle = msg.getMessage("ezSchedule.kmh02", locale);
+		loginVO = commonUtil.userInfo(loginCookie);
+		String lang = loginVO.getPrimary();
+		int tenantID = loginVO.getTenantId();
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginVO.getTenantId());
+		String otherId = request.getParameter("otherid");
+
+		String groupId = request.getParameter("groupid");
+		if (groupId == null) {
+			groupId = "";
+		}
+
+		String SearchUserId = request.getParameter("SearchUserId");
+		if (SearchUserId == null) {
+			SearchUserId = "";
+		}
+
+		String SearchDeptName = request.getParameter("SearchDeptName");
+		if (SearchDeptName == null) {
+			SearchDeptName = "";
+		}
+
+		String SearchDeptId = request.getParameter("SearchDeptId");
+		if (SearchDeptId == null) {
+			SearchDeptId = "";
+		}
+
+		String SearchName = request.getParameter("SearchName");
+		if (SearchName == null) {
+			SearchName = "";
+		}
+		String SearchCompanyId = request.getParameter("SearchCompanyId");
+		if (SearchCompanyId == null) {
+			SearchCompanyId = "";
+		}
+
+		// 일정관리 환경설정 정보
+		ScheduleConfigVO scheduleConfigVO = ezScheduleService.getScheduleConfig(loginVO.getId(), loginVO.getTenantId());
+
+		int	defaultView = 0;
+		int	startDay = 0;
+		int	startTime = 0;
+		int	endTime = 0;
+
+		if (scheduleConfigVO != null) {
+			defaultView	= scheduleConfigVO.getDefaultView();
+			startDay	= scheduleConfigVO.getStartDay();
+			startTime	= scheduleConfigVO.getStartTime() / 60;
+			endTime		= scheduleConfigVO.getEndTime() / 60;
+		} else {
+			defaultView	= 2;
+			startDay	= 7;
+			startTime	= 540 / 60;
+			endTime		= 1020 / 60;
+		}
+		
+		List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(SearchUserId, loginVO.getTenantId() ,SearchCompanyId);
+
+		for (int i = 0; i < groupList.size(); i++) {
+			ScheduleGroupListVO data = groupList.get(i);
+
+			if(data.getGroupColor() == null) {
+				data.setGroupColor("#e9de13");
+			}
+		}
+		
+		model.addAttribute("userInfo",		loginVO);
+		model.addAttribute("pOffset",		pOffset);
+		model.addAttribute("timeZoneStr",	timeZone);
+		model.addAttribute("idType",		idType);
+		model.addAttribute("otherId",		otherId);
+		model.addAttribute("startTime",		startTime);
+		model.addAttribute("endTime",		endTime);
+		model.addAttribute("defaultView",	defaultView);
+		model.addAttribute("startDay",		startDay);
+		model.addAttribute("useEditor",		useEditor);
+		model.addAttribute("defaultTitle",	defaultTitle);
+		model.addAttribute("SearchName", SearchName);
+		model.addAttribute("resultUserID", SearchUserId);
+		model.addAttribute("resultCompanyID", SearchCompanyId);
+		model.addAttribute("resultDeptName", SearchDeptName);
+		model.addAttribute("resultDeptID", SearchDeptId);
+		model.addAttribute("groupList", groupList);
+
+		return "/ezSchedule/scheduleUserCalendarSearch";
+	}
+
+	/**
+	 * 일정관리 일정 데이터 표출 함수
+	 */
+	public List<ScheduleInfoVO> scheduleUserSearchListData(String startDate, String endDate, String idList, String groupID, String offSetMin, LoginVO userInfo) throws Exception {
+
+		logger.debug("============ scheduleUserSearchListData started ============");
+		String indiList = "";
+		String pidList = "";
+		String pidListSub = "";
+		String indiListSub = "";
+		String blank ="";
+
+		if(startDate != null && !startDate.equals("")) {
+			String[] sDate = startDate.split("-");
+			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+
+			startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
+		}
+
+		if(endDate != null && !endDate.equals("")) {
+			String[] eDate = endDate.split("-");
+			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+
+			endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+		}
+
+		String utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
+		String utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
+
+		String userID = userInfo.getId();
+		String lang = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+
+		//근태현황 일정관리 연동 x
+		String useAnnualScheduleYN = "0";
+		//일정 비서 사용 x
+		//List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID ,companyID);
+		List<ScheduleSecretaryVO> tList = new ArrayList<ScheduleSecretaryVO>();
+
+		//공유 부서 사용 x
+		//List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID ,companyID);
+		List<ScheduleDeptVO> dList = new ArrayList<ScheduleDeptVO>();
+
+		//겸직 부서 사용 x
+		//List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID, companyID);
+		List<ScheduleCumulerVO> cList = new ArrayList<ScheduleCumulerVO>();
+
+		//일정 그룹 사용 
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userID, userInfo.getTenantId() ,companyID);
+		//List<ScheduleGroupListVO> gList = new ArrayList<ScheduleGroupListVO>();
+
+		if (idList == null) {
+			idList = "";
+		}
+
+		if (idList.equals("T") || idList.equals("")) {
+			indiList = "'" + userInfo.getId() + "'";
+
+			if(tList != null && tList.size()>0){
+				for (int i = 0; i < tList.size(); i++) {
+					if (i == 0) {
+						indiListSub += ",";
+					}
+					ScheduleSecretaryVO data = tList.get(i);
+					indiListSub += "\'" + data.getSecId()+ "\',";
+				}
+			}
+
+			pidList = "'" + userInfo.getDeptID() + "'," + "'" + userInfo.getCompanyID() + "'";
+
+
+			if(dList != null && dList.size()>0){
+				for (int i = 0; i < dList.size(); i++) {
+					if (i == 0) {
+						pidListSub += ",";
+					}
+					ScheduleDeptVO data = dList.get(i);
+					pidListSub += "\'" + data.getDeptId()+ "\',";
+				}
+			}
+
+			if(cList != null && cList.size()>0 ){
+				for (int i = 0; i < cList.size(); i++) {
+					if(dList == null || dList.size()<=0){
+						if (i == 0) {
+							pidListSub += ",";
+						}
+					}
+					ScheduleCumulerVO data = cList.get(i);
+					pidListSub += "\'" + data.getDeptId()+ "\',";
+				}
+			}
+
+			for (int i = 0; i < gList.size(); i++) {
+				if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+					if (i == 0) {
+						pidListSub += ",";
+					}
+				}
+				ScheduleGroupListVO data = gList.get(i);
+				pidListSub += "\'" + data.getGroupId() + "\',";
+
+					/*if (i != gList.size()-1) {
+						pidListSub += ",";
+					}*/
+			}
+
+			if(indiListSub.equals("") || indiListSub == null){
+				indiListSub = ",\'\'";
+			}else{
+				indiListSub = indiListSub.substring(0, indiListSub.length()-1);
+			}
+
+			indiList += indiListSub;
+
+			if(pidListSub.equals("") || pidListSub == null){
+				pidListSub = ",\'\'";
+			}else{
+				pidListSub = pidListSub.substring(0, pidListSub.length()-1);
+			}
+
+			pidList += pidListSub;
+
+		} else if(idList.equals("chkAllFalse")) {
+			indiList = "";
+			pidList = "\'\'";
+		} else if (idList.equals("P")) {
+			indiList = "'" + userInfo.getId() + "'";
+			pidList = "";
+		}else {
+			pidList = idList;
+		}
+
+		List<ScheduleInfoVO> sList = ezScheduleService.getUserSearchScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), companyID, userInfo.getId(), userInfo.getDeptID(), useAnnualScheduleYN);
+
+		/* 2021-11-26 홍승비 - 일정 리스트 데이터를 전달받아 일정완료 데이터를 추가 가공하여 리턴 */
+		sList = ezScheduleService.applyScheduleCompleteData(sList, userInfo.getOffset(), userInfo.getTenantId(), companyID);
+
+		Collections.sort(sList, new EzScheduleCompareUtil());
+
+		return sList;
+	}
 
 }

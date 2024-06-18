@@ -158,15 +158,17 @@ public class MOrganGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String organType = request.getParameter("organType");
+			String userSearch = request.getParameter("userSearch");
 			
 			logger.debug("serverName : " + serverName);
 			logger.debug("userId : " + userId);
 			logger.debug("organType : " + organType);
+			logger.debug("userSearch : " + userSearch);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
-			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptInfo(organType, userInfo.getCompanyId(), userInfo.getDeptId(), optionInfo.getLang(), userInfo.getTenantId());
+
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptInfo(organType, userInfo.getCompanyId(), userInfo.getDeptId(), optionInfo.getLang(), userInfo.getTenantId(), userSearch);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -192,15 +194,17 @@ public class MOrganGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String deptID = request.getParameter("deptID");
+			String userSearch = request.getParameter("userSearch");
 			
 			logger.debug("serverName : " + serverName);
 			logger.debug("userId : " + userId);
 			logger.debug("deptID : " + deptID);
+			logger.debug("userSearch : " + userSearch);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getLowDeptInfo(deptID, optionInfo.getLang(), userInfo.getTenantId());
+			List<MOrganListVO> mOrganListVOs = mOrganService.getLowDeptInfo(deptID, optionInfo.getLang(), userInfo.getTenantId(), userSearch);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -228,15 +232,17 @@ public class MOrganGWController {
 			String deptID = request.getParameter("deptID");
 			String deptType = request.getParameter("deptType");
 			String organType = request.getParameter("organType");
+			String userSearch = request.getParameter("userSearch");
 			
 			logger.debug("serverName : " + serverName);
 			logger.debug("userId : " + userId);
 			logger.debug("deptID : " + deptID);
+			logger.debug("userSearch : " + userSearch);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getHighDeptInfo(deptID, deptType, organType, optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
+			List<MOrganListVO> mOrganListVOs = mOrganService.getHighDeptInfo(deptID, deptType, organType, optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), userSearch);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -265,17 +271,19 @@ public class MOrganGWController {
 			String searchFlag = request.getParameter("searchFlag");
 			String selectType = request.getParameter("selectType");
 			String companyId = request.getParameter("companyId");
-			
+			String userSearch = request.getParameter("userSearch");
+
 			logger.debug("serverName : " + serverName);
 			logger.debug("userId : " + userId);
 			logger.debug("selectType : " + selectType);
 			logger.debug("searchFlag : " + searchFlag);
 			logger.debug("companyId : " + companyId);
-			
+			logger.debug("userSearch : " + userSearch);
+
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID.trim(), searchFlag, selectType, optionInfo.getLang(), userInfo.getTenantId(), companyId);
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID.trim(), searchFlag, selectType, optionInfo.getLang(), userInfo.getTenantId(), companyId, userSearch);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

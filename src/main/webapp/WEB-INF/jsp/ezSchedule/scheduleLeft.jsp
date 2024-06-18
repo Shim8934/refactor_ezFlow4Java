@@ -85,7 +85,7 @@
 			        chk_DisplayChange2();
 			    }
 			    liSelected();
-			}   
+			}
 			function FindByAttributeValue(attribute, value, element_type)    {
 				element_type = element_type || "*";
 			   	var All = document.getElementsByTagName(element_type);
@@ -421,7 +421,16 @@
 		            	$('#select-all').prop('checked',false);
 		                window.open("/ezSchedule/scheduleConfigMain.do?flag=schedule", "right");
 		                break;
-		        }
+					case 12:		// Search User Calendar
+						$('.checkSelect').each(function() {
+							$(this).prop('checked',false);
+						});
+						isCalendarView = false;
+						$('#select-all').prop('checked',false);
+						liSelected();
+						window.open("/ezSchedule/scheduleUserCalendarSearch.do", "right");
+						break;
+				}
 		    }
 	        
 	        function WriteSchedule() {
@@ -499,20 +508,20 @@
 					chk_str += $('#select-all').val();
 				}
 	        }
-	        
+
 	        // 2023-06-30 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 일정검색, 공개일정검색 선택 항목 클래스 제어
 	        function liSelected() {
 	        	$(".list_text.node_selected").removeClass("node_selected");
 
 	        	var liSelected = $(event.target);
-	        	
+
 	            if (liSelected.prop("tagName") == "LI") {
 	            	liSelected.children().addClass("node_selected");
 	            } else {
 	            	liSelected .addClass("node_selected");
 	            }
 	        }
-	        
+
 		</script>
 	</head>
 
@@ -632,7 +641,8 @@
 					<%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > LNB 이미지, 구조 수정 --%>
                   	<li class="ul_2Box"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
                   	<li><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
-		        </ul>
+					<li><span class="list_text" onClick="Function_Flag(12)"><spring:message code='ezSchedule.kmh01'/></span></li>
+				</ul>
 <%-- 		    <ul class="lnbUL">
 	            	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
     	        	<li><span class="sub_iconLNB tree_pims_search_open"></span><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
