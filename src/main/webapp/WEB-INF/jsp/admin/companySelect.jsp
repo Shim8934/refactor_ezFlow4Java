@@ -9,8 +9,6 @@
         var request = new XMLHttpRequest();
         request.open('GET', '/admin/ezOrgan/getCompanies.do', false);
         request.setRequestHeader('Content-Type', 'application/json');
-        var companiesHTML = "";
-
         request.onload = function () {
             if (request.status >= 200 && request.status < 400) {
                 var result = JSON.parse(request.responseText);
