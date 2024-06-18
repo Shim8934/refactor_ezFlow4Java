@@ -14365,7 +14365,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprType(map);
 
             //////
-			if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
+			if (aprTypeList.size() > 0 && aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
                 if (!"2".equals(agreeReturnType)) {
                     //type1 : 다음 결재권자에게 진행
                     //displayName : 회사/부서명, displayName2 : 회사/부서명 (다국어), department : 부서ID
@@ -14728,7 +14728,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			
 			// 개인병렬합의/협조의 반송타입이 2인 경우
-			if ("2".equals(agreeReturnType)) {
+			if ("2".equals(agreeReturnType) && !"Y".equals(passAprLine)) {
 				/**
 				 * 지난 합의자의 정보 중 한 명이라도 반송 (aprstate == 004)인 경우
 				 * 원기안자에게 반송
@@ -14795,10 +14795,34 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ezApprovalGDAO.updateAprLineInfo(map3);
 
+            boolean pass = true;
+            String signType = "APR";
+            switch(curAprType){
+                case "008":
+                case "009":
+                    signType = "AST";
+                case "001":
+                case "002":
+                case "019":
+                    absentReason = getBujaeInfo(docXML.getElementsByTagName("APRMEMBERID").item(0).getTextContent(), docXML.getElementsByTagName("APRMEMBERDEPTID").item(0).getTextContent(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID());
+                if (!absentReason.trim().equals("") && !curAprType.equals(staATChamJo)) {
+                    subSQL = setBujaeInfo(docID, docXML.getElementsByTagName("APRMEMBERID").item(0).getTextContent(), docXML.getElementsByTagName("APRMEMBERDEPTID").item(0).getTextContent(), absentReason, signType, companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+                    if (!subSQL.toUpperCase().equals("FALSE")) {
+                        map3.put("v_APRSTATE", staASSungIn);
+                        map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
+
+                        ezApprovalGDAO.updateAprLineInfo3(map3);
+                        pass = false;
+                    }
+                }
+            }
+
 			logger.debug("curAprType = " + curAprType);
 			
 			//처리하고있는 결재유형이 병렬협조일때
-			if (curAprType.equals(staATByungRyulHyubJo)) {
+            int userCnt = 0;
+            int passCnt = 0;
+            if (curAprType.equals(staATByungRyulHyubJo)) {
 				for (int i = 0; i < dlength; i++) {
 					String tmpAprType = docXML2.getElementsByTagName("APRTYPE").item(i).getTextContent();
 					String tmpAprStat = docXML2.getElementsByTagName("APRSTATE").item(i).getTextContent();
@@ -14806,7 +14830,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					//병렬협조로 같이 걸려있는 사람들 중 반송한사람들 같이 진행으로 수정처리
 					if (tmpAprType.equals(staATByungRyulHyubJo)) {
 						if (tmpAprStat.equals(staASBanSong) || tmpAprStat.equals(staASDaeGi)) {
-							map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(i).getTextContent());
+                            userCnt++;
+                            k++;
+                            map3.put("v_APRSTATE", staASJinHang);
+                            map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(i).getTextContent());
 							ezApprovalGDAO.updateAprLineInfo(map3);
 							
 							//병렬협조 반송한사람들 중 부재사유가 있는 부재자가 있을 경우, 부재사유 기입 및 승인처리
@@ -14818,6 +14845,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 									map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
 									
 									ezApprovalGDAO.updateAprLineInfo3(map3);
+                                    passCnt++;
 								}
 							}
 						}
@@ -14837,8 +14865,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ezApprovalGDAO.setAprLineStateBanSongToStay(map);
 			logger.debug("doApprove passAprLine ended");
-			return "TRUE";
-		} else {
+            if(passCnt != userCnt || pass)
+			    return "TRUE";
+		}
 			while (k < dlength && whileFlag) {
 				if (!curAprType.equals("007")) {
 					map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
@@ -15154,7 +15183,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 					if (approvalFlag.equals("G")) {
 						if (!curAprType.equals(staATByungRyulHyubJo)) {
-							while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
+                            int userCnt = 0;
+                            int passCnt = 0;
+                            while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
+                                userCnt++;
 								map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
 								map3.put("v_APRSTATE", staASJinHang);
 								ezApprovalGDAO.updateAprLineInfo(map3);
@@ -15174,7 +15206,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 										rtnVal = false;
 										whileFlag = false;
 									} else {
-										map3.put("v_APRSTATE", staASSungIn);
+                                        passCnt++;
+                                        map3.put("v_APRSTATE", staASSungIn);
 										map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
 										
 										ezApprovalGDAO.updateAprLineInfo3(map3);
@@ -15182,8 +15215,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								}
 								k += 1;
 							}
-							
-							whileFlag = false;
+
+                            // 병렬협조자 모두가 부재사유 존재시 다음 진행
+                            if(userCnt != passCnt)
+                                whileFlag = false;
 						} else {
 							k += 1;
 						}
@@ -15428,8 +15463,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					whileFlag = false;
 				}
 			}
-		}
-		
+
 		/*
 		 * 비전자문서 기록물 등록 시 변경사항 업데이트 로직
 		 * */
