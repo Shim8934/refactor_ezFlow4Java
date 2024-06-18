@@ -655,7 +655,7 @@
 					data : {
 						search : document.getElementById("search_type").value + "::" + encodeURIComponent(keyword.value),
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType;jobId",
 						page : CurPage ,
 		                <c:if test="${useShowAllCompanies eq 'YES'}">
 	        			company : "",
