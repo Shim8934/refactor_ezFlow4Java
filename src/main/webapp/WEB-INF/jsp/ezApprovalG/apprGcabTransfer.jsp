@@ -49,7 +49,7 @@
 	            InitSelCabinetList();
 	            
 	            //2018-05-18 강민수92 셀렉트 박스 추가
-	            for (var i = nowYear + 5; i >= nowYear - 5; i--) {
+	            for (var i = nowYear; i >= nowYear - 5; i--) {
 	            	$('#selYear').append("<option value='" + i + "'>" + i + "</option>")
 	            }
 				
