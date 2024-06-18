@@ -152,12 +152,9 @@ var assembleNoticeList = function(noticeList, noticePortletId, access, totalCnt,
 	// 2024-05-30 조수빈 - 불러온 공지사항의 개수가 최대 개수보다 작고, 3 혹은 6의 배수가 아닐 때 남는 자리에 대한 처리
 	// 현재 한 페이지에 보여야 하는 개수와 일치하지 않는 경우 '(한 페이지에 보일 개수) - (공지사항글 개수) % (한 페이지에 보일 개수)'만큼 빈 ui 생성
 	var noticeCnt = getNoticePagePerCount(noticePortletObj.portletId);
-	if (noticeCnt && (noticeCnt.length < noticePorletPagingCnt)) {
-		var cnt = noticeCnt === null ? 0 : noticeCnt.length;
-		if (cnt % notiCount != 0) {
-			for(var i = 0; i < notiCount - cnt; i++) {
-				str += '<li class="notiLI"><dl class="noti_nodata"></dl></li>';
-			}
+	if (noticeList.length < noticeCnt) {
+		for (var i = 0; i < noticeCnt - noticeList.length; i++) {
+			str += '<li class="notiLI"><dl class="noti_nodata"></dl></li>';
 		}
 	}
 	
