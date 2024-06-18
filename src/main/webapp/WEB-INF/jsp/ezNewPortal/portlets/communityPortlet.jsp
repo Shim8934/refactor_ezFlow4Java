@@ -53,6 +53,7 @@
 								</dt>
 								<dd class="comTit"><c:out value='${commu.c_ClubName }'/></dd>
 								<dd class="comText"><c:out value='${commu.c_ClubDesc }'/></dd>
+								<dd class="comPerson">회원수 43명</dd>
 							</dl>
 						</c:forEach>
 					</c:otherwise>
