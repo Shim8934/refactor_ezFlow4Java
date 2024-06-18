@@ -648,6 +648,27 @@
 					DisplayEntryList();
 				}
 			}
+
+			function openFolder() {
+				if ($(event.target).context.classList.contains('doNotOpen')) {
+					return;
+				}
+
+				var h2Title = $(event.target).parent();
+
+				if (h2Title.hasClass("on")) {
+					h2Title.attr("class", "off");
+					h2Title.next().addClass("off");
+					h2Title.children().eq(0).attr("class", "sub_iconLNB tree_plus");
+				} else {
+					$("h2.on").attr("class", "off");
+					$(".lnbUL").attr("class", "lnbUL off");
+					h2Title.attr("class", "on");
+					h2Title.next().removeClass("off");
+					$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+					h2Title.children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+				}
+			}
 		</script>
 	</head>
 
@@ -665,7 +686,7 @@
 	        </div>
         	<div class="scheduleListBox" style="overflow:hidden; padding-right: 0;">
 		        <%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 최상위 '일정관리' 메뉴 표시 추가 --%>
-	        	<h2 class="on">
+	        	<h2 class="on" onclick="openFolder()">
 			            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" id="" onclick="('')"><spring:message code='ezSchedule.t1010'/></span>
 		        </h2>
 		        <ul class="lnbUL">
@@ -775,19 +796,25 @@
                   	<li class="ul_2Box"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
                   	<li><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
 					<li><span class="list_text" onClick="Function_Flag(12)"><spring:message code='ezSchedule.kmh01'/></span></li>
-					<%-- 2024-06-05 임정은 - 일정 모아보기 기능 --%>
-					<li class="ul_2Box">
-						<span class="list_text" onClick="Function_Flag(13)"><spring:message code='ezSchedule.ljeGs001'/></span>
-						<c:if test='${!empty gatherList}'>
-							<c:forEach var="group" items="${gatherList}">
-								<li>
-									<label class="IDcontainer">
-										<span class="list_text" data1="${fn:escapeXml(group.groupId)}" data2="${fn:escapeXml(group.groupName)}" onclick="Add_UserInfo_onclick(this)">▪&nbsp;${fn:escapeXml(group.groupName)}</span>
-									</label>
-								</li>
-							</c:forEach>
-						</c:if>
-					</li>
+		        </ul>
+				<%-- 2024-06-05 임정은 - 일정 모아보기 기능 --%>
+				<h2 class="off" onclick="openFolder()">
+					<span class="sub_iconLNB tree_plus"></span>
+					<span class="h2Title">
+						<spring:message code='ezSchedule.ljeGs001'/>
+						<span onclick="Function_Flag(13)" class="sub_iconLNB tree_manage doNotOpen"></span>
+					</span>
+				</h2>
+				<ul class="lnbUL off">
+					<c:if test='${!empty gatherList}'>
+						<c:forEach var="group" items="${gatherList}">
+							<li>
+								<label class="IDcontainer">
+									<span class="list_text" data1="${fn:escapeXml(group.groupId)}" data2="${fn:escapeXml(group.groupName)}" onclick="Add_UserInfo_onclick(this)">${fn:escapeXml(group.groupName)}</span>
+								</label>
+							</li>
+						</c:forEach>
+					</c:if>
 				</ul>
 <%-- 		    <ul class="lnbUL">
 	            	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
