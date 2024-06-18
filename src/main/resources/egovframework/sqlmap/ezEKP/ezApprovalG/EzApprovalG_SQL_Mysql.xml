@@ -6090,7 +6090,7 @@
                         TBL_SEPERATEATTACH.Title AS RecTitle
                     </isNotEmpty>
                     <isNotEmpty property="dispClassNo" prepend=",">
-                        CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(TRIM(TBL_CABINETCLASS.ProcessDeptCode),'-'),TBL_CABINETCLASS.TaskCode),'-'),ProductionYear),'-'),TRIM(LEADING'0' FROM RegSerialNo)),'('),TRIM(LEADING'0' FROM VolumeNo)),')') AS DispClassNo
+                        CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(TRIM(TBL_CABINET.ProcessDeptCode),'-'),TBL_CABINET.TaskCode),'-'),ProductionYear),'-'),TRIM(LEADING'0' FROM RegSerialNo)),'('),TRIM(LEADING'0' FROM VolumeNo)),')') AS DispClassNo
                     </isNotEmpty>
                     <isNotEmpty property="reSendFlag" prepend=",">
                         CASE WHEN TBL_ENDAPRDOCINFO.DocType = '003' AND TBL_SEPERATEATTACH.RegisterType = '1' THEN '발송' ELSE '없음' END AS ReSendFlag
