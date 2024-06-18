@@ -1829,7 +1829,11 @@
 		        
 		        parameter[60] = passAprLine;
 		        parameter[61] = tempKeyword;
-				parameter[65] = message.document.getElementById("frame_doctitle").textContent;
+
+				var frame_doctitle = message.document.getElementById("frame_doctitle");
+				if (frame_doctitle != null) {
+					parameter[65] = frame_doctitle.textContent;
+				}
 
 				ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
