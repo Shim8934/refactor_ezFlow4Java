@@ -116,7 +116,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
         logger.debug("isAddJob=" + isAddJob + ", jobId=" + jobId + ", roleId=" + roleId);
         
         OrganUserVO organUserVO = (OrganUserVO) select("EzOrganDAO.getTBLUserMaster", map);
-        organUserVO.setJobID(jobId);
+        
         logger.debug("getTBLUserMasterForLocal ended.");
         
         return organUserVO;

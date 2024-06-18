@@ -1545,7 +1545,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_PCN", id);
 		map.put("v_PDEPT", pDeptID);
 		map.put("v_LANGDATA", primary);
-
+		
 		OrganUserVO userVO = (ezOrganDAO.getUserAddjobInfo(map));
 		
 		if (userVO != null) {
@@ -1566,43 +1566,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 			strXML = stb.toString();
 		}
 		
-		return strXML;
-	}
-
-	@Override
-	public String getUserAddjobInfoWithJobId(String id, String pDeptID, String primary, String jobID, int tenantID) throws Exception {
-		String strXML = null;
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		map.put("v_TENANT_ID", tenantID);
-		map.put("v_PCN", id);
-		map.put("v_PDEPT", pDeptID);
-		map.put("v_LANGDATA", primary);
-		// 2024.05.16 장혜연 직원 상세정보 조회시 jobId도 고려되도록 추가
-		map.put("v_jobID", jobID);
-
-		OrganUserVO userVO = (ezOrganDAO.getUserAddjobInfo(map));
-
-		if (userVO != null) {
-			StringBuilder stb = new StringBuilder();
-
-			stb.append("<ROW>");
-			stb.append("<TITLE>");
-			stb.append(commonUtil.cleanValue(userVO.getTitle()));
-			stb.append("</TITLE>");
-			stb.append("<DISPLAYNAME>");
-			stb.append(commonUtil.cleanValue(userVO.getDisplayName()));
-			stb.append("</DISPLAYNAME>");
-			stb.append("<COMPANY>");
-			stb.append(commonUtil.cleanValue(userVO.getCompany()));
-			stb.append("</COMPANY>");
-			stb.append("<EXTENSIONATTRIBUTE10>");
-			stb.append(commonUtil.cleanValue(userVO.getRole()));
-			stb.append("</EXTENSIONATTRIBUTE10>");
-			stb.append("</ROW>");
-			strXML = stb.toString();
-		}
-
 		return strXML;
 	}
 
@@ -2752,27 +2715,5 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 		return returnVal;
 	}
-
-    @Override
-    public String changeCookie(String loginCookie, String deptId, String companyId, int tenantId) throws Exception {
-        logger.debug("loginCookie = " + loginCookie + ", deptId = " + deptId + ", companyId = " + companyId + ", tenantId = " + tenantId);
-        String decData = egovFileScrty.decryptAES(loginCookie);
-        String[] decDataArray = decData.split("///");
-        decDataArray[9] = deptId;
-        decDataArray[10] = companyId;
-        decDataArray[8] = String.valueOf(tenantId);
-        String newCookieStr = String.join("///", decDataArray);
-
-        return egovFileScrty.encryptAES(newCookieStr);
-    }
-
-	public OrganUserVO getAddJobInfo(String id, String dept, String jobId, int tenantId) throws Exception {
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userID", id);
-		map.put("dept", dept);
-		map.put("jobID", jobId);
-		map.put("tenantID", tenantId);
-		return ezOrganDAO.getAddJobInfo(map);
-	}
+	
 }

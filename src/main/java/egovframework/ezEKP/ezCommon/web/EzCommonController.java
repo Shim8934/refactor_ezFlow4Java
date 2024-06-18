@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -335,12 +334,8 @@ public class EzCommonController extends EgovFileMngUtil{
 			userName = request.getParameter("userName");
 		}
 		
-		String jobId = Optional.ofNullable(request.getParameter("jobId")).orElse("");
-		String type = Optional.ofNullable(request.getParameter("type")).orElse("");
-
-		logger.debug("id=" + id + ", email=" + email + ", dept=" + pDeptID + ", userType=" + userType + ", userName="
-				+ userName + ", jobId=" + jobId + ", type=" + type);
-
+		logger.debug("id=" + id + ", email=" + email + ", dept=" + pDeptID + ", userType=" + userType + ", userName=" + userName);
+		
 		OrganUserVO userCheckVO = ezOrganService.getUserInfo(id, "1", loginVO.getTenantId());
 		if (userCheckVO != null) {
 			logger.debug(id + " is member.");
@@ -466,8 +461,7 @@ public class EzCommonController extends EgovFileMngUtil{
 						literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 					} else {
 						if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
-							// 2024.05.16 장혜연 직원 상세정보 조회시 jobId도 고려되도록 추가
-							String infoXML2 = ezOrganService.getUserAddjobInfoWithJobId(id, pDeptID, loginVO.getPrimary(), jobId, loginVO.getTenantId());
+							String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary(), loginVO.getTenantId());
 							
 							if (infoXML2 != null && !infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
 								Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
@@ -488,14 +482,8 @@ public class EzCommonController extends EgovFileMngUtil{
 							literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 							literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
 							literalRole= xmldom.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();
-							// 겸직자의 상세보기 화면 표출 시 jobid를 통하여 직위,직책 값을 가져옴
-							if (type.equals("addJob")) {
-								OrganUserVO userAddJob = ezOrganService.getAddJobInfo(id, pDeptID, jobId, loginVO.getTenantId());
-								literalTitle = userAddJob.getTitle();
-								literalRole = userAddJob.getRole();
-							}
 						}
-
+						
 						if (!xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") && xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().contains(".")) {
 							literalPhoto = "<IMG SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
 						} else {

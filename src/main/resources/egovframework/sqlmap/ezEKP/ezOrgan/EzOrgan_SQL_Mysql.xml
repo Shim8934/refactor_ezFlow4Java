@@ -90,7 +90,6 @@
 		<result property="title"								column="title" 							columnIndex="1"/>
 		<result property="displayName" 							column="displayName" 					columnIndex="2"/>		
 		<result property="company" 								column="company" 						columnIndex="3"/>		
-		<result property="role" 								column="role" 							columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap id="userInfoForRoles" class="OrganUserVO">
@@ -1558,17 +1557,7 @@
                 ELSE
                 	COMPNM2
                 END
-					COMPANY,
-                CASE
-					#v_LANGDATA#
-                WHEN
-					'1'
-				THEN
-					ROLE
-                ELSE
-					ROLE2
-                END
-					ROLE
+                	COMPANY 
         	FROM
         		TBL_ADDJOBMASTER A
         	JOIN
@@ -1576,13 +1565,10 @@
         	WHERE
         		A.CN = #v_PCN#
         	AND
-				A.DEPTID = #v_PDEPT#
+        		A.DEPTID = #v_PDEPT#
         	AND
-				A.TENANT_ID = #v_TENANT_ID#
+        		A.TENANT_ID = #v_TENANT_ID#	
 		]]>
-			<isNotEmpty property="v_jobID">
-				AND A.JOBID = #v_jobID#
-			</isNotEmpty>
 	</select>
 		
 	<update id="EzOrganDAO.updateProperty" parameterClass="Map">
@@ -2449,24 +2435,6 @@
 		<isNotEmpty property="title">
 			AND TITLE = #title#
 		</isNotEmpty>		
-	</select>
-
-	<select id="EzOrganDAO.getAddJobInfo" parameterClass="Map" resultClass="OrganUserVO">
-		SELECT
-			TITLE,
-			TITLE2,
-			ROLE,
-			ROLE2
-		FROM
-			TBL_ADDJOBMASTER
-		WHERE
-			CN = #userID#
-		AND
-			TENANT_ID = #tenantID#
-		AND
-			DEPTID = #dept#
-		AND
-			JOBID = #jobID#
 	</select>
 	
 	<select id="EzOrganDAO.getOrgUserInfo" parameterClass="Map" resultClass="OrganUserVO">
