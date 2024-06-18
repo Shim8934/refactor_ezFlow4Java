@@ -57,7 +57,6 @@ var getTabBoard = function (portletId) {
                 allDisplayNone('#notexistence');
                 allDisplayNone('#tabBoard .portletText');
                 
-                var portletId = tabBoardPortletObj.portletId;
                 var perCount = getTabBoardPagePerCount(portletId);
                 var tabNode = null;
                 for (var i = 0; i < tabList.length; i++) {
