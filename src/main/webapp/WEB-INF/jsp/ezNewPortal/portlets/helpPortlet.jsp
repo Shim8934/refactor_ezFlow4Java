@@ -20,7 +20,7 @@
 						<spring:message code='ezNewPortal.t043' />
 					</c:if>
 					<c:if test="${lang eq '2'}">
-						<a href = "/files/QST User Guide.pptx" style="color: white"><spring:message code='ezNewPortal.t043' /></a>
+						<a href = "/files/QST User Guide.pptx"><spring:message code='ezNewPortal.t043' /></a>
 					</c:if>
 				</dd>
 			</dl>
