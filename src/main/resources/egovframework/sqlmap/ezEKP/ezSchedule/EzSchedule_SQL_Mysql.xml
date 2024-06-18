@@ -2722,7 +2722,7 @@
 	<select id="EzScheduleDAO.getMyGatherMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
 		<![CDATA[
 			select
-				A.memberid, A.membername, A.membername2, '' as status, '' as responsedate, BB.mail, BB.department,
+				A.memberid, A.membername, A.membername2, A.groupname as status, '' as responsedate, BB.mail, BB.department,
 				case #v_LANG#
 					when '1' then concat(A.memberName, '(', BB.description, ')')
 					when '2' then concat(A.memberName2, '(', BB.description2, ')')
@@ -2730,11 +2730,17 @@
 			    BB.DESCRIPTION, BB.DESCRIPTION2
 			from (
 				select
-					groupid, memberid, membername, membername2, tenant_id
+					M.groupid, M.memberid, M.membername, M.membername2, M.tenant_id, G.groupname
 				from
-					tbl_schedulegathermember
+					tbl_schedulegathermember M
+				JOIN
+					tbl_schedulegather G
+				on
+					G.groupid = M.groupid
+				and
+					G.tenant_id = M.tenant_id
 				where
-					tenant_id = #v_TENANTID#
+					M.tenant_id = #v_TENANTID#
 			) A
 			join (
 				SELECT

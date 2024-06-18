@@ -276,24 +276,42 @@
 				});
 		    }
 
+			var beforeText = '';
 		    function unEscapeHtml(text) {
+				beforeText = text;
+
 		        var map = {
 		            '&amp;' : '&',
 		            '&lt;' : '<',
 		            '&gt;' : '>',
 		            '&#034;' : '"',
-		            '&#039;' : "'"
+		            '&#039;' : "'",
+					'&#92;' : '\\'
 		        };
 
-		        return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;/g, function(m) { return map[m]; });
-		    }	
+		        return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;|&#92;/g, function(m) {
+					return map[m];
+				});
+			}
+
+			function unEscapeHtml2(text) {
+				beforeText = text;
+				var afterText = unEscapeHtml(beforeText);
+
+				while (beforeText != afterText) {
+					afterText = unEscapeHtml(afterText);
+				}
+
+				beforeText = '';
+				return afterText;
+			}
 
 		    //2018-08-10 김보미 - 추가
 		    window.onload = function () {
 		    	var groupName = "<c:out value='${groupName}' />";
 	    	    var description = "<c:out value='${description}' />";
-	        	$('#groupname').val(unEscapeHtml(groupName));
-	        	$('#description').val(unEscapeHtml(description));
+	        	$('#groupname').val(unEscapeHtml2(groupName));
+	        	$('#description').val(unEscapeHtml2(description));
 			    
 		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 		    	

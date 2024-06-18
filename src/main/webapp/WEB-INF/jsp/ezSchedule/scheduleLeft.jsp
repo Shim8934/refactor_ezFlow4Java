@@ -39,6 +39,8 @@
 	        .IDcontainer .checkSelect { display: none; }
 	
 	        #mCSB_1_container { margin-right: 0px; }
+
+			.node_selected { width: inherit; }
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
@@ -481,7 +483,7 @@
 						isCalendarView = false;
 						$('#select-all').prop('checked',false);
 						window.open("/ezSchedule/scheduleGatherMain.do", "right")
-						liSelected();
+						//liSelected();
 						break;
 		        }
 		    }
@@ -650,11 +652,17 @@
 			}
 
 			function openFolder() {
+				var h2Title;
+
 				if ($(event.target).context.classList.contains('doNotOpen')) {
 					return;
 				}
 
-				var h2Title = $(event.target).parent();
+				if ($(event.target).get(0).nodeName == 'H2') {
+					h2Title = $(event.target);
+				} else {
+					h2Title = $(event.target).parent();
+				}
 
 				if (h2Title.hasClass("on")) {
 					h2Title.attr("class", "off");

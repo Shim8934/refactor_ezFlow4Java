@@ -73,7 +73,7 @@
 	
 		        var Para = RetValue;
 		        var entries;
-				document.getElementById("groupName").innerHTML = "▪ " + Para["groupName"];
+				document.getElementById("groupName").innerText = "▪ " + Para["groupName"].toString();
 	
 		        if (typeof (Para) != "undefined" && Para != null) {
 		            s_date = Para["startTime"];

@@ -651,24 +651,42 @@
 		        });
 		    }
 		    	
-		    function unEscapeHtml(text) {
-		        var map = {
-		            '&amp;' : '&',
-		            '&lt;' : '<',
-		            '&gt;' : '>',
-		            '&#034;' : '"',
-		            '&#039;' : "'"
+			var beforeText = '';
+			function unEscapeHtml(text) {
+				beforeText = text;
+
+				var map = {
+					'&amp;' : '&',
+					'&lt;' : '<',
+					'&gt;' : '>',
+					'&#034;' : '"',
+					'&#039;' : "'",
+					'&#92;' : '\\'
 		        };
 
-		        return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;/g, function(m) { return map[m]; });
+				return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;|&#92;/g, function(m) {
+					return map[m];
+				});
+			}
+
+			function unEscapeHtml2(text) {
+				beforeText = text;
+				var afterText = unEscapeHtml(beforeText);
+
+				while (beforeText != afterText) {
+					afterText = unEscapeHtml(afterText);
+				}
+
+				beforeText = '';
+				return afterText;
 		    }	
 		    
 		    //2018-08-10 김보미 - 추가
 		    window.onload = function () {
 		    	var groupName = "<c:out value='${groupName}' />";
 	    	    var description = "<c:out value='${description}' />";
-	        	$('#groupname').val(unEscapeHtml(groupName));
-	        	$('#description').val(unEscapeHtml(description));
+	        	$('#groupname').val(unEscapeHtml2(groupName));
+	        	$('#description').val(unEscapeHtml2(description));
 	        	
 	        	<%-- 2024-07-18 조소정 - 일정관리 > 그룹 관리 창에서 작성 권한 여부 표출 --%>
 		        var checks = document.getElementsByName("memberaccess");

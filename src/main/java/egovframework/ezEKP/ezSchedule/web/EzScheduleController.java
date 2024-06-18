@@ -1009,8 +1009,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("groupID", groupID);
 		model.addAttribute("groupColor", groupColor);
 		model.addAttribute("memberList", mList);
-		model.addAttribute("groupName", mList.get(0).getGroupName());
-		model.addAttribute("description",mList.get(0).getDescription());
+		model.addAttribute("groupName", mList.get(0).getGroupName().replace("\\", "&#92;"));
+		model.addAttribute("description",mList.get(0).getDescription().replace("\\", "&#92;"));
 		
 		return "/ezSchedule/scheduleGroupMember";
 	}
@@ -6124,8 +6124,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("loginUserRoll",loginVO.getRollInfo());
 		model.addAttribute("groupID", groupID);
 		model.addAttribute("memberList", mList);
-		model.addAttribute("groupName", mList.get(0).getGroupName());
-		model.addAttribute("description",mList.get(0).getDescription());
+		model.addAttribute("groupName", mList.get(0).getGroupName().replace("\\", "&#92;"));
+		model.addAttribute("description",mList.get(0).getDescription().replace("\\", "&#92;"));
 
 		return "/ezSchedule/scheduleGatherMember";
 	}
