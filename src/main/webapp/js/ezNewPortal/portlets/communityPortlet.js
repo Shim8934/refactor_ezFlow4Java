@@ -235,11 +235,16 @@ var setCommunityData = function(commuInfo, commuPath, classTag) {
 	comText.textContent = commuInfo.c_ClubDesc;
 	comText.className = "comText";
 	
+	var comPerson = document.createElement("dd");
+	comPerson.textContent = messages.strLangCommunity01 + " " + commuInfo.c_memberCnt + messages.strLangCommunity02;
+	comPerson.className = "comPerson";
+	
 	comDT.appendChild(comImg);
 	
 	comListDL.appendChild(comDT);
 	comListDL.appendChild(comTitle);
 	comListDL.appendChild(comText);
+	comListDL.appendChild(comPerson);
 	
 	return comListDL;
 }

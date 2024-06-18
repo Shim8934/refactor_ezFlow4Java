@@ -56,5 +56,7 @@ var messages = {
 	strLang601 : "閉じる",
 	strLang602 : "ja",
 	strLangSchedule01 : "日;月;火;水;木;金;土",
-	strLangFavorPortlet : "お気に入り"
+	strLangFavorPortlet : "お気に入り",
+	strLangCommunity01 : "メンバー数",
+	strLangCommunity02 : "人"
 }

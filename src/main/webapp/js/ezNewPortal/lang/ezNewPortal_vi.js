@@ -56,5 +56,7 @@ var messages = {
     strLang601: "đóng cửa",
     strLang602: "vi",
     strLangSchedule01: "chủ nhật;Thứ hai;Thứ ba;Thứ Tư;Thứ năm;Thứ sáu;Thứ bảy;",
-    strLangFavorPortlet : "Portlet yêu thích"
+    strLangFavorPortlet : "Portlet yêu thích",
+    strLangCommunity01 : "Số lượng thành viên",
+	strLangCommunity02 : "người"
 }

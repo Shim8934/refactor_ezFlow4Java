@@ -53,7 +53,7 @@
 								</dt>
 								<dd class="comTit"><c:out value='${commu.c_ClubName }'/></dd>
 								<dd class="comText"><c:out value='${commu.c_ClubDesc }'/></dd>
-								<dd class="comPerson">회원수 43명</dd>
+								<dd class="comPerson"><spring:message code="ezCommunity.t477"/> ${commu.c_memberCnt}<spring:message code="ezCommunity.t478"/></dd>
 							</dl>
 						</c:forEach>
 					</c:otherwise>
