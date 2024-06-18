@@ -209,6 +209,25 @@
 												    #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, #v_LDAPPATH#)}
 		]]>											    
 	</procedure> -->
+
+	<select id="EzOrganAdminDAO.getDBData_dept" resultClass="String">
+		<![CDATA[
+			SELECT
+				EXTENSIONATTRIBUTE15 + 1 AS EXTENSIONATTRIBUTE15
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				CN NOT LIKE 'trash_%'
+			AND
+				EXTENSIONATTRIBUTE1 = #v_PARENTCN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				ROWNUM = 1
+			ORDER BY
+				EXTENSIONATTRIBUTE15 DESC
+		]]>		
+	</select>
 	
     <insert id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
         <![CDATA[
@@ -7635,7 +7654,7 @@
 		]]>
 	</select>
 
-	<select id="EzOrganAdminDAO.getDeptInfo" parameterClass="Map" resultClass="OrganDeptVO">
+	<select id="EzOrganAdminDAO.getDeptInfo" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				EXTENSIONATTRIBUTE15 + 1 AS EXTENSIONATTRIBUTE15

@@ -2,13 +2,7 @@ package egovframework.ezEKP.ezOrgan.dao;
 
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TimeZone;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.naming.NamingEnumeration;
@@ -2359,5 +2353,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 
 	public OrganDeptVO getDeptInfo(Map<String, Object> map) throws Exception {
 		return (OrganDeptVO) select("EzOrganAdminDAO.getDeptInfo",map);
+	}
+
+	public String getDBData_dept(Map<String, Object> map) throws Exception {
+		 return (String) Optional.ofNullable(select("EzOrganAdminDAO.getDBData_dept",map)).orElseGet(() -> "0");
 	}
 }
