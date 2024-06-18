@@ -265,7 +265,6 @@
 		    	}
 		    	
 		        if (inboxRuleCon1.value.length > 0) {
-		            inboxRuleCon1.value = inboxRuleCon1.value.replace(/<[^>]*>?/g, '');
 		            var ischeck = true;
 		            if (checkRulekind(_RuleKind))
 		                ischeck = IsEmail(inboxRuleCon1.value);
