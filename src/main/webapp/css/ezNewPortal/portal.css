@@ -249,7 +249,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 /* schedule포틀릿과 weather 포틀릿도 너비 변경 */
 .portlet_title.portlet_schedule .portletText, .weather .portlet_title .portletText {width:auto;}
 /* mail 포틀릿 너비 변경 */
-.mail .portlet_title .portletText {width:34%;}
+.mail .portlet_title .portletText {width:100px;}
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:0px 20px 0px; list-style:none; height: calc(100% - 83px); box-sizing:border-box; overflow:hidden;}
@@ -260,7 +260,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .portlet_list li .name {display:block; float:none; overflow:hidden; letter-spacing: -0.5px; white-space:nowrap; text-overflow:ellipsis; padding-right:7px; color:#838383; font-size:13px; font-weight:normal;}
 .portlet_list li .date {float:right; width:100px; text-align:right;overflow:hidden; letter-spacing:-0.5px; padding:0px 1px 0px 0px; color:#838383; font-weight:normal;}
 
-.portlet.two_by_one .portlet_list li{padding:11px 0;}
+.portlet.two_by_one .portlet_list li{padding:11.4px 0;}
 .portlet.two_by_one .portlet_list li.first_approval{padding:0;}
 
 /* portlet_list mail */
@@ -313,7 +313,6 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .approval .approval_line span:hover, .approval .approval_line span.on{background:#DCEDFF; color:#388CE5;}
 .approval .portlet_list li{ margin:0px; padding:7px 0px; background:none; font-size:13px; color:#444; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
 .approval .portlet_list li .approval_tit{margin:0;}
-.portlet.two_by_one .approval .portlet_list li{padding:8px 0;}
 .portlet.two_by_one .portlet_list li.first_approval{padding:8px 0px; box-sizing:border-box; height:auto; border:none;}
 .portlet.two_by_one .portlet_list li.first_approval:first-child{margin-top:0;}
 .portlet.two_by_one .approval_tit{ margin:0px; padding:0px; height:24px; line-height:16px;}
@@ -599,7 +598,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .comPic img{position:relative; width:100%; height:100%; display:block; transition: -webkit-transform .2s cubic-bezier(.165,.84,.44,1); transition: transform .2s cubic-bezier(.165,.84,.44,1); transition: transform .2s cubic-bezier(.165,.84,.44,1),-webkit-transform .2s cubic-bezier(.165,.84,.44,1); image-rendering: -webkit-optimize-contrast; border-radius:8px;}
 .comTit{margin:0; padding:0px; font-size: 15px; color:#333; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; margin-bottom:5px;}
 .comTit_none{ color:#c0c0c0;margin:0px; padding:10px 0px; font-size:13px; font-weight:bold; text-align:center;}
-.comText{margin:0; padding:0px; font-size:13px; color: #333; white-space:normal; text-overflow:ellipsis; overflow:hidden; min-height:34px; line-height:17px; word-wrap:break-word; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; margin-bottom:5px;}
+.comText{margin:0; padding:0px; font-size:13px; color: #333; white-space:normal; text-overflow:ellipsis; overflow:hidden; min-height:34px; line-height:17px; word-wrap:break-word; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; margin-bottom:3px;}
 .comPerson{font-size:12px; color:#777777;}
 .comSub{vertical-align:top; font-size:13px;}
 .comSub .name{color:#777; vertical-align:top;}
@@ -622,7 +621,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .voteList li .voteT {margin: 0px; padding: 0px 10px 0 0; float: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 40%; text-align: left;}
 .voteList li .voteT .Vnum {margin: 0px 3px 0px 0px; padding:0 5px; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; background: #BCC2C7; font-size: 12px; font-weight: 400; color: #fff; height:17px; line-height:17px;}
 .voteList li .voteT .Vtext {font-size: 14px; color: #444;}
-.portlet.two_by_one .voteList li{padding:10px 0;}
+.portlet.two_by_one .voteList li{padding:10.5px 0;}
 
 .voteList li .voteGraph{ width:calc(60% - 70px); height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#E8E8E8; overflow:hidden; margin:3px 0px 0px 0px;}
 .voteList li .voteGraph span{height:9px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#61BB4F; margin:2px;}
@@ -1517,7 +1516,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .collaborate_listTab dt.on{border:1px solid #C2E4FA; background:#F2FAFF;}
 .collaborate_listTab dt:hover{border:1px solid #C2E4FA; background:#F2FAFF;}
 .collaborate_list .listtype_txt{list-style:none; margin:0px; height:calc(100% - 35px); overflow:hidden; padding:0px 20px 0 0; overflow:auto;}
-.collaborate_list .listtype_txt li{overflow:hidden; margin:0px; padding:8px 0; color:#333; font-size:13px; cursor:pointer; background:url(/images/kr/main/collaborateList_point.png) 0px 15px no-repeat; border-bottom:1px solid #E6E6E6;}
+.collaborate_list .listtype_txt li{overflow:hidden; margin:0px; padding:4px 0; color:#333; font-size:13px; cursor:pointer; background:url(/images/kr/main/collaborateList_point.png) 0px 15px no-repeat; border-bottom:1px solid #E6E6E6;}
 .collaborate_list .listtype_txt span{display:inline-block;}
 .collaborate_list .listtype_txt span.txt{display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; color:#333;}
 .collaborate_list .listtype_txt span.txt:hover{color:#000;}
@@ -1741,7 +1740,7 @@ div.orbit img{border-radius: 5px;}
 #inAttiBtn, #outAttiBtn{font-size: 13px !important;}
 #addr{height: 12px !important;}
 /* .dataHave{left: 36%;} */
-#theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{display: block; border: none; margin-left:-13px; top:2px;}
+#theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{display: block; border: none; margin-left:1px; top:2px; left:0; }
 .full_menu_toggleUL > li{height: 118px;}
 
 /* 20231030 디자인 css 추가 */
@@ -2049,15 +2048,6 @@ div.orbit img{border-radius: 5px;}
 	.top_info_area ul li > span > span{display:none;}
 	.top_info_area ul li > span em{margin:0; color:#333;}
 }
-
-
-/* 게시판 리스트 2줄 */
-/*.portlet_list.two_line li{height:auto; padding:7px 0; line-height:normal;}*/
-/*.portlet_list.two_line li .txt{float:none; display:block; width:100%; padding-bottom:5px;}*/
-/*.portlet_list.two_line li .name{float:left; text-align:left;}*/
-/*.portlet_list.two_line li .date{padding:0 1px 0 0;}*/
-
-.two_by_one .portlet_list.two_line li{padding:11px 0;}
 
 
 /* 게시판 A type */

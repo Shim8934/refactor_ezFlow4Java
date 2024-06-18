@@ -11,3 +11,4 @@
 	.top_info_area ul li{width:60%;}
 	.top_info_area ul li:last-child{width:40%;}
 }
+.btn_prev span img, .btn_next span img{margin-top:4px;}
