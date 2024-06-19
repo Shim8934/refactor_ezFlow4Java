@@ -1463,6 +1463,32 @@
                 getBoardList();
 	    	}
 		    
+			/*  2023-05-22 기민혁 - 나의스크랩함 나의스크랩 추가 버튼 클릭시 동작 */
+			function SaveScrapMyBoard() {
+				var arrList = new Array();
+				var strItemList = "";
+				var i = 0;
+				arrList = strListInfo.split(";");
+
+				if (Read_FG != "true") {
+					alert("<spring:message code='ezBoard.t202' />");
+					return;
+				}
+
+				if(arrList.length == "1"){
+					alert("<spring:message code='ezBoard.kmh01'/>");
+					return;
+				}
+
+				for (i = 0; i < arrList.length - 1; i++) {
+					strItemList += arrList[i].split(",")[0] + ";";
+				}
+
+				var url = "/ezBoard/selUserScrapCont.do";
+				ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+				try { ContOpen.focus() } catch (e) { }
+			}
+
 		</script>
 	</head>
 	<c:choose>
@@ -1536,7 +1562,10 @@
 					</div>
 				 </div>
 				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li> 
+		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li>
+			    <c:if test="${MyScrapContFlag != 'NO'}">
+					  <li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh42' /></span></li>
+			    </c:if>
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
 			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
 		        </c:if>

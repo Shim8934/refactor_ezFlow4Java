@@ -71,6 +71,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardScrapListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
+import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -3814,6 +3816,27 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("deleteItemsScrap ended");
 	}
 
+	/* 2023-05-22 기민혁 - 스크랩함 삭제 스케줄러 */
+	@Override
+	public void deleteItemsScrapCont() throws Exception {
+		logger.debug("deleteItemsScrapCont started");
+
+		List<BoardDeleteItemVO> scrapItemList = ezBoardDAO.deleteItemsScrapContList();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		for (BoardDeleteItemVO s : scrapItemList) {
+
+			map.put("itemID", s.getItemID());
+			map.put("boardID", s.getBoardID());
+			map.put("tenantID", s.getTenantID());
+
+			ezBoardDAO.deleteItemsScrapCont(s);
+		}
+
+		logger.debug("deleteItemsScrapCont ended");
+	}
+
 	@Override
 	public String moveItem(String orgItemIDList, String orgBoardIDList, String destBoardID, LoginVO userInfo, String uploadFilePath, String realPath) throws Exception {
 		logger.debug("moveItem started");
@@ -5593,5 +5616,435 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 
 		logger.debug("deleteBoardScrapItem ended");
+	}
+	
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 data 표출 */
+	@Override
+	public String getUserScrapContTree(String OwnUserID, String ParentScrapContID, String companyID, String lang, int tenantID, Locale locale) throws Exception {
+		logger.debug("getUserScrapContTree start");
+		StringBuilder rtnXML = new StringBuilder("");
+
+		String strLangDeptDocFolder = egovMessageSource.getMessage("ezBoard.kmh12", locale); 
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LANGTYPE", lang);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_USERID", OwnUserID);
+		map.put("v_ParentScrapContID", ParentScrapContID);
+
+		List<BoardUserScrapContVO> userScrapContlist = ezBoardDAO.getUserScrapContTree(map);
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+
+		for (int i = 0; i < userScrapContlist.size(); i++) {
+			sb.append(commonUtil.getQueryResult(userScrapContlist.get(i)));
+		}
+
+		sb.append("</DATA>");
+
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		if (ParentScrapContID.toUpperCase().equals("ROOT")) {
+			rtnXML.append("<TREEVIEWDATA>");
+		} else {
+			rtnXML.append("<NODES>");
+		}
+
+		if (dlength > 0) {
+			if (ParentScrapContID.toUpperCase().equals("ROOT")) {
+				rtnXML.append("<NODE>");
+				rtnXML.append("<VALUE>" + commonUtil.cleanValue(docXML.getElementsByTagName("USERSCRAPCONTNAME").item(0).getTextContent()).replace("\\", "&#92;") + "</VALUE>");
+				rtnXML.append("<DATA1>" + docXML.getElementsByTagName("USERSCRAPCONTID").item(0).getTextContent()+ "</DATA1>");
+				rtnXML.append("<DATA2>" + ParentScrapContID + "</DATA2>");
+				rtnXML.append("<DATA3>" + commonUtil.cleanValue(docXML.getElementsByTagName("DESCRIPTION").item(0).getTextContent()) + "</DATA3>");
+				rtnXML.append("<DATA4>" + OwnUserID + "</DATA4><ISLEAF>" + getUserScrapContTreeLeaf(docXML.getElementsByTagName("USERSCRAPCONTID").item(0).getTextContent(), companyID, tenantID) + "</ISLEAF><EXPANDED>FALSE</EXPANDED>");
+				// 표준모듈 (2007.05.07) : 다국어
+				rtnXML.append(getUserScrapContTree(OwnUserID, docXML.getElementsByTagName("USERSCRAPCONTID").item(0).getTextContent(), companyID, lang, tenantID, locale));
+				rtnXML.append("</NODE>");
+			} else {
+				for (int j = 0; j < dlength; j++) {
+					rtnXML.append("<NODE>");
+					rtnXML.append("<VALUE>" + commonUtil.cleanValue(docXML.getElementsByTagName("USERSCRAPCONTNAME").item(j).getTextContent()).replace("\\", "&#92;") + "</VALUE>");
+					rtnXML.append("<DATA1>" + docXML.getElementsByTagName("USERSCRAPCONTID").item(j).getTextContent() + "</DATA1>");
+					rtnXML.append("<DATA2>" + ParentScrapContID + "</DATA2>");
+					rtnXML.append("<DATA3>" + commonUtil.cleanValue(docXML.getElementsByTagName("DESCRIPTION").item(j).getTextContent()) + "</DATA3>");
+					rtnXML.append("<DATA4>" + OwnUserID + "</DATA4><ISLEAF>" + getUserScrapContTreeLeaf(docXML.getElementsByTagName("USERSCRAPCONTID").item(j).getTextContent(), companyID, tenantID) + "</ISLEAF><EXPANDED>FALSE</EXPANDED></NODE>");
+				}
+			}
+		} else {
+			if (ParentScrapContID.toUpperCase().equals("ROOT")) {
+				// 표준모듈 (2007.05.07) : 다국어
+				String NewScrapContID = createUserScrapCont(egovMessageSource.getMessage("ezBoard.kmh12", locale), ParentScrapContID, strLangDeptDocFolder, OwnUserID, companyID, lang, tenantID);
+
+				if (!NewScrapContID.trim().equals("")) {
+					rtnXML.append("<NODE>");
+					rtnXML.append("<VALUE>" + egovMessageSource.getMessage("ezBoard.kmh12", locale) + "</VALUE>");
+					rtnXML.append("<DATA1>" + NewScrapContID + "</DATA1>");
+					rtnXML.append("<DATA2>" + ParentScrapContID + "</DATA2>");
+					rtnXML.append("<DATA3>" + strLangDeptDocFolder + "</DATA3>");
+					rtnXML.append("<DATA4>" + OwnUserID + "</DATA4><ISLEAF>" + getUserScrapContTreeLeaf(NewScrapContID, companyID, tenantID) + "</ISLEAF><EXPANDED>FALSE</EXPANDED></NODE>");
+				}
+			}
+		}
+
+		if (ParentScrapContID.toUpperCase().equals("ROOT")) {
+			rtnXML.append("</TREEVIEWDATA>");
+		} else {
+			rtnXML.append("</NODES>");
+		}
+
+		logger.debug("getUserScrapContTree ended");
+		return rtnXML.toString();
+	}
+	
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 생성 */
+	@Override
+	public String insUserScrapCont(String ownUserID, String parentScrapContID, String UserScrapContName, String description, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("insUserScrapCont started");
+		String scrapContID = createUserScrapCont(UserScrapContName, parentScrapContID, description, ownUserID, companyID, lang, tenantID);
+
+		if (scrapContID.trim().equals(""))
+			return "<RESULT>FALSE</RESULT>";
+		else
+			return "<RESULT>TRUE</RESULT>";
+	}
+	
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 변경 */
+	@Override
+	public String updateUserScrapCont(String scrapContID, String ownUserID, String parentScrapContID, String userScrapContName, String description, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("updateUserScrapCont started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_POWNUSERID", ownUserID);
+		map.put("v_PUSERSCRAPCONTNAME", userScrapContName);
+		map.put("v_PSCRAPCONTID", scrapContID);
+		map.put("v_PDESCRIPTION", description);
+		map.put("v_PPARENTSCRAPCONTID", parentScrapContID);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+
+		ezBoardDAO.updateUserScrapCont(map);
+		
+		logger.debug("updateUserScrapCont ended.");
+		return "<RESULT>TRUE</RESULT>";
+	}
+	
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 삭제 */
+	@Override
+	public String deleteUserScrapCont(String scrapContID, String mode, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("deleteUserScrapCont started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PSCRAPCONTID", scrapContID);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+
+		int hasSubCont = ezBoardDAO.getUserScrapContSubCount(map);
+
+		if (hasSubCont > 0) {
+			return "<RESULT>HASSUBCONT</RESULT>";
+		}
+
+		int ItemCount = 0;
+		if (mode.toLowerCase().equals("check")) {
+			ItemCount = ezBoardDAO.delUserScrapContItemCnt(map);
+		}
+
+		if (ItemCount <= 0) {
+			ezBoardDAO.delUserScrapContList(map);
+			ezBoardDAO.delUserScrapCont(map);
+		} else {
+			return "<RESULT>" + ItemCount + "</RESULT>";
+		}
+		logger.debug("deleteUserScrapCont ended");
+		return "<RESULT>TRUE</RESULT>";
+	}
+	
+	/* 2023-05-22 기민혁 - 스크랩함 중복 스크랩 목록 확인 */
+	@Override
+	public int getOverlapItemCount(String id, String itemListID, String boardID, String userScrapContID, String companyID, int tenantID) throws Exception {
+		logger.debug("getOverlapItemCount start");
+
+		int overlapCount = 0;
+		BoardUserScrapContListVO boardUserScrapContListVO = new BoardUserScrapContListVO();
+
+		boardUserScrapContListVO.setUserID(id);
+		boardUserScrapContListVO.setBoardID(boardID);
+		boardUserScrapContListVO.setCompanyID(companyID);
+		boardUserScrapContListVO.setTenantID(tenantID);
+		boardUserScrapContListVO.setUserScrapContID(userScrapContID);
+
+		String[] itemListArray = itemListID.split(";");
+
+		for (int i = 0; i < itemListArray.length; i++) {
+			String itemID = itemListArray[i];
+			boardUserScrapContListVO.setItemID(itemID);
+
+			overlapCount += ezBoardDAO.getOverlapItemCount(boardUserScrapContListVO);
+		}
+		logger.debug("getOverlapItemCount ended");
+		return overlapCount;
+	}
+	
+	/* 2023-05-22 기민혁 - 스크랩함에 게시물 데이터 insert */
+	@Override
+	public String setUserScrapContItem(String id, String itemListID, String boardID, String userScrapContID, String companyID, int tenantId) throws Exception {
+		logger.debug("setUserScrapContItem start.");
+
+		BoardUserScrapContListVO boardUserScrapContListVO = new BoardUserScrapContListVO();
+		String result = "true";
+
+		boardUserScrapContListVO.setBoardID(boardID);
+		boardUserScrapContListVO.setUserID(id);
+		boardUserScrapContListVO.setUserScrapContID(userScrapContID);
+		boardUserScrapContListVO.setCompanyID(companyID);
+		boardUserScrapContListVO.setTenantID(tenantId);
+		boardUserScrapContListVO.setScrapDate(commonUtil.getTodayUTCTime(""));
+
+		try {
+
+			String[] itemListArray = itemListID.split(";");
+			for (int i = 0; i < itemListArray.length; i++) {
+				String itemID = itemListArray[i];
+				boardUserScrapContListVO.setItemID(itemID);
+				boardUserScrapContListVO.setDescription(Integer.toString(i));
+				ezBoardDAO.setUserScrapContItem(boardUserScrapContListVO);
+
+			}
+
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			result = "error";
+			return result;
+		}
+
+		logger.debug("setUserScrapContItem ended.");
+		return result;
+	}
+	
+	/* 2023-05-22 기민혁 - 스크랩함 게시물 스크랩 해제 */
+	@Override
+	public String deleteScrapContItemList(String userID, String itemList, String companyID, int tenantID, String scrapContID) throws Exception {
+		logger.debug("deleteScrapContItemList started");
+
+		BoardScrapListVO scrapList = new BoardScrapListVO();
+
+		scrapList.setUserID(userID);
+		scrapList.setCompanyID(companyID);
+		scrapList.setTenant_ID(tenantID);
+		scrapList.setScrapContID(scrapContID);
+		String[] itemListArray = itemList.split(";");
+
+		try {
+			for (int i = 0; i < itemListArray.length; i++) {
+				String scrapItem = itemListArray[i].split(",")[0];
+				scrapList.setItemID(scrapItem);
+				ezBoardDAO.deleteScrapContItemList(scrapList);
+			}
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "error";
+		}
+
+		logger.debug("deleteScrapContItemList ended");
+		return "true";
+	}
+	
+	/* 2023-05-22 기민혁 - 스크랩함 스크랩 item totalcount */
+	@Override
+	public int getUserScrapContlistCount(LoginVO userInfo, String scrapContID) throws Exception {
+		logger.debug("getUserScrapContlistCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_userID", userInfo.getId());
+		map.put("v_companyID", userInfo.getCompanyID());
+		map.put("v_tenantID", userInfo.getTenantId());
+		map.put("v_scrapContID", scrapContID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+
+		logger.debug("getUserScrapContlistCount ended");
+		return ezBoardDAO.getUserScrapContlistCount(map);
+	}
+	
+	/* 2023-05-22 기민혁 - 스크랩함 리스트 표출 */
+	@Override
+	public List<HashMap<String, Object>> getScrapContItemList(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String scrapContID) throws Exception {
+		logger.debug("getScrapContItemList started");
+
+		if (orderOption1.length() > 0) {
+			if (orderOption1.indexOf("SCRAPDATE") > -1) {
+				if (orderOption1.indexOf("SCRAPDATE DESC") > -1) {
+					orderOption1 = " E.SCRAPDATE DESC, E.DESCRIPTION DESC + 0 ";
+				} else {
+					orderOption1 = " E.SCRAPDATE, E.DESCRIPTION + 0 ";
+				}
+			}
+		} else {
+			orderOption1 = " E.SCRAPDATE DESC, E.DESCRIPTION + 0 ";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("v_PSTARTROW", startRow);
+		map.put("v_PENDROW", endRow);
+		map.put("iv_PORDERBYSUB", orderOption1);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
+		map.put("scrapContID", scrapContID);
+
+		logger.debug("getScrapContItemList ended");
+		return ezBoardDAO.getScrapContItemList(map);
+	}
+	
+	/* 2023-05-22 기민혁 - 스크랩함 검색결과 스크랩 item totalcount */
+	public int getSearchScrapContItemListCount(LoginVO userInfo, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchScrapContItemListCount started");
+
+		if (boardVO.getSearchQuery().length() > 0) {
+			boardVO.setSearchQuery(" AND " + boardVO.getSearchQuery());
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_userID", userInfo.getId());
+		map.put("v_companyID", userInfo.getCompanyID());
+		map.put("v_tenantID", userInfo.getTenantId());
+		map.put("v_scrapContID", boardVO.getScrapContID());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+
+		logger.debug("getSearchScrapContItemListCount ended");
+		return ezBoardDAO.getSearchScrapContItemListCount(map);
+	}
+	
+	/* 2023-05-22 기민혁 - 나의 스크랩함 검색리스트 표출 */
+	@Override
+	public List<HashMap<String, Object>> getSearchScrapContItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchScrapContItemList started");
+
+		if (boardListVO.getOrderBySub().length() > 0) {
+			if (boardListVO.getOrderBySub().indexOf("SCRAPDATE") > -1) {
+				if (boardListVO.getOrderBySub().indexOf("SCRAPDATE DESC") > -1) {
+					boardListVO.setOrderBySub(" S.SCRAPDATE DESC, S.DESCRIPTION DESC ");
+				} else {
+					boardListVO.setOrderBySub(" S.SCRAPDATE, S.DESCRIPTION ");
+				}
+			}
+		} else {
+			boardListVO.setOrderBySub(" S.SCRAPDATE DESC, S.DESCRIPTION ");
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", boardListVO.getWriterCompanyID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_SCRAPCONTID", boardVO.getScrapContID());
+
+		logger.debug("getSearchScrapContItemList ended");
+		return ezBoardDAO.getSearchScrapContItemList(map);
+	}
+	
+	/* 2023-05-22 기민혁 - 나의 스크랩함 폴더 생성 */
+	private String createUserScrapCont(String tempOwnUserName, String parentScrapContID, String description, String ownUserID, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("createUserScrapCont started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERSCRAPCONTNAME", tempOwnUserName);
+		map.put("v_PARENTSCRAPCONTID", parentScrapContID);
+		map.put("v_DESCRIPTION", description);
+		map.put("v_USERID", ownUserID);
+		map.put("v_LANGTYPE", lang);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+
+		String maxScrapContID = ezBoardDAO.getUserScrapContMaxID(map);
+		map.put("v_PMAXSCRAPCONTAINERID", maxScrapContID);
+
+		ezBoardDAO.insertUserScrapCont(map);
+
+		if (maxScrapContID == null) {
+			maxScrapContID = "";
+		}
+		
+		logger.debug("createUserScrapCont ended");
+		return maxScrapContID;
+	}
+	
+	/* 2023-05-22 기민혁 - 게시물함  자식 폴더 표출 */
+	private String getUserScrapContTreeLeaf(String UserScrapContID, String companyID, int tenantID) throws Exception {
+		logger.debug("getUserScrapContTreeLeaf started");
+
+		String isLeaf = "FALSE";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERSCRAPCONTID", UserScrapContID);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+
+		List<BoardUserScrapContVO> userScrapContTreelist = ezBoardDAO.getUserScrapContTreeLeaf(map);
+
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+
+		for (int i = 0; i < userScrapContTreelist.size(); i++) {
+			sb.append(commonUtil.getQueryResult(userScrapContTreelist.get(i)));
+		}
+		sb.append("</DATA>");
+
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+
+		if (docXML.getElementsByTagName("ROW").getLength() > 0) {
+			isLeaf = "FALSE";
+		} else {
+			isLeaf = "TRUE";
+		}
+
+		logger.debug("getUserScrapContTreeLeaf ended");
+		return isLeaf;
+	}
+	
+	/* 2023-05-22 기민혁 - 게시물 삭제시 scrapcont 목록 삭제 */
+	@Override
+	public void deleteBoardScrapContItem(String itemList, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteBoardScrapContItem started");
+
+		int isScrap;
+		BoardUserScrapContListVO scrapList = new BoardUserScrapContListVO();
+
+		scrapList.setCompanyID(companyID);
+		scrapList.setTenantID(tenantID);
+
+		String[] itemListArray = itemList.split(";");
+
+		for (int i = 0; i < itemListArray.length; i++) {
+			String scrapItem = itemListArray[i].split(",")[0];
+			scrapList.setItemID(scrapItem);
+			
+			isScrap = ezBoardDAO.isScrapContItemCount(scrapList);
+			
+			if(isScrap != 0){
+			ezBoardDAO.deleteBoardScrapContItem(scrapList);
+			}
+		}
+
+		logger.debug("deleteBoardScrapContItem ended");
 	}
 }

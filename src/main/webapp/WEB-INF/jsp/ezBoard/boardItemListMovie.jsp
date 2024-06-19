@@ -1016,6 +1016,32 @@
                 getBoardList();
             }
 	    	
+		    /*  2023-05-22 기민혁 - 나의스크랩함 나의스크랩 추가 버튼 클릭시 동작 */
+    	    function SaveScrapMyBoard() {
+    	    	var arrList = new Array();
+	            var strItemList = "";
+	            var i = 0;
+	            arrList = strListInfo.split(";");
+
+				if (Read_FG != "true") {
+					alert("<spring:message code='ezBoard.t202' />");
+					return;
+				}
+
+	            if(arrList.length == "1"){
+	            	alert("<spring:message code='ezBoard.kmh01'/>");
+	            	return;
+	            }
+
+	            for (i = 0; i < arrList.length - 1; i++) {
+		            strItemList += arrList[i].split(",")[0] + ";";
+		        }
+
+    	        var url = "/ezBoard/selUserScrapCont.do";
+    	        ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+    	        try { ContOpen.focus() } catch (e) { }
+    	    }
+
 		</script>
 	</head>
 	<c:choose>
@@ -1064,6 +1090,9 @@
 		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02'/></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li>
+		        <c:if test="${MyScrapContFlag != 'NO'}">
+		        	<li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh42' /></span></li>
+				</c:if>
 				<div id="right" class="sub_frameIcon" style="float:right">	
 					<div class="sub_frameIconUL" style="width:57px !important">
 					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>

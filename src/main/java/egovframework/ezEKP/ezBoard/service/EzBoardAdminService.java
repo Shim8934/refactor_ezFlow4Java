@@ -152,4 +152,6 @@ public interface EzBoardAdminService {
 	List<OrganDeptVO> getListCompanyInBoard(String userID, String primary, int tenantID);
 	
 	void deleteScrapBoard(String boardID) throws Exception;
+
+	void deleteScrapContBoard(String boardID) throws Exception;
 }

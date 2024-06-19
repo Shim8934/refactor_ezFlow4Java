@@ -56,6 +56,10 @@ public class BoardVO {
 	private String likeFlag;
 	/** 2023-05-03 기민혁 - 게시판 스크랩 */
 	private String scrap;
+	/** 2023-05-22 기민혁 - 게시판 스크랩함 ID */
+	private String scrapContID;
+	/** 2023-05-22 기민혁 - 게시판 스크랩함 이름 */
+	private String scrapContTitle;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -218,6 +222,18 @@ public class BoardVO {
 	}
 	public void setScrap(String scrap) {
 		this.scrap = scrap;
+	}
+	public String getScrapContID() {
+		return scrapContID;
+	}
+	public void setScrapContID(String scrapContID) {
+		this.scrapContID = scrapContID;
+	}
+	public String getScrapContTitle() {
+		return scrapContTitle;
+	}
+	public void setScrapContTitle(String scrapContTitle) {
+		this.scrapContTitle = scrapContTitle;
 	}
 	
 }

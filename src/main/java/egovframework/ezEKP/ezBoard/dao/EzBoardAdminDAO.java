@@ -384,4 +384,9 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void deleteScrapBoard(String boardID) throws Exception {
 		delete("EzBoardAdminDAO.deleteScrapBoard", boardID);
 	}
+
+	public void deleteScrapContBoard(String boardID) throws Exception {
+		delete("EzBoardAdminDAO.deleteScrapContBoard", boardID);
+	}
+
 }

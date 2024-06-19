@@ -89,6 +89,7 @@
 		        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 				var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
 		        var isScrap = "<c:out value='${isScrap}'/>";
+				var acScrap = "<c:out value='${acScrap}'/>";
 
 				/* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
 				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";

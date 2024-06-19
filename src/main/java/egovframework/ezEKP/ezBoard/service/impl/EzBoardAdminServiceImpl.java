@@ -1429,6 +1429,11 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	public void deleteScrapBoard(String boardID) throws Exception {
 		ezBoardAdminDAO.deleteScrapBoard(boardID);
 	}
+
+	@Override
+	public void deleteScrapContBoard(String boardID) throws Exception {
+		ezBoardAdminDAO.deleteScrapContBoard(boardID);
+	}
 	
 	
 }

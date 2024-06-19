@@ -5068,7 +5068,7 @@
 		  CONSTRAINT "TBL_BOARDITEM_SCRAP_PK" PRIMARY KEY ("TENANT_ID", "COMPANYID", "USERID","BOARDID","ITEMID")
 		) 
 	</statement>
-
+	
 
 	<select id="EzCommonDAO.checkUserHideFlag">
 		<![CDATA[
@@ -6078,5 +6078,72 @@
 		ALTER TABLE
 			TBL_RS_SCHEDULE
 			ADD DEPTID NVARCHAR2(80) DEFAULT NULL
+	</statement>
+	<select id="EzCommonDAO.checkScrapContTenantConfig" resultClass="String" parameterClass="Map">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'MyScrapContFlag'
+		AND
+			tenant_id = #tenantId#
+	</select>
+
+	<insert id="EzCommonDAO.insertScrapContTenantConfig" parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, SYSDATE, #configType#) 
+	</insert>
+	
+	<select id="EzCommonDAO.checkTblUserScrapCont" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USERSCRAPCONTID
+			FROM 
+				TBL_USERSCRAPCONT
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserScrapCont"> 
+	    CREATE TABLE "EZEKP2017"."TBL_USERSCRAPCONT" (
+	        "USERSCRAPCONTID" VARCHAR2(20 BYTE) NOT NULL ENABLE, 
+			"USERSCRAPCONTNAME" VARCHAR2(255 BYTE), 
+			"PARENTSCRAPCONTID" VARCHAR2(20 BYTE), 
+			"DESCRIPTION" VARCHAR2(255 BYTE), 
+			"USERID" VARCHAR2(100 BYTE) NOT NULL ENABLE,
+			"TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+			"COMPANYID" VARCHAR2(20 BYTE) NOT NULL ENABLE,
+			CONSTRAINT "TBL_USERSCRAPCONT_PK" PRIMARY KEY ("USERSCRAPCONTID", "TENANT_ID", "COMPANYID")
+	    )	
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblUserScrapContList" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USERSCRAPCONTID
+			FROM 
+				TBL_USERSCRAPCONTLIST
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserScrapContList"> 
+	    CREATE TABLE "EZEKP2017"."TBL_USERSCRAPCONTLIST" (
+	       "BOARDID" VARCHAR2(76) NOT NULL ENABLE,
+		   "ITEMID" VARCHAR2(76) NOT NULL ENABLE,
+		   "USERID" VARCHAR2(100) NOT NULL ENABLE,
+		   "USERSCRAPCONTID" VARCHAR2(20) NOT NULL ENABLE,
+		   "SCRAPDATE" VARCHAR2(40),
+		   "DESCRIPTION" VARCHAR2(255),
+		   "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+           "COMPANYID" VARCHAR2(20) NOT NULL ENABLE,
+			CONSTRAINT "TBL_USERSCRAPCONTLIST_PK" PRIMARY KEY ("USERSCRAPCONTID", "TENANT_ID", "COMPANYID", "ITEMID", "BOARDID", "USERID"),
+			CONSTRAINT "TBL_USERSCRAPCONTLIST_FK" FOREIGN KEY ("TENANT_ID", "COMPANYID", "USERSCRAPCONTID") REFERENCES "TBL_USERSCRAPCONT" ("TENANT_ID", "COMPANYID", "USERSCRAPCONTID") ON DELETE CASCADE
+	    )	
 	</statement>
 </sqlMap>

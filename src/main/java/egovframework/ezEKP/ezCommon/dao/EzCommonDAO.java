@@ -2762,9 +2762,38 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		try {
 			select("EzCommonDAO.checkTblBoardScrap");
 		} catch (Exception e) {
-			logger.debug("tbl_boardscrap doesn't exist. creating the table...");
+			logger.debug("tbl_boarditem_scrap doesn't exist. creating the table...");
 
 			update("EzCommonDAO.createTblBoardScrap");
+		}
+	}
+	
+	public void insertScrapContTenantConfig(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.checkScrapContTenantConfig",map);
+		
+		if (propertyValue == null) {
+			logger.debug("ScrapCont tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertScrapContTenantConfig",map);
+		}
+	}
+	
+	public void createTblUserScrapCont() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblUserScrapCont");
+		} catch (Exception e) {
+			logger.debug("tbl_userscrapcont doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblUserScrapCont");
+		}
+	}
+	
+	public void createTblUserScrapContList() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblUserScrapContList");
+		} catch (Exception e) {
+			logger.debug("tbl_userscrapcontlist doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblUserScrapContList");
 		}
 	}
 }

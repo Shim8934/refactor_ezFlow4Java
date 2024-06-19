@@ -110,6 +110,7 @@
 				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
 				
 				var isScrap = "<c:out value='${isScrap}'/>";
+				var acScrap = "<c:out value='${acScrap}'/>";
 				
 		        window.onload = function () {
 		            imageViewInit();

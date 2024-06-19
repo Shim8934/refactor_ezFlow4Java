@@ -91,6 +91,8 @@
 			var strDocNo = "<c:out value='${boardItem.docNo}'/>"; // 답변게시물 판별용 현재게시물 NO(DOCNO)
 
 			var isScrap = "<c:out value='${isScrap}'/>";
+			var acScrap = "<c:out value='${acScrap}'/>";
+
 		    // 수정 수아 재은	    
 		    var nowZoom = 100;
 	        var maxZoom = 200;

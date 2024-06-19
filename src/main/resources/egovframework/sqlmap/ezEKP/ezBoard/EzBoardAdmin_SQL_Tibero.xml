@@ -2937,4 +2937,10 @@
 		FROM TBL_BOARDITEM_SCRAP
 		WHERE BOARDID = #boardID#
 	</delete>
+
+	<delete id="EzBoardAdminDAO.deleteScrapContBoard" parameterClass="String">
+		DELETE
+		FROM TBL_USERSCRAPCONTLIST
+		WHERE BOARDID = #boardID#
+	</delete>
 </sqlMap>

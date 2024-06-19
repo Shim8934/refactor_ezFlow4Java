@@ -4355,4 +4355,31 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblBoardScrap() throws Exception {
 		ezCommonDAO.createTblBoardScrap();
 	}
+	
+	@Override
+	public void insertScrapContTenantConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("propertyName", "MyScrapContFlag");
+            map.put("propertyValue", "YES");
+            map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
+            map.put("configName", "게시판 왼쪽 메뉴 나의 스크랩 사용여부");
+            map.put("configType", "기타모듈");
+            map.put("regdate", "2023-06-14 00:00:00");
+
+            ezCommonDAO.insertScrapContTenantConfig(map);
+        }
+	}
+	
+	@Override
+	public void createTblUserScrapCont() throws Exception {
+		ezCommonDAO.createTblUserScrapCont();
+	}
+	
+	@Override
+	public void createTblUserScrapContList() throws Exception {
+		ezCommonDAO.createTblUserScrapContList();
+	}
 }
