@@ -561,16 +561,35 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useMemo", data.get("useMemo"));
 			model.addAttribute("useWebfolder", data.get("useWebfolder"));
 			
-			
 			// 2023-06-15 한슬기 - 디자인 개선 테마2 > 상단 영역 메일/웹폴더(개인) 용량 표시 추가
 			if (usedTheme.equals("2")) {
-				// 2023-06-14 한슬기 - 디자인 개선 테마2 > 상단 영역 메일 용량 표시 추가를 위한 메일용량정보(xml)
-				String mailCapacityInfo = ezEmailConfigController.mailGetUse(loginCookie, local, model, req);
 				
-				// 2023-06-20 한슬기 - 디자인 개선 테마2 > 웹폴더(개인) 용량표시 추가를 위한 FolderId 값 추출
-				String webFolderPersonalFolderId = ezWebFolderService_y.getFolderTree(userInfo.getId(), userInfo.getDeptID(),
-												  userInfo.getCompanyName(), "U", userInfo.getPrimary(), userInfo.getTenantId(), "", false)
-												  .stream().findFirst().map(FolderTreeVO::getId).orElse("");
+				String mailCapacityInfo = "";
+				String webFolderPersonalFolderId = "";
+				
+				if (data.get("useMail").equals("YES")) {
+					// 2023-06-14 한슬기 - 디자인 개선 테마2 > 상단 영역 메일 용량 표시 추가를 위한 메일용량정보(xml)
+					mailCapacityInfo = ezEmailConfigController.mailGetUse(loginCookie, local, model, req);
+				}
+				
+				if (data.get("useWebfolder").equals("YES")) {
+					// 2023-06-20 한슬기 - 디자인 개선 테마2 > 웹폴더(개인) 용량표시 추가를 위한 FolderId 값 추출
+					webFolderPersonalFolderId = ezWebFolderService_y.getFolderTree(userInfo.getId(), userInfo.getDeptID(),
+							userInfo.getCompanyName(), "U", userInfo.getPrimary(), userInfo.getTenantId(), "", false)
+							.stream().findFirst().map(FolderTreeVO::getId).orElse("");
+					
+					// 2024-06-19 조수빈 - 웹폴더를 한 번도 접속하지 않은 사용자의 경우 사용자의 웹폴더 아이디가 없어 사용량이 나타나지 않는 문제 해소
+					if (webFolderPersonalFolderId.equals("")) {
+						String webFolderUrl = "/rest/ezwebfolder/users/" + userInfo.getId() + "/checkRootFolder";
+						// 웹폴더 아이디가 한 번도 발급되지 않은 사용자이면 발급할 수 있도록 api 호출
+						JSONObject webFolderResultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.webFolderGwServerURL"), webFolderUrl, null, req, "get", null);
+						
+						webFolderPersonalFolderId = ezWebFolderService_y.getFolderTree(userInfo.getId(), userInfo.getDeptID(),
+								userInfo.getCompanyName(), "U", userInfo.getPrimary(), userInfo.getTenantId(), "", false)
+								.stream().findFirst().map(FolderTreeVO::getId).orElse("");
+					}
+					
+				}
 				
 				model.addAttribute("mailCapacityInfo", mailCapacityInfo);
 				model.addAttribute("webFolderPersonalFolderId", webFolderPersonalFolderId);
