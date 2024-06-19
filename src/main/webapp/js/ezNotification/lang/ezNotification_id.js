@@ -77,3 +77,7 @@ subType["schedule"]["delete"] = "membatalkan undangan";
 subType["survey"]["new"] = "Pendaftaran baru";
 subType["poll"]["new"] = "Pendaftaran baru";
 subType["community"]["new"] = "Pendaftaran baru";
+
+var notiMessages = {
+	strLang1 : '"Data is missing"'
+}

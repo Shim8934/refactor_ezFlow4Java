@@ -77,3 +77,7 @@ subType["schedule"]["delete"] = "초대취소";
 subType["survey"]["new"] = "신규등록";
 subType["poll"]["new"] = "신규등록";
 subType["community"]["new"] = "신규게시";
+
+var notiMessages = {
+	strLang1 : '"데이터가 없습니다."'
+}

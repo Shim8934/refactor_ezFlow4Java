@@ -77,3 +77,7 @@ subType["schedule"]["delete"] = "cancel invitation";
 subType["survey"]["new"] = "New registration";
 subType["poll"]["new"] = "New registration";
 subType["community"]["new"] = "New registration";
+
+var notiMessages = {
+	strLang1 : '"Data is missing"'
+}

@@ -77,3 +77,7 @@ subType["schedule"]["delete"] = "hủy lời mời";
 subType["survey"]["new"] = "Đăng kí mới";
 subType["poll"]["new"] = "Đăng kí mới";
 subType["community"]["new"] = "Đăng kí mới";
+
+var notiMessages = {
+	strLang1 : "Dữ liệu bị thiếu"
+}

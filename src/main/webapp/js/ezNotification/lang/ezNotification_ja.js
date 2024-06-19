@@ -77,3 +77,7 @@ subType["schedule"]["delete"] = "招待キャンセル";
 subType["survey"]["new"] = "新規登録";
 subType["poll"]["new"] = "新規登録";
 subType["community"]["new"] = "新規登録";
+
+var notiMessages = {
+	strLang1 : '"没有数据."'
+}

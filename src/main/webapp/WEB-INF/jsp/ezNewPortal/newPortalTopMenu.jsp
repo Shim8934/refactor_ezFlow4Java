@@ -1673,6 +1673,27 @@
 	 			quickMenu.removeChild(quickMenu.firstChild);
 	 		}
 			
+			if (quickList == null || quickList.length == 0) {
+				var dlEl = document.createElement('dl');
+				dlEl.className = 'nodata';
+				
+				var dtEl = document.createElement('dt');
+				
+				var imgEl = document.createElement('img');
+				imgEl.src = '/images/kr/main/noData_sIcon.png';
+				
+				var ddEl = document.createElement('dd');
+				ddEl.textContent =  '"<spring:message code="main.t00026" />"';
+				
+				dtEl.appendChild(imgEl);
+				
+				dlEl.appendChild(dtEl);
+				dlEl.appendChild(ddEl);
+				
+				quickMenu.appendChild(dlEl);
+				return;
+			}
+			
 			quickList.forEach(function (item, index) {
 				var li = document.createElement('li');
 				var div = document.createElement('div');

@@ -151,7 +151,9 @@
 			
 			var str = "";
 			if (notiList == "") {
-				str += '<br/><div class="notiZero"><span><spring:message code="ezNotification.hth12"/></span></div>';
+				str += '<br/><div class="notiZero">'
+				str	+= '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + notiMessages.strLang1 + '</dd></dl>'
+				str += '</div>';
 				curPageNum = 1;
 			} else {
 				for (var i = 0; i < notiList.length; i++) {
