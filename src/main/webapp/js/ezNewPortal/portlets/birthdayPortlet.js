@@ -137,7 +137,7 @@ function getBirthdayList(currentPage) {
                             }
                         }
                     } else {
-                        userBirthdayFormatSum = userBirthday;
+                        userBirthdayFormatSum = userBirthday.replace("-", ".");
                     }
 					strHTML += "<dd class='birthDate'>" + userBirthdayFormatSum + "</dd>";
 					strHTML += "<dd class='birthTeam'>" + birthdayList[i].userDeptName + "</dd>";
