@@ -525,7 +525,8 @@ var handlePopupMenuBtn = function (type) {
 	var menuBtnSpans = document.querySelectorAll('.quickMenuBtnDiv');
 	if (type === 'on') {
 		//animatePopupBtn.play();
-		document.getElementById('popupMenuBtn').style.width = (100 * menuBtnSpans.length + 68) +'px';
+		// document.getElementById('popupMenuBtn').style.width = (100 * menuBtnSpans.length + 68) +'px';
+		document.getElementById('popupMenuBtn').style.width = "auto";
 		contextMenuObject.popupMenu = true;
 		$('#contextMenuBtn').draggable('disable');		
 	} else if (type === 'off') {
