@@ -80,7 +80,7 @@
 			<c:if test="${newMailFlag ne null}">
 			<div id="txt" style="WIDTH:100%; height:20px; margin-bottom: 5px;">
 				<span style="font-weight: bolder;"><spring:message code='ezEmail.t57'/>&nbsp;&#58;&nbsp;</span>
-				<span>${name}&lt;${mailAddress}&gt;</span>
+				<span>${name}&nbsp;&lt;${mailAddress}&gt;</span>
 			</div>
 			</c:if>
 			<div id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; height:350px;">
