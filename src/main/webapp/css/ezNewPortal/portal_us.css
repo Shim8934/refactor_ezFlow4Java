@@ -1,5 +1,6 @@
 ﻿@charset "utf-8";
 
+html,input,button,select,textarea{font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .profile_div{width:250px;}
 .filter_pop .check_scroll{max-height:270px;}
 .filter_pop .check_list .check_ul li{width:50%;}

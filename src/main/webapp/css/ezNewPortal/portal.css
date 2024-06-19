@@ -1557,7 +1557,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .resources_setting{margin:0px; padding:18px 15px; float:right; overflow:hidden; cursor:pointer;}
 
 .resource_listBox { clear: both; height:calc(100% - 79px); margin: 0px 0px 0px 0px; padding: 0px 0px; overflow-x: hidden; overflow-y:auto; box-sizing: border-box; background:#fff;}
-.resource_listBoxUL { list-style: none; margin: 0px;  padding:10px 20px 0px; box-sizing:border-box;}
+.resource_listBoxUL { list-style: none; margin: 0px;  padding:10px 20px 0px; box-sizing:border-box; height:100%;}
 .resource_listBoxUL li{margin-top:10px;}
 .resource_listBoxUL li:first-child{margin-top:0;}
 .resource_listBoxUL .resource_listBoxDL { margin: 0px; padding: 0px; }
@@ -1779,7 +1779,7 @@ div.orbit img{border-radius: 5px;}
 
 
 .main_main_time .main_timeCheckOut .main_out{color: #333;}
-#ptlTimeFlow{margin: 22px 0px; padding: 0px; text-align: center; background: url(/images/kr/main/present_time_icon.png) no-repeat 1px 5px; padding-left: 31px;}
+#ptlTimeFlow{margin: 22px 0px; padding: 0px; text-align: center; background: url(/images/kr/main/present_time_icon.png) no-repeat 1px 3px; padding-left: 31px;}
 .presentTime .timeTxt{background: none;}
 /* #theme3Body #ptlTimeFlow{background: url(/images/ezNewPortal/theme3Img/present_time_icon.png) no-repeat 1px 5px; padding-left: 31px;} */
 #theme3Body .presentTime .timeTxt{background: none;}
@@ -2219,3 +2219,11 @@ div.orbit img{border-radius: 5px;}
 .mainbg tr td:first-child .ui-state-default{color:#FF0000;}
 .mainbg tr td:last-child .ui-state-default{color:#0000FF;}
 .mainbg .ui-state-highlight, .mainbg .ui-widget-content .ui-state-highlight, .mainbg .ui-widget-header .ui-state-highlight{border:none; background:#3D8FEA; font-size:11px; color:#fff;}
+
+
+/*	화면작아질 때 gnb lnb로 바꾸는 반응형 css(테스트)
+@media (max-width:1210px) {
+	.contentlayout > .contentlayout_none{display:none;}
+	#mainFrame{width:calc(100% - 81px) !important; float:right !important;}
+} */
+#mainFrame.active{width:calc(100% - 81px) !important; float:right !important;}

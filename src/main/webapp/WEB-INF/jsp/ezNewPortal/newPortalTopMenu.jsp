@@ -71,6 +71,36 @@
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	<script type="text/javascript">
+		// 상단 메뉴시 화면 작아질시 좌측으로 이동 함수 start(테스트용/UIUX-조기완)
+		/* function calcWidth(obj){
+			var totalWidth = 0;
+			$(obj).each(function(){
+				totalWidth += $(this).outerWidth(true);
+			})
+			return totalWidth;
+		}
+
+		function gnbChange(){
+			var windowWidth = $(window).outerWidth(true);
+			var leftWidth = calcWidth(".topmenulayout > .contentlayout_left");
+			var rightWidth = calcWidth(".topmenulayout > .contentlayout_right");
+			var contWidth = windowWidth - leftWidth - rightWidth;
+			var gnbWidth = calcWidth(".topNavCls li");
+
+			if(gnbWidth > contWidth){
+				$(window.parent.document).find("#mainFrame").addClass("active");
+				$(".contentlayout_none").css("visibility","hidden");
+			} else{
+				$(window.parent.document).find("#mainFrame").removeClass("active");
+				$(".contentlayout_none").css("visibility","visible");
+			}
+		}
+
+		$(window).resize(function(){
+			gnbChange();
+		}) */
+		// 상단 메뉴시 화면 작아질시 좌측으로 이동 함수 end
+
 		var menuDisplayMode = '<c:out value="${menuDisplayMode}"/>';
 		var userLang = '<c:out value="${lang}"/>';
 		var userPrimary = '<c:out value="${primary}"/>';
