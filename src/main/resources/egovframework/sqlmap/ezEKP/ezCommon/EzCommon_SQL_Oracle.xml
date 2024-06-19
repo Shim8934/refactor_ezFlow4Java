@@ -1008,7 +1008,7 @@
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 			VALUES (#portletId#, #menuId#, 1, #tenantId#, #companyId#, '개인폴더')			
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Personal Folder')			
+			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'My Folder')			
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 			VALUES (#portletId#, #menuId#, 3, #tenantId#, #companyId#, 'Webフォルダ')
 		SELECT *

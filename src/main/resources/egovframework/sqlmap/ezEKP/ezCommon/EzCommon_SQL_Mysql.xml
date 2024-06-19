@@ -976,7 +976,7 @@
 			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		VALUES
 			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '개인폴더'),
-			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Personal Folder'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'My Folder'),
 			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, 'Webフォルダ')
 	</insert>
 	
