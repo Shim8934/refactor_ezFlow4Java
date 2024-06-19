@@ -122,7 +122,7 @@ function CalendarMiniView(pTagetID) {
         var curMonth = sDate.getMonth() + 1;
         var mText = document.createTextNode(curMonth);
         
-        mText.textContent = curMonth + strLangHSBScPt2;
+        mText.textContent = curMonth;
         
         imSpan.appendChild(mText);
         
