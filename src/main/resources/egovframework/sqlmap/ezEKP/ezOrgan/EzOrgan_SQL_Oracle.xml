@@ -84,6 +84,7 @@
 		<result property="role" 						  	    column="role" 						    columnIndex="45"  nullValue=""/>
 		<result property="role1" 							    column="role1" 						    columnIndex="46"  nullValue=""/>
 		<result property="role2" 							    column="role2" 						    columnIndex="47"  nullValue=""/>
+		<result property="userTreeFlag" 						column="usertreeflag" 					columnIndex="48"/>
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
@@ -1524,7 +1525,8 @@
 	            'user' TYPE  ,
 	            SIPURI ,
 	            POSITIONCD ,
-	            'user' USERTYPE
+	            'user' USERTYPE,
+	            USERTREEFLAG
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1648,7 +1650,8 @@
              'user' TYPE  ,
              SIPURI ,
              B.POSITIONCD ,
-	         'addJob' USERTYPE
+	         'addJob' USERTYPE,
+	         B.USERTREEFLAG
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN

@@ -130,7 +130,8 @@
 		            }
 		        }catch (e){ }
 		        */
-	
+				document.getElementById("userTreeFlag").checked = true;
+				
 		        if (RetValue[2] == "") {
 		            document.getElementById("DeptName").value = RetValue[1];
 		            // 수정(2007.06.26) : 사용자 추가 시 부서명(P/S)이 제대로 보이지 않는 문제 수정

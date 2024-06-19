@@ -1851,6 +1851,7 @@ public class EzWebFolderGWController {
 		String deptId     = request.getParameter("deptId")   != null ? request.getParameter("deptId")    : "";
 		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")    : "";
 		String serverName = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host")    : "";
+		String adminOrgan = request.getParameter("adminOrgan") != null ? request.getParameter("adminOrgan") : "n";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Department Id: " + deptId + " || UserId: " + userId);
@@ -1868,6 +1869,9 @@ public class EzWebFolderGWController {
 			int tenantId          = userInfo.getTenantId();
 			deptId                = deptId.equals("") ? userInfo.getDeptID() : deptId;
 			SimpleDeptVO sCompany = null;
+			String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag",tenantId);
+			// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+			adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
 			
 			if (deptId.equals("")) {
 				sCompany = ezWebFolderService.getAllDepts(companyId, 0, primary, tenantId);
@@ -1877,7 +1881,7 @@ public class EzWebFolderGWController {
 				String[] path    = deptPath.split(",");
 				sCompany         = ezWebFolderService.getSimpleCompany(companyId, 0, primary, tenantId);
 				
-				ezWebFolderService.getAllDepts(sCompany, path, primary, tenantId, 1, 1);
+				ezWebFolderService.getAllDepts(sCompany, path, primary, tenantId, 1, 1, adminOrgan);
 			}
 			
 			result.put("status", "ok");
@@ -1935,6 +1939,7 @@ public class EzWebFolderGWController {
 		logger.debug("getAllDeptMembers start");
 		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		String adminOrgan = request.getParameter("adminOrgan") != null ? request.getParameter("adminOrgan") : "n";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("deptId: " + deptId + " || serverName: " + serverName + " || UserId: " + userId);
@@ -1950,7 +1955,10 @@ public class EzWebFolderGWController {
 			LoginVO userInfo               = commonUtil.getUserForGw(userId, serverName);
 			int tenantId                   = userInfo.getTenantId();
 			String primary                 = userInfo.getPrimary();
-			List<SimpleUserVO> listMembers = ezWebFolderService.getDeptMemberList(deptId, primary, tenantId);
+			String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag",tenantId);
+			// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+			adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
+			List<SimpleUserVO> listMembers = ezWebFolderService.getDeptMemberList(deptId, primary, tenantId, adminOrgan);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

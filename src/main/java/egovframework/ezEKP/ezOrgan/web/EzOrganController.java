@@ -692,10 +692,16 @@ public class EzOrganController {
 		String searchType = request.getParameter("searchType");
 		String searchValue = request.getParameter("searchValue");
 		String comID = request.getParameter("comID");
+		String adminOrgan = request.getParameter("adminOrgan") == null ? "n" : request.getParameter("adminOrgan");
+		
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag",userInfo.getTenantId());
+		 // useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+		adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
+		
 		logger.debug("type=" + type + ", jobId=" + jobID + ", pageSize=" + pageSize + ", pageNum=" + pageNum + ", searchType=" + searchType 
 				+ ", searchValue=" + searchValue + ", comID=" + comID + ", celllist=" + celllist + ", proplist=" + proplist);
 		   
-		memInfo = ezOrganService.getJobMasterMemberList(type, jobID, celllist, proplist, pageSize, pageNum, searchType, searchValue, primary, comID, tenantID);
+		memInfo = ezOrganService.getJobMasterMemberList(type, jobID, celllist, proplist, pageSize, pageNum, searchType, searchValue, primary, comID, tenantID,adminOrgan);
         
         logger.debug("getJobMasterMemberList ended");
 		return memInfo;	

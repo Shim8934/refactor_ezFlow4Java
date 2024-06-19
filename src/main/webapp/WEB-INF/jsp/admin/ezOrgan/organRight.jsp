@@ -199,7 +199,7 @@
 				}
 				
 				if (listOpt1.checked == true){
-					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10";
+					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10;userTreeFlag";
 					typeContent = "userWithMasterAdmin";
 					document.getElementsByClassName('searchForm')[0].style.display = "";
 				}else{
@@ -261,6 +261,10 @@
 				            		var orgPosition = $(this).find("CELL").eq(4).find("VALUE").text();
 				            		$(this).find("CELL").eq(4).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
 				            	}
+								if ("YES" === useOrganHideFlag && $(this).find("CELL").eq(6).find("VALUE").text() === 'N') {
+									var userName = $(this).find("CELL").eq(1).find("VALUE").text();
+									$(this).find("CELL").eq(1).find("VALUE").text(userName+"(X)");
+								}
 				            });
 				            var Node = headerData.importNode(xmlRtn, true);
 				            headerData.documentElement.appendChild(Node);

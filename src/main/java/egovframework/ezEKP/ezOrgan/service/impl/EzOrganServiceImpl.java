@@ -2503,7 +2503,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getJobMasterMemberList(String type, String jobID, String celllist, String proplist, String pageSize, String pageNum, 
-			String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception {
+			String searchType, String searchValue, String primary, String companyID, int tenantID, String adminOrgan) throws Exception {
 		logger.debug("getJobMasterMemberList started.");
 		
 		StringBuilder userInfo = new StringBuilder();
@@ -2513,6 +2513,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_JOBID", jobID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_ADMINORGAN", adminOrgan);
 		
 		if (!pageNum.equals("") && !pageSize.equals("")) {
 			int pPageSize = Integer.parseInt(pageSize);
@@ -2524,17 +2525,26 @@ public class EzOrganServiceImpl implements EzOrganService {
 			map.put("v_PAGENUM", pPageNum);
 		}
 		
-		if (!searchType.equals("") && !searchValue.equals("")) {
+		if (!searchType.equals("") && !searchValue.equals("") || "n".equals(adminOrgan)) {
+			String v_subQuery = "WHERE ";
 			if (searchType.equalsIgnoreCase("displayname")) {
-				String v_subQuery = primary.equals("1") ? " DISPLAYNAME " : " DISPLAYNAME2 ";
+				v_subQuery += primary.equals("1") ? " DISPLAYNAME " : " DISPLAYNAME2 ";
 				v_subQuery += " LIKE '%" + searchValue.trim() + "%' ";
 				
 				if (globals.getProperty("Globals.DbType").equals("oracle")) {
 					v_subQuery += " ESCAPE '\\' ";
 				}
-
-				map.put("v_SUBQUERY", "WHERE " + v_subQuery);
 			}
+			
+			if ("n".equals(adminOrgan)) {
+				String regex = "WHERE\\\\s+\\\\S+.*";
+				if (v_subQuery.matches(regex)) {
+					// where절 뒤에 searchType문자열이 들어갔는지 확인하고 있으면 AND 추가
+					v_subQuery += "AND ";
+				}
+				v_subQuery += "USERTREEFLAG = 'Y'";
+			}
+			map.put("v_SUBQUERY", v_subQuery);
 		}
 		
 		List<OrganUserVO> userList = ezOrganAdminDao.getTitleUserList(map);

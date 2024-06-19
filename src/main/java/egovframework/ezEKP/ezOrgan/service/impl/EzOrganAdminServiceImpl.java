@@ -982,6 +982,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
 		map.put("v_MANUAL_FLAG", vo.getManualFlag() != null ? vo.getManualFlag() : "N");
 		map.put("v_LDAPPATH", "");
+		map.put("v_DEPTTREEFLAG",vo.getDeptTreeFlag() != null ? vo.getDeptTreeFlag() : "Y");
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -1102,6 +1103,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		}
 		
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+		map.put("v_USERTREEFLAG", vo.getUserTreeFlag() != null ? vo.getUserTreeFlag() : "Y");
 		ezOrganAdminDao.insertDBData_user(map);
 				
 		logger.debug("insertDBData_user ended");

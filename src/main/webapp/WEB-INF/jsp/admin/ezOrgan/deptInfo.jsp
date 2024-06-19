@@ -42,6 +42,8 @@
 			    	window.resizeTo(window.outerWidth, windowHeight);
 			    }
 
+				document.getElementById("deptTreeFlag").checked = true;
+				
 			    if(RetValue[1] == ""){
 					subtitle.innerText = "<spring:message code='ezOrgan.t80' />";
 			        ParentID.value = RetValue[0];

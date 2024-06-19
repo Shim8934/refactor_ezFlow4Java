@@ -119,7 +119,7 @@ public interface EzOrganService {
 	
 	public String getJobMasterTreeInfo(String type, String pComID, String lang, int tenantID) throws Exception;
 	
-	public String getJobMasterMemberList(String type, String jobID, String celllist, String proplist, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception;
+	public String getJobMasterMemberList(String type, String jobID, String celllist, String proplist, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID,String adminOrgan) throws Exception;
 	
 	public List<OrganUserVO> getOrgUserInfo(String userID, int tenantID, String companyID) throws Exception;
 
