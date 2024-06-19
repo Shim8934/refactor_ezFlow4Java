@@ -1,5 +1,5 @@
 var messages = {
-	strLang1 : '"Data is missing"',
+	strLang1 : '"No Data."',
 	strLang2 : "Error occurred",
 	strLang3 : "You can leave the office after work.",
 	strLang4 : "Year ",
