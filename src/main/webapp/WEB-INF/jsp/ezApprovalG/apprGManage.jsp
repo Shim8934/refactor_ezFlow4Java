@@ -2069,6 +2069,7 @@
 			        if (SearchCond[1] != "" && SearchCond[1] !== undefined)		// DocTitle
 			        {
 			            TYPE += "DOCTITLE;";
+						SearchCond[1] = SearchCond[1].replace(/\\/g, "\\\\");
 			            DATA += "<DOCTITLE>" + SearchCond[1] + "</DOCTITLE>";
 			        }
 			
@@ -2136,6 +2137,7 @@
 
 				    if (condition[1] != "" && condition[1] !== undefined) {
 				        TYPE += "DOCTITLE;"
+						SearchCond[1] = SearchCond[1].replace(/\\/g, "\\\\");
 				        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
 				    }
 

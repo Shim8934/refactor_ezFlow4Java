@@ -9635,7 +9635,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 
 		if (doc.getElementsByTagName("TITLE").item(0) != null && doc.getElementsByTagName("TITLE").item(0).getTextContent().length() > 0) {
-			recordListVO.setTitle(makeSearchField(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
+			recordListVO.setTitle(makeSearchField(doc.getElementsByTagName("TITLE").item(0).getTextContent().replace("\\", "\\\\")));
 		}
 
 		if (doc.getElementsByTagName("REGTYPE").item(0) != null && doc.getElementsByTagName("REGTYPE").item(0).getTextContent().length() > 0) {

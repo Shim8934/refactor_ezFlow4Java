@@ -187,10 +187,14 @@ function GetDocSearch() {
     if (approvalFlag == 'S') {
     	document.getElementById("tbtnRemoveDoc").style.display = "none";
     	for (i = 0; i < 12 ; i++) {
-            if (typeof (condition[i]) == "undefined")
+            if (typeof (condition[i]) == "undefined") {
                 createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
-            else
+            } else {
+                if (i == 1) {
+                    condition[1] = condition[1].replace(/\\/g, "\\\\");
+                }
                 createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
+            }
         }
         
         if (typeof (ContainerID) == "undefined")
@@ -242,11 +246,15 @@ function GetDocSearch() {
 	    
 	    listLoading(false);
 	} else {
-	        for (i = 0; i < condition.length - 1 ; i++) {
-	        if (typeof(condition[i]) == "undefined")
-	            createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
-	        else
-	            createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
+        for (i = 0; i < condition.length - 1 ; i++) {
+	        if (typeof(condition[i]) == "undefined") {
+                createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
+            } else {
+                if (i == 1) {
+                    condition[1] = condition[1].replace(/\\/g, "\\\\");
+                }
+                createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
+            }
 	    }
 	    if (typeof(ContainerID) == "undefined") {
 	    	createNodeAndInsertText(xmlpara, objNode, "Param24", "");
