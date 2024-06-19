@@ -3625,11 +3625,11 @@
     		<![CDATA[
 		    	INSERT ALL
 		    	INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '출근', 'go to work', '1', 'inOut', null, 1)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '출근', 'check in', '1', 'inOut', null, 1)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '퇴근', 'off work', '1', 'inOut', null, 3)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '퇴근', 'check out', '1', 'inOut', null, 3)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
@@ -3675,11 +3675,11 @@
     	    <![CDATA[
 		    	INSERT ALL
 	    		INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '出勤', 'go to work', '1', 'inOut', null, 1)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '出勤', 'check in', '1', 'inOut', null, 1)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A02', #companyID#, #tenantID#, '遅刻', 'late', '1', 'inOut', null, 2)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '退勤', 'off work', '1', 'inOut', null, 3)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '退勤', 'check out', '1', 'inOut', null, 3)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A07', #companyID#, #tenantID#, '休出', 'working Holiday', '1', 'inOut', null, 6)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)

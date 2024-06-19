@@ -2295,9 +2295,9 @@
 		    		TBL_ATTITUDE_TYPE
 		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES
-		    			('A01', #companyID#, #tenantID#, '출근', 'go to work', '1', 'inOut', null, 1),
+		    			('A01', #companyID#, #tenantID#, '출근', 'check in', '1', 'inOut', null, 1),
 		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2),
-		    			('A03', #companyID#, #tenantID#, '퇴근', 'off work', '1', 'inOut', null, 3),
+		    			('A03', #companyID#, #tenantID#, '퇴근', 'check out', '1', 'inOut', null, 3),
 		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6),
 		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', 'trip', null, 8),
 		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', 'trip', null, 6),
@@ -2324,9 +2324,9 @@
 		    		TBL_ATTITUDE_TYPE
 		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES
-		    			('A01', #companyID#, #tenantID#, '出勤', 'go to work', '1', 'inOut', null, 1),
+		    			('A01', #companyID#, #tenantID#, '出勤', 'check in', '1', 'inOut', null, 1),
 		    			('A02', #companyID#, #tenantID#, '遅刻', 'late', '1', 'inOut', null, 2),
-		    			('A03', #companyID#, #tenantID#, '退勤', 'off work', '1', 'inOut', null, 3),
+		    			('A03', #companyID#, #tenantID#, '退勤', 'check out', '1', 'inOut', null, 3),
 		    			('A07', #companyID#, #tenantID#, '休出', 'working Holiday', '1', 'inOut', null, 6),
 		    			('A04', #companyID#, #tenantID#, '外部勤務', 'outside work', '1', 'trip', null, 8),
 		    			('A06', #companyID#, #tenantID#, '外出', 'outing', '1', 'trip', null, 6),
