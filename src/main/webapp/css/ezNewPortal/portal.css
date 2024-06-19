@@ -623,8 +623,8 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .voteList li .voteT .Vtext {font-size: 14px; color: #444;}
 .portlet.two_by_one .voteList li{padding:10.5px 0;}
 
-.voteList li .voteGraph{ width:calc(60% - 70px); height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#E8E8E8; overflow:hidden; margin:3px 0px 0px 0px;}
-.voteList li .voteGraph span{height:9px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#61BB4F; margin:2px;}
+.voteList li .voteGraph{ width:calc(60% - 70px); height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#E8E8E8; overflow:hidden; margin:3px 0px 0px 0px; padding:0 2px;}
+.voteList li .voteGraph span{height:9px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#61BB4F; margin:2px 0;}
 .voteList li .percent{float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:13px; color:#444; overflow:hidden;}
 
 .voteList .voteList_02 .voteGraph span{height:9px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#F1B901; margin:2px;}
