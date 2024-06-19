@@ -22,11 +22,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style type="text/css">
 			html { height: 100%; }
-			#set-body { background-color: white; height: 700px;}
+			#set-body { background-color: white;}
 			h3 { padding-left: 20px; margin-top: 25px; margin-bottom: 10px; font-size:14px; }
 			.set-head { background-color: rgb(228, 238, 254); height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
 			.set-head h1 { font-size: 16px; margin-left: 20px; color:black;}
-			.set-portlet{height: calc(100% - 125px); margin-top: 20px;display: flex;flex-direction: column; align-items: center;}
+			.set-portlet{ margin-top: 20px;display: flex;flex-direction: column; align-items: center;}
 			.set-action { height: 9%; display: flex; justify-content: center; align-items: center;} 
 			.ui-portlet { position:relative;  width: 220px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
