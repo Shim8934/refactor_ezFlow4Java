@@ -191,3 +191,45 @@ function reserveViewPopup() {//0 num //1 id
 	feature = feature + GetOpenPosition(820, 700);
     window.open(url, "", feature);
 }
+
+function settingResourceCalendar() {
+	var dayList = messages.strLangSchedule01.split(";");
+ 	var dSun = dayList[0];
+	var dMon = dayList[1];
+	var dTue = dayList[2];
+	var dWed = dayList[3];
+	var dThu = dayList[4];
+	var dFri = dayList[5];
+	var dSat = dayList[6];
+	$("#Sdatepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		autoSize: true,
+		showOn: "both",
+		buttonImage: "/images/ezNewPortal/calIcon.png",
+		buttonImageOnly: true,
+		closeText: messages.strLang601,
+		prevText: messages.strLang599,
+		nextText: messages.strLang600,
+		currentText: messages.strLang598,
+		monthNames: [messages.strLang586, messages.strLang587, messages.strLang588, messages.strLang589, messages.strLang590, messages.strLang591, messages.strLang592, messages.strLang593, messages.strLang594, messages.strLang595, messages.strLang596, messages.strLang597],
+		monthNamesShort: [messages.strLang586, messages.strLang587, messages.strLang588, messages.strLang589, messages.strLang590, messages.strLang591, messages.strLang592, messages.strLang593, messages.strLang594, messages.strLang595, messages.strLang596, messages.strLang597],
+		dayNames: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		dayNamesShort: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		dayNamesMin: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		weekHeader: "Wk",
+		dateFormat: "yy.mm.dd",
+		firstDay: 0,
+		isRTL: false,
+		duration: 200,
+		showAnim: "show",
+		showMonthAfterYear: true,
+		onSelect: function(dateText, inst) {
+			var date = $(this).val();
+			getPersPortlet();
+		}
+	});
+	
+	var SDate = new Date();
+	$("#Sdatepicker").datepicker('setDate', SDate);
+}

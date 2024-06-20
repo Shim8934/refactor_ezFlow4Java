@@ -162,6 +162,10 @@ function getScheduleList_after(resultList, mode, date) {
 		
 		document.getElementById("scheduleList").innerHTML = listHTML;
 		
+		var selectedDate = new Date(date);
+		
+		$("#scheduleSdatepicker").datepicker('setDate', selectedDate);
+		
 	} catch (e) { alert(e) }
 }
 
@@ -275,6 +279,90 @@ function getWorkspaceAppPath() {
 
     return result;
 }                                                                                                                                                                                                                                                                                     
+
+function getThisSchedule(selectedDate) {
+	selectedDate = selectedDate.replace(/\./gi, '-');
+	var selectedTDId = 'TDMINI_' + selectedDate + '_Day'
+	var selectedTD = $('#' + selectedTDId);   
+	
+	if (usedTheme == 3) {
+    	$("#"+g_selTDID).parent().removeClass('schedule');
+    	$("#"+g_selTRID).parent().removeClass('schedule');
+    } else {
+    	if ($("#"+g_selTDID)) {
+    		$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+    	}
+    	
+    	if ($("#"+g_selTRID)) {
+    		$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    	}
+    }
+	
+	if (usedTheme == 3) {
+    	if (selectedTD.parent().attr('class').indexOf('sun') > -1) {
+    		selectedTD.parent().addClass('schedule');
+    		selectedTD.parent().css("color","red");
+    	} else {
+    		selectedTD.parent().addClass('schedule');
+    	}
+    } else {
+    	if (selectedTD.parent().attr('class').indexOf('sun') > -1) {
+    		selectedTD.parent().css("background","#f0f6ff").css("border-radius","20px").css("color","red");
+    	} else {
+    		selectedTD.parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    	}
+    }
+		
+	g_selTRID = document.querySelector('#' + selectedTDId).parentNode.parentNode.getAttribute("id");
+    g_selTDID = 'TDMINI_' + selectedDate + '_Day';
+
+    date = selectedDate;
+    getScheduleList(date, "P");
+	
+}
+
+function settingScheduleCalendar() {
+	var dayList = messages.strLangSchedule01.split(";");
+ 	var dSun = dayList[0];
+	var dMon = dayList[1];
+	var dTue = dayList[2];
+	var dWed = dayList[3];
+	var dThu = dayList[4];
+	var dFri = dayList[5];
+	var dSat = dayList[6];
+	$("#scheduleSdatepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		autoSize: true,
+		showOn: "both",
+		buttonImage: "/images/ezNewPortal/calIcon.png",
+		buttonImageOnly: true,
+		closeText: messages.strLang601,
+		prevText: messages.strLang599,
+		nextText: messages.strLang600,
+		currentText: messages.strLang598,
+		monthNames: [messages.strLang586, messages.strLang587, messages.strLang588, messages.strLang589, messages.strLang590, messages.strLang591, messages.strLang592, messages.strLang593, messages.strLang594, messages.strLang595, messages.strLang596, messages.strLang597],
+		monthNamesShort: [messages.strLang586, messages.strLang587, messages.strLang588, messages.strLang589, messages.strLang590, messages.strLang591, messages.strLang592, messages.strLang593, messages.strLang594, messages.strLang595, messages.strLang596, messages.strLang597],
+		dayNames: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		dayNamesShort: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		dayNamesMin: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		weekHeader: "Wk",
+		dateFormat: "yy.mm.dd",
+		firstDay: 0,
+		isRTL: false,
+		duration: 200,
+		showAnim: "show",
+		showMonthAfterYear: true,
+		onSelect: function(dateText, inst) {
+			var selectedDate = $(this).val();
+			getThisSchedule(selectedDate);
+		}
+	});
+
+	var scheduleSdatepicker = new Date();
+	$("#scheduleSdatepicker").datepicker('setDate', scheduleSdatepicker);
+}
+
 
 //function today() {
 //	newDate = new Date();
