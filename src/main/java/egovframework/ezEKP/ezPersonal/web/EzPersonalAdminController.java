@@ -1502,13 +1502,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		// png파일의 배경을 검게 만들지 않도록 수정
 		if (inputImage.getType() == 0) {
-			outputImage= new BufferedImage(40, 39, BufferedImage.TYPE_INT_RGB);
+			outputImage= new BufferedImage(100, 50, BufferedImage.TYPE_INT_RGB);
 		} else {
-			outputImage= new BufferedImage(40, 39, inputImage.getType());
+			outputImage= new BufferedImage(100, 50, inputImage.getType());
 		}
 		
 		saveImage = outputImage.createGraphics();
-		saveImage.drawImage(inputImage, 0, 0, 40, 39, null);
+		saveImage.drawImage(inputImage, 0, 0, 100, 50, null);
 		
 		HashMap<RenderingHints.Key,Object> hm = new HashMap<RenderingHints.Key,Object>();
 		

@@ -335,7 +335,7 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "</table>";
 	linksHTML += "<table class='quickTable02' border='0' cellpadding='0' cellspacing='0'>";
 	linksHTML += "<tr>";
-	linksHTML += "<th class='quickLinkTH02'><spring:message code = 'ezPersonal.t1023' /> Type <span class='Ared'>*</span><span class='adminPlusBtn' onclick='CreateType()'><img src='/images/admin/adminPlus.png'></span></th></tr>";
+	linksHTML += "<th class='quickLinkTH02'><spring:message code = 'ezPersonal.t1023' /> Type <span class='Ared'>*</span><span style='font-size: 12px; font-weight: normal;'>" + strLangQuickLinkSize01 + "</span><span class='adminPlusBtn' onclick='CreateType()'><img src='/images/admin/adminPlus.png'></span></th></tr>";
 	linksHTML += "<tr><td class='quickTD'>";
 	linksHTML += "<div>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("A", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='A' checked=''></dd></dl>";
