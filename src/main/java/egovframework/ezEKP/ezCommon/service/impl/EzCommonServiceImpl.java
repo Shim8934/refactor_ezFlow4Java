@@ -3923,7 +3923,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			map.put("themeContent6", "A theme with a design that has information and shortcuts at the top.");
 			ezCommonDAO.alterThemeInformation(map);
 			map.put("themeId", 3);
-			map.put("themeContent1", "정보 관련 고정영역이 없이 포틀릿에 집중할 수 있는 테마입니다.");
+			map.put("themeContent1", "정보 관련 고정영역이 없어 포틀릿에 집중할 수 있는 테마입니다.");
 			map.put("themeContent2", "A theme that allows to focus on portlets without any fixed areas related to information.");
 			map.put("themeContent3", "情報関連の固定領域がなくてもポートレットに集中できるテーマです。");
 			map.put("themeContent4", "该主题允许您专注于 portlet，而无需任何与信息相关的固定区域。");
