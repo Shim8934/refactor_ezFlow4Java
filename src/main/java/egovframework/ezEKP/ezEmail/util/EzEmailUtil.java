@@ -1428,7 +1428,7 @@ public class EzEmailUtil {
 				pAttachListHtml += " </p>";
 			} else {
 				String filename_egovSpclStr = EgovStringUtil.getSpclStrCnvr2(filename);
-				String folderPath_URLEnc = URLEncoder.encode(folderPath,"UTF-8");
+				String folderPath_URLEnc = URLEncoder.encode(folderPath,"UTF-8").replace("+", "%20");
 
 				aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+folderPath_URLEnc+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
 				
