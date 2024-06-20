@@ -151,7 +151,7 @@
 			
 			var str = "";
 			if (notiList == "") {
-				str += '<br/><div class="notiZero">'
+				str += '<div class="notiZero">'
 				str	+= '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + notiMessages.strLang1 + '</dd></dl>'
 				str += '</div>';
 				curPageNum = 1;
