@@ -5581,6 +5581,14 @@ public class EzNewPortalGWController {
 			
 			String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId, "U");
 			
+			if (folderId == null || folderId.equals("")) {
+				String webFolderUrl = "/rest/ezwebfolder/users/" + userId + "/checkRootFolder";
+				// 웹폴더 아이디가 한 번도 발급되지 않은 사용자이면 발급할 수 있도록 api 호출
+				JSONObject webFolderResultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.webFolderGwServerURL"), webFolderUrl, null, request, "get", null);
+				
+				folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId, "U");
+			}
+			
 			int totalCnt = ezNewPortalService.getWebFolderFileListTotalCnt(folderId, tenantId);
 
 			int totalPages  = (totalCnt + listSize - 1) / listSize;

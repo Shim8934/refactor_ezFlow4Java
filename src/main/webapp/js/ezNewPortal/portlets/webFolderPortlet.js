@@ -37,7 +37,7 @@ function getwebFolderPerCount(webFolderPortletId) {
 }
 
 function getWebFolderFileList(currentPage) {
-	var webFolderId = webFolderPortletObj.portletId;
+	var webFolderId = "";
     var listSize = getwebFolderPerCount(webFolderPortletObj.portletId);
 	$.ajax({
 		type : "GET",
@@ -49,7 +49,7 @@ function getWebFolderFileList(currentPage) {
 		}, 
 		async : false,
 		success : function(result) {
-			webFolderId = result.data.folderId
+			webFolderId = result.data.folderId;
 			var folderId = result.data.folderId;
 			var totalCnt = result.data.totalCnt;
 			currentPage = result.data.currentPage;
@@ -119,6 +119,7 @@ function getWebFolderFileList(currentPage) {
 			}
             
             resetPortletPaging(webFolderPortletObj.portletId, totalCnt, currentPage, "");   
+            loadCapacity(webFolderId);
 		},
 		error : function () {
 			alert("웹폴더 포틀릿 생성중 에러가 발생했습니다.");
@@ -126,7 +127,6 @@ function getWebFolderFileList(currentPage) {
 		
 	});
 	
-	loadCapacity(webFolderId);
 }
 
 // 파일 형식에 따라 이미지 불러옴
