@@ -6227,7 +6227,8 @@
 		                TBL_RECORD.ProcessDeptCode RECDEPTCODE,
 		                TBL_RECORD.ProcessDeptName RECDEPTNAME,
 		                SUBSTR(TBL_RECORD.RegisterNo, -6) RECREGSN,
-		                M.AprmemberId as ORGUSERID
+		                M.AprmemberId as ORGUSERID,
+                        TBL_CABINET.TITLE
 				  <isEqual property="usePublicFlag" compareValue="true">
 				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval 
 				  </isEqual> 
@@ -6242,6 +6243,10 @@
 				   		TBL_RECORD.DocID = TBL_ENDAPRDOCINFO.DocID 
 				   AND 
 				   		TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+                   LEFT JOIN 
+				   		TBL_ENDAPRDOCINFO ENDDOCNO
+                   ON 
+                        TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
 				   Inner Join 
 				   		TBL_SEPERATEATTACH 
 				   On 
@@ -6305,7 +6310,8 @@
 				   				ExpirationYear, 
 				   				KeepingPeriod ,
 				   				TBL_CABINETCLASS.TENANT_ID,
-				   				TBL_CABINETCLASS.COMPANYID
+				   				TBL_CABINETCLASS.COMPANYID,
+                                TBL_CABINETCLASS.TITLE
 				   		  FROM 
 				   		  		TBL_CABINETCLASS  
 				   		  INNER JOIN 

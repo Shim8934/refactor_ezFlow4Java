@@ -3569,4 +3569,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertApprNonElecRecTypeConfing(map);
         }
     }
+
+    @Override
+    public void insertRecordHeaderClassTitle() throws Exception {
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("v_COMPANYID", company.getCompanyId());
+                map.put("v_TENANTID", company.getTenantId());
+                ezCommonDAO.insertRecordHeaderClassTitle(map);
+            }
+        }
+    }
 }

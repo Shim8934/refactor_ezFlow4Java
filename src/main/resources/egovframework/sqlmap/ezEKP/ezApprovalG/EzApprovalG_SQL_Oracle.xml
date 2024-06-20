@@ -6042,7 +6042,9 @@
 				  <isEqual property="usePublicFlag" compareValue="true">
 				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval 
 				  </isEqual> 
-						$extraSelectClause$
+						$extraSelectClause$,
+                        TBL_CABINETCLASS.TITLE,
+                        ENDDOCNO.DOCNO SIHANGNO
 				   FROM 
 				   		TBL_RECORD 
 				   Inner Join 
@@ -6097,6 +6099,16 @@
                     AND 
                         TBL_RECORD.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
               </isEqual>
+                    LEFT JOIN 
+				   		TBL_ENDAPRDOCINFO
+                    ON
+                        TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
+                    LEFT JOIN 
+				   		TBL_ENDAPRDOCINFO ENDDOCNO
+                    ON 
+                        TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
+                    AND
+                        TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD.DOCID
 				   WHERE
 				   		1 = 1 			   		  		
 						<isEmpty property="cabinetIDs">

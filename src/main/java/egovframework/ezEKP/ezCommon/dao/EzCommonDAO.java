@@ -2044,4 +2044,18 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertApprNonElecRecTypeConfing", map);
 		}
 	}
+
+    public void insertRecordHeaderClassTitle(Map<String, Object> map) throws Exception {
+        String companyId = (String) select("EzCommonDAO.checkRecordHeadereOption", map);
+        try {
+            if (companyId == null) {
+                // 2024-06-21 민지수 전자결재 > 기록물등록대장 헤더 > 기록물철명 존재하지 않는 경우 001 타입에 대한 헤더 지운 후 Insert 작업 (PrimaryKey 중복 오류)
+                delete ("EzCommonDAO.deleteRecordHeader",map);
+                logger.debug("ReName option doesn't exist. insert data...");
+                insert("EzCommonDAO.insertRecordHeaderClassTitle", map);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
 }

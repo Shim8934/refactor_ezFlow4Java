@@ -338,4 +338,6 @@ public interface EzCommonService {
 	public void alterRepeatFlagForResourceInfo() throws Exception;
 
 	public void insertApprNonElecRecTypeConfing() throws Exception;
+
+    public void insertRecordHeaderClassTitle() throws Exception;
 }

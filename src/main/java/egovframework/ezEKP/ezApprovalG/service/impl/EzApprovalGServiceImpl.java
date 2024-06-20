@@ -9795,7 +9795,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				case "dtDateTime" :								// 날짜 타입(시간포함)
 					resultXML.append(formatDateForView(makeListField(docXML.getElementsByTagName(fieldName).item(k).getTextContent()), 0));
 					break;
-
+                    
+                case "dtClassTitle" :  // 기록물철명
+                    resultXML.append(makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent()));
+                    break;
+                    
+                case "dtSihangNO"  :   // 시행번호
+                    resultXML.append(makeListField(docXML.getElementsByTagName("SIHANGNO").item(k).getTextContent()));
+                    break;
+                    
 				default:
 					resultXML.append(makeListField(docXML.getElementsByTagName(fieldName).item(k).getTextContent()));
 					break;
