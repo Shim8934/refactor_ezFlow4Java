@@ -590,6 +590,7 @@ const fixBoardArr = {};
 function makeFixPortlet(fixedPortletList) {
     var length = fixedPortletList.length;
     for (var i = 0; i < length; i++) {
+    	var lazy = i == 1? 3000 : 0;
         const fixPortletCode = fixedPortletList[i].portletCode;
         const portletName = fixedPortletList[i].portletName;
         const fixUrl = URLParamsUtils(fixedPortletList[i].portletUrl).getFullUrl();
@@ -597,6 +598,7 @@ function makeFixPortlet(fixedPortletList) {
             .area("#fixBoardArea")
             .id(fixPortletCode)
             .title(portletName)
+            .setSwiperTime(5000, lazy)
             .makeShell();
         fixBoardArr[fixPortletCode] = fixBoardUtil;
         $.ajax({

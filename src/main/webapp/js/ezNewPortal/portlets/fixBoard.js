@@ -140,15 +140,17 @@ function  FixBoardUtil() {
                 prevEl: areaSelector + classSelector + _enum.CLASS_PREV,
             },
             autoplay: {
-                delay: 5000,
+                delay: _delay,
                 disableOnInteraction: false,
             }
         });
-
-        /*_swiper.autoplay.stop();
-        setTimeout(function () {
-            _swiper.autoplay.start();
-        }, _lazy);*/
+        
+        if (_lazy != 0) {
+        	_swiper.autoplay.stop();
+        	setTimeout(function () {
+        		_swiper.autoplay.start();
+        	}, _lazy);
+        }
     }
 
     var _chkBuild = function () {
@@ -220,6 +222,11 @@ function  FixBoardUtil() {
         hide : function () {
             _thisDom.classList.add(_enum.CLASS_HIDE);
             return this;
+        },
+        setSwiperTime : function (delay, lazy) {
+        	_delay = delay;
+        	_lazy = lazy;
+        	return this;
         }
     };
 }
