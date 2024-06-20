@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -1885,6 +1886,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
 			}
 		}
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mode", mode);
@@ -1905,7 +1907,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("gref", ref);
 		model.addAttribute("dirPath", commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()));
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
-		
+		model.addAttribute("companyID", companyID);
+
 		logger.debug("bbsEditNew ended.");
 		
 		return "ezCommunity/communityBbsEditNew";

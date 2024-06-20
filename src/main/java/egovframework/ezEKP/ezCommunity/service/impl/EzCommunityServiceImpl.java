@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -3784,7 +3785,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	strPath = commonUtil.detectPathTraversal(strPath);
         	
         	/* 2021-06-28 홍승비 - mode가 write이고 no가 존재하는 답변 공지사항 등록 시, 부모 no 데이터를 UPPERNO 칼럼에 저장하도록 수정 */
-        	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, no, userInfo.getTenantId());
+			String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+			bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, companyID, userInfo.getId(), userNm, userNm2, title, maxIdFieldName, no, userInfo.getTenantId());
         	
         	try (PrintWriter pw = new PrintWriter(new File(strPath))) {
         		//File dir = new File(commonUtil.detectPathTraversal(dirPath));
