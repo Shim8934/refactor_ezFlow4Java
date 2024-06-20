@@ -24,7 +24,7 @@
 				</dd>
 			</dl>
 			<div id="notexistence" class="portlet_list" style="display:none;">
-				<dl class='nodata' id="notexistence" style="display:none;">
+				<dl class='nodata'>
 					<dt><img src='/images/kr/main/noData_sIcon.png'></dt>
 					<dd><spring:message code='ezNewPortal.t018' /></dd>
 				</dl>
