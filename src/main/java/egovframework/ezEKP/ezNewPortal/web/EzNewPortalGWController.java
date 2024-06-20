@@ -4053,6 +4053,7 @@ public class EzNewPortalGWController {
 			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
 			int listCntSize = Integer.parseInt(request.getParameter("listCntSize"));
 			String portletLang = info.getLang();
+			int totalCnt = 0;
 //			int limit = 12; // 공지사항 갯수
 			
 			// 회사의 포토게시판의 포틀릿 정보 가져오기
@@ -4072,6 +4073,13 @@ public class EzNewPortalGWController {
 				if (!accessCheck) {
 					data.put("access", "false");
 				} else {
+					BoardMyFavoriteVO brdVo = new BoardMyFavoriteVO();
+					brdVo.setBoardId(boardId);
+					brdVo.setUserId(userId);
+					brdVo.setType("1");
+					brdVo.setTenantID(tenantId);
+					brdVo.setNowDate(commonUtil.getTodayUTCTime(""));
+					totalCnt = ezBoardService.getBrdTotalItemCount(brdVo);
 					// 권한이 true이면 boardList불러오기
 					List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
 					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
@@ -4094,16 +4102,9 @@ public class EzNewPortalGWController {
 					data.put("noticeList", noticeList);
 				}
 				
-				BoardMyFavoriteVO brdVo = new BoardMyFavoriteVO();
-				brdVo.setBoardId(boardId);
-				brdVo.setUserId(userId);
-				brdVo.setType("1");
-				brdVo.setTenantID(tenantId);
-				brdVo.setNowDate(commonUtil.getTodayUTCTime(""));
-				
-				int totalCnt = ezBoardService.getBrdTotalItemCount(brdVo);
-				data.put("totalCnt", totalCnt);
 			}
+			
+			data.put("totalCnt", totalCnt);
 
 			result.put("status", "ok");
 			result.put("code", 0);
