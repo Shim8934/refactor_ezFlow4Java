@@ -122,7 +122,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("nowDate", nowDate);
 		
 		if (!lang.equals("1")) {
-			map.put("lang", lang);
+			map.put("lang", 2);
 		}
 		
 		map.put("startRow", (currentPage - 1) * listCntSize);
