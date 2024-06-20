@@ -2335,8 +2335,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String cateCode = request.getParameter("cateCode");
 		String strType = request.getParameter("strType");
 		String initFlag = request.getParameter("initFlag");
-		
-		String result = ezApprovalGService.getTaskSubCategoryAll(deptCode, companyID, cateCode, strType, initFlag, userInfo.getTenantId());
+		String viewFlag = request.getParameter("viewFlag") == null ? "N" : request.getParameter("viewFlag");
+
+		String result = ezApprovalGService.getTaskSubCategoryAll(deptCode, companyID, cateCode, strType, initFlag, userInfo.getTenantId(), viewFlag);
 		
 		logger.debug("getTaskSubCategoryAll ended.");
 		

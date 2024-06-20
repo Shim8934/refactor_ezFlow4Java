@@ -139,6 +139,67 @@ function GetTaskMiddleCategory(pCode)
 		selTaskMCategory_onchange();
 	}
 }
+//2024-06-20 이주원 부서철보기(GetTaskSubCategory메서드 카피)
+function viewDeptBinder(pCode, pSubCategoryCode){
+    var GetXml = "";
+
+    $.ajax({
+        type : "POST",
+        dataType : "text",
+        async : false,
+        url : "/ezApprovalG/getTaskSubCategoryAll.do",
+        data : {
+            cateCode   : pCode,
+            companyID  : CompanyID,
+            deptCode   : g_DeptCode,
+            strType    : UserLang,
+            initFlag   : g_InitFlag,
+            viewFlag   : 'Y'
+        },
+        success: function(xml){
+            GetXml = xml;
+        }
+    });
+
+    var xmldoc = loadXMLString(GetXml);
+    var headerData = createXmlDom();
+    headerData = loadXMLString(Category_h.innerHTML.toUpperCase());
+
+    if (CrossYN()) {
+        var xmlRtn = xmldoc.documentElement.getElementsByTagName("ROWS")[0];
+        var Node = headerData.importNode(xmlRtn, true);
+        headerData.documentElement.appendChild(Node);
+    }
+    else {
+        var xmlRtn = xmldoc.documentElement.getElementsByTagName("ROWS")[0];
+        headerData.documentElement.appendChild(xmlRtn);
+    }
+
+    if (document.getElementById("TaskSCateList").innerHTML != "") document.getElementById("TaskSCateList").innerHTML = "";
+    var DocList = new ListView();
+    DocList.SetID("DivTaskSCateList");
+    DocList.SetMulSelectable(false);
+    DocList.SetSelectFlag(false);
+    DocList.SetRowOnClick("TaskSCateList_onclick");
+    DocList.SetTitleIdx(0);
+    DocList.DataSource(headerData);
+    DocList.DataBind("TaskSCateList");
+
+    var len = DocList.GetRowCount();
+    if (len > 0 && g_SelCabID != "")
+    {
+        if(typeof(pSubCategoryCode)!="undefined")
+        {
+            if(pSubCategoryCode != "")
+            {
+                iSeledtedIdx = GetSelIdxForSubCate(DocList.GetDataRows(), len, g_SelCabID);
+            }
+        }
+        selectRow("DivTaskSCateList", iSeledtedIdx);
+    }
+
+    DocList = null;
+}
 function GetTaskSubCategory(pCode, pSubCategoryCode)
 {	    
 	var GetXml = "";

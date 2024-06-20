@@ -5360,6 +5360,9 @@
 	</select>
 	
 	<select id="EzApprovalG.getTaskSubCategoryAll" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+        <isEqual property="viewFlag" compareValue="Y">
+            select * from (
+        </isEqual>
 	<![CDATA[
 		SELECT 
 		    VTASKCLASS.TASKCODE,
@@ -5418,8 +5421,13 @@
 		            COMPANYID
 		    FROM
 		        VTASKCLASS
-		    WHERE
-	            MCATEGORYCODE = #cateCode#
+		    WHERE 1=1
+		    ]]>
+        <isNotEqual property="viewFlag" compareValue="Y">
+            AND
+                MCATEGORYCODE = #cateCode#
+        </isNotEqual>
+        <![CDATA[
             AND 
             	(TRIM(PROCESSDEPTCODE) = #deptCode#
             OR 
@@ -5536,6 +5544,9 @@
 			TBL_CABINET.TASKNAME,
 			TBL_CABINET.TITLE,
 			TBL_CABINET.CLASSCREATEDATE DESC
+        <isEqual property="viewFlag" compareValue="Y">
+            ) A where VOLUMENO is not null
+        </isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTaskInSubCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->

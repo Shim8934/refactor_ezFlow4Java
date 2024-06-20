@@ -2851,6 +2851,16 @@
 	                            </table>
 	                        </div>
 	                    </td>
+	                    <!-- 2024-06-19 이주원 화살표ui 추가 -->
+	                    <td style="width: 16px; text-align: center; padding-left: 4px;" >
+                            <!-- <div style="display: inline-block; margin:auto; padding-left:2.5px;" id="AddRemoveBTN"> -->
+                            <div style="display: inline-block; margin:auto;" id="AddRemoveBTN">
+                                <img src="/images/kr/cm/arr_right.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsert" onclick="return list2_onSel_DBclick();">
+                                <br>
+                                <img src="/images/kr/cm/arr_left.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgDelete" onclick="return AprlineDel_onclick();">
+                                <br>
+                            </div>
+                        </td>
 	                    <td style="vertical-align: top;">
 	                    <c:if test="${approvalFlag == 'G' }">
 	                        <table style="margin-left: 5px;">
@@ -3233,6 +3243,7 @@
 		                                        	<c:if test="${initFlag == '1'}">
 			                                            <a class="imgbtn imgbck2" style="margin-top: 3px"><span onclick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
 			                                            <a class="imgbtn imgbck2" style="margin-top: 3px; display:none;"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a>
+			                                            <a class="imgbtn imgbck2" style="margin-top: 3px;"><span onclick="return viewDeptBinder()"><spring:message code='ezApprovalG.t1119'/></span></a>
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
