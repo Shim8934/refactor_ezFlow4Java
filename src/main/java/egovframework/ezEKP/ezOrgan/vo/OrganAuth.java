@@ -61,6 +61,29 @@ public class OrganAuth {
         return false;
     }
 
+    /**
+     * 겸직을 포함에서 부서, 회사 등 스코프에 상관없이 권한이 존재하는지 체크
+     */
+    public boolean isAuth(AdminAuth auth) {
+        switch (auth.scope) {
+            case ALL:
+                return allSet.contains(auth);
+            case DEPT:
+                for (Set<AdminAuth> set : deptSet.values()) {
+                    if (set.contains(auth)) {
+                        return true;
+                    }
+                }
+            case COMPANY:
+                for (Set<AdminAuth> set : compSet.values()) {
+                    if (set.contains(auth)) {
+                        return true;
+                    }
+                }
+        }
+        return false;
+    }
+
     public boolean isAuth(String authCode, String id) {
         return isAuth(AdminAuth.getAdminAuthByCode(authCode), id);
     }
@@ -108,9 +131,14 @@ public class OrganAuth {
          */
         WEB_FOLDER_MANAGER("f", COMPANY),
         /**
+         * 결재조회 관리자 "q", COMPANY
+         */
+        APR_QUERY_MANAGER("q", COMPANY),
+        /**
          * 근태관리자 "e", COMPANY
          */
-        ATTENDANCE_MANAGER("e", COMPANY);
+        ATTENDANCE_MANAGER("e", COMPANY)
+        ;
 
         private final String code;
         private final Scope scope;
