@@ -2543,6 +2543,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 					v_subQuery += "AND ";
 				}
 				v_subQuery += "USERTREEFLAG = 'Y'";
+				v_subQuery += " AND DEPTTREEFLAG = 'Y'";
 			}
 			map.put("v_SUBQUERY", v_subQuery);
 		}
