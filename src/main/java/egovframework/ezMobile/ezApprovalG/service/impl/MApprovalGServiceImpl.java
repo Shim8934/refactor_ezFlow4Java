@@ -728,11 +728,11 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						}
 						
 						// 2023-05-17 이사라 : NullPointerException 시큐어코딩
-						String contentBuilderChamValue = !Objects.isNull(contentBuilderCham) ? contentBuilderCham.toString() : "";
+						String contentBuilderValue = !Objects.isNull(contentBuilder) ? contentBuilder.toString() : "";
 
 						// 참조자가 아닌 경우, 개별로 결재에 관련된 속성(targetUserId, targetUserName 등)을 부여한 결재알림메일을 루프 내부에서 발송한다.
 						if (toList.size() > 0) {
-							ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderChamValue, tenantId, locale), false, EmailImportance.NORMAL);
+							ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderValue, tenantId, locale), false, EmailImportance.NORMAL);
 							toList.clear(); // 결재자에게 메일 발송 후 리스트 초기화 -> 다음 루프에서 참조자가 아닌 결재자가 존재한다면 다시 메일 발송하도록 add() 후 초기화를 반복함
 						}
 					}
@@ -741,7 +741,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 					// 참조자인 경우, 메일 내부에 결재 관련 속성이 없으므로 한꺼번에 참조메일을 발송한다.
 					if (toListCham.size() > 0) {
-						ezEmailService.sendMail(userEmail, password, locale, from, toListCham.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderChamValue, tenantId, locale), false, EmailImportance.NORMAL);
+						ezEmailService.sendMail(userEmail, password, locale, from, toListCham.toArray(new InternetAddress[toListCham.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderChamValue, tenantId, locale), false, EmailImportance.NORMAL);
 					}
 				}
 
