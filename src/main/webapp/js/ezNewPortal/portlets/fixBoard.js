@@ -82,7 +82,11 @@ function  FixBoardUtil() {
     var _makeSlidPage = function () {
         if (!_boardList) return;
         var title = _thisDom.getElementsByClassName(_enum.CLASS_TITLE)[0];
-        title.setAttribute('data1', _boardList[0].boardID);
+        var boardID = _boardList[0].boardID;
+        title.setAttribute('data1', boardID);
+        title.getElementsByClassName(_enum.CLASS_TITLE_PLUS)[0].addEventListener("click", function (event) {
+            window.open("/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(boardID), "main", "");
+        });
 
         var max = _boardList.length;
         for (var i = 0; i < max; i++) {
