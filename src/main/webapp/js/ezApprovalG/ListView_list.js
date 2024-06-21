@@ -562,7 +562,7 @@ function ListView() {
                 if (strColName == "HASATTACHYN")
                     objTd.style.textAlign = "center";
                 
-                if (strColName == "ISPUBLIC") {
+                if (strColName == "ISPUBLIC" || strColName == "IsPublic") {
                 	objTd.style.textAlign = "center";
                 }
                 
@@ -979,7 +979,7 @@ function ListView() {
                             objTd.appendChild(_img);
                         }
                     }
-                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ISPUBLIC") {
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ISPUBLIC" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "IsPublic") {
                         objTd.style.textAlign = "center";
                         if (SelectSingleNodeValue(oCells[j], "ISPUBLIC") != "Y") {
                             var _img = document.createElement("img");
@@ -997,7 +997,11 @@ function ListView() {
                         oText = document.createTextNode(strValue);
                         objTd.appendChild(oText);
                     }
-                	// 전자결재G 한글로 하드코딩 해도 되겠지? 2018-07-03
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "RESENDFLAG" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ReSendFlag") {
+                        objTd.style.textAlign = "center";
+                        oText = document.createTextNode(strValue);
+                    	objTd.appendChild(oText);
+                    }
                     else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CreateDate" || SelectSingleNodeValue(oHeaders[j], "NAME") == "등록일") {
                     	objTd.style.textAlign = "left";
                     	oText = document.createTextNode(strValue);

@@ -171,8 +171,13 @@ function ezCabMunuCtl(MenuType, selRow) {
             break;
 
         case "1":
+        	
+        	if (typeof (ListTypeFlag) != "undefined" && ListTypeFlag == "25") {
+        		return;
+        	}
+        	
         	/* 2023-06-28 한태훈 - 통합 PC 저장 시 지워졌던 네 개의 버튼 - 등록정보, 공람정보, 철검색, 목록출력 버튼 보이기 (나머지 버튼들은 아래 if문으로 조절됨) */
-			document.getElementById("tDocInfo").style.display = "";
+        	document.getElementById("tDocInfo").style.display = "";
 			document.getElementById("tdViewRecInfo").style.display = "";
 			document.getElementById("tdCabSelect").style.display = "";
 			document.querySelector("#trRecSubMenu #tdDocListPrint").style.display = "";

@@ -153,7 +153,11 @@ public class ApprGRecordVO {
 	private String orgUserId;
 
 	private String siHangNo;
-	
+
+	private String formName;
+	private String writerDeptName;
+	private String isPublic;
+
 	public String getOrgUserId() {
 		return orgUserId;
 	}
@@ -611,5 +615,24 @@ public class ApprGRecordVO {
 
 	public void setSiHangNo(String siHangNo) {
 		this.siHangNo = siHangNo;
+	}
+
+	public String getFormName() {
+		return formName;
+	}
+	public void setFormName(String formName) {
+		this.formName = formName;
+	}
+	public String getWriterDeptName() {
+		return writerDeptName;
+	}
+	public void setWriterDeptName(String writerDeptName) {
+		this.writerDeptName = writerDeptName;
+	}
+	public String getIsPublic() {
+		return isPublic;
+	}
+	public void setIsPublic(String isPublic) {
+		this.isPublic = isPublic;
 	}
 }

@@ -6133,6 +6133,14 @@
                         TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
                     AND
                         TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD.DOCID
+              <isEqual property="listType" compareValue="012">
+				   Left Join
+				   		TBL_RECROLEINFO R
+				   On
+				   		TBL_RECORD.TENANT_ID = R.TENANT_ID
+				   AND
+				   		TBL_RECORD.RECORDID = R.RECORDID
+			 </isEqual>
 				   WHERE
 				   		1 = 1 			   		  		
 						<isEmpty property="cabinetIDs">
@@ -6145,8 +6153,10 @@
 						   				And 
 						   			TBL_CABINETCLASS.ConfirmFlag = '0')
 						  <isNotEqual property="tempDeptCode" compareValue="ALL">
+							  <isNotEqual property="listType" compareValue="012">
 							  AND
 							  		TRIM(OwnerDeptID) = #tempDeptCode#
+							  </isNotEqual>
 						  </isNotEqual>
 						</isEmpty> 
 				  		<isNotEmpty property="cabinetIDs">
@@ -6455,6 +6465,12 @@
                        TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
                 </isEqual>
                 AND TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+                <isEqual property="listType" compareValue="012">
+                	AND
+                		R.USERID = #userID#
+                	AND
+						TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
+                </isEqual>
 			<isNotEmpty property="isDocPrint">
 				<isEqual property="isDocPrint" compareValue="TRUE">
 					<isLessThan property="start" compareValue="0">
@@ -13932,6 +13948,14 @@
 	     		TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
 	    	 AND 
 	     		TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
+	  <isEqual property="listType" compareValue="012">
+			Left Join
+				TBL_RECROLEINFO R
+			On
+				TBL_RECORD.TENANT_ID = R.TENANT_ID
+			AND
+				TBL_RECORD.RECORDID = R.RECORDID
+ 	  </isEqual>
 		   Inner Join
 		   		( Select 
 		   				ProcessDeptCode, 
@@ -13980,10 +14004,12 @@
 				   				And 
 				   			ConfirmFlag = '0')
 				<isNotEqual property="tempDeptCode" compareValue="ALL">
+				<isNotEqual property="listType" compareValue="012">
 				  AND
 				  		TRIM(OwnerDeptID) = #tempDeptCode#
 				</isNotEqual>
-				</isEmpty> 
+				</isNotEqual>
+				</isEmpty>
 		  		<isNotEmpty property="cabinetIDs">
 				  <isEqual property="listFlag" compareValue="0">
 				  WHERE 
@@ -14311,6 +14337,12 @@
 			AND
 				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 	    </isEqual>
+	    <isEqual property="listType" compareValue="012">
+			AND
+				R.USERID = #userID#
+			AND
+				TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
+		</isEqual>
 		)
 	</select>
 	
@@ -24360,7 +24392,7 @@
 	   		INSERT INTO 
 	   			TBL_RECORD_TEMP
 	   		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
-	   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID, DocAttachName) 
+	   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID, DocAttachName)
 	   		VALUES 
 	   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_REGISTERDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
 	   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_DOCATTACHNAME#)

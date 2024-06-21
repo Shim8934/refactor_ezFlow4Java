@@ -9560,6 +9560,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		    recordListVO.setUsePublicFlag(true);
 		    recordListVO.setJoinEndReceiptPointInfo(true);
 		    break;
+		case "25" :	// 열람문서함
+			listType = "012";
+			recordListVO.setUsePublicFlag(true);
+			recordListVO.setListType(listType);
+		    break;
 		}
 		
 		if (recordListVO.isUsePublicFlag()) {
@@ -9601,6 +9606,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+		logger.debug("selectClause = " + selectClause);
 		logger.debug("extraSelectClause = " + extraSelectClause);
 		
 		recordListVO.setExtraSelectClause(extraSelectClause);
@@ -9738,6 +9744,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (arrList.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("TBL_RECORD.REJECTFLAG")) {
 				resultXML.append("<COLNAME>" + "REJECTFLAG" + "</COLNAME>");
 			}
+			if (arrList.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("TBL_ENDAPRDOCINFO.ISPUBLIC")) {
+				resultXML.append("<COLNAME>" + "ISPUBLIC" + "</COLNAME>");
+			}
+			if (arrList.getElementsByTagName("COLALIAS").item(k).getTextContent().trim().toUpperCase().equals("RESENDFLAG")) {
+				resultXML.append("<COLNAME>" + "RESENDFLAG" + "</COLNAME>");
+			}
+			
 			resultXML.append("</HEADER>");
 		}
 		resultXML.append("</HEADERS>");
@@ -9875,6 +9888,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (fieldName.toUpperCase().equals("REJECTFLAG")) {
 					resultXML.append("<REJECTFLAG>" + docXML.getElementsByTagName("REJECTFLAG").item(k).getTextContent() + "</REJECTFLAG>");
+				}
+				
+				if (fieldName.toUpperCase().equals("RESENDFLAG")) {
+					resultXML.append("<RESENDFLAG>" + docXML.getElementsByTagName("RESENDFLAG").item(k).getTextContent() + "</RESENDFLAG>");
+				}
+				
+				if (fieldName.toUpperCase().equals("ISPUBLIC")) {
+					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -20024,6 +20045,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 			case "11":	// 발송목록
 				typeCode = "001";
+				break;
+				
+			case "25" : // 열람문서함
+				typeCode = "012";
 				break;
 				
 			default:

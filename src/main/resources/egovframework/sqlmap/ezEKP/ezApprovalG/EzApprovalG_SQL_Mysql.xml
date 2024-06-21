@@ -6306,6 +6306,14 @@
 			     		M.COMPANYID = TBL_RECORD.COMPANYID
 			     	 AND
 			     	 	M.APRMEMBERSN = 1	
+	     	 <isEqual property="listType" compareValue="012">
+				   Left Join 
+				   		TBL_RECROLEINFO R
+				   On 
+				   		TBL_RECORD.TENANT_ID = R.TENANT_ID
+				   AND 
+				   		TBL_RECORD.RECORDID = R.RECORDID
+			 </isEqual>
 				   Inner Join 
 				   		( Select 
 				   				ProcessDeptCode, 
@@ -6355,8 +6363,10 @@
 						   				And 
 						   			ConfirmFlag = '0')
 						  <isNotEqual property="tempDeptCode" compareValue="ALL">
-							  AND 
-							  		OwnerDeptID = #tempDeptCode#
+						  <isNotEqual property="listType" compareValue="012">
+						  AND 
+						  		OwnerDeptID = #tempDeptCode#
+						  </isNotEqual>
 						  </isNotEqual>
 						</isEmpty> 
 				  		<isNotEmpty property="cabinetIDs">
@@ -6684,6 +6694,12 @@
                        TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
 					AND
 						TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+                </isEqual>
+                <isEqual property="listType" compareValue="012">
+                	AND
+                		R.USERID = #userID#
+                	AND
+						TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
                 </isEqual>
 			<isNotEmpty property="isDocPrint">
 				<isEqual property="isDocPrint" compareValue="TRUE">
@@ -14140,6 +14156,14 @@
      		TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
     	 AND 
      		TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
+  <isEqual property="listType" compareValue="012">
+		Left Join 
+			TBL_RECROLEINFO R
+		On 
+			TBL_RECORD.TENANT_ID = R.TENANT_ID
+		AND 
+			TBL_RECORD.RECORDID = R.RECORDID
+  </isEqual>     		
 	   Inner Join 
 	   		( Select 
 	   				ProcessDeptCode, 
@@ -14186,8 +14210,10 @@
 			  AND 
 			   		NOT (TBL_CABINET.CabinetTransferFlag = '2' And ConfirmFlag = '0')
 			  <isNotEqual property="tempDeptCode" compareValue="ALL">
+			  <isNotEqual property="listType" compareValue="012">
 			  AND 
 			  		OwnerDeptID = #tempDeptCode#
+			  </isNotEqual>
 			  </isNotEqual>
 			</isEmpty> 
 	  		<isNotEmpty property="cabinetIDs">
@@ -14515,6 +14541,12 @@
            TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
 		AND
 			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+	</isEqual>
+	<isEqual property="listType" compareValue="012">
+		AND
+			R.USERID = #userID#
+		AND
+			TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
 	</isEqual>
 	
 	</select>

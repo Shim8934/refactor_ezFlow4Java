@@ -531,7 +531,7 @@
 		  PRIMARY KEY ("USERID","TENANTID")
 		) 
 	</statement>
-	
+
 	<select id="EzCommonDAO.checkPortalThemePortlet" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -3823,7 +3823,7 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 			VALUES ('0', 'permissionBasisDeptYN', 'N', '조직도 > 권한 설정 시 Y: 사용자/겸직부서를 기준으로 권한을 부여한다 // N: 사용자만을 기준으로 권한을 부여한다.(Default: N)', '조직도 권한부여 기준 설정', sysdate, '조직도')
 	</insert>
-	
+
 	<select id="EzCommonDAO.checkTblDbLog" resultClass="String">
 		SELECT
 			EVENT_DATE
@@ -4120,7 +4120,7 @@
 		SELECT *
 		FROM DUAL
 	</insert>
-	
+
 	<select id="EzCommonDAO.checkLoadTimeForApprAllConfig" resultClass="String">
 		SELECT
 			PROPERTY_VALUE
@@ -4131,7 +4131,7 @@
 		AND
 			TENANT_ID = 0
 	</select>
-	
+
 	<insert id="EzCommonDAO.insertLoadTimeForApprAllConfig">
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES ('0', 'loadTimeForApprAll', '200', '다안기안 문서 표출 시 글꼴,스크롤 오류를 해결하기 위한 setTimeout 시간. 네트워크 환경에 따라 적절한 시간 조절을 위해 사용(default:200)', '다안기안 문서 로딩시간', TO_DATE('2024-01-11 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재G')
@@ -4467,7 +4467,7 @@
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('001',7,'기안자',70,'TBL_RECORD','TBL_RECORD.DrafterName','DrafterName','Default','기록물 대장',null,'Drafter','起案者','起草人',#v_COMPANYID#,#v_TENANTID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('001',8,'수신자(발신자)',90,'TBL_RECORD','TBL_RECORD.ReceiptMemberName','ReceiptName','Default','기록물 대장',null,'Recipient(Sender)','受信者（起案者）','受信者(送信者)',#v_COMPANYID#,#v_TENANTID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('001',9,'결재권자',80,'TBL_RECORD','TBL_RECORD.AprMemberTitle','AprMemberTitle','Default','기록물 대장',null,'Approval person','決裁権者','审批',#v_COMPANYID#,#v_TENANTID#)
-			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('001',10,'시행번호',180,null,null,'SihangNo','dtSihangNO','기록물 대장',null,'SihangNo','施行番号','试行编号',#v_COMPANYID#,#v_TENANTID#)			
+			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('001',10,'시행번호',180,null,null,'SihangNo','dtSihangNO','기록물 대장',null,'SihangNo','施行番号','试行编号',#v_COMPANYID#,#v_TENANTID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('001',11,'첨부',40,'TBL_RECORD','TBL_RECORD.AttachFlag','AttachFlag','dtBool','기록물 대장','첨부여부','AttachFlag','添付','附件',#v_COMPANYID#,#v_TENANTID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('001',12,'수신',40,'TBL_RECORD','CASE WHEN TBL_ENDAPRDOCINFO.DocType = ''003'' AND TBL_SEPERATEATTACH.RegisterType = ''1'' THEN ''발송'' ELSE ''없음'' END','ReSendFlag','Default','기록물 대장','수신문 발송여부','ReSendFlag','受信','接待区分',#v_COMPANYID#,#v_TENANTID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('001',13,'반려',40,'TBL_RECORD','TBL_RECORD.RejectFlag','RejectFlag','dtBool','기록물 대장','반려여부','RejectFlag','差し戻し','伴侣区分',#v_COMPANYID#,#v_TENANTID#)
@@ -4500,7 +4500,7 @@
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES (#v_TENANTID#, 'useReceiptDeptFileAttach', 'NO', '부서수신함에서 첨부, 문서첨부 기능 사용 여부. YES: 사용 NO: 사용안함 (default: NO)', '부서수신함에서 첨부, 문서첨부 기능 사용여부', TO_DATE('2024-06-04 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
     </insert>
-	
+
 	<select id="EzCommonDAO.checkExistDocBinderListOption" parameterClass="map" resultClass="int">
 		SELECT
 			COUNT(*)
@@ -4549,7 +4549,7 @@
 		VALUES
 			(#tenantID#, 'ReturnByDesignationUsed', 'NO', '지정반송 사용여부 (default:NO)', '지정반송 사용여부', TO_DATE('2024-06-18 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '전자결재')
 	</insert>
-    
+
 	<select id="EzCommonDAO.checkDocAttachNameCol">
 		<![CDATA[
 		SELECT
@@ -4583,5 +4583,54 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES (#v_TENANTID#, 'NonUseDocAttachYN', 'Y', '비전자문서 본문첨부 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '본문첨부 기능 사용여부', TO_DATE('2024-07-02 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
 	</insert>
-	
+
+	<select id="EzCommonDAO.checkReadingRecordHeader" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_LISTINFO
+		WHERE
+			LISTTYPE = '012'
+		  AND
+			TENANT_ID = #tenantId#
+		  AND
+			COMPANYID = #companyId#
+	</select>
+
+	<insert id="EzCommonDAO.insertReadingRecordHeader" parameterClass="map">
+		INSERT ALL
+			INTO TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('012', 1, '문서번호', 110, null, 'CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, ''-''), SUBSTR(TBL_RECORD.RegisterNo, -6))', 'DispRegisterNo', 'Default', '열람문서함', null, 'Doc. No.', '登録番号', '註冊號', #tenantId#, #companyId#)
+			INTO TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('012', 2, '제목', 200, 'TBL_SEPERATEATTACH', 'TBL_SEPERATEATTACH.Title', 'RecTitle', 'Default', '열람문서함', null, 'Title', 'タイトル', '标题', #tenantId#, #companyId#)
+			INTO TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('012', 3, '기안자', 50, 'TBL_RECORD', 'TBL_RECORD.DrafterName', 'DrafterName', 'Default', '열람문서함', null, 'Drafter', '起案者', '起草人', #tenantId#, #companyId#)
+			INTO TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('012', 4, '기안부서', 70, 'TBL_ENDAPRDOCINFO', 'TBL_ENDAPRDOCINFO.WriterDeptName', 'WriterDeptName', 'Default', '열람문서함', null, 'Dept.(draft)', '起案部署', '起草部门', #tenantId#, #companyId#)
+			INTO TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('012', 5, '등록일', 100, 'TBL_RECORD', 'TBL_RECORD.RegisterDate', 'RegisterDate', 'dtDateTime', '열람문서함', null, 'RegisterDate', '登録日', '注册', #tenantId#, #companyId#)
+			INTO TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('012', 6, '문서명', 80, 'TBL_EXPENDAPRDOCINFO', 'TBL_EXPENDAPRDOCINFO.FormName', 'FormName', 'Default', '열람문서함', null, 'Form title', '文書名', '文件名', #tenantId#, #companyId#)
+			INTO TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('012', 7, '첨부', 40, 'TBL_RECORD', 'TBL_RECORD.AttachFlag', 'AttachFlag', 'dtBool', '열람문서함', '첨부여부', 'AttachFlag', '添付', '附件', #tenantId#, #companyId#)
+			INTO TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('012', 8, '공개', 40, 'TBL_ENDAPRDOCINFO', 'TBL_ENDAPRDOCINFO.ISPUBLIC', 'IsPublic', 'Default', '열람문서함', null, 'Public', '公開', '公开', #tenantId#, #companyId#)
+			INTO TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('012', 9, '반려', 40, 'TBL_RECORD', 'TBL_RECORD.RejectFlag', 'RejectFlag', 'dtBool', '열람문서함', '반려여부', 'RejectFlag', '差し戻し', '伴侣区分', #tenantId#, #companyId#)
+			INTO TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('012', 10, '수신', 40, 'TBL_RECORD', 'CASE WHEN TBL_ENDAPRDOCINFO.DocType = ''003'' AND TBL_SEPERATEATTACH.RegisterType = ''1'' THEN ''발송'' ELSE ''없음'' END', 'ReSendFlag', 'Default', '열람문서함', '발송여부', 'ReSendFlag', '受信', '接待区分', #tenantId#, #companyId#)
+		SELECT *
+			FROM DUAL
+	</insert>
+
+	<delete id="EzCommonDAO.delReadingRecordHeader" parameterClass="map" >
+		DELETE FROM
+			TBL_LISTINFO
+		WHERE
+			LISTTYPE = '012'
+		  AND
+			TENANT_ID = #tenantId#
+		  AND
+			COMPANYID = #companyId#
+	</delete>
 </sqlMap>

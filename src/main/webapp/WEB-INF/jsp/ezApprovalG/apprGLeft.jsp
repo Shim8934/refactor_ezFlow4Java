@@ -407,6 +407,9 @@
 							pListTypeValue = "23";
 		                    DocManageMain(pthis.id);
 		                    break;
+		                case "readingRecord" : 
+		                	DocManageMain(pthis.id);
+		                	break;
 		                default:
 		                    break;
 		            }
@@ -1096,7 +1099,7 @@
 		
 		    function DocManageMain(sFlag) {
 		        try {
-		            if (PresentOpen != "DOCMANAGE") {
+		            if (PresentOpen != "DOCMANAGE" && sFlag != "readingRecord") {
 		                PresentOpen = "DOCMANAGE";
 		                window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		            }
@@ -1142,6 +1145,9 @@
 								break;
 							case "m14":
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+								break;
+							case "readingRecord" : 
+								window.parent.frames.right.document.location.href = "/ezApprovalG/readingRecord.do";
 								break;
 		                }
 		            }
@@ -1485,6 +1491,9 @@
 			        </ul>
 		        </c:if>
 		        <c:if test="${approvalFlag eq 'G'}">
+		        	<h2 class="off" id="readingRecordH2">
+		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="readingRecord" onclick="openFolder('readingRecord'), Open_Func(this)">열람문서함</span>
+			        </h2>
 		        	<h2 class="off" id="recordCabinetH2">
 		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('recordCabinet')">기록물대장</span>
 			        </h2>

@@ -2153,4 +2153,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertNonUseDocAttachYN", map);
 		}
 	}
+	
+	public void insertReadingRecordHeader(Map<String, Object> map) {
+		int optionCount = (int) select("EzCommonDAO.checkReadingRecordHeader", map);
+		if (optionCount < 10) {
+			logger.debug("ReadingRecord List Header doesn't exist. insert data...");
+			delete("EzCommonDAO.delReadingRecordHeader", map);
+			insert("EzCommonDAO.insertReadingRecordHeader", map);
+		}
+	}
 }
