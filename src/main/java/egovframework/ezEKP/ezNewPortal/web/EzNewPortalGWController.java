@@ -2476,6 +2476,7 @@ public class EzNewPortalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezNewPortal G/W getCompanyMenus ended.");
