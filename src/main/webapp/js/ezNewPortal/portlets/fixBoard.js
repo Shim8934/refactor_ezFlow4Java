@@ -8,6 +8,7 @@ function  FixBoardUtil() {
     var _boardList;
     var _defaultImg = ['/images/slide_sample.png', '/images/slide_sample2.png', '/images/slide_sample3.png', '/images/slide_sample4.png'];
     var _title;
+    var _swiper;
     var _enum = Object.freeze({
         CLASS_IMG_SLIDE: 'img_slide', // 최상단 css용
             CLASS_FIX_PORTLET: 'fix-portlet',
