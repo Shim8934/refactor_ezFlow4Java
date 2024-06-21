@@ -1614,14 +1614,12 @@
 		from 
 			tbl_journal j
 		left join 
-			tbl_journal_recv r on (j.journal_id = r.journal_id and j.tenant_id = r.tenant_id)
+			tbl_journal_recv r on (j.journal_id = r.journal_id and j.tenant_id = r.tenant_id and r.user_id = #userId#)
 		right outer join dual 
 		on
 			j.journal_id = #journalId#
 		and 
 			j.tenant_id = #tenantId#
-		and 
-			r.user_id = #userId#
 	</select>
 	
 	<!-- 취합할 일지들 가져오기 -->
