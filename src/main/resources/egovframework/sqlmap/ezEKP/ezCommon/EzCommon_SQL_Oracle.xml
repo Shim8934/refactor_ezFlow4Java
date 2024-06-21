@@ -4831,7 +4831,7 @@
 		ALTER TABLE
 			TBL_PORTAL_THEME_USER
 		ADD
-			USEPAGING	NUMBER(1)	DEFAULT	1	NOT NULL	COMMENT '페이징 사용 여부'
+			USEPAGING	NUMBER(1)	DEFAULT	1	NOT NULL
 	</statement>
 	
 	 <select id="EzCommonDAO.checkThemeInformation" resultClass="string">
