@@ -197,7 +197,7 @@ nav .navUL {float:none; height:58px; list-style: none; margin: 0px; padding: 0px
 /*line-height이 51로 되어있어서 다른게 클릭되는 문제로 navUL높이(54px)와 똑같이 지정해줌*/
 nav .navUL li { float: left; line-height:58px; padding:0px 15px; font-size:18px; font-weight:500; color:#333; cursor:pointer; letter-spacing: -2px}
 nav .navUL li:hover { line-height:58px; height:56px; color:#0287db;}
-nav .navUL li.on {line-height:54px; color:#0287db;}
+nav .navUL li.on {line-height:58px; color:#0287db;}
 
 nav > .full_nav {float:left; width: 56px; height: 54px; margin-right:10px; padding: 15px 0px; text-align: center; box-sizing: border-box; cursor: pointer; }
 nav > .full_nav.on { border: 0px none; background: #0287db; }
@@ -2081,7 +2081,9 @@ div.orbit img{border-radius: 5px;}
 
 /* 게시판 B type */
 .portlet .board_Btype .portlet_title .portletText{width:calc(100% - 160px);}
+.portlet .board_Btype .noti_portlet_list .notiLI dl{border:1px solid #F2F4F6; padding:12px;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text{height:auto;}
+.portlet .board_Btype .noti_portlet_list .notiLI .noti_text span{text-shadow:-2px 0 #F2F4F6, 0 2px #F2F4F6, 1px 0 #F2F4F6, 0 -1px #F2F4F6;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text .title{display:block; height:20px; line-height:20px; font-weight:bold; color:#333; margin-bottom:8px; font-size:14px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text .cont{display:block; height:80px; line-height:20px; color:#333; margin:0; -webkit-line-clamp:4; -webkit-box-orient:vertical; display:-webkit-box; font-size:13px; white-space:normal; text-overflow:ellipsis; overflow:hidden; font-weight:normal;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text .day{display:block; text-align:right; font-size:13px; color:#838383; line-height:20px; font-weight:normal;}
