@@ -50,7 +50,7 @@ function getEmployeeList(year) {
 		type : "POST",
 		url : "/admin/ezPersonal/getEmployeeOfMonthList.do",
 		dataType : "JSON",
-		data : {year: selectedYear, companyID : selectedCompany},
+		data : {year: selectedYear, companyID : companySelectID},
 		success : function(result) {
 			renderList(result.list, selectedYear);
 		}
