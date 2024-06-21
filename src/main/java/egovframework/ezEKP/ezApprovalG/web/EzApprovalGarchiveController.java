@@ -29,6 +29,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -91,6 +92,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
+
+	@Value("#{globals['Globals.DbType']}")
+	private String dbType;
 	/*
 	 * 기록물대장 리스트
 	 */
@@ -139,7 +143,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		if (useAprPreview.equalsIgnoreCase("YES")) {
 			previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId());
 		}
-		
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("dirpath", dirpath);
@@ -545,7 +549,11 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         } else {
             deptcode = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(0).getTextContent().trim();
             deptcode2 = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(1).getTextContent().trim();
-            title = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\\\\\");
+			if (dbType.equals("mysql")) {
+				title = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\\\\\");
+			} else {
+				title = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\");
+			}
             sregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(3).getTextContent();
             eregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(4).getTextContent();
             debenturer = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(5).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");

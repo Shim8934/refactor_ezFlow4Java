@@ -6335,7 +6335,7 @@
 						TBL_RECORD.ProcessDeptCode = #recDeptCode#
 				</isNotEmpty>						
 				<isNotEmpty property="title" prepend="AND">
-						TBL_SEPERATEATTACH.Title Like CONCAT(CONCAT('%', #title#), '%')
+						TBL_SEPERATEATTACH.Title Like CONCAT(CONCAT('%', #title#), '%') ESCAPE '\'
 				</isNotEmpty>
 				<isNotEmpty property="regType" prepend="AND">
 						TBL_SEPERATEATTACH.RegisterType = #regType#
@@ -9562,7 +9562,7 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_DOCTITLE">
 							   	 	AND 
-							   	 		 DOCTITLE LIKE '%$v_DOCTITLE$%'
+							   	 		 DOCTITLE LIKE '%$v_DOCTITLE$%' ESCAPE '\'
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_DRAFTER">
 							   	 	 AND 
@@ -21496,7 +21496,7 @@
 	   	</isNotEmpty>
 	   	<isNotEmpty property="v_DOCTITLE">
 	   	 AND 
-	   	 	DOCTITLE LIKE '%$v_DOCTITLE$%'
+	   	 	DOCTITLE LIKE '%$v_DOCTITLE$%' ESCAPE '\'
 	   	</isNotEmpty>
 	   	<isNotEmpty property="v_CHARGENAME">
 	   	AND 
@@ -21573,7 +21573,7 @@
 				   		</isNotEmpty>
 				   		<isNotEmpty property="v_DOCTITLE" >
 				   		 	AND 
-				   		 		A.DOCTITLE LIKE '%$v_DOCTITLE$%'
+				   		 		A.DOCTITLE LIKE '%$v_DOCTITLE$%' ESCAPE '\'
 				   		</isNotEmpty>
 				   		<isNotEmpty property="v_CHARGENAME" >
 				   		 	AND 

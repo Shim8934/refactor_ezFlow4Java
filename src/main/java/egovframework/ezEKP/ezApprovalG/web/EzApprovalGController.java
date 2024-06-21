@@ -611,8 +611,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			if (tempQuery.indexOf("DOCTITLE;") != -1) {
-                returnQuery += " AND DocTitle LIKE '%" + domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent().replace("\\", "\\\\") + "%' ";
-            }
+				if (dbType.equals("mysql")) {
+                	returnQuery += " AND DocTitle LIKE '%" + domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent().replace("\\", "\\\\") + "%' ";
+				} else {
+					returnQuery += " AND DocTitle LIKE '%" + domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ESCAPE '\\'";
+				}
+			}
 
 			/* 2020-06-29 홍승비 - WRITERNAME, WRITERDEPTNAME칼럼은 2까지만 존재함(일본어인 경우 3이 전달되는 오류 수정) */
             if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
@@ -6119,7 +6123,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			if (tempQuery.indexOf("DOCTITLE;") != -1) {
-                returnQuery += " AND TBL_APRDOCINFO.DocTitle LIKE '%" + xmlDomSub.getElementsByTagName("DOCTITLE").item(0).getTextContent().replace("\\", "\\\\") + "%' ";
+				if (dbType.equals("mysql")) {
+                	returnQuery += " AND TBL_APRDOCINFO.DocTitle LIKE '%" + xmlDomSub.getElementsByTagName("DOCTITLE").item(0).getTextContent().replace("\\", "\\\\") + "%' ";
+				} else {
+					returnQuery += " AND TBL_APRDOCINFO.DocTitle LIKE '%" + xmlDomSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ESCAPE '\\'";
+				}
             }
 
 			/* 2020-06-29 홍승비 - WRITERNAME, WRITERDEPTNAME칼럼은 2까지만 존재함(일본어인 경우 3이 전달되는 오류 수정) */
@@ -7914,7 +7922,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = "";
 	
 		docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
-		docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\");
+		if (dbType.equals("mysql")) {
+			docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\");
+		} else {
+			docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
+		}
         drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
         String draftfrom = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
         String draftto = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
@@ -7993,7 +8005,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		String docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
-        String docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("\\", "\\\\");
+		String docTitle = "";
+		if (dbType.equals("mysql")) {
+			docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("\\", "\\\\");
+		} else {
+			docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		}
         String drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
         String draftFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
         String draftFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
