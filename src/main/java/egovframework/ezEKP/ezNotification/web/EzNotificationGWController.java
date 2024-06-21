@@ -139,7 +139,7 @@ public class EzNotificationGWController {
 			NotiType notiType = null;
 			
 			String subTypeForMobilePush = "0";
-			if (!mainType.equals("ETC")) {
+			if (!mainType.equals("ETC") && (etcData == null || etcData.indexOf("notChkSetting") < 0)) {
 				notiType = NotiType.fromString(notiName);
 				subTypeForMobilePush = subType != "" ? notiType.subType() + "" : "0";
 			}
