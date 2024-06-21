@@ -167,7 +167,7 @@ header {height:60px; background-color:#ffffff; box-sizing:border-box; position:r
 .util li span.util_set{background-image:url(/images/ezNewPortal/util_set.svg);}
 .util li span.util_employee_search{background-image:url(/images/ezNewPortal/util_employee_search.svg); background-size:20px 20px;}
 .util li span.util_logout{background-image:url(/images/ezNewPortal/util_logout.svg);}
-.util li span.util_quick_menu{background-image:url(/images/ezNewPortal/util_quick_menu.svg); background-size:23px 23px;}
+.util li span.util_quick_menu{background-image:url(/images/ezNewPortal/util_quick_menu.svg); background-size:18px 18px;}
 .util li span.util_admin{background-image:url(/images/ezNewPortal/util_admin.svg); background-size:20px 22px;}
 
 .util li span.util_profile {display: inline-block; width: 28px; height: 28px; margin: 16px 30px 0 20px; position: relative;}
@@ -1024,8 +1024,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 /* section1 영역 */
 
 #theme2Body .portlet_title{}
-#theme2Body .section1_bg{width:100%; height:400px; margin:0px; padding:0 60px; box-sizing: border-box; background:#E8EFF8;}
-#theme2Body .section1{margin:0px; padding:0px; vertical-align:top; overflow:hidden; padding-bottom:14px; padding-top:14px; float:none; max-width:1920px; box-sizing:border-box; margin:0 auto;}
+#theme2Body .section1_bg{width:100%; height:400px; margin:0px; padding:0; box-sizing: border-box; background:#E8EFF8;}
+#theme2Body .section1{margin:0px; padding:0px 60px; vertical-align:top; overflow:hidden; padding-bottom:14px; padding-top:14px; float:none; max-width:1920px; box-sizing:border-box; margin:0 auto;}
 #theme2Body .section1 .sec1Layout_left{overflow:hidden;padding:0px 0px 10px 0px; box-sizing:border-box; }
 #theme2Body .section1 .sec1Layout_btm_left{overflow:hidden; float:left; box-sizing:border-box; background: #fff; border-radius: 10px; box-shadow: 0px 0px 3px #ddd; height:190px;}
 #theme2Body .section1 .portlet_title{border:none; padding:0px;}
@@ -1054,7 +1054,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .section1 .sec1Layout_middle .scalendar_mini td.main_today{background: none;}
 #theme2Body .section1 .sec1Layout_middle .scalendar_mini td.main_today div{background: #BBD8F8; color:#333;}
 
-#theme2Body .section1 .sec1Layout_right{overflow:hidden; float:left; padding:0px 0px 0px 20px; box-sizing:border-box; height:190px; margin-right:15px;}
+#theme2Body .section1 .sec1Layout_right{overflow:hidden; float:left; padding:0px 0px 0px 20px; box-sizing:border-box; height:190px;}
 #theme2Body .section1 .sec1Layout_right .event .portlet_title{overflow:unset; line-height:50px; height:50px;}
 #theme2Body .section1 .sec1Layout_right .event .portlet_title .portletText{width:100%;}
 #theme2Body .section1 .sec1Layout_right .mailGraph{width:100%; height:30px;}
@@ -1165,9 +1165,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .portlet_tab{margin:0px 0px 0px 0px; padding-left:11px; background: #fff; overflow:unset;white-space:nowrap; font-size:18px; box-sizing:border-box;}
 /* 미디어쿼리 적용 */
 @media only screen and (min-width: 1921px){
-	#theme2Body .section1 .sec1Layout_btm_left{width:32.7%;}
-	#theme2Body .section1 .sec1Layout_middle{width:32.7%;}
-	#theme2Body .section1 .sec1Layout_right{width:32.6%;}
+	#theme2Body .section1 .sec1Layout_btm_left{width:calc(33.333% - 10px);}
+	#theme2Body .section1 .sec1Layout_middle{width:33.333%;}
+	#theme2Body .section1 .sec1Layout_right{width:calc(33.333% - 10px);}
 }
 
 @media only screen and (max-width: 1920px) and (min-width: 1620px){
@@ -1231,7 +1231,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 /* main media query */
 @media only screen and (min-width :1921px) {
-	#theme2Body .portlet{float:left; margin:30px 4px -8px 16px; height: 252px;}
+	#theme2Body .portlet{float:left; margin:30px 4px -8px 16px;}
 	#theme2Body .box_shadow{ width:auto;}
 }
 
@@ -1408,7 +1408,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .list_no_appr .no_apprBox{background:#fff;}
 /* main media query */
 @media only screen and (min-width :1921px) {
-	#theme3Body .portlet{float:left; height: 250px;}
+	#theme3Body .portlet{float:left;}
 	#theme3Body .box_shadow{ width:auto;}
 }
 
