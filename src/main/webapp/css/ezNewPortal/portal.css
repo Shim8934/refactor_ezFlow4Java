@@ -2081,9 +2081,9 @@ div.orbit img{border-radius: 5px;}
 
 /* 게시판 B type */
 .portlet .board_Btype .portlet_title .portletText{width:calc(100% - 160px);}
-.portlet .board_Btype .noti_portlet_list .notiLI dl{border:1px solid #F2F4F6; padding:12px;}
+.portlet .board_Btype .noti_portlet_list .notiLI dl{border:1px solid #F2F4F6; padding:12px; background:url(/images/portal/noti_nodata.png) no-repeat 0 0 / 100% 100%;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text{height:auto;}
-.portlet .board_Btype .noti_portlet_list .notiLI .noti_text span{text-shadow:-2px 0 #F2F4F6, 0 2px #F2F4F6, 1px 0 #F2F4F6, 0 -1px #F2F4F6;}
+.portlet .board_Btype .noti_portlet_list .notiLI .noti_text span{text-shadow:-2px 0 #FFF, 0 2px #FFF, 1px 0 #FFF, 0 -1px #FFF;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text .title{display:block; height:20px; line-height:20px; font-weight:bold; color:#333; margin-bottom:8px; font-size:14px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text .cont{display:block; height:80px; line-height:20px; color:#333; margin:0; -webkit-line-clamp:4; -webkit-box-orient:vertical; display:-webkit-box; font-size:13px; white-space:normal; text-overflow:ellipsis; overflow:hidden; font-weight:normal;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text .day{display:block; text-align:right; font-size:13px; color:#838383; line-height:20px; font-weight:normal;}
