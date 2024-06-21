@@ -964,7 +964,7 @@
 
 		// 단어설정 버튼 표출 조건
 		function isWordSelectDisplay(viewType) {
-			return viewType === BoardViewType.CARD_A;
+			return viewType === BoardViewType.CARD_A || viewType === BoardViewType.CARD_B;
 		}
 	</script>
 </body>

@@ -220,6 +220,10 @@ function getBoardListBType(data, portletId) {
 			})(id, guBun, boardID);
 			var dlEle = document.createElement('dl');
 			listEle.appendChild(dlEle);
+			if (!!item.thumbnail) {
+				dlEle.style.background = "url('" + item.thumbnail + "')";
+				dlEle.style.backgroundSize = "100% 100%";
+			}
 			// var dt = document.createElement('dt');
 			// dlEle.appendChild(dt);
 			// dt.className = 'noti_num';
