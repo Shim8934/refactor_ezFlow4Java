@@ -1,5 +1,6 @@
 target/
 output/
+src/main/webapp/fileroot
 .idea
 *.iml
 #Eclipse Setting
