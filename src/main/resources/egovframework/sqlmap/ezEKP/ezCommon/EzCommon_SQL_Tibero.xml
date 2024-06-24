@@ -4833,7 +4833,8 @@
 	<select id="EzCommonDAO.checkUserThemePagination">
 		SELECT	USEPAGING
 		FROM	TBL_PORTAL_THEME_USER
-		LIMIT 1
+		WHERE
+            ROWNUM <= 1
 	</select>
 
 	<statement id="EzCommonDAO.alterUserThemePagination">
