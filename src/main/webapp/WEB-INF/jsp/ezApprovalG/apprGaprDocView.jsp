@@ -1065,10 +1065,11 @@
 	            pArgument[5] = "";
 	            pArgument[6] = "";
 	            pArgument[7] = "";
-	            pArgument[8] = 99;
+	            pArgument[8] = ListTypeValue;
 	            pArgument[9] = editable;
 	            pArgument[10] = pDocID;
-	            pArgument[11] = 1;
+	            pArgument[11] = pOrgDocID;
+	            pArgument[12] = 1;
 	            			
 	            var params = {
 	            	formURL: escape(pArgument[1]),
@@ -1081,7 +1082,8 @@
 	            	listType: escape(pArgument[8]),
 	            	isUsed: escape(pArgument[9]),
 	            	beforeDocID: escape(pArgument[10]),
-	            	fromGongram: escape(pArgument[11])
+	            	orgDocID: escape(pArgument[11]),
+	            	fromGongram: escape(pArgument[12])
 	            };
 	            
 	            var openLocation = "/ezApprovalG/draftui.do?" + new URLSearchParams(params);		        

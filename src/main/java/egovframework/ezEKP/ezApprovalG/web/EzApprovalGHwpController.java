@@ -1252,10 +1252,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String beforeDocID = ObjectUtils.defaultIfNull(request.getParameter("beforeDocID"), "");
 		String isUsed = ObjectUtils.defaultIfNull(request.getParameter("isUsed"), "");
 		String fromGongram = request.getParameter("fromGongram");
+		String orgDocID = request.getParameter("orgDocID");
 		
 		if (!beforeDocID.isEmpty()) {
 			if (fromGongram != null && fromGongram.equals("1") && isUsed.equals("reuse")) {
-				beforeDocID = ezApprovalGService.getOrgDocIDfromGongram(beforeDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+				beforeDocID = orgDocID;
 			}
 			beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
 		}
