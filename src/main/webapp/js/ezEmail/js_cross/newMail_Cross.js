@@ -858,7 +858,7 @@ function Save_onClick(savemode) {
     }
     
     // 2024-03-06 이사라 - 임시보관함으로 메일을 저장하는 경우도 제목을 필수로 입력하도록 수정
-    if (eSubject.value.trim() == "") {
+    if (eSubject.value.trim() == "" && !previewChk) {
         alert(strLang92);
         eSubject.focus();
         return "noSubject"; // 2024.04.29 한슬기 : 제목이 없는 경우 noSubject를 리턴하도록 변경
