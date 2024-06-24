@@ -4827,7 +4827,7 @@
         ALTER TABLE
             TBL_PS_QUICKLINK
             ADD
-                COMPANYID varchar(20) NOT NULL
+                COMPANYID varchar(20) DEFAULT 'Top' NOT NULL
     </statement>
 	
 	<select id="EzCommonDAO.checkUserThemePagination">
