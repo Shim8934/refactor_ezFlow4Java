@@ -4822,10 +4822,12 @@
     </statement>
     
 	<select id="EzCommonDAO.checkUserThemePagination">
+		<![CDATA[
 		SELECT	USEPAGING
 		FROM	TBL_PORTAL_THEME_USER
 		WHERE
             ROWNUM <= 1
+        ]]>
 	</select>
 
 	<statement id="EzCommonDAO.alterUserThemePagination">
