@@ -455,6 +455,7 @@
 			
 			$("#cityList").val(cityCode).prop("selected", true);
 			$("#countryList").val(countryCode).prop("selected", true);
+			debugger;
 
 			function reArrangeCityList(data) {
 				// child node 삭제

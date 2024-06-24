@@ -4504,7 +4504,7 @@ public class EzNewPortalGWController {
 			int userLocalLang = Integer.parseInt(ezNewPortalService.getUserLocalLang(userId, tenantID));
 			String countryCode = request.getParameter("countryCode") == null ?
 								 (
-									 ezNewPortalService.getCountryCode(userId, tenantID) == null ?
+									 ezNewPortalService.getCountryCode(userId, tenantID) != null && ezNewPortalService.getCountryCode(userId, tenantID).isEmpty() ?
 									 String.valueOf(userLocalLang) :
 									 ezNewPortalService.getCountryCode(userId, tenantID)
 								 ) :
