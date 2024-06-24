@@ -207,6 +207,9 @@
 			
 			// 2024-06-11 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
 			var useReceiptDeptFileAttach = "<c:out value ='${useReceiptDeptFileAttach}'/>";
+
+			// 2024-06-24 양지혜 - 지정반송 기능 사용여부
+			var useReturnByDesignation = "<c:out value ='${useReturnByDesignation}'/>";
 	        
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -220,6 +223,11 @@
 		    	if(useExternalMailServer == "NO") {
 		    		$("#btnMail").css("display","");
 		    	}
+
+				if (useReturnByDesignation == "YES") {
+					document.getElementById("btnReject2").style.display = "";
+				}
+
 		    	var officeFlag = this.officeFlag;
 		    	
 		    	if(isReform) {
@@ -717,6 +725,7 @@
 		        if (KuyjeType == "001") {
 		            if (pDraftFlag == "SUSIN" || pAprLineType == strAprType7 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
 		                setMenuBar("btnReject", false);
+						setMenuBar("btnReject2", false);
 		                setMenuBar("btnStay", false);
 		                setMenuBar("btnModAprLine", false);
 		                setMenuBar("btnModAprDept", false);
@@ -1225,8 +1234,15 @@
 		    /**
 		    * '반송'
 		    */
-		    function btnReject_option_Complete(ret) { 
-		        DivPopUpHidden();
+			var returnUserSN = "";
+		    function btnReject_option_Complete(ret) {
+				DivPopUpHidden();
+				// 2024-06-24 양지혜 - 전자결재 > 지정반송
+				if (ret != "cancel" && returnUserSN != "" && returnUserSN != "1") {
+					returnByDesignation(ret, returnUserSN);
+					return;
+				}
+
 		        if (ret != "cancel") {
 		        	pHasOpinionYN = "Y";
 		            UpdateLineHistory(); // '변경내역' 업데이트
@@ -1296,6 +1312,10 @@
 			        
 		        } else if (ret == "cancel") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t38'/>";
+					if (returnChk == "Y") {
+						pAlertContent = "<spring:message code='ezApprovalG.yjh05'/>";
+						returnChk = "N";
+					}
 		            OpenAlertUI(pAlertContent);
 		        }
 		    }
@@ -2374,7 +2394,21 @@
 		    	    }
 	    		}
 	    	}
-	    	
+
+			/* 2024-06-24 양지혜 - 전자결재 > 지정반송 */
+			var returnChk = "N";
+			function btnReturnDesignation_onclick() {
+				returnChk = "Y";
+				if (checkAprState()) {
+					alert("<spring:message code='ezApprovalG.bhs23'/>");
+					window.returnValue = "CLOSE";
+					btnClose_onclick();
+					return;
+				}
+				var pInformationContent = "<spring:message code='ezApprovalG.yjh04'/>";
+				OpenInformationUI(pInformationContent, btnReject_onclick_Complete);
+			}
+
 		</script>
 	</head>
 	<body class="popup" style="height:100%;">
@@ -2386,6 +2420,7 @@
 		        <ul id="AllApprove" <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 					  <li id="btnApprove"><span onClick="return btnApprove_onclick()"><spring:message code='ezApprovalG.t1'/></span></li>
 	                  <li id="btnReject"><span onClick="return btnReject_onclick()"><spring:message code='ezApprovalG.t49'/></span></li>
+					  <li id="btnReject2" style="display: none"><span onClick="return btnReturnDesignation_onclick()"><spring:message code='ezApprovalG.yjh02'/></span></li>
 	                  <li id="btnStay"><span onClick="return btnStay_onclick()"><spring:message code='ezApprovalG.t50'/></span></li>
 	                  <span style="display:none"><li id="btnSetTaskCode" style="display:none"><span onClick="btnSetTaskCode_onclick()" ><spring:message code='ezApprovalG.t9994'/></span></li></span>
 	                  <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo()" ><spring:message code='ezApprovalG.t1742'/></span></li>        

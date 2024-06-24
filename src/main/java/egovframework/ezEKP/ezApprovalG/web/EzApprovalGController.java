@@ -5360,7 +5360,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
 		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
-		
+
+		/* 2024-06-24 양지혜 - 지정반송 사용 여부 */
+		model.addAttribute("useReturnByDesignation", ezCommonService.getTenantConfig("returnByDesignationUsed", userInfo.getTenantId()));
+
 		logger.debug("approvui ended");
 		
 		return "ezApprovalG/apprGapprovui";
@@ -11493,9 +11496,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		/* 2023-07-19 민지수 - [추가의견] 버튼 클릭 시 의견창 모드값 전달 */
 		String opMode = request.getParameter("opMode");
 
+		/* 2024-06-24 양지혜 - 지정반송 사용 여부 */
+		String returnByDesignationUsed = ezCommonService.getTenantConfig("ReturnByDesignationUsed", userInfo.getTenantId());
+		if (returnByDesignationUsed == null || returnByDesignationUsed.equals("")) {
+			returnByDesignationUsed = "NO";
+		}
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("opMode",opMode);
+		model.addAttribute("DesignationUsed", returnByDesignationUsed);
 
 		logger.debug("aprOpinionNew ended.");
 		return "ezApprovalG/apprGaprOpinionNew";
@@ -11508,6 +11518,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("aprOpinionPopup started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		/* 2024-06-24 양지혜 - 지정반송 > 반송위치에 표출할 결재라인 호출 */
+		String docID = request.getParameter("docID");
+		if (docID != null && !docID.equals("")) {
+			String returnUserList = ezApprovalGService.getReturnUserList(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+			model.addAttribute("aprUserList", returnUserList);
+		}
 		
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		
@@ -12924,5 +12941,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		logger.info("attachRecordDoc ended");
 		return result.toString();
+	}
+
+	/* 2024-06-24 양지혜 - 지정반송 > 결재라인 업데이트 */
+	@RequestMapping(value = "/ezApprovalG/updateReturnByDesignation.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String updateReturnByDesignation (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("updateReturnByDesignation started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String returnUserSN = request.getParameter("returnUserSN");
+		String docID = request.getParameter("docID");
+
+		String res = ezApprovalGService.updateReturnByDesignation(userInfo, docID, returnUserSN);
+
+		logger.debug("updateReturnByDesignation ended");
+		return res;
 	}
 }

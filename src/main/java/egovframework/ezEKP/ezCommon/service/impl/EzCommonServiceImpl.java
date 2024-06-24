@@ -3699,4 +3699,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertEndDateOptionConfig(map);
         }
     }
+
+    // 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그
+    @Override
+    public void insertReturnByDesignationUsedConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        String property = "ReturnByDesignationUsed";
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantID", tenantVo.getTenantId());
+            map.put("property", property.toUpperCase());
+
+            ezCommonDAO.insertReturnByDesignationUsedConfig(map);
+        }
+    }
 }

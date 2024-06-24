@@ -35659,4 +35659,62 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                commonUtil.separator + getDocHrefYear(docID, companyID, tenantID) +
                commonUtil.separator + getDocDir(docID);
     }
+
+    /* 2024-06-24 양지혜 - 지정반송 > 반송위치에 표출할 결재라인 호출 */
+    @Override
+    public String getReturnUserList(String docId, int tenantId, String companyId) throws Exception {
+        logger.debug("getReturnUserList started");
+
+        StringBuilder rtnXML = new StringBuilder();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("docId", docId);
+        map.put("companyId", companyId);
+        map.put("tenantId", tenantId);
+
+        List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getReturnUserList(map);
+
+        for (int i = 0; i < apprGAprLineVOList.size(); i++) {
+            String num = String.valueOf(i+1);
+            rtnXML.append("<label><input type='radio' id='ru"+num+"' name='returnUser'; style='vertical-align: top;' ");
+            if (apprGAprLineVOList.get(i).getAprType().equals("018")) {
+                rtnXML.append("checked='checked' ");
+            }
+            rtnXML.append("data1='" + apprGAprLineVOList.get(i).getAprMemberName() + "' ");
+            rtnXML.append("value='" + apprGAprLineVOList.get(i).getAprMemberSN() + "'/>");
+            rtnXML.append(apprGAprLineVOList.get(i).getAprMemberSN() + ".&nbsp;");
+            rtnXML.append(apprGAprLineVOList.get(i).getAprMemberJobTitle() + "&nbsp;");
+            rtnXML.append(apprGAprLineVOList.get(i).getAprMemberName() + "&nbsp;");
+            rtnXML.append("/&nbsp;" + apprGAprLineVOList.get(i).getAprMemberDeptName());
+            rtnXML.append("</label><br>");
+        }
+
+        logger.debug("getReturnUserList ended");
+
+        return rtnXML.toString();
+    }
+
+    /* 2024-06-24 양지혜 - 지정반송 > 결재라인 업데이트 */
+    @Override
+    public String updateReturnByDesignation(LoginVO userInfo, String docID, String returnUserSN) throws Exception {
+        logger.debug("updateReturnByDesignation started");
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("docID", docID);
+        map.put("companyID", userInfo.getCompanyID());
+        map.put("tenantID", userInfo.getTenantId());
+        map.put("returnUserSN", Integer.parseInt(returnUserSN));
+
+        // 지정반송 user의 결재할문서에 돌아가도록 상태를 진행(002)으로 변경
+        map.put("type", "1");
+        map.put("aprState", "002");
+        ezApprovalGDAO.updateReturnByDesignation(map);
+        // 기안자 제외 나머지 결재자의 상태를 대기(001)로 변경
+        map.put("type", "2");
+        map.put("aprState", "001");
+        ezApprovalGDAO.updateReturnByDesignation(map);
+
+        logger.debug("updateReturnByDesignation ended");
+        return null;
+    }
 }

@@ -1021,6 +1021,7 @@ function ChangeBtnStateTrue() {
         if (pDraftFlag == "CHAMJO") {
             setMenuBar("btnApprove", false);
             setMenuBar("btnReject", false);
+            setMenuBar("btnReject2", false);
             setMenuBar("btnStay", false);
             setMenuBar("btnModAprLine", false);
             setMenuBar("btnModAprDept", false);
@@ -1033,6 +1034,7 @@ function ChangeBtnStateTrue() {
 function chkBtn(pBtnflag, approvalFlag) {
     setMenuBar("btnApprove", pBtnflag);
     setMenuBar("btnReject", pBtnflag);
+    setMenuBar("btnReject2", pBtnflag);
     setMenuBar("btnStay", pBtnflag);
     setMenuBar("btnDocInfo", pBtnflag);
     setMenuBar("btnJunKyul", false);
@@ -1052,10 +1054,12 @@ function chkBtn(pBtnflag, approvalFlag) {
 
     if (trim(pDraftFlag) == "GONGRAM" || trim(pDraftFlag) == "CHAMJO") {
         setMenuBar("btnReject", false);
+        setMenuBar("btnReject2", false);
         setMenuBar("btnStay", false);
     }
     else {
         setMenuBar("btnReject", pBtnflag);
+        setMenuBar("btnReject2", pBtnflag);
 
         var APRSTATE = GetElementsByTagName(xmldoc, "DOCSTATE");
         if (APRSTATE == strAprState5)
@@ -1346,6 +1350,7 @@ function getApprovInfo() {
                 GetChildNodes(document.getElementById("btnApprove"))[0].innerHTML = strLang10;
                 setMenuBar("btnJunKyul", false);
                 setMenuBar("btnReject", false);
+                setMenuBar("btnReject2", false);
                 setMenuBar("btnStay", false);
                 setMenuBar("btnOpinion", true); // 2019-04-02 천성준 - 참조자가 작성된 의견은 확인이 가능하기에 의견 버튼 표출 
                 setMenuBar("btnFileAttach", false);
@@ -1370,6 +1375,7 @@ function getApprovInfo() {
             	approvalType = "GAMSA";
                 setMenuBar("btnApprove", true);
                 setMenuBar("btnReject", false);
+                setMenuBar("btnReject2", false);
                 setMenuBar("btnStay", false);
                 setMenuBar("btnJunKyul", false);
                 setMenuBar("btnModAprLine", false);
@@ -1383,6 +1389,7 @@ function getApprovInfo() {
             	approvalType = "B_GAMSA";
                 setMenuBar("btnApprove", true);
                 setMenuBar("btnReject", true);  // 부서감사 유형 감사부서에서 반송 가능하도록 수정. 2020-02-28 홍대표
+                setMenuBar("btnReject2", false);
                 setMenuBar("btnStay", false);
                 setMenuBar("btnJunKyul", false);
                 setMenuBar("btnModAprLine", false);
@@ -3034,6 +3041,7 @@ function getSusinSNInfo() {
 function setBtnDisableAprLineType() {
     if (pDraftFlag == "SUSIN" || pAprLineType == strAprType7 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
         setMenuBar("btnReject", false);
+        setMenuBar("btnReject2", false);
         setMenuBar("btnStay", false);
         setMenuBar("btnModAprLine", false);
         setMenuBar("btnModAprDept", false);
@@ -4413,5 +4421,45 @@ function getDeptSymbol(DeptID, DeptName) {
     }
     else {
         return RtnVal;
+    }
+}
+
+/* 2024-06-24 양지혜 - 지정반송 > 결재상태 업데이트 및 문서저장 */
+function returnByDesignation (ret, returnUserSN) {
+    pHasOpinionYN = "Y";
+    UpdateLineHistory(); // '변경내역' 업데이트
+
+    $.ajax({
+        type : "GET",
+        dataType : "text",
+        async : false,
+        url : "/ezApprovalG/updateReturnByDesignation.do",
+        data : {
+            returnUserSN : returnUserSN,
+            docID : pDocID
+        }
+    });
+
+    signDel(returnUserSN); // 사인제거
+    SaveFile(); // 문서 저장
+    process_AfterApprove("2"); // 알림창
+}
+
+/* 2024-06-24 양지혜 - 지정반송 > 결재 사인 제거 */
+function signDel(returnUserSN) {
+    var fields = message.GetFieldsList();
+    for (i = returnUserSN; i < 10; i++) {
+        var field = message.GetListItem(fields, "sign" + i);
+        if (field) {
+            setNodeText(field, " ");
+            if (new RegExp(/Firefox/).test(navigator.userAgent))
+                field.innerHTML = "<br type='_moz'>";
+        }
+        field = message.GetListItem(fields, "seumyungdate" + i);
+        if (field) {
+            setNodeText(field, " ");
+            if (new RegExp(/Firefox/).test(navigator.userAgent))
+                field.innerHTML = "<br type='_moz'>";
+        }
     }
 }

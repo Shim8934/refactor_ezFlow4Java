@@ -889,4 +889,10 @@ public interface EzApprovalGService {
     public List<OrganDeptVO> getUnderDeptList(LoginVO userInfo) throws Exception;
 
     public String attachRecordDoc(LoginVO userInfo, String newDocID, Object attachedDocList) throws Exception;
+
+    /* 2024-06-24 양지혜 - 지정반송 > 반송위치에 표출할 결재라인 호출 */
+    String getReturnUserList(String docId, int tenantId, String companyId) throws Exception;
+
+    /* 2024-06-24 양지혜 - 지정반송 > 결재라인 업데이트 */
+    String updateReturnByDesignation(LoginVO userInfo, String docID, String returnUserSN) throws Exception;
 }

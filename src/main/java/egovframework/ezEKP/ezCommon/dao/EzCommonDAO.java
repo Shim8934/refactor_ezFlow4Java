@@ -2123,4 +2123,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertDocBinderListOption", map);
 		}
 	}
+
+	// 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그
+	public void insertReturnByDesignationUsedConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.getTenantConfig", map);
+
+		if (propertyValue == null) {
+			logger.debug("insertReturnByDesignationUsedConfig tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertReturnByDesignationUsedConfig", map);
+		}
+	}
 }

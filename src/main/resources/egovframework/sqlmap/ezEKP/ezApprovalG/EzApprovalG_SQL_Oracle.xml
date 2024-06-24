@@ -36486,4 +36486,44 @@
         FROM
             DUAL
     </select>
+
+    <select id ="EzApprovalG.getReturnUserList" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
+        SELECT
+            *
+        FROM
+            TBL_APRLINEINFO
+        WHERE
+            DOCID = #docId#
+        AND
+            COMPANYID = #companyId#
+        AND
+            TENANT_ID = #tenantId#
+        AND
+            APRSTATE = '003'
+        AND
+            APRTYPE IN ('018','019')
+    </select>
+
+    <update id="EzApprovalG.updateReturnByDesignation" parameterClass="Map">
+        UPDATE
+            TBL_APRLINEINFO
+        SET
+            APRSTATE = #aprState#,
+            PROCESSDATE = NULL
+        WHERE
+        <isEqual property="type" compareValue="1">
+            APRMEMBERSN = #returnUserSN#
+        </isEqual>
+        <isNotEqual property="type" compareValue="1">
+            APRMEMBERSN > #returnUserSN#
+        AND
+            APRTYPE IN ('001', '019')
+        </isNotEqual>
+        AND
+            DOCID = #docID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            TENANT_ID = #tenantID#
+    </update>
 </sqlMap>
