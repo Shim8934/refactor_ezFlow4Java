@@ -253,7 +253,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 /* schedule포틀릿과 weather 포틀릿도 너비 변경 */
 .portlet_title.portlet_schedule .portletText, .weather .portlet_title .portletText {width:auto;}
 /* mail 포틀릿 너비 변경 */
-.mail .portlet_title .portletText {width:100px;}
+.mail .portlet_title .portletText {width:110px;}
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:0px 20px 0px; list-style:none; height: calc(100% - 83px); box-sizing:border-box; overflow:hidden;}
@@ -595,7 +595,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .community_list{margin:0; padding:0 20px 0; height:calc(100% - 83px); box-sizing:border-box; overflow:hidden;}
 .community_list dl{margin:0 0 15px 0; cursor:pointer;}
 .community_list dl:after{content:""; display:block; clear:both;}
-.comPic{float:left; position:relative; width:130px; height:82px; margin:0 15px 0 0; padding:0; border-radius:8px;}
+.comPic{float:left; position:relative; width:130px; height:82px; margin:0 15px 0 0; padding:0; border-radius:8px; overflow:hidden;}
 .comPic:before{content:""; position:absolute; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.1); z-index:1; border-radius:8px;}
 .comPic .best{ margin:0px 0px 0px 0px; padding:0px; position:absolute; left:-5px; top:-8px; z-index:1000;}
 .comPic .best img{transition:none; image-rendering:auto;}
@@ -610,6 +610,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .comSub .day{color:#777; vertical-align:top;}
 
 .community_list dl.nodata{margin:0; cursor:default;}
+.community_list dl:hover dt > img{transform:scale(1.2); transition:all 0.2s linear;}
 
 
 /* board */
@@ -707,6 +708,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .photoList li{margin:0 0 7px 7px; padding:0; float:left; box-sizing:border-box; width:calc((99.999% - 14px) / 3); text-align:center; overflow:hidden; height:183px; position: relative; border-radius:7px;}
 .photoList li:nth-child(3n+1){margin-left:0px;}
 .photoList li img{width:100%; height:100%; position:relative; object-fit:cover; cursor:pointer;}
+.photoList li:hover img{transform:scale(1.2); transition:all 0.2s linear;}
 .photoList li.none img{ cursor:default;}
 .photoList li span{width:100%; background: rgba(0,0,0,0.3); color:#fff; position:absolute; bottom:0px; left:0; height: 40px; line-height:40px; padding:0 5px; box-sizing: border-box; border-radius: 0 0 7px 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size:14px;}
 
@@ -1788,7 +1790,7 @@ div.orbit img{border-radius: 5px;}
 
 
 .main_main_time .main_timeCheckOut .main_out{color: #333;}
-#ptlTimeFlow{margin: 22px 0px; padding: 0px; text-align: center; background: url(/images/kr/main/present_time_icon.png) no-repeat 1px 3px; padding-left: 31px;}
+#ptlTimeFlow{margin: 22px 0px; padding: 0px; text-align: center; background: url(/images/kr/main/present_time_icon.png) no-repeat 0px 5px; padding-left: 31px;}
 .presentTime .timeTxt{background: none;}
 /* #theme3Body #ptlTimeFlow{background: url(/images/ezNewPortal/theme3Img/present_time_icon.png) no-repeat 1px 5px; padding-left: 31px;} */
 #theme3Body .presentTime .timeTxt{background: none;}
@@ -2067,8 +2069,9 @@ div.orbit img{border-radius: 5px;}
 .portlet .board_Atype .portlet_list li dl{margin:0; padding:0;}
 .portlet .board_Atype .portlet_list li dl:after{content:""; display:block; clear:both;}
 .portlet .board_Atype .portlet_list li dl dt{float:left; position:relative; width:130px; height:82px; margin:0 15px 0 0; padding:0; border-radius:8px; overflow:hidden;}
-.portlet .board_Atype .portlet_list li dl dt:before{content:""; position:absolute; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.1);}
+.portlet .board_Atype .portlet_list li dl dt:before{content:""; position:absolute; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.1); z-index:1;}
 .portlet .board_Atype .portlet_list li dl dt img{width:100%; height:auto; min-height:82px;}
+.portlet .board_Atype .portlet_list li:hover dl dt img{transform:scale(1.2); transition:all 0.2s linear;}
 
 .portlet .board_Atype .portlet_list li dl dd{float:left; width:calc(100% - 145px); margin:0; padding:0;}
 .portlet .board_Atype .portlet_list li dl dd > span{display:block; line-height:normal;}
