@@ -3014,6 +3014,7 @@ public class EzNewPortalGWController {
 							
 							portletNamesWithOrder.add(portletNameList.get(langIndex));
 						}
+						pvo.setPortletNameList(portletNamesWithOrder);
 					}
 					else if (menuNamesCount > 2 && menuNamesCount < 4) {
 						int[] langOrder = new int[3];
@@ -3037,8 +3038,9 @@ public class EzNewPortalGWController {
 							
 							portletNamesWithOrder.add(portletNameList.get(langIndex));
 						}
+						pvo.setPortletNameList(portletNamesWithOrder);
 					}
-					pvo.setPortletNameList(portletNamesWithOrder);
+					pvo.setPortletNameList(portletNameList);
 				} 
 				else {
 					pvo.setPortletNameList(portletNameList);
