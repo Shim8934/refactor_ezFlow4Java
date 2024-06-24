@@ -5729,7 +5729,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				String realPath              = request.getServletContext().getRealPath("");
 				String pDirPath              = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
 				pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
-				excelPath             = ezOrganAdminService.createExcelPermissionsList(realPath + commonUtil.separator, pDirPath, exportPermissionList, primary, locale);
+				excelPath             = ezOrganAdminService.createExcelPermissionsList(realPath + commonUtil.separator, pDirPath, exportPermissionList, primary, locale, isRollC);
+				//일반사용자 리스트 요청이라면
 			} else {
 				List<OrganUserVO> exportUserlist = ezOrganAdminService.getExportUserList(primary, companyId, tenantId);
 				String realPath              = request.getServletContext().getRealPath("");

@@ -3031,7 +3031,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String createExcelPermissionsList(String realPath, String dirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale) throws Exception {
+	public String createExcelPermissionsList(String realPath, String dirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale, boolean isRollC) throws Exception {
 		logger.debug("createExcelPermissionsList start");
 
 		Date date = new Date();
@@ -3117,34 +3117,35 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 		// 액셀 라이브러리가 지원하는 row수: 65536건
 		// 사용자의 권한을 타입별로 나눠준다 (전체관리자)
-		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
-			Row newRow1 = sheet1.createRow(i);
+		if (isRollC) {
+			for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+				Row newRow1 = sheet1.createRow(i);
 
-			if (exportPermissionInfo.getExtensionAttribute1().contains("c=1")) {
-				permission = egovMessageSource.getMessage("ezOrgan.t291", locale).trim();
+				if (exportPermissionInfo.getExtensionAttribute1().contains("c=1")) {
+					permission = egovMessageSource.getMessage("ezOrgan.t291", locale).trim();
 
-				newRow1.createCell(0).setCellValue(permission); // 권한
-				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
-				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
-				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
-				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
-				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
-				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
-				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+					newRow1.createCell(0).setCellValue(permission); // 권한
+					newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+					newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+					newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+					newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+					newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+					newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+					newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
 
-				newRow1.getCell(0).setCellStyle(centerStyle2);
-				newRow1.getCell(1).setCellStyle(centerStyle2);
-				newRow1.getCell(2).setCellStyle(centerStyle2);
-				newRow1.getCell(3).setCellStyle(centerStyle2);
-				newRow1.getCell(4).setCellStyle(centerStyle2);
-				newRow1.getCell(5).setCellStyle(centerStyle2);
-				newRow1.getCell(6).setCellStyle(centerStyle2);
-				newRow1.getCell(7).setCellStyle(centerStyle2);
+					newRow1.getCell(0).setCellStyle(centerStyle2);
+					newRow1.getCell(1).setCellStyle(centerStyle2);
+					newRow1.getCell(2).setCellStyle(centerStyle2);
+					newRow1.getCell(3).setCellStyle(centerStyle2);
+					newRow1.getCell(4).setCellStyle(centerStyle2);
+					newRow1.getCell(5).setCellStyle(centerStyle2);
+					newRow1.getCell(6).setCellStyle(centerStyle2);
+					newRow1.getCell(7).setCellStyle(centerStyle2);
 
-				i++;
+					i++;
+				}
 			}
 		}
-
 		// 사용자의 권한을 타입별로 나눠준다 (회사관리자)
 		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
 			Row newRow1 = sheet1.createRow(i);

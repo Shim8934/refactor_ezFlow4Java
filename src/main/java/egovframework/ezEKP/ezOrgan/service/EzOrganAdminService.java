@@ -196,7 +196,7 @@ public interface EzOrganAdminService {
 
 	public List<OrganUserVO> getExportPermissionsList(String primary, String companyId, int tenantId) throws Exception;
 
-	public String createExcelPermissionsList(String realPath, String pDirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale) throws Exception;
+	public String createExcelPermissionsList(String realPath, String pDirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale, boolean isRollC) throws Exception;
 	
 	// 2023-08-25 전인하 - 해당 유저가 원직인지 겸직인지 확인 메소드
 	String isThisAddJob(String cn, int tenant_id, String DeptId, String jobId) throws Exception;
