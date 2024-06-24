@@ -21,7 +21,7 @@
 			var todayWeather = "${todayWeather}";
 			var cityList = JSON.parse('${cityList}');
 			var cityCode = "${cityCode}";
-			var countryCode = "${ countryCode }"
+			var countryCode = "${ countryCode }";
 			var displayName = "${displayName}";
 			var todayHours = "${todayHours}"; 
 			var todayHoursArr = todayHours.split(";");
@@ -79,7 +79,7 @@
 			    		async : false,
 			    		url : "/ezNewPortal/weatherPortletChange.do",
 			    		data : {
-			    			cityCode : urlCityCode,
+							cityCode : urlCityCode,
 							countryCode : urlCountryCode
 			    		},
 			    		success: function(data) {
@@ -92,7 +92,7 @@
 							if (target.id === "countryList") {
 								reArrangeCityList(data);
 							}
-
+			    			
 			    			currentWeatherArr = data.currentWeather.split(";");
 			    			
 			    			currentIcon = currentWeatherArr[0];
@@ -266,7 +266,7 @@
 		<article class="weather box_shadow">
 			<div class="layDiv">
 				<dl class="portlet_title sortablePortlet">
-		        	<dt class="portletText" style = "width : 53% !important;"><c:out value='${portletName }'/></dt>
+					<dt class="portletText" style = "width : 53% !important;"><c:out value='${portletName }'/></dt>
 					<select id = "countryList" class = "selectCountry setWeatherEventHandler">
 						<!-- 한국 -->
 						<option value = '1'><spring:message code = 'weather.nation1' /></option>
@@ -274,25 +274,25 @@
 						<option value = '2'><spring:message code = 'weather.nation2' /></option>
 						<!-- 일본 -->
 						<c:if test = "${ useJP eq 'YES' }">
-							<option value = "${ codeJP }"><spring:message code = 'weather.nation3' /></option>
+						<option value = "${ codeJP }"><spring:message code = 'weather.nation3' /></option>
 						</c:if>
 						<!-- 중국 -->
 						<c:if test = "${ useCN eq 'YES' }">
-							<option value = "${ codeCN }"><spring:message code = 'weather.nation4' /></option>
+						<option value = "${ codeCN }"><spring:message code = 'weather.nation4' /></option>
 						</c:if>
 						<!-- 베트남 -->
 						<c:if test = "${ useVN eq 'YES' }">
-							<option value = "${ codeVN }"><spring:message code = 'weather.nation5' /></option>
+						<option value = "${ codeVN }"><spring:message code = 'weather.nation5' /></option>
 						</c:if>
 						<!-- 인도네시아 -->
 						<c:if test = "${ useID eq 'YES' }">
-							<option value = "${ codeID }"><spring:message code = 'weather.nation6' /></option>
+						<option value = "${ codeID }"><spring:message code = 'weather.nation6' /></option>
 						</c:if>
 					</select>
-		            <dd class="portletPlus">
-		            	<select id="cityList" class="weatherSelect setWeatherEventHandler">
-		                </select>
-		            </dd>
+					<dd class="portletPlus">
+						<select id="cityList" class="weatherSelect setWeatherEventHandler">
+						</select>
+					</dd>
 		        </dl>
 		        <%-- 2023-06-01 홍승비 - 홈 > 날씨 포틀릿 > 디자인 개선을 위해 스타일 및 날씨 이미지 수정 --%>
 		        <div class="weather_content">
@@ -457,6 +457,36 @@
 			
 			$("#cityList").val(cityCode).prop("selected", true);
 			$("#countryList").val(countryCode).prop("selected", true);
+
+			function reArrangeCityList(data) {
+				// child node 삭제
+				removeChildren();
+
+				// cityList 배열
+				arrangeCityList(data);
+			}
+
+			function arrangeCityList(data) {
+				var cityList = data.cityList;
+
+				for (var i = 0; i < cityList.length; i++) {
+					if (lang == "2") {
+						$("#cityList").append("<option value='" + cityList[i].cityCode + "'>" + cityList[i].cityName + "</option>");
+					} else {
+						$("#cityList").append("<option value='" + cityList[i].cityCode + "'>" + cityList[i].displayName + "</option>");
+					}
+				}
+			}
+
+			function removeChildren() {
+				let parentNode = document.getElementById("cityList");
+				let childNode = parentNode.children;
+				let tmp;
+
+				while((tmp = childNode[0]) != null) {
+					parentNode.removeChild(tmp);
+				}
+			}
 		</script>
 	</body>
 </html>
