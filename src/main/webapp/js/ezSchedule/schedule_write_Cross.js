@@ -2185,7 +2185,11 @@ function getFirstDateInfo(startDate, endDate) {
 	    }
 	}
 	else {
-		returnValue = xmlHTTP.responseText;
+		if ("firstScheduleDateNotFound" == xmlHTTP.responseText) {
+			alert(ezSchedule_kyj2);
+		} else {
+			returnValue = xmlHTTP.responseText;
+		}
 	}
 	
 	return returnValue;

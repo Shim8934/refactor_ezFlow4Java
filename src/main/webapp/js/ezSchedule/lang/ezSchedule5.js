@@ -217,3 +217,5 @@ var strLangHSBScPt3 = "";
 
 /* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
 var ezSchedule_kyj1 = "Không thể gửi lịch trình đến liệu lên bảng ảnh hoặc bảng ẩn danh hoặc URL-link-board.";
+/* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
+var ezSchedule_kyj2 = "Vui lòng kiểm tra lại chu kỳ lặp lại một lần nữa.";

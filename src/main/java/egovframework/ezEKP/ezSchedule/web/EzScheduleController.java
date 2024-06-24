@@ -3378,6 +3378,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String[] info = repetition.split("\\|");
 		int maxCount = Integer.parseInt(info[0]);
 		int count = 0;
+		int count2 = 0;
 		boolean isFirst = true;
 
 		if (maxCount == 0) {
@@ -3511,6 +3512,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 				if (maxCount == count) break;
 
+				if (10 == count2) {
+					returnValue = "firstScheduleDateNotFound";
+					break;
+				}
+
 				boolean generated = false;
 
 				Calendar newCal = Calendar.getInstance();
@@ -3562,7 +3568,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 				date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
 				date_cal.add(Calendar.YEAR, 1);
-			}
+
+				count2++;
+			}						
 			break;	
 		}				
 		
