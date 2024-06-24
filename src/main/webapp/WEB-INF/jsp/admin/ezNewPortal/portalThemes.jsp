@@ -699,34 +699,36 @@
 						listHTML += dd.outerHTML + dd2.outerHTML;
 					}
 					listHTML += "</dl>";
-                    listHTML += "<div class='admin_menu_content'>";
+					if (fixList != null) {
+						listHTML += "<div class='admin_menu_content'>";
 
-					var fixCount = fixList.length * - 1;
-					fixList.forEach(function (item) {
-						var portletId = item.portletId;
-
-						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content'";
-						listHTML += " id='" + item.portletCode + "'";
-						listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "' data-fix=" + fixCount++ + ">";
-						listHTML += "<span class='ui-portlet-span'>";
-
-						listHTML += ConvertCharToEntityReference(item.portletName);
-						listHTML += "</span>";
-						listHTML += "<label class='portlet_switch switch' title='"+ "<spring:message code='ezNewPortal.fixportlet.theme2' />" +"'>";
-
-						listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' ";
-						listHTML += item.fixBoard ? " data-fix=true " : "";
-
-						if (themeId == 2) {
-							listHTML +=  " disabled > ";
-						} else {
-							listHTML += item.portletUsed ? " checked>" : ">";
-						}
-
-						listHTML += "<span class='slider round'></span></label>";
+						var fixCount = fixList.length * - 1;
+						fixList.forEach(function (item) {
+							var portletId = item.portletId;
+	
+							listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content'";
+							listHTML += " id='" + item.portletCode + "'";
+							listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "' data-fix=" + fixCount++ + ">";
+							listHTML += "<span class='ui-portlet-span'>";
+	
+							listHTML += ConvertCharToEntityReference(item.portletName);
+							listHTML += "</span>";
+							listHTML += "<label class='portlet_switch switch' title='"+ "<spring:message code='ezNewPortal.fixportlet.theme2' />" +"'>";
+	
+							listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' ";
+							listHTML += item.fixBoard ? " data-fix=true " : "";
+	
+							if (themeId == 2) {
+								listHTML +=  " disabled > ";
+							} else {
+								listHTML += item.portletUsed ? " checked>" : ">";
+							}
+	
+							listHTML += "<span class='slider round'></span></label>";
+							listHTML += "</div>";
+						});
 						listHTML += "</div>";
-					});
-                    listHTML += "</div>";
+					}
 					listHTML += "<div class='admin_menu_content'>";
 					if (usePortletSize) {
 						listHTML += "<div id='themePortletList' class=" + ClassPortlet.AREA_PORTLET + ">";
