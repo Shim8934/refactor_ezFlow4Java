@@ -527,7 +527,7 @@ var handlePopupMenuBtn = function (type) {
 		//animatePopupBtn.play();
 		// document.getElementById('popupMenuBtn').style.width = (100 * menuBtnSpans.length + 68) +'px'; 기존방식
 		// ↓↓ 다국어 이슈로 인한 .quickMenuBtn의 width값을 css에서 받아서 상위 div(슬라이드 동작때문에 고정 width값 필요)에 width값 계산해서 넣기(UIUX-조기완)
-		document.getElementById('popupMenuBtn').style.width = `${($(".quickMenuBtn").outerWidth() + 20)}px`;
+		document.getElementById('popupMenuBtn').style.width = ($(".quickMenuBtn").outerWidth() + 20) + "px";
 		contextMenuObject.popupMenu = true;
 		$('#contextMenuBtn').draggable('disable');		
 	} else if (type === 'off') {
