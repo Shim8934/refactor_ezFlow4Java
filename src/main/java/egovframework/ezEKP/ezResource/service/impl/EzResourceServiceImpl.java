@@ -53,7 +53,7 @@ import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzResourceService")
 public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements EzResourceService{

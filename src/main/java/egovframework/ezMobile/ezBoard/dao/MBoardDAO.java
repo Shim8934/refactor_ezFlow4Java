@@ -14,7 +14,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MBoardDAO")
 public class MBoardDAO extends EgovAbstractDAO {

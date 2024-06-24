@@ -12,7 +12,7 @@ import egovframework.ezEKP.ezWebFolder.vo.ShareSubVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzWebFolderDAO_m")
 @SuppressWarnings("unchecked")

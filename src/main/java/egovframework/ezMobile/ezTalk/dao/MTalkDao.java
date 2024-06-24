@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezMobile.ezTalk.vo.MTalkNotification;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository
 public class MTalkDao extends EgovAbstractDAO {

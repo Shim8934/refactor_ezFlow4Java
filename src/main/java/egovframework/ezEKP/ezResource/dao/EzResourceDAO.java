@@ -20,7 +20,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResOccuVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzResourceDAO")
 public class EzResourceDAO extends EgovAbstractDAO {

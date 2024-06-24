@@ -1,7 +1,7 @@
 package egovframework.let.main.dao;
 
 import egovframework.let.main.vo.MainVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

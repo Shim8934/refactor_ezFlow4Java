@@ -9,7 +9,7 @@ import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MOptionDAO")
 public class MOptionDAO extends EgovAbstractDAO {

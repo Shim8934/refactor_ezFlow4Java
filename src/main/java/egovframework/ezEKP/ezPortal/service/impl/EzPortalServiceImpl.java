@@ -25,7 +25,7 @@ import org.w3c.dom.NodeList;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPortalService")
 public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPortalService {

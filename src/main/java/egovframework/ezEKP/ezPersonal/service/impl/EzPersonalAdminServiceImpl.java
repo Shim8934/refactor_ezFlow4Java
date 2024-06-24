@@ -35,7 +35,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPersonalAdminService")
 public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implements EzPersonalAdminService {

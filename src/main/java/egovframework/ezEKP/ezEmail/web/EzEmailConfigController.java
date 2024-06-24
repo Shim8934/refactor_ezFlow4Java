@@ -82,7 +82,7 @@ import egovframework.let.utl.rest.JgwResult;
 import egovframework.let.utl.rest.Rest;
 import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-import egovframework.rte.fdl.string.EgovStringUtil;
+import org.egovframe.rte.fdl.string.EgovStringUtil;
 
 /**
  * @Description [Controller] 메일 환경설정

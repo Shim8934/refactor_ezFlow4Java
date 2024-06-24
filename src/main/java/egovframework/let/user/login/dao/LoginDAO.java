@@ -15,7 +15,7 @@ import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

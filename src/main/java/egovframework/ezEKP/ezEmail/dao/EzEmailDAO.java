@@ -18,7 +18,7 @@ import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzEmailDAO")
 public class EzEmailDAO extends EgovAbstractDAO {

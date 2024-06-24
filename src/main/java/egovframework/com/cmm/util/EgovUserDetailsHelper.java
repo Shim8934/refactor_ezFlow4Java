@@ -8,7 +8,7 @@ import java.util.List;
 
 
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.rte.fdl.string.EgovObjectUtil;
+import org.egovframe.rte.fdl.string.EgovObjectUtil;
 
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;

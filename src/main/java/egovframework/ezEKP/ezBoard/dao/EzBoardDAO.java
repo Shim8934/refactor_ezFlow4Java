@@ -31,7 +31,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzBoardDAO")
 public class EzBoardDAO extends EgovAbstractDAO{

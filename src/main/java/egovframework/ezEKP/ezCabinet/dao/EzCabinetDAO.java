@@ -18,7 +18,7 @@ import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserInfoVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @SuppressWarnings("unchecked")
 @Repository("EzCabinetDAO")

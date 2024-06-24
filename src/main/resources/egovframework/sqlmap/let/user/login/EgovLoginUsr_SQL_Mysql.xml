@@ -3,7 +3,7 @@
 
 <sqlMap namespace="Login">
 
-    <typeAlias  alias="egovMap"                 type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="egovMap"                 type="org.egovframe.rte.psl.dataaccess.util.EgovMap"/>
     <typeAlias  alias="loginVO"                 type="egovframework.let.user.login.vo.LoginVO"/>
     <typeAlias  alias="SessionVO"               type="egovframework.let.user.login.vo.SessionVO"/>
 	<typeAlias 	alias="loginDeviceVO" 			type="egovframework.let.user.login.vo.LoginDeviceVO"/>

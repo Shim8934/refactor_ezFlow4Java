@@ -17,7 +17,7 @@ import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
 import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.main.vo.MainVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzSystemAdminDAO")
 public class EzSystemAdminDAO extends EgovAbstractDAO {

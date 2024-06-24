@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleShareVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzScheduleAdminDAO")
 public class EzScheduleAdminDAO extends EgovAbstractDAO {

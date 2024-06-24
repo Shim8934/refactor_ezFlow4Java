@@ -4702,7 +4702,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
 		String buJaeInfo = "";
-		String nowDate = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
+		String nowDate = EgovDateUtil.convertDate(org.egovframe.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
 		String susinAdmin = "";
 		String listType = "1";
 		String viewLeftCount = ezCommonService.getTenantConfig("APPROVLEFTCOUNT", userInfo.getTenantId()); 

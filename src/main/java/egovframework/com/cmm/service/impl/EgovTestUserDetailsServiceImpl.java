@@ -8,7 +8,7 @@ import java.util.List;
 
 import egovframework.com.cmm.service.EgovUserDetailsService;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 /**
  *

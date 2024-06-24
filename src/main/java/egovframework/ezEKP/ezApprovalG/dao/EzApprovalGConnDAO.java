@@ -3,7 +3,7 @@ package egovframework.ezEKP.ezApprovalG.dao;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.stereotype.Repository;
 
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 import java.util.Map;
 

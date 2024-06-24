@@ -30,7 +30,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzResourceAdminService")
 public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implements EzResourceAdminService {

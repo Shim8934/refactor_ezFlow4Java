@@ -5,7 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MScheduleDAO")
 public class MScheduleDAO extends EgovAbstractDAO {
