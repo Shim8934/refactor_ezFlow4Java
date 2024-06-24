@@ -616,6 +616,9 @@ function makeFixPortlet(fixedPortletList) {
                     fixBoardArr[fixPortletCode].start(boardList);
                 } else {
                     fixBoardArr[fixPortletCode].hide();
+                    if (document.getElementsByClassName("news_setting")[0]){
+                        document.getElementsByClassName("news_setting")[0].remove();
+                    }
                 }
             },
             error: function (error) {
