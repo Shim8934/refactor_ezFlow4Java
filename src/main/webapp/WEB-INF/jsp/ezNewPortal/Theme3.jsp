@@ -66,8 +66,8 @@
 					<div class="portal_setting" onclick="viewPortletEnv()"><spring:message code = 'ezNewPortal.HSBPT01' /></div>
 
 						<div class="news_setting">
-							<input type="checkbox" id="portal_set">
-							<label for="portal_set" onclick="displayFixPortlet()"><span></span><spring:message code='ezNewPortal.topMenu.hth13'/></label>
+							<input type="checkbox" id="portal_set" onchange="displayFixPortlet()">
+							<label for="portal_set"><span></span><spring:message code='ezNewPortal.topMenu.hth13'/></label>
 						</div>
 	
 	                <%-- <div class="info_logout" onclick="infoLogoutClick()"><spring:message code = 'ezNewPortal.t008' /></div> --%>
@@ -733,16 +733,16 @@
 	    }
 	
 	// 고정포틀릿 on/off
-    function displayFixPortlet() {
-        var onOff = document.getElementById("portal_set").checked;
-        var fixArea = document.getElementById("fixBoardArea");
-        
-        if (onOff == false) {
-            fixArea.classList.add("hidden");
-        } else {
-            fixArea.classList.remove("hidden");
-        }
-    }
+	function displayFixPortlet() {
+		var onOff = document.getElementById("portal_set").checked;
+		var fixArea = document.getElementById("fixBoardArea");
+
+		if (onOff) {
+			fixArea.classList.add("hidden");
+		} else {
+			fixArea.classList.remove("hidden");
+		}
+	}
 	</script>
 	</body>
 </html>
