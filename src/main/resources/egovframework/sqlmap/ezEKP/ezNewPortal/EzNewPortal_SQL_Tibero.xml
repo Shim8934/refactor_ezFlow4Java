@@ -2401,7 +2401,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
                 NVL(TPPU.portlet_used, NVL(THEME.portlet_used, NVL(COMP.portlet_used, 1))) AS portletUsed,
             	THEME.is_fixed as isFixed,
             	A.portletcode,
-            	MENU.menucode
+            	MENU.menucode,
+            	CS.CLASS_SIZE_RESULT AS classSize
 		]]>
 		
 		<isEmpty property="deptId" prepend=",">
@@ -2644,6 +2645,27 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 					TPPU.user_id = #userId#
 				AND
 					TPPU.theme_id = #themeId#
+				LEFT JOIN (SELECT PCS.*, NVL(PUS.CLASS_SIZE, PCS.CLASS_SIZE) AS CLASS_SIZE_RESULT
+                    FROM (SELECT CS.*, PS.CLASS_SIZE
+                          FROM TBL_PORTAL_PORTLET_COMPANY_SIZE CS
+                                   JOIN TBL_PORTAL_PORTLET_SIZE PS
+                                        ON CS.SIZE_ID = PS.SIZE_ID
+                          WHERE DEFAULT_FLAG = 1) PCS
+                             LEFT JOIN (SELECT US.*, PS.CLASS_SIZE
+                                        FROM TBL_PORTAL_PORTLET_USER_SIZE US
+                                                 JOIN TBL_PORTAL_PORTLET_SIZE PS
+                                                      ON PS.SIZE_ID = US.SIZE_ID
+                                                          AND US.USER_ID = #userId#) PUS
+                                       ON PCS.TENANT_ID = PUS.TENANT_ID
+                                           AND PCS.COMPANY_ID = PUS.COMPANY_ID
+                                           AND PCS.THEME_ID = PUS.THEME_ID
+                                           AND PCS.PORTLET_ID = PUS.PORTLET_ID
+                    WHERE PCS.TENANT_ID = #tenantId#
+                      AND PCS.COMPANY_ID = #companyId#
+                      AND PCS.THEME_ID = #themeId#) CS
+                   ON COMP.TENANT_ID = CS.TENANT_ID
+                       AND COMP.COMPANY_ID = CS.COMPANY_ID
+                       AND COMP.PORTLET_ID = CS.PORTLET_ID
 				WHERE
 					NAME.tenant_id = #tenantId#
 				AND
@@ -2676,6 +2698,27 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 					TPPU.user_id = #userId#
 				AND
 					TPPU.theme_id = #themeId#
+				LEFT JOIN (SELECT PCS.*, NVL(PUS.CLASS_SIZE, PCS.CLASS_SIZE) AS CLASS_SIZE_RESULT
+                    FROM (SELECT CS.*, PS.CLASS_SIZE
+                          FROM TBL_PORTAL_PORTLET_COMPANY_SIZE CS
+                                   JOIN TBL_PORTAL_PORTLET_SIZE PS
+                                        ON CS.SIZE_ID = PS.SIZE_ID
+                          WHERE DEFAULT_FLAG = 1) PCS
+                             LEFT JOIN (SELECT US.*, PS.CLASS_SIZE
+                                        FROM TBL_PORTAL_PORTLET_USER_SIZE US
+                                                 JOIN TBL_PORTAL_PORTLET_SIZE PS
+                                                      ON PS.SIZE_ID = US.SIZE_ID
+                                                          AND US.USER_ID = #userId#) PUS
+                                       ON PCS.TENANT_ID = PUS.TENANT_ID
+                                           AND PCS.COMPANY_ID = PUS.COMPANY_ID
+                                           AND PCS.THEME_ID = PUS.THEME_ID
+                                           AND PCS.PORTLET_ID = PUS.PORTLET_ID
+                    WHERE PCS.TENANT_ID = #tenantId#
+                      AND PCS.COMPANY_ID = #companyId#
+                      AND PCS.THEME_ID = #themeId#) CS
+                   ON COMP.TENANT_ID = CS.TENANT_ID
+                       AND COMP.COMPANY_ID = CS.COMPANY_ID
+                       AND COMP.PORTLET_ID = CS.PORTLET_ID
 				WHERE
 					NAME.tenant_id = #tenantId#
 				AND

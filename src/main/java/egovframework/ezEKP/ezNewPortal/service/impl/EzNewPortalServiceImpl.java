@@ -2809,16 +2809,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId, String lang) {
-		logger.debug("getPortletNameList started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
+
+		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("portletId", portletId);
 		
 		List<PortletNameInfoVO> portetList = ezNewPortalDAO.getPortletNameList(map);
 		
-		logger.debug("getPortletNameList ended");
 		return portetList;
 	}
 	
