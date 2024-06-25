@@ -1,9 +1,8 @@
 package egovframework.ezEKP.ezSchedule.web;
 
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -127,18 +126,18 @@ public class EzScheduleAdminController {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-		
+
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
+
 		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
+			OrganDeptVO vo = list.get(i);
+
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
 				resultList.add(vo);
 			}
 		}
-		
+
 		model.addAttribute("companyList", resultList);
 		model.addAttribute("userInfo", userInfo);
 		
@@ -221,11 +220,12 @@ public class EzScheduleAdminController {
 		int checkCnt = ezScheduleAdminService.scheduleShareCheck(userID, deptID, tenantID, companyID);
 		
 		if (checkCnt == 0) {
-			loginVO.setId(userID);
-			loginVO.setDn("NOPASSWORD");
-			loginVO.setTenantId(tenantID);
-			
-			LoginVO user = loginService.selectUser(loginVO);
+			LoginVO tempLoginVO = new LoginVO();
+			tempLoginVO.setId(userID);
+			tempLoginVO.setDn("NOPASSWORD");
+			tempLoginVO.setTenantId(tenantID);
+
+			LoginVO user = loginService.selectUser(tempLoginVO);
 			
 			String userName = user.getDisplayName1();
 			String userName2 = user.getDisplayName2();
@@ -547,14 +547,14 @@ public class EzScheduleAdminController {
 		}
 		
 		String primary = userInfo.getPrimary();
-		
+
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		
+
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
+
 		for (int i =0 ; i < list.size() ; i++) {
 			OrganDeptVO vo = list.get(i);
-			
+
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(vo);
 			}
@@ -620,14 +620,14 @@ public class EzScheduleAdminController {
 		String primary = userInfo.getPrimary();
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		
+
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		StringBuffer companyList = new StringBuffer();
-		
+
 		for (int i =0 ; i < list.size() ; i++) {
 			OrganDeptVO vo = list.get(i);
-			
+
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(vo);
 				companyList.append(vo.getCn()+","+vo.getDisplayName()+";");
