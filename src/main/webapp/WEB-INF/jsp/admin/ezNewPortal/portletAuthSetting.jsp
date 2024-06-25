@@ -135,7 +135,7 @@
 		var board_alertArguments = new Array();
 		
 		var savePortletAuthSetting = function() {
-			board_alertArguments[1] = DivPopUpHidden;
+			board_alertArguments[1] = window.close;
 			var companyValue = "<c:out value='${companyId}'/>";
 			var portletId = "<c:out value='${portletId}'/>";
 			var request = new XMLHttpRequest();
