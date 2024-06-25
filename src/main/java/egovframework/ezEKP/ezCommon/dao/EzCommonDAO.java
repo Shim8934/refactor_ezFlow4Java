@@ -2133,4 +2133,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertReturnByDesignationUsedConfig", map);
 		}
 	}
+
+	public void alterDocAttachNameCol() throws Exception {
+		try {
+			select(("EzCommonDAO.checkDocAttachNameCol"));
+		} catch (Exception e) {
+			logger.debug("In TBL_RECORD_TEMP doesn't exist DocAttach column. creating the column...");
+
+			update("EzCommonDAO.alterDocAttachNameCol");
+		}
+	}
 }

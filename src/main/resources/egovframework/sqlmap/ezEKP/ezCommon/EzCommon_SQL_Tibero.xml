@@ -4557,4 +4557,23 @@
 		VALUES
 			(#tenantID#, 'ReturnByDesignationUsed', 'NO', '지정반송 사용여부 (default:NO)', '지정반송 사용여부', TO_DATE('2024-06-18 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '전자결재')
 	</insert>
+    
+	<select id="EzCommonDAO.checkDocAttachNameCol">
+		<![CDATA[
+		SELECT
+			DOCATTACHNAME
+		FROM
+			TBL_RECORD_TEMP
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterDocAttachNameCol">
+		ALTER TABLE
+			TBL_RECORD_TEMP
+		ADD
+			DOCATTACHNAME VARCHAR2(300) ;
+	</statement>
+	
 </sqlMap>

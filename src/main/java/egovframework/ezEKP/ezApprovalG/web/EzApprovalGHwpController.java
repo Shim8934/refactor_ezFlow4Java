@@ -1326,6 +1326,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		model.addAttribute("attachedDocList", attachedDocList);
+		model.addAttribute("tenantID",userInfo.getTenantId());
 		
 		logger.debug("draftuiWHWP ended. formPath:" + formPath);
 		

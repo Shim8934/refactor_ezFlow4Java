@@ -3075,6 +3075,10 @@ function SaveDraftDocInfo_ilban(pState) {
                 
                 createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
     		}
+
+            if (SelectNodes(NonElecXML, "DOCATTACHNAME").length > 0 ) {
+                createNodeAndInsertText(xmlpara, objNode, "DOCATTACHNAME", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DOCATTACHNAME"));
+            }
     	}
     	
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);

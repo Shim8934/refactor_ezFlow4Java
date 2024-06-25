@@ -1626,6 +1626,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
         boolean isOuterForm = ezApprovalGService.isOuterForm(formID, userInfo.getCompanyID(), userInfo.getTenantId());
         String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String nonElecRecType = ezCommonService.getTenantConfig("ApprNonElecRecType", userInfo.getTenantId()) != null ? ezCommonService.getTenantConfig("ApprNonElecRecType", userInfo.getTenantId()) : "HWP";
 		
 		model.addAttribute("periodnode", periodnode);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -1659,6 +1660,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId())); // 다국어 여부 - 1(primary) / 2(secondary)
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 		model.addAttribute("draftAllFlag", draftAllFlag);
+		model.addAttribute("nonElecRecType",nonElecRecType);
 		
 		logger.debug("ezApprovalInfo ended.");
 		

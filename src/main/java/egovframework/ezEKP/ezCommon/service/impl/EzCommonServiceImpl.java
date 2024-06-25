@@ -3725,4 +3725,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertReturnByDesignationUsedConfig(map);
         }
     }
+    
+    public void alterDocAttachNameCol() throws Exception {
+        ezCommonDAO.alterDocAttachNameCol();
+    }
+
 }
