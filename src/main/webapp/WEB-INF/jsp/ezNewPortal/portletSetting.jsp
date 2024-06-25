@@ -34,7 +34,7 @@
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
 			.ui-portlet-content { font-weight: bold; display: inline-block;}
 			.ui-portlet-list { padding-left: 25px; width: 97%; box-sizing: border-box;}
-			.ui-portlet-span { display: inline-block; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-bottom:-3px;}
+			.ui-portlet-span { display: inline-block; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-bottom:-3px; width: 130px;}
 			.flipsterLi { width:95px; height: 64px; margin-top:20px; margin-left:20px; padding:20px; background:#fff;}
 			.frameList { height: 151px; /* background-color: #e0e3e4; */ margin-left: 20px; margin-right: 20px;}
 			
@@ -45,7 +45,7 @@
 			.flipster__container {margin-left:-20px;}
 			.mCSB_container {margin-right:10px !important; padding:0;}
 			.flipster__button {height:65px;}
-			.fixed_span {width:67%; display:inline-block; margin-top: 12px;}
+			.fixed_span {width:72%; display:inline-block; margin-top: 12px;}
 			.fixed_span img { vertical-align: top; margin: 3px 5px 0px 0px;}
 			/* Tooltip text */
 			.fixed_span .tooltiptext {
