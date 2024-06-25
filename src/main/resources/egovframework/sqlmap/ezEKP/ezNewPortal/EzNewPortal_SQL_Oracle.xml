@@ -69,6 +69,8 @@
 <result property="title" 				column="TITLE" />
 <result property="guBun" 				column="GUBUN" />
 <result property="writeDate" 			column="WRITEDATE" />
+<result property="writerName" 			column="WRITERNAME" />
+<result property="content" 				column="CONTENT" />
 </resultMap>
 <resultMap class="PersonalLightPollVO" id="PersonalLightPollVO">
 <result property="itemSeq"              column="ITEMSEQ"  nullValue=""/>
@@ -195,7 +197,9 @@
 			BOARDID,
 		    ITEMID,
 		    TITLE,
-		    WRITEDATE
+		    WRITEDATE,
+			WRITERNAME,
+			CONTENT
 		FROM (
 			SELECT 
 				INFO.*, ROWNUM AS RNUM
@@ -205,7 +209,9 @@
 					A.BOARDID,
 				    A.ITEMID,
 				    A.TITLE,
-				    A.WRITEDATE
+				    A.WRITEDATE,
+					A.WRITERNAME$lang$ as WRITERNAME,
+					A.CONTENT
 				FROM 
 					TBL_BOARD_ITEM A
 				JOIN
@@ -244,9 +250,9 @@
 			) INFO
 		) P
 		WHERE
-			P.RNUM <= #startPoint# + #listCount#
+			P.RNUM <= #startRow# + #listCount#
 		AND
-			P.RNUM >= #startPoint# + 1
+			P.RNUM >= #startRow# + 1
 	]]>
 </select>
 
