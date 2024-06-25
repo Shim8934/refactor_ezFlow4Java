@@ -117,6 +117,10 @@ function save_schedule(pageFrom)
 	        }
     	}
     }
+	/* 2024-06-25 김유진 - 반복일정인 경우, 반복설정에서 날짜를 체크하고 넘어오기에 timeCheck값 true로 변경 */
+	if (repetition != "") {
+		timeCheck = 'true';
+	}
     //2018.01.30 김기반복설정시 기본 날짜 사용안하고 반복 설정된 날짜 사용
     if(!timeCheck)
     {
