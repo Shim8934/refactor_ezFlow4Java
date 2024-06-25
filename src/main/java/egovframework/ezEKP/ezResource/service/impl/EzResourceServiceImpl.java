@@ -143,8 +143,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerID);
 		map.put("v_PCOMPANYID", companyID);
-		map.put("v_PSTARTDATE", startDate);
-		map.put("v_PENDDATE", endDate);
+		map.put("v_PSTARTDATE", startDate.replace(".", "-"));
+		map.put("v_PENDDATE", endDate.replace(".", "-"));
 		map.put("v_WRITERNAME", writerName);
 		map.put("v_WRITERDEPT", writerDept);
 		if(!title.equals("")) {
