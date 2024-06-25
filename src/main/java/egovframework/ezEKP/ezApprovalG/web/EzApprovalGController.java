@@ -3672,6 +3672,92 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("downloadHwpDbClick ended.");
 	}
 	
+	@RequestMapping(value="/ezApprovalG/downloadMhtDbClick.do", method = RequestMethod.GET, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public void downloadMhtDbClick(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadMhtDbClick started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String filePath = request.getParameter("filePath");
+		String fileName = request.getParameter("fileName");
+		String fileName2 = request.getParameter("fileName2");
+		String realPath = commonUtil.getRealPath(request);
+		String tempFileUploadPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile";
+		String guid = UUID.randomUUID().toString();
+		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		
+		logger.debug("fileName : " + fileName);
+		
+		ZipOutputStream zos = null;
+		String downFileName = "";
+		
+		try {
+			File tempFile = new File(pDirTempPath + commonUtil.separator + ".zip");
+			
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+			
+			tempFile = new File(tempFileUploadPath);
+			
+			if (!tempFile.exists()) {
+				tempFile.mkdirs();
+			}
+			
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+			
+			downFileName = fileName2 + ".zip"; // zip파일명
+			
+			BufferedInputStream bis = null;
+				
+			try {
+				File sourceFile = new File(commonUtil.detectPathTraversal(realPath + filePath)); // 다운받기 위한 원본 파일의 경로
+				byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
+				
+				ZipEntry zentry = new ZipEntry(fileName);
+				zos.putNextEntry(zentry);
+				zos.write(fileBytes);
+				zos.closeEntry();
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			} finally {
+				if (bis != null) {
+					try {
+						bis.close();
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+			}
+			zos.flush();
+			zos.close();
+			zos = null;
+
+			File file = new File(pDirTempPath + ".zip");
+			
+			if (file.exists()) {
+				downFile(request, response, pDirTempPath + ".zip", downFileName);
+				file.delete();
+			}
+			
+		} catch (Exception e) {
+			File file = new File(pDirTempPath + ".zip");
+			
+			if (file.exists()) {
+				file.delete();
+			}
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+		logger.debug("downloadMhtDbClick ended.");
+	}
+	
 	/**
 	 * 전자결재G 기안 문서첨부 호출 Method
 	 */
