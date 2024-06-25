@@ -87,14 +87,14 @@
 		        if (obj != _RowObject) {
 		            obj.childNodes.item(0).style.backgroundColor = "#EDEDED";
 		            obj.childNodes.item(1).style.backgroundColor = "#EDEDED";
-		            obj.childNodes.item(2).style.backgroundColor = "#EDEDED";
+		            // obj.childNodes.item(2).style.backgroundColor = "#EDEDED";
 		        }
 		    }
 		    function event_Mout(obj) {
 		        if (obj != _RowObject) {
 		            obj.childNodes.item(0).style.backgroundColor = "#FFFFFF";
 		            obj.childNodes.item(1).style.backgroundColor = "#FFFFFF";
-		            obj.childNodes.item(2).style.backgroundColor = "#FFFFFF";
+		            // obj.childNodes.item(2).style.backgroundColor = "#FFFFFF";
 		        }
 		    }
 		    var _RowObject = null;
@@ -102,13 +102,13 @@
 		        if (_RowObject != null && _RowObject.childNodes.length != 0) {
 		            _RowObject.childNodes.item(0).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(1).style.backgroundColor = "#ffffff";
-		            _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
+		            // _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
 		        }
-		
+
 		        _RowObject = obj;
 		        obj.childNodes.item(0).style.backgroundColor = "#f1f8ff";
 		        obj.childNodes.item(1).style.backgroundColor = "#f1f8ff";
-		        obj.childNodes.item(2).style.backgroundColor = "#f1f8ff";
+		       //  obj.childNodes.item(2).style.backgroundColor = "#f1f8ff";
 		    }
 		
 		    function event_dbclick() {}
