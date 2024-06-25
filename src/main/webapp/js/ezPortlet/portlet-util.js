@@ -613,6 +613,8 @@ function makeFixPortlet(fixedPortletList) {
             success: function (result) {
                 var boardList = result.boardList || [];
                 if (boardList.length > 0) {
+                    // 하나라도 고정포틀릿이 표출될 경우 고정영역 버튼 활성화
+                    $('.my_info_wrap .news_setting').show();
                     fixBoardArr[fixPortletCode].start(boardList);
                 } else {
                     fixBoardArr[fixPortletCode].hide();

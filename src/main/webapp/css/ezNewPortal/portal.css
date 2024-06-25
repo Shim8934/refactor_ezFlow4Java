@@ -2030,7 +2030,7 @@ div.orbit img{border-radius: 5px;}
 .my_info_wrap .my_info span.team{margin-left:10px;}
 .my_info_wrap .my_info select{height:28px; border:1px solid #EFEFEF; border-radius:5px; padding:0 20px 0 8px; box-sizing:border-box; color:#333; font-size:13px; appearance:none; background:url(/images/ezNewPortal/select_arrow.svg) no-repeat right 9px center; margin-left:15px;}
 
-.my_info_wrap .news_setting{margin-left:35px; cursor:pointer;}
+.my_info_wrap .news_setting{margin-left:35px; cursor:pointer; display:none;}
 .my_info_wrap .news_setting input{display:none;}
 .my_info_wrap .news_setting input + label{font-size:13px; font-weight:500; line-height:28px; cursor:pointer; color:#333;}
 .my_info_wrap .news_setting input + label span{display:inline-block; width:28px; height:16px; border:2px solid #388CE5; border-radius:16px; background:#fff; transition:all 0.3s ease; position:relative; margin:6px 10px 0 0; vertical-align:top; box-sizing:border-box;}
