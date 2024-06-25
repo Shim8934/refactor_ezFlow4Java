@@ -116,7 +116,12 @@ function getBirthdayList(currentPage) {
 					strHTML += "<dt class='birthPic'>";
 					strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
 					strHTML += "</dt>";
-					strHTML += "<dd class='birthName'>" + birthdayList[i].userName  + " " + birthdayList[i].title +"</dd>";
+					strHTML += "<dd class='birthName'>" + birthdayList[i].userName  + " ";
+                    if (birthdayList[i].title != null && birthdayList[i].title != "null") {
+                        strHTML += birthdayList[i].title + "</dd>";
+                    } else {
+                        "</dd>"
+                    }
                     var userBirthdayFormatSum = "";
                     var userBirthdayFormat1 = userBirthday.slice(0,1);
                     var userBirthdayFormat2 = userBirthday.slice(3,4);

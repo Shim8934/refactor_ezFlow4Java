@@ -120,6 +120,7 @@
 <result property="userBirthday"			column="BIRTH"/>
 <result property="isSolar"				column="IS_SOLAR"/>
 <result property="userImg"				column="USER_IMG"/>
+<result property="title"				column="TITLE"/>
 </resultMap>
 <resultMap class="PortalUserInfoVO" id="BestEmpVO">
 <result property="userName"				column="USER_NAME"/>
@@ -1331,7 +1332,8 @@ SELECT
 	DESCRIPTION$lang$ AS DEPT_NAME,
 	BIRTH,
 	(CASE TO_CHAR(BIRTHTYPE) WHEN 'Y' THEN 1 ELSE 0 END) AS IS_SOLAR,
-	EXTENSIONATTRIBUTE2 AS USER_IMG
+	EXTENSIONATTRIBUTE2 AS USER_IMG,
+	TITLE$lang$ AS TITLE
 FROM
 	TBL_USERMASTER
 WHERE
