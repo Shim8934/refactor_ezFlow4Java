@@ -209,7 +209,7 @@
 	<script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
   	<script type="text/javascript">
 
-		createContextMenu("${userDeptId}");
+		if(!!createContextMenu) createContextMenu("${userDeptId}");
 		
 	 	$(window).resize(function() {
 	 		//browserResize();
