@@ -433,7 +433,7 @@
 		            	isCalendarView = false;
 		            	$('#select-all').prop('checked',false);
 		                window.open("/ezSchedule/scheduleManageGroup.do", "right");
-						liSelected();
+						//liSelected();
 		                break;
 
 		            case 6:		// schedule search
