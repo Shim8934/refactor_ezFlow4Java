@@ -16,12 +16,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
 import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
-import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import org.codehaus.jackson.map.ObjectMapper;
