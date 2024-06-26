@@ -41,7 +41,7 @@
                 <li>
                     <span class="mail" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.topMenu.unReadMail' /></span><em id="unReadMailCount"></em></span>
                     <span class="appr" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.gu2' /></span><em id="approvalCnt"></em></span>
-                    <span class="board" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezBoard.t480' /></span><em id="newBoardCnt"></em></span>
+                    <span class="board"><span><spring:message code = 'ezBoard.t480' /></span><em id="newBoardCnt" class="board" onclick="openPageOfPortal(this.className)"></em></span>
                 </li>
             </ul>
         </div>
