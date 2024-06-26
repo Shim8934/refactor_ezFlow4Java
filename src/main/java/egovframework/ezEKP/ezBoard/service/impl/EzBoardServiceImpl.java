@@ -5237,6 +5237,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("itemID", itemID);
 		map.put("tenantID", tenantID);
 
+		// 파일이름이 없을경우 empty 리턴
+		if (StringUtils.isBlank(fileName)) return Optional.empty();
+
 		List<BoardAttachVO> voList = ezBoardDAO.brdGetItemAttachmentInfo(map);
 		for (BoardAttachVO vo : voList) {
 			// 파일이름이 비어있거나 이미지 파일의 확장자가 아닌경우 스킵
