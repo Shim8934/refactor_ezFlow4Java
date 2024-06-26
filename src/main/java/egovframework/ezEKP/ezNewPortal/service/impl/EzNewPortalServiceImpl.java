@@ -1075,7 +1075,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("month", monthStr);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		if (!lang.equals("1")) {
+		if (lang != null && !lang.equals("") && !lang.equals("1")) {
 			map.put("lang", 2);
 		}
 
