@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,19 +57,9 @@ public class EzStatisticsPersonalController {
 		}		
 			
 		try {
-			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-			
-			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-			
-			for (int i =0 ; i < list.size() ; i++) {
-				OrganDeptVO vo = list.get(i);
-				
-				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-					resultList.add(vo);
-				}
-			}
-			
-			model.addAttribute("list", resultList);
+			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+
+			model.addAttribute("list", adminCompanyList);
 			model.addAttribute("userCompany", userInfo.getCompanyID());
 			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {
@@ -114,17 +105,7 @@ public class EzStatisticsPersonalController {
 		}		
 				
 		try {
-			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-
-			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-			
-			for (int i = 0; i < list.size() ; i++) {
-				OrganDeptVO vo = list.get(i);
-				
-				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-					resultList.add(vo);
-				}
-			}
+			List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 			
 			model.addAttribute("list", resultList);
 			model.addAttribute("userCompany", userInfo.getCompanyID());
@@ -173,17 +154,7 @@ public class EzStatisticsPersonalController {
 		}		
 				
 		try {
-			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-
-			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-			
-			for (int i = 0 ; i < list.size() ; i++) {
-				OrganDeptVO vo = list.get(i);
-				
-				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-					resultList.add(vo);
-				}
-			}
+			List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 			
 			model.addAttribute("list", resultList);
 			model.addAttribute("userCompany", userInfo.getCompanyID());

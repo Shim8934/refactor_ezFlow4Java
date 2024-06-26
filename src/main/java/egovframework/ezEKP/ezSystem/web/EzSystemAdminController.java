@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -359,25 +361,13 @@ public class EzSystemAdminController {
 		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
 		
 		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
 
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(j++, vo);
-			}
-		}
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		String isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER) ? "y" : "";
 		
-		String isMasterAdmin = "";
-		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체관리자
-			isMasterAdmin = "y";
-		}
-		
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 		
@@ -1587,17 +1577,10 @@ public class EzSystemAdminController {
 		useMultiLogin = Optional.ofNullable(useMultiLogin).filter(StringUtils::isNotEmpty).orElse("YES");
 		
 		// 회사리스트
-		List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantID);
-		List<OrganDeptVO> resultCompanyList = new ArrayList<OrganDeptVO>();
-		
-		for(OrganDeptVO company : companyList) {
-			if(company.getCn().equals(userInfo.getCompanyID()) || userInfo.getRollInfo().indexOf("c=1") != -1) {
-				resultCompanyList.add(company);
-			}
-		}
-		
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), tenantID, userInfo.getPrimary());
+
 		model.addAttribute("companyID", companyID);
-		model.addAttribute("companyList", resultCompanyList);
+		model.addAttribute("companyList", adminCompanyList);
 		model.addAttribute("useMultiLogin", useMultiLogin);
 		
 		logger.debug("multiLoginManager ended");
@@ -1813,26 +1796,18 @@ public class EzSystemAdminController {
 		String companyID = userInfo.getCompanyID();
 		
 		// 회사리스트
-		List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantID);
-		List<OrganDeptVO> resultCompanyList = new ArrayList<OrganDeptVO>();
-		
-		for(OrganDeptVO company : companyList) {
-			if(company.getCn().equals(userInfo.getCompanyID()) || userInfo.getRollInfo().indexOf("c=1") != -1) {
-				resultCompanyList.add(company);
-			}
-		}
-		
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), tenantID, userInfo.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
 		boolean isDotNetAdmin = false;
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
 		
 		if (dotNetIntegration.equals("YES")) {
-			if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1) {
-				isDotNetAdmin = true;
-			}			
+			isDotNetAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER);
 		}
 		
 		model.addAttribute("companyID", companyID);
-		model.addAttribute("companyList", resultCompanyList);
+		model.addAttribute("companyList", adminCompanyList);
 		model.addAttribute("isDotNetAdmin", isDotNetAdmin);
 		
 		logger.debug("passwordPolicyMain ended.");
@@ -2345,16 +2320,9 @@ public class EzSystemAdminController {
 		 * model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
 		 */
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
-
-		for (OrganDeptVO vo : list) {
-			if (isMasterAdmin || vo.getCn().equals(companyId)) {
-				resultList.add(j++, vo);
-			}
-		}
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), tenantId, user.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
 		// 관리자 구분 셀렉트박스 적용
 		String approvalFlag		= ezCommonService.getTenantConfig("ApprovalFlag" ,tenantId);
@@ -2372,7 +2340,7 @@ public class EzSystemAdminController {
 		model.addAttribute("packageType", packageType);
 		model.addAttribute("useBoard", useBoard);
 		model.addAttribute("useSurvey", useSurvey);
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 
@@ -2769,21 +2737,11 @@ public class EzSystemAdminController {
 		}
 
 		String companyId = user.getCompanyID();
-		int tenantId = user.getTenantId();
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
-		for (OrganDeptVO vo : list) {
-			if (isMasterAdmin || vo.getCn().equals(companyId)) {
-				resultList.add(j++, vo);
-			}
-		}
-
-
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 
@@ -3136,14 +3094,11 @@ public class EzSystemAdminController {
 		String companyId = user.getCompanyID();
 		int tenantId = user.getTenantId();
 
-		List<OrganDeptVO> lists = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
-		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
-
-		List<OrganDeptVO> companyList = lists.stream().filter(list -> isMasterAdmin || list.getCn().equals(companyId))
-				.collect(Collectors.toList());
-
-		model.addAttribute("list", companyList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 
