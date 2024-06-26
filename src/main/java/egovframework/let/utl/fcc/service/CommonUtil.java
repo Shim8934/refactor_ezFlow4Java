@@ -92,6 +92,7 @@ import com.google.gson.JsonParser;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -591,11 +592,14 @@ public class CommonUtil {
 	public LoginVO checkAdmin(String loginCookie){
 		try{
 			LoginVO user = userInfo(loginCookie);
+			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId());
 	
-			if (!isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c;k")) {
-				return null;
-			}else{
+			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 				return user;
+			} else if (organAuth.isAuth(AdminAuth.COMPANY_MANAGER)){
+				return user;
+			} else {
+				return null;
 			}
 		}catch(Exception e){
 			return null;
