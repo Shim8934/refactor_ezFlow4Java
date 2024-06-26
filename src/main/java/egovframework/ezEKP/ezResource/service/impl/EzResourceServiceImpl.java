@@ -1343,7 +1343,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("getScheduleList Start");
 		
 		sDate = sDate.replace(".", "-");
-		eDate = sDate.replace(".", "-");
+		eDate = eDate.replace(".", "-");
 		
 		String startDateLimit = eDate + " 23:59:59";
 		String endDateLimit = sDate + " 00:00:01";
