@@ -212,9 +212,9 @@
 	        <isNotEmpty property="pSearchText">
 	            <![CDATA[
 	                AND
-	                    (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                    (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                        OR
-	                    A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                    A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
 	            ]]>
 	        </isNotEmpty>
 			
@@ -347,9 +347,9 @@
 	            <isNotEmpty property="pSearchText">
 	                <![CDATA[
 	                    AND
-	                        (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                        (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                            OR
-	                        A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
 	                ]]>
 	            </isNotEmpty>                
 	            
@@ -514,9 +514,9 @@
             <isNotEmpty property="pSearchText">
                 <![CDATA[
                     AND
-                        (title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+                        (title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
                             OR
-                        writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))
+                        writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))
                 ]]>
             </isNotEmpty>
 			
@@ -723,9 +723,9 @@
 	            <isNotEmpty property="pSearchText">
 	                <![CDATA[
 	                    AND
-	                        (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                        (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                            OR
-	                        A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
 	                ]]>
 	            </isNotEmpty>
 	            
@@ -800,8 +800,8 @@
   
   <select id="MBoardDAO.getBrdItemInfo" parameterClass="Map" resultClass="MBoardItemVO">
           SELECT
-              ITEMID ,
-              WRITERID ,
+              ITEMID,
+              WRITERID,
 			  <isEqual property="lang" compareValue="2">
 				  WRITERNAME2 AS WRITERNAME,
 				  WRITERDEPTNAME2 AS WRITERDEPTNAME,
@@ -812,37 +812,37 @@
 				  WRITERDEPTNAME,
 				  WRITERCOMPANYNAME,
 			  </isNotEqual>
-              WRITEDATE ,
-              PARENTWRITEDATE ,
-              IMPORTANCE ,
-              TITLE ,
-              CONTENTLOCATION ,
-              STARTDATE ,
-              ENDDATE ,
-              ABSTRACT ,
-              ATTACHMENTS ,
-              UPPERITEMIDTREE ,
-              ITEMLEVEL ,
-              COPIEDITEM ,
-              EXTENSIONATTRIBUTE1 ,
-              EXTENSIONATTRIBUTE2 ,
+              WRITEDATE,
+              PARENTWRITEDATE,
+              IMPORTANCE,
+              TITLE,
+              CONTENTLOCATION,
+              STARTDATE,
+              ENDDATE,
+              ABSTRACT,
+              ATTACHMENTS,
+              UPPERITEMIDTREE,
+              ITEMLEVEL,
+              COPIEDITEM,
+              EXTENSIONATTRIBUTE1,
+              EXTENSIONATTRIBUTE2,
 			  <isEqual property="lang" compareValue="2">
 				  EXTENSIONATTRIBUTE32 AS EXTENSIONATTRIBUTE3,
 			  </isEqual>
 			  <isNotEqual property="lang" compareValue="2">
 				  EXTENSIONATTRIBUTE3,
 			  </isNotEqual>
-              EXTENSIONATTRIBUTE4 ,
-              EXTENSIONATTRIBUTE5 ,
-              MAINCONTENT ,
-              A.APPRFLAG  ,
-              B.GUBUN ,
-              EXTENSIONATTRIBUTE6 ,
-              EXTENSIONATTRIBUTE7 ,
-              EXTENSIONATTRIBUTE8 ,
-              EXTENSIONATTRIBUTE9 ,
-              EXTENSIONATTRIBUTE10 ,
-              A.BOARDID ,
+              EXTENSIONATTRIBUTE4,
+              EXTENSIONATTRIBUTE5,
+              MAINCONTENT,
+              A.APPRFLAG,
+              B.GUBUN,
+              EXTENSIONATTRIBUTE6,
+              EXTENSIONATTRIBUTE7,
+              EXTENSIONATTRIBUTE8,
+              EXTENSIONATTRIBUTE9,
+              EXTENSIONATTRIBUTE10,
+              A.BOARDID,
               A.DOCNO,
 			  NTSTARTDATE notiStart,
 			  NTENDDATE notiEnd
@@ -857,7 +857,7 @@
           WHERE
               A.TENANT_ID = #tenantID#
           AND  
-              ItemID = #itemID#
+              ITEMID = #itemID#
   </select>
   
   <select id="MBoardDAO.getBoardItemRead" parameterClass="Map" resultClass="String">
@@ -1722,9 +1722,9 @@
 	<isNotEmpty property="pSearchText">
 		<![CDATA[
 	        WHERE
-	            (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	            (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                OR
-	            A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))
+	            A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))
 	    ]]>
 	</isNotEmpty>
   </select>
@@ -2191,9 +2191,9 @@
 		<isNotEmpty property="pSearchText">
 		    <![CDATA[
 				AND
-					(title LIKE CONCAT('%' ,#pSearchText#, '%')
+					(title LIKE ('%' || #pSearchText# || '%')
 					OR
-		    		writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+		    		writerName LIKE ('%' || #pSearchText# || '%'))    
 			]]>
 		</isNotEmpty>
 		<isEqual property="apprFlag" compareValue="Y">
@@ -2304,9 +2304,9 @@
 	        <isNotEmpty property="pSearchText">
 	            <![CDATA[
 	                AND
-	                    (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                    (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                        OR
-	                    A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                    A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
 	            ]]>
 	        </isNotEmpty>
 	        <isNotEmpty property="parentWriteDate">
@@ -2419,9 +2419,9 @@
 	            <isNotEmpty property="pSearchText">
 	                <![CDATA[
 	                    AND
-	                        (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                        (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                            OR
-	                        A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
 	                ]]>
 	            </isNotEmpty> 
 	            <isNotEmpty property="parentWriteDate">

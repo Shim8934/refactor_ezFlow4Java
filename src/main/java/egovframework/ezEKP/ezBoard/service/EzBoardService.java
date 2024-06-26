@@ -60,7 +60,7 @@ public interface EzBoardService {
 	
 	/* 2018-10-19 홍승비 - 익명게시물의 댓글 표출조건 gubun값 추가 */
 	/* 2018-07-02 홍승비 - 댓글 확인 시 작성자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
-	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, String gubun, String companyID, int tenantID) throws Exception;
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String lang, String gubun, String companyID, int tenantID) throws Exception;
 	
 	public List<BoardListVO> getUnreadItems(String pUserID, String pBoardID, int pMaxCount, int tenantID) throws Exception;
 	
