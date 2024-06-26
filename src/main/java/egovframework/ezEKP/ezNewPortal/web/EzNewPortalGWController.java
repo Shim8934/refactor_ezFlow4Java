@@ -1383,12 +1383,14 @@ public class EzNewPortalGWController {
 			JSONObject data = new JSONObject();
 			String deptId = info.getDeptId();
 			String userId = request.getParameter("userId");
+
+			// 2024-05-17 김유진 - 퀵링크 list, cnt 가져오기
+			Map<String, Object> map = ezNewPortalService.getQuickLinkList(companyId, tenantId, page, limit, userId, deptId);
+			data.put("quickLinkList", map.get("quickLinkList"));
+			data.put("totalPageCnt", map.get("totalPageCnt"));
 			
-			List<?> quickLinkList= ezNewPortalService.getQuickLinkList(companyId, tenantId, page, limit, userId, deptId);
-			data.put("quickLinkList", quickLinkList);
-			
-			int totalPageCnt = ezNewPortalService.getQuickLinkTotalPageCnt(companyId, tenantId, limit, userId, deptId);
-			data.put("totalPageCnt", totalPageCnt);
+//			int totalPageCnt = ezNewPortalService.getQuickLinkTotalPageCnt(companyId, tenantId, limit, userId, deptId);
+//			data.put("totalPageCnt", totalPageCnt);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

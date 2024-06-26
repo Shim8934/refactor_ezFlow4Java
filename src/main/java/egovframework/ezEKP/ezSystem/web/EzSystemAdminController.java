@@ -3499,4 +3499,280 @@ public class EzSystemAdminController {
 		logger.debug("deptChageHistExcelExport ended.");
 	}
 
+	/**
+	 * 접속자 목록 메인 호출
+	 * 2024-05-21 장혜연
+	 */
+	@RequestMapping(value="/admin/ezSystem/systemConnectorHist.do", method = RequestMethod.GET)
+	public String systemConnectorList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+
+		logger.debug("started systemConnectorList controller.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String companyId = userInfo.getCompanyID();
+
+		String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod",
+				userInfo.getTenantId());
+		LoginMailLogKeepPeriod = LoginMailLogKeepPeriod.equals("") ? "3" : LoginMailLogKeepPeriod;
+
+		String mailLogKeepPeriodMessage = egovMessageSource.getMessage("ezStatistics.t1065", locale);
+		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
+
+		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(j++, vo);
+			}
+		}
+
+		String isMasterAdmin = "";
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체관리자
+			isMasterAdmin = "y";
+		}
+
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("isMasterAdmin", isMasterAdmin);
+
+		logger.debug("ended systemConnectorList controller.");
+
+		return "/ezSystem/systemConnectorHist";
+
+	}
+
+	/**
+	 * 접속자 데이터 목록 호출
+	 * 2024-05-21 장혜연
+	 */
+	@RequestMapping(value="/admin/ezSystem/systemConnectorList.do", method = RequestMethod.POST)
+	public String systemConnectorList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,
+			@RequestParam(required=false)String searchKeycode, @RequestParam(required=false)String searchKeyword,
+			@RequestParam(required=false)String startDate, @RequestParam(required=false)String endDate) throws Exception {
+
+		logger.debug("started systemConnectorList controller.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		String offset = userInfo.getOffset();
+		String currPage = req.getParameter("pageNum");
+
+		if (currPage == null || currPage.equals("")) {
+			currPage = "1";
+		}
+
+		int maxItemPerPage = 20;
+		int currentPage = Integer.parseInt(currPage);
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
+
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+
+		/*
+		 * 2018.11.21 김수아 (전체관리자) 회사선택 후 선택한 회사의 로그인 히스토리가 나오도록 변경
+		 */
+		String companyId = req.getParameter("companyId"); // 선택된 회사
+
+		/*
+		 * 2017.07.26 강민석 로그인 히스토리에는 자신의 회사만 나오도록 수정
+		 */
+		// String companyId = userInfo.getCompanyID();
+		logger.debug("companyId : " + companyId);
+
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang)) {
+			sysLang = "primary";
+		}
+
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
+		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getConnectorList(
+				Integer.valueOf(userInfo.getTenantId()), commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage,
+				searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+
+		int itemCnt = ezSystemAdminService.getConnectorListCount(userInfo.getTenantId(),
+				commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+
+		int totalPage = itemCnt / maxItemPerPage;
+
+		if (itemCnt < 1) {
+			totalPage = 1;
+		}
+
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1;
+		}
+
+		currentPage = Math.min(currentPage, totalPage);
+		model.addAttribute("loginHistList", loginHistList);
+		model.addAttribute("lang", sysLang);
+		model.addAttribute("currPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("itemCnt", itemCnt);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+
+		logger.debug("ended systemConnectorList controller.");
+
+		return "json";
+	}
+
+	/*
+	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
+	 * 2024-05-21 장혜연
+	 */
+	@RequestMapping(value = "/admin/ezSystem/systemConnHistExcelExport.do", method = RequestMethod.GET)
+	@ResponseBody
+	public void connectorHistExcelExport (@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, String searchKeycode, String searchKeyword,
+			String startDate, String endDate, Locale locale, HttpServletResponse response) throws Exception {
+		logger.debug("connectorHistExcelExport started.");
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
+
+		int tenantId = user.getTenantId();
+		String offset = user.getOffset();
+		String currPage = request.getParameter("pageNum");
+
+		int maxItemPerPage = 20;
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+
+		String companyId = request.getParameter("companyId"); // 선택된 회사
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+
+		if (user.getLang().equals(sysLang)) {
+			sysLang = "primary";
+		}
+
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
+		List<ConnectionInfoVO> connectorList = new ArrayList<ConnectionInfoVO>();
+		int totalCount = 0;
+
+		String fileName = startDate + "_" + endDate + "_connectorHistory";
+
+		connectorList = ezSystemAdminService.getConnectorList(Integer.valueOf(tenantId),
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang,
+				startDate, endDate, companyId);
+		totalCount = ezSystemAdminService.getConnectorListCount(tenantId, commonUtil.getMinuteUTC(offset),
+				searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+
+		String userNm = "";
+		String deptNm = "";
+		String compNm = "";
+
+		List<List<String>> rowDeptValue = new ArrayList<List<String>>();
+
+		for (ConnectionInfoVO connInfo : connectorList) {
+			List<String> cellDeptValue = new ArrayList<>();
+
+			userNm = connInfo.getUsernm() + "(" + connInfo.getUserid() + ")";
+			deptNm = connInfo.getDeptnm();
+			compNm = connInfo.getCompanynm();
+
+			if (!"primary".equals(sysLang)) {
+				userNm = connInfo.getUsernm2() + "(" + connInfo.getUserid() + ")";
+				deptNm = connInfo.getDeptnm2();
+				compNm = connInfo.getCompanynm2();
+			}
+
+			cellDeptValue.add(userNm);
+			cellDeptValue.add(deptNm);
+			cellDeptValue.add(compNm);
+
+			rowDeptValue.add(cellDeptValue);
+		}
+
+		SXSSFRow row = null;
+		SXSSFCell cell = null;
+		String[] histHeaderArr = egovMessageSource.getMessage("ezSystem.jhyConnectorHistory", locale).split(";");
+
+		try (SXSSFWorkbook workbook = new SXSSFWorkbook(totalCount + 2)) {
+			SXSSFSheet sheet = workbook.createSheet("connectorHistory");
+			CellStyle headerStyle = workbook.createCellStyle();
+			CellStyle bodyStyle = workbook.createCellStyle();
+
+			// 시트 기본 열 넓이
+			sheet.setDefaultColumnWidth(20);
+
+			// 폰트 설정
+			Font font = workbook.createFont();
+			font.setFontHeightInPoints((short) 11);
+			font.setBold(Boolean.TRUE);
+			headerStyle.setFont(font);
+
+			// 헤더 스타일
+			headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(CellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(CellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(CellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(CellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment((short) 1);
+
+			// 바디 스타일
+			bodyStyle.setBorderBottom(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(CellStyle.BORDER_THIN);
+
+			// 1행 - 조회한 기간, count 입력
+			row = sheet.createRow(0);
+			cell = row.createCell(0);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(
+					egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
+			cell = row.createCell(histHeaderArr.length - 1);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount
+					+ egovMessageSource.getMessage("ezSystem.kyj2", locale));
+
+			// 2행 - 헤더 입력
+			row = sheet.createRow(1);
+			for (int head = 0; head < histHeaderArr.length; head++) {
+				cell = row.createCell(head);
+				cell.setCellStyle(headerStyle);
+				cell.setCellValue(histHeaderArr[head]);
+			}
+
+			// 3행 ~ - 바디 입력
+			for (int nRow = 2; nRow < totalCount + 2; nRow++) {
+				row = sheet.createRow(nRow);
+
+				for (int nCell = 0; nCell < histHeaderArr.length; nCell++) {
+					cell = row.createCell(nCell);
+					cell.setCellStyle(bodyStyle);
+					cell.setCellValue(rowDeptValue.get(nRow - 2).get(nCell));
+				}
+			}
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xlsx");
+			response.setContentType("application/vnd.ms-excel");
+
+			workbook.write(response.getOutputStream());
+			workbook.close();
+		}
+		;
+		logger.debug("connectorHistExcelExport ended.");
+	}
 }

@@ -226,7 +226,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addAttitudeFormFormHtml2Column(); // 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
 			ezCommonService.addTblBoardItemNoti(); /* 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 */
 			ezCommonService.addTblBoardItemTempNoti(); /* 2023-09-25 민지수 - 게시판 > 임시저장 > 공지게시물 > 기간설정 컬럼 추가 */
-	    	ezCommonService.alterRepeatFlagForResourceInfo(); // 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+			ezCommonService.alterRepeatFlagForResourceInfo(); // 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+			ezCommonService.alterSubPermittedForMenuAuth();		/* 2024-05-28 김유진 - 포탈 > 메뉴관리 하위부서 허용여부 컬럼 추가 */
+			ezCommonService.alterSubPermittedForPortletAuth();	/* 2024-05-28 김유진 - 포탈 > 포틀릿관리 하위부서 허용여부 컬럼 추가 */
+			ezCommonService.alterSubPermittedForThemeAuth();	/* 2024-05-28 김유진 - 포탈 > 테마관리 하위부서 허용여부 컬럼 추가 */
+			ezCommonService.alterSubPermittedForQuicklinkAcl(); /* 2024-05-28 김유진 - 포탈 > 빠른링크관리 하위부서 허용여부, 유저타입 컬럼 추가 */
 
 			// tenant config
 	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
@@ -244,6 +248,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertTenantConfigLangQuaternary(); // 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
 			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
 			ezCommonService.insertUseHideHeaderArea(); // 2024-05-23 김우철 - 헤더 숨기기 기능 사용여부 테넌트 컨피그 추가
+			ezCommonService.insertUseReceiptDeptFileAttach(); // 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부 테넌트 컨피그 추가
 
 	    	ezCommonService.insertPortalThemePortletInitdata();
 	    	ezCommonService.updateTaskUrl();
@@ -273,7 +278,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createTblTotalHistory(); // 2023-06-04 - 통합 PC 다중 파일 저장시 다운로드 로그 남기는 테이블
 			ezCommonService.insertdelAttachByOthersConfing(); // 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부
 			ezCommonService.insertApprNonElecRecTypeConfing(); // 2024-05-29 김유진 - 전자결재G 비전자문서등록 양식 확장자 정보
-    	} catch (Exception e) {
+            ezCommonService.insertRecordHeaderClassTitle(); // 2024-06-11 민지수 - 전자결재 > 기록물대장 > 기록물철명 헤더 추가
+        } catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
     	logger.debug("init ended.");
@@ -1508,6 +1514,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    			
 	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
 	    		}
+				// 메일 자동 전달, 자동분류 설정 삭제
+				rc = ezEmailUserAdminService.removeUserMailSetting(mailAddr);
+				logger.debug("removeUserMailSetting rc=" + rc);
 			}
 
 

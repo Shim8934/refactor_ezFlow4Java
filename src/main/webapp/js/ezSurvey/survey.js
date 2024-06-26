@@ -2796,9 +2796,9 @@ var SurveyCreate     = function() {
 		var cntValue = cntInput ? parseInt(cntInput.value) : -1;
 
 		//Check slider requirements
-		if (!isValid(lowestValue))       {sliderObj.error = "strSlider1"; return sliderObj;}
-		if (!isValid(highestValue))      {sliderObj.error = "strSlider2"; return sliderObj;}
-		if (!isValid(unitValue))         {sliderObj.error = "strSlider5"; return sliderObj;}
+		if (!isValid(lowestInput.value))       {sliderObj.error = "strSlider1"; return sliderObj;}
+		if (!isValid(unitInput.value))         {sliderObj.error = "strSlider5"; return sliderObj;}
+		if (!isValid(highestInput.value))      {sliderObj.error = "strSlider2"; return sliderObj;}
 		if (lowestValue >= highestValue) {sliderObj.error = "strSlider3"; return sliderObj;}
 		if (cntValue > 200) {sliderObj.error = "strSlider10"; return sliderObj;}
 		

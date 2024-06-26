@@ -113,8 +113,7 @@ CREATE TABLE `james_mail_property` (
   PRIMARY KEY (`PROPERTY_ID`),
   KEY `INDEX_PROPERTY_LINE_NUMBER` (`PROPERTY_LINE_NUMBER`),
   KEY `INDEX_PROPERTY_MSG_ID` (`PROPERTY_ID`),
-  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
-  CONSTRAINT `james_mail_property_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
+  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -145,8 +144,7 @@ CREATE TABLE `james_mail_search` (
   KEY `IDX_SENDER` (`SENDER`(191)),
   KEY `IDX_RECIPIENT` (`RECIPIENT`(191)),
   KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`(191)),
-  KEY `IDX_SUBJECT` (`SUBJECT`(191)),
-  CONSTRAINT `james_mail_search_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
+  KEY `IDX_SUBJECT` (`SUBJECT`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -164,8 +162,7 @@ CREATE TABLE `james_mail_userflag` (
   `MAIL_UID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`USERFLAG_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
-  KEY `james_mail_userflag_NAME_IDX` (`USERFLAG_NAME`),
-  CONSTRAINT `james_mail_userflag_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
+  KEY `james_mail_userflag_NAME_IDX` (`USERFLAG_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -845,8 +842,7 @@ CREATE TABLE `jmocha_mail_secure` (
   `max_read_count` int(11) DEFAULT NULL,
   `max_read_date` datetime DEFAULT NULL,
   PRIMARY KEY (`secure_id`),
-  KEY `fk_mail_secure_idx` (`mailbox_id`,`mail_uid`),
-  CONSTRAINT `fk_mail_secure` FOREIGN KEY (`mailbox_id`, `mail_uid`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `fk_mail_secure_idx` (`mailbox_id`,`mail_uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -8995,6 +8991,7 @@ CREATE TABLE `tbl_portal_menu_auth` (
   `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
   `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
   `sn` int(11) DEFAULT 0,
+  `subdept_permitted` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`menu_id`,`company_id`,`tenant_id`,`user_id`),
   CONSTRAINT `FK_tbl_portal_menu_auth_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='메뉴권한 설정 테이블';
@@ -9093,6 +9090,7 @@ CREATE TABLE `tbl_portal_portlet_auth` (
   `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
   `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
   `sn` int(11) DEFAULT 0,
+  `subdept_permitted` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`portlet_id`,`company_id`,`tenant_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9212,6 +9210,7 @@ CREATE TABLE `tbl_portal_theme_auth` (
   `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
   `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
   `sn` int(11) DEFAULT 0,
+  `subdept_permitted` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`theme_id`,`company_id`,`tenant_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9616,6 +9615,8 @@ CREATE TABLE `tbl_ps_quicklink_acl` (
   `ACCESSNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `VIEW_FLAG` varchar(4) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `USER_TYPE` varchar(100) NOT NULL,
+  `SUBDEPT_PERMITTED` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`TENANT_ID`,`QUICKLINKID`,`ACCESSID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

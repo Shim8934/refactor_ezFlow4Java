@@ -514,7 +514,8 @@
 				var companiesObj = document.getElementById("ListCompany");
 				var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 				
-				checkAuth(themeId, companyValue, themeInfo, frameInfos);
+				// checkAuth(themeId, companyValue, themeInfo, frameInfos);
+				checkAuthAfter(themeId, companyValue, themeInfo, frameInfos);
 			}
 		}
 		

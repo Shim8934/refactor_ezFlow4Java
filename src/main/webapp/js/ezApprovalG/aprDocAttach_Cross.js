@@ -174,6 +174,27 @@ function AttachList() {
     listview.DataSource(loadXMLString(result));
     listview.DataBind("lvTDoc");
 }
+function orgAttachList(orgDocId) {
+	var result = "";
+	var returnXml = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getAttachInfo.do",
+		data : {
+			docID : orgDocId,
+			mode : "END"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+	returnXml = loadXMLString(result);
+	return returnXml;
+}
 
 function delAttachDoc() {
 	var result = "";
@@ -411,3 +432,29 @@ function DuplicateCheck(AttachDocID) {
     listview = null;
     return RtnVal;
 }
+
+// START
+var ezapralert_cross_dialogArguments = new Array();
+function OpenAlertUI(pAlertContent, CompleteFunction) {
+    var parameter = pAlertContent;
+    var url = "/ezApprovalG/ezAprAlert.do";
+
+    if (CrossYN()) {
+        ezapralert_cross_dialogArguments[0] = parameter;
+        if (CompleteFunction != undefined)
+            ezapralert_cross_dialogArguments[1] = CompleteFunction;
+        else
+            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+        DivPopUpShow(330, 205, url);
+    }
+    else {
+        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+        feature = feature + GetShowModalPosition(330, 205);
+        var RtnVal = window.showModalDialog(url, parameter, feature);
+    }
+}
+
+function OpenAlertUI_Complete() {
+    DivPopUpHidden();
+}
+// END

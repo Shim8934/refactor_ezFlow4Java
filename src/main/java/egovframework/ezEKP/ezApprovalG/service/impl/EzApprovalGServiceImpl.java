@@ -70,12 +70,12 @@ import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList; 
 import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape; 
 import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader; 
-import kr.dogfoot.hwplib.object.docinfo.BinData; 
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress; 
+import kr.dogfoot.hwplib.object.docinfo.BinData;
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress;
 import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataState; 
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType; 
-import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation; 
-import kr.dogfoot.hwplib.reader.HWPReader; 
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType;
+import kr.dogfoot.hwplib.org.apache.poi.hpsf.SummaryInformation;
+import kr.dogfoot.hwplib.reader.HWPReader;
 import kr.dogfoot.hwplib.writer.HWPWriter; 
 
 import org.apache.commons.codec.binary.Base64; 
@@ -6432,7 +6432,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int streamIdx = hwpFile.getBinData().getEmbeddedBinaryDataList().size() + 1;
 		String streamName = "Bin" + String.format("%04X", streamIdx) + "." + imageFileExt;
 		byte[] fileBinary = loadFile(filePath);
-		BinDataCompress compressMethod = BinDataCompress.ByStroageDefault;
+		BinDataCompress compressMethod = BinDataCompress.ByStorageDefault;
 		
 		hwpFile.getBinData().addNewEmbeddedBinaryData(streamName, fileBinary, compressMethod);
 		addBinDataInDocInfo(hwpFile, streamIdx, compressMethod, imageFileExt);
@@ -6464,7 +6464,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		BinData bd = new BinData();
 		bd.getProperty().setType(BinDataType.Embedding);
 		bd.getProperty().setCompress(compressMethod);
-		bd.getProperty().setState(BinDataState.NotAcceess);
+		bd.getProperty().setState(BinDataState.NotAccess);
 		bd.setBinDataID(streamIndex);
 		bd.setExtensionForEmbedding(imageFileExt);
 		hwpFile.getDocInfo().getBinDataList().add(bd);
@@ -9478,7 +9478,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "5" :	// 이관목록
 			listType = "005";
 			break;
-		case "6" :	// 연기신청목록
+		case "6" :	// 연기신청목록 (2024-06-26 기준 실제로 호출되는 분기가 아닌 것으로 확인)
 			listType = "007";
 			break;
 		case "7" :	// 폐기대상 기록물
@@ -9550,7 +9550,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String arrListInfo = getLVFieldInfo(listType, recordListVO.getCompanyID(), lang, tenantID);
 		Document arrList = commonUtil.convertStringToDocument(arrListInfo);
 		
-        /* 이유정 - [웹취약점] EzApprovalG.getRecordList 관련 $extraSelectClause$ 수정 (파라미터 추가) */
+        /* 이유정 - [웹취약점] EzApprovalG.getRecordList 관련 $extraSelectClause$ 수정 (동적 칼럼 셀렉트를 위한 파라미터 추가) */
         recordListVO.setListType(listType);
         switch (listType) {
             case "001" :
@@ -9570,6 +9570,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 recordListVO.setRecTitle("RECTITLE");
                 recordListVO.setNumOfPage("NUMOFPAGE");
                 break;
+            /* 2024-06-26 홍승비 - 실제로 호출되는 분기가 아닌 것으로 확인, 쿼리 상에서 sepTitle을 사용하는 칼럼 셀렉트 분기 주석처리 후 TBL_CABINET.TITLE 칼럼을 고정적으로 가져오도록 수정 */
             case "007" :
                 recordListVO.setDispRegisterNo("DISPREGISTERNO");
                 recordListVO.setSepTitle("SEPTITLE");
@@ -9842,7 +9843,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				case "dtDateTime" :								// 날짜 타입(시간포함)
 					resultXML.append(formatDateForView(makeListField(docXML.getElementsByTagName(fieldName).item(k).getTextContent()), 0));
 					break;
-
+                    
+                case "dtClassTitle" :  // 기록물철명
+                    resultXML.append(makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent()));
+                    break;
+                    
+                case "dtSihangNO"  :   // 시행번호
+                    resultXML.append(makeListField(docXML.getElementsByTagName("SIHANGNO").item(k).getTextContent()));
+                    break;
+                    
 				default:
 					resultXML.append(makeListField(docXML.getElementsByTagName(fieldName).item(k).getTextContent()));
 					break;

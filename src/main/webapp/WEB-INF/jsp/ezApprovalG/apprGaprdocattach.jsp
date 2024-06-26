@@ -48,6 +48,12 @@
 	        var delAttachByOthers = "<c:out value ='${delAttachByOthers}'/>";
 		 	
 	        subCondition = "";
+
+			/* Header sorting variable */
+			var SortHeader;
+			var sortType = "asc";
+			
+			var orgResultxml;
 	        
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 	            window.onblur = function () {
@@ -88,6 +94,26 @@
 	            pChackYN = "FALSE";
 	            getDocList();
 	            AttachList();
+	            
+	            if (parent.pOrgDocID != '') {
+	            	orgResultxml = orgAttachList(parent.pOrgDocID);
+	            	if (orgResultxml != null && SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW").length > 0) {
+	            		var DocList = new ListView();
+			            DocList.LoadFromID("lvTDocList");
+			            var attachSel = DocList.GetDataRows();
+			            var length = attachSel.length;
+			            for (var i = 0; i < length; i++) {
+			            	var href = GetAttribute(attachSel[i], "data1");
+			            	for (var j = 0; j < SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW").length; j++) {
+			            		var orgHref = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW")[j])[0])[1]);
+								if (href == orgHref) {
+									SetAttribute(attachSel[i], "DELETE", "N");
+									break;
+								}
+			            	}
+			            }
+	            	}
+	            }
 	        }
 	        function lvTDoc_onSel_Click() {
 	            var listview = new ListView();
@@ -121,14 +147,32 @@
 	            listview.LoadFromID("lvTDocList");
 	            var selRow;
 	            var count1;
-	            var plength = listview.GetSelectedRows().length;
+	            var pCurSel = listview.GetSelectedRows();
+	            var plength = pCurSel.length;
 	            var plength2 = listview.GetDataRows().length;
 	            if (plength <= 0) {
-	                alert("<spring:message code='ezApprovalG.t360'/>");
+	            	OpenAlertUI("<spring:message code='ezApprovalG.t360'/>");
+	            	return;
 	            }
-	            else if (arr_userinfo[1] != trim_Cross(GetAttribute(listview.GetSelectedRows()[0], "DATA4"))) {
+	            
+	            for (var i = 0; i < plength; i++) {
+	            	if (typeof(GetAttribute(pCurSel[i], "DELETE")) != "undefined" && GetAttribute(pCurSel[i], "DELETE") == "N") {
+	            		OpenAlertUI("<spring:message code='ezApprovalG.t365'/>");
+	            		return;
+	            	}
+	            }
+	            
+	            var userCheck = true;
+	            for (var i = 0; i < plength; i++) {
+	            	if (arr_userinfo[1].toLowerCase() != trim_Cross(GetAttribute(pCurSel[i], "DATA4")).toLowerCase()) {
+	            		userCheck = false;
+	            		break;
+	            	}
+	            }
+	            
+	            if (!userCheck) {
 	            	if(delAttachByOthers == "0"){
-		                alert("<spring:message code='ezApprovalG.t365'/>");
+	            		OpenAlertUI("<spring:message code='ezApprovalG.t365'/>");
 		                return;	            		
 	            	} else {
 		                if (plength > 0 && plength2 > 0) {
@@ -141,7 +185,7 @@
 		                    }
 		                }
 		                else
-		                    alert("<spring:message code='ezApprovalG.t360'/>");   		
+		                	OpenAlertUI("<spring:message code='ezApprovalG.t360'/>");   		
 	            	}
 	            }
 	            else {
@@ -155,7 +199,7 @@
 	                    }
 	                }
 	                else
-	                    alert("<spring:message code='ezApprovalG.t360'/>");
+	                	OpenAlertUI("<spring:message code='ezApprovalG.t360'/>");
 	            }
 	        }
 	        function bt_OK_onclick() {
@@ -231,6 +275,97 @@
 	            }            
 	            DivPopUpHidden();
 	        }
+
+			function moveDataRow(e) {
+				let listView = new ListView();
+				listView.LoadFromID("lvTDocList");
+
+				var msg = checkIsValidReq(listView, e);
+
+				if (!msg) {
+					return;
+				}
+
+				relocateAttachedList(listView, e);
+			}
+
+			function checkIsValidReq(listView, e) {
+				let bool = false;
+				let selectedRow = listView.GetSelectedRows();
+				let selectedRowCnt = selectedRow.length;
+				let curIdx;
+
+				if (selectedRowCnt == 0) {
+					OpenAlertUI("<spring:message code = 'ezApprovalG.docAttach.msg1' />");
+
+					return;
+				} else if (selectedRowCnt >= 2) {
+					OpenAlertUI("<spring:message code = 'ezApprovalG.docAttach.msg2' />");
+
+					return;
+				}
+
+				selectedRow = selectedRow[0];
+				curIdx = selectedRow.getAttribute("data2");
+
+				switch (e) {
+					case "up" : {
+						bool = curIdx != 1;
+
+						break;
+					}
+
+					case "down" : {
+						bool = curIdx < listView.GetDataRows().length;
+
+						break;
+					}
+				}
+
+				return bool;
+			}
+
+			function relocateAttachedList(listView, e) {
+				let curIdx = parseInt(listView.GetSelectedRows()[0].getAttribute("data2")) - 1;
+				let destIdx;
+
+				switch (e) {
+					case "up" : {
+						destIdx = curIdx - 1;
+
+						break;
+					}
+
+					case "down" : {
+						destIdx = curIdx + 1;
+
+						break;
+					}
+				}
+
+				moveRow(listView, curIdx, destIdx);
+			}
+
+			function moveRow(listView, curIdx, destIdx) {
+				let attachedList = listView.GetDataRows();
+				let tbody = document.getElementById(listView.GetID()).querySelector("tbody");
+				let tmp1 = attachedList[curIdx];
+				let tmp2 = attachedList[destIdx];
+				let newNode;
+
+				attachedList[curIdx] = tmp2;
+				attachedList[destIdx] = tmp1;
+
+				tbody.replaceChildren();
+
+				var cnt = 0;
+				while ((newNode = attachedList[cnt]) != null) {
+					tbody.insertAdjacentElement("beforeend", newNode);
+					newNode.setAttribute("data2", cnt + 1);
+
+					cnt++;
+				}
+			}
 	    </script>
 	    <style>
 			.mainlist tr th {border-top:0px}

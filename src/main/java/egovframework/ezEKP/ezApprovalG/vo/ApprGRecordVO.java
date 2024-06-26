@@ -151,6 +151,8 @@ public class ApprGRecordVO {
 	
 	/**원기안자*/
 	private String orgUserId;
+
+	private String siHangNo;
 	
 	public String getOrgUserId() {
 		return orgUserId;
@@ -602,5 +604,12 @@ public class ApprGRecordVO {
 	public void setModifierId(String modifierId) {
 		this.modifierId = modifierId;
 	}
-	
+
+	public String getSiHangNo() {
+		return siHangNo;
+	}
+
+	public void setSiHangNo(String siHangNo) {
+		this.siHangNo = siHangNo;
+	}
 }

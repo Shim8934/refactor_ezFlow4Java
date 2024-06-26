@@ -209,7 +209,7 @@
 	  				data : {
 	  					deptID : tempDeptID ,
 	  					cell : "company;description;displayName;title;telephoneNumber",
-	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType;jobId",
 	  					page : CurPage ,
 	  					type : "user"
 	  				} ,
@@ -303,6 +303,8 @@
 	    	function event_listDBclick(obj) {
 		        var id = obj.getAttribute("_DATA2");
 		        var dept = obj.getAttribute("_DATA10");
+		        var jobId = obj.getAttribute("_DATA12");
+		        var type = obj.getAttribute("_DATA11");
 
 	    	    var width = 420, height = 450;
 	        	var leftPosition, topPosition;
@@ -312,10 +314,11 @@
 	        	topPosition = (window.screen.height / 2) - ((height / 2) + 50);
 	        	//Open the window.
 
-		        if(CrossYN())
+		        /* if(CrossYN())
 		            window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	    	    else
-	        	    window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	        	    window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",status = no, toolbar=no, menubar=no,location=no, resizable=1"); */
+	        	    window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept + "&jobId=" + jobId + "&type=" + type , "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	    	}
 	    	var pSeach = false;
 	    	function DisplayUserImageList() {
@@ -617,7 +620,9 @@
 	        	if (length > 0) {
 	            	var id = GetAttribute(selectdata[0], "DATA2");
 	            	var dept = GetAttribute(selectdata[0], "DATA10");
-	            	window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 450));
+					var jobId = GetAttribute(selectdata[0], "DATA12");
+					var type = GetAttribute(selectdata[0], "DATA11");
+					window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept + "&jobId=" + jobId + "&type=" + type, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 450));
 	        	}
 	    	}
 	    	
@@ -650,7 +655,7 @@
 					data : {
 						search : document.getElementById("search_type").value + "::" + encodeURIComponent(keyword.value),
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType;jobId",
 						page : CurPage ,
 		                <c:if test="${useShowAllCompanies eq 'YES'}">
 	        			company : "",
@@ -1184,7 +1189,6 @@
 	        	var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var treeViewSelectNode = treeView.GetSelectNode();
-	            
         		var jobId = treeViewSelectNode.GetNodeData("cn");
         		var comId = treeViewSelectNode.GetNodeData("comid");
         		var jobType = treeViewSelectNode.GetNodeData("jobtype");
@@ -1199,7 +1203,7 @@
 						jobID : jobId,
 						pageNum : CurPage,
 						cell : "company;description;displayName;title;telephoneNumber", 
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType;jobId",
 						searchType : "",
 						searchValue : "",
 						comID : comId

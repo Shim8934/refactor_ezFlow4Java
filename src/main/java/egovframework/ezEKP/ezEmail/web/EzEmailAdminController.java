@@ -663,7 +663,7 @@ public class EzEmailAdminController {
 							
 							distributionSortList.add(map);
 							
-						} else {	// 직위, 직책
+						} else if (pCn.substring(0,1).equalsIgnoreCase("_")) {	// 직위, 직책
 							String jobId = pCn.split("__")[1]; // 직위,직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
 							OrganJobVO jobVO = ezOrganAdminService.getTitleByJobID(jobId, userLang, userInfo.getTenantId());
 							
@@ -1123,7 +1123,7 @@ public class EzEmailAdminController {
 						map.put("DISPLAYNAME", user.getDisplayName());
 						map.put("MAIL", user.getMail());
 						mailDistributionSortList.add(map);
-					} else {    // 직위, 직책
+					} else if (pCn.substring(0,1).equalsIgnoreCase("_")) {	// 직위, 직책
 						String jobId = pCn.split("__")[1]; // 직위,직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
 						OrganJobVO jobVO = ezOrganAdminService.getTitleByJobID(jobId, userLang, tenantId);
 

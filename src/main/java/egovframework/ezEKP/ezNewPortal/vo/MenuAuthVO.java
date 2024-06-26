@@ -8,6 +8,7 @@ public class MenuAuthVO {
 	private String userDeptName; // 사용자 부서 이름
 	private int userType; // 사용자 or 부서 분리 -- 사용자(1), 부서(0), 직위(2), 직책(3), 권한그룹(4)
 	private boolean accessYN; // 접근 가능(true), 접근 불가(false)
+	private String subdeptPermitted; // 하위부서 허용 여부(Y/N)
 
 	public int getMenuId() {
 		return menuId;
@@ -55,6 +56,14 @@ public class MenuAuthVO {
 
 	public void setAccessYN(boolean accessYN) {
 		this.accessYN = accessYN;
+	}
+
+	public String getSubdeptPermitted() {
+		return subdeptPermitted;
+	}
+
+	public void setSubdeptPermitted(String subdeptPermitted) {
+		this.subdeptPermitted = subdeptPermitted;
 	}
 
 	@Override

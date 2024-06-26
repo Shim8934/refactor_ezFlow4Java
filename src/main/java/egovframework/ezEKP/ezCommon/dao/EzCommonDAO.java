@@ -2035,6 +2035,43 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	/* 2024-05-28 김유진 - 포탈 메뉴,포틀릿,테마,빠른링크 > 하위부서 허용여부 컬럼 추가, 빠른링크 > 유저타입 컬럼 추가 */
+	public void alterSubPermittedForMenuAuth() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForMenuAuth"));
+		} catch (Exception e) {
+			logger.debug("tbl_portal_menu_auth subdept_permitted column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForMenuAuth");
+			update("EzCommonDAO.updateSubPermittedForMenuAuth"); // 기존 스펙상 부서 선택 시 하위부서 허용이 고정임으로 부서일 경우 허용으로 값 변경
+		}
+	}
+	public void alterSubPermittedForPortletAuth() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForPortletAuth"));
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_auth subdept_permitted column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForPortletAuth");
+			update("EzCommonDAO.updateSubPermittedForPortletAuth");
+		}
+	}
+	public void alterSubPermittedForThemeAuth() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForThemeAuth"));
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_auth subdept_permitted column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForThemeAuth");
+			update("EzCommonDAO.updateSubPermittedForThemeAuth");
+		}
+	}
+	public void alterSubPermittedForQuicklinkAcl() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForQuicklinkAcl"));
+		} catch (Exception e) {
+			logger.debug("tbl_ps_quicklink_acl subdept_permitted, user_type column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForQuicklinkAcl");
+			update("EzCommonDAO.updateSubPermittedForQuicklinkAcl"); // 유저,부서,직위,직책,그룹권한 user_type 세팅, 부서일 경우 허용으로 값 변경
+		}
+	}
 	/* 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 */
 	public void insertApprNonElecRecTypeConfing(Map<String, Object> map) {
 		String propertyValue = (String) select("EzCommonDAO.checkApprNonElecRecTypeConfing", map);
@@ -2042,6 +2079,30 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		if (propertyValue == null) {
 			logger.debug("apprNonElecRecType tenant config doesn't exist. insert data...");
 			insert("EzCommonDAO.insertApprNonElecRecTypeConfing", map);
+		}
+	}
+
+    public void insertRecordHeaderClassTitle(Map<String, Object> map) throws Exception {
+        String companyId = (String) select("EzCommonDAO.checkRecordHeadereOption", map);
+        try {
+            if (companyId == null) {
+                // 2024-06-21 민지수 전자결재 > 기록물등록대장 헤더 > 기록물철명 존재하지 않는 경우 001 타입에 대한 헤더 지운 후 Insert 작업 (PrimaryKey 중복 오류)
+                delete ("EzCommonDAO.deleteRecordHeader",map);
+                logger.debug("ReName option doesn't exist. insert data...");
+                insert("EzCommonDAO.insertRecordHeaderClassTitle", map);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+	// 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용 여부 테넌트 컨피그 추가
+	public void insertUseReceiptDeptFileAttach(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkUseReceiptDeptFileAttach", map);
+		
+		if (propertyValue == null) {
+			logger.debug("useReceiptDeptFileAttach tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseReceiptDeptFileAttach", map);
 		}
 	}
 }

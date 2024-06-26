@@ -2356,4 +2356,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 
 		return userCount;
 	}
+
+	public OrganDeptVO getDeptInfo(Map<String, Object> map) throws Exception {
+		return (OrganDeptVO) select("EzOrganAdminDAO.getDeptInfo",map);
+	}
 }

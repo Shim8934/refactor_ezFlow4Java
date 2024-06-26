@@ -1883,16 +1883,9 @@ function openOpinionUI_New_Complete(ret) {
 }
 
 function openFileAttachUI() {
-    try {
-        var parameter = pDocID;
-        var url = "../ezAPRATTACH/Aprattach_Cross.aspx";
-        var feature = "status:no;dialogWidth:390px;dialogHeight:285px;edge:sunken;scroll:no"; 
-        var ret = window.showModalDialog(url, parameter, feature);
-
-        if (ret != "cancel") {
-            setAttachInfo(pDocID, "APR", lstAttachLink);
-        }
-        return ret;
+	try {
+		var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + "hwp";
+		DivPopUpShow(800, 610, url);
     } catch (e) {
         alert("openFileAttachUI : " + e.description);
     }
@@ -2821,21 +2814,26 @@ function setFirstDrafter() {
     return;
 }
 
-
+var aprcabinetattach_cross_dialogArguments = new Array();
 function openAaprDocAttachUI() {
     try {
-        var parameter = pUserID;
-        var url = "../ezAprDocAttach/aprDocAttach_Cross.aspx";
-        var feature = "status:no;dialogWidth:574px;dialogHeight:385px;edge:sunken;scroll:no";
-        var ret = window.showModalDialog(url, parameter, feature);
+        var parameter = pDocID;
+		var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag;
+	
+		aprcabinetattach_cross_dialogArguments[0] = parameter;
+		aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_complete;
+      
+		DivPopUpShow(1050, 520, url);
+	} catch(e) {
+		alert("openAaprDocAttachUI() :: " + e);
+	}
+}
 
-        if (ret != "cancel") {
-            setAttachInfo(pDocID, "APR", lstAttachLink);
-        }
-        return ret;
-    } catch (e) {
-        alert("openAaprDocAttachUI : " + e.description);
-    }
+function openAaprDocAttachUI_complete(ret){
+	DivPopUpHidden();
+	if(ret != "cancel") {
+		setAttachInfo(pDocID, "APR", lstAttachLink);	
+	}
 }
 
 function delDocInfo() {

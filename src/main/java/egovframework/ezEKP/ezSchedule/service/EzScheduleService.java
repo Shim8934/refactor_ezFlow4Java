@@ -148,4 +148,8 @@ public interface EzScheduleService {
 	
 	/* 2023-07-19 홍승비 - 일정그룹의 관리자(그룹장) CREATORID(USERID)값을 리턴하는 메서드 */
 	public String getScheduleGroupCreatorID(String groupID) throws Exception;
+
+	/* 2023-10-10 기민혁 - 사용자일정 검색시 스케쥴 list 호출 메서드 */
+	public List<ScheduleInfoVO> getUserSearchScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID, String deptId, String useAnnualScheduleYN) throws Exception;
+
 }

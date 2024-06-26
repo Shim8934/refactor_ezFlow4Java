@@ -144,6 +144,9 @@
 	     	// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 			
+			// 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
+			var useReceiptDeptFileAttach = "<c:out value ='${useReceiptDeptFileAttach}'/>";
+			
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -301,7 +304,11 @@
 		    	
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
-                
+				
+				if (useReceiptDeptFileAttach == "YES") {
+					document.getElementById("btnFileAttach").style.display = "";
+					document.getElementById("btnAprDocAttach").style.display = "";
+				}
 		    }
 		
 			function window_onload2() {
@@ -1926,8 +1933,8 @@
 	                        <li id="btnReDistribute" style="display: none"><span onclick="return btnReDistribute_onclick()"><spring:message code='ezApprovalG.t1433'/></span></li>
 	                        <li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
-	                        <li id="btnFileAttach" style="display: none"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
-	                        <li id="btnAprDocAttach" style="display: none"><span onclick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t1429'/></span></li>
+	                        <li id="btnFileAttach"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
+	                        <li id="btnAprDocAttach"><span onclick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
 	                        <li id="btnAddSepAttach" style="display: none"><span onclick="btnAddSepAttach_onclick()"><spring:message code='ezApprovalG.t58'/></span></li>
 	                        <c:choose>
 		                        <c:when test="${isNonElecRec eq 'Y'}">

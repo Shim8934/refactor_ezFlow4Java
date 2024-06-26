@@ -3057,11 +3057,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
+		String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "ING";
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			companyID = orgCompanyID;
 		}
-		String result = ezApprovalGService.getAttachFileInfo(docID, "ING", "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String result = ezApprovalGService.getAttachFileInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("attachRequest ended");
 		
@@ -3171,22 +3172,25 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String oldYear = ezApprovalGService.getDocHrefYear(fileDocID, userInfo.getCompanyID(), userInfo.getTenantId());
 			String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator;
 			String fileName = xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/")[xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/").length - 1];
+			String deleteYN = xmlDom.getElementsByTagName("DELETE").item(k).getTextContent();
 			
-			File filePath = new File(commonUtil.detectPathTraversal(dirPath));
-			
-	        if (!filePath.exists()) {
-	        	filePath.mkdirs();
-	        }
-        
-			File file = new File(commonUtil.detectPathTraversal(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName));
-			
-			if (file.isFile()) {
-				if (file.exists()) {
-					FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(upd + fileName)));
-				}  
+			if (!(deleteYN != null && deleteYN.equals("N"))) {
+				File filePath = new File(commonUtil.detectPathTraversal(dirPath));
+				
+		        if (!filePath.exists()) {
+		        	filePath.mkdirs();
+		        }
+	        
+				File file = new File(commonUtil.detectPathTraversal(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName));
+				
+				if (file.isFile()) {
+					if (file.exists()) {
+						FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(upd + fileName)));
+					}  
+				}
+				
+				xmlDom.getElementsByTagName("DATA1").item(k).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator + fileName);
 			}
-			
-			xmlDom.getElementsByTagName("DATA1").item(k).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator + fileName);
 		}
 		String result="";
 		
@@ -3787,13 +3791,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
+		String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "ING";
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			companyID = orgCompanyID;
 		}
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		String result = ezApprovalGService.getAttachDocInfo(docID, "ING", "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		String result = ezApprovalGService.getAttachDocInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
 		logger.debug("getAttachInfo ended.");
 		
@@ -5265,6 +5270,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 		
 	 	// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
 	 	String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
+	 	// 2024-06-11 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
+	 	String useReceiptDeptFileAttach = ezCommonService.getTenantConfig("useReceiptDeptFileAttach", userInfo.getTenantId());
  		
 		model.addAttribute("useAnnualSusinYN", useAnnualSusinYN);
 	    model.addAttribute("optSignDateFormat", optSignDateFormat);
@@ -5333,6 +5340,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
+		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
 		
 		logger.debug("approvui ended");
 		
@@ -6300,6 +6308,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
 		String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
 		
+		// 2024-06-04 김우철 - 부서수신함 첨부, 문서첨부 기능 사용 여부
+		String useReceiptDeptFileAttach = ezCommonService.getTenantConfig("useReceiptDeptFileAttach", userInfo.getTenantId());
+		
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("docID", docID);
 		model.addAttribute("orgDocID", orgDocID);
@@ -6334,6 +6345,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
+		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
 		
 		logger.debug("recevGSusin ended.");
 		

@@ -116,7 +116,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
         logger.debug("isAddJob=" + isAddJob + ", jobId=" + jobId + ", roleId=" + roleId);
         
         OrganUserVO organUserVO = (OrganUserVO) select("EzOrganDAO.getTBLUserMaster", map);
-        
+        organUserVO.setJobID(jobId);
         logger.debug("getTBLUserMasterForLocal ended.");
         
         return organUserVO;
@@ -450,5 +450,20 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > 리스트 생성 위한 겸직정보 조회
 	public List<OrganUserVO> getAddJobListForEzApprDropdown(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganDAO.addJobListForEzApprDropdown", map);
+	}
+
+
+	public OrganUserVO getAddJobInfo(Map<String, Object> map) throws Exception {
+		return (OrganUserVO) select("EzOrganDAO.getAddJobInfo", map);
+	}
+
+    @SuppressWarnings("unchecked")
+    // 2023-10-31 박기범 - 모든 유저정보 조회(사간 겸직 포함)
+    public List<OrganUserVO> getAllUserInfo(Map<String, Object> map) throws Exception {
+        return (List<OrganUserVO>) list("EzOrganDAO.getAllUserInfo", map);
+    }
+
+	public List<OrganUserVO> getRetireUserMail(int tenantId) throws Exception {
+		return (List<OrganUserVO>) list("EzOrganDAO.getRetireUserMail", tenantId);
 	}
 }

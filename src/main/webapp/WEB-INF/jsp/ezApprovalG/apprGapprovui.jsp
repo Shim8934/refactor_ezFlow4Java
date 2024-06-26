@@ -204,6 +204,9 @@
 			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
+			
+			// 2024-06-11 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
+			var useReceiptDeptFileAttach = "<c:out value ='${useReceiptDeptFileAttach}'/>";
 	        
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -730,8 +733,12 @@
 		            }
 		
 		            setMenuBar("btnModAprDept", false);
-		            setMenuBar("btnFileAttach", false);
-		            setMenuBar("btnAprDocAttach", false);
+		            
+		            if (useReceiptDeptFileAttach == "NO") {
+		            	setMenuBar("btnFileAttach", false);
+			            setMenuBar("btnAprDocAttach", false);	
+		            }
+		            
 		            pGubun = "6";
 		        }
 		        else {

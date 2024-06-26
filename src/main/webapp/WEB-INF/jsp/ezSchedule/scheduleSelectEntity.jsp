@@ -268,6 +268,12 @@
 		        if (DeptID != undefined) {
 	            	tempDeptID = DeptID;
 		        }
+				var propStr = "";
+				if("<c:out value='${title}' />" == "<spring:message code='ezSchedule.kmh02' />"){
+					propStr = "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;physicaldeliveryofficename1";
+				}else{
+					propStr = "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2";
+				}
 
 	        	$.ajax({
   					url : '/ezOrgan/getDeptMemberList.do',
@@ -276,7 +282,7 @@
   					data : {
   						deptID : tempDeptID ,
   						cell : "company;description;displayName;title;telephoneNumber",
-  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+  						prop : propStr ,
   						page : CurPage ,
   						type : "user"
   					} ,
@@ -502,6 +508,14 @@
 	            var pparsingXML2 = "";
 	            var strSIP = "";
 	            var pAddFlag = false;
+
+				if("<c:out value='${title}' />" == "<spring:message code='ezSchedule.kmh02' />"){
+					if ($('#MsgToList >tbody tr').length != 0 || listContentArry.length >= 2){
+						alert("<spring:message code='ezSchedule.kmh03' />");
+						return;
+					}
+				}
+
 	            if (listContentArry != "") {
 	                for (var i = 0; i < listContentArry.length; i++) {
 	                    var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
@@ -512,7 +526,12 @@
 	                    var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 	                    var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 	                    var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
-	
+
+						if("<c:out value='${title}' />" == "<spring:message code='ezSchedule.kmh02' />"){
+							var strDeptId = document.getElementById(listContentArry[i]).getAttribute("_data10");
+							var strCompayId = document.getElementById(listContentArry[i]).getAttribute("_data11");
+						}
+
 	                    var listid = "MsgToList";
 	                    var getlistview = new ListView();
 	                    getlistview.LoadFromID(listid);
@@ -535,6 +554,12 @@
 	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+
+							if("<c:out value='${title}' />" == "<spring:message code='ezSchedule.kmh02' />"){
+								pparsingXML = pparsingXML + "<DATA10><![CDATA[" + strDeptId + "]]></DATA10>";
+								pparsingXML = pparsingXML + "<DATA11><![CDATA[" + strCompayId + "]]></DATA11>";
+							}
+
 	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
@@ -932,6 +957,13 @@
 		            CurPage = "1";
 		            issearch = true;
 		        }
+
+				var propStr = "";
+				if("<c:out value='${title}' />" == "<spring:message code='ezSchedule.kmh02' />"){
+					propStr = "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;physicaldeliveryofficename1";
+				}else{
+					propStr = "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2";
+				}
 		
 		        $.ajax({
 					url : '/ezOrgan/getSearchList.do',
@@ -940,7 +972,7 @@
 					data : {
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						prop : propStr ,
 						page : CurPage ,
 						type : "user"
 					} ,
@@ -1000,18 +1032,32 @@
 		    }
 	
 		    function close_onclick() {
-		        var rtn = { "id": new Array(), "name": new Array(), "deptname": new Array() };
-	
+				if("<c:out value='${title}' />" == "<spring:message code='ezSchedule.kmh02' />") {
+					var rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "deptid": new Array(), "companyid": new Array()};
+				}else{
+					var rtn = { "id": new Array(), "name": new Array(), "deptname": new Array() };
+				}
+
 		        var listid = "MsgToList";
 		        var selList = new ListView();
 		        selList.LoadFromID(listid);
 	
 		        var totalRows = selList.GetDataRows();
 		        var totalLen = totalRows.length;
+				
+				if(totalLen == 0){
+					alert("<spring:message code='ezPersonal.yej02' />");
+					return;
+				}
+				
 		        for (var i = 0; i < totalLen; i++) {
 		            rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
 		            rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
 		            rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");
+					if("<c:out value='${title}' />" == "<spring:message code='ezSchedule.kmh02' />") {
+						rtn["deptid"][i] = GetAttribute(totalRows[i], "DATA10");
+						rtn["companyid"][i] = GetAttribute(totalRows[i], "DATA11");
+					}
 		        }
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtn);

@@ -337,5 +337,18 @@ public interface EzCommonService {
 	// 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
 	public void alterRepeatFlagForResourceInfo() throws Exception;
 
+	/* 2024-05-28 김유진 - 포탈 메뉴,포틀릿,테마,빠른링크 > 하위부서 허용여부 컬럼 추가, 빠른링크 > 유저타입 컬럼 추가 */
+	public void alterSubPermittedForMenuAuth() throws Exception;
+
+	public void alterSubPermittedForPortletAuth() throws Exception;
+
+	public void alterSubPermittedForThemeAuth() throws Exception;
+
+	public void alterSubPermittedForQuicklinkAcl() throws Exception;
+
 	public void insertApprNonElecRecTypeConfing() throws Exception;
+
+    public void insertRecordHeaderClassTitle() throws Exception;
+    
+	public void insertUseReceiptDeptFileAttach() throws Exception;
 }

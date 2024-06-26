@@ -5582,7 +5582,8 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"USER_ID" VARCHAR2(100 BYTE), 
 	"ACCESS_YN" NUMBER(5,0) DEFAULT 0, 
 	"USER_TYPE" NUMBER(5,0), 
-	"SN" NUMBER(*,0) DEFAULT 0
+	"SN" NUMBER(*,0) DEFAULT 0,
+	"SUBDEPT_PERMITTED" VARCHAR2(4 BYTE) DEFAULT 'N'
    ) ;
 
    COMMENT ON COLUMN "TBL_PORTAL_MENU_AUTH"."MENU_ID" IS '메뉴 아이디';
@@ -5676,7 +5677,8 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"USER_ID" VARCHAR2(100 BYTE), 
 	"ACCESS_YN" NUMBER(5,0) DEFAULT 0, 
 	"USER_TYPE" NUMBER(5,0), 
-	"SN" NUMBER(*,0) DEFAULT 0
+	"SN" NUMBER(*,0) DEFAULT 0,
+    "SUBDEPT_PERMITTED" VARCHAR2(4 BYTE) DEFAULT 'N'
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTAL_PORTLET_COMP
@@ -5787,7 +5789,8 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"USER_ID" VARCHAR2(100 BYTE) DEFAULT NULL, 
 	"ACCESS_YN" NUMBER(5,0) DEFAULT 0, 
 	"USER_TYPE" NUMBER(5,0) DEFAULT 0, 
-	"SN" NUMBER(*,0) DEFAULT 0
+	"SN" NUMBER(*,0) DEFAULT 0,
+    "SUBDEPT_PERMITTED" VARCHAR2(4 BYTE) DEFAULT 'N'
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTAL_THEME_COMP
@@ -6022,7 +6025,9 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"ACCESSNAME" NVARCHAR2(50), 
 	"ACCESSNAME2" NVARCHAR2(50), 
 	"VIEW_FLAG" CHAR(1 CHAR), 
-	"TENANT_ID" NUMBER(5,0)
+	"TENANT_ID" NUMBER(5,0),
+	`USER_TYPE` NVARCHAR2(50) NOT NULL,
+    `SUBDEPT_PERMITTED` CHAR(1 CHAR) DEFAULT 'N'
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_SHAREAPPROVAL
@@ -17867,20 +17872,14 @@ END;
 --  Ref Constraints for Table JAMES_MAIL_PROPERTY
 --------------------------------------------------------
 
-  ALTER TABLE "JAMES_MAIL_PROPERTY" ADD FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE DEFERRABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JAMES_MAIL_SEARCH
 --------------------------------------------------------
 
-  ALTER TABLE "JAMES_MAIL_SEARCH" ADD CONSTRAINT "TMP_JAMES_MAIL_SEARCH_FK1" FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE ENABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JAMES_MAIL_USERFLAG
 --------------------------------------------------------
 
-  ALTER TABLE "JAMES_MAIL_USERFLAG" ADD FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE DEFERRABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JMOCHA_DISTRIBUTION
 --------------------------------------------------------
@@ -17921,8 +17920,6 @@ END;
 --  Ref Constraints for Table JMOCHA_MAIL_SECURE
 --------------------------------------------------------
 
-  ALTER TABLE "JMOCHA_MAIL_SECURE" ADD CONSTRAINT "FK_JMOCHA_MAIL_SECURE" FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE ENABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JMOCHA_MAIL_SECURE_READ
 --------------------------------------------------------

@@ -5371,8 +5371,254 @@
 			FILESTATE = #V_FILESTATE#
 	</select>
 	
-	<!-- 2024-06-04 홍승비 - 사용되지 않는 구버전 전자결재 관련 쿼리 제거 (EzApprovalGAdminDAO.getSearchDocListCount) -->
-	<!-- 2024-06-04 홍승비 - 사용되지 않는 구버전 전자결재 관련 쿼리 제거 (EzApprovalGAdminDAO.getSearchDocList) -->
+	<select id ="EzApprovalGAdminDAO.getSearchDocListCount" parameterClass="Map" resultClass="int" remapResults="true">
+	<![CDATA[
+		SELECT 
+			COUNT(DOCID)
+		FROM
+		(
+		SELECT	
+			DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
+   		FROM 
+   			TBL_ENDAPRDOCINFO 
+   		LEFT OUTER JOIN 
+   			TBL_ENDAPRLINEINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+   		AND 
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+   		AND	
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+   		WHERE 
+			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		AND
+			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		]]>	
+		<!-- 2024-03-20 홍승비 - SQL Injection 제거 -->
+		<isNotEmpty property="v_STARTDATE1" prepend="AND">
+			<![CDATA[STARTDATE >= TO_DATE(#v_STARTDATE1#, 'YYYY-MM-DD HH24:MI:SS')]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_STARTDATE2" prepend="AND">
+			<![CDATA[STARTDATE <= TO_DATE(#v_STARTDATE2#, 'YYYY-MM-DD HH24:MI:SS')]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_ENDDATE1" prepend="AND">
+			<![CDATA[ENDDATE >= TO_DATE(#v_ENDDATE1#, 'YYYY-MM-DD HH24:MI:SS')]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_ENDDATE2" prepend="AND">
+			<![CDATA[ENDDATE <= TO_DATE(#v_ENDDATE2#, 'YYYY-MM-DD HH24:MI:SS')]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_DOCNUMBER" prepend="AND">
+			<![CDATA[DOCNO LIKE '%' || #v_DOCNUMBER# || '%']]>
+		</isNotEmpty>
+		<isNotEmpty property="v_DOCTITLE" prepend="AND">
+			<![CDATA[DOCTITLE LIKE '%' || #v_DOCTITLE# || '%']]>
+		</isNotEmpty>
+		<isNotEmpty property="v_DRAFTER" prepend="AND">
+			<![CDATA[WRITERNAME LIKE '%' || #v_DRAFTER# || '%']]>
+		</isNotEmpty>
+		<isNotEmpty property="v_DRAFTER2" prepend="AND">
+			<![CDATA[WRITERNAME2 LIKE '%' || #v_DRAFTER2# || '%']]>
+		</isNotEmpty>
+		<isNotEmpty property="v_DEPTNAME" prepend="AND">
+			<![CDATA[WRITERDEPTNAME LIKE '%' || #v_DEPTNAME# || '%']]>
+		</isNotEmpty>
+		<isNotEmpty property="v_DEPTNAME2" prepend="AND">
+			<![CDATA[WRITERDEPTNAME2 LIKE '%' || #v_DEPTNAME2# || '%']]>
+		</isNotEmpty>
+		<isNotEmpty property="v_FORMID" prepend="AND">
+			<![CDATA[FORMID = #v_FORMID#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_FORMNAME" prepend="AND">
+			<![CDATA[(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')]]>
+		</isNotEmpty>
+	   	<isNotEmpty property="v_APPROVUSER" prepend="AND">
+	   		<![CDATA[TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%' || #v_APPROVUSER# || '%']]>
+		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD" prepend="AND">
+			<![CDATA[KEYWORD LIKE '%' || #v_KEYWORD# || '%']]>
+		</isNotEmpty>
+		<isNotEmpty property="v_ITEMCODE" prepend="AND">
+			<![CDATA[ITEMCODE = #v_ITEMCODE#]]>
+		</isNotEmpty>
+   		)
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		SELECT 
+			* 
+		FROM (
+				SELECT 
+					row_number() over(ORDER BY NULL) as rnum,
+					A.* 
+			  	FROM (
+							SELECT 
+								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
+										 TBL_ENDAPRDOCINFO.DOCTYPE,
+					   				     TBL_ENDAPRDOCINFO.DOCSTATE, 
+					   				     TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
+					   				     TBL_ENDAPRDOCINFO.HREF,
+					   					 TBL_ENDAPRDOCINFO.DOCTITLE, 
+					   					 TBL_ENDAPRDOCINFO.DOCNO, 
+					   					 TBL_ENDAPRDOCINFO.HASATTACHYN,
+					   					 TBL_ENDAPRDOCINFO.HASOPINIONYN, 
+					   					 TBL_ENDAPRDOCINFO.STARTDATE, 
+					   					 TBL_ENDAPRDOCINFO.ENDDATE,
+								   		 TBL_ENDAPRDOCINFO.WRITERID, 
+								   		 TBL_ENDAPRDOCINFO.WRITERNAME, 
+								   		 NVL(TBL_ENDAPRDOCINFO.WRITERNAME2, TBL_ENDAPRDOCINFO.WRITERNAME) AS WRITERNAME2, 
+								   		 TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+								   		 NVL(TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, TBL_ENDAPRDOCINFO.WRITERJOBTITLE) AS WRITERJOBTITLE2,
+								   		 TBL_ENDAPRDOCINFO.WRITERDEPTID, 
+								   		 TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+								   		 NVL(TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, TBL_ENDAPRDOCINFO.WRITERDEPTNAME) AS WRITERDEPTNAME2, 
+								   		 TBL_ENDAPRDOCINFO.FORMID, 
+								   		 TBL_ENDAPRDOCINFO.CONTAINERID, 
+								   		 TBL_EXPENDAPRDOCINFO.FORMNAME, 
+								   		 NVL(TBL_EXPENDAPRDOCINFO.FORMNAME2, TBL_EXPENDAPRDOCINFO.FORMNAME) AS FORMNAME2, 
+								   		 TBL_EXPENDAPRDOCINFO.STATUS,
+								   		 TBL_ENDAPRDOCINFO.ORGDOCID, 
+								   		 TBL_ENDAPRDOCINFO.ISPUBLIC, 
+								   		 TBL_EXPENDAPRDOCINFO.EDMSYN,
+								   		 NVL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL,
+								   		 TBL_ENDAPRDOCINFO.COMPANYID,
+								   		 TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName,
+										 TBL_DEPTMASTER.COMPNM2 companyName2,
+										 TBL_EXPENDAPRDOCINFO.DELFLAG
+							   	FROM 
+							   			 TBL_ENDAPRDOCINFO 
+							   	LEFT OUTER JOIN 
+							   			 TBL_ENDAPRLINEINFO 
+							   	ON 
+							   			 TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+							   	AND 
+							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+							   	AND 
+							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+							   	INNER JOIN 
+							   			 TBL_EXPENDAPRDOCINFO 
+							   	ON 
+							   			 TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+							   	AND
+							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+					   			AND
+							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+							   	INNER JOIN
+							   			TBL_DEPTMASTER
+							   	ON
+							   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN
+							   	AND
+							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID		 
+							   	WHERE 
+										TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+							    AND
+		    							TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		    					<!-- 2024-03-20 홍승비 - SQL Injection 제거 -->
+		    					<isNotEmpty property="v_STARTDATE1" prepend="AND">
+									<![CDATA[STARTDATE >= TO_DATE(#v_STARTDATE1#, 'YYYY-MM-DD HH24:MI:SS')]]>
+								</isNotEmpty>
+								<isNotEmpty property="v_STARTDATE2" prepend="AND">
+									<![CDATA[STARTDATE <= TO_DATE(#v_STARTDATE2#, 'YYYY-MM-DD HH24:MI:SS')]]>
+								</isNotEmpty>
+								<isNotEmpty property="v_ENDDATE1" prepend="AND">
+									<![CDATA[ENDDATE >= TO_DATE(#v_ENDDATE1#, 'YYYY-MM-DD HH24:MI:SS')]]>
+								</isNotEmpty>
+								<isNotEmpty property="v_ENDDATE2" prepend="AND">
+									<![CDATA[ENDDATE <= TO_DATE(#v_ENDDATE2#, 'YYYY-MM-DD HH24:MI:SS')]]>
+								</isNotEmpty>
+								<isNotEmpty property="v_DOCNUMBER" prepend="AND">
+									<![CDATA[DOCNO LIKE '%' || #v_DOCNUMBER# || '%']]>
+								</isNotEmpty>
+								<isNotEmpty property="v_DOCTITLE" prepend="AND">
+									<![CDATA[DOCTITLE LIKE '%' || #v_DOCTITLE# || '%']]>
+								</isNotEmpty>
+								<isNotEmpty property="v_DRAFTER" prepend="AND">
+									<![CDATA[WRITERNAME LIKE '%' || #v_DRAFTER# || '%']]>
+								</isNotEmpty>
+								<isNotEmpty property="v_DRAFTER2" prepend="AND">
+									<![CDATA[WRITERNAME2 LIKE '%' || #v_DRAFTER2# || '%']]>
+								</isNotEmpty>
+								<isNotEmpty property="v_DEPTNAME" prepend="AND">
+									<![CDATA[WRITERDEPTNAME LIKE '%' || #v_DEPTNAME# || '%']]>
+								</isNotEmpty>
+								<isNotEmpty property="v_DEPTNAME2" prepend="AND">
+									<![CDATA[WRITERDEPTNAME2 LIKE '%' || #v_DEPTNAME2# || '%']]>
+								</isNotEmpty>
+								<isNotEmpty property="v_FORMID" prepend="AND">
+									<![CDATA[FORMID = #v_FORMID#]]>
+								</isNotEmpty>
+								<isNotEmpty property="v_FORMNAME" prepend="AND">
+									<![CDATA[(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')]]>
+								</isNotEmpty>
+								<isNotEmpty property="v_KEYWORD" prepend="AND">
+									<![CDATA[KEYWORD LIKE '%' || #v_KEYWORD# || '%']]>
+								</isNotEmpty>
+								<isNotEmpty property="v_ITEMCODE" prepend="AND">
+									<![CDATA[ITEMCODE = #v_ITEMCODE#]]>
+								</isNotEmpty>
+								<isNotEmpty property="v_APPROVUSER" prepend="AND">
+								AND 
+									TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%' || #v_APPROVUSER# || '%'
+							    GROUP BY 
+							      	TBL_ENDAPRDOCINFO.DOCID,
+									TBL_ENDAPRDOCINFO.DOCTYPE,
+									TBL_ENDAPRDOCINFO.DOCSTATE,
+									TBL_ENDAPRDOCINFO.FUNCTIONTYPE,
+									TBL_ENDAPRDOCINFO.HREF,
+									TBL_ENDAPRDOCINFO.DOCTITLE,
+									TBL_ENDAPRDOCINFO.DOCNO,
+									TBL_ENDAPRDOCINFO.HASATTACHYN,
+									TBL_ENDAPRDOCINFO.HASOPINIONYN,
+									TBL_ENDAPRDOCINFO.STARTDATE,
+									TBL_ENDAPRDOCINFO.ENDDATE,
+									TBL_ENDAPRDOCINFO.WRITERID,
+									TBL_ENDAPRDOCINFO.WRITERNAME,
+									TBL_ENDAPRDOCINFO.WRITERNAME2,
+									TBL_ENDAPRDOCINFO.WRITERJOBTITLE,
+									TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
+									TBL_ENDAPRDOCINFO.WRITERDEPTID,
+									TBL_ENDAPRDOCINFO.WRITERDEPTNAME,
+									TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, 
+									TBL_ENDAPRDOCINFO.FORMID,
+									TBL_ENDAPRDOCINFO.CONTAINERID,
+									TBL_EXPENDAPRDOCINFO.FORMNAME, 
+									TBL_EXPENDAPRDOCINFO.FORMNAME2, 
+									TBL_EXPENDAPRDOCINFO.STATUS,
+									TBL_ENDAPRDOCINFO.ORGDOCID, 
+									TBL_ENDAPRDOCINFO.ISPUBLIC, 
+									TBL_EXPENDAPRDOCINFO.EDMSYN,
+									TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,
+									TBL_ENDAPRDOCINFO.COMPANYID,
+									TBL_DEPTMASTER.EXTENSIONATTRIBUTE3,
+									TBL_DEPTMASTER.COMPNM2
+							   	</isNotEmpty>
+							   	<!-- 2024-03-20 기준, 해당 쿼리의 호출 시 orderCell과 orderOption은 반드시 공백으로 고정되어 전달되므로 분기처리 제거 -->
+						   		ORDER BY 
+									ENDDATE DESC, DOCNO DESC
+							   	<![CDATA[
+							   	 ) A 
+							   	 ]]>
+							   	 <isNotEqual property="alFlag" compareValue="1">
+							   	 <![CDATA[
+							   	 	WHERE 
+							   	 		ROWNUM <= #v_PAGESIZE#
+							   	 ]]>	
+							   	 </isNotEqual>
+							   	 <![CDATA[
+							   	 		) X
+							   		 WHERE 
+							   		 	X.rnum >= #v_PAGESIZE3# + 1
+							   	 ]]>
+				 ORDER BY 
+				 	ENDDATE, DOCNO
+	</select>
 	
 	<resultMap id="auditApprLine" class="java.util.LinkedHashMap">
 		<result property="AUDITAPPRLINEID"		column="AUDITAPPRLINEID" />

@@ -459,10 +459,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String adminFlag = request.getParameter("adminFlag") == null ? "admin" : request.getParameter("adminFlag");
 		logger.debug("adminFlag:" + adminFlag);
-		if (!checkWfAdmin(request, user.getId()).get("status").toString().equals("ok")) {
-			return "cmm/error/adminDenied";
+
+		// 2024.05.08 장혜연 : adminFlag값이 user 일 경우 담당하는 그룹폴더가 존재하는 지 확인
+		if (adminFlag.equals("user")) {
+			if (ezWebFolderAdminService
+					.getFolderIdsByManagerUserId(user.getId(), "", user.getCompanyID(), user.getTenantId()).size() <= 0)
+				return "cmm/error/adminDenied";
+		} else {
+			if (!checkWfAdmin(request, user.getId()).get("status").toString().equals("ok")) {
+				return "cmm/error/adminDenied";
+			}
 		}
-		
+
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
 		
@@ -727,17 +735,31 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return type;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getFileLogs start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
-		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
+		String adminFlag     = defaultString(request.getParameter("adminFlag"));
 		
-		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck;
+		// 2024.05.08 장혜연 : adminFlag값이 user 일 경우 담당하는 그룹폴더가 존재하는 지 확인
+		if (adminFlag.equals("user")) {
+			if (ezWebFolderAdminService
+					.getFolderIdsByManagerUserId(user.getId(), "", user.getCompanyID(), user.getTenantId())
+					.size() <= 0) {
+				JSONObject resultCheck = new JSONObject();
+				resultCheck.put("code", 3);
+				return resultCheck;
+			}
+		} else {
+			JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
+
+			if (!resultCheck.get("status").toString().equals("ok")) {
+				return resultCheck;
+			}
 		}
-		
+
 		String currPage      = request.getParameter("currentPage");
 		String companyId     = request.getParameter("companyId");
 		String column        = request.getParameter("column");
@@ -752,7 +774,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String actionType    = defaultString(request.getParameter("actionType"));
 		String sortType    	 = defaultString(request.getParameter("sortType"));
 		String sortColumn    = defaultString(request.getParameter("sortColumn"));
-		String adminFlag     = defaultString(request.getParameter("adminFlag"));
 		String folderId      = defaultString(request.getParameter("folderId"));
 		
 		logger.debug("Current page: " + currPage + " || CompanyId: " + companyId + " || Column: " + column + " || Order: " + order + " || ListCount: " + listCnt + " || StartDate: " + startDate 
@@ -1593,17 +1614,31 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return resultBody;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/admin/ezWebFolder/exportFileLogs.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject exportFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("exportFileLogs start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
-		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
-		
-		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck;
+		String adminFlag     = request.getParameter("adminFlag")  != null ? request.getParameter("adminFlag")  : "";
+
+		// 2024.05.08 장혜연 : adminFlag값이 user 일 경우 담당하는 그룹폴더가 존재하는 지 확인
+		if (adminFlag.equals("user")) {
+			if (ezWebFolderAdminService
+					.getFolderIdsByManagerUserId(user.getId(), "", user.getCompanyID(), user.getTenantId())
+					.size() <= 0) {
+				JSONObject resultCheck = new JSONObject();
+				resultCheck.put("code", 3);
+				return resultCheck;
+			}
+		} else {
+			JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
+
+			if (!resultCheck.get("status").toString().equals("ok")) {
+				return resultCheck;
+			}
 		}
-		
+
 		String companyId     = request.getParameter("companyId");
 		String column        = request.getParameter("column");
 		String order         = request.getParameter("order");
@@ -1614,7 +1649,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String userName      = request.getParameter("userName")   != null ? request.getParameter("userName")   : "";
 		String fileType      = request.getParameter("fileType")   != null ? request.getParameter("fileType")   : "";
 		String actionType    = request.getParameter("actionType") != null ? request.getParameter("actionType") : "";
-		String adminFlag     = request.getParameter("adminFlag")  != null ? request.getParameter("adminFlag")  : "";
 		String folderId      = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
 		String sortType    	 = request.getParameter("sortType")   != null ? request.getParameter("sortType")   : "";
 		String sortColumn    = request.getParameter("sortColumn") != null ? request.getParameter("sortColumn") : "";

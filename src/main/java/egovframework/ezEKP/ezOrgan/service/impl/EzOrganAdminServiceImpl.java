@@ -1081,18 +1081,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		// 나머지 사원들의 트리뷰순서값들을 1씩 증가
 		if (vo.getManualFlag() != null && vo.getManualFlag().equals("Y")) {
 			if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
-				vo.setExtensionAttribute15("0");
-				ezOrganAdminDao.updateDBData_userOrderIsNull(map);		
+				vo.setExtensionAttribute15(ezOrganAdminDao.getDeptInfo(map).getExtensionAttribute15());
+//				ezOrganAdminDao.updateDBData_userOrderIsNull(map);		
 			}
 			
-			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+//			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
 			
 			// 2023.06.07 한슬기 : 트리뷰 순서값이 지정된 경우 순서값 유지, 지정되지 않았을 경우 1씩 증가하도록 수정
-			if ("0".equals(map.get("v_EXTATTR15"))) {
-				ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
-				ezOrganAdminDao.updateDBData_userOrder(map); // 원부서 사용자 트리뷰순서값 1씩 증가
-				
-			}
+//			if ("0".equals(map.get("v_EXTATTR15"))) {
+//				ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
+//				ezOrganAdminDao.updateDBData_userOrder(map); // 원부서 사용자 트리뷰순서값 1씩 증가
+//				
+//			}
 			
 			/* 원본코드
 			ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
@@ -1421,7 +1421,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_TITLE2", sTitle2);
             		map.put("v_ROLE", sRole1);
             		map.put("v_ROLE2", sRole2);
-            		map.put("v_EXTATTR15", "0");
             		map.put("v_PARENTCN", pDeptID);
             		map.put("v_JOBID", jobIDinfo[i]);
             		map.put("v_ROLEID", roleId.length() > 0 ? roleId : "0");
@@ -1431,6 +1430,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		date.setTimeZone(TimeZone.getTimeZone("GMT"));
             		String nowDate = date.format(new Date());
             		map.put("nowDate", nowDate);
+					map.put("v_EXTATTR15", ezOrganAdminDao.getDeptInfo(map).getExtensionAttribute15());
                     
             		String bizmekaResult = "ERROR";
             		
@@ -1457,8 +1457,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         					
         					// 겸직 시 조직도에서 트리뷰순서값 0으로 수정(맨 위에 세팅 되도록)
                     		// 부서 사용자 순서값 1씩 증가
-                    		ezOrganAdminDao.updateDBData_userOrder(map);
-                    		ezOrganAdminDao.updateDBData_addjobmasterOrder(map);
+//                    		ezOrganAdminDao.updateDBData_userOrder(map);
+//                    		ezOrganAdminDao.updateDBData_addjobmasterOrder(map);
         					ezOrganAdminDao.setAddJob_I(map);
         					
         				}       

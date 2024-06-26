@@ -5,6 +5,7 @@ import java.util.Map;
 
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
+import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
@@ -79,7 +80,12 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void deleteUserMenuOrder(Map<String, Object> map) throws Exception {
 		delete("ezNewPortal.deleteUserMenuOrder", map);
 	}
-	
+
+	// 2024-05-17 김유진 - 퀵링크 권한 체크
+	public List<QuickLinkVO> getCheckQuickLinkAcl(Map<String, Object> map) throws Exception {
+		return (List<QuickLinkVO>) list("ezNewPortal.getCheckQuickLinkAcl", map);
+	}
+
 	// 퀵 링크 불러오기
 	public List<?> getQuickLinkList(Map<String, Object> map) throws Exception {
 		return (List<?>) list("ezNewPortal.getQuickLinkList", map);
@@ -180,6 +186,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<ThemeInfoVO> getUserThemeList(Map<String, Object> map) throws Exception {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getUserThemeList", map);
 	}
+
+	public List<ThemeInfoVO> getCompThemeList(Map<String, Object> map) throws Exception {
+		return (List<ThemeInfoVO>) list("ezNewPortal.getCompThemeList", map);
+	}
 	
 	public MenuInfoVO getUserStartPage(Map<String, Object> map) throws Exception {
 		return (MenuInfoVO) select("ezNewPortal.getUserStartPage", map);
@@ -238,6 +248,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public void updateThemePortletUsed(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateThemePortletUsed", map);
+	}
+
+	public void updateThemePortlet(Map<String, Object> map) throws Exception {
+		update("ezNewPortal.updateThemePortlet", map);
 	}
 	
 	public void updatePortletOrderUser(Map<String, Object> map) throws Exception {

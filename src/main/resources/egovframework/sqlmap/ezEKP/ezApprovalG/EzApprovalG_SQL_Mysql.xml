@@ -6074,7 +6074,9 @@
                         TBL_RECORD.ProcessDeptCode RECDEPTCODE,
                         TBL_RECORD.ProcessDeptName RECDEPTNAME,
                         SUBSTR(TBL_RECORD.RegisterNo, -6) RECREGSN,
-                        M.AprmemberId as ORGUSERID
+                        M.AprmemberId as ORGUSERID,
+                        TBL_CABINET.TITLE,
+                        ENDDOCNO.DOCNO AS SIHANGNO
                   <isEqual property="usePublicFlag" compareValue="true">
                         , TBL_EXPENDAPRDOCINFO.SecurityApproval
                   </isEqual>
@@ -6098,9 +6100,10 @@
                     <isNotEmpty property="numOfPage" prepend=",">
                         TBL_SEPERATEATTACH.NumOfPage AS NumOfPage
                     </isNotEmpty>
-                    <isNotEmpty property="sepTitle" prepend=",">
+                    <!-- 2024-06-26 홍승비 - 실제로 호출되는 분기가 아닌 것으로 확인, 주석처리 후 TBL_CABINET.TITLE 및 ENDDOCNO.DOCNO (SIHANGNO) 칼럼을 고정적으로 가져오도록 수정 -->
+                    <!-- <isNotEmpty property="sepTitle" prepend=",">
                         TBL_SEPERATEATTACH.Title AS Title
-                    </isNotEmpty>
+                    </isNotEmpty> -->
                     <isNotEmpty property="registerYear" prepend=",">
                         TBL_RECORD.RegisterYear AS RegisterYear
                     </isNotEmpty>
@@ -6120,6 +6123,14 @@
 				   		TBL_RECORD.DocID = TBL_ENDAPRDOCINFO.DocID 
 				   AND 
 				   		TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+                   LEFT JOIN 
+				   		TBL_ENDAPRDOCINFO ENDDOCNO
+                   ON 
+                        TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
+				   AND
+						TBL_ENDAPRDOCINFO.TENANT_ID = ENDDOCNO.TENANT_ID
+				   AND
+						TBL_ENDAPRDOCINFO.COMPANYID = ENDDOCNO.COMPANYID 
 				   Inner Join 
 				   		TBL_SEPERATEATTACH 
 				   On 
@@ -6183,7 +6194,8 @@
 				   				ExpirationYear, 
 				   				KeepingPeriod ,
 				   				TBL_CABINETCLASS.TENANT_ID,
-				   				TBL_CABINETCLASS.COMPANYID
+				   				TBL_CABINETCLASS.COMPANYID,
+                                TBL_CABINETCLASS.TITLE
 				   		  FROM 
 				   		  		TBL_CABINETCLASS  
 				   		  INNER JOIN 

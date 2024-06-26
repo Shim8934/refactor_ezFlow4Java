@@ -1,15 +1,19 @@
 ﻿var wTable;
 var xmlhttp;
+var chk_usersearch = "";
 
 var delFlag = false;
 
 function CalViewSource(chk_str) {
 	xmlhttp = createXMLHttpRequest();
 	var xmlpara;
-    
-    xmlpara ="STARTDATE="+sStartDate+"&ENDDATE="+sEndDate+"&APP="+chk_str+"&GROUPID="+groupid+"&IDLIST=T";
-    
-    
+
+    if(chk_usersearch == "UserSearch"){
+        xmlpara = "STARTDATE=" + sStartDate + "&ENDDATE=" + sEndDate + "&APP=" + chk_str + "&GROUPID=" + groupid + "&IDLIST=T" + "&resultUserID=" + encodeURIComponent(resultUserID) + "&chk_usersearch=" + encodeURIComponent(chk_usersearch) + "&resultDeptName=" + encodeURIComponent(resultDeptName)+ "&resultDeptID=" + encodeURIComponent(resultDeptID)+ "&resultCompanyID=" + encodeURIComponent(resultCompanyID);
+    }else {
+        xmlpara = "STARTDATE=" + sStartDate + "&ENDDATE=" + sEndDate + "&APP=" + chk_str + "&GROUPID=" + groupid + "&IDLIST=T";
+    }
+
     if (!delFlag) {
     	xmlhttp.open("POST", "/ezSchedule/scheduleGetList.do", true);
     } else {
@@ -272,28 +276,30 @@ function getCalWeekViewSource_after() {
         tempData = null;
         chk_scheduleCSS();
         
-        //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
-      if(objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
-        $("div[id$='ALL'").children().draggable({
-        	addClasses: false,
-        	revert : "invalid",
-        	helper : function(event) {
-        		return $(event.target).clone().css({
-        			width: $(event.target).width()
-        		});
-        	},
-        	appendTo: "body",
-        	containment: "#calTR"
-        });
-        
-      //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
-      $("#dayDiv").find("div[id^='div_']").draggable({
-        	addClasses: false,
-        	cursorAt: { top: 1, left: 1 },
-        	scroll: false,
-        	handle: "td", 
-        	helper: "clone"
-        });
+      if(chk_usersearch != "UserSearch") {
+          //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
+          if (objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
+              $("div[id$='ALL'").children().draggable({
+                  addClasses: false,
+                  revert: "invalid",
+                  helper: function (event) {
+                      return $(event.target).clone().css({
+                          width: $(event.target).width()
+                      });
+                  },
+                  appendTo: "body",
+                  containment: "#calTR"
+              });
+
+              //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
+              $("#dayDiv").find("div[id^='div_']").draggable({
+                  addClasses: false,
+                  cursorAt: {top: 1, left: 1},
+                  scroll: false,
+                  handle: "td",
+                  helper: "clone"
+              });
+          }
       }
     }
     catch (e) {
@@ -404,14 +410,16 @@ function getCalDayViewSource_after() {
         }        
         tempData = null;
         chk_scheduleCSS();
-        if(objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
-        //2018-11-05 김혜정  일보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
-        $("#CalDiv").find("div[id^='div_']").draggable({
-        	addClasses: false,
-        	scroll: true,
-        	helper : "clone",
-        	cursorAt: { top: 1, left: 1 }
-        });
+        if(chk_usersearch != "UserSearch") {
+            if (objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
+                //2018-11-05 김혜정  일보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
+                $("#CalDiv").find("div[id^='div_']").draggable({
+                    addClasses: false,
+                    scroll: true,
+                    helper: "clone",
+                    cursorAt: {top: 1, left: 1}
+                });
+            }
         }
     }
     catch (e) {
@@ -889,20 +897,22 @@ function CalMonthDataBind(oAppointment) {
         
         oTr.appendChild(oTd);
         objElm.appendChild(oTr);
-        
-        //2018-11-05 김혜정 월보기
-        if (oAppointment.scheduleFlag != 'google') {
-        $("#" + "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID).parent("tr").draggable({
-        	addClasses: false,
-        	containment: $("#dayDiv"),
-        	revert : "invalid",
-        	helper : function(event) {
-        		return $(event.target).clone().css({
-        			width: $(event.target).width()
-        		});
-        	},
-        	scroll : false
-        });
+
+        if(chk_usersearch != "UserSearch") {
+            //2018-11-05 김혜정 월보기
+            if (oAppointment.scheduleFlag != 'google') {
+                $("#" + "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID).parent("tr").draggable({
+                    addClasses: false,
+                    containment: $("#dayDiv"),
+                    revert: "invalid",
+                    helper: function (event) {
+                        return $(event.target).clone().css({
+                            width: $(event.target).width()
+                        });
+                    },
+                    scroll: false
+                });
+            }
         }
     }
     objElm = null;

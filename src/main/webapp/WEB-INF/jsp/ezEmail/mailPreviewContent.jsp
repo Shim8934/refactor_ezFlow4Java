@@ -438,7 +438,7 @@
 	    			  url : '/ezEmail/attachFilePreview.do',
 	    			  data : {
 	    				  "fileName" : fileName,
-	    				  "folderId" : mailPath,
+	    				  "folderId" : decodeURIComponent(mailPath),
 	    				  "mailId" : mailUid,
 	    				  "fileIndex" : fileIndex
 	    			  },

@@ -5316,7 +5316,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			fileIndex = request.getParameter("fileIndex");
 		}
 		
-		logger.debug("folderId : " + folderId + "mailId : " + mailId + "fileName : " + fileName + "fileIndex : " + fileIndex);
+		logger.debug("folderId : {}, mailId : {}, fileName : {}, fileIndex : {}", folderId, mailId, fileName, fileIndex);
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 

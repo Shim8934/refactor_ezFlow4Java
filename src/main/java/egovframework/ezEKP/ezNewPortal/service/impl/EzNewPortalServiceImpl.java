@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
+import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -71,13 +72,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Resource(name = "EzNewPortalDAO")
 	private EzNewPortalDAO ezNewPortalDAO;
-	
+
 	@Autowired
 	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private EzApprovalGService ezApprovalGService;
-	
+
 	@Resource(name  ="EzOrganAdminDAO")
 	private EzOrganAdminDAO ezOrganAdminDAO;
 	
@@ -305,7 +306,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	// 퀵링크 가져오기
-	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit, String userId, String deptId) throws Exception {
+	public  Map<String, Object> getQuickLinkList(String companyId, int tenantId, int page, int limit, String userId, String deptId) throws Exception {
 		logger.debug("[Serivce] getQuickLinkList Started");
 		
 		int offset = (page-1) * limit;
@@ -317,9 +318,79 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("offset", offset);
 		map.put("userId", userId);
 		map.put("deptId", deptId);
-		
+
+		// 2024-05-17 김유진 - 퀵링크 권한 체크 로직 추가
+		List<String> quickLinkIds = new ArrayList<>();
+		//유저 권한체크
+		map.put("userType", "USER");
+		List<QuickLinkVO> result = ezNewPortalDAO.getCheckQuickLinkAcl(map);
+		for (QuickLinkVO userQuickLink : result) {
+			String quickLinkId = userQuickLink.getQuickLinkId();
+			logger.debug("getQuickLinkList userQuickLink: " + quickLinkId);
+			if (quickLinkIds.indexOf(quickLinkId) == -1) {
+				quickLinkIds.add(quickLinkId);
+			}
+		}
+		result.removeIf(vo -> ("N".equals(vo.getViewflag())));
+
+		// 직위,직책 권한체크
+		map.put("userType", "PERMISSION");
+		List<QuickLinkVO> permissionResult = ezNewPortalDAO.getCheckQuickLinkAcl(map);
+		for (QuickLinkVO permissionQuickLink : permissionResult) {
+			String quickLinkId = permissionQuickLink.getQuickLinkId();
+			logger.debug("getQuickLinkList permissionQuickLink: " + quickLinkId);
+			if (quickLinkIds.indexOf(quickLinkId) == -1) {
+				quickLinkIds.add(quickLinkId);
+				if ("Y".equals(permissionQuickLink.getViewflag())) {
+					result.add(permissionQuickLink);
+				}
+			}
+		}
+
+		// 부서 권한체크 - 하위부서부터 체크
+		String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
+		List<String> deptIds = Arrays.asList(deptPath.split(","));
+		Collections.reverse(deptIds);
+
+		List<QuickLinkVO> deptResult = null;
+		map.put("userType", "DEPT");
+		for(String pathId : deptIds) {
+			map.put("deptId", pathId);
+			if (pathId.equals(deptId)) {
+				map.put("isUserDept", true);
+			} else {
+				map.put("isUserDept", false);
+			}
+			deptResult = ezNewPortalDAO.getCheckQuickLinkAcl(map);
+
+			for (QuickLinkVO deptQuickLink : deptResult) {
+				String quickLinkId = deptQuickLink.getQuickLinkId();
+				if (quickLinkIds.indexOf(quickLinkId) == -1) {
+					quickLinkIds.add(quickLinkId);
+					if ("Y".equals(deptQuickLink.getViewflag())) {
+						result.add(deptQuickLink);
+					}
+				}
+			}
+		}
+
+		ArrayList<String> quickLinkIdList = new ArrayList<>();
+		for (QuickLinkVO quickLink : result ) {
+			quickLinkIdList.add(quickLink.getQuickLinkId());
+		}
+		if (quickLinkIdList.size() > 0) {
+			map.put("quickLinkIdList", quickLinkIdList);
+		}
+
+		Map<String, Object> resultMap = new HashMap<>();
+		// getQuickLinkTotalPageCnt 총 개수 구하기
+		int totalCnt = ezNewPortalDAO.getQuickLinkTotalCnt(map);
+		float pageCnt = (float)totalCnt / (float)limit;
+		resultMap.put("totalPageCnt", (int) Math.ceil(pageCnt));
+		resultMap.put("quickLinkList", ezNewPortalDAO.getQuickLinkList(map));
+
 		logger.debug("[Serivce] getQuickLinkList Ended");
-		return ezNewPortalDAO.getQuickLinkList(map);
+		return resultMap;
 	}
 	// 퀵링크 전체 페이지 개수 가져오기
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit, String userId, String deptId) throws Exception {
@@ -334,7 +405,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int totalCnt = ezNewPortalDAO.getQuickLinkTotalCnt(map);
 		
 		float pageCnt = (float)totalCnt / (float)limit;
-		
+
 		logger.debug("[Serivce] getQuickLinkTotalPageCnt Ended");
 		return (int) Math.ceil(pageCnt);
 	}
@@ -710,11 +781,16 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 				
 				if (!canAccessTheme) {
-					map.put("usedTheme", themeList.get(0).getThemeId());
-					userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
-					
-					if (userPortalSetting == null) {
+					if (themeList == null || themeList.size() == 0) {
+						// 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기
 						userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+					} else {
+						map.put("usedTheme", themeList.get(0).getThemeId());
+						userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
+						if (userPortalSetting == null) {
+							map.put("themeId", themeList.get(0).getThemeId());
+							userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+						}
 					}
 				}
 			}
@@ -733,7 +809,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			
 			if (!canAccessTheme) {
 				if (themeList == null || themeList.size() == 0) {
-					map.put("themeId", themeList.get(0).getThemeId());
+					// 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기
 					userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
 				}  else {
 					map.put("usedTheme", themeList.get(0).getThemeId());
@@ -760,12 +836,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		//List<Integer> portletIdList = new ArrayList<Integer>();
-	
+
 		//포틀릿 순서 업데이트 (없으면 insert)
 		for (Object item : portletOrder) {
 			if (item instanceof JSONObject) {
 				JSONObject portlet = (JSONObject) item;
-				
+
 				map = new ObjectMapper().readValue(portlet.toJSONString(), Map.class);
 				map.put("userId", userId);
 				map.put("companyId", companyId);
@@ -774,12 +850,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("themeId", themeId);
 				map.put("portletUsed", 1);
 				ezNewPortalDAO.updatePortletOrderUser(map);
-				
+
 				/*int portletId = Integer.parseInt(portlet.get("portletId").toString());
 				portletIdList.add(portletId);*/
 			}
 		}
-				
+
 		//tbl_portal_portlet_user에는 있는데 포틀릿 순서에 없었던 목록 가져오기
 		/*map.put("portletIdList", portletIdList);
 		
@@ -1158,7 +1234,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//path 거꾸로 돌려야해서
 		List<String> deptIds = Arrays.asList(deptPath.split(","));
 		Collections.reverse(deptIds);
-		
+		String userDeptId = deptIds.get(0);
+
 		map.put("lang", lang);
 		
 		//유저권한체크
@@ -1197,6 +1274,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
 		for(String pathId : deptIds) {
 			map.put("userId", pathId);
+			if (pathId.equals(userDeptId)) {
+				map.put("isUserDept", true);
+			} else {
+				map.put("isUserDept", false);
+			}
 			
 			deptResult = ezNewPortalDAO.getUserThemeList(map);
 			
@@ -1219,6 +1301,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return result;
 	}
 	
+
+	/* 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기 */
+	public List<ThemeInfoVO> getCompThemeList(String companyId, int tenantId, String lang) throws Exception {
+		logger.debug("getCompThemeList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("lang", lang);
+		List<ThemeInfoVO> result = ezNewPortalDAO.getCompThemeList(map);
+		logger.debug("getCompThemeList ended.");
+		return result;
+	}
 
 	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception {
 		logger.debug("getUserStartPage started.");
@@ -1450,6 +1544,16 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				ezNewPortalDAO.updateCompanyPortletNameInfo(map);
 			}
 		}
+
+		/* 2024-06-13 김유진 - 테마별 포틀릿도 업데이트 */
+		map.put("lang", 1);
+		List<ThemeInfoVO> themeList = ezNewPortalDAO.getCompanyThemes(map);
+		int themeCount = themeList.size();
+		for (int i = 0; i < themeCount; i ++) {
+			map.put("themeId", themeList.get(i).getThemeId());
+			ezNewPortalDAO.updateThemePortlet(map);
+		}
+
 		logger.debug("updateCompanyPortletInfo ended.");
 		
 	}
@@ -1496,7 +1600,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.deletePortlet(map);
 		
 		ezNewPortalDAO.deleteThemePortlet(map);
-		
+
 		
 		logger.debug("deletePortlet ended.");
 	}
@@ -1960,6 +2064,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			list = getCompanyThemes(companyId, tenantId, lang);
 		} else {
 			list = getUserThemeList(companyId, tenantId, userId, deptPath, lang);
+			// 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기
+			if (list == null || list.size() == 0) {
+				list = getCompThemeList(companyId, tenantId, lang);
+			}
 		}
 		
 		logger.debug("getThemes ended.");
@@ -2573,9 +2681,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		URL url;
 		URL todayUrl;
 		InputStreamReader isr;
-		
+
 		JSONObject jsonTemp;
-		
+
 		for (int i = 0; i < weatherKeyList.size(); i++) {
 			if (primaryLangList.get(i) == null) {
 				logger.debug("not enough weatherKey!!");
@@ -2584,22 +2692,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			String primaryLang = primaryLangList.get(i);
 			logger.debug("primaryLang = " + primaryLang);
 			cityCodeList = ezNewPortalDAO.getCityCodeList(primaryLang);
-			
+
 			StringBuffer buffer = new StringBuffer();
-			
+
 			for (String str : cityCodeList) {
 				buffer.append(str + ",");
 			}
-			
+
 			cityCode = buffer.toString();
 			cityCode = cityCode.substring(0, cityCode.length() - 1);
-			
+
 			url = new URL("http://api.openweathermap.org/data/2.5/group?" + "id=" + cityCode + "&units=metric" + "&appid=" + weatherKeyList.get(i));
-			
+
 			isr = new InputStreamReader(url.openConnection().getInputStream(),"UTF-8");
 			
 			JSONObject items = (JSONObject) JSONValue.parseWithException(isr); 
-			
+
 			JSONArray jsonCurrentWeatherArr = (JSONArray)items.get("list");
 			
 			for (int j = 0; j < jsonCurrentWeatherArr.size(); j++) {
@@ -2676,11 +2784,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@Override
 	public List<WeatherVO> getCityList(int primaryLang) {
 		logger.debug("getCityList started.");
-		
+
 		List<WeatherVO> result = ezNewPortalDAO.getCityList(primaryLang);
 		
 		logger.debug("getCityList ended.");
-		
+
 		return result;
 	}
 	

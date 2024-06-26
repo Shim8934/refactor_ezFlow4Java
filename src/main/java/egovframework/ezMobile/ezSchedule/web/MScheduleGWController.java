@@ -40,6 +40,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
@@ -102,7 +103,15 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */ 
 			String searchColumn = request.getParameter("searchColumn");
 			String searchData = request.getParameter("searchData");
-			
+
+			/* 2023-10-11 기민혁 사용자 일정검색 요소 추가 */
+			String chk_usersearch = request.getParameter("chk_usersearch");
+			String SuserId = request.getParameter("SuserId");
+			String SuserName = request.getParameter("SuserName");
+			String SuserDeptId = request.getParameter("SuserDeptId");
+			String SuserCompanyId = request.getParameter("SuserCompanyId");
+			String SuserDeptName = request.getParameter("SuserDeptName");
+
 			logger.debug("searchTitle: " + searchTitle);
 			
 			if (startDate != null && !startDate.equals("")) {
@@ -133,30 +142,45 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			
+
 			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
-			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
-						
-			String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
-			
-			if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
-				useWorkspaceSchedule = "NO";
-			} else if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
-	        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
-	        	result.put("workspaceHostUrl", workspaceHostUrl);
-	        }
-	        
-	        String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
-			if(useGoogleCalendar.equals("YES")) {
-				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-				userInfo.setDisplayName(info.getUserName());	// 오늘의 일정 > 데이터가 없어서 추가
-				List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, searchTitle, userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
-				sList.addAll(googleList);
+			List<ScheduleInfoVO> sList ;
+
+			if(chk_usersearch !=null && chk_usersearch.equals("userSearch")) {
+				if(SuserId == null || SuserId.isEmpty()){
+					info.setUserId("");
+					info.setDeptId("");
+					info.setCompanyId("");
+					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+				}else{
+					info.setUserId(SuserId);
+					info.setDeptId(SuserDeptId);
+					info.setCompanyId(SuserCompanyId);
+					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+				}
+			}else {
+				sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+
+				String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
+				
+				if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
+					useWorkspaceSchedule = "NO";
+				} else if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+					String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
+					result.put("workspaceHostUrl", workspaceHostUrl);
+				}
+
+				String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
+				if(useGoogleCalendar.equals("YES")) {
+					LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+					userInfo.setDisplayName(info.getUserName());	// 오늘의 일정 > 데이터가 없어서 추가
+					List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, searchTitle, userInfo, userInfo.getId(), "member", userInfo.getDisplayName());
+					sList.addAll(googleList);
+				}
 			}
-			
 			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", sList);		
+			result.put("code", 0);
+			result.put("data", sList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

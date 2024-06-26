@@ -6090,10 +6090,12 @@
 						TBL_RECORD.ProcessDeptName RECDEPTNAME,
 						SUBSTR(TBL_RECORD.RegisterNo, -6) RECREGSN,
 		                TBL_RECORD.TENANT_ID,
-		                TBL_RECORD.COMPANYID
+		                TBL_RECORD.COMPANYID,
+		                TBL_CABINETCLASS.TITLE,
+                        ENDDOCNO.DOCNO SIHANGNO
 				  <isEqual property="usePublicFlag" compareValue="true">
 				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval 
-				  </isEqual> 
+				  </isEqual>
 				<isNotEmpty property="dispRegisterNo" prepend=",">
 	                 <isEqual property="listType" compareValue="001">
 	                     CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, '-'), SUBSTR(TBL_RECORD.RegisterNo, -6)) AS DispRegisterNo
@@ -6114,9 +6116,10 @@
 				<isNotEmpty property="numOfPage" prepend=",">
 				    TBL_SEPERATEATTACH.NumOfPage AS NumOfPage
 				</isNotEmpty>
-				<isNotEmpty property="sepTitle" prepend=",">
-				    TBL_SEPERATEATTACH.Title AS Title
-				</isNotEmpty>
+				<!-- 2024-06-26 홍승비 - 실제로 호출되는 분기가 아닌 것으로 확인, 주석처리 후 TBL_CABINET.TITLE 및 ENDDOCNO.DOCNO (SIHANGNO) 칼럼을 고정적으로 가져오도록 수정 -->
+                <!-- <isNotEmpty property="sepTitle" prepend=",">
+                    TBL_SEPERATEATTACH.Title AS Title
+                </isNotEmpty> -->
 				<isNotEmpty property="registerYear" prepend=",">
 				    TBL_RECORD.RegisterYear AS RegisterYear
 				</isNotEmpty>
@@ -6180,6 +6183,24 @@
                     AND 
                         TBL_RECORD.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
               </isEqual>
+                    LEFT JOIN 
+				   		TBL_ENDAPRDOCINFO
+                    ON
+                        TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
+                    AND
+						TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+				   	AND
+						TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+                    LEFT JOIN 
+				   		TBL_ENDAPRDOCINFO ENDDOCNO
+                    ON 
+                        TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
+                    AND
+                        TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD.DOCID
+                    AND
+						TBL_ENDAPRDOCINFO.TENANT_ID = ENDDOCNO.TENANT_ID
+				    AND
+						TBL_ENDAPRDOCINFO.COMPANYID = ENDDOCNO.COMPANYID  
 				   WHERE
 				   		1 = 1
 						<isEmpty property="cabinetIDs">

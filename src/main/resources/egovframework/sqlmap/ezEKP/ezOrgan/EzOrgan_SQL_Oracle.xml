@@ -84,12 +84,14 @@
 		<result property="role" 						  	    column="role" 						    columnIndex="45"  nullValue=""/>
 		<result property="role1" 							    column="role1" 						    columnIndex="46"  nullValue=""/>
 		<result property="role2" 							    column="role2" 						    columnIndex="47"  nullValue=""/>
+		<result property="physicalDeliveryOfficeName1" 			column="physicalDeliveryOfficeName1" 	columnIndex="44"/>
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
 		<result property="title"								column="title" 							columnIndex="1"/>
 		<result property="displayName" 							column="displayName" 					columnIndex="2"/>	
 		<result property="company" 								column="company" 					columnIndex="3"/>			
+		<result property="role" 								column="role" 							columnIndex="4"/>
 	</resultMap>
 
 	<resultMap id="userInfoForRoles" class="OrganUserVO">
@@ -1461,6 +1463,7 @@
 	            'user' TYPE  ,
 	            SIPURI ,
 	            POSITIONCD ,
+	            PHYSICALDELIVERYOFFICENAME AS PHYSICALDELIVERYOFFICENAME1 ,
 	            'user' USERTYPE
 	        FROM
 	        	TBL_USERMASTER 
@@ -1504,6 +1507,7 @@
 	         C.DISPLAYNAME DESCRIPTION1  ,
      	     C.DISPLAYNAME2 DESCRIPTION2  ,
           	 A.PHYSICALDELIVERYOFFICENAME ,
+          	 C.EXTENSIONATTRIBUTE2 AS PHYSICALDELIVERYOFFICENAME1  ,
              CASE
              	#v_LANGDATA#
              WHEN
@@ -1748,7 +1752,17 @@
                 ELSE
                 	COMPNM2
                 END
-                	COMPANY   
+                	COMPANY,
+                CASE
+					#v_LANGDATA#
+                WHEN
+					'1'
+				THEN
+					ROLE
+                ELSE
+					ROLE2
+                END
+					ROLE
         	FROM
         		TBL_ADDJOBMASTER A
         	JOIN
@@ -1760,6 +1774,27 @@
         	AND
         		A.TENANT_ID = #v_TENANT_ID#	
 		]]>
+			<isNotEmpty property="v_jobID">
+				AND A.JOBID = #v_jobID#
+			</isNotEmpty>
+	</select>
+
+	<select id="EzOrganDAO.getAddJobInfo" parameterClass="Map" resultClass="OrganUserVO">
+		SELECT
+			TITLE,
+			TITLE2,
+			ROLE,
+			ROLE2
+		FROM
+			TBL_ADDJOBMASTER
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			DEPTID = #dept#
+		AND
+			JOBID = #jobID#
 	</select>
 
 	<update id="EzOrganDAO.updateProperty" parameterClass="Map">
@@ -2703,5 +2738,187 @@
 			J.TENANT_ID = #v_TENANT_ID#
 		ORDER BY
 			JM."TYPE", JM.SORT, (CASE #v_LANGDATA# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END) ASC
+	</select>
+	
+    <select id="EzOrganDAO.getAllUserInfo" parameterClass="Map" resultClass="OrganUserVO" remapResults="true">
+        SELECT CN,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       DISPLAYNAME
+                   ELSE
+                       DISPLAYNAME2
+                   END
+                                                     DISPLAYNAME,
+               DISPLAYNAME                           DISPLAYNAME1,
+               DISPLAYNAME2,
+               MAIL,
+               DEPARTMENT,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       DESCRIPTION
+                   ELSE
+                       DESCRIPTION2
+                   END
+                                                     DESCRIPTION,
+               DESCRIPTION                           DESCRIPTION1,
+               DESCRIPTION2,
+               PHYSICALDELIVERYOFFICENAME,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       COMPANY
+                   ELSE
+                       COMPANY2
+                   END
+                                                     COMPANY,
+               COMPANY                               COMPANY1,
+               COMPANY2,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       TITLE
+                   ELSE
+                       TITLE2
+                   END
+                                                     TITLE,
+               TITLE                                 TITLE1,
+               TITLE2                                TITLE2,
+               TELEPHONENUMBER,
+               HOMEPHONE,
+               MOBILE,
+               FACSIMILETELEPHONENUMBER,
+               STREETADDRESS,
+               INFO,
+               EXTENSIONATTRIBUTE1,
+               EXTENSIONATTRIBUTE2,
+               EXTENSIONATTRIBUTE3,
+               EXTENSIONATTRIBUTE4,
+               (CASE
+                    WHEN EXTENSIONATTRIBUTE5 IS NULL
+                        THEN CAST('' AS NVARCHAR2(200))
+                    ELSE EXTENSIONATTRIBUTE5 END) AS EXTENSIONATTRIBUTE5,
+               EXTENSIONATTRIBUTE6,
+               EXTENSIONATTRIBUTE7,
+               EXTENSIONATTRIBUTE8,
+               EXTENSIONATTRIBUTE9,
+               EXTENSIONATTRIBUTE10,
+               EXTENSIONATTRIBUTE11,
+               EXTENSIONATTRIBUTE12,
+               EXTENSIONATTRIBUTE13,
+               EXTENSIONATTRIBUTE14,
+               EXTENSIONATTRIBUTE15,
+               ADSPATH,
+               UPDATEDT,
+               'user'                                TYPE,
+               SIPURI,
+               POSITIONCD,
+               'user'                                USERTYPE,
+               ''	JOBID
+        FROM TBL_USERMASTER
+        WHERE CN = #v_CN#
+          AND TENANT_ID = #v_TENANT_ID#
+        UNION ALL
+        SELECT A.CN,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       A.DISPLAYNAME
+                   ELSE
+                       A.DISPLAYNAME2
+                   END
+                                                  DISPLAYNAME,
+               A.DISPLAYNAME                      DISPLAYNAME1,
+               A.DISPLAYNAME2,
+               A.MAIL,
+               C.CN                               DEPARTMENT,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       C.DISPLAYNAME
+                   ELSE
+                       C.DISPLAYNAME2
+                   END
+                                                  DESCRIPTION,
+               C.DISPLAYNAME                      DESCRIPTION1,
+               C.DISPLAYNAME2                     DESCRIPTION2,
+               A.PHYSICALDELIVERYOFFICENAME,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       C.EXTENSIONATTRIBUTE3
+                   ELSE
+                       C.COMPNM2
+                   END
+                                                  COMPANY,
+               C.EXTENSIONATTRIBUTE3              COMPANY1,
+               C.COMPNM2                          COMPANY2,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       B.TITLE
+                   ELSE
+                       B.TITLE2
+                   END
+                                                  TITLE,
+               B.TITLE                            TITLE1,
+               B.TITLE2                           TITLE2,
+               A.TELEPHONENUMBER,
+               A.HOMEPHONE,
+               A.MOBILE,
+               A.FACSIMILETELEPHONENUMBER,
+               A.STREETADDRESS,
+               A.INFO,
+               A.EXTENSIONATTRIBUTE1,
+               A.EXTENSIONATTRIBUTE2,
+               A.EXTENSIONATTRIBUTE3,
+               A.EXTENSIONATTRIBUTE4,
+               CAST(B.PROXY AS NVARCHAR2(200)) AS EXTENSIONATTRIBUTE5,
+               A.EXTENSIONATTRIBUTE6,
+               A.EXTENSIONATTRIBUTE7,
+               A.EXTENSIONATTRIBUTE8,
+               A.EXTENSIONATTRIBUTE9,
+               A.EXTENSIONATTRIBUTE10,
+               A.EXTENSIONATTRIBUTE11,
+               A.EXTENSIONATTRIBUTE12,
+               A.EXTENSIONATTRIBUTE13,
+               A.EXTENSIONATTRIBUTE14,
+               A.EXTENSIONATTRIBUTE15,
+               A.ADSPATH,
+               A.UPDATEDT,
+               'user'                             TYPE,
+               SIPURI,
+               B.POSITIONCD,
+               'addJob'                           USERTYPE,
+               JOBID
+        FROM TBL_ADDJOBMASTER B
+                 JOIN
+             TBL_USERMASTER A ON B.CN = A.CN AND B.TENANT_ID = A.TENANT_ID
+                 JOIN
+             TBL_DEPTMASTER C ON C.CN = B.DEPTID AND C.TENANT_ID = B.TENANT_ID
+        WHERE B.CN = #v_CN#
+          AND B.TENANT_ID = #v_TENANT_ID#
+    </select>
+
+	<select id="EzOrganDAO.getRetireUserMail" parameterClass="Integer" resultClass="OrganUserVO">
+		SELECT MAIL FROM
+		TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#
 	</select>
 </sqlMap>

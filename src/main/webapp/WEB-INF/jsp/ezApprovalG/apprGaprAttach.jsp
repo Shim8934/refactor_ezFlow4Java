@@ -94,6 +94,8 @@
 	        var anNo = "<c:out value ='${anNo}'/>"; // 일괄기안인 경우, 첨부파일을 첨부할 안의 번호
 	        
 	        var filetag;
+	        
+	        var orgResultxml;
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -180,6 +182,10 @@
 			    document.getElementById("docid").value =pDocID;
 			    document.getElementById("compid").value =  "<c:out value ='${userInfo.companyID}'/>";
 				Resultxml = InitAttach(pDocID);
+				
+				if (parent.pOrgDocID != '') {
+					orgResultxml = orgInitAttach(parent.pOrgDocID);
+				}
 
 				//2021-04-14 남학선 대용량첨부파일 용량제한이 0일때는 사용안하므로 버튼을 생략
 				if(bigSizeApprAttachLimit == "0"){
@@ -222,6 +228,19 @@
 				    } else {
 				    	normalAttachSize += parseInt(realFileSize.split(".")[0]);
 				    }
+				}
+				
+				if (orgResultxml != null && SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW").length > 0) {
+					for (var i = 0; i < SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+						var href = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")[i])[0])[1]);
+						for (var j = 0; j < SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW").length; j++) {
+							var orgHref = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW")[j])[0])[1]);
+							if (href == orgHref) {
+								createNodeAndAppandNodeText(Resultxml, GetChildNodes(SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")[i])[0], "", "DELETE", "N");
+								break;
+							}
+						}
+					}	
 				}
 				
 				/* 2020-03-19 홍승비 - 첨부파일 리스트뷰에서 다중선택이 가능하도록 수정 */
@@ -333,8 +352,27 @@
 			    var pAttachCurSel =listview.GetSelectedRows();
 			    if (pAttachCurSel.length > 0)
 				{
-					var pcheckID =  GetAttribute(pAttachCurSel[0], "DATA4");
- 					if (pcheckID.toLowerCase() != pUserID.toLowerCase() && pDraftFlag != "REDRAFT")
+					var isUsed = "";
+				    if (typeof(parent.isUsed) != "undefined") {
+				    	isUsed = parent.isUsed;
+				    }
+				    
+				    for (var i = 0; i < pAttachCurSel.length; i++) {
+		            	if (typeof(GetAttribute(pAttachCurSel[i], "DELETE")) != "undefined" && GetAttribute(pAttachCurSel[i], "DELETE") == "N") {
+		            		OpenAlertUI("<spring:message code='ezApprovalG.t277'/>");
+		            		return;
+		            	}
+		            }
+				    
+				    var userCheck = true;
+		            for (var i = 0; i < pAttachCurSel.length; i++) {
+		            	if (pUserID.toLowerCase() != GetAttribute(pAttachCurSel[i], "DATA4").toLowerCase()) {
+		            		userCheck = false;
+		            		break;
+		            	}
+		            }
+				    
+ 					if (!userCheck && pDraftFlag != "REDRAFT" && isUsed != "reuse")
 					{
  						if(delAttachByOthers == "0"){
 							var pAlertContent = "<spring:message code='ezApprovalG.t277'/>" + "<br>" + "<spring:message code='ezApprovalG.t278'/>";
@@ -572,7 +610,17 @@
 			
 			    var pCurSelRow = CurSelList.GetSelectedRows();
 			    var pAttachUserID = GetAttribute(pCurSelRow[0], "DATA4");
-			    if (pAttachUserID.toLowerCase() == pUserID.toLowerCase()) {
+			    var isUsed = "";
+			    if (typeof(parent.isUsed) != "undefined") {
+			    	isUsed = parent.isUsed;
+			    }
+			    
+            	if (typeof(GetAttribute(pCurSelRow[0], "DELETE")) != "undefined" && GetAttribute(pCurSelRow[0], "DELETE") == "N") {
+            		OpenAlertUI("<spring:message code='ezApprovalG.t282'/>");
+            		return;
+            	}
+				
+			    if (pAttachUserID.toLowerCase() == pUserID.toLowerCase() || isUsed == "reuse") {
 			        var retValue = getAttachFilePageNum(GetAttribute(pCurSelRow[0], "DATA9"), GetChildNodes(pCurSelRow[0])[1].innerHTML, ATTACH_onDblclick_Complete);
 			        if (retValue != undefined) {
 			            if ((!CrossYN()) && retValue[0] == "OK") {
