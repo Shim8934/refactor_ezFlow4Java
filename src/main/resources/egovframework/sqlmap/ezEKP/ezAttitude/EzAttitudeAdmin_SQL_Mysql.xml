@@ -993,8 +993,6 @@
 				U.CN = #userId#
 			AND 
 				U.TENANT_ID = #tenantId#
-			ORDER BY 
-				deptName
 			UNION
 			SELECT
 				D.DISPLAYNAME$primary$ AS deptName,
