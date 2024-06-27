@@ -690,30 +690,15 @@
 	        makeSwiperByTopMenu();
 	    }
 
-	    var makeSwiperByTopMenu = function () {
-	        var swiper = new Swiper(".mySwiper", {
-	            navigation: {
-	                nextEl: ".swiper-button-next",
-	                prevEl: ".swiper-button-prev"
-	            },
-	            autoplay: {
-	                delay: 5000,
-	                disableOnInteraction: false,
-	            }
-	        });
-	    }
-
-	    // 겸직
-	    /*function callAllUserTab() {
-	        $.ajax({
-	            type: "GET",
-	            url: "/ezNewPortal/allUserTab.do",
-	            dataType: "JSON",
-	            success : function(data) {
-	                makeAllUserTab(data);
-	            }
-	        });
-	    }*/
+		var makeSwiperByTopMenu = function () {
+			var swiper = new Swiper(".mySwiper", {
+				loop: true,
+				autoplay: {
+					delay: 5000,
+					disableOnInteraction: false,
+				}
+			});
+		}
 	    
 	    function getCookie(Name) {
 	        var search = Name + "="

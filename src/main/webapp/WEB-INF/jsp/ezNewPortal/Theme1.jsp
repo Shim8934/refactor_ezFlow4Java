@@ -708,10 +708,7 @@
 
     var makeSwiperByTopMenu = function () {
         var swiper = new Swiper(".mySwiper", {
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev"
-            },
+            loop: true,
             autoplay: {
                 delay: 5000,
                 disableOnInteraction: false,
@@ -719,18 +716,6 @@
         });
     }
 
-    // 겸직
-    /*function callAllUserTab() {
-        $.ajax({
-            type: "GET",
-            url: "/ezNewPortal/allUserTab.do",
-            dataType: "JSON",
-            success : function(data) {
-                makeAllUserTab(data);
-            }
-        });
-    }*/
-    
     function getCookie(Name) {
         var search = Name + "="
         if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
@@ -747,56 +732,7 @@
             }
         }
     }
-    
-    /*function makeAllUserTab(json) {
-        var switchUserCompany = "<c:out value='${switchUserCompany}' />"
 
-        if (switchUserCompany !== "Y") return;
-
-        var myInfo = document.getElementById("myInfo");
-        var select = document.createElement("select");
-        select.id = "switchUser";
-        select.style.maxWidth = "80px"; // 길이 임시조치
-        // select.style.padding = "0 6px";
-        // list.append(select);
-        myInfo.append(select);
-
-        for (var i = 0; i < json.length; i++) {
-            var option = document.createElement("option");
-            option.setAttribute("data-dept", json[i].deptId);
-            option.setAttribute("data-company", json[i].companyId);
-            option.setAttribute("data-job", json[i].jobId);
-            option.value = json[i].companyId;
-            option.text = json[i].companyName + " (" + json[i].deptName + " " + json[i].title + ")";
-            select.appendChild(option);
-            option.selected = json[i].curr;
-        }
-        
-        select.addEventListener("change", function() {
-            switchAllUserInfo();
-        });
-
-        function switchAllUserInfo() {
-            var select = document.getElementById("switchUser").selectedOptions[0];
-            var json = {};
-            json['companyId'] = select.getAttribute("data-company");
-            json['deptId'] = select.getAttribute("data-dept");
-            json['jobId'] = select.getAttribute("data-job");
-
-            $.ajax({
-                type: "POST",
-                url: "/ezNewPortal/switchAllUserInfo.do",
-                contentType: "application/json; charset=UTF-8",
-                data: JSON.stringify(json),
-                success : function(text) {
-                    if (text === "true") {
-                        parent.window.location.reload();
-                    }
-                }
-            });
-        }
-    }*/
-    
     // 고정포틀릿 on/off
     function displayFixPortlet() {
         var onOff = document.getElementById("portal_set").checked;
