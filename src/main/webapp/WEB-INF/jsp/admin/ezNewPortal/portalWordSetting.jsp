@@ -43,7 +43,7 @@
 	}
 	
 	function checkWord(obj){
-	    var RegExp = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
+	    var RegExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
 	    if (RegExp.test(obj.value)) {
 	    	obj.value = obj.value.replace(RegExp , '');
 	    	alert("<spring:message code='ezNewPortal.ljw01'/>");
