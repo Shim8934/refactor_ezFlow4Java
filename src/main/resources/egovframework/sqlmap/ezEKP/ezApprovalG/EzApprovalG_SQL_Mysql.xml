@@ -6254,7 +6254,8 @@
 		                M.AprmemberId as ORGUSERID,
                         TBL_CABINET.TITLE
 				  <isEqual property="usePublicFlag" compareValue="true">
-				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval 
+				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval
+                        , TBL_EXPENDAPRDOCINFO.FORMNAME
 				  </isEqual> 
 						$extraSelectClause$
 				   FROM 

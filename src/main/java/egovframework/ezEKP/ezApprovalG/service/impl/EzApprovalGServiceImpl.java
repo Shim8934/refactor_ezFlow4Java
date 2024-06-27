@@ -9878,6 +9878,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(k).getTextContent()).trim() + "]]></DATA16>");
 					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()).trim() + "]]></DATA17>");
 
+                    resultXML.append("<DATA99><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "]]></DATA99>");
+
                     /* 2023-06-26 민지수 - 추가의견 존재 여부 저장 (TRUE, FALSE) */
                     resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
                     resultXML.append("<HASOPINIONYN>" + hasopinionYn + "</HASOPINIONYN>");
