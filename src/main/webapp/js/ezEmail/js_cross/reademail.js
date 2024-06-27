@@ -76,6 +76,25 @@ function ReSend(pURL, pEmail) {
     }*/
 }
 
+// 2024.05.24 한슬기 : 수신인 이름을 사용하기위해 오버라이드
+function ReSend(pURL, pEmail, pReader) {
+    var pheight = window.screen.availHeight;
+    var conHeight = pheight * 0.8;
+    var pwidth = window.screen.availWidth;
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+    
+    var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail) + "&reciverName=" + encodeURIComponent(pReader);
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+    
+    window.open(requestUrl, "", feature);
+    
+}
+
 function encoding_mail() {
     try {
         var infolder = "/exchange/" + CutBeforeText(g_paramURL, "/exchange/");
