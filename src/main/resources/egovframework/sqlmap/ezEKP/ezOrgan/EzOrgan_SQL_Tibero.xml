@@ -902,44 +902,6 @@
 				COUNT(CN) TOTALCOUNT  
         	FROM
         		(
-		]]>
-		
-		<isEqual property="containConfig" compareValue="YES">
-			<![CDATA[
-				SELECT
-					CN 
-				FROM
-					TBL_USERMASTER 
-				WHERE
-					DEPARTMENT = #deptCN#
-				AND
-					CN <> 'masteradmin'
-				AND 
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)
-				AND
-					TENANT_ID = #tenantID#	
-				UNION ALL
-				 
-				SELECT
-					B.CN 
-				FROM
-					TBL_ADDJOBMASTER B
-				JOIN
-					TBL_USERMASTER A
-				ON
-					A.CN = B.CN
-				AND
-					A.TENANT_ID = B.TENANT_ID
-				WHERE
-					B.DEPTID = #deptCN#
-				AND
-					B.TENANT_ID = #tenantID#
-					
-				UNION ALL
-			]]>
-		</isEqual>
-		
-		<![CDATA[
 			SELECT
 				C.cn
 			FROM

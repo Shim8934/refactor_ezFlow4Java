@@ -876,52 +876,27 @@
 			SELECT
 				COUNT(cn) totalcount
         	FROM
-        		(
-		]]>
-        		
-		<isEqual property="containConfig" compareValue="YES">
-			<![CDATA[
-				SELECT
-					B.cn
+				(SELECT
+					C.cn
 				FROM
-					TBL_ADDJOBMASTER B
-				JOIN
-					TBL_USERMASTER A
-				ON
-					A.tenant_id = B.tenant_id
-				AND
-					A.cn = B.cn
+					TBL_USERMASTER C
 				WHERE
-					B.deptid = #deptCN#
+					C.tenant_id = #tenantID#
 				AND
-					B.tenant_id = #tenantID#
-					
-				UNION ALL
-			]]>
-		</isEqual>
-		
-		<![CDATA[
-			SELECT
-				C.cn
-			FROM
-				TBL_USERMASTER C
-			WHERE
-				C.tenant_id = #tenantID#
-			AND
-				C.cn <> 'masteradmin'
-			AND
-				C.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantID#)
-			AND
-				C.department in (SELECT
-									cn
-								FROM
-									TBL_DEPTMASTER
-								WHERE
-									C.tenant_id = #tenantID#
-								AND
-									(LOCATE((SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#), dept_cd_path)
-								OR
-									extensionattribute2 = #deptCN#))
+					C.cn <> 'masteradmin'
+				AND
+					C.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantID#)
+				AND
+					C.department in (SELECT
+										cn
+									FROM
+										TBL_DEPTMASTER
+									WHERE
+										C.tenant_id = #tenantID#
+									AND
+										(LOCATE((SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#), dept_cd_path)
+									OR
+										extensionattribute2 = #deptCN#))
 			UNION ALL
 			
 			SELECT
