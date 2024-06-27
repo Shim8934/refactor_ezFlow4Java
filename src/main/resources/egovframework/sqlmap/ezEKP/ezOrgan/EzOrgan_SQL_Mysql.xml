@@ -897,6 +897,14 @@
 										(LOCATE((SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#), dept_cd_path)
 									OR
 										extensionattribute2 = #deptCN#))
+		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				 AND
+					C.USERTREEFLAG = 'Y'
+			]]>
+		</isNotEqual>
+		<![CDATA[
 			UNION ALL
 			
 			SELECT
@@ -923,9 +931,15 @@
 							OR
 								(extensionattribute2 = #deptCN#
 									AND
-								CN <> #deptCN#)
-								)) AA
+								CN <> #deptCN#))
 		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				 AND
+					D.USERTREEFLAG = 'Y'
+			]]>
+		</isNotEqual>
+								) AA
 	</select>
 	
 	<select id="EzOrganDAO.getChildCompany" parameterClass="Map" resultClass="String">

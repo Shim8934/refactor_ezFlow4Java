@@ -924,7 +924,14 @@
 					(INSTR(dept_cd_path, (SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#)) = 1
 				OR
 					extensionattribute1 = #deptCN#))
-					
+		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				 AND
+					C.USERTREEFLAG = 'Y'
+			]]>
+		</isNotEqual>
+		<![CDATA[
 			UNION ALL
 			
 			SELECT
@@ -950,7 +957,16 @@
 				AND
 					(INSTR(dept_cd_path, (SELECT CONCAT(dept_cd_path, ',') FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #deptCN#)) = 1)
 				OR
-					extensionattribute1 = #deptCN#)) AA
+					extensionattribute1 = #deptCN#)
+		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				 AND
+					D.USERTREEFLAG = 'Y'
+			]]>
+		</isNotEqual>
+		<![CDATA[
+					) AA
 		]]>
 	</select>
 	
