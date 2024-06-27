@@ -793,9 +793,9 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
-			String deptId = info.getDeptId();
+			String deptId = request.getParameter("deptId");
 			String lang = info.getLang();
 			
 			// deptpath 구하기
