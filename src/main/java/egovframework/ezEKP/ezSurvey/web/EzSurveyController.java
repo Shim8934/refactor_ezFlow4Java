@@ -47,6 +47,7 @@ import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 import egovframework.ezEKP.ezSurvey.vo.OptionVO;
 import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
 import egovframework.ezEKP.ezSurvey.vo.ResponseVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -1388,5 +1389,27 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		logger.debug("jsonUpdateResponse ended");
 		return resultObj;
+	}
+	
+	@RequestMapping(value="/ezSurvey/setPreviewFlag.do", method = RequestMethod.POST)
+	public String setPreviewFlag(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("setPreviewFlag start");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String prevMode = request.getParameter("prevMode") != null ? request.getParameter("prevMode") : "";
+		
+		SurveyGeneralVO userConfig  = ezSurveyService.getUserPreviewConfig(user.getId(), user.getCompanyID(), user.getTenantId());
+		try {
+			if (userConfig == null) {
+				ezSurveyService.saveUserConfig(prevMode, 10, 50, 50, user.getId(), user.getCompanyID(), user.getTenantId());
+			} else {
+				ezSurveyService.setPreviewFlag(prevMode, user.getId(), user.getCompanyID(), user.getTenantId());
+			}	
+			
+			logger.debug("setPreviewFlag end");
+			return "OK";
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			return "NO";
+		}
 	}
 }

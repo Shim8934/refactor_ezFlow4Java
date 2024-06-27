@@ -1589,4 +1589,17 @@
 		  AND
 			TENANT_ID = #tenantID#
 	</select>
+	
+	<update id="EzSurveyDAO.setPreviewFlag" parameterClass="Map">
+		UPDATE
+			TBL_SURVEY_CONFIG
+		SET
+			PREVIEW_FLAG = #prevMode#
+		WHERE
+			USER_ID = #userId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
 </sqlMap>

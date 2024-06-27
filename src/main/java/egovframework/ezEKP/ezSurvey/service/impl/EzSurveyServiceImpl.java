@@ -1728,4 +1728,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return ezSurveyDAO.checkTenantConfig(map);
 	}
 	
+	@Override
+	public void setPreviewFlag(String prevMode, String userId, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("prevMode", prevMode);
+		
+		ezSurveyDAO.setPreviewFlag(map);
+	}
+	
 }

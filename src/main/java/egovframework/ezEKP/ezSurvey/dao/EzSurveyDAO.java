@@ -274,4 +274,8 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public String checkTenantConfig(Map<String, Object> map) throws Exception{
 		return (String) select("EzSurveyDAO.checkTenantConfig", map);
 	}
+	
+	public void setPreviewFlag(Map<String, Object> map) {
+		update("EzSurveyDAO.setPreviewFlag", map);
+	}
 }
