@@ -412,7 +412,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}
 
 	@Override
-	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle, String searchColumn, String searchData) throws Exception {								
+	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle, String searchLocation, String searchAll, String filter) throws Exception {
 		String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 		String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
 
@@ -493,7 +493,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 
 		pidList += pidListSub;
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, searchColumn, utcStartTime, utcEndTime, startDate, endDate, searchData, offSetMin, searchTitle, info.getTenantId(), info.getCompanyId(), info.getUserId(), info.getDeptId(), useAnnualScheduleYN);
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, filter, utcStartTime, utcEndTime, startDate, endDate, offSetMin, searchTitle, searchLocation, searchAll, info.getTenantId(), info.getCompanyId(), info.getUserId(), info.getDeptId(), useAnnualScheduleYN);
 
 		Collections.sort(sList, new EzScheduleCompareUtilPublic());
 		
@@ -539,7 +539,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		String startDate = sdf.format(cal.getTime()) + " 00:00:00";
 		String endDate = sdf.format(cal.getTime()) + " 23:59:59";
 		
-		List<ScheduleInfoVO> sList = scheduleList(info, startDate, endDate, "", "", "");
+		List<ScheduleInfoVO> sList = scheduleList(info, startDate, endDate, "", "", "", "");
 		
 		String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 		if(useGoogleCalendar.equals("YES")) {
@@ -589,7 +589,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}
 
 	@Override
-	public List<ScheduleInfoVO> scheduleUserSearchList(MCommonVO info, String startDate, String endDate, String searchTitle, String searchColumn, String searchData) throws Exception {
+	public List<ScheduleInfoVO> scheduleUserSearchList(MCommonVO info, String startDate, String endDate, String searchTitle) throws Exception {
 		String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 		String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
 
