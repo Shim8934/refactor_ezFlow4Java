@@ -1007,8 +1007,9 @@
 			            enforceDocID = GetAttribute(selRow[0], "DATA1");
 			            enforceDocHref = GetAttribute(selRow[0], "DATA2");
 			            enforceDocOrgCompanyID = GetAttribute(selRow[0], "ORGCOMPANYID");
+			            enforceExt = GetAttribute(selRow[0], "DATA2").indexOf("hwp") > -1 ? "hwp" : "mht";
 			            
-		        		var pURL = "/ezApprovalG/getFormCont.do?pFormType=004"; //일반버전의 FormType=004는 시행문
+		        		var pURL = "/ezApprovalG/getFormCont.do?pFormType=004&ext=" + enforceExt; //일반버전의 FormType=004는 시행문
 		        		var getFormCont_Cross = window.open(pURL, "formCont", GetOpenWindowfeature(713, 570));
 		        		try { getFormCont_Cross.focus(); } catch (e) {}
 		        	} else {
@@ -1023,17 +1024,23 @@
 	        var enforceDocID = "";
 	        var enforceDocHref = "";
 	        var enforceDocOrgCompanyID = "";
+	        var enforceExt = "";
 	        function enforce_onclick_complete(ret) {
 	        	if (ret[0] != "cancel") {
-	        		var pURL = "/ezApprovalG/enforceSihangDocView.do";
+	        	    var isHwp = enforceExt == "hwp";
+	        		var pURL = isHwp ? "/ezApprovalG/ezConvSihang_WHWP.do" : "/ezApprovalG/enforceSihangDocView.do";
 	        		pURL += "?pFormURL=" + encodeURIComponent(ret[0]);
 	        		pURL += "&pFormType=" + encodeURIComponent(ret[1]);
 	        		pURL += "&pFormID=" + encodeURIComponent(ret[2]);
-	        		pURL += "&pDocID=" + encodeURIComponent(enforceDocID);
-	        		pURL += "&pDocHref=" + encodeURIComponent(enforceDocHref);
-	        		pURL += "&pOrgCompanyID=" + encodeURIComponent(enforceDocOrgCompanyID);
-	        		
-	        		window.open(pURL, "", GetOpenWindowfeature(850, 900));
+	        		pURL +=  (isHwp ? "&docID=" : "&pDocID=") + encodeURIComponent(enforceDocID);
+	        		pURL += (isHwp ? "&docHref=" : "&pDocHref=") + encodeURIComponent(enforceDocHref);
+	        		pURL += (isHwp ? "&orgCompanyID=" : "&pOrgCompanyID=") + encodeURIComponent(enforceDocOrgCompanyID);
+
+                    var height = window.screen.availHeight;
+                    var width = window.screen.availWidth;
+                    var height = height - 50;
+                    var width = width/2;
+	        		window.open(pURL, "", GetOpenWindowfeature(isHwp ? width : 850, isHwp ? height : 900));
 	        	}
 	        }
 			function Approval_onclick() {
