@@ -1721,7 +1721,7 @@ nav .navUL li:hover:after{width:50%; transition:all 0.2s ease;}
 
 /* 20230612 메인 신규추가 */
 
-.sscheduleUL .scheduleLi.group { background: #fffbe2; border-radius: 5px;}
+.sscheduleUL .scheduleLi.group {background:rgba(255,251,226,0.6); border-color:rgba(167,151,45,0.2);}
 
 #theme2Body .info_txt .info_icon {position: absolute;right: 10px;top:0px;}
 #theme2Body .personal_content dl.current{text-align:center; width:100%; color:#6E7F93; font-size:14px; font-weight:500;}

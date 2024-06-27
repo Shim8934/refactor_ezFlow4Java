@@ -108,11 +108,12 @@ function getScheduleList_after(resultList, mode, date) {
 					// 2023-09-06 조소정 - 일정 포틀릿 그룹일정 그룹색상 표출
 		            if(groupColor == null || groupColor == "") {
 		            	var groupColor = "#e9de13";
-						listHTML += "<span class='Tgroup' style='color: " + groupColor + ";'>" + strLangArrForTheme[3] + "</span>";  
+						// listHTML += "<span class='Tgroup' style='color: " + groupColor + ";'>" + strLangArrForTheme[3] + "</span>";
+						listHTML += "<span class='Tgroup'>" + strLangArrForTheme[3] + "</span>";
 		            }
 		            else {
-						listHTML += "<span class='Tgroup' style='color: " + groupColor + ";'>" + strLangArrForTheme[3] + "</span>";
-		            }
+						// listHTML += "<span class='Tgroup' style='color: " + groupColor + ";'>" + strLangArrForTheme[3] + "</span>";
+						listHTML += "<span class='Tgroup'>" + strLangArrForTheme[3] + "</span>";		            }
 				} else if (SCHEDULETYPE == 4) {
 					timeClass = "Tcollaborate";
 					listHTML += "<span class='Tcollaborate'>" + strLangArrForTheme[4] + "</span>";
