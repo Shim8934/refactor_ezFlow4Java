@@ -62,7 +62,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN",userid);
-		map.put("v_FIELD", propName);
+		map.put("v_FIELD", propName.toUpperCase());
 		
         // 지정된 사원이 존재하는 지 여부를 확인한다.
     	String temp = ezOrganDAO.getPropertyValue_S1(map);
@@ -765,7 +765,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         
         if (pLimit != 0) {
             strSize = " AND ROWNUM <= " + pLimit;
-            strSizeForMySQL = " LIMIT " + pLimit;
+            //strSizeForMySQL = " LIMIT " + pLimit;
         }
         
         if (!pSearchList.equals("")){
@@ -845,7 +845,8 @@ public class EzOrganServiceImpl implements EzOrganService {
                 
         map.put("strSQL", strSQL + strSize);
         map.put("strSQLForMySQL", strSQL);
-        map.put("strSizeForMySQL", strSizeForMySQL);
+        map.put("pLimit", pLimit);
+        //map.put("strSizeForMySQL", strSizeForMySQL);
         map.put("strGyumjikForOracle", strSQLForAddJob);
         map.put("type", type);
         map.put("class", pClass);
@@ -917,7 +918,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         
         if (pLimit != 0) {
             strSize = " AND ROWNUM <= " + pLimit;
-            strSizeForMySQL = " LIMIT " + pLimit;
+            //strSizeForMySQL = " LIMIT " + pLimit;
         }
         
         if (!pSearchList.equals("")){
@@ -989,7 +990,8 @@ public class EzOrganServiceImpl implements EzOrganService {
                 
         map.put("strSQL", strSQL + strSize);
         map.put("strSQLForMySQL", strSQL);
-        map.put("strSizeForMySQL", strSizeForMySQL);
+        //map.put("strSizeForMySQL", strSizeForMySQL);
+        map.put("pLimit", pLimit);
         map.put("strGyumjikForOracle", strSQL.replace("department", "deptID"));
         map.put("type", type);
         map.put("class", pClass);
@@ -1128,16 +1130,17 @@ public class EzOrganServiceImpl implements EzOrganService {
         	logger.debug("searchList : " + pSearchList.split("@@")[0]);
         	
         	if (!companyId.equals("")) {
-        		strSQLCom = "AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+        		/*strSQLCom = "AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
         		
         		if (type.equals("G")) {
         			strSQLCom = strSQLCom.replace("PHYSICALDELIVERYOFFICENAME", "EXTENSIONATTRIBUTE2");
         		}
 
-        		strSQLAddjobCom = "AND a.DEPTID IN (SELECT cn FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = '" + companyId + "')";
+        		strSQLAddjobCom = "AND a.DEPTID IN (SELECT cn FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = '" + companyId + "')";*/
         		
         		if (pSearchList.split("@@")[0].equals("description")) {
-        			strSQLAddjobCom = strSQLAddjobCom.replace("a.DEPTID", "b.PHYSICALDELIVERYOFFICENAME");
+        			//strSQLAddjobCom = strSQLAddjobCom.replace("a.DEPTID", "b.PHYSICALDELIVERYOFFICENAME");
+					strSQLAddjobCom = "description";
         		}
         	}
 
@@ -1152,13 +1155,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 
         	map.put("strSQL" , strSQL);
         	map.put("type", type);
+        	map.put("companyId", companyId);
         	map.put("class", pClass);
         	map.put("startRow", startRow);
         	map.put("endRow", endRow);
         	map.put("v_TENANT_ID", tenantID);
         	map.put("startRowForMySQL", startRow - 1);
         	map.put("count", 50);        
-        	map.put("strSQLCom", strSQLCom);  
+        	//map.put("strSQLCom", strSQLCom);
         	map.put("strSQLAddjobCom", strSQLAddjobCom);
         	map.put("adminOrgan", adminOrgan);
         	map.put("v_LANGDATA", pLangCode);
@@ -1761,7 +1765,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", userID);
 		map.put("v_CLASS", pClass);
-		map.put("v_PROPNAME", propName);
+		map.put("v_PROPNAME", propName.toUpperCase());
 		map.put("v_PROPVALUE", propValue);
 		
         // 사원의 경우
@@ -2170,7 +2174,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         
         if (pLimit != 0) {
             strSize = " AND ROWNUM <= " + pLimit;
-            strSizeForMySQL = " LIMIT " + pLimit;
+            //strSizeForMySQL = " LIMIT " + pLimit;
         }
         
         if (!pSearchList.equals("")) {
@@ -2240,14 +2244,15 @@ public class EzOrganServiceImpl implements EzOrganService {
 
     	logger.debug("searchList : " + pSearchList.split("@@")[0]);
         if (!companyId.equals("")) {
-        	strSQLCom = "AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+        	/*strSQLCom = "AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
         	if (type.equals("G")) {
         		strSQLCom = strSQLCom.replace("PHYSICALDELIVERYOFFICENAME", "EXTENSIONATTRIBUTE2");
         	}
         	
-        	strSQLAddjobCom = "AND a.DEPTID IN (SELECT cn FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = '" + companyId + "')";
+        	strSQLAddjobCom = "AND a.DEPTID IN (SELECT cn FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = '" + companyId + "')";*/
         	if (pSearchList.split("@@")[0].equals("description")){
-        		strSQLAddjobCom = strSQLAddjobCom.replace("a.DEPTID", "b.PHYSICALDELIVERYOFFICENAME");
+        		//strSQLAddjobCom = strSQLAddjobCom.replace("a.DEPTID", "b.PHYSICALDELIVERYOFFICENAME");
+				strSQLAddjobCom = "description";
         	}
         }
 		
@@ -2259,22 +2264,24 @@ public class EzOrganServiceImpl implements EzOrganService {
 		}
 
         Map<String, Object> map = new HashMap<String, Object>();
-                
+
         map.put("strSQL", strSQL + strSize);
         map.put("strSQLForMySQL", strSQL);
-        map.put("strSizeForMySQL", strSizeForMySQL);
+        //map.put("strSizeForMySQL", strSizeForMySQL);
+        map.put("pLimit", pLimit);
         map.put("strGyumjikForOracle", strSQLForAddJob);
         map.put("type", type);
+        map.put("companyId", companyId);
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
-        map.put("strSQLCom", strSQLCom);
+        //map.put("strSQLCom", strSQLCom);
         map.put("strSQLAddjobCom", strSQLAddjobCom);
         map.put("noAddJob", noAddJob);
         map.put("adminOrgan", adminOrgan);
 		map.put("strSQLForAddJobForMySQL", strSQLForAddJob);
         
         logger.debug("strSQL=" + strSQL);
-        logger.debug("strSQLCom=" + strSQLCom);//getSearchList
+        //logger.debug("strSQLCom=" + strSQLCom);//getSearchList
         logger.debug("strSQLAddjobCom=" + strSQLAddjobCom);
         
         List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
@@ -2404,7 +2411,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getPropertyValueForDept started.");
 		
 	    Map<String, Object> map = new HashMap<String, Object>();
-	    map.put("v_FIELD", fieldName);
+	    map.put("v_FIELD", fieldName.toUpperCase());
 		map.put("v_CN", deptID);
 		map.put("v_TENANT_ID", tenantID);
 		

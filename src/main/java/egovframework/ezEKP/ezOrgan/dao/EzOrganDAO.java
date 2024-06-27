@@ -81,7 +81,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	}
 		
     @SuppressWarnings("unchecked")
-    private List<OrganDeptVO> organSearchForLocal(Map<String, Object> map) throws Exception {        
+    private List<OrganDeptVO> organSearchForLocal(Map<String, Object> map) throws Exception {
         return (List<OrganDeptVO>) list("EzOrganDAO.organSearch", map);
     }   
 	
