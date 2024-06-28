@@ -135,7 +135,7 @@ public class EzCabinetGWController_h {
 			switch(searchOpt) {
 				case "displayname": sqlQuery = "display_name"   ; break;
 				case "description": sqlQuery = "department_name"; break;
-				case "cn"         : sqlQuery = "cn"             ; break;
+				case "userId"     : sqlQuery = "cn"             ; break;
 				default: sqlQuery = "display_name";
 			}
 			
