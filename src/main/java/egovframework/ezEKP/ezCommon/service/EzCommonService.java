@@ -409,4 +409,8 @@ public interface EzCommonService {
 	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테넌트 컨피그 추가 */
 	public void insertReminderTenantConfig() throws Exception;
 	
+	public void alterDocAttachNameCol() throws Exception;
+
+	// 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+	public void alterSaveFlagForCbShare() throws Exception;
 }

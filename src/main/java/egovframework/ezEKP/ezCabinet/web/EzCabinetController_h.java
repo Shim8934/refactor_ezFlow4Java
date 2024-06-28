@@ -121,10 +121,11 @@ public class EzCabinetController_h {
 		String cabinetId    = request.getParameter("cabinetId")  != null ? request.getParameter("cabinetId")   : "";
 		String searchOpt    = request.getParameter("searchOpt")  != null ? request.getParameter("searchOpt")   : "";
 		String searchValue  = request.getParameter("searchValue")!= null ? request.getParameter("searchValue") : "";
+		String searchFlag  = request.getParameter("searchFlag")!= null ? request.getParameter("searchFlag") : ""; // 공유자 검색 Flag
 		
 		logger.debug("CabinetId: " + cabinetId + " || searchOpt: " + searchOpt + " || searchValue" + searchValue);
 		
-		JSONObject resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId, searchOpt, searchValue);
+		JSONObject resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId, searchOpt, searchValue, searchFlag);
 		
 		if (resultObj.get("status").toString().equals("ok")) {
 			List<SimpleUserVO> listUsers = (List<SimpleUserVO>)resultObj.get("shareList");
@@ -188,6 +189,7 @@ public class EzCabinetController_h {
 		String cabinetId    = request.getParameter("cabinetId")  != null ? request.getParameter("cabinetId")   : "";
 		String searchOpt    = request.getParameter("searchOpt")  != null ? request.getParameter("searchOpt")   : "";
 		String searchValue  = request.getParameter("searchValue")!= null ? request.getParameter("searchValue") : "";
+		String searchFlag   = request.getParameter("searchFlag")!= null ? request.getParameter("searchFlag") : ""; // 공유자 검색 Flag
 		
 		logger.debug("CabinetId: " + cabinetId + " || searchOpt: " + searchOpt + " || searchValue" + searchValue);
 		
@@ -199,7 +201,7 @@ public class EzCabinetController_h {
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId, searchOpt, searchValue);
+		resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId, searchOpt, searchValue, searchFlag);
 		
 		logger.debug("jsonGetShareUserList ended");
 		return resultObj.toString();

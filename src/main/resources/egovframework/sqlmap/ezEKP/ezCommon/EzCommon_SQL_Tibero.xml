@@ -5149,4 +5149,24 @@
 			(#tenantID#, #property#, '09:00', 'HH24:MM 형식으로 미리알림 시 하루종일 일정의 시작 시각 설정가능(MM은 00 또는 30만 가능)', '미리알림 시 하루종일 일정의 시작 시각 세팅', TO_DATE('2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일정관리')
 	</insert>
 	
+
+	<select id="EzCommonDAO.checkSaveFlagForCbShare" resultClass="String">
+	<![CDATA[
+		SELECT
+			SAVEFLAG
+		FROM
+			TBL_CB_SHARE
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSaveFlagForCbShare">
+	<![CDATA[
+		ALTER TABLE
+			TBL_CB_SHARE
+			ADD
+				SAVEFLAG NUMBER(3,0)
+		]]>
+    </statement>
 </sqlMap>

@@ -125,7 +125,7 @@
 													<div>
 														<select id="searchType2">
 															<option selected value="displayname"><spring:message code="ezCabinet.t18" /></option>
-															<option          value="cn"         ><spring:message code="ezCabinet.t137"/></option>
+															<option          value="userId"         ><spring:message code="ezCabinet.t137"/></option>
 															<option          value="description"><spring:message code="ezCabinet.t19" /></option>
 														</select>
 														<input type="text" id="keyword2">
@@ -168,6 +168,27 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetNavi.js')   }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTable.js')  }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetShare.js')  }"></script>
-		<script type="text/javascript">CabinetShareItem.init("<c:out value='${cabinetId}'/>", "<c:out value='${userId}'/>");</script>
+		<script type="text/javascript">
+			var cabinetId = "<c:out value='${cabinetId}'/>";
+			CabinetShareItem.init(cabinetId, "<c:out value='${userId}'/>");
+			var firstList;
+
+			// 최초로 창이 로드될때 div에 존재하는 공유자 리스트 배열에 저장.
+			window.onload = function() {
+				var selectedUsers = document.getElementById("sharedTable");
+				var listTr        = selectedUsers.rows;
+				firstList      = [];
+
+				for (var i = 1, len = listTr.length; i < len; i++) {
+					var userId   = listTr[i].getAttribute("role");
+					var userType = listTr[i].getAttribute("userType");
+					var perSlBox = listTr[i].children[2].firstElementChild;
+					var subSlBox = listTr[i].children[3].firstElementChild;
+					var permiss  = perSlBox.options[perSlBox.selectedIndex].value;
+					var subPerm  = subSlBox.options[subSlBox.selectedIndex].value;
+					firstList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm, searchFlag : 'N'});
+				}
+			};
+		</script>
 	</body>
 </html>

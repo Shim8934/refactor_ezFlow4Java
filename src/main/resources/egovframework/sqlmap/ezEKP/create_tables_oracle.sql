@@ -2834,8 +2834,9 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"PERMISSION" NUMBER(3,0), 
 	"SHARE_DATE" TIMESTAMP (0), 
 	"CHILD_PERMISSION" NUMBER(3,0), 
-	"USE_STATUS" NUMBER(3,0), 
-	"COMPANY_ID" VARCHAR2(50 BYTE), 
+	"USE_STATUS" NUMBER(3,0),
+    "SAVEFLAG" NUMBER(3,0),
+    "COMPANY_ID" VARCHAR2(50 BYTE),
 	"TENANT_ID" NUMBER(10,0)
    ) ;
 --------------------------------------------------------
@@ -14750,6 +14751,7 @@ END;
   ALTER TABLE "TBL_CB_SHARE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "TBL_CB_SHARE" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "TBL_CB_SHARE" MODIFY ("USE_STATUS" NOT NULL ENABLE);
+  ALTER TABLE "TBL_CB_SHARE" MODIFY ("SAVEFLAG" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_CB_USER_CAPACITY
 --------------------------------------------------------

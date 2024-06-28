@@ -4970,6 +4970,7 @@ CREATE TABLE `tbl_cb_share` (
   `share_date` datetime NOT NULL,
   `child_permission` tinyint(4) NOT NULL COMMENT '1: 권한있음, 0: 권한없음',
   `use_status` tinyint(4) NOT NULL COMMENT '1: 사용, 0: 삭제',
+  `saveflag` tinyint(4) NOT NULL COMMENT '1: 최종 저장, 0: 검색시 저장',
   `company_id` varchar(50) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   PRIMARY KEY (`share_id`,`tenant_id`)
