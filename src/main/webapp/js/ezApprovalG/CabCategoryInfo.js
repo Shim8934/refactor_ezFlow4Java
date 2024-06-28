@@ -6,6 +6,7 @@ g_arrInitValue[0]="";
 g_arrInitValue[1]="";
 g_arrInitValue[2]="";
 g_arrInitValue[3]="";
+var viewFlag = "N";
 
 function selTaskCategory_onchange() 
 {
@@ -139,6 +140,18 @@ function GetTaskMiddleCategory(pCode)
 		selTaskMCategory_onchange();
 	}
 }
+
+function changeViewFlag() {
+    var cate = document.getElementById('selTaskCategory');
+    var mCate = document.getElementById('selTaskMCategory');
+    if (viewFlag == 'Y') {
+//        cate.options[0].text = "";
+//        mCate.options[0].text = "";
+        cate.value = "";
+        mCate.value = "";
+    }
+}
+
 //2024-06-20 이주원 부서철보기(GetTaskSubCategory메서드 카피)
 function viewDeptBinder(pCode, pSubCategoryCode){
     var GetXml = "";
@@ -158,6 +171,8 @@ function viewDeptBinder(pCode, pSubCategoryCode){
         },
         success: function(xml){
             GetXml = xml;
+            viewFlag = 'Y';
+            changeViewFlag();
         }
     });
 
@@ -201,14 +216,14 @@ function viewDeptBinder(pCode, pSubCategoryCode){
     DocList = null;
 }
 function GetTaskSubCategory(pCode, pSubCategoryCode)
-{	    
+{	viewFlag = 'N';
 	var GetXml = "";
 	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/getTaskSubCategoryAll.do",
+            url : "/ezApprovalG/getTaskSubCategoryAll.do",
 		data : {
 			cateCode   : pCode,
 			companyID  : CompanyID,
