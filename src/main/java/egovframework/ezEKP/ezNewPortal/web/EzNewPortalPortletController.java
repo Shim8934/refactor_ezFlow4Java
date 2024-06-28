@@ -1074,7 +1074,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("companyId", userInfo.getCompanyID());
-		param.put("deptId", userInfo.getDeptPathCode());
+		param.put("deptId", userInfo.getDeptID());
 		param.put("currentPage", req.getParameter("currentPage"));
 		param.put("photoCount", photoCount);
 		param.put("portletId", portletId);

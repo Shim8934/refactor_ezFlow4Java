@@ -759,6 +759,7 @@ function makePortlets(portletOrder) {
                                 }
                             } catch (e) {
                                 // 포틀릿 내부 에러시에 포탈 전체 스크립트 에러가 나서 다른 포틀릿의 실행도 막으므로, try catch 처리함
+                                console.log('portletId:' + portletId + ' / ' + portletCode);
                                 console.log(e);
                                 makeErrorPortlet(portletId);
                             }
