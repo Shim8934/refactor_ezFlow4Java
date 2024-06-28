@@ -7,6 +7,7 @@ var BTN_NEXT = "nextBtn"
 var BTN_PREV = "preBtn"
 
 function makeBoardList(portletId, fileName, count, type, currentPage) {
+    var boardHTML = "";
 	$.ajax({
 		type: "GET",
 		dataType: "json",
@@ -30,6 +31,9 @@ function makeBoardList(portletId, fileName, count, type, currentPage) {
 				} else {
 					getBoardList(result.boardList, portletId);
 				}
+			} else {
+                boardHTML += '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + messages.strLang14 + '</dd></dl>'
+                $("#customBoardList" + portletId).html(boardHTML);
 			}
 			resetPortletPaging(portletId, boardListTotalCnt, currentPage, "");
 		}
