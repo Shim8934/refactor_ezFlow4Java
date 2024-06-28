@@ -16,9 +16,13 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -26,6 +30,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -264,7 +269,7 @@ public class EzJournalGWController {
 				formList = ezJournalService.getFormListAdmin(typeId, deptId, companyId, info.getTenantId(), info.getOffSet(), lang);
 			} else {
 				// 사용자단의 양식리스트 (부서사용양식, 기본양식)
-				formList = ezJournalService.getFormList(typeId, deptId, info.getCompanyId(), info.getTenantId());
+				formList = ezJournalService.getFormList(typeId, deptId, "", info.getTenantId());
 			}
 			
 			result.put("data", formList);
@@ -628,9 +633,10 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
+			String deptId = String.valueOf(jsonParam.get("deptId"));
 			String realPath = commonUtil.getRealPath(request);
 			
-			String journalId = ezJournalService.insertJournal(jsonParam, info.getDeptId(), info.getTenantId(), realPath);
+			String journalId = ezJournalService.insertJournal(jsonParam, deptId, info.getTenantId(), realPath);
 			
 			result.put("data", journalId);
 			result.put("status", "ok");
@@ -1880,7 +1886,8 @@ public class EzJournalGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
+			List<OrganUserVO> allUserinfo = ezOrganService.getAllUserinfo(userId, info.getTenantId());
+
 			logger.debug("userId : " + userId);
 			String companyId = request.getParameter("companyId");
 			
@@ -1889,7 +1896,17 @@ public class EzJournalGWController {
 			}
 			String lang = request.getParameter("lang") != null ? commonUtil.getMultiData(request.getParameter("lang"), info.getTenantId()) : commonUtil.getMultiData(info.getLang(), info.getTenantId());;
 			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, companyId, info.getTenantId(),lang);
-			
+
+			if (deptList.stream().noneMatch(vo -> "yes".equals(vo.getMyDept()))) {
+				Set<String> set = allUserinfo.stream()
+						.map(OrganUserVO::getDepartment)
+						.collect(Collectors.toSet());
+                deptList.stream()
+						.filter(vo -> set.contains(vo.getId()))
+						.findFirst()
+						.ifPresent(vo -> vo.setMyDept("yes"));
+			}
+
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", deptList);

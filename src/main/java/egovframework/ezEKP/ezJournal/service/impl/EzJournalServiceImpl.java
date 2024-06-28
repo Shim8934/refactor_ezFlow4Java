@@ -946,6 +946,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("journalText", journalText);
 		
 		if (isTemp != null) {
+			map.put("deptId", jsonParam.get("deptId"));
 			map.put("isTemp", isTemp);
 			map.put("journalStatus", "");
 		}

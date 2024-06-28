@@ -351,14 +351,17 @@
 					tbl_journal_form a left join tbl_journal_form_use_dept b 
 				on 
 					(a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+				join tbl_deptmaster d
+							  on
+								  (d.TENANT_ID = a.tenant_id
+									  and d.cn = #deptId#
+									  and d.EXTENSIONATTRIBUTE2 = a.company_id)
 				where 
 					(b.dept_id = #deptId# or b.dept_id is null)
 				and
 					a.type_id = #typeId#
 				and
 					a.tenant_id = #tenantId#
-				and
-					a.company_id = #companyId#
 				and
 					a.form_del_flag is null
 				order by orderNo, form_id
@@ -1191,18 +1194,23 @@
 		select
 			*
 		from
-			(select 
-				a.form_id 
-			from 
-				tbl_journal a join tbl_journal_form b
-			on
-				(a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+			(select
+				a.form_id
+			 from tbl_journal a
+					  join tbl_journal_form b
+						   on
+							   (a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+					  join tbl_deptmaster d
+						   on
+							   (d.TENANT_ID = a.tenant_id and d.cn = a.journal_dept)
 			where
 				a.journal_writer = #userId#
 			and
 				b.type_id = #typeId#
 			and
 				a.tenant_id = #tenantId#
+			and
+			    d.EXTENSIONATTRIBUTE2 = #companyId#
 			order by a.journal_id desc)
 		where
 			ROWNUM = 1
@@ -1341,7 +1349,8 @@
 			,journal_date = TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS') 
 			</isEqual>
 			<isEqual property="isTemp" compareValue="Y">
-			,journal_date = TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS') 
+			,journal_date = TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,journal_dept = #deptId#
 			</isEqual>
 		where
 			journal_id = #journalId#

@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -148,7 +149,8 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		String listType = request.getParameter("listType");
 		String typeId = request.getParameter("typeId");
-		
+		String userDept = userInfo.getDeptID();
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/" + userInfo.getId() + "/author-depts", param, request,"get",null);
@@ -160,6 +162,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			model.addAttribute("deptList", deptList);
 			model.addAttribute("listType",listType);
 			model.addAttribute("typeId",typeId);
+			model.addAttribute("userDept",userDept);
 		}
 		
 		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/" + userInfo.getId() + "/options", param, request, "get", null);
@@ -189,11 +192,9 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("journalListMainFormList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String deptId = "";
-		if (request.getParameter("deptId")!=null) {
-			deptId = request.getParameter("deptId");
-		}
+		String deptId = Optional.ofNullable(request.getParameter("deptId")).orElse("");
+		deptId = StringUtils.isBlank(deptId) ? userInfo.getDeptID() : deptId;
+
 		String typeId = request.getParameter("typeId");
 		if (typeId == null || typeId.equals("")) {
 			typeId = "basic";
@@ -299,7 +300,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals", param, request, "get", null);
 		status = resultBody.get("status").toString();
 		
-		if (status.equals("ok")) {			
+		if (status.equals("ok")) {
 			JSONArray journalList =  (JSONArray) resultBody.get("data");
 //			logger.debug(journalList.toJSONString());
 			/*
@@ -461,7 +462,8 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		
+		param.put("companyId", userInfo.getCompanyID());
+
 		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
 		String status = result.get("status").toString();
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -695,20 +697,22 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String mode = (String) request.getParameter("mode");
-		String formId = (String) (request.getParameter("formId")+"");
-		String typeId = (String) request.getParameter("typeId");
-		String journalIdList = (String) request.getParameter("journalIdList");
+		String mode = request.getParameter("mode");
+		String formId = request.getParameter("formId");
+		String typeId = request.getParameter("typeId");
+		String journalIdList = request.getParameter("journalIdList");
 		String userId = userInfo.getId();
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		
+		param.put("companyId", userInfo.getCompanyID());
+
 		JSONObject jsonParam = new JSONObject();
 		jsonParam.put("mode", mode);
 		jsonParam.put("formId", formId);
 		jsonParam.put("typeId", typeId);
 		jsonParam.put("journalIdList", journalIdList);
-		
+		jsonParam.put("companyId", userInfo.getCompanyID());
+
 		String restUrl="";
 		JSONObject result=null;
 		switch (mode) {
@@ -720,7 +724,6 @@ public class EzJournalController extends EgovFileMngUtil {
 			case "sum":
 				jsonParam.put("userId", userId);
 				restUrl = "/rest/ezjournal/journals-sum" ;
-			//	logger.debug("***" + jsonParam.toString());
 				result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
 				break;
 			default:
@@ -775,6 +778,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
 		param.put("isGetForm", "isGetForm");
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
@@ -1041,8 +1045,9 @@ public class EzJournalController extends EgovFileMngUtil {
 			originJournalId = "";
 		}
 		
-		JSONObject result = new JSONObject();
-		
+		JSONObject result;
+ 		jsonParam.put("deptId", userInfo.getDeptID());
+
 		if (!originJournalId.equals("") && mode.equals("temp") || mode.equals("modify")) {
 			restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + originJournalId;
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", jsonParam);
@@ -1103,6 +1108,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		jsonParam.put("deptShare", isPublic);
 		jsonParam.put("formId", formId);
 		jsonParam.put("userId", userInfo.getId());
+		jsonParam.put("deptId", userInfo.getDeptID());
 		jsonParam.put("receiverIDs", receiverIDs);
 		jsonParam.put("receiverList", receiverList);
 		jsonParam.put("fileList", fileList);
