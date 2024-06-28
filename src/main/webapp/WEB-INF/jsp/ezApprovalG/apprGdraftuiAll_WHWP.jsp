@@ -1291,7 +1291,7 @@
 	                ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			
 	                var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID + "&draftAllFlag=Y";
-			        var ret = window.open(url, '', 'height=750,width=1194,scrollbars=no' + GetOpenPosition(1194, 750));
+			        var ret = window.open(url, '', 'height=750,width=1194,scrollbars=no' + GetOpenPosition(1200, 750));
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e);
 			    }
