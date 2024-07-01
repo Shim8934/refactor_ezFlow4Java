@@ -591,7 +591,7 @@ function makeFixPortlet(fixedPortletList) {
     var length = fixedPortletList.length;
     for (var i = 0; i < length; i++) {
     	var lazy = i == 1? 2000 : 0;
-        const fixPortletCode = fixedPortletList[i].portletCode;
+        const fixPortletCode = length===1? "fixCenter" : fixedPortletList[i].portletCode;
         const portletName = fixedPortletList[i].portletName;
         const fixUrl = URLParamsUtils(fixedPortletList[i].portletUrl).getFullUrl();
         const fixBoardUtil = new FixBoardUtil()
