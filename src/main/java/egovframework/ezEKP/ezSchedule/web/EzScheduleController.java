@@ -2389,37 +2389,39 @@ public class EzScheduleController extends EgovFileMngUtil {
         			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop);
        
         	// 참석자 초대 메일 발송
-        	 if (attendantId != null) {
-        		 startdate = commonUtil.getDateStringInUTC(startdate, loginVO.getOffset(), false);
-        		 enddate = commonUtil.getDateStringInUTC(enddate, loginVO.getOffset(), false);
+        	if (attendantId != null) {
+        		startdate = commonUtil.getDateStringInUTC(startdate, loginVO.getOffset(), false);
+        		enddate = commonUtil.getDateStringInUTC(enddate, loginVO.getOffset(), false);
+        		String scheDateContent = ezScheduleService.makeScheDateContent(datetype, repetition, startdate, enddate, loginVO.getLocale());
+  				String scheTimeContent = ezScheduleService.makeScheTimeContent(startdate, enddate, datetype, repetition, loginVO.getLocale());
+  				String scheRepeContent = ezScheduleService.makeRepetitionContent(repetition, loginVO.getLocale());
+  				
+  				String periodConetent = "";
+  				periodConetent = " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t318", loginVO.getLocale()) + " : " + scheDateContent + "<br>";
+  				periodConetent += " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t67", loginVO.getLocale()) + " : " + scheTimeContent;
+  				
+  				if (datetype.equals("3")) {
+  					periodConetent += "<br>" + " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t71", loginVO.getLocale()) + " : " + scheRepeContent;
+  				}
+  				
      			for (int i=0; i < attendantId.getLength(); i++) {								
      				String v_attendantId = attendantId.item(i).getTextContent();				
      				String v_attendantName = attendantName.item(i).getTextContent();
      				
-
-     				String period = "";
-     				if (datetype.equals("3")){
-     					period = startdate.substring(0,16) + " ~ " + enddate.substring(0,16) + " (" + msg.getMessage("ezSchedule.t343", locale) + ")";
-     		        } else if (datetype.equals("2")){
-     		        	period = startdate.substring(0,10) + " ~ " + enddate.substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);
-     		        } else {
-     		        	period = startdate.substring(0,16) + " ~ " + enddate.substring(0,16);
-     		        }
-
      				if (!ezPersonalService.hasNotiDiableItem(v_attendantId, NotiType.SCHEDULE_ADD, NotiPlatform.MAIL, loginVO.getTenantId())) {
-     					ezScheduleService.scheduleSendMail(result, v_attendantId, v_attendantName, title, period, "add", loginVO, loginCookie);
+     					ezScheduleService.scheduleSendMail(result, v_attendantId, v_attendantName, title, periodConetent, "add", loginVO, loginCookie, startdate, enddate);
      				}
 
      				String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do";
-     				String linkUrlMobile = "";
+     				String linkUrlMobile = "/mobile/ezSchedule/mScheduleReceiveAttendant.do";
      				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), v_attendantId, "schedule", "add", title, "popup", "730", "370", linkUrl, linkUrlMobile, "");
      			}
         	 }
 	    } else {
-        	//updateSchedule
+	    	ScheduleInfoVO beforeSche = ezScheduleService.getScheduleInfo(scheduleid, commonUtil.getMinuteUTC(loginVO.getOffset()), loginVO.getTenantId(), loginVO.getCompanyID());
+	    	//updateSchedule
         	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop);
-
-        	/* 2021-11-25 홍승비 - 일정 수정 시 일정완료 데이터 삽입 또는 삭제 */
+        	
             if (doc.getElementsByTagName("REPSTARTDATE").item(0) != null) {
             	repStartDate = doc.getElementsByTagName("REPSTARTDATE").item(0).getTextContent();
             	repStartDate = sdf.format(sdf.parse(repStartDate));
@@ -2427,7 +2429,13 @@ public class EzScheduleController extends EgovFileMngUtil {
             } else {
             	repStartDate = startdate;
             }
-
+            
+            // 2023-09-22 한태훈 : 초대 일정 수정 메일 발송
+	       	 if (attendantId != null) {
+	       		ezScheduleService.sendInviteModNoti(request, scheduleid, attendantId, attendantName, location, title, importance, ispublic, startdate, enddate, datetype, repetition, beforeSche, repStartDate, repeatCount, isAllRep, completeFG, loginVO, loginCookie);
+	       	}
+            
+	       	/* 2021-11-25 홍승비 - 일정 수정 시 일정완료 데이터 삽입 또는 삭제 */
             if (completeFG.equals("Y")) { // 일정완료 삽입
             	ezScheduleService.insertScheduleComplete(scheduleid, repeatCount, isAllRep, repStartDate, loginVO.getTenantId(), loginVO.getCompanyID());
             } else { // 일정완료 해제
@@ -2916,7 +2924,22 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String scheduleId = request.getParameter("scheduleId");
 		String resDel = request.getParameter("resDel");
 		String dateType = request.getParameter("dateType");
-
+		
+		String offSetMin = commonUtil.getMinuteUTC(loginSimpleVO.getOffset());
+		
+		List<AttendantListVO> attendantList = new ArrayList<>();
+		ScheduleInfoVO scheduleInfo = ezScheduleService.getScheduleInfo(scheduleId, offSetMin, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
+		
+		String hasAttendant = scheduleInfo.getHasAttendant();
+        if (hasAttendant.equals("Y")) {            	
+            String parentId = (scheduleInfo.getParentId().equals("0") ? scheduleId : scheduleInfo.getParentId());    
+            attendantList = ezScheduleService.getAttendantList(parentId, offSetMin, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
+        }
+        
+		if (attendantList != null && attendantList.size() > 0) {
+			ezScheduleService.sendInviteScheDelNoti(request, attendantList, scheduleInfo, null, "0", commonUtil.userInfo(loginCookie), loginCookie);
+		}
+		
 		//일정데이터 삭제
 		ezScheduleService.deleteSchedule(scheduleId, loginSimpleVO.getTenantId());
 		
@@ -2949,6 +2972,21 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String repeatCount = request.getParameter("repeatCount");	
 
 		String realDate = commonUtil.getDateStringInUTC(realStartDate, loginSimpleVO.getOffset(), true);
+		
+		String offSetMin = commonUtil.getMinuteUTC(loginSimpleVO.getOffset());
+		
+		List<AttendantListVO> attendantList = new ArrayList<AttendantListVO> ();
+		ScheduleInfoVO scheduleInfo = ezScheduleService.getScheduleInfo(scheduleId, offSetMin, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
+		
+		String hasAttendant = scheduleInfo.getHasAttendant();
+        if (hasAttendant.equals("Y")) {            	
+            String parentId = (scheduleInfo.getParentId().equals("0") ? scheduleId : scheduleInfo.getParentId());    
+            attendantList = ezScheduleService.getAttendantList(parentId, offSetMin, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
+        }
+		
+		if (attendantList != null) {
+			ezScheduleService.sendInviteScheDelNoti(request, attendantList, scheduleInfo, realDate, repeatCount, commonUtil.userInfo(loginCookie), loginCookie);
+		}
 
 		//일정데이터 삭제
 		ezScheduleService.insertScheduleRepeDel(scheduleId, realDate, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
@@ -3018,23 +3056,30 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 			ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(scheduleId, offSetMin, loginVO.getTenantId(), loginVO.getCompanyID());
 			
-			String period = "";
-			if (vo.getDateType().equals("3")){
-				period = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16) + " (" + msg.getMessage("ezSchedule.t343", loginVO.getLocale()) + ")";
-	        } else if (vo.getDateType().equals("2")){
-	        	period = vo.getStartDate().substring(0,10) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", loginVO.getLocale());
-	        } else {
-	        	period = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
-	        }
+			String startdate = vo.getStartDate();
+			String enddate = vo.getEndDate();
+			String datetype = vo.getDateType();
+			String repetition = vo.getRepetition();
+			String scheDateContent = ezScheduleService.makeScheDateContent(datetype, repetition, startdate, enddate, loginVO.getLocale());
+			String scheTimeContent = ezScheduleService.makeScheTimeContent(startdate, enddate, datetype, repetition, loginVO.getLocale());
+			String scheRepeContent = ezScheduleService.makeRepetitionContent(repetition, loginVO.getLocale());
+			
+			String periodConetent = "";
+			periodConetent = " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t318", loginVO.getLocale()) + " : " + scheDateContent + "<br>";
+			periodConetent += " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t67", loginVO.getLocale()) + " : " + scheTimeContent;
+			
+			if (datetype.equals("3")) {
+				periodConetent += "<br>" + " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t71", loginVO.getLocale()) + " : " + scheRepeContent;
+			}
 			
 			if (!ezPersonalService.hasNotiDiableItem(attendantId, NotiType.SCHEDULE_ADD, NotiPlatform.MAIL, loginVO.getTenantId())) {
-					ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleId), attendantId, attendantName, vo.getTitle(), period, "add", loginVO, loginCookie);
+				ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleId), attendantId, attendantName, vo.getTitle(), periodConetent, "add", loginVO, loginCookie, startdate, enddate);
 			}
 
 			/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 			String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do";
-			String linkUrlMobile = "";
-
+			String linkUrlMobile = "/mobile/ezSchedule/mScheduleReceiveAttendant.do";
+			
 			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), attendantId, "schedule", "add", vo.getTitle(), "popup", "730", "370", linkUrl, linkUrlMobile, "");
 		}
 	}
@@ -3068,21 +3113,27 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 			ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(scheduleId, offSetMin, loginVO.getTenantId(), loginVO.getCompanyID());
 			
-			String period = "";
-			if (vo.getDateType().equals("3")){
-				period = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16) + " (" + msg.getMessage("ezSchedule.t343", loginVO.getLocale()) + ")";
-	        } else if (vo.getDateType().equals("2")){
-	        	period = vo.getStartDate().substring(0,10) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", loginVO.getLocale());
-	        } else {
-	        	period = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
-	        }
+			String startdate = vo.getStartDate();
+			String enddate = vo.getEndDate();
+			String datetype = vo.getDateType();
+			String repetition = vo.getRepetition();
+			String scheDateContent = ezScheduleService.makeScheDateContent(datetype, repetition, startdate, enddate, loginVO.getLocale());
+			String scheTimeContent = ezScheduleService.makeScheTimeContent(startdate, enddate, datetype, repetition, loginVO.getLocale());
+			String scheRepeContent = ezScheduleService.makeRepetitionContent(repetition, loginVO.getLocale());
+			String periodContent = "";
+			periodContent = " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t318", loginVO.getLocale()) + " : " + scheDateContent + "<br>";
+			periodContent += " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t67", loginVO.getLocale()) + " : " + scheTimeContent;
 			
-			if (!ezPersonalService.hasNotiDiableItem(attendantId, NotiType.SCHEDULE_DELETE, NotiPlatform.MAIL, loginVO.getTenantId())) {
-					ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleId), attendantId, attendantName, vo.getTitle(), period, "del", loginVO, loginCookie);
+			if (datetype.equals("3")) {
+				periodContent += "<br>" + " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t71", loginVO.getLocale()) + " : " + scheRepeContent;
+			}
+			
+			if (!ezPersonalService.hasNotiDiableItem(attendantId, NotiType.SCHEDULE_CANCEl, NotiPlatform.MAIL, loginVO.getTenantId())) {
+				ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleId), attendantId, attendantName, vo.getTitle(), periodContent, "del", loginVO, loginCookie, startdate, enddate);
 			}
 
 			/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
-			String linkUrl = "";
+			String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleId;
 			String linkUrlMobile = "";
 			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), attendantId, "SCHEDULE", "CANCEL", vo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
 		}
@@ -3100,14 +3151,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 		String serverFlag = request.getParameter("serverFlag");
 		String serverName = request.getScheme() + "://" + request.getServerName();
-
+		String from       = request.getParameter("from");
+		
 		List<ScheduleReceiveListVO> rList = ezScheduleService.getReceiveList(loginVO.getId(), loginVO.getTenantId(), offSetMin, loginVO.getCompanyID());
 		
 		model.addAttribute("receiveList", rList);
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("serverFlag", serverFlag);
 		model.addAttribute("serverName", serverName);
-
+		model.addAttribute("from", from);
+		
 		return "ezSchedule/scheduleReceiveAttendant";
 	}
 	
@@ -3144,33 +3197,38 @@ public class EzScheduleController extends EgovFileMngUtil {
 
             ezScheduleService.updateAttendant(scheduleIdList[i], attendantId, displayName, displayName2, status, loginSimpleVO.getTenantId(), showtop);
 
-			String period = "";
-			if (dateType.equals("3")){
-				period = startDate.substring(0,16) + " ~ " + endDate.substring(0,16) + " (" + msg.getMessage("ezSchedule.t343", loginVO.getLocale()) + ")";
-	        } else if (dateType.equals("2")){
-	        	period = startDate.substring(0,10) + " ~ " + endDate.substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", loginVO.getLocale());
-	        } else {
-	        	period = startDate.substring(0,16) + " ~ " + endDate.substring(0,16);
-	        }
+			String repetition = (String) obj.get("repetition");
+			
+			String scheDateContent = ezScheduleService.makeScheDateContent(dateType, repetition, startDate, endDate, loginVO.getLocale());
+			String scheTimeContent = ezScheduleService.makeScheTimeContent(startDate, endDate, dateType, repetition, loginVO.getLocale());
+			String scheRepeContent = ezScheduleService.makeRepetitionContent(repetition, loginVO.getLocale());
+			
+			String periodContent = "";
+			periodContent = " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t318", loginVO.getLocale()) + " : " + scheDateContent + "<br>";
+			periodContent += " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t67", loginVO.getLocale()) + " : " + scheTimeContent;
+			
+			if (dateType.equals("3")) {
+				periodContent += "<br>" + " &nbsp;&nbsp;- " + msg.getMessage("ezSchedule.t71", loginVO.getLocale()) + " : " + scheRepeContent;
+			}
 			
 			if(status.equals("1")) {
 				if (!ezPersonalService.hasNotiDiableItem(creatorId, NotiType.SCHEDULE_ACCEPT, NotiPlatform.MAIL, loginVO.getTenantId())) {
- 					ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleIdList[i]), creatorId, creatorName, title, period, "acc", loginVO, loginCookie);
+ 					ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleIdList[i]), creatorId, creatorName, title, periodContent, "acc", loginVO, loginCookie, startDate, endDate);
  				}
 
 				/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 				String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleIdList[i];
-				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&type=monthList&flag="; // 일정 상세 페이지 구현 커밋 반영 이후 수정 예정
+				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&type=monthList&purpose=scheduleInfoDetail";
 				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), creatorId, "schedule", "accept", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 			else {
 				if (!ezPersonalService.hasNotiDiableItem(creatorId, NotiType.SCHEDULE_REJECT, NotiPlatform.MAIL, loginVO.getTenantId())) {
- 					ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleIdList[i]), creatorId, creatorName, title, period, "rej", loginVO, loginCookie);
+ 					ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleIdList[i]), creatorId, creatorName, title, periodContent, "rej", loginVO, loginCookie, startDate, endDate);
  				}
 
 				/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 				String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleIdList[i];
-				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&type=monthList&flag="; // 일정 상세 페이지 구현 커밋 반영 후 수정 예정
+				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&type=monthList&purpose=scheduleInfoDetail";
 				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), creatorId, "schedule", "reject", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 		}	

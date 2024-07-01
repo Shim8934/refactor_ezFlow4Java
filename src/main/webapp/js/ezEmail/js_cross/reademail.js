@@ -1,5 +1,4 @@
 ﻿
-
 var m_bPrevNext = false;
 var real_href = "";
 var minimumWidth = 890;
@@ -1481,4 +1480,30 @@ function view_OriginalEML() {
     }
 
     DivPopUpShow(620, 600, requestUrl);
+}
+
+function openAttendChk() {
+	var height = 300;
+	var width = 800;
+    var feature = GetOpenPosition(width, height);
+    var requestUrl = "/ezSchedule/scheduleReceiveAttendant.do?from=mail";
+    
+    window.open(requestUrl, "", "height=" + height + "px, width= " + width + "px" + feature);
+}
+
+function openScheduleInfo() {
+	var scheduleId = event.target.getAttribute("scheduleId");
+	var repeatCount = event.target.getAttribute("repeatCount");
+	var height = 700;
+	var width = 800;
+    var feature = GetOpenPosition(width, height);
+    var requestUrl = "";
+    if (repeatCount != null) {
+    	requestUrl = "/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleId) + "&repeatCount=" + repeatCount;
+    } else {
+    	requestUrl = "/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleId) + "&isReceive=Y";
+    }
+    
+    window.open(requestUrl, "", "height=" + height + "px, width= " + width + "px" + feature);
+	
 }

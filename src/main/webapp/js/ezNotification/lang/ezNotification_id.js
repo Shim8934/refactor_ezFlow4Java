@@ -37,8 +37,10 @@ var subType = {
 	},
 	schedule : {
 		add : "Jadwalkan undangan",
+		cancel : "membatalkan undangan",
 		accept : "Undangan disetujui",
-		reject : "Penolakan undangan"
+		reject : "Penolakan undangan",
+		mod : "Ubah jadwal"
 	},
 	resource : {
 		reserve : "Reservasi sumber daya",
@@ -78,7 +80,7 @@ subType["approval"]["return"] = "Pemulihan dokumen";
 subType["approval"]["default"] = "Notifikasi Persetujuan";
 subType["board"]["new"] = "Postingan baru";
 subType["board"]["return"] = "Tolak persetujuan";
-subType["schedule"]["delete"] = "membatalkan undangan";
+subType["schedule"]["delete"] = "Hapus acara";
 subType["survey"]["new"] = "Pendaftaran baru";
 subType["poll"]["new"] = "Pendaftaran baru";
 subType["community"]["new"] = "Pendaftaran baru";

@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezSchedule.service;
 
 import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.w3c.dom.NodeList;
 
@@ -17,6 +20,8 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 
@@ -127,7 +132,7 @@ public interface EzScheduleService {
 
 	public List<ScheGetHolidayVO> getTholidayYear(String companyID,String userCompany, int tenantId, String isRest, String holidayYear) throws Exception;
 
-	public void scheduleSendMail(int scheduleId, String v_attendantId, String v_attendantName, String title, String period, String type, LoginVO userInfo, String loginCookie) throws Exception;
+	public void scheduleSendMail(int scheduleId, String v_attendantId, String v_attendantName, String title, String periodContent, String type, LoginVO userInfo, String loginCookie, String startDate, String endDate) throws Exception;
 
 	public void setScheduleMailNotiConfig(String userMailNoti, String userID, int tenantId) throws Exception;
 
@@ -152,4 +157,39 @@ public interface EzScheduleService {
 	/* 2023-10-10 기민혁 - 사용자일정 검색시 스케쥴 list 호출 메서드 */
 	public List<ScheduleInfoVO> getUserSearchScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID, String deptId, String useAnnualScheduleYN) throws Exception;
 
+	/* 2023-09-22 한태훈 - 일정관리 > 초대 일정 참석 여부 반환 메서드 */
+	public String selectAttendanceStatus(String scheduleid, String v_attendantId, int tenantId) throws Exception;
+	
+	// 2023-09-25 한태훈 - 일정관리 > 초대 일정 수정 시 메일 및 알림 발송 메서드
+	public void sendInviteModNoti(HttpServletRequest request, String scheduleid, NodeList attendantId, NodeList attendantName, String location, String title, String importance, String ispublic, String startdate, String enddate, String datetype, String repetition, ScheduleInfoVO beforeSche, String repStartdate, String repeatCount, String isAllRep, String completeFG,  LoginVO userInfo, String loginCookie) throws Exception;
+	
+	// 2023-09-25 한태훈 - 일정관리 > 참석자 초대 일정 수정 알림 메일 전송시 변경 내용 양식 만들기
+	public StringBuilder makeScheModMailForm(StringBuilder mailContent, String category, String beforeContent, String afterContent, Locale locale) throws Exception;
+	
+	// 2023-09-25 한태훈 - 일정관리 > 참석자 초대 일정 수정 알림 메일 전송시 중요도, 공개여부 컬럼 코드값 변경
+	public String decodeColumnValue(String column, String originString, Locale locale) throws Exception;
+	
+	// 2023-09-25 한태훈 - 일정관리 > 참석자 초대 일정 수정 알림 메일 전송시 일정 기간 내용 만들기
+	public String makeScheDateContent(String dateType, String repetition, String startDate, String endDate, Locale locale) throws Exception;
+
+	// 2023-09-25 한태훈 - 일정관리 > 참석자 초대 일정 수정 알림 메일 전송 시 시간 내용 만들기
+	public String makeScheTimeContent(String startdate, String enddate, String datetype, String repetition, Locale locale) throws Exception;
+	
+	// 2023-09-25 한태훈 - 일정관리 > 참석자 초대 일정 수정 알림 메일 전송 시 반복주기 내용 만들기
+	public String makeRepetitionContent(String repetition, Locale locale) throws Exception;
+	
+	// 2023-09-25 한태훈 - 일정관리 > 참석자 초대 일정 수정 알림 메일 전송 시 완료 여부 내용 만들기
+	public String makeCompleteContent(String dateType, String isAllRep, String completeFG, String repStartdate, Locale locale) throws Exception;
+	
+	// 2024-07-01 한태훈 - 일정관리 > 일정 삭제 메일 및 알림 전송
+	public void sendInviteScheDelNoti(HttpServletRequest request, List<AttendantListVO> attendantList, ScheduleInfoVO scheduleInfo, String selectedDate, String repeatCount, LoginVO loginVO, String loginCookie) throws Exception;
+	
+	// 2023-10-17 한태훈 - 일정관리 > 모바일 초대 일정 참석 수락/거절 메일 및 알림 발송
+	public void sendScheduleNotiForMobile(HttpServletRequest request, MCommonVO userInfo, String creatorId, String creatorName, String title, String periodContent, String type, String scheduleId, String stardDate, String endDate) throws Exception;
+	 
+	// 2023-10-17 한태훈 - 일정관리 > 모바일 초대 일정 수정 메일 및 알림 발송
+	public void sendInviteModNotiForMoblie(HttpServletRequest request, String scheduleId, String ownerId, String ownerName, List<AttendantListVO> attendantList, String location, String title, String importance, String ispublic, String startdate, String enddate, String datetype, MScheduleInfoVO vo, MCommonVO info) throws Exception;
+	
+	// 2023-10-25 한태훈 - 일정관리 > 모바일 초대 일정 삭제 메일 및 알림 발송
+	public void sendInviteScheDelNotiForMobile(HttpServletRequest request, List<AttendantListVO> attendantList, ScheduleInfoVO scheduleInfo, MCommonVO info) throws Exception;
 }

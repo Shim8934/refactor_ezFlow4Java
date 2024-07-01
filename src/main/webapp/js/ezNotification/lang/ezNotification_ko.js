@@ -37,8 +37,10 @@ var subType = {
 	},
 	schedule : {
 		add : "일정초대",
+		cancel : "초대취소",
 		accept : "초대승인",
-		reject : "초대거부"
+		reject : "초대거부",
+		mod : "일정수정"
 	},
 	resource : {
 		reserve : "자원예약",
@@ -78,7 +80,7 @@ subType["approval"]["return"] = "문서회수";
 subType["approval"]["default"] = "결재노티";
 subType["board"]["new"] = "신규게시";
 subType["board"]["return"] = "승인반려";
-subType["schedule"]["delete"] = "초대취소";
+subType["schedule"]["delete"] = "일정삭제";
 subType["survey"]["new"] = "신규등록";
 subType["poll"]["new"] = "신규등록";
 subType["community"]["new"] = "신규게시";

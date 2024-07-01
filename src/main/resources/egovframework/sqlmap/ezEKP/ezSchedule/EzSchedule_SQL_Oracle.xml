@@ -177,9 +177,10 @@
 
 	<resultMap class="ScheduleMailConfigVO" id="getScheduleMailConfigVO">
 		<result property="invitationMail"		column="INVITATIONMAIL"		columnIndex="1"/>
-		<result property="cancellationMail"			column="CANCELLATIONMAIL"			columnIndex="2"/>
-		<result property="attendanceMail"		column="ATTENDANCEMAIL"			columnIndex="3"/>
-		<result property="rejectedMail"			column="REJECTEDMAIL"			columnIndex="4"/>
+		<result property="inviteScheModMail"	column="INVITESCHEMODMAIL"	columnIndex="2"/>
+		<result property="cancellationMail"		column="CANCELLATIONMAIL"	columnIndex="3"/>
+		<result property="attendanceMail"		column="ATTENDANCEMAIL"		columnIndex="4"/>
+		<result property="rejectedMail"			column="REJECTEDMAIL"		columnIndex="5"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleTokenInfoVO"         id="scheduleTokenInfoVO">
@@ -1340,9 +1341,9 @@
 	<insert id="EzScheduleDAO.insertScheduleConfig" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULECONFIG(
-				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			InvitationMail, CancellationMail, AttendanceMail, RejectedMail, autodelete,			tenant_id
+				USERID, 		DEFAULTVIEW, 		STARTDAY, 		STARTTIME, 			ENDTIME, InvitationMail, INVITESCHEMODMAIL, CancellationMail, AttendanceMail, RejectedMail,			AUTODELETE,			tenant_id		
 			) VALUES (
-				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		#v_INVITATIONMAIL#, #v_CANCELLATIONMAIL#, #v_ATTENDANCEMAIL#, #v_REJECTEDMAIL#, #v_AUTODELETE#,		#v_TENANTID#
+				#v_USERID#,		#v_DEFAULTVIEW#,	#v_STARTDAY#,	#v_STARTTIME#,		#v_ENDTIME#, #v_INVITATIONMAIL#, #v_INVITESCHEMODMAIL#, #v_CANCELLATIONMAIL#, #v_ATTENDANCEMAIL#, #v_REJECTEDMAIL#,		#v_AUTODELETE#,		#v_TENANTID#
 			)
    		]]>
 	</insert>
@@ -1473,6 +1474,7 @@
 				tbl_scheduleconfig
 			set
 				InvitationMail = #v_INVITATIONMAIL#,
+				INVITESCHEMODMAIL = #v_INVITESCHEMODMAIL#,
 				CancellationMail = #v_CANCELLATIONMAIL#,
 				AttendanceMail = #v_ATTENDANCEMAIL#,
 				RejectedMail = #v_REJECTEDMAIL#
@@ -1727,7 +1729,7 @@
 	<select id="EzScheduleDAO.getScheduleMailNotiConfig" parameterClass="Map" resultMap="getScheduleMailConfigVO">
 		<![CDATA[
 		SELECT
-			INVITATIONMAIL, CANCELLATIONMAIL, ATTENDANCEMAIL, REJECTEDMAIL
+			INVITATIONMAIL, INVITESCHEMODMAIL, CANCELLATIONMAIL, ATTENDANCEMAIL, REJECTEDMAIL
 		FROM
 			TBL_SCHEDULECONFIG
 		WHERE
@@ -2158,5 +2160,29 @@
 		ORDER BY C.STARTDATE ASC
 	</select>
 
+	<select id="EzScheduleDAO.selectAttendanceStatus" resultClass="String">
+	SELECT
+		STATUS
+	FROM
+		TBL_ATTENDANT
+	WHERE
+		SCHEDULEID = 
+		(SELECT
+			CASE
+				WHEN PARENTID = '0' THEN SCHEDULEID
+				ELSE PARENTID
+			END AS SCHEDULEID
+		FROM ( 
+			SELECT SCHEDULEID, PARENTID
+			FROM TBL_SCHEDULE
+			WHERE SCHEDULEID = #v_SCHEDULEID#
+			) A
+		)
+	AND
+		ATTENDANTID = #v_ATTENDANTID#
+	AND
+		TENANT_ID = #v_TENANTID# 
+	</select>
+	
 </sqlMap>
 

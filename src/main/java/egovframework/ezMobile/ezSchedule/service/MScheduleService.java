@@ -3,6 +3,8 @@ package egovframework.ezMobile.ezSchedule.service;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -15,7 +17,7 @@ public interface MScheduleService {
 	
 	public int insertBoardSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale) throws Exception;
 
-	public void deleteSchedule(String scheduleId, int tenantId) throws Exception;
+	public void deleteSchedule(HttpServletRequest request, String scheduleId, int tenantId, MCommonVO info) throws Exception;
 
 	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId) throws Exception;
 	

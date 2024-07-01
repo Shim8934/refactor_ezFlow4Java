@@ -375,5 +375,9 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public List<ScheduleInfoVO> getUserSearchScheduleList(Map<String, Object> map) throws Exception  {
 		return (List<ScheduleInfoVO>) list("EzScheduleDAO.getUserSearchScheduleList", map);
 	}
+	
+	public String selectAttendanceStatus(Map<String, Object> map) throws Exception {
+		return (String) select("EzScheduleDAO.selectAttendanceStatus", map);
+	}
 }
 
