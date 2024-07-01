@@ -14,7 +14,8 @@ public class SurveyItemSearchVO {
 	private String creatorName;
 	private String startDate;
 	private String endDate;
-	private String sqlOrder;
+	private String orderCol;
+	private String orderSort;
 	private String searchMode;
 	private String searchOption;
 	private String today;
@@ -23,7 +24,7 @@ public class SurveyItemSearchVO {
 	
 	public SurveyItemSearchVO() {}
 	
-	public SurveyItemSearchVO(String pageMode, int listCount, int tenantId, String userId, String primary, String offset, String title, String creatorName, String startDate, String endDate, String sqlOrder, String searchMode, String searhOption, int userMode) {
+	public SurveyItemSearchVO(String pageMode, int listCount, int tenantId, String userId, String primary, String offset, String title, String creatorName, String startDate, String endDate, String orderCol, String orderSort, String searchMode, String searhOption, int userMode) {
 		this.pageMode     = pageMode;
 		this.listCount    = listCount;
 		this.tenantId     = tenantId;
@@ -34,7 +35,8 @@ public class SurveyItemSearchVO {
 		this.creatorName  = creatorName;
 		this.startDate    = startDate;
 		this.endDate      = endDate;
-		this.sqlOrder     = sqlOrder;
+		this.orderCol     = orderCol;
+		this.orderSort    = orderSort;
 		this.searchMode   = searchMode;
 		this.searchOption = searhOption;
 		this.userMode = userMode;
@@ -103,14 +105,22 @@ public class SurveyItemSearchVO {
 		this.endDate = endDate;
 	}
 	
-	public String getSqlOrder() {
-		return sqlOrder;
+	public String getOrderCol() {
+		return orderCol;
 	}
-	
-	public void setSqlOrder(String sqlOrder) {
-		this.sqlOrder = sqlOrder;
+
+	public void setOrderCol(String orderCol) {
+		this.orderCol = orderCol;
 	}
-	
+
+	public String getOrderSort() {
+		return orderSort;
+	}
+
+	public void setOrderSort(String orderSort) {
+		this.orderSort = orderSort;
+	}
+
 	public String getSearchMode() {
 		return searchMode;
 	}

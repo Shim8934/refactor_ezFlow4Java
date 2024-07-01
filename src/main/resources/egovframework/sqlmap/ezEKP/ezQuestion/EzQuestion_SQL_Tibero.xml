@@ -236,7 +236,7 @@
 								A.brd_id,
 								A.item_no,
 								A.user_id,
-								A.user_nm$v_PLANG$ AS USER_NM,
+								CASE #v_PLANG# WHEN '2' THEN A.USER_NM2 ELSE A.USER_NM END AS USER_NM,
 								A.user_email,
 								A.title,
 								A.content,
@@ -318,7 +318,7 @@
       				A.brd_id, 
       				A.item_no, 
 				    A.user_id, 
-				    A.user_nm$v_PLANG$ AS USER_NM, 
+				    CASE #v_PLANG# WHEN '2' THEN A.USER_NM2 ELSE A.USER_NM END AS USER_NM,
 				    A.user_email, 
 				    A.title, 
 				    A.content, 
@@ -629,12 +629,12 @@
 						answer_subjectivity,
 						answer_viewselect,
 						responseuser_id,
-						responseuser_name$v_pLang$ AS responseuser_name,
+						CASE #v_pLang# WHEN '2' THEN responseuser_name2 ELSE responseuser_name END AS responseuser_name,
 						responseuser_email,
 						responseuser_dept_id,
-						responseuser_dept_name$v_pLang$ AS responseuser_dept_name,
-						responseuser_position$v_pLang$ AS responseuser_position,
-						responseuser_jikgub$v_pLang$ AS responseuser_jikgub,
+						CASE #v_pLang# WHEN '2' THEN responseuser_dept_name2 ELSE responseuser_dept_name END AS responseuser_dept_name,
+						CASE #v_pLang# WHEN '2' THEN responseuser_position2 ELSE responseuser_position END AS responseuser_position,
+						CASE #v_pLang# WHEN '2' THEN responseuser_jikgub2 ELSE responseuser_jikgub END AS responseuser_jikgub,
 						responseuser_gender,
 						responseuser_age,
 						response_date,
@@ -653,7 +653,7 @@
 						tenant_id = #tenantID# 
 					) P 
 				WHERE
-					ROWNUM <= $v_pTotalCnt$
+					ROWNUM <= #v_pTotalCnt#
 				ORDER BY
 					P.responseno DESC
 				) K
@@ -682,12 +682,12 @@
 						answer_subjectivity,
 						answer_viewselect,
 						responseuser_id,
-						responseuser_name$v_pLang$ AS responseuser_name,
+						CASE #v_pLang# WHEN '2' THEN responseuser_name2 ELSE responseuser_name END AS responseuser_name,
 						responseuser_email,
 						responseuser_dept_id,
-						responseuser_dept_name$v_pLang$ AS responseuser_dept_name,
-						responseuser_position$v_pLang$ AS responseuser_position,
-						responseuser_jikgub$v_pLang$ AS responseuser_jikgub,
+						CASE #v_pLang# WHEN '2' THEN responseuser_dept_name2 ELSE responseuser_dept_name END AS responseuser_dept_name,
+						CASE #v_pLang# WHEN '2' THEN responseuser_position2 ELSE responseuser_position END AS responseuser_position,
+						CASE #v_pLang# WHEN '2' THEN responseuser_jikgub2 ELSE responseuser_jikgub END AS responseuser_jikgub,
 						responseuser_gender,
 						responseuser_age,
 						response_date,
@@ -724,12 +724,12 @@
                       FROM
     					(SELECT
     						responseuser_id AS user_id, 
-    						MAX(responseuser_name$v_pLang$) AS user_name,
+    						MAX(CASE #v_pLang# WHEN '2' THEN responseuser_name2 ELSE responseuser_name END) AS user_name,
     						MAX(responseuser_email) AS user_email,
     						MAX(responseuser_dept_id) AS user_dept_id, 
-    						MAX(responseuser_dept_name$v_pLang$) AS user_dept_name,
-    						MAX(responseuser_position$v_pLang$) AS user_position, 
-    						MAX(responseuser_jikgub$v_pLang$) AS user_jikgub,
+    						MAX(CASE #v_pLang# WHEN '2' THEN responseuser_dept_name2 ELSE responseuser_dept_name END) AS user_dept_name,
+    						MAX(CASE #v_pLang# WHEN '2' THEN responseuser_position2 ELSE responseuser_position END) AS user_position, 
+    						MAX(CASE #v_pLang# WHEN '2' THEN responseuser_jikgub2 ELSE responseuser_jikgub END) AS user_jikgub,
     						MAX(responseuser_gender) AS user_gender,
     						MAX(responseuser_age) AS user_age,
     						MAX(response_date) AS RESPONSE_DATE
@@ -762,12 +762,12 @@
                       FROM
     					(SELECT
     						user_id,
-    						user_nm$v_pLang$ AS user_name,
+    						CASE #v_pLang# WHEN '2' THEN user_nm2 ELSE user_nm END AS user_name,
     						user_email,
     						user_dept_id,	
-    						user_dept_nm$v_pLang$ AS user_dept_name,
-    						user_pos$v_pLang$ AS user_position,
-    						user_jikgub$v_pLang$ AS user_jikgub,
+    						CASE #v_pLang# WHEN '2' THEN user_dept2_nm ELSE user_dept_nm END AS user_dept_name,
+							CASE #v_pLang# WHEN '2' THEN user_pos2 ELSE user_pos END AS user_position,
+							CASE #v_pLang# WHEN '2' THEN user_jikgub2 ELSE user_jikgub END AS user_jikgub,
     						user_gender,
     						user_age,
     						response_date,
@@ -1254,9 +1254,12 @@
 				COUNT(*) 
 			FROM (SELECT
 							BRD_ID, ITEM_NO, QUESTION_NO, RESPONSENO, ANSWER_OBJECTIVITY, ANSWER_SUBJECTIVITY, 
-   							ANSWER_VIEWSELECT, RESPONSEUSER_ID, RESPONSEUSER_NAME$v_pLang$ AS RESPONSEUSER_NAME,
-   							RESPONSEUSER_EMAIL, RESPONSEUSER_DEPT_ID, RESPONSEUSER_DEPT_NAME$v_pLang$ AS RESPONSEUSER_DEPT_NAME,
-   							RESPONSEUSER_POSITION$v_pLang$ AS RESPONSEUSER_POSITION, RESPONSEUSER_JIKGUB$v_pLang$ AS RESPONSEUSER_JIKGUB,
+   							ANSWER_VIEWSELECT, RESPONSEUSER_ID,
+   							CASE #v_pLang# WHEN '2' THEN RESPONSEUSER_NAME2 ELSE RESPONSEUSER_NAME END AS RESPONSEUSER_NAME
+   							RESPONSEUSER_EMAIL, RESPONSEUSER_DEPT_ID,
+   							CASE #v_pLang# WHEN '2' THEN RESPONSEUSER_DEPT_NAME2 ELSE RESPONSEUSER_DEPT_NAME END AS RESPONSEUSER_DEPT_NAME
+   							CASE #v_pLang# WHEN '2' THEN RESPONSEUSER_POSITION2 ELSE RESPONSEUSER_POSITION END AS RESPONSEUSER_POSITION
+   							CASE #v_pLang# WHEN '2' THEN RESPONSEUSER_JIKGUB2 ELSE RESPONSEUSER_JIKGUB END AS RESPONSEUSER_JIKGUB
    							RESPONSEUSER_GENDER, RESPONSEUSER_AGE, RESPONSE_DATE, RESPONSEUSER_IP 
    		 				FROM
    		 					TBL_POLL_RESPONSE  
@@ -1312,12 +1315,12 @@
 				FROM 
                     (SELECT
                         RESPONSEUSER_ID AS USER_ID, 
-                        MAX(RESPONSEUSER_NAME$v_pLang$) AS USER_NAME,
+                        MAX(CASE #v_pLang# WHEN '2' THEN RESPONSEUSER_NAME2 ELSE RESPONSEUSER_NAME END) AS USER_NAME,
                         MAX(RESPONSEUSER_DEPT_ID) AS USER_DEPT_ID, 
                         MAX(RESPONSEUSER_EMAIL) AS USER_EMAIL,
-                        MAX(RESPONSEUSER_POSITION$v_pLang$) AS USER_POSITION, 
-                        MAX(RESPONSEUSER_DEPT_NAME$v_pLang$) AS USER_DEPT_NAME,
-                        MAX(RESPONSEUSER_JIKGUB$v_pLang$) AS USER_JIKGUB,
+                       	MAX(CASE #v_pLang# WHEN '2' THEN RESPONSEUSER_POSITION2 ELSE RESPONSEUSER_POSITION END) AS USER_POSITION,
+						MAX(CASE #v_pLang# WHEN '2' THEN RESPONSEUSER_DEPT_NAME2 ELSE RESPONSEUSER_DEPT_NAME END) AS USER_DEPT_NAME,
+						MAX(CASE #v_pLang# WHEN '2' THEN RESPONSEUSER_JIKGUB2 ELSE RESPONSEUSER_JIKGUB END) AS USER_JIKGUB,
                         MAX(RESPONSEUSER_GENDER) AS USER_GENDER,
                         MAX(RESPONSEUSER_AGE) AS USER_AGE,
                         MAX(RESPONSE_DATE) AS RESPONSE_DATE 
@@ -1342,12 +1345,12 @@
 				FROM 
                     (SELECT
 					    USER_ID	AS USER_ID,
-                      	USER_NM$v_pLang$ AS USER_NAME,
-                      	USER_DEPT_NM$v_pLang$ AS USER_DEPT_NAME,
+                      	CASE #v_pLang# WHEN '2' THEN USER_NM2 ELSE USER_NM END AS USER_NAME,
+						CASE #v_pLang# WHEN '2' THEN USER_DEPT_NM2 ELSE USER_DEPT_NM END AS USER_DEPT_NAME,
                       	USER_DEPT_ID AS USER_DEPT_ID,	
                       	USER_EMAIL AS USER_EMAIL,
-              			USER_POS$v_pLang$ AS USER_POSITION,
-              			USER_JIKGUB$v_pLang$ AS USER_JIKGUB,
+              			CASE #v_pLang# WHEN '2' THEN USER_POS2 ELSE USER_POS END AS USER_POSITION,
+						CASE #v_pLang# WHEN '2' THEN USER_JIKGUB2 ELSE USER_JIKGUB END AS USER_JIKGUB,
               			USER_GENDER AS USER_GENDER,
               			USER_AGE AS USER_AGE,
               			RESPONSE_DATE AS RESPONSE_DATE
@@ -1390,7 +1393,7 @@
 					A.brd_id, 
 					A.item_no,
 					A.user_id,
-					A.user_nm$v_PLANG$ AS user_nm,
+					CASE #v_PLANG# WHEN '2' THEN A.user_nm2 ELSE A.user_nm END AS user_nm,
 					A.user_email,
 					A.title,
 					A.content,
@@ -1472,7 +1475,7 @@
       				A.brd_id, 
       				A.item_no, 
 				    A.user_id, 
-				    A.user_nm$v_PLANG$ AS user_nm, 
+				    CASE #v_PLANG# WHEN '2' THEN A.user_nm2 ELSE A.user_nm END AS user_nm,
 				    A.user_email, 
 				    A.title, 
 				    A.content, 

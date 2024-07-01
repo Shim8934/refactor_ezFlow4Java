@@ -637,6 +637,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj;
 	}
 	
+	/* 2024-07-01 홍승비 - surveyUser.js 파일 내부의 getUsers() 함수에서만 호출되는 URL로, 해당 js파일이 사용되지 않아 전체 주석처리 */
+	/*
 	@RequestMapping(value="/ezSurvey/getSearchMember.do", method=RequestMethod.POST)
 	@ResponseBody
 	public JSONObject jsonGetSearchMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -661,7 +663,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jsonGetSearchMember ended");
 		logger.debug(resultObj.toString());
 		return resultObj;
-	}
+	}*/
 	
 	@RequestMapping(value="/ezSurvey/uploadAttachFile.do", method = RequestMethod.POST)
 	@ResponseBody

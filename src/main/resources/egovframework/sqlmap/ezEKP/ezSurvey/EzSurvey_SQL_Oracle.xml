@@ -462,86 +462,11 @@
 		</isGreaterThan>
 	</select>
 	
-	<select id="EzSurveyDAO.getTotalSearchMembers" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				COUNT(AA.CN)
-			FROM (
-				SELECT
-					CN
-				FROM
-					TBL_USERMASTER 
-				WHERE
-					CN != 'masteradmin'
-				AND
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
-				AND
-					TENANT_ID = #tenantId#
-				AND 
-					$srchOption$ LIKE CONCAT(CONCAT('%', #srchValue#), '%')
-			) AA
-		]]>
-	</select>
+	<!-- 2024-07-01 홍승비 - 사용되지 않는 구버전 전자설문 쿼리 제거 (EzSurveyDAO.getTotalSearchMembers) -->
+	<!-- 2024-07-01 홍승비 - 사용되지 않는 구버전 전자설문 쿼리 제거 (EzSurveyDAO.getSearchMemberList) -->
 	
-	<select id="EzSurveyDAO.getSearchMemberList" resultMap="deptMemberInfo">
-		<![CDATA[
-			SELECT
-				*
-			FROM
-				(
-				SELECT
-					k.*, ROWNUM AS RNUM
-				FROM
-					(
-				SELECT
-					AA.CN                  AS CN,
-					AA.POSITION            AS POSITION,
-					AA.DISPLAYNAME         AS DISPLAYNAME,
-					AA.DISPLAYNAME1        AS DISPLAYNAME1,
-					AA.DISPLAYNAME2        AS DISPLAYNAME2,
-					AA.DEPARTMENT          AS DEPARTMENT,
-					AA.DEPARTMENTNAME      AS DEPARTMENTNAME,
-					AA.DEPARTMENTNAME1     AS DEPARTMENTNAME1,
-					AA.DEPARTMENTNAME2     AS DEPARTMENTNAME2,
-					AA.TELEPHONENUMBER     AS TELEPHONENUMBER,
-					AA.MAIL                AS MAIL, 
-					AA.EXTENSIONATTRIBUTE2 AS USERIMAGE
-				FROM (
-					SELECT
-						CN                                                                                                                           AS CN,
-						CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
-						CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
-						DISPLAYNAME                                                                                                                  AS DISPLAYNAME1,
-						DISPLAYNAME2                                                                                                                 AS DISPLAYNAME2,
-						CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(nvl(EXTENSIONATTRIBUTE15, '0'))), nvl(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
-						DEPARTMENT                                                                                                                   AS DEPARTMENT,
-						CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
-						DESCRIPTION                                                                                                                  AS DEPARTMENTNAME1,
-						DESCRIPTION2                                                                                                                 AS DEPARTMENTNAME2,
-						TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
-						MAIL                                                                                                                         AS MAIL,
-						EXTENSIONATTRIBUTE2                                                                                                          AS EXTENSIONATTRIBUTE2
-					FROM
-						TBL_USERMASTER 
-					WHERE
-						CN != 'masteradmin'
-					AND
-						CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
-					AND
-						TENANT_ID = #tenantId#
-					AND
-						$srchOption$ LIKE CONCAT(CONCAT('%', #srchValue#), '%')
-				) AA
-				ORDER BY
-					EXTENSIONATTRIBUTE15 ASC,
-					DISPLAYNAME ASC
-				) k WHERE ROWNUM <= #startPoint# + #listCount#
-			) WHERE RNUM >= #startPoint# + 1
-		]]>
-	</select>
-
+	<!-- 2024-07-01 홍승비 - SQL Injection 수정 > 검색 조건 칼럼 분기처리 (직위, 직책) -->
 	<select id="EzSurveyDAO.getSearchMemberListByAttr" resultMap="deptMemberInfo">
-		<![CDATA[
 			SELECT
 				CN                                                                                                                           AS CN,
 				CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
@@ -564,9 +489,9 @@
 			AND
 				TENANT_ID = #tenantId#
 			AND
-				$srchOption$ IN
-		]]>
-			<iterate property="attrList" open="(" close=")" conjunction=",">#attrList[]#</iterate>
+			<isEqual property="srchOption" compareValue="EXTENSIONATTRIBUTE7">EXTENSIONATTRIBUTE7</isEqual>
+			<isEqual property="srchOption" compareValue="EXTENSIONATTRIBUTE8">EXTENSIONATTRIBUTE8</isEqual>
+				IN <iterate property="attrList" open="(" close=")" conjunction=",">#attrList[]#</iterate>
 	</select>
 	
 	<!--***********************************************************************************
@@ -818,8 +743,21 @@
 			<include refid="surveySelect"/>
 			<include refid="surveyItemList"/>
 				order by
-					<isEmpty property="sqlOrder">update_date desc, survey_id desc</isEmpty>
-					<isNotEmpty property="sqlOrder">$sqlOrder$, update_date desc, survey_id desc</isNotEmpty>
+					<isEmpty property="orderCol">update_date desc, survey_id desc</isEmpty>
+					<!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
+			        <isNotEmpty property="orderCol">
+						<isEqual property="orderCol" compareValue="attach_flag">attach_flag</isEqual>
+						<isEqual property="orderCol" compareValue="create_date">create_date</isEqual>
+						<isEqual property="orderCol" compareValue="title">CAST(SUBSTR(title, 1, 100) AS varchar(100))</isEqual>
+						<isEqual property="orderCol" compareValue="end_date">end_date</isEqual>
+						<isEqual property="orderCol" compareValue="participate_flag">participate_flag</isEqual>
+						<isEqual property="orderCol" compareValue="user_name1">user_name1</isEqual>
+						<isEqual property="orderCol" compareValue="user_name2">user_name2</isEqual>
+						<isEqual property="orderCol" compareValue="result_public_flag">result_public_flag</isEqual>
+						<isEqual property="orderCol" compareValue="anonymous_flag">anonymous_flag</isEqual>
+						<isEqual property="orderSort" compareValue="DESC">DESC</isEqual>,
+						update_date desc, survey_id desc
+			      	</isNotEmpty>
 			<![CDATA[
 				) k WHERE ROWNUM <= #startPoint# + #listCount#
 			)
