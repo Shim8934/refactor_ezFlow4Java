@@ -391,8 +391,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("imgPath", commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()));
 			
 			//진행중인 문서일 경우에만 aprLines
-			if (data.containsKey("aprLines")) {
-				model.addAttribute("aprLines", (JSONArray) data.get("aprLines"));
+			if (data.containsKey("aprLines0")) {
+				model.addAttribute("aprLines0", (JSONArray) data.get("aprLines0"));
+				model.addAttribute("aprLines1", (JSONArray) data.get("aprLines1"));
+				model.addAttribute("aprLines2", (JSONArray) data.get("aprLines2"));
 			}
 		}
 		

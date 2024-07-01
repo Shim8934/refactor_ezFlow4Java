@@ -32,8 +32,14 @@ var getApprovalList = function(type, portletId) {
 				switch (type) {
 				case "doing":
 					docList.forEach(function(item, index) {
-						docsHTML += dataAssemblerApprLine(item, result.aprLines, result.imgPath);
-					});
+                        if (index === 0) {
+                            docsHTML += dataAssemblerApprLine(item, result.aprLines0, result.imgPath);
+                        } else if (index === 1) {
+                            docsHTML += dataAssemblerApprLine(item, result.aprLines1, result.imgPath);
+                        } else if (index === 2) {
+                            docsHTML += dataAssemblerApprLine(item, result.aprLines2, result.imgPath);
+                        }
+                    });
 						
 	                break;
 

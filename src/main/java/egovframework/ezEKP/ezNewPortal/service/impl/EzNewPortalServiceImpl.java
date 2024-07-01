@@ -2075,20 +2075,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			result.put("list", list);
 			
 			if (list.size() > 0) {
-				if (approvalFlag.equalsIgnoreCase("G")) {
-					map.put("code1", "A04");
-				} else {
-					map.put("code1", "SA04");
+				for (int i = 0; i < list.size(); i++) {
+					if (approvalFlag.equalsIgnoreCase("G")) {
+						map.put("code1", "A04");
+					} else {
+						map.put("code1", "SA04");
+					}
+					
+					map.put("docId", list.get(i).getDocID());
+					map.put("lang", lang.equals("1") ? "" : lang);
+					
+					//결재선 정보
+					List<ApprGDocListVO> list2 = null;
+					list2 = assembleApprPortletList(map);
+					result.put("aprLines" + i, list2);
 				}
-				
-				map.put("docId", list.get(0).getDocID());
-				map.put("lang", lang.equals("1") ? "" : lang);
-				
-				//결재선 정보
-				list = assembleApprPortletList(map);
-				result.put("aprLines", list);
 			}
-			
 			break;
 		case "reject":
 			//반송
