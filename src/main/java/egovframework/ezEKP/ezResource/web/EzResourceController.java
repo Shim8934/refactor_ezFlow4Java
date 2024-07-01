@@ -1431,6 +1431,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
 				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
 			}
+
+			if (getSchedule == null) {
+				return "cmm/error/noData";
+			}
 			
 			num = String.valueOf(getSchedule.getNum());
 			pNum = String.valueOf(getSchedule.getpNum());
