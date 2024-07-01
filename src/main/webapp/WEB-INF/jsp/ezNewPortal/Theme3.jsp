@@ -570,10 +570,10 @@
 
 	        switch(className){
 	            case "mail":
-	                document.getElementById("unReadMailCount").addEventListener('click', function(){quickMenuOpen('NewMail');});
+	                quickMenuOpen('NewMail');
 	                break;
 	            case "appr":
-	                document.getElementById("approvalCnt").addEventListener('click', function(){quickMenuOpen('ApprG');});
+	                quickMenuOpen('ApprG');
 	                break;
 	            case "board":
 	                var mainHref = "";
