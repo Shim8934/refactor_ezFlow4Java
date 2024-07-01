@@ -3243,9 +3243,10 @@
 		                                        	<c:if test="${initFlag == '1'}">
 			                                            <a class="imgbtn imgbck2" style="margin-top: 3px"><span onclick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
 			                                            <a class="imgbtn imgbck2" style="margin-top: 3px; display:none;"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a>
-			                                            <a class="imgbtn imgbck2" style="margin-top: 3px;"><span onclick="return viewDeptBinder()"><spring:message code='ezApprovalG.t1119'/></span></a>
 		                                        	</c:if>
 		                                        </span>
+		                                        <!-- 부서철보기 -->
+                                                <a class="imgbtn imgbck2" style="margin-top: 3px;"><span onclick="return viewDeptBinder()"><spring:message code='ezApprovalG.t1119'/></span></a>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
 		                                <span  style="vertical-align: middle; float: right;">
 		                                    <select id="selSearchOption" style="vertical-align: top;height:22px;margin-top:3px">
