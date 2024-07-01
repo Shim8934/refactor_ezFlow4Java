@@ -116,6 +116,7 @@
 		where u.cn = #userId# and u.physicaldeliveryofficename = #companyId# and u.tenant_id = #tenantId#
 	</select>
 	
+	<!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건 쿼리에서 $ 기호 제거 -->
 	<select id="EzCabinetAdminDAO.getListUserCapacity" resultMap="userCapacityVO">
 		select
 			*
@@ -128,11 +129,17 @@
 				<include refid="selectCapacityCabinet"/>
 				<include refid="userCapacityCabinet"/>
 					order by
-						<isNotEqual property="realColmn" compareValue="">
-							$realColmn$ $order$,
-						</isNotEqual>
-							department_name asc,
-							display_name asc
+					<isNotEqual property="realColmn" compareValue="">
+						<isEqual property="realColmn" compareValue="COMPANY_NAME">COMPANY_NAME</isEqual>
+						<isEqual property="realColmn" compareValue="DEPARTMENT_NAME">DEPARTMENT_NAME</isEqual>
+						<isEqual property="realColmn" compareValue="DISPLAY_NAME">DISPLAY_NAME</isEqual>
+						<isEqual property="realColmn" compareValue="JOB_TITLE">JOB_TITLE</isEqual>
+						<isEqual property="realColmn" compareValue="TOTAL_CAPACITY">TOTAL_CAPACITY</isEqual>
+						<isEqual property="realColmn" compareValue="CAPACITY_TP">CAPACITY_TP</isEqual>
+						<isEqual property="order" compareValue="DESC"> desc</isEqual>,
+					</isNotEqual>
+					department_name asc,
+					display_name asc
 			) k <![CDATA[ where rownum <= #startPoint# + #listCnt#]]>
 		) where rnum >= #startPoint# + 1
 	</select>

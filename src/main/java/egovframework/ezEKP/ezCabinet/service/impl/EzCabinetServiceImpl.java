@@ -1333,7 +1333,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		JSONObject result            = new JSONObject();
 		String userId                = userInfo.getId();
 		int tenantId                 = userInfo.getTenantId();
-		String primary               = userInfo.getPrimary();
+		String primary               = userInfo.getPrimary(); // 1 or 2
 		String offset                = userInfo.getOffset();
 		String offsetMinute          = commonUtil.getMinuteUTC(offset);
 		int startPoint               = 0;
@@ -1343,14 +1343,19 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		logger.debug("Offset: " + offset);
 		
+		/* 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건 쿼리에서 $ 기호 제거 */
+		String orderCol = "";
+		String orderSort = "";
 		if (!column.equals("") && !order.equals("")) {
+			orderSort = order;
+			
 			switch(column) {
-				case "it": sqlQuery = "item_type "   + order; break;
-				case "tt": sqlQuery = "title "       + order; break;
-				case "un": sqlQuery = primary.equals("1") ? "creator_name1 " + order : "creator_name2 " + order; break;
-				case "cd": sqlQuery = "create_date " + order; break;
-				case "is": sqlQuery = "item_size "   + order; break;
-				default  : sqlQuery = "item_type "   + order; break;
+				case "it": orderCol = "item_type"; break;
+				case "tt": orderCol = "title"; break;
+				case "un": orderCol = ("creator_name" + primary); break;
+				case "cd": orderCol = "create_date"; break;
+				case "is": orderCol = "item_size"; break;
+				default  : orderCol = "item_type"; break;
 			}
 		}
 		
@@ -1365,7 +1370,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		summary     = summary.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		creatorName = creatorName.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		
-		CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, offsetMinute, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
+		CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, offsetMinute, title, summary, creatorName, startDate, endDate, orderCol, orderSort, srchMode, srchOption);
 		List<CabinetItemVO> itemList = new ArrayList<>();
 		
 		if (srchMode.equals("2") && recursive.equals("1")) {
