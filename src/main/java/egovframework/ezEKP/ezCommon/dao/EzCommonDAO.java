@@ -2143,4 +2143,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterDocAttachNameCol");
 		}
 	}
+
+	// 2024-07-02 민지수 - 전자결재 > 비전자문서 등록 > 본문첨부 기능 사용여부 테넌트 컨피그 추가
+	public void insertNonUseDocAttachYN(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkNonUseDocAttachYN", map);
+
+		if (propertyValue == null) {
+			logger.debug("NonUseDocAttachYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertNonUseDocAttachYN", map);
+		}
+	}
 }

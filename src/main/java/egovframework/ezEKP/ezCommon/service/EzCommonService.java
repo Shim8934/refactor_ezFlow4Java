@@ -360,4 +360,6 @@ public interface EzCommonService {
 	public void insertReturnByDesignationUsedConfig() throws Exception;
 
 	public void alterDocAttachNameCol() throws Exception;
+    
+	public void insertNonUseDocAttachYN() throws Exception;
 }

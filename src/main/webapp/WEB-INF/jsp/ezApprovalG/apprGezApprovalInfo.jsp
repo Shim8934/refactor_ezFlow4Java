@@ -2812,7 +2812,9 @@
 				iTd.appendChild(div);
 				
 				if (divLength == 0){
-					opener.document.getElementById("message").contentWindow.document.getElementById("info").remove();
+					opener.document.getElementById("message").contentWindow.document.getElementById("info").style.display = "none";
+					opener.document.getElementById("message").contentWindow.document.getElementById("body").id = "docNotebody";
+					
 				}
 				
 				opener.document.getElementById("message").contentWindow.document.getElementById("area").appendChild(iTd);
@@ -4043,7 +4045,7 @@
 				                        </a>
 					                </td>
 				                </tr>
-									<tr <c:if test="${nonElecRecType eq 'HWP' }"> style="display: none;"</c:if>>
+									<tr <c:if test="${nonElecRecType eq 'HWP' || nonUseDocAttachYN eq 'N' }"> style="display: none;"</c:if>>
 									<th><spring:message code='ezApprovalG.nonElecAt02'/></th> <!-- 본문첨부 -->
 									<td>
 										<input type="text" readonly="" id="filename" style="width: 180px;">
