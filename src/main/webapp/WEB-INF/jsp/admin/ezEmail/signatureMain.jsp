@@ -351,7 +351,7 @@
 								<div style="border-top: 0px">
 									<spring:message code='ezEmail.jje06'/>
 								</div>
-								<input type="text" id="signSearchInput" onkeydown="signSearchEnter()" style="width: auto; height:22px !important;">
+								<input type="text" id="signSearchInput" onkeydown="signSearchEnter()" style="width: 41%; height:22px !important;">
 								<div class="lmLetterBoxTitSearch">
 									<button class="lmTop" onclick="searchSignList()">
 										<spring:message code='ezBoard.t188'/>
