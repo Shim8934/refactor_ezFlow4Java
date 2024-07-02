@@ -2051,7 +2051,7 @@ div.orbit img{border-radius: 5px;}
 .top_info_area ul li .noti{width:100%; padding:0 15px 0 50px; background:url(/images/ezNewPortal/info_board.svg) no-repeat 15px center / 20px 20px; box-sizing:border-box;}
 .top_info_area ul li .noti .swiper_txt{white-space:nowrap; text-overflow:ellipsis; overflow:hidden; cursor:pointer; user-select:none; font-size:13px; color:#333;}
 
-.top_info_area ul li > span{display:inline-block; color:#333; font-size:13px; font-weight:500; padding:0 15px 0 40px; background-repeat:no-repeat; background-position:15px center; line-height:24px;}
+.top_info_area ul li > span{display:inline-block; color:#333; font-size:13px; font-weight:500; padding:0 15px 0 40px; background-repeat:no-repeat; background-position:15px center; line-height:24px; cursor: pointer;}
 .top_info_area ul li > span.mail{background-image:url(/images/ezNewPortal/info_mail.svg); background-size:18px 14px;}
 .top_info_area ul li > span.appr{background-image:url(/images/ezNewPortal/info_appr.svg); background-size:20px 20px;}
 .top_info_area ul li > span.board{background-image:url(/images/ezNewPortal/info_board.svg); background-size:20px 20px;}
