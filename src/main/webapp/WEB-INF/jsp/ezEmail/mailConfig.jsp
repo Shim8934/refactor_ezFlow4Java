@@ -128,7 +128,8 @@
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailUserDistribution.do";
 	                    break;
 	                case "tag":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailTagConfig.do";
+	                    var requestUrl = shareId != "" ? "/ezEmail/mailTagConfig.do?shareId=" + encodeURIComponent(shareId) : "/ezEmail/mailTagConfig.do";
+                        document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	            }
 	        }
@@ -697,8 +698,8 @@
 							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 					    </c:otherwise>
 				    </c:choose>	
-					<%--24.04.22 김대현 공유사서함 경우 tag탭 사라지게 처리--%>
-					<c:if test="${useMailTag and flag ne 'address' and shareId == null}">
+					<%--24.06.12 이사라 - 공유사서함 태그 지원--%>
+					<c:if test="${useMailTag and flag ne 'address'}">
 						<p><span divname="tag" id="1tab12"><spring:message code='ezEmail.tag.config' /></span></p>
 					</c:if>
 	            </div>
