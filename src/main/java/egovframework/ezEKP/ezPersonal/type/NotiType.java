@@ -71,7 +71,10 @@ public enum NotiType {
 	// 웹폴더 개설승인
 	WEBFOLDER_OPEN_ADMIT(9, 1),
 	// 웹폴더 개설거절
-	WEBFOLDER_OPEN_REJECT(9, 2)
+	WEBFOLDER_OPEN_REJECT(9, 2),
+	
+	JOURNAL_RECV(10, 1),
+	JOURNAL_COMMENT(10, 2)
 	;
 
 	private final int mainType;

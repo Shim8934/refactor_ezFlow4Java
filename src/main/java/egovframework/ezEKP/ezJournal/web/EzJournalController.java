@@ -55,6 +55,7 @@ import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezJournal.vo.JournalPagination;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -83,6 +84,8 @@ public class EzJournalController extends EgovFileMngUtil {
 	@Resource(name="EzCabinetAdminService")
 	private EzCabinetAdminService cabinetAdminService;
 	
+	@Autowired
+	private EzNotificationService ezNotificationService;
 	/**
 	 * 업무일지 메인화면 호출
 	 */
@@ -1857,7 +1860,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @return
 	 */
 	@RequestMapping(value="/ezJournal/sendJournalReplyMail.do", method = RequestMethod.POST)
-	public String sendJournalReplyMail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+	public String sendJournalReplyMail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("sendJournalReplyMail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1868,39 +1871,45 @@ public class EzJournalController extends EgovFileMngUtil {
 		String journalId = request.getParameter("journalId");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("notiName", "JOURNAL_COMMENT");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/" + journalWriter + "/options", param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/" + journalWriter + "/noti/options", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {			
-			JSONObject journalEnv = (JSONObject) ((JSONObject) resultBody.get("data")).get("journalOpt");
-			
-			String replyAlert = (String) journalEnv.get("replyAlert");
-			
-			if (replyAlert.equals("Y")) {
+			JSONArray disableNotiPlatformList = (JSONArray) ((JSONObject) resultBody.get("data")).get("disablePlatformList");
+			JSONObject journalMailInfo = (JSONObject)((JSONObject)resultBody.get("data")).get("journalMailInfo");
+			if (!disableNotiPlatformList.contains(1L)) {
 				try {
-				InternetAddress[] toArr = new InternetAddress[1];
-				toArr[0] = new InternetAddress((String) journalEnv.get("mail"));
-				toArr[0].setPersonal((String) journalEnv.get("name"));
-				
-				String subject = egovMessageSource.getMessage("ezJournal.t151", userInfo.getLocale()) + journalTitle;
-				
-				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t152", userInfo.getLocale()) + "</p>";
-				
-				content += "<p></p>";
-				content += "<a id='journal_a' href='javascript:;' target='' onclick='journalMailLink(" + journalId + ",1);'>" + journalTitle + "</a>";
-				content += "<p>" + egovMessageSource.getMessage("ezJournal.t153", userInfo.getLocale()) + userInfo.getDisplayName() + "</p>";
-				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154", userInfo.getLocale()) + journalTitle + "</p>";
-				content += "<p>" + replyContent + "</p>";
-				
-				content = commonUtil.createNotiMailContent(content, userInfo.getTenantId(), userInfo.getLocale());
-				
-				InternetAddress from = new InternetAddress(userInfo.getEmail());
-				from.setPersonal(userInfo.getDisplayName());
-				ezEmailService.sendMail(loginCookie , from, toArr, null, null, subject, content, false);
+					InternetAddress[] toArr = new InternetAddress[1];
+					toArr[0] = new InternetAddress((String) journalMailInfo.get("mail"));
+					toArr[0].setPersonal((String) journalMailInfo.get("name"));
+					
+					String subject = egovMessageSource.getMessage("ezJournal.t151", userInfo.getLocale()) + journalTitle;
+					
+					String content = "<p>" + egovMessageSource.getMessage("ezJournal.t152", userInfo.getLocale()) + "</p>";
+					
+					content += "<p></p>";
+					content += "<a id='journal_a' href='javascript:;' target='' onclick='journalMailLink(" + journalId + ",1);'>" + journalTitle + "</a>";
+					content += "<p>" + egovMessageSource.getMessage("ezJournal.t153", userInfo.getLocale()) + userInfo.getDisplayName() + "</p>";
+					content += "<p>" + egovMessageSource.getMessage("ezJournal.t154", userInfo.getLocale()) + journalTitle + "</p>";
+					content += "<p>" + replyContent + "</p>";
+					
+					content = commonUtil.createNotiMailContent(content, userInfo.getTenantId(), userInfo.getLocale());
+					
+					InternetAddress from = new InternetAddress(userInfo.getEmail());
+					from.setPersonal(userInfo.getDisplayName());
+					ezEmailService.sendMail(loginCookie , from, toArr, null, null, subject, content, false);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
+			}
+			
+			if (!disableNotiPlatformList.contains(4L)) {
+				String recipientIdList = ((String)journalMailInfo.get("mail")).split("@")[0];
+				String linkUrl = "/ezJournal/journalDetail.do?journalId=" + journalId + "&pPreviewShow_HOW=D";
+				String linkUrlMobile = "";
+				ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), recipientIdList, "JOURNAL", "COMMENT", journalTitle, "popup", "750", "760", linkUrl, linkUrlMobile, "");
 			}
 		}
 		
@@ -1917,7 +1926,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezJournal/sendJournalRecvMail.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendJournalRecvMail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+	public void sendJournalRecvMail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("sendJournalRecvMail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1928,31 +1937,37 @@ public class EzJournalController extends EgovFileMngUtil {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String userId = userInfo.getId();
 		param.put("userId", userId);
+		param.put("notiName", "JOURNAL_RECV");
 		
 		ArrayList<InternetAddress> toArrList = new ArrayList<InternetAddress>(); 
 		if (recvIds != null && !recvIds.equals("")) {
 			String[] receiverID = recvIds.split(", ");
-			
+			String recipientIdList = "";
+			String separator = ";;";
 			for (int i = 0; i < receiverID.length; i++) {
 				String recvId = receiverID[i];
 				
-				JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+recvId+"/options", param, request, "get", null);
+				JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/" + recvId + "/noti/options", param, request, "get", null);
 				String status = resultBody.get("status").toString();
 				
-				if (status.equals("ok")) {			
-					JSONObject journalEnv = (JSONObject) ((JSONObject) resultBody.get("data")).get("journalOpt");
+				if (status.equals("ok")) {
+					JSONArray disableNotiPlatformList = (JSONArray) ((JSONObject) resultBody.get("data")).get("disablePlatformList");
+					JSONObject journalMailInfo = (JSONObject)((JSONObject)resultBody.get("data")).get("journalMailInfo");
 					
-					String recvAlert = (String) journalEnv.get("recvAlert");
 					
-					if (recvAlert.equals("Y")) {
+					if (!disableNotiPlatformList.contains(1L)) {
 						try {
 							InternetAddress recvMail = new InternetAddress();
-							recvMail.setAddress((String) journalEnv.get("mail"));
-							recvMail.setPersonal((String) journalEnv.get("name"));
+							recvMail.setAddress((String) journalMailInfo.get("mail"));
+							recvMail.setPersonal((String) journalMailInfo.get("name"));
 							toArrList.add(recvMail);
 						} catch (Exception e) {
 							logger.error(e.getMessage(), e);
 						}
+					}
+					
+					if (!disableNotiPlatformList.contains(4L)) {
+						recipientIdList += ((String)journalMailInfo.get("mail")).split("@")[0] + separator;
 					}
 				}
 			}
@@ -1979,6 +1994,15 @@ public class EzJournalController extends EgovFileMngUtil {
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
+			
+			if (recipientIdList != null && !recipientIdList.equals("")) {
+				recipientIdList = recipientIdList.substring(0, recipientIdList.length() - separator.length());
+			}
+			
+			String linkUrl = "/ezJournal/journalDetail.do?journalId=" + journalId + "&pPreviewShow_HOW=D";
+			String linkUrlMobile = "";
+			ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), recipientIdList, "JOURNAL", "RECV", journalTitle, "popup", "750", "760", linkUrl, linkUrlMobile, "");
+			
 		}
 		
 		logger.debug("sendJournalRecvMail ended");

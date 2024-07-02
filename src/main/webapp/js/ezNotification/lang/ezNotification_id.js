@@ -8,6 +8,7 @@ var mainType = {
 	poll : "Pilih",
 	community : "masyarakat",
 	webfolder : "folder web",
+	journal : "Jurnal Kerja",
 	etc : "dll."
 }
 
@@ -66,6 +67,10 @@ var subType = {
 		open_apply : "Aplikasi untuk pembukaan",
 		open_admit : "Persetujuan pembukaan",
 		open_reject : "Pembukaan ditolak"
+	},
+	journal : {
+		comment : "Tulis komentar",
+		recv : "Pemberitahuan Penerimaan"
 	}
 }
 

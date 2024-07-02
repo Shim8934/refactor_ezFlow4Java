@@ -8,6 +8,7 @@ var mainType = {
 	poll : "투표",
 	community : "커뮤니티",
 	webfolder : "웹폴더",
+	journal : "업무일지",
 	etc : "기타"
 }
 
@@ -66,6 +67,10 @@ var subType = {
 		open_apply : "개설신청",
 		open_admit : "개설승인",
 		open_reject : "개설거절"
+	},
+	journal : {
+		comment : "댓글등록",
+		recv : "수신알림"
 	}
 }
 

@@ -8,6 +8,7 @@ var mainType = {
 	poll : "投票",
 	community : "社区",
 	webfolder : "网络文件夹",
+	journal : "工作日志",
 	etc : "ETC"
 }
 
@@ -66,6 +67,10 @@ var subType = {
 		open_apply : "申请开业",
 		open_admit : "批准开业",
 		open_reject : "开门被拒绝"
+	},
+	journal : {
+		comment : "发表评论",
+		recv : "接收通知"
 	}
 }
 

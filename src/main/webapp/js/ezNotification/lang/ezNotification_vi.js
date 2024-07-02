@@ -8,6 +8,7 @@ var mainType = {
 	poll : "bỏ phiếu",
 	community : "cộng đồng",
 	webfolder : "thư mục web",
+	journal : "Nhật ký công việc",
 	etc : "vân vân"
 }
 
@@ -66,6 +67,10 @@ var subType = {
 		open_apply : "Đơn xin khai trương",
 		open_admit : "Phê duyệt khai trương",
 		open_reject : "Khai trương bị từ chối"
+	},
+	journal : {
+		comment : "Đăng bình luận",
+		recv : "Thông báo nhận"
 	}
 }
 

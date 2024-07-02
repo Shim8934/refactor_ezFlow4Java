@@ -344,10 +344,10 @@ tr[data-target='.approval'], tr.approval { display: none; }
 		<%-- 2024-04-30 한태훈 - 웹폴더 알림 설정 --%>
 		<tr class="collapsible" data-target=".webfolder">
 	        <th><spring:message code='ezWebFolder.t10'/></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 9, 1, 1)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 9, 1, 2)%></th>
 	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 9, 3, 1)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 9, 4, 1)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 9, 3, 2)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 9, 4, 2)%></th>
 		</tr>
 		<tr class="collapse webfolder">
 	        <td><spring:message code='ezNotification.hth54'/></td>
@@ -362,6 +362,29 @@ tr[data-target='.approval'], tr.approval { display: none; }
 	        <td></td>
 	        <td><%=makeCheckbox(disableItemFinder, 9, 2, 3)%></td>
 	        <td><%=makeCheckbox(disableItemFinder, 9, 2, 4)%></td>
+		</tr>
+		
+		<%-- 2024-06-28 한태훈 - 업무일지 알림 설정 --%>
+		<tr class="collapsible" data-target=".journal">
+	        <th><spring:message code='ezJournal.t1'/></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 10, 1, 2)%></th>
+	        <th></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 10, 3, 2)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 10, 4, 2)%></th>
+		</tr>
+		<tr class="collapse journal">
+	        <td><spring:message code='ezJournal.t122'/></td>
+	        <td><%=makeCheckbox(disableItemFinder, 10, 1, 1)%></td>
+	        <td></td>
+	        <td><%=makeCheckbox(disableItemFinder, 10, 1, 3)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 10, 1, 4)%></td>
+		</tr>
+		<tr class="collapse journal">
+	        <td><spring:message code='ezJournal.t123'/></td>
+	        <td><%=makeCheckbox(disableItemFinder, 10, 2, 1)%></td>
+	        <td></td>
+	        <td><%=makeCheckbox(disableItemFinder, 10, 2, 3)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 10, 2, 4)%></td>
 		</tr>
 		
 	</table>

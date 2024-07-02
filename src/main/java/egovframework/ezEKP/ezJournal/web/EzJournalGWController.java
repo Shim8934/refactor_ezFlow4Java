@@ -31,6 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -93,6 +96,9 @@ public class EzJournalGWController {
 	
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
+	
+	@Resource(name="EzPersonalService")
+	private EzPersonalService ezPersonalService;
 	
 	/**
 	 * 업무일지 G/W [POST] 일지함 생성
@@ -1966,6 +1972,40 @@ public class EzJournalGWController {
 		}
 		
 		logger.debug("ezJournal G/W getUserList ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezjournal/users/{userId}/noti/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getNotiOption(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		logger.debug("ezJournal G/W getNotiOption started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String notiName = request.getParameter("notiName");
+			NotiType notiType = NotiType.fromString(notiName);
+			List<Integer> disablePlatformList = ezPersonalService.getAllPlatformFromNotiDisableItem(userId, notiType, info.getTenantId());
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			JournalEnvVO journalMailInfo = ezJournalService.getUserJournalMailInfo(userId, info.getTenantId(), lang);
+			
+			data.put("journalMailInfo", journalMailInfo);
+			data.put("disablePlatformList", disablePlatformList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("ezJournal G/W getNotiOption ended.");
 		return result;
 	}
 	

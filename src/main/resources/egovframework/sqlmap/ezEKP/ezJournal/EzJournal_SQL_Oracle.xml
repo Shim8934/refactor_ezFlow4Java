@@ -1696,4 +1696,21 @@
 		and
 			dept_id = #deptId#
 	</delete>
+	
+	<select id="selectJournalMailInfo" parameterClass="Map" resultClass="journalEnvVO">
+		select 
+			u.mail as mail,
+		<isNotEqual property="lang" compareValue="2">
+			u.DISPLAYNAME as name
+		</isNotEqual>
+		<isEqual property="lang" compareValue="2">
+			u.DISPLAYNAME2 as name
+		</isEqual>
+		from 
+			tbl_usermaster u
+		where 
+			u.CN = #userId#
+		and 
+			u.tenant_id = #tenantId#
+	</select>
 </sqlMap>
