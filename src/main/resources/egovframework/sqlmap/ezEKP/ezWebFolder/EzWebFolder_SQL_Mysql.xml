@@ -1369,7 +1369,7 @@
 			
 			SELECT
 				A.CN                                                                                                                         AS CN,
-				CASE WHEN #primary# = '1'THEN A.TITLE ELSE A.TITLE2 END                                                                      AS POSITION,
+				CASE WHEN #primary# = '1'THEN B.TITLE ELSE B.TITLE2 END                                                                      AS POSITION,
 				CASE WHEN #primary# = '1'THEN A.DISPLAYNAME ELSE A.DISPLAYNAME2 END                                                          AS DISPLAYNAME,
 				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
 				A.DEPARTMENT                                                                                                                 AS DEPARTMENT,
