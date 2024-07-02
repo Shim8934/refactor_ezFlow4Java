@@ -389,6 +389,11 @@
     var userLang2 = "<c:out value='${userLang2}'/>";
 	var usePortletSize = "<c:out value='${usePortletSize}'/>" === "Y";
 	var portletInfoMap = {};
+	var useWebHWP = "<c:out value='${useWebHWP}'/>";
+	var companyID = "<c:out value='${companyID}'/>";
+	var userID = "<c:out value='${userId}'/>";
+	var apprPortletIDs = [];
+	var apprPortletTypes = [];
 	
  	var quickLinkPage = {
  		current: 1,

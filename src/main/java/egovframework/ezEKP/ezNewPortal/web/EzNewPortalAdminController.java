@@ -657,6 +657,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("useChinese", useChinese);
 				model.addAttribute("useVietnamese", useVietnamese);
 				model.addAttribute("useIndonesian", useIndonesian);
+				model.addAttribute("approvalFlag", ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId()));
 
 				if ("Y".equals(usePortletSize)) {
 					List<String> allSize = ezNewPortalService.getAllAvailablePortletSize();

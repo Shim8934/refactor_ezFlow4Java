@@ -3773,5 +3773,34 @@ ORDER BY
 			TENANT_ID = #tenantId#
 	]]>
 </select>
-	
+
+	<select id="ezNewPortal.getApprovalDisplayList" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+		SELECT	*
+		FROM	vgongramaprdoingdoclist
+		WHERE	APRMEMBERID = #userId#
+		AND		APRTYPE = '015'
+		AND		TENANT_ID = #tenantId#
+		AND		COMPANYID IN
+			(
+				SELECT		EXTENSIONATTRIBUTE2
+				FROM		TBL_DEPTMASTER
+				INNER JOIN	TBL_ADDJOBMASTER
+					ON
+						TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+					AND
+						TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+				WHERE	TBL_ADDJOBMASTER.TENANT_ID = #tenantId#
+				AND		TBL_ADDJOBMASTER.CN = #userId#
+				UNION ALL
+				SELECT	PHYSICALDELIVERYOFFICENAME
+				FROM	TBL_USERMASTER
+				WHERE	CN = #userId#
+				AND		TENANT_ID = #tenantId#
+			)
+		ORDER BY	STARTDATE DESC
+		LIMIT	7
+		]]>
+	</select>
+		
 </sqlMap>

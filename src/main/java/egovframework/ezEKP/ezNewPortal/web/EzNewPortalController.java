@@ -618,6 +618,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		}
 		
 		model.addAttribute("checkBrowser", checkBrowser);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("companyID", companyId);
 		
 		logger.debug("portalMainPage End");
 		return returnUrl;

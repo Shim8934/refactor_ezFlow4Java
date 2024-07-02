@@ -354,6 +354,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("portletId", req.getParameter("portletId"));
 		
 		logger.debug("portalApprovalListPortlet ended.");
 		
@@ -399,6 +400,32 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		return "json";
 	}
+	
+
+	/**
+	 * 포틀릿 - 전자결재 문서함별 포틀릿
+	 */
+	@RequestMapping(value = "/ezNewPortal/apprPortlet.do", method=RequestMethod.GET)
+	public String portalApprPortlet(HttpServletRequest req, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("portalApprovalListPortlet started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = request.getParameter("portletId");
+		String portletName = request.getParameter("portletName");
+		String cabinetType = request.getParameter("cabinetType");
+
+		model.addAttribute("portletId", portletId);
+		model.addAttribute("portletName", portletName);
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("cabinetType", cabinetType);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		
+		logger.debug("portalApprovalListPortlet ended.");
+		
+		return "/ezNewPortal/portlets/apprPortlet";
+	}
+	
 	
 	/**
 	 * 포틀릿 - 양식즐겨찾기 포틀릿

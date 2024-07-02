@@ -58,5 +58,13 @@ var messages = {
     strLangSchedule01: "chủ nhật;Thứ hai;Thứ ba;Thứ Tư;Thứ năm;Thứ sáu;Thứ bảy;",
     strLangFavorPortlet : "Portlet yêu thích",
     strLangCommunity01 : "Số lượng thành viên",
-	strLangCommunity02 : "người"
+	strLangCommunity02 : "người",
+	apprPortlet001 : " : Được cấu hình trong trường hợp vắng mặt.",
+	apprPortlet002 : "Turn off Out-of-Office setting",
+	apprPortlet003 : "Không có dữ liệu.",
+	apprPortlet004 : "Dự thảo",
+	apprPortlet005 : "Tài liệu được thực hiện bởi một công ty khác không thể được phục hồi.",
+	apprPortlet006 : "Dạng Hangul chỉ có thể được tìm thấy trong IE.",
+	apprPortlet007 : "Biểu mẫu được liên kết không thể được soạn thảo lại.",
+	apprPortlet008 : "Bạn có muốn hủy bỏ cấu hình vắng mặt không?"
 }

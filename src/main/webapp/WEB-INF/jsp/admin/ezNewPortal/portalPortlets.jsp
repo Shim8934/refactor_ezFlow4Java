@@ -151,6 +151,14 @@
 		});
 		var CLASS_DISPLAY_NONE = 'notUsedTR';
 
+		// 전자결재 포틀릿의 표출 타입 enum.
+		var CabinetType = Object.freeze({
+			DOING : 'doing',
+			REJECT : 'reject',
+			DRAFT : 'draft',
+			DISPLAY : 'display'
+		});
+
 		$(function() {
 			getCompanies();
 			getPortletList();	
@@ -264,6 +272,11 @@
 			if (portletMenuId == 4 && boardId == null && portletId != 10) {
 				alert("<spring:message code='ezNewPortal.t050' />");
 				return;
+			}
+			
+			if (portletMenuId == 3) {
+				console.log(connectionUrl + " / cabinetType: " + document.getElementById("newPortlet").querySelector("#cabinetType").value);
+				connectionUrl += ("?cabinetType=" + document.getElementById("newPortlet").querySelector("#cabinetType").value);
 			}
 			
 			var request = new XMLHttpRequest();
@@ -409,6 +422,10 @@
 					alert("<spring:message code='ezNewPortal.t092'/>");
 					return;
 				}
+			}
+			
+			if (menuId == 3) {
+				connectionUrl += ("?cabinetType=" + document.getElementById("portlet" + portletId).querySelector("#cabinetType" + portletId).value);
 			}
 			
 			var request = new XMLHttpRequest();
@@ -595,7 +612,11 @@
 						}
 
 						if (!result[i].general) {
-							listHTML += getBoardViewTypeRowStr(portletURL, portletId);
+							if (menuId == '3') {
+								listHTML += getCabinetTypeRowStr(portletURL, portletId);
+							} else {
+								listHTML += getBoardViewTypeRowStr(portletURL, portletId);
+							}
 						} else if (isFixBoardPortlet(portletCode)) {
 							listHTML += getFixBoardKeyRowStr(portletURL, portletId);
 						}
@@ -642,6 +663,11 @@
 							switchBoardViewTypeRow(result[i].portletId, true);
 						} else if (result[i].menuId == 4 && !result[i].general && result[i].boardGubun == 0) {
 							switchBoardViewTypeRow(result[i].portletId, true);
+						} else if (result[i].menuId == 3 && !result[i].portletCode) {
+							document.getElementById("portlet" + result[i].portletId).querySelector(".connectionTR").style.display = "none";
+							document.getElementById("portlet" + result[i].portletId).querySelector(".connectionUrl").value = portletURL.split('?')[0];
+							document.getElementById("portlet" + result[i].portletId).querySelector("#cabinetSelRow" + result[i].portletId).style.display = "";
+							
 						}
 					}
 
@@ -748,7 +774,9 @@
 			listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
 
 			listHTML += getBoardViewTypeRowStr('', '');
-
+			
+			listHTML += getCabinetTypeRowStr('', '');
+			
 			listHTML += "</table>";
 			listHTML += "</li>";
 			
@@ -966,8 +994,26 @@
 		function isWordSelectDisplay(viewType) {
 			return viewType === BoardViewType.CARD_A || viewType === BoardViewType.CARD_B;
 		}
+		
+		// 2024-06-26 조수빈 - 관련 메뉴가 전자결재일 경우 포틀릿에 보여질 문서함을 선택하는 ui 생성 메소드
+		function getCabinetTypeRowStr(portletURL, portletId) {
+			var portletUrl = URLParamsUtils(portletURL);
+			var cabinetType = portletUrl.get('cabinetType');
+			var approvalFlag = "<c:out value='${approvalFlag}'/>";
+
+			var resultStr = "<tr id='cabinetSelRow" + portletId + "' class='CabinetTR' style='display:none'><th class='portletInfoTH'><spring:message code='ezApprovalG.t1187' /> :</th><td class='portletInfoTD CabinetSelTD'>";
+			resultStr += "<select id='cabinetType" + portletId + "' style='font-size:12px;'>";
+			resultStr += "<option value='" + CabinetType.DOING + "' " + (cabinetType === CabinetType.DOING ||  !cabinetType ? "selected" : "") + "><spring:message code='main.t00003' /></option>";
+			resultStr += "<option value='" + CabinetType.REJECT + "' " + (cabinetType === CabinetType.REJECT ? "selected" : "") + "><spring:message code='main.t00004' /></option>";
+			resultStr += "<option value='" + CabinetType.DRAFT + "' " + (cabinetType === CabinetType.DRAFT ? "selected" : "") + "><spring:message code='main.t00005' /></option>";
+			resultStr += "<option value='" + CabinetType.DISPLAY + "' " + (cabinetType === CabinetType.DISPLAY ? "selected" : "") + ">";
+			resultStr += approvalFlag === "G" ? "<spring:message code='ezApprovalG.t10011' />" : "<spring:message code='ezCircular.t7' />";
+			resultStr += "</option>";
+			resultStr += "</select></tr>";
+
+			return resultStr;
+		}
+		
 	</script>
 </body>
-	
-
 </html>

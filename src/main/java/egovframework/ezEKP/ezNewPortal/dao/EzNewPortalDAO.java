@@ -805,4 +805,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (int) select("ezNewPortal.getFavItemListCnt", map);
 	}
 	
+	// 2024-07-02 조수빈 - 공람 / 회람 포틀릿 목록 반환
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getApprovalDisplayList(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("ezNewPortal.getApprovalDisplayList", map);
+	}
+	
 }

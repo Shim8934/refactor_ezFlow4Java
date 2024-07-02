@@ -77,14 +77,21 @@ var selectMenu = function() {
 		window.opener.document.getElementById("newPortletMenu").value = menuName;
 		window.opener.document.getElementById("newPortletMenu").setAttribute("value", menuName);
 		window.opener.document.getElementById("newPortletMenu").setAttribute("data2", menuId);
-
-		if (menuId == 4) {
+		
+		if (menuId == 3) {
+			window.opener.document.getElementById("newPortlet").querySelector("#CabinetSelRow").style.display = "table-row";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/apprPortlet.do";
+			window.opener.document.getElementById("newPortlet").querySelector("#newPortletMenu").value = menuName;
+			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "none";
+		} else if (menuId == 4) {
 			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "table-row";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
+			window.opener.document.getElementById("newPortlet").querySelector("#CabinetSelRow").style.display = "none";
 		} else {
 			
-			if (beforeMenu == 4) {
+			if (beforeMenu == 3 || beforeMenu == 4) {
 				window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "";
 			}
 			
@@ -93,6 +100,7 @@ var selectMenu = function() {
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("value", "");
 			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "none";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "table-row";
+			window.opener.document.getElementById("newPortlet").querySelector("#CabinetSelRow").style.display = "none";
 		}
 		 
 	} else {
@@ -100,18 +108,30 @@ var selectMenu = function() {
 		window.opener.document.getElementById("portletMenu" + portletId).value =  menuName;
 		window.opener.document.getElementById("portletMenu" + portletId).setAttribute("value", menuName);
 		window.opener.document.getElementById("portlet" + portletId).setAttribute("data2", menuId);
+
+		if (beforeMenu == 4) {
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
+		}
+		
+		if (beforeMenu == 3) {
+			window.opener.document.getElementById("portlet" + portletId).querySelector("#cabinetSelRow" + portletId).style.display = "none";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
+		}
 		
 		if (menuId == 4) {
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "table-row";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "none";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "/ezNewPortal/boardPortlet.do");
+		} else if (menuId == 3) {
+			window.opener.document.getElementById("portlet" + portletId).querySelector("#cabinetSelRow" + portletId).style.display = "table-row";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "none";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/apprPortlet.do";
+			window.opener.document.getElementById("portletMenu" + portletId).value =  menuName;
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".notUsedTR").style.display = "none";
 		} else {
-			
-			if (beforeMenu == 4) {
-				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
-				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
-			}
 			
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "none";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "table-row";

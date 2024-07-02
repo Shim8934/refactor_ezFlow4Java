@@ -58,5 +58,13 @@ var messages = {
 	strLangSchedule01 : "Sun;Mon;Tue;Wed;Thu;Fri;Sat",
 	strLangFavorPortlet : "Favorites",
 	strLangCommunity01 : "The number of member",
-	strLangCommunity02 : " person"
+	strLangCommunity02 : " person",
+	apprPortlet001 : ": Configured in absence.",
+	apprPortlet002 : "Turn off Out-of-Office setting",
+	apprPortlet003 : "No data.",
+	apprPortlet004 : "Draft",
+	apprPortlet005 : "Documents made by another company can not be recovered.",
+	apprPortlet006 : "Hangul form can be found only in IE.",
+	apprPortlet007 : "The linked form can not be re-drafted.",
+	apprPortlet008 : "Do you want to unlock absence configuration?"
 }

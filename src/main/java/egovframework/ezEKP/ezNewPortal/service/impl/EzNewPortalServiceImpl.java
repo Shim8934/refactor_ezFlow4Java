@@ -1480,7 +1480,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		//메뉴
 		map = new ObjectMapper().readValue(portletInfo.toJSONString(), Map.class);
-		map.put("boardId", commonUtil.stripScriptTags(map.get("boardId").toString()));
+		map.put("boardId", map.get("boardId") != null? commonUtil.stripScriptTags(map.get("boardId").toString()) : null);
 		
 		String connectionUrl = commonUtil.stripScriptTags(map.get("connectionUrl").toString());
 		connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
@@ -2101,6 +2101,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		case "draft":
 			//기안
 			list = ezNewPortalDAO.getApprovalDraftList(map);
+			result.put("list", list);
+			
+			break;
+		case "display":
+			// 공람 / 회람
+			list = ezNewPortalDAO.getApprovalDisplayList(map);
 			result.put("list", list);
 			
 			break;

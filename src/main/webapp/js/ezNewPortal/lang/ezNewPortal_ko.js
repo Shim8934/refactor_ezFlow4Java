@@ -58,6 +58,13 @@ var messages = {
 	strLangSchedule01 : "일;월;화;수;목;금;토",
 	strLangFavorPortlet : "즐겨찾기",
 	strLangCommunity01: "회원수",
-	strLangCommunity02: "명"
-	
+	strLangCommunity02: "명",
+	apprPortlet001 : "까지 부재중으로 설정이 되어 있습니다. ",
+	apprPortlet002 : "부재중 설정을 해제",
+	apprPortlet003 : "데이터가 없습니다.",
+	apprPortlet004 : "기안",
+	apprPortlet005 : "다른 회사에서 기안한 문서는 재기안 할 수 없습니다.",
+	apprPortlet006 : "한글양식은 IE에서만 볼 수 있습니다.",
+	apprPortlet007 : "연동 양식은 재기안하실 수 없습니다.",
+	apprPortlet008 : "부재 설정을 해제하시겠습니까?"
 }
