@@ -3220,7 +3220,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 				/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 				String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleIdList[i];
-				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&type=monthList&purpose=scheduleInfoDetail";
+				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&date=" + startDate.substring(0,16) + "&type=monthList&purpose=scheduleInfoDetail";
 				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), creatorId, "schedule", "accept", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 			else {
@@ -3230,7 +3230,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 				/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 				String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleIdList[i];
-				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&type=monthList&purpose=scheduleInfoDetail";
+				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&date=" + startDate.substring(0,16) + "&type=monthList&purpose=scheduleInfoDetail";
 				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), creatorId, "schedule", "reject", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 		}	

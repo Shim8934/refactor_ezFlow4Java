@@ -187,10 +187,10 @@ tr[data-target='.approval'], tr.approval { display: none; }
 		<%-- 2023-08-03 조수빈 - 일정관리 알림 설정 --%>
 		<tr class="collapsible" data-target=".schedule">
 	        <th><spring:message code='ezSchedule.t1010'/></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 1, 5)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 1, 6)%></th>
 	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 3, 5)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 4, 5)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 3, 6)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 4, 6)%></th>
 		</tr>
 		<tr class="collapse schedule">
 	        <td><spring:message code='ezSchedule.kmss09'/></td>

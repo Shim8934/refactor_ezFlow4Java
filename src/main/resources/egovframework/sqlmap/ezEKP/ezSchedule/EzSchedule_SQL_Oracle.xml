@@ -1344,9 +1344,9 @@
 	<insert id="EzScheduleDAO.insertScheduleConfig" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULECONFIG(
-				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			InvitationMail, INVITESCHEMODMAIL, CancellationMail, AttendanceMail, RejectedMail, autodelete,			tenant_id,      remindertime		
+				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			autodelete,			tenant_id,      remindertime		
 			) VALUES (
-				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		#v_INVITATIONMAIL#, #v_INVITESCHEMODMAIL#, #v_CANCELLATIONMAIL#, #v_ATTENDANCEMAIL#, #v_REJECTEDMAIL#, #v_AUTODELETE#,		#v_TENANTID#,   #v_REMINDERTIME# 
+				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		#v_AUTODELETE#,		#v_TENANTID#,   #v_REMINDERTIME# 
 			)
    		]]>
 	</insert>

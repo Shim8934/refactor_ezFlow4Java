@@ -1487,11 +1487,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_REMINDERTIME", reminderTime);
 		
 		if(ezScheduleDAO.getUserScheduleConfig(map) == null) {			
-			map.put("v_INVITATIONMAIL", "Y");
-			map.put("v_CANCELLATIONMAIL", "Y");
-			map.put("v_ATTENDANCEMAIL", "Y");
-			map.put("v_REJECTEDMAIL", "Y");
-			
 			ezScheduleDAO.insertScheduleConfig(map);
 		}
 		else {
@@ -2021,7 +2016,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			ezScheduleDAO.insertReminderSchedule(map);
 		}
 		
-		if (completeFG.equals("Y")) { // 일정완료 삽입
+		if (completeFG != null && completeFG.equals("Y")) { // 일정완료 삽입
         	insertScheduleComplete(scheduleId + "", "0", "N", startDate, tenantId, companyId);
         }
 	}
@@ -2105,7 +2100,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss04", userInfo.getLocale()) + "</br><br>" + " ");
 				bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + commonUtil.cleanValue(title) + "</br>");
 				bodyContent.append(periodContent);
-				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
 				break;
 			case "acc" :		// 참석 수락
 				subject = egovMessageSource.getMessage("ezSchedule.kmss05", userInfo.getLocale());
@@ -2114,7 +2109,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				//bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' >" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(periodContent);
-				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
 				//bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2', '', 'width=1400px, height=900px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=0' )\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
 			case "rej" :		// 참석 거절
@@ -2124,7 +2119,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				//bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' >" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(periodContent);
-				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
 				//bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2', '', 'width=1400px, height=900px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=0' )\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
 		}
@@ -2468,9 +2463,9 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		bodyContent.append(mailContent.toString());
 		
 		if (Integer.parseInt(repeatCount) > 0) {
-			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleid + "' startDate='" + startdate + "' endDate='" + enddate + "' repeatcount='" + repeatCount + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleid + "' startDate='" + startdate + "' endDate='" + enddate + "' date='" + repStartdate + "' repeatcount='" + repeatCount + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
 		} else {
-			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleid + "' startDate='" + startdate + "' endDate='" + enddate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleid + "' startDate='" + startdate + "' endDate='" + enddate + "' date='" + startdate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
 		}
 		
 		String content_ = commonUtil.createNotiMailContent(bodyContent.toString(), loginVO.getTenantId(), loginVO.getLocale());
@@ -2482,10 +2477,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		String linkUrlMobile = "";
 		if (Integer.parseInt(repeatCount) > 0) {
 			linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleid + "&repeatCount=" + repeatCount;
-			linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleid + "&startDate=" + startdate + "&endDate=" + enddate + "&repeatCount=" + repeatCount + "&type=monthList" + "&purpose=scheduleInfoDetail" ;
+			linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleid + "&startDate=" + startdate + "&endDate=" + enddate + "&date=" + repStartdate + "&repeatCount=" + repeatCount + "&type=monthList" + "&purpose=scheduleInfoDetail" ;
 	    } else {
 	    	linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleid + "&isReceive=Y";
-	    	linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleid + "&startDate=" + startdate + "&endDate=" + enddate + "&type=monthList" + "&purpose=scheduleInfoDetail";
+	    	linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleid + "&startDate=" + startdate + "&endDate=" + enddate + "&date=" + startdate + "&type=monthList" + "&purpose=scheduleInfoDetail";
 	    }
 		
 		
@@ -2752,7 +2747,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			bodyContent.append(egovMessageSource.getMessage("ezSchedule.t343", loginVO.getLocale()));
 			bodyContent.append("(" + repeatCount + egovMessageSource.getMessage("ezSchedule.mail.hth32", loginVO.getLocale()) + selectedDate);
 			bodyContent.append("<br><span>&nbsp;&nbsp; - ").append(egovMessageSource.getMessage("ezSchedule.t71", loginVO.getLocale()) + " : " + repetitionContent);
-			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' repeatCount= '" + repeatCount + "' startDate='" + selectedDate + "' endDate='" + selectedDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+			//bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' repeatCount= '" + repeatCount + "' startDate='" + selectedDate + "' endDate='" + selectedDate + "' date='" + selectedDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
 		} else {
 			bodyContent.append(scheDateContent);
 			bodyContent.append("<br><span>&nbsp;&nbsp; - ").append(egovMessageSource.getMessage("ezSchedule.t67", loginVO.getLocale()) + " : " + scheTimeContent);
@@ -2815,7 +2810,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			bodyContent.append(" " + userName + egovMessageSource.getMessage("ezSchedule.kmss06", locale) + "</br><br>" + " ");
 			bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", locale) + " : " + "<span id='schedule_read' >" + commonUtil.cleanValue(title) + "</span></br>");
 			bodyContent.append(periodContent);
-			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
 			notiSubType = "ACCEPT";
 			break;
 		case "rej" :		// 참석 거절
@@ -2824,7 +2819,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			bodyContent.append(" " + userName + egovMessageSource.getMessage("ezSchedule.kmss08", locale) + "</br><br>" + " ");
 			bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", locale) + " : " + "<span id='schedule_read' >" + commonUtil.cleanValue(title) + "</span></br>");
 			bodyContent.append(periodContent);
-			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
 			notiSubType = "REJECT";
 			break;
 		}
@@ -2835,7 +2830,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleId + "&isReceive=Y";
 			
-		String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleId + "&startDate=" + startDate + "&endDate=" + endDate + "&type=monthList" + "&purpose=scheduleInfoDetail";
+		String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleId + "&startDate=" + startDate + "&endDate=" + endDate + "&date=" + startDate + "&type=monthList" + "&purpose=scheduleInfoDetail";
 			
 		ezNotificationService.sendNoti(request, userInfo.getUserId(), creatorName, notiRecipientIdList, "schedule", notiSubType, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 		
@@ -2926,7 +2921,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		bodyContent.append(beforeScheTime + ")" + "<br><br>");
 		bodyContent.append(mailContent.toString());
 		
-		bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startdate + "' endDate='" + enddate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+		bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startdate + "' endDate='" + enddate + "' date='" + startdate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
 		
 		ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(bodyContent.toString(), tenantId, locale), false, EmailImportance.NORMAL);
 		
@@ -2934,7 +2929,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleId + "&isReceive=Y";
 			
-		String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleId + "&startDate=" + startdate + "&endDate=" + enddate + "&type=monthList" + "&purpose=scheduleInfoDetail";
+		String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleId + "&startDate=" + startdate + "&endDate=" + enddate + "&date=" + startdate + "&type=monthList" + "&purpose=scheduleInfoDetail";
 			
 		ezNotificationService.sendNoti(request, beforeSche.getCreatorId(), ownerName, notiRecipientIdList, "SCHEDULE", "MOD", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 		
@@ -4116,9 +4111,9 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		String linkUrlMobile = "";
 		if (repeatcount > 0) {
-			linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + reminderSche.getScheduleId() + "&startDate=" + startdate + "&endDate=" + enddate + "&repeatCount=" + repeatcount + "&type=monthList" + "&purpose=scheduleInfoDetail" ;
+			linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + reminderSche.getScheduleId() + "&startDate=" + startdate + "&endDate=" + enddate + "&date=" + date + "&repeatCount=" + repeatcount + "&type=monthList" + "&purpose=scheduleInfoDetail" ;
 		} else {
-			linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + reminderSche.getScheduleId() + "&startDate=" + startdate + "&endDate=" + enddate + "&type=monthList" + "&purpose=scheduleInfoDetail";
+			linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + reminderSche.getScheduleId() + "&startDate=" + startdate + "&endDate=" + enddate + "&date=" + date + "&type=monthList" + "&purpose=scheduleInfoDetail";
 		}
 		
 		ezNotificationService.sendNoti(reminderSche.getCreatorId(), fromName, reminderSche.getOwnerId(), "SCHEDULE", "REMINDER", title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting", reminderSche.getTenantId(), reminderSche.getCompanyId());

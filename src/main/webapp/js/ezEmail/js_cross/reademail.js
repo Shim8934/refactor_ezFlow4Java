@@ -1498,7 +1498,7 @@ function openScheduleInfo() {
     var feature = GetOpenPosition(width, height);
     var requestUrl = "";
     if (repeatCount != null) {
-    	requestUrl = "/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleId) + "&repeatCount=" + repeatCount;
+    	requestUrl = "/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleId) + "&repeatcount=" + repeatCount;
     } else {
     	requestUrl = "/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleId) + "&isReceive=Y";
     }
