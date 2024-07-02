@@ -18,6 +18,7 @@
 		</dl>
 		<div>
 			<ul id="BoardList_NewBoard" class='noti_portlet_list portletPagingArea'></ul>
+			<input type="hidden" id="pageChk">
 		</div>
 		<ul class="noti_portlet_list">
 		</ul>

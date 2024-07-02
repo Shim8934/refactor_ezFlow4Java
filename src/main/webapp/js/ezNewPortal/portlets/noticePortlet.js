@@ -160,6 +160,7 @@ var assembleNoticeList = function(noticeList, noticePortletId, access, totalCnt,
 	
 //	str += "</ul>";
 	document.getElementById('BoardList_NewBoard').innerHTML = str;
+	document.getElementById('pageChk').value = currentPage;
 	
 	document.getElementsByClassName('notiLI').forEach(function(item, index) {
 		if(item.getAttribute('data1')) {
@@ -184,6 +185,9 @@ portletId = portletId.substring(0, portletId.indexOf("P"));
 
 /* [포틀릿] 공지사항 리스트 */ 
 var getNoticePortletList = function (currentPage) {
+    if (currentPage == null) {
+        currentPage = document.getElementById("pageChk").value;
+    }
     $.ajax({
         url: '/ezNewPortal/getNoticePortlet.do',
         type: 'GET',
