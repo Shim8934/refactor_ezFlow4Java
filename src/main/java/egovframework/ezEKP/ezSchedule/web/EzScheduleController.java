@@ -3139,7 +3139,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String dateType = (String) obj.get("dateType");
 			String startDate = (String) obj.get("startDate");
 			String endDate = (String) obj.get("endDate");
-            String showtop = (String) obj.get("showtop");
+            String showtop = obj.get("showtop") == null ? "N" : obj.get("showtop").toString();
 
             ezScheduleService.updateAttendant(scheduleIdList[i], attendantId, displayName, displayName2, status, loginSimpleVO.getTenantId(), showtop);
 
