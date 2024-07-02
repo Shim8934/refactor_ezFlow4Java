@@ -1147,14 +1147,15 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String displayName = jsonParam.get("displayName").toString();
 			String displayName2 = jsonParam.get("displayName2").toString();
 			String status = jsonParam.get("status").toString();
-			
+			String showtop = jsonParam.get("showtop") == null ? "N" : jsonParam.get("showtop").toString();
+
 			for (String scheduleId : scheduleIdList) {
 				logger.debug("scheduleId : " + scheduleId);
 			}
 			logger.debug("tenantId : " + tenantId + "  displayName : " + displayName + "  status : " + status);
 			
 			for (int i=0; i < scheduleIdList.length; i++) {
-				ezScheduleService.updateAttendant(scheduleIdList[i], userId, displayName, displayName2, status, tenantId);
+				ezScheduleService.updateAttendant(scheduleIdList[i], userId, displayName, displayName2, status, tenantId, showtop);
 			}
 			
 			result.put("status", "ok");

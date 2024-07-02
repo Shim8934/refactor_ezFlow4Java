@@ -617,7 +617,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			pidList = idList;
 		}		
 		
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), companyID, userInfo.getId(), userInfo.getDeptID(), useAnnualScheduleYN);		
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), companyID, userInfo.getId(), userInfo.getDeptID(), useAnnualScheduleYN);
 		
 		/* 2021-11-26 홍승비 - 일정 리스트 데이터를 전달받아 일정완료 데이터를 추가 가공하여 리턴 */
 		sList = ezScheduleService.applyScheduleCompleteData(sList, userInfo.getOffset(), userInfo.getTenantId(), companyID);
@@ -1379,7 +1379,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String keyword = request.getParameter("keyword");
 		String startDate = request.getParameter("sdate");
 		String endDate = request.getParameter("edate");
-		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());		
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 		String indiList = "'" + loginVO.getId() + "'";
 		//2020-02-24 김정언
 		String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", loginVO.getTenantId());
@@ -1406,7 +1406,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		if (filter != null && !filter.equals("")) {			
 			String utcStartTime = "";
 			String utcEndTime = "";
-			
+
 			if (keyword == null) keyword = "";
 			if (startDate == null) startDate = "";
 			if (endDate == null) endDate = "";			
@@ -2395,16 +2395,16 @@ public class EzScheduleController extends EgovFileMngUtil {
      				String v_attendantId = attendantId.item(i).getTextContent();				
      				String v_attendantName = attendantName.item(i).getTextContent();
      				
-     				
+
      				String period = "";
      				if (datetype.equals("3")){
      					period = startdate.substring(0,16) + " ~ " + enddate.substring(0,16) + " (" + msg.getMessage("ezSchedule.t343", locale) + ")";
      		        } else if (datetype.equals("2")){
-     		        	period = startdate.substring(0,10) + " ~ " + enddate.substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);        	
+     		        	period = startdate.substring(0,10) + " ~ " + enddate.substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);
      		        } else {
      		        	period = startdate.substring(0,16) + " ~ " + enddate.substring(0,16);
      		        }
-     				
+
      				if (!ezPersonalService.hasNotiDiableItem(v_attendantId, NotiType.SCHEDULE_ADD, NotiPlatform.MAIL, loginVO.getTenantId())) {
      					ezScheduleService.scheduleSendMail(result, v_attendantId, v_attendantName, title, period, "add", loginVO, loginCookie);
      				}
@@ -2417,7 +2417,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    } else {
         	//updateSchedule
         	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop);
-        	
+
         	/* 2021-11-25 홍승비 - 일정 수정 시 일정완료 데이터 삽입 또는 삭제 */
             if (doc.getElementsByTagName("REPSTARTDATE").item(0) != null) {
             	repStartDate = doc.getElementsByTagName("REPSTARTDATE").item(0).getTextContent();
@@ -2426,7 +2426,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             } else {
             	repStartDate = startdate;
             }
-            
+
             if (completeFG.equals("Y")) { // 일정완료 삽입
             	ezScheduleService.insertScheduleComplete(scheduleid, repeatCount, isAllRep, repStartDate, loginVO.getTenantId(), loginVO.getCompanyID());
             } else { // 일정완료 해제
@@ -2915,7 +2915,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String scheduleId = request.getParameter("scheduleId");
 		String resDel = request.getParameter("resDel");
 		String dateType = request.getParameter("dateType");
-		
+
 		//일정데이터 삭제
 		ezScheduleService.deleteSchedule(scheduleId, loginSimpleVO.getTenantId());
 		
@@ -3021,7 +3021,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			if (vo.getDateType().equals("3")){
 				period = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16) + " (" + msg.getMessage("ezSchedule.t343", loginVO.getLocale()) + ")";
 	        } else if (vo.getDateType().equals("2")){
-	        	period = vo.getStartDate().substring(0,10) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", loginVO.getLocale());        	
+	        	period = vo.getStartDate().substring(0,10) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", loginVO.getLocale());
 	        } else {
 	        	period = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
 	        }
@@ -3071,7 +3071,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			if (vo.getDateType().equals("3")){
 				period = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16) + " (" + msg.getMessage("ezSchedule.t343", loginVO.getLocale()) + ")";
 	        } else if (vo.getDateType().equals("2")){
-	        	period = vo.getStartDate().substring(0,10) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", loginVO.getLocale());        	
+	        	period = vo.getStartDate().substring(0,10) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", loginVO.getLocale());
 	        } else {
 	        	period = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
 	        }
@@ -3099,14 +3099,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 		String serverFlag = request.getParameter("serverFlag");
 		String serverName = request.getScheme() + "://" + request.getServerName();
-		
+
 		List<ScheduleReceiveListVO> rList = ezScheduleService.getReceiveList(loginVO.getId(), loginVO.getTenantId(), offSetMin, loginVO.getCompanyID());
 		
 		model.addAttribute("receiveList", rList);
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("serverFlag", serverFlag);
 		model.addAttribute("serverName", serverName);
-		
+
 		return "ezSchedule/scheduleReceiveAttendant";
 	}
 	
@@ -3132,8 +3132,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 		JSONArray jsonArray = (JSONArray)parser.parse(creatorList);
 		
 		for (int i=0; i < scheduleIdList.length; i++) {
-			ezScheduleService.updateAttendant(scheduleIdList[i], attendantId, displayName, displayName2, status, loginSimpleVO.getTenantId());
-			
 			JSONObject obj = (JSONObject) jsonArray.get(i);
 			String creatorId = (String) obj.get("creatorId");			
 			String creatorName = (String) obj.get("creatorName");
@@ -3141,12 +3139,15 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String dateType = (String) obj.get("dateType");
 			String startDate = (String) obj.get("startDate");
 			String endDate = (String) obj.get("endDate");
-			
+            String showtop = (String) obj.get("showtop");
+
+            ezScheduleService.updateAttendant(scheduleIdList[i], attendantId, displayName, displayName2, status, loginSimpleVO.getTenantId(), showtop);
+
 			String period = "";
 			if (dateType.equals("3")){
 				period = startDate.substring(0,16) + " ~ " + endDate.substring(0,16) + " (" + msg.getMessage("ezSchedule.t343", loginVO.getLocale()) + ")";
 	        } else if (dateType.equals("2")){
-	        	period = startDate.substring(0,10) + " ~ " + endDate.substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", loginVO.getLocale());        	
+	        	period = startDate.substring(0,10) + " ~ " + endDate.substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", loginVO.getLocale());
 	        } else {
 	        	period = startDate.substring(0,16) + " ~ " + endDate.substring(0,16);
 	        }
@@ -3561,7 +3562,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 				date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
 				date_cal.add(Calendar.YEAR, 1);
-			}						
+			}
 			break;	
 		}				
 		

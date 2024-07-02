@@ -56,7 +56,8 @@
 					    data.dateType = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'dateType');
 					    data.startDate = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'startdate');
 					    data.endDate = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'enddate');
-					    
+					    data.showtop = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'showtop');
+
 					    creatorList.push(data);
 					}
 				}
@@ -140,6 +141,7 @@
 					var dateType = $( this ).attr('dateType');
 					var startDate = $( this ).attr('startDate');
 					var endDate = $( this ).attr('endDate');
+					var showtop = $( this ).attr('showtop');
 					var timeString = "";
 					switch (dateType) {
 						case "1":
@@ -403,7 +405,7 @@
 	              	<tr> 
 	                    <td style="text-align:center">
 	                    	<input type='checkbox' value="1" scheduleid='${item.scheduleId}' creatorId='${item.creatorId}' creatorName='${item.creatorName}' />
-	                    </td> 
+	                    </td>
 	                    <td title="<spring:message code='ezSchedule.t162' />" style="cursor:pointer; text-align:center;" onClick="parentwin.show_personinfo('${item.creatorId}')">
 	                    	<c:if test="${userInfo.primary == '1'}">${item.creatorName}</c:if>
 	                    	<c:if test="${userInfo.primary != '1'}">${item.creatorName2}</c:if>	                    
@@ -414,7 +416,7 @@
 	                    </td> 
 	                    <td style="text-align:center;"><c:out value="${item.location }" /></td> 
 	                    <td title="<spring:message code='ezSchedule.t342' />" style="word-break:break-all; cursor:pointer; text-overflow:ellipsis; overflow:hidden; text-align:center;" onClick="open_schedule_in_receiveAttendant('${item.scheduleId}', 'Y')"><c:out value="${item.title}" /></td> 
-	                    <td class="showDateType" style="white-space:nowrap; text-align:center;" startDate="${item.startDate}" endDate="${item.endDate}" dateType="${item.dateType}" repetition="${item.repetition}"></td> 
+	                    <td class="showDateType" style="white-space:nowrap; text-align:center;" startDate="${item.startDate}" endDate="${item.endDate}" dateType="${item.dateType}" repetition="${item.repetition}" showtop="${item.showtop}"></td>
 	                </tr>	              		
 	              	</c:forEach>	                 
 	            </table>

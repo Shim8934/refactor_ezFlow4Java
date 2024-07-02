@@ -148,6 +148,7 @@
 		<result property="startDate"		column="STARTDATE"			columnIndex="10"/>
 		<result property="endDate"			column="ENDDATE"			columnIndex="11"/>
 		<result property="repetition"		column="REPETITION"			columnIndex="12"/>
+		<result property="showtop"			column="SHOWTOP"			columnIndex="13"/>
 	</resultMap>
 
 	<resultMap class="OrganUserVO" id="organUserVO">
@@ -1127,7 +1128,8 @@
              	b.datetype as datetype,
              	date_add(b.startdate, interval +#v_OFFSETMIN# minute) as startdate,
              	date_add(b.enddate, interval +#v_OFFSETMIN# minute) as enddate,
-             	b.repetition as repetition
+             	b.repetition as repetition,
+             	showtop
         	from
         		tbl_attendant a join tbl_schedule b on a.scheduleid = b.scheduleid and a.tenant_id = b.tenant_id
         	where
@@ -1352,13 +1354,13 @@
 				parentid, 			ownerid, 				ownername, 				ownername2, 			creatorid, 			creatorname, 		creatorname2, 
 				createdate, 		modifierid, 			modifiername, 			modifiername2, 			modifydate, 		scheduletype, 		importance, 			hasattendant, 
 				hasattach, 			hascomment, 			isreadonly, 			ispublic, 				datetype, 			startdate, 			enddate, 				repetition, 
-				repetitiondelete, 	title, 					location, 				contentpath,			tenant_id,			companyid	
+				repetitiondelete, 	title, 					location, 				contentpath,			tenant_id,			companyid,			showtop
 			) (
 			select
 				#v_SCHEDULEID#,		#v_ATTENDANTID#,		#v_ATTENDANTNAME#,		#v_ATTENDANTNAME2#,		creatorid, 			creatorname, 		creatorname2,
 				createdate, 		modifierid, 			modifiername, 			modifiername2, 			modifydate, 		scheduletype, 		importance, 			hasattendant,
 				hasattach, 			hascomment,				'Y',					ispublic, 				datetype, 			startdate, 			enddate, 				repetition, 
-				repetitiondelete, 	title,					location, 				contentpath,			tenant_id,			companyid
+				repetitiondelete, 	title,					location, 				contentpath,			tenant_id,			companyid,			#v_SHOWTOP#
 			from
 				tbl_schedule
 			where

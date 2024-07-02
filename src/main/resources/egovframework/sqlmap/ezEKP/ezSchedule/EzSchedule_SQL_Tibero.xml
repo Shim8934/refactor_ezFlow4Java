@@ -161,6 +161,7 @@
 		<result property="startDate"		column="STARTDATE"			columnIndex="10"/>
 		<result property="endDate"			column="ENDDATE"			columnIndex="11"/>
 		<result property="repetition"		column="REPETITION"			columnIndex="12"/>
+		<result property="showtop"			column="SHOWTOP"			columnIndex="13"/>
 	</resultMap>
 
 	<resultMap class="OrganUserVO" id="organUserVO">
@@ -1153,7 +1154,8 @@
              	B.DATETYPE AS DATETYPE,             	
              	(B.STARTDATE + #v_OFFSETMIN#/(24*60)) AS STARTDATE,             	
              	(B.ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE,
-             	b.repetition as repetition
+             	b.repetition as repetition,
+             	showtop
         	FROM
         		TBL_ATTENDANT A JOIN TBL_SCHEDULE B ON A.SCHEDULEID = B.SCHEDULEID AND A.TENANT_ID = B.TENANT_ID
         	WHERE
@@ -1346,13 +1348,13 @@
 				SCHEDULEID, 				PARENTID, 			OWNERID, 			OWNERNAME, 			OWNERNAME2, 			CREATORID, 			CREATORNAME, 			CREATORNAME2, 
 				CREATEDATE, 				MODIFIERID, 		MODIFIERNAME, 		MODIFIERNAME2, 		MODIFYDATE, 			SCHEDULETYPE, 		IMPORTANCE, 			HASATTENDANT, 
 				HASATTACH, 					HASCOMMENT, 		ISREADONLY, 		ISPUBLIC, 			DATETYPE, 				STARTDATE, 			ENDDATE, 				REPETITION, 
-				REPETITIONDELETE, 			TITLE, 				LOCATION, 			CONTENTPATH,		TENANT_ID,				COMPANYID
+				REPETITIONDELETE, 			TITLE, 				LOCATION, 			CONTENTPATH,		TENANT_ID,				COMPANYID,			showtop
 			) (
 			SELECT
 				SEQ_TBL_SCHEDULE.NEXTVAL,	#v_SCHEDULEID#,		#v_ATTENDANTID#,	#v_ATTENDANTNAME#,	#v_ATTENDANTNAME2#,		CREATORID, 			CREATORNAME, 			CREATORNAME2,
 				CREATEDATE, 				MODIFIERID, 		MODIFIERNAME, 		MODIFIERNAME2, 		MODIFYDATE, 			SCHEDULETYPE, 		IMPORTANCE, 			HASATTENDANT,
 				HASATTACH, 					HASCOMMENT,			'Y',				ISPUBLIC, 			DATETYPE, 				STARTDATE, 			ENDDATE, 				REPETITION, 
-				REPETITIONDELETE, 			TITLE,				LOCATION, 			CONTENTPATH,		TENANT_ID,				COMPANYID
+				REPETITIONDELETE, 			TITLE,				LOCATION, 			CONTENTPATH,		TENANT_ID,				COMPANYID,			#v_SHOWTOP#
 			FROM
 				TBL_SCHEDULE
 			WHERE

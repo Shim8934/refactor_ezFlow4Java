@@ -1803,7 +1803,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId) throws Exception {
+	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId, String showtop) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 				
 		map.put("v_SCHEDULEID", scheduleId);
@@ -1812,7 +1812,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_ATTENDANTNAME2", displayName2);
 		map.put("v_STATUS", status);
 		map.put("v_TENANTID", tenantId);
-		
+		map.put("v_SHOWTOP", showtop);
+
 		ezScheduleDAO.updateAttendantStatus(map);
 		
 		if (status.equals("1")) {
