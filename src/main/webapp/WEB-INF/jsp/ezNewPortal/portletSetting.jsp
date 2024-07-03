@@ -78,7 +78,7 @@
 			}
 
 			._mCS_2 {overflow: auto;}
-
+			#fixBoardList .mCSB_scrollTools_vertical{display:none !important;}
 		</style>
 	</head>
 	<body id="set-body">
