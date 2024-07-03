@@ -79,7 +79,7 @@ var selectMenu = function() {
 		window.opener.document.getElementById("newPortletMenu").setAttribute("data2", menuId);
 		
 		if (menuId == 3) {
-			window.opener.document.getElementById("newPortlet").querySelector("#CabinetSelRow").style.display = "table-row";
+			window.opener.document.getElementById("newPortlet").querySelector("#cabinetSelRow").style.display = "table-row";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/apprPortlet.do";
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletMenu").value = menuName;
@@ -88,7 +88,7 @@ var selectMenu = function() {
 			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "table-row";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
-			window.opener.document.getElementById("newPortlet").querySelector("#CabinetSelRow").style.display = "none";
+			window.opener.document.getElementById("newPortlet").querySelector("#cabinetSelRow").style.display = "none";
 		} else {
 			
 			if (beforeMenu == 3 || beforeMenu == 4) {
@@ -100,7 +100,7 @@ var selectMenu = function() {
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("value", "");
 			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "none";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "table-row";
-			window.opener.document.getElementById("newPortlet").querySelector("#CabinetSelRow").style.display = "none";
+			window.opener.document.getElementById("newPortlet").querySelector("#cabinetSelRow").style.display = "none";
 		}
 		 
 	} else {
