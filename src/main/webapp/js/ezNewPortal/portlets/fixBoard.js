@@ -88,6 +88,8 @@ function  FixBoardUtil() {
             window.open("/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(boardID), "main", "");
         });
 
+        var slideLink = [];
+
         var max = _boardList.length;
         for (var i = 0; i < max; i++) {
             var board = _boardList[i];
@@ -121,12 +123,14 @@ function  FixBoardUtil() {
             var dd2 = document.createElement('dd');
             dl.appendChild(dd2);
 
-            (function (board) {
-                slide.addEventListener("click", function (event) {
-                    openBoard(board.itemID, board.guBun, board.boardID);
-                });
-            }(board));
+            slideLink[i] = [board.itemID, board.guBun, board.boardID];
         }
+
+        _thisDom.addEventListener("click", function (event) {
+            if (!event.target.classList.contains(_enum.CLASS_SLIDE)) return;
+            var index = event.target.getAttribute('data-swiper-slide-index');
+            openBoard(slideLink[index][0],slideLink[index][1],slideLink[index][2]);
+        });
     }
 
 
