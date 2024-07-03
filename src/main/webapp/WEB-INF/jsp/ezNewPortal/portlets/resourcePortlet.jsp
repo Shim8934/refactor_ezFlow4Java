@@ -12,7 +12,7 @@
         <dl class="portlet_title sortablePortlet">
             <dt class="portletText"><c:out value='${portletName }'/></dt>
             <dd class="portletPlus" id="resourcePlus"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>
-            <dd class="resources_setting" id="resourceSetting">
+            <dd class="portletPlus" id="resourceSetting">
             	<img src="/images/ezNewPortal/portlet_setting<c:out value='${usedTheme }'/>.png">
             </dd>
             <dd class="resources_calendal">

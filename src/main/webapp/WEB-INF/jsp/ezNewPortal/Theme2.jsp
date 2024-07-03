@@ -39,7 +39,7 @@
                 		<span class="info_name">${userName} ${userTitle}</span>
                 		<span class="info_icon">
 							<span class="info_set" id="main_personalEnv"><img src="/images/admin/infoSetting.png" alt=""></span>
-							<span id="main_portletEnv"><img src="/images/admin/frameSetting.png"></span>
+							<span class="info_portlet" id="main_portletEnv"><img src="/images/admin/frameSetting.png"></span>
                 		</span>
                 	</dt>
                     <dd><spring:message code='ezNewPortal.yej06'/> <span>${lastLogin}</span></dd>
@@ -294,8 +294,8 @@
 	            </dt>
 	        </dl>
             <dl class="excellent_info" id="excellentcontent">
-                <dt id="exellentEmpName" style="font-size:15px"></dt>
-                <dt id="exellentDeptName" style="font-size:13px; color:#777; font-weight: normal"></dt>
+                <dt id="exellentEmpName"></dt>
+                <dt id="exellentDeptName"></dt>
                 <dd id="emPic"><%-- <img src="/images/ezNewPortal/best_month.png"> --%></dd>
             </dl>
         </article>
