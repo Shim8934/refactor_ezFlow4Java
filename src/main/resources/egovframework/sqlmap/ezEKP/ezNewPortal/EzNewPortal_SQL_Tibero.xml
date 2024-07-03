@@ -3714,9 +3714,9 @@ ORDER BY
 				) F
 	    	) P
 		WHERE
-			P.RNUM > #startRow#
+			P.RN > #startRow#
 	  	AND
-			P.RNUM <= #startRow# + #folderListCount#
+			P.RN <= #startRow# + #folderListCount#
 	]]>
 </select>
 
@@ -4192,5 +4192,20 @@ ORDER BY
 		WHERE ROWNUM <= 7
 		]]>
 	</select>
+
+	<select id="ezNewPortal.getWebFolderFileListTotalCnt" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_WEBFOLDER_FILE
+		WHERE
+			FOLDER_ID = #folderId#
+		  AND
+			USE_STATUS = 'Y'
+		  AND
+			TENANT_ID = #tenantId#
+		]]>
+</select>
 	
 </sqlMap>
