@@ -516,6 +516,9 @@
 	    	paramObj = extractParam(linkUrl);
 	    	linkUrl = makeRedraftUILink(paramObj);
 	    	windowName = "openDraftUI_REDRAFT"
+	    } else if (linkUrl.indexOf("/ezApprovalG/openApprovByLink.do") >= 0) {
+	    	paramObj = extractParam(linkUrl);
+	    	linkUrl = makeApprovUiLink(paramObj);
 	    } else if (linkUrl.indexOf("/ezApprovalG/openDocViewByLink.do") >= 0) {
 	    	paramObj = extractParam(linkUrl);
 	    	linkUrl = makeOpenDocViewLink(paramObj);
@@ -547,6 +550,128 @@
 		}
 		
 		return paramObj;
+	}
+	
+	function makeApprovUiLink(paramObj) {
+		var mode = "APR";
+	    var openLocation;
+	    
+	    var p_companyId = paramObj["companyID"];
+		var p_docID = paramObj["docID"];
+		var p_userDeptId = paramObj["userDeptID"];
+		var p_userID = paramObj["userID"];
+		var p_userName = paramObj["userName"];
+	    var useWebHWP = "";
+	    var pArgument = new Array();
+	    var orgCompanyID = p_companyId;
+	    var formURL = "";
+	    var orgDocId = "";
+	    var docState = "";
+	    var aprMode = "";
+	    var docInfo = null;
+	    var allFlag = "";
+	    var functionType = "";
+		$.ajax({
+			type: "GET",
+			url: "/ezApprovalG/getAprDocInfoForLink.do",
+			dataType:"JSON",
+			data:{
+				companyId : p_companyId,
+				docId: p_docID,
+				userId : p_userID
+			},
+			async: false,
+			success: function(result) {
+				if (result.status != "ok") {
+					alert("에러가 발생했습니다.");
+					return null;
+				}
+				
+				pArgument[0] = p_docID;      
+		        pArgument[1] = p_userID;		
+		        pArgument[2] = p_userName;		
+		        pArgument[3] = p_userDeptId;
+		        pArgument[4] = result.data.aprMemberSN
+		        orgCompanyID = p_companyId;
+		        formURL = result.data.href;
+				orgDocId = result.data.orgDocID == null ? "" : result.data.orgDocID;
+				docState = result.data.docState;
+				useWebHWP = result.useWebHWP;
+				aprMode = result.mode;
+				docInfo = result;
+				functionType = result.data.functionType;
+			},
+			error: function (xhr, status, e) {
+				alert("에러가 발생했습니다.");
+				return;
+			}
+		});
+		
+		if (aprMode == "ING" && pArgument[4] == null) {
+			if (functionType == "004" || functionType == "006") {
+				return "";
+			}
+			
+			paramObj["listType"] = "3";
+			openLocation = makeOpenDocViewLink(paramObj);
+			return openLocation;
+		} else if (aprMode == "END") {
+			openLocation = makeCompleteDocLink(docInfo);
+			return openLocation;
+		}
+        
+        if (docState == "017") {
+        	   $.ajax({
+        			type : "POST",
+        			dataType : "text",
+        			async : false,
+        			url : "/ezApprovalG/getLineMode.do",
+        			data : {
+        					docID : pArgument[0],
+        					orgCompanyID : orgCompanyID
+        					},
+        			success: function(xml){
+        				mode = xml;
+        			}        			
+        	  });
+        }
+        
+        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
+            openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?docID=" + encodeURI(pArgument[0]);
+            openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
+        } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+	        if (useWebHWP == "NO") {
+        		if (isIE()) {
+	        		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
+	        		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+	        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(docState) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(orgDocId);
+	        	} else {
+	        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	        		alert(pAlertContent);
+	                
+	                return;
+	        	}
+        	} else {
+        		var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
+        		var openLocation = "";
+        		
+        		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우
+        			openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=" + encodeURI(pArgument[0]);
+        		} else {
+            		openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
+        		}
+        		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(docState) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(orgDocId);
+        	}
+        } else {
+            openLocation = "/ezApprovalG/approvui.do?docID=";
+            openLocation = openLocation + encodeURI(pArgument[0]);
+            openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(docState) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(orgDocId) + "&aprMemberSN=" + pArgument[4];
+        }
+        
+        return openLocation;
 	}
 	
 	function makeRedraftUILink(paramObj) {
@@ -713,7 +838,7 @@
 			        pArgument[2] = result.data.hasOpinionYn;
 			        pArgument[3] = result.data.docState;
 			        pArgument[4] = p_userID;
-			        pArgument[5] = result.data.orgDocID;
+			        pArgument[5] = result.data.orgDocID == null ? "" : result.data.orgDocID;
 			        
 			        if (pListTypeValue != "5") {
 			            pArgument[6] = "OPINION_SHOW";
@@ -722,6 +847,7 @@
 			        }
 			        
 			        pArgument[7] = pListTypeValue;
+			        pArgument[8] = result.data.formID;
 			    }
 			},
 			error: function (xhr, status, e) {
@@ -782,6 +908,7 @@
 	        openLocation = openLocation + "&CallBackType=" + "";
 	        openLocation = openLocation + "&ext=" + escape(trim_Cross(formUrlExt));
 	        openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
+	        openLocation = openLocation + "&formID=" + encodeURI(pArgument[8]);
 	    }
         return openLocation;
 	}

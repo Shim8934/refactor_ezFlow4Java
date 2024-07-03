@@ -36104,7 +36104,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			linkUrl = "/ezApprovalG/openDocViewByLink.do?docID=" + docID + "&userID=" + userID + "&userDeptID=" + userDeptId + "&companyID=" + companyID + "&listType=" + 99;
 			break;
 		default:
-			linkUrl = "/ezApprovalG/approvui.do?" + "docID=" + docID + "&id=" + userID + "&name=" + userName + "&deptID=" + userDeptId + "&allFlag=0&mailchk=Y&orgCompanyID=" + companyID;
+			linkUrl = "/ezApprovalG/openApprovByLink.do?" + "docID=" + docID + "&userID=" + userID + "&userName=" + userName + "&userDeptID=" + userDeptId + "&companyID=" + companyID;
 			break;
 		}
 
