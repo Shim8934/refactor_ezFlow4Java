@@ -845,7 +845,7 @@
 	                 	TITLE ,
 	                 	TITLE2 ,
 	                 	#v_pTerm# ,
-	                 	to_date('$v_pTerm$', 'YYYY-MM') ,
+	                 	to_date(#v_pTerm#, 'YYYY-MM') ,
 	                 	TENANT_ID
           			FROM
           				TBL_USERMASTER
@@ -871,7 +871,7 @@
                  		A.TITLE ,
                  		A.TITLE2 ,
                  		#v_pTerm# ,
-                 		to_date('$v_pTerm$', 'YYYY-MM') ,
+                 		to_date(#v_pTerm#, 'YYYY-MM') ,
                  		A.TENANT_ID
           			FROM
           				TBL_ADDJOBMASTER A
@@ -1304,7 +1304,6 @@
 	</update>
 
 	<delete id="EzPersonalAdmin.EZSP_UPDATE_RESULT" parameterClass="Map" >
-		<![CDATA[
 			DELETE FROM
 				TBL_PS_LIGHTPOLLRESULT
 			WHERE
@@ -1312,8 +1311,10 @@
 			AND
 				TENANT_ID = #tenantID#
 			AND
-				RESULT IN ($sbQuery$)
-		]]>
+				RESULT IN
+				<iterate property="sbQuery" open="(" close=")" conjunction=",">
+   					#sbQuery[]#
+   				</iterate>
 	</delete>
 
 	<select id="EzPersonalAdmin.EZSP_CheckJoinPoll" parameterClass="Map" resultClass="Integer">
@@ -1390,6 +1391,7 @@
         ]]>
     </update>
     
+    <!-- 2024-07-03 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
     <select id="EzPersonalAdmin.getPopupUserList" parameterClass="Map" resultClass="PersonalPopupUserVO">
         <![CDATA[
             SELECT
@@ -1398,13 +1400,21 @@
                 A.user_type as usertype,
                 CASE 
                     WHEN user_type = 'USER'
-                        THEN NVL((SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id), '')
+                        THEN NVL(
+                        	(SELECT CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+                        	FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id), '')
                     WHEN user_type = 'DEPT' 
-                        THEN NVL((SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id), '')
+                        THEN NVL(
+                        	(SELECT CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+                        	FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id), '')
                     WHEN user_type = 'JIKWI'
-                        THEN NVL((SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '001'), '')
+                        THEN NVL(
+                        	(SELECT CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+                        	FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '001'), '')
                     WHEN user_type = 'JIKCHEK'
-                        THEN NVL((SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '002'), '')
+                        THEN NVL(
+                        	(SELECT CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+                        	FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '002'), '')
                     WHEN user_type = 'GROUP'
                         THEN NVL((SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantId# AND company_id = #companyId# AND group_id = user_id), '')
                 END AS username,
