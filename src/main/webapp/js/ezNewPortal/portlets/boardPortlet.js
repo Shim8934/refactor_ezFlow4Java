@@ -36,6 +36,11 @@ function makeBoardList(portletId, fileName, count, type, currentPage) {
                 $("#customBoardList" + portletId).html(boardHTML);
 			}
 			resetPortletPaging(portletId, boardListTotalCnt, currentPage, "");
+		},
+		error: function(e) {
+			boardHTML += '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + messages.strLang2 + '</dd></dl>'
+            $("#customBoardList" + portletId).html(boardHTML);
+			console.log(e);
 		}
 	})
 }
