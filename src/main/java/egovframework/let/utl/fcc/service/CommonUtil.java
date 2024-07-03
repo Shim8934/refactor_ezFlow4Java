@@ -40,6 +40,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.ParseException;
@@ -61,6 +65,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -3267,6 +3272,115 @@ public class CommonUtil {
 			}
 		}
 		return adminCount > 0;
+	}
+
+	private static final String CHARPOOL = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789";
+	public String getTempPassword (int length) throws Exception {
+		Random random = new SecureRandom();
+		StringBuilder rs;
+		do {
+			rs = new StringBuilder();
+			for (int i = 0; i < length; i++) {
+				int index = random.nextInt(CHARPOOL.length());
+				rs.append(CHARPOOL.charAt(index));
+			}
+		} while (!hasConsecutiveCharsAndValidFormat(rs.toString(), 3));
+		return rs.toString();
+	}
+
+	private boolean hasConsecutiveCharsAndValidFormat(String source, int sequenceLength) {
+		// 연속된문자 체크 및 대소문자숫자 포함여부
+		boolean hasConsecutiveChars = source.matches("(.)\\1{" + (sequenceLength - 1) + "}");
+		boolean hasUpperCase = source.matches(".*[A-Z].*");
+		boolean hasLowerCase = source.matches(".*[a-z].*");
+		boolean hasDigit = source.matches(".*\\d.*");
+
+		return !(hasConsecutiveChars || !hasUpperCase || !hasLowerCase || !hasDigit);
+	}
+
+	private static final String INSERTSMS = "insert into em_tran(tran_phone, tran_callback, tran_status, tran_date, tran_msg , tran_type) values(?, ?, '1', GETDATE(), ? ,4)";
+
+	/**
+	 * 2024-07-03 김대현
+	 * 	sendSMS 메소드는 SMS로 인증번호와 임시비밀번호를 전송할때 커스터마이징 하기위해 만들어짐.
+	 * 	각 프로젝트에서 해당 메소드 바디 부분을 수정하여 사용하면 됨.
+	 * @param mobileNo 이동전화 번호
+	 * @param randomValue 랜덤값
+	 * @param type 인증번호, 임시비밀번호 타입
+	 * @return
+	 * @throws Exception
+	 */
+	public Boolean sendSMS (String mobileNo, String randomValue, String type) throws Exception {
+		logger.debug("sendSMS Started:mobileNo={},randomValue={},type={}",mobileNo,randomValue,type);
+		boolean result = false;
+//		String tran_msg = "";
+//		String tran_phone = mobileNo; // 받는전화
+//		String tran_callback = ""; // 보낸전화
+//		String tran_status = "1"; // 1
+//		String tran_date = ""; // 발송시간
+//
+//		if ("authCode".equals(type)) {
+//			// 인증번호
+//			tran_msg = "인증번호:[" + randomValue + "]'\n그룹웨어에서 보낸 인증번호 입니다.";
+//		} else {
+//			// 임시 비밀번호
+//			tran_msg = "임시비밀번호:[" + randomValue + "]'\n그룹웨어에서 보낸 임시비밀번호 입니다.";
+//		}
+//
+//		tran_callback = "02-000-0000";
+//
+//		logger.debug("sendSMS Started:randomValue={},tran_phone={},tran_callback{}",randomValue,tran_phone,tran_callback);
+//
+//		if (StringUtils.isBlank(randomValue) || StringUtils.isBlank(tran_phone) || StringUtils.isBlank(tran_callback) ) {
+//			result = false;
+//		} else {
+//			String smsDriverClassName = globals.getProperty("Globals.SMSDriverClassName");
+//			String smsUrl = globals.getProperty("Globals.SMSUrl");
+//			String smsUserName = globals.getProperty("Globals.SMSUserName");
+//			String smsPassword = globals.getProperty("Globals.SMSPassword");
+//
+//
+//			Connection conn = null;
+//			PreparedStatement pstmt = null;
+//
+//			String sqlQuery = INSERTSMS;
+//
+//			try {
+//				Class.forName(smsDriverClassName);
+//				conn = DriverManager.getConnection(smsUrl,smsUserName,smsPassword);
+//
+//				pstmt = conn.prepareStatement(sqlQuery);
+//				pstmt.setObject(1, tran_phone);
+//				pstmt.setObject(2, tran_callback);
+//				pstmt.setObject(3, tran_msg);
+//				int count = pstmt.executeUpdate();
+//
+//				if (count != 0) {
+//					result = true;
+//				}
+//
+//			} catch (Exception e){
+//				logger.error(e.getMessage(), e);
+//
+//			} finally {
+//				closeQuietly(pstmt, conn);
+//			}
+//		}
+		result = true;
+		logger.debug("sendSMS ended={}",result);
+		return result;
+	}
+
+	public static void closeQuietly(AutoCloseable... closeables) {
+		for (AutoCloseable closeable : closeables) {
+			if (closeable == null) {
+				continue;
+			}
+
+			try {
+				closeable.close();
+			} catch (Exception ignore) {}
+		}
 	}
 
 	/**

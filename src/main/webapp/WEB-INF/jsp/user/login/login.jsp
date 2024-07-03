@@ -298,6 +298,9 @@
 			        document.all['txtNewPasswordConfirm'].focus();
 			        return;
 			    }
+				
+				var resetPasswordFlag = "${resetPassword}";
+				resetPasswordFlag = resetPasswordFlag ==="" ? 'N' : resetPasswordFlag;
 		        
 		        var frm = document.loginForm;
 		        var rsa = new RSAKey();
@@ -311,7 +314,8 @@
 		    			USERID : rsa.encrypt(document.getElementById("chooseId").getAttribute("data-userId")),
 		    			OLDPASSWORD : rsa.encrypt(document.getElementById('txtOldPassword').value),
 		    			NEWPASSWORD : rsa.encrypt(document.getElementById('txtNewPassword').value),
-		    			NEWPASSWORDCONFIRM : rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value)
+		    			NEWPASSWORDCONFIRM : rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value),
+						RESETPASSWORDFLAG : resetPasswordFlag
 		    		},
 		    		url : "/user/login/changePassword.do",
 		    		success: function(text){
@@ -501,6 +505,10 @@
 	                clearObj.focus();
 	            })
 	        }
+			
+			function resetPassword () {
+				window.location.href = "/user/login/resetPw/resetPwInfo.do";
+			}
 	
     	</script>
 	</head>	
@@ -554,7 +562,7 @@
 			                        </p>
 	  		                        <c:if test="${usePasswordReset == 'YES'}"> 
 				                        <p class="find_pw">
-			                                <a id="findPwd" onclick="openFindPwd();" ><spring:message code="login.zno025"/></a>
+			                                <a id="findPwd" onclick="resetPassword();" ><spring:message code="login.zno025"/></a>
 			                            </p>
 	 	                            </c:if>
 	                        	</div>
@@ -585,7 +593,7 @@
 					<c:if test="${isFirstLogin == 'Y'}">
 						<img src="/images/kr/login/firstLogin_txt.svg" style="height: 52px;">
 					</c:if>
-					<c:if test="${isFirstLogin != 'Y'}">
+					<c:if test="${isFirstLogin != 'Y' && resetPassword != 'Y'}">
 						<img src="/images/kr/login/expireDate_txt.svg" style="height: 52px;">
 					</c:if>
 				</p>
@@ -594,7 +602,11 @@
 						<span class="formText"><spring:message code='main.jjh09'/></span>
 						<span class="formID" id="chooseId" data-userId="${userId}">${loginId}</span>
 					</li>
-					<li><span class="formText"><spring:message code='ezPersonal.t949'/></span><span class="formInput"><input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
+					<li>
+						<span class="formText">
+							<c:if test="${resetPassword == 'Y'}"><spring:message code='login.kdh001'/></c:if>
+							<c:if test="${resetPassword != 'Y'}"><spring:message code='ezPersonal.t949'/> </c:if>
+						</span><span class="formInput"><input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
 					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
 					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
 					<%-- <li style="padding-bottom:10px;padding-top:3px" class="grayText">▒ <spring:message code='main.jjh04'/></li> --%>
@@ -603,7 +615,7 @@
 			</div>
 			<div class="btnpositionLayer" style="background-color: white;border:0px">
 			    <a class="imgbtn" onClick="javascript:PassWordChange()" style="background: #3F8EE8; border: 1px solid #3F8EE8;"><span style="color: #fff;"><spring:message code='ezSchedule.t4' /></span></a>
-			    <c:if test="${isFirstLogin != 'Y'}">
+			    <c:if test="${isFirstLogin != 'Y' && resetPassword != 'Y'}">
 		    		<a class="imgbtn" onClick="passwordUpdateNextTime()" ><span><spring:message code='main.hdp01'/></span></a>
 			    </c:if>
 			</div>			

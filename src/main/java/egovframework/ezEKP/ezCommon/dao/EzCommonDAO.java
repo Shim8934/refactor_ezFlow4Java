@@ -253,6 +253,10 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public void insertUserConfigInfo(Map<String, Object> map) throws Exception {
 		insert("EzCommonDAO.insertUserConfigInfo", map);
 	}
+
+	public void deleteUserConfigInfo(Map<String, Object> map) throws Exception {
+		delete("EzCommonDAO.deleteUserConfigInfo", map);
+	}
 	
 	public void deleteMultiLoginUser(Map<String, Object> map) throws Exception {
 		update("EzCommonDAO.deleteMultiLoginUser", map);

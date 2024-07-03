@@ -1284,6 +1284,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.insertUserConfigInfo(map);
 	}
 
+    @Override
+    public void deleteUserConfigInfo(int tenantID, String userID, String propertyName) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("tenant_id", tenantID);
+        map.put("user_id", userID);
+        map.put("property_name", propertyName);
+
+        ezCommonDAO.deleteUserConfigInfo(map);
+    }
+    
 	@Override
 	public void createTblCompanyConfig() throws Exception {
 		ezCommonDAO.createTblCompanyConfig();

@@ -183,6 +183,19 @@
 			)
 		]]>
 	</insert>
+
+	<delete id="EzCommonDAO.deleteUserConfigInfo" parameterClass="Map">
+		<![CDATA[
+		DELETE FROM
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenant_id#
+		  AND
+			USER_ID = #user_id#
+		  AND
+			PROPERTY_NAME = #property_name#
+		]]>
+	</delete>
 	
 	<update id="EzCommonDAO.updateUserConfigInfo" parameterClass="Map">
 		<![CDATA[
