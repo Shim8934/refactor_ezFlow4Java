@@ -1570,10 +1570,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			String connectionUrl = map.get("connectionUrl").toString();
 			
 			if (connectionUrl != null) {
-				connectionUrl = URLDecoder.decode(connectionUrl, "UTF-8");
 				connectionUrl = commonUtil.stripScriptTags(connectionUrl);
 				connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
-				connectionUrl = specialCharacterToEmptyString(connectionUrl);
 			}
 			
 			map.put("connectionUrl", connectionUrl);

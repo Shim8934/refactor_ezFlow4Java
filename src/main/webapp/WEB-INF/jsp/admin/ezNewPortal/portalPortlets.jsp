@@ -755,8 +755,10 @@
 				titleMap.delete(primary);
 
 				// sub		*맵은 입력된 순서를 기억합니다. 열거는 입력된 순서대로 이루어집니다. (https://offbyone.tistory.com/468)
-				titleMap.forEach( (message, key, map) =>
-					listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + message + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + key + "' type='text' maxlength='50'></td></tr>"
+				titleMap.forEach(
+					function (message, key, map) {
+						return listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + message + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + key + "' type='text' maxlength='50'></td></tr>";
+					}
 				);
 			}
 			

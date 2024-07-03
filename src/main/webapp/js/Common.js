@@ -892,7 +892,7 @@ URLParamsUtilsProto = {
      *  urlParams.get('param1'); -> 'value1'
      */
     get : function (key) {
-        var pattern = new RegExp('(?:\\?|&)' + encodeURIComponent(key) + '=([^&#]*)');
+        var pattern = new RegExp('(?:\\?|&)' + key + '=([^&#]*)');
         var results = pattern.exec('?' + this.queryString);
         if (results == null) {
             return "";
