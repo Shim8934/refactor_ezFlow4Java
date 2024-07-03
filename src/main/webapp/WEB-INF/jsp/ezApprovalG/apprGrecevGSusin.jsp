@@ -28,6 +28,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "<c:out value = '${docID}'/>";
@@ -150,10 +151,12 @@
 			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
-			
+
 			// 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
 			var useReceiptDeptFileAttach = "<c:out value ='${useReceiptDeptFileAttach}'/>";
-			
+
+			var type = "ING"; // 2023-07-24 임정은 - 공람 추가
+
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
 					$(".approvalS").show();
@@ -1780,6 +1783,14 @@
                                 basis = ret[29];
                                 reason = ret[30];
                                 limitDate = ret[31];
+							}
+
+							// 2023-07-24 임정은 - 공람 추가
+							if (ret[22] == "noItem") {
+								delAprLineInfoCC();
+							} else if (ret[22] == "sameItem") {
+							} else {
+								SaveAprLineInfoCC(ret[22]);
 							}
 		                } else {
 		                	tempKeep = ret[16];

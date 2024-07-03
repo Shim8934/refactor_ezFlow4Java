@@ -5036,4 +5036,40 @@
 		ADD 
 		    USERTREEFLAG char(1) DEFAULT 'Y'
 	</statement>
+
+	<select id="EzCommonDAO.checkGongRamListOption" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				companyid
+			FROM
+				TBL_LISTOPTION
+			WHERE
+				LISTTYPE = #listOption#
+			AND
+				companyid = #companyId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				ROWNUM = 1
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertGongRamListOption">
+		<![CDATA[
+			INSERT ALL
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,1,'순번',35,'TBL_APRLINEINFO','AprMemberSN',NULL,NULL,'결재선정보(공람)','순번','No.','順番','序号',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,2,'성명',100,'TBL_APRLINEINFO','AprMemberName',NULL,NULL,'결재선정보(공람)','성명','Name','氏名','姓名',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,3,'직위',100,'TBL_APRLINEINFO','AprMemberJobTitle',NULL,NULL,'결재선정보(공람)','직위','Title','役職','职位',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,4,'부서',300,'TBL_APRLINEINFO','AprMemberDeptName',NULL,NULL,'결재선정보(공람)','부서명','Dept.','部署','部门',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,5,'공람일시',300,'TBL_APRLINEINFO','ProcessDate',NULL,NULL,'결재선정보(공람)','공람일시','Date','供覧日時','供览日时',#tenantId#, #companyId#)
+			SELECT
+				*
+			FROM DUAL
+		]]>
+   	</insert>
 </sqlMap>

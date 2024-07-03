@@ -1999,6 +1999,14 @@
                                 limitDate = ret[31];
                                 // passAprLine = ret[32];
                             }
+                            
+                         	// 2023-05-23 임정은 - 공람 추가
+		                	if (ret[22] == "noItem") {
+		                		delAprLineInfoCC();
+		                	} else if (ret[22] == "sameItem") {
+		                	} else {
+		                		SaveAprLineInfoCC(ret[22]);
+		                	}
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

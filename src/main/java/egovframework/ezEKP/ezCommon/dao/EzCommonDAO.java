@@ -2365,4 +2365,34 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterTblScheduleForShowtop");
 		}
 	}
+
+	public void insertGongRamListOption(Map<String, Object> map) throws Exception {
+		map.put("listOption", "014"); // APR
+		String companyId = checkGongRamListOption(map);
+
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertGongRamListOption", map);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		map.put("listOption", "015"); // END
+		companyId = checkGongRamListOption(map);
+
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertGongRamListOption", map);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private String checkGongRamListOption(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkGongRamListOption", map);
+	}
 }

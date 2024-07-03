@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 	    <script type="text/javascript">
 	        var OrgAprUserID = "<c:out value ='${orgAprUserID}'/>";
 	        var OrgAprUserName = "<c:out value ='${orgAprUserName}'/>";
@@ -162,6 +163,8 @@
 			
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+
+			var type = "ING"; // 2023-05-23 임정은 - 공람 추가
 	        
 			// 2024-06-11 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
 			var useReceiptDeptFileAttach = "<c:out value ='${useReceiptDeptFileAttach}'/>";
@@ -570,7 +573,9 @@
 			    pGubun = "8";
 			    
 			    if (pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
-			        setMenuBar("btntotaldocinfo", false);
+					if (pAprLineType != strAprType8 && pAprLineType != strAprType9) {
+						setMenuBar("btntotaldocinfo", false);
+					}
 			        setMenuBar("btnJunKyul", false);
 			        setMenuBar("btnModAprLine", false);
 			        setMenuBar("btnEdit", false);
@@ -629,6 +634,11 @@
 			        }
 				}
 			    //SignCheck();
+
+				// 2024-06-27 임정은 - 협조자도 공람자 지정할 수 있도록 변경
+				if (approvalFlag == "G" && pGubun == "6" && (pAprLineType == strAprType8 || pAprLineType == strAprType9)) {
+					pGubun = "14";
+				}
 			}
 	
 			// btnApprove_onclick 시작
@@ -1629,6 +1639,14 @@
 
 							SummaryFlag = true;
    			                savexmlhttp = null;
+
+							// 2023-05-23 임정은 - 공람 추가
+							if (ret[22] == "noItem") {
+								delAprLineInfoCC();
+							} else if (ret[22] == "sameItem") {
+							} else {
+								SaveAprLineInfoCC(ret[22]);
+							}
    			            }
    			            catch (e) {
    			                alert("저장시 오류 발생");

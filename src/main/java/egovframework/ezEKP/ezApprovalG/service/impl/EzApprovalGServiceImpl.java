@@ -1162,17 +1162,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		String listString = "";
 		StringBuffer resultXML = new StringBuffer();
-		
-		if (mode.equals("APR")) {
-			//결재진행중인 문서
-			listString = getListHeader("S014", companyID, lang, tenantID);
-		} else if (mode.equals("END")) {
-			//회람문서, 결재완료문서
-			listString = getListHeader("S015", companyID, lang, tenantID);
-		} else {
-			listString = getListHeader("S015", companyID, lang, tenantID);
-		}
-		
+
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+        if (approvalFlag.equals("S")) { // 회람
+            if (mode.equals("APR")) {
+                //결재진행중인 문서
+                listString = getListHeader("S014", companyID, lang, tenantID);
+            } else if (mode.equals("END")) {
+                //회람문서, 결재완료문서
+                listString = getListHeader("S015", companyID, lang, tenantID);
+            } else {
+                listString = getListHeader("S015", companyID, lang, tenantID);
+            }
+        } else { // 공람
+            if (mode.equals("APR")) {
+                //결재진행중인 문서
+                listString = getListHeader("014", companyID, lang, tenantID);
+            } else if (mode.equals("END")) {
+                //공람문서, 결재완료문서
+                listString = getListHeader("015", companyID, lang, tenantID);
+            } else {
+                listString = getListHeader("015", companyID, lang, tenantID);
+            }
+        }
+
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
@@ -15604,9 +15617,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				//회람 추가
-				if (approvalFlag.equals("S")) {
-					updateCirculation(docID, dirPath, companyID, userInfo);
-				}
+                updateCirculation(docID, dirPath, companyID, userInfo);
 			}
 			
 			if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
@@ -15684,7 +15695,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} 
+					}
+
+                    updateCirculation(docID, dirPath, companyID, userInfo); // 2023-07-25 임정은 - 공람 추가
 				}
 			}
 			
@@ -36381,4 +36394,50 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getOrgDocIDfromGongram ended");
 		return orgDocID;
 	}
+
+    /* 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 공람회수  */
+    @Override
+    public String gongRamCancel(String docID, int count, int aprMemberSN, String companyID, int tenantId) throws Exception {
+        logger.debug("gongRamCancel started.");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("v_DocID", docID);
+        map.put("v_gongRamDocID", docID);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantId);
+        map.put("v_AprMemberSN", aprMemberSN);
+
+        try {
+            if (count == aprMemberSN) {
+                if (count == 1) {
+                    ezApprovalGDAO.aprDeleteDocInfo(map);
+                    ezApprovalGDAO.aprDeleteDocInfo2(map);
+                    ezApprovalGDAO.aprDeleteDocInfo5(map);
+                    ezApprovalGDAO.aprDeleteDocInfo6(map);
+                    ezApprovalGDAO.aprDeleteDocInfo7(map);
+                    ezApprovalGDAO.aprDeleteDocInfo8(map);
+                    ezApprovalGDAO.aprDeleteDocInfo9(map);
+                } else {
+                    ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
+                    ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
+                }
+            } else {
+                ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
+                ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
+
+                for (int i = aprMemberSN + 1; i <= count; i++) {
+                    map.put("v_AprMemberSN", i);
+
+                    ezApprovalGDAO.updateOtherGongRamExpAprLine(map);
+                    ezApprovalGDAO.updateOtherGongRamAprLineInfo(map);
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return "FALSE";
+        }
+        logger.debug("gongRamCancel ended.");
+        return "TRUE";
+    }
 }
