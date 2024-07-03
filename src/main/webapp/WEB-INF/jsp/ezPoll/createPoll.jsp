@@ -694,7 +694,9 @@
 	        return document.getElementById("RangeXMLStr").value;
 	    }
     	    	
-    	function fun_OK() {
+    	function fun_OK(element) {
+			element.style.pointerEvents = 'none';
+			try {
     		$('#numberOfOptions').val($('#columnsbnk li').length); 
     		
 /*     		if (!$('#endDate').is(':checked')) {    			
@@ -778,6 +780,7 @@
 	        }
 	        
     		if (form_check() == false) {
+				element.style.pointerEvents = '';
         		return;
         	} 
     		else {        		
@@ -819,6 +822,10 @@
             	document.frmCreate.message = encodeURIComponent(document.frmCreate.message);             	
             	document.frmCreate.submit();
         	}
+			} catch (e) {
+				console.log(e);
+				element.style.pointerEvents = '';
+			}
     	}    	
     	
     	function checkOption() {
@@ -1381,7 +1388,7 @@
 				</tr>						
 			</table>			
 			<div class="btnpositionJsp">				
-				<a class="imgbtn" onclick="fun_OK()"><span><spring:message code="ezPoll.kje01" /></span></a>				
+				<a class="imgbtn" onclick="fun_OK(this)"><span><spring:message code="ezPoll.kje01" /></span></a>
 				<a class="imgbtn" onclick="fun_Cancel()"><span><spring:message code="ezPoll.t139" /></span></a>				
 			</div>
 		</div>	
