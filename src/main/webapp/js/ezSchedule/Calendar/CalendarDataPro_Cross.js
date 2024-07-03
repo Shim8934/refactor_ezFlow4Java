@@ -877,6 +877,7 @@ function CalMonthDataBind(oAppointment) {
         // 2020-02-24 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
         if(oAppointment.DateType == 4) {
         	var divID = "\"" + oAppointment.ScheduleID + ":" + oAppointment.ParentID + "\"";
+            oTd.setAttribute("onclick", "ReadAttitude(" + divID + ")");
         	oTd.setAttribute("ondblclick", "ReadAttitude(" + divID + ")");
         }
         else {
