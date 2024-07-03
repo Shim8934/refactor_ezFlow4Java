@@ -46,16 +46,13 @@ function CalendarMiniView(pTagetID) {
 		mTd1.setAttribute("style","position: relative; z-index: 999;");
         var mSpan = document.createElement("SPAN");
         mSpan.style.cursor = "pointer";
-        //mSpan.style.marginLeft = "6px";
-        //mSpan.style.marginTop = "4px";
-        var mImg = document.createElement("IMG");
-       	mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");
-        
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "preMonth()");
-        mSpan.appendChild(mImg);
+        mSpan.setAttribute("onclick", "preMonth()");
+        // var mImg = document.createElement("IMG");
+       	// mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");
+        // mImg.setAttribute("border", "0");
+        // mImg.setAttribute("onclick", "preMonth()");
+        // mSpan.appendChild(mImg);
         mTd1.appendChild(mSpan);
-        
        	mTr.appendChild(mTd1);
         
         var mTd2 = document.createElement("TD");
@@ -135,13 +132,12 @@ function CalendarMiniView(pTagetID) {
 		mTd3.setAttribute("style","position: relative; z-index: 999;");
         var mSpan = document.createElement("SPAN");
         mSpan.style.cursor = "pointer";
-        //mSpan.style.marginRight = "6px";
-        //mSpan.style.marginTop = "4px";
-        var mImg = document.createElement("IMG");
-       	mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "nextMonth()");
-        mSpan.appendChild(mImg);
+        mSpan.setAttribute("onclick", "nextMonth()");
+        // var mImg = document.createElement("IMG");
+       	// mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");
+        // mImg.setAttribute("border", "0");
+        // mImg.setAttribute("onclick", "nextMonth()");
+        // mSpan.appendChild(mImg);
         mTd3.appendChild(mSpan);
        	mTr.appendChild(mTd3);
        	
@@ -341,11 +337,15 @@ function DayOnMouseClick(event) {
     		$("#"+event.getAttribute("id")).parent().addClass('schedule');
     	}
     } else {
+        /* style 로 적용하던 부분 클래스로 스타일 수정(스킨 작업 또는 디자인 변경시 css로 수정 가능) - UIUX 조기완
     	if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
     		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","red");
     	} else {
     		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
     	}
+    	*/
+        $(".schedule_calendar .scalendar_mini td").removeClass("select");
+        $("#"+event.getAttribute("id")).parent().addClass("select");
     }
 	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
 	
@@ -473,7 +473,9 @@ function clickDay(val01) {
 	if (usedTheme == 3) {
 		$("#"+val01).parent().addClass('schedule');
     } else {
-    	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    	// $("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+        $(".schedule_calendar .scalendar_mini td").removeClass("select");
+        $("#"+val01).parent().addClass("select");
     } 
 	
     g_selTRID = $("#"+val01).parent().parent().attr("id");
