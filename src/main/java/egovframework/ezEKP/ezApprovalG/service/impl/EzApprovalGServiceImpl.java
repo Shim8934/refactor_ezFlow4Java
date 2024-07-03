@@ -9693,6 +9693,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         if (doc.getElementsByTagName("DRAFTER").item(0) != null && doc.getElementsByTagName("DRAFTER").item(0).getTextContent().length() > 0) {
         	recordListVO.setDrafter(makeSearchField(doc.getElementsByTagName("DRAFTER").item(0).getTextContent()));
         }
+
+        if (doc.getElementsByTagName("FORMID").item(0) != null && doc.getElementsByTagName("FORMID").item(0).getTextContent().length() > 0) {
+            recordListVO.setFormID(makeSearchField(doc.getElementsByTagName("FORMID").item(0).getTextContent()));
+        }
+
+        if (doc.getElementsByTagName("ORGDOCNUM").item(0) != null && doc.getElementsByTagName("ORGDOCNUM").item(0).getTextContent().length() > 0) {
+            recordListVO.setOrgDocNum(makeSearchField(doc.getElementsByTagName("ORGDOCNUM").item(0).getTextContent()));
+        }
+
+        if (doc.getElementsByTagName("DRAFTERDEPT").item(0) != null && doc.getElementsByTagName("DRAFTERDEPT").item(0).getTextContent().length() > 0) {
+            recordListVO.setDrafterDept(makeSearchField(doc.getElementsByTagName("DRAFTERDEPT").item(0).getTextContent()));
+        }
+
+        if (doc.getElementsByTagName("DOCNUM").item(0) != null && doc.getElementsByTagName("DOCNUM").item(0).getTextContent().length() > 0) {
+            recordListVO.setDocNum(makeSearchField(doc.getElementsByTagName("DOCNUM").item(0).getTextContent().replace("\\", "\\\\")));
+        }
         
         if (recordListVO.isUsePublicFlag()) {
         	String userSecurityCode = ezOrganService.getPropertyValue(recordListVO.getUserID(), "extensionAttribute6", tenantID);

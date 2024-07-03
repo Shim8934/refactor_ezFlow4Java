@@ -6613,6 +6613,18 @@
 						TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 					]]>
 				</isNotEmpty>
+                <isNotEmpty property="formID" prepend="AND">
+                        TBL_ENDAPRDOCINFO.FORMID = #formID# 
+                </isNotEmpty>
+                <isNotEmpty property="orgDocNum" prepend="AND">
+                        ENDDOCNO.DOCNO Like CONCAT(CONCAT('%', #orgDocNum#), '%')
+                </isNotEmpty>
+                <isNotEmpty property="drafterDept" prepend="AND">
+                        TBL_ENDAPRDOCINFO.WRITERDEPTNAME Like CONCAT(CONCAT('%', #drafterDept#), '%')
+                </isNotEmpty>
+                <isNotEmpty property="docNum" prepend="AND">
+                        TBL_ENDAPRDOCINFO.DOCNO Like CONCAT(CONCAT('%', #docNum#), '%')
+                </isNotEmpty>	
 <!-- 				<![CDATA[ -->
 <!-- 					 AND    -->
 <!-- 					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->
@@ -14182,6 +14194,10 @@
 	   		TBL_RECORD.DocID = TBL_ENDAPRDOCINFO.DocID 
 	   	AND
 	   		TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+        LEFT JOIN
+            TBL_ENDAPRDOCINFO ENDDOCNO
+        ON
+            TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID	    
 	    Inner Join 
 	   		TBL_SEPERATEATTACH 
 	    On 
@@ -14503,6 +14519,18 @@
 			TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 		]]>
 	</isNotEmpty>
+    <isNotEmpty property="formID" prepend="AND">
+            TBL_ENDAPRDOCINFO.FORMID = #formID#
+    </isNotEmpty>
+    <isNotEmpty property="orgDocNum" prepend="AND">
+            ENDDOCNO.DOCNO Like CONCAT(CONCAT('%', #orgDocNum#), '%')
+    </isNotEmpty>
+    <isNotEmpty property="drafterDept" prepend="AND">
+            TBL_ENDAPRDOCINFO.WRITERDEPTNAME Like CONCAT(CONCAT('%', #drafterDept#), '%')
+    </isNotEmpty>
+    <isNotEmpty property="docNum" prepend="AND">
+            TBL_ENDAPRDOCINFO.DOCNO Like CONCAT(CONCAT('%', #docNum#), '%')
+    </isNotEmpty>
 <!-- 	<![CDATA[ -->
 <!-- 		 AND    -->
 <!-- 		 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->

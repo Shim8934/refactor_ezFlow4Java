@@ -6382,6 +6382,18 @@
 				<isNotEmpty property="regType" prepend="AND">
 						TBL_SEPERATEATTACH.RegisterType = #regType#
 				</isNotEmpty>
+                <isNotEmpty property="formID" prepend="AND">
+                        TBL_ENDAPRDOCINFO.FORMID = #formID#
+                </isNotEmpty>
+                <isNotEmpty property="orgDocNum" prepend="AND">
+                        ENDDOCNO.DOCNO Like CONCAT(CONCAT('%', #orgDocNum#), '%') ESCAPE '\'
+                </isNotEmpty>
+                <isNotEmpty property="drafterDept" prepend="AND">
+                        TBL_ENDAPRDOCINFO.WRITERDEPTNAME Like CONCAT(CONCAT('%', #drafterDept#), '%') ESCAPE '\'
+                </isNotEmpty>
+                <isNotEmpty property="docNum" prepend="AND">
+                        TBL_ENDAPRDOCINFO.DOCNO Like CONCAT(CONCAT('%', #docNum#), '%') ESCAPE '\'
+                </isNotEmpty>   
 <!-- 				<![CDATA[ -->
 <!-- 					 AND    -->
 <!-- 					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->
@@ -13970,6 +13982,16 @@
 		   		TBL_RECORD.DocID = TBL_ENDAPRDOCINFO.DocID
 		   AND
 		   		TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+           LEFT JOIN
+                TBL_ENDAPRDOCINFO
+           ON
+                TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
+           LEFT JOIN
+                TBL_ENDAPRDOCINFO ENDDOCNO
+           ON
+                TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
+           AND
+                TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD.DOCID		    
 		   Inner Join 
 		   		TBL_SEPERATEATTACH 
 		   On 
@@ -14293,6 +14315,18 @@
 				TBL_RECORD.RegisterDate <= TO_DATE(#regEndDate#, 'YYYY.MM.DD HH24:MI:SS')
 			]]>
 		</isNotEmpty>
+        <isNotEmpty property="formID" prepend="AND">
+                TBL_ENDAPRDOCINFO.FORMID = #formID#
+        </isNotEmpty>
+        <isNotEmpty property="orgDocNum" prepend="AND">
+                ENDDOCNO.DOCNO Like CONCAT(CONCAT('%', #orgDocNum#), '%') ESCAPE '\'
+        </isNotEmpty>
+        <isNotEmpty property="drafterDept" prepend="AND">
+                TBL_ENDAPRDOCINFO.WRITERDEPTNAME Like CONCAT(CONCAT('%', #drafterDept#), '%') ESCAPE '\'
+        </isNotEmpty>
+        <isNotEmpty property="docNum" prepend="AND">
+                TBL_ENDAPRDOCINFO.DOCNO Like CONCAT(CONCAT('%', #docNum#), '%') ESCAPE '\'
+        </isNotEmpty>	
 <!-- 		<![CDATA[ -->
 <!-- 			 AND    -->
 <!-- 			 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->
