@@ -1984,6 +1984,7 @@ div.orbit img{border-radius: 5px;}
 .lnb ul li.icon_nav_project_leftmenu:hover:before, .lnb ul li.on.icon_nav_project_leftmenu:before{background-image:url(/images/lnb/lnb_project_on.svg); background-size:21px 18px;}
 .lnb ul li.icon_nav_car_leftmenu:hover:before, .lnb ul li.on.icon_nav_car_leftmenu:before{background-image:url(/images/lnb/lnb_car_on.svg); background-size:21px 18px;}
 .lnb ul li.icon_nav_work_leftmenu:hover:before, .lnb ul li.on.icon_nav_work_leftmenu:before{background-image:url(/images/lnb/lnb_work_on.svg); background-size:21px 18px;}
+.lnb ul li.layer:before{background-color:rgba(0,0,0,0.1);}
 
 .lnb ul li span{display:block; padding:0 5px; font-size:14px; font-weight:500; color:#000; margin-top:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; word-wrap:break-word; text-overflow:ellipsis; overflow:hidden}
 .lnb_menu_all{width:456px; height:100%; position:absolute; left:-456px; top:0; background:#fff; overflow:auto;}
