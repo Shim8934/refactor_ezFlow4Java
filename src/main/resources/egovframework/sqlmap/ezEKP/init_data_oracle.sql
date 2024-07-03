@@ -3339,6 +3339,7 @@ VALUES(0, 'useWorkspaceSchedule', '협업 일정 연동 여부', 'NO', 'YES: 사
 
 INSERT INTO tbl_tenant_config (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(0, 'delAttachByOthers', '0', '결재에서 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값(0 : 불가 1 : 허용), (default:0) ', '결재에서 첨부파일을 다른사람이 지울수있는 여부', TO_DATE('2021-03-05 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES ('0', 'useShowAuthCode', 'NO', 'SMS비밀번호 초기화기능에서 인증코드,임시비밀번호 표출 여부 YES: 사용 NO: 사용안함 (default)', '인증번호,임시비밀번호 표출여부', TO_DATE('2021-03-05 00:00:00','yyyy-mm-dd hh24:mi:ss'), '로그인');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES ('0', 'useShowAuthCode', 'YES', 'SMS비밀번호 초기화기능에서 인증코드,임시비밀번호 표출 여부 YES: 사용 NO: 사용안함 (default)', '인증번호,임시비밀번호 표출여부', TO_DATE('2021-03-05 00:00:00','yyyy-mm-dd hh24:mi:ss'), '로그인');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'usePortletSize', 'Y', 'Y: 사용 N: 사용안함 (default: Y)', '포탈 포틀릿 커스텀 사이즈 사용 여부', TO_DATE('2023-11-20 00:00:00','yyyy-mm-dd hh24:mi:ss'), '포탈');
