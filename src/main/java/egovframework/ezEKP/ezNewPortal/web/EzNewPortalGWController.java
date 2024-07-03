@@ -4185,7 +4185,7 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
-			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId());
+			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId(), info.getDeptID());
 			
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int listCount = list.size();

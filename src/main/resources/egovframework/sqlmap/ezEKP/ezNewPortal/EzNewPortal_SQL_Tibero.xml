@@ -2365,26 +2365,59 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			SELECT
 				INFO.*, ROWNUM AS RNUM
 			FROM (
-					SELECT
-						TBL_FORMINFO.*
-					FROM
-						TBL_FORMINFO
-					INNER JOIN
-						TBL_FORMUSERINFO
-					ON
-						TBL_FORMINFO.tenant_id = TBL_FORMUSERINFO.tenant_id
-					AND
-						TBL_FORMINFO.companyid = TBL_FORMUSERINFO.companyid
-					AND
-						TBL_FORMINFO.formid = TBL_FORMUSERINFO.formid
-					WHERE
-						TBL_FORMUSERINFO.tenant_id = #tenantId#
-					AND
-						TBL_FORMUSERINFO.companyid = #companyId#
-					AND
-						TBL_FORMUSERINFO.userid = #userId#
-					ORDER BY
-						FORMORDER
+					 SELECT
+						 TBL_FORMINFO.*
+					 FROM
+						 TBL_FORMINFO
+					 INNER JOIN
+						 TBL_FORMUSERINFO
+					 ON
+						 TBL_FORMINFO.tenant_id = TBL_FORMUSERINFO.tenant_id
+					 AND
+						 TBL_FORMINFO.companyid = TBL_FORMUSERINFO.companyid
+					 AND
+						 TBL_FORMINFO.formid = TBL_FORMUSERINFO.formid
+					 LEFT JOIN
+						 TBL_FORM_OFFICE O
+					 ON
+						 TBL_FORMINFO.FORMID = O.FORMID
+					 AND
+						 TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+					 AND
+						 TBL_FORMINFO.COMPANYID = O.COMPANYID
+					 WHERE
+						 TBL_FORMUSERINFO.USERID = #userId#
+				     AND
+						 TBL_FORMINFO.FORMCONTID IN
+							 (
+								 SELECT
+									 TO_CHAR(FORMCONTID)
+								 FROM
+									 TBL_FORMCONTUSERGROUP
+								 WHERE
+									 TENANT_ID = TBL_FORMINFO.TENANT_ID
+							     AND
+									 COMPANYID = TBL_FORMINFO.COMPANYID
+							     AND
+									 FORMCONTUSERDEPID = #deptId#
+								 UNION ALL
+								 SELECT
+									 TO_CHAR(FORMCONTID)
+								 FROM
+									 TBL_FORMCONTAINER
+								 WHERE
+									 TENANT_ID = TBL_FORMINFO.TENANT_ID
+								 AND
+									 TO_CHAR(COMPANYID) = TO_CHAR(TBL_FORMINFO.COMPANYID)
+								 AND
+									 (FORMCONTOWNDEPID = 'ALL' or FORMCONTOWNDEPID = #deptId#)
+							 )
+					 AND
+						 TBL_FORMINFO.TENANT_ID = #tenantId#
+					 AND
+						 TBL_FORMINFO.COMPANYID = #companyId#
+					 ORDER BY
+						 FORMORDER
 				) INFO
 			) P
 		WHERE
