@@ -19,15 +19,108 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/lang/ezSurvey_ko.js')}"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<style type="text/css">
+		<style>
 			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
 			#logoUrl {height:42px;}
 			/*-- top_totalSearch --*/
 			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:12px 10px 0px 0px; padding:0px; width:245px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
 		</style>
+		<script>
+			// UI 스킨 작업용
+			function skin(skinId){
+				var skinLink = "";
+				var skinCss = document.getElementById("skinCss");
+				var mainFrame = window.parent.document.getElementById("mainFrame").contentWindow;
+				var mainSkinCss = mainFrame.document.getElementById("mainSkinCss");
+				var mainSkinLink = document.createElement("link");
+				var themeId = mainFrame.document.querySelector(".mainbg");
+
+				if(skinCss){
+					skinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					skinLink = document.createElement("link");
+					skinLink.id = "skinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					document.head.appendChild(skinLink);
+				}
+
+				if(mainSkinCss){
+					mainSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					mainSkinLink.id = "mainSkinCss";
+					mainSkinLink.rel = "stylesheet";
+					mainSkinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					mainFrame.document.head.appendChild(mainSkinLink);
+				}
+
+				if(skinId == "dark"){
+					document.querySelector(".logo img").src = "/images/ezNewPortal/skin/dark/logo_white.png";
+				} else{
+					document.querySelector(".logo img").src = "/files/upload_portal/Top/Logo/logo.gif";
+				}
+
+				var plusBtn = mainFrame.document.querySelectorAll(".portletPlus");
+				plusBtn.forEach(function(item){
+					var btnImg = item.querySelector("img");
+
+					if(skinId == "dark"){
+						if(btnImg && btnImg.src.includes("/images/ezNewPortal/portlet_Plus")){
+							btnImg.src = "/images/ezNewPortal/skin/dark/portlet_Plus.png";
+						} else if(btnImg && btnImg.src.includes("/images/ezNewPortal/portlet_setting")){
+							btnImg.src = "/images/ezNewPortal/skin/dark/portlet_setting.png";
+						}
+					} else{
+						if(btnImg && btnImg.src.includes("/images/ezNewPortal/skin/dark/portlet_Plus")){
+							if(themeId.id == "theme1Body"){
+								btnImg.src = "/images/ezNewPortal/portlet_Plus1.png";
+							} else if(themeId.id == "theme2Body"){
+								btnImg.src = "/images/ezNewPortal/portlet_Plus2.png";
+							} else if(themeId.id == "theme3Body"){
+								btnImg.src = "/images/ezNewPortal/portlet_Plus3.png";
+							}
+						} else if(btnImg && btnImg.src.includes("/images/ezNewPortal/skin/dark/portlet_setting")){
+							if(themeId.id == "theme1Body"){
+								btnImg.src = "/images/ezNewPortal/portlet_setting1.png";
+							} else if(themeId.id == "theme2Body"){
+								btnImg.src = "/images/ezNewPortal/portlet_setting2.png";
+							} else if(themeId.id == "theme3Body"){
+								btnImg.src = "/images/ezNewPortal/portlet_setting3.png";
+							}
+						}
+					}
+				})
+
+				if(themeId.id == "theme2Body"){
+					var theme2Img = mainFrame.document.querySelectorAll("#theme2Body .writebanner .writebannerDL dt");
+					theme2Img.forEach(function(item){
+						var listImg = item.querySelector("img");
+						if(listImg){
+							if(skinId == "dark"){
+								listImg.src = listImg.src.replace("/images/ezNewPortal/theme2Img","/images/ezNewPortal/skin/dark");
+							} else {
+								listImg.src = listImg.src.replace("/images/ezNewPortal/skin/dark","/images/ezNewPortal/theme2Img");
+							}
+						}
+					})
+
+					var theme2Img2 = mainFrame.document.querySelector("#theme2Body .exellentEmployee .portlet_title .portletText img");
+					if(skinId == "dark"){
+						theme2Img2.src = theme2Img2.src.replace("/images/ezNewPortal/theme2Img","/images/ezNewPortal/skin/dark");
+					} else {
+						theme2Img2.src = theme2Img2.src.replace("/images/ezNewPortal/skin/dark","/images/ezNewPortal/theme2Img");
+					}
+				}
+			}
+		</script>
 	</head>
 	<body>
+		<%-- ui 확인용 버튼(추후 삭제 예정)-조기완 --%>
+		<div style="position:absolute; left:50%; top:0; transform:translateX(-50%); z-index:10000; display:none;">
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('');">기본</span>
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer;" onclick="skin('dark');">다크</span>
+		</div>
 		<header id="top"></header>
 		<div class="lnb">
 			<ul id="mainMenuListLeft">
@@ -40,6 +133,10 @@
 	                </div>
 	                <div class="set_btn" id="editMenuBtn">
 	                    <span id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span><span id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>
+
+						<div class="skin">	<!-- 스킨 임시 버튼 -->
+							<span onclick="skin('')">white</span><span onclick="skin('dark')">dark</span>
+						</div>
 	                </div>
 	            </div>
 
@@ -1393,8 +1490,8 @@
 				document.getElementsByTagName("body")[0].style.backgroundColor = "";
 				topFrame.style.position = "";
 				if (menuDisplayMode == "1") {
-					document.querySelector('#mainMenuListLeft').style.backgroundColor = '#fff';
-					document.querySelector('#mainMenuListLeft').style.borderRight = '1px solid #ddd';
+					// document.querySelector('#mainMenuListLeft').style.backgroundColor = '#fff';
+					// document.querySelector('#mainMenuListLeft').style.borderRight = '1px solid #ddd';
 					parent.document.getElementById('mainFrame').style.position = 'relative';
 					$('#mainMenuListLeft li').removeClass("layer");
 				}

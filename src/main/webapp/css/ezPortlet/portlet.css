@@ -84,8 +84,8 @@
 
 .body_pop_for_size {
     position: absolute;
-    bottom: 2px;
-    right: 2px;
+    bottom: 3px;
+    right: 3px;
     display: none;
     z-index: 4;
     background: #fff;
