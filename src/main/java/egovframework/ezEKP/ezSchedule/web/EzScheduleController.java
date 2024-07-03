@@ -3076,10 +3076,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 			
 			/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
-			String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleId;
-			String linkUrlMobile = ""; // 현재는 삭제 일정 표출 링크 없음(일정 상세보기 페이지 구현된 커밋 반영 후 추가 예정)
-//			String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleId + "&startDate=" + vo.getStartDate().substring(0,16) + "&endDate=" + vo.getEndDate().substring(0,16) + "&type=monthList&flag="; //반복일정일 때 startDate와 endDate 수정 필요
-			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), attendantId, "schedule", "delete", vo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
+			String linkUrl = "";
+			String linkUrlMobile = "";
+			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), attendantId, "SCHEDULE", "CANCEL", vo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
 		}
 	}
 	
