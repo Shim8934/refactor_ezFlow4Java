@@ -201,7 +201,7 @@
 		]]>											    
 	</procedure> -->
 	
-	<select id="EzOrganAdminDAO.getDBData_dept" resultClass="String">
+	<select id="EzOrganAdminDAO.getDeptExtension15" resultClass="String">
 		<![CDATA[
 			SELECT 
 				EXTENSIONATTRIBUTE15 + 1 AS EXTENSIONATTRIBUTE15
@@ -5746,7 +5746,7 @@
 		]]>
 	</select>
 
-	<select id="EzOrganAdminDAO.getDeptInfo" parameterClass="Map" resultClass="String">
+	<select id="EzOrganAdminDAO.getUserExtension15" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				EXTENSIONATTRIBUTE15 + 1 AS EXTENSIONATTRIBUTE15
@@ -5759,7 +5759,7 @@
 					DEPARTMENT = #v_PARENTCN#
 				AND
 					CN	NOT IN (SELECT
-								  CN
+									CN
 							  	FROM
 									TBL_USERMASTER_RETIRE
 								WHERE
@@ -5770,19 +5770,13 @@
 				UNION ALL
 				
 				SELECT
-					EXTENSIONATTRIBUTE15
+					 ORDERBY
 				FROM
-					TBL_ADDJOBMASTER B
-				JOIN
-					TBL_USERMASTER A
-				ON
-					A.CN = B.CN
-				AND
-					A.TENANT_ID = B.TENANT_ID
+					TBL_ADDJOBMASTER 
 				WHERE
-					B.DEPTID = #v_PARENTCN#
+					DEPTID = #v_PARENTCN#
 				AND
-					B.TENANT_ID = #v_TENANT_ID# ) AA
+					TENANT_ID = #v_TENANT_ID#) AA
 			ORDER BY
 				EXTENSIONATTRIBUTE15 DESC
 				LIMIT 1	

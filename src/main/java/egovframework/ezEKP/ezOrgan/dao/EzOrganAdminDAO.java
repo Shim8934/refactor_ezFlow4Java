@@ -2350,12 +2350,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 
 		return userCount;
 	}
-
-	public OrganDeptVO getDeptInfo(Map<String, Object> map) throws Exception {
-		return (OrganDeptVO) select("EzOrganAdminDAO.getDeptInfo",map);
+	
+	public String getUserExtension15(Map<String, Object> map) throws Exception {
+		return (String) Optional.ofNullable(select("EzOrganAdminDAO.getUserExtension15",map)).orElseGet(() -> "0");
 	}
 
-	public String getDBData_dept(Map<String, Object> map) throws Exception {
-		 return (String) Optional.ofNullable(select("EzOrganAdminDAO.getDBData_dept",map)).orElseGet(() -> "0");
+	public String getDeptExtension15(Map<String, Object> map) throws Exception {
+		 return (String) Optional.ofNullable(select("EzOrganAdminDAO.getDeptExtension15",map)).orElseGet(() -> "0");
 	}
 }
