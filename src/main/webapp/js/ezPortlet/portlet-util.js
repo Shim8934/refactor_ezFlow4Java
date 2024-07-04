@@ -48,7 +48,7 @@ var portletOption = Object.freeze({
     dragSortPredicate: function (item) {
         var result = Muuri.ItemDrag.defaultSortPredicate(item, {
             action: 'swap', // move/swap
-            threshold: 40,  // 민감도
+            threshold: 0,  // 민감도
         });
         if (!!gridElement && !!result) {
             var chkBox = gridElement.getItem(result.index).getElement().getElementsByClassName(ClassPortlet.CHK_USE)[0];
