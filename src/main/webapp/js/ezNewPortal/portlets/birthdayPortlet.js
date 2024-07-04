@@ -145,7 +145,7 @@ function getBirthdayList(currentPage) {
                         userBirthdayFormatSum = userBirthday.replace("-", ".");
                     }
 					strHTML += "<dd class='birthDate'>" + userBirthdayFormatSum + "</dd>";
-					strHTML += "<dd class='birthTeam'>" + birthdayList[i].userDeptName + "</dd>";
+					strHTML += "<dd class='birthTeam'>" + ConvertCharToEntityReference(birthdayList[i].userDeptName) + "</dd>";
 					strHTML += "</dl>";
 					strHTML += "</li>";
 				}
