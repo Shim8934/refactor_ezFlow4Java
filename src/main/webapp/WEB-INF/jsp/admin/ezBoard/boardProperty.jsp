@@ -420,6 +420,8 @@
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("<c:out value='${adminType}'/>" == "y") {
+							setMenuBtnDisplay();
+
 	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + encodeURIComponent(BoardID);
 	            			return;	            			
 	            		} else {
@@ -923,7 +925,14 @@
 					$("#chkBoardReplyReact").prop("disabled", true);
 		    	}
 		    }
-		    
+
+			function setMenuBtnDisplay() {
+				if (parent != null) {
+					let configFormBtn = parent.document.getElementById("1tab5");
+
+					configFormBtn.style.display = document.getElementById("chkform").checked ? "" : "none";
+				}
+			}
 	    </script>
 	    <style type="text/css">
 	    	.mainlist tr {

@@ -1208,6 +1208,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String connFormCode = StringUtils.defaultString(request.getParameter("connFormCode"));
 		String docSN = "";
 		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
+		String attachedDocList = request.getParameter("attachedDocList") == null ? "" : request.getParameter("attachedDocList");
 		
 		if (nonElecRec == null) {
 			nonElecRec = "";
@@ -1324,6 +1325,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		model.addAttribute("attachedDocList", attachedDocList);
 		
 		logger.debug("draftuiWHWP ended. formPath:" + formPath);
 		

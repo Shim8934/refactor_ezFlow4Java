@@ -61,6 +61,8 @@
 
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = '${useAprFilePrvw}';
+
+			var attachedDocList;
 			
 	    	$(document).ready(function() {
 	    		// 1안 추가 시에 최초로 동작하는 부모창의 draftFlag 등 부여 함수
@@ -159,7 +161,16 @@
 	                    process_AfterOpen();
 	                    // 현재 안 탭의 정보를 부모페이지에도 저장
 	                    parent.setTabInfo(frameNum);
-	                    
+
+						if (frameNum == 1 && attachedDocList != "" && pDraftFlag == "DRAFT" && ListType != "21") {
+							var pd = parent.document;
+
+							attachRecordDoc();
+							pd.getElementById("ifrm" + frameNum).contentWindow.setAttachInfo(pDocID, "APR", pd.getElementById("lstAttachLink"));
+
+							attachedDocList = "";
+						}
+
 	                    // 반송문서가 아닌 임시저장 문서의 경우, 안 추가 시 초기 고정수신처 세팅 진행
 	                    if (pDraftFlag != "REDRAFT" || (ListType == "21" && parent.addFlag == true)) {
 	                        setFirstDrafter(); // 기본 결재선 설정 및 고정수신처 설정 등을 진행 (ezDraftAll_WHWP.js > GetDraftAprLineInfo)

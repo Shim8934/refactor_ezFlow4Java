@@ -57,6 +57,8 @@ function getDocList() {
     createNodeAndInsertText(xmlpara, objNode, "NODE", selSContName.value);
     createNodeAndInsertText(xmlpara, objNode, "BlockNum", curpage);
     createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
+    createNodeAndInsertText(xmlpara, objNode, "SortHeader", SortHeader == null ? "" : SortHeader);
+    createNodeAndInsertText(xmlpara, objNode, "sortType", sortType);
 
     xmlhttp.open("POST", "/ezApprovalG/aprDocAttachList.do?orgCompanyID="+orgCompanyID, false);
     xmlhttp.send(xmlpara);
@@ -88,9 +90,63 @@ function getDocList() {
         listview.DataBind("lvSDoc");
 
         pagingCount(curpage, nowblock);
+        setDatarowSerialNumber();
+        setHeaderEventHandler();
     }
 
     pChackYN = "FALSE"
+}
+
+function setHeaderEventHandler() {
+    let headRow = document.getElementById("lvSDocList").querySelector("thead");
+
+    setHeaderCursorPointer(headRow);
+
+    headRow.addEventListener("click", (e) => {
+        pChackYN = "TRUE";
+
+        sortList(e);
+    });
+}
+
+function setHeaderCursorPointer(headRow) {
+    headRow.style.cursor = "pointer";
+}
+
+function sortList(e) {
+    let targetID = e.target.id;
+
+    if (SortHeader !== document.getElementById(targetID).getAttribute("colname")) {
+        SortHeader = document.getElementById(targetID).getAttribute("colname");
+        sortType = "asc";
+    } else {
+        sortType = sortType === "asc" ? "desc" : "asc";
+    }
+
+    if (SortHeader === "SN") {
+        return;
+    }
+
+    getDocList();
+}
+
+function setDatarowSerialNumber() {
+    let cnt = 0;
+    let sn = 1;
+    let documetBuffer;
+    let tdBuffer;
+
+    while ((documetBuffer = document.getElementById("lvSDocList_TR_" + cnt++)) != null) {
+        let tdCnt = 0;
+
+        while ((tdBuffer = documetBuffer.children[tdCnt++]) != null) {
+            if (tdBuffer.getAttribute("headername") === "SN") {
+                tdBuffer.innerText = sn++;
+
+                break;
+            }
+        }
+    }
 }
 
 function DocMove() {

@@ -329,6 +329,9 @@
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = '${useAprFilePrvw}';
 
+			var parameters;
+			var attachedDocList;
+
     		// 일괄기안문서를 재기안하는 경우, 기존 문서와 양식 등의 정보를 배열에 부여
     		$(document).ready(function() {
                 pDraftFlag = DraftFlag; // 모든 문서 공통이므로 ready 시 바로 부여
@@ -366,6 +369,10 @@
 	        
 	        window.onload = function () {
 	            try {
+					if (opener != null) {
+						parameters = opener.getformcont_cross_dialogArguments[0];
+					}
+
 	                pSusinSN = SusinSN;
 	                dragNdrapNo();
 	                
@@ -380,10 +387,18 @@
 	                
 					// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가 (모든 안 공통)
 					setAttachGuideText();
+
+					if (parameters.length != 0) {
+						extractParameters();
+					}
 	            } catch (e) {
 	                alert("ezdraftui_hwp.window.onload::" + e);
 	            }
 	        }
+
+			function extractParameters() {
+				attachedDocList = parameters[0] == null ? "" : parameters[0];	// 첨부기안 대상 리스트
+			}
 	
 	       	window.onresize = function () {
 			getReSize();
@@ -1665,7 +1680,13 @@
 	    		}
 	    		
 	    		var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(formHref);
-                iframe.contentWindow.Open(URL, "", "", function (res) {iframe.contentWindow.FieldsAvailable(res.result);Editor_focus(iframeID);}, null);
+                iframe.contentWindow.Open(URL, "", "", function (res) {
+                	iframe.contentWindow.ShowToolBar(true);
+                	iframe.contentWindow.ShowRibbon(true);
+					iframe.contentWindow.attachedDocList = attachedDocList;
+                	iframe.contentWindow.FieldsAvailable(res.result);
+                	Editor_focus(iframeID);
+                }, null);
 	    	}
 	    	
  	    	function Editor_focus(iframeID){

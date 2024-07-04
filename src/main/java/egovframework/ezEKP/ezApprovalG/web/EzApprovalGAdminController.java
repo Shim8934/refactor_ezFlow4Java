@@ -5012,7 +5012,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("cabTransfer started");
 
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
+
 		// 2024-06-12 전인하 - 전자결재G > 기록물관리 > 기록물철인계 > 리스트헤더 정보 호출
 		String listHeaderTemp = ezApprovalGService.getListHeader("095", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		Document listXML = commonUtil.convertStringToDocument(listHeaderTemp);
@@ -5034,6 +5034,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("listHeaderString", listHeaderString);
+
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		model.addAttribute("ironListYear", ezApprovalGAdminService.getIronListYear(companyID, tenantID));
 
 		logger.debug("cabTransfer ended");
 

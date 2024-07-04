@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path; 
 import java.nio.file.Paths; 
 import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime; 
 import java.time.ZoneId;
@@ -43,6 +44,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -19919,6 +19922,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "CABINET":
 			switch (listType.toUpperCase()) {
 			case "0":	// 기록물철 대장
+            case "15" : // 철삭제이력
 				typeCode = "002";
 				break;
 				
@@ -24193,6 +24197,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		switch (cabinetListVO.getListFlag()) {
 		case "0" :	// 기록물철 대장 (기록물철등록부)
+        case "15" :
 			cabinetListVO.setListType("002");
 			break;
 		case "1" :	// 편철확정대상 기록물철
@@ -26506,48 +26511,48 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() + "</WIDTH>");
 			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "</COLNAME>");
 			
-			if (!SortHeader.equals("") && SortHeader.equals(listXML.getElementsByTagName("NAME").item(i).getTextContent())) {
-				if(SortHeader.equals("")) {
-					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
-					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
-				} else {
-					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
-					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
-				}
-			}
+//			if (!SortHeader.equals("") && SortHeader.equals(tmpStr.toUpperCase())) {
+//				if(orderOption.equals("asc")) {
+//					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
+//					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
+//				} else {
+//					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
+//					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
+//				}
+//			}
 			resultXML.append("</HEADER>");
 		}
 		resultXML.append("</HEADERS>");
-		if (OrderOption1.indexOf("SENDFLAG") > -1) {
-			OrderOption1 = "";
-		} else if (OrderOption2.indexOf("SENDFLAG") > -1) {
-			OrderOption2 = "";
-		}
+//		if (OrderOption1.indexOf("SENDFLAG") > -1) {
+//			OrderOption1 = "";
+//		} else if (OrderOption2.indexOf("SENDFLAG") > -1) {
+//			OrderOption2 = "";
+//		}
 		
-		if (OrderOption1.indexOf("DOCSTATENAME") > -1) {
-			OrderOption1.replace("DOCSTATENAME", "DOCSTATE");
-		} else if (OrderOption2.indexOf("DOCSTATENAME") > -1) {
-			OrderOption2.replace("DOCSTATENAME", "DOCSTATE");
-		}
+//		if (OrderOption1.indexOf("DOCSTATENAME") > -1) {
+//			OrderOption1.replace("DOCSTATENAME", "DOCSTATE");
+//		} else if (OrderOption2.indexOf("DOCSTATENAME") > -1) {
+//			OrderOption2.replace("DOCSTATENAME", "DOCSTATE");
+//		}
 		
-		if (OrderOption1.indexOf("SENDFLAG") > -1) {
-			OrderOption1 = "";
-		} else if (OrderOption2.indexOf("SENDFLAG") > -1) {
-			OrderOption2 = "";
-		}
+//		if (OrderOption1.indexOf("SENDFLAG") > -1) {
+//			OrderOption1 = "";
+//		} else if (OrderOption2.indexOf("SENDFLAG") > -1) {
+//			OrderOption2 = "";
+//		}
 		
-		map.put("v_ORDEROPTION", OrderOption1);
-		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
-		
-		if (OrderOption1.length() > 0 ) {
-			map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,7).toLowerCase());
-		}
-		map.put("v_ORDEROPTION2", OrderOption2);
-		map.put("v_ORDEROPTIONLENGTH2", OrderOption2.length());
-		
-		if (OrderOption2.length() > 0 ) {
-			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,7).toLowerCase());
-		}
+//		map.put("v_ORDEROPTION", OrderOption1);
+//		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
+//
+//		if (OrderOption1.length() > 0 ) {
+//			map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,7).toLowerCase());
+//		}
+//		map.put("v_ORDEROPTION2", OrderOption2);
+//		map.put("v_ORDEROPTIONLENGTH2", OrderOption2.length());
+//
+//		if (OrderOption2.length() > 0 ) {
+//			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,7).toLowerCase());
+//		}
 		
 		if (contID == null || contID.equals("")) {
 			map.put("v_CONTFLAG", "0");
@@ -26567,6 +26572,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PAGESIZE2", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
 		map.put("v_PAGESIZE", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
 		map.put("v_PAGESIZE3", Integer.parseInt(pageSize) * Integer.parseInt(pageNum) - Integer.parseInt(pageSize));
+        map.put("sortHeader", SortHeader);
+        map.put("sortType", orderOption);
 
 		List <ApprGDocListVO> conDocList = ezApprovalGDAO.getContDocList(map);
 		
@@ -26612,7 +26619,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 	if (FieldName.equals("DOCSTATENAME")) {
                 		FieldValue = docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent();
                 	} else {
-				    FieldValue = docXML.getElementsByTagName(FieldName.toUpperCase()).item(k).getTextContent();
+				        FieldValue = docXML.getElementsByTagName(FieldName.toUpperCase()).item(k).getTextContent();
                 	}
                 }
 				resultXML.append("<CELL>");
@@ -35405,5 +35412,235 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         map.put("primary", userInfo.getPrimary());
         
         return ezApprovalGDAO.getUnderDeptList(map);
+    }
+
+    @Override
+    public String attachRecordDoc(LoginVO userInfo, String newDocID, Object attachedDocList) throws Exception {
+        logger.info("attachRecordDoc started");
+
+        List<String> attachDocList = attachedDocList instanceof String ?
+                                     Arrays.asList(((String)attachedDocList).split(",")) :
+                                     Arrays.asList((String[])attachedDocList);
+
+        AtomicReference<String> result = new AtomicReference<>("true");
+        AtomicReference<ApprGAttachInfoVO> newAttachInfo = getAttachInfo(newDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+        AtomicInteger attachDocCnt = new AtomicInteger(1);
+        AtomicInteger attachFileCnt = new AtomicInteger(1);
+
+        attachDocList.forEach(d -> {
+            try {
+                // 첨부기안 대상 문서의 문서첨부 존재 시 새 문서의 문서첨부로 추가
+                copyAttachedDoc(newAttachInfo, attachDocCnt, d);
+                
+                // 첨부기안 대상 문서를 새 문서의 첨부파일로 추가
+                docAttach(newAttachInfo, userInfo, attachFileCnt, d);
+                
+                // 첨부기안 대상 문서의 첨부파일 리스트를 새 문서에 추가
+                fileAttach(newAttachInfo, attachFileCnt, d);
+            } catch (SQLException se) {
+                logger.error(se.getMessage(), se);
+
+                result.set("false");
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                
+                result.set("false");
+            }
+        });
+
+        logger.info("attachRecordDoc ended");
+        return result.get();
+    }
+	
+    private AtomicReference<ApprGAttachInfoVO> getAttachInfo(String newDocID, String companyID, int tenantID) throws Exception {
+        logger.info("getAttachInfo started");
+
+        AtomicReference<ApprGAttachInfoVO> a = new AtomicReference<ApprGAttachInfoVO>();
+        ApprGAttachInfoVO vo = new ApprGAttachInfoVO();
+
+        vo.setNewDocID(newDocID);
+        vo.setCompanyID(companyID);
+        vo.setTenantID(tenantID);
+        a.set(vo);
+
+        logger.info("getAttachInfo ended");
+        return a;
+    }
+
+    private void copyAttachedDoc(AtomicReference<ApprGAttachInfoVO> newAttachInfo, AtomicInteger attachDocCnt, String docID) throws Exception {
+        logger.info("copyAttachedDoc started");
+
+        List<ApprGDocAttachInfoVO> attachedDocList = null;
+        ApprGAttachInfoVO vo = newAttachInfo.get();
+
+        String newDocID = vo.getNewDocID();
+        String tenantID = String.valueOf(vo.getTenantID());
+        String companyID = vo.getCompanyID();
+        int listCnt = 0;
+
+        attachedDocList = ezApprovalGDAO.getAttachedDocList(
+            new HashMap() {{
+                put("docID", docID);
+                put("newDocID", newDocID);
+                put("tenantID", tenantID);
+                put("companyID", companyID);
+            }}
+        );
+
+        listCnt = attachedDocList.size();
+
+        if (listCnt == 0) {
+            return;
+        }
+
+
+        for (int cnt = 0; cnt < listCnt; cnt++) {
+            String sn = String.valueOf(attachDocCnt.getAndIncrement());
+            attachedDocList.get(cnt).setAttachSN(sn);
+
+            ezApprovalGDAO.insertDocAttachInfo(attachedDocList.get(cnt));
+        }
+
+        logger.info("copyAttachedDoc ended");
+    }
+
+    private void docAttach(AtomicReference<ApprGAttachInfoVO> newAttachInfo, LoginVO userInfo, AtomicInteger cnt, String docID) throws Exception {
+        logger.info("docAttach started");
+
+        ApprGAttachInfoVO newAttachInfoVO = newAttachInfo.get();
+        newAttachInfoVO.setDocID(docID);
+
+        ApprGAttachInfoVO attachDocInfo = ezApprovalGDAO.getAttachDocInfo(newAttachInfoVO);
+
+        String sn = String.valueOf(cnt.getAndIncrement());
+        String ext = attachDocInfo.getAttachFileHref().substring(attachDocInfo.getAttachFileHref().lastIndexOf("."));
+        String realFileName = attachDocInfo.getAttachFileName() + ext;
+        String fileName = getNewAttachFileName(sn, newAttachInfoVO.getNewDocID(), realFileName);
+        String realPath = commonUtil.getRealPath(servletContext);
+        String srcPath = realPath + attachDocInfo.getAttachFileHref();
+        String destPath = getSaveAttachFilePath(newAttachInfoVO.getDocID(), newAttachInfoVO.getCompanyID(), newAttachInfoVO.getTenantID());
+        String destRealPath = realPath + destPath;
+
+        attachDocInfo.setAttachFileSN(sn);
+        attachDocInfo.setAttachFileName(realFileName);
+        attachDocInfo.setAttachFileHref(destPath + commonUtil.separator + fileName);
+        attachDocInfo.setAttachFileSize(String.valueOf (new File(srcPath).length()));
+        attachDocInfo.setAttachUserID(userInfo.getId());
+        attachDocInfo.setAttachUserName(userInfo.getDisplayName());
+        attachDocInfo.setAttachUserJobTitle(userInfo.getTitle());
+        attachDocInfo.setAttachUserDeptID(userInfo.getDeptID());
+        attachDocInfo.setAttachUserDeptName(userInfo.getDeptName());
+        attachDocInfo.setPageNum("1");
+        attachDocInfo.setDisplayName(realFileName);
+        attachDocInfo.setBodyAttach("N");
+        attachDocInfo.setAttachUserName2(userInfo.getDisplayName2());
+        attachDocInfo.setAttachUserJobTitle2(userInfo.getTitle2());
+        attachDocInfo.setAttachUserDeptName2(userInfo.getDeptName2());
+        attachDocInfo.setIsBigAttach("N");
+        attachDocInfo.setIsBigAttachDel("N");
+
+        ezApprovalGDAO.insertAttachInfo(attachDocInfo);
+
+        File dest = new File(destRealPath);
+
+        if (dest.exists()) {
+            dest.mkdirs();
+        }
+
+        File src = new File(srcPath);
+        dest = new File(destRealPath + commonUtil.separator + fileName);
+        
+        FileUtils.copyFile(src, dest);
+
+        logger.info("docAttach ended");
+    }
+    
+    private String getNewAttachFileName(String sn, String newDocID, String fileName) throws Exception {
+        logger.info("getNewAttachFileName started");
+
+        String snFormat = "00000" + sn;
+        String fn = newDocID + snFormat.substring(snFormat.length() - 4) + fileName;
+
+        logger.info("getNewAttachFileName ended");
+        return fn;
+    }
+    
+    private void fileAttach(AtomicReference<ApprGAttachInfoVO> newAttachInfo, AtomicInteger cnt, String docID) throws Exception {
+        logger.info("fileAttach started");
+
+        List<ApprGAttachInfoVO> attachFilePathList = null;
+        ApprGAttachInfoVO newAttachInfoVO = newAttachInfo.get();
+
+        String newDocID = newAttachInfoVO.getNewDocID();
+        String companyID = newAttachInfoVO.getCompanyID();
+        int tenantID = newAttachInfoVO.getTenantID();
+        String realPath = commonUtil.getRealPath(servletContext);
+        
+        String saveFilePath;
+
+        if (checkHasAttachFile(
+            new HashMap() {{
+                put("docID", docID);
+                put("companyID", companyID);
+                put("tenantID", tenantID);
+            }}
+        ).equals("TRUE")) {
+            saveFilePath = getSaveAttachFilePath(newDocID, companyID, tenantID);
+
+            attachFilePathList = ezApprovalGDAO.getAttachFileInfo(
+                new HashMap() {{
+                    put("v_DOCID", docID);
+                    put("newDocID", newDocID);
+                    put("companyID", companyID);
+                    put("v_TENANTID", tenantID);
+                    put("saveFilePath", saveFilePath);
+                    put("v_MODE", "END");
+                }}
+            );
+
+            attachFilePathList.forEach(a -> {
+                try {
+                    String sn = String.valueOf(cnt.getAndIncrement());
+
+                    String fileName = getNewAttachFileName(sn, newDocID, a.getAttachFileName());
+                    String sourcePath = a.getAttachFileHref();
+                    String destPath = saveFilePath + commonUtil.separator + fileName;
+
+                    a.setNewDocID(newDocID);
+                    a.setAttachFileSN(sn);
+                    a.setAttachFileHref(destPath);
+                    a.setTenantID(tenantID);
+
+                    ezApprovalGDAO.insertAttachInfo(a);
+
+                    File dest = new File(realPath + saveFilePath);
+
+                    if (!dest.exists()) {
+                        dest.mkdirs();
+                    }
+
+                    File src = new File(realPath + sourcePath);
+                    dest = new File(realPath + destPath);
+
+                    FileUtils.copyFile(src, dest);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            });
+        }
+
+        logger.info("fileAttach ended");
+    }
+    
+    private String checkHasAttachFile(HashMap<String, String> map) throws Exception {
+        return ezApprovalGDAO.checkHasAttachFile(map);
+    }
+
+    private String getSaveAttachFilePath(String docID, String companyID, int tenantID) throws Exception {
+        return commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) +
+               commonUtil.separator + companyID +
+               commonUtil.separator + "uploadFile" +
+               commonUtil.separator + getDocHrefYear(docID, companyID, tenantID) +
+               commonUtil.separator + getDocDir(docID);
     }
 }

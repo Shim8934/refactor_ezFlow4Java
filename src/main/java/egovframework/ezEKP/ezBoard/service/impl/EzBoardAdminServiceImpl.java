@@ -1384,4 +1384,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		logger.debug("updateTabBoard ended");
 	}
+
+	@Override
+	public String getUseFormFlag(String boardID, int tenantID) throws Exception {
+		return ezBoardAdminDAO.getUseFormFlag(boardID, tenantID);
+	}
 }

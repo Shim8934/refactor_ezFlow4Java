@@ -2231,6 +2231,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
+		String SortHeader = xmlDom.getElementsByTagName("SortHeader").item(0) != null ? xmlDom.getElementsByTagName("SortHeader").item(0).getTextContent() : "";
+		String sortType = xmlDom.getElementsByTagName("sortType").item(0) != null ? xmlDom.getElementsByTagName("sortType").item(0).getTextContent() : "";
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -2240,7 +2242,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String pageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
 		String pageSize = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
 		
-		String result = ezApprovalGService.getContDocListS(contID, userInfo.getId(), "", pageSize, pageNum, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+		String result = ezApprovalGService.getContDocListS(contID, userInfo.getId(), "", pageSize, pageNum, SortHeader, sortType, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 
 		logger.debug("aprDocAttachList ended");
 		

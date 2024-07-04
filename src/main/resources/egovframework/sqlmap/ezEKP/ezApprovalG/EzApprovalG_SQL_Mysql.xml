@@ -6005,7 +6005,7 @@
 		</isEqual>
 		<isNotEqual property="v_MODE" compareValue="APR">
 		<isNotEqual property="v_MODE" compareValue="END">
-			SELECT 
+			SELECT
 			 * 
 			FROM 
 				TBL_APRATTACHINFO  
@@ -6015,7 +6015,7 @@
 				TENANT_ID = #v_TENANTID#
 			AND
 				COMPANYID = #companyID#
-		</isNotEqual>
+        </isNotEqual>
 		</isNotEqual>
 		<isGreaterThan property="v_ORDERBYLENGTH" compareValue="0">
 			<isGreaterEqual property="v_ORDERBYLENGTH" compareValue="12">
@@ -10116,7 +10116,8 @@
 				   							  	   ELSE TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
 				   							  END)  AS SECURITYAPPROVAL,
 				   							  (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = TBL_ENDAPRDOCINFO.COMPANYID AND TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID) AS COMPANYNAME,
-				   							  (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = TBL_ENDAPRDOCINFO.COMPANYID AND TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID) AS COMPANYNAME2
+				   							  (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = TBL_ENDAPRDOCINFO.COMPANYID AND TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID) AS COMPANYNAME2,
+				   							  '' SN
 				   						FROM 
 				   							  TBL_ENDAPRDOCINFO 
 				   						LEFT OUTER JOIN 
@@ -10164,14 +10165,15 @@
 									      	]]>
 										</isNotEmpty>
 									</isEqual>
-									<isNotEmpty property="v_SUBQUERY">
-										AND 
+									<!--<isNotEmpty property="v_SUBQUERY">
+										AND
 											$v_SUBQUERY$
-									</isNotEmpty>	
+									</isNotEmpty>-->
 										AND
 											TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 										AND
 											TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+<!--
 									<isNotEmpty property="v_ORDEROPTION">
 										<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
 											<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
@@ -10189,16 +10191,17 @@
 										</isLessThan>
 									</isNotEmpty>
 									<isEmpty property="v_ORDEROPTION">
-										ORDER BY 
+-->
+										ORDER BY
 											ENDDATE DESC
-									</isEmpty>
+									<!--</isEmpty>-->
 									 <![CDATA[
 									 LIMIT #v_PAGESIZE#
 							   	 ) B 
 							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) A
 									  ]]>
-						<isNotEmpty property="v_ORDEROPTION2">
+<!--						<isNotEmpty property="v_ORDEROPTION2">
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
 								<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
 								<![CDATA[
@@ -10219,14 +10222,44 @@
 										$v_ORDEROPTION2$, ENDDATE 
 								]]>
 							</isLessThan>
-						</isNotEmpty>
-						<isEmpty property="v_ORDEROPTION2">
-							<![CDATA[	
-								ORDER BY 
-									ENDDATE 
-							]]>
-						</isEmpty>
-		   			
+						</isNotEmpty>-->
+                        ORDER BY
+                        <isNotEmpty property = "sortHeader">
+                            <isEqual property = "sortHeader" compareValue = "DOCTITLE">
+                                DOCTITLE
+                            </isEqual>
+                            <isEqual property = "sortHeader" compareValue = "DOCNO">
+                                DOCNO
+                            </isEqual>
+                            <isEqual property = "sortHeader" compareValue = "WRITERNAME">
+                                WRITERNAME
+                            </isEqual>
+                            <isEqual property = "sortHeader" compareValue = "COMPANYNAME">
+                                COMPANYNAME
+                            </isEqual>
+                            <isEqual property = "sortHeader" compareValue = "WRITERDEPTNAME">
+                                WRITERDEPTNAME
+                            </isEqual>
+                            <isEqual property = "sortHeader" compareValue = "ENDDATE">
+                                ENDDATE
+                            </isEqual>
+
+                            <isNotEmpty property = "sortType">
+                                <isEqual property = "sortType" compareValue = "asc">
+                                    ASC
+                                </isEqual>
+                                <isNotEqual property = "sortType" compareValue = "asc">
+                                    DESC
+                                </isNotEqual>
+                            </isNotEmpty>
+
+                            <isNotEqual property = "sortHeader" compareValue = "ENDDATE">
+                                , ENDDATE
+                            </isNotEqual>
+                        </isNotEmpty>
+                        <isEmpty property = "sortHeader">
+                            ENDDATE
+                        </isEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true"> -->
@@ -21838,10 +21871,17 @@
 			  		  		TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
 			  		  AND 
 			  		  		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
-		  		  	  WHERE 
-		  		  	  		TBL_CABINET.DelFlag = '0' 
-		  		  	  AND 
-		  		  	  		TBL_CABINETCLASS.DelFlag = '0' 
+		  		  	  WHERE
+                      <isEqual property = "listFlag" compareValue = "15">
+		  		  	  		TBL_CABINET.DelFlag = '1'
+		  		  	  AND
+		  		  	  		TBL_CABINETCLASS.DelFlag = '0'
+                      </isEqual>
+		  		  	  <isNotEqual property = "listFlag" compareValue = "15">
+                          TBL_CABINET.DelFlag = '0'
+                      AND
+                          TBL_CABINETCLASS.DelFlag = '0'
+                      </isNotEqual>
 		  		  <isEqual property="listFlag" compareValue="9">
 		  		  	  AND 
 		  		  	  		TBL_CABINET.CabinetTransferFlag = '2'
@@ -22139,10 +22179,17 @@
 	  		TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
 	  AND 
 	  		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
-  	  WHERE 
-  	  		TBL_CABINET.DelFlag = '0' 
+  	  WHERE
+      <isEqual property = "listFlag" compareValue = "15">
+          TBL_CABINET.DelFlag = '1'
   	  AND 
-  	  		TBL_CABINETCLASS.DelFlag = '0' 
+  	      TBL_CABINETCLASS.DelFlag = '0'
+      </isEqual>
+  	  <isNotEqual property = "listFlag" compareValue = "15">
+          TBL_CABINET.DelFlag = '0'
+          AND
+          TBL_CABINETCLASS.DelFlag = '0'
+      </isNotEqual>
 	  <isEqual property="listFlag" compareValue="9">
 	  	  AND 
 	  	  		TBL_CABINET.CabinetTransferFlag = '2'
@@ -35891,4 +35938,141 @@
         AND
             DEPT_CD_PATH LIKE CONCAT(CONCAT('%', #deptID#), '%')
     </select>
+
+    <select id = "EzApprovalGDAO.getAttachDocInfo" parameterClass = "ApprGAttachInfoVO" resultClass = "ApprGAttachInfoVO">
+        SELECT
+            #newDocID# AS NEWDOCID,
+            DOCTITLE AS ATTACHFILENAME,
+            HREF AS ATTACHFILEHREF,
+            #companyID# AS COMPANYID,
+            #tenantID# AS TENANTID
+        FROM
+            TBL_ENDAPRDOCINFO
+        WHERE
+            DOCID = #docID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            TENANT_ID = #tenantID#
+    </select>
+
+    <select id = "EzApprovalGDAO.checkHasAttachFile" parameterClass = "map" resultClass = "String" remapResults = "true">
+        SELECT
+            CASE
+                WHEN
+                    COUNT(1) > 0
+                THEN
+                    'TRUE'
+                ELSE
+                    'FALSE'
+            END
+        FROM
+            TBL_ENDATTACHINFO
+        WHERE
+            DOCID = #docID#
+        AND
+            TENANT_ID = #tenantID#
+        AND
+            COMPANYID = #companyID#
+    </select>
+
+    <insert id = "EzApprovalGDAO.insertAttachInfo" parameterClass = "ApprGAttachInfoVO">
+        INSERT INTO
+            TBL_APRATTACHINFO (
+                DOCID,
+                ATTACHFILESN,
+                VIEWORDER,
+                ATTACHFILENAME,
+                ATTACHFILEHREF,
+                ATTACHFILESIZE,
+                ATTACHUSERID,
+                ATTACHUSERNAME,
+                ATTACHUSERJOBTITLE,
+                ATTACHUSERDEPTID,
+                ATTACHUSERDEPTNAME,
+                PAGENUM,
+                DISPLAYNAME,
+                BODYATTACH,
+                ATTACHUSERNAME2,
+                ATTACHUSERJOBTITLE2,
+                ATTACHUSERDEPTNAME2,
+                TENANT_ID,
+                COMPANYID,
+                ISBIGATTACH,
+                ISBIGATTACHDEL,
+                SAVEDATE
+            )
+        VALUES (
+            #newDocID#,
+            #attachFileSN#,
+            #attachFileSN#,
+            #attachFileName#,
+            #attachFileHref#,
+            #attachFileSize#,
+            #attachUserID#,
+            #attachUserName#,
+            #attachUserJobTitle#,
+            #attachUserDeptID#,
+            #attachUserDeptName#,
+            #pageNum#,
+            #displayName#,
+            #bodyAttach#,
+            #attachUserName2#,
+            #attachUserJobTitle2#,
+            #attachUserDeptName2#,
+            #tenantID#,
+            #companyID#,
+            #isBigAttach#,
+            #isBigAttachDel#,
+            NOW()
+       )
+    </insert>
+
+    <select id = "EzApprovalGDAO.getAttachedDocList" parameterClass = "map" resultClass = "ApprGDocAttachInfoVO">
+        SELECT
+            #newDocID# AS NEWDOCID,
+            ATTACHDOCNAME,
+            ATTACHDOCURL,
+            SUBATTACHYN,
+            ATTACHUSERID,
+            ATTACHUSERNAME,
+            ATTACHUSERDEPTID,
+            ATTACHUSERDEPTNAME,
+            ATTACHUSERJOBTITLE,
+            ATTACHUSERNAME2,
+            ATTACHUSERJOBTITLE2,
+            ATTACHUSERDEPTNAME2,
+            TENANT_ID AS TENANTID,
+            COMPANYID
+        FROM
+            TBL_ENDAPRDOCATTACHINFO
+        WHERE
+            DOCID = #docID#
+          AND
+            TENANT_ID = #tenantID#
+          AND
+            COMPANYID = #companyID#
+    </select>
+
+    <insert id = "EzApprovalGDAO.insertDocAttachInfo" parameterClass = "ApprGDocAttachInfoVO">
+        INSERT INTO
+            TBL_APRDOCATTACHINFO
+        VALUES (
+            #newDocID#,
+            #attachSN#,
+            #attachDocName#,
+            #attachDocURL#,
+            #subAttachYN#,
+            #attachUserID#,
+            #attachUserName#,
+            #attachUserDeptID#,
+            #attachUserDeptName#,
+            #attachUserJobTitle#,
+            #attachUserName2#,
+            #attachUserJobTitle2#,
+            #attachUserDeptName2#,
+            #tenantID#,
+            #companyID#
+       )
+    </insert>
 </sqlMap>

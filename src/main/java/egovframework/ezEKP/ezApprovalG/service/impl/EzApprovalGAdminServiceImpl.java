@@ -5958,4 +5958,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("getTaskListCount ended.");
 		return result;
 	}
+
+	@Override
+	public ArrayList<String> getIronListYear(String companyID, int tenantID) throws Exception {
+		return ezApprovalGAdminDAO.getIronListYear(companyID, tenantID);
+	}
 }

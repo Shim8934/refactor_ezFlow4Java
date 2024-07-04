@@ -4842,11 +4842,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		
 		//logger.debug("FilePath: " + filePath + " || File Name: " + fileName + " || attID: " + attID);
-		
-		if (attID != null && !attID.equals("")) {
-			downFile(request, response, realPath + filePath, attID);
+
+		if (!fileName.endsWith(".mht")) {
+			if (attID != null && !attID.equals("")) {
+				downFile(request, response, realPath + filePath, attID);
+			} else {
+				downFile(request, response, realPath + filePath, fileName);
+			}
 		} else {
-			downFile(request, response, realPath + filePath, fileName);
+			ezBoardService.downloadBackgroundItemFile(request, response, realPath, filePath, fileName);
 		}
 
 		logger.debug("boardAttachDown ended");
