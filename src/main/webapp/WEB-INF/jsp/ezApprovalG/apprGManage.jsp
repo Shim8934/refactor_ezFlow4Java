@@ -1737,7 +1737,7 @@
 			        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 			        	window.close();
 			        } else {
-			        	OpenPopupWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1200, 750));
+			        	OpenPopupWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 			        	try { OpenPopupWin.focus(); } catch (e) { }
 			        }
 		    	}
