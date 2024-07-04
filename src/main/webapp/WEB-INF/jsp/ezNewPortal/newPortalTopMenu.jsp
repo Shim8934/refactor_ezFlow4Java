@@ -255,7 +255,7 @@
 				var mainFrame = window.parent.document.getElementById("mainFrame");
 				if (menuDisplayMode == "0") { // 메뉴 top에 생성
 					menuLi.setAttribute('id', 'menu_' + item.menuId);
-					menuLi.textContent = ConvertCharToEntityReference(item.menuName);
+					menuLi.textContent = item.menuName;
 					mainFrame.style.width = "100%";
 					mainFrame.style.float = "none";
 					mainFrame.style.position = "static";
@@ -265,7 +265,7 @@
 					menuLi.classList.add('sortable-item');
 					menuLi.setAttribute('id', 'menu_' + item.menuId);
 					var liSpan = document.createElement('span');
-					liSpan.textContent = ConvertCharToEntityReference(item.menuName);
+					liSpan.textContent = item.menuName;
 					menuLi.appendChild(liSpan);
 					mainFrame.style.width = "calc(100% - 81px)";
 					mainFrame.style.float = "right";
@@ -653,7 +653,7 @@
 				
 				var menuAllList = document.createElement('li');
 				var menuAllListSpan = document.createElement('span');
-				menuAllListSpan.textContent = ConvertCharToEntityReference(item.menuName);
+				menuAllListSpan.textContent = item.menuName;
 				menuAllList.appendChild(menuAllListSpan);
 				menuAllList.setAttribute("id", item.menuId);
 				menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");

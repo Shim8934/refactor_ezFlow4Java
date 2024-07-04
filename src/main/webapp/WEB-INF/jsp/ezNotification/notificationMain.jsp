@@ -170,7 +170,7 @@
 						str += '<em>[' + mainType[noti.mainType.toLowerCase()] + ']</em>';
 						str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : ' ';
 					}
-					str += noti.notiContent + '</p>';
+					str += ConvertCharToEntityReference(noti.notiContent) + '</p>';
 					
 					str += '<p class=\"desc\"><span>' + noti.senderName + '&nbsp;</span><span class=\"date\">' + noti.regDate.substring(0, 19) + '</span></p></div>';
 					str += '<span class=\"list_del blind\" onclick="updateNoti(\'delete\')"></span></li>';
