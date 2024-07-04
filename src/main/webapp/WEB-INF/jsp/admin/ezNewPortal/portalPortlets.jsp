@@ -83,8 +83,8 @@
 	}
 	.slideImageSetting {
 		position: absolute;
-	    right: 78px;
-	    top: 57px;
+	    right: 70px;
+	    top: 12px;
         cursor: pointer;
         display: inline-block;
 	}
