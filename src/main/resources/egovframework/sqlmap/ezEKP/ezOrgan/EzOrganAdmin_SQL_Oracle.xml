@@ -7660,7 +7660,7 @@
 	<select id="EzOrganAdminDAO.getUserExtension15" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
-				EXTENSIONATTRIBUTE15 + 1 AS EXTENSIONATTRIBUTE15
+				EXTENSIONATTRIBUTE15
 			FROM
 				(SELECT
 					EXTENSIONATTRIBUTE15
@@ -7688,10 +7688,10 @@
 					DEPTID = #v_PARENTCN#
 				AND
 					TENANT_ID = #v_TENANT_ID#) AA
+				ORDER BY
+					EXTENSIONATTRIBUTE15 DESC)
 			WHERE
-			    ROWNUM = 1
-			ORDER BY
-				EXTENSIONATTRIBUTE15 DESC
+				ROWNUM = 1
 		]]>
 	</select>
 	

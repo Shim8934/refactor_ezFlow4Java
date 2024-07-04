@@ -1079,13 +1079,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		// 신규 사원 추가 시 제일 하위에 위치하도록 순서 조정
 		if (vo.getManualFlag() != null && vo.getManualFlag().equals("Y")) {
 			if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
-<<<<<<< HEAD
-				vo.setExtensionAttribute15(ezOrganAdminDao.getDeptInfo(map));
-//				ezOrganAdminDao.updateDBData_userOrderIsNull(map);		
-=======
 				vo.setExtensionAttribute15(ezOrganAdminDao.getUserExtension15(map));
 //				ezOrganAdminDao.updateDBData_userOrderIsNull(map);
->>>>>>> bae2bf53f5 ([표준모듈] 관리자 조직도 신규사원 및 겸직 추가 시 위치 맨아래로 변경(1))
 			}
 			
 //			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
@@ -1433,13 +1428,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		date.setTimeZone(TimeZone.getTimeZone("GMT"));
             		String nowDate = date.format(new Date());
             		map.put("nowDate", nowDate);
-<<<<<<< HEAD
-					map.put("v_EXTATTR15", ezOrganAdminDao.getDeptInfo(map));
-                    
-=======
 					map.put("v_EXTATTR15", ezOrganAdminDao.getUserExtension15(map));
 
->>>>>>> bae2bf53f5 ([표준모듈] 관리자 조직도 신규사원 및 겸직 추가 시 위치 맨아래로 변경(1))
             		String bizmekaResult = "ERROR";
             		
             		try {
