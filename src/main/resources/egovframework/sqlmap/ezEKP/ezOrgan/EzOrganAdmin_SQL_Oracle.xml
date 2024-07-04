@@ -5090,37 +5090,40 @@
 	<select id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
 		<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/부서 별 권한 조회 -->
 			<![CDATA[
-			SELECT
-				*
-			FROM 
-                ( SELECT
-                    *
-                  FROM
-                    ( 
-                    SELECT
+		SELECT *
+			FROM (
+					SELECT
 						CN,
-						CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END AS DISPLAYNAME,
-						CASE #v_LANGDATA# WHEN '1' THEN DESCRIPTION ELSE DESCRIPTION2 END AS DESCRIPTION,
-						CASE #v_LANGDATA# WHEN '1' THEN TITLE ELSE TITLE2 END AS TITLE,
+						DISPLAYNAME,
+						DESCRIPTION,
+						TITLE,
 						MAIL,
 						TELEPHONENUMBER,
-						CASE #v_LANGDATA# WHEN '1' THEN COMPANY ELSE COMPANY2 END AS COMPANY,
+						COMPANY,
 						EXTENSIONATTRIBUTE1,
 						DEPARTMENT,
 						EXTENSIONATTRIBUTE7,
-						ROW_NUMBER() OVER (ORDER BY U.DISPLAYNAME, U.CN) AS ROWNUM_
-                    FROM
-						TBL_USERMASTER U 
+						ROW_NUMBER() OVER (ORDER BY DISPLAYNAME, CN) AS ROWNUM_
+					FROM (
+						SELECT
+							U.CN,
+							CASE #v_LANGDATA# WHEN '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END AS DISPLAYNAME,
+							CASE #v_LANGDATA# WHEN '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END AS DESCRIPTION,
+							CASE #v_LANGDATA# WHEN '1' THEN U.TITLE ELSE U.TITLE2 END AS TITLE,
+							U.MAIL,
+							U.TELEPHONENUMBER,
+							CASE '1' WHEN '1' THEN U.COMPANY ELSE U.COMPANY2 END AS COMPANY,
+							U.EXTENSIONATTRIBUTE1,
+							U.DEPARTMENT,
+							U.EXTENSIONATTRIBUTE7
+					FROM
+					    	TBL_USERMASTER U
 					WHERE
 						NULLIF(U.EXTENSIONATTRIBUTE1, NULL) IS NOT NULL
-					AND
-						U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
-					AND
-						U.EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
-					AND 
-						U.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
-					AND
-						U.TENANT_ID = #v_TENANT_ID#
+						AND U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+						AND U.EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+						AND U.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID =  #v_TENANT_ID#)
+						AND U.TENANT_ID = #v_TENANT_ID#
                     ]]>
 					<isNotEmpty property="searchValue" prepend="AND">
 						<isEqual property="searchType" compareValue="cn">
@@ -5158,8 +5161,7 @@
 						CASE #v_LANGDATA# WHEN '1' THEN U.COMPANY ELSE U.COMPANY2 END AS COMPANY,
 						UNISTR(J.ROLL_INFO) AS EXTENSIONATTRIBUTE1,
 						D.CN AS DEPARTMENT,
-						UNISTR(J.JOBID) AS EXTENSIONATTRIBUTE7,
-						ROW_NUMBER() OVER (ORDER BY U.DISPLAYNAME, U.CN) AS ROWNUM_
+						UNISTR(J.JOBID) AS EXTENSIONATTRIBUTE7
 					FROM
 						TBL_ADDJOBMASTER J
 					INNER JOIN
@@ -5211,11 +5213,9 @@
 					</isEqual>
 					<![CDATA[
 			) A
-			 WHERE
-				A.ROWNUM_ <= #v_PENDROW#    
 		 ) X
 		WHERE
-			X.ROWNUM_ >= #v_PSTARTROW# 
+			X.ROWNUM_ BETWEEN #v_PSTARTROW# AND #v_PENDROW#
 			]]>
 	</select>
 	
