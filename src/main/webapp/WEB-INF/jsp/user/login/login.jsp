@@ -88,8 +88,18 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
-		<script type="text/javascript">		
+		<script type="text/javascript">
+			var lastLoginAttempt = 0;
+			var loginCooldown = 1000; // 1초 (1000 밀리초)
+
 			function actionLogin() {
+				var currentTime = new Date().getTime();
+
+				// 중복 실행 방지: 1초 이내에 다시 로그인 시도를 막음
+				if (currentTime - lastLoginAttempt < loginCooldown) {
+					return;
+				}
+
 			    if (document.loginForm.id.value =="") {
 			        alert("<spring:message code='main.jjs02'/>");
 			        document.loginForm.id.focus();
@@ -113,6 +123,8 @@
 					frm.otp.value = "";
 					frm.action="<c:url value='/user/login/actionLogin.do'/>";        
 					frm.submit();
+
+					lastLoginAttempt = new Date().getTime();
 			    }
 			}
 			
