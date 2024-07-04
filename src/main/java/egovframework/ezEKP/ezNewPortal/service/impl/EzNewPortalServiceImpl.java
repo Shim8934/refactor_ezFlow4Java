@@ -1484,7 +1484,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		String connectionUrl = commonUtil.stripScriptTags(map.get("connectionUrl").toString());
 		connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
-		connectionUrl = specialCharacterToEmptyString(connectionUrl);
+		connectionUrl = specialCharacterToEmptyString(URLDecoder.decode(connectionUrl, "UTF-8"));
 		
 		map.put("connectionUrl", connectionUrl);
 		map.put("menuId", commonUtil.stripScriptTags(map.get("menuId").toString()));
