@@ -200,12 +200,252 @@ function AprrovMappingSign(ret, maxIdx) {
 			signCnt = signCnt + 1;
 		}
 	}
+	else if (ret == "BANSONG" && parent.KuyjeType == "001") {
+        var pAprMemberSignSN = parent.pAprMemberSN;
+        var signID;
+        var seumyungID;
+        var seumyungdateID;
+
+        signID = "sign" + pAprMemberSignSN;
+        seumyungID = "seumyung" + pAprMemberSignSN;
+        seumyungdateID = "seumyungdate" + pAprMemberSignSN;
+
+        if (FieldExist(signID)) {
+            var SContent = strLang4 + "\15" + arr_userinfo[2];
+            PutFieldText(signID, SContent);
+            parent.docApprovSignChkCnt ++;
+
+            parent.signInfo[signCnt] = signID;
+            parent.SignName[signCnt] = signID;
+            parent.SignType[signCnt] = "TEXT";
+            parent.SignContent[signCnt] = SContent;
+            parent.newSignInfo.push(signID);
+            signCnt = signCnt + 1;
+        }
+
+        if (FieldExist(seumyungID)) {
+            PutFieldText(seumyungID, arr_userinfo[5]);
+            parent.signInfo[signCnt] = seumyungID;
+            parent.SignName[signCnt] = seumyungID;
+            parent.SignType[signCnt] = "TEXT";
+            parent.SignContent[signCnt] = arr_userinfo[5];
+//            signCnt = signCnt + 1;
+        }
+
+        if (FieldExist(seumyungdateID)) {
+            PutFieldText(seumyungdateID, s);
+            parent.signInfo[signCnt] = seumyungdateID;
+            parent.SignName[signCnt] = seumyungdateID;
+            parent.SignType[signCnt] = "TEXT";
+            parent.SignContent[signCnt] = s;
+//            signCnt = signCnt + 1;
+        }
+    }
+    else if (approvalFlag == "S" && parent.pAprLineType == strAprType4) { // 4 : 전결
+    	var pAprMemberSignSN = parent.pAprMemberSN;
+        var signID;
+        var seumyungID;
+        var seumyungdateID;
+        var LastKyulSN = parent.LastKyulSN;
+
+        var pSusinSN2 = "";
+        // 일괄은 수신이 없음
+//    	if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N")) {
+//    		pSusinSN2 = pSusinSN;
+//    	}
+
+        if (junGyulFlag == "1") {
+    		/* 2018-04-27 천성준 - 전결자만 결재칸에 전결 표시 >> 전결자 결재칸에 전결String */
+        	signID = pSusinSN2 + "sign" + pAprMemberSignSN;
+
+        	var field = message.GetListItem(fields, signID);
+            if (FieldExist(signID)) {
+                PutFieldText(strLang6);
+            }
+
+            //최종결재자 인덱스 구하기
+            for (var i=0; i<20; i++) {
+            	signID = pSusinSN2 + "sign" + i;
+
+                if (FieldExist(signID)) {
+                	LastKyulSN = i;
+                }
+            }
+
+            //최종결재자 결재칸에 싸인
+        	signID = pSusinSN2 + "sign" + LastKyulSN;
+            seumyungID = pSusinSN2 + "jikwe" + LastKyulSN;
+            seumyungdateID = pSusinSN2 + "seumyungdate" + LastKyulSN;
+
+            if (FieldExist(seumyungdateID)) {
+                PutFieldText(seumyungdateID , s);
+            }
+
+            if (FieldExist(signID)) {
+                if (ret != "NAME") { //이미지 서명
+                    PutFieldText(signID, "");
+
+                    if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                        AppendFieldText(signID, strLang8, true);
+                    }
+
+                    if(!FieldExist(seumyungdateID))
+                        AppendFieldText(signID, OpinionText, true);
+
+                    parent.docApprovSignChkCnt ++;
+
+                    parent.signInfo[signCnt] = signID;
+                    parent.SignName[signCnt] = signID;
+                    parent.newSignInfo.push(signID);
+
+                    if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                        parent.SignType[signCnt] = "IMAGE";
+                        parent.SignContent[signCnt] = ret+"::"+strLang8;
+                    }
+                    else {
+                        parent.SignType[signCnt] = "IMAGE";
+                        parent.SignContent[signCnt] = ret;
+                    }
+
+                    InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+
+                    signCnt = signCnt + 1;
+                    SingFlag = true;
+                }
+                else { //문자 서명
+                    if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                        PutFieldText(signID, strLang8 + "\15" + arr_userinfo[2]);
+                        contents = strLang8 + "\15" + arr_userinfo[2];
+                    }
+                    else {
+                        PutFieldText(signID, arr_userinfo[2]);
+                        contents = arr_userinfo[2];
+                    }
+
+                    if (!FieldExist(seumyungdateID)) {
+                        PrependFieldText(signID, OpinionText);
+                        contents = OpinionText + contents;
+                    }
+
+                    if (parent.pAprLineType == strAprType4) {
+                        PrependFieldText(signID, strLang6);
+                        contents = strLang6 + contents;
+                    }
+
+                    parent.docApprovSignChkCnt ++;
+
+                    parent.signInfo[signCnt] = signID;
+                    parent.SignName[signCnt] = signID;
+                    parent.SignType[signCnt] = "TEXT";
+                    parent.SignContent[signCnt] = contents;
+                    signCnt = signCnt + 1;
+                    SingFlag = false;
+                    parent.newSignInfo.push(signID);
+                }
+            }
+    	} else if (junGyulFlag == "4") {
+    		signID = pSusinSN2 + "sign" + pAprMemberSignSN;
+            seumyungID = pSusinSN2 + "jikwe" + pAprMemberSignSN;
+            seumyungdateID = pSusinSN2 + "seumyungdate" + pAprMemberSignSN;
+
+            if (FieldExist(seumyungdateID)) {
+                PutFieldText(seumyungdateID , s);
+            }
+
+            if (FieldExist(seumyungID)) {
+                PutFieldText(seumyungID , GetFieldText(seumyungID) + PositionText);
+            }
+
+            var field = message.GetListItem(fields, signID);
+            if (field) {
+                if (ret != "NAME") { //이미지 서명
+                    PutFieldText(signID, "");
+
+                    if(!FieldExist(seumyungdateID))
+                        AppendFieldText(signID, OpinionText, true);
+
+                    parent.docApprovSignChkCnt ++;
+
+                    parent.signInfo[signCnt] = signID;
+                    parent.SignName[signCnt] = signID;
+                    parent.newSignInfo.push(signID);
+
+                    if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                        parent.SignType[signCnt] = "IMAGE";
+                        parent.SignContent[signCnt] = ret+"::"+strLang8;
+                    }
+                    else {
+                        parent.SignType[signCnt] = "IMAGE";
+                        parent.SignContent[signCnt] = ret;
+                    }
+
+                    InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+
+                    signCnt = signCnt + 1;
+                    SingFlag = true;
+                }
+                else { // 문자 서명
+                    if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                        PutFieldText(signID, strLang8 + "\15" + arr_userinfo[2]);
+                        contents = strLang8 + "\15" + arr_userinfo[2];
+                    }
+                    else {
+                        PutFieldText(signID, arr_userinfo[2]);
+                        contents = arr_userinfo[2];
+                    }
+
+                    if (!FieldExist(seumyungdateID)) {
+                        PrependFieldText(signID, OpinionText);
+                        contents = OpinionText + contents;
+                    }
+
+                    if (parent.pAprLineType == strAprType4) {
+                        PrependFieldText(signID, strLang6);
+                        contents = strLang6 + contents;
+                    }
+
+                    parent.docApprovSignChkCnt ++;
+
+                    parent.signInfo[signCnt] = signID;
+                    parent.SignName[signCnt] = signID;
+                    parent.SignType[signCnt] = "TEXT";
+                    parent.SignContent[signCnt] = contents;
+                    signCnt = signCnt + 1;
+                    SingFlag = false;
+                    parent.newSignInfo.push(signID);
+                }
+            }
+    	}
+        //TODO: junGyulFlag 2,3 일때 처리
+    }
 	else {
 		var pAprMemberSignSN = parent.pAprMemberSN;
 		var signID;
 		var seumyungID;
 		var seumyungdateID;
-		
+		var LastKyulSN = parent.LastKyulSN;
+		var pAprMemberSN = parent.pAprMemberSN;
+
+        if (approvalFlag == "S") {
+            if (LastKyulSN == pAprMemberSN || parent.pAprLineType == strAprType4) {
+                for (i = 1; i <= 20; i++) {
+                    signID = "sign" + i;
+
+                    if (FieldExist(signID)) {
+                        LastSignNo = i;
+                    }
+                }
+
+                if (LastKyulSN == pAprMemberSN) {
+                    pAprMemberSignSN = LastSignNo;
+                }
+
+                if (pAprLineType == strAprType4) {
+                    LastKyulSN = LastSignNo;
+                }
+            }
+        }
+
 		if (pDraftFlag == "SUSIN") {
 			signID = pSusinSN + "sign" + pAprMemberSignSN;
 			seumyungID = pSusinSN + "jikwe" + pAprMemberSignSN;
@@ -817,12 +1057,14 @@ function SaveFileForApprovAll(currIdx) {
 		html  : parent.htmlDataAry[currIdx],
 		orgCompanyID : orgCompanyID
 	}
-	
+
+	var url = parent.extAry[currIdx] == "mht" ? "/ezApprovalG/saveFile.do" : "/ezApprovalG/saveFileHWP.do";
+
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/saveFileHWP.do",
+		url : url,
 		contentType : "application/json",
 		data : JSON.stringify(data),
 		success: function(text){
@@ -846,7 +1088,7 @@ function SignSave(currIdx) {
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNTYPE", parent.SignType[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", parent.SignName[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", parent.SignContent[i]);
-            createNodeAndAppandNodeText(xmlpara, objNode, subNode, "ORGCOMPANYID", orgCompanyID);
+            createNodeAndAppandNodeText(xmlpara, objNode, subNode, "ORGCOMPANYID", typeof orgCompanyID == "undefined" ? parent.orgCompanyID : orgCompanyID);
         }
         xmlhttp.open("Post", "/ezApprovalG/setSignInfo.do", false);
         xmlhttp.send(xmlpara);

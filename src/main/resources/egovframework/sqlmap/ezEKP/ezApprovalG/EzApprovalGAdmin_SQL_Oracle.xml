@@ -1035,7 +1035,8 @@
 					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
 					aproption,
 					SIHANGTYPE,
-					formxslt
+					formxslt,
+                    FORMDRAFTALLFLAG
 				FROM
 					TBL_FORMINFO
 				JOIN 

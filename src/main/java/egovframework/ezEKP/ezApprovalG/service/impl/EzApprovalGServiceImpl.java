@@ -34789,11 +34789,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getHWPDocNumFormatByFormID started");
 		
 		String result = "";
-		String formPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + orgCompanyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".hwp";
-		HWPFile hwpFile = HWPReader.fromFile(realPath + formPath);
-		
-		result = getHwpText("docnumber", hwpFile);
-		
+        Map<String, Object> map = new HashMap<>();
+        map.put("tenantId", tenantID);
+        map.put("companyId", orgCompanyID);
+        map.put("formId", formID);
+        ApprGFormVO formPathVO = ezApprovalGDAO.getFormPath(map);
+        String formPath = formPathVO.getFormFileLocation();
+        if(formPath.endsWith("hwp")){
+            HWPFile hwpFile = HWPReader.fromFile(realPath + formPath);
+
+            result = getHwpText("docnumber", hwpFile);
+        }else{
+            String loadMht = ezCommonService.loadMHTFile(realPath + formPath); // 결재문서 가져오기
+            String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, null, null, null);
+            org.jsoup.nodes.Document doc = Jsoup.parse(content);
+
+            result = doc.getElementById("docnumber").text();
+        }
+
 		logger.debug("getHWPDocNumFormatByFormID ended");
 		return result;
 	}

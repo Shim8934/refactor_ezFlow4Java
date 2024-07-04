@@ -3006,7 +3006,7 @@
 	            	<spring:message code='ezApprovalG.jjh03'/>
 	            </c:if></span></p>
 	            <c:if test="${approvalFlag eq 'S' }">
-		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.hyj06'/></span></p>
+		            <p id="showHRAprLine"<c:if test="${draftAllFlag eq 'Y'}"> style="display:none"</c:if>><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.hyj06'/></span></p>
 	            </c:if>
 	            <c:if test="${approvalFlag eq 'G' and draftAllFlag ne 'Y'}">
 		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.LJEAppr06'/></span></p>

@@ -2128,6 +2128,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String docID = request.getParameter("pDocID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String orgCompanyID = request.getParameter("orgCompanyID");
+
+		String draftAllFlag = request.getParameter("draftAllFlag") != null ? request.getParameter("draftAllFlag") : "N";
+		String anNo = request.getParameter("anNo") != null ? request.getParameter("anNo") : "0";
         
         if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -2188,7 +2191,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("delAttachByOthers", delAttachByOthers);
-		
+		model.addAttribute("draftAllFlag", draftAllFlag);
+		model.addAttribute("anNo", anNo);
+
 		logger.debug("aprDocAttach ended");
 		
 		return "ezApprovalG/apprGaprdocattach";
