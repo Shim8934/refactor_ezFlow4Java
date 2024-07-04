@@ -12421,7 +12421,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	// 수신 문서와 심사 문서를 같이 가져온다. admin, user = 수신문서, simsa = 심사문서
 	public String getReceiveDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang,
-			Map<String, Object> searchQueryMap, int tenantID, String offset) throws Exception {
+			Map<String, Object> searchQueryMap, int tenantID, String offset, String assignChk) throws Exception {
 		logger.debug("getReceiveDocList started");
 
 		StringBuilder resultXML = new StringBuilder();
@@ -12451,14 +12451,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
-
+        
         /* 전자결재G > 부서수신함 > 상위부서문서 사용 시 deptID에 상위부서ID를 사용 */
         Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, tenantID);
         if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
             deptID = upDeptInfo.get("upperDeptCode");
         }
-
-		int totalCount = getReceiveDocListCount(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), searchQueryMap, companyID, tenantID);
+        
+        int totalCount = getReceiveDocListCount(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), searchQueryMap, companyID, tenantID, assignChk);
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
 		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
 		
@@ -12494,7 +12494,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		resultXML.append("</HEADERS>");
 		
-		String docList = getReceiveDocList(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), querySize, querySize2, searchQueryMap, companyID, tenantID);
+		String docList = getReceiveDocList(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), querySize, querySize2, searchQueryMap, companyID, tenantID, assignChk);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -12514,7 +12514,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + langData;
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset)) + "</VALUE>");
+                /* 2024-06-28 양지혜 - 부서수신함 > 지정목록 > 결재상태에 진행자명을 함께 표출 */
+                if (fieldName.equals("APRSTATE") && assignChk.equals("Y")) {
+                    resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset))
+                            + "(" + docXML.getElementsByTagName("PROCESSORNAME").item(k).getTextContent() + ")</VALUE>");
+                } else {
+                    resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset)) + "</VALUE>");
+                }
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
@@ -13870,7 +13876,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return apprGSecondApprVOList;
 	}
 
-	private String getReceiveDocList(String mode, String userID, String deptID, String docManageDeptInfo, int querySize, int querySize2, Map<String, Object> searchQueryMap, String companyID, int tenantID) throws Exception {
+	private String getReceiveDocList(String mode, String userID, String deptID, String docManageDeptInfo, int querySize, int querySize2, Map<String, Object> searchQueryMap, String companyID, int tenantID, String assignChk) throws Exception {
 		logger.debug("getReceiveDocList started");
 		
         String susinAdmin = "N";
@@ -13895,6 +13901,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DEPTIDS", docManageDeptInfo.replace("'", "").replace(" ", "").split(","));
 		map.put("v_PAGESIZE", querySize);
 		map.put("v_PAGESIZE2", querySize2);
+		map.put("assignChk", assignChk);
 		map.put("v_TENANTID", tenantID);
 		
 		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
@@ -13918,7 +13925,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return sb.toString();
 	}
 
-	private int getReceiveDocListCount(String mode, String userID, String deptID, String docManageDeptInfo, Map<String, Object> searchQueryMap, String companyID, int tenantID) throws Exception {
+	private int getReceiveDocListCount(String mode, String userID, String deptID, String docManageDeptInfo, Map<String, Object> searchQueryMap, String companyID, int tenantID, String assignChk) throws Exception {
 		logger.debug("getReceiveDocListCount started");
 		
 		String susinAdmin = "N";
@@ -13942,6 +13949,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		/* 2024-02-23 홍승비 - SQL Injection 제거 > 부서ID를 배열로 전달 (현재부서ID, 문서과ID, ... 형태) */
 		map.put("v_DEPTIDS", docManageDeptInfo.replace("'", "").replace(" ", "").split(","));
 		map.put("v_TENANTID", tenantID);
+        map.put("assignChk", assignChk);
 		
 		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		map.put("v_aprFlag", ApprovalFlag);

@@ -581,7 +581,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (useAprPreview.equalsIgnoreCase("YES")) {
 			previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId()); // 미리보기 영역 사용설정 (OFF, H)
 		}
-		
+
+		/* 2024-06-28 양지혜 - 전자결재 > 지정목록 접근 권한 체크 */
+		String assignPermission = (userInfo.getRollInfo().indexOf("a=1") != -1 || userInfo.getRollInfo().indexOf("m=1") != -1) ? "Y" : "N";
+
 		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userInfo", userInfo);
@@ -608,7 +611,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("previewInfo", previewInfo);
 		model.addAttribute("useAprPreview", useAprPreview);
 		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
-		
+		model.addAttribute("assignPermission", assignPermission);
+
 		logger.debug("aprManage ended.");
 		
 		return "ezApprovalG/apprGManage";
@@ -6400,6 +6404,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
 		String searchStatus = request.getParameter("searchStatus");
+		String assignChk = request.getParameter("assignChk");
 		String userLang = userInfo.getLang();
 		Document xmlDomSub = null;
 		
@@ -6491,7 +6496,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		// 기존 searchQuery 문자열 대신 searchQueryMap을 사용하여 검색 조건 전달, 사용하지 않는 Document xmlDomSub 파라미터 제거
-		String result = ezApprovalGService.getReceiveDocList(userID, deptID, receiveDocMode, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userLang, searchQueryMap, userInfo.getTenantId(), userInfo.getOffset());
+		String result = ezApprovalGService.getReceiveDocList(userID, deptID, receiveDocMode, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userLang, searchQueryMap, userInfo.getTenantId(), userInfo.getOffset(), assignChk);
 		
 		logger.debug("getReceivedDocList ended.");
 		

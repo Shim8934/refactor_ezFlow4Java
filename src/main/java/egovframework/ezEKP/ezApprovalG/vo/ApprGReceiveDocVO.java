@@ -70,7 +70,24 @@ public class ApprGReceiveDocVO {
 	/* 진행자 이름 2*/
 	private String processorName2;
 
-	
+	/** 작성자 부서명 */
+	private String writerDeptName;
+
+	/** 작성자 부서명 2 */
+	private String writerDeptName2;
+
+	public String getWriterDeptName() {
+		return writerDeptName;
+	}
+	public void setWriterDeptName(String writerDeptName) {
+		this.writerDeptName = writerDeptName;
+	}
+	public String getWriterDeptName2() {
+		return writerDeptName2;
+	}
+	public void setWriterDeptName2(String writerDeptName2) {
+		this.writerDeptName2 = writerDeptName2;
+	}
 	public String getCompanyID() {
 		return companyID;
 	}

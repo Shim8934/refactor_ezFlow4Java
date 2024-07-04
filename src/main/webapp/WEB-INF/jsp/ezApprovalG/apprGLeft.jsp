@@ -465,7 +465,7 @@
 				        if (tempValue == "") {
 				            tempValue = localValue;
 				        } else {
-		 		    	if (event.target.tagName == "SPAN" && event.target.classList.contains("list_text") && !event.target.classList.contains("deptShare")) {
+		 		    	if (typeof target != 'undefined' && event.target.tagName == "SPAN" && event.target.classList.contains("list_text") && !event.target.classList.contains("deptShare")) {
 		 		    		var divElements = document.querySelectorAll('div');
 		 		    		divElements.forEach(function(div) {
 		 		    	        if (div.id.endsWith('_sub')) {
@@ -487,6 +487,9 @@
 				        }
 				        catch (e) { }		    	        
 		    	}
+				if (tempValue == '부서수신함') {
+					parent.frames["right"].assignChk = "N";
+				}
 		    } 
 		
 		    function convMain(listtype, SubQuery, shareUserId) {

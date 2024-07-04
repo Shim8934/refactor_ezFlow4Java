@@ -9160,6 +9160,9 @@
 	      			TBL_APRDOCINFO.WRITERNAME,
 	      			TBL_APRDOCINFO.WRITERNAME2,
 					TBL_APRDOCINFO.FORMID
+			    <isEqual property="assignChk" compareValue="Y">
+				    , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME as PROCESSORNAME
+                </isEqual>
 	      		FROM 
 	      			TBL_APRRECEIPTPROCESSINFO 
 	      		INNER JOIN 
@@ -9188,17 +9191,23 @@
            			TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
                	AND 
 					TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
-	      		WHERE 
+	      		WHERE
+                <![CDATA[
 	      			TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
-	      		AND 
-	      			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
+			    ]]>
+	      		AND ((
+	      		<isNotEqual property="assignChk" compareValue="Y">
+                    (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
+                </isNotEqual>
+                <isEqual property="assignChk" compareValue="Y">
+                    TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#
+                </isEqual>
 	      		AND 
 	      			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 	      		AND
 	      			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	      		AND
 	      			TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
-	      	]]>
 	      	<isEqual property="v_SUSINADMIN" compareValue="Y">
 	      		OR 
 	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
@@ -15052,9 +15061,15 @@
        			TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
 	      	WHERE 
 	      		TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+	      	]]>
 	      	AND 
 	      		((
-	      			(TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
+	      		    <isNotEqual property="assignChk" compareValue="Y">
+                        (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
+                    </isNotEqual>
+                    <isEqual property="assignChk" compareValue="Y">
+                        TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#
+                    </isEqual>
 	      			AND 
 	      				(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
 	      			OR 
@@ -15065,7 +15080,6 @@
 	      		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	      	AND
 	      		TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
-	      			]]>
 	     <isEqual property="v_SUSINADMIN" compareValue="Y">
              OR
              (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN

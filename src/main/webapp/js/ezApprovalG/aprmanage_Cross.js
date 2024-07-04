@@ -316,7 +316,8 @@ function getReceivedDocList(p_FormCd) {
 				orderCell : OrderCell,
 				orderOption : OrderOption,
 				searchQuery : SQLPARADATA,
-				searchStatus : searchStatus
+				searchStatus : searchStatus,
+                assignChk : assignChk
 				},
 		success: function(xml){
 			getReceivedDocList_after(loadXMLString(xml));
@@ -383,7 +384,8 @@ function getReceivedDocList_after(xml) {
         DocList.SetRowOnDblClick("lvDocList_DBSelChange");
         DocList.SetTitleIdx(0);
         DocList.SetUrgentFlag(false);
-        if (pListTypeValue == "4" || pListTypeValue == "97")  //2023-04-12 이가은 - 부서수신함 복수체크박스 추가
+
+        if ((pListTypeValue == "4" && assignChk != "Y") || pListTypeValue == "97")  // 2023-04-12 이가은 - 부서수신함 복수체크박스 추가
             DocList.SetCheckBoxFlag(true);
         DocList.DataSource(xmlDoc);
         DocList.DataBind("lvDocList");
@@ -459,7 +461,12 @@ function getReceivedDocList_after(xml) {
         try {
         	parent.frames["left"].pListTypeValue = pListTypeValue;
             parent.frames["left"].getAprCount();
-            parent.frames["left"].setPresentValue("");
+            if (pListTypeValue == 4) {
+                var topTitle = assignChk == "Y" ? "지정목록" : "부서수신함";
+                parent.frames["left"].setPresentValue(topTitle);
+            } else {
+                parent.frames["left"].setPresentValue("");
+            }
         } catch (e) { }
     }
     catch (e) {
@@ -2122,12 +2129,20 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "";
         document.getElementById("tbtnReceiptAll").style.display = "none";
         document.getElementById("tbtnRJunkyulAll").style.display = "none";
+        document.getElementById("tbtnAssignList").style.display = "none";
+        document.getElementById("tbtnAssign").style.display = "none";
+        document.getElementById("tbtnDeptRecevList").style.display = "none";
         document.getElementById("tbtnJiJungAll").style.display = "none";
         document.getElementById("tbtnBebuAll").style.display = "none";
     } else if (pListTypeValue == "4" || pListTypeValue == "97") {
     	document.getElementById("tbtnApproveALL").style.display = "none";
     	document.getElementById("tbtnReceiptAll").style.display = "";
     	document.getElementById("tbtnRJunkyulAll").style.display = "";
+        if (assignPermission == "Y") { // 지정목록 > 수발신담당자, 기록물관리자에게만 표출
+            document.getElementById("tbtnAssignList").style.display = "";
+            document.getElementById("tbtnAssign").style.display = "none";
+            document.getElementById("tbtnDeptRecevList").style.display = "none";
+        }
         document.getElementById("tbtnJiJungAll").style.display = "";
         document.getElementById("tbtnBebuAll").style.display = "";
     }
@@ -2467,6 +2482,18 @@ function setbuttonenable() {
     
     if (pListTypeValue != "21" ) {
         document.getElementById("tbtnTotalSave").style.display = "";      
+    }
+
+    /* 2024-06-28 양지혜 - 부서수신함 > 지정목록에서 사용하는 버튼 */
+    if (assignChk == "Y") {
+        document.getElementById("tbtnReceiptAll").style.display = "none";
+        document.getElementById("tbtnRJunkyulAll").style.display = "none";
+        document.getElementById("tbtnAssignList").style.display = "none";
+        document.getElementById("tbtnAssign").style.display = "";
+        document.getElementById("tbtnDeptRecevList").style.display = "";
+        document.getElementById("tbtnDraft").style.display = "none";
+        document.getElementById("tbtnRedraft").style.display = "none";
+        document.getElementById("tbtnReceipt").style.display = "none";
     }
     
     document.getElementById("tSearchCondi").style.display = ""; 
@@ -3269,12 +3296,18 @@ function OpenAlertUI_Close() {
 }
 
 function OpenAlertUI_Close_Complete() {
-    try{
+    try {
         DivPopUpHidden();
         parent.frames["left"].getAprCount();
-        getDocList();
+        if (assignChk == "Y") { // 지정목록 > 지정완료 > 리스트 재호출
+            getReceivedDocList();
+        } else {
+            getDocList();
+        }
         OpenPopupWin.close();
-    }catch(e){}
+    } catch (e) {
+        console.log("OpenAlertUI_Close_Complete ::: " + e);
+    }
 }
 
 function CheckUsePassword() {

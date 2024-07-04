@@ -3549,6 +3549,57 @@
 				}
 			}
 			
+			/* 2024-06-28 양지혜 - 전자결재 > 부서수신함 > 지정목록 */
+			var assignChk = "N";
+			var assignPermission = "<c:out value = '${assignPermission}'/>";
+			function btnAssignList_onclick() {
+				assignChk = "Y";
+				getReceivedDocList();
+				$('#sel_status_div').closest("li").hide();
+			}
+			function btnDeptRecevList_onclick() {
+				assignChk = "N";
+				getReceivedDocList();
+				$('#sel_status_div').closest("li").show();
+			}
+
+			/* 2024-06-28 양지혜 - 전자결재 > 부서수신함 > 지정목록 > 지정
+			* 리스트에서 선택한 문서를 바로 지정할 수 있도록 함 */
+			var ezreceiveassignui_cross_dialogArguments = new Array();
+			function btnAssign_onclick2() {
+				var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				var oArrRows = DocList.GetSelectedRows();
+				var pCurSelRow = oArrRows[0];
+
+				var parameter = new Array();
+				parameter[0] = pCurSelRow.getAttribute("DATA1"); //pDocID;
+				parameter[1] = pCurSelRow.getAttribute("DATA2"); //pSusinSN;
+				parameter[2] = pCurSelRow.getAttribute("DATA10") //pAprState;
+				parameter[3] = pCurSelRow.getAttribute("DATA9"); //pDocState;
+				parameter[4] = ""; //REDIRECTYN
+				parameter[5] = pCurSelRow.getAttribute("ORGCOMPANYID") //orgCompanyID;
+
+				ezreceiveassignui_cross_dialogArguments[0] = parameter;
+				ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
+
+				DivPopUpShow(800, 600, "/ezApprovalG/ezReceiveAssignUI.do");
+				// 지정선택 창 떠있는 동안은 스크롤 비활성화
+				parent.frames[1].frameElement.setAttribute('scrolling','no');
+			}
+
+			function btnAssign_onclick_Complete(ret) {
+				parent.frames[1].frameElement.setAttribute('scrolling','auto'); // 스크롤 활성화
+				DivPopUpHidden();
+				if (ret == "OK") {
+					var pAlertContent = "<spring:message code='ezApprovalG.t1420'/>";
+					OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+				} else if (ret == "DUPL") {
+					alert("<spring:message code='ezApprovalG.bhs23'/>");
+					window.close();
+				}
+			}
+
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px; overflow:auto;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">	
@@ -3596,6 +3647,9 @@
 					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL" onclick="return btnGongRamALL_onclick()" ><spring:message code='ezApprovalG.CSJBDA03'/></span></li>
 				</c:if>
 				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
+				<li id="tbtnAssignList" style="display:none"><span id="btnAssignList" onclick="return btnAssignList_onclick()"><spring:message code='ezApprovalG.yjh06'/></span></li>
+				<li id="tbtnAssign" style="display:none"><span id="btnAssign" onClick="return btnAssign_onclick2()"><spring:message code='ezApprovalG.t1430'/></span></li>
+				<li id="tbtnDeptRecevList" style="display:none"><span id="btnDeptRecevList" onclick="return btnDeptRecevList_onclick()"><spring:message code='ezApprovalG.t1749'/></span></li>
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSearchCondi" style="DISPLAY:none"><span class="icon16 icon16_search" id="SearchCondi" onclick="return SearchCondi_onclick()"></span></li>
 		        <%-- <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li> --%>
