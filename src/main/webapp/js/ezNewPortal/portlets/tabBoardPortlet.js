@@ -248,9 +248,9 @@ function openDoc_section3_Type(pItemID, pType, oBoardID) {
 		}
 	    
 		pTop = (pheight - 789) / 2;
-		pLeft = (pwidth - 790) / 2;
+		pLeft = (pwidth - 826) / 2;
 
-        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=790,top=" + pTop + ",left=" + pLeft, "");
+        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=826,top=" + pTop + ",left=" + pLeft, "");
     } else if (pType == "7") {
 	    var height = 679;
 	    pTop = (pheight - 679) / 2;
