@@ -2420,9 +2420,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	
 	/** 2023-09-11 한태훈 - 일정관리 > 미리알림 > 하루종일 일정의 시작 시각 설정 테넌트 컨피그 추가 */
 	public void insertReminderTenantConfig(Map<String, Object> map) throws Exception{
-		map.put("property", "allDaySTimeForReminder".toUpperCase());
-		String allDaySTimeForReminder = (String) select("EzCommonDAO.getTenantConfig", map);
-		
+		map.put("property", "allDaySTimeForReminder");
+		String allDaySTimeForReminder = (String) select("EzCommonDAO.getAllDaySTimeTenantConfig", map);
+
 		if (allDaySTimeForReminder == null) {
 			logger.debug("allDaySTimeForReminder tenant config doesn't exist. insert data...");
 			insert("EzCommonDAO.insertAllDaySTimeForReminderTenantConfig", map);

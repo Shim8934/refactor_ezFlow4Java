@@ -5131,6 +5131,17 @@
 			REMINDERTIME NVARCHAR2(4) DEFAULT '0' NOT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.getAllDaySTimeTenantConfig" parameterClass="map" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = #property#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
 	<insert id="EzCommonDAO.insertAllDaySTimeForReminderTenantConfig">
 		INSERT INTO TBL_TENANT_CONFIG
 			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
