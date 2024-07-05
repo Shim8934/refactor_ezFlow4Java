@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -217,14 +218,21 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
+			String jobId = request.getParameter("jobId");
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
-			logger.debug("primaryLang=" + primaryLang);
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", portletLang : " + portletLang + ", deptPath : " + deptPath);
-			
+			Optional<OrganUserVO> userInfo = ezOrganService.getUserInfo(tenantId, userId, companyId, deptId, jobId, portletLang);
+
+			if (!userInfo.isPresent()) {
+				throw new Exception("There are no query result about user matching the given conditions.");
+			}
+
+			OrganUserVO organUserVO = userInfo.get();
+
 			// 사용자 설정 테마/프레임 가져오기
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, portletLang);
 			//logger.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame()); // 로그정리 : 서비스에서 찍어 줌
@@ -468,18 +476,14 @@ public class EzNewPortalGWController {
 			} else {
 				lastLogin = "";
 			}
+
+
 			
 			// 회원정보 불러오기
-			if (portletLang.equals(primaryLang)) {
-				userName = info.getUserName();
-				userTitle = info.getTitle();
-				deptName = info.getDeptName();
-			} else {
-				userName = info.getUserName2();
-				userTitle = info.getTitle2();
-				deptName = info.getDeptName2();
-			}
-			
+			userName = organUserVO.getDisplayName();
+			userTitle = organUserVO.getTitle();
+			deptName = organUserVO.getDescription();
+
 			// IP
 			String lastLoginIP = ezOrganService.getLoginIP(userId, info.getTenantId());
 			

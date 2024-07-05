@@ -504,7 +504,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
 		String deptId = userInfo.getDeptID();
-		String url = "/rest/ezPortal/settingInfo/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId;
+		String jobId = userInfo.getJobId();
+		String url = "/rest/ezPortal/settingInfo/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId + "&jobId=" + jobId;
 		String returnUrl = "/ezNewPortal/";
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
@@ -973,7 +974,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
 		String deptId = userInfo.getDeptID();
-		String url = "/rest/ezPortal/settingInfo/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId;
+		String jobId = userInfo.getJobId();
+		String url = "/rest/ezPortal/settingInfo/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId + "&jobId=" + jobId;
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
