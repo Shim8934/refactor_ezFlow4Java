@@ -2422,7 +2422,7 @@
 			)
 			VALUES (
 				#scheInfo.scheduleId#,	#v_ATTENDANTID#, #v_ATTENDANTNAME#,	#v_ATTENDANTNAME2#,	#scheInfo.creatorId#, #scheInfo.creatorName#,	#scheInfo.creatorName2#, #scheInfo.scheduleType#, #scheInfo.dateType#,
-				#v_STARTDATE#, #v_ENDDATE#, #scheInfo.repetition#, #scheInfo.title#,	#v_TENANTID#, #scheInfo.companyid#, #v_REMINDERSTATUS#, #v_OFFSET#, #v_LANG#, #v_OFFSETMIN#, #scheInfo.parentId#
+				TO_DATE(#v_STARTDATE#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_ENDDATE#,'YYYY-MM-DD HH24:MI:SS'), #scheInfo.repetition#, #scheInfo.title#,	#v_TENANTID#, #scheInfo.companyid#, #v_REMINDERSTATUS#, #v_OFFSET#, #v_LANG#, #v_OFFSETMIN#, #scheInfo.parentId#
 			)
    		]]>
 	
@@ -2438,6 +2438,19 @@
 	AND
 		TENANT_ID = #v_TENANTID#
 	</select>
+	
+	<delete id="EzScheduleDAO.deleteAttendantReminderSchedule" parameterClass="map">
+		<![CDATA[
+			delete from
+				tbl_schedule_reminder_scheduler
+			where
+				parentid = #v_SCHEDULEID#
+			and
+				ownerid	 = #v_ATTENDANTID#
+			and
+				tenant_id = #v_TENANTID#
+	   	]]>
+	</delete>
 	
 	<select id="EzScheduleDAO.selectExpiredSchedule" parameterClass="map" resultClass="ScheduleReminderVO">
 	<![CDATA[
