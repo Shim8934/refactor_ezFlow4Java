@@ -592,27 +592,37 @@
 				<div class="passwordTitle">
 					<span class="password_lock"></span>
 					<div class="password_tit">
-						<p class="tit_01">비밀번호가 기한이 만료되었습니다.</p>
-						<p class="tit_02"><span>비밀번호</span>를 변경해 주세요.</p>
+						<p class="tit_01">
+							<c:if test="${resetPassword == 'Y'}"><spring:message code='login.kdh030'/></c:if>
+							<c:if test="${resetPassword != 'Y'}"><spring:message code='login.kdh029'/> </c:if>
+						</p>
+						<p class="tit_02">
+<%--							<span><spring:message code='main.login.design03'/></span>--%>
+							<spring:message code='login.kdh031' htmlEscape="false"/>
+						</p>
 					</div>
 				</div>
 				<ul class="passwordForm">
 					<li style="padding-top:10px;">
-						<span class="formText">로그인 아이디</span>
-						<span class="formID" id="chooseId" data-userid="dhkim3">dhkim3</span>
+						<span class="formText"><spring:message code='main.jjh09'/></span>
+						<span class="formID" id="chooseId" data-userId="${userId}">${loginId}</span>
 					</li>
-					<li><span class="formText">현재 비밀번호</span><span class="formInput"><input type="password" id="txtOldPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
-					<li><span class="formText">변경할 비밀번호</span><span class="formInput"><input type="password" id="txtNewPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
-					<li><span class="formText">비밀번호 확인</span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+					<li>
+						<span class="formText">
+							<c:if test="${resetPassword == 'Y'}"><spring:message code='login.kdh001'/></c:if>
+							<c:if test="${resetPassword != 'Y'}"><spring:message code='ezPersonal.t949'/> </c:if>
+						</span><span class="formInput"><input type="password" id="txtOldPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
 
 					<li style="padding-bottom:10px;padding-top:3px" class="grayText"></li>
 				</ul>
 			</div>
 			<div class="btnpositionLayer" style="background-color: white;border:0px">
-				<a class="imgbtn ok" onclick="javascript:PassWordChange()"><span>확인</span></a>
-
-				<a class="imgbtn" onclick="passwordUpdateNextTime()"><span>다음에 변경</span></a>
-
+				<a class="imgbtn ok" onclick="javascript:PassWordChange()"><span><spring:message code='ezSchedule.t4' /></span></a>
+				<c:if test="${isFirstLogin != 'Y' && resetPassword != 'Y'}">
+					<a class="imgbtn" onClick="passwordUpdateNextTime()" ><span><spring:message code='main.hdp01'/></span></a>
+				</c:if>
 			</div>
 
 			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a></div>

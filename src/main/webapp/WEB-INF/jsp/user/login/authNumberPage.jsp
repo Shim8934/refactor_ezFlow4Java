@@ -64,9 +64,9 @@
                             alert('<spring:message code="login.kdh015"/>');
                             return;
                         } else {
-                            document.getElementById("authCode").value = result;
                             alert('<spring:message code="login.kdh016"/>');
                             if (useShowAuthCode) {
+                                document.getElementById("authCode").value = result;
                                 alert(result);
                             }
                             doClose();
@@ -112,7 +112,9 @@
                            alert('<spring:message code="login.kdh020"/>');
                            return;
                        } else {
-                           document.getElementById("authCode").value = result;
+                           if (useShowAuthCode) {
+                               document.getElementById("authCode").value = result;
+                           }
                            alert('<spring:message code="login.kdh021"/>');
                            isSend = true;
                            timerCheck();
@@ -189,7 +191,7 @@
             <div class="right_wrap">
                 <div class="login_layout">
                     <c:if test="${useShowAuthCode eq 'true'}">
-                        <div id="authCode_wrapper" style="display:none;"><input name="authCode" id="authCode" value=""> : <spring:message code="login.kdh023"/></div>
+                        <div id="authCode_wrapper"><input name="authCode" id="authCode" value=""> : <spring:message code="login.kdh023"/></div>
                     </c:if>
 
                     <div class="login_form">
