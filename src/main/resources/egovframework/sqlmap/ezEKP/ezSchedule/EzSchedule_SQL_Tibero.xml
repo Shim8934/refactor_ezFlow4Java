@@ -215,7 +215,7 @@
 				'' AS DESCRIPTION,
               	'' AS CREATEDATE,
               	A.GROUPCOLOR AS GROUPCOLOR
-        	FROM 
+           	FROM 
         		TBL_SCHEDULEGROUP A LEFT JOIN TBL_SCHEDULEGROUPMEMBER B ON A.GROUPID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
        		WHERE  
        			(CREATORID = #v_USERID# OR ( MEMBERID = #v_USERID# AND STATUS = 1 ))
@@ -271,9 +271,9 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-05 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
-		<![CDATA[
-			SELECT C.* FROM
+		SELECT C.* FROM
 			(
 			SELECT 
 				SCHEDULEID,
@@ -310,7 +310,11 @@
         	FROM 
         		TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID
        		WHERE  
-       			(A.OWNERID IN ($v_INDILIST$)
+       			(A.OWNERID IN
+       				<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
+						#v_INDILIST[]#
+					</iterate>
+			<![CDATA[
             AND 
             	(            		
             		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
@@ -330,14 +334,19 @@
             	A.title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
             ]]>
             </isNotEmpty> 
-            <isNotEmpty property="v_PKEYWORD">
-            and
-            	$v_PFILTER$ like '%' || (REPLACE(REPLACE(#v_PKEYWORD#,'%','\%'),'_','\_')) || '%'
+            <isNotEmpty prepend="AND" property="v_PKEYWORD">
+	            <isEqual property="v_PFILTER" compareValue="TITLE">TITLE</isEqual>
+	            <isEqual property="v_PFILTER" compareValue="LOCATION">LOCATION</isEqual>
+	            <isEqual property="v_PFILTER" compareValue="ISPUBLIC">ISPUBLIC</isEqual>
+            	like '%' || (REPLACE(REPLACE(#v_PKEYWORD#,'%','\%'),'_','\_')) || '%'
             </isNotEmpty>
-            <![CDATA[
             )
             or 
-       			(A.OWNERID IN ($v_PIDLIST$)
+       			(A.OWNERID IN
+       				<iterate property="v_PIDLIST" open="(" close=")" conjunction=",">
+						#v_PIDLIST[]#
+					</iterate>
+			<![CDATA[
        		and
         		A.companyid = #v_COMPANYID#        	     	
         	and 
@@ -389,7 +398,12 @@
             	A.title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
             ]]>
             </isNotEmpty>
-            <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
+            <isNotEmpty prepend="AND" property="v_PKEYWORD">
+	            <isEqual property="v_PFILTER" compareValue="TITLE">TITLE</isEqual>
+	            <isEqual property="v_PFILTER" compareValue="LOCATION">LOCATION</isEqual>
+	            <isEqual property="v_PFILTER" compareValue="ISPUBLIC">ISPUBLIC</isEqual>
+            	LIKE '%'||#v_PKEYWORD#||'%'
+            </isNotEmpty>
         	) ) C
         	ORDER BY C.STARTDATE ASC
 	</select>
@@ -1310,7 +1324,7 @@
 	<insert id="EzScheduleDAO.insertScheduleGroup" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULEGROUP(
-				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,			tenant_id,		COMPANYID, 		groupcolor			
+				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,			tenant_id,		COMPANYID,		groupcolor			
 			) VALUES (
 				#v_GUID#,		#v_GROUPNAME#,		#v_USERID#,		#v_DISPLAYNAME#,	#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_TENANTID#,	#v_COMPANYID#,	#v_GROUPCOLOR#
 			)
@@ -1448,7 +1462,7 @@
 
 	<update id="EzScheduleDAO.setScheduleMailNotiConfig" parameterClass="map">
 		<![CDATA[
-			updat
+			update
 				tbl_scheduleconfig
 			set
 				InvitationMail = #v_INVITATIONMAIL#,
@@ -2047,9 +2061,9 @@
        		WHERE
        			(A.OWNERID IN 
 		]]>
-		<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
-			#v_INDILIST[]#
-		</iterate>
+			<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
+				#v_INDILIST[]#
+			</iterate>
 		<![CDATA[        	
        		AND
 				ispublic = #v_ISPUBLIIC#
@@ -2077,9 +2091,9 @@
             or
        			(A.OWNERID IN 
 		]]>
-		<iterate property="v_PIDLIST" open="(" close=")" conjunction=",">
-			#v_PIDLIST[]#
-		</iterate>
+			<iterate property="v_PIDLIST" open="(" close=")" conjunction=",">
+				#v_PIDLIST[]#
+			</iterate>
 		<![CDATA[
        		and
         		A.companyid = #v_COMPANYID#

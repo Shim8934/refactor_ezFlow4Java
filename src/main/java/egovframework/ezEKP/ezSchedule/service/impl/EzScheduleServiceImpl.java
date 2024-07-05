@@ -248,9 +248,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	public List<ScheduleInfoVO> getScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID, String deptID, String useAnnualScheduleYN) throws Exception {						
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_INDILIST", indiList);
-		map.put("v_PIDLIST", pidList);		
-		map.put("v_PFILTER", filter);
+		
+		/* 2024-07-05 홍승비 - SQL Injection 수정 > 문자열 대신 배열 리스트 파라미터 전달 */
+		map.put("v_INDILIST", indiList.replace("'", "").replace("\\", "").replace(" ", "").split(","));
+		map.put("v_PIDLIST", pidList.replace("'", "").replace("\\", "").replace(" ", "").split(","));		
+		map.put("v_PFILTER", filter.toUpperCase()); // TITLE, LOCATION, ISPUBLIC 검색조건
 		map.put("v_PSTARTDATE", utcStartDate);
 		map.put("v_PENDDATE", utcEndDate);
 		map.put("v_PKEYWORD", keyword);
@@ -268,7 +270,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
 
 		// 2020-02-24 김정언 - 근태 현황 일정관리 연동
-		if(!useAnnualScheduleYN.equals("0")){
+		if (!useAnnualScheduleYN.equals("0")) {
 			List<AttitudeVO> aList = ezAttitudeDAO.getAnuualListSchedule(map);
 
 			for (int j = 0; j < aList.size(); j++) {
@@ -727,9 +729,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		logger.debug("=====getScheduleListForWorkspace start=====");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_INDILIST", indiList);
-		map.put("v_PIDLIST", pidList);		
-		map.put("v_PFILTER", filter);
+		
+		/* 2024-07-05 홍승비 - SQL Injection 수정 > 문자열 대신 배열 리스트 파라미터 전달 */
+		map.put("v_INDILIST", indiList.replace("'", "").replace("\\", "").replace(" ", "").split(","));
+		map.put("v_PIDLIST", pidList.replace("'", "").replace("\\", "").replace(" ", "").split(","));		
+		map.put("v_PFILTER", filter.toUpperCase());
 		map.put("v_PSTARTDATE", utcStartDate);
 		map.put("v_PENDDATE", utcEndDate);
 		map.put("v_PKEYWORD", keyword);
@@ -741,7 +745,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_DEPTID", deptID);
 		
 		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
-
 		List<ScheduleInfoVO> resultList = new ArrayList<ScheduleInfoVO>();
 		List<ScheduleInfoVO> tempResultList = new ArrayList<ScheduleInfoVO>();
 		

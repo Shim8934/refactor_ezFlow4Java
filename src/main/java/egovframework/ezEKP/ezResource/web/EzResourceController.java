@@ -708,29 +708,13 @@ public class EzResourceController extends EgovFileMngUtil {
 			curPage = "1";
 			totalPage = 1;
 		}
-
-		int topCount = Math.multiplyExact(Integer.parseInt(curPage.trim()), pageSize);
 		
+		int topCount = Math.multiplyExact(Integer.parseInt(curPage.trim()), pageSize);
 		int start = Math.multiplyExact(Math.subtractExact(Integer.parseInt(curPage.trim()), 1), pageSize);
 		
-		String brdNmStr = "";
-		String ownDeptNm = "";
-		String ownerNm = "";
-		String ownerPosition = "";
+		/* 2024-07-05 홍승비 - SQL Injection 수정 > 다국어 칼럼은 쿼리 내부 분기로 처리 */
+		List<ResBrdListVO> resBrdList =  ezResourceService.getBrdList(topCount, Integer.parseInt(brdID), userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
-		if (userInfo.getPrimary().equals("1")) {
-			brdNmStr = "Brd_NM";
-			ownerNm = "OwnerNm";
-			ownDeptNm = "OwnDeptNm";
-			ownerPosition = "OwnerPosition";
-		} else {
-			brdNmStr = "Brd_NM" + userInfo.getPrimary();
-			ownDeptNm = "OwnDeptNm" + userInfo.getPrimary();
-			ownerNm = "OwnerNm" + userInfo.getPrimary();
-			ownerPosition = "OwnerPosition" + userInfo.getPrimary();
-		}
-		
-		List<ResBrdListVO> resBrdList =  ezResourceService.getBrdList(topCount, Integer.parseInt(brdID), userInfo.getCompanyID(), ownDeptNm, ownerNm, ownerPosition, brdNmStr, userInfo.getTenantId());
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());

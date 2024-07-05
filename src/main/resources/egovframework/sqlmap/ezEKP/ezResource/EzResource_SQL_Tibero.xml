@@ -615,8 +615,8 @@
                 CHARACTERID ,
                 APPROVEFLAG ,
                 RETURNFLAG,
-            	IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM  ,
-                IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM  
+            	DECODE(#v_lang#, '1', U.DISPLAYNAME, U.DISPLAYNAME2) AS OWNERNM  ,
+                DECODE(#v_lang#, '1', U.DESCRIPTION, U.DESCRIPTION2) AS DEPTNM  
            	FROM
            		TBL_RS_SCHEDULE A
            	LEFT JOIN 
@@ -705,8 +705,8 @@
             	CHARACTERID ,
             	SCH.APPROVEFLAG ,
             	SCH.RETURNFLAG,
-            	IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM ,
-            	IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM ,
+            	DECODE(#v_lang#, '1', U.DISPLAYNAME, U.DISPLAYNAME2) AS OWNERNM,
+                DECODE(#v_lang#, '1', U.DESCRIPTION, U.DESCRIPTION2) AS DEPTNM,
             	SCH.COMPANYID 
 			FROM
 				TBL_RS_SCHEDULE SCH
@@ -723,7 +723,7 @@
 			ON
 				SCH.WRITERID = U.CN
 			AND 
-				SCH.TENANT_ID = U.TENANT_ID
+				SCH.TENANT_ID = U.TENANT_ID	
 			WHERE
 				STARTDATE <= TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS')
         	AND
@@ -768,8 +768,8 @@
             	CHARACTERID ,
             	APPROVEFLAG ,
             	RETURNFLAG ,
-            	IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM , 
-                IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM  
+            	DECODE(#v_lang#, '1', U.DISPLAYNAME, U.DISPLAYNAME2) AS OWNERNM  ,
+                DECODE(#v_lang#, '1', U.DESCRIPTION, U.DESCRIPTION2) AS DEPTNM
 			FROM
 				TBL_RS_SCHEDULE A
 			JOIN
@@ -837,8 +837,8 @@
              	CHARACTERID ,
              	SCH.ApproveFlag ,
              	SCH.returnFlag ,
-             	IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM ,
-             	IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM ,
+             	DECODE(#v_lang#, '1', U.DISPLAYNAME, U.DISPLAYNAME2) AS OWNERNM ,
+                DECODE(#v_lang#, '1', U.DESCRIPTION, U.DESCRIPTION2) AS DEPTNM ,
              	SCH.companyID 
         	FROM
         		TBL_RS_SCHEDULE SCH
@@ -854,7 +854,7 @@
            		TBL_USERMASTER U
            	ON 
            		SCH.WRITERID = U.CN
-           	AND 
+           	AND
            		SCH.TENANT_ID = U.TENANT_ID
         	WHERE
         		STARTDATE <= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
@@ -904,15 +904,21 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-05 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzResourceDAO.getBrdList" parameterClass="Map" resultMap="resBrdListVO">
 		<![CDATA[
 			SELECT
-				ATTACH_SIZE, BRD_ACCESS, BRD_COMPANY, BRD_COUNT, 
-                BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL, $v_PBRDNM$ AS BRD_NM, 
-                BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL, 
-                SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE, OWNDEPTID,  $v_POWNDEPTNM$  AS OWNDEPTNM, OWNERCALL, 
-                OWNERID,  $v_POWNERNM$  AS OWNERNM,  $v_POWNERPOSITION$   AS OWNERPOSITION, 
-                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG 
+				ATTACH_SIZE, BRD_ACCESS, BRD_COMPANY, BRD_COUNT,
+                BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL,
+                CASE #v_lang# WHEN '2' THEN BRD_NM2 ELSE BRD_NM END AS BRD_NM,
+                BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL,
+                SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE, OWNDEPTID,
+                CASE #v_lang# WHEN '2' THEN OWNDEPTNM2 ELSE OWNDEPTNM END AS OWNDEPTNM,
+                OWNERCALL,
+                OWNERID,
+                CASE #v_lang# WHEN '2' THEN OWNERNM2 ELSE OWNERNM END AS OWNERNM,
+                CASE #v_lang# WHEN '2' THEN OWNERPOSITION2 ELSE OWNERPOSITION END AS OWNERPOSITION,
+                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG
 			FROM
 				TBL_RS_BRD  
 			WHERE
@@ -925,7 +931,8 @@
 				BRD_COMPANY = #v_PCOMPANYID#
 			AND
 				TENANT_ID = #tenantID#
-			ORDER BY BRD_STEP	
+			ORDER BY
+				BRD_STEP	
 		]]>
 	</select>
 	
@@ -2446,7 +2453,6 @@
 	</update>
 	
 	<select id="EzResourceDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
-		<![CDATA[
 			SELECT
 				DEPT_YN , 
 				SDA_YN ,
@@ -2464,8 +2470,10 @@
        		AND
        			SDA_Yn = 'Y'
        		AND
-       			MEMBER_ID in ( $v_PUSERID$ )
-		]]>
+       			MEMBER_ID IN
+       			<iterate property="v_PUSERID" open="(" close=")" conjunction=",">
+		   			#v_PUSERID[]#
+		   		</iterate>
 	</select>
 	
 	<select id="EzResourceDAO.isResourceGroupManager" parameterClass="map" resultClass="String">
