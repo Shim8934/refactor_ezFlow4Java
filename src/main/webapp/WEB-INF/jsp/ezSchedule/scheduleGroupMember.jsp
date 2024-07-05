@@ -482,7 +482,7 @@
 				length = chkstr.length;
 
 				if (length > maxlength) {
-					alert(fieldname + " <spring:message code='ezSchedule.t200' />" + maxlength + "<spring:message code='ezSchedule.t201' />");
+					alert(fieldname + "<spring:message code='ezSchedule.t200' /> " + maxlength + "<spring:message code='ezSchedule.t201' />");
 					return false;
 				}
 
