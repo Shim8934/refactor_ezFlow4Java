@@ -784,7 +784,7 @@
         		li.textContent = item.title + " : " + item.creatorName;
             	li.style.cursor = "pointer";
             	*/
-            	span.innerText = (item.title + " : " + item.creatorName);
+            	span.innerText = (ConvertCharToEntityReference(item.title) + " : " + item.creatorName);
             	
             	li.addEventListener('click', function() {  			    
             		if (CrossYN()) {
@@ -801,7 +801,7 @@
         		li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
 	        	li.style.cursor = "pointer";
 	        	*/
-	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + item.title);
+	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + ConvertCharToEntityReference(item.title));
 	        	
 	        	li.addEventListener('click', function() {
 				    var wWeight = "760";
@@ -819,7 +819,7 @@
 	        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
 	        	li.style.cursor = "pointer";
 	        	*/
-	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + item.title);
+	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + ConvertCharToEntityReference(item.title));
 	        	
 	        	li.addEventListener('click', function() {
 				    var wWeight = "760";
