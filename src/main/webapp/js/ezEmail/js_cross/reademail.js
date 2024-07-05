@@ -1481,13 +1481,29 @@ function view_OriginalEML() {
     DivPopUpShow(620, 600, requestUrl);
 }
 
+function makeWindowPosition(width, height) {
+	var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+    var dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+
+    var screenWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+    var screenHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+    var left = (screenWidth - width) / 2 + dualScreenLeft;
+    var top = (screenHeight - height) / 2 + dualScreenTop;
+    
+    var feature = ", left=" + left + ",top=" + top;
+    return feature;
+}
+
 function openAttendChk() {
 	var height = 300;
 	var width = 800;
-    var feature = GetOpenPosition(width, height);
+	var feature = makeWindowPosition(width, height);
+    
     var requestUrl = "/ezSchedule/scheduleReceiveAttendant.do?from=mail";
     
     window.open(requestUrl, "", "height=" + height + "px, width= " + width + "px" + feature);
+    
 }
 
 function openScheduleInfo() {
@@ -1495,7 +1511,7 @@ function openScheduleInfo() {
 	var repeatCount = event.target.getAttribute("repeatCount");
 	var height = 700;
 	var width = 800;
-    var feature = GetOpenPosition(width, height);
+	var feature = makeWindowPosition(width, height);
     var requestUrl = "";
     if (repeatCount != null) {
     	requestUrl = "/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleId) + "&repeatcount=" + repeatCount;
@@ -1516,14 +1532,12 @@ function reminderMailLink() {
 	var type = reminder_link.getAttribute("type");
 	var datetype = reminder_link.getAttribute("datetype");
 	var pattern = reminder_link.getAttribute("pattern");
-	var pScreenHeight = window.screen.availHeight;
-    var pScreenWidth = window.screen.availWidth;
     var height = 750;
     var width = 800;
-    var pTop = (pScreenHeight - height) / 2;
-    var pLeft = (pScreenWidth - width) / 2;
+    
+    var feature = makeWindowPosition(width, height);
 	
 	var url = "/ezSchedule/scheduleRead.do?";
 	url += "id=" + encodeURIComponent(id) + "&otherid=" + encodeURIComponent(otherid) +"&repeatcount=" + encodeURIComponent(repeatcount) + "&date=" + encodeURIComponent(date) + "&type=" + encodeURIComponent(type) + "&datetype=" + encodeURIComponent(datetype) + "&pattern=" + encodeURIComponent(pattern);
-	window.open(url, "", "toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=0, resizable=1, height=" + height +"px, width=" + width +"px, top=" + pTop +", left=" + pLeft);
+	window.open(url, "", "toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=0, resizable=1, height=" + height +"px, width=" + width +"px" + feature);
 }

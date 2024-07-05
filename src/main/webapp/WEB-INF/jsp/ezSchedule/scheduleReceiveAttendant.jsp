@@ -35,6 +35,12 @@
 			    parentwin = RetValue;
 			    
 			    showDateType();
+			    
+			    var checks2 = document.getElementById("receivelist").getElementsByTagName("input");
+				if( checks2.length == 0)	{
+					alert("<spring:message code='ezSchedule.mail.hth34'/>");
+					window.close();
+				}
 			}
 	
 			function accept_schedule(status)
@@ -110,10 +116,14 @@
 				});
 				var checks2 = document.getElementById("receivelist").getElementsByTagName("input");
 				if( checks2.length==0 )	{
-					ReturnFunction("success");
+					if (ReturnFunction != null) {
+						ReturnFunction("success");
+					}
+					
 					window.close();
 				}
-				if(parent.parent.frames["right"].groupcount == "0") {
+				
+				if(parent.parent.frames["right"].groupcount != null && parent.parent.frames["right"].groupcount == "0") {
 					parent.parent.frames["left"].document.body.removeAttribute('style');
 				}
 			}
@@ -127,7 +137,10 @@
 					
 					ReturnFunction("cancel");
 					window.close();
+				} else {
+					window.close();
 				}
+				
 			}
 			
 // 			window.onbeforeunload = function () {
