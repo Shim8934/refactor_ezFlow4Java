@@ -160,14 +160,70 @@
                 document.getElementById("rightsYearP").innerText = rightsYearString;
             }
 
+            function clearInput(obj){
+                obj.addEventListener("click",function(){
+                    var clearObj = $(obj).prev();
+                    clearObj.val("");
+                    clearObj.attr("class","focus");
+                    clearObj.focus();
+                })
+            }
+
+            $(document).ready(function(){
+                $(".input_wrap > input").on({
+                    focus : function(){
+                        $(this).addClass("focus");
+                    },
+                    blur : function(){
+                        if($(this).val().length == 0){
+                            $(this).removeClass("focus")
+                        }
+                    }
+                })
+            })
         </script>
     </head>
-    <body class="login_body" onload="fnInit()">
+    <body class="login_body password_reset" onload="fnInit()">
         <div class="login_wrapper">
-            <div class="login_layout">
-                <c:if test="${useShowAuthCode eq 'true'}">
-                    <div id="authCode_wrapper"><input name="authCode" id="authCode" value=""> : <spring:message code="login.kdh023"/></div>
-                </c:if>
+            <div class="login_backImg"></div>
+            <div class="right_wrap">
+                <div class="login_layout">
+                    <c:if test="${useShowAuthCode eq 'true'}">
+                        <div id="authCode_wrapper" style="display:none;"><input name="authCode" id="authCode" value=""> : <spring:message code="login.kdh023"/></div>
+                    </c:if>
+
+                    <div class="login_form">
+                        <form style="display: inherit;" id="" name="" method="post">
+                            <p class="logo">
+                                <spring:message code="login.kdh013"/>
+                            </p>
+                            <fieldset>
+                                <!-- 로그인화면 -->
+                                <div class="web_login_wrap" style="display: block;">
+                                    <p class="input_wrap">
+                                        <input id="userName" class="input_text" type="text" placeholder='<spring:message code="ezStatistics.t1015"/> ' value="${userName}" disabled="disabled">
+                                    </p>
+                                    <p class="input_wrap">
+                                        <input id="mobileNo" class="input_text" type="text" placeholder='<spring:message code="ezEmail.t99000046"/> ' value="${mobileNo}" disabled="disabled">
+                                    </p>
+        
+                                    <ul class="newBtn">
+                                        <li class="ok" onclick="requestCertNum()"><spring:message code="login.zno008"/></li>
+                                        <li onclick="doClose()"><spring:message code="main.t135"/></li>
+                                    </ul>
+                                    <span class="time_mes" id="remainTime" style="display: none;"></span>
+                                    <div class="confirmBox">
+                                        <p class="input_wrap">
+                                            <input id="authcodeCheck" name="CertNum" class="input_text" type="text" onkeypress="key_press();" placeholder='<spring:message code="login.zno013"/>'>
+                                            <span class="btnClear" id="" onclick="clearInput(this)"></span>
+                                        </p>
+                                        <p class="btn" onclick="doOk()"><spring:message code="main.t4008"/></p>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
                 <div class="login_img">
                     <div class="login_img_text">
                         <p class="img_title"><spring:message code="login.kdh004"/></p>
@@ -177,40 +233,10 @@
                             <li><spring:message code="login.kdh026"/></li>
                             <li class="point"><spring:message code="login.kdh027"/><br/><spring:message code="login.kdh028"/></li>
                         </ol>
-    
+
                     </div>
                 </div>
-                <div class="login_form">
-                    <form style="display: inherit;" id="" name="" method="post">
-                        <p class="logo">
-                            <spring:message code="login.kdh013"/>
-                        </p>
-                        <fieldset>
-                            <!-- 로그인화면 -->
-                            <div class="web_login_wrap" style="display: block;">
-                                <p class="id">
-                                    <input id="userName" class="input_text" type="text" placeholder='<spring:message code="ezStatistics.t1015"/> ' value="${userName}" disabled="disabled">
-                                </p>
-                                <p class="name">
-                                    <input id="mobileNo" class="input_text" type="text" placeholder='<spring:message code="ezEmail.t99000046"/> ' value="${mobileNo}" disabled="disabled">
-                                </p>
-    
-                                <ul class="newBtn">
-                                    <li class="ok" onclick="requestCertNum()"><spring:message code="login.zno008"/></li>
-                                    <li onclick="doClose()"><spring:message code="main.t135"/></li>
-                                </ul>
-                                <span class="time_mes" id="remainTime" style="display: none;"></span>
-                                <div class="confirmBox">
-                                    <p class="name">
-                                        <input id="authcodeCheck" name="CertNum" class="input_text" type="text" onkeypress="key_press();" placeholder='<spring:message code="login.zno013"/>'>
-                                    </p>
-                                    <p class="btn" onclick="doOk()"><spring:message code="main.t4008"/></p>
-                                </div>
-                            </div>
-                            <p id="rightsYearP"></p>
-                        </fieldset>
-                    </form>
-                </div>
+                <div class="copy"><p id="rightsYearP"></p></div>
             </div>
         </div>
     </body>
