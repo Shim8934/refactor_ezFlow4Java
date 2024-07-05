@@ -806,15 +806,11 @@
       var length = 0;
       var i;
 
-      for (i = 0; i < chkstr.length; i++)
-        if (chkstr.charCodeAt(i) > 256)
-          length = length + 2;
-        else
-          length++;
+      length = chkstr.length;
 
       if (length > maxlength) {
-        alert(fieldname + "<spring:message code='ezSchedule.t200' />" + maxlength + "<spring:message code='ezSchedule.t201' />");
-        return false
+        alert(fieldname + " <spring:message code='ezSchedule.t200' />" + maxlength + "<spring:message code='ezSchedule.t201' />");
+        return false;
       }
 
       return true;
@@ -1381,11 +1377,11 @@
     <tr>
       <th style="width:120px; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.ljeGs004' /></th>
       <td style="width:200px">
-        <input type="text" id="groupname" style="WIDTH:200px; height: 23px;" maxlength=50>
+        <input type="text" id="groupname" style="WIDTH:200px; height: 23px;">
       </td>
       <th style="width:120px; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.ljeGs005' /></th>
       <td>
-        <input name="text" type="text" id="description" style="WIDTH:100%; height: 23px;" maxlength=250>
+        <input name="text" type="text" id="description" style="WIDTH:100%; height: 23px;">
       </td>
     </tr>
   </table>

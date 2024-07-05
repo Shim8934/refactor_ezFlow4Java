@@ -212,7 +212,7 @@
         },
         url : "/ezSchedule/scheduleGatherDelete.do",
         success: function(text) {
-          alert(count + " <spring:message code='ezSchedule.ljeGs010' />");
+          alert(count + "<spring:message code='ezSchedule.ljeGs010' />");
           window.location.reload(false);
         },
         error: function(err) {

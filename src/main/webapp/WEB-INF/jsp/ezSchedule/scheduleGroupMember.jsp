@@ -476,21 +476,17 @@
 		    }
 		    
 		    function check_length(chkstr, maxlength, fieldname) {
-		        var length = 0;
-		        var i;
+				var length = 0;
+				var i;
 
-		        for (i = 0; i < chkstr.length; i++)
-		            if (chkstr.charCodeAt(i) > 256)
-		                length = length + 2;
-		            else
-		                length++;
+				length = chkstr.length;
 
-		        if (length > maxlength) {
-		            alert(fieldname + "<spring:message code='ezSchedule.t200' />" + maxlength + "<spring:message code='ezSchedule.t201' />");
-		            return false
-		        }
+				if (length > maxlength) {
+					alert(fieldname + " <spring:message code='ezSchedule.t200' />" + maxlength + "<spring:message code='ezSchedule.t201' />");
+					return false;
+				}
 
-		        return true;
+				return true;
 		    }
 		    
 		    function cancel_onclick() {
