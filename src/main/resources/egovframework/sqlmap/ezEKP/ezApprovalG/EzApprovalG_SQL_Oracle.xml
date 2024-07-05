@@ -6065,7 +6065,9 @@
 		                TBL_RECORD.COMPANYID
 				  <isEqual property="usePublicFlag" compareValue="true">
 				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval
+  		  		  <isNotEqual property="listType" compareValue="012">
                         , TBL_EXPENDAPRDOCINFO.FORMNAME
+                  </isNotEqual>
 				  </isEqual>  
 						$extraSelectClause$,
                         TBL_CABINETCLASS.TITLE,
