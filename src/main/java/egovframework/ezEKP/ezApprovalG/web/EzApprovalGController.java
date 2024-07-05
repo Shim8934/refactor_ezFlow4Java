@@ -7961,6 +7961,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("aprState", aprState);
 		model.addAttribute("childDocInfo", childDocInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("companyID", userInfo.getCompanyID());
 		
 		logger.debug("ezLineInfo ended");
 		
