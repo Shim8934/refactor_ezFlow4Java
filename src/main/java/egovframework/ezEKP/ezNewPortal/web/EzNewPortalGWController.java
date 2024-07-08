@@ -4504,9 +4504,9 @@ public class EzNewPortalGWController {
 			int userLocalLang = Integer.parseInt(ezNewPortalService.getUserLocalLang(userId, tenantID));
 			String countryCode = request.getParameter("countryCode") == null ?
 								 (
-									 ezNewPortalService.getCountryCode(userId, tenantID) != null && ezNewPortalService.getCountryCode(userId, tenantID).isEmpty() ?
-									 String.valueOf(userLocalLang) :
-									 ezNewPortalService.getCountryCode(userId, tenantID)
+									 ezNewPortalService.getCountryCode(userId, tenantID) != null && !ezNewPortalService.getCountryCode(userId, tenantID).isEmpty() ?
+									 ezNewPortalService.getCountryCode(userId, tenantID) :
+									 String.valueOf(userLocalLang)
 								 ) :
 								 request.getParameter("countryCode");
 			String cityCode = request.getParameter("cityCode");
@@ -4543,7 +4543,7 @@ public class EzNewPortalGWController {
 			data.put("currentWeather", resultMap.get("CURRENTWEATHER"));
 			data.put("todayWeather", resultMap.get("TODAYWEATHER"));
 			data.put("cityCode", resultMap.get("CITYCODE"));
-			data.put("countryCode", ezNewPortalService.getCountryCode(info.getId(), tenantID));
+			data.put("countryCode", countryCode);
 
 			String[] todayArr = resultMap.get("TODAYWEATHER").toString().split("!");
 			
