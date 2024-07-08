@@ -940,7 +940,6 @@
 			
 			var screenHeight = screen.height;
 			topFrame.style.position = 'relative';
-			topFrame.style.minHeight = screenHeight+"px";
 			bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 			
 			if (menuDisplayMode == "1") {
