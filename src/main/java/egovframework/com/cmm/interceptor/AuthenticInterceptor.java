@@ -92,6 +92,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {		
+		String loginCookieExists =  commonUtil.loginCookieExists(request, response);
 		if(!commonUtil.checkMultiLogin(request, response)) {
 			try {
 //				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + "/user/login/login.do&message=multiLoginNoti");
@@ -104,7 +105,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			}
 		}
 
-		if ("0".equals(commonUtil.loginCookieExists(request, response))) {
+		if ("0".equals(loginCookieExists)) {
 			try {
 		        String serverName = request.getServerName();
 		        int tenantId = loginService.getTenantId(serverName);
@@ -156,11 +157,11 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			}
 			
 			return true;
-		} else if ("1".equals(commonUtil.loginCookieExists(request, response))) {
+		} else if ("1".equals(loginCookieExists)) {
 			try {
 				response.sendRedirect("/user/login/login.do?loginSessionFlag=1");
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				return false;
 			}
