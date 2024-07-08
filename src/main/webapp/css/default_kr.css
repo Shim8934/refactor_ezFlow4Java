@@ -3995,3 +3995,5 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 
 #fixLeft {width:calc(60% - 10px); margin:5px}
 #fixRight {width:calc(40% - 10px); margin:5px}
+
+.resetBtn {line-height: 0px;}

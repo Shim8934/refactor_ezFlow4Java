@@ -3778,4 +3778,66 @@ public class EzSystemAdminController {
 		return "success";
 	}
 
+	@RequestMapping(value = "/admin/ezSystem/resetUserSettings.do", method = RequestMethod.GET)
+	public String resetUserSettings(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("resetUserSettings started.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		//관리자 권한 체크
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		model.addAttribute("type", request.getParameter("type"));
+
+		logger.debug("resetUserSettings ended.");
+		return "/ezSystem/systemResetUserSettings";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/ezSystem/allUserResetFrame.do", method=RequestMethod.POST)
+	public String allUserResetFrame(@CookieValue String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("allUserResetFrame started.");
+		//관리자 권한체크
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		try {
+			ezSystemAdminService.resetThemeAllUser();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			logger.debug("allUserResetFrame ended.");
+			return "fail";
+		}
+
+		logger.debug("allUserResetFrame ended.");
+		return "success";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/ezSystem/allUserResetPortlet.do", method=RequestMethod.POST)
+	public String allUserResetPortlet(@CookieValue String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("allUserResetPortlet started.");
+		//관리자 권한체크
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		try {
+			ezSystemAdminService.resetPortletAllUser();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			logger.debug("resetPortletAllUser ended.");
+			return "fail";
+		}
+
+		logger.debug("allUserResetPortlet ended.");
+		return "success";
+	}
+
 }

@@ -1441,4 +1441,26 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 		return ezSystemAdminDAO.getConnectorListCount(params);
 	}
+
+	@Override
+	public void resetThemeAllUser() throws Exception {
+		logger.debug("resetThemeAllUser started.");
+
+		ezSystemAdminDAO.updateResetThemeAllCompany(); // 모든 회사 테마 리셋
+		ezSystemAdminDAO.deleteThemeAllUser();
+		ezSystemAdminDAO.updateResetThemeAllUser();
+
+		logger.debug("resetThemeAllUser ended.");
+	}
+
+	@Override
+	public void resetPortletAllUser() throws Exception {
+		logger.debug("resetPortletAllUser started.");
+
+		ezSystemAdminDAO.deletePortletAllUser();
+		ezSystemAdminDAO.deletePortletSizeAllUser();
+
+		logger.debug("resetPortletAllUser ended.");
+	}
+
 }
