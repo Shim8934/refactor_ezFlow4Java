@@ -1116,6 +1116,7 @@ public class EzNewPortalGWController {
 			 * 디폴트는 TOP. 디폴트 설정을 넣을경우 여기 변경
 			 */
 			Optional<TopFrameType> topFrameInfo = ezNewPortalService.getPortalTopFrameInfo(userId, companyId, tenantId);
+			
 			data.put("menuDisplayMode", topFrameInfo.orElse(TopFrameType.TOP).getCode());
 			//end
 
@@ -6056,7 +6057,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			String topMenuDisplayMode = ezNewPortalService.getTopMenuDisplayModeForCompany(companyId, tenantId);
+			int topMenuDisplayMode = ezNewPortalService.getTopMenuDisplayModeForCompany(companyId, tenantId).orElse(TopFrameType.TOP).getCode();
 			
 			result.put("code", 0);
 			result.put("status", "ok");
@@ -6081,7 +6082,8 @@ public class EzNewPortalGWController {
 		try {
 			String companyId = request.getParameter("companyId");
 			String userId = request.getParameter("userId");
-			String type = request.getParameter("type");
+			int type = Integer.parseInt(request.getParameter("type"));
+			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
@@ -6097,6 +6099,32 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		logger.debug("ezPortal G/W updateTopMenuDisplayModeForCompany ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezPortal/setMenuDisplayMode/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	public JSONObject setUserMenuDisplayMode(HttpServletRequest request, @PathVariable String userId) throws Exception {
+		logger.debug("ezPortal G/W setUserMenuDisplayMode started.");
+
+		JSONObject result = new JSONObject();
+		try {
+			String companyId = request.getParameter("companyId");
+			int menuDisplayMode = Integer.parseInt(request.getParameter("menuDisplayMode"));
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			ezNewPortalService.insertPortalTopFrameInfo(userId, companyId, tenantId, TopFrameType.fromCode(menuDisplayMode));
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		logger.debug("ezPortal G/W setUserMenuDisplayMode ended.");
 		return result;
 	}
 	

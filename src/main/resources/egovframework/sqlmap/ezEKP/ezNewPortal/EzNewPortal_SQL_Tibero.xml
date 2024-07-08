@@ -3759,7 +3759,7 @@ ORDER BY
 			VALUES (#userID#, #tenantID#, #companyID#, #type#)
 	</insert>
 
-	<select id="ezNewPortal.getPortalTopFrameInfo" parameterClass="PortalTopVO" resultClass="PortalTopVO">
+	<select id="ezNewPortal.getUserMenuDisplayMode" parameterClass="PortalTopVO" resultClass="PortalTopVO">
 		SELECT
 			USER_ID AS USERID,
 			TENANT_ID AS TENANTID,
@@ -3879,16 +3879,5 @@ ORDER BY
 			A.cn NOT LIKE 'shared_mailbox%'
 	]]>
 	</select>
-	
-	<update id="ezNewPortal.updateTopMenuDisplayModeForCompany" parameterClass="Map">
-		UPDATE 
-			TBL_PORTAL_TOP_COMPANY
-		SET
-			TYPE = #type#
-		WHERE
-			TENANT_ID = #tenantId#
-		AND
-			COMPANY_ID = #companyId#
-	</update>
 	
 </sqlMap>

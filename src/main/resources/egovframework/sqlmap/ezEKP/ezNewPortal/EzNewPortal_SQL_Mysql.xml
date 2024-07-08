@@ -3415,10 +3415,10 @@ ORDER BY
 	<insert id="ezNewPortal.insertPortalTopFrameInfo" parameterClass="PortalTopVO">
 		INSERT INTO tbl_portal_top_user (user_id, tenant_id, company_id, type)
 		VALUES (#userID#, #tenantID#, #companyID#, #type#)
-		ON DUPLICATE KEY UPDATE user_id = #userID#, tenant_id = #tenantID#, company_id = #companyID#
+		ON DUPLICATE KEY UPDATE user_id = #userID#, tenant_id = #tenantID#, company_id = #companyID#, type=#type#
 	</insert>
 
-	<select id="ezNewPortal.getPortalTopFrameInfo" parameterClass="PortalTopVO" resultClass="PortalTopVO">
+	<select id="ezNewPortal.getUserMenuDisplayMode" parameterClass="PortalTopVO" resultClass="PortalTopVO">
 		SELECT
 			user_id as userID,
 			tenant_id as tenantID,
@@ -3541,14 +3541,4 @@ ORDER BY
 	]]>
 	</select>
 	
-	<update id="ezNewPortal.updateTopMenuDisplayModeForCompany" parameterClass="Map">
-		UPDATE 
-			TBL_PORTAL_TOP_COMPANY
-		SET
-			TYPE = #type#
-		WHERE
-			TENANT_ID = #tenantId#
-		AND
-			COMPANY_ID = #companyId#
-	</update>
 </sqlMap>

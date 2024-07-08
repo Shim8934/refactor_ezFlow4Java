@@ -1278,4 +1278,34 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value = "/ezNewPortal/setUserMenuDisplayMode.do")
+	public JSONObject setUserMenuDisplayMode(@CookieValue String loginCookie, HttpServletRequest request) {
+		logger.debug("setUserMenuDisplayMode started");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String userID = userInfo.getId();
+			String companyID = userInfo.getCompanyID();
+			String menuDisplayMode = request.getParameter("menuDisplayMode");
+			
+			String url = "/rest/ezPortal/setMenuDisplayMode/users/" + userID + "?companyId=" + companyID + "&menuDisplayMode=" + menuDisplayMode;;
+			result = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, request, "post", null);
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("message", "unread mail count failed");
+		}
+		
+		logger.debug("setUserMenuDisplayMode ended");
+		
+		return result;
+	}
 }

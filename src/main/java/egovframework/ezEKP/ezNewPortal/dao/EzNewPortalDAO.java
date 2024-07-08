@@ -746,14 +746,15 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		insert("ezNewPortal.insertPortletSizeUser", list);
 	}
 
-	public void updatePortalTopFrameInfo(PortalTopVO vo) {
+	public void updatePortalTopFrameInfo(PortalTopVO vo)  throws Exception {
 		insert("ezNewPortal.insertPortalTopFrameInfo", vo);
 	}
 
-	public PortalTopVO getPortalTopFrameInfo(PortalTopVO vo) {
-		return (PortalTopVO) select("ezNewPortal.getPortalTopFrameInfo", vo);
+	public PortalTopVO getUserMenuDisplayMode(PortalTopVO vo) throws Exception {
+		return (PortalTopVO) select("ezNewPortal.getUserMenuDisplayMode", vo);
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	public List<BoardListVO> getNewBoardPortletInfo(Map<String, Object> map) throws Exception {
 		return (List<BoardListVO>) list("ezNewPortal.getNewBoardPortletInfo", map);
 	}
@@ -765,13 +766,18 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 
 	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 가져오는 메소드
-	public String getTopMenuDisplayModeForCompany(Map<String, Object> map) {
-		return (String) select("ezNewPortal.getTopMenuDisplayModeForCompany", map);
+	public PortalTopVO getTopMenuDisplayModeForCompany(PortalTopVO potalTopVO) throws Exception {
+		return (PortalTopVO) select("ezNewPortal.getTopMenuDisplayModeForCompany", potalTopVO);
 	}
 	
 	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 수정하는 메소드
-	public void updateTopMenuDisplayModeForCompany(Map<String, Object> map) {
-		update("ezNewPortal.updateTopMenuDisplayModeForCompany", map);
+	public void updateTopMenuDisplayModeForCompany(PortalTopVO potalTopVO) throws Exception {
+		update("ezNewPortal.updateTopMenuDisplayModeForCompany", potalTopVO);
+	}
+	
+	// 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
+	public void insertTopMenuDisplayModeForCompany(PortalTopVO potalTopVO) throws Exception {
+		insert("ezNewPortal.insertTopMenuDisplayModeForCompany", potalTopVO);
 	}
 	
 }

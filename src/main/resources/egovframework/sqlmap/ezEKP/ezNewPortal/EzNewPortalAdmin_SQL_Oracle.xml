@@ -10,6 +10,7 @@
 	<typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
 	<typeAlias alias="portalDeptViewVO" 	type="egovframework.ezEKP.ezNewPortal.vo.DeptViewVO" />
 	<typeAlias alias="MenuAuthorUserVO" 	type="egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO" />
+	<typeAlias alias="PortalTopVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalTopVO"/>
 	<resultMap class="java.util.HashMap" id="ThemeAuthMap">
 		<result property="themeId" column="THEMEID" />
 		<result property="userId" column="USERID" />
@@ -1552,14 +1553,34 @@
 		FROM DUAL
 	</insert>
 	
-	<select id="ezNewPortal.getTopMenuDisplayModeForCompany" resultClass="String">
+	<select id="ezNewPortal.getTopMenuDisplayModeForCompany" parameterClass="PortalTopVO" resultClass="PortalTopVO">
 		SELECT
 			TYPE
 		FROM
 			TBL_PORTAL_TOP_COMPANY
 		WHERE
-			TENANT_ID = #tenantId#
+			TENANT_ID = #tenantID#
 		AND
-			COMPANY_ID = #companyId#
+			COMPANY_ID = #companyID#
 	</select>
+	
+	<update id="ezNewPortal.updateTopMenuDisplayModeForCompany" parameterClass="PortalTopVO">
+		UPDATE 
+			TBL_PORTAL_TOP_COMPANY
+		SET
+			TYPE = #type#
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANY_ID = #companyID#
+	</update>
+	
+	<insert id="ezNewPortal.insertTopMenuDisplayModeForCompany" parameterClass="PortalTopVO">
+		INSERT
+			INTO 
+    	TBL_PORTAL_TOP_COMPANY 
+    		(COMPANY_ID, TENANT_ID, TYPE)
+    	VALUES
+    		(#companyID#, #tenantID#, #type#)
+	</insert>
 </sqlMap>

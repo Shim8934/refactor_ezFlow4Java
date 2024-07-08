@@ -44,14 +44,14 @@
 
 				<%-- 메인메뉴 위치 html --%>
 				<div class="menu_position">
-					<span class="tit">메인메뉴 위치</span>
+					<span class="tit"><spring:message code="ezNewPortal.topMenu.hth10" /></span>
 					<div class="input_radio">
-						<input type="radio" id="sample_01" name="sample" checked>
-						<label for="sample_01">상단</label>
+						<input type="radio" id="menuDispalyTop" name="userMenuDisplayMode" value="0">
+						<label for="menuDispalyTop"><spring:message code="ezNewPortal.topMenu.hth11" /></label>
 					</div>
 					<div class="input_radio">
-						<input type="radio" id="sample_02" name="sample">
-						<label for="sample_02">좌측</label>
+						<input type="radio" id="menuDispalyLeft" name="userMenuDisplayMode" value="1">
+						<label for="menuDispalyLeft"><spring:message code="ezNewPortal.topMenu.hth12" /></label>
 					</div>
 				</div>
 				<%-- 메인메뉴 위치 html --%>
@@ -165,6 +165,13 @@
 					menuName: item.menuName,
 				};
 			});
+			
+			var userMenuDisplayModeBtn = document.getElementsByName('userMenuDisplayMode');
+			for (var i = 0; i < userMenuDisplayModeBtn.length; i++) {
+				if (menuDisplayMode == userMenuDisplayModeBtn[i].value) {
+					userMenuDisplayModeBtn[i].checked = true;
+				}
+			}
 			
 		}
 		
@@ -368,7 +375,7 @@
 		
 		/* 통합검색 */
 		var totalSearch = function () {
-			var keyword = $("#input_totalSearch").val();
+			var keyword = $("#topsearch_btn").val();
 			//$("#input_totalSearch").val("");
 // 			OpenWindow(event, "/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
 			window.open("/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
@@ -439,7 +446,7 @@
 			/* document.getElementById("util_frmae").addEventListener("click", viewPortletEnv); */
 			/*통합검색*/
 			if ('${useTotalSearch}' === 'YES') {				
-				document.getElementById("topsearch_btn").addEventListener("click", totalSearch);
+				document.getElementById("topsearch_btn").addEventListener("keydown", totalSearch_key_event);
 			}
 			
 			document.querySelector('#util_quickmenu').addEventListener("click", function() {toggleDivMenu(document.querySelector('#quickMenuContainer'))});
@@ -624,6 +631,28 @@
 				
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
 				var sortedMenu = document.getElementById('menuListAll').getElementsByTagName('li');
+				
+				var userMenuDisplayModeBtn = document.getElementsByName('userMenuDisplayMode');
+				for (var i = 0; i < userMenuDisplayModeBtn.length; i++) {
+					if (userMenuDisplayModeBtn[i].checked) {
+						menuDisplayMode = userMenuDisplayModeBtn[i].value;
+						break;
+					}
+				}
+				
+				$.ajax({
+					type: "POST",
+					url: "/ezNewPortal/setUserMenuDisplayMode.do",
+					data:{
+						menuDisplayMode : menuDisplayMode
+					},
+					success: function(result) {
+						
+					},
+					error: function (xhr, status, e){
+						
+					}
+				});
 				
 				var orderObj = [];
 				sortedMenu.forEach(function (item, index) {

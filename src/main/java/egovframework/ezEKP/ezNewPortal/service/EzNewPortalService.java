@@ -259,16 +259,14 @@ public interface EzNewPortalService {
 
 	void updateThemePortletSize(int themeId, int tenantId, String companyId, JSONArray sizeList);
 
-	void insertPortalTopFrameInfo(String userID, String companyID, int tenantID);
+	void insertPortalTopFrameInfo(String userID, String companyID, int tenantID, TopFrameType type) throws Exception;
 
-	void insertPortalTopFrameInfo(String userID, String companyID, int tenantID, TopFrameType type);
-
-	Optional<TopFrameType> getPortalTopFrameInfo(String userID, String companyID, int tenantID);
+	Optional<TopFrameType> getPortalTopFrameInfo(String userID, String companyID, int tenantID) throws Exception;
 	
     public List<BoardListVO> getNewBoardPortletInfo(LoginVO userInfo, String userType, int startRow, int itemCount) throws Exception;
     // 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 가져오는 메소드
-	public String getTopMenuDisplayModeForCompany(String companyId, int tenantId) throws Exception;
+	public Optional<TopFrameType> getTopMenuDisplayModeForCompany(String companyId, int tenantId) throws Exception;
 	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 수정하는 메소드
-	public void updateTopMenuDisplayModeForCompany(String type, String companyId, int tenantId) throws Exception;
+	public void updateTopMenuDisplayModeForCompany(int type, String companyId, int tenantId) throws Exception;
 	
 }

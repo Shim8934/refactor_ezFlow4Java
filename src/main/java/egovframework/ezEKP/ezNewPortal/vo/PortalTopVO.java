@@ -7,7 +7,7 @@ public class PortalTopVO {
     private String companyID;
     private String userID;
     private int type = 0;
-
+    
     @Override
     public String toString() {
         return "PortalTopVO{" +
@@ -86,6 +86,15 @@ public class PortalTopVO {
 
         public int getCode() {
             return code;
+        }
+        
+        public static TopFrameType fromCode(int code) {
+            for (TopFrameType type : TopFrameType.values()) {
+                if (type.getCode() == code) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("Invalid code: " + code);
         }
     }
 }

@@ -31,6 +31,8 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -93,6 +95,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
     @Autowired
     private EzPersonalDAO ezPersonalDAO; // 2021-11-01 이사라 추가
+    
+    @Autowired
+    private EzNewPortalDAO ezNewPortalDAO;
     
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
@@ -865,7 +870,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_IJHS1(map1);
 				//차량관리 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_I33(map1);
-				ezOrganAdminDao.insertCompanyTopMenuInfo(map1); // 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
+				
+				PortalTopVO portalTopVO = new PortalTopVO();
+				portalTopVO.setCompanyID(cn);
+				portalTopVO.setTenantID(tenantID);
+				portalTopVO.setType(0);
+				ezNewPortalDAO.insertTopMenuDisplayModeForCompany(portalTopVO); // 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
