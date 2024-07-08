@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -408,5 +409,5 @@ public interface EzBoardService {
 	Optional<BoardAttachVO> getBoardAttachByName(String itemID, String fileName, int tenantID) throws Exception;
 	
 	/* 2024-04-01 한태훈 - 게시판 > 게시판 즐겨찾기 추가한 유저 리스트 가져오는 메소드 */
-	public List<String> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception;
+	public List<OrganUserVO> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception;
 }

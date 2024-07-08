@@ -18,6 +18,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -866,7 +867,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	/* 2024-04-01 한태훈 - 게시판 즐겨찾기 추가 구성원 리스트 호출 */
 	@SuppressWarnings("unchecked")
-	public List<String> getFavoriteBoardUserList(Map<String, Object> map) {
-		return (List<String>) list("EzBoardDAO.getFavoriteBoardUserList", map);
+	public List<OrganUserVO> getFavoriteBoardUserList(Map<String, Object> map) {
+		return (List<OrganUserVO>) list("EzBoardDAO.getFavoriteBoardUserList", map);
 	}
 }

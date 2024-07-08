@@ -144,21 +144,21 @@ tr[data-target='.approval'], tr.approval { display: none; }
 		<%-- 2023-08-03 조수빈 - 게시판 알림 설정 --%>
 		<tr class="collapsible" data-target=".board">
 	        <th><spring:message code='ezBoard.t0006' /></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 1, 3)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 1, 5)%></th>
 	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 3, 4)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 4, 4)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 3, 5)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 4, 5)%></th>
 		</tr>
 		<tr class="collapse board">
 	        <td><spring:message code='ezNotification.hth39' /></td>
-	        <td></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 1, 1)%></td>
 	        <td></td>
 	        <td><%=makeCheckbox(disableItemFinder, 3, 1, 3)%></td>
 	        <td><%=makeCheckbox(disableItemFinder, 3, 1, 4)%></td>
 		</tr>
 		<tr class="collapse board">
 	        <td><spring:message code='ezNotification.hth40' /></td>
-	        <td></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 2, 1)%></td>
 	        <td></td>
 	        <td><%=makeCheckbox(disableItemFinder, 3, 2, 3)%></td>
 	        <td><%=makeCheckbox(disableItemFinder, 3, 2, 4)%></td>

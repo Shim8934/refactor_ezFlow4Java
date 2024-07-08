@@ -1206,16 +1206,16 @@
 	        	<th><spring:message code="ezNotification.hth38" /></th>
 	        	<td>
 	        		<c:if test="${model.mailFG_Post == 'Y'}">	
-	                	<span style="display:none;"><input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail01" />&nbsp;</span>
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail01" />&nbsp;</span>
 	                </c:if>
 	                <c:if test="${model.mailFG_Post != 'Y'}">
-	                	<span style="display:none;"><input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail01" />&nbsp;</span>
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail01" />&nbsp;</span>
 	                </c:if>
 					<c:if test="${model.mailFG_Mod == 'Y'}">
-	                	<span style="display:none;"><input type="checkbox" id="chkMailFG_Mod" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail02" />&nbsp;</span>
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Mod" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail02" />&nbsp;</span>
 	                </c:if>
 	                <c:if test="${model.mailFG_Mod != 'Y'}">
-	                	<span style="display:none;"><input type="checkbox" id="chkMailFG_Mod" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail02" />&nbsp;</span>
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Mod" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail02" />&nbsp;</span>
 	                </c:if>
 					<c:if test="${model.mailFG_Comment == 'Y'}">
 	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Comment" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail03" />&nbsp;</span>
