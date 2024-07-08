@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -1016,7 +1017,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
-		HashMap<String, Object> param = new HashMap<String, Object>();
+		String type = Optional.ofNullable(req.getParameter("type")).orElse("");
+		HashMap<String, Object> param = new HashMap<>();
 		param.put("userId", userInfo.getId());
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("deptId", userInfo.getDeptID());
@@ -1041,6 +1043,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		}
 		
 		model.addAttribute("portletId", portletId);
+		model.addAttribute("type", type);
 		logger.debug("portalBoardPortlet End");
 		
 		return "/ezNewPortal/portlets/boardPortlet";

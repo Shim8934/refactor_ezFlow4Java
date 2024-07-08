@@ -1680,7 +1680,7 @@ div.orbit img{border-radius: 5px;}
 .first_approval .approval_content .apprDL .apprText_orange span{padding: 1px 7px;}
 
 .portlet .set_portlet{display: none;opacity:0;}
-.portlet:hover .set_portlet{display:block; opacity:1;}
+.portletArea .portlet:hover .set_portlet{display:block; opacity:1;}
 .two_by_one .layDIV{height:100%;}
 
 #theme3Body .box_shadow{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.10);}
@@ -1699,3 +1699,5 @@ div.orbit img{border-radius: 5px;}
 .first_approval .approval_content{padding: 9px 0px 3px 0px;}
 .portlet_list li.first_approval{height: 103px;}
 .bookmark .bookmarkLi{font-size: 13px;}
+
+#fixBoardArea{height: 270px;}

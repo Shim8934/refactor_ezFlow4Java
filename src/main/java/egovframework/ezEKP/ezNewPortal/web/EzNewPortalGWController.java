@@ -21,6 +21,7 @@ import javax.mail.Message;
 import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
@@ -54,8 +55,10 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
@@ -95,6 +98,38 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
+
+import javax.annotation.Resource;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.UIDFolder;
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TimeZone;
 
 @RestController
 public class EzNewPortalGWController {
@@ -123,9 +158,6 @@ public class EzNewPortalGWController {
 
 	@Resource(name = "MOptionService")
 	private MOptionService mOptionService;
-
-	@Resource(name = "EzBoardController")
-	private EzBoardController ezBoardController;
 
 	@Resource(name = "EzPersonalService")
 	private EzPersonalService ezPersonalService;
@@ -220,6 +252,7 @@ public class EzNewPortalGWController {
 			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
 			String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
 			String useCar = ezCommonService.getTenantConfig("useCar", tenantId);
+			String useFixBoard = ezCommonService.getTenantConfig("useFixBoard", tenantId);
 
 			boolean usePortletSize = "Y".equals(ezCommonService.getTenantConfig("usePortletSize", tenantId));
 
@@ -294,11 +327,15 @@ public class EzNewPortalGWController {
 			if (useToDo == null || useToDo.equals("")) {
 				useToDo = "YES";
 			}
-			
+
 			if (useCar == null || useCar.equals("")) {
 				useCar = "NO";
 			}
-			
+
+			if (StringUtils.isBlank(useFixBoard)) {
+				useFixBoard = "YES";
+			}
+
 			if (useQuestion.equals("NO")) {
 				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
@@ -366,7 +403,11 @@ public class EzNewPortalGWController {
 			if (useCar.equals("NO")) {
 				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("car")));
 			}
-			
+
+			if (useFixBoard.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("fix")));
+			}
+
 			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
 			String useInternet = config.getProperty("config.useInternet");
 			logger.debug("useInternet=" + useInternet);
@@ -4916,10 +4957,12 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String attachImage = request.getParameter("attach");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
 			String rollInfo = info.getRollInfo();
+			String defaultImg = "/images/kr/login/login_img1.png";	// gbp-todo : 추후 추가 될 fix board 디폴트 이미지.
 			int tenantId = info.getTenantId();
 			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
 		
@@ -4956,11 +4999,17 @@ public class EzNewPortalGWController {
 				// 리스트 개수로 utc time 적용시키기
 				int boardListCount = boardList.size();
 				for (int i = 0; i < boardListCount; i++) {
-					String writeDate = boardList.get(i).getStartDate();
+					BoardListVO boardListVO = boardList.get(i);
+					String writeDate = boardListVO.getStartDate();
 					
-					boardList.get(i).setStartDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
+					boardListVO.setStartDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
+					if (StringUtils.isNotBlank(attachImage) && "1".equals(boardListVO.getAttachments())) {
+						Optional<BoardAttachVO> boardAttach = ezBoardService.getBoardAttachByName(boardListVO.getItemID(), attachImage, tenantId);
+						boardListVO.setThumbnail(boardAttach.map(BoardAttachVO::getFilePath).orElse(defaultImg));
+					}
 				}
-				
+
+
 				data.put("access", "true");
 				data.put("boardList", boardList);
 			}
@@ -5196,7 +5245,8 @@ public class EzNewPortalGWController {
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			String useCar = ezCommonService.getTenantConfig("useCar", tenantId);
-			
+			String useFixBoard = ezCommonService.getTenantConfig("useFixBoard", tenantId);
+
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
 			}
@@ -5244,7 +5294,11 @@ public class EzNewPortalGWController {
 			if (useCar == null || useCar.equals("")) {
 				useCar = "NO";
 			}
-			
+
+			if (StringUtils.isBlank(useFixBoard)) {
+				useFixBoard = "YES";
+			}
+
 			if (useQuestion.equals("NO")) {
 				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
@@ -5292,7 +5346,20 @@ public class EzNewPortalGWController {
 			if (useCar.equals("NO")) {
 				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("car")));
 			}
-			
+
+			List<PortletInfoVO> fixBoardList = new ArrayList<>();
+			themePortletList.forEach(vo -> {
+				if (vo.isFixBoard()) {
+					fixBoardList.add(vo);
+				}
+			});
+
+			themePortletList.removeAll(fixBoardList);
+
+			if ("YES".equals(useFixBoard)) {
+				result.put("fixBoard", fixBoardList);
+			}
+
 
 			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
 			String useInternet = config.getProperty("config.useInternet");

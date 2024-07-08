@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.w3c.dom.Document;
 
@@ -403,4 +404,6 @@ public interface EzBoardService {
 	boolean isBoardAdmin(String boardId, String userId, String deptId, String companyId, int tenantId, String rollInfo);
 
 	public void downloadBackgroundItemFile(HttpServletRequest request, HttpServletResponse response, String realPath, String filePath, String fileName) throws Exception;
+
+	Optional<BoardAttachVO> getBoardAttachByName(String itemID, String fileName, int tenantID) throws Exception;
 }

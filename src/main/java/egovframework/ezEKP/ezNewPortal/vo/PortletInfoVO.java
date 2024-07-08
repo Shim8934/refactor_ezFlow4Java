@@ -34,6 +34,29 @@ public class PortletInfoVO {
 	private String classSize = "one_by_one";	// 포틀릿 사이즈
 	private List<String> listPortletSize = new ArrayList<>(Collections.singletonList("one_by_one"));
 
+	public boolean isFixBoard() {
+		for (FixBoardCode code : FixBoardCode.values()) {
+			if (code.getCode().equalsIgnoreCase(this.getPortletCode())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public enum FixBoardCode {
+		FIX_LEFT("fixLeft"), FIX_RIGHT("fixRight");
+
+		private String code;
+
+		FixBoardCode(String code) {
+			this.code = code;
+		}
+
+		public String getCode() {
+			return code;
+		}
+	}
+
 	public String getPortletCode() {
 		return portletCode;
 	}

@@ -124,13 +124,13 @@ function startGridElement() {
 }
 
 // 포틀릿 아이콘 클릭시 팝업창 뜨는 이벤트부여
-function giveSetPortletEvent() {
+function giveSetPortletEvent(portletId) {
     var nodes = document.getElementsByClassName(ClassPortlet.BTN_OPEN_POP);
     Array.prototype.forEach.call(nodes, function (node) {
         node.addEventListener("click", openPopPortletSize);
     });
 
-    var btnList = document.querySelectorAll("img[data-size]");
+    var btnList = $("#" + portletId + "Portlet")[0].querySelectorAll("img[data-size]");
     Array.prototype.forEach.call(btnList, function (btn) {
         btn.addEventListener("click", function (e) {
             e = e||window.event;
@@ -256,7 +256,11 @@ function resizePortlet(portletNode) {
     if (!portletNode) {
         gridElement.refreshItems();
     } else {
-        gridElement.refreshItems([gridElement.getItem(portletNode)]);
+        if (gridElement.getItem(portletNode) != null) {
+            gridElement.refreshItems([gridElement.getItem(portletNode)]);
+        } else {
+            return;
+        }
     }
     gridElement.layout();
 }

@@ -1199,9 +1199,9 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 
 	@RequestMapping(value = "/admin/ezNewPortal/getThemePortletList.do", method=RequestMethod.POST)
 	@ResponseBody
-	public JSONArray getThemePortletList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+	public JSONObject getThemePortletList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getThemePortletList started");
-		JSONArray result = new JSONArray();
+		JSONObject jo = new JSONObject();
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String themeId = paramMap.get("themeId").toString();
 		String companyId = paramMap.get("companyId").toString();
@@ -1214,11 +1214,14 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			result = (JSONArray) resultBody.get("data");
+			jo.put("poList", resultBody.get("data"));
+			if (resultBody.containsKey("fixBoard")) {
+				jo.put("fixBoard",  resultBody.get("fixBoard"));
+			}
 		}
 		
 		logger.debug("getThemePortletList ended");
-		return result;
+		return jo;
 	}
 	
 	@SuppressWarnings("unchecked")

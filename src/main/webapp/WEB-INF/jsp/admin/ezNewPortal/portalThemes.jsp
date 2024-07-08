@@ -676,8 +676,9 @@
 			
 			request.onload = function() {
 				if (request.status >= 200 && request.status < 400) {
-					var portletList = JSON.parse(request.responseText);
-					var portletListCount = portletList.length;
+					var data = JSON.parse(request.responseText);
+					var fixList = data['fixBoard'];
+					var portletList = data['poList'];
 
 					var listHTML = "<div id='themePortletList" + themeId + "' class='portletList' data-themeid='" + themeId + "'>";
 					listHTML += "<div class='admin_thema admin_theme_portlet'>";
@@ -698,6 +699,27 @@
 						listHTML += dd.outerHTML + dd2.outerHTML;
 					}
 					listHTML += "</dl>";
+                    listHTML += "<div class='admin_menu_content'>";
+					fixList.forEach(function (item) {
+						var portletId = item.portletId;
+
+						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content'";
+						listHTML += " id='" + item.portletCode + "'";
+						listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "'>";
+						listHTML += "<span class='ui-portlet-span'>";
+
+						listHTML += ConvertCharToEntityReference(item.portletName);
+						listHTML += "</span>";
+						listHTML += "<label class='portlet_switch switch'>";
+
+						listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' ";
+						listHTML += item.fixBoard ? " data-fix=true " : "";
+						listHTML += item.portletUsed ? " checked>" : ">";
+
+						listHTML += "<span class='slider round'></span></label>";
+						listHTML += "</div>";
+					});
+                    listHTML += "</div>";
 					listHTML += "<div class='admin_menu_content'>";
 					if (usePortletSize) {
 						listHTML += "<div id='themePortletList' class=" + ClassPortlet.AREA_PORTLET + ">";
@@ -1017,7 +1039,7 @@
 						}
 					}
 					portlet.classList.remove(ClassPortlet.OFF_PORTLET);
-				} else {
+				} else if (!this.getAttribute('data-fix')){
 					portlet.classList.add(ClassPortlet.OFF_PORTLET);
 					gridElement.move(item,-1);
 					changePortletSize(portlet, GridSize.ONE_BY_ONE);

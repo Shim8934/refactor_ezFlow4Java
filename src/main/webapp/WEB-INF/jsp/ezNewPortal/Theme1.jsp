@@ -303,8 +303,8 @@
 		</div>
 		<%-- 2021-10-20 홍승비 - 테마1에서 가장 아래 포틀릿의 하단 그림자 css가 잘리므로, 패딩 추가 --%>
 		<section class="section_main" style="padding-bottom: 6px;">
-			<div id="portletArea" class="portlet_area">
-			</div>
+			<div id="fixBoardArea"></div>
+			<div id="portletArea" class="portlet_area"></div>
 		</section>
 		
 		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
@@ -526,14 +526,20 @@
 		if (portletOrder != null && portletOrder.length != 0) {
 			var portletCount = portletOrder.length;
 			var portletArea = document.getElementsByClassName("portlet_area")[0];
+			var fixBoardArea = document.getElementById("fixBoardArea");
 
 			for (var i = 0; i < portletCount; i++) {
 				var element = document.createElement("div");
-				element.id = portletOrder[i].portletId + "Portlet";
+				var portletData = portletOrder[i];
+				element.id = portletData.portletId + "Portlet";
 				element.classList.add("portlet");
-				element.classList.add(portletOrder[i].classSize);
-				element.dataset.size = portletOrder[i].classSize;
-				portletArea.appendChild(element);
+				element.classList.add(portletData.classSize);
+				element.dataset.size = portletData.classSize;
+				if (!!portletData.fixBoard) {
+					fixBoardArea.appendChild(element);
+				} else {
+					portletArea.appendChild(element);
+				}
 
 				var article = document.createElement('article');
 				article.classList.add('box_shadow');

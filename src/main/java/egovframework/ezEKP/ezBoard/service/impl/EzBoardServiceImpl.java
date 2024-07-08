@@ -29,6 +29,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.StringJoiner;
 import java.util.UUID;
@@ -41,6 +42,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -5217,5 +5220,35 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 
 		logger.info("downloadFile ended");
+	}
+
+	/**
+	 * 이미지 파일명을 조사하여 첫번째 포함 파일 객체를 리턴
+	 * @param itemID 조사할 게시판 id
+	 * @param fileName 포함될 단어
+	 * @param tenantID tenant ID
+	 * @return	해당하는 첨부 이미지 객체
+	 * @throws Exception 해당 게시판 조회 쿼리(when itemID, tenantID) 가 예외 발생
+	 */
+	public Optional<BoardAttachVO> getBoardAttachByName(String itemID, String fileName, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+
+		List<BoardAttachVO> voList = ezBoardDAO.brdGetItemAttachmentInfo(map);
+		for (BoardAttachVO vo : voList) {
+			// 파일이름이 비어있거나 이미지 파일의 확장자가 아닌경우 스킵
+			if (StringUtils.isBlank(vo.getFileName()) || commonUtil.checkImgExtension(FilenameUtils.getExtension(vo.getFileName()))) {
+				continue;
+			}
+
+			// 파일이름에 주어진 단어가 포함된 경우 vo 바로 리턴
+			if (FilenameUtils.getBaseName(vo.getFileName()).contains(fileName)) {
+				return Optional.of(vo);
+			}
+		}
+
+		return Optional.empty();
 	}
 }
