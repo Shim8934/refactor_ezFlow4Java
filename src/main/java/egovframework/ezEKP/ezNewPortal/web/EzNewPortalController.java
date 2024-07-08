@@ -204,7 +204,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
 		String deptId = userInfo.getDeptID();
-		String jobId = userInfo.getJobId() != null ? userInfo.getJobId() : "";
+		String jobId = StringUtils.isNotBlank(userInfo.getJobId()) ? userInfo.getJobId() : "";
 		String url = "/rest/ezPortal/menus/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId + "&jobId=" + jobId;
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
@@ -504,7 +504,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
 		String deptId = userInfo.getDeptID();
-		String jobId = userInfo.getJobId();
+		String jobId = StringUtils.isNotBlank(userInfo.getJobId()) ? userInfo.getJobId() : "";
 		String url = "/rest/ezPortal/settingInfo/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId + "&jobId=" + jobId;
 		String returnUrl = "/ezNewPortal/";
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
@@ -841,7 +841,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		//초기화면으로 설정할 수 있는 메뉴 호출
 		String companyId = userInfo.getCompanyID();
 		String deptId = userInfo.getDeptID();
-		String jobId = userInfo.getJobId() != null ? userInfo.getJobId() : "";
+		String jobId = StringUtils.isNotBlank(userInfo.getJobId()) ? userInfo.getJobId() : "";
 		String menuUrl = "/rest/ezPortal/menus/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId + "&jobId=" + jobId;
 		JSONObject menuResultBody = commonUtil.getJsonFromRestApi(menuUrl, null, req, "get", null);
 		String menuStatus = menuResultBody.get("status").toString();
@@ -974,7 +974,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
 		String deptId = userInfo.getDeptID();
-		String jobId = userInfo.getJobId();
+		String jobId = StringUtils.isNotBlank(userInfo.getJobId()) ? userInfo.getJobId() : "";
 		String url = "/rest/ezPortal/settingInfo/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId + "&jobId=" + jobId;
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();

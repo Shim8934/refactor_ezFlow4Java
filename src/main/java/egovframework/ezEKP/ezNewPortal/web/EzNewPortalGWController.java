@@ -218,7 +218,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
-			String jobId = request.getParameter("jobId");
+			String jobId = Optional.ofNullable(request.getParameter("jobId")).orElse("");
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
