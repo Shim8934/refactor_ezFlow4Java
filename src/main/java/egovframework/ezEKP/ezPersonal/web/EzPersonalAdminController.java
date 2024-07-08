@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -330,7 +331,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do", method = RequestMethod.GET)
-	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie, Model model) {
+	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model)  throws Exception {
 		logger.debug("manageQuickLink started");
 
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -338,10 +339,29 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
-		
+		String companyId = "";
+		if (request.getParameter("companyId") != null) {
+			companyId = request.getParameter("companyId");
+		} else {
+			companyId = auth.getCompanyID();
+		}
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(auth.getPrimary(), auth.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+
 		model.addAttribute("host", auth.getServerName());
 		model.addAttribute("lang", auth.getLang());
-		
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
+
 		logger.debug("manageQuickLink ended");
 		return "admin/ezPersonal/personalManageQuickLink";
 	}
@@ -350,16 +370,16 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink 목록 호출 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public JSONObject getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
-		logger.debug("getQuickLinkList started");
-		
+	public JSONObject getQuickLinkList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getQuickLinkList started company:" + request.getParameter("companyID"));
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String lang = userInfo.getLang();
-		logger.debug("[getQuickLinkList] primaryLang : " + primaryLang + ", lang : " + lang);
-		
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+
 		String userLang = "1";
 		
 		if (primaryLang.equals(lang)) {
@@ -368,7 +388,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			userLang = lang;
 		}
 		
-		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang(), userLang);
+		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang(), userLang, companyID);
 		
 		JSONObject json = new JSONObject();
 		json.put("list", list);

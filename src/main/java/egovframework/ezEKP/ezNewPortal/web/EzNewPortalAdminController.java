@@ -273,7 +273,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			model.addAttribute("userCompany", resultBody.get("userCompany"));
+			model.addAttribute("userCompany", userInfo.getCompanyID());
 			model.addAttribute("list", resultBody.get("data"));
 			model.addAttribute("primary", resultBody.get("primary"));
 			model.addAttribute("usePrimaryLangOnly", resultBody.get("usePrimaryLangOnly"));

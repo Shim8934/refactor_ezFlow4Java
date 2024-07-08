@@ -1,8 +1,10 @@
-function makeList() {
+function makeList(com) {
 	$.ajax({
-		type : "POST",
 		url : "/admin/ezPersonal/getQuickLinkList.do",
 		async : false,
+		data:{
+			companyID : com
+		},
 		dataType : "JSON",
 		success : function(result) {
 			event_QuickList(result.list);
@@ -12,6 +14,9 @@ function makeList() {
 
 function event_QuickList(result) {
 	var mainList = document.getElementById("mainlist");
+	while (mainList.firstChild) {
+		mainList.removeChild(mainList.firstChild);
+	}
 	
 	result.forEach(function(item, index) {
 		var itemId  = item.quickLinkID;
@@ -845,4 +850,8 @@ function updateLinkOrder() {
 		success: function(result) {
 		}
 	});
+}
+
+function changeCompany(comID) {
+	makeList(comID);
 }

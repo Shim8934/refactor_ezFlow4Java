@@ -329,7 +329,7 @@ public interface EzCommonService {
 
 	/** 2023-06-26 한태훈 - 통합 PC 저장 이력 남기는 테이블(차후 다른 목적으로도 쓰일 수 있음) 추가 */
 	public void createTblTotalHistory() throws Exception;
-    
+
 	public void insertdelAttachByOthersConfing() throws Exception;
 
 	public void insertUseHideHeaderArea() throws Exception;
@@ -349,18 +349,18 @@ public interface EzCommonService {
 	public void insertApprNonElecRecTypeConfing() throws Exception;
 
     public void insertRecordHeaderClassTitle() throws Exception;
-    
+
 	public void insertUseReceiptDeptFileAttach() throws Exception;
 
 	public void insertDocBinderListOption() throws Exception;
-	
+
 	public void insertEndDateOptionConfig() throws Exception;
 
 	/* 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그 */
 	public void insertReturnByDesignationUsedConfig() throws Exception;
 
 	public void alterDocAttachNameCol() throws Exception;
-    
+
 	public void insertNonUseDocAttachYN() throws Exception;
 
 	public void insertReadingRecordHeader() throws Exception;
@@ -384,4 +384,5 @@ public interface EzCommonService {
 
 	public void insertPortalTopCompanyInitdata() throws Exception;
 
+    void addQuickLinkCompanyID() throws Exception;
 }

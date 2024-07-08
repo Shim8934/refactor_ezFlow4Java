@@ -4509,4 +4509,20 @@
 			COMMENT '회사별 탑 메뉴 프레임 타입'
 	</statement>
 
+    <select id="EzCommonDAO.checkQuickLinkCompanyID">
+		<![CDATA[
+        SELECT
+            COMPANYID
+        FROM
+            TBL_PS_QUICKLINK
+                LIMIT 1
+        ]]>
+	</select>
+
+    <statement id="EzCommonDAO.addQuickLinkCompanyID">
+        ALTER TABLE
+            TBL_PS_QUICKLINK
+            ADD
+                COMPANYID varchar(20) NOT NULL
+    </statement>
 </sqlMap>

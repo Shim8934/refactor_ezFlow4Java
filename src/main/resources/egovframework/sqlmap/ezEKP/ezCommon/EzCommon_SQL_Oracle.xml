@@ -4802,6 +4802,22 @@
 				PRIMARY KEY (COMPANY_ID, TENANT_ID)
 		)
 	</statement>
-	
-	
+
+    <select id="EzCommonDAO.checkQuickLinkCompanyID">
+		<![CDATA[
+        SELECT
+            COMPANYID
+        FROM
+            TBL_PS_QUICKLINK
+        WHERE
+            ROWNUM <= 1
+        ]]>
+	</select>
+
+    <statement id="EzCommonDAO.addQuickLinkCompanyID">
+        ALTER TABLE
+            TBL_PS_QUICKLINK
+            ADD
+                COMPANYID varchar(20) NOT NULL
+    </statement>
 </sqlMap>

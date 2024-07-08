@@ -184,13 +184,13 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public List<PersonalQuickLinkVO> getQuickLinkList(LoginVO userInfo, String lang, String userLang) throws Exception {
+	public List<PersonalQuickLinkVO> getQuickLinkList(LoginVO userInfo, String lang, String userLang, String companyID) throws Exception {
 		logger.debug("getQuickLinkList started");
 
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		
 		map.put("tenantID", userInfo.getTenantId());
-		map.put("companyID", userInfo.getCompanyID());
+		map.put("companyID", companyID);
 		map.put("lang", userInfo.getLang());
 		map.put("userLang", userLang);
 		
@@ -280,8 +280,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String pMode = doc.getElementsByTagName("pMode").item(0).getTextContent();
 		String pUrl= doc.getElementsByTagName("pURL").item(0).getTextContent();
 		String pSize= doc.getElementsByTagName("pSize").item(0).getTextContent();
-		
-		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pQuickLinkName4, pQuickLinkName5, pQuickLinkName6, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String pCompanyID= doc.getElementsByTagName("companyID").item(0).getTextContent();
+
+		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pQuickLinkName4, pQuickLinkName5, pQuickLinkName6, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId(), pCompanyID, userInfo.getTenantId());
 		
 		if (doc.getElementsByTagName("node").getLength() == 0) {
 			setQuickLinkACL(pQuickLinkID, "", "", "", "", "", "", "DEL", userInfo.getTenantId());

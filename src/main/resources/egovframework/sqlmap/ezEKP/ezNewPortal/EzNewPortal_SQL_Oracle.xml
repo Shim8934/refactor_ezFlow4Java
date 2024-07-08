@@ -608,6 +608,8 @@ FROM (
 			tbl_ps_quicklink Q
 		WHERE 
 			Q.TENANT_ID = #tenantId#
+		  AND
+			Q.COMPANYID = #companyId#
 ]]>
 	<isNotEmpty property="quickLinkIdList">
 		AND quicklinkid in
@@ -646,6 +648,8 @@ FROM (
 		tbl_ps_quicklink Q
 	WHERE 
 		Q.TENANT_ID = #tenantId#
+	  AND
+		Q.COMPANYID = #companyId#
 ]]>
 	<isNotEmpty property="quickLinkIdList">
 		AND quicklinkid in

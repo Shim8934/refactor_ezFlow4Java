@@ -532,7 +532,7 @@ SELECT
     quicklinkname, 
     quicklinkname2, 
     quicklinkname3, 
-    linktype, 
+    linktype,
     linktypeurl,
     url,
 	size_ as quicksize
@@ -540,6 +540,8 @@ FROM
 	tbl_ps_quicklink
 WHERE
 	TENANT_ID = #tenantId#
+  AND
+	COMPANYID = #companyId#
 ]]>
 	<isNotEmpty property="quickLinkIdList">
 		AND quicklinkid in
@@ -573,6 +575,8 @@ FROM (
 		tbl_ps_quicklink as Q
 	WHERE 
 		Q.TENANT_ID = #tenantId#
+	  AND
+		Q.COMPANYID = #companyId#
 ]]>
 	<isNotEmpty property="quickLinkIdList">
 		AND quicklinkid in

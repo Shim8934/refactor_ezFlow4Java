@@ -3891,4 +3891,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.insertPortalTopCompanyInitdata();
 	}
 
+    @Override
+	public void addQuickLinkCompanyID() throws Exception {
+		ezCommonDAO.addQuickLinkCompanyID();
+	}
+
 }

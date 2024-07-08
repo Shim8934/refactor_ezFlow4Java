@@ -39,8 +39,9 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code ="ezPersonal.khj1" /></h1>
-
+		<h1><spring:message code="ezPersonal.khj1"/>
+			<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
+		</h1>
 		<!-- 빠른 링크 리스트 영역 -->
 		<div class="admin_quicklink">
 			<ul id="mainlist"></ul>

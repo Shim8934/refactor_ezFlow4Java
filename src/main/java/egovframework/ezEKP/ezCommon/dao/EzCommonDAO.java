@@ -2259,4 +2259,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 	}
+
+    public void addQuickLinkCompanyID() {
+        try {
+            select("EzCommonDAO.checkQuickLinkCompanyID");
+        } catch (Exception e) {
+            logger.debug("tbl_ps_quicklink copmpanyid doesn't exist. creating the column...");
+
+            update("EzCommonDAO.addQuickLinkCompanyID");
+        }
+    }
 }
