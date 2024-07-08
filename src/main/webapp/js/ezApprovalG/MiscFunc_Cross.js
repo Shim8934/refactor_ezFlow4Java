@@ -122,18 +122,21 @@ function ValidateYearValue(strYear) {
     }
 }
 
-function ValidateNumber(strValue) {
+/* 2024-06-13 양지혜 - 시, 분은 0 가능. type 추가하여 분기를 나누도록 함 (Y:0체크O, N:0체크X) */
+function ValidateNumber(strValue, type) {
     if (strValue.length > 0) {
         var strMatch = strValue.match(/^[0-9]+$/);
         if (!strMatch) {
             return false;
-        } else {
+        } else if (strMatch && type == 'Y') {
         	strMatch = strValue.match(/^[0]+$/);
         	if (!strMatch) {
         		return true;
         	} else {
         		return false;
         	}
+        } else {
+            return true;
         }
     }
     else {

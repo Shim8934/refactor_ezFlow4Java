@@ -376,26 +376,27 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             switch (extractProcessType) {
                 case "0" : {
                     for (Element e : elements) {
-                        imgSrcs.add(element.attr("src"));
+                        imgSrcs.add(e.attr("src"));
                     }
 
                     break;
                 }
 
                 case "1" : {
-                    String attrList[] = element.attr("style").split(";");
-                    String imgPath;
-
-                    for (String s : attrList) {
-                        if (!s.contains("background-image")) {
-                            continue;
-                        }
-
-                        imgPath = "/" + s.substring(s.indexOf("url(\'") + 5, s.indexOf("\')"));
-                        imgSrcs.add(imgPath);
-                    }
-
-                    break;
+                    /* 2024-06-17 김유진 - 백그라운드 이미지는 extractBackgroundSource 에서 처리되어 주석 처리함  */
+//                    String attrList[] = element.attr("style").split(";");
+//                    String imgPath;
+//
+//                    for (String s : attrList) {
+//                        if (!s.contains("background-image")) {
+//                            continue;
+//                        }
+//
+//                        imgPath = "/" + s.substring(s.indexOf("url(\'") + 5, s.indexOf("\')"));
+//                        imgSrcs.add(imgPath);
+//                    }
+//
+//                    break;
                 }
             }
 
@@ -516,9 +517,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             /*
                 imgSrc compile 중 boardID의 {}로 에러가 발생, 임시로 !!Q, !!W로 치환 
             */
-            imgSrc = imgSrc.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W").substring(1);
+            imgSrc = imgSrc.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
             tempHtml = tempHtml.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
             tempHtml = Pattern.compile(imgSrc).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
+            tempHtml = Pattern.compile(imgSrc.substring(1)).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
 
             imgSrc = imgSrc.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
             tempHtml = tempHtml.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
@@ -670,6 +672,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 extension = "." + contentType.split("/")[1];
             }
 
+            // imgSrc compile 중 boardID의 {}로 에러가 발생, 임시로 !!Q, !!W로 치환
+            backgroundImgSrc = backgroundImgSrc.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
+            tempHtml = tempHtml.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
+            tempHtml = Pattern.compile(backgroundImgSrc).matcher(tempHtml).replaceAll("file:///C:/BACKGROUNDIMAGE" + (backgroundImgSrc.indexOf(backgroundImgSrc) + 1) + extension);
+
+            backgroundImgSrc = backgroundImgSrc.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
+            tempHtml = tempHtml.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
+
             backgroundImagesBuilder.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
             backgroundImagesBuilder.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
             backgroundImagesBuilder.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (backgroundImgSrcs.indexOf(backgroundImgSrc) + 1) + extension + commonUtil.CRLF);
@@ -732,7 +742,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 }
             } else {
                 try {
-                    in = new FileInputStream(realPath + backgroundImgSrc);
+                    String fisPath = new File(realPath + backgroundImgSrc).exists() ? realPath + backgroundImgSrc : realPath + "/" + backgroundImgSrc;
+                    in = new FileInputStream(fisPath);
                     logger.debug(realPath + backgroundImgSrc + " is exist.");
                 } catch (Exception e) {
                     try {
@@ -3697,6 +3708,49 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             map.put("v_TENANTID", tenantVo.getTenantId());
 
             ezCommonDAO.insertEndDateOptionConfig(map);
+        }
+    }
+
+    // 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그
+    @Override
+    public void insertReturnByDesignationUsedConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        String property = "ReturnByDesignationUsed";
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantID", tenantVo.getTenantId());
+            map.put("property", property.toUpperCase());
+
+            ezCommonDAO.insertReturnByDesignationUsedConfig(map);
+        }
+    }
+    
+    public void alterDocAttachNameCol() throws Exception {
+        ezCommonDAO.alterDocAttachNameCol();
+    }
+
+    public void insertNonUseDocAttachYN() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertNonUseDocAttachYN(map);
+        }
+    }
+
+    @Override
+    public void insertReadingRecordHeader() throws Exception {
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+                ezCommonDAO.insertReadingRecordHeader(map);
+            }
         }
     }
 }

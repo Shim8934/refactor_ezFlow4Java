@@ -2123,4 +2123,43 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertDocBinderListOption", map);
 		}
 	}
+
+	// 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그
+	public void insertReturnByDesignationUsedConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.getTenantConfig", map);
+
+		if (propertyValue == null) {
+			logger.debug("insertReturnByDesignationUsedConfig tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertReturnByDesignationUsedConfig", map);
+		}
+	}
+
+	public void alterDocAttachNameCol() throws Exception {
+		try {
+			select(("EzCommonDAO.checkDocAttachNameCol"));
+		} catch (Exception e) {
+			logger.debug("In TBL_RECORD_TEMP doesn't exist DocAttach column. creating the column...");
+
+			update("EzCommonDAO.alterDocAttachNameCol");
+		}
+	}
+
+	// 2024-07-02 민지수 - 전자결재 > 비전자문서 등록 > 본문첨부 기능 사용여부 테넌트 컨피그 추가
+	public void insertNonUseDocAttachYN(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkNonUseDocAttachYN", map);
+
+		if (propertyValue == null) {
+			logger.debug("NonUseDocAttachYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertNonUseDocAttachYN", map);
+		}
+	}
+	
+	public void insertReadingRecordHeader(Map<String, Object> map) {
+		int optionCount = (int) select("EzCommonDAO.checkReadingRecordHeader", map);
+		if (optionCount < 10) {
+			logger.debug("ReadingRecord List Header doesn't exist. insert data...");
+			delete("EzCommonDAO.delReadingRecordHeader", map);
+			insert("EzCommonDAO.insertReadingRecordHeader", map);
+		}
+	}
 }

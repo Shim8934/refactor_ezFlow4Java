@@ -62,4 +62,6 @@ public interface EzSurveyService {
 	JSONObject checkRespondent(Long surveyId, LoginVO userInfo);
 	int getSurveyIngCnt(MCommonVO userInfo);
 	String checkTenantConfig(String propertyName, int tenantID) throws Exception;
+	
+	void setPreviewFlag(String prevMode, String userId, String companyId, int tenantId) throws Exception;
 }

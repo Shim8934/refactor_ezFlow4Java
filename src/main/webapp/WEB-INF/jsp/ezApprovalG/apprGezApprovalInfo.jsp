@@ -238,6 +238,9 @@
 
 			var doctitle;
 
+            var isfileup = false;
+			var convertedImgInfo;
+	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);
@@ -1559,7 +1562,9 @@
 									}
 			                	} else if (!CheckInputField()) { // 기록물정보 입력란 유효성 검사
 			                		return;
-			                	}
+			                	} else if (convertedImgInfo != undefined) { // 본문첨부 존재할 경우 본문에 이미지 추가
+									setConvertedImg(convertedImgInfo);
+								}
 			                	
 			                	if (g_SepAttachLVXml != "") {
 			                		if (sepAttachCheckYN != "TRUE" && pIniGubun != "6") {
@@ -2230,25 +2235,25 @@
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtRegM.value)) {
+			        if (!ValidateNumber(txtRegM.value, 'Y')) {
 			            alert("<spring:message code='ezApprovalG.t1047'/>");
 						viewDocInfoAndFocusNode(txtRegM);
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtRegD.value)) {
+			        if (!ValidateNumber(txtRegD.value, 'Y')) {
 			            alert("<spring:message code='ezApprovalG.t1048'/>");
 						viewDocInfoAndFocusNode(txtRegD);
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtRegH.value)) {
+			        if (!ValidateNumber(txtRegH.value, 'N')) {
 			            alert("<spring:message code='ezApprovalG.t1049'/>");
 						viewDocInfoAndFocusNode(txtRegH);
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtRegMi.value)) {
+			        if (!ValidateNumber(txtRegMi.value, 'N')) {
 			            alert("<spring:message code='ezApprovalG.t1050'/>");
 						viewDocInfoAndFocusNode(txtRegMi);
 
@@ -2260,13 +2265,13 @@
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtExeM.value)) {
+			        if (!ValidateNumber(txtExeM.value, 'Y')) {
 			            alert("<spring:message code='ezApprovalG.t1052'/>");
 						viewDocInfoAndFocusNode(txtExeM);
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtExeD.value)) {
+			        if (!ValidateNumber(txtExeD.value, 'Y')) {
 			            alert("<spring:message code='ezApprovalG.t1053'/>");
 						viewDocInfoAndFocusNode(txtExeD);
 
@@ -2686,6 +2691,181 @@
 	            GamsaYesanInfoXML = loadXMLString(xmlhttp.responseText);
 
 	        }
+	        
+	        function ShowMailProgress() {
+	    		var CurrenWidth = document.documentElement.clientWidth;
+	    		
+	            document.getElementById("mailPanel").style.display = "";
+	            document.getElementById("loadingProgress").style.top = "600px";
+	            document.getElementById("loadingProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+	            document.getElementById("loadingProgress").style.display = "";
+		    }
+	    	
+		    function HiddenMailProgress() {
+		    	document.getElementById("mailPanel").style.display = "none";
+	        	document.getElementById("loadingProgress").style.display = "none";
+		    }
+
+			function btnfileup() {
+				if (!isfileup) {
+					document.getElementById("file").click();
+				}
+			}
+
+			function filechange(e) {
+				onDrop();
+			}
+
+			function onDrop(evt) {
+				if (evt != undefined) {
+					evt.stopPropagation();
+					evt.preventDefault();
+				}
+
+				if (evt == undefined) {
+					filelist = document.getElementById("file").files;
+				} else {
+					filelist = evt.dataTransfer.files;
+				}
+
+				if(filelist.length > 1) {
+					alert("<spring:message code='ezOrgan.x0001'/>");
+					return;
+				}
+
+				for (var i = 0; i < filelist.length; i++) {
+					//파일명체크
+					var tmpFileName = ReplaceHTML(filelist[i].name);
+
+					if (tmpFileName.indexOf(">") > -1 || tmpFileName.indexOf("<") > -1 || tmpFileName.indexOf("\"") > -1 ||
+							tmpFileName.indexOf("/") > -1 || tmpFileName.indexOf("\\") > -1 || tmpFileName.indexOf(":") > -1 ||
+							tmpFileName.indexOf("*") > -1 || tmpFileName.indexOf("|") > -1 || tmpFileName.indexOf("?") > -1) {
+						alert("<spring:message code='ezApproval.t936'/>");
+						return;
+					}
+
+					var FileFilter = /\.(doc|docx|ppt|pptx|xls|xlsx|pdf|jpg|jpeg|png|gif|bmp|txt|text|html|htm|hwp)$/i;
+
+					if (!tmpFileName.match(FileFilter)) {
+						alert("<spring:message code='ezApproval.t937'/>");
+						return;
+					}
+				}
+
+				document.getElementById("filename").value = tmpFileName;	
+				fileupload();
+			}
+
+			function fileupload() {
+
+				isfileup = true;
+
+				var formData = new FormData();
+				formData.append("fileToUpload", filelist[0]);
+				formData.append("docId", opener.pDocID);
+				formData.append("tenantId", opener.pTenantID);
+				formData.append("companyId", opener.pCompanyID);
+				formData.append("userId", opener.pUserID);
+
+				$("#loading").css("display", "");
+
+				$.ajax({
+					type : "post",
+					data : formData,
+					url : "/ezApprovalG/officeUpload.do",
+					processData: false,
+					contentType: false,
+					success : function(result) {
+						$("#mailPanel", parent.document).css("display", "none");
+						$("#layerpopup", parent.document).css("display", "none");
+						convertedImgInfo = result;
+					},
+					error : function() {
+						alert("<spring:message code='ezApprovalG.nonElecAt01'/>");
+					},
+					complete : function() {
+						$("#loading").css("display", "none");
+						isfileup = false;
+					}
+				});
+			}
+
+			function setConvertedImg(convertedImgInfo) {
+				var divLength = parent.opener.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
+				
+				if (divLength > 0) {
+					opener.document.getElementById("message").contentWindow.document.getElementById("body").remove();
+				}
+				var iTd = document.createElement('td');
+				iTd.setAttribute("class", "FIELD");
+				iTd.setAttribute("id", "body");
+				iTd.setAttribute("receiptnumber", "@dp-@nn");
+				iTd.vAlign = "top";
+				iTd.style.borderImage = "none 100% / 1 / 0 stretch";
+				iTd.style.width = "523px";
+				iTd.style.height = "150px";
+				iTd.style.fontSize= "14px";
+				
+				var div = document.createElement('div');
+				$(div).addClass("divImg");
+				$(div).css("overflow", "auto");
+				iTd.appendChild(div);
+				
+				if (divLength == 0){
+					opener.document.getElementById("message").contentWindow.document.getElementById("info").style.display = "none";
+					opener.document.getElementById("message").contentWindow.document.getElementById("body").id = "docNotebody";
+					
+				}
+				
+				opener.document.getElementById("message").contentWindow.document.getElementById("area").appendChild(iTd);
+
+				var imgURL = convertedImgInfo;
+				
+				var pagesIndexOf = imgURL.indexOf("pages");
+				var pagesURL = imgURL.substr(pagesIndexOf);
+				var pagesIndexOf2 = pagesURL.indexOf("&");
+				var pagesURL2 = pagesURL.substr(0, pagesIndexOf2);
+				var pagesIndexOf3 = pagesURL2.indexOf("=")+1;
+				var pages = pagesURL2.substr(pagesIndexOf3);
+
+				var fileIndexOf = imgURL.indexOf("filename");
+				var fileURL = imgURL.substr(fileIndexOf);
+				var fileIndexOf2 = fileURL.indexOf(".png");
+
+				var imgURLF = imgURL.substr(0, fileIndexOf);
+				var imgURLL = fileURL.substr(fileIndexOf2);
+				
+				for(var i = 1; i <= pages; i++) {
+					var imgSrc = document.createElement('img');
+					var fileNm;
+
+					if (i < 10) {
+						fileNm = "filename=0000" + i;
+					} else if (i < 100) {
+						fileNm = "filename=000" + i;
+					} else {
+						fileNm = "filename=00" + i;
+					}
+
+					imgSrc.src = imgURLF + fileNm + imgURLL;
+					imgSrc.style.width = "654px";
+					imgSrc.style.border = "1px solid rgb(200, 200, 200)";
+					imgSrc.style.boxSizing = "border-box";
+					$(imgSrc).addClass("office-image");
+					$(imgSrc).css("position", "relative");
+					$(imgSrc).attr("z-index", 100);
+
+
+					imgDiv = document.createElement('div');
+					$(imgDiv).css("overflow", "auto");
+					$(imgDiv).css("text-align", "center");
+					$(imgDiv).addClass("imgDiv");
+					
+					imgDiv.appendChild(imgSrc);
+					div.appendChild(imgDiv);
+				}
+				
+			}
 	    </script>
 	    <style>
 	    	/* .mainlist_free tr th {text-align:center} */
@@ -2851,6 +3031,16 @@
 	                            </table>
 	                        </div>
 	                    </td>
+	                    <!-- 2024-06-19 이주원 화살표ui 추가 -->
+	                    <td style="width: 16px; text-align: center; padding-left: 4px;" >
+                            <!-- <div style="display: inline-block; margin:auto; padding-left:2.5px;" id="AddRemoveBTN"> -->
+                            <div style="display: inline-block; margin:auto;" id="AddRemoveBTN">
+                                <img src="/images/kr/cm/arr_right.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsert" onclick="return list2_onSel_DBclick();">
+                                <br>
+                                <img src="/images/kr/cm/arr_left.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgDelete" onclick="return AprlineDel_onclick();">
+                                <br>
+                            </div>
+                        </td>
 	                    <td style="vertical-align: top;">
 	                    <c:if test="${approvalFlag == 'G' }">
 	                        <table style="margin-left: 5px;">
@@ -3235,6 +3425,8 @@
 			                                            <a class="imgbtn imgbck2" style="margin-top: 3px; display:none;"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a>
 		                                        	</c:if>
 		                                        </span>
+		                                        <!-- 부서철보기 -->
+                                                <a class="imgbtn imgbck2" style="margin-top: 3px;"><span onclick="return viewDeptBinder()"><spring:message code='ezApprovalG.t1119'/></span></a>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
 		                                <span  style="vertical-align: middle; float: right;">
 		                                    <select id="selSearchOption" style="vertical-align: top;height:22px;margin-top:3px">
@@ -3853,6 +4045,20 @@
 				                        </a>
 					                </td>
 				                </tr>
+									<tr <c:if test="${nonElecRecType eq 'HWP' || nonUseDocAttachYN eq 'N' }"> style="display: none;"</c:if>>
+									<th><spring:message code='ezApprovalG.nonElecAt02'/></th> <!-- 본문첨부 -->
+									<td>
+										<input type="text" readonly="" id="filename" style="width: 180px;">
+										<c:if test="${guBun eq '1'}">
+										<a class="imgbtn">
+						     	           <span id="btnAddDocAttach" onClick="return btnfileup()" style="" >
+											    <spring:message code='ezApprovalG.nonElecAt03'/>
+						     	        	</span>
+										</a>
+											<span>* (image, OfficeFile, hwp )</span>
+										</c:if>
+									</td>
+								</tr>
 			        		</table>
 			        		<div id="divAudioVisualDummy" style="display:none"></div>
 			        		<div id="divAudioVisual" style="display: none">
@@ -3975,6 +4181,7 @@
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	    <!-- 사용자 정보 해더 xml -->
+		<input id="file" type="file" onchange="filechange(event)" accept=".doc, .docx, .ppt, .pptx, .xls, .xlsx, .pdf, .jpg, .jpeg, .png, .gif, .bmp, .txt, .text, .html, .htm, .hwp" style="display:none;width:0px;height:0px;" />
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");
@@ -3984,4 +4191,7 @@
 		    Tab5_NewTabIni("tab5");
 	    }
 	</script>
+	<span id="loading" style="top: 300px; left: 550px; width: 100px; display: none; position: absolute;">
+			<img src="/images/loading/loading_new.gif" style="width: 100px;">
+	</span>
 </html>

@@ -3924,4 +3924,19 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void insertDocAttachInfo(ApprGDocAttachInfoVO vo) throws Exception {
 		insert("EzApprovalGDAO.insertDocAttachInfo", vo);
 	}
+
+	/* 2024-06-18 양지혜 - 비전자문서의 분리첨부 유무 및 RECORDID 확인 */
+	public String chkNonElecRec(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.chkNonElecRec", map);
+	}
+
+	/* 2024-06-24 양지혜 - 지정반송 > 반송위치에 표출할 결재라인 호출 */
+	public List<ApprGAprLineVO> getReturnUserList(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getReturnUserList", map);
+	}
+
+	/* 2024-06-24 양지혜 - 지정반송 > 결재라인 업데이트 */
+	public void updateReturnByDesignation(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateReturnByDesignation", map);
+	}
 }

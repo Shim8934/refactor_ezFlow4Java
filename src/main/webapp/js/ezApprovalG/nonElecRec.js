@@ -212,6 +212,7 @@ function getNonElecRecInfo() {
             }
         }
     }
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "DOCATTACHNAME", filename.value);	
 	
 	return getXmlString(rtnXml);
 }
@@ -275,6 +276,11 @@ function nonElecRecInfoInit() {
 	    	}
 	    }
 	}
+	
+	if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DOCATTACHNAME").length > 0){
+		document.getElementById("filename").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DOCATTACHNAME");
+	}
+	
 }
 /*
  * .hwp 전용  ret값 받아서 결재양식에 데이터 뿌려주는 메소드

@@ -185,6 +185,8 @@
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 
 			var attachedDocList = "${ attachedDocList }";
+
+			var pTenantID = "<c:out value='${userInfo.tenantId}'/>";
 	        
 	        window.onload = function () {
 	            try {

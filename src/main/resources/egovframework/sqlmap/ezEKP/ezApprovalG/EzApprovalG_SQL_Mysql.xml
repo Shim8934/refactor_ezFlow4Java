@@ -5559,6 +5559,9 @@
 	</select>
 	
 	<select id="EzApprovalG.getTaskSubCategoryAll" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+        <isEqual property="viewFlag" compareValue="Y">
+            select * from (
+        </isEqual>
 	<![CDATA[
 		SELECT 
 		    VTASKCLASS.TASKCODE,
@@ -5617,8 +5620,13 @@
 		            COMPANYID
 		    FROM
 		        VTASKCLASS
-		    WHERE
-	            MCATEGORYCODE = #cateCode#
+		    WHERE 1=1
+		    ]]>
+        <isNotEqual property="viewFlag" compareValue="Y">
+            AND
+                MCATEGORYCODE = #cateCode#
+        </isNotEqual>
+        <![CDATA[
             AND 
             	(TRIM(PROCESSDEPTCODE) = #deptCode#
             OR 
@@ -5735,6 +5743,9 @@
 			TBL_CABINET.TASKNAME,
 			TBL_CABINET.TITLE,
 			TBL_CABINET.CLASSCREATEDATE DESC
+        <isEqual property="viewFlag" compareValue="Y">
+            ) A where VOLUMENO is not null
+        </isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTaskInSubCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
@@ -6295,6 +6306,14 @@
 			     		M.COMPANYID = TBL_RECORD.COMPANYID
 			     	 AND
 			     	 	M.APRMEMBERSN = 1	
+	     	 <isEqual property="listType" compareValue="012">
+				   Left Join 
+				   		TBL_RECROLEINFO R
+				   On 
+				   		TBL_RECORD.TENANT_ID = R.TENANT_ID
+				   AND 
+				   		TBL_RECORD.RECORDID = R.RECORDID
+			 </isEqual>
 				   Inner Join 
 				   		( Select 
 				   				ProcessDeptCode, 
@@ -6344,8 +6363,10 @@
 						   				And 
 						   			ConfirmFlag = '0')
 						  <isNotEqual property="tempDeptCode" compareValue="ALL">
-							  AND 
-							  		OwnerDeptID = #tempDeptCode#
+						  <isNotEqual property="listType" compareValue="012">
+						  AND 
+						  		OwnerDeptID = #tempDeptCode#
+						  </isNotEqual>
 						  </isNotEqual>
 						</isEmpty> 
 				  		<isNotEmpty property="cabinetIDs">
@@ -6673,6 +6694,12 @@
                        TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
 					AND
 						TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+                </isEqual>
+                <isEqual property="listType" compareValue="012">
+                	AND
+                		R.USERID = #userID#
+                	AND
+						TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
                 </isEqual>
 			<isNotEmpty property="isDocPrint">
 				<isEqual property="isDocPrint" compareValue="TRUE">
@@ -11148,16 +11175,29 @@
 		<isEqual property="v_FLAG" compareValue="001">
 			<isEqual property="approvalFlag" compareValue="G">
 				<![CDATA[
-					SELECT 
-						PUBLICITYYN 
-			        FROM 
-			        	TBL_EXPENDAPRDOCINFO 
-			        WHERE  
-			        	DOCID = #v_DOCID#
+					SELECT
+						CASE
+						    WHEN A.PUBLICITYYN = 'Y' AND C.USERRIGHT = 0 THEN 'N'
+					        ELSE A.PUBLICITYYN
+					    END AS PUBLICITYYN
+			        FROM
+                        TBL_EXPENDAPRDOCINFO A
+			        INNER JOIN
+			        	TBL_RECORD B
+			        ON A.DOCID = B.DOCID AND A.TENANT_ID = B.TENANT_ID AND A.COMPANYID = B.COMPANYID
+                    INNER JOIN
+			        	TBL_RECROLEINFO C
+			        ON B.RECORDID = C.RECORDID AND B.TENANT_ID = C.TENANT_ID AND B.COMPANYID = C.COMPANYID
+			        WHERE
+			        	A.DOCID = #v_DOCID#
 			        AND
-						TENANT_ID = #v_TENANTID#
+						A.TENANT_ID = #v_TENANTID#
 					AND
-		      			COMPANYID = #companyID#					
+		      			A.COMPANYID = #companyID#
+                    AND
+                        C.SEPERATEATTACHNO = '00'
+                    AND
+                        C.USERID = 'All_User'
 				]]>
 			</isEqual>
 			<isNotEqual property="approvalFlag" compareValue="G">
@@ -14116,6 +14156,14 @@
      		TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
     	 AND 
      		TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
+  <isEqual property="listType" compareValue="012">
+		Left Join 
+			TBL_RECROLEINFO R
+		On 
+			TBL_RECORD.TENANT_ID = R.TENANT_ID
+		AND 
+			TBL_RECORD.RECORDID = R.RECORDID
+  </isEqual>     		
 	   Inner Join 
 	   		( Select 
 	   				ProcessDeptCode, 
@@ -14162,8 +14210,10 @@
 			  AND 
 			   		NOT (TBL_CABINET.CabinetTransferFlag = '2' And ConfirmFlag = '0')
 			  <isNotEqual property="tempDeptCode" compareValue="ALL">
+			  <isNotEqual property="listType" compareValue="012">
 			  AND 
 			  		OwnerDeptID = #tempDeptCode#
+			  </isNotEqual>
 			  </isNotEqual>
 			</isEmpty> 
 	  		<isNotEmpty property="cabinetIDs">
@@ -14491,6 +14541,12 @@
            TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
 		AND
 			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+	</isEqual>
+	<isEqual property="listType" compareValue="012">
+		AND
+			R.USERID = #userID#
+		AND
+			TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
 	</isEqual>
 	
 	</select>
@@ -24343,7 +24399,7 @@
 		  		 	SendingMemberName, SendingMemberName2, DeliveryNo, ProduceDeptRegNo, ElectronicRecFlag, 
 		  		 	SpecialRecordCode, PublicityCode, LimitRange, OldRecordFlag, DeleteDate,
 		  		 	DelFlag, SpecialCatalogFlag, AttachFlag, CreateDate, RejectFlag,    
-		  		 	ManualRegFlag, DocType, TENANT_ID, COMPANYID) 
+		  		 	ManualRegFlag, DocType, TENANT_ID, COMPANYID, DocAttachName) 
 	   			VALUES 
 	   				(#v_RECORDID#, #v_DOCID#, #v_DEPTNAME#,	#v_DEPTNAME2#, #v_DEPTCODE#,
 					#v_REGYEAR#, #v_REGISTERDATE#, #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  
@@ -24351,7 +24407,7 @@
 	   				NULL, NULL, #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, 
 	   				#v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#, NULL,
 	   				#v_DELFLAG#, #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, #v_SYSDATE#, #v_REJECTFLAG#, 
-	   				#v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#)
+	   				#v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_DOCATTACHNAME#)
 	   </isEqual>
 	   <isNotEqual property="v_NONELECRECYN" compareValue="Y">
 	   		INSERT INTO 
@@ -30779,7 +30835,8 @@
 		 	B.CABINETID,
 		 	B.NUMOFPAGE,
 		 	C.RECORDTYPE,
-		 	C.SUMMARY
+		 	C.SUMMARY,
+		 	A.DOCATTACHNAME
 		FROM 
 			TBL_RECORD_TEMP A
 		JOIN 
@@ -30813,15 +30870,15 @@
     	UPDATE 
     		TBL_SEPERATEATTACH_TEMP
     	SET
-    		CABINETID = #cabinetID#
+    		CABINETID = #v_CABID#
     	WHERE
     		DOCID = #orgDocID#
     	AND
-    		SEPERATEATTACHNO = #sepAttachNO#
+    		SEPERATEATTACHNO = #v_SepAttachNo#
     	AND 
 			COMPANYID = #companyID# 
 		AND 
-			TENANT_ID = #tenantID#
+			TENANT_ID = #v_TENANTID#
     </update>
     <update id="EzApprovalG.setEndNonElecRecDocDel" parameterClass="Map">
     	UPDATE 
@@ -36075,4 +36132,64 @@
             #companyID#
        )
     </insert>
+
+    <!-- 2024-06-18 양지혜 - 비전자문서의 분리첨부 유무 및 RECORDID 확인 -->
+    <select id = "EzApprovalG.chkNonElecRec" parameterClass="Map" resultClass="String">
+        SELECT
+            CASE
+                WHEN COUNT(1) = 0
+                    THEN (SELECT RECORDID FROM TBL_SEPERATEATTACH_TEMP WHERE DOCID = #orgDocID# AND SEPERATEATTACHNO = '00' AND COMPANYID = #companyID# AND TENANT_ID = #v_TENANTID#)
+                ELSE 'existence'
+            END AS RECORDID
+        FROM
+            TBL_SEPERATEATTACH_TEMP
+        WHERE
+            DOCID = #orgDocID#
+        AND
+            SEPERATEATTACHNO = #v_SepAttachNo#
+        AND
+            COMPANYID = #companyID#
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+
+    <select id ="EzApprovalG.getReturnUserList" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
+        SELECT
+            *
+        FROM
+            TBL_APRLINEINFO
+        WHERE
+            DOCID = #docId#
+        AND
+            COMPANYID = #companyId#
+        AND
+            TENANT_ID = #tenantId#
+        AND
+            APRSTATE = '003'
+        AND
+            APRTYPE IN ('018','019')
+    </select>
+
+    <update id="EzApprovalG.updateReturnByDesignation" parameterClass="Map">
+        UPDATE
+            TBL_APRLINEINFO
+        SET
+            APRSTATE = #aprState#,
+            PROCESSDATE = NULL
+        WHERE
+        <isEqual property="type" compareValue="1">
+            APRMEMBERSN = #returnUserSN#
+        </isEqual>
+        <isNotEqual property="type" compareValue="1">
+            APRMEMBERSN > #returnUserSN#
+        AND
+            APRTYPE IN ('001', '019')
+        </isNotEqual>
+        AND
+            DOCID = #docID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            TENANT_ID = #tenantID#
+    </update>
 </sqlMap>

@@ -6087,6 +6087,10 @@
 			COMPANYID = #companyID#
 		AND
 			TENANT_ID = #tenantID#
+		AND
+		<![CDATA[
+			PRODUCTIONYEAR <= TO_CHAR(SYSDATE, 'YYYY')
+		]]>
 		ORDER BY
 			PRODUCTIONYEAR DESC
 	</select>

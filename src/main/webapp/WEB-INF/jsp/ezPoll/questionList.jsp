@@ -449,7 +449,9 @@
 		    function creatorResultAlert(){
 		    	var resultFirst = "${resultFirst}" + "";
 		    	if(resultFirst === "2"){
-			    	alert("<spring:message code = 'ezPoll.hdp08'/>");
+					setTimeout(function() {
+			    		alert("<spring:message code = 'ezPoll.hdp08'/>");
+					}, 100);
 		    	}
 		    }
 		    

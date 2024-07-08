@@ -3022,4 +3022,71 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/readingRecord.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	public String readingCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("readingRecord Started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String sFlag = "m01";
+		String shareDeptId = (request.getParameter("shareDeptId") != null ? request.getParameter("shareDeptId") : "");
+		String contType = "END";
+		String dirpath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + "doc";
+		String deptInfo = "";
+		String buJaeInfo = "";
+		String susinAdmin = "";
+    	// OCS 사용 여부
+	    String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+	    String userEmail = userInfo.getEmail();
+	    String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
+	    
+	    String useOpenGov = config.getProperty("config.useOpenGov");
+	    
+		if (useOpenGov != null && useOpenGov.equals("YES")) {
+			model.addAttribute("useOpenGov", useOpenGov);
+		}
+	    
+    	if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+    		susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+    	
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
+		Document doc = commonUtil.convertStringToDocument(result);
+		
+		deptInfo  = doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
+		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent().trim();
+		
+		// 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 전자결재 미리보기영역 관련 변수 추가
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String previewInfo = "OFF";
+		String useAprPreview = ezCommonService.getTenantConfig("useAprPreview", userInfo.getTenantId());
+		
+		if (useAprPreview.equalsIgnoreCase("YES")) {
+			previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId());
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("dirpath", dirpath);
+		model.addAttribute("deptInfo", deptInfo);
+		model.addAttribute("buJaeInfo", buJaeInfo);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("userEmail", userEmail);
+		model.addAttribute("openYear", openYear);
+		model.addAttribute("contType", contType);
+		model.addAttribute("sFlag", sFlag);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("shareDeptId", shareDeptId);
+        model.addAttribute("previewInfo", previewInfo);
+		model.addAttribute("useAprPreview", useAprPreview);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useDraftAll", ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId()));
+		
+		logger.debug("readingRecord ended");
+		
+		return "ezApprovalG/apprGreadingRecord";
+	}
 }

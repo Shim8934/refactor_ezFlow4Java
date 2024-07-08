@@ -228,6 +228,8 @@ var SurveyCreate     = function() {
 	// 설문 저장
 	function saveSurvey() {
 		if(confirm(SurveyMessages.strSaveAsk) == true) {
+			var saveSurveybtn = document.getElementById('saveSurvey');
+			saveSurveybtn.style.pointerEvents = 'none';
 			$.ajax({
 				type: "POST",
 				url: "/ezSurvey/saveSurvey.do",
@@ -240,6 +242,7 @@ var SurveyCreate     = function() {
 					afterSaveSuccessfully(data);
 				},
 				error : function(error) {
+					saveSurveybtn.style.pointerEvents = '';
 					alert(SurveyMessages.strError);
 				}
 			});
@@ -313,15 +316,16 @@ var SurveyCreate     = function() {
 	}
 	
 	function afterSaveSuccessfully(data) {
+		var saveSurveybtn = document.getElementById('saveSurvey');
 		var code = data.code;
 		switch(code) {
 			case 0 : window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
 					 window.parent.frames["left"].surveyId = -1;
 					 window.parent.frames["left"].isInCreateSurvey = false; // 신규 설문 생성 완료
 					 break;
-			case 1 : alert(SurveyMessages.strParamErr); break;
-			case 2 : alert(SurveyMessages.strError)   ; break;
-			default: alert(SurveyMessages.strError)   ; return;
+			case 1 : alert(SurveyMessages.strParamErr); saveSurveybtn.style.pointerEvents = ''; break;
+			case 2 : alert(SurveyMessages.strError)   ; saveSurveybtn.style.pointerEvents = ''; break;
+			default: alert(SurveyMessages.strError)   ; saveSurveybtn.style.pointerEvents = ''; return;
 		}
 	}
 	// 설문 정보 입력 단계

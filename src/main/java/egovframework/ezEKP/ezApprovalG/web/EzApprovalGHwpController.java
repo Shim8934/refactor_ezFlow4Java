@@ -1326,6 +1326,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		model.addAttribute("attachedDocList", attachedDocList);
+		model.addAttribute("tenantID",userInfo.getTenantId());
 		
 		logger.debug("draftuiWHWP ended. formPath:" + formPath);
 		
@@ -1535,6 +1536,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
+		/* 2024-06-24 양지혜 - 지정반송 사용 여부 */
+		model.addAttribute("useReturnByDesignation", ezCommonService.getTenantConfig("returnByDesignationUsed", userInfo.getTenantId()));
 		
 		logger.debug("approvuiWHWP ended");
 		

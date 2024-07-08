@@ -125,7 +125,7 @@ public interface EzApprovalGService {
 
     public String getTaskSubCategory(String deptCode, String companyID, String cateCode, String strType, int tenantID) throws Exception;
 
-    public String getTaskSubCategoryAll(String deptCode, String companyID, String cateCode, String strType, String initFlag, int tenantID) throws Exception;
+    public String getTaskSubCategoryAll(String deptCode, String companyID, String cateCode, String strType, String initFlag, int tenantID, String viewFlag) throws Exception;
 
     public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType, int tenantID, String approvalFlag) throws Exception;
 
@@ -559,7 +559,7 @@ public interface EzApprovalGService {
 
     public String getNonElecInfoSusinInit(String orgDocID, String companyID, int tenantID) throws Exception;
 
-    public void setNonElecRecCabID(String docID, String orgDocID, String cabinetID, String companyID, int tenantID) throws Exception;
+    public void setNonElecRecCabID(String docID, String orgDocID, String cabinetID, String companyID, int tenantID, Locale locale) throws Exception;
 
     /**
      * 결재완료문서에서 첨부파일로 쓰이는지 여부를 반환
@@ -889,4 +889,10 @@ public interface EzApprovalGService {
     public List<OrganDeptVO> getUnderDeptList(LoginVO userInfo) throws Exception;
 
     public String attachRecordDoc(LoginVO userInfo, String newDocID, Object attachedDocList) throws Exception;
+
+    /* 2024-06-24 양지혜 - 지정반송 > 반송위치에 표출할 결재라인 호출 */
+    String getReturnUserList(String docId, int tenantId, String companyId) throws Exception;
+
+    /* 2024-06-24 양지혜 - 지정반송 > 결재라인 업데이트 */
+    String updateReturnByDesignation(LoginVO userInfo, String docID, String returnUserSN) throws Exception;
 }

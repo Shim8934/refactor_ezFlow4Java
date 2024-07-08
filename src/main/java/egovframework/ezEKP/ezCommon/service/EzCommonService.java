@@ -356,4 +356,12 @@ public interface EzCommonService {
 	
 	public void insertEndDateOptionConfig() throws Exception;
 
+	/* 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그 */
+	public void insertReturnByDesignationUsedConfig() throws Exception;
+
+	public void alterDocAttachNameCol() throws Exception;
+    
+	public void insertNonUseDocAttachYN() throws Exception;
+
+	public void insertReadingRecordHeader() throws Exception;
 }

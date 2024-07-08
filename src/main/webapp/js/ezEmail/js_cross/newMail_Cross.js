@@ -3997,7 +3997,7 @@ function mailExportOption_onClick(type) {
     exportOption_cross_dialogArguments[1] = mailExportOption_onClick_Complete;
     exportOption_cross_dialogArguments[2] = DivPopUpHidden;
     
-    DivPopUpShow(460, 230, "/ezEmail/mailExportOption.do?exportType=" + type);
+    DivPopUpShow(460, 240, "/ezEmail/mailExportOption.do?exportType=" + type);
 }
 
 function mailExportOption_onClick_Complete(m_rgParams4PostOption) { }

@@ -544,7 +544,7 @@
 		  PRIMARY KEY (`USERID`,`TENANTID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
-	
+
 	<select id="EzCommonDAO.checkPortalThemePortlet">
 		<![CDATA[
 			SELECT
@@ -3622,7 +3622,7 @@
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
         VALUES (0, 'useBoardFilePrvw', '게시판 첨부파일 미리보기 기능 사용 여부', '1', '게시판 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', '2023-06-29 00:00:00', '게시판');
     </insert>
-    
+
 	<select id="EzCommonDAO.checkPermissionBasisDeptYN_Config" resultClass="String">
 		SELECT
 			PROPERTY_VALUE
@@ -3633,7 +3633,7 @@
 		AND
 			TENANT_ID = 0
 	</select>
-	
+
 	<insert id="EzCommonDAO.insertPermissionBasisDeptYN_Config">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES ('0', 'permissionBasisDeptYN', 'N', '조직도 > 권한 설정 시 Y: 사용자/겸직부서를 기준으로 권한을 부여한다 // N: 사용자만을 기준으로 권한을 부여한다.(Default: N)', '조직도 권한부여 기준 설정', '2023-08-16 00:00:00.000', '조직도')
@@ -3657,7 +3657,7 @@
 			STACK      MEDIUMTEXT    NULL
 		) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4
 	</statement>
-	
+
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 -->
     <select id="EzCommonDAO.getPortalMenuTenantList" resultClass="String">
 		<![CDATA[
@@ -3835,7 +3835,7 @@
 			(#v_TENANTID#, 'LangQuaternary4', '멀티언어4', '中文', '', '2023-11-27 14:30:00', '일반'),
 			(#v_TENANTID#, 'LangQuaternary5', '멀티언어5', '', '', '2023-11-27 14:30:00', '일반')
 	</insert>
-	
+
 	<select id="EzCommonDAO.checkLoadTimeForApprAllConfig" resultClass="String">
 		SELECT
 			PROPERTY_VALUE
@@ -3846,7 +3846,7 @@
 		AND
 			TENANT_ID = 0
 	</select>
-	
+
 	<insert id="EzCommonDAO.insertLoadTimeForApprAllConfig">
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES ('0', 'loadTimeForApprAll', '200', '다안기안 문서 표출 시 글꼴,스크롤 오류를 해결하기 위한 setTimeout 시간. 네트워크 환경에 따라 적절한 시간 조절을 위해 사용(default:200)', '다안기안 문서 로딩시간', '2024-01-11 00:00:00', '전자결재G')
@@ -3948,8 +3948,8 @@
 		  `COMPANYID` varchar(20) NOT NULL,
 		  PRIMARY KEY (`DOCID`, `USERID`, `REGDATE`, `TENANT_ID`, `COMPANYID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='2023-06-30 기준 통합 PC 저장에서만 사용하고 있음. gubun 은 "D"(Download) 로 사용하고 있음.';
-	</statement>	
-	
+	</statement>
+
 
 	<!-- 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부 -->
 	<select id="EzCommonDAO.checkDelAttachByOthersConfing" resultClass="String">
@@ -4132,7 +4132,7 @@
 				ELSE 'N'
 				END
 	</update>
-	
+
 
 
 	<!-- 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 -->
@@ -4172,7 +4172,7 @@
     </select>
 
 	<insert id="EzCommonDAO.insertRecordHeaderClassTitle" parameterClass="Map">
-		INSERT INTO TBL_LISTINFO 
+		INSERT INTO TBL_LISTINFO
 		    (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
 		VALUES
 			('001',1,'순번',40,null,null,'dtSerialNum','dtSerialNum','기록물 대장',null,'No.','順番','序号',#v_TENANTID#,#v_COMPANYID#),
@@ -4200,7 +4200,7 @@
           AND
             COMPANYID = #v_COMPANYID#
     </delete>
-    
+
 	<select id="EzCommonDAO.checkUseReceiptDeptFileAttach" resultClass="String">
 		SELECT
 			PROPERTY_VALUE
@@ -4217,9 +4217,9 @@
         VALUES (#v_TENANTID#, 'useReceiptDeptFileAttach', 'NO', '부서수신함에서 첨부, 문서첨부 기능 사용 여부. YES: 사용 NO: 사용안함 (default: NO)', '부서수신함에서 첨부, 문서첨부 기능 사용여부', '2024-06-04 00:00:00', '전자결재')
     </insert>
 
-	
+
 	<select id="EzCommonDAO.checkExistDocBinderListOption" parameterClass="map" resultClass="int">
-		SELECT 
+		SELECT
 			COUNT(*)
 		FROM
 			TBL_LISTOPTION
@@ -4230,9 +4230,9 @@
 		AND
 			COMPANYID = #companyId#
 	</select>
-	
+
 	<insert id="EzCommonDAO.insertDocBinderListOption" parameterClass="map">
-		INSERT INTO 
+		INSERT INTO
 			TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
 		VALUES
 			('095', 1, '이름', 140, 'TBL_CABINETCLASS', 'TITLE', null, null, 'Simple기록물철', '이름', 'Name', '綴じ名', '名稱', #tenantId#, #companyId#),
@@ -4242,9 +4242,9 @@
 			('095', 5, '연번', 50, 'TBL_CABINETCLASS', 'REGSERIALNO', null, null, 'Simple기록물철', '연번', 'SN.', '連番', '序列号', #tenantId#, #companyId#),
 			('095', 6, '권호수', 40, 'TBL_CABINET', 'VOLUMENO', null, null, 'Simple기록물철', '권호수', 'VOL.', '巻号数', '卷湖',  #tenantId#, #companyId#)
 	</insert>
-	
+
 	<delete id="EzCommonDAO.delDocBinderListOption" parameterClass="map" >
-		DELETE FROM 
+		DELETE FROM
 			TBL_LISTOPTION
 		WHERE
 			LISTTYPE = '095'
@@ -4271,4 +4271,82 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES (#v_TENANTID#, 'endDateOptionConfig', 'NOPE', '게시판 게시물 리스트 조회 시 만료게시물 조회가능 여부 / NOPE:불가, ADMIN:관리자만 조회가능, ALWAYS:전부 조회 가능 (default:NOPE)', '만료게시물 조회가능 여부', '2024-05-24 00:00:00', '게시판')
 	</insert>
+
+	<insert id="EzCommonDAO.insertReturnByDesignationUsedConfig" parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG
+		(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantID#, 'ReturnByDesignationUsed', 'NO', '지정반송 사용여부 (default:NO)', '지정반송 사용여부', '2024-06-18 00:00:00', '전자결재')
+	</insert>
+
+	<select id="EzCommonDAO.checkDocAttachNameCol">
+		SELECT
+		    DOCATTACHNAME
+		FROM
+		    TBL_RECORD_TEMP
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterDocAttachNameCol">
+		ALTER TABLE
+			TBL_RECORD_TEMP
+		ADD
+			DOCATTACHNAME varchar(300) DEFAULT '' ;
+	</statement>
+
+	<select id="EzCommonDAO.checkNonUseDocAttachYN" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'NonUseDocAttachYN'
+		  AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertNonUseDocAttachYN">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'NonUseDocAttachYN', 'Y', '비전자문서 본문첨부 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '본문첨부 기능 사용여부', '2024-07-02 00:00:00', '전자결재')
+	</insert>
+
+	<select id="EzCommonDAO.checkReadingRecordHeader" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_LISTINFO
+		WHERE
+			LISTTYPE = '012'
+		  AND
+			TENANT_ID = #tenantId#
+		  AND
+			COMPANYID = #companyId#
+	</select>
+
+	<insert id="EzCommonDAO.insertReadingRecordHeader" parameterClass="map">
+		INSERT INTO
+			TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			('012', 1, '문서번호', 110, null, 'CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, ''-''), SUBSTR(TBL_RECORD.RegisterNo, -6))', 'DispRegisterNo', 'Default', '열람문서함', null, 'Doc. No.', '登録番号', '註冊號', #tenantId#, #companyId#),
+			('012', 2, '제목', 200, 'TBL_SEPERATEATTACH', 'TBL_SEPERATEATTACH.Title', 'RecTitle', 'Default', '열람문서함', null, 'Title', 'タイトル', '标题', #tenantId#, #companyId#),
+			('012', 3, '기안자', 50, 'TBL_RECORD', 'TBL_RECORD.DrafterName', 'DrafterName', 'Default', '열람문서함', null, 'Drafter', '起案者', '起草人', #tenantId#, #companyId#),
+			('012', 4, '기안부서', 70, 'TBL_ENDAPRDOCINFO', 'TBL_ENDAPRDOCINFO.WriterDeptName', 'WriterDeptName', 'Default', '열람문서함', null, 'Dept.(draft)', '起案部署', '起草部门', #tenantId#, #companyId#),
+			('012', 5, '등록일', 100, 'TBL_RECORD', 'TBL_RECORD.RegisterDate', 'RegisterDate', 'dtDateTime', '열람문서함', null, 'RegisterDate', '登録日', '注册', #tenantId#, #companyId#),
+			('012', 6, '문서명', 80, 'TBL_EXPENDAPRDOCINFO', 'TBL_EXPENDAPRDOCINFO.FormName', 'FormName', 'Default', '열람문서함', null, 'Form title', '文書名', '文件名', #tenantId#, #companyId#),
+			('012', 7, '첨부', 40, 'TBL_RECORD', 'TBL_RECORD.AttachFlag', 'AttachFlag', 'dtBool', '열람문서함', '첨부여부', 'AttachFlag', '添付', '附件', #tenantId#, #companyId#),
+			('012', 8, '공개', 40, 'TBL_ENDAPRDOCINFO', 'TBL_ENDAPRDOCINFO.ISPUBLIC', 'IsPublic', 'Default', '열람문서함', null, 'Public', '公開', '公开', #tenantId#, #companyId#),
+			('012', 9, '반려', 40, 'TBL_RECORD', 'TBL_RECORD.RejectFlag', 'RejectFlag', 'dtBool', '열람문서함', '반려여부', 'RejectFlag', '差し戻し', '伴侣区分', #tenantId#, #companyId#),
+			('012', 10, '수신', 40, 'TBL_RECORD', 'CASE WHEN TBL_ENDAPRDOCINFO.DocType = ''003'' AND TBL_SEPERATEATTACH.RegisterType = ''1'' THEN ''발송'' ELSE ''없음'' END', 'ReSendFlag', 'Default', '열람문서함', '발송여부', 'ReSendFlag', '受信', '接待区分', #tenantId#, #companyId#)
+	</insert>
+
+	<delete id="EzCommonDAO.delReadingRecordHeader" parameterClass="map" >
+		DELETE FROM
+			TBL_LISTINFO
+		WHERE
+			LISTTYPE = '012'
+		  AND
+			TENANT_ID = #tenantId#
+		  AND
+			COMPANYID = #companyId#
+	</delete>
 </sqlMap>

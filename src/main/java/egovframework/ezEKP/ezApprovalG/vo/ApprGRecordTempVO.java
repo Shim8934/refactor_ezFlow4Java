@@ -61,7 +61,8 @@ public class ApprGRecordTempVO {
 	/* 구분 */
 	private int tenantID;
 	private String companyID;
-	
+
+	private String docAttachName;
 	public String getRecordID() {
 		return recordID;
 	}
@@ -368,5 +369,12 @@ public class ApprGRecordTempVO {
 	public void setSc3(String sc3) {
 		this.sc3 = sc3;
 	}
-	
+
+	public String getDocAttachName() {
+		return docAttachName;
+	}
+
+	public void setDocAttachName(String docAttachName) {
+		this.docAttachName = docAttachName;
+	}
 }
