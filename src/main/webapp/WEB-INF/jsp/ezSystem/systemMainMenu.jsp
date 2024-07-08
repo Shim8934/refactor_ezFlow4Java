@@ -356,7 +356,7 @@
 					<th><spring:message code="ezSystem.reset01" /></th>
 					<td>
 						<a class="imgbtn resetBtn" id="frameReset" onclick="personalReset('frame')"><span><spring:message code='ezSystem.reset03'/></span></a>
-						※ 기존 포탈 사용 고객 필수 적용
+						<spring:message code="ezSystem.reset12" />
 					</td>
 				</tr>
 				<tr data-name="portal">
