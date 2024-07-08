@@ -4525,4 +4525,18 @@
             ADD
                 COMPANYID varchar(20) NOT NULL
     </statement>
+    
+    <select id="EzCommonDAO.checkUserThemePagination">
+		SELECT	USEPAGING
+		FROM	TBL_PORTAL_THEME_USER
+		LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.alterUserThemePagination">
+		ALTER TABLE
+			TBL_PORTAL_THEME_USER
+		ADD
+			USEPAGING	TINYINT	DEFAULT	1	NOT NULL	COMMENT '페이징 사용 여부'
+    </statement>
+    
 </sqlMap>

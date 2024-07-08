@@ -542,7 +542,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
             logger.debug("imgSrc = " + imgSrc);
             /*
-                imgSrc compile 중 boardID의 {}로 에러가 발생, 임시로 !!Q, !!W로 치환 
+                imgSrc compile 중 boardID의 {}로 에러가 발생, 임시로 !!Q, !!W로 치환
             */
             imgSrc = imgSrc.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
             tempHtml = tempHtml.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
@@ -3623,8 +3623,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterFileNameForWebfolderHistory() throws Exception {
         ezCommonDAO.alterFileNameForWebfolderHistory();
     }
-	
-	/** 2023-06-27 한태훈 - 전자결재 > 통합PC저장 다운로드 이력 남기는 테이블 생성(차후에 다른 이력을 남기기 위한 테이블로 쓸 수 있음) */	
+
+	/** 2023-06-27 한태훈 - 전자결재 > 통합PC저장 다운로드 이력 남기는 테이블 생성(차후에 다른 이력을 남기기 위한 테이블로 쓸 수 있음) */
 	@Override
 	public void createTblTotalHistory() throws Exception {
 		logger.debug("createTblTotalHistory started");
@@ -3641,11 +3641,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertdelAttachByOthersConfing(map);
         }
     }
-    
+
     @Override
     public void insertUseHideHeaderArea() throws Exception {
     	List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
-    	
+
     	for (TenantVO tenantVo : tenantIdList) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("v_TENANTID", tenantVo.getTenantId());
@@ -3707,14 +3707,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     @Override
     public void insertUseReceiptDeptFileAttach() throws Exception {
     	List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
-    	
+
     	for (TenantVO tenantVo : tenantIdList) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("v_TENANTID", tenantVo.getTenantId());
             ezCommonDAO.insertUseReceiptDeptFileAttach(map);
         }
     }
-    
+
 
     public void insertDocBinderListOption() throws Exception {
         List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
@@ -3755,7 +3755,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertReturnByDesignationUsedConfig(map);
         }
     }
-    
+
     public void alterDocAttachNameCol() throws Exception {
         ezCommonDAO.alterDocAttachNameCol();
     }
@@ -3894,6 +3894,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     @Override
 	public void addQuickLinkCompanyID() throws Exception {
 		ezCommonDAO.addQuickLinkCompanyID();
+	}
+
+	@Override
+	public void alterUserThemePagination() throws Exception {
+		ezCommonDAO.alterUserThemePagination();
 	}
 
 }

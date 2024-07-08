@@ -533,6 +533,11 @@ function resetPortletPaging(portletId, totalCnt, currentPage, activeTabId) {
 		if (portletInfoObj.portletCode != "tabBoard") {
 			portletPageNav.style.display = "block";
 		}
+		
+		if (usePaging != '1') {
+			portletPageNav.style.display = "none";
+		}
+		
 	} else {
 		if (portletInfoObj.portletCode != "tabBoard") {
 			portletPageNav.style.display = "none";

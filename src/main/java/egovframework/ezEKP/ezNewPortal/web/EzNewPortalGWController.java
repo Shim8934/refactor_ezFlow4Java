@@ -611,6 +611,7 @@ public class EzNewPortalGWController {
 			
 			data.put("usedTheme", userThemeSetting.getUsedTheme());
 			data.put("usedFrame", userThemeSetting.getUsedFrame());
+			data.put("usePaging", userThemeSetting.getUsePaging());
 //			data.put("portletOrder", portletOrder);
 			data.put("sliderList", sliderList);
 			data.put("userName", userName);

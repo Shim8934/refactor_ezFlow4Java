@@ -81,7 +81,7 @@
 	</head>
 	<body id="set-body">
 		<section class="set-head">
-			<h1><spring:message code='ezNewPortal.t009' /></h1>
+			<h1><spring:message code='ezNewPortal.HSBPT01' /></h1>
 		</section>
 		<section class="set-frame" style="display: none">
 			<h3><spring:message code='ezNewPortal.t010' /></h3>
@@ -110,7 +110,8 @@
 		<script type="text/javascript">
 			var portletSetting = {
 				selectedFrame: '',
-				usedtheme: '',
+				// 2024-06-11 조수빈 - 프레임 영역이 사라짐에 따라 본 창에서 테마 정보 가져옴
+				usedTheme: window.parent.parent[2].usedTheme
 			};
 			
 			var bodyFrameSetting = function (type) {
@@ -348,6 +349,14 @@
 								mouseWheelPixels: 70, 
 								//scrollInertia: 60,
 							});						
+							
+							var usedPaging = window.parent.parent[2].usePaging == 1 ? "checked" : "";
+							var pagingSetting = '<div style="position: relative; display: inline-block; left: 230px;">';
+							pagingSetting += '<input type="checkbox" ' + usedPaging + ' style="vertical-align: middle; margin: 0 10px;" id="pagingSetting">';
+							pagingSetting += '<label for="pagingSetting" style="vertical-align: middle;">' + "<spring:message code='ezNewPortal.usePaging' />" + '</label>';
+							pagingSetting += '</div>';
+							
+							document.getElementById("fixBoardList").firstChild.firstChild.innerHTML += pagingSetting; 
 						} else {
 							console.error(xhr.responseText);	
 						}
@@ -403,6 +412,7 @@
 						frameId: portletSetting.selectedFrame,
 						themeId: portletSetting.usedTheme,
 						portletList: portletList,
+						usePaging: !document.getElementById("pagingSetting").checked ? 0 : 1
 					}
 					
 					console.log('param', portletList);

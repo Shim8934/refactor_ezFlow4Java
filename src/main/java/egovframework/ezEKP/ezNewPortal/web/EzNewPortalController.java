@@ -472,17 +472,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String companyId = userInfo.getCompanyID();
 		String result = "success";
 		
+		// 2024-06-11 조수빈 - 프레임을 하나로 통일하도록 하였으나, 페이징처리 사용 유무 update를 위해 사용함. (프레임은 테마별 기본 값을 넣음)
 		/* 사용자 프레임 변경 */
-		/*
 		String url = "/rest/ezPortal/frames/users/" + userId + "?companyId=" + companyId;
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
-		String status = resultBody.get("status").toString();*/
+		String status = resultBody.get("status").toString();
 		
 		
 		/* 사용자 포틀릿 사용 변경 */
-		String url = "/rest/ezPortal/portlets/users/" + userId + "?companyId=" + companyId;
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
-		String status = resultBody.get("status").toString();
+		url = "/rest/ezPortal/portlets/users/" + userId + "?companyId=" + companyId;
+		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
+		status = resultBody.get("status").toString();
 		
 		logger.debug("status" + status);
 		
@@ -526,6 +526,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("fixedPortletList", data.get("fixedPortletList"));
 			model.addAttribute("usedTheme", data.get("usedTheme"));
 			model.addAttribute("usedFrame", data.get("usedFrame"));
+			model.addAttribute("usePaging", data.get("usePaging"));
 			model.addAttribute("sliderList", data.get("sliderList"));
 			model.addAttribute("userPhoto", data.get("userPhoto"));
 			model.addAttribute("userName", data.get("userName"));

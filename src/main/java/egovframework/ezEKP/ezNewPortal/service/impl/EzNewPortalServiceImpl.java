@@ -474,14 +474,26 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("[Serivce] updateUserUsedFrame Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> param = (Map<String, Object>) jObj.get("param");
+		Object themeId = param.get("themeId");
+		// 2024-06-11 조수빈 - 한 프레임만 사용하게 됨에 따라 테마에 맞는 해당 프레임을 지정해서 update하도록 수정.
+		Object frameId = "";
+		
+		if (themeId.equals("1")) {
+			frameId = "1";
+		} else if (themeId.equals("2")) {
+			frameId = "5";
+		} else if (themeId.equals("3")) {
+			frameId = "8";
+		}
 		
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("frameId", param.get("frameId"));
-		map.put("themeId", param.get("themeId"));
+		map.put("frameId", frameId);
+		map.put("themeId", themeId);
+		map.put("usePaging", param.get("usePaging") == null ? 1 : param.get("usePaging"));
 		map.put("isDefault", 1);
-		map.put("usedTheme", param.get("themeId"));
+		map.put("usedTheme", themeId);
 		
 		logger.debug("map.toString() : " + map.toString());
 		
@@ -836,6 +848,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					}
 				}
 			}
+			
+			// 2024-06-11 조수빈 - 회사 혹은  기준으로 포탈 설정을 가져올 경우 페이징 처리에 대한 값이 없으므로 default 값인 1을 넣는다.
+			userPortalSetting.setUsePaging(1);
 		} else {
 			List<ThemeInfoVO> themeList = getUserThemeList(companyId, tenantId, userId, deptPath, portletLang);
 			boolean canAccessTheme = false;

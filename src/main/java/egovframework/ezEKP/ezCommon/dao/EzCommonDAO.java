@@ -2269,4 +2269,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
             update("EzCommonDAO.addQuickLinkCompanyID");
         }
     }
+
+	public void alterUserThemePagination() throws Exception {
+		try {
+			select(("EzCommonDAO.checkUserThemePagination"));
+		} catch (Exception e) {
+			logger.debug("In TBL_PORTAL_THEME_USER doesn't exist usePaging column. creating the column...");
+
+			update("EzCommonDAO.alterUserThemePagination");
+		}
+	}
 }

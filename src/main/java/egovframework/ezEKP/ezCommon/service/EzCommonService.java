@@ -385,4 +385,6 @@ public interface EzCommonService {
 	public void insertPortalTopCompanyInitdata() throws Exception;
 
     void addQuickLinkCompanyID() throws Exception;
+
+	public void alterUserThemePagination() throws Exception;
 }

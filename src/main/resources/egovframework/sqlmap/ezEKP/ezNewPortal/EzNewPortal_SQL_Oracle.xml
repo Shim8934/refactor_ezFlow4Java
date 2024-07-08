@@ -103,6 +103,7 @@
 <result property="userId" 					column="USER_ID" />
 <result property="usedTheme" 				column="USED_THEME" />
 <result property="usedFrame" 				column="USED_FRAME" />
+<result property="usePaging" 				column="USEPAGING" />
 </resultMap>
 <resultMap class="FavoriteBoardVO" id="FavoriteBoardVO">
 <result property="title" 				column="TITLE" />
@@ -740,12 +741,13 @@ ON (	user_id = #userId#
 	)
 WHEN MATCHED THEN
 	UPDATE SET
-		USED_FRAME = #frameId#
+		USED_FRAME = #frameId#,
+		USEPAGING = #usePaging#
 WHEN NOT MATCHED THEN
 	INSERT (
-		USER_ID, COMPANY_ID, TENANT_ID, USED_THEME, USED_FRAME, IS_DEFAULT
+		USER_ID, COMPANY_ID, TENANT_ID, USED_THEME, USED_FRAME, IS_DEFAULT, USEPAGING
 	) VALUES (
-		#userId#, #companyId#, #tenantId#, #themeId#, #frameId#, #isDefault#
+		#userId#, #companyId#, #tenantId#, #themeId#, #frameId#, #isDefault#, #usePaging#
 	)
 ]]>	
 </update>
@@ -2809,7 +2811,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 <select id="ezNewPortal.getUserPortalSetting" parameterClass="Map" resultMap="UserPortalSettingVO">
 <![CDATA[
 	SELECT	
-		A.USER_ID, A.USED_THEME, B.FRAME_NAME AS USED_FRAME
+		A.USER_ID, A.USED_THEME, B.FRAME_NAME AS USED_FRAME, A.USEPAGING
 	FROM
 		TBL_PORTAL_THEME_USER A
 	JOIN

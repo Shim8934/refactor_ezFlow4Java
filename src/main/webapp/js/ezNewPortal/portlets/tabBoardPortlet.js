@@ -51,6 +51,11 @@ var getTabBoard = function (portletId) {
                 loadTabBoard(result.tabBoardId2, result.tabBoard2, result.tabBoardName2, 2);
                 loadTabBoard(result.tabBoardId1, result.tabBoard1, result.tabBoardName1, 1);
                 document.getElementById('tabBoardBtnDiv').style.display = "block";
+
+        		if (usePaging != '1') {
+        			document.getElementById('tabBoardBtnDiv').style.display = "none";
+        		}
+        		
             } else {
             	var notExistenceElemes = document.getElementById(portletId + "Portlet").querySelectorAll('#notexistence');
             	for (var i = 0; i < notExistenceElemes.length; i++) {
