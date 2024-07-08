@@ -143,6 +143,7 @@
 <result property="portletName" 				column="PORTLET_NAME" />
 <result property="portletCode" 				column="PORTLETCODE" />
 <result property="menuCode" 				column="MENUCODE" />
+<result property="boardGubun" 				column="BOARDGUBUN" />
 </resultMap>
 <resultMap class="PortletNameInfoVO" id="PortletNameInfoVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -3045,7 +3046,7 @@ SELECT c_id,
 SELECT A.PORTLET_ID,
 	   A.PORTLET_CATEGORY,
 	   (CASE C.PORTLET_TYPE WHEN 'G' THEN 1 ELSE 0 END) AS IS_GENERAL,
-	   C.portlet_url as connection_url,
+	   A.connection_url as connection_url,
 	   A.PORTLET_ORDER,
        A.PORTLET_USED AS PORTLET_USED,
        C.MENU_ID,
@@ -3056,7 +3057,8 @@ SELECT A.PORTLET_ID,
        E.MENU_NAME,
        F.PORTLET_NAME,
 	   C.PORTLETCODE,
-       G.MENUCODE
+       G.MENUCODE,
+	   NVL(D.GUBUN, -1) AS BOARDGUBUN
   FROM TBL_PORTAL_PORTLET_COMP A
   JOIN TBL_PORTAL_PORTLET C
     ON A.PORTLET_ID = C.PORTLET_ID

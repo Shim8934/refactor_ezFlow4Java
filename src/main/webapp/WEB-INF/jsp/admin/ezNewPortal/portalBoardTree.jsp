@@ -111,6 +111,16 @@ var selectBoard = function(event) {
 				window.opener.document.getElementById("portletBoard" + portletId).setAttribute("value", boardName);
 				window.opener.document.getElementById("portletBoard" + portletId).setAttribute("data1", selBoard);
 			}
+
+			// 게시판 포틀릿 형태 관련 on off
+			if (!!window.opener.switchBoardViewTypeRow) {
+				var id = portletId !== "null" ? portletId : "";
+				window.opener.switchBoardViewTypeRow(id, false);
+				window.opener.resetBoardUrl(id);
+				if (gubun == 0) {
+					window.opener.switchBoardViewTypeRow(id, true);
+				}
+			}
 			
 			window.close();
 		}

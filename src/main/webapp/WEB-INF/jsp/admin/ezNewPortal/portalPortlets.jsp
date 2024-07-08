@@ -11,6 +11,7 @@
 	<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
@@ -119,7 +120,7 @@
 	
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-	<script type="text/javascript">	
+	<script type="text/javascript">
 		var lang = "${lang}";
 		var arrayLang = Number(lang) - 1;
 		var usePrimaryLangOnly = "";
@@ -128,7 +129,13 @@
 		var useChinese = "${useChinese}";
 		var useVietnamese = "${useVietnamese}";
 		var useIndonesian = "${useIndonesian}";
-		
+
+		// 일반 게시판 포틀릿의 표출 타입 enum.
+		var BoardViewType = Object.freeze({
+			DEFAULT : '', CARD_A : 'a', CARD_B : 'b'
+		});
+		var CLASS_DISPLAY_NONE = 'notUsedTR';
+
 		$(function() {
 			getCompanies();
 			getPortletList();	
@@ -324,10 +331,11 @@
 			var portletId = event.data.portletId;
 			
 			//포틀릿 사용 여부
-			var isUsed = document.getElementById("portlet" + portletId).querySelectorAll(".switch")[0].querySelectorAll("input")[0].checked;
+			var targetPortlet = document.getElementById("portlet" + portletId);
+			var isUsed = targetPortlet.querySelectorAll(".switch")[0].querySelectorAll("input")[0].checked;
 			
 			//포틀릿 이름 리스트
-			var portletNameList = document.getElementById("portlet" + portletId).querySelectorAll(".portletName");
+			var portletNameList = targetPortlet.querySelectorAll(".portletName");
 			var portletNameListCount = portletNameList.length;
 			var nameList = [];
 			var portletNameEmptyNum = 0;
@@ -452,7 +460,9 @@
 						portletCode =  result[i].portletCode;
 
 						// 2020-12-08 박기범 - data3에 portletCode 추가
-						listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "' data3='" + portletCode + "' data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;") + "'>";
+						listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder
+								+ "' data2='" + menuId + "' data3='" + portletCode + "' data-general=" + result[i].general
+								+ " data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;") + "'>";
 						
 						if (usePrimaryLangOnly == "YES") {
 							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[0].portletName) + "</div>";
@@ -542,6 +552,8 @@
 								}	
 							}
 							
+						} else if (isFixBoardPortlet(portletCode)) {
+							listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
 						}
 						
 						// 2020-12-07 박기범:tabBoard 게시판도 게시판설정 감추도록 분기 추가
@@ -569,7 +581,13 @@
 							listHTML += "<a class='boardSettingtBtn'>";
 							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
 						}
-						
+
+						if (!result[i].general) {
+							listHTML += getBoardViewTypeRowStr(portletURL, portletId);
+						} else if (isFixBoardPortlet(portletCode)) {
+							listHTML += getFixBoardKeyRowStr(portletURL, portletId);
+						}
+
 						listHTML += "</table>";
 						listHTML += "</li>";
 					}
@@ -607,8 +625,15 @@
 						
 						//포틀릿 권한 창 불러오기 버튼 활성화
 						$("#portlet" + result[i].portletId).find(".portletAuthSetting").on("click", {"portletId" : result[i].portletId}, openPortletAuthSetting);
+
+						if (isFixBoardPortlet(result[i].portletCode)) {
+							switchBoardViewTypeRow(result[i].portletId, true);
+						} else if (result[i].menuId == 4 && !result[i].general && result[i].boardGubun == 0) {
+							switchBoardViewTypeRow(result[i].portletId, true);
+						}
 					}
-					
+
+
 					loadAfter();
 				}
 			};
@@ -709,6 +734,9 @@
 			listHTML += "<div class='btnpositionJsp boardSetting'>";
 			listHTML += "<a class='boardSettingtBtn'>";
 			listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
+
+			listHTML += getBoardViewTypeRowStr('', '');
+
 			listHTML += "</table>";
 			listHTML += "</li>";
 			
@@ -827,6 +855,97 @@
 	        
 	        window.open("/admin/ezNewPortal/openPortletAuthSetting.do?portletId=" + portletId + "&companyId=" + companyId, "",
 	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
+		}
+
+		function getBoardViewTypeRowStr(portletURL, portletId) {
+			var portletUrl = URLParamsUtils(portletURL);
+			var viewType = portletUrl.get('type');
+
+			var resultStr = "<tr id='rowViewType" + portletId + "' class='notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.board.pgb04' /> :</th><td class='portletInfoTD typeTD'>";
+			resultStr += "<select id='portletViewType" + portletId + "' name='portletViewType" + portletId + "' style='font-size:12px;' onchange='updateViewTypeOfBoard(this.value,\"" + portletId + "\");'>";
+			resultStr += "<option value='" + BoardViewType.DEFAULT + "' " + (viewType === BoardViewType.DEFAULT ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb01' /></option>";
+			resultStr += "<option value='" + BoardViewType.CARD_A + "' " + (viewType === BoardViewType.CARD_A ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb02' /></option>";
+			resultStr += "<option value='" + BoardViewType.CARD_B + "' " + (viewType === BoardViewType.CARD_B ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb03' /></option>";
+			resultStr += "</select>   ";
+			resultStr += "<a class='imgbtn wordSelect " + (viewType === BoardViewType.CARD_A || viewType === BoardViewType.CARD_B ? "" : CLASS_DISPLAY_NONE) + "' id='wordSelect" + portletId + "' onclick='selectWord(\"" + portletId + "\");'>";
+			resultStr += "<span style='font-size:11px;'><spring:message code='ezNewPortal.board.pgb05' /></span></a>";
+
+			return resultStr;
+		}
+
+		function getFixBoardKeyRowStr(portletURL, portletId) {
+			var portletUrl = URLParamsUtils(portletURL);
+			var viewType = portletUrl.get('type');
+
+			var resultStr = "<tr id='rowViewType" + portletId + "' class='notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.board.pgb08' /> :</th><td class='portletInfoTD typeTD'>";
+			resultStr += "<a class='imgbtn wordSelect' id='wordSelect" + portletId + "' onclick='selectWord(\"" + portletId + "\");'>";
+			resultStr += "<span style='font-size:11px;'><spring:message code='ezNewPortal.board.pgb05' /></span></a>";
+
+			return resultStr;
+		}
+
+		function resetBoardUrl(id) {
+			var portlet = !!id ? 'portlet' + id : 'newPortlet';
+			var conUrl = document.getElementById(portlet).querySelector('.connectionUrl');
+			if (!!conUrl) conUrl.value = "/ezNewPortal/boardPortlet.do";
+		}
+
+		function switchBoardViewTypeRow(portletId, turnOn) {
+			var row = document.getElementById('rowViewType' + portletId);
+			if (!row) return;
+			var select = document.getElementById('portletViewType' + portletId);
+			var anchor = document.getElementById('wordSelect' + portletId);
+
+			if (turnOn) {
+				row.classList.remove(CLASS_DISPLAY_NONE);
+			} else {
+				row.classList.add(CLASS_DISPLAY_NONE);
+				anchor.classList.add(CLASS_DISPLAY_NONE);
+				select.value = '';
+			}
+		}
+
+		function selectWord(id) {
+			var portletId = !!id ? "portlet" + id : "newPortlet";
+			var connectionUrl = document.getElementById(portletId).querySelector(".connectionUrl");
+
+			var companiesObj = document.getElementById("ListCompany");
+			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+
+			var wWeight ="540";
+			var wHeight = "270";
+
+			var heigth = window.screen.availHeight;
+			var width = window.screen.availWidth;
+			var left = (width - wWeight) / 2;
+			var top = (heigth - wHeight) / 2;
+			var conUrl = URLParamsUtils(connectionUrl.value);
+			var wordSetUrl = URLParamsUtils("/admin/ezNewPortal/cardViewPortletWordSetting.do?");
+			wordSetUrl.put('portletId', portletId);
+			wordSetUrl.put('companyId', companyId);
+			wordSetUrl.put('fileName', conUrl.get('fileName'));
+			var openWin = window.open(wordSetUrl.url, "", "height = " + wHeight + ", width = " + wWeight
+					+ ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
+
+		}
+
+		function updateViewTypeOfBoard(type, portletId) {
+			var anchor = document.getElementById('wordSelect' + portletId);
+			if (type === BoardViewType.DEFAULT) {
+				anchor.classList.add(CLASS_DISPLAY_NONE);
+			} else {
+				anchor.classList.remove(CLASS_DISPLAY_NONE);
+			}
+
+			var domId = !!portletId ? "portlet" + portletId : "newPortlet";
+			var connectionUrl = document.getElementById(domId).querySelector(".connectionUrl");
+            var url = URLParamsUtils(connectionUrl.value);
+            connectionUrl.value = url.put('type', type);
+		}
+
+		function isFixBoardPortlet(code) {
+			if (!code) return false;
+			return code === 'fixLeft' || code === 'fixRight';
 		}
 	</script>
 </body>

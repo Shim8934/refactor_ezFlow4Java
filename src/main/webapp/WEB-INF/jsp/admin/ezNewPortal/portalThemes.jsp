@@ -50,7 +50,7 @@
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
 			.ui-portlet-content { font-weight: bold; display: inline-block; float: left;cursor:move; border:1px dotted #000;}
 			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
-			.ui-portlet-span { display: inline-block; width: 68%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-top:12px;}
+			.ui-portlet-span { display: inline-block; width: calc(100% - 70px); font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-top:12px;}
 			/* .portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin:13px 0px 10px 0px; vertical-align:top;} */
 			.portlet_switch {margin: 1px 0px 10px 14px;}
 			.portlet_switch .slider {z-index:10;}
@@ -966,18 +966,23 @@
 				var portletUsed = $("#portlet" + portletId).prop("checked");
 				
 				var isFixed = false;
-				var fixedClassList = document.getElementById("fixedPortlet" + portletId).classList;
-				
-				for (var j = 0; j < fixedClassList.length; j++) {
-					if (fixedClassList[j] === "fixedPortlet") {
-						isFixed = true;
-						break;
-					} else if (fixedClassList[j] === "noneFixedPortlet") {
-						isFixed = false;
-						break;
+				var fixPo = document.getElementById("fixedPortlet" + portletId);
+				if (!!fixPo) {
+					var fixedClassList = fixPo.classList;
+
+					for (var j = 0; j < fixedClassList.length; j++) {
+						if (fixedClassList[j] === "fixedPortlet") {
+							isFixed = true;
+							break;
+						} else if (fixedClassList[j] === "noneFixedPortlet") {
+							isFixed = false;
+							break;
+						}
 					}
+				} else {
+					isFixed = true;
 				}
-				
+
 				themePortlet.push({"portletId" : portletId, "menuId" : menuId, "portletUsed" : portletUsed, "portletOrder" : i + 1, "isFixed" : isFixed});
 			}
 			

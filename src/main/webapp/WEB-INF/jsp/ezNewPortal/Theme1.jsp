@@ -535,7 +535,7 @@
 				element.classList.add("portlet");
 				element.classList.add(portletData.classSize);
 				element.dataset.size = portletData.classSize;
-				if (!!portletData.fixBoard) {
+				if (!!portletData.fixBoard && !!fixBoardArea) {
 					fixBoardArea.appendChild(element);
 				} else {
 					portletArea.appendChild(element);

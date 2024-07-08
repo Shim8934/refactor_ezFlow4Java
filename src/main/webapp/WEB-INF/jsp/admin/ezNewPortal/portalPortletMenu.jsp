@@ -119,7 +119,15 @@ var selectMenu = function() {
 			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("value", "");
 		}
 	}
-	
+
+	// 게시판 포틀릿 형태 관련 on off
+	if (!!window.opener.switchBoardViewTypeRow) {
+		var id = portletId !== "null" ? portletId : "";
+		window.opener.switchBoardViewTypeRow(id, false);
+		if (menuId == 4 && beforeMenu == 4) {
+			window.opener.switchBoardViewTypeRow(id, true);
+		}
+	}
 	
 	window.close();
 }

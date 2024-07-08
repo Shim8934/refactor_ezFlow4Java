@@ -1754,7 +1754,7 @@ form{display:inline;margin:0}
 	word-break:keep-all;
 	white-space:nowrap;
 	z-index:15;
-	background-color:#f8f8fa!;
+	background-color:#f8f8fa;
 	background-image:none!important;
 	cursor:default !important;
 	
@@ -3836,7 +3836,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .lnbUL li .list_text{padding: 0px 0px 0px 0px; height: 26px; ;line-height: 26px;}
 .lnbUL{padding: 0px 0px 17px 0px;}
 .tree_plus{margin: 3px 0px 0px 0px;}
-.btn_writeBox .btn_write01{height: 40px; line-height: 40px; font-size: 15px; padding: ;}
+.btn_writeBox .btn_write01{height: 40px; line-height: 40px; font-size: 15px;}
 .btn_writeBox{height: 66px;}
 #left h2.on, #TopBoards h2.on{background: #F8F9FB !important;}
 .lnb h2.on + .lnbUL{background:#F8F9FB; margin-bottom: 0px;}

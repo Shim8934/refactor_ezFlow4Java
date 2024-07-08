@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -1783,5 +1784,21 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String companyId = paramMap.get("companyId").toString();
 
 		return ezNewPortalService.getAvailablePortletSize(themeId, companyId, userInfo.getTenantId());
+	}
+
+	// 2023-11-24 황인경 - 관리자 > 포탈 > 포틀릿관리 > 일반게시판 포틀릿 > 카드형일 때 단어지정 팝업창
+	@RequestMapping(value = "/admin/ezNewPortal/cardViewPortletWordSetting.do", method=RequestMethod.GET)
+	public String cardViewPortletWordSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("cardViewPortletWordSetting started.");
+
+		String companyId = request.getParameter("companyId");
+		String portletId = request.getParameter("portletId");
+		String fileName = Optional.ofNullable(request.getParameter("fileName")).orElse("");
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("portletId", portletId);
+		model.addAttribute("fileName", fileName);
+
+		logger.debug("cardViewPortletWordSetting ended.");
+		return "/admin/ezNewPortal/portalWordSetting";
 	}
 }

@@ -785,6 +785,51 @@ if (!Node.prototype.append) {
     }
     testElement = null;
 }());
+
+if (!Array.prototype.fill) {
+    Object.defineProperty(Array.prototype, 'fill', {
+        value: function(value) {
+
+            // Steps 1-2.
+            if (this == null) {
+                throw new TypeError('this is null or not defined');
+            }
+
+            var O = Object(this);
+
+            // Steps 3-5.
+            var len = O.length >>> 0;
+
+            // Steps 6-7.
+            var start = arguments[1];
+            var relativeStart = start >> 0;
+
+            // Step 8.
+            var k = relativeStart < 0 ?
+                Math.max(len + relativeStart, 0) :
+                Math.min(relativeStart, len);
+
+            // Steps 9-10.
+            var end = arguments[2];
+            var relativeEnd = end === undefined ?
+                len : end >> 0;
+
+            // Step 11.
+            var final = relativeEnd < 0 ?
+                Math.max(len + relativeEnd, 0) :
+                Math.min(relativeEnd, len);
+
+            // Step 12.
+            while (k < final) {
+                O[k] = value;
+                k++;
+            }
+
+            // Step 13.
+            return O;
+        }
+    });
+}
 // polyfill end
 
 
@@ -822,5 +867,77 @@ function throttle(fn, limit, last) {
             }
         }
     };
+}
+
+/**
+ * URLSearchParams 이 사용되지 않는 환경에서 사용(⭐파라미터, 동작은 URLSearchParams 과 다름)
+ * @param {string} url - URL 또는 ?로 시작하는 쿼리스트링
+ * @returns {object} URLSearchParams 객체
+ * @example var urlParams = URLParamsUtils('http://example.com?param1=value1&param2=value2');
+ * @example var urlParams = URLParamsUtils('param1=value1&param2=value2');
+ */
+function URLParamsUtils(url) {
+    var instance = Object.create(URLParamsUtilsProto);
+    instance.url = url;
+    instance._hasQ = url.indexOf('?') > -1;
+    instance.base = url.split('?')[0];
+    instance.queryString = instance._hasQ ? url.substring(url.indexOf('?') + 1) : '';
+    return instance;
+}
+
+URLParamsUtilsProto = {
+    /**
+     * 특정 key에 해당하는 value를 가져온다.
+     * @param {string} key - 가져올 value의 key
+     * @returns {string} key에 해당하는 value
+     * @example var urlParams = URLParamsUtils('http://example.com?param1=value1&param2=value2');
+     *  urlParams.get('param1'); -> 'value1'
+     */
+    get : function (key) {
+        var pattern = new RegExp('(?:\\?|&)' + encodeURIComponent(key) + '=([^&#]*)');
+        var results = pattern.exec('?' + this.queryString);
+        if (results == null) {
+            return "";
+        } else {
+            return decodeURIComponent(results[1]) || "";
+        }
+    },
+    /**
+     * 특정 key에 value를 설정한다.
+     * @param {string} key - 설정할 value의 key
+     * @param {string} value - 설정할 value
+     * @returns {string} 설정된 url
+     * @example var urlParams = URLParamsUtils('http://example.com?param1=value1&param2=value2');
+     *  urlParams.put('param1', 'value3'); -> 'http://example.com?param1=value3&param2=value2'
+     */
+    put : function (key, value) {
+        var newParams = [];
+        var found = false;
+
+        if (!key || typeof value === 'undefined') {
+            return this.url;
+        }
+
+        if (this.queryString) {
+            var params = this.queryString.split('&');
+            for (var i = 0; i < params.length; i++) {
+                var param = params[i].split('=');
+                if (param[0] === key) {
+                    newParams.push(key + '=' + encodeURIComponent(value));
+                    found = true;
+                } else {
+                    newParams.push(params[i]);
+                }
+            }
+        }
+
+        if (!found) {
+            newParams.push(key + '=' + encodeURIComponent(value));
+        }
+        this.queryString = newParams.join('&');
+        this.url = this.base;
+        this.url += !!this.queryString || this._hasQ ? '?' + this.queryString : '';
+        return this.url;
+    }
 }
 

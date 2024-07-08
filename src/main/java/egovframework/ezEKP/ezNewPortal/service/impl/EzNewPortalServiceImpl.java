@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1524,12 +1526,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			String connectionUrl = map.get("connectionUrl").toString();
 			
 			if (connectionUrl != null) {
+				connectionUrl = URLDecoder.decode(connectionUrl, "UTF-8");
 				connectionUrl = commonUtil.stripScriptTags(connectionUrl);
 				connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
 				connectionUrl = specialCharacterToEmptyString(connectionUrl);
 			}
 			
-			map.put("connectionUrl", connectionUrl);
+			map.put("connectionUrl", URLEncoder.encode(connectionUrl, "UTF-8"));
 		}
 		
 		map.put("menuId", Integer.parseInt(map.get("menuId").toString()));

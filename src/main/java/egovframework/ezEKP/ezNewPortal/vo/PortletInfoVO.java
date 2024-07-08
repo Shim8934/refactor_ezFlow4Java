@@ -21,6 +21,7 @@ public class PortletInfoVO {
 	private List<PortletNameInfoVO> portletNameList; // 포틀릿명 리스트
 	private String boardName1;
 	private String boardName2;
+	private int boardGubun;	// 게시판 구분
 	private String menuName;
 	private String userAuth;
 	private String deptAuth;
@@ -209,6 +210,14 @@ public class PortletInfoVO {
 
 	public void addListPortletSize(String size) {
 		this.listPortletSize.add(size);
+	}
+
+	public int getBoardGubun() {
+		return boardGubun;
+	}
+
+	public void setBoardGubun(int boardGubun) {
+		this.boardGubun = boardGubun;
 	}
 
 	@Override
