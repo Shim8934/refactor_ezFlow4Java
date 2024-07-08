@@ -26,7 +26,7 @@ public class PollQuestionVO implements Serializable {
 	private String filePath;
 	private int resultFirst;
 	private int isHidden;
-	private int isMofifying;
+	private int isModifying;
 	private int setDate;
 	private int isSorting;
 	private int isSelOnlyOnce;
@@ -188,12 +188,12 @@ public class PollQuestionVO implements Serializable {
 		this.isHidden = isHidden;
 	}	
 	
-	public int getIsMofifying() {
-		return isMofifying;
+	public int getIsModifying() {
+		return isModifying;
 	}
 	
-	public void setIsMofifying(int isMofifying) {
-		this.isMofifying = isMofifying;
+	public void setIsModifying(int isModifying) {
+		this.isModifying = isModifying;
 	}
 	
 	public String getReceiverType() {

@@ -715,7 +715,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId, String userType) throws Exception {
+	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId, String userType, String deptId) throws Exception {
 		logger.debug("[Serivce] getVotePortletCount Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String[] deptArr = deptPath.split(",");
@@ -725,7 +725,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("deptArr", deptArr);
 		map.put("userType", userType);
-		
+		map.put("deptId", deptId);
+
 		logger.debug("[Serivce] getVotePortletCount Ended");
 		return ezNewPortalDAO.getVotePortletCount(map);
 	}

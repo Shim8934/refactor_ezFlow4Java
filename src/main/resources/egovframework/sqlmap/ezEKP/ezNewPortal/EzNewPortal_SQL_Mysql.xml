@@ -700,7 +700,7 @@ INSERT INTO TBL_PORTAL_PORTLET_USER (
 <select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">
 <![CDATA[
 SELECT
-	COUNT(ID)
+	COUNT(DISTINCT ID)
 FROM
 	tbl_vote_question A
 JOIN 
@@ -710,45 +710,58 @@ ON
 AND
 	A.TENANT_ID = B.TENANT_ID
 WHERE
+	A.START_DATE <= date_format(now(), '%Y-%m-%d %H:%i:%s')
+AND
 	A.END_DATE > date_format(now(), '%Y-%m-%d %H:%i:%s')
 AND
-(
-	(
-		B.USER_ID = #userId#
-		AND
-		B.user_type = 'user'
-	)
-    OR
-    (
-		B.USER_type = 'company'
-        AND
-		B.USER_ID = #companyId#
-	)
-    OR
-	(
-		B.user_type = 'dept'
-		AND
-        B.USER_ID
-		IN
-			(
-				SELECT 
-					C.CN 
-				FROM 
-					TBL_DEPTMASTER C 
-				WHERE 
-					(FIND_IN_SET (CN, #deptPath#) 
-					OR CN = 'Top') 
-				AND C.TENANT_ID = #tenantId#
-			)
-	)
 ]]>
+(
+	<isNotEqual property="userType" compareValue="admin">
+		(
+			B.USER_ID = #userId#
+			AND
+			B.user_type = 'user'
+		)
+	    OR
+	    (
+			B.USER_type = 'company'
+	        AND
+	        (
+				B.USER_ID = #companyId#
+			OR
+			  	B.USER_ID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptId# and TENANT_ID = #tenantId#)
+			)
+		)
+	    OR
+		(
+			B.user_type = 'dept'
+			AND
+	        B.USER_ID
+			IN
+				(
+					SELECT 
+						C.CN 
+					FROM 
+						TBL_DEPTMASTER C 
+					WHERE 
+						(FIND_IN_SET (CN, #deptPath#) 
+						OR CN = 'Top') 
+					AND C.TENANT_ID = #tenantId#
+				)
+		)
+	</isNotEqual>
 	<isEqual property="userType" compareValue="admin">
-		OR
+	(
 			A.COMPANYID = #companyId#
+		OR
+			B.USER_ID = #deptId#
+		OR
+			B.USER_ID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptId# and TENANT_ID = #tenantId#)
+	)
 	</isEqual>
 )
 AND
-	a.TENANT_ID = #tenantId#
+	A.TENANT_ID = #tenantId#
 </select>
 <!-- 은정 -->
 <!-- 가장 최근에 만들어진 진행중이면서 사용자가 참여 중인 투표 정보 가져오기 -->

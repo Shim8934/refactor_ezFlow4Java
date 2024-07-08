@@ -806,7 +806,7 @@ WHEN NOT MATCHED THEN
 <select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">
 <![CDATA[
 SELECT
-	COUNT(ID)
+	COUNT(DISTINCT ID)
 FROM
 	tbl_vote_question A
 JOIN 
@@ -816,9 +816,13 @@ ON
 AND
 	A.TENANT_ID = B.TENANT_ID
 WHERE
+	A.START_DATE <= TO_CHAR(sysdate, 'YYYY-MM-DD HH:MI:SS')
+AND
 	A.END_DATE > TO_CHAR(sysdate, 'YYYY-MM-DD HH:MI:SS')
 AND
+]]>
 (
+	<isNotEqual property="userType" compareValue="admin">
 	(
 		B.USER_ID = #userId#
 		AND
@@ -828,7 +832,11 @@ AND
     (
 		B.USER_type = 'company'
         AND
-		B.USER_ID = #companyId#
+        (
+			B.USER_ID = #companyId#
+		OR
+		   	B.USER_ID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptId# AND TENANT_ID = #tenantId#)
+		)
 	)
     OR
 	(
@@ -843,7 +851,7 @@ AND
 					TBL_DEPTMASTER C 
 				WHERE 
 					(CN IN (
-		]]>	
+			
 		<iterate conjunction="," property="deptArr">
 			<![CDATA[
 						#deptArr[]#
@@ -857,13 +865,19 @@ AND
 			)
 	)
 	]]>
+	</isNotEqual>
 	<isEqual property="userType" compareValue="admin">
-		OR
+	(
 			A.COMPANYID = #companyId#
+		OR
+			B.USER_ID = #deptId#
+		OR
+			B.USER_ID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptId# and TENANT_ID = #tenantId#)
+	)
 	</isEqual>
 )
 AND
-	a.TENANT_ID = #tenantId#
+	A.TENANT_ID = #tenantId#
 </select>
 <!-- 은정 -->
 <!-- 가장 최근에 만들어진 진행중이면서 사용자가 참여 중인 투표 정보 가져오기 -->
@@ -4214,6 +4228,70 @@ ORDER BY
 		  AND
 			TENANT_ID = #tenantId#
 		]]>
-</select>
+	</select>
+
+	<select id="EzPollDAO.getAllQuestions" resultClass="PollQuestionVO">
+		<![CDATA[
+			SELECT DISTINCT
+				a.ID AS qstid,
+				a.TENANT_ID AS tenantid,
+				a.CONTENT AS content,
+				a.MULTI_SELECT AS multiselect,
+				a.CREATE_DATE AS createdate,
+				a.START_DATE AS startdate,
+				a.END_DATE AS enddate,
+				a.TARGET AS target,
+				a.TITLE AS title,
+				a.SECRET_VOTE AS secretvote,
+				a.CREATOR AS creator,
+				a.CREATOR_NAME1 AS creatorname1,
+				a.CREATOR_NAME2 AS creatorname2,
+				a.CREATOR_DEPT AS creatordept,
+				a.FILE_PATH AS filepath,
+				a.RESULT_FIRST AS resultfirst,
+				a.IS_MODIFYING AS ismodifying,
+				a.SET_DATE AS setdate,
+				a.IS_SORTING AS inssorting,
+				a.IS_SELONLYONCE AS isselonlyonce,
+				a.SENDPOSTNOTICE AS sendpostnotice,
+				a.OPENTOALL AS opentoall,
+				((SELECT COUNT(ID) FROM TBL_VOTE_COMMENT WHERE QST_ID = a.ID and TENANT_ID = a.TENANT_ID)) AS CMTCNT
+			FROM 
+				TBL_VOTE_QUESTION a
+			JOIN
+				TBL_VOTE_USER_AND_QUESTION b
+			ON
+				a.ID = b.QST_ID	
+			AND
+				a.TENANT_ID = b.TENANT_ID
+			WHERE 
+				a.TENANT_ID = #tenant_id#
+			AND
+			(
+					a.COMPANYID = #companyid#
+				OR
+					b.USER_ID = #dept_id#
+				OR
+					b.USER_ID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #dept_id#)
+			)
+		]]>	
+		<isEqual property="mode" compareValue="sub" prepend="AND">
+			<![CDATA[
+				a.TITLE LIKE CONCAT('%', #search_str#, '%')				
+			]]>
+		</isEqual>	
+		<isEqual property="mode" compareValue="wri" prepend="AND">
+			<isEqual property="primary" compareValue="1" >
+				<![CDATA[
+					a.CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
+				]]>
+			</isEqual>	
+			<isNotEqual property="primary" compareValue="1">
+				<![CDATA[
+	        		a.CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
+		        ]]>
+			 </isNotEqual>
+		</isEqual>
+    </select>     
 	
 </sqlMap>

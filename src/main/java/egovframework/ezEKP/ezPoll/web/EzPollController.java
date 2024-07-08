@@ -501,7 +501,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String modifyingQst = ((String)session.getAttribute("modifying_question") != null) ? (String)session.getAttribute("modifying_question") : "";					
 		
 		for (PollQuestionVO pollQstVO : listTotalQuestions) {
-			if (pollQstVO.getIsMofifying() == 1) {
+			if (pollQstVO.getIsModifying() == 1) {
 				if (modifyingQst.equals("")) {
 					listOfModifyingQst.add(pollQstVO);
 				}
@@ -832,7 +832,7 @@ public class EzPollController extends EgovFileMngUtil {
 		//Get question
 		pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
 
-		if (pollQuestionVO.getIsMofifying() == 1) {
+		if (pollQuestionVO.getIsModifying() == 1) {
 			String modifyingUser = ezPollService.getModifyingUser(tenantId, qstId);
 			if (loginVO.getId().equals(modifyingUser)) {
 				return "redirect:/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=modify" + "&params=" + params + "&search=" + searchStr + "&searchN=" + searchN;
@@ -1150,7 +1150,7 @@ public class EzPollController extends EgovFileMngUtil {
 		//Get question
 		PollQuestionVO pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
 
-		if (pollQuestionVO.getIsMofifying() == 0) {
+		if (pollQuestionVO.getIsModifying() == 0) {
 			data = "{\"result\":\"Normal\"}";
 		}
 		else {

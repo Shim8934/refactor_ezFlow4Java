@@ -3927,7 +3927,7 @@ public class EzNewPortalGWController {
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 
 			// 진행중인 투표 중 내가 참여하고 있는 투표의 개수
-			int voteCount = ezNewPortalService.getVotePortletCount(userId, companyId, deptPath, tenantId, userType);
+			int voteCount = ezNewPortalService.getVotePortletCount(userId, companyId, deptPath, tenantId, userType, deptId);
 
 			JSONObject data = new JSONObject();
 			data.put("voteCount", voteCount);
