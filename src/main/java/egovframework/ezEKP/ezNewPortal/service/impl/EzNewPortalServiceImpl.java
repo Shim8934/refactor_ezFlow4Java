@@ -12,13 +12,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.vo.LoginVO;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -78,6 +86,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Autowired
 	private EzApprovalGService ezApprovalGService;
+
+	@Autowired
+	private EzOrganDAO ezOrganDAO;
 
 	@Resource(name  ="EzOrganAdminDAO")
 	private EzOrganAdminDAO ezOrganAdminDAO;
@@ -1279,7 +1290,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			} else {
 				map.put("isUserDept", false);
 			}
-			
+
 			deptResult = ezNewPortalDAO.getUserThemeList(map);
 			
 			//권한잇는것들 && 기존 권한체크안된것들 추가
@@ -2832,7 +2843,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		
 		MenuAuthVO userAuth = ezNewPortalDAO.getCheckUserAuth(map);
-		
+
 		if (userAuth != null) {
 			//유저 권한이 있으면 바로 리턴
 			if (userAuth.isAccessYN() == true) {
@@ -3249,5 +3260,64 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int userListCount = ezNewPortalDAO.getDeptUserListCount(param);
 
 		return userListCount;
+	}
+
+	/**
+	 * 유저의 모든 본직/겸직 정보를 가져온다.
+	 * @param lang
+	 * @param userId
+	 * @param tenantId
+	 * @return egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO
+	 * @throws Exception
+	 */
+	@Override
+	public List<PortalUserSwitchVO> getArrayUserJob(String lang, String userId, int tenantId) throws Exception {
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_CN", userId);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_LANGDATA", lang);
+
+		List<OrganUserVO> allUserInfo = ezOrganDAO.getAllUserInfo(map);
+		List<PortalUserSwitchVO> userInfoList = new ArrayList<>();
+
+		for (OrganUserVO vo : allUserInfo) {
+			PortalUserSwitchVO portalUserSwitchVO = new PortalUserSwitchVO();
+			portalUserSwitchVO.setCompanyId(vo.getCompanyId());
+			portalUserSwitchVO.setCompanyName(vo.getCompany());
+			portalUserSwitchVO.setCompanyName2(vo.getCompany2());
+			portalUserSwitchVO.setDeptId(vo.getDepartment());
+			portalUserSwitchVO.setDeptName(vo.getDescription() == null ? "" : vo.getDescription());
+			portalUserSwitchVO.setDeptName2(vo.getDescription2() == null ? "" : vo.getDescription2());
+			portalUserSwitchVO.setTitle(vo.getTitle() == null ? "" : vo.getTitle());
+			portalUserSwitchVO.setTitle2(vo.getTitle2() == null ? "" : vo.getTitle2());
+			portalUserSwitchVO.setJobId(vo.getJobID() == null ? "" : vo.getJobID());
+			portalUserSwitchVO.setJobType(vo.getJobType() == null ? "" : vo.getJobType());
+			userInfoList.add(portalUserSwitchVO);
+		}
+
+		return userInfoList;
+	}
+
+	@Override
+	public void switchAllUserInfo(HttpServletRequest request, HttpServletResponse response, String loginCookie, String companyId, String deptId, String jobId, String jobType) throws Exception {
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		List<PortalUserSwitchVO> list = getArrayUserJob(userInfo.getLang(), userInfo.getId(), userInfo.getTenantId());
+
+		Optional<PortalUserSwitchVO> optionalUserInfoVO = list.stream()
+				.filter(vo -> companyId.equals(vo.getCompanyId()) && deptId.equals(vo.getDeptId()) && jobId.equals(vo.getJobId()))
+				.findFirst();
+		if (!optionalUserInfoVO.isPresent()) throw new Exception("switchAllUserInfo error");
+		PortalUserSwitchVO infoVO = optionalUserInfoVO.get();
+		ezApprovalGService.changeAprUserInfo(response,
+				infoVO.getDeptId(), infoVO.getDeptName(), infoVO.getDeptName2(),
+				infoVO.getCompanyName(), infoVO.getCompanyName2(),
+				infoVO.getTitle(), infoVO.getTitle2(), infoVO.getCompanyId(), infoVO.getJobId());
+
+		String cookieStr = ezOrganService.changeCookie(loginCookie, infoVO.getDeptId(), infoVO.getCompanyId(), userInfo.getTenantId(), infoVO.getJobId());
+		Cookie cookie = new Cookie("loginCookie", cookieStr);
+		cookie.setPath("/");
+		response.addCookie(cookie);
 	}
 }

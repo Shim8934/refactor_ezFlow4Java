@@ -114,6 +114,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/notice";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -199,6 +201,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("companyId", userInfo.getCompanyID());
 		String url = "/rest/ezPortal/portlets/vote";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -229,6 +232,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("companyId", userInfo.getCompanyID());
 		String url = "/rest/ezPortal/portlets/vote";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -264,6 +268,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/poll";
 
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -303,6 +309,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("selectDate", request.getParameter("selectDate"));
 		param.put("STARTDATE", request.getParameter("STARTDATE"));
 		param.put("ENDDATE", request.getParameter("ENDDATE"));
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		
 		String url = "/rest/ezportal/portlets/schedulelist";
 		
@@ -351,6 +359,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("type", paramMap.get("type"));
+		param.put("companyId", userInfo.getCompanyID());
 		String url = "/rest/ezportal/portlets/approvallist";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
@@ -486,6 +495,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("startRow", 0);
 		param.put("photoCount", 3);
 		param.put("portletId", portletId);
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -540,7 +551,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("mode", mode);
 		param.put("userId", userId);
-		
+		param.put("companyId", userInfo.getCompanyID());
+
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites/lists", param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
@@ -577,7 +589,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("boardId", boardId);
-		
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites", param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
@@ -610,6 +624,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
 		String url = "/rest/ezPortal/portlets/community";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
@@ -639,6 +654,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
 		String url = "/rest/ezPortal/portlets/community";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
@@ -807,6 +823,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("photoCount", photoCount);
 		param.put("startRow", startRow);
 		param.put("portletId", portletId);
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
@@ -927,6 +945,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("startRow", 0);
 		param.put("photoCount", 1);
 		param.put("portletId", portletId);
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -998,6 +1018,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String portletId = req.getParameter("portletId");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		param.put("startRow", 0);
 		param.put("photoCount", 5);
 		param.put("portletId", portletId);
@@ -1033,6 +1055,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String portletId = req.getParameter("portletId");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("deptId", userInfo.getDeptPathCode());
 		param.put("startRow", 0);
 		param.put("photoCount", 5);
 		param.put("portletId", portletId);
@@ -1069,6 +1094,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		
 		String url = "/rest/ezportal/portlets/count/"+ userId;
 		
@@ -1111,6 +1138,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		
 		String url = "/rest/ezportal/portlets/count/"+ userId;
 		
@@ -1237,6 +1266,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/tabBoard";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -1293,6 +1324,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("boardID", boardID);
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		
 		String url = "/rest/ezPortal/portlets/theme2NotiBoardItemList";
 		

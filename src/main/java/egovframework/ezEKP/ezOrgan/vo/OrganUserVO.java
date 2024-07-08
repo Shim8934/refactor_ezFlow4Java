@@ -149,6 +149,12 @@ public class OrganUserVO {
 	/** 겸직 최상위 부서명*/
 	private String physicalDeliveryOfficeName1;
 
+	/** 겸직 타입*/
+	private String jobType;
+
+	/** 권한 */
+	private String roleInfo;
+
 	public String getAddJobTitle() {
 		return addJobTitle;
 	}
@@ -710,4 +716,20 @@ public class OrganUserVO {
 	public String getPhysicalDeliveryOfficeName1() {return physicalDeliveryOfficeName1; }
 
 	public void setPhysicalDeliveryOfficeName1(String physicalDeliveryOfficeName1) {this.physicalDeliveryOfficeName1 = physicalDeliveryOfficeName1; }
+
+	public String getJobType() {
+		return jobType;
+	}
+
+	public void setJobType(String jobType) {
+		this.jobType = jobType;
+	}
+
+	public String getRoleInfo() {
+		return roleInfo;
+	}
+
+	public void setRoleInfo(String roleInfo) {
+		this.roleInfo = roleInfo;
+	}
 }

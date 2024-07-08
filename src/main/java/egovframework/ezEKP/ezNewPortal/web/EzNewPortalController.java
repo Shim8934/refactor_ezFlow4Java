@@ -15,20 +15,24 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.ibm.icu.impl.TimeZoneGenericNames.Pattern;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -43,7 +47,6 @@ import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
-import egovframework.ezEKP.ezWebFolder.web.EzWebFolderController;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -66,6 +69,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 	@Autowired
 	private EzWebFolderService_y ezWebFolderService_y;
+
+	@Autowired
+	private EzNewPortalService ezNewPortalService;
 	
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
@@ -114,7 +120,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		//초기화면 설정 확인
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		String url = "/rest/ezPortal/startpage/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String url = "/rest/ezPortal/startpage/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId;
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
@@ -181,7 +189,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("portalTopMenu Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		String url = "/rest/ezPortal/menus/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String jobId = userInfo.getJobId() != null ? userInfo.getJobId() : "";
+		String url = "/rest/ezPortal/menus/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId + "&jobId=" + jobId;
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
 
@@ -248,6 +259,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				logoMainUrl = (String) firstMenu.get("menuUrl");
 				//logoMainUrl = "/ezApprovalG/apprGMain.do";
 			}
+
+			String switchUserCompany = ezCommonService.getTenantConfig("switchUserCompany", userInfo.getTenantId());
 			
 			model.addAttribute("packageType", packageType.toLowerCase());
 			
@@ -268,6 +281,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			}
 			//2019-10-04 통합검색 추가
 			model.addAttribute("useTotalSearch", data.get("useTotalSearch"));
+			model.addAttribute("switchUserCompany", switchUserCompany);
 		}
 		
 		logger.debug("portalTopMenu End");
@@ -284,7 +298,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("updateUserMenuOrder Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		String url = "/rest/ezPortal/menus/order/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String url = "/rest/ezPortal/menus/order/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId;
+
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
 		String status = resultBody.get("status").toString();
 		String result = "failure";
@@ -311,7 +328,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("deleteUserMenuOrder Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		String url = "/rest/ezPortal/menus/order/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String url = "/rest/ezPortal/menus/order/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId;
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "delete", null);
 		String status = resultBody.get("status").toString();
 		String result = "failure";
@@ -366,8 +385,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	public JSONObject getUserFrameList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUserFrameList Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userId = userInfo.getId();		
-		String url = "/rest/ezPortal/frames/users/" + userId;	
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String url = "/rest/ezPortal/frames/users/" + userId + "?companyId=" + companyId;
+
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "GET", null);
 		String status = resultBody.get("status").toString();	
 		
@@ -393,8 +415,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userId = userInfo.getId();
-		
-		String url = "/rest/ezPortal/portlets/users/" + userId;	
+
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String url = "/rest/ezPortal/portlets/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId;
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "GET", null);
 		String status = resultBody.get("status").toString();	
 		
@@ -421,13 +445,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String result = "success";
 		
 		/* 사용자 프레임 변경 */
-		String url = "/rest/ezPortal/frames/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String url = "/rest/ezPortal/frames/users/" + userId + "?companyId=" + companyId;
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
 		String status = resultBody.get("status").toString();
 		
 		
 		/* 사용자 포틀릿 사용 변경 */
-		url = "/rest/ezPortal/portlets/users/" + userId;
+		String deptId = userInfo.getDeptID();
+		url = "/rest/ezPortal/portlets/users/" + userId + "?companyId=" + companyId;
 		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
 		status = resultBody.get("status").toString();
 		
@@ -449,7 +475,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("portalMainPage Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		String url = "/rest/ezPortal/settingInfo/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String url = "/rest/ezPortal/settingInfo/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId;
 		String returnUrl = "/ezNewPortal/";
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
@@ -553,7 +581,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String result = "success";
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		String url = "/rest/ezPortal/portlets/order/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String url = "/rest/ezPortal/portlets/order/users/" + userId + "?companyId=" + companyId;
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jsonParam);
 		String status = resultBody.get("status").toString();
@@ -660,8 +689,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	public JSONObject getUnreadCounts(HttpServletRequest req, Model model,@RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUnreadCounts Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userId = userInfo.getId();		
-		String url = "/rest/ezPortal/settingInfo/unreadCounts/users/" + userId;
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String url = "/rest/ezPortal/settingInfo/unreadCounts/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId;
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
@@ -743,7 +774,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		
 		//초기화면으로 설정할 수 있는 메뉴 호출
-		String menuUrl = "/rest/ezPortal/menus/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String jobId = userInfo.getJobId() != null ? userInfo.getJobId() : "";
+		String menuUrl = "/rest/ezPortal/menus/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId + "&jobId=" + jobId;
 		JSONObject menuResultBody = commonUtil.getJsonFromRestApi(menuUrl, null, req, "get", null);
 		String menuStatus = menuResultBody.get("status").toString();
 
@@ -755,7 +789,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		}
 		
 		//현재 사용중인 초기화면 호출
-		String startPageUrl = "/rest/ezPortal/startpage/users/" + userId;
+		String startPageUrl = "/rest/ezPortal/startpage/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId;
 		JSONObject startPageResultBody = commonUtil.getJsonFromMemoRestApi(startPageUrl, null, req, "get", null);
 		String startPageStatus = startPageResultBody.get("status").toString();
 		
@@ -784,7 +818,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		int menuId = Integer.parseInt(req.getParameter("menuId"));
-		String url = "/rest/ezPortal/startpage/menus/" + menuId + "/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String url = "/rest/ezPortal/startpage/menus/" + menuId + "/users/" + userId + "?companyId=" + companyId;
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", null);
 		
@@ -798,7 +833,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("deleteUserThemeSetting Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		String url = "/rest/ezPortal/themes/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String url = "/rest/ezPortal/themes/users/" + userId + "?companyId=" + companyId;
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "delete", null);
 		
@@ -813,7 +849,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		int themeId = Integer.parseInt(req.getParameter("themeId"));
-		String url = "/rest/ezPortal/themes/" + themeId + "/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String url = "/rest/ezPortal/themes/" + themeId + "/users/" + userId + "?companyId=" + companyId;
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("frameDefault", req.getParameter("frameDefault"));
@@ -869,7 +907,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("getPortalInfo Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		String url = "/rest/ezPortal/settingInfo/users/" + userId;
+		String companyId = userInfo.getCompanyID();
+		String deptId = userInfo.getDeptID();
+		String url = "/rest/ezPortal/settingInfo/users/" + userId + "?companyId=" + companyId + "&deptId=" + deptId;
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
@@ -1018,5 +1058,30 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@RequestMapping(value = "/ezNewPortal/help/sub6-1.do", method=RequestMethod.GET)
 	public String sub61(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub6-1";
+	}
+
+	@GetMapping(value = "/ezNewPortal/allUserTab.do", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public List<PortalUserSwitchVO> getAllUserTab(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		List<PortalUserSwitchVO> arrayUserJob = ezNewPortalService.getArrayUserJob(userInfo.getLang(), userInfo.getId(), userInfo.getTenantId());
+		arrayUserJob.forEach(vo -> {
+			vo.setCurr(
+					(StringUtils.isBlank(userInfo.getJobId()) && StringUtils.isBlank(vo.getJobId())) ||
+							(vo.getCompanyId().equals(userInfo.getCompanyID())
+					&& vo.getDeptId().equals(userInfo.getDeptID())
+					&& vo.getJobId().equals(userInfo.getJobId())));
+		});
+		return arrayUserJob;
+	}
+
+	@PostMapping(value = "/ezNewPortal/switchAllUserInfo.do", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String switchAllUserInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody PortalUserSwitchVO vo, HttpServletResponse response,
+							   HttpServletRequest request) throws Exception {
+
+		ezNewPortalService.switchAllUserInfo(request, response, loginCookie,
+				vo.getCompanyId(), vo.getDeptId(), vo.getJobId(), vo.getJobType());
+		return "true";
 	}
 }

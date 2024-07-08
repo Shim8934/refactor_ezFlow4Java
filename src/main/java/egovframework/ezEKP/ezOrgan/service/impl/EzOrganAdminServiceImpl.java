@@ -3513,4 +3513,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public int retireUserCountCheck(String cn, int tenantID) throws Exception {
 		return ezOrganAdminDao.retireUserCountCheck(cn, tenantID);
 	}
+
+	@Override
+	public Optional<String> getJobIdForFirstUser(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_CN", userId);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_LANGDATA", "1");
+
+		List<OrganUserVO> allUserInfo = ezOrganDao.getAllUserInfo(map);
+		if (allUserInfo.isEmpty()) {
+			throw new Exception("getJobIdForFirstUser - 유저 정보 조회 실패");
+		}
+		return Optional.ofNullable(allUserInfo.get(0).getJobID());
+	}
 }

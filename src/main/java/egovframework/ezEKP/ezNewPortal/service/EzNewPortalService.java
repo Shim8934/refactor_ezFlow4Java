@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezNewPortal.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import org.json.simple.JSONArray;
@@ -31,6 +32,9 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface EzNewPortalService {
 
@@ -215,6 +219,9 @@ public interface EzNewPortalService {
 
 	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception;
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception;
+
+	List<PortalUserSwitchVO> getArrayUserJob(String lang, String userId, int tenantId) throws Exception;
+	void switchAllUserInfo(HttpServletRequest request, HttpServletResponse response, String loginCookie, String companyId, String deptId, String jobId, String jobType) throws Exception;
 
 	/**
 	 * 조직도에 쓸 부서 리스트 가져오기

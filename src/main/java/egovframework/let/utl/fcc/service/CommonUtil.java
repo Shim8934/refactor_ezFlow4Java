@@ -380,19 +380,34 @@ public class CommonUtil {
             String tenantIdStr = "0";
             
             String deptID = "";
-            
+			String companyID = "";
+			String jobID = "";
+			String roleID = "";
+
             if (decDataArray.length >= 9) {
                 tenantIdStr = decDataArray[8];	
             }
             if(decDataArray.length >= 10) {
             	deptID = decDataArray[9];
             }
+			if(decDataArray.length >= 11) {
+				companyID = decDataArray[10];
+			}
+			if(decDataArray.length >= 12) {
+				jobID = decDataArray[11];
+			}
+			if(decDataArray.length >= 13) {
+				roleID = decDataArray[12];
+			}
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
 			login.setDn("NOPASSWORD");
 			login.setTenantId(Integer.parseInt(tenantIdStr));
 			login.setDeptID(deptID);
+			login.setCompanyID(companyID);
+			login.setJobId(jobID);
+			login.setRoleId(roleID);
 			
 			LoginVO user = loginService.selectUser(login);
 	

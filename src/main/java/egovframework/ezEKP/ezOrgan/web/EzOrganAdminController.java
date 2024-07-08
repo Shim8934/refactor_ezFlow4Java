@@ -3134,14 +3134,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String type = (request.getParameter("type") !=null ? request.getParameter("type") : "");
 		String packageType = commonUtil.getPackageType(user.getTenantId());
 		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", user.getTenantId());
-		
-		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topID = selCompany;
-			deptTreeTopId = topID;
-		} else {
-			topID = "Top";
-			deptTreeTopId = topID + "/organ";
-		}
+
+        topID = user.getCompanyID();
+        deptTreeTopId = topID;
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());

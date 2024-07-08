@@ -166,6 +166,7 @@ public class EzNewPortalGWController {
 	// ///사용자///////
 	/**
 	 * 포탈개인화 G/W [GET] 사용자별 개인화 정보 조회
+	 * 2023-10-30 gbpark0524 : 회사별 포탈 구분을 위한 회사 파라미터 추가.
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/settingInfo/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
@@ -176,8 +177,8 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
-			String deptId = info.getDeptId();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
@@ -604,7 +605,7 @@ public class EzNewPortalGWController {
 			
 			JSONArray portletOrder = (JSONArray) jsonParam.get("updateOrder");
 			int themeId = Integer.parseInt(jsonParam.get("themeId").toString());
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
@@ -791,14 +792,15 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
 			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
-			String deptId = info.getDeptId();
 			String langType = info.getLang();
 			String logoType = "P";
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
+			String jobId = request.getParameter("jobId");
 			JSONObject data = new JSONObject();
-			
+
 			/**
 			 * 1) 로고
 			 */
@@ -1002,7 +1004,9 @@ public class EzNewPortalGWController {
 			String roleInfo = "user";
 			
 			// 전체관리자, 회사관리자, 웹폴더관리자면 관리자 버튼이 나타나도록 추가 -> 관리자 안에서 웹폴더관리자는 웹폴더 관리만 나타나도록 수정 
-			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1 || info.getRollInfo().indexOf("f=1") > -1) {
+			String roleInfoStr = ezOrganService.getUserInfo(tenantId, userId, companyId, deptId, jobId, info.getLang())
+					.orElseThrow(IllegalArgumentException::new).getRoleInfo();
+			if (roleInfoStr.contains("c=1") || roleInfoStr.contains("k=1") || roleInfoStr.contains("f=1")) {
 				roleInfo = "admin";
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
 				data.put("utilAdminUrl", "/admin/main.do");
@@ -1070,8 +1074,8 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);	
-			String companyId = info.getCompanyId();
-			String deptId = info.getDeptId();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			int tenantId = info.getTenantId();
 			String langType = info.getLang();			
 			JSONObject data = new JSONObject();
@@ -1229,8 +1233,8 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
-			String deptId = info.getDeptId();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			int tenantId = info.getTenantId();
 			String langType = info.getLang();			
 			JSONObject data = new JSONObject();
@@ -1417,7 +1421,7 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			List<?> frameList = ezNewPortalService.getUserFrameListAndSelectedFrame(companyId, tenantId, userId);
@@ -1449,7 +1453,7 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
 
 			ezNewPortalService.updateUserUsedFrame(userId, tenantId, companyId, jObj);
 			
@@ -1477,10 +1481,10 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			String portletLang = info.getLang();
-			String deptId = info.getDeptId();
-			
+
 			JSONObject data = new JSONObject();
 			
 			int themeId = ezNewPortalService.getThemeId(userId, companyId, tenantId);
@@ -1635,8 +1639,8 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
-			String companyId = info.getCompanyId();
-			
+			String companyId = request.getParameter("companyId");
+
 			ezNewPortalService.updateUserUsedPortlet(userId, tenantId, companyId, jObj);
 			
 			result.put("status", "ok");
@@ -1663,7 +1667,7 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
 			int frameDefault = Integer.parseInt(request.getParameter("frameDefault"));
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
@@ -1694,7 +1698,7 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
@@ -1724,14 +1728,14 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String offset = info.getOffSet();
 			Calendar cal = Calendar.getInstance();
 			SimpleDateFormat adf = new SimpleDateFormat("yyyy-MM-dd");
 			String nowDate = adf.format(cal.getTime());
-			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			// String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
 			// String password = jspw;
@@ -1908,11 +1912,11 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
-			String deptId = info.getDeptId();
-			
+
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			MenuInfoVO startPage = ezNewPortalService.getUserStartPage(userId, tenantId, companyId);
@@ -1979,7 +1983,7 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			logger.debug("menuId : " + menuId);
@@ -3344,6 +3348,10 @@ public class EzNewPortalGWController {
 			// 2023-07-28 황인경 즐겨찾기 포틀릿 > 게시판 작성자 > 다국어 지원 추가
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			JSONObject data = new JSONObject();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
+			info.setCompanyId(companyId);
+			info.setDeptId(deptId);
 
 			data.put("boardId", boardId);
 
@@ -3412,11 +3420,11 @@ public class EzNewPortalGWController {
 		JSONObject result = new JSONObject();
 		String userId = request.getParameter("userId");
 		String mode = request.getParameter("mode");
+		String companyId = request.getParameter("companyId");
 
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			
 			// 2023-12-01 조소정 - 사용자 설정 언어에 따라 포틀릿 탭리스트 표출되도록 수정
@@ -3458,7 +3466,7 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
-			String companyId = info.getCompanyID();
+			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			String lang = info.getLang();
@@ -3779,8 +3787,8 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
-			String companyId = info.getCompanyId();
-			String deptId = info.getDeptId();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 
 			// deptpath 구하기
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
@@ -3835,15 +3843,15 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
-			String companyId = info.getCompanyID();
-			String deptId = info.getDeptID();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			String rollInfo = info.getRollInfo();
 			int tenantId = info.getTenantId();
 			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의  포틀릿 아이디
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int photoCount = Integer.parseInt(request.getParameter("photoCount"));
 			String portletLang = info.getLang();
-			String deptPath = info.getDeptPathCode();
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 
@@ -3897,10 +3905,10 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = info.getTenantId();
-			String deptId = info.getDeptID();
-			String deptPath = info.getDeptPathCode();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone," + deptPath + "," + userId;
-			String companyId = info.getCompanyID();
 			String rollInfo = info.getRollInfo();
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
 			String portletLang = info.getLang();
@@ -3964,7 +3972,8 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			List<Map<String, Object>> answerList = new ArrayList<Map<String, Object>>();
@@ -4017,8 +4026,9 @@ public class EzNewPortalGWController {
 			String type = request.getParameter("type");
 			int tenantId = info.getTenantId();
 			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
+			String companyId = request.getParameter("companyId");
 
-			JSONObject data = ezNewPortalService.getApprovalList(userId, info.getCompanyID(), tenantId, info.getOffset(), type, approvalFlag, info.getLang());
+			JSONObject data = ezNewPortalService.getApprovalList(userId, companyId, tenantId, info.getOffset(), type, approvalFlag, info.getLang());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -4155,8 +4165,8 @@ public class EzNewPortalGWController {
 			
 			String lang = info.getPrimary();
 			int tenantId = info.getTenantId();
-			String companyId = info.getCompanyId();
-			String deptId = info.getDeptId();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			//2020-02-24 김정언
 			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
 			
@@ -4420,9 +4430,10 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
-			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(info.getCompanyID(), "USER", null, info.getTenantId());
+			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(companyId, "USER", null, info.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -4545,10 +4556,10 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
-			String deptId = info.getDeptId();
 			//2020-02-24 김정언
 			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
 			
@@ -4883,15 +4894,15 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
-			String companyId = info.getCompanyID();
-			String deptId = info.getDeptID();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			String rollInfo = info.getRollInfo();
 			int tenantId = info.getTenantId();
 			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
 		
 			int itemCount = Integer.parseInt(request.getParameter("photoCount"));
 			String portletLang = info.getLang();
-			String deptPath = info.getDeptPathCode();
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 
@@ -5656,10 +5667,10 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = info.getTenantId();
-			String deptId = info.getDeptID();
-			String deptPath = info.getDeptPathCode();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone," + deptPath + "," + userId;
-			String companyId = info.getCompanyID();
 			String rollInfo = info.getRollInfo();
 			String portletLang = info.getLang();
 			//회사의 존재하는 탭게시판 불러오기, 탭ID, boardid, boardname을 리턴한다.
@@ -5756,11 +5767,11 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 			String boardID = request.getParameter("boardID"); // 회사별 공지사항 게시판ID
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
-			String companyId = info.getCompanyID();
-			String deptId = info.getDeptID();
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			String rollInfo = info.getRollInfo();
 			int tenantId = info.getTenantId();
-			String deptPath = info.getDeptPathCode();
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 			

@@ -11,7 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.zip.ZipOutputStream;
@@ -839,7 +845,7 @@ public interface EzApprovalGService {
 
 	/* 2022-07-20 홍승비 - 기록물철등록부 > 기록물보기로 진입 시 해당 기록물철의 생산년도를 가져오기 위한 메서드 */
 	public String getCabProduceYear(String cabinetClassNo, String companyID, int tenantID) throws Exception;
-	
+
     /* 2023-06-26 민지수 - 완료문서 추가의견 삭제 */
     public String deleteAddOpinionInfo(String docID, String companyID, String lang, int tenantId) throws Exception;
 
@@ -863,25 +869,25 @@ public interface EzApprovalGService {
 
 	/* 2023-03-20 한태훈 - 전자결재 > 기록물등록대장, 완료문서조회 > 다중 선택 문서 통합PC저장 메서드 */
 	public String totalSaveDownloadAll(String[] docIDArr, LoginVO userInfo, String type, String approvalFlag, String accessInfo, String realPath, String opinionTxtFileName, String opinionWriterMark, String opinionContentMark, String attMark) throws Exception;
-	
+
 	/* 2023-03-22  한태훈 - 전자결재 > 통합PC저장시 완료문서 하나의 모든 의견 정보 리턴 */
 	public List<ApprGOpinionVO> getDocOpinionList(String docID, LoginVO userInfo) throws Exception;
-	
+
 	/* 2023-03-22 한태훈 - 전자결재  > 단일/다중 문서 통합PC저장 다운로드 이력 남기기 (차후 다운로드 이력 외 다른 이력 삽입 가능) */
 	public void insertTotalSaveHistory(List<String> docIDlist, LoginVO userInfo, String gubun)throws Exception;
-	
+
 	/* 2023-03-28 한태훈  - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 문서 통합PC저장 시 선택된 보안결재 문서들 결재선 포함 여부 확인 (현재 사용자가 결재선상에 존재해야 다운로드 가능) */
 	public String checkAprLineAll(String[] docIDarr, String mode, String userID, String companyID, int tenantID) throws Exception;
-	
+
 	/* 2023-04-12 한태훈 - 전자결재  > 단일 문서 통합PC저장 시 완료문서의 의견 내용 전체를 문자열 형태의 내용으로 만들어서 리턴하는 메소드 */
 	public String makingOpinionFileContent(LoginVO userInfo, List<ApprGOpinionVO> apprGOpinionList, String opinionWriterMark, String opinionContentMark, String lineSepearator) throws Exception;
-	
+
 	/* 2023-04-12 한태훈 - 전자결재G  > 기록물등록대장, 완료문서조회 > 다중 문서 통합PC저장 시 파일들을 압축 파일 안에 다운로드 하여주는 메소드 */
 	public void downloadFileInZip(String realPath, String filePath, String fileName, String folderName, ZipOutputStream zout, Map<String, Integer> fileNameMap, boolean isAttachYN, String attMark) throws Exception;
-	
+
 	/* 2023-04-12 한태훈 - 전자결재G  > 기록물등록대장, 완료문서조회 > 다중 문서 통합PC저장 시 하나의 의견내용을 양식에 맞게 만들어주는 메소드 */
 	public StringBuilder makeOneOpinionContent(StringBuilder sb, LoginVO userInfo, String lineSepearator, String opinionWriterMark, String opinionContentMark, ApprGOpinionVO apprGOpinion) throws Exception;
-	
+
 	/* 2023-04-12 한태훈 - 전자결재G  > 기록물등록대장, 완료문서조회 > 통합PC저장 시 의견 파일을 .zip 파일에 넣어주는 메소드 */
 	public void downloadOpinionFileInZip(String realPath, String tempOpinionFilePath, String opinionTxtFileName, StringBuilder sb, String saveFolderName, ZipOutputStream zout) throws Exception;
 
@@ -895,4 +901,6 @@ public interface EzApprovalGService {
 
     /* 2024-06-24 양지혜 - 지정반송 > 결재라인 업데이트 */
     String updateReturnByDesignation(LoginVO userInfo, String docID, String returnUserSN) throws Exception;
+
+    void changeAprUserInfo(HttpServletResponse response, String deptID, String deptName, String deptName2, String companyName, String companyName2, String title, String title2, String companyID, String jobID) throws UnsupportedEncodingException;
 }

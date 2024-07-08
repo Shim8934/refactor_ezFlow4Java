@@ -1300,6 +1300,23 @@
 			var expireDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 23, 59, 59);
 			document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + expireDate.toGMTString() + ";";
 		}
+
+		function getCookie(Name) {
+			var search = Name + "="
+			if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
+				offset = document.cookie.indexOf(search)
+
+				if (offset != -1) { // 쿠키가 존재하면
+					offset += search.length
+					// set index of beginning of value
+					end = document.cookie.indexOf(";", offset);
+					// 쿠키 값의 마지막 위치 인덱스 번호 설정
+					if (end == -1)
+						end = document.cookie.length
+					return unescape(document.cookie.substring(offset, end))
+				}
+			}
+		}
 		
 		var officeBugPatch = function() {
 		}
@@ -1380,6 +1397,67 @@
       			subMenuClickEvent('off');
       		}
       	});
+
+		function callAllUserTab() {
+			$.ajax({
+				type: "GET",
+				url: "/ezNewPortal/allUserTab.do",
+				dataType: "JSON",
+				success : function(data) {
+					makeAllUserTab(data);
+				}
+			});
+		}
+
+		function makeAllUserTab(json) {
+			var switchUserCompany = "<c:out value='${switchUserCompany}' />"
+
+			if (switchUserCompany !== "Y") return;
+
+			var list = document.createElement("li");
+			list.className = "contentlayout_right";
+
+			var select = document.createElement("select");
+			select.id = "switchUser";
+			select.style.height = "54px";
+			select.style.padding = "0 6px";
+			list.append(select);
+
+			for (var i = 0; i < json.length; i++) {
+				var option = document.createElement("option");
+				option.setAttribute("data-dept", json[i].deptId);
+				option.setAttribute("data-company", json[i].companyId);
+				option.setAttribute("data-job", json[i].jobId);
+				option.value = json[i].companyId;
+				option.text = json[i].companyName + " (" + json[i].deptName + " " + json[i].title + ")";
+				select.appendChild(option);
+				option.selected = json[i].curr;
+			}
+			var last = document.querySelector("#top .contentlayout_none");
+			document.querySelector("#top > ul").insertBefore(list, last);
+
+			select.addEventListener("change", function() {
+				switchAllUserInfo();
+			});
+		}
+
+		function switchAllUserInfo() {
+			var select = document.getElementById("switchUser").selectedOptions[0];
+			var json = {};
+			json['companyId'] = select.getAttribute("data-company");
+			json['deptId'] = select.getAttribute("data-dept");
+			json['jobId'] = select.getAttribute("data-job");
+
+			$.ajax({
+				type: "POST",
+				url: "/ezNewPortal/switchAllUserInfo.do",
+				contentType: "application/json; charset=UTF-8",
+				data: JSON.stringify(json),
+				success : function(text) {
+					if (text === "true") parent.location.reload();
+				}
+			});
+		}
  		
  		// 시작지점
 		newPortalTopMenuFunc();	
@@ -1390,6 +1468,7 @@
 		
 		window.onload = function() {
 			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
+			callAllUserTab();
 		}
 		</script>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>	

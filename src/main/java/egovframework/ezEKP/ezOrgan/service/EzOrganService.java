@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -128,7 +130,11 @@ public interface EzOrganService {
 
 	// 2023-08-09 전인하 - 특정 유저의 모든 겸직 권한 호출하는 메소드
 	public List<OrganUserVO> getAllRollInfoForUserBasisDept(String userId, int tenantId, String permissionCode) throws Exception;
-	
+
 	// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > 리스트 생성 위한 겸직정보 조회
 	public List<OrganUserVO> getAddJobListForEzApprDropdown(String lang, String userId, int tenantId) throws Exception;
+
+	String changeCookie(String loginCookie, String deptId, String companyId, int tenantId, String jobId) throws Exception;
+
+	Optional<OrganUserVO> getUserInfo(int tenantId, String userId, String companyId, String deptId, String jobId, String lang) throws Exception;
 }
