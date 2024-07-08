@@ -1478,7 +1478,8 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			//int page = Integer.parseInt(request.getParameter("page"));
-			int page = Integer.parseInt(request.getParameter("page"));
+			String pPage = request.getParameter("page");
+			int page = pPage.isEmpty() ? 0 : Integer.parseInt(pPage);
 			int limit = 6; // 한 페이지에 뿌려지는 리스트 개수 // 다르게 처리할 수 있는 방법 찾아보기
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();

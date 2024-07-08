@@ -622,11 +622,15 @@ FROM (
 		    LINKORDER ASC
 	) INFO
 ) A
+]]>	
+<isEqual property="pageMode" compareValue="PAGE">
+<![CDATA[
 WHERE 
 	A.RNUM > #offset# 
 AND
 	A.RNUM <= #offset# + #limit#
 ]]>	
+</isEqual>
 </select>
 
 <!-- 퀵 링크 전체 개수 가져오기 -->

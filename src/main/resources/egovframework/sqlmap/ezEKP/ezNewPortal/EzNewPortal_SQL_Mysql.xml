@@ -552,9 +552,12 @@ WHERE
 <![CDATA[
 ORDER BY
 	LINKORDER ASC
-LIMIT #limit#
-OFFSET #offset#
-]]>	
+]]>
+<isEqual property="pageMode" compareValue="PAGE">	
+	LIMIT #limit#
+	OFFSET #offset#
+</isEqual>
+	
 </select>
 
 <!-- 퀵 링크 전체 개수 가져오기 -->
