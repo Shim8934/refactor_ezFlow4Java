@@ -368,4 +368,14 @@ public interface EzCommonService {
     void insertPortalPortletSizeTables();
 
 	void insertTblPortalTopUser();
+	
+	// 2024-03-28 한태훈 > 통합알림 테이블 생성하는 메소드
+	public void createTblRealTimeNotification() throws Exception;
+
+	// 2024-03-28 한태훈 > 알림 보관기간 테넌트 컨피그 추가 메소드
+	public void addNotiStoragePeriodConfig() throws Exception;
+	
+	// 2024-03-28 한태훈 > 통합알림 polling 방식 이용시 알림 데이터 새로고침 주기 설정
+	public void addNotiPollingIntervalConfig() throws Exception;
+	
 }

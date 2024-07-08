@@ -130,6 +130,12 @@
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
+		<div id="iframeShawdowLayer" class="iframeShawdowLayer" onclick = "hidefunc()" style="display: none;">
+			<div id="myNotificationUL" style="padding: 0px; margin: 0px;  width: 390px; height: 603px; right: 50px; z-index:20; position:absolute;">
+				<iframe id="iframeNoti" style="width:100%; height:603px;" frameborder="0" scrolling="NO" src="/ezNotification/notificationMain.do">
+				</iframe>
+			</div>
+		</div>
 		<div style="height:60px;"><iframe src="/ezNewPortal/newPortalTopMenu.do" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;min-height:1080px;" frameborder="0"></iframe></div>
 		<iframe src="<c:out value='${mainUrl }'/>" name="main" id="mainFrame" style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;height:100vh;overflow:auto;" frameborder="0" allowfullscreen="true"></iframe>
 		<%-- <div style="height:${topHeight}px"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
@@ -328,7 +334,12 @@
 	    		$(".noteBlock").css("pointer-events", "none");
 	    		$(".noteBlock").css("display", "none");
 	    	}
-	    });		
+	    });
+	 	
+	 	function hidefunc() {
+            document.getElementById("iframeShawdowLayer").style.display = "none";
+        }
+	 	
 	</script>
 	<!-- 컨텍스트 메뉴 관련 끝 -->	    	
 	<script type="text/javascript">

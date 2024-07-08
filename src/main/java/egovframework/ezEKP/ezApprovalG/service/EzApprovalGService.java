@@ -488,7 +488,7 @@ public interface EzApprovalGService {
 
     public String doBansong(String docID, String childDocID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo, String curDocNum) throws Exception;
 
-    public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
+    public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID, String userName) throws Exception;
 
     public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
     
@@ -903,4 +903,19 @@ public interface EzApprovalGService {
     String updateReturnByDesignation(LoginVO userInfo, String docID, String returnUserSN) throws Exception;
 
     void changeAprUserInfo(HttpServletResponse response, String deptID, String deptName, String deptName2, String companyName, String companyName2, String title, String title2, String companyID, String jobID) throws UnsupportedEncodingException;
+    
+    // 2024-04-23 한태훈 > 결재 알림 발송 위한 결재 문서 정보 가져오기
+    public ApprGDocListVO getDocInfoForNoti(String companyID, String docID, int tenantID, String mode) throws Exception;
+    
+    // 2024-04-23 한태훈 > 결재 알림 발송 위한 결재 순서 가져오기
+    public ApprGDocListVO getAprMemberSnForNoti(String companyID, String docID, int tenantID, String userID) throws Exception;
+    
+    // 2024-04-23 한태훈 > 결재 알림 발송 위한 수신 처리 정보 가져오기
+	public ApprGSusinProcessInfoVO getSusinProcessInfo(String docID, int tenantID, String deptId, String companyID, String receiveUserId) throws Exception;
+	
+	// 2024-04-23 한태훈 > 결재 알림 발송 위한 공람 결재선 정보 가져오기
+	public List<ApprGAprLineVO> getGongramAprLineInfo(String docID, String companyID, int tenantId) throws Exception;
+	
+	// 2024-04-23 한태훈 > 결재 알림 발송
+	public String sendNoti(String docID, String senderId, String senderName, String recipientId, String recipientName, String recipientDeptId, String mode, String companyID, String lang, int tenantID) throws Exception; 
 }

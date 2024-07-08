@@ -2184,4 +2184,32 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblPortalTopUser");
 		}
 	}
+	// 2024-03-28 한태훈 > 통합알림 테이블 생성 메소드
+	public void createTblRealTimeNotification() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblRealTimeNotification");
+		} catch (Exception e) {
+			logger.debug("tbl_realtime_notification doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblRealTimeNotification");
+		}
+	}
+	
+	// 2024-03-28 한태훈 > 통합알림 보관기간 테넌트 컨피그 생성 메소드
+	public void addNotiStoragePeriodConfig(Map<String, Object> map) throws Exception {
+		String notiStoragePeriod = (String) select("EzCommonDAO.getNotiStoragePeriodConfig", map);
+		if (notiStoragePeriod == null) {
+			logger.debug("notiStoragePeriod tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.addNotiStoragePeriodConfig", map);
+		}
+	}
+	
+	// 2024-03-28 한태훈 > 통합알림 데이터 폴링 주기 설정 테넌트 컨피그 생성 메소드
+	public void addNotiPollingIntervalConfig(Map<String, Object> map) throws Exception {
+		String notiPollingInterval = (String) select("EzCommonDAO.getNotiPollingIntervalConfig", map);
+		if (notiPollingInterval == null) {
+			logger.debug("notiPollingInterval tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.addNotiPollingIntervalConfig", map);
+		}
+	}
 }

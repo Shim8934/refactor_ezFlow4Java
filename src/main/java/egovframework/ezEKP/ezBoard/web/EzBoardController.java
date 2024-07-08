@@ -93,6 +93,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezMemo.service.EzMemoService;
 import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -164,6 +165,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	@Resource(name = "EzPersonalService")
 	private EzPersonalService ezPersonalService;
+
+	@Resource(name = "EzNotificationService")
+	private EzNotificationService ezNotificationService;
 
 	@Autowired
 	private KlibUtil klibUtil;
@@ -7921,12 +7925,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 게시알림 메일전송 실행 Method (관리자 권한자에게 발송하는 게시알림 메일)
+	 * 게시판 게시알림 전송 실행 Method (관리자 권한자에게 발송하는 게시알림)
 	 */
-	@RequestMapping(value = "/ezBoard/sendPostNotiMail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezBoard/sendPostNotiForAdmin.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendPostNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("sendPostNotiMail started.");
+	public void sendPostNotiForAdmin(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("sendPostNotiForAdmin started.");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -7964,47 +7968,116 @@ public class EzBoardController extends EgovFileMngUtil{
         
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         String subject = "[" + egovMessageSource.getMessage("ezBoard.t255", userInfo.getLocale()) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
-        
+        String notiContent = "[" + egovMessageSource.getMessage("ezNotification.hth35", userInfo.getLocale()) + "]"+ boardInfo.getBoardName() + " - " + boardItem.getTitle();
+
+        String separator = ";;";
+        String notiRecipientParam = "";
         List<BoardAccessVO> list = ezBoardService.getPostNotiMailUserList(boardID, userInfo.getPrimary(), userInfo.getTenantId());
         
+        logger.debug("Sending board mail starts.");
         for (BoardAccessVO vo : list) {
-        	InternetAddress from = new InternetAddress();
-        	
-        	/* 2021-06-29 홍승비 - 익명게시판의 경우, 관리자에게 게시알림 메일발송 시 게시자 표출명과 임의의 이메일을 사용하도록 수정 */
-        	if (boardInfo.getGuBun().equals("2")) {
-        		from.setPersonal(boardItem.getWriterName(), "UTF-8");
-        		from.setAddress("AnonyBoardMail@boardmail");
-        	} else {
-        		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        		from.setAddress(userInfo.getEmail());
-        	}
-        	
-        	String mail = "";
-        	String toName = vo.getAccessName();
-        	
-        	/* 2021-10-12 홍승비 - 게시판 관리자 권한자에게 게시알림메일 발송 시 현재의 이름을 사용 (괄호 안의 부서명 제거 > 일반 사용자에 대한 게시알림메일의 받는사람 형식과 통일) */
         	try {
-        		OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
-        		
-        		mail = AccessUserInfo.getMail();
-        		toName = AccessUserInfo.getDisplayName();
-				logger.debug("user sendMail");
-			} catch (Exception e) {
-				OrganDeptVO accessDeptInfo = ezOrganService.getDeptInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
-				
-				mail = accessDeptInfo.getMail();
-				toName = accessDeptInfo.getDisplayName(); // 관리자 권한자가 부서인 경우에도 현재 부서명을 가져옴
-				logger.debug("dept sendMail");
-			}
-        	
-        	InternetAddress to = new InternetAddress();
-        	to.setPersonal(toName, "UTF-8");
-        	to.setAddress(mail);
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+	        	notiRecipientParam += vo.getAccessID() + separator;
+
+	        	InternetAddress from = new InternetAddress();
+
+	        	/* 2021-06-29 홍승비 - 익명게시판의 경우, 관리자에게 게시알림 메일발송 시 게시자 표출명과 임의의 이메일을 사용하도록 수정 */
+	        	if (boardInfo.getGuBun().equals("2")) {
+	        		from.setPersonal(boardItem.getWriterName(), "UTF-8");
+	        		from.setAddress("AnonyBoardMail@boardmail");
+	        	} else {
+	        		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	        		from.setAddress(userInfo.getEmail());
+	        	}
+
+	        	String mail = "";
+	        	String toName = vo.getAccessName();
+
+	        	/* 2021-10-12 홍승비 - 게시판 관리자 권한자에게 게시알림메일 발송 시 현재의 이름을 사용 (괄호 안의 부서명 제거 > 일반 사용자에 대한 게시알림메일의 받는사람 형식과 통일) */
+	        	try {
+	        		OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
+
+	        		mail = AccessUserInfo.getMail();
+	        		toName = AccessUserInfo.getDisplayName();
+					logger.debug("user sendMail");
+				} catch (Exception e) {
+					OrganDeptVO accessDeptInfo = ezOrganService.getDeptInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
+
+					mail = accessDeptInfo.getMail();
+					toName = accessDeptInfo.getDisplayName(); // 관리자 권한자가 부서인 경우에도 현재 부서명을 가져옴
+					logger.debug("dept sendMail");
+				}
+
+	        	InternetAddress to = new InternetAddress();
+	        	to.setPersonal(toName, "UTF-8");
+	        	to.setAddress(mail);
+
+	        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+
+        	} catch (Exception e) {
+        		logger.debug(e.getMessage());
+        		logger.debug("Sending board Mail is failed : "  + vo.getAccessID());
+        		continue;
+        	}
         }
-		
-		logger.debug("sendPostNotiMail ended.");
+
+        logger.debug("Sending board mail ends.");
+        // 2024-03-28 한태훈 > 게시판 관리자 게시알림 통합알림 추가
+        String boardType = boardInfo.getGuBun();
+		String linkUrl = "";
+		String linkUrlMobile = "";
+		String boardStatus = "";
+
+		String tempItemID = encodeURIComponent(itemID);
+		String tempBoardID = encodeURIComponent(boardID);
+
+		if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+			boardStatus = "photoBoardItem";
+		}
+
+		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			boardStatus = "newBoardItemList";
+		} else {
+			boardStatus = "boardItemList";
+		}
+
+		if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+			boardStatus = "photoBoardItem";
+		}
+
+		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			boardStatus = "newBoardItemList";
+		} else {
+			boardStatus = "boardItemList";
+		}
+
+		String tempBoardStatus = encodeURIComponent(boardStatus);
+
+		switch (boardType) {
+		case "3":
+		case "4":
+			linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		case "7":
+			linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		default:
+			linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		}
+
+		String senderName = boardType.equals("2") ? "익명" : userInfo.getDisplayName();
+
+        if (notiRecipientParam.length() > 0) {
+			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), senderName, notiRecipientParam, "board", "new", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "notChkSetting");
+			logger.debug("board " +  "new" + " noti status : " + notiStatus);
+        }
+
+		logger.debug("sendPostNotiForAdmin ended.");
 	}
 	
 	/**
@@ -8060,10 +8133,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 답변알림 메일전송 실행 Method
 	 */
-	@RequestMapping(value = "/ezBoard/sendReplyNoticeMail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezBoard/sendReplyNotice.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendReplyNoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("sendReplyNoticeMail started");
+	public void sendReplyNotice(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("sendReplyNotice started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -8109,33 +8182,88 @@ public class EzBoardController extends EgovFileMngUtil{
         
         String subject = "[" + egovMessageSource.getMessage("ezBoard.t260", userInfo.getLocale()) + boardInfo.getBoardName() + "]" + title;
         
+        String notiContent = boardInfo.getBoardName() + " - " + title;
+		String notiReceiptIdList = "";
+
         List<BoardListVO> boardListVOs = ezBoardService.getReplyNoticeMail(boardID, itemTreeID, userInfo.getLang(), userInfo.getTenantId());
         
+        logger.debug("Sending board mail starts.");
         for (BoardListVO vo : boardListVOs) {
-        	InternetAddress from = new InternetAddress();
-        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        	from.setAddress(userInfo.getEmail());
-        	
-        	InternetAddress to = new InternetAddress();
-        	to.setPersonal(vo.getWriterName(), "UTF-8");
-        	to.setAddress(vo.getMail());
-        	
-        	if (!ezPersonalService.hasNotiDiableItem(vo.getWriterID(), NotiType.BOARD_REPLY, NotiPlatform.MAIL, userInfo.getTenantId())) {
-        		ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	try {
+        		notiReceiptIdList += vo.getWriterID() + ";;";
+
+	        	InternetAddress from = new InternetAddress();
+	        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	        	from.setAddress(userInfo.getEmail());
+
+	        	InternetAddress to = new InternetAddress();
+	        	to.setPersonal(vo.getWriterName(), "UTF-8");
+	        	to.setAddress(vo.getMail());
+
+	        	if (!ezPersonalService.hasNotiDiableItem(vo.getWriterID(), NotiType.BOARD_REPLY, NotiPlatform.MAIL, userInfo.getTenantId())) {
+	        		ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+	        	}
+        	} catch (Exception e) {
+        		logger.debug(e.getMessage());
+        		logger.debug("Sending board mail is failed : " + vo.getWriterID());
+        		continue;
         	}
         	
         }
-        
-		logger.debug("sendReplyNoticeMail ended");
+        logger.debug("Sending board mail ends.");
+
+        // 2024-03-28 한태훈 > 게시판 답변알림 통합알림 추가
+        String linkUrl = "";
+		String linkUrlMobile = "";
+		String boardStatus = "";
+
+		if (boardGubun != null && (boardGubun.equals("4") || boardGubun.equals("3"))) {
+			boardStatus = "photoBoardItem";
+		}
+
+		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			boardStatus = "newBoardItemList";
+		} else {
+			boardStatus = "boardItemList";
+		}
+
+		itemID = encodeURIComponent(itemID);
+		boardID = encodeURIComponent(boardID);
+		boardStatus = encodeURIComponent(boardStatus);
+
+		switch (boardGubun) {
+		case "3":
+		case "4":
+			linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (itemID) + "&boardID=" + (boardID);
+			linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (boardID) + "&itemID=" + (itemID) + "&type=photoBoardItem&boardItemListType=" + (boardStatus);
+			break;
+		case "7":
+			linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (itemID) + "&boardID=" + (boardID);
+			linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (boardID) + "&itemID=" + (itemID) + "&type=movieBoardItem&boardItemListType=" + (boardStatus);
+			break;
+		default:
+			linkUrl += "/ezBoard/boardItemView.do?itemID=" + (itemID) + "&boardID=" + (boardID);
+			linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (boardID) + "&itemID=" + (itemID) + "&type=boardItem&boardItemListType=" + (boardStatus);
+			break;
+		}
+
+		if (notiReceiptIdList != null && !notiReceiptIdList.equals("")) {
+        	notiReceiptIdList = notiReceiptIdList.substring(0, notiReceiptIdList.length() - 2);
+        }
+
+        String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiReceiptIdList, "board", "reply", notiContent, "popup", "800", "1000", linkUrl, linkUrlMobile, "");
+		logger.debug("board " +  "reply" + "noti status : " + notiStatus);
+
+		logger.debug("sendReplyNotice ended");
 	}
 	
 	/**
-	 * 게시판 게시물승인관련 메일전송 실행 Method
+	 * 게시판 게시물승인관련 알림전송 실행 Method
 	 */
-	@RequestMapping(value = "/ezBoard/sendApprNoticeMail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezBoard/sendApprNotice.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendApprnoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("sendApprnoticemail started");
+	public void sendApprnotice(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("sendApprnotice started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -8176,29 +8304,84 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         
         List<LoginVO> loginVOs = ezBoardService.getSendApprMailList(boardID, userInfo.getLang(), userInfo.getTenantId());
-        
+        String notiRecipientParam = "";
+        String separator = ";;";
+
+        logger.debug("Sending board mail starts.");
         for (LoginVO vo : loginVOs) {
-        	InternetAddress from = new InternetAddress();
-        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        	from.setAddress(userInfo.getEmail());
-        	
-        	InternetAddress to = new InternetAddress();
-        	to.setPersonal(vo.getDisplayName(), "UTF-8");
-        	to.setAddress(vo.getEmail());
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	try {
+	        	notiRecipientParam += vo.getId() + separator;
+	        	InternetAddress from = new InternetAddress();
+	        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	        	from.setAddress(userInfo.getEmail());
+
+	        	InternetAddress to = new InternetAddress();
+	        	to.setPersonal(vo.getDisplayName(), "UTF-8");
+	        	to.setAddress(vo.getEmail());
+
+	        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	} catch (Exception e) {
+        		logger.debug(e.getMessage());
+        		logger.debug("Sending board mail is failed : " + vo.getId());
+        		continue;
+        	}
         }
-        
-		logger.debug("sendApprnoticemail ended");
+
+        logger.debug("Sending board mail ends.");
+
+        // 2024-03-28 한태훈 > 게시판 게시물 승인 통합알림 추가
+        String notiContent = boardInfo.getBoardName() + " - " + title;
+        String boardType = boardInfo.getGuBun();
+		String linkUrl = "";
+		String linkUrlMobile = "";
+		String boardStatus = "";
+
+		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			boardStatus = "newBoardItemList";
+		} else {
+			boardStatus = "boardItemList";
+		}
+
+		if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+			boardStatus = "photoBoardItem";
+		}
+
+		String tempItemID = encodeURIComponent(itemID);
+		String tempBoardID = encodeURIComponent(boardID);
+		String tempBoardStatus = encodeURIComponent(boardStatus);
+
+		switch (boardType) {
+		case "3":
+		case "4":
+			linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		case "7":
+			linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		default:
+			linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		}
+
+		if (notiRecipientParam.length() > 0) {
+			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "board", "apprv_waiting", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "notChkSetting");
+			logger.debug("board " +  "apprv" + " noti status : " + notiStatus);
+		}
+
+		logger.debug("sendApprnotice ended");
 	}
 	
 	/**
 	 * 게시판 게시물반려관련 메일전송 실행 Method
 	 */
-	@RequestMapping(value = "/ezBoard/sendReturnNoticeMail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezBoard/sendReturnNotice.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendReturnNoticemail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("sendReturnNoticemail started");
+	public void sendReturnNotice(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("sendReturnNotice started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -8214,34 +8397,78 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			BoardListVO boardListVO = ezBoardService.getItemInfo("", tempItemID, userInfo.getLang(), userInfo.getTenantId());
 			
-			// 게시판ID, 게시물ID로 어느 회사에서 쓴것인지 확인 -> 현재 자신의 companyID와 다르다면 alert 후 창 닫음
-			String strURL = "javascript:Item_View_APPR('" + boardListVO.getBoardID() + "','" + tempItemID + "','" + boardListVO.getGuBun() + "');";
-	        strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
-	        
-	        StringBuilder bodyContent = new StringBuilder();
-	        
-	        /* 2018-10-26 홍승비 - 게시판 게시물 반려 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
-	        bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999015", userInfo.getLocale()) + "<br><br>");
-	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardListVO.getBoardName());
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardListVO.getTitle()) + "</a>");
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t999016", userInfo.getLocale()) + " : " + commonUtil.cleanValue(content) + "</a>");
-	        
-	        /* 2019-05-06 홍승비 - 루프 바깥의 content 변수 반복 사용으로 메세지 깨지는 오류 수정 */
-	        String subject = "[" + egovMessageSource.getMessage("ezBoard.t999017", userInfo.getLocale()) + "]" + boardListVO.getTitle();
-	        String contentTemp = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-	        
-        	InternetAddress from = new InternetAddress();
-        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        	from.setAddress(userInfo.getEmail());
-        	
-        	InternetAddress to = new InternetAddress();
-        	to.setPersonal(boardListVO.getWriterName(), "UTF-8");
-        	to.setAddress(boardListVO.getMail());
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, contentTemp, false);
+			if(!ezPersonalService.hasNotiDiableItem(boardListVO.getWriterID(), NotiType.fromString("BOARD_RETURN"), NotiPlatform.MAIL, userInfo.getTenantId())) {
+				// 게시판ID, 게시물ID로 어느 회사에서 쓴것인지 확인 -> 현재 자신의 companyID와 다르다면 alert 후 창 닫음
+				String strURL = "javascript:Item_View_APPR('" + boardListVO.getBoardID() + "','" + tempItemID + "','" + boardListVO.getGuBun() + "');";
+		        strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
+
+		        StringBuilder bodyContent = new StringBuilder();
+
+		        /* 2018-10-26 홍승비 - 게시판 게시물 반려 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
+		        bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999015", userInfo.getLocale()) + "<br><br>");
+		        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardListVO.getBoardName());
+		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardListVO.getTitle()) + "</a>");
+		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t999016", userInfo.getLocale()) + " : " + commonUtil.cleanValue(content) + "</a>");
+
+		        /* 2019-05-06 홍승비 - 루프 바깥의 content 변수 반복 사용으로 메세지 깨지는 오류 수정 */
+		        String subject = "[" + egovMessageSource.getMessage("ezBoard.t999017", userInfo.getLocale()) + "]" + boardListVO.getTitle();
+		        String contentTemp = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+
+
+	        	InternetAddress from = new InternetAddress();
+	        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	        	from.setAddress(userInfo.getEmail());
+
+	        	InternetAddress to = new InternetAddress();
+	        	to.setPersonal(boardListVO.getWriterName(), "UTF-8");
+	        	to.setAddress(boardListVO.getMail());
+
+	        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, contentTemp, false);
+			}
+
+        	// 2024-03-28 한태훈 > 게시판 게시물 반려 통합알림 추가
+        	String boardType = boardListVO.getGuBun();
+    		String linkUrl = "";
+    		String linkUrlMobile = "";
+    		String boardStatus = "";
+
+    		if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+    			boardStatus = "photoBoardItem";
+    		}
+
+    		if (tempItemID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+    			boardStatus = "newBoardItemList";
+    		} else {
+    			boardStatus = "boardItemList";
+    		}
+
+    		tempItemID = encodeURIComponent(tempItemID);
+    		String boardID = encodeURIComponent(boardListVO.getBoardID());
+    		boardStatus = encodeURIComponent(boardStatus);
+
+    		switch (boardType) {
+    		case "3":
+    		case "4":
+    			linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (boardID);
+    			linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (boardID) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (boardStatus);
+    			break;
+    		case "7":
+    			linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (boardID);
+    			linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (boardID) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (boardStatus);
+    			break;
+    		default:
+    			linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (boardID);
+    			linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (boardID) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (boardStatus);
+    			break;
+    		}
+
+    		String notiContent = boardListVO.getBoardName() + " - " + boardListVO.getTitle();
+        	String notiRecipientParam =  boardListVO.getWriterID();
+   			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "BOARD", "RETURN", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
+   			logger.debug("board " +  "return" + " noti status : " + notiStatus);
 		}
 		
-		logger.debug("sendReturnNoticemail ended");
+		logger.debug("sendReturnNotice ended");
 	}
 	
 	/**
@@ -10166,10 +10393,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 2021-06-21 홍승비 - 게시판 메일알림 메일 발송 컨트롤러 (게시알림, 수정알림, 댓글알림)
 	 * */
-	@RequestMapping(value = "/ezBoard/sendBoardAlertMail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezBoard/sendBoardAlert.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendBoardAlertMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("sendBoardAlertMail started.");
+	public void sendBoardAlert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("sendBoardAlert started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
@@ -10181,50 +10408,32 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		// 게시판 옵션에서 메일알림을 사용하는 경우에만 발송한다.
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
+
+		if (boardProperty.getGuBun().equals("2")) {
+			logger.debug("Sending Noti doesn't support on Anonymous Board");
+			logger.debug("sendBoardAlert ended.");
+			return;
+		}
+
 		List<HashMap<String, String>> possibleUserInfo = new ArrayList<HashMap<String, String>>();
 		HashMap<String, String> recipientIDs = new HashMap<String, String>();
 		String companyID = pIsAllGroupBoard.equals("Y") ? "" : boardProperty.getCompanyID(); // 회사ID의 경우, 그룹사게시판이 아닌 경우에만 게시판이 속한 회사ID로 세팅한다.
 		
-		// 신규 게시물 등록, 수정 알림에 대한 수신인 ID 리턴
-		if ((pMode.equals("new") && boardProperty.getMailFG_Post() != null && boardProperty.getMailFG_Post().equals("Y")) || (pMode.equals("modify") && boardProperty.getMailFG_Mod() != null && boardProperty.getMailFG_Mod().equals("Y"))) {
-			// 표준모듈(포탈, 게시판)에 회사 전환 기능이 없으므로, 사간겸직에 대해서는 권한을 체크하지 않는다. (회사 변경기능이 있다면 해당 회사에 대응하도록 수정 필요)
-			possibleUserInfo = ezBoardService.getBoardUserInfoForMailSend(pIsAllGroupBoard, commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()), companyID, userInfo.getTenantId());
-			
-			// 관리자권한이 있는 사원 + 해당 회사 소속 사원 정보를 리턴받는다.
-			for (int i = 0; i < possibleUserInfo.size(); i++) {
-				String userID = possibleUserInfo.get(i).get("CN");
-				String userName = possibleUserInfo.get(i).get("USERNAME");
-				String mail = possibleUserInfo.get(i).get("MAIL");
-				String deptID = possibleUserInfo.get(i).get("DEPTID");
-				String userCompanyID = possibleUserInfo.get(i).get("COMPANYID");
-				String deptPathCode = userID + "," + possibleUserInfo.get(i).get("DEPT_CD_PATH");
-				String rollInfo = possibleUserInfo.get(i).get("ROLLINFO");
-				int tenantId = Integer.parseInt(possibleUserInfo.get(i).get("TENANT_ID"));
-				String value = userName + ";;" + mail;
-				
-				// 2023-08-03 조수빈 - 해당 항목에 대한 사용자의 알림 수신 여부를 반환
-				switch (pMode) {
-					case "new":
-						disableMail = ezPersonalService.hasNotiDiableItem(userID, NotiType.BOARD_NEW, NotiPlatform.MAIL, tenantId);
-				        break;
-					
-					case "modify":
-						disableMail = ezPersonalService.hasNotiDiableItem(userID, NotiType.BOARD_MODIFY, NotiPlatform.MAIL, tenantId);
-				        break;
-				}
+		List<String> notiRecipientIds = new ArrayList<String>();
+		String notiRecipientParam = "";
+		String separator = ";;";
 
-				// userID가 메일발송 대상에 없는 경우 권한체크 진행
-				if (!recipientIDs.containsKey(userID)) {
-					boolean canAccess = accessListViewFGCheck(boardID, boardProperty.getGuBun(), userID, deptID, deptPathCode, rollInfo, pIsAllGroupBoard, userCompanyID, userInfo.getTenantId());
-					
-					if (canAccess && !disableMail) {
-						recipientIDs.put(userID, value);
-					}
-				}
-			}
+		boolean sendMailFlag = false;
+		// 2024-04-01 한태훈 > 게시글 등록 및 수정 알림은 게시판 이용자 많읗 시 속도이슈로 기능 제외 (즐겨찾기 추가한 게시물에 한해서 새 게시물 등록 통합알림 추가)
+		if (pMode.equals("new")) {
+			sendMailFlag = false;
+		}
+		else if (pMode.equals("modify")) {
+			sendMailFlag = false;
 		}
 		// 게시물 댓글 알림에 대한 수신인 ID 리턴
 		else if (pMode.equals("comment") && boardProperty.getMailFG_Comment() != null && boardProperty.getMailFG_Comment().equals("Y")) {
+			sendMailFlag = true;
 			possibleUserInfo = ezBoardService.getCommentNoticeMail(boardID, itemID, userInfo.getLang(), userInfo.getTenantId());
 			
 			for (int i = 0; i < possibleUserInfo.size(); i++) {
@@ -10239,84 +10448,147 @@ public class EzBoardController extends EgovFileMngUtil{
 				        recipientIDs.put(writerID, value);
 				}
 
+				if (!notiRecipientIds.contains(writerID)) {
+					notiRecipientIds.add(writerID);
+					notiRecipientParam += writerID + ";;";
+				}
+
 			}
 		}
-		// 메일발송 하지 않는 경우, 바로 리턴
+		// 알림발송 하지 않는 경우, 바로 리턴
 		else {
-			logger.debug("sendBoardAlertMail ended. (mail alert is not used for mode [" + pMode + "])");
+			logger.debug("sendBoardAlert ended. (Sending alert is not used for mode [" + pMode + "])");
 			return;
 		}
-		
-		// 게시물 링크, 게시일 정보 등 생성
-		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
-		String strURL = "Item_View_New('" + boardID + "','" + itemID + "','" + boardProperty.getGuBun() + "');";
-        strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
-        String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false); 
-        strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
-        
-		// 메일 본문 생성
-		StringBuilder bodyContent = new StringBuilder();
-		String content = "";
-		String subject = "";
-		
-		if (pMode.equals("new")) { // 게시판 게시알림 (아래 게시판에 새 게시글이 게시되었습니다.)
-			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250", userInfo.getLocale()) + "<br><br>");
-	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
-	        
-	        /* 2024-02-02 홍승비 - 승인게시판의 경우, 승인자가 아닌 게시물 작성자의 정보가 메일에 표출되도록 수정 (익명게시판은 승인여부 사용불가, getBrdGetItemInfo로 가져온 데이터는 작성자/작성자 부서명/작성자 회사명 전부 다국어 대응됨) */
-	        if (boardProperty.getApprFlag() != null && boardProperty.getApprFlag().equalsIgnoreCase("Y")) { // 승인게시판
-	        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + boardItem.getWriterName() + "(" + (boardItem.getExtensionAttribute3() == null || "null".equals(boardItem.getExtensionAttribute3()) ? "" : boardItem.getExtensionAttribute3()+ ", ")  + boardItem.getWriterDeptName() + ", " + boardItem.getWriterCompanyName() + ")");
-	        } else {
-	        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()+ ", ") + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
-	        }
-	        
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
-	        
-	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-	        subject = "[" + egovMessageSource.getMessage("ezBoard.t255", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
+
+        BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+
+        if (sendMailFlag) {
+            // 게시물 링크, 게시일 정보 등 생성
+            String strURL = "Item_View_New('" + boardID + "','" + itemID + "','" + boardProperty.getGuBun() + "');";
+            strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
+            String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false);
+            strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
+
+            // 메일 본문 생성
+            StringBuilder bodyContent = new StringBuilder();
+            String content = "";
+            String subject = "";
+
+            if (pMode.equals("new")) { // 게시판 게시알림 (아래 게시판에 새 게시글이 게시되었습니다.)
+                bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250", userInfo.getLocale()) + "<br><br>");
+                bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
+                bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
+
+                /* 2024-02-02 홍승비 - 승인게시판의 경우, 승인자가 아닌 게시물 작성자의 정보가 메일에 표출되도록 수정 (익명게시판은 승인여부 사용불가, getBrdGetItemInfo로 가져온 데이터는 작성자/작성자 부서명/작성자 회사명 전부 다국어 대응됨) */
+                if (boardProperty.getApprFlag() != null && boardProperty.getApprFlag().equalsIgnoreCase("Y")) { // 승인게시판
+                    bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + boardItem.getWriterName() + "(" + (boardItem.getExtensionAttribute3() == null || "null".equals(boardItem.getExtensionAttribute3()) ? "" : boardItem.getExtensionAttribute3() + ", ") + boardItem.getWriterDeptName() + ", " + boardItem.getWriterCompanyName() + ")");
+                } else {
+                    bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle() + ", ") + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+                }
+
+                bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
+
+                content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+                subject = "[" + egovMessageSource.getMessage("ezBoard.t255", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
+            } else if (pMode.equals("modify")) { // 게시판 수정알림 (아래 게시판의 게시물이 수정되었습니다.)
+                bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail05", userInfo.getLocale()) + "<br><br>");
+                bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
+                bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
+                bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+                bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
+
+                content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+                subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail07", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
+            } else if (pMode.equals("comment")) { // 게시판 댓글알림 (아래 게시판의 게시물에 댓글이 등록되었습니다.)
+                bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail06", userInfo.getLocale()) + "<br><br>");
+                bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
+                bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
+                bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+                bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
+
+                content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+                subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail08", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
+            }
+
+            // 수신인 ID에 대해 개별 메일발송 실행
+            Iterator<String> keys = recipientIDs.keySet().iterator();
+            while (keys.hasNext()) {
+                String key = keys.next(); // userID
+                String value = recipientIDs.get(key); // userName;;mail
+                String userName = value.split(";;")[0];
+                String mail = value.split(";;")[1];
+
+                InternetAddress from = new InternetAddress();
+                from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+                from.setAddress(userInfo.getEmail());
+
+                InternetAddress to = new InternetAddress();
+                to.setPersonal(userName, "UTF-8");
+                to.setAddress(mail);
+
+                ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+            }
+        }
+
+        String notiContent = boardProperty.getBoardName() + " - " + boardItem.getTitle();
+        String boardType = boardProperty.getGuBun();
+		String linkUrl = "";
+		String linkUrlMobile = "";
+		String boardStatus = "";
+
+		if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+			boardStatus = "photoBoardItem";
 		}
-		else if (pMode.equals("modify")) { // 게시판 수정알림 (아래 게시판의 게시물이 수정되었습니다.)
-			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail05", userInfo.getLocale()) + "<br><br>");
-	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
-	        
-	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-	        subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail07", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
+
+		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			boardStatus = "newBoardItemList";
+		} else {
+			boardStatus = "boardItemList";
 		}
-		else if (pMode.equals("comment")) { // 게시판 댓글알림 (아래 게시판의 게시물에 댓글이 등록되었습니다.)
-			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail06", userInfo.getLocale()) + "<br><br>");
-	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
-	        
-	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-	        subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail08", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
+
+		String tempItemID = encodeURIComponent(itemID);
+		String tempBoardID = encodeURIComponent(boardID);
+		boardStatus = encodeURIComponent(boardStatus);
+
+		switch (boardType) {
+		case "3":
+		case "4":
+			linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (boardStatus);
+			break;
+		case "7":
+			linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (boardStatus);
+			break;
+		default:
+			linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (boardStatus);
+			break;
 		}
-		
-		// 수신인 ID에 대해 개별 메일발송 실행
-		Iterator<String> keys = recipientIDs.keySet().iterator();
-		while (keys.hasNext()) {
-			String key = keys.next(); // userID
-			String value = recipientIDs.get(key); // userName;;mail
-			String userName = value.split(";;")[0];
-			String mail = value.split(";;")[1];
-					
-			InternetAddress from = new InternetAddress();
-        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        	from.setAddress(userInfo.getEmail());
-        	
-			InternetAddress to = new InternetAddress();
-        	to.setPersonal(userName, "UTF-8");
-        	to.setAddress(mail);
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+
+		if (pMode.equals("comment")) {
+			// 2024-03-28 한태훈 > 게시판 일반 사용자 통합 알림 추가 (댓글)
+			if (notiRecipientIds != null && notiRecipientIds.size() > 0) {
+				notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "board", pMode, notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
+				logger.debug("board " +  pMode + " noti status : " + notiStatus);
+			}
+		} else {
+			// 2024-03-28 한태훈 > 게시판 일반 사용자 즐겨찾기 게시판 새게시물 등록 시 통합알림 추가
+			List<String> favoriteBoardUserList = ezBoardService.getFavoriteBoardUserList(boardID, userInfo.getCompanyID(), userInfo.getTenantId());
+			String favoriteUserParam = "";
+			for (int i = 0; i < favoriteBoardUserList.size(); i++) {
+				favoriteUserParam += favoriteBoardUserList.get(i) + separator;
+			}
+
+			if (!favoriteUserParam.isEmpty()) {
+				favoriteUserParam = favoriteUserParam.substring(0, favoriteUserParam.length() - separator.length());
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), favoriteUserParam, "board", pMode, notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
+				logger.debug("board " +  pMode + " noti status : " + notiStatus);
+			}
 		}
-		
-		logger.debug("sendBoardAlertMail ended.");
+		logger.debug("sendBoardAlert ended.");
 	}
 	
 	/**
@@ -10699,5 +10971,19 @@ public class EzBoardController extends EgovFileMngUtil{
 		builder.queryParam("showAdjacent", showAdjacent);
 
 		return "redirect:" + builder.build().encode().toUriString();
+	}
+
+	// 2023-12-07 한태훈 - java에서 encodeURIComponent 메소드 구현
+	private String encodeURIComponent(String s) throws Exception {
+	    String result = null;
+    	result = URLEncoder.encode(s, "UTF-8")
+                         .replaceAll("\\+", "%20")
+                         .replaceAll("\\%21", "!")
+                         .replaceAll("\\%27", "'")
+                         .replaceAll("\\%28", "(")
+                         .replaceAll("\\%29", ")")
+                         .replaceAll("\\%7E", "~");
+
+	    return result;
 	}
 }

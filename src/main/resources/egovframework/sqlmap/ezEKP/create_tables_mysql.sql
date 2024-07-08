@@ -15168,3 +15168,34 @@ CREATE TABLE `TBL_PORTAL_TOP_USER`
 )   ENGINE=InnoDB DEFAULT CHARSET=utf8
     COMMENT '개인별 탑 메뉴 프레임 타입';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_realtime_notification`
+--
+
+DROP TABLE IF EXISTS `tbl_realtime_notification`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_realtime_notification` (
+		  `NOTISEQ` bigint(20) NOT NULL AUTO_INCREMENT,
+		  `USERID` varchar(80) NOT NULL,
+		  `MAINTYPE` varchar(20) NOT NULL,
+		  `SUBTYPE` varchar(20) DEFAULT NULL,
+		  `NOTICONTENT` varchar(3000) DEFAULT NULL,
+		  `SENDERID` varchar(80) DEFAULT NULL,
+		  `SENDERNAME` varchar(100) DEFAULT NULL,
+		  `REGDATE` datetime DEFAULT NULL,
+		  `ISREAD` char(1) DEFAULT 'N',
+		  `READDATE` datetime DEFAULT NULL,
+		  `ETCDATA` varchar(400) DEFAULT NULL,
+		  `ISDELETE` char(1) DEFAULT 'N',
+		  `DELETEDATE` datetime DEFAULT NULL,
+		  `LINKURL` varchar(4000) DEFAULT NULL,
+		  `LINKURL_MOBILE` varchar(4000) DEFAULT NULL,
+		  `VIEWTYPE` varchar(10) DEFAULT NULL,
+		  `VIEWWIDTH` int(11) DEFAULT NULL,
+		  `VIEWHEIGHT` int(11) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(200) DEFAULT NULL,
+		  PRIMARY KEY (`NOTISEQ`,`TENANT_ID`)
+		) ENGINE=InnoDB AUTO_INCREMENT=736 DEFAULT CHARSET=utf8mb4;

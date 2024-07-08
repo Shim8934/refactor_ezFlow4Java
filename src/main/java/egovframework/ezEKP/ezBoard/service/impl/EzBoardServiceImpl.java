@@ -5251,4 +5251,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		return Optional.empty();
 	}
+	
+	@Override
+	/* 2024-04-01 한태훈 - 게시판 즐겨찾기 추가 구성원 리스트 가져오는 메소드 */
+	public List<String> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception {
+		logger.debug("getFavoriteBoardUserList starts");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardId", boardId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		logger.debug("getFavoriteBoardUserList ends");
+		return ezBoardDAO.getFavoriteBoardUserList(map);
+	}
 }

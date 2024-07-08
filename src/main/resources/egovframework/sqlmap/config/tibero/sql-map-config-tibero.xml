@@ -116,4 +116,6 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezCar/EzCarAdmin_SQL_Tibero.xml"/>
     <!-- 관리자 main xml -->
     <sqlMap resource="egovframework/sqlmap/let/main/EgovMainAdn_SQL_Tibero.xml"/>
+    <!-- 통합알림 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezNotification/EzNotification_SQL_Mysql.xml"/>
 </sqlMapConfig>

@@ -133,6 +133,9 @@
 							case "usePortalAutoRefreshInterval" :
 								alertMsg = "<spring:message code='ezSystem.yej01'/>: <spring:message code='ezEmail.t99000066'/>";
 								break;
+							case "notiPollingInterval" :
+								alertMsg = "<spring:message code='ezNotification.hth37'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
 							case "MailBigSizeAttachLimitCount" :
 								alertMsg = "<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.t99000066'/>";
 								break;
@@ -341,6 +344,12 @@
 					<th><spring:message code="ezSystem.yej01" /></th>
 					<td>
 						<input data-paramId="usePortalAutoRefreshInterval" Id="usePortalAutoRefreshInterval" maxlength="3" type="text" value="<c:out value='${usePortalAutoRefreshInterval}'/>"> (<spring:message code="ezSystem.yej02"/>)
+					</td>
+				</tr>
+				<tr data-name="portal">
+					<th><spring:message code="ezNotification.hth37" /></th>
+					<td>
+						<input data-paramId="notiPollingInterval" Id="notiPollingInterval" maxlength="3" type="text" value="<c:out value='${notiPollingInterval}'/>"> (<spring:message code="ezSystem.yej02"/>)
 					</td>
 				</tr>
 				</c:if>

@@ -3763,4 +3763,49 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void insertTblPortalTopUser() {
         ezCommonDAO.insertTblPortalTopUser();
     }
+	
+    // 2024-03-28 한태훈 > 통합알림 테이블 생성하는 메소드
+	@Override
+	public void createTblRealTimeNotification() throws Exception {
+		ezCommonDAO.createTblRealTimeNotification();		
+	}
+	
+	// 2024-03-28 한태훈 > 통합알림 보관기간 tenant config 생성하는 메소드
+	@Override
+	public void addNotiStoragePeriodConfig() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("propertyName", "notiStoragePeriod");
+		map.put("propertyValue", "10");
+		map.put("description", "통합알림 데이터 보관 기간(default: 10)(일)");
+		map.put("configName", "통합알림 데이터 보관 기간");
+		map.put("regdate", "2024-04-25 00:00:00");
+		map.put("configType", "통합알림");
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			map.put("tenantId", tenantVo.getTenantId());
+			ezCommonDAO.addNotiStoragePeriodConfig(map);
+		}
+	}
+	
+	// 2024-03-28 한태훈 > 통합알림 polling 방식 이용시 알림 데이터 새로고침 주기 설정
+	@Override
+	public void addNotiPollingIntervalConfig() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("propertyName", "notiPollingInterval");
+		map.put("propertyValue", "60000"); // 1분이 기본값. 단위는 밀리초
+		map.put("description", "통합알림 데이터 새로고침 주기 설정(단위는 밀리초)");
+		map.put("configName", "통합알림 데이터 새로고침 주기");
+		map.put("regdate", "2024-04-25 00:00:00");
+		map.put("configType", "통합알림");
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			map.put("tenantId", tenantVo.getTenantId());
+			ezCommonDAO.addNotiPollingIntervalConfig(map);
+		}
+		
+	}
 }

@@ -811,7 +811,8 @@
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION,
 	                    C.MAIL,
-	                    A.ITEMID
+	                    A.ITEMID,
+	                    A.WRITERID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -838,7 +839,8 @@
 						BOARDID, 
 	                    CONTENTLOCATION,
 	                    ITEMID,
-	                    TITLE
+	                    TITLE,
+	                    WRITERID
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
@@ -858,7 +860,8 @@
 	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION,
-	                    A.ITEMID
+	                    A.ITEMID,
+	                    A.WRITERID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -879,7 +882,8 @@
 						BOARDID, 
 	                    CONTENTLOCATION,
 	                    ITEMID,
-	                    TITLE
+	                    TITLE,
+	                    WRITERID
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
@@ -6310,5 +6314,18 @@
 				TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
-
+	
+	<select id="EzBoardDAO.getFavoriteBoardUserList" parameterClass="Map" resultClass="String">
+		SELECT
+			USERID
+		FROM
+			TBL_BOARD_MYBOARDS TBM 
+		WHERE
+			BOARDID = #boardId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			(COMPANYID = #companyId# OR COMPANYID = '*')
+	</select>
+	
 </sqlMap>

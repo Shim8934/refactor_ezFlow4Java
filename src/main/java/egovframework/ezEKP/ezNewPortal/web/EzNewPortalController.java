@@ -298,6 +298,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("menuDisplayMode", data.get("menuDisplayMode"));
 		}
 		
+		/* 2024-03-26 한태훈 - 통합알림용 데이터 추가 */
+		model.addAttribute("pollingInterval", ezCommonService.getTenantConfig("notiPollingInterval", userInfo.getTenantId()));
+		model.addAttribute("lastNotiPollTime", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		
 		logger.debug("portalTopMenu End");
 		return "/ezNewPortal/newPortalTopMenu";
 	}

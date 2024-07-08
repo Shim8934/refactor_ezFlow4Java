@@ -44,7 +44,7 @@ public interface MResourceService {
 	
 	public List<MResourceScheduleVO> getResFavoriteList(String userId, String companyId, int tenantId, String langStr);
 	
-	public void addResSch(String ownerId, String companyId, int tenantId, String pNum, String writerId, String deptNm, String ownerNm, String title, 
+	public Integer addResSch(String ownerId, String companyId, int tenantId, String pNum, String writerId, String deptNm, String ownerNm, String title, 
 			String location, String timeDisplay, String startDate, String endDate, String allDay, String alterTime, String content, String importance, 
 			String writeDay, String entryList, String attachFlag, String approveFlag, String reFlag,String scheduleId);
 	

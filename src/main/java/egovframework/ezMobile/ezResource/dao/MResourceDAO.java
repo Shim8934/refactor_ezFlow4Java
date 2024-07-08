@@ -62,8 +62,9 @@ public class MResourceDAO extends EgovAbstractDAO {
 		return  (List<MResourceScheduleVO>) list("MResourceDAO.getResFavoriteList", map);
 	}
 	
-	public void addResSch(Map<String, Object> map){
+	public Integer addResSch(Map<String, Object> map){
 		insert("MResourceDAO.addResSch", map);
+		return (Integer) map.get("v_PNUM");
 	}
 	
 	public void modifyResSch(Map<String, Object> map){

@@ -28,6 +28,9 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezPoll.dao.EzPollDAO;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -68,7 +71,10 @@ public class EzPollServiceImpl implements EzPollService{
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
-
+	
+	@Autowired
+	EzPersonalService ezPersonalService;
+	
 	@Override
 	public String getQuestionSeq(int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();		
@@ -777,6 +783,10 @@ public class EzPollServiceImpl implements EzPollService{
 				AccessUserGroupInfo = ezOrganService.getDeptInfo(receiverId, userInfo.getPrimary(), userInfo.getTenantId());
 			}
 			
+			if (ezPersonalService.hasNotiDiableItem(receiverId, NotiType.fromString("POLL_NEW"), NotiPlatform.MAIL, tenantId)) {
+				continue;
+			}
+			
 			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
 			from.setAddress(userInfo.getEmail());
 			
@@ -794,8 +804,9 @@ public class EzPollServiceImpl implements EzPollService{
 			to.setAddress(toAddress);
 			toArr[i] = to;
 		}
-		
-		ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
+		if (toArr != null && toArr.length > 0) {
+			ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
+		}
 	}
 
 	@Override

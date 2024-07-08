@@ -60,6 +60,7 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -104,6 +105,9 @@ public class EzSystemAdminController {
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
+	@Autowired
+	private EzNotificationService ezNotificationService;
+
 	@Resource
 	private EgovMessageSource egovMessageSource;
 	
@@ -229,7 +233,8 @@ public class EzSystemAdminController {
 			useExternalMailServer = "NO";
 		}
 		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
-		
+		Integer notiPollingInterval = Integer.parseInt(ezCommonService.getTenantConfig("notiPollingInterval", userInfo.getTenantId())) / (1000 * 60);
+
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
@@ -243,7 +248,8 @@ public class EzSystemAdminController {
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("systemDomain", systemDomain);
-		
+		model.addAttribute("notiPollingInterval", notiPollingInterval);
+
 		logger.debug("systemMainMenu ended");
 		
 		return "/ezSystem/systemMainMenu";
@@ -1037,7 +1043,7 @@ public class EzSystemAdminController {
 		
 		return jObj.toString();
 	}
-	
+
 	@RequestMapping(value="/admin/ezSystem/systemIPManager.do", method=RequestMethod.GET)
 	public String systemIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("systemIPManager started");
@@ -2668,7 +2674,7 @@ public class EzSystemAdminController {
 				adminType = egovMessageSource.getMessage("ezOrgan.t303", locale);
 			} else if (adminType.contains("e=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.kbm01", locale);
-			} else { 
+			} else {
 				adminType = egovMessageSource.getMessage("ezOrgan.t9904", locale);
 			}
 
@@ -3778,4 +3784,43 @@ public class EzSystemAdminController {
 		;
 		logger.debug("connectorHistExcelExport ended.");
 	}
+
+	@RequestMapping(value = "/admin/ezSystem/notiSetting.do", method = RequestMethod.GET)
+	public String notiSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("notiSetting started.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		//관리자 권한 체크
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String notiStoragePeriod = ezCommonService.getTenantConfig("notiStoragePeriod", user.getTenantId());
+		model.addAttribute("notiStoragePeriod", notiStoragePeriod);
+
+		logger.debug("addSystemConfig ended.");
+
+		return "/ezSystem/storageSetting";
+	}
+
+	// 2024-04-01 한태훈 - 관리자 > 알림 보관기간 수정
+	@ResponseBody
+	@RequestMapping(value = "/admin/ezSystem/updateStoragePeriod.do", method=RequestMethod.POST)
+	public String updateStoragePeriod(@CookieValue String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("updateStoragePeriod started.");
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		try {
+			String storagePeriod = request.getParameter("storagePeriod");
+			ezNotificationService.updateStoragePeriod(storagePeriod, userInfo.getTenantId());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			logger.debug("updateStoragePeriod ended.");
+			return "fail";
+		}
+
+		logger.debug("updateStoragePeriod ended.");
+		return "success";
+	}
+
 }

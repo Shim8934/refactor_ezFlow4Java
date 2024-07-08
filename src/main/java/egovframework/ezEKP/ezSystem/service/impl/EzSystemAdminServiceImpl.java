@@ -121,6 +121,11 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 				paramValue = Integer.toString(sessionParam);
 			}
 			
+			if (paramName.equals("notiPollingInterval")) {
+				int notiIntervalParam = Integer.parseInt(paramValue) * (1000 * 60);
+				paramValue = Integer.toString(notiIntervalParam);
+			}
+			
 			sysParamVO.setName(paramName);
 			sysParamVO.setValue(paramValue);
 			

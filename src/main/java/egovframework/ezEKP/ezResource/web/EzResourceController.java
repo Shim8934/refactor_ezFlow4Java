@@ -48,8 +48,12 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
@@ -122,6 +126,12 @@ public class EzResourceController extends EgovFileMngUtil {
 	
 	@Resource(name="EzResourceAdminService")
 	private EzResourceAdminService ezResourceAdminService;
+	
+	@Resource(name="EzNotificationService")
+	private EzNotificationService ezNotificationService;
+	
+	@Resource(name="EzPersonalService")
+	private EzPersonalService ezPersonalService;
 	
 	/**
 	 * 자원관리 메인 화면 호출 함수
@@ -2409,6 +2419,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
 		String startDateTime = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
 		String endDateTime = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
+		String num = xmlDom.getElementsByTagName("RSSCHEDULENUM").item(0).getTextContent();
 		
 		//startDateTime = commonUtil.getDateStringInUTC(startDateTime, userInfo.getOffset(), false);
 		//endDateTime = commonUtil.getDateStringInUTC(endDateTime, userInfo.getOffset(), false);
@@ -2458,6 +2469,18 @@ public class EzResourceController extends EgovFileMngUtil {
 	        	
 	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
     	}
+    	
+    	if (startDateTime.length() == 16) {
+    		startDateTime = startDateTime + ":00";
+    	}
+    	if (endDateTime.length() == 16) {
+    		endDateTime = endDateTime + ":00";
+    	}
+    	
+    	String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + ownerID + "&type=Master&startDate=" + startDateTime.substring(0,10) + "&endDate=" + endDateTime.substring(0,10);
+    	String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + ownerID + "&num=" + num + "&startDate=" + startDateTime.substring(0,19) + "&endDate=" + endDateTime.substring(0,19) + "&type=" + "res";
+    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), resbrd.getOwnerID().replaceAll(",", ";;"), "RESOURCE", "RESERVE", brdNm + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting");
+    	
         logger.debug("sendMail ended");
         
         return "OK";
@@ -2477,6 +2500,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String resID = xmlDom.getElementsByTagName("RESID").item(0).getTextContent();
 		String num = xmlDom.getElementsByTagName("NUM").item(0).getTextContent();
 		String approve = xmlDom.getElementsByTagName("APPROVE").item(0).getTextContent();
+		String startDateTime = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+		String endDateTime = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
 		
 		logger.debug("resID=" + resID + ",num=" + num + ",approve=" + approve);
 		
@@ -2486,57 +2511,65 @@ public class EzResourceController extends EgovFileMngUtil {
         
         // 2023-08-02 황인경 - 자원관리 > 예약 승인/거절시 작성자들에게 메일 발송 처리 > 메일 제목, 본문 실자원명 다국어 지원
      	String brdNm;
-
+     	
      	if (userInfo.getPrimary().equals("1")) {
      		brdNm = resInfo.getBrd_Nm();
      	} else {
      		brdNm = resInfo.getBrd_Nm2();
      	}
-            
-        if (approve.equals("1")) {
-           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));
-           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008", userInfo.getLocale()) + " : " + brdNm);
-        } else if (approve.equals("0")) {
-           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009", userInfo.getLocale()));
-           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900010", userInfo.getLocale()) + " : " + brdNm);
-        } else {
-           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900015", userInfo.getLocale()));
-           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900016", userInfo.getLocale()) + " : " + brdNm);
-        }
-        
-        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
-        		+ commonUtil.getDateStringInUTC(resInfo.getStartDate().substring(0, 16), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" 
-        		+ commonUtil.getDateStringInUTC(resInfo.getEndDate().substring(0, 16), userInfo.getOffset(), false));
-        
-        String subject = "";
+     	
+     	String subject = "";
+        String notiSubType = "";
         if (approve.equals("1")) {
         	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
+        	notiSubType = "APPROVE";
         } else if (approve.equals("0")){
         	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
+        	notiSubType = "CANCEL";
         } else {
         	subject = "["+egovMessageSource.getMessage("ezResource.t9900017", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
+        	notiSubType = "REJECT";
         }
-        
-        String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-        
-    	InternetAddress from = new InternetAddress();
-    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-    	from.setAddress(userInfo.getEmail());
-    	
-    	String emailAddress = resInfo.getMail(); 
-    	String accessName = resInfo.getOwnerNm(); 
-    	
-    	if (accessName.indexOf("(") > -1) {
-    		accessName = accessName.split("\\(")[0];
-    	}
-    	
-    	InternetAddress to = new InternetAddress();
-    	to.setPersonal(accessName, "UTF-8");
-    	to.setAddress(emailAddress);
-        	
-        
-        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
-        
+
+     	if (!ezPersonalService.hasNotiDiableItem(resInfo.getWriterID(), NotiType.fromString("RESOURCE_" + notiSubType), NotiPlatform.MAIL, userInfo.getTenantId())) {
+	        if (approve.equals("1")) {
+	           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));
+	           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008", userInfo.getLocale()) + " : " + brdNm);
+	        } else if (approve.equals("0")) {
+	           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009", userInfo.getLocale()));
+	           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900010", userInfo.getLocale()) + " : " + brdNm);
+	        } else {
+	           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900015", userInfo.getLocale()));
+	           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900016", userInfo.getLocale()) + " : " + brdNm);
+	        }
+	        
+	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
+	        		+ commonUtil.getDateStringInUTC(resInfo.getStartDate().substring(0, 16), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" 
+	        		+ commonUtil.getDateStringInUTC(resInfo.getEndDate().substring(0, 16), userInfo.getOffset(), false));
+	        
+	        String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+	        
+	    	InternetAddress from = new InternetAddress();
+	    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	    	from.setAddress(userInfo.getEmail());
+	    	
+	    	String emailAddress = resInfo.getMail(); 
+	    	String accessName = resInfo.getOwnerNm(); 
+	    	
+	    	if (accessName.indexOf("(") > -1) {
+	    		accessName = accessName.split("\\(")[0];
+	    	}
+	    	
+	    	InternetAddress to = new InternetAddress();
+	    	to.setPersonal(accessName, "UTF-8");
+	    	to.setAddress(emailAddress);
+	        
+	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+     	}
+     	
+        String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + resID + "&type=Master&startDate=" + startDateTime.substring(0,10) + "&endDate=" + endDateTime.substring(0,10);
+        String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + resID + "&num=" + num + "&startDate=" + startDateTime.substring(0,19) + "&endDate=" + endDateTime.substring(0,19) + "&type=" + "res";
+    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), resInfo.getWriterID(), "RESOURCE", notiSubType, brdNm + " - " + resInfo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
         logger.debug("sendMailToUser ended");
 	}
 	
@@ -2962,4 +2995,22 @@ public class EzResourceController extends EgovFileMngUtil {
         
         return "json";
     }
+	
+	@RequestMapping(value = "/ezResource/checkApprovalFlag.do", method = RequestMethod.GET, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String checkApprovalFlag(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("checkApprovalFlag Start");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String resID = "";
+		if(request.getParameter("resID") != null) {
+			resID = request.getParameter("resID");
+		}
+		
+		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("checkApprovalFlag end");
+		return brdApproveFlag;
+	}
 }

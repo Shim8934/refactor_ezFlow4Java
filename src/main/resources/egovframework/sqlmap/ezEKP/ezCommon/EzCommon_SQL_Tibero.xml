@@ -4718,4 +4718,78 @@
 				PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkTblRealTimeNotification">
+		<![CDATA[
+		SELECT NOTISEQ FROM TBL_REALTIME_NOTIFICATION WHERE ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblRealTimeNotification">
+		CREATE TABLE tbl_realtime_notification (
+		    NOTISEQ NUMBER(20) NOT NULL,
+		    USERID VARCHAR2(80) NOT NULL,
+		    MAINTYPE VARCHAR2(20) NOT NULL,
+		    SUBTYPE VARCHAR2(20),
+		    NOTICONTENT VARCHAR2(3000),
+		    SENDERID VARCHAR2(80),
+		    SENDERNAME VARCHAR2(100),
+		    REGDATE DATE,
+		    ISREAD CHAR(1) DEFAULT 'N',
+		    READDATE DATE,
+		    ETCDATA VARCHAR2(400),
+		    ISDELETE CHAR(1) DEFAULT 'N',
+		    DELETEDATE DATE,
+		    LINKURL VARCHAR2(4000),
+		    LINKURL_MOBILE VARCHAR2(4000),
+		    VIEWTYPE VARCHAR2(10),
+		    VIEWWIDTH NUMBER(11),
+		    VIEWHEIGHT NUMBER(11),
+		    TENANT_ID NUMBER(5) NOT NULL,
+		    COMPANYID VARCHAR2(200),
+		    CONSTRAINT PK_TBL_REALTIME_NOTIFICATION
+		    PRIMARY KEY (NOTISEQ,TENANT_ID)
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.getNotiStoragePeriodConfig" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT 
+			PROPERTY_VALUE
+		FROM 
+			TBL_TENANT_CONFIG
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			PROPERTY_NAME = 'notiStoragePeriod'
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.addNotiStoragePeriodConfig"  parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+
+	<select id="EzCommonDAO.getNotiPollingIntervalConfig" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT 
+			PROPERTY_VALUE
+		FROM 
+			TBL_TENANT_CONFIG
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			PROPERTY_NAME = 'notiPollingInterval'
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.addNotiPollingIntervalConfig"  parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+	
 </sqlMap>

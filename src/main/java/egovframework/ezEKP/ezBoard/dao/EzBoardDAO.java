@@ -863,4 +863,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public int checkReplyID(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.checkReplyID", map);
 	}
+	
+	/* 2024-04-01 한태훈 - 게시판 즐겨찾기 추가 구성원 리스트 호출 */
+	@SuppressWarnings("unchecked")
+	public List<String> getFavoriteBoardUserList(Map<String, Object> map) {
+		return (List<String>) list("EzBoardDAO.getFavoriteBoardUserList", map);
+	}
 }
