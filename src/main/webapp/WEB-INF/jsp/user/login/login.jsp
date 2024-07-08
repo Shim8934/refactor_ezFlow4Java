@@ -593,8 +593,9 @@
 					<span class="password_lock"></span>
 					<div class="password_tit">
 						<p class="tit_01">
-							<c:if test="${resetPassword == 'Y'}"><spring:message code='login.kdh030'/></c:if>
-							<c:if test="${resetPassword != 'Y'}"><spring:message code='login.kdh029'/> </c:if>
+							<c:if test="${isFirstLogin != 'Y'&& resetPassword != 'Y'}"><spring:message code='login.kdh030'/></c:if>
+							<c:if test="${isFirstLogin == 'Y'&& resetPassword != 'Y'}"><spring:message code='login.kdh029'/> </c:if>
+							<c:if test="${isFirstLogin != 'Y'&& resetPassword == 'Y'}"><spring:message code='login.kdh032'/> </c:if>
 						</p>
 						<p class="tit_02">
 <%--							<span><spring:message code='main.login.design03'/></span>--%>
