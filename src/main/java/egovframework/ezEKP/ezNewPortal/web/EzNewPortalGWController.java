@@ -5979,6 +5979,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", deptList);
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
@@ -6028,6 +6029,7 @@ public class EzNewPortalGWController {
 			result.put("totalCount2", totalCount2);
 			result.put("containLow", containLow);
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
@@ -6036,4 +6038,63 @@ public class EzNewPortalGWController {
 		logger.debug("ezPortal G/W getUserList ended.");
 		return result;
 	}
+	
+	// [GET] 2024-05-17 한태훈 - 포탈 > 포탈 탑메뉴 위치 회사 설정값 불러오기
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/admin/ezNewPortal/company/topMenuMode", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getTopMenuDisplayModeForCompany(HttpServletRequest request) throws Exception {
+		logger.debug("ezPortal G/W getTopMenuDisplayModeForCompany started.");
+
+		JSONObject result = new JSONObject();
+		try {
+			String companyId = request.getParameter("companyId");
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			String topMenuDisplayMode = ezNewPortalService.getTopMenuDisplayModeForCompany(companyId, tenantId);
+			
+			result.put("code", 0);
+			result.put("status", "ok");
+			result.put("data", topMenuDisplayMode);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		logger.debug("ezPortal G/W getTopMenuDisplayModeForCompany ended.");
+		return result;
+	}
+	
+	// [POST] 2024-05-17 한태훈 - 포탈 > 포탈 탑메뉴 위치 회사 설정값 수정
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/admin/ezNewPortal/company/topMenuMode", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	public JSONObject updateTopMenuDisplayModeForCompany(HttpServletRequest request) throws Exception {
+		logger.debug("ezPortal G/W updateTopMenuDisplayModeForCompany started.");
+
+		JSONObject result = new JSONObject();
+		try {
+			String companyId = request.getParameter("companyId");
+			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezNewPortalService.updateTopMenuDisplayModeForCompany(type, companyId, tenantId);
+			
+			result.put("code", 0);
+			result.put("status", "ok");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		logger.debug("ezPortal G/W updateTopMenuDisplayModeForCompany ended.");
+		return result;
+	}
+	
 }

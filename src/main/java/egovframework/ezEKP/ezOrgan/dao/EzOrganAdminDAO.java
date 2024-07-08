@@ -2358,4 +2358,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public String getDeptExtension15(Map<String, Object> map) throws Exception {
 		 return (String) Optional.ofNullable(select("EzOrganAdminDAO.getDeptExtension15",map)).orElseGet(() -> "0");
 	}
+
+	// 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
+	public void insertCompanyTopMenuInfo(Map<String, Object> map) {
+		insert("EzOrganAdminDAO.insertCompanyTopMenuInfo", map);
+	}
 }

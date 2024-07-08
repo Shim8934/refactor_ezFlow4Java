@@ -810,7 +810,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				map1.put("topMenuLogoJaUUID", UUID.randomUUID().toString());
 				map1.put("topMenuLogoEnUUID", UUID.randomUUID().toString());
 				map1.put("PrimaryLang", ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()));
-				
+				map1.put("menuType", "0");
 				for (int i = 0; i < 112; i++) {
 					map1.put("menuItemUUID"+String.valueOf(i), UUID.randomUUID().toString());
 				}
@@ -865,6 +865,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_IJHS1(map1);
 				//차량관리 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_I33(map1);
+				ezOrganAdminDao.insertCompanyTopMenuInfo(map1); // 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {

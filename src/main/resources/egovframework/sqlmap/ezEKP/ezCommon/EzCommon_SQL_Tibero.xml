@@ -4797,4 +4797,19 @@
 			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
 	</insert>
 	
+	<select id="EzCommonDAO.checkTblPortalTopCompany" resultClass="String">
+		SELECT 1 FROM TBL_PORTAL_TOP_COMPANY WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblPortalTopCompany">
+		CREATE TABLE TBL_PORTAL_TOP_COMPANY
+		(
+			COMPANY_ID VARCHAR2(100)       NOT NULL,
+			TYPE       NUMBER(5) DEFAULT 0 NOT NULL,
+			TENANT_ID  NUMBER(5) DEFAULT 0 NOT NULL,
+			CONSTRAINT PK_TBL_PORTAL_TOP_COMPANY
+				PRIMARY KEY (COMPANY_ID, TENANT_ID)
+		)
+	</statement>
+	
 </sqlMap>

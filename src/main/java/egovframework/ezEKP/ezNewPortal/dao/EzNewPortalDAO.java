@@ -758,4 +758,20 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<BoardListVO>) list("ezNewPortal.getNewBoardPortletInfo", map);
 	}
 	
+	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 설정 기본 데이터 추가 되어있지 않은 회사 목록 가져오는 메소드
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getInitCompanyListForTopMenu() {
+		return (List<OrganDeptVO>) list("ezNewPortal.getInitCompanyListForTopMenu");
+	}
+
+	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 가져오는 메소드
+	public String getTopMenuDisplayModeForCompany(Map<String, Object> map) {
+		return (String) select("ezNewPortal.getTopMenuDisplayModeForCompany", map);
+	}
+	
+	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 수정하는 메소드
+	public void updateTopMenuDisplayModeForCompany(Map<String, Object> map) {
+		update("ezNewPortal.updateTopMenuDisplayModeForCompany", map);
+	}
+	
 }

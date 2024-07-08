@@ -1551,4 +1551,15 @@
 		SELECT *
 		FROM DUAL
 	</insert>
+	
+	<select id="ezNewPortal.getTopMenuDisplayModeForCompany" resultClass="String">
+		SELECT
+			TYPE
+		FROM
+			TBL_PORTAL_TOP_COMPANY
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			COMPANY_ID = #companyId#
+	</select>
 </sqlMap>

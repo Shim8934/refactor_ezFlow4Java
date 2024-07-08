@@ -2223,4 +2223,39 @@ public class EzCommonDAO extends EgovAbstractDAO {
             update("EzCommonDAO.createTblPortalTopUser");
         }
     }
+
+	// 2024-05-17 한태훈 > 포탈 > 회사별 탑메뉴 위치 설정 테이블 생성 메소드
+	public void insertTblPortalTopCompany() {
+		try {
+			select("EzCommonDAO.checkTblPortalTopCompany");
+		} catch (Exception e) {
+			logger.debug("TBL_PORTAL_TOP_Company doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblPortalTopCompany");
+		}
+	}
+
+	// 2024-05-17 한태훈 > 포탈 > 회사별 탑메뉴 위치 설정 기본값 입력 메소드(기본값 : 0 - 상단)
+	public void insertPortalTopCompanyInitdata() {
+		List<OrganDeptVO> initList = ezNewPortalDAO.getInitCompanyListForTopMenu();
+		if (initList != null ) {
+			int initListCount = initList.size();
+
+			for (int i = 0; i < initListCount; i++) {
+				int tenantId = initList.get(i).getTenantId();
+				String companyId = initList.get(i).getCn();
+
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tenantID", tenantId);
+				map.put("companyID", companyId);
+				map.put("menuType", "0");
+
+				try {
+					ezOrganAdminDAO.insertCompanyTopMenuInfo(map);
+				} catch (Exception e1) {
+					logger.error(e1.getMessage(), e1);
+				}
+			}
+		}
+	}
 }

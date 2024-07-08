@@ -3447,4 +3447,31 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getNewBoardPortletInfo(map);
 	}
 	
+	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 가져오는 메소드
+	@Override
+	public String getTopMenuDisplayModeForCompany(String companyId, int tenantId) throws Exception {
+		logger.debug("getTopMenuDisplayModeForCompany started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		logger.debug("getTopMenuDisplayModeForCompany ended");
+		return ezNewPortalDAO.getTopMenuDisplayModeForCompany(map);
+	}
+	
+	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 수정하는 메소드
+	@Override
+	public void updateTopMenuDisplayModeForCompany(String type, String companyId, int tenantId) throws Exception {
+		logger.debug("updateTopMenuDisplayModeForCompany started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("type", type);
+		
+		ezNewPortalDAO.updateTopMenuDisplayModeForCompany(map);
+		logger.debug("updateTopMenuDisplayModeForCompany ended");
+	}
+	
 }

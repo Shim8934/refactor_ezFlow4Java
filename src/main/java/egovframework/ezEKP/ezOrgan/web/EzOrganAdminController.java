@@ -251,7 +251,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertUseHideHeaderArea(); // 2024-05-23 김우철 - 헤더 숨기기 기능 사용여부 테넌트 컨피그 추가
 			ezCommonService.insertUseReceiptDeptFileAttach(); // 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부 테넌트 컨피그 추가
 			ezCommonService.insertNonUseDocAttachYN(); // 2024-07-02 민지수 - 전자결재 > 비전자문서등록 > 본문첨부 기능 사용여부 테넌트 컨피그 추가
-			
+
 	    	ezCommonService.insertPortalThemePortletInitdata();
 	    	ezCommonService.updateTaskUrl();
 	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
@@ -287,11 +287,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertReadingRecordHeader(); // 2024-06-21 김우철 - 전자결재G > 열람문서함 헤더 추가
             ezCommonService.insertPortalPortletSizeTables(); // 2023-11-20 박기범 - 포탈 포틀릿 사이즈 관련 테이블 추가
 			ezCommonService.insertTblPortalTopUser(); // 2024-04-11  TBL_PORTAL_TOP_USER 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
+			ezCommonService.insertTblPortalTopCompany(); // 2024-05-17 한태훈 - TBL_PORTAL_TOP_COMPANY 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
 			ezCommonService.createTblRealTimeNotification(); // 2024-03-28 한태훈 - 통합알림 테이블 추가
 			ezCommonService.addNotiStoragePeriodConfig(); // 2024-03-28 한태훈 - 통합알림 보관기간 tenantConfig 추가
 			ezCommonService.addNotiPollingIntervalConfig(); // 2024-03-28 한태훈 - 통합알림 데이터 새로고침 간격 tenantConfig 추가
 			ezCommonService.insertFixPortlet(); // 2024-05-17 박기범 - 고정포틀릿 추가
-			
+			ezCommonService.insertPortalTopCompanyInitdata(); // 2024-05-17 한태훈 - 포탈 탑 메뉴 위치 설정 회사 기본 데이터 세팅
+
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

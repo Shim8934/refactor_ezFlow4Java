@@ -62,17 +62,37 @@
 			<spring:message code='ezNewPortal.t055' />
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
-			<span><spring:message code='ezNewPortal.garm07' /></span>
 		</h1>
-		
+		<div style="margin-bottom:10px;">
+			<span style="font-size: 14px; font-weight: 500;">▒ <spring:message code="ezNewPortal.topMenu.hth01"/></span> <span style="font-size: 11px; font-weight: 400;">(<spring:message code="ezNewPortal.topMenu.hth02"/></span>)</span>
+			<form id="Form1" method="post">
+				<br>
+				<table class="content" style="width: 450px; margin-top:10px;">
+				    <tbody><tr>
+				        <th><spring:message code="ezNewPortal.topMenu.hth04"/></span></th>
+				        <td>
+				            <input style="margin-top: 0px;" type="radio" id="topDisplayMode" name="topMenuDisplayMode" value="0"><label for="topDisplayMode" style="cursor: pointer; vertical-align: middle">상단</label>
+				            <input style="margin-top: 0px;" type="radio" id="leftDisplayMode" name="topMenuDisplayMode" value="1"><label for="leftDisplayMode" style="cursor: pointer; vertical-align: middle">왼쪽</label>
+				        </td>
+				    </tr>
+				</tbody></table>
+				<div class="btnpositionJsp" style="width: 436px; margin-top:10px;">
+				    <a class="imgbtn" onclick="topMenuDisplayModeSave()"><span><spring:message code="ezNewPortal.topMenu.hth05"/></span></span></a>
+				    <a class="imgbtn" onclick="getCompanyTopMenuDisplayMode()"><span><spring:message code="ezNewPortal.topMenu.hth06"/></span></span></a>
+				</div>
+			</form>
+		</div>
 		
 		<%-- <div id="mainmenu">
 			<ul style="margin-top: 15px;">
 				<li class="menuOrderResetButton" id="menuOrderReset"><span><spring:message code='ezNewPortal.t003' /></span></li>
 			</ul>
 		</div> --%>
+		<div>
+		<span style="font-size: 14px; font-weight: 500;">▒ <spring:message code="ezNewPortal.topMenu.hth04"/></span> </span> <span style="font-size: 11px; font-weight: 400;">(<spring:message code='ezNewPortal.garm07' />)</span>
 		<ul id="menuList">
 		</ul>
+		</div>
 	</body>
 	
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -91,6 +111,7 @@
 		$(function(){
 			getCompanies();
 			getMenus();
+			getCompanyTopMenuDisplayMode();
 			/* document.getElementById("menuOrderReset").addEventListener("click", resetMenuOrder); */
 		});
 		
@@ -136,6 +157,7 @@
 					
 					document.getElementById("ListCompany").addEventListener('change', function() {
 						getMenus();
+						getCompanyTopMenuDisplayMode();
 					});
 				} else {
 					// We reached our target server, but it returned an error
@@ -237,6 +259,34 @@
 			});
 			 
 			request.send(data);
+		}
+		
+		var getCompanyTopMenuDisplayMode = function() {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			$.ajax({
+				type: "GET",
+				url: "/admin/ezNewPortal/getTopMenuDisplayModeForCompany.do",
+				dataType: "JSON",
+				data : {
+					companyId : companyValue	
+				},
+				async: true,
+				success: function(result) {
+					var topMenuDisplayModeBtn = document.getElementsByName('topMenuDisplayMode');
+					for (var i = 0; i < topMenuDisplayModeBtn.length; i++) {
+						if (topMenuDisplayModeBtn[i].value == result.data) {
+							topMenuDisplayModeBtn[i].checked = true;
+							break;
+						}
+					}
+					
+				},
+				error: function (xhr, status, e){
+					
+				}
+			});
 		}
 		
 		var openMenuDetail = function(event) {
@@ -883,6 +933,37 @@
 			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId + "&mode=menu";
 			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
 		    	try { OpenWin.focus(); } catch (e) { }
+		}
+		
+		var topMenuDisplayModeSave = function () {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			var topMenuDisplayModeBtn = document.getElementsByName('topMenuDisplayMode');
+		    var type = 0;
+		    for (let i = 0; i < topMenuDisplayModeBtn.length; i++) {
+		        if (topMenuDisplayModeBtn[i].checked) {
+		        	type = topMenuDisplayModeBtn[i].value;
+		        	break;
+		        }
+		    }
+			
+			$.ajax({
+				type: "POST",
+				url: "/admin/ezNewPortal/updateTopMenuDisplayModeForCompany.do",
+				dataType: "text",
+				data : {
+					companyId : companyValue,
+					type : type
+				},
+				async: true,
+				success: function(result) {
+					alert("저장하였습니다.");
+				},
+				error: function (xhr, status, e){
+					
+				}
+			});
 		}
 
 	</script>

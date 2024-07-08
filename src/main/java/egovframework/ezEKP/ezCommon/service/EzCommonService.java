@@ -379,4 +379,9 @@ public interface EzCommonService {
 	public void addNotiPollingIntervalConfig() throws Exception;
 
 	void insertFixPortlet();
+
+	public void insertTblPortalTopCompany() throws Exception;
+
+	public void insertPortalTopCompanyInitdata() throws Exception;
+
 }

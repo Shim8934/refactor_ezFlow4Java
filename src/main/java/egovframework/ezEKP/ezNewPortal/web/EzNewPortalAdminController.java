@@ -1801,4 +1801,41 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		logger.debug("cardViewPortletWordSetting ended.");
 		return "/admin/ezNewPortal/portalWordSetting";
 	}
+	
+	// [GET] 2024-05-17 한태훈 - 포탈 > 포탈 탑메뉴 위치 회사 설정값 불러오기
+	@ResponseBody
+	@RequestMapping(value = "/admin/ezNewPortal/getTopMenuDisplayModeForCompany.do", method=RequestMethod.GET)
+	public JSONObject getTopMenuDisplayModeForCompany(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getTopMenuDisplayModeForCompany started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("userId", userInfo.getId());
+		param.put("companyId", request.getParameter("companyId"));
+		
+		JSONObject result = commonUtil.getJsonFromRestApi("/rest/admin/ezNewPortal/company/topMenuMode", param, request, "get", null);
+		
+		logger.debug("getTopMenuDisplayModeForCompany ended.");
+		return result;
+	}
+	
+	// [POST] 2024-05-17 한태훈 - 포탈 > 포탈 탑메뉴 위치 회사 설정값 수정
+	@RequestMapping(value = "/admin/ezNewPortal/updateTopMenuDisplayModeForCompany.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String updateTopMenuDisplayModeForCompany(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("updateTopMenuDisplayModeForCompany started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("userId", userInfo.getId());
+		param.put("companyId", request.getParameter("companyId"));
+		param.put("type", request.getParameter("type"));
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/admin/ezNewPortal/company/topMenuMode", param, request, "post", null);
+		String result = resultBody.get("status").toString();
+		logger.debug("updateTopMenuDisplayModeForCompany ended.");
+		return result;
+	}
 }

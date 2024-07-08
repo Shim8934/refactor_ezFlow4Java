@@ -3521,4 +3521,34 @@ ORDER BY
 		]]>
 	</select>
 	
+	<select id="ezNewPortal.getInitCompanyListForTopMenu" resultClass="OrganDeptVO">
+	<![CDATA[
+		SELECT 
+			A.cn, 
+			A.tenant_id AS tenantId 
+		FROM
+			TBL_DEPTMASTER A 
+		LEFT JOIN
+			TBL_PORTAL_TOP_COMPANY B
+		ON
+			A.cn = B.company_id
+		WHERE
+			A.cn = A.dept_cd_path
+		AND
+			B.company_id IS NULL
+		AND 
+			A.cn NOT LIKE 'shared_mailbox%'
+	]]>
+	</select>
+	
+	<update id="ezNewPortal.updateTopMenuDisplayModeForCompany" parameterClass="Map">
+		UPDATE 
+			TBL_PORTAL_TOP_COMPANY
+		SET
+			TYPE = #type#
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			COMPANY_ID = #companyId#
+	</update>
 </sqlMap>

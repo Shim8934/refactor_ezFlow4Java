@@ -3879,4 +3879,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             order++;
         }
     }
+
+	@Override
+	public void insertTblPortalTopCompany() throws Exception {
+		ezCommonDAO.insertTblPortalTopCompany();
+	}
+
+	@Override
+	public void insertPortalTopCompanyInitdata() throws Exception {
+		ezCommonDAO.insertPortalTopCompanyInitdata();
+	}
+
 }

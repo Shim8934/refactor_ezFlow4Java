@@ -4494,4 +4494,19 @@
 			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#)
 	</insert>
 
+	<select id="EzCommonDAO.checkTblPortalTopCompany" resultClass="String">
+		SELECT 1 FROM TBL_PORTAL_TOP_COMPANY LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblPortalTopCompany">
+		CREATE TABLE TBL_PORTAL_TOP_COMPANY
+		(
+			COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
+			TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입 0:탑, 1:좌측메뉴',
+			TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
+			PRIMARY KEY (COMPANY_ID, TENANT_ID)
+		)
+			COMMENT '회사별 탑 메뉴 프레임 타입'
+	</statement>
+
 </sqlMap>

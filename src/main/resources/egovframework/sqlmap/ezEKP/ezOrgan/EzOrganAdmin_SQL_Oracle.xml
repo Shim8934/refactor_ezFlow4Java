@@ -7759,4 +7759,13 @@
 		]]>
 	</select>
 
+	<insert id="EzOrganAdminDAO.insertCompanyTopMenuInfo" parameterClass="Map">
+		INSERT
+			INTO
+    	TBL_PORTAL_TOP_COMPANY
+    		(COMPANY_ID, TENANT_ID, TYPE)
+    	VALUES
+    		(#companyID#, #tenantID#, #menuType#)
+	</insert>
+
 </sqlMap>
