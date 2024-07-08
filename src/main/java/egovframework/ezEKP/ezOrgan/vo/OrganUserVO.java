@@ -155,6 +155,9 @@ public class OrganUserVO {
 	/** 권한 */
 	private String roleInfo;
 
+	/** 관리자 권한 객체 */
+	private OrganAuth auth;
+
 	public String getAddJobTitle() {
 		return addJobTitle;
 	}
@@ -731,5 +734,13 @@ public class OrganUserVO {
 
 	public void setRoleInfo(String roleInfo) {
 		this.roleInfo = roleInfo;
+	}
+
+	public OrganAuth getAuth() {
+		return auth;
+	}
+
+	public void setAuth(OrganAuth auth) {
+		this.auth = auth;
 	}
 }

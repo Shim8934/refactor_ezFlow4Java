@@ -7,7 +7,7 @@
     var companySelectID = '' ;
     (function () {
         var request = new XMLHttpRequest();
-        request.open('GET', '/admin/ezNewPortal/getCompanies.do', false);
+        request.open('GET', '/admin/ezOrgan/getCompanies.do', false);
         request.setRequestHeader('Content-Type', 'application/json');
         var companiesHTML = "";
 

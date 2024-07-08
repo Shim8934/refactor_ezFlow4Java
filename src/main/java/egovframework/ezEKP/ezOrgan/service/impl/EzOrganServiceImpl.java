@@ -2806,4 +2806,18 @@ public class EzOrganServiceImpl implements EzOrganService {
                 (companyId.equals(vo.getCompanyId()) && deptId.equals(vo.getDepartment()) && jobId.equals(vo.getJobID()))).findAny();
 	}
 
+	@Override
+	public List<OrganUserVO> getAllUserinfo(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_CN", userId);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_LANGDATA", "1");
+		List<OrganUserVO> allUserInfo = ezOrganDao.getAllUserInfo(map);
+
+		if (allUserInfo.isEmpty()) {
+			throw new Exception("getAllUserinfo - 유저 정보 조회 실패 : " + tenantId + "/" + userId);
+		}
+
+		return allUserInfo;
+	}
 }

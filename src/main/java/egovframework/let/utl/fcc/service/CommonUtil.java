@@ -91,6 +91,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -3231,5 +3233,14 @@ public class CommonUtil {
 			}
 		}
 		return adminCount > 0;
+	}
+
+	public OrganAuth makeOrganAuth(String userId, int tenantId) throws Exception {
+		List<OrganUserVO> allUserinfo = ezOrganService.getAllUserinfo(userId, tenantId);
+		OrganAuth organAuth = new OrganAuth();
+		for (OrganUserVO user : allUserinfo) {
+            organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
+        }
+		return organAuth;
 	}
 }

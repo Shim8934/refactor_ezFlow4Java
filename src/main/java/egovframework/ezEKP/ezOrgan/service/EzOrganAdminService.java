@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
@@ -215,4 +216,6 @@ public interface EzOrganAdminService {
 	int retireUserCountCheck(String cn, int tenantID) throws Exception;
 
 	Optional<String> getJobIdForFirstUser(String userId, int tenantId) throws Exception;
+
+	List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary) throws Exception;
 }

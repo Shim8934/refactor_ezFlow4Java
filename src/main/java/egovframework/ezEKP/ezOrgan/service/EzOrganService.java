@@ -137,4 +137,6 @@ public interface EzOrganService {
 	String changeCookie(String loginCookie, String deptId, String companyId, int tenantId, String jobId) throws Exception;
 
 	Optional<OrganUserVO> getUserInfo(int tenantId, String userId, String companyId, String deptId, String jobId, String lang) throws Exception;
+
+	List<OrganUserVO> getAllUserinfo(String userId, int tenantId) throws Exception;
 }

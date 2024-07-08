@@ -5911,4 +5911,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 		return result;
 	}
+
+	@RequestMapping(value = "/admin/ezOrgan/getCompanies.do", method=RequestMethod.GET)
+	public String getCompanys(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("getCompanys started.");
+
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getLang());
+
+		model.addAttribute("userCompany", userInfo.getCompanyID());
+		model.addAttribute("list", adminCompanyList);
+
+		logger.debug("getCompanys ended.");
+
+		return "json";
+	}
 }

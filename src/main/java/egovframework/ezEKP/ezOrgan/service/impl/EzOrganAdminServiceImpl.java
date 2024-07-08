@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -3527,15 +3528,28 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 	@Override
 	public Optional<String> getJobIdForFirstUser(String userId, int tenantId) throws Exception {
-		Map<String, Object> map = new HashMap<>();
-		map.put("v_CN", userId);
-		map.put("v_TENANT_ID", tenantId);
-		map.put("v_LANGDATA", "1");
-
-		List<OrganUserVO> allUserInfo = ezOrganDao.getAllUserInfo(map);
-		if (allUserInfo.isEmpty()) {
-			throw new Exception("getJobIdForFirstUser - 유저 정보 조회 실패");
-		}
+		List<OrganUserVO> allUserInfo = ezOrganService.getAllUserinfo(userId, tenantId);
 		return Optional.ofNullable(allUserInfo.get(0).getJobID());
+	}
+
+
+	/**
+	 * 일반적인 관리자의 관리 회사 리스트를 불러온다.
+	 * @param id      the ID of the admin user
+	 * @param tenantID the ID of the tenant
+	 * @param primary  the primary parameter
+	 * @return 전체관리자 - 모든 회사 리스트 / 회사관리자 - 권한이 있는 회사리스트
+	 * @throws Exception if an error occurs while retrieving the company list
+	 */
+	public List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary) throws Exception {
+		List<OrganDeptVO> list = getCompanyList(primary, tenantID);
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(id, tenantID);
+
+        if (!organAuth.isAuth(OrganAuth.AdminAuth.ADMIN_MASTER, "")) {
+            list.removeIf(vo -> !organAuth.isAuth(OrganAuth.AdminAuth.COMPANY_MANAGER, vo.getCn()));
+        }
+
+        return list;
 	}
 }
