@@ -295,6 +295,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertFixPortlet(); // 2024-05-17 박기범 - 고정포틀릿 추가
 			ezCommonService.insertPortalTopCompanyInitdata(); // 2024-05-17 한태훈 - 포탈 탑 메뉴 위치 설정 회사 기본 데이터 세팅
             ezCommonService.addQuickLinkCompanyID(); // 2023-12-15 박차웅 - 퀵링크 tbl_ps_quicklink 테이블 COMPANYID 필드 추가
+            ezCommonService.alterThemeInformation(); // 2024-06-20 한태훈 - 테마 설명 내용 수정.
         } catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

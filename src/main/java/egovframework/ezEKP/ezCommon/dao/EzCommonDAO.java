@@ -2279,4 +2279,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterUserThemePagination");
 		}
 	}
+	
+	public String checkThemeInformation() {
+		return (String) select("EzCommonDAO.checkThemeInformation");
+	}
+	
+	public void alterThemeInformation(Map<String, Object> map) throws Exception {
+		try {
+			update("EzCommonDAO.alterThemeInformation", map);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return;
+		}
+	}
 }

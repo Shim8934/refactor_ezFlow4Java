@@ -4842,5 +4842,30 @@
 		ADD
 			USEPAGING	NUMBER(1)	DEFAULT	1	NOT NULL	COMMENT '페이징 사용 여부'
 	</statement>
+	
+	 <select id="EzCommonDAO.checkThemeInformation" resultClass="string">
+    	SELECT
+    		THEME_CONTENT
+    	FROM
+    		TBL_PORTAL_THEME
+    	WHERE
+    		THEME_ID=1
+    </select>
+    
+    <update id="EzCommonDAO.alterThemeInformation" parameterClass="Map">
+    	<![CDATA[
+			UPDATE  
+					TBL_PORTAL_THEME
+			SET		
+					THEME_CONTENT = #themeContent1#,
+					THEME_CONTENT2 = #themeContent2#,
+					THEME_CONTENT3 = #themeContent3#,
+					THEME_CONTENT4 = #themeContent4#,
+					THEME_CONTENT5 = #themeContent5#,
+					THEME_CONTENT6 = #themeContent6#
+			WHERE 	
+					THEME_ID = #themeId#
+		]]>	
+    </update>
     
 </sqlMap>

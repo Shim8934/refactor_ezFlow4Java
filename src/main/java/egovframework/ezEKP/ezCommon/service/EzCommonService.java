@@ -387,4 +387,6 @@ public interface EzCommonService {
     void addQuickLinkCompanyID() throws Exception;
 
 	public void alterUserThemePagination() throws Exception;
+
+	public void alterThemeInformation() throws Exception;
 }

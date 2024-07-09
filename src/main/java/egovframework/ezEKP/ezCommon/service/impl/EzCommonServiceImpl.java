@@ -3901,4 +3901,37 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.alterUserThemePagination();
 	}
 
+	@Override
+	public void alterThemeInformation() throws Exception {
+		String themeContent1 = ezCommonDAO.checkThemeInformation().trim();
+		if (themeContent1.equals("왼쪽 혹은 오른쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.")) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("themeId", 1);
+			map.put("themeContent1", "소식 및 상단영역이 있는 디자인의 테마입니다.");
+			map.put("themeContent2", "A theme with a design that includes news and a top area.");
+			map.put("themeContent3", "ニュースやトップエリアのあるデザインのテーマです。");
+			map.put("themeContent4", "这是一个包含新闻和顶部区域的设计主题。");
+			map.put("themeContent5", "A theme with a design that includes news and a top area.");
+			map.put("themeContent6", "A theme with a design that includes news and a top area.");
+			ezCommonDAO.alterThemeInformation(map);
+			map.put("themeId", 2);
+			map.put("themeContent1", "위쪽에 정보 및 바로가기가 있는 디자인의 테마입니다.");
+			map.put("themeContent2", "A theme with a design that has information and shortcuts at the top.");
+			map.put("themeContent3", "上部に情報やショートカットがあるデザインのテーマです。");
+			map.put("themeContent4", "该主题的设计在顶部包含信息和快捷方式。");
+			map.put("themeContent5", "A theme with a design that has information and shortcuts at the top.");
+			map.put("themeContent6", "A theme with a design that has information and shortcuts at the top.");
+			ezCommonDAO.alterThemeInformation(map);
+			map.put("themeId", 3);
+			map.put("themeContent1", "정보 관련 고정영역이 없이 포틀릿에 집중할 수 있는 테마입니다.");
+			map.put("themeContent2", "A theme that allows to focus on portlets without any fixed areas related to information.");
+			map.put("themeContent3", "情報関連の固定領域がなくてもポートレットに集中できるテーマです。");
+			map.put("themeContent4", "该主题允许您专注于 portlet，而无需任何与信息相关的固定区域。");
+			map.put("themeContent5", "A theme that allows to focus on portlets without any fixed areas related to information.");
+			map.put("themeContent6", "A theme that allows to focus on portlets without any fixed areas related to information.");
+			ezCommonDAO.alterThemeInformation(map);
+		}
+
+	}
+
 }
