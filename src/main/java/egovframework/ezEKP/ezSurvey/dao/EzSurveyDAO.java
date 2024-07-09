@@ -278,4 +278,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public void setPreviewFlag(Map<String, Object> map) {
 		update("EzSurveyDAO.setPreviewFlag", map);
 	}
+
+	public boolean comfirmSurveyDeletion(Map<String, Object> map) {
+		boolean isDeletedSurvey = (boolean) select("EzSurveyDAO.comfirmSurveyDeletion", map);
+		
+		return isDeletedSurvey;
+	}
 }
