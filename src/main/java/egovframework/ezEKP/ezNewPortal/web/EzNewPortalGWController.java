@@ -5831,8 +5831,8 @@ public class EzNewPortalGWController {
 			if (companyId == null || companyId.equals("")) {
 				companyId = info.getCompanyId();
 			}
-			String lang = request.getParameter("lang") != null ? commonUtil.getMultiData(request.getParameter("lang"), info.getTenantId()) : commonUtil.getMultiData(info.getLang(), info.getTenantId());;
-			List<DeptViewVO> deptList = ezNewPortalService.getDeptViewList(userId, companyId, info.getTenantId(),lang);
+			String lang = request.getParameter("lang") != null ? commonUtil.getMultiData(request.getParameter("lang"), info.getTenantId()) : commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			List<DeptViewVO> deptList = ezNewPortalService.getDeptViewList(userId, companyId, info.getTenantId(), lang);
 
 			result.put("status", "ok");
 			result.put("code", 0);

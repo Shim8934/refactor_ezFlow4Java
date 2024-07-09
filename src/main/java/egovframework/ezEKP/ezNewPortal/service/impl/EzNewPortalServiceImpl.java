@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1965,11 +1966,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			List<ApprGProxyVO> proxyList = null;
 
 			if (proxyOption.equals("1")) {
-
 //				userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
 				proxyList = ezApprovalGService.getProxyUserInfo(userId, lang, tenantId, offset);
 			}
-			map.put("userIDs", userIDs);
+			
+			/* 2024-07-09 홍승비 - SQL Injection 수정 > 사용자ID 리스트는 문자열 대신 배열로 전달 (현재 사용자 ID만 전달됨) */
+			map.put("userIDs", userIDs.replace("'", "").replace(" ", "").split(","));
 			map.put("proxyList", proxyList);
 			
 			list = ezNewPortalDAO.getApprovalDoingList(map);
@@ -2020,12 +2022,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		boolean isUser = false;
 		
 		Iterator<ApprGDocListVO> it = ezNewPortalDAO.getApprovalDoingLines(param).iterator();
-		// 대리결재할 id
-		String userIds = (String)param.get("userIDs");
-		String[] idArr = userIds.split(",");
-		String subId = idArr[0].substring(1, idArr[0].lastIndexOf("'"));
 		
-		while(it.hasNext() && index < 3) {
+		/* 2024-07-09 홍승비 - SQL Injection 수정 > 사용자ID 리스트는 문자열 대신 배열로 전달 (현재 사용자 ID만 전달됨) */
+		// 대리결재할 id
+		String subId = ((String[]) param.get("userIDs"))[0];
+		
+		while (it.hasNext() && index < 3) {
 			ApprGDocListVO vo = it.next();
 			
 			if (index == 0 && vo.getAprMemberSN().equalsIgnoreCase("1")) {
@@ -2033,7 +2035,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				index++;
 			} else {
 				// 현재 유저 결재선 정보와 바로 뒷 사람 정보까지 넣고 while문 종료!
-				if(param.get("userId").toString().equalsIgnoreCase(vo.getAprMemberID()) || subId.equalsIgnoreCase(vo.getAprMemberID())) {
+				if (param.get("userId").toString().equalsIgnoreCase(vo.getAprMemberID()) || subId.equalsIgnoreCase(vo.getAprMemberID())) {
 					ret.add(vo);
 					index++;
 					isUser = true;
@@ -3093,7 +3095,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 //			userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
 			proxyList = ezApprovalGService.getProxyUserInfo(userId, lang, tenantId, offset);
 		}
-		map.put("userIDs", userIDs);
+		
+		/* 2024-07-09 홍승비 - SQL Injection 수정 > 사용자ID 리스트는 문자열 대신 배열로 전달 (현재 사용자 ID만 전달됨) */
+		map.put("userIDs", userIDs.replace("'", "").replace(" ", "").split(","));
 		map.put("proxyList", proxyList);
 		int doingListCount = ezNewPortalDAO.getApprovalDoingListCount(map);
 		
@@ -3208,7 +3212,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		param.put("companyId", companyId);
 		param.put("lang", lang);
 		List<DeptViewVO> deptList = ezNewPortalDAO.getDeptViewVO(param);
-		for(int i=0; i < deptList.size(); i++) {
+		for (int i = 0; i < deptList.size(); i++) {
 			deptList.get(i).setText(commonUtil.cleanValue(deptList.get(i).getText()));
 		}
 
@@ -3224,7 +3228,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int page = pageSize * (Integer.parseInt(curPage)-1);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
-		param.put("key", key);
+		param.put("key", key.toUpperCase());
 		param.put("value", value);
 		param.put("companyId", companyId);
 		param.put("lang", lang);
@@ -3241,7 +3245,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
-		param.put("key", key);
+		param.put("key", key.toUpperCase());
 		param.put("value", value);
 		param.put("companyId", companyId);
 		param.put("lang", lang);

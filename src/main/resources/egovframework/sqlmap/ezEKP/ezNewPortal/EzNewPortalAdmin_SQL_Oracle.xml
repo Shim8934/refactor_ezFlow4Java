@@ -259,7 +259,7 @@
 			]]>
 	</select>
 	
-	<!-- 언어는 좀따해야지 -->
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="ezNewPortal.getMenuAuth" parameterClass="Map" resultClass="MenuAuthVO">
 		<![CDATA[
 			SELECT
@@ -279,9 +279,15 @@
 					ELSE NULL
 				END AS username,
 				CASE WHEN user_type = 1
-					THEN NVL((SELECT TO_CHAR(description$lang$) FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
-							(SELECT TO_CHAR(displayname$lang$) FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) AND extensionattribute2 = #companyId# AND ROWNUM = 1))
-					ELSE (SELECT TO_CHAR(displayname$lang$) FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+					THEN NVL((SELECT
+								TO_CHAR(CASE #lang# WHEN '2' THEN description2 ELSE description END)
+							FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
+							(SELECT
+								TO_CHAR(CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END)
+							FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) AND extensionattribute2 = #companyId# AND ROWNUM = 1))
+					ELSE (SELECT
+							TO_CHAR(CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END)
+						FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 				END AS userdeptname,
 				user_type AS usertype,
 				access_yn AS accessyn,
@@ -1177,6 +1183,7 @@
 	]]>
 	</update>
 
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<!-- 18.12.03 테마별 포틀릿 사용여부 설정 관련 개발 ===== 끝-->
 	<!-- 테마별, 포틀릿별 권한 설정 관련 개발 -->
 	<select id="ezNewPortal.getThemeAuth" parameterClass="Map" resultMap="ThemeAuthMap" remapResults="true">
@@ -1186,21 +1193,33 @@
 			user_id AS userid,
 			CASE
 				WHEN user_type = 1
-					THEN (SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
 				WHEN user_type = 2
-					THEN (SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '001' AND companyid = #companyId#)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '001' AND companyid = #companyId#)
 				WHEN
 					user_type = 3
-					THEN (SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '002' AND companyid = #companyId#)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '002' AND companyid = #companyId#)
 				WHEN
 					user_type = 4
                     THEN (SELECT group_name FROM TBL_PERMISSIONGROUPLIST WHERE tenant_id = #tenantId# AND group_id = user_id AND company_id = #companyId#)
 				ELSE NULL
 			END AS username,
 			CASE WHEN user_type = 1
-				THEN NVL((SELECT TO_CHAR(description$lang$) FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
-						(SELECT TO_CHAR(displayname$lang$) FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) AND extensionattribute2 = #companyId# AND ROWNUM = 1))
-				ELSE (SELECT TO_CHAR(displayname$lang$) FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+				THEN NVL((SELECT
+							TO_CHAR(CASE #lang# WHEN '2' THEN description2 ELSE description END)
+						FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
+						(SELECT
+							TO_CHAR(CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END)
+						FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) AND extensionattribute2 = #companyId# AND ROWNUM = 1))
+				ELSE (SELECT
+						TO_CHAR(CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END)
+					FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
 			access_yn AS accessyn,
@@ -1215,21 +1234,15 @@
 			theme_id = #themeId#
 	]]>
 	<isNotEmpty property="accessType">
-		<![CDATA[
 		AND
 			access_yn = #accessType#
-		]]>
 	</isNotEmpty>
 	<isNotEmpty property="userId">
-		<![CDATA[
 		AND
 			user_id = #userId#
-		]]>
 	</isNotEmpty>
-		<![CDATA[
 		ORDER BY
 			sn, user_type
-		]]>
 	</select>
 	
 	<delete id="ezNewPortal.deleteThemeAuth" parameterClass="Map">
@@ -1281,6 +1294,7 @@
 	</isNotEqual>
 	</select>
 	
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="ezNewPortal.getPortletAuth" parameterClass="Map" resultMap="PortletAuthMap">
 	<![CDATA[
 		SELECT
@@ -1288,21 +1302,33 @@
 			user_id AS userid,
 			CASE
 				WHEN user_type = 1
-					THEN (SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
 				WHEN user_type = 2
-					THEN (SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '001' AND companyid = #companyId#)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '001' AND companyid = #companyId#)
 				WHEN
 					user_type = 3
-					THEN (SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '002' AND companyid = #companyId#)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '002' AND companyid = #companyId#)
 				WHEN
 					user_type = 4
                     THEN (SELECT group_name FROM TBL_PERMISSIONGROUPLIST WHERE tenant_id = #tenantId# AND group_id = user_id AND company_id = #companyId#)
 				ELSE NULL
 			END AS username,
 			CASE WHEN user_type = 1
-				THEN NVL((SELECT TO_CHAR(description$lang$) FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
-						(SELECT TO_CHAR(displayname$lang$) FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) AND extensionattribute2 = #companyId# AND ROWNUM = 1))
-				ELSE (SELECT TO_CHAR(displayname$lang$) FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+				THEN NVL((SELECT
+							TO_CHAR(CASE #lang# WHEN '2' THEN description2 ELSE description END)
+						FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
+						(SELECT
+							TO_CHAR(CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END)
+						FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) AND extensionattribute2 = #companyId# AND ROWNUM = 1))
+				ELSE (SELECT
+						TO_CHAR(CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END)
+					FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
 			access_yn AS accessyn,
@@ -1375,154 +1401,199 @@
 			COUNT(B.theme_id) > 1
 	]]>
 	</select>
-	<!-- 조직도 만들기 위한 쿼리 -->
+	
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
+	<!-- 관리자 > 포탈 > 메뉴관리 > 권한설정 > 부서리스트 표출 시 조직도 생성을 위한 쿼리 -->
 	<select id="ezNewPortal.selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select
-		d.CN as id,
-		case
-		when d.extensionattribute1 = null
-		<isNotEmpty property="companyId">
-			or d.CN = #companyId#
-		</isNotEmpty>
-		then N'##'
-		else d.EXTENSIONATTRIBUTE1
-		end as parent,
-		d.extensionattribute2 as companyId,
-		d.DISPLAYNAME$lang$ as text,
-		case
-		when d.CN = d.extensionattribute2 then 'comp'
-		else 'dept'
-		end as isComp,
-		case
-		when d.CN = u.DEPARTMENT then 'yes'
-		else 'no'
-		end as myDept
+			d.CN as id,
+			case
+				when d.extensionattribute1 = null
+				<isNotEmpty property="companyId">
+					or d.CN = #companyId#
+				</isNotEmpty>
+				then N'##'
+				else d.EXTENSIONATTRIBUTE1
+			end as parent,
+			d.extensionattribute2 as companyId,
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS text,
+			case
+				when d.CN = d.extensionattribute2 then 'comp'
+				else 'dept'
+			end as isComp,
+			case
+				when d.CN = u.DEPARTMENT then 'yes'
+				else 'no'
+			end as myDept
 		from
-		tbl_deptmaster d
+			tbl_deptmaster d
 		left join
-		tbl_usermaster u
+			tbl_usermaster u
 		on
-		d.tenant_id = u.TENANT_ID
+			d.tenant_id = u.TENANT_ID
 		where
-		d.tenant_id = #tenantId#
+			d.tenant_id = #tenantId#
 		and
-		u.CN = #userId#
+			u.CN = #userId#
 		and
-		u.tenant_id = #tenantId#
-		and
-		(
-		((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0
-		and
-		d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
-		or
-		(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
+			u.tenant_id = #tenantId#
+		and (
+			((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0
+			and
+			d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
+			or
+			(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
 		)
 		<isNotEmpty property="companyId">
-			and
+		and
 			d.EXTENSIONATTRIBUTE2 = #companyId#
 		</isNotEmpty>
-		ORDER BY lpad(nvl(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
+		ORDER BY
+			lpad(nvl(d.EXTENSIONATTRIBUTE15, 0), 6, 0),
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END
 	</select>
+	
 	<!-- 해당부서의 사원리스트 -->
 	<select id="ezNewPortal.selectUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
-		select * from
-		(	select
-		DISPLAYNAME$lang$ as user_name,
-		CN as user_id,
-		TITLE$lang$ as jikwi,
-		MAIL as mail,
-		DEPARTMENT as dept_id,
-		DESCRIPTION$lang$ as dept_name,
-		EXTENSIONATTRIBUTE2 as user_img,
-		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15,
-		'user' as userType
-		from
-		tbl_usermaster
-		where
-		TENANT_ID = #tenantId#
-		and
-		PHYSICALDELIVERYOFFICENAME = #companyId#
-		and
-		CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
-		<isNotEqual property="key" compareValue="DEPARTMENT">
-			and
-			$key$ like '%'||#value#||'%'
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
-			and
-			$key$ = #value#
-		</isEqual>
-		union all
 		select
-		A.DISPLAYNAME$lang$ as user_name,
-		A.CN as user_id,
-		B.TITLE$lang$ as jikwi,
-		A.MAIL as mail,
-		B.DEPTID as dept_id,
-		C.DISPLAYNAME$lang$ as dept_name,
-		A.EXTENSIONATTRIBUTE2 as user_img,
-		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.EXTENSIONATTRIBUTE15, '0'))) || NVL(A.EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15,
-		'addJob' as userType
+			* 
 		from
-		tbl_addjobmaster B
-		join
-		tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
-		join
-		tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
-		where
-		B.TENANT_ID = #tenantId#
-		<isNotEqual property="key" compareValue="DEPARTMENT">
+			(select
+				CASE #lang# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END AS user_name,
+				CN as user_id,
+				CASE #lang# WHEN '2' THEN TITLE2 ELSE TITLE END AS jikwi,
+				MAIL as mail,
+				DEPARTMENT as dept_id,
+				CASE #lang# WHEN '2' THEN DESCRIPTION2 ELSE DESCRIPTION END AS dept_name,
+				EXTENSIONATTRIBUTE2 as user_img,
+				SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15,
+				'user' as userType
+			from
+				tbl_usermaster
+			where
+				TENANT_ID = #tenantId#
 			and
-			A.$key$ like '%'||#value#||'%'
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
+				PHYSICALDELIVERYOFFICENAME = #companyId#
 			and
-			B.DEPTID = #value#
-		</isEqual>
-		) AA
-		ORDER BY 8 ASC, 1 ASC
+				CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+				like '%'||#value#||'%'
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				DEPARTMENT = #value#
+			</isEqual>
+			
+			union all
+			
+			select
+				CASE #lang# WHEN '2' THEN A.DISPLAYNAME2 ELSE A.DISPLAYNAME END AS user_name,
+				A.CN as user_id,
+				CASE #lang# WHEN '2' THEN B.TITLE2 ELSE B.TITLE END AS jikwi,
+				A.MAIL as mail,
+				B.DEPTID as dept_id,
+				CASE #lang# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS dept_name,
+				A.EXTENSIONATTRIBUTE2 as user_img,
+				SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.EXTENSIONATTRIBUTE15, '0'))) || NVL(A.EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15,
+				'addJob' as userType
+			from
+				tbl_addjobmaster B
+			join
+				tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+			join
+				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+			where
+				B.TENANT_ID = #tenantId#
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">A.DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">A.CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">A.DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">A.TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">A.TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">A.MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">A.HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">A.FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">A.MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">A.STREETADDRESS</isEqual>
+				like '%'||#value#||'%'
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				B.DEPTID = #value#
+			</isEqual>
+			) AA
+		ORDER BY
+			8 ASC, 1 ASC
 	</select>
 
 	<!-- 해당부서의 사원수 -->
 	<select id="ezNewPortal.getDeptUserListCount" parameterClass="Map" resultClass="Integer">
-		select count(*) AS count from
-		(	select
-		CN as user_id
-		from
-		tbl_usermaster
-		where
-		TENANT_ID = #tenantId#
-		and
-		PHYSICALDELIVERYOFFICENAME = #companyId#
-		and
-		CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
-		<isNotEqual property="key" compareValue="DEPARTMENT">
-			and
-			$key$ like '%' || #value# || '%'
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
-			and
-			$key$ = #value#
-		</isEqual>
-		union all
 		select
-		A.CN as user_id
+			count(*) AS count
 		from
-		tbl_addjobmaster B
-		join
-		tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
-		join
-		tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
-		where
-		B.TENANT_ID = #tenantId#
-		<isNotEqual property="key" compareValue="DEPARTMENT">
+			(select
+				CN as user_id
+			from
+				tbl_usermaster
+			where
+				TENANT_ID = #tenantId#
 			and
-			A.$key$ like '%' || #value# || '%'
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
+				PHYSICALDELIVERYOFFICENAME = #companyId#
 			and
-			B.DEPTID = #value#
-		</isEqual>
-		) AA
+				CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+				like '%'||#value#||'%'
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				DEPARTMENT = #value#
+			</isEqual>
+			
+			union all
+			
+			select
+				A.CN as user_id
+			from
+				tbl_addjobmaster B
+			join
+				tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+			join
+				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+			where
+				B.TENANT_ID = #tenantId#
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">A.DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">A.CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">A.DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">A.TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">A.TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">A.MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">A.HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">A.FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">A.MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">A.STREETADDRESS</isEqual>
+				like '%'||#value#||'%'
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				B.DEPTID = #value#
+			</isEqual>
+			) AA
 	</select>
 </sqlMap>
