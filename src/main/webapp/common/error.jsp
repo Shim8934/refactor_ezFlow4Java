@@ -26,7 +26,12 @@
         <div class='text_wrap'>
             <img src="/images/error_img.svg" width="90">
             <p class="text">
-                <spring:message code="main.t0634"/>
+	            <c:if test="${not empty messageContent}">
+					${messageContent}	            
+	            </c:if>
+	            <c:if test="${empty messageContent}">
+	                <spring:message code="main.t0634"/>
+	            </c:if>
             </p>
         </div>
     </div>

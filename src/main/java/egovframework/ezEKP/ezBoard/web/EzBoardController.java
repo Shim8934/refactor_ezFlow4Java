@@ -3772,6 +3772,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		location = request.getParameter("location");
 		
+		boolean isExistBoardItem = ezBoardService.confirmBoardItemDeletion(boardID, itemID, userInfo.getTenantId());
+		
+		if (!isExistBoardItem) {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", userInfo.getLocale()));
+			return "/common/error";
+		}
+		
 		if (!accessCheck(boardID, itemID, location, userInfo)) {
 			return "main/warning";
 		}
@@ -5882,6 +5889,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardVO boardAdjacent = null;
 		
 		mode = request.getParameter("mode");
+		
+		boolean isExistBoardItem = ezBoardService.confirmBoardItemDeletion(boardID, itemID, userInfo.getTenantId());
+		
+		if (!isExistBoardItem) {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", userInfo.getLocale()));
+			return "/common/error";
+		}
 		
 		if (!accessCheck(boardID, itemID, location, userInfo)) {
 			return "main/warning";
@@ -9759,6 +9773,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardVO boardAdjacent = null;
 		
 		mode = request.getParameter("mode");
+		
+		boolean isExistBoardItem = ezBoardService.confirmBoardItemDeletion(boardID, itemID, userInfo.getTenantId());
+		
+		if (!isExistBoardItem) {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", userInfo.getLocale()));
+			return "/common/error";
+		}
 		
 		if (!accessCheck(boardID, itemID, location, userInfo)) {
 			return "main/warning";

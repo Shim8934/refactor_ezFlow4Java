@@ -6357,4 +6357,17 @@
 			(COMPANYID = #companyId# OR COMPANYID = '*')
 	</select>
 	
+	<select id="EzBoardDAO.confirmBoardItemDeletion" parameterClass="map" resultClass="boolean">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			ITEMID = #itemID#
+		AND
+			BOARDID = #boardID#
+		AND
+			TENANT_ID = #tenantID#
+	</select>
+
 </sqlMap>

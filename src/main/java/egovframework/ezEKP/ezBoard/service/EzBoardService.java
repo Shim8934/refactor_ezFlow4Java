@@ -410,4 +410,6 @@ public interface EzBoardService {
 	
 	/* 2024-04-01 한태훈 - 게시판 > 게시판 즐겨찾기 추가한 유저 리스트 가져오는 메소드 */
 	public List<OrganUserVO> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception;
+
+	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception;
 }

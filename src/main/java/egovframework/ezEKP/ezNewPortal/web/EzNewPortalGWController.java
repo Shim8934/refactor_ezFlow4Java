@@ -3014,6 +3014,7 @@ public class EzNewPortalGWController {
 							
 							portletNamesWithOrder.add(portletNameList.get(langIndex));
 						}
+						pvo.setPortletNameList(portletNamesWithOrder);
 					}
 					else if (menuNamesCount > 2 && menuNamesCount < 4) {
 						int[] langOrder = new int[3];
@@ -3037,8 +3038,9 @@ public class EzNewPortalGWController {
 							
 							portletNamesWithOrder.add(portletNameList.get(langIndex));
 						}
+						pvo.setPortletNameList(portletNamesWithOrder);
 					}
-					pvo.setPortletNameList(portletNamesWithOrder);
+					pvo.setPortletNameList(portletNameList);
 				} 
 				else {
 					pvo.setPortletNameList(portletNameList);
@@ -3986,7 +3988,7 @@ public class EzNewPortalGWController {
 			int photoCount = Integer.parseInt(request.getParameter("photoCount"));
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
-			deptPath = "everyone," + deptPath + "," + userId;
+			deptPath = "everyone,top,Top," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 
 			// 회사의 포토게시판의 포틀릿 정보 가져오기
@@ -4054,7 +4056,7 @@ public class EzNewPortalGWController {
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
-			deptPath = "everyone," + deptPath + "," + userId;
+			deptPath = "everyone,top,Top," + deptPath + "," + userId;
 			String rollInfo = info.getRollInfo();
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
 			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
@@ -5071,7 +5073,7 @@ public class EzNewPortalGWController {
 			int currentPage = commonUtil.isIntNumber(request.getParameter("currentPage"),1);
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
-			deptPath = "everyone," + deptPath + "," + userId;
+			deptPath = "everyone,top,Top," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 
 			// 회사의 포틀릿 정보 가져오기
@@ -5900,7 +5902,7 @@ public class EzNewPortalGWController {
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
-			deptPath = "everyone," + deptPath + "," + userId;
+			deptPath = "everyone,top,Top," + deptPath + "," + userId;
 			String rollInfo = info.getRollInfo();
 			String portletLang = info.getLang();
 			//회사의 존재하는 탭게시판 불러오기, 탭ID, boardid, boardname을 리턴한다.
@@ -5976,7 +5978,7 @@ public class EzNewPortalGWController {
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
-			deptPath = "everyone," + deptPath + "," + userId;
+			deptPath = "everyone,top,Top," + deptPath + "," + userId;
 			String rollInfo = info.getRollInfo();
 			String boardId = request.getParameter("boardId");
 			int listCnt = Integer.parseInt(request.getParameter("listCnt"));
@@ -6054,7 +6056,7 @@ public class EzNewPortalGWController {
 			String rollInfo = info.getRollInfo();
 			int tenantId = info.getTenantId();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
-			deptPath = "everyone," + deptPath + "," + userId;
+			deptPath = "everyone,top,Top," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 			
 			// 게시판 권한 체크

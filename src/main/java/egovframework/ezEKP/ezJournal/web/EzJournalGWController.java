@@ -721,6 +721,12 @@ public class EzJournalGWController {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId(), lang, info.getOffSet(), pPreviewShow_HOW);
 			
+			if (journal == null) {
+				result.put("data", "");
+				result.put("status", "empty");
+				result.put("code", -1);
+			}
+			
 			if (journal.getFileList().size() > 0) {
 				List<JournalFileVO> fileList = journal.getFileList();
 				
