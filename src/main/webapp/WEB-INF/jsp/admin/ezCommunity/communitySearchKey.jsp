@@ -62,7 +62,7 @@
 					infoPopup = window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
 				}
 				else {
-					infoPopup = window.open("/admin/ezCommunity/closeCommunityInfo.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
+					infoPopup = window.open("/admin/ezCommunity/closeCommunityInfo.do?companyID=" + encodeURIComponent(companySelectID) + "&code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
 				}
 			}
 			
@@ -207,7 +207,8 @@
 						pageNum     : pCurPage,
 						searchType  : document.getElementsByName("cCateA")[0].value, // 카테고리 종류
 						searchType2 : QuerySelect.options[QuerySelect.selectedIndex].value, // 커뮤니티 검색옵션
-						searchValue : document.getElementById("txt_SearchQuery").value // 검색값
+						searchValue : document.getElementById("txt_SearchQuery").value, // 검색값
+						companyId 	: encodeURIComponent(companySelectID)
 					},
 					success : function (data) {
 						pCurPage   = data.pageNum;
@@ -284,7 +285,8 @@
 					{
 						pageNum     : pCurPage,
 						searchType2 : QuerySelect.options[QuerySelect.selectedIndex].value, // 커뮤니티 검색옵션
-						searchValue : document.getElementById("txt_SearchQuery").value
+						searchValue : document.getElementById("txt_SearchQuery").value,
+						companyId 	: encodeURIComponent(companySelectID)
 					},
 					success : function (data) {
 						pCurPage   = data.pageNum;
@@ -622,10 +624,16 @@
 				
 				return retVal;
 			}
+
+			function changeCompany() {
+				ChangeTab(document.querySelector("#openCommu"));
+			}
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code = 'ezCommunity.khj02' /><span id="TitleInfo"></span></h1>
+		<h1><spring:message code = 'ezCommunity.khj02' /><span id="TitleInfo"></span>
+			<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
+		</h1>
 		
 			<%--<div class="page">
 			<img src="/images/page_previous.gif" width="15" height="16" align="absmiddle" id="td_Previous"  onClick="prevPage_onclick()">

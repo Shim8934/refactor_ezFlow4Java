@@ -1,11 +1,15 @@
 package egovframework.ezEKP.ezNewPortal.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
+import com.google.gson.JsonArray;
+import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
@@ -39,7 +43,7 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzNewPortalDAO")
 public class EzNewPortalDAO extends EgovAbstractDAO {
-		
+
 	// 공지사항 리스트
 	@SuppressWarnings("unchecked")
 	public List<BoardListVO> getNoticePortletList (Map<String, Object> map) throws Exception {
@@ -119,7 +123,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void insertUserUsedPortlet(Map<String, Object> map) throws Exception {
 		insert("ezNewPortal.insertUserUsedPortlet", map);
 	}
-	
+
 	/**
 	 * 유은정
 	 */
@@ -143,6 +147,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<BoardItemVO> getphotoBoardPortletInfo(Map<String, Object> map) throws Exception {
 		return (List<BoardItemVO>) list("ezNewPortal.getPhotoBoardPortletInfo", map);
+	}
+	
+	public int getPhotoBoardPortletTotalCnt(Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getPhotoBoardPortletTotalCnt", map);
 	}
 
 	//게시판 권한 체크
@@ -190,7 +198,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<ThemeInfoVO> getCompThemeList(Map<String, Object> map) throws Exception {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getCompThemeList", map);
 	}
-	
+
 	public MenuInfoVO getUserStartPage(Map<String, Object> map) throws Exception {
 		return (MenuInfoVO) select("ezNewPortal.getUserStartPage", map);
 	}
@@ -241,6 +249,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<BoardListVO>) list("ezNewPortal.getBoardPortletInfo", map);
 	}
 	
+	public int getBoardPortletTotalCnt (Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getBoardPortletTotalCnt", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<PortletInfoVO> getThemePortletList(Map<String, Object> map) throws Exception {
 		return (List<PortletInfoVO>) list("ezNewPortal.getThemePortletList", map);
@@ -253,7 +265,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void updateThemePortlet(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateThemePortlet", map);
 	}
-	
+
 	public void updatePortletOrderUser(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updatePortletOrderUser", map);
 	}
@@ -353,7 +365,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public int getThemeId(Map<String, Object> map) throws Exception {
 		return (int) select("ezNewPortal.getThemeId", map);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<ThemeInfoVO> getCompanyThemes(Map<String, Object> map) throws Exception {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getCompanyThemes", map);
@@ -543,6 +555,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<FavoriteBoardVO>) list("ezNewPortal.getNewItemList", map);
 	}
 	
+	public int getFavNewItemListCnt(Map<String, Object> map) {
+		return (int) select("ezNewPortal.getNewItemListCnt", map);
+	}
+	
 	//즐겨찾기 게시판 포틀릿 리스트(일반)
 	@SuppressWarnings("unchecked")
 	public List<FavoriteBoardVO> getFavItemList(Map<String, Object> map) {
@@ -553,6 +569,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<CommunityMyCommunityVO> getCommunityList(Map<String, Object> map) {
 		return (List<CommunityMyCommunityVO>) list("ezNewPortal.getCommunityList", map);
+	}
+	
+	public int getCommunityListTotalCnt(Map<String, Object> map) {
+		return (int) select("ezNewPortal.getCommunityListTotalCnt", map);
 	}
 	
 	//ezNewPortal.getCommunityPermit
@@ -674,6 +694,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<FileVO> getWebFolderFileList(Map<String, Object> map) {
 		return (List<FileVO>)list("ezNewPortal.getWebFolderFileList", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public int getWebFolderFileListTotalCnt(Map<String, Object> map) {
+		return (int) select("ezNewPortal.getWebFolderFileListTotalCnt", map);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> getInitCompanyListThemeAuth() {
@@ -712,4 +737,78 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public int getDeptUserListCount(Map<String, Object> map) {
 		return (int) select("ezNewPortal.getDeptUserListCount", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getAllAvailablePortletSize() {
+		return (List<String>) list("ezNewPortal.getAllAvailablePortletSize");
+	}
+
+	// 사용 설정된 포틀릿 사이즈 리스트
+	@SuppressWarnings("unchecked")
+	public List<PortletInfoVO> getAvailablePortletSize(Map<String, Object> map) {
+		return (List<PortletInfoVO>) list("ezNewPortal.getAvailablePortletSize", map);
+	}
+
+	// 회사 포틀릿 사이즈 삭제
+	public void clearPortletSize(Map<String, Object> map) {
+		delete("ezNewPortal.clearPortletSize", map);
+	}
+
+	public void insertPortletSizeCompany(List<Map<String, Object>> list) {
+		insert("ezNewPortal.insertPortletSizeCompany", list);
+	}
+
+	// 사용자 포틀릿 사이즈 삭제
+	public void clearPortletSizeUser(Map<String, Object> map) {
+		delete("ezNewPortal.clearPortletSizeUser", map);
+	}
+
+	public void insertPortletSizeUser(List<Map<String, Object>> list) {
+		insert("ezNewPortal.insertPortletSizeUser", list);
+	}
+
+	public void updatePortalTopFrameInfo(PortalTopVO vo)  throws Exception {
+		insert("ezNewPortal.insertPortalTopFrameInfo", vo);
+	}
+
+	public PortalTopVO getUserMenuDisplayMode(PortalTopVO vo) throws Exception {
+		return (PortalTopVO) select("ezNewPortal.getUserMenuDisplayMode", vo);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getNewBoardPortletInfo(Map<String, Object> map) throws Exception {
+		return (List<BoardListVO>) list("ezNewPortal.getNewBoardPortletInfo", map);
+	}
+	
+	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 설정 기본 데이터 추가 되어있지 않은 회사 목록 가져오는 메소드
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getInitCompanyListForTopMenu() {
+		return (List<OrganDeptVO>) list("ezNewPortal.getInitCompanyListForTopMenu");
+	}
+
+	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 가져오는 메소드
+	public PortalTopVO getTopMenuDisplayModeForCompany(PortalTopVO potalTopVO) throws Exception {
+		return (PortalTopVO) select("ezNewPortal.getTopMenuDisplayModeForCompany", potalTopVO);
+	}
+	
+	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 수정하는 메소드
+	public void updateTopMenuDisplayModeForCompany(PortalTopVO potalTopVO) throws Exception {
+		update("ezNewPortal.updateTopMenuDisplayModeForCompany", potalTopVO);
+	}
+	
+	// 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
+	public void insertTopMenuDisplayModeForCompany(PortalTopVO potalTopVO) throws Exception {
+		insert("ezNewPortal.insertTopMenuDisplayModeForCompany", potalTopVO);
+	}
+
+	public int getFavItemListCnt(Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getFavItemListCnt", map);
+	}
+	
+	// 2024-07-02 조수빈 - 공람 / 회람 포틀릿 목록 반환
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getApprovalDisplayList(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("ezNewPortal.getApprovalDisplayList", map);
+	}
+	
 }

@@ -7,7 +7,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code="ezNewPortal.yej08"/></title>
-<!-- <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css"> -->
 <!-- portal.css 필요없음 - 적용시 팝업에 스크롤 생김 -->
 <link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 
@@ -136,7 +135,7 @@
 		var board_alertArguments = new Array();
 		
 		var savePortletAuthSetting = function() {
-			board_alertArguments[1] = DivPopUpHidden;
+			board_alertArguments[1] = window.close;
 			var companyValue = "<c:out value='${companyId}'/>";
 			var portletId = "<c:out value='${portletId}'/>";
 			var request = new XMLHttpRequest();

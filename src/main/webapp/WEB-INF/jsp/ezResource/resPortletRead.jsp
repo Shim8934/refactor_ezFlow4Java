@@ -452,6 +452,8 @@
 
 	                if (rtnValue == "True") {
 	                    xmlHTTP = createXMLHttpRequest();
+	                    createNodeAndInsertText(xmlDOM, objNode, "STARTDATETIME", sDT);
+	                	createNodeAndInsertText(xmlDOM, objNode, "ENDDATETIME", eDT);
 	                    xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 	                    xmlHTTP.send(xmlDOM);
 	                    var ResponseXML = xmlHTTP.responseXML;

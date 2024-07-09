@@ -16,6 +16,7 @@
 	<typeAlias  alias="BoardMyFavoriteVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardDeleteItemVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO"/>
 	<typeAlias  alias="BoardPollConfigVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO"/> <!-- baonk added -->
+	<typeAlias  alias="OrganUserVO" 			type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
@@ -811,7 +812,8 @@
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION,
 	                    C.MAIL,
-	                    A.ITEMID
+	                    A.ITEMID,
+	                    A.WRITERID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -838,7 +840,8 @@
 						BOARDID, 
 	                    CONTENTLOCATION,
 	                    ITEMID,
-	                    TITLE
+	                    TITLE,
+	                    WRITERID
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
@@ -858,7 +861,8 @@
 	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION,
-	                    A.ITEMID
+	                    A.ITEMID,
+	                    A.WRITERID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -879,7 +883,8 @@
 						BOARDID, 
 	                    CONTENTLOCATION,
 	                    ITEMID,
-	                    TITLE
+	                    TITLE,
+	                    WRITERID
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
@@ -6023,6 +6028,8 @@
 				A.COMPANYID IS NULL)
 			AND
 				A.TENANT_ID = #v_TENANTID#
+			ORDER BY
+				TABID
 		]]>
 	</select>
 
@@ -6310,5 +6317,44 @@
 				TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
-
+	
+	<select id="EzBoardDAO.getFavoriteBoardUserList" parameterClass="Map" resultClass="OrganUserVO">
+		SELECT
+			BM.USERID AS cn,
+			U.DISPLAYNAME AS displayName,
+			U.MAIL AS mail,
+			BM.TENANT_ID AS tenantId,
+			BM.COMPANYID AS companyID
+		FROM
+			TBL_BOARD_MYBOARDS BM
+		INNER JOIN
+			TBL_USERMASTER U
+		ON 
+			BM.TENANT_ID  = U.TENANT_ID 
+		AND
+			BM.USERID = U.CN
+		LEFT JOIN
+			TBL_USERMASTER_RETIRE R
+		ON
+			BM.TENANT_ID = R.TENANT_ID
+		AND
+			BM.USERID = R.CN
+		LEFT JOIN
+			TBL_USERMASTER_DELETE D
+		ON
+			BM.TENANT_ID = D.TENANT_ID
+		AND
+			BM.USERID = D.CN
+		WHERE
+			BM.TENANT_ID = #tenantId#
+		AND
+			BM.boardid = #boardId#
+		AND
+			R.CN IS NULL
+		AND
+			D.CN IS NULL
+		AND
+			(COMPANYID = #companyId# OR COMPANYID = '*')
+	</select>
+	
 </sqlMap>

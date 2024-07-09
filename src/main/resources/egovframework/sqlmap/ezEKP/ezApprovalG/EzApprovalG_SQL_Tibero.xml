@@ -49,12 +49,13 @@
 	<typeAlias  alias="ApprGGroupDocInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO"/>
     <typeAlias  alias="ApprGOutOfOfficeInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO"/>
     <typeAlias  alias="OrganDeptVO" 		type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
+	<typeAlias  alias="ApprGSusinProcessInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO"/>
 
 	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
 		<result property="companyID"					column="companyID"						/>
 		<result property="companyName"					column="companyName"						/>
 	</resultMap>
-    
+
     <resultMap class="OrganDeptVO" 	id="OrganDeptMap">
         <result property="cn"					column="cn"						/>
         <result property="displayName"					column="displayName"						/>
@@ -10275,9 +10276,11 @@
 			* 
         FROM ( 
         		SELECT 
-        			  APRMEMBERSN ,
-                      APRMEMBERID
-        		FROM 
+        			  APRMEMBERSN,
+                      APRMEMBERID,
+              		  APRMEMBERNAME,
+                      APRMEMBERDEPTID
+        		FROM
         			  TBL_APRLINEINFO 
 				WHERE 
 					  TENANT_ID = #v_TENANTID#
@@ -36573,4 +36576,211 @@
         AND
             TENANT_ID = #tenantID#
     </update>
+    <select id ="EzApprovalG.isExistDocAttach" parameterClass="Map" resultClass="Integer" remapResults="true">
+        SELECT COUNT(*)
+        FROM TBL_ENDAPRDOCINFO DI
+                 JOIN (SELECT DOCID, ATTACHDOCURL, COMPANYID, TENANT_ID
+                       FROM TBL_APRDOCATTACHINFO
+                       UNION ALL
+                       SELECT DOCID, ATTACHDOCURL, COMPANYID, TENANT_ID
+                       FROM TBL_ENDAPRDOCATTACHINFO) AT
+                      ON AT.ATTACHDOCURL = DI.HREF
+                          AND AT.COMPANYID = DI.COMPANYID
+                          AND AT.TENANT_ID = DI.TENANT_ID
+        WHERE AT.DOCID = #v_ParentID#
+          AND DI.COMPANYID = #companyID#
+          AND DI.TENANT_ID = #v_TENANTID#
+          AND DI.DOCID = #v_DOCID#
+    </select>
+
+    <select id="EzApprovalG.getDraftUserInfo" parameterClass="Map" resultClass="ApprGAprDocInfoVO">
+        <isEqual property="v_FLAG" compareValue="ING">
+		    SELECT
+		    	WRITERID,
+		    	WRITERNAME,
+		    	WRITERNAME2,
+		    	WRITERJOBTITLE,
+		    	WRITERJOBTITLE2,
+		    	WRITERDEPTID,
+		    	WRITERDEPTNAME,
+		    	WRITERDEPTNAME2
+		    FROM
+		    	TBL_APRDOCINFO
+		    WHERE
+		    	DOCID = #v_DOCID#
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		    AND
+		    	COMPANYID = #companyID#
+	    </isEqual>
+	    <isEqual property="v_FLAG" compareValue="END">
+		    SELECT
+		    	WRITERID,
+		    	WRITERNAME,
+		    	WRITERNAME2,
+		    	WRITERJOBTITLE,
+		    	WRITERJOBTITLE2,
+		    	WRITERDEPTID,
+		    	WRITERDEPTNAME,
+		    	WRITERDEPTNAME2
+		    FROM
+		    	TBL_ENDAPRDOCINFO
+		    WHERE
+		    	DOCID = #v_DOCID#
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		    AND
+		    	COMPANYID = #companyID#
+	    </isEqual>
+    </select>
+    <select id="EzApprovalG.getDocInfoForNoti" parameterClass="Map" resultClass="ApprGDocListVO">
+    	 <isEqual property="v_FLAG" compareValue="ING">
+		    SELECT
+		    	DOCID,
+				FORMID,
+				ORGDOCID,
+				DOCTYPE,
+				DOCSTATE,
+				FUNCTIONTYPE,
+				HREF,
+				DOCTITLE,
+				DOCNO,
+				HASATTACHYN,
+				HASOPINIONYN,
+				STARTDATE,
+				ENDDATE,
+		    	WRITERID,
+		    	WRITERNAME,
+		    	WRITERNAME2,
+		    	WRITERJOBTITLE,
+		    	WRITERDEPTID,
+		    	WRITERDEPTNAME,
+		    	WRITERJOBTITLE2,
+		    	WRITERDEPTNAME2,
+		    	ISPUBLIC,
+		    	COMPANYID
+		    FROM
+		    	TBL_APRDOCINFO
+		    WHERE
+		    	DOCID = #v_DOCID#
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		    AND
+		    	COMPANYID = #companyID#
+	    </isEqual>
+	    <isEqual property="v_FLAG" compareValue="END">
+		    SELECT
+		    	DOCID,
+				FORMID,
+				ORGDOCID,
+				DOCTYPE,
+				DOCSTATE,
+				FUNCTIONTYPE,
+				HREF,
+				DOCTITLE,
+				DOCNO,
+				HASATTACHYN,
+				HASOPINIONYN,
+				STARTDATE,
+				ENDDATE,
+		    	WRITERID,
+		    	WRITERNAME,
+		    	WRITERNAME2,
+		    	WRITERJOBTITLE,
+		    	WRITERJOBTITLE2,
+		    	WRITERDEPTID,
+		    	WRITERDEPTNAME,
+		    	WRITERDEPTNAME2,
+		    	ISPUBLIC,
+		    	COMPANYID
+		    FROM
+		    	TBL_ENDAPRDOCINFO
+		    WHERE
+		    	DOCID = #v_DOCID#
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		    AND
+		    	COMPANYID = #companyID#
+	    </isEqual>
+
+    </select>
+    <select id="EzApprovalG.getUserInfoForNoti" parameterClass="Map" resultClass="OrganUserVO">
+    	SELECT
+    		DISPLAYNAME,
+    		TITLE
+    	FROM
+    		TBL_USERMASTER
+    	WHERE
+    		CN = #userID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </select>
+
+    <select id="EzApprovalG.getAprMemberSnForNoti" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+			(SELECT
+				DOCID,
+				ORGDOCID,
+				FORMID,
+				HREF,
+				HASATTACHYN,
+				APRMEMBERID,
+				APRMEMBERNAME,
+				APRMEMBERNAME2,
+				APRMEMBERDEPTID,
+				DOCSTATE,
+				DOCTITLE,
+				APRMEMBERSN,
+				APRSTATE
+			FROM
+				VAPRDOINGDOCLIST
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID#
+			AND
+				APRMEMBERSN IN (SELECT APRMEMBERSN FROM TBL_APRDOCINFO WHERE APRMEMBERID = #userID#)
+			)
+			WHERE ROWNUM <= 1
+		]]>
+	</select>
+
+	<select id="EzApprovalG.getSusinProcessInfo" parameterClass="Map" resultClass="ApprGSusinProcessInfoVO">
+		SELECT
+			APRSTATE,
+			PROCESSYN,
+			PROCESSORID,
+			PROCESSDOCID
+		FROM
+			TBL_APRRECEIPTPROCESSINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			RECEIVEDDEPTID = #deptId#
+	</select>
+
+	<select id="EzApprovalG.getGongramAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+	SELECT
+		APRMEMBERID,
+		APRMEMBERNAME,
+		APRMEMBERDEPTID
+
+	FROM
+		TBL_APRLINEINFO
+	WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</select>
 </sqlMap>

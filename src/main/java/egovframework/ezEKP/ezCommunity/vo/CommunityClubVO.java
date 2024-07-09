@@ -147,6 +147,8 @@ public class CommunityClubVO {
 	String deptID;
 	/** 2018-11-13 김민성 - 카테고리 c_name 추가 */
 	String c_name;
+	/** 2024-04-29 한태훈 - userId 추가 */
+	String userId;
 	
 	public String getC_ClubNo() {
 		return c_ClubNo;
@@ -585,5 +587,11 @@ public class CommunityClubVO {
 	}
 	public void setC_name(String c_name) {
 		this.c_name = c_name;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

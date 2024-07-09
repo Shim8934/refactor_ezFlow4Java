@@ -91,6 +91,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -370,7 +373,7 @@ public class CommonUtil {
 		try{
 			String decData = getDecryptedLoginCookie(loginCookie);
 
-			String[] decDataArray = decData.split("///");
+			String[] decDataArray = decData.split("///", -1);
 			String serverName = decDataArray[0];
 			String userID = decDataArray[1];
 			String locale = decDataArray[5];
@@ -380,19 +383,34 @@ public class CommonUtil {
             String tenantIdStr = "0";
             
             String deptID = "";
-            
+			String companyID = "";
+			String jobID = "";
+			String roleID = "";
+
             if (decDataArray.length >= 9) {
                 tenantIdStr = decDataArray[8];	
             }
             if(decDataArray.length >= 10) {
             	deptID = decDataArray[9];
             }
+			if(decDataArray.length >= 11) {
+				companyID = decDataArray[10];
+			}
+			if(decDataArray.length >= 12) {
+				jobID = decDataArray[11];
+			}
+			if(decDataArray.length >= 13) {
+				roleID = decDataArray[12];
+			}
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
 			login.setDn("NOPASSWORD");
 			login.setTenantId(Integer.parseInt(tenantIdStr));
 			login.setDeptID(deptID);
+			login.setCompanyID(companyID);
+			login.setJobId(jobID);
+			login.setRoleId(roleID);
 			
 			LoginVO user = loginService.selectUser(login);
 	
@@ -574,11 +592,14 @@ public class CommonUtil {
 	public LoginVO checkAdmin(String loginCookie){
 		try{
 			LoginVO user = userInfo(loginCookie);
+			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId());
 	
-			if (!isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c;k")) {
-				return null;
-			}else{
+			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 				return user;
+			} else if (organAuth.isAuth(AdminAuth.COMPANY_MANAGER)){
+				return user;
+			} else {
+				return null;
 			}
 		}catch(Exception e){
 			return null;
@@ -854,7 +875,7 @@ public class CommonUtil {
 	}
 
 	public boolean checkDeptId(String cValue){
-		String[] decDataArray = cValue.split("///");
+		String[] decDataArray = cValue.split("///", -1);
 		
 		String userID = decDataArray[1];
         String tenantId = "0";
@@ -3216,5 +3237,21 @@ public class CommonUtil {
 			}
 		}
 		return adminCount > 0;
+	}
+
+	public OrganAuth makeOrganAuth(String userId, int tenantId) throws Exception {
+		List<OrganUserVO> allUserinfo = ezOrganService.getAllUserinfo(userId, tenantId);
+		OrganAuth organAuth = new OrganAuth();
+		boolean permissionBasisDeptYN = "Y".equalsIgnoreCase(ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantId));
+
+		if (permissionBasisDeptYN) {
+			for (OrganUserVO user : allUserinfo) {
+				organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
+			}
+		} else {
+            OrganUserVO user = allUserinfo.get(0);
+            organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
+        }
+        return organAuth;
 	}
 }

@@ -152,6 +152,7 @@ public class BoardListVO {
 	private String notiStart;
 	/** 2023-09-25 민지수 - 공지사항 기간설정 종료날짜 */
 	private String notiEnd;
+	private String thumbnail;
 
 	public int getrNum() {
 		return rNum;
@@ -602,5 +603,11 @@ public class BoardListVO {
 	}
 	public void setNotiEnd(String notiEnd) {
 		this.notiEnd = notiEnd;
+	}
+	public String getThumbnail() {
+		return thumbnail;
+	}
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 }

@@ -10,6 +10,7 @@
 	<typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
 	<typeAlias alias="portalDeptViewVO" 	type="egovframework.ezEKP.ezNewPortal.vo.DeptViewVO" />
 	<typeAlias alias="MenuAuthorUserVO" 	type="egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO" />
+	<typeAlias alias="PortalTopVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalTopVO"/>
 	<resultMap class="java.util.HashMap" id="ThemeAuthMap">
 		<result property="themeId" column="THEMEID" />
 		<result property="userId" column="USERID" />
@@ -141,7 +142,10 @@
 				B.menu_Type AS menutype,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
-				B.icon_url AS iconurl,
+				CASE WHEN A.icon_url IS NULL
+					THEN B.icon_url
+				   	ELSE A.icon_url
+				END AS iconurl,
 				CASE WHEN A.company_order IS NULL
 					THEN B.default_order
 					ELSE A.company_order
@@ -717,7 +721,7 @@
 			AND
 				company_id = #companyId#
 			AND
-				portlet_id = #poortletId#
+				portlet_id = #portletId#
 		]]>
 	</delete>
 	
@@ -1139,7 +1143,7 @@
 				theme_id, tenant_id, company_id, portlet_id, portlet_used, portlet_order, menu_id, is_fixed
 			) VALUES (
 				#themeId#, #tenantId#, #companyId#, #portletId#, #portletUsed#, 
-				(SELECT portlet_order FROM TBL_PORTAL_PORTLET_COMP WHERE company_id = #companyId# AND tenant_id = #tenantId# AND portlet_id = #portletId#),
+				(SELECT DEFAULT_ORDER FROM TBL_PORTAL_PORTLET WHERE portlet_id = #portletId#),
 				#menuId#, #isFixed#
 			) 
 	]]>
@@ -1321,7 +1325,7 @@
 			sn, user_type
 	]]>
 	</select>
-	
+
 	<delete id="ezNewPortal.deletePortletAuth" parameterClass="Map">
 	<![CDATA[
 		DELETE FROM
@@ -1525,4 +1529,61 @@
 		</isEqual>
 		) AA
 	</select>
+
+	<select id="ezNewPortal.getAllAvailablePortletSize" resultClass="String">
+		SELECT CLASS_SIZE FROM TBL_PORTAL_PORTLET_SIZE
+	</select>
+
+	<update id="ezNewPortal.clearPortletSize" parameterClass="Map">
+		DELETE
+		FROM TBL_PORTAL_PORTLET_COMPANY_SIZE
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND THEME_ID = #themeId#
+	</update>
+
+	<insert id="ezNewPortal.insertPortletSizeCompany" parameterClass="list">
+		INSERT ALL
+			<iterate>
+				INTO TBL_PORTAL_PORTLET_COMPANY_SIZE (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID, DEFAULT_FLAG)
+				VALUES ( #[].tenantId#, #[].companyId#, #[].portletId#,
+				#[].themeId#, (SELECT SIZE_ID
+				FROM TBL_PORTAL_PORTLET_SIZE
+				WHERE CLASS_SIZE = #[].portletSize# AND ROWNUM = 1)
+				, #[].default# )
+			</iterate>
+		SELECT *
+		FROM DUAL
+	</insert>
+	
+	<select id="ezNewPortal.getTopMenuDisplayModeForCompany" parameterClass="PortalTopVO" resultClass="PortalTopVO">
+		SELECT
+			TYPE
+		FROM
+			TBL_PORTAL_TOP_COMPANY
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANY_ID = #companyID#
+	</select>
+	
+	<update id="ezNewPortal.updateTopMenuDisplayModeForCompany" parameterClass="PortalTopVO">
+		UPDATE 
+			TBL_PORTAL_TOP_COMPANY
+		SET
+			TYPE = #type#
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANY_ID = #companyID#
+	</update>
+	
+	<insert id="ezNewPortal.insertTopMenuDisplayModeForCompany" parameterClass="PortalTopVO">
+		INSERT
+			INTO 
+    	TBL_PORTAL_TOP_COMPANY 
+    		(COMPANY_ID, TENANT_ID, TYPE)
+    	VALUES
+    		(#companyID#, #tenantID#, #type#)
+	</insert>
 </sqlMap>

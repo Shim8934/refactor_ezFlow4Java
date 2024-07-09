@@ -1,12 +1,17 @@
 package egovframework.ezEKP.ezJournal.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -26,6 +31,8 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+
+import static egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 
 /**
  * @Description [Controller] 업무일지 관리자
@@ -49,6 +56,9 @@ public class EzJournalAdminController {
 
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	/**
 	 * 관리자 업무일지  메인 화면 호출 함수
@@ -100,25 +110,17 @@ public class EzJournalAdminController {
 		}
 		
 		param.put("companyId",companyId);
-		param.put("userId", userInfo.getId());
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/companies", param, request, "get", null);
+		param.put("userId",userInfo.getId());
+
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request, "get", null);
 		String status = resultBody.get("status").toString();
-			
-		if (status.equals("ok")) {			
-			JSONArray compList = (JSONArray) resultBody.get("data");
-			model.addAttribute("compList", compList);
-		}
-		
-		param.put("userId",userInfo.getId() );
-		
-		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request, "get", null);
-		status = resultBody.get("status").toString();
-		
+
 		if (status.equals("ok")) {		
 			JSONArray typeList = (JSONArray) resultBody.get("data");
 			model.addAttribute("typeList", typeList);
 		}
+
+		model.addAttribute("selectedCompany" , companyId);
 		
 		logger.debug("formType ended");
 		return "admin/ezJournal/formType";
@@ -177,42 +179,23 @@ public class EzJournalAdminController {
 		String companyId = "";
 		if (request.getParameter("companyId") != null) {
 			companyId = request.getParameter("companyId");
-		} 
-		
-		param.put("companyId", companyId);
-		param.put("userId", userInfo.getId());
-		
-		String restUrl = "/rest/ezjournal/companies";
-		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
-		
-		String status = result.get("status").toString();
-//		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useEditor = commonUtil.getTenantConfigRest("EDITOR", userInfo.getId(), request);
-		
-		if (status.equals("ok")) {
-			JSONArray companyList = (JSONArray) result.get("data");
-			
-			model.addAttribute("userInfo", userInfo);
-			model.addAttribute("companyList", companyList);
-			model.addAttribute("useEditor", useEditor);
 		}
-		
-		param.clear();
-		
+
 		param.put("userId", userInfo.getId());
 		param.put("companyId", companyId);
 		param.put("used", "use");
-		
-		restUrl = "/rest/ezjournal/types";
-		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
-		
-		status = result.get("status").toString();
+
+		String restUrl = "/rest/ezjournal/types";
+		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+
+		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
 			JSONArray typeList = (JSONArray) result.get("data");
 			model.addAttribute("typeList", typeList);
 		}
-		
+
+		model.addAttribute("selectedCompany" , companyId);
 		logger.debug("formMain ended");
 		return "/admin/ezJournal/formMain";
 	}
@@ -443,21 +426,13 @@ public class EzJournalAdminController {
 		} else{
 			companyId = userInfo.getCompanyID();
 		}
-		
+
 		param.put("companyId",companyId);
 		param.put("userId", userInfo.getId());
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/companies", param, request,"get",null);
-		String status = resultBody.get("status").toString();
-			
-		if (status.equals("ok")) {			
-			JSONArray compList = (JSONArray) resultBody.get("data");
-			model.addAttribute("compList", compList);
-		}
-		
+
 		/*System.out.println("companyId = "+companyId);*/
-		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", param, request, "get", null);
-		status = resultBody.get("status").toString();
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", param, request, "get", null);
+		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {		
 			JSONArray authList = (JSONArray) resultBody.get("data");
@@ -472,7 +447,8 @@ public class EzJournalAdminController {
 			}
 			model.addAttribute("authList", authList);
 		}
-		
+
+		model.addAttribute("selectedCompany" , companyId);
 		logger.debug("authorMain ended");
 		
 		return "admin/ezJournal/author";

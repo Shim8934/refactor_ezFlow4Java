@@ -310,6 +310,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 -- 전자설문 종료 후 게시기간 설정 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'SurveyPostingMaxPeriod', '전자설문 종료 후 게시기간 설정', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', '2024-03-26 00:00:00', '전자설문');
 
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'switchUserCompany', '포탈 유저 회사 변경 기능', 'N', '유저의 사간 겸직 변경 허용 여부. Y:허용 그외: 불가', '2023-11-03 00:00:00', '포탈');
+
 --- 메일 개별발신 티폴트 사용여부 옵션 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useEachMailDefault', '메일 개별발신 디폴트 사용여부 ', 'NO', '시스템 > 패러메터 > 개별발신 디폴트 사용  메일쓰기 시 개별발신 사용을 디폴트로 설정한다. 사용 : YES , 사용안함 : NO (default : NO)', '2024-01-31 00:00:00', '메일');
 
@@ -2638,9 +2640,9 @@ INSERT INTO TBL_ATTITUDE_FORM (FORM_ID, TENANT_ID, FORM_NAME, FORM_NAME2, FORM_H
 INSERT INTO TBL_ATTITUDE_CONF (COMPANY_ID, TENANT_ID, WORK_STARTTIME, WORK_ENDTIME, CLOSED_DAY, ATTITUDE_MOD_APPL, CLOSED_DATE_ATTITUDE, CONF_SET_DATE) VALUES ('Top',@tenant_id_value, '00:00', '09:00', '1,0,0,0,0,0,1', '1', '1', now());
 
 -- attitude Type
-INSERT INTO TBL_ATTITUDE_TYPE (TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES ('A01', 'Top',@tenant_id_value, '출근', 'inCom', '1', 'inOut', null, 1);
+INSERT INTO TBL_ATTITUDE_TYPE (TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES ('A01', 'Top',@tenant_id_value, '출근', 'check in', '1', 'inOut', null, 1);
 INSERT INTO TBL_ATTITUDE_TYPE (TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES ('A02', 'Top',@tenant_id_value, '지각', 'late', '1', 'inOut', null, 2);
-INSERT INTO TBL_ATTITUDE_TYPE (TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES ('A03', 'Top',@tenant_id_value, '퇴근', 'outCom', '1', 'inOut', null, 3);
+INSERT INTO TBL_ATTITUDE_TYPE (TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES ('A03', 'Top',@tenant_id_value, '퇴근', 'check out', '1', 'inOut', null, 3);
 INSERT INTO TBL_ATTITUDE_TYPE (TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES ('A07', 'Top',@tenant_id_value, '휴근', 'working Holiday', '1', 'inOut', null, 6);
 INSERT INTO TBL_ATTITUDE_TYPE (TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES ('A04', 'Top',@tenant_id_value, '외근', 'outside work', '1', 'trip', null, 8);
 INSERT INTO TBL_ATTITUDE_TYPE (TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES ('A06', 'Top',@tenant_id_value, '외출', 'outing', '1', 'trip', null, 6);
@@ -2723,9 +2725,9 @@ INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARY
 INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('2','6697514','Asahi','旭市','3',NULL,NULL);
 
 -- 포탈 개인화
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (1, '테마1', 'Theme1', 'Theme1', '왼쪽 혹은 오른쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.', 'A theme with a fixed area on the left or right.', '固定領域を画面の右または左に配置できるテーマです。', '左侧或右侧有固定区域的主题。', 'A theme with a fixed area on the left or right.', 'A theme with a fixed area on the left or right.');
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (2, '테마2', 'Theme2', 'Theme2', '위쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.', 'A theme with a fixed area on the top.', '固定領域が画面の上部に表示されるテーマです。', '顶部有固定区域的主题。', 'A theme with a fixed area on the top.', 'A theme with a fixed area on the top.');
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (3, '테마3', 'Theme3', 'Theme3', '기본 정보관련 영역이 없이 포틀릿에 집중할 수 있는 테마 입니다.', 'A theme that consists of only portlets without fixed areas.', '固定領域がなく、すべてのポートレットを自由に配置できるテーマです。', '仅由没有固定区域的 portlet 组成的主题。', 'A theme that consists of only portlets without fixed areas.', 'A theme that consists of only portlets without fixed areas.');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (1, '테마1', 'Theme1', 'Theme1', '소식 및 상단영역이 있는 디자인의 테마입니다.', 'A theme with a design that includes news and a top area.', 'ニュースやトップエリアのあるデザインのテーマです。', '这是一个包含新闻和顶部区域的设计主题。', 'A theme with a design that includes news and a top area.', 'A theme with a design that includes news and a top area.');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (2, '테마2', 'Theme2', 'Theme2', '위쪽에 정보 및 바로가기가 있는 디자인의 테마입니다.', 'A theme with information and shortcuts at the top.', '上部に情報やショートカットがあるデザインのテーマです。', '该主题的设计在顶部包含信息和快捷方式。', 'A theme with information area and shortcuts at the top.', 'A theme with information area and shortcuts at the top.');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (3, '테마3', 'Theme3', 'Theme3', '정보 관련 고정영역이 없이 포틀릿에 집중할 수 있는 테마입니다.', 'A theme that allows to focus on portlets without any fixed areas related to information.', '情報関連の固定領域がなくてもポートレットに集中できるテーマです。', '该主题允许您专注于 portlet，而无需任何与信息相关的固定区域。', 'A theme that allows to focus on portlets without any fixed areas related to information.', 'A theme that allows to focus on portlets without any fixed areas related to information.');
 
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (0, '/ezNewPortal/newPortalPortalPage.do', 'G', '', 0, 'portal');
 UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE menu_url = '/ezNewPortal/newPortalPortalPage.do';
@@ -2761,6 +2763,8 @@ INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (6, 'Frame1
 INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (7, 'Frame2', 2);
 INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (8, 'Frame2', 3);
 
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (15, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -2, 'fixLeft');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (16, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -1, 'fixRight');
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (1, 1, '/ezNewPortal/receivedMailPortlet.do', 'G', 2, 'receivedmail');
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (2, 4, '/ezNewPortal/noticePortlet.do', 'G', 1, 'notice');
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (4, 15, '/ezNewPortal/votePortlet.do', 'G', 3, 'vote');
@@ -2960,6 +2964,8 @@ INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MEN
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 5, 'Top',@tenant_id_value, 'Car');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 6, 'Top',@tenant_id_value, 'Car');
 
+INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',@tenant_id_value, 15, 1, 1, -2, null);
+INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',@tenant_id_value, 16, 1, 1, -1, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',@tenant_id_value, 1, 1, 1, 2, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',@tenant_id_value, 2, 4, 1, 1, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',@tenant_id_value, 4, 15, 1, 3, null);
@@ -2981,12 +2987,24 @@ INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID,
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',@tenant_id_value, 70, 10, 1, 22, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',@tenant_id_value, 73, 19, 1, 20, null);
                 
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 1, @tenant_id_value, 'Top', '고정 포틀릿');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 2, @tenant_id_value, 'Top', 'fixed portlet');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 3, @tenant_id_value, 'Top', '固定ポートレット');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 4, @tenant_id_value, 'Top', '固定门户组件');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 5, @tenant_id_value, 'Top', 'portlet cố định');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 6, @tenant_id_value, 'Top', 'portlet tetap');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 1, @tenant_id_value, 'Top', '고정 포틀릿');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 2, @tenant_id_value, 'Top', 'fixed portlet');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 3, @tenant_id_value, 'Top', '固定ポートレット');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 4, @tenant_id_value, 'Top', '固定门户组件');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 5, @tenant_id_value, 'Top', 'portlet cố định');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 6, @tenant_id_value, 'Top', 'portlet tetap');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 1, @tenant_id_value, 'Top', '받은 메일');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 2, @tenant_id_value, 'Top', 'Received Mail');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 2, @tenant_id_value, 'Top', 'Mail');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 3, @tenant_id_value, 'Top', '受信トレイ');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 4, @tenant_id_value, 'Top', '收件邮件');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 5, @tenant_id_value, 'Top', 'Received Mail');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 6, @tenant_id_value, 'Top', 'Received Mail');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 5, @tenant_id_value, 'Top', 'Mail');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 6, @tenant_id_value, 'Top', 'Mail');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (2, 4, 1, @tenant_id_value, 'Top', '공지사항');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (2, 4, 2, @tenant_id_value, 'Top', 'Notice');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (2, 4, 3, @tenant_id_value, 'Top', 'お知らせ');
@@ -3090,11 +3108,11 @@ INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_I
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (51, 6, 5, @tenant_id_value, 'Top', 'Resource');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (51, 6, 6, @tenant_id_value, 'Top', 'Resource');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 1, @tenant_id_value, 'Top', '개인폴더');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 2, @tenant_id_value, 'Top', 'Personal Folder');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 2, @tenant_id_value, 'Top', 'My Folder');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 3, @tenant_id_value, 'Top', 'Webフォルダ');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 4, @tenant_id_value, 'Top', '个人文件夹');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 5, @tenant_id_value, 'Top', 'Personal Folder');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 6, @tenant_id_value, 'Top', 'Personal Folder');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 5, @tenant_id_value, 'Top', 'My Folder');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 6, @tenant_id_value, 'Top', 'My Folder');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (73, 19, 1, @tenant_id_value, 'Top', '전자설문');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (73, 19, 2, @tenant_id_value, 'Top', 'Survey');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (73, 19, 3, @tenant_id_value, 'Top', '電子アンケート');
@@ -3102,6 +3120,12 @@ INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_I
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (73, 19, 5, @tenant_id_value, 'Top', 'Survey');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (73, 19, 6, @tenant_id_value, 'Top', 'Survey');
 
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (1, @tenant_id_value, 'Top', 15, 1, 4, -2, 0);
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (2, @tenant_id_value, 'Top', 15, 1, 4, -2, 0);
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (3, @tenant_id_value, 'Top', 15, 1, 4, -2, 0);
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (1, @tenant_id_value, 'Top', 16, 1, 4, -1, 0);
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (2, @tenant_id_value, 'Top', 16, 1, 4, -1, 0);
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (3, @tenant_id_value, 'Top', 16, 1, 4, -1, 0);
 INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (1, @tenant_id_value, 'Top', 1, 1, 1, 1, 0);
 INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (1, @tenant_id_value, 'Top', 2, 1, 2, 4, 0);
 INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (1, @tenant_id_value, 'Top', 4, 1, 3, 15, 0);
@@ -3170,6 +3194,8 @@ INSERT INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACC
 INSERT INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (2, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (3, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 
+INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (15, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
+INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (16, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (1, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (2, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (4, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
@@ -3275,3 +3301,11 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'useWorkspaceSchedule', '협업 일정 연동 여부', 'NO', 'YES: 사용 NO: 사용안함', '2024-05-22 00:00:00', '협업');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'delAttachByOthers', '0', '결재에서 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값(0 : 불가 1 : 허용), (default:0) ', '결재에서 첨부파일을 다른사람이 지울수있는 여부', '2021-03-05 00:00:00', '전자결재');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES (0, 'usePortletSize', 'N', 'Y: 사용 N: 사용안함 (default: N)', '포탈 포틀릿 커스텀 사이즈 사용 여부', '2023-11-20 00:00:00', '포탈');
+
+INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (0, 'one_by_one');
+INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (1, 'two_by_one');
+INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (2, 'one_by_two');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'notiStoragePeriod', '통합알림 데이터 보관 기간', '10', '통합알림 데이터 보관 기간(default: 10)(일)', '2024-04-25 00:00:00', '통합알림');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'notiPollingInterval', '통합알림 데이터 새로고침 주기', '60000', '통합알림 데이터 새로고침 주기 설정(단위는 밀리초)', '2024-04-25 00:00:00', '통합알림');

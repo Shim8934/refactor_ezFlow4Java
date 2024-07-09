@@ -44,7 +44,7 @@
 					<ul>
 						<li class="logoTitle"><spring:message code='ezNewPortal.t060' /></li>
 						<li><spring:message code='ezNewPortal.t061' /></li>
-						<li><spring:message code='ezNewPortal.t062' /></li>
+<%--						<li><spring:message code='ezNewPortal.t062' /></li>--%>
 						<li><spring:message code='ezNewPortal.t063' /></li>
 					</ul>
 				</div>
@@ -62,7 +62,7 @@
 						<ul>
 							<li class="logoTitle"><spring:message code='ezNewPortal.t064' /></li>
 							<li><spring:message code='ezNewPortal.t065' /></li>
-							<li><spring:message code='ezNewPortal.t066' /></li>
+<%--							<li><spring:message code='ezNewPortal.t066' /></li>--%>
 						</ul>
 					</div>
 				</div>

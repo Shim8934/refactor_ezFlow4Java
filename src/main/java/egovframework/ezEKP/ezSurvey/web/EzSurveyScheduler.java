@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
@@ -36,13 +37,16 @@ public class EzSurveyScheduler {
 	@Autowired
 	private EzEmailAsync ezEmailAsync;
 	
+	@Autowired
+	private EzNotificationService ezNotificationService;
+	
 	@Resource(name = "jspw")
     private String jspw;
 	
 	@SuppressWarnings("deprecation")
 	@Scheduled(cron = "${config.cron.sendMailToSurveyParticipant}")
 //	@RequestMapping(value = "/ezSurvey/tt.do")
-	public void sendMailToSurveyParticipant() throws Exception{
+	public void sendMailToSurveyParticipant() throws Exception {
 		logger.debug("sendMailToSurveyParticipant scheduler started.");
 		
 		//choose scheduler running server
@@ -57,6 +61,7 @@ public class EzSurveyScheduler {
 		List<SurveyVO> todaySurveyList = ezSurveyService.getTodaySurveyList(offset);
 		
 		if (todaySurveyList == null || todaySurveyList.size() == 0) {
+			logger.debug("sendMailToSurveyParticipant scheduler ended.");
 			return;
 		}
 		
@@ -70,6 +75,19 @@ public class EzSurveyScheduler {
 			
 			ezEmailAsync.sendMail(participantList, survey, Integer.toString(offset));
 			ezSurveyService.updateMailSentFlag(surveyId, 1, companyId, tenantId);
+			
+			String receipientIds = "";
+			String separator = ";;";
+			for (SurveyParticipantVO surveyParticipant : participantList) {
+				receipientIds += surveyParticipant.getUserId() + separator;
+			}
+			
+			if (receipientIds != null && receipientIds.length() > 0) {
+				receipientIds.substring(0, receipientIds.length() - separator.length());
+				String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + surveyId;
+		    	String linkUrlMobile = "";
+		    	ezNotificationService.sendNoti(survey.getCreatorId(), survey.getCreatorName(), receipientIds, "SURVEY", "NEW", survey.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "", tenantId, companyId);
+			}
 		}
 		
 		logger.debug("sendMailToSurveyParticipant scheduler ended.");

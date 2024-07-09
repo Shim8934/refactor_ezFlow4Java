@@ -3939,4 +3939,31 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateReturnByDesignation(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateReturnByDesignation", map);
 	}
+
+    // 2024-04-23 한태훈 > 결재 알림 발송 위한 결재 문서 정보 가져오기
+	public ApprGDocListVO getDocInfoForNoti(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.getDocInfoForNoti", map);
+	}
+
+	// 2024-04-23 한태훈 > 결재 알림 발송 위한 유저 정보 가져오기
+	public OrganUserVO getUserInfoForNoti(Map<String, Object> map) throws Exception {
+		return (OrganUserVO) select("EzApprovalG.getUserInfoForNoti", map);
+	}
+
+	// 2024-04-23 한태훈 > 결재 알림 발송 위한 결재 순서 가져오기
+	public ApprGDocListVO getAprMemberSnForNoti(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.getAprMemberSnForNoti", map);
+	}
+
+	// 2024-04-23 한태훈 > 결재 알림 발송 위한 수신 처리 정보 가져오기
+	public ApprGSusinProcessInfoVO getSusinProcessInfo(Map<String, Object> map) throws Exception {
+		return (ApprGSusinProcessInfoVO) select("EzApprovalG.getSusinProcessInfo", map);
+	}
+
+	// 2024-04-23 한태훈 > 결재 알림 발송 위한 공람 결재선 정보 가져오기
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getGongramAprLineInfo(Map<String, Object> map) {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getGongramAprLineInfo", map);
+	}
+
 }

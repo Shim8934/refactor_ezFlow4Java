@@ -204,6 +204,8 @@
 	                	list += "<DATA7>" + getNodeText(SelectNodes(listxml, "instancetype")[i]).substring(0, 10) + "</DATA7>";
 	                	list += "<DATA8>" + getNodeText(SelectNodes(listxml, "pnumber")[i]).substring(0, 10) + "</DATA8>";
 	                	list += "<DATA9>" + getNodeText(SelectNodes(listxml, "groupflag")[i]).substring(0, 10) + "</DATA9>";
+	                	list += "<DATA10>" + getNodeText(SelectNodes(listxml, "dtstart")[i]).substring(0, 16) + "</DATA10>";
+	                	list += "<DATA11>" + getNodeText(SelectNodes(listxml, "dtend")[i]).substring(0, 16) + "</DATA11>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "approveFlag")[i]) + "</VALUE></CELL>";
 	                	list += "</CELL><CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "subject")[i]) + "]]></VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dtstart")[i]).substring(0, 16).replace("T", " ") + "</VALUE></CELL>";
@@ -326,6 +328,18 @@
 
 	                	if (rtnValue == "True") {
 		                    xmlHTTP = createXMLHttpRequest();
+		                    var allDayCheck = selrow[i].getAttribute("DATA6");
+		                    var startdatetime = selrow[i].getAttribute("DATA10");
+		                    var enddatetime = selrow[i].getAttribute("DATA11");
+		                    if (allDayCheck == "1") {
+		                    	startdatetime = startdatetime.substring(0,10) + " 00:00:01";
+		                    	enddatetime = enddatetime.substring(0,10) + " 23:59:59";
+		                    } else {
+		                    	startdatetime = startdatetime.substring(0,10) + " " + startdatetime.substring(11,16) + ":00"; 
+		                    	enddatetime = enddatetime.substring(0,10) + " " + enddatetime.substring(11,16) + ":00"; 
+		                    }
+		                    createNodeAndInsertText(xmlDOM, objNode, "STARTDATETIME", startdatetime);
+		                	createNodeAndInsertText(xmlDOM, objNode, "ENDDATETIME", enddatetime);
 		                    xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 	    	                xmlHTTP.send(xmlDOM);
 	        	            var ResponseXML = xmlHTTP.responseXML;
@@ -373,6 +387,18 @@
 
 	                	if (rtnValue == "True") {
 		                    xmlHTTP = createXMLHttpRequest();
+		                    var allDayCheck = selrow[i].getAttribute("DATA6");
+		                    var startdatetime = selrow[i].getAttribute("DATA10");
+		                    var enddatetime = selrow[i].getAttribute("DATA11");
+		                    if (allDayCheck == "1") {
+		                    	startdatetime = startdatetime.substring(0,10) + " 00:00:01";
+		                    	enddatetime = enddatetime.substring(0,10) + " 23:59:59";
+		                    } else {
+		                    	startdatetime = startdatetime.substring(0,10) + " " + startdatetime.substring(11,16) + ":00"; 
+		                    	enddatetime = enddatetime.substring(0,10) + " " + enddatetime.substring(11,16) + ":00"; 
+		                    }
+		                    createNodeAndInsertText(xmlDOM, objNode, "STARTDATETIME", startdatetime);
+		                	createNodeAndInsertText(xmlDOM, objNode, "ENDDATETIME", enddatetime);
 	                    	xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 	                    	xmlHTTP.send(xmlDOM);
 	                    	var ResponseXML = xmlHTTP.responseXML;

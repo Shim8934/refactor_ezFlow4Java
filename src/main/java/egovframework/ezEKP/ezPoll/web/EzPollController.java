@@ -60,6 +60,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -112,6 +113,9 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Autowired
+	private EzNotificationService ezNotificationService;
 	
 	@Autowired
 	private SimpMessagingTemplate template;
@@ -497,7 +501,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String modifyingQst = ((String)session.getAttribute("modifying_question") != null) ? (String)session.getAttribute("modifying_question") : "";					
 		
 		for (PollQuestionVO pollQstVO : listTotalQuestions) {
-			if (pollQstVO.getIsMofifying() == 1) {
+			if (pollQstVO.getIsModifying() == 1) {
 				if (modifyingQst.equals("")) {
 					listOfModifyingQst.add(pollQstVO);
 				}
@@ -762,9 +766,25 @@ public class EzPollController extends EgovFileMngUtil {
 				ezPollService.insertOption(pollAnswerVO);
 			}
 		}
-
-		// Send posting notification mail
-		// 메일 발송 체크되어 있고, 투표 등록이나 재사용일 경우 => true
+		
+		Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
+		getAllUserForQuestion(loginVO, pollQuestionVO.getQstId(), setOfUserIds);
+		String notiReceipientIds = "";
+		String separator = ";;";
+		for (LoginVO user : setOfUserIds) {
+			notiReceipientIds += user.getId() + separator;
+		}
+		if (notiReceipientIds != null && !notiReceipientIds.equals("")) {
+			notiReceipientIds = notiReceipientIds.substring(0, notiReceipientIds.length() - separator.length());
+		}
+		
+		String linkUrl = "/ezPoll/pollVote.do?brdId=6&qstId=" + pollAnswerVO.getQstId();
+    	String linkUrlMobile = "";
+    	ezNotificationService.sendNoti(req, loginVO.getId(), loginVO.getDisplayName(), notiReceipientIds, "POLL", "NEW", pollQuestionVO.getTitle(), "popup", "900", "750", linkUrl, linkUrlMobile, "");
+		
+    	// Send posting notification mail
+    	// 메일 발송 체크되어 있고, 투표 등록이나 재사용일 경우 => true
+    	
 		if (sendPostNotice == 1 && qstModifyInfo.equals("")) {
 			ezPollService.sendPostNotiMail(loginVO, loginCookie, pollQuestionVO);
 		}
@@ -812,7 +832,7 @@ public class EzPollController extends EgovFileMngUtil {
 		//Get question
 		pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
 
-		if (pollQuestionVO.getIsMofifying() == 1) {
+		if (pollQuestionVO.getIsModifying() == 1) {
 			String modifyingUser = ezPollService.getModifyingUser(tenantId, qstId);
 			if (loginVO.getId().equals(modifyingUser)) {
 				return "redirect:/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=modify" + "&params=" + params + "&search=" + searchStr + "&searchN=" + searchN;
@@ -1130,7 +1150,7 @@ public class EzPollController extends EgovFileMngUtil {
 		//Get question
 		PollQuestionVO pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
 
-		if (pollQuestionVO.getIsMofifying() == 0) {
+		if (pollQuestionVO.getIsModifying() == 0) {
 			data = "{\"result\":\"Normal\"}";
 		}
 		else {

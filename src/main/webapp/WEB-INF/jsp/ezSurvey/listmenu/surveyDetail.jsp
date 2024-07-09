@@ -783,8 +783,8 @@
 				case 0 : alert(SurveyMessages.strSave2)    ;
 						 resposeObj.responses = [];
 						 
-						 if (window.opener.getPotletSurveyList != undefined) {
-							 window.opener.getPotletSurveyList();
+						 if (window.opener.reloadSurveyPage != undefined) {
+							 window.opener.reloadSurveyPage();
 							 // 일단 현 상황에 맞춰 주석처리
 							 // 나중에 필요하면 주석 풀면 됌
 							 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
@@ -1103,8 +1103,8 @@
 			alert(SurveyMessages.strDel);
 			if (window.opener && window.opener.openSurveyPopup)    {window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
 			
-			if (window.opener != null && window.opener.getPotletSurveyList != undefined) {
-				 window.opener.getPotletSurveyList();
+			if (window.opener != null && window.opener.reloadSurveyPage != undefined) {
+				 window.opener.reloadSurveyPage();
 				 // 일단 현 상황에 맞춰 주석처리
 				 // 나중에 필요하면 주석 풀면 됌
 				 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');

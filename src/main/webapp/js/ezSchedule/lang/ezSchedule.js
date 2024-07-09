@@ -214,8 +214,8 @@ var strLang127_2 = "회사";
 var strLang130_2 = "그룹";
 var strLang131_2 = "협업";
 var strLang141_2 = "구글";
-var strLangHSBScPt1 = "년";
-var strLangHSBScPt2 = "월";
+var strLangHSBScPt1 = ".";
+var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "일";
 
 /* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */

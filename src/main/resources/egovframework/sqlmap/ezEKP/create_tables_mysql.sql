@@ -9012,6 +9012,7 @@ CREATE TABLE `tbl_portal_menu_comp` (
   `company_lang` varchar(45) DEFAULT NULL,
   `company_order` int(11) DEFAULT NULL,
   `menu_ipused` int(11) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
+  `icon_url` varchar(200) DEFAULT NULL COMMENT '회사별 기본 아이콘 변경',
   PRIMARY KEY (`company_id`,`tenant_id`,`menu_id`),
   KEY `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
   CONSTRAINT `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
@@ -15090,3 +15091,112 @@ WHERE
         `tbl_task_deptinfo`.`DELFLAG` = '0'
    OR `tbl_task_deptinfo`.`DELFLAG` IS NULL
    OR `tbl_task_deptinfo`.`DELFLAG` = '2';
+
+create table tbl_portal_portlet_size
+(
+    SIZE_ID    int          not null comment '사용가능한 포틀릿 사이즈 ID'
+        primary key,
+    CLASS_SIZE varchar(100) not null comment '사이즈 클래스 명'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '포틀릿 사이즈 클래스명 정의 테이블';
+
+
+create table tbl_portal_portlet_company_size
+(
+    TENANT_ID    mediumint    default 0  not null comment '테넌트 아이디',
+    COMPANY_ID   varchar(100) default '' not null comment '회사 아이디',
+    PORTLET_ID   int          default 0  not null comment '포틀릿 아이디',
+    THEME_ID     int          default 1  not null,
+    SIZE_ID      int                     not null comment '사용가능한 포틀릿 사이즈 ID',
+    DEFAULT_FLAG tinyint(1)   default 0  not null comment '기본 사이즈 설정 여부',
+    primary key (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID),
+    constraint FK_tbl_portal_portlet_company_size_SIZE_ID
+        foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '회사별 포틀릿 사이즈 설정 테이블';
+
+create index IDX_TBL_PORTAL_PORTLET_COMPANY_SIZE_ID
+    on jmocha.tbl_portal_portlet_company_size (SIZE_ID);
+
+create index tbl_portal_portlet_company_size_COMPANY_ID_index
+    on jmocha.tbl_portal_portlet_company_size (COMPANY_ID);
+
+create index tbl_portal_portlet_company_size_TENANT_ID_index
+    on jmocha.tbl_portal_portlet_company_size (TENANT_ID);
+
+create index tbl_portal_portlet_company_size_THEME_ID_index
+    on jmocha.tbl_portal_portlet_company_size (THEME_ID);
+
+
+
+create table tbl_portal_portlet_user_size
+(
+    USER_ID    varchar(100)            not null comment '사용자 아이디',
+    TENANT_ID  mediumint    default 0  not null comment '테넌트 아이디',
+    COMPANY_ID varchar(100) default '' not null comment '회사 아이디',
+    PORTLET_ID int          default 0  not null comment '포틀릿 아이디',
+    THEME_ID   int          default 1  not null,
+    SIZE_ID    int                     not null,
+    primary key (USER_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID),
+    constraint FK_tbl_portal_portlet_user_size_tbl_portal_portlet_size_SIZE_ID
+        foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '사용자 별 포틀릿 사이즈 설정 테이블';
+
+create index IDX_TBL_PORTAL_PORTLET_USER_COMPANY
+    on jmocha.tbl_portal_portlet_user_size (COMPANY_ID);
+
+create index IDX_TBL_PORTAL_PORTLET_USER_ID
+    on jmocha.tbl_portal_portlet_user_size (USER_ID);
+
+create index IDX_TBL_PORTAL_PORTLET_USER_PORTLET
+    on jmocha.tbl_portal_portlet_user_size (PORTLET_ID);
+
+create index IDX_TBL_PORTAL_PORTLET_USER_TENANT
+    on jmocha.tbl_portal_portlet_user_size (TENANT_ID);
+
+--
+-- Table structure for table `TBL_PORTAL_TOP_USER`
+--
+
+DROP TABLE IF EXISTS `TBL_PORTAL_TOP_USER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_PORTAL_TOP_USER`
+(
+    USER_ID    VARCHAR(100)            NOT NULL COMMENT '사용자 아이디',
+    TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
+    COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
+    TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입',
+    PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
+)   ENGINE=InnoDB DEFAULT CHARSET=utf8
+    COMMENT '개인별 탑 메뉴 프레임 타입';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_realtime_notification`
+--
+
+DROP TABLE IF EXISTS `tbl_realtime_notification`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_realtime_notification` (
+		  `NOTISEQ` bigint(20) NOT NULL AUTO_INCREMENT,
+		  `USERID` varchar(80) NOT NULL,
+		  `MAINTYPE` varchar(20) NOT NULL,
+		  `SUBTYPE` varchar(20) DEFAULT NULL,
+		  `NOTICONTENT` varchar(3000) DEFAULT NULL,
+		  `SENDERID` varchar(80) DEFAULT NULL,
+		  `SENDERNAME` varchar(100) DEFAULT NULL,
+		  `REGDATE` datetime DEFAULT NULL,
+		  `ISREAD` char(1) DEFAULT 'N',
+		  `READDATE` datetime DEFAULT NULL,
+		  `ETCDATA` varchar(400) DEFAULT NULL,
+		  `ISDELETE` char(1) DEFAULT 'N',
+		  `DELETEDATE` datetime DEFAULT NULL,
+		  `LINKURL` varchar(4000) DEFAULT NULL,
+		  `LINKURL_MOBILE` varchar(4000) DEFAULT NULL,
+		  `VIEWTYPE` varchar(10) DEFAULT NULL,
+		  `VIEWWIDTH` int(11) DEFAULT NULL,
+		  `VIEWHEIGHT` int(11) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(200) DEFAULT NULL,
+		  PRIMARY KEY (`NOTISEQ`,`TENANT_ID`)
+		) ENGINE=InnoDB AUTO_INCREMENT=736 DEFAULT CHARSET=utf8mb4;

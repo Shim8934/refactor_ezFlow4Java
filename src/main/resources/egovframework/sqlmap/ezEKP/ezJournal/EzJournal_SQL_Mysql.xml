@@ -341,30 +341,30 @@
 		</isEmpty>
 		<isNotEmpty property="deptId">
 			<![CDATA[
-				select
-					a.form_id,
-					a.form_name,
-					a.form_status,
-					a.type_id,
-					case
-						when form_status = 'basic' then 0
-						else 1
-					end as orderNo
-				from 
-					tbl_journal_form a left join tbl_journal_form_use_dept b 
-				on 
-					(a.form_id = b.form_id and a.tenant_id = b.tenant_id)
-				where 
-					(b.dept_id = #deptId# or b.dept_id is null)
-				and
-					a.type_id = #typeId#
-				and
-					a.tenant_id = #tenantId#
-				and
-					a.company_id = #companyId#
-				and
-					a.form_del_flag is null
-				order by orderNo, form_id
+				select a.form_id,
+					   a.form_name,
+					   a.form_status,
+					   a.type_id,
+					   case
+						   when form_status = 'basic' then 0
+						   else 1
+						   end as orderNo
+				from tbl_journal_form a
+						 left join tbl_journal_form_use_dept b
+								   on
+									   (a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+						 join tbl_deptmaster d
+							  on
+								  (d.TENANT_ID = a.tenant_id
+									  and d.cn = #deptId#
+									  and d.EXTENSIONATTRIBUTE2 = a.company_id)
+				where (b.dept_id = #deptId# or b.dept_id is null)
+						   and
+					   a.type_id = #typeId#
+						   and
+					   a.tenant_id = #tenantId#
+						   and
+					   a.form_del_flag is null order by orderNo, form_id
 			]]>
 		</isNotEmpty>
 	</select>
@@ -437,14 +437,6 @@
 		 u.CN = #userId#
 		and
 			u.tenant_id = #tenantId#
-		and 
-			(
-				((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0 
-			and 
-				d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
-			or
-				(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
-			)
 		and
 			not((d.extensionattribute1 is null or d.extensionattribute1 = '') and d.cn <![CDATA[<>]]> d.extensionattribute2)
 			<isNotEmpty property="companyId">
@@ -1164,21 +1156,21 @@
 
 	<!-- 최근사용양식 아이디 가져오기 -->
 	<select id="getJournalLastFormId" parameterClass="map" resultClass="String">
-		select
-			a.form_id
-		from
-			tbl_journal a join tbl_journal_form b
-		on
-			(a.form_id = b.form_id and a.tenant_id = b.tenant_id)
-		where
-			a.journal_writer = #userId#
-		and
-			b.type_id = #typeId#
-		and
-			a.tenant_id = #tenantId#
-		and
-			b.form_del_flag is null 
-		order by a.journal_id desc limit 1
+		select a.form_id
+		from tbl_journal a
+				 join tbl_journal_form b
+					  on
+						  (a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+				 join tbl_deptmaster d
+					  on
+						  (d.TENANT_ID = a.tenant_id and d.cn = a.journal_dept)
+		where a.journal_writer = #userId#
+		  and b.type_id = #typeId#
+		  and a.tenant_id = #tenantId#
+		  and d.EXTENSIONATTRIBUTE2 = #companyId#
+		  and b.form_del_flag is null
+		order by a.journal_id desc
+		limit 1
 	</select>
 
 	<!-- 일지 뷰 정보 저장 -->
@@ -1311,7 +1303,8 @@
 			,journal_date = #writeDate# 
 			</isEqual>
 			<isEqual property="isTemp" compareValue="Y">
-			,journal_date = #writeDate# 
+			,journal_date = #writeDate#
+			,journal_dept = #deptId#
 			</isEqual>
 		where
 			journal_id = #journalId#
@@ -1634,4 +1627,21 @@
 		and
 			dept_id = #deptId#
 	</delete>
+	
+	<select id="selectJournalMailInfo" parameterClass="Map" resultClass="journalEnvVO">
+		select 
+			u.mail as mail,
+		<isNotEqual property="lang" compareValue="2">
+			u.DISPLAYNAME as name
+		</isNotEqual>
+		<isEqual property="lang" compareValue="2">
+			u.DISPLAYNAME2 as name
+		</isEqual>
+		from 
+			tbl_usermaster u
+		where 
+			u.CN = #userId#
+		and 
+			u.tenant_id = #tenantId#
+	</select>
 </sqlMap>

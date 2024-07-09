@@ -557,4 +557,8 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		delete("deleteAuthDeptOne", map);
 	}
 
+	public JournalEnvVO selectJournalMailInfo(Map<String, Object> map) throws Exception {
+		return (JournalEnvVO) select("selectJournalMailInfo",map);
+	}
+
 }

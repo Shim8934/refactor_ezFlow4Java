@@ -312,33 +312,52 @@
 			            }
 			            
 			            //2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
-						if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
-							parent.opener.photoBoardMovePage(null);
-						}
-
-						if (window.opener != null && window.opener.getBoardList != undefined) {
-							window.opener.getBoardList();
-						}
+			            try { 
+							if (parent.opener != null && parent.opener.reloadPhotoPage != undefined) {
+								parent.opener.reloadPhotoPage();
+							}
+			            } catch (e) {console.log(e);}
+						
+			            try {
+							if (window.opener != null && window.opener.getBoardList != undefined) {
+								window.opener.getBoardList();
+							}
+			            } catch (e) {console.log(e);}
 			            
-			            // 게시판 포틀릿 리스트 업데이트 되도록 수정
-			            if (parent.opener.getBoardPortletInfo != undefined) {
-			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
-			            	var customBoardCount = customBoardList.length;
-			            	
-			            	for (var i = 0; i < customBoardCount; i++) {
-			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
-			            		
-			            		if (boardId == pBoardID) {
-			            			var portletId = customBoardList[i].parentElement.id;
-			            			portletId = portletId.substring(0, portletId.indexOf("P"));
-			            			parent.opener.getBoardPortletInfo(portletId);
-			            		}
+			            try {// 카드 A형, 카드 B형, 리스트형 포틀릿 새로고침
+				            if (parent.opener.refreshBordPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.refreshBordPortletInfo(portletId);
+				            		}
+				            	}
 			            	}
-		            	}
-
-						if(parent.opener.search != undefined){
-							parent.opener.search('skip');
-						}
+			            } catch (e) {console.log(e);}
+			            
+			            try { // 탭게시판  포틀릿 새로고침
+			            	if (parent.opener.refreshTab != undefined) {
+	                 			parent.opener.refreshTab();
+	                 		}
+	                 	} catch (e) {console.log(e);}
+						
+	                 	try { // 즐겨찾기 포틀릿 새로고침
+				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+								parent.opener.getBoardList_NewBoardSTD();
+							}
+	                 	} catch (e) {console.log(e);}
+	                 	
+	                 	try {
+							if(parent.opener.search != undefined){
+								parent.opener.search('skip');
+							}
+	                 	} catch (e) {console.log(e);}
 						
 			            window.close();
 				    }
@@ -698,25 +717,41 @@
 		                    }
 		                    
 		                  	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
-							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
-								parent.opener.photoBoardMovePage();
-							}
+		                  	try{
+								if (parent.opener != null && parent.opener.reloadPhotoPage != undefined) {
+									parent.opener.reloadPhotoPage();
+								}
+		                  	} catch (e) {console.log(e)}
 			                
 							// 게시판 포틀릿 리스트 업데이트 되도록 수정
-				            if (parent.opener.getBoardPortletInfo != undefined) {
-				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
-				            	var customBoardCount = customBoardList.length;
-				            	
-				            	for (var i = 0; i < customBoardCount; i++) {
-				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
-				            		
-				            		if (boardId == pBoardID) {
-				            			var portletId = customBoardList[i].parentElement.id;
-				            			portletId = portletId.substring(0, portletId.indexOf("P"));
-				            			parent.opener.getBoardPortletInfo(portletId);
-				            		}
-				            	}
-			           		}
+							try{
+					            if (parent.opener.refreshBordPortletInfo != undefined) {
+					            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+					            	var customBoardCount = customBoardList.length;
+					            	
+					            	for (var i = 0; i < customBoardCount; i++) {
+					            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+					            		
+					            		if (boardId == pBoardID) {
+					            			var portletId = customBoardList[i].parentElement.id;
+					            			portletId = portletId.substring(0, portletId.indexOf("P"));
+					            			parent.opener.refreshBordPortletInfo(portletId);
+					            		}
+					            	}
+				           		}
+							} catch(e) {console.log(e);}
+							
+				            try { // 탭게시판 포틀릿 새로고침
+				            	if (parent.opener.refreshTab != undefined) {
+		                 			parent.opener.refreshTab();
+		                 		}
+		                 	} catch (e) {console.log(e);}
+		                 	
+		                 	try { // 즐겨찾기 포틀릿 새로고침
+					            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+									parent.opener.getBoardList_NewBoardSTD();
+								}
+		                 	} catch (e) {console.log(e);}
 							
 		                    window.close();
 		                }
@@ -978,29 +1013,41 @@
 		                var ret = window.showModalDialog("/ezBoard/photoAlbumEdit.do", params, feature);
 		                if (ret == "OK") {
 		                	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
-							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
-								parent.opener.photoBoardMovePage();
-							}
+		                	try {
+								if (parent.opener != null && parent.opener.reloadPhotoPage != undefined) {
+									parent.opener.reloadPhotoPage();
+								}
+		                	} catch(e) {console.log(e); }
 			                
 							// 게시판 포틀릿 리스트 업데이트 되도록 수정
-				            if (parent.opener.getBoardPortletInfo != undefined) {
-				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
-				            	var customBoardCount = customBoardList.length;
-				            	
-				            	for (var i = 0; i < customBoardCount; i++) {
-				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
-				            		
-				            		if (boardId == pBoardID) {
-				            			var portletId = customBoardList[i].parentElement.id;
-				            			portletId = portletId.substring(0, portletId.indexOf("P"));
-				            			parent.opener.getBoardPortletInfo(portletId);
-				            		}
-				            	}
-				            }
+							try{
+					            if (parent.opener.refreshBordPortletInfo != undefined) {
+					            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+					            	var customBoardCount = customBoardList.length;
+					            	
+					            	for (var i = 0; i < customBoardCount; i++) {
+					            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+					            		
+					            		if (boardId == pBoardID) {
+					            			var portletId = customBoardList[i].parentElement.id;
+					            			portletId = portletId.substring(0, portletId.indexOf("P"));
+					            			parent.opener.refreshBordPortletInfo(portletId);
+					            		}
+					            	}
+					            }
+							} catch(e) {console.log(e); }
 							
-				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
-								parent.opener.getBoardList_NewBoardSTD();
-							}
+							try { // 탭게시판 포틀릿 새로고침
+								if (parent.opener.refreshTab != undefined) {
+		                 			parent.opener.refreshTab();
+		                 		}
+		                 	} catch (e) {console.log(e);}
+							
+		                 	try{
+					            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+									parent.opener.getBoardList_NewBoardSTD();
+								}
+		                 	} catch(e) {console.log(e);}
 				            
 		                	page_reload();
 		                }
@@ -1013,29 +1060,41 @@
 		            
 		            if (ret == "OK") {
 	                	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
-						if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
-							parent.opener.photoBoardMovePage();
-						}
+	                	try{
+							if (parent.opener != null && parent.opener.reloadPhotoPage != undefined) {
+								parent.opener.reloadPhotoPage();
+							}
+	                	} catch(e) {console.log(e);}
 		                
 						// 게시판 포틀릿 리스트 업데이트 되도록 수정
-			            if (parent.opener.getBoardPortletInfo != undefined) {
-			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
-			            	var customBoardCount = customBoardList.length;
-			            	
-			            	for (var i = 0; i < customBoardCount; i++) {
-			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
-			            		
-			            		if (boardId == pBoardID) {
-			            			var portletId = customBoardList[i].parentElement.id;
-			            			portletId = portletId.substring(0, portletId.indexOf("P"));
-			            			parent.opener.getBoardPortletInfo(portletId);
-			            		}
-			            	}
-			            }
+						try{
+				            if (parent.opener.refreshBordPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.refreshBordPortletInfo(portletId);
+				            		}
+				            	}
+				            }
+						} catch (e) {console.log(e);}
 						
-			            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
-							parent.opener.getBoardList_NewBoardSTD();
-						}
+			            try { // 탭게시판 포틀릿 새로고침
+			            	if (parent.opener.refreshTab != undefined) {
+	                 			parent.opener.refreshTab();
+	                 		}
+	                 	} catch (e) {console.log(e);}
+						
+	                 	try {
+				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+								parent.opener.getBoardList_NewBoardSTD();
+							}
+	                 	} catch (e) {console.log(e);}
 			            
 			            page_reload();
 		            }
@@ -1159,11 +1218,11 @@
 		                if (xmlhttp.responseText == "OK") {
 		                	/* 2023-11-17 홍승비 - 승인게시판의 게시물 승인 시 게시알림메일 발송 기능 추가 (포토/썸네일 게시판은 답변게시물 사용 불가) */
 		                	if (pFlag == "Y") { // 승인
-		                		// 해당 게시판의 관리자에게 게시알림메일 발송 (게시판 권한설정 > 관리자 권한자인 경우 '게시 메일로 알림' 옵션)
-		                		sendPostNotiMail(pBoardID, pItemID);
+		                		// 해당 게시판의 관리자에게 게시알림 발송 (게시판 권한설정 > 관리자 권한자인 경우 '게시 알림' 옵션)
+		                		sendPostNotiForAdmin(pBoardID, pItemID);
 		                		
-	                			// 해당 게시판의 일반 사용자(접근 권한자)에게 게시알림메일 발송 (게시판 일반설정 > 메일알림 > '게시알림' 옵션)
-	                			sendBoardAlertMail("new", pBoardID, pItemID, isAllGroupBoard);
+	                			// 해당 게시판의 일반 사용자(접근 권한자)에게 게시알림 발송 (게시판 일반설정 > 메일알림 > '게시알림' 옵션)
+	                			sendBoardAlert("new", pBoardID, pItemID, isAllGroupBoard);
 		                		
 		                		alert("<spring:message code='ezBoard.t999002' />");
 		                	}
@@ -1547,13 +1606,13 @@
 			    	}
 			    }
 			    
-				/* 2023-11-17 홍승비 - 관리자 권한자의 '게시 메일로 알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-				function sendPostNotiMail(pBoardID, pItemID) {
+				/* 2023-11-17 홍승비 - 관리자 권한자의 '게시 알림' 옵션에 대한 게시알림 함수 추가, 비동기로 백그라운드 동작 */
+				function sendPostNotiForAdmin(pBoardID, pItemID) {
 					$.ajax({
 						type : "POST",
 						dataType : "text",
 						async : true,
-						url : "/ezBoard/sendPostNotiMail.do",
+						url : "/ezBoard/sendPostNotiForAdmin.do",
 						data : {
 							boardID : pBoardID,
 							itemID : pItemID
@@ -1562,12 +1621,12 @@
 				}
 				
 				/* 2023-11-17 홍승비 - 일반 사용자(접근 권한자)의 '게시알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-				function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+				function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 					$.ajax({
 						type : "POST",
 						dataType : "text",
 						async : true,
-						url : "/ezBoard/sendBoardAlertMail.do",
+						url : "/ezBoard/sendBoardAlert.do",
 						data : {
 							mode : pMode,
 							boardID : pBoardID,

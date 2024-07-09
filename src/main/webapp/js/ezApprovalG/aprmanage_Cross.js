@@ -1074,7 +1074,7 @@ function openForm_Complete(ret) {
 }
 
 function openViewDocInfo(type) {
-	 if (type == undefined)
+	if (type == undefined)
 	        type = "";
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
@@ -1167,7 +1167,7 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
         openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
         openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
-        if (shareUser = "shareUser") {
+        if (shareUser == "shareUser") {
         	openLocation += "&pageType=admin";
         }
     }
