@@ -240,6 +240,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("primary"   , userInfo.getPrimary());
 		map.put("offset"    , commonUtil.getMinuteUTC(userInfo.getOffset()));
 		
+		boolean isDeletedSurvey = ezSurveyDAO.comfirmSurveyDeletion(map);
+		
+		if (isDeletedSurvey) {
+			result.put("code", -1);
+			return result;
+		}
+		
 		List<SurveyVO> listSurvey  = ezSurveyDAO.getSurveyListForPermission(map);
 		
 		if (listSurvey == null || listSurvey.isEmpty()) {

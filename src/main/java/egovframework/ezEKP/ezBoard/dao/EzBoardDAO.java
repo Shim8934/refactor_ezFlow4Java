@@ -867,7 +867,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	/* 2024-04-01 한태훈 - 게시판 즐겨찾기 추가 구성원 리스트 호출 */
 	@SuppressWarnings("unchecked")
-	public List<OrganUserVO> getFavoriteBoardUserList(Map<String, Object> map) {
+	public List<OrganUserVO> getFavoriteBoardUserList(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzBoardDAO.getFavoriteBoardUserList", map);
+	}
+
+	public boolean confirmBoardItemDeletion(Map<String, Object> map) throws Exception {
+		return (boolean) select("EzBoardDAO.confirmBoardItemDeletion", map);
 	}
 }

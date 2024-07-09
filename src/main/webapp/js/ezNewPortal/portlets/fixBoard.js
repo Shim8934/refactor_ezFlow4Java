@@ -127,8 +127,8 @@ function  FixBoardUtil() {
         }
 
         _thisDom.addEventListener("click", function (event) {
-            if (!event.target.classList.contains(_enum.CLASS_SLIDE)) return;
-            var index = event.target.getAttribute('data-swiper-slide-index');
+            if (!event.target.closest('.swiper-slide')) return;
+            var index = event.target.closest('.swiper-slide').getAttribute('data-swiper-slide-index');
             openBoard(slideLink[index][0],slideLink[index][1],slideLink[index][2]);
         });
     }

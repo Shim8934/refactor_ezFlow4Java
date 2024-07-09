@@ -831,7 +831,12 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get question
 		pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
-
+		
+		if (pollQuestionVO == null) {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", loginVO.getLocale()));
+			return "/common/error";
+		}
+		
 		if (pollQuestionVO.getIsModifying() == 1) {
 			String modifyingUser = ezPollService.getModifyingUser(tenantId, qstId);
 			if (loginVO.getId().equals(modifyingUser)) {

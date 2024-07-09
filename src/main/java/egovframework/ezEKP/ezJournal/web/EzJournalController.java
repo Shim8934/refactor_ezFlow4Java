@@ -1333,6 +1333,9 @@ public class EzJournalController extends EgovFileMngUtil {
 		//	journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
 		//	journal.put("journalDate", journalDate);
 			model.addAttribute("journal",journal);
+		} else {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", userInfo.getLocale()));
+			return "/common/error";
 		}
 		
 		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
