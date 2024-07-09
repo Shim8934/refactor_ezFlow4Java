@@ -5269,4 +5269,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getFavoriteBoardUserList ends");
 		return ezBoardDAO.getFavoriteBoardUserList(map);
 	}
+
+	@Override
+	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception {
+		logger.debug("confirmBoardItemDeletion starts");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantId);
+		map.put("itemID", itemID);
+
+		logger.debug("confirmBoardItemDeletion ends");
+		return ezBoardDAO.confirmBoardItemDeletion(map);
+	}
 }
