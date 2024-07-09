@@ -362,7 +362,9 @@
 					}
 					
 					themesHTML += "</table>";
-					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'><spring:message code='ezNewPortal.t002'/></a><a class='btnA previewBtn' ><spring:message code='ezNewPortal.t113' /></a><a class='btnA themeAuthBtn' ><spring:message code='ezNewPortal.t086' /></a></div>";
+					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'><spring:message code='ezNewPortal.t002'/></a>";
+					<%--themesHTML += "<a class='btnA previewBtn' ><spring:message code='ezNewPortal.t113' /></a>";--%>
+					themesHTML += "<a class='btnA themeAuthBtn' ><spring:message code='ezNewPortal.t086' /></a></div>";
 					themesHTML += "</div></div></div>";
 					
 
