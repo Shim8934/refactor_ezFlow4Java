@@ -124,26 +124,14 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 	@Override
 	public String getFormInfo(StatApprVO statApprVO) {
 		String rtnValue = "";
-		String subQuery = "";
 		
 		if (statApprVO.getDate() != null && !statApprVO.getDate().equals("")) {
 			statApprVO.setStartDate(statApprVO.getDate() + "-01-01");
 			statApprVO.setEndDate(statApprVO.getDate() + "-12-31");
 		}
 		
+		/* 2024-07-05 홍승비 - SQL Injection 수정 > 검색 조건은 문자열로 전달하지 않고 쿼리 내부에서 분기처리하도록 수정 */
 		try {
-			if (statApprVO.getType().equals("1")) {
-				subQuery = " AND (DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR SUSININGCNT != 0 OR SUSINENDCNT != 0 OR RETURNCNT != 0) ";
-			} else {
-				subQuery = " AND (DRAFTTIME != 0) ";
-			}
-			
-			if (statApprVO.getSearchList() != null && !statApprVO.getSearchList().equals("")) {
-				subQuery += " AND A.FORMNAME LIKE '%" + statApprVO.getSearchList() + "%'";
-			}
-			
-			statApprVO.setSearchList(subQuery);
-			
 			List<StatDailyDocCountLogVO> docCountLogVOs = ezStatisticsAdminDAO.getFormInfo(statApprVO);
 			StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
 			

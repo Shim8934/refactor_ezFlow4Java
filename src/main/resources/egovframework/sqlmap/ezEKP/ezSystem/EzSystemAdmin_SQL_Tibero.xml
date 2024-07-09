@@ -9,7 +9,7 @@
 	<typeAlias alias="PasswordPolicyVO" type="egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO"/>
 	<typeAlias alias="MainVO" type="egovframework.let.main.vo.MainVO"/>
 	<typeAlias alias="PermissionInfoVO" type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO"/>
-	<typeAlias alias="UserChangeInfoVO"	type="egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO" />
+	<typeAlias alias="UserChangeInfoVO"	type="egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO"/>
 	<typeAlias alias="DeptChangeInfoVO" type="egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO"/>
 
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
@@ -153,8 +153,11 @@
 					ON 
 						C.USERID = U.USERID -->
 					WHERE 
-						C.TENANT_ID=#v_tenantID# <!-- AND U.TENANT_ID=#v_tenantID# -->
-						$companyOracleStr$
+						C.TENANT_ID = #v_tenantID# <!-- AND U.TENANT_ID=#v_tenantID# -->
+						<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
+						<isNotEmpty property="companyOracleStr">
+							AND C.COMPANYID = #companyId#
+						</isNotEmpty>
 						<include refid="EzSystemAdminDAO.searchQuery"/>
 						<isEqual property="search_keycode" compareValue="6">
 							AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
@@ -180,7 +183,9 @@
 		FROM   	TBL_CONNECTION_INFO C <!--INNER JOIN TBL_USERLOCALINFO U
 		ON 		C.USERID = U.USERID -->
 		WHERE	C.TENANT_ID = #v_tenantID# <!-- AND U.TENANT_ID = #v_tenantID# --> 
-		$companyOracleStr$
+		<isNotEmpty property="companyOracleStr">
+			AND C.COMPANYID = #companyId#
+		</isNotEmpty>
 		<include refid="EzSystemAdminDAO.searchQuery"/>
 		<isEqual property="search_keycode" compareValue="6">
 			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
@@ -242,8 +247,10 @@
 					ON 
 						C.USERID = U.USERID -->
 					WHERE 
-						C.TENANT_ID=#v_tenantID# <!-- AND U.TENANT_ID=#v_tenantID# --> AND C.USERID = #userId#
-						$companyOracleStr$
+						C.TENANT_ID = #v_tenantID# <!-- AND U.TENANT_ID=#v_tenantID# --> AND C.USERID = #userId#
+						<isNotEmpty property="companyOracleStr">
+							AND C.COMPANYID = #companyId#
+						</isNotEmpty>
 						<include refid="EzSystemAdminDAO.searchQuery"/>
 				    ORDER BY 
 				    	C."SEQUENCE" DESC
@@ -266,7 +273,9 @@
 		FROM   	TBL_CONNECTION_INFO C <!-- INNER JOIN TBL_USERLOCALINFO U
 		ON 		C.USERID = U.USERID -->
 		WHERE	C.TENANT_ID = #v_tenantID# <!-- AND U.TENANT_ID = #v_tenantID# --> AND C.USERID = #userId#
-		$companyOracleStr$
+		<isNotEmpty property="companyOracleStr">
+			AND C.COMPANYID = #companyId#
+		</isNotEmpty>
 		<include refid="EzSystemAdminDAO.searchQuery"/>
 	</select>
 	
@@ -353,18 +362,24 @@
        
 	</delete>
 	
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzSystemAdminDAO.getAllAccessList" parameterClass="Map" resultClass="AccessIdVO">
 		<![CDATA[
 			SELECT
-				TBL_ACCESS_ID.ACCESSNO, TBL_USERMASTER.DISPLAYNAME$lang$ NAME, TBL_ACCESS_ID.CN CN, TBL_USERMASTER.DESCRIPTION$lang$ DEPARTMENT 
+				TBL_ACCESS_ID.ACCESSNO,
+				CASE #lang# WHEN '2' THEN TBL_USERMASTER.DISPLAYNAME2 ELSE TBL_USERMASTER.DISPLAYNAME END AS NAME,
+				TBL_ACCESS_ID.CN CN,
+				CASE #lang# WHEN '2' THEN TBL_USERMASTER.DESCRIPTION2 ELSE TBL_USERMASTER.DESCRIPTION END AS DEPARTMENT
 			FROM 
 				TBL_ACCESS_ID
 			INNER JOIN
 				TBL_USERMASTER
 			ON 
-				TBL_ACCESS_ID.CN=TBL_USERMASTER.CN AND TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME=#companyID# 
+				TBL_ACCESS_ID.CN = TBL_USERMASTER.CN
+			AND
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #companyID# 
 			AND	
-				TBL_USERMASTER.TENANT_ID=#tenantID#
+				TBL_USERMASTER.TENANT_ID = #tenantID#
 			AND
 				TBL_USERMASTER.TENANT_ID = TBL_ACCESS_ID.TENANT_ID
 		]]>
@@ -373,15 +388,20 @@
 	<select id="EzSystemAdminDAO.getAllAccessListDept" parameterClass="Map" resultClass="AccessIdVO">
 		<![CDATA[
 			SELECT
-				TBL_ACCESS_ID.ACCESSNO, TBL_DEPTMASTER.DISPLAYNAME$lang$ NAME, TBL_ACCESS_ID.CN CN, TBL_DEPTMASTER.DISPLAYNAME$lang$ DEPARTMENT 
+				TBL_ACCESS_ID.ACCESSNO,
+				CASE #lang# WHEN '2' THEN TBL_DEPTMASTER.DISPLAYNAME2 ELSE TBL_DEPTMASTER.DISPLAYNAME END AS NAME,
+				TBL_ACCESS_ID.CN CN,
+				CASE #lang# WHEN '2' THEN TBL_DEPTMASTER.DISPLAYNAME2 ELSE TBL_DEPTMASTER.DISPLAYNAME END AS DEPARTMENT
 			FROM 
 				TBL_ACCESS_ID
 			INNER JOIN
 				TBL_DEPTMASTER
 			ON 
-				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN AND TBL_DEPTMASTER.EXTENSIONATTRIBUTE2=#companyID# 
+				TBL_ACCESS_ID.CN = TBL_DEPTMASTER.CN
+			AND
+				TBL_DEPTMASTER.EXTENSIONATTRIBUTE2 = #companyID# 
 			AND	
-				TBL_DEPTMASTER.TENANT_ID=#tenantID#
+				TBL_DEPTMASTER.TENANT_ID = #tenantID#
 			AND
 				TBL_DEPTMASTER.TENANT_ID = TBL_ACCESS_ID.TENANT_ID
 		]]>
@@ -799,8 +819,10 @@
 					FROM 
 						TBL_ADMIN_ACCESS_INFO C
 					WHERE 
-						C.TENANT_ID=#v_tenantID#
-						$companyOracleStr$
+						C.TENANT_ID = #v_tenantID#
+						<isNotEmpty property="companyOracleStr">
+							AND C.COMPANYID = #companyId#
+						</isNotEmpty>
 						<include refid="EzSystemAdminDAO.searchQuery2"/>
 						<isEqual property="search_keycode" compareValue="6">
 							AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
@@ -825,7 +847,9 @@
 		SELECT 	COUNT(SEQUENCE) 
 		FROM   	TBL_ADMIN_ACCESS_INFO C 
 		WHERE	C.TENANT_ID = #v_tenantID# 
-		$companyOracleStr$
+		<isNotEmpty property="companyOracleStr">
+			AND C.COMPANYID = #companyId#
+		</isNotEmpty>
 		<include refid="EzSystemAdminDAO.searchQuery2"/>
 		<isEqual property="search_keycode" compareValue="6">
 			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
@@ -932,8 +956,10 @@
 				FROM
 					TBL_PERMISSION_CHANGE_INFO C
 				WHERE
-					C.TENANT_ID=#v_tenantID#
-					$companyOracleStr$
+					C.TENANT_ID = #v_tenantID#
+					<isNotEmpty property="companyOracleStr">
+						AND C.COMPANYID = #companyId#
+					</isNotEmpty>
 					<include refid="EzSystemAdminDAO.searchQueryForPermissionChList"/>
 					<isEqual property="search_keycode" compareValue="6">
 						AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
@@ -958,7 +984,9 @@
 		SELECT 	COUNT(SEQUENCE)
 		FROM   	TBL_PERMISSION_CHANGE_INFO C
 		WHERE	C.TENANT_ID = #v_tenantID#
-		$companyOracleStr$
+		<isNotEmpty property="companyOracleStr">
+			AND C.COMPANYID = #companyId#
+		</isNotEmpty>
 		<include refid="EzSystemAdminDAO.searchQueryForPermissionChList"/>
 		<isEqual property="search_keycode" compareValue="6">
 			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
@@ -987,27 +1015,27 @@
 	
 	<insert id="EzSystemAdminDAO.insertUserChangeHist" parameterClass="UserChangeInfoVO">
 	<![CDATA[
-		INSERT INTO
+	INSERT INTO
 			TBL_USER_CHANGE_INFO 
 			(SEQ, USERID, USERNM, USERNM2, DEPTID, DEPTNM, DEPTNM2, COMPANYID, COMPANYNM, COMPANYNM2, UPDATEDT, TARGET_DEPTID, TARGET_DEPTNM, TARGET_DEPTNM2, UPDATE_TYPE, EXECUTORID, EXECUTORNM, EXECUTORNM2, EXECUTORIP, TENANTID)
 			(SELECT 
 					SEQ_TBL_USER_CHANGE_INFO.NEXTVAL,
 					CN,
 					DISPLAYNAME,
-					DISPLAYNAME2, ]]>
+					DISPLAYNAME2,]]>
 		<isEqual property="updateType" compareValue="mvDept">
 		<![CDATA[	#deptId#,
 					#deptNm#,
-					#deptNm2#, ]]>
+					#deptNm2#,]]>
 		</isEqual>
 		<isNotEqual property="updateType" compareValue="mvDept">
 		<![CDATA[	DEPARTMENT,
 					DESCRIPTION,
-					DESCRIPTION2, ]]>
+					DESCRIPTION2,]]>
 		</isNotEqual>
 		<![CDATA[	PHYSICALDELIVERYOFFICENAME,
 					COMPANY,
-					COMPANY2, ]]>
+					COMPANY2,]]>
 		<isEqual property="targetType" compareValue="addJob">
 		  		<![CDATA[ to_date(#updatedt#, 'yyyy-MM-dd HH24:MI:SS'), ]]>
 		</isEqual>
@@ -1022,8 +1050,8 @@
 					#executorNm#,
 					#executorNm2#,
 					#executorIp#,
-					TENANT_ID
-			FROM ]]>
+					TENANT_ID]]>
+			FROM 
 		<isEqual property="updateType" compareValue="retire">
 					TBL_USERMASTER_RETIRE
 		</isEqual>
@@ -1076,12 +1104,12 @@
 					</isEqual>
 				</isNotEqual>
 				<isEqual property="search_keycode" compareValue="2" >
-						USERID LIKE #search_keyword# ESCAPE '\'
+						USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 				</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="search_keycodeForType" prepend="and">
-			UPDATE_TYPE LIKE '%'||#search_keycodeForType#||'%' ESCAPE '\'
+			UPDATE_TYPE LIKE #search_keycodeForType# ESCAPE '\'
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
@@ -1164,8 +1192,10 @@
 		FROM
 			TBL_USER_CHANGE_INFO C
 		WHERE
-			C.TENANTID=#v_tenantID#
-			$companyOracleStr$ 
+			C.TENANTID = #v_tenantID#
+		<isNotEmpty property="companyOracleStr">
+			AND C.COMPANYID = #companyId#
+		</isNotEmpty>
 		<include
 			refid="EzSystemAdminDAO.searchQueryForUserChList" />
 		ORDER BY	
@@ -1188,7 +1218,9 @@
 		SELECT COUNT(SEQ)
 		FROM TBL_USER_CHANGE_INFO
 		WHERE TENANTID = #v_tenantID#
-		$companyOracleStr$
+		<isNotEmpty property="companyOracleStr">
+			AND COMPANYID = #companyId#
+		</isNotEmpty>
 		<include
 			refid="EzSystemAdminDAO.searchQueryForUserChList" />
 	</select>
@@ -1330,8 +1362,10 @@
 		FROM
 			TBL_DEPT_CHANGE_INFO C
 		WHERE
-			C.TENANTID=#v_tenantID#
-			$companyOracleStr$ 
+			C.TENANTID = #v_tenantID#
+		<isNotEmpty property="companyOracleStr">
+			AND COMPANYID = #companyId#
+		</isNotEmpty>
 		<include
 			refid="EzSystemAdminDAO.searchQueryForDeptChList" />
 		ORDER BY	
@@ -1354,7 +1388,9 @@
 		SELECT COUNT(SEQ)
 		FROM TBL_DEPT_CHANGE_INFO
 		WHERE TENANTID = #v_tenantID#
-		$companyOracleStr$
+		<isNotEmpty property="companyOracleStr">
+			AND COMPANYID = #companyId#
+		</isNotEmpty>
 		<include
 			refid="EzSystemAdminDAO.searchQueryForDeptChList" />
 	</select>
@@ -1403,8 +1439,10 @@
 			FROM
 				(SELECT USERID, USERNM, USERNM2, DEPTID, DEPTNM, DEPTNM2,COMPANYID ,COMPANYNM, COMPANYNM2
 				FROM TBL_CONNECTION_INFO
-				WHERE TENANT_ID= #v_tenantID#
-				$companyOracleStr$
+				WHERE TENANT_ID = #v_tenantID#
+				<isNotEmpty property="companyOracleStr">
+					AND COMPANYID = #companyId#
+				</isNotEmpty>
 				AND (STATUS LIKE 'Y' OR STATUS LIKE '' OR STATUS IS NULL)
 				<include refid="EzSystemAdminDAO.searchQueryForConnectorList" />
 				<isEqual property="search_keycode" compareValue="3">
@@ -1426,7 +1464,9 @@
 		FROM (SELECT USERID
 			FROM TBL_CONNECTION_INFO
 			WHERE TENANT_ID = #v_tenantID#
-			$companyOracleStr$
+			<isNotEmpty property="companyOracleStr">
+				AND COMPANYID = #companyId#
+			</isNotEmpty>
 			AND (STATUS LIKE 'Y' OR STATUS like '' OR STATUS IS NULL)
 		<include refid="EzSystemAdminDAO.searchQueryForConnectorList" />
 		<isEqual property="search_keycode" compareValue="3">

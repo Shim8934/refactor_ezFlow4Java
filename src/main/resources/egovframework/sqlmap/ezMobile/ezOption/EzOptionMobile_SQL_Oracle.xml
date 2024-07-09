@@ -77,7 +77,6 @@
 		]]>	
 				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
 				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
-		<![CDATA[
 				VAPRDOINGDOCLIST.DOCID as APPRID,
 				APRMEMBERSN as APRMEMBERSN,
 				'' as BOARDID,
@@ -126,7 +125,11 @@
 			AND
 				NVL(GRP.TABSN, 1) = 1
 			AND 
-				APRMEMBERID IN ($userIDS$)
+				APRMEMBERID IN
+				<iterate property="userIDS" open="(" close=")" conjunction=",">
+					#userIDS[]#
+				</iterate>
+		<![CDATA[
 			AND 
 				APRTYPE <> '015' 
 			AND
@@ -143,7 +146,6 @@
 		]]>	
 				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
 				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
-		<![CDATA[
 				VENDCHAMJODOCINFO.DOCID as APPRID,
 				APRMEMBERSN as APRMEMBERSN,
 				'' as BOARDID,
@@ -192,7 +194,11 @@
 			AND
 				NVL(GRP.TABSN, 1) = 1
 			AND 
-				APRMEMBERID IN ($userIDS$)
+				APRMEMBERID IN
+				<iterate property="userIDS" open="(" close=")" conjunction=",">
+					#userIDS[]#
+				</iterate>
+		<![CDATA[
 			AND 
 				APRTYPE <> '015' 
 			AND

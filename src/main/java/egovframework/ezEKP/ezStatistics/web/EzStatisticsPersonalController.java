@@ -78,10 +78,9 @@ public class EzStatisticsPersonalController {
 		return "ezStatistics/statisticsPersonalMain";
 	}
 	
-	@RequestMapping(value="/ezStatistics/getPersonalMain.do",method=RequestMethod.POST,
-			produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezStatistics/getPersonalMain.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String getPersnalMain(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model,StatApprVO statApprVO) throws Exception {
+	public String getPersnalMain(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model, StatApprVO statApprVO) throws Exception {
         //관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
