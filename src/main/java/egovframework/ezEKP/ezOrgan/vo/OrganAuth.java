@@ -68,35 +68,35 @@ public class OrganAuth {
 
     public enum AdminAuth {
         /**
-         * 전체관리자
+         * 전체관리자 "c", ALL
          */
         ADMIN_MASTER("c", ALL),
         /**
-         * 회사관리자
+         * 회사관리자 "k", COMPANY
          */
         COMPANY_MANAGER("k", COMPANY),
         /**
-         * 부서관리자
+         * 부서관리자 "g", DEPT
          */
         DEPT_MANAGER("g", DEPT),
         /**
-         * 수발신담당자
+         * 수발신담당자 "a", DEPT
          */
         RECEPTION_MANAGER("a", DEPT),
         /**
-         * 심사자
+         * 심사자 "i", COMPANY
          */
         INSPECTION_MANAGER("i", COMPANY),
         /**
-         * 게시판관리자
+         * 게시판관리자 "n", COMPANY
          */
         BOARD_MANAGER("n", COMPANY),
         /**
-         * 설문관리자
+         * 설문관리자 "l", COMPANY
          */
         SURVEY_MANAGER("l", COMPANY),
         /**
-         * 업무관리자
+         * 업무관리자 "w", COMPANY
          */
         TASK_MANAGER("w", COMPANY),
         /**
@@ -104,11 +104,11 @@ public class OrganAuth {
          */
         ARCHIVE_MANAGER("m", COMPANY),
         /**
-         * 웹폴더관리자
+         * 웹폴더관리자 "f", COMPANY
          */
         WEB_FOLDER_MANAGER("f", COMPANY),
         /**
-         * 근태관리자
+         * 근태관리자 "e", COMPANY
          */
         ATTENDANCE_MANAGER("e", COMPANY);
 

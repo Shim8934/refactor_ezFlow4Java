@@ -2113,40 +2113,23 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			String primary = "";
-			int tenantId = 0;
-			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
-			String lang = "";
-			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-			tenantId = userInfo.getTenantId();
-			lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
-			
-			if (lang == null || lang.equals("")) {
+
+			String primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+			int tenantId = userInfo.getTenantId();
+			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+			String lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+
+			if (StringUtils.isBlank(lang)) {
 				lang = "1";
 			}
 			
 			result.put("userCompany", userInfo.getCompanyID());
 			result.put("lang",lang);
 
-			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-			resultList = ezOrganAdminService.getCompanyList(lang, tenantId);
+			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, userInfo.getTenantId(), userInfo.getLang());
 			
-			String roleInfo = userInfo.getRollInfo();
-			//회사관리자일 때는 회사리스트만 나오도록
-			List<OrganDeptVO> companyList = new ArrayList<OrganDeptVO>();
-			
-			if (roleInfo != null) {
-				for (OrganDeptVO companyInfo : resultList) {
-					if (roleInfo.indexOf("c=1") > -1 || (roleInfo.indexOf("k=1") > -1 && companyInfo.getCn().equals(userInfo.getCompanyID()))) {
-						companyList.add(companyInfo);
-					}
-				}
-			}
-			
-			result.put("data", companyList);
-			
+			result.put("data", adminCompanyList);
 			result.put("primary", primary);
 			result.put("usePrimaryLangOnly", usePrimaryLangOnly);
 			result.put("status", "ok");

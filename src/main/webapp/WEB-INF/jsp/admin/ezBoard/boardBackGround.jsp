@@ -22,7 +22,7 @@
 					type :	"POST",
 	            	dataType : "text",			
 					url: "/admin/ezBoard/getBackGroundImage.do",
-					data : { type: "ALL", backgroundID: "" },
+					data : { type: "ALL", backgroundID: "", companyID: "<c:out value='${companyID}'/>"},
 					success: function(result){		
 			            var _html = "";
 			            try {

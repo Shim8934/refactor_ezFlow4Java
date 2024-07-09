@@ -904,7 +904,7 @@ URLParamsUtilsProto = {
      * 특정 key에 value를 설정한다.
      * @param {string} key - 설정할 value의 key
      * @param {string} value - 설정할 value
-     * @returns {string} 설정된 url
+     * @returns this
      * @example var urlParams = URLParamsUtils('http://example.com?param1=value1&param2=value2');
      *  urlParams.put('param1', 'value3'); -> 'http://example.com?param1=value3&param2=value2'
      */
@@ -935,23 +935,11 @@ URLParamsUtilsProto = {
         this.queryString = newParams.join('&');
         this.url = this.base;
         this.url += !!this.queryString || this._hasQ ? '?' + this.queryString : '';
-        return this.url;
+        return this;
     },
     getFullUrl : function () {
         var fullUrl = this.base;
-
-        if (this.queryString) {
-            var params = this.queryString.split('&');
-            var encodedParams = params.map(function(param) {
-                var parts = param.split('=');
-                if (parts.length === 2) {
-                    return encodeURIComponent(parts[0]) + '=' + encodeURIComponent(parts[1]);
-                }
-                return encodeURIComponent(parts[0]);
-            });
-            fullUrl += '?' + encodedParams.join('&');
-        }
-
+        if (this.queryString) fullUrl += '?' + this.queryString;
         return fullUrl;
     }
 }

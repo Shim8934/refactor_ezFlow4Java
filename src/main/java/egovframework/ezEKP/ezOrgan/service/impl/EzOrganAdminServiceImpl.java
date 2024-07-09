@@ -14,6 +14,7 @@ import javax.naming.directory.DirContext;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -3546,8 +3547,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 		OrganAuth organAuth = commonUtil.makeOrganAuth(id, tenantID);
 
-        if (!organAuth.isAuth(OrganAuth.AdminAuth.ADMIN_MASTER, "")) {
-            list.removeIf(vo -> !organAuth.isAuth(OrganAuth.AdminAuth.COMPANY_MANAGER, vo.getCn()));
+        if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER, "")) {
+            list.removeIf(vo -> !organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn()));
         }
 
         return list;

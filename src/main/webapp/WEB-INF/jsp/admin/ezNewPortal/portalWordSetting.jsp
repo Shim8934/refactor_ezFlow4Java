@@ -28,7 +28,7 @@
 	
 	function saveBtn() {
 		var parentConn = window.opener.document.getElementById(portletId).querySelector(".connectionUrl");
-		parentConn.value = URLParamsUtils(parentConn.value).put("fileName", document.getElementById("fileName").value);
+		parentConn.value = URLParamsUtils(parentConn.value).put("fileName", document.getElementById("fileName").value).getFullUrl();
 
 		window.close();
 	}

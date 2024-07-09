@@ -47,6 +47,8 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -3434,8 +3436,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		int pSelectBy = 0;
 		String pExcludeBoardID = " ";
 		String isAdminLeft = "";
-		boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c");
-		
+		String companyID = Optional.ofNullable(req.getParameter("companyID")).orElse(userInfo.getCompanyID());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		boolean isCompanyAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER,"");
+
 		if (req.getParameter("rootBoardID") != null && !req.getParameter("rootBoardID").equals("")) {
 			pRootBoardID = req.getParameter("rootBoardID");
 		}
@@ -3455,13 +3459,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (req.getParameter("isAdminLeft") != null && !req.getParameter("isAdminLeft").equals("")) {
 			isAdminLeft = req.getParameter("isAdminLeft");
 		}
-		
+
 		/* 2019-06-03 홍승비 - 게시판그룹 관리자권한 체크 시 사내겸직 및 하위부서 허용여부 체크하도록 수정 */
 		String boardGroupAdmin_FG = checkIfBoardGroupAdmin(pRootBoardID, userInfo);
-		int pMode = boardGroupAdmin_FG.equals("OK") || commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;n;k") ? 0 : 1;
+
+		int pMode = isCompanyAdmin || organAuth.isAuth(AdminAuth.COMPANY_MANAGER, companyID)
+				|| organAuth.isAuth(AdminAuth.BOARD_MANAGER, companyID)
+				|| boardGroupAdmin_FG.equals("OK") ? 0 : 1;
 		
 		/* 2018-10-16 홍승비 - 관리자단에서 접근했는지 판단하는 플래그를 인자로 추가 */
-		String strXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
+		String strXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), companyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
 				commonUtil.getLangData(userInfo.getLang()), isAdminLeft, isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
 		
 		Document doc = commonUtil.convertStringToDocument(strXML);

@@ -341,8 +341,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
-		boardPropertyVO.setCompanyID(user.getCompanyID());
-		boardPropertyVO.setTenantID(user.getTenantId());
+		boardPropertyVO.setCompanyID(boardGroupPropertyVO.getCompanyID());
+		boardPropertyVO.setTenantID(boardGroupPropertyVO.getTenantID());
 		
 		ezBoardAdminService.createBoard(boardPropertyVO);
 
@@ -496,12 +496,14 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 배경이미지 관리 메뉴화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardBackGround.do", method = RequestMethod.GET)
-	public String boardBackGround(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String boardBackGround(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("boardBackGround started");
 
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		model.addAttribute("tenantID", userInfo.getTenantId());
+		model.addAttribute("companyID",
+				Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID()));
 
 		logger.debug("boardBackGround ended");
 		
@@ -517,9 +519,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		logger.debug("getBackGroundImage started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boardBackgroundVO.setCompanyID(userInfo.getCompanyID());
+		boardBackgroundVO.setCompanyID(Optional.ofNullable(boardBackgroundVO.getCompanyID()).orElse(userInfo.getCompanyID()));
 		boardBackgroundVO.setTenantID(userInfo.getTenantId());
-		
+
 		/* 2018-06-26 홍승비 - companyID 조건 추가 */
 		List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);
 		
@@ -1676,19 +1678,18 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String isAllGroupBoard = request.getParameter("isAllGroupBoard");
-		String topid = "";
-		
+		String topid = Optional.ofNullable(request.getParameter("companyID")).orElse(user.getCompanyID());
+
 		if (isAllGroupBoard == null || isAllGroupBoard.equals("")) {
 			isAllGroupBoard = "N";
 		}
-		
-		if (!commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c") || isAllGroupBoard.equals("N")) { // 전체관리자가 아니거나, 그룹사게시판이 아님(회사 소속 게시판)
-			topid = user.getCompanyID();
-		} else { // 전체관리자이면서 그룹사게시판인 경우 (모든 회사를 조직도에서 표출)
-			topid = "Top";
-		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+
+		// 전체관리자이면서 그룹사게시판인 경우 (모든 회사를 조직도에서 표출)
+        if (commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c") && !isAllGroupBoard.equals("N")) {
+            topid = "Top";
+        }
+
+        List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		

@@ -27,6 +27,7 @@
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
@@ -274,7 +275,10 @@
 	        /* 2018-10-16 홍승비 - 관리자단에서 좌측게시판리스트 하위에 접근하는지 판단하는 플래그 추가  */
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
 		    	var xmlhttp3 = createXMLHttpRequest();
-		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0&isAdminLeft=Y", false);
+				var urlUtil = URLParamsUtils("/ezBoard/getSubBoards.do?");
+				var url = urlUtil.put("rootBoardID", pRootBoardID).put("subFlag", pSubFlag)
+						.put("selectFlag", "0").put("isAdminLeft", "Y").put("companyID",companySelectID).getFullUrl();
+		        xmlhttp3.open("POST", url, false);
 		        xmlhttp3.send();
 		        var ret = xmlhttp3.responseXML;
 		        xmlhttp3 = null;
@@ -346,7 +350,7 @@
 	                    window.open("/admin/ezBoard/boardACL.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&accessLevel=" + AccessLevel, "board_main");
 	                    break;
 	                case 8:
-	                    window.open("/admin/ezBoard/boardBackGround.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID), "board_main");
+	                    window.open("/admin/ezBoard/boardBackGround.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&companyID=" + encodeURIComponent(companySelectID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID), "board_main");
 	                    break;
 					/* 2022-09-27 홍승비 - 트리캐시 일괄생성기능 추가 */
 	                case 9:
@@ -359,7 +363,7 @@
 
         		// 2023-07-03 황인경 - 디자인 개선 > 관리자 > 게시판 > 좌측메뉴 하단 영역 > 메뉴 선택 시 on class 제어
     	        $("li.on").removeClass("on");
-    			$(event.target).parent().addClass("on");
+				if (!!event) $(event.target).parent().addClass("on");
 	        }
 	        
 	        /* 2018-12-28 홍승비 - '+/-' 아이콘 > img -> span 태그로 변경된 부분 id 찾도록 수정 */

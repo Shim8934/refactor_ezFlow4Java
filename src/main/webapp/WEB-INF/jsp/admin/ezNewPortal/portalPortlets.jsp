@@ -954,7 +954,7 @@
 			var domId = !!portletId ? "portlet" + portletId : "newPortlet";
 			var connectionUrl = document.getElementById(domId).querySelector(".connectionUrl");
             var url = URLParamsUtils(connectionUrl.value);
-            connectionUrl.value = url.put('type', type);
+            connectionUrl.value = url.put('type', type).getFullUrl();
 		}
 
 		function isFixBoardPortlet(code) {

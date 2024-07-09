@@ -420,16 +420,15 @@
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("<c:out value='${adminType}'/>" == "y") {
-							setMenuBtnDisplay();
-
-	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + encodeURIComponent(BoardID);
-	            			return;	            			
+							if (!!parent.parent.board_menu && !!parent.parent.board_menu.refreshLeft) {
+	            				parent.parent.board_menu.refreshLeft();
+							}
 	            		} else {
-	            			parent.frames.location = parent.frames.location;
+							if (!!parent.board_menu && !!parent.board_menu.refreshLeft) {
+								parent.board_menu.refreshLeft();
+							}
 	            		}
-	            		
-	            		location.href = location.href;
-	            	}	            		
+	            	}
 	            });
 	        }
 			
@@ -591,7 +590,7 @@
 					$("#chktabBoard1").prop("disabled", true);
 					$("#chktabBoard2").prop("disabled", true);
 					$("#chktabBoard3").prop("disabled", true);
-					
+
                     document.getElementById("chkApprBoard").checked = false;
                     checkApprBoard();                   
                     document.getElementById("chkExpires").checked = false;
