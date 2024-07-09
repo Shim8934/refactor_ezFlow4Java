@@ -12515,7 +12515,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
                 /* 2024-06-28 양지혜 - 부서수신함 > 지정목록 > 결재상태에 진행자명을 함께 표출 */
-                if (fieldName.equals("APRSTATE") && assignChk.equals("Y")) {
+                if (fieldName.equals("APRSTATE") && assignChk != null && assignChk.equals("Y")) {
                     resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset))
                             + "(" + docXML.getElementsByTagName("PROCESSORNAME").item(k).getTextContent() + ")</VALUE>");
                 } else {
