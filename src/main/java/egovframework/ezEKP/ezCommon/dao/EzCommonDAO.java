@@ -2292,4 +2292,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			return;
 		}
 	}
+	
+	public void alterCompanyMenuIconUrl() throws Exception {
+		try {
+			select("EzCommonDAO.checkCompanyMenuIconUrl");
+		} catch (Exception e) {
+			logger.debug("In TBL_PORTAL_MENU_COMP doesn't exist icon_url column. creating the column...");
+			update("EzCommonDAO.alterCompanyMenuIconUrl");
+			return;
+		}
+	}
 }

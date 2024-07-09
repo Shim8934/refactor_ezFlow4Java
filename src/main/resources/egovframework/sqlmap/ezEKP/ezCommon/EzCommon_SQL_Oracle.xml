@@ -4861,5 +4861,18 @@
 					THEME_ID = #themeId#
 		]]>	
     </update>
+
+	<select id="EzCommonDAO.checkCompanyMenuIconUrl">
+		SELECT	ICON_URL
+		FROM	TBL_PORTAL_MENU_COMP
+					LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterCompanyMenuIconUrl">
+		ALTER TABLE
+			TBL_PORTAL_MENU_COMP
+			ADD
+				ICON_URL varchar(200) DEFAULT NULL
+	</statement>
     
 </sqlMap>

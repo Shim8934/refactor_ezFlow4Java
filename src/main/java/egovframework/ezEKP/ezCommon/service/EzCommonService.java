@@ -389,4 +389,6 @@ public interface EzCommonService {
 	public void alterUserThemePagination() throws Exception;
 
 	public void alterThemeInformation() throws Exception;
+	
+	public void alterCompanyMenuIconUrl() throws Exception;
 }

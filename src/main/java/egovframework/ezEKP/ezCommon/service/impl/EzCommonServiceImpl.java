@@ -3934,4 +3934,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	}
 
+    @Override
+    public void alterCompanyMenuIconUrl() throws Exception {
+        ezCommonDAO.alterCompanyMenuIconUrl();
+    }
+
 }

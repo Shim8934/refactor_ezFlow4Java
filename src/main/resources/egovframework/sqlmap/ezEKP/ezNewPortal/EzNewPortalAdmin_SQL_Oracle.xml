@@ -142,7 +142,10 @@
 				B.menu_Type AS menutype,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
-				B.icon_url AS iconurl,
+				CASE WHEN A.icon_url IS NULL
+					THEN B.icon_url
+				   	ELSE A.icon_url
+				END AS iconurl,
 				CASE WHEN A.company_order IS NULL
 					THEN B.default_order
 					ELSE A.company_order
