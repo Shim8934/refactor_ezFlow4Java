@@ -18,6 +18,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -862,5 +863,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	/* 2023-03-08 이가은 - 댓글 존재여부 리턴하는 쿼리 */
 	public int checkReplyID(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.checkReplyID", map);
+	}
+	
+	/* 2024-04-01 한태훈 - 게시판 즐겨찾기 추가 구성원 리스트 호출 */
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getFavoriteBoardUserList(Map<String, Object> map) {
+		return (List<OrganUserVO>) list("EzBoardDAO.getFavoriteBoardUserList", map);
 	}
 }

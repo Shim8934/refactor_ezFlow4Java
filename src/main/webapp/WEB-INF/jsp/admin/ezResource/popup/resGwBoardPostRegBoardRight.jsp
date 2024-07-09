@@ -45,6 +45,7 @@
 	        var pListXML_Info = null;
 	        var ReturnFunction;
 	        var userLang = "<c:out value='${userLang}'/>";
+	        var companyID = "<c:out value='${company}'/>";
 
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -112,7 +113,7 @@
 	                var objNode;
 	                createNodeInsert(xmlpara, objNode, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID + "/organ");
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);

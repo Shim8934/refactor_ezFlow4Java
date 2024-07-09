@@ -203,9 +203,9 @@
 	
 	<select id="EzOrganAdminDAO.getDeptExtension15" resultClass="String">
 		<![CDATA[
-			SELECT 
+			SELECT
 				EXTENSIONATTRIBUTE15 + 1 AS EXTENSIONATTRIBUTE15
-			FROM 
+			FROM
 				TBL_DEPTMASTER
 			WHERE
 				CN NOT LIKE 'trash_%'
@@ -218,7 +218,7 @@
 			LIMIT 1
 		]]>
 	</select>
-	
+
 	<insert id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
@@ -2150,7 +2150,7 @@
                    ('001',10,'시행번호',180,null,'ENDDOCNO.DOCNO','SihangNo','dtSihangNO','기록물 대장',null,'SihangNo','施行番号','试行编号',#tenantID#, #companyID#),
                    ('001',11,'첨부',40,'TBL_RECORD','TBL_RECORD.AttachFlag','AttachFlag','dtBool','기록물 대장','첨부여부','AttachFlag','添付','附件',#tenantID#, #companyID#),
 				   ('001',12,'수신',40,'TBL_RECORD','CASE WHEN TBL_ENDAPRDOCINFO.DocType = ''003'' AND TBL_SEPERATEATTACH.RegisterType = ''1'' THEN ''발송'' ELSE ''없음'' END','ReSendFlag','Default','기록물 대장','수신문 발송여부','ReSendFlag','受信','接待区分',#tenantID#, #companyID#),
-                   ('001',13,'반려',40,'TBL_RECORD','TBL_RECORD.RejectFlag','RejectFlag','dtBool','기록물 대장','반려여부','RejectFlag','差し戻し','伴侣区分',#tenantID#, #companyID#),                   
+                   ('001',13,'반려',40,'TBL_RECORD','TBL_RECORD.RejectFlag','RejectFlag','dtBool','기록물 대장','반려여부','RejectFlag','差し戻し','伴侣区分',#tenantID#, #companyID#),
                    ('002',1,'순번',40,null,null,'dtSerialNum','dtSerialNum','기록물철 대장',null,'No.','順番','序号',#tenantID#, #companyID#),
                    ('002',2,'분류번호',180,null,'CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(TRIM(ProcessDeptCode),''-''),TaskCode),''-''),ProductionYear),''-''),TRIM(LEADING''0'' FROM RegSerialNo)),''(''),TRIM(LEADING''0'' FROM VolumeNo)),'')'')','DispClassNo','Default','기록물철 대장','기록물철 분류번호','DispClassNo','分類番号','分类编号',#tenantID#, #companyID#),
                    ('002',3,'제목',200,'TBL_CABINETCLASS','TBL_CABINETCLASS.Title','Title','Default','기록물철 대장','제목','Title','タイトル','标题',#tenantID#, #companyID#),
@@ -2194,7 +2194,7 @@
                    ('012',8,'공개',40,'TBL_ENDAPRDOCINFO','TBL_ENDAPRDOCINFO.ISPUBLIC','IsPublic','Default','열람문서함',null,'Public','公開','公开',#tenantID#, #companyID#),
                    ('012',9,'반려',40,'TBL_RECORD','TBL_RECORD.RejectFlag','RejectFlag','dtBool','열람문서함','반려여부','RejectFlag','差し戻し','伴侣区分',#tenantID#, #companyID#),
                    ('012',10,'수신',40,'TBL_RECORD','CASE WHEN TBL_ENDAPRDOCINFO.DocType = ''003'' AND TBL_SEPERATEATTACH.RegisterType = ''1'' THEN ''발송'' ELSE ''없음'' END','ReSendFlag','Default','열람문서함','발송여부','ReSendFlag','受信','接待区分',#tenantID#, #companyID#)
-                   
+
       ]]>
     </insert>
     
@@ -2295,9 +2295,9 @@
 		    		TBL_ATTITUDE_TYPE
 		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES
-		    			('A01', #companyID#, #tenantID#, '출근', 'go to work', '1', 'inOut', null, 1),
+		    			('A01', #companyID#, #tenantID#, '출근', 'check in', '1', 'inOut', null, 1),
 		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2),
-		    			('A03', #companyID#, #tenantID#, '퇴근', 'off work', '1', 'inOut', null, 3),
+		    			('A03', #companyID#, #tenantID#, '퇴근', 'check out', '1', 'inOut', null, 3),
 		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6),
 		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', 'trip', null, 8),
 		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', 'trip', null, 6),
@@ -2324,9 +2324,9 @@
 		    		TBL_ATTITUDE_TYPE
 		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES
-		    			('A01', #companyID#, #tenantID#, '出勤', 'go to work', '1', 'inOut', null, 1),
+		    			('A01', #companyID#, #tenantID#, '出勤', 'check in', '1', 'inOut', null, 1),
 		    			('A02', #companyID#, #tenantID#, '遅刻', 'late', '1', 'inOut', null, 2),
-		    			('A03', #companyID#, #tenantID#, '退勤', 'off work', '1', 'inOut', null, 3),
+		    			('A03', #companyID#, #tenantID#, '退勤', 'check out', '1', 'inOut', null, 3),
 		    			('A07', #companyID#, #tenantID#, '休出', 'working Holiday', '1', 'inOut', null, 6),
 		    			('A04', #companyID#, #tenantID#, '外部勤務', 'outside work', '1', 'trip', null, 8),
 		    			('A06', #companyID#, #tenantID#, '外出', 'outing', '1', 'trip', null, 6),
@@ -2582,6 +2582,8 @@
 	    		(#companyID#, #tenantID#, 11, 5, 1, 10, null),
 	    		(#companyID#, #tenantID#, 12, 0, 1, 11, null),
 	    		(#companyID#, #tenantID#, 14, 0, 1, 13, null),
+	    		(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 1, -2, null),
+	    		(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 1, -1, null),
 	    		(#companyID#, #tenantID#, 26, 0, 1, 14, null),
 	    		(#companyID#, #tenantID#, 34, 0, 1, 15, null),
 	    		(#companyID#, #tenantID#, 36, 0, 1, 16, null),
@@ -2599,13 +2601,13 @@
 	    INSERT INTO 
 	    	TBL_PORTAL_PORTLET_NAME 
 	    		(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-	    VALUES 
+	    VALUES
 	    		(1, 1, 1, #tenantID#, #companyID#, '받은 메일'),
-	    		(1, 1, 2, #tenantID#, #companyID#, 'Received Mail'),
+	    		(1, 1, 2, #tenantID#, #companyID#, 'Mail'),
 	    		(1, 1, 3, #tenantID#, #companyID#, '受信トレイ'),
 	    		(1, 1, 4, #tenantID#, #companyID#, '收件邮件'),
-	    		(1, 1, 5, #tenantID#, #companyID#, 'Received Mail'),
-	    		(1, 1, 6, #tenantID#, #companyID#, 'Received Mail'),
+	    		(1, 1, 5, #tenantID#, #companyID#, 'Mail'),
+	    		(1, 1, 6, #tenantID#, #companyID#, 'Mail'),
 	    		(2, 4, 1, #tenantID#, #companyID#, '공지사항'),
 	    		(2, 4, 2, #tenantID#, #companyID#, 'Notice'),
 	    		(2, 4, 3, #tenantID#, #companyID#, 'お知らせ'),
@@ -2709,11 +2711,11 @@
 	    		(51, 6, 5, #tenantID#, #companyID#, 'Resource'),
 	    		(51, 6, 6, #tenantID#, #companyID#, 'Resource'),
 	    		(70, 10, 1, #tenantID#, #companyID#, '개인폴더'),
-	    		(70, 10, 2, #tenantID#, #companyID#, 'Personal Folder'),
+	    		(70, 10, 2, #tenantID#, #companyID#, 'My Folder'),
 	    		(70, 10, 3, #tenantID#, #companyID#, 'Webフォルダ'),
 	    		(70, 10, 4, #tenantID#, #companyID#, '个人文件夹'),
-	    		(70, 10, 5, #tenantID#, #companyID#, 'Personal Folder'),
-	    		(70, 10, 6, #tenantID#, #companyID#, 'Personal Folder'),
+	    		(70, 10, 5, #tenantID#, #companyID#, 'My Folder'),
+	    		(70, 10, 6, #tenantID#, #companyID#, 'My Folder'),
 	    		(73, 19, 1, #tenantID#, #companyID#, '전자설문'),
 	    		(73, 19, 2, #tenantID#, #companyID#, 'Survey'),
 	    		(73, 19, 3, #tenantID#, #companyID#, '電子アンケート'),
@@ -2731,7 +2733,19 @@
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 3, #tenantID#, #companyID#, '図表'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 4, #tenantID#, #companyID#, '图表'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 5, #tenantID#, #companyID#, 'Chart'),
-				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 6, #tenantID#, #companyID#, 'Chart')
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 6, #tenantID#, #companyID#, 'Chart'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 1, #tenantID#, #companyID#, '고정 포틀릿'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 2, #tenantID#, #companyID#, 'fixed portlet'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 3, #tenantID#, #companyID#, '固定ポートレット'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 4, #tenantID#, #companyID#, '固定门户组件'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 5, #tenantID#, #companyID#, 'portlet cố định'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 6, #tenantID#, #companyID#, 'portlet tetap'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 1, #tenantID#, #companyID#, '고정 포틀릿'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 2, #tenantID#, #companyID#, 'fixed portlet'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 3, #tenantID#, #companyID#, '固定ポートレット'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 4, #tenantID#, #companyID#, '固定门户组件'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 5, #tenantID#, #companyID#, 'portlet cố định'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 6, #tenantID#, #companyID#, 'portlet tetap')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I30" parameterClass="Map">
@@ -2739,7 +2753,10 @@
 	    INSERT INTO 
 	    	TBL_PORTAL_THEME_PORTLET
 	    		(THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
-	    VALUES 
+	    VALUES
+
+	    		(1, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 1, -2, 4, 0),
+	    		(1, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 1, -1, 4, 0),
 	    		(1, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(1, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(1, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
@@ -2763,6 +2780,8 @@
 	    		(1, #tenantID#, #companyID#, 73, 1, 20, 19, 0),
 				(1, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 1, 23, 4, 0),
 				(1, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 1, 24, 3, 0),
+				(2, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 0, -2, 4, 0),
+	    		(2, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 0, -1, 4, 0),
 	    		(2, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(2, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(2, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
@@ -2786,6 +2805,8 @@
 	    		(2, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
 				(2, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 1, 23, 4, 0),
 				(2, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 1, 24, 3, 0),
+				(3, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 1, -2, 4, 0),
+	    		(3, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 1, -1, 4, 0),
 	    		(3, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(3, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(3, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
@@ -2847,7 +2868,9 @@
 	    		(47, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
 	    		(49, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
-				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
   		]]>
     </insert>
     
@@ -3268,7 +3291,7 @@
 				WHERE
 					NULLIF(J.ROLL_INFO, '') IS NOT NULL
 				AND
-					U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+					D.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 				AND
 					J.ROLL_INFO LIKE '%$v_TYPE$%'
 				AND 
@@ -3390,7 +3413,7 @@
 			WHERE
 				NULLIF(J.ROLL_INFO, '') IS NOT NULL
 			AND
-				U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+				D.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 			AND
 				J.ROLL_INFO LIKE '%$v_TYPE$%'
 			AND 
@@ -5777,21 +5800,29 @@
 									TENANT_ID = #v_TENANT_ID#)
 				AND
 					TENANT_ID = #v_TENANT_ID#
-				
+
 				UNION ALL
-				
+
 				SELECT
 					 ORDERBY
 				FROM
-					TBL_ADDJOBMASTER 
+					TBL_ADDJOBMASTER
 				WHERE
 					DEPTID = #v_PARENTCN#
 				AND
 					TENANT_ID = #v_TENANT_ID#) AA
 			ORDER BY
 				EXTENSIONATTRIBUTE15 DESC
-				LIMIT 1	
+				LIMIT 1
 		]]>
 	</select>
-	
+
+	<insert id="EzOrganAdminDAO.insertCompanyTopMenuInfo" parameterClass="Map">
+		INSERT
+			INTO
+    	TBL_PORTAL_TOP_COMPANY
+    		(COMPANY_ID, TENANT_ID, TYPE)
+    	VALUES
+    		(#companyID#, #tenantID#, #menuType#)
+	</insert>
 </sqlMap>

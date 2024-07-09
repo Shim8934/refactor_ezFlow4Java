@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
@@ -913,7 +915,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("BO")) {
-				rtnVal = ezApprovalGService.doBoryu(docId, approvalGDocInfoVO.getAprMemberID(), "005", userInfo.getCompanyId(), optionInfo.getLang(), userInfo.getTenantId());
+				rtnVal = ezApprovalGService.doBoryu(docId, approvalGDocInfoVO.getAprMemberID(), "005", userInfo.getCompanyId(), optionInfo.getLang(), userInfo.getTenantId(), userInfo.getUserName());
 				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");
@@ -1252,6 +1254,61 @@ public class MApprovalGGWController {
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkIsGroupDoc] ended.");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/mobile/ezApprovalG/getAprDocInfoForLink.do", method = RequestMethod.GET)
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	public JSONObject getAprDocInfoForLink(HttpServletRequest request) throws Exception {
+		logger.debug("getAprDocInfoForLink (Controller) started");
+		JSONObject result = new JSONObject ();
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			String docID = request.getParameter("docId");
+			String companyID = request.getParameter("companyId");
+			String mode = "ING";
+			int tenantID = userInfo.getTenantId();
+			ApprGDocListVO apprGDocInfo = ezApprovalGService.getDocInfoForNoti(companyID, docID, tenantID, mode);
+			
+			if (apprGDocInfo != null) {
+				ApprGDocListVO apprGMemberSnVO = ezApprovalGService.getAprMemberSnForNoti(companyID, docID, tenantID, userId);
+				if (apprGMemberSnVO != null) {
+					apprGDocInfo.setAprMemberSN(apprGMemberSnVO.getAprMemberSN());
+					apprGDocInfo.setAprState(apprGMemberSnVO.getAprState());
+				}
+			}
+			
+			if (apprGDocInfo == null) {
+				mode = "END";
+				apprGDocInfo = ezApprovalGService.getDocInfoForNoti(companyID, docID, tenantID, mode);
+			}
+			
+			if (apprGDocInfo == null) {
+				mode = "ERROR";
+				result.put("status", "error");
+				result.put("data", null);
+				logger.debug("getAprDocInfoForLink (Controller) ended, result = " + result);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("mode", mode);
+			result.put("data", apprGDocInfo);
+			result.put("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+			result.put("relayG_type", ezCommonService.getTenantConfig("UserInfo_RelayG_Type", userInfo.getTenantId()));
+			result.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()));
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", null);
+		}
+		logger.debug("getAprDocInfoForLink (Controller) ended, result = " + result);
 		
 		return result;
 	}

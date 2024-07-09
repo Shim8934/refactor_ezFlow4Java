@@ -205,6 +205,7 @@
 			                DocManageMain("m02");
 			            }
 			            if (pListTypeValue == "99") {
+			            	window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
 			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
 			                document.getElementById('APPROVAL99').click();
 			            }

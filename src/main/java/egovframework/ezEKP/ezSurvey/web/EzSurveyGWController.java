@@ -487,7 +487,7 @@ public class EzSurveyGWController {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
+			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
 		}
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);

@@ -262,4 +262,23 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public int getConnectorListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzSystemAdminDAO.getConnectorListCount", map);
 	}
+	public void updateResetThemeAllCompany() throws Exception {
+		update("EzSystemAdminDAO.updateResetThemeAllCompany");
+	}
+
+	public void deleteThemeAllUser() throws Exception {
+		delete("EzSystemAdminDAO.deleteThemeAllUser");
+	}
+
+	public void updateResetThemeAllUser() throws Exception {
+		update("EzSystemAdminDAO.updateResetThemeAllUser");
+	}
+
+	public void deletePortletAllUser() throws Exception {
+		delete("EzSystemAdminDAO.deletePortletAllUser");
+	}
+
+	public void deletePortletSizeAllUser() throws Exception {
+		delete("EzSystemAdminDAO.deletePortletSizeAllUser");
+	}
 }

@@ -7,8 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
 <!-- <meta http-equiv="content-language" content="ko"> -->
 <title>ERROR</title>
-
-    <style>
+    <style type="text/css">
         body, div, h2, ul, li, p{margin: 0; padding: 0;}
 
         ul{list-style: none;}
@@ -20,7 +19,6 @@
         .error_page .text_wrap{text-align:center; padding-top:50px; width: 100%; position: relative}
         .error_page .text_wrap .text{position:relative; font-size: 15px; font-weight: bold; color: #333; margin-top: 20px;}
     </style>
-    
 </head>
 <body>
 <div class="error_wrap">
@@ -33,5 +31,15 @@
         </div>
     </div>
 </div>
+<%--<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="100%" height="100%" align="center" valign="middle" style="padding-top:150px;"><table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+<!--         <td><span style="font-family:Tahoma; font-weight:bold; color:#000000; line-height:150%; width:440px; height:70px;">오류발생 알림화면(허용되지 않는 요청을 하셨습니다)</span></td> -->
+        <td><span style="font-family:Tahoma; font-weight:bold; color:#000000; line-height:150%; width:440px; height:70px;"><spring:message code="main.t0634"/></span></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>--%>
 </body>
 </html>

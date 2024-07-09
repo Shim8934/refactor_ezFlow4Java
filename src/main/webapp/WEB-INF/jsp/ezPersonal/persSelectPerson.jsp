@@ -28,6 +28,7 @@
 		    var tagName = "${tagName}";
 		    var ReturnFunction;
 		    var userID = "${userInfo.id}";
+		    var companyID = "${companyID}";
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.selectperson_cross_dialogArguments[1];
@@ -72,7 +73,13 @@
 		            	
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
-		            else {
+					else if (type === "EMP") {
+						createNodeInsert(xmlpara, objNode, "DATA");
+						createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyID);
+						createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID);
+						createNodeAndInsertText(xmlpara, objNode, "ADMINCHK", true);
+						createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+					} else {
 		                createNodeInsert(xmlpara, objNode, "DATA");
 		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
 		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");

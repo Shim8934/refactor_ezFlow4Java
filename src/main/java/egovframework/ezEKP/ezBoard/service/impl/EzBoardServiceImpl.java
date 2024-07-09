@@ -29,6 +29,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.StringJoiner;
 import java.util.UUID;
@@ -41,6 +42,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +74,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -5217,5 +5221,52 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 
 		logger.info("downloadFile ended");
+	}
+
+	/**
+	 * 이미지 파일명을 조사하여 첫번째 포함 파일 객체를 리턴
+	 * @param itemID 조사할 게시판 id
+	 * @param fileName 포함될 단어
+	 * @param tenantID tenant ID
+	 * @return	해당하는 첨부 이미지 객체
+	 * @throws Exception 해당 게시판 조회 쿼리(when itemID, tenantID) 가 예외 발생
+	 */
+	public Optional<BoardAttachVO> getBoardAttachByName(String itemID, String fileName, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+
+		// 파일이름이 없을경우 empty 리턴
+		if (StringUtils.isBlank(fileName)) return Optional.empty();
+
+		List<BoardAttachVO> voList = ezBoardDAO.brdGetItemAttachmentInfo(map);
+		for (BoardAttachVO vo : voList) {
+			// 파일이름이 비어있거나 이미지 파일의 확장자가 아닌경우 스킵
+			if (StringUtils.isBlank(vo.getFileName()) || !commonUtil.checkImgExtension(FilenameUtils.getExtension(vo.getFileName()))) {
+				continue;
+			}
+
+			// 파일이름에 주어진 단어가 포함된 경우 vo 바로 리턴
+			if (FilenameUtils.getBaseName(vo.getFileName()).contains(fileName)) {
+				return Optional.of(vo);
+			}
+		}
+
+		return Optional.empty();
+	}
+	
+	@Override
+	/* 2024-04-01 한태훈 - 게시판 즐겨찾기 추가 구성원 리스트 가져오는 메소드 */
+	public List<OrganUserVO> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception {
+		logger.debug("getFavoriteBoardUserList starts");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardId", boardId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		logger.debug("getFavoriteBoardUserList ends");
+		return ezBoardDAO.getFavoriteBoardUserList(map);
 	}
 }

@@ -1,26 +1,5 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
-import java.lang.reflect.Field;
-import java.net.URLDecoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.annotation.Resource;
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
@@ -30,14 +9,47 @@ import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+
+import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+import java.lang.reflect.Field;
+import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 
 @Service("EzOrganService")
 public class EzOrganServiceImpl implements EzOrganService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzOrganServiceImpl.class);
-	
+
+	/** CRYPTO */
+	@Resource(name="crypto")
+	private EgovFileScrty egovFileScrty;
+
 	@Resource(name = "EzOrganDAO")
 	private EzOrganDAO ezOrganDAO;
 	
@@ -55,7 +67,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	@Autowired
 	private Properties globals;
-	
+
+	@Autowired
+	private EzOrganDAO ezOrganDao;
+
     // 지정된 사원 혹은 부서의 특정 필드의 값을 반환한다.
 	@Override
 	public String getPropertyValue(String userid, String propName, int tenantID) throws Exception{
@@ -388,9 +403,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    logger.debug("getDeptMemberList started");
 	    logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
 	            + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
-		
+
 		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID);
-		
+
 	    // 2019-01-09 황윤호
 		// 조직도 관리에서 부서장 column을 id -> name으로 바꿔주기 위해 사용
 		String deptMaster = "";
@@ -431,11 +446,11 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("JOBID", obj.getJobId());
 				map1.put("permissionBasisDeptYN", permissionBasisDeptYN);
         		map1.put("ROLEID", obj.getRoleId());
-        		
+
         		// 사원의 상세 정보를 가져온다.
 				Object userVO = ezOrganDAO.getTBLUserMaster(map1);
 				sb.append(commonUtil.getQueryResult(userVO));
-				
+
             // 멤버가 부서인 경우
             } else {
             	map1.put("v_CN", obj.getCn());
@@ -512,7 +527,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("IS_ADDJOB", obj.getIsAddjob());
         		map1.put("JOBID", obj.getJobId());
         		map1.put("ROLEID", obj.getRoleId());
-        		
+
         		// 사원의 상세 정보를 가져온다.
         		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
                 sb.append(commonUtil.getQueryResult(userVO));
@@ -834,7 +849,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         }else{
         	type = "G";
         }
-		
+
 		String strSQLForAddJob = strSQL;
 		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
 			strSQLForAddJob = strSQLForAddJob.replace("extensionattribute1", "A.roll_info");
@@ -842,7 +857,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-                
+
         map.put("strSQL", strSQL + strSize);
         map.put("strSQLForMySQL", strSQL);
         map.put("strSizeForMySQL", strSizeForMySQL);
@@ -852,7 +867,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("v_TENANT_ID", tenantID);
         map.put("adminOrgan", adminOrgan);
 		map.put("strSQLForAddJobForMySQL", strSQLForAddJob);
-        
+
         logger.debug("strSQL=" + strSQL);
         
         List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
@@ -876,7 +891,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             		map1.put("IS_ADDJOB", organVO.getIsAddjob());
             		map1.put("JOBID", organVO.getJobId());
 					map1.put("ROLEID", Optional.ofNullable(organVO.getRoleId()).filter(str -> !str.isEmpty()).orElse("0"));
-	        		
+
 	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
 	        	}else{
 	        		map1.put("v_CN", organVO.getCn());
@@ -1481,7 +1496,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	public String getPropertyList(String id, String pPropList, String primary, int tenantID) throws Exception {
 	    logger.debug("getPropertyList started");
 	    logger.debug("id=" + id + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
-	    
+
 		StringBuilder propInfo = new StringBuilder("<DATA>");
 		
 		String dataType = "user";
@@ -2167,7 +2182,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         String type = ""; 
         int i = 0;
 		String strSQLForAddJob = "";
-        
+
         if (pLimit != 0) {
             strSize = " AND ROWNUM <= " + pLimit;
             strSizeForMySQL = " LIMIT " + pLimit;
@@ -2250,7 +2265,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         		strSQLAddjobCom = strSQLAddjobCom.replace("a.DEPTID", "b.PHYSICALDELIVERYOFFICENAME");
         	}
         }
-		
+
 		strSQLForAddJob = strSQL;
 		// 2023-08-23 전인하 - 권한 겸직/사용자 기준 설정 기능 대응, 해당 옵션 사용 시 권한 설정 컬럼을 addJobMaster의 추가컬럼에서 찾게 함
 		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
@@ -2272,7 +2287,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("noAddJob", noAddJob);
         map.put("adminOrgan", adminOrgan);
 		map.put("strSQLForAddJobForMySQL", strSQLForAddJob);
-        
+
         logger.debug("strSQL=" + strSQL);
         logger.debug("strSQLCom=" + strSQLCom);//getSearchList
         logger.debug("strSQLAddjobCom=" + strSQLAddjobCom);
@@ -2298,7 +2313,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        		map1.put("IS_ADDJOB", organVO.getIsAddjob());
 	        		map1.put("JOBID", organVO.getJobId());
 					map1.put("ROLEID", Optional.ofNullable(organVO.getRoleId()).filter(str -> !str.isEmpty()).orElse("0"));
-	        		
+
 	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
 	        	}else{
 	        		map1.put("v_CN", organVO.getCn());
@@ -2555,7 +2570,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				String tmpUserType = obj.getUserType();
 				tmpUserType = (tmpUserType != null && tmpUserType.equalsIgnoreCase("addJob")) ? "Y" : "";
 				String roleId = Optional.ofNullable(obj.getRoleId()).filter(str -> !str.isEmpty()).orElse("0");
-				
+
 				Map<String, Object> userMap = new HashMap<String, Object>();
 				userMap.put("v_CN", obj.getCn());
 				userMap.put("v_DEPTCD", obj.getDepartment());
@@ -2706,15 +2721,15 @@ public class EzOrganServiceImpl implements EzOrganService {
 	@Override
 	public String getRollInfoBasisDept(String userID, int tenantID, String deptID, String jobID) throws Exception {
 		logger.debug("getRollInfoBasisDept started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN",userID);
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_DEPTID", deptID);
 		map.put("v_JOBID", jobID);
-		
+
 		logger.debug("getRollInfoBasisDept ended");
-		
+
 		return ezOrganDAO.getRollInfoBasisDept(map);
 	}
 
@@ -2732,10 +2747,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 		List<OrganUserVO> returnVal = ezOrganDAO.getAllRollInfoForUserBasisDept(map);
 
 		logger.debug("getAllRollInfoForUserBasisDept ended");
-		
+
 		return returnVal;
 	}
-	
+
 	// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > 리스트 생성 위한 겸직정보 조회
 	@Override
 	public List<OrganUserVO> getAddJobListForEzApprDropdown(String lang, String userId, int tenantId) throws Exception {
@@ -2761,5 +2776,48 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("jobID", jobId);
 		map.put("tenantID", tenantId);
 		return ezOrganDAO.getAddJobInfo(map);
+	}
+
+    @Override
+	public String changeCookie(String loginCookie, String deptId, String companyId, int tenantId, String jobId) throws Exception {
+		logger.debug("changeCookie => deptId = " + deptId + ", companyId = " + companyId + ", tenantId = " + tenantId + ", jobId = " + jobId);
+        String decData = egovFileScrty.decryptAES(loginCookie);
+		String[] decDataArray = decData.split("///", -1);
+		decDataArray[8] = String.valueOf(tenantId);
+		decDataArray[9] = deptId;
+		decDataArray[10] = companyId;
+		decDataArray[11] = jobId;
+        String newCookieStr = String.join("///", decDataArray);
+
+        return egovFileScrty.encryptAES(newCookieStr);
+    }
+
+	@Override
+	public Optional<OrganUserVO> getUserInfo(int tenantId, String userId, String companyId, String deptId, String jobId, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_CN", userId);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_LANGDATA", lang);
+
+		List<OrganUserVO> allUserInfo = ezOrganDAO.getAllUserInfo(map);
+
+		// jobId 가 빈경우-> null인 유저정보(본직). 또는 회사, 부서, jobid가 일치한 vo 반환
+		return allUserInfo.stream().filter(vo -> (StringUtils.isBlank(jobId) && StringUtils.isBlank(vo.getJobID())) ||
+                (companyId.equals(vo.getCompanyId()) && deptId.equals(vo.getDepartment()) && jobId.equals(vo.getJobID()))).findAny();
+	}
+
+	@Override
+	public List<OrganUserVO> getAllUserinfo(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_CN", userId);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_LANGDATA", "1");
+		List<OrganUserVO> allUserInfo = ezOrganDao.getAllUserInfo(map);
+
+		if (allUserInfo.isEmpty()) {
+			throw new Exception("getAllUserinfo - 유저 정보 조회 실패 : " + tenantId + "/" + userId);
+		}
+
+		return allUserInfo;
 	}
 }

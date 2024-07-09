@@ -214,8 +214,8 @@ var strLang127_2 = "会社";
 var strLang130_2 = "グループ";
 var strLang131_2 = "協業";
 var strLang141_2 = "グーグル";
-var strLangHSBScPt1 = "年";
-var strLangHSBScPt2 = "月";
+var strLangHSBScPt1 = ".";
+var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "日";
 
 /* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */

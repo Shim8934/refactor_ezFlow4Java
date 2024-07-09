@@ -1,10 +1,13 @@
 package egovframework.ezEKP.ezOrgan.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
@@ -211,4 +214,8 @@ public interface EzOrganAdminService {
 
 	// 2024-01-15 김혜지 - 지정된 부서에 속한 퇴직자 수를 반환한다.
 	int retireUserCountCheck(String cn, int tenantID) throws Exception;
+
+	Optional<String> getJobIdForFirstUser(String userId, int tenantId) throws Exception;
+
+	List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary) throws Exception;
 }

@@ -159,7 +159,7 @@
 			        /* 2023-11-16 홍승비 - 이동 대상 게시판의 승인여부를 체크한 다음 게시알림 메일을 발송 */
 			        if (apprFlag != "Y") {
 				        /* 2019-12-17 홍승비 - 게시물 이동 시에도 게시알림 메일을 보내도록 수정 */
-				        sendNotiMail(pDestBoardID, returnItemIDStr);
+				        sendPostNotiForAdmin(pDestBoardID, returnItemIDStr);
 			        }
 		        } 
 		        //else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
@@ -357,7 +357,7 @@
 					 	if (result == "Y") {
 							for (var i = 0; i < itemIDs.length - 1 ;i++) {
 			                    xmlhttp = createXMLHttpRequest();
-			                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+			                    xmlhttp.open("POST", "/ezBoard/sendApprNotice.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
 			                    xmlhttp.send();
 			                    xmlhttp = null;
 							}
@@ -366,14 +366,14 @@
 				});
 		    }
 		    
-		    /* 2019-12-17 홍승비 - 게시물 이동 시에도 게시알림 메일을 보내도록 수정 */
-	        function sendNotiMail(pDestBoardID, returnItemIDStr) {
+		    /* 2019-12-17 홍승비 - 게시물 이동 시에도 게시알림을 보내도록 수정 */
+	        function sendPostNotiForAdmin(pDestBoardID, returnItemIDStr) {
 				var xmlhttp;
 				var itemIDs = returnItemIDStr.split(";");
 				
 				for (var i = 0; i < itemIDs.length - 1 ;i++) {
 					xmlhttp = createXMLHttpRequest();
-	                xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+	                xmlhttp.open("POST", "/ezBoard/sendPostNotiForAdmin.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
 	                xmlhttp.send();
 	                xmlhttp = null;
 				}

@@ -5,8 +5,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
 		<script type="text/javascript">
 			var currentWeather = "${currentWeather}";
 			var todayWeather = "${todayWeather}";
@@ -234,15 +232,15 @@
 		                <ul class="weatherPer">
 		                	<li class="weatherPerLi" style="display: list-item;">
 		                		<%-- <span class="icon iconbg01"><img src="/images/ezNewPortal/weather/weatherIcon_add01.png"></span> --%>
-		                		<span class="text"><span class="text" id="humidity" style="margin-right:5px;font-weight: normal"></span><span id="currentHumidity"></span><span class="text" id="humidityPer"></span></span>
+		                		<span class="text"><span class="text" id="humidity"></span><span id="currentHumidity"></span><span class="text" id="humidityPer"></span></span>
 		                	</li>
 		                    <li class="weatherPerLi" style="display: list-item;">
 		                    	<%-- <span class="icon iconbg02"><img src="/images/ezNewPortal/weather/weatherIcon_add02.png"></span> --%>
-		                    	<span class="text"><span class="text" id="clouds" style="margin-right:5px;font-weight: normal"></span><span id="currentClouds"></span><span class="text" id="cloudsPer"></span></span>
+		                    	<span class="text"><span class="text" id="clouds"></span><span id="currentClouds"></span><span class="text" id="cloudsPer"></span></span>
 		                    </li>
 		                    <li class="weatherPerLi" style="display: list-item;">
 		                    	<%-- <span class="icon iconbg03"><img src="/images/ezNewPortal/weather/weatherIcon_add03.png"></span> --%>
-		                    	<span class="text"><span class="text" id="wind" style="margin-right:5px;font-weight: normal"></span><span id="currentWind"></span><span class="text" id="windPer"></span></span>
+		                    	<span class="text"><span class="text" id="wind"></span><span id="currentWind"></span><span class="text" id="windPer"></span></span>
 		                    </li>
 		                </ul>
 		            </div>

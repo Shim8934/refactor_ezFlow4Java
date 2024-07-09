@@ -89,8 +89,8 @@
 		        } catch (e) {}
 	
 		        popupTitle();
-		        
-		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+				var top = (type ==='c=1') ? "top" : deptTreeTopId + "/organ"
+		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>" + top + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
 		        xmlHTTP.send(strQuery);

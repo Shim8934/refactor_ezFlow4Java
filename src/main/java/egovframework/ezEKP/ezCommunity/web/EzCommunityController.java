@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -60,8 +61,12 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -105,6 +110,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 	
 	@Resource(name="EzCabinetAdminService")
 	private EzCabinetAdminService cabinetAdminService;
+	
+	@Resource(name="EzNotificationService")
+	private EzNotificationService ezNotificationService;
+	
+	@Autowired
+	EzPersonalService ezPersonalService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityController.class);
 	
@@ -1875,6 +1886,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
 			}
 		}
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mode", mode);
@@ -1895,7 +1907,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("gref", ref);
 		model.addAttribute("dirPath", commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()));
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
-		
+		model.addAttribute("companyID", companyID);
+
 		logger.debug("bbsEditNew ended.");
 		
 		return "ezCommunity/communityBbsEditNew";
@@ -2487,13 +2500,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/commOutOk.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String commOutOk(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData) throws Exception{
+	public String commOutOk(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, HttpServletRequest request) throws Exception{
 		Document xmlDoc = commonUtil.convertStringToDocument(xmlData);
 		
 		String code = xmlDoc.getElementsByTagName("CODE").item(0).getTextContent();
 		String reason = xmlDoc.getElementsByTagName("REASON").item(0).getTextContent();
 		
-		String retValue = ezCommunityService.commOutOk(loginCookie, code, reason);
+		String retValue = ezCommunityService.commOutOk(request, loginCookie, code, reason);
 		
 		return retValue;
 	}
@@ -3885,7 +3898,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		clubVO.setC_ClubNo(code);
-		ezCommunityService.joinOkSendMail(loginCookie, userInfo, clubVO);
+		ezCommunityService.joinOkSendMail(request, loginCookie, userInfo, clubVO);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("code", code);
@@ -4023,7 +4036,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		try {
 			ezCommunityService.okNoSet(flag.toUpperCase(), code, cID, userInfo.getTenantId());
-			ezCommunityService.okNoSetSendMail(loginCookie, userInfo, flag.toUpperCase(), code, cID);
+			ezCommunityService.okNoSetSendMail(request, loginCookie, userInfo, flag.toUpperCase(), code, cID);
 			
 			result = "true";
 		} catch (Exception e) {
@@ -4719,21 +4732,39 @@ public class EzCommunityController extends EgovFileMngUtil{
         	
         	List<InternetAddress> to = new ArrayList<InternetAddress>();
         	
+        	String notiRecipientParam = "";
+        	String separator = ";;";
 			for(CommunityClubVO vo : list) {
 				if (vo.getEmail() != null) {
 		        	InternetAddress to1 = new InternetAddress();
 		        	to1.setPersonal(vo.getUserName(), "UTF-8");
 		        	to1.setAddress(vo.getEmail());
 		        	
+		        	if (ezPersonalService.hasNotiDiableItem(vo.getUserId(), NotiType.fromString("COMMUNITY_NOTICE"), NotiPlatform.MAIL, userInfo.getTenantId())) {
+						continue;
+					}
+		        	
 		        	to.add(to1);
 		        	
+		        	notiRecipientParam += vo.getUserId() + separator;
 		        	//logger.debug("to = " + vo.getEmail());
 		        }
 			}
 			
 			String content = commonUtil.createNotiMailContent(memo, tenantID, userInfo.getLocale());
 			
-			ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, content, false);
+			if (to != null && to.size() > 0) {
+				ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, content, false);
+			}
+			
+			if (notiRecipientParam.length() > 0) {
+				notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+				String linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + code;
+	        	String linkUrlMobile = "";
+	        	String notiSubType = "NOTICE";
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "COMMUNITY", notiSubType, clubVO.getC_ClubName() + " - 상세 내용은  메일함에서 확인 필요", "popup", "1300", "900", linkUrl, linkUrlMobile, "");
+				logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
+			}
 			
 			model.addAttribute("result", "OK");
 		}
@@ -4772,7 +4803,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String itemID = request.getParameter("itemID");
 		String itemTreeID = request.getParameter("itemTreeID");
 		
-		ezCommunityService.sendReplyNoticeMail(boardID, itemID, itemTreeID, loginCookie);
+		ezCommunityService.sendReplyNoticeMail(request, boardID, itemID, itemTreeID, loginCookie);
 		
 		logger.debug("sendReplyNoticeMail ended.");
 	}
@@ -4970,6 +5001,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardPropertyVO boardProperty = ezCommunityService.getBoardProperty(boardID, userInfo.getTenantId());
 		CommunityBoardItemVO itemVO = ezCommunityService.getItemXML(boardID, itemID, userInfo);
 		
+		// 2024-04-29 한태훈 > 커뮤니티 통합알림 추가
+		String notiRecipientParam = "";
+		String separator = ";;";
+		
 		// 신규 게시물 등록, 수정 알림에 대한 수신인 ID 리턴 (커뮤니티에 가입승인된 모든 사용자들)
 		if ((pMode.equals("new") && boardProperty.getMailFG_Post() != null && boardProperty.getMailFG_Post().equals("Y")) || (pMode.equals("modify") && boardProperty.getMailFG_Mod() != null && boardProperty.getMailFG_Mod().equals("Y"))) {
 			List<CommunityClubVO> list = ezCommunityService.adminNoticeMailOkGet2(boardProperty.getC_ClubNo(), userInfo.getTenantId());
@@ -4979,7 +5014,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 			        	InternetAddress to1 = new InternetAddress();
 			        	to1.setPersonal(vo.getUserName(), "UTF-8");
 			        	to1.setAddress(vo.getEmail());
+			        	
+			        	notiRecipientParam += vo.getUserId() + separator;
+			        	
+			        	if (ezPersonalService.hasNotiDiableItem(vo.getUserId(), NotiType.fromString("COMMUNITY_" + pMode.toString()), NotiPlatform.MAIL, userInfo.getTenantId())) {
+							continue;
+						}
+			        	
 			        	to.add(to1);
+			        	
 			        }
 				}
 		}
@@ -4993,7 +5036,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 				InternetAddress to1 = new InternetAddress();
 				to1.setPersonal(uvo.getDisplayName(), "UTF-8");
 	        	to1.setAddress(uvo.getMail());
-	        	to.add(to1);
+	        	notiRecipientParam += itemVO.getWriterID() + separator;
+	        	
+	        	if (!ezPersonalService.hasNotiDiableItem(itemVO.getWriterID(), NotiType.fromString("COMMUNITY_COMMENT"), NotiPlatform.MAIL, userInfo.getTenantId())) {
+	        		to.add(to1);
+				}
 	        } else {
 	        	return;
 	        }
@@ -5060,9 +5107,39 @@ public class EzCommunityController extends EgovFileMngUtil{
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
     	from.setAddress(userInfo.getEmail());
     	
-		ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, content, false);
+    	if (to != null && to.size() > 0) {
+    		ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, content, false);
+    	}
 		
+		// 2024-04-29 한태훈 - 커뮤니티 > 게시판 통합 알림 추가 
+		String boardType = boardProperty.getGubun();
+		String linkUrl = "";
+		String linkUrlMobile = "";
 		
+		String tempItemID = ezCommunityService.encodeURIComponent(itemID);
+		String tempBoardID = ezCommunityService.encodeURIComponent(boardID);
+		
+		switch (boardType) {
+		case "3":
+		case "4":
+			linkUrl += "/ezCommunity/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			break;
+		case "7":
+			linkUrl += "/ezCommunity/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			break;
+		default:
+			linkUrl += "/ezCommunity/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID) + "&code=" + boardProperty.getC_ClubNo();
+			break;
+		}
+		
+    	String notiSubType = pMode.toUpperCase();
+		
+    	if (notiRecipientParam.length() > 0) {
+			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam , "community", notiSubType, boardProperty.getBoardName() + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
+			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
+    	}
+    	
 		logger.debug("sendCommBoardAlertMail ended.");
 	}
 	

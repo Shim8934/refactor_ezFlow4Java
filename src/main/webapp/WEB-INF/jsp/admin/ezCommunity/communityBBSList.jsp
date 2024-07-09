@@ -53,7 +53,7 @@
 			function refresh_onclick() {
 				window.location.reload(false);
 			}
-			
+
 			function search() {
 				if (document.page.s_radio.value == "title" ) {
 					var strSearch = "sRadio=title&keyword=" + encodeURIComponent(document.page.keyword.value);
@@ -66,7 +66,12 @@
 				
 				// key파마리터 없어도 되므로 삭제
 				strSearch = strSearch + "&code=" + "<c:out value = '${code}' />" + "&bName=" + "<c:out value = '${bName}' />";
-				window.location.href = "/admin/ezCommunity/bbsList.do?" + strSearch;
+				window.location.href = "/admin/ezCommunity/bbsList.do?" + strSearch + "&companyID=" + encodeURIComponent(companySelectID);
+			}
+
+			function changeCompany() {
+				document.page.keyword.value = "";
+				search();
 			}
 	
 			function comm_searchCheck() {
@@ -231,9 +236,9 @@
 			    feature = feature + GetOpenPosition(760, 720);
 			    
 			    if (CrossYN()) {
-			        window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
+			        window.open("/ezCommunity/board/bbsEditNew.do?mode=write&companyID=" + encodeURIComponent(companySelectID) + "&bName=" + bName, "", feature);
 			    } else {
-		            window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
+		            window.open("/ezCommunity/board/bbsEditNew.do?mode=write&companyID=" + encodeURIComponent(companySelectID) + "&bName=" + bName, "", feature);
 			    }
 			}
 			
@@ -263,17 +268,24 @@
 	</head>
 	
 	<body class="mainbody">
+	<h1>
 		<c:choose>
 			<c:when test="${bName == 'tbl_c_notice' }">
-				<h1><spring:message code='ezCommunity.khj07'/><span id="mailBoxInfo"></span></h1>
+				<spring:message code='ezCommunity.khj07'/>
 			</c:when>
 			<c:when test="${bName == 'tbl_c_board' }">
-				<h1><spring:message code='ezCommunity.khj07'/><span id="mailBoxInfo"></span></h1>
+				<spring:message code='ezCommunity.khj07'/>
 			</c:when>
 			<c:otherwise>
-				<h1><c:out value = '${titleName}' /><span id="mailBoxInfo"></span></h1>
+				<c:out value='${titleName}'/>
 			</c:otherwise>
 		</c:choose>
+		<span id="mailBoxInfo"></span>
+		<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp">
+			<jsp:param name="companySelectID" value="${companySelectID}"/>
+		</jsp:include>
+	</h1>
+	</body>
 	
 		<div id="mainmenu">
   			<ul>

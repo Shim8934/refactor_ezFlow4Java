@@ -760,7 +760,9 @@
 			SELECT
 				B.email EMAIL,
 				B.username$v_USERINFO_LANG$ USERNAME,
-				A.c_clubname$v_USERINFO_LANG$ C_CLUBNAME
+				A.c_clubname$v_USERINFO_LANG$ C_CLUBNAME,
+				B.USERID USERID,
+				A.C_CLUBNO C_CLUBNO
 			FROM
 				TBL_C_CLUB A
 			INNER JOIN

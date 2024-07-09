@@ -1746,6 +1746,20 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
     createNodeAndInsertText(xmlDoc, objNode, "ownerNM", replaceSingleQuotation(username));
 
     var objNode23;
+    
+    $.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezResource/checkApprovalFlag.do",
+		data : {
+			resID  : resItem		    			
+		},
+		success: function(result) {
+			ApproveFlag = result;
+		}
+    });
+    
     if (ApproveFlag == "1") {
         if (cmd == "add")
             objNode23 = "0";
@@ -1787,9 +1801,13 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
     	
         xmlHttp = null;
         if (cmd == "add" && objNode23 == "0") {
+        	var returnNodes = SelectNodes(resultXML,"RTN_DATA")[0];
+ 	    	var pNum = getNodeText(GetChildNodes(returnNodes)[0]);//objNodes.item(0).text;
+ 	    	createNodeAndInsertText(xmlDoc, objNode, "RSSCHEDULENUM", pNum);
+        	
             xmlHttp = createXMLHttpRequest();
             xmlHttp.open("POST", "/ezResource/sendMail.do", false);
-            xmlHttp.send(xmlDoc.xml);
+            xmlHttp.send(xmlDoc);
             xmlHttp = null;
         }
         

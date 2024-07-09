@@ -155,6 +155,8 @@ public class LoginVO implements Serializable {
     private String extensionattribute5;
 	/** 직위 ID */
 	private String jobId;
+	/** 직책 ID */
+	private String roleId;
     
 	// 생성자 대신 활용도 높게 setter로 정의함.
 	public void setForSelectUser(String id, String dn, int tenantId) {
@@ -574,5 +576,13 @@ public class LoginVO implements Serializable {
 	}
 	public void setJobId(String jobId) {
 		this.jobId = jobId;
+	}
+
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
 	}
 }

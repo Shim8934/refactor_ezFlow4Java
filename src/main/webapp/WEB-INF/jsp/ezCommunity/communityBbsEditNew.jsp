@@ -143,7 +143,8 @@
 	 							code	:	pCode,
 	 							bName	:	pBname,
 	 							userNM	:	pUserNM,
-	 							userNM2	:	pUserNM2
+	 							userNM2	:	pUserNM2,
+								companyID : "<c:out value='${companyID}'/>"
 	 						   },
 	 					success : function(result){
 	 						if (result != "OK") {

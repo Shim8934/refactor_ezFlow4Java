@@ -41,7 +41,7 @@
 
 					        if (rv) {
 					            alert("<spring:message code='ezResource.t78' />");
-					            parent.window.location.reload();
+								window.parent.board_menu.location.href = "/admin/ezResource/gwBoardListManagelistLeft.do?flag=SELECT_YES&selCompany=" + pCompanyID;
 					        } else {
 					            alert("<spring:message code='ezResource.t79' />");
 					        }

@@ -5,7 +5,7 @@
 
 	<typeAlias alias="OrganDeptVO"							    type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganUserVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>	
-	<typeAlias alias="OrganProxyVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>	
+	<typeAlias alias="OrganProxyVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>
 	
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
@@ -1551,7 +1551,7 @@
              A.STREETADDRESS ,
              A.INFO ,
             ]]>
-			<!-- 2023-08-22 전인하 - 유저 겸직 부서/사용자 기준 설정 - 
+			<!-- 2023-08-22 전인하 - 유저 겸직 부서/사용자 기준 설정 -
 			permissionBasisDeptYN 옵션에 따라 addJobMaster 테이블에 ROLLINFO 컬럼 사용시 분기 처리, JOBID 정보를 정확한 ID로 호출 -->
 			<isEqual property="permissionBasisDeptYN" compareValue="Y">
 				B.ROLL_INFO AS EXTENSIONATTRIBUTE1 ,
@@ -1559,7 +1559,7 @@
 			<isNotEqual  property="permissionBasisDeptYN" compareValue="Y">
 				A.EXTENSIONATTRIBUTE1 ,
 			</isNotEqual>
-			<![CDATA[     
+			<![CDATA[
              A.EXTENSIONATTRIBUTE2 ,
              A.EXTENSIONATTRIBUTE3 ,
              A.EXTENSIONATTRIBUTE4 ,
@@ -2032,7 +2032,7 @@
 			</isEqual>	  
 			<!-- 2023-08-30 전인하 - 리스트에 겸직, 원직 함께 나타날 때 원직을 상위에, 겸직을 하위에 나타나게 함 -->
 			$strSize$
-			) ORDER BY type DESC, ISADDJOB DESC, NAME ASC	 			
+			) ORDER BY type DESC, ISADDJOB DESC, NAME ASC
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
@@ -2763,7 +2763,7 @@
 													 DESCRIPTION,
 			   DESCRIPTION                           DESCRIPTION1,
 			   DESCRIPTION2,
-			   PHYSICALDELIVERYOFFICENAME,
+			   PHYSICALDELIVERYOFFICENAME AS COMPANYID,
 			   CASE
 				   #v_LANGDATA#
 				   WHEN
@@ -2818,7 +2818,10 @@
 			   SIPURI,
 			   POSITIONCD,
 			   'user'                                USERTYPE,
-			   ''	JOBID
+			   EXTENSIONATTRIBUTE7                   JOBID,
+			   CAST('' AS NVARCHAR2(50))			JOBTYPE,
+			   EXTENSIONATTRIBUTE8                  AS ROLEID,
+			   EXTENSIONATTRIBUTE1 AS ROLEINFO
 		FROM TBL_USERMASTER
 		WHERE CN = #v_CN#
 		  AND TENANT_ID = #v_TENANT_ID#
@@ -2850,7 +2853,7 @@
 												  DESCRIPTION,
 			   C.DISPLAYNAME                      DESCRIPTION1,
 			   C.DISPLAYNAME2                     DESCRIPTION2,
-			   A.PHYSICALDELIVERYOFFICENAME,
+			   C.EXTENSIONATTRIBUTE2 COMPANYID,
 			   CASE
 				   #v_LANGDATA#
 				   WHEN
@@ -2881,7 +2884,7 @@
 			   A.FACSIMILETELEPHONENUMBER,
 			   A.STREETADDRESS,
 			   A.INFO,
-			   A.EXTENSIONATTRIBUTE1,
+			   CAST(B.ROLL_INFO AS NVARCHAR2(200)) AS EXTENSIONATTRIBUTE1,
 			   A.EXTENSIONATTRIBUTE2,
 			   A.EXTENSIONATTRIBUTE3,
 			   A.EXTENSIONATTRIBUTE4,
@@ -2902,18 +2905,23 @@
 			   SIPURI,
 			   B.POSITIONCD,
 			   'addJob'                           USERTYPE,
-			   JOBID
+			   CAST(B.JOBID AS NVARCHAR2(200))                       AS JOBID,
+			   J.TYPE                        AS JOBTYPE,
+			   CAST(B.ROLEID AS NVARCHAR2(200))                       AS ROLEID,
+			   CAST(B.ROLL_INFO AS NVARCHAR2(200)) AS ROLEINFO
 		FROM TBL_ADDJOBMASTER B
 				 JOIN
 			 TBL_USERMASTER A ON B.CN = A.CN AND B.TENANT_ID = A.TENANT_ID
 				 JOIN
 			 TBL_DEPTMASTER C ON C.CN = B.DEPTID AND C.TENANT_ID = B.TENANT_ID
+				 JOIN
+			 TBL_USER_JOBMASTER J ON J.JOBID = B.JOBID AND J.TENANT_ID = B.TENANT_ID
 		WHERE B.CN = #v_CN#
 		  AND B.TENANT_ID = #v_TENANT_ID#
 	</select>
 
-	<select id="EzOrganDAO.getRetireUserMail" parameterClass="Integer" resultClass="OrganUserVO">
-		SELECT MAIL FROM
-		TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#
-	</select>
+    <select id="EzOrganDAO.getRetireUserMail" parameterClass="Integer" resultClass="OrganUserVO">
+        SELECT MAIL FROM
+            TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#
+    </select>
 </sqlMap>

@@ -1016,30 +1016,29 @@
 		            
 		            if (pMode != "temp") {
 		                if (document.getElementById("chk_reservation").checked == false) {
-		                	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림메일을 보내지 않도록 수정 + 답변알림메일을 보내지 않도록 수정 */
+		                	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림을 보내지 않도록 수정 + 답변알림을 보내지 않도록 수정 */
 		                	if ("${boardInfo.apprFlag}" != "Y") {
-			                	/* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림메일이 가지 않는 오류 수정 */
+			                	/* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림이 가지 않는 오류 수정 */
 			                    if (strItemID == "" || (strItemID != "" && orgMode == "temp")) {
 			                        xmlhttp = createXMLHttpRequest();
-			                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
+			                        xmlhttp.open("POST", "/ezBoard/sendPostNotiForAdmin.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 			                        xmlhttp.send();
 			                        xmlhttp = null;
 			                    }
 			                    if (pMode == "reply") {
 			                        xmlhttp = createXMLHttpRequest();
-			                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
+			                        xmlhttp.open("POST", "/ezBoard/sendReplyNotice.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
 			                        xmlhttp.send();
 			                        xmlhttp = null;
 			                    }
 		                	}
-		                	
 		                    /* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송), 수정알림 추가 (승인게시판의 경우, 게시물 승인 전에 게시알림 메일 사용안함) */
 		                    if (("${boardInfo.apprFlag}" != "Y") && (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pMode == "save")) { // 게시알림
-		                    	sendBoardAlertMail("new", pBoardID, newID, isAllGroupBoard);
+		                    	sendBoardAlert("new", pBoardID, newID, isAllGroupBoard);
 		                    }
 		                    /* 2023-11-17 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 수정알림메일을 발송하지 않도록 수정 */
-		                    else if ((itemApprFlag == null || itemApprFlag == "Y") && pMode == "modify") { // 수정알림 (반려된 게시물이 아닌 경우에만 발송)
-		                    	sendBoardAlertMail("modify", pBoardID, strItemID, isAllGroupBoard);
+		                    else if ((itemApprFlag == null || itemApprFlag == "" || itemApprFlag == "Y") && pMode == "modify") { // 수정알림 (반려된 게시물이 아닌 경우에만 발송)
+		                    	sendBoardAlert("modify", pBoardID, strItemID, isAllGroupBoard);
 		                    }
 		                    
 		                    alert("<spring:message code='ezBoard.t399' />");
@@ -1048,7 +1047,7 @@
 		                }
 		                
 		                /* 2019-05-07 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 승인요청 알림메일 발송하도록 수정 */
-		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
+		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림 발송하지 않도록 수정 */
 		                if (("${boardInfo.apprMail_FG}" == "Y") && ((pMode != "modify") || ((itemApprFlag != null && itemApprFlag != "Y") && pMode == "modify"))) {
 		                	var tItemID = strItemID; // 게시물 수정(재작성)
 		                	if (pMode != "modify") { // 신규 게시물 등록
@@ -1056,7 +1055,7 @@
 		                	}
 		                	
 		                    xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(tItemID), false);
+		                    xmlhttp.open("POST", "/ezBoard/sendApprNotice.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(tItemID), false);
 		                    xmlhttp.send();
 		                    xmlhttp = null;
 		                }
@@ -1132,9 +1131,11 @@
 						if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
 							parent.opener.getNoticePortletList();
 						}
-						
-						// 게시판 포틀릿 리스트 업데이트 되도록 수정
-			            if (parent.opener != null && parent.opener.getBoardPortletInfo != undefined) {
+					} catch (e) {console.log(e); }	
+					
+					try{
+						// 카드A형, 카드B형, 리스트형 포틀릿 업데이트 되도록 수정
+			            if (parent.opener != null && parent.opener.refreshBordPortletInfo != undefined) {
 			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
 			            	var customBoardCount = customBoardList.length;
 			            	
@@ -1144,17 +1145,23 @@
 			            		if (boardId == pBoardID) {
 			            			var portletId = customBoardList[i].parentElement.id;
 			            			portletId = portletId.substring(0, portletId.indexOf("P"));
-			            			parent.opener.getBoardPortletInfo(portletId);
+			            			parent.opener.refreshBordPortletInfo(portletId);
 			            		}
 			            	}
 			            }
-						
+					} catch (e) {console.log(e); }
+					
+					try { // 탭게시판  포틀릿 새로고침
+						if (parent.opener != null && parent.opener.refreshTab != undefined) {
+                 			parent.opener.refreshTab();
+                 		}
+                 	} catch (e) {console.log(e);}
+					
+					try{
 						if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
 							parent.opener.getBoardList_NewBoardSTD();
 						}
-					} catch (e) {
-						
-					}
+					} catch (e) {console.log(e); }
 					
 
 		            window.close();
@@ -2334,12 +2341,12 @@
 		    }
 	        
 	        /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+	        function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendBoardAlertMail.do",
+					url : "/ezBoard/sendBoardAlert.do",
 					data : {
 						mode : pMode,
 						boardID : pBoardID,

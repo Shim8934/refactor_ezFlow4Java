@@ -31,6 +31,9 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -56,6 +59,10 @@ public class EzEmailAsync {
 
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+	
+	
+	@Autowired
+	private EzPersonalService ezPersonalService;
 	
 	@Resource(name = "jspw")
 	private String jspw;
@@ -216,8 +223,14 @@ public class EzEmailAsync {
 				String userAccount = userinfo.getEmail();
 				
 				String userId = userAccount.split("@")[0];
+				
 				String domainName = ezCommonService.getTenantConfig("DomainName", userinfo.getTenantId());
 				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+				
+				if (ezPersonalService.hasNotiDiableItem(userId, NotiType.fromString("SURVEY_NEW"), NotiPlatform.MAIL, tenantId)) {
+					continue;
+				}
+				
 				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 				lang = lang == null ? "1" : lang;
 				// 2023-08-01 황인경 - 포탈 > 메일 포틀릿 > 전자설문 게시알림 문구 다국어 지원

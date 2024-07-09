@@ -133,6 +133,9 @@
 							case "usePortalAutoRefreshInterval" :
 								alertMsg = "<spring:message code='ezSystem.yej01'/>: <spring:message code='ezEmail.t99000066'/>";
 								break;
+							case "notiPollingInterval" :
+								alertMsg = "<spring:message code='ezNotification.hth37'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
 							case "MailBigSizeAttachLimitCount" :
 								alertMsg = "<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.t99000066'/>";
 								break;
@@ -343,6 +346,25 @@
 						<input data-paramId="usePortalAutoRefreshInterval" Id="usePortalAutoRefreshInterval" maxlength="3" type="text" value="<c:out value='${usePortalAutoRefreshInterval}'/>"> (<spring:message code="ezSystem.yej02"/>)
 					</td>
 				</tr>
+				<tr data-name="portal">
+					<th><spring:message code="ezNotification.hth37" /></th>
+					<td>
+						<input data-paramId="notiPollingInterval" Id="notiPollingInterval" maxlength="3" type="text" value="<c:out value='${notiPollingInterval}'/>"> (<spring:message code="ezSystem.yej02"/>)
+					</td>
+				</tr>
+				<tr data-name="portal">
+					<th><spring:message code="ezSystem.reset01" /></th>
+					<td>
+						<a class="imgbtn resetBtn" id="frameReset" onclick="personalReset('frame')"><span><spring:message code='ezSystem.reset03'/></span></a>
+						<spring:message code="ezSystem.reset12" />
+					</td>
+				</tr>
+				<tr data-name="portal">
+					<th><spring:message code="ezSystem.reset02" /></th>
+					<td>
+						<a class="imgbtn resetBtn" id="portletReset" onclick="personalReset('portlet')"><span><spring:message code='ezSystem.reset04'/></span></a>
+					</td>
+				</tr>
 				</c:if>
 				
 	        	<!-- 메일 -->
@@ -415,5 +437,25 @@
 	        <a class="imgbtn" onclick="update_Sys_Param()"><span><spring:message code='main.sp09'/></span></a>
 	        <a class="imgbtn" onClick="window.location.href='/admin/ezSystem/systemMainMenu.do'"><span><spring:message code='main.t135'/></span></a>
 	    </div>       
+	<script>
+		function personalReset(val) {
+			var wWeight ="390";
+			var wHeight = "250";
+
+			var heigth = window.screen.availHeight;
+			var width = window.screen.availWidth;
+			var left = (width - wWeight) / 2;
+			var top = (heigth - wHeight) / 2;
+			console.log(val);
+			if (val == "frame") {
+				window.open("/admin/ezSystem/resetUserSettings.do?type=frame", "", "height = " + wHeight + ", width = " + wWeight
+						+ ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
+			} else if (val == "portlet") {
+				window.open("/admin/ezSystem/resetUserSettings.do?type=portlet", "", "height = " + wHeight + ", width = " + wWeight
+						+ ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
+			}
+		}
+		
+	</script>
 	</body>
 </html>

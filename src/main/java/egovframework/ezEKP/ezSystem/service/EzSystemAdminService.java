@@ -79,4 +79,6 @@ public interface EzSystemAdminService {
 	public List<ConnectionInfoVO> getConnectorList(int tenantID, String offset, int startPage, int maxItemPerPage,
 			String keycode, String keyword, String lang, String startDate, String endDate, String companyId) throws Exception;
 	public int getConnectorListCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate, String companyId) throws Exception;
+	public void resetThemeAllUser () throws Exception;
+	public void resetPortletAllUser () throws Exception;
 }

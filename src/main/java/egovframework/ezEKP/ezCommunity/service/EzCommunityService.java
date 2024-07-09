@@ -201,7 +201,7 @@ public interface EzCommunityService {
 	
 	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C, LoginVO userInfo) throws Exception;
 
-	public String commOutOk(String loginCookie, String code, String reason) throws Exception;
+	public String commOutOk(HttpServletRequest request, String loginCookie, String code, String reason) throws Exception;
 
 	public String adminBasicGet1(String code, int tenantID) throws Exception;
 
@@ -364,9 +364,9 @@ public interface EzCommunityService {
 
 	public void adminLogoUploadIE9(String code, String type, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception;
 
-	public void joinOkSendMail(String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception;
+	public void joinOkSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception;
 	
-	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception;
+	public void okNoSetSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception;
 
 	public void deleteExpiredItems(String realPath) throws Exception;
 
@@ -374,7 +374,7 @@ public interface EzCommunityService {
 
 	public void deleteReservedBoardItem(String realPath)throws Exception;
 
-	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception;
+	public void sendReplyNoticeMail(HttpServletRequest request, String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception;
 
 	public String getOneLineReplyCount(String pBoardID, String pItemID,int tenantId) throws Exception;
 	
@@ -387,4 +387,6 @@ public interface EzCommunityService {
 	public String getIsNewItemExists(String boardID, String userID, int tenantID) throws Exception;
 
 	public boolean checkUserInCommunity(String clubNo, String userID, int tenantID) throws Exception;
+	
+	public String encodeURIComponent(String url) throws Exception; 
 }

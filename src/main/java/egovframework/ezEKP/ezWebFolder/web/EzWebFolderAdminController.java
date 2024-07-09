@@ -48,8 +48,12 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -87,6 +91,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzNotificationService ezNotificationService;
+	
+	@Autowired
+	private EzPersonalService ezPersonalService;
 
 	@Autowired
 	private Rest rest;
@@ -1904,15 +1914,24 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			folderName = commonUtil.cleanValueUnescape(folderName);
 			
 			if (reStatus.equalsIgnoreCase("OK")) {
-				List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
-				toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
+	        	String notiSubType = "OPEN_ADMIT";
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), applicantId, "WEBFOLDER", notiSubType, folderName, "", "", "", "", "", "");
+				logger.debug("webfolder " +  notiSubType + " noti status : " + notiStatus);
 				
-				String mailSubject = egovMessageSource.getMessage("ezWebFolder.ksa54", locale);
-				String mailContent = egovMessageSource.getMessage("ezWebFolder.ksa58", locale);
-				mailSubject = String.format(mailSubject, folderName);
-				mailContent = String.format(mailContent, folderName);
+				if (!ezPersonalService.hasNotiDiableItem(applicantId, NotiType.fromString("WEBFOLDER_OPEN_ADMIT"), NotiPlatform.MAIL, tenantId)) {
+					List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
+					toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
+					
+					String mailSubject = egovMessageSource.getMessage("ezWebFolder.ksa54", locale);
+					String mailContent = egovMessageSource.getMessage("ezWebFolder.ksa58", locale);
+					mailSubject = String.format(mailSubject, folderName);
+					mailContent = String.format(mailContent, folderName);
+					
+					reStatus = sendNotiMail(loginCookie, toUserList, mailSubject, mailContent, locale); // OK, EMAIL_ERROR
+				} else {
+					reStatus = "OK";
+				}
 				
-				reStatus = sendNotiMail(loginCookie, toUserList, mailSubject, mailContent, locale); // OK, EMAIL_ERROR
 			}
 		}
 		
@@ -1951,15 +1970,25 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			folderName = commonUtil.cleanValueUnescape(folderName);
 			
 			if (reStatus.equalsIgnoreCase("OK")) {
-				List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
-				toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
+				String notiSubType = "OPEN_REJECT";
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), applicantId, "WEBFOLDER", notiSubType, folderName, "", "", "", "", "", "");
+				logger.debug("webfolder " +  notiSubType + " noti status : " + notiStatus);
 				
-				String mailSubject = egovMessageSource.getMessage("ezWebFolder.ksa55", locale);
-				String mailContent = egovMessageSource.getMessage("ezWebFolder.ksa60", locale);
-				mailSubject = String.format(mailSubject, folderName);
-				mailContent = String.format(mailContent, folderName, reasonContent);
 				
-				reStatus = sendNotiMail(loginCookie, toUserList, mailSubject, mailContent, locale); // OK, EMAIL_ERROR
+				if (!ezPersonalService.hasNotiDiableItem(applicantId, NotiType.fromString("WEBFOLDER_OPEN_REJECT"), NotiPlatform.MAIL, tenantId)) {
+					List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
+					toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
+					
+					String mailSubject = egovMessageSource.getMessage("ezWebFolder.ksa55", locale);
+					String mailContent = egovMessageSource.getMessage("ezWebFolder.ksa60", locale);
+					mailSubject = String.format(mailSubject, folderName);
+					mailContent = String.format(mailContent, folderName, reasonContent);
+					
+					reStatus = sendNotiMail(loginCookie, toUserList, mailSubject, mailContent, locale); // OK, EMAIL_ERROR
+				} else {
+					reStatus = "OK";
+				}
+				
 			}
 		}
 		

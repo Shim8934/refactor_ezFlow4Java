@@ -13,11 +13,11 @@ var strLanghyh12 = "진행중인 공지사항을 삭제하시겠습니까?";
 var strLanghyh13 = "공지사항을 삭제하시겠습니까?";
 var strLanghyh14 = "공지사항을 삭제하는 도중 오류 발생.";
 var strLanghyh15 = "공지사항을 삭제하였습니다.";
-var strLangkhj1 = "빠른 링크";
+var strLangkhj1 = "퀵 메뉴";
 var strLangkhj2 = "등록자";
 var strLangkhj3 = "등록일";
 var strLangkhj4 = "수정일";
-var strLangkhj5 = "빠른 링크를";
+var strLangkhj5 = "퀵 메뉴를";
 var strLangkhj6 = " 추가하세요.";
 var strLangkhj7 = "등록";
 var strLangkhj8 = "수정";
@@ -50,3 +50,5 @@ var srtLangHSBEx01 = "허용하지 않는 확장자입니다.";
 
 /* 2022-11-22 조소정 - 관리자 > 포탈 > 빠른링크 > 중국어 버전 추가 */
 var strLangCSJQL01 = "중국어";
+
+var strLangQuickLinkSize01 = "&nbsp&nbsp&nbsp(이미지 크기는 100*50(px) 입니다.)";

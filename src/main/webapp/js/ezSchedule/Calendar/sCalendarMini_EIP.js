@@ -46,25 +46,14 @@ function CalendarMiniView(pTagetID) {
 		mTd1.setAttribute("style","position: relative; z-index: 999;");
         var mSpan = document.createElement("SPAN");
         mSpan.style.cursor = "pointer";
-        //mSpan.style.marginLeft = "6px";
-        //mSpan.style.marginTop = "4px";
-        var mImg = document.createElement("IMG");
-        
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mImg.setAttribute("src", "/images/ezNewPortal/theme3Img/calender_pre.png");
-        } else {
-        	mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
-        }
-        
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "preMonth()");
-        mSpan.appendChild(mImg);
+        mSpan.setAttribute("onclick", "preMonth()");
+        // var mImg = document.createElement("IMG");
+       	// mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");
+        // mImg.setAttribute("border", "0");
+        // mImg.setAttribute("onclick", "preMonth()");
+        // mSpan.appendChild(mImg);
         mTd1.appendChild(mSpan);
-        
-        /* 2023-06-08 홍승비 - 테마3 > 일정 포틀릿 상단 > 좌우이동 버튼과 년월 표기 순서 변경 */
-        if (Number($("#schedule_usedTheme").val()) !== 3) {
-        	mTr.appendChild(mTd1);
-        }
+       	mTr.appendChild(mTd1);
         
         var mTd2 = document.createElement("TD");
         mTd2.className = "calendar_mini_day"
@@ -118,18 +107,11 @@ function CalendarMiniView(pTagetID) {
         var curYear = sDate.getFullYear();
         var yText = document.createTextNode(curYear);
         
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	yText.textContent = curYear + strLangHSBScPt1 + " "; // "년 " 표기
-        }
+        yText.textContent = curYear + strLangHSBScPt1 + " ";
         
         iySpan.appendChild(yText);
 
-        mTd2.appendChild(iySpan);
-
-        if (Number($("#schedule_usedTheme").val()) !== 3) {
-	        var dotText = document.createTextNode(".");
-	        mTd2.appendChild(dotText);
-        }
+        mTd2.appendChild(iySpan);        
 
         var imSpan = document.createElement("SPAN");//년 월 select박스인것 바꿔야할듯
         imSpan.setAttribute("id", "iMon");
@@ -137,47 +119,28 @@ function CalendarMiniView(pTagetID) {
         var curMonth = sDate.getMonth() + 1;
         var mText = document.createTextNode(curMonth);
         
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mText.textContent = curMonth + strLangHSBScPt2; // "월" 표기
-        }
+        mText.textContent = curMonth;
         
         imSpan.appendChild(mText);
         
         mTd2.appendChild(imSpan);
         
-        if (Number($("#schedule_usedTheme").val()) !== 3) {
-        	mTr.appendChild(mTd2);
-        }
+       	mTr.appendChild(mTd2);
 
         var mTd3 = document.createElement("TD");
         mTd3.className = "btn_next";
 		mTd3.setAttribute("style","position: relative; z-index: 999;");
         var mSpan = document.createElement("SPAN");
         mSpan.style.cursor = "pointer";
-        //mSpan.style.marginRight = "6px";
-        //mSpan.style.marginTop = "4px";
-        var mImg = document.createElement("IMG");
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mImg.setAttribute("src", "/images/ezNewPortal/theme3Img/calender_next.png");
-        } else {
-        	mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
-        }
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "nextMonth()");
-        mSpan.appendChild(mImg);
+        mSpan.setAttribute("onclick", "nextMonth()");
+        // var mImg = document.createElement("IMG");
+       	// mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");
+        // mImg.setAttribute("border", "0");
+        // mImg.setAttribute("onclick", "nextMonth()");
+        // mSpan.appendChild(mImg);
         mTd3.appendChild(mSpan);
-        
-        if (Number($("#schedule_usedTheme").val()) !== 3) {
-        	mTr.appendChild(mTd3);
-        }
-
-        // 테마3 > 년월, 좌우이동버튼을 좌측에서부터 순서대로 표출
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mTr.appendChild(mTd2);
-        	mTr.appendChild(mTd1);
-        	mTr.appendChild(mTd3);
-        }
-
+       	mTr.appendChild(mTd3);
+       	
         mTable.appendChild(mTr);
         objElm.appendChild(mTable);
 
@@ -374,11 +337,15 @@ function DayOnMouseClick(event) {
     		$("#"+event.getAttribute("id")).parent().addClass('schedule');
     	}
     } else {
+        /* style 로 적용하던 부분 클래스로 스타일 수정(스킨 작업 또는 디자인 변경시 css로 수정 가능) - UIUX 조기완
     	if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
     		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","red");
     	} else {
     		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
     	}
+    	*/
+        $(".schedule_calendar .scalendar_mini td").removeClass("select");
+        $("#"+event.getAttribute("id")).parent().addClass("select");
     }
 	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
 	
@@ -506,7 +473,9 @@ function clickDay(val01) {
 	if (usedTheme == 3) {
 		$("#"+val01).parent().addClass('schedule');
     } else {
-    	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    	// $("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+        $(".schedule_calendar .scalendar_mini td").removeClass("select");
+        $("#"+val01).parent().addClass("select");
     } 
 	
     g_selTRID = $("#"+val01).parent().parent().attr("id");

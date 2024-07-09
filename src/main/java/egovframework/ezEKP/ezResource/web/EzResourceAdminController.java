@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezResource.web;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -122,6 +123,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		model.addAttribute("adminYN", adminYN);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("selectNo", selectNo);
+		model.addAttribute("selectedCompany", Optional.ofNullable(req.getParameter("selCompany")).orElse(userInfo.getCompanyID()));
 		return "admin/ezResource/resGwBoardListManageListLeft";
 	}
 	
@@ -488,6 +490,9 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String useOCS = config.getProperty("config.USE_OCS");
 		model.addAttribute("useOCS", useOCS);
 		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("company",
+				Optional.ofNullable(req.getParameter("company"))
+						.orElse(userInfo.getCompanyID()));
 		return "admin/ezResource/popup/resGwBoardPostRegBoardRight";
 	}
 	
