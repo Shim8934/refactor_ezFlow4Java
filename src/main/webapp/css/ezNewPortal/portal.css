@@ -1860,7 +1860,7 @@ div.orbit img{border-radius: 5px;}
 
 .noti_info{display:flex; justify-content:space-between; padding:0 20px;}
 .noti_view{overflow:hidden;}
-.noti_view span{float:left; height:34px; line-height:32px; padding:0 12px; color:#808080; font-size:14px; background:#EFF0F4; border-radius:17px; margin-right:8px;}
+.noti_view span{float:left; height:34px; line-height:32px; padding:0 12px; color:#808080; font-size:14px; background:#EFF0F4; border-radius:17px; margin-right:8px; box-sizing:border-box;}
 .noti_view span:last-child{margin-right:0;}
 .noti_view span em{color:#808080; margin-left:3px;}
 .noti_view span.on{background:#388CE5; color:#fff;}
@@ -1922,17 +1922,19 @@ div.orbit img{border-radius: 5px;}
 
 .filter_pop{position:absolute; border:1px solid #B7B7B7; border-radius:12px; background:#fff; z-index:10; width:338px; top:64px; left:25px;}
 .filter_pop .check_list{}
-.filter_pop .check_scroll{overflow-y:auto; max-height:240px;}
+.filter_pop .check_scroll{overflow-y:auto; max-height:240px; padding:15px 25px 10px;}
 .filter_pop .check_list h2{height:56px; line-height:56px; margin:0; padding:0 20px; font-size:17px; font-weight:bold; color:#000; border-bottom:1px solid #E6E6E6;}
-.filter_pop .check_list h3{margin:0; padding:0; font-size:16px; font-weight:500;}
+.filter_pop .check_list h3{margin:0; padding:0; font-size:15px; font-weight:500;}
 .filter_pop .check_list .check_ul{margin:10px 0; padding:0; list-style:none; overflow:hidden;}
 .filter_pop .check_list .check_ul li{float:left; width:33.333%; margin-bottom:10px;}
 .filter_pop .check_list .check_ul li .input_check input[type="checkbox"]{display:none;}
-.filter_pop .check_list .check_ul li .input_check input[type="checkbox"] + label{display:inline-block; position:relative; padding-left:26px; height:16px; line-height:14px; cursor:pointer; font-size:14px; color:#333; max-width:100%; box-sizing:border-box; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; vertical-align:top;}
+.filter_pop .check_list .check_ul li .input_check input[type="checkbox"] + label{display:inline-block; position:relative; padding-left:26px; height:16px; line-height:14px; cursor:pointer; font-size:14px; color:#000; max-width:100%; box-sizing:border-box; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; vertical-align:top;}
 .filter_pop .check_list .check_ul li .input_check input[type="checkbox"] + label:before{content:""; position:absolute; left:0; top:0; width:16px; height:16px; border:1px solid #ccc; border-radius:3px; background-color:#fff; box-sizing:border-box;}
 .filter_pop .check_list .check_ul li .input_check input[type="checkbox"]:checked + label:before{background:url(/images/ezNewPortal/bg_checkbox.png) no-repeat 2px center; background-color:#0075FF; border-color:#0075FF;}
-.filter_pop .reset{border-top:1px solid #e6e7e8; height:50px; line-height:48px; text-align:center; font-size:14px; color:#004b8e; text-decoration:underline; font-weight:500;}
-.filter_pop .reset span{cursor:pointer;}
+
+.filter_pop .noti_bot_btn{display:flex; justify-content:center; padding-bottom:18px;}
+.filter_pop .noti_bot_btn span{display:inline-block; width:135px; height:40px; line-height:38px; text-align:center; border-radius:6px; background:#EFEFEF; color:#737373; font-size:14px; margin-right:10px; cursor:pointer;}
+.filter_pop .noti_bot_btn span.ok{margin-right:0; background:#388CE5; color:#fff;}
 
 
 /* 프로필 */
@@ -2070,7 +2072,7 @@ div.orbit img{border-radius: 5px;}
 .top_info_area ul li .noti{width:100%; padding:0 15px 0 50px; background:url(/images/ezNewPortal/info_board.svg) no-repeat 15px center / 20px 20px; box-sizing:border-box;}
 .top_info_area ul li .noti .swiper_txt{white-space:nowrap; text-overflow:ellipsis; overflow:hidden; cursor:pointer; user-select:none; font-size:13px; color:#333;}
 
-.top_info_area ul li > span{display:inline-block; color:#333; font-size:13px; font-weight:500; padding:0 15px 0 40px; background-repeat:no-repeat; background-position:15px center; line-height:24px; cursor: pointer;}
+.top_info_area ul li > span{display:inline-block; color:#333; font-size:13px; font-weight:500; padding:0 0 0 25px; background-repeat:no-repeat; background-position:0 center; line-height:24px; cursor: pointer; margin:0 15px;}
 .top_info_area ul li > span.mail{background-image:url(/images/ezNewPortal/info_mail.svg); background-size:18px 14px;}
 .top_info_area ul li > span.appr{background-image:url(/images/ezNewPortal/info_appr.svg); background-size:20px 20px;}
 .top_info_area ul li > span.board{background-image:url(/images/ezNewPortal/info_board.svg); background-size:20px 20px;}
@@ -2258,6 +2260,6 @@ div.orbit img{border-radius: 5px;}
 
 
 /* 추후 삭제(임시) */
-.skin{position:absolute; right:34px; top:0;}
+.skin{position:absolute; right:34px; top:0; display:none;}
 .skin span{border:1px solid #cecece !important; color:#000 !important;}
 .skin span:hover{border-color:#388ce5 !important; color:#388ce5 !important;}
