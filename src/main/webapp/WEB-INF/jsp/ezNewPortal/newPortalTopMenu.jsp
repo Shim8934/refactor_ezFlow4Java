@@ -33,8 +33,7 @@
 				var skinCss = document.getElementById("skinCss");
 				var mainFrame = window.parent.document.getElementById("mainFrame").contentWindow;
 				var mainSkinCss = mainFrame.document.getElementById("mainSkinCss");
-				var notiFrame = window.parent.document.getElementById("iframeNoti").contentWindow;
-				var notiSkinCss = notiFrame.document.getElementById("notiSkinCss");
+				var mainSkinLink = document.createElement("link");
 				var themeId = mainFrame.document.querySelector(".mainbg");
 
 				if(skinCss){
@@ -50,23 +49,11 @@
 				if(mainSkinCss){
 					mainSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
 				} else {
-					skinLink = document.createElement("link");
-					skinLink.id = "mainSkinCss";
-					skinLink.rel = "stylesheet";
-					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
-					mainFrame.document.head.appendChild(skinLink);
+					mainSkinLink.id = "mainSkinCss";
+					mainSkinLink.rel = "stylesheet";
+					mainSkinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					mainFrame.document.head.appendChild(mainSkinLink);
 				}
-
-				if(notiSkinCss){
-					notiSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
-				} else {
-					skinLink = document.createElement("link");
-					skinLink.id = "notiSkinCss";
-					skinLink.rel = "stylesheet";
-					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
-					notiFrame.document.head.appendChild(skinLink);
-				}
-
 
 				if(skinId == "dark"){
 					document.querySelector(".logo img").src = "/images/ezNewPortal/skin/dark/logo_white.png";
@@ -130,7 +117,7 @@
 	</head>
 	<body>
 		<%-- ui 확인용 버튼(추후 삭제 예정)-조기완 --%>
-		<div class="skin_test" style="position:absolute; left:50%; top:0; transform:translateX(-50%); z-index:10000; display:none;">
+		<div style="position:absolute; left:50%; top:0; transform:translateX(-50%); z-index:10000; display:none;">
 			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('');">기본</span>
 			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer;" onclick="skin('dark');">다크</span>
 		</div>

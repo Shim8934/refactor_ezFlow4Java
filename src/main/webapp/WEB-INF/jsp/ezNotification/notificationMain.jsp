@@ -19,15 +19,10 @@
 	<div class="notification" onclick="hideFilter()">
         <div class="noti_header">
             <h3><spring:message code="ezNotification.hth01"/></h3>
-			<ul class="noti_btn_list">
-				<li class="noti_refresh" title="<spring:message code="ezNotification.hth02"/>" onclick="notiRefresh_onclick()"></li>	
-				<li class="noti_write"></li>
-				<li class="noti_filter" id="notFillterPopBtn" onclick="popUpNotFillter();"></li>
-			</ul>
-            
+            <span class="noti_refresh" title="<spring:message code="ezNotification.hth02"/>" onclick="notiRefresh_onclick()"></span>
         </div>
 
-        <div class="noti_search" style="display:none;">
+        <div class="noti_search">
             <div class="noti_search_input">
                 <input type="text" id="searchNotiContent" onkeypress="searchInput()" placeholder="<spring:message code='ezNotification.hth30'/>" onselectstart="event.cancelBubble=true;event.returnValue=true" maxlength="100" autocomplete="off">
                 <span onclick="searchOnClick()"></span>
@@ -73,7 +68,7 @@
         
         <div class="noti_info">
             <div class="noti_view">
-                <span class="on"><spring:message code="ezNotification.hth08"/><em id="notiTotalCount"></em></span>
+                <span><spring:message code="ezNotification.hth08"/><em id="notiTotalCount"></em></span>
                 <span><spring:message code="ezNotification.hth06"/><em id="notiUnreadCount"></em></span>
             </div>
             <div class="noti_btn">
@@ -83,14 +78,12 @@
         </div>
 
         <div class="noti_list_wrap">
-            <%-- 개발 필요 (noti_list_date & noti_list 가 한묶음 이 2개가 반복되면서 날짜 + 리스트 형태) --%>
-            <div class="noti_list_date"><span>2024.08.13 (화)</span></div>
             <ul class="noti_list" id="notiList" >
                 
             </ul>
         </div>
 
-		<div class="noti_paging" style="display:none;">
+        <div class="noti_paging">
             <span class="prev" onclick="moveNotiPage('down')"></span>
             <span class="page_num">
                 <input type="text" id="notiCurrentPage" autocomplete="off" value="1" onkeypress="return moveInputPage()">&nbsp;/&nbsp;<span  id="notiTotalPage"></span>
@@ -99,7 +92,7 @@
         </div>
         <div id="notiListProgress" style="position: relative; width: 100%; height: 639px; top: -640px; left: 0px; background-color: rgb(210, 210, 210); opacity: 0.4; z-index: 100; display: none;">
                <div style="top: 300px; left: 80px" id="MailProgress"></div>
-		</div>   
+           </div>   
     </div>
 	<span class="loadingLayer" style="z-index:6000;position:absolute;display:none;" id="loadingLayer"><span class="right"><img src="/images/email/progress_img.gif" width="150" height="30" ></span></span></span>
        	
@@ -173,21 +166,19 @@
 					str += 'onclick=\"updateNoti(\'read\'); openLink();\" ';
 					str += 'notiseq=\"' + noti.notiSeq +'\" viewtype=\"' + noti.viewType + '\" viewwidth=\"' + noti.viewWidth + '\" viewheight=\"' + noti.viewHeight + '\" ';
 					str += 'linkurl=\"' + linkUrl + '\" isread=\"' + noti.isRead + '\" mainType=\"' +noti.mainType.toLowerCase() + '\">'
-					str += '<dl><dt><i class=\"icon_' + noti.mainType.toLowerCase() + '\"></i>' + mainType[noti.mainType.toLowerCase()];
-					// str += noti.isRead == "Y" ? ' read\"></i>' : '\"></i>';
-                    str += '</dt><dd><span class=\"name\">' + noti.senderName + '</span>';
-                    str += '<span class=\"date\">' + noti.regDate.substring(11, 19) + '</span>';
-                    str += '</dd></dl>'
+					str += '<i class=\"icon_' + noti.mainType.toLowerCase();
+					str += noti.isRead == "Y" ? ' read\"></i>' : '\"></i>';
 					str += '<div class=\"list_info\">'
-					str += '<span class=\"read_point\"></span>'
 					str += '<p class=\"title ellipsis2\">'
-					// if (noti.mainType.toLowerCase() != "etc") {
-					// 	str += '<em>[' + mainType[noti.mainType.toLowerCase()] + ']</em>';
-					// 	str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : ' ';
-					// }
+					if (noti.mainType.toLowerCase() != "etc") {
+						str += '<em>[' + mainType[noti.mainType.toLowerCase()] + ']</em>';
+						str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : ' ';
+					}
 					str += ConvertCharToEntityReference(noti.notiContent) + '</p>';
-                    str += '<span class=\"list_del blind\" onclick="updateNoti(\'delete\')"></span>';
-                    str += '</div></li>';
+					
+					str += '<p class=\"desc\"><span>' + noti.senderName + '&nbsp;</span><span class=\"date\">' + noti.regDate.substring(0, 19) + '</span></p></div>';
+					str += '<span class=\"list_del blind\" onclick="updateNoti(\'delete\')"></span></li>';
+					
 				}
 		
 			}
