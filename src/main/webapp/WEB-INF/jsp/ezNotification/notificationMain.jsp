@@ -60,10 +60,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="noti_bot_btn">
-                <span onclick="filterAllSelect_onclick()"><spring:message code="ezNotification.hth09"/></span>
-                <span class="ok">확인</span>
-            </div>
+            <div class="reset"><span onclick="filterAllSelect_onclick()"><spring:message code="ezNotification.hth09"/></span></div>
         </div>
         
         <div class="noti_info">
