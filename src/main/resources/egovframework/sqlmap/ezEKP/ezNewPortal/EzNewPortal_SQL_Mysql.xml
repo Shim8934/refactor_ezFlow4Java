@@ -3066,11 +3066,20 @@ SELECT A.PORTLET_ID,
 		AND
 			A.portlet_id = #portletId#
 	]]>
-	<isNotEmpty property="lang" prepend="AND">
-		<![CDATA[
-			B.portlet_lang = #lang#
-		]]>
-	</isNotEmpty>
+		AND
+			B.portlet_lang in ('1'
+					, '2'
+					, '3'
+				<isEqual property="useChinese" compareValue="YES">
+					, '4'
+				</isEqual>
+				<isEqual property="useVietnamese" compareValue="YES">
+					, '5'
+				</isEqual>
+				<isEqual property="useIndonesian" compareValue="YES">
+					, '6'
+				</isEqual>
+			)
 </select>
 
 <select id="ezNewPortal.getPrimaryLangList" resultClass="String">
