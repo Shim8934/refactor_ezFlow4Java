@@ -41,6 +41,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
@@ -2982,65 +2984,22 @@ public class EzNewPortalGWController {
 			}
 			
 			for (PortletInfoVO pvo : portletList) {
-				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId(), lang);
+				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId());
 				
 				int menuNamesCount = portletNameList.size();
-				
 				if (menuNamesCount > 2) {
 					List<PortletNameInfoVO> portletNamesWithOrder = new ArrayList<PortletNameInfoVO>();
 					
-					if (menuNamesCount > 3 && menuNamesCount < 5) {
-						int[] langOrder = new int[4];
-						
-						if (primaryLang.equals("2")) {
-							langOrder[0] = 2;
-							langOrder[1] = 1;
-							langOrder[2] = 3;
-							langOrder[3] = 4;
-						} else if (primaryLang.equals("3")){
-							langOrder[0] = 3;
-							langOrder[1] = 1;
-							langOrder[2] = 2;
-							langOrder[3] = 4;
-						} else {
-							langOrder[0] = 1;
-							langOrder[1] = 2;
-							langOrder[2] = 3;
-							langOrder[3] = 4;
+					// 사용 언어가 가장 먼저 위치하도록 순서 조정.
+					portletNamesWithOrder.add(portletNameList.get(Integer.parseInt(primaryLang) - 1));
+					
+					for (PortletNameInfoVO vo : portletNameList) {
+						if (!vo.getPortletLang().equals(primaryLang)) {
+							portletNamesWithOrder.add(vo);
 						}
-						
-						for (int i = 0; i < langOrder.length; i++) {
-							int langIndex = langOrder[i] - 1;
-							
-							portletNamesWithOrder.add(portletNameList.get(langIndex));
-						}
-						pvo.setPortletNameList(portletNamesWithOrder);
 					}
-					else if (menuNamesCount > 2 && menuNamesCount < 4) {
-						int[] langOrder = new int[3];
-						
-						if (primaryLang.equals("2")) {
-							langOrder[0] = 2;
-							langOrder[1] = 1;
-							langOrder[2] = 3;
-						} else if (primaryLang.equals("3")){
-							langOrder[0] = 3;
-							langOrder[1] = 1;
-							langOrder[2] = 2;
-						} else {
-							langOrder[0] = 1;
-							langOrder[1] = 2;
-							langOrder[2] = 3;
-						}
-						
-						for (int i = 0; i < langOrder.length; i++) {
-							int langIndex = langOrder[i] - 1;
-							
-							portletNamesWithOrder.add(portletNameList.get(langIndex));
-						}
-						pvo.setPortletNameList(portletNamesWithOrder);
-					}
-					pvo.setPortletNameList(portletNameList);
+					
+					pvo.setPortletNameList(portletNamesWithOrder);
 				} 
 				else {
 					pvo.setPortletNameList(portletNameList);

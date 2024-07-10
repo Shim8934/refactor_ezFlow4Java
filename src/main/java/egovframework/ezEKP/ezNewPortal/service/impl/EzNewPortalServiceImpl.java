@@ -2819,12 +2819,16 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId, String lang) {
+	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId) throws Exception {
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("portletId", portletId);
+		
+		map.put("useChinese", ezCommonService.getTenantConfig("useChinese", tenantId));
+		map.put("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", tenantId));
+		map.put("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", tenantId));
 		
 		List<PortletNameInfoVO> portetList = ezNewPortalDAO.getPortletNameList(map);
 		
