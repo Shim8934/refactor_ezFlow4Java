@@ -1867,7 +1867,7 @@ div.orbit img{border-radius: 5px;}
 .noti_list li{padding:10px 20px; display:flex; flex-wrap:wrap; cursor:pointer; position:relative;}
 .noti_list li i{width:40px; height:40px; border-radius:40px; background-position:center; background-repeat:no-repeat; background-color:#388CE5; margin-right:15px;}
 .noti_list li .list_info{flex:1; padding-right:20px;}
-.noti_list li .list_info .title{color:#333; font-size:16px; font-weight:500; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; text-overflow:ellipsis; white-space:normal; margin:0; padding:0; overflow:hidden;}
+.noti_list li .list_info .title{color:#333; font-size:16px; font-weight:500; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; text-overflow:ellipsis; white-space:normal; margin:0; padding:0; overflow:hidden; word-break: break-all;}
 .noti_list li .list_info .desc{margin:4px 0 0;}
 .noti_list li .list_info .desc span{color:#999; font-size:14px; font-weight:500;}
 
