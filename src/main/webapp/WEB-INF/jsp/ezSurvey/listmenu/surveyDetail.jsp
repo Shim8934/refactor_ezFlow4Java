@@ -831,13 +831,16 @@
 						alert(id + SurveyMessages.writeOthers);
 					}
 				}
-				optionId['optionId'] = optId;
-				optionId['responseId'] = responseId;
-				answer.push(optionId);
-				answerObj['answers'] = answer;
-				answerObj['type'] = type;
-				answerObj['questionLevel'] = id;
-				resposeObj.responses.push(answerObj);
+
+				if (result !== "fail") {
+					optionId['optionId'] = optId;
+					optionId['responseId'] = responseId;
+					answer.push(optionId);
+					answerObj['answers'] = answer;
+					answerObj['type'] = type;
+					answerObj['questionLevel'] = id;
+					resposeObj.responses.push(answerObj);
+				}
 			}
 			
 			return result;
