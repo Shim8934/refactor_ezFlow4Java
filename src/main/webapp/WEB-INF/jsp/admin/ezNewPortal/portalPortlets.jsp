@@ -612,11 +612,8 @@
 						}
 
 						if (!result[i].general) {
-							if (menuId == '3') {
-								listHTML += getCabinetTypeRowStr(portletURL, portletId);
-							} else {
-								listHTML += getBoardViewTypeRowStr(portletURL, portletId);
-							}
+							listHTML += getCabinetTypeRowStr(portletURL, portletId);
+							listHTML += getBoardViewTypeRowStr(portletURL, portletId);
 						} else if (isFixBoardPortlet(portletCode)) {
 							listHTML += getFixBoardKeyRowStr(portletURL, portletId);
 						}
