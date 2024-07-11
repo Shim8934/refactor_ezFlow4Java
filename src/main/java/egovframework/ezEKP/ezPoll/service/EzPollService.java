@@ -30,7 +30,7 @@ public interface EzPollService {
 
 	public List<PollQuestionVO> getQuestionByDeptId(String dept_id, int tenantID) throws Exception;
 
-	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary, String mode) throws Exception;
+	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, String deptID, int tenantID, String searchStr, String primary, String mode) throws Exception;
 
 	public List<Integer> getHiddenQuestionIds(String userID, int tenantId, String companyID) throws Exception;
 

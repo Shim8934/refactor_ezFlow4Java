@@ -13,6 +13,8 @@ import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +33,8 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -93,6 +97,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
     @Autowired
     private EzPersonalDAO ezPersonalDAO; // 2021-11-01 이사라 추가
+    
+    @Autowired
+    private EzNewPortalDAO ezNewPortalDAO;
     
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
@@ -810,7 +817,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				map1.put("topMenuLogoJaUUID", UUID.randomUUID().toString());
 				map1.put("topMenuLogoEnUUID", UUID.randomUUID().toString());
 				map1.put("PrimaryLang", ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()));
-				
+				map1.put("menuType", "0");
 				for (int i = 0; i < 112; i++) {
 					map1.put("menuItemUUID"+String.valueOf(i), UUID.randomUUID().toString());
 				}
@@ -865,6 +872,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_IJHS1(map1);
 				//차량관리 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_I33(map1);
+				
+				PortalTopVO portalTopVO = new PortalTopVO();
+				portalTopVO.setCompanyID(cn);
+				portalTopVO.setTenantID(tenantID);
+				portalTopVO.setType(0);
+				ezNewPortalDAO.insertTopMenuDisplayModeForCompany(portalTopVO); // 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
@@ -3512,5 +3525,32 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public int retireUserCountCheck(String cn, int tenantID) throws Exception {
 		return ezOrganAdminDao.retireUserCountCheck(cn, tenantID);
+	}
+
+	@Override
+	public Optional<String> getJobIdForFirstUser(String userId, int tenantId) throws Exception {
+		List<OrganUserVO> allUserInfo = ezOrganService.getAllUserinfo(userId, tenantId);
+		return Optional.ofNullable(allUserInfo.get(0).getJobID());
+	}
+
+
+	/**
+	 * 일반적인 관리자의 관리 회사 리스트를 불러온다.
+	 * @param id      the ID of the admin user
+	 * @param tenantID the ID of the tenant
+	 * @param primary  the primary parameter
+	 * @return 전체관리자 - 모든 회사 리스트 / 회사관리자 - 권한이 있는 회사리스트
+	 * @throws Exception if an error occurs while retrieving the company list
+	 */
+	public List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary) throws Exception {
+		List<OrganDeptVO> list = getCompanyList(primary, tenantID);
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(id, tenantID);
+
+        if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER, "")) {
+            list.removeIf(vo -> !organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn()));
+        }
+
+        return list;
 	}
 }

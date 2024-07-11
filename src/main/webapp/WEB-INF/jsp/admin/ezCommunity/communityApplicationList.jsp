@@ -152,7 +152,8 @@
 						pageNum     : pCurPage,
 						searchType  : document.getElementsByName("cCateA")[0].value, // 카테고리 종류
 						searchType2  : searchType2.options[searchType2.selectedIndex].value, // 커뮤니티 검색옵션
-						searchValue : make_searchstring(document.getElementById("searchValue").value) // 검색값
+						searchValue : make_searchstring(document.getElementById("searchValue").value), // 검색값
+						companyID : encodeURIComponent(companySelectID)
 					},
 					success : function (data) {
 						pCurPage   = data.pageNum;
@@ -607,10 +608,18 @@
 				
 				return retVal;
 			}
+
+			function changeCompany() {
+				document.getElementById("searchValue").value = "";
+				applicationCommuList();
+			}
+
 		</script>
 	</head>
 <body class="mainbody">
-	<h1><spring:message code = 'ezCommunity.khj06' /></h1>
+	<h1><spring:message code = 'ezCommunity.khj06' />
+		<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
+	</h1>
 	
 	<div class="portlet_tabpart01">
 		<div class="portlet_tabpart01_top" id="tab1">

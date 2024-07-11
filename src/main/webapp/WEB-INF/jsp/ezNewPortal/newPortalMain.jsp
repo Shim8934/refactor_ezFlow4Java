@@ -7,6 +7,7 @@
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="shortcut icon" href="/images/favicon.ico">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <%-- 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css"> --%>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
@@ -74,12 +75,12 @@
 	     	var memoDelay = 200;
 	     	var memoPrevent = false;
 	     	
-			topHeight = "56";
+			topHeight = "60";
 
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
+		        document.getElementById("topFrame").style.height = document.documentElement.clientHeight + "px";
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
-		        // 컨텍스트 메뉴 관련
 		        //contextMenuRePosition();
 		    }
 
@@ -130,8 +131,14 @@
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
-		<div style="height:56px;"><iframe src="/ezNewPortal/newPortalTopMenu.do" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;min-height:1080px;" frameborder="0"></iframe></div>
-		<iframe src="<c:out value='${mainUrl }'/>" name="main" id="mainFrame" style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;height:100%;overflow:auto;" frameborder="0" allowfullscreen="true"></iframe>
+		<div id="iframeShawdowLayer" class="iframeShawdowLayer" onclick = "hidefunc()" style="display: none; width:100vw; right:0;">
+			<div id="myNotificationUL" style="padding: 0px; margin: 0px;  width: 390px; height: 603px; right: 50px; z-index:20; position:absolute;">
+				<iframe id="iframeNoti" style="width:100%; height:603px;" frameborder="0" scrolling="NO" src="/ezNotification/notificationMain.do">
+				</iframe>
+			</div>
+		</div>
+		<div style="height:60px;"><iframe src="/ezNewPortal/newPortalTopMenu.do" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
+		<iframe src="<c:out value='${mainUrl }'/>" name="main" id="mainFrame" style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;overflow:auto;" frameborder="0" allowfullscreen="true"></iframe>
 		<%-- <div style="height:${topHeight}px"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
 		<iframe src="${mainUrl}" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe> --%>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
@@ -141,11 +148,11 @@
 		<div id="popupArea"><div id="noticePopupLayer"></div></div>
 		<div id="noticePopupArea"></div>
   		<div id="contextMenuBlock" class="contextMenuBlock" <c:if test="${useContextmenu eq 'NO'}">style="display:none" </c:if>>
-			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;visibility:hidden;">
+			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;">
 				<div class="contextMenu"></div>
 				
 			</div>
-			<div id="popupMenuBtn" class="popupMenuBtn" style="display: block;visibility:hidden;">
+			<div id="popupMenuBtn" class="popupMenuBtn" style="display: block;">
 				<div id="quickMenuBtn" class="quickMenuBtn">
 					<span class="quickMenuTop_memo"><img src="/images/ezNewPortal/quick01.png"></span>
 					<span class="quickMenuMiddle_memo"><img src="/images/ezNewPortal/quick02.png"><img src="/images/ezNewPortal/quick03.png"></span>
@@ -204,7 +211,7 @@
 	<script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
   	<script type="text/javascript">
 
-		createContextMenu("${userDeptId}");
+		if(!!createContextMenu) createContextMenu("${userDeptId}");
 		
 	 	$(window).resize(function() {
 	 		//browserResize();
@@ -215,7 +222,7 @@
 	 		
 	 		clearTimeout(window.resizedFinished);
 		    window.resizedFinished = setTimeout(function(){
-		        setContextMenuGadgetPosition();
+		        //setContextMenuGadgetPosition();
 		    }, 750);	 		
 		    
 	 	});	
@@ -328,13 +335,20 @@
 	    		$(".noteBlock").css("pointer-events", "none");
 	    		$(".noteBlock").css("display", "none");
 	    	}
-	    });		
+	    });
+	 	
+	 	function hidefunc() {
+            document.getElementById("iframeShawdowLayer").style.display = "none";
+        }
+	 	
 	</script>
 	<!-- 컨텍스트 메뉴 관련 끝 -->	    	
 	<script type="text/javascript">
     	var Main_DialogArguments = new Array();
     	var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
     	/* var MainHeight = document.documentElement.clientHeight - parseInt("${topHeight}"); */
+    	
+    	document.getElementById("topFrame").style.height = document.documentElement.clientHeight + "px";
     	document.getElementById("mainFrame").style.height = MainHeight + "px";
 	</script>
 </html>

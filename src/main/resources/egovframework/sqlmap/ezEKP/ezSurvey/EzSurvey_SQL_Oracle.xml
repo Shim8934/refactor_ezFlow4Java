@@ -1623,4 +1623,22 @@
 		AND
 			TENANT_ID = #tenantId#
 	</update>
+	
+	<select id="EzSurveyDAO.comfirmSurveyDeletion" parameterClass="map" resultClass="boolean">
+	SELECT
+		COUNT(*)
+	FROM
+		TBL_SURVEY
+	WHERE
+		SURVEY_ID IN <iterate property="surveyList" open="(" close=")" conjunction=",">#surveyList[]#</iterate>
+	AND
+		COMPANY_ID = #companyId#
+	AND
+		TENANT_ID = #tenantId#
+	AND
+		USE_STATUS = 0
+	AND
+		DELETE_USER IS NOT NULL
+	</select>
+	
 </sqlMap>

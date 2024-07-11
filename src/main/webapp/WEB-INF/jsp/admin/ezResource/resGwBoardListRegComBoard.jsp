@@ -150,7 +150,7 @@
 		         그럴 경우 아무 액션을 하지 않고 바로 좌측 메뉴의 "분류이동"을 클릭 하게 되면 선택한 자원의 값이 없기 때문에 빨간창 오류가 발생함.
 		         오류가 난 상태에서 좌측 "일반설정"을 다시 클릭해도 선택 값이 없어서 빨간창 오류 발생.
 		        */
-			    	window.parent.board_menu.location.href = "/admin/ezResource/gwBoardListManagelistLeft.do?flag=SELECT_YES"; //flag=SELECT_NO -> SELECT_YES
+			    	window.parent.board_menu.location.href = "/admin/ezResource/gwBoardListManagelistLeft.do?flag=SELECT_YES&selCompany=" + pCompanyID; //flag=SELECT_NO -> SELECT_YES
 				}
 			}
 

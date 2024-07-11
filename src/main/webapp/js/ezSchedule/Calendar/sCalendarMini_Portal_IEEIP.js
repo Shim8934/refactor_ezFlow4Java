@@ -44,7 +44,6 @@ function CalendarMiniView(pTagetID) {
 	        mTable.setAttribute("cellpadding", "0");
 	        mTable.setAttribute("cellspacing", "0");
 	        mTable.setAttribute("border", "0");
-	        mTable.setAttribute("style", "margin: 10px 10px; padding: 0px 25px 0px 3px;");
 	        mTable.setAttribute("width", "100%");
 	        var mTr = document.createElement("TR");
 

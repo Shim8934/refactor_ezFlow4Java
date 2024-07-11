@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -80,9 +81,13 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -113,10 +118,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	private EzCommonService ezCommonService;
 	
 	@Autowired
+	private EzNotificationService ezNotificationService;
+	
+	@Autowired
 	private EgovFileScrty egovFileScrty;
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzPersonalService ezPersonalService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityServiceImpl.class);
 	
@@ -3774,7 +3785,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	strPath = commonUtil.detectPathTraversal(strPath);
         	
         	/* 2021-06-28 홍승비 - mode가 write이고 no가 존재하는 답변 공지사항 등록 시, 부모 no 데이터를 UPPERNO 칼럼에 저장하도록 수정 */
-        	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, no, userInfo.getTenantId());
+			String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+			bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, companyID, userInfo.getId(), userNm, userNm2, title, maxIdFieldName, no, userInfo.getTenantId());
         	
         	try (PrintWriter pw = new PrintWriter(new File(strPath))) {
         		//File dir = new File(commonUtil.detectPathTraversal(dirPath));
@@ -4448,7 +4460,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String commOutOk(String loginCookie, String code, String reason) throws Exception {
+	public String commOutOk(HttpServletRequest request, String loginCookie, String code, String reason) throws Exception {
 		logger.debug("commOutOk started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -4474,7 +4486,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			ezCommunityDAO.commOutOkInsert(map);
 			
 			strReturn = "<RETURN><VALUE>1</VALUE></RETURN>";
-			commOutOkSendMail(loginCookie, userInfo, code, reason);
+			commOutOkSendMail(request, loginCookie, userInfo, code, reason);
 		}
 
 		logger.debug("commOutOk ended. strReturn=" + strReturn);
@@ -7480,7 +7492,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public void joinOkSendMail(String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception {
+	public void joinOkSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception {
 		logger.debug("joinOkSendMail started.");
 		
 		int tenantID = userInfo.getTenantId();
@@ -7500,14 +7512,17 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (vo.getEmail() != null) {
 			String subject = "";
 			String bodyContent = "";
+			String notiSubType = "";
 			// 2023-08-18 황인경 - 커뮤니티 > 사용자 가입시 관리자가 받는 메일 제목, 본문 수정
 			if (clubVO.getC_ClubConfirmType().equals("3")) {
 				subject = "[" + clubVO.getC_ClubName() + "]" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
 				bodyContent += "[" + clubVO.getC_ClubName() + "]" + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
 				bodyContent += "<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t1533", userInfo.getLocale());
+				notiSubType = "APPLY";
 			} else {
 				subject = "[" + clubVO.getC_ClubName() + "]" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
 				bodyContent += "[" + clubVO.getC_ClubName() + "]" + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
+				notiSubType = "JOIN";
 			}
 			
 //			if (clubVO.getC_ClubConfirmType().equals("3")) {
@@ -7532,13 +7547,18 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	//logger.debug("from = " + userInfo.getEmail());
         	//logger.debug("to = " + vo.getEmail());
         	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	
+        	String linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + clubVO.getC_ClubNo();
+        	String linkUrlMobile = "";
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), clubMasterID, "COMMUNITY", notiSubType, clubVO.getC_ClubName(), "popup", "1300", "900", linkUrl, linkUrlMobile, "notChkSetting");
+			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
         }
 		
 		logger.debug("joinOkSendMail ended.");
 	}
 	
 	/* 2018-07-18 - 탈퇴신청 메일 보낼 시 마스터 셀렉트에 companyID 조건 추가 */
-	public void commOutOkSendMail(String loginCookie, LoginVO userInfo, String code, String reason) throws Exception {
+	public void commOutOkSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, String code, String reason) throws Exception {
 		logger.debug("commOutOkSendMail started.");
 		
         Map<String, Object> map = new HashMap<String, Object>();
@@ -7565,13 +7585,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	to.setAddress(vo.getEmail());
         	
         	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	
+        	String notiSubType = "WITHDRAWAL";
+        	String linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + code;
+        	String linkUrlMobile = "";
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), vo.getC_SysopID(), "COMMUNITY", notiSubType, vo.getC_ClubName(), "popup", "1300", "900", linkUrl, linkUrlMobile, "notChkSetting");
+			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
         }
         
         logger.debug("commOutOkSendMail ended.");
 	}
 
 	@Override
-	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception {
+	public void okNoSetSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception {
 		logger.debug("okNoSetSendMail started.");
 		
         Map<String, Object> map = new HashMap<String, Object>();
@@ -7584,29 +7610,38 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         //logger.debug("C_ClubName=" + cvo.getC_ClubName() + ", email=" + uvo.getMail());
         
         if (uvo.getMail() != null) {
+        	String notiSubType = "MEMBER_ADMIT";
         	String subName = egovMessageSource.getMessage("ezCommunity.t1534", userInfo.getLocale());
             String bodyName = egovMessageSource.getMessage("ezCommunity.t1536", userInfo.getLocale());
             
             if (flag.toUpperCase().equals("NO")) {
             	subName = egovMessageSource.getMessage("ezCommunity.t1535", userInfo.getLocale());
             	bodyName = egovMessageSource.getMessage("ezCommunity.t1537", userInfo.getLocale());
+            	notiSubType = "MEMBER_REJECT";
+            }
+            
+            if (!ezPersonalService.hasNotiDiableItem(cID, NotiType.fromString("COMMUNITY_" + notiSubType), NotiPlatform.MAIL, userInfo.getTenantId())) {
+	        	String subject = "[" + cvo.getC_ClubName() + "] " + subName;
+	
+	        	String bodyContent = "[" + cvo.getC_ClubName() + "] " + bodyName;
+	        	
+	        	String content = commonUtil.createNotiMailContent(bodyContent, userInfo.getTenantId(), userInfo.getLocale());
+	        	
+	        	InternetAddress from = new InternetAddress();
+	        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	        	from.setAddress(userInfo.getEmail());
+	        	
+	        	InternetAddress to = new InternetAddress();
+	        	to.setPersonal(uvo.getDisplayName(), "UTF-8");
+	        	to.setAddress(uvo.getMail());
+	        	
+	        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
             }
         	
-        	String subject = "[" + cvo.getC_ClubName() + "] " + subName;
-
-        	String bodyContent = "[" + cvo.getC_ClubName() + "] " + bodyName;
-        	
-        	String content = commonUtil.createNotiMailContent(bodyContent, userInfo.getTenantId(), userInfo.getLocale());
-        	
-        	InternetAddress from = new InternetAddress();
-        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        	from.setAddress(userInfo.getEmail());
-        	
-        	InternetAddress to = new InternetAddress();
-        	to.setPersonal(uvo.getDisplayName(), "UTF-8");
-        	to.setAddress(uvo.getMail());
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	String linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + code;
+        	String linkUrlMobile = "";
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), cID, "COMMUNITY", notiSubType, cvo.getC_ClubName(), "popup", "1300", "900", linkUrl, linkUrlMobile, "");
+			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
         }
         
         logger.debug("okNoSetSendMail ended.");
@@ -7753,7 +7788,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	/* 커뮤니티 답변메일 -> 보낼 당시에 a링크로 박힌다. 받고 나서 처리하자. */
 	@Override
-	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception {
+	public void sendReplyNoticeMail(HttpServletRequest request, String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception {
 		logger.debug("sendReplyNoticeMail started.");
 		//logger.debug("boardID = " + boardID + " || itemID = " + itemID + " || itemTreeID = " + itemTreeID);
 		
@@ -7793,20 +7828,46 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	
         	// 가장 첫번째 부모글을 작성한 사람에게 메일을 발송 (itemTreeID 잘라서 사용)
         	OrganUserVO uvo = sendReplyNoticeMail(boardID, itemTreeID.substring(0, 38), userInfo.getTenantId());
+
+        	if (!ezPersonalService.hasNotiDiableItem(uvo.getCn(), NotiType.fromString("COMMUNITY_REPLY"), NotiPlatform.MAIL, userInfo.getTenantId())) {
+	        	// 가입승인된 사용자에게만 메일을 발송하도록 작성자의 이메일로 체크 (커뮤니티 탈퇴했다면 게시물 접근권한 없으므로 메일 발송 안함)
+	        	InternetAddress to = new InternetAddress();
+	        	boolean chkUser = checkUserInCommunity(boardInfo.getC_ClubNo(), uvo.getCn(), userInfo.getTenantId());
+				if (chkUser == true) {
+					to.setPersonal(uvo.getDisplayName(), "UTF-8");
+		        	to.setAddress(uvo.getMail());
+		        } else {
+		        	return;
+		        }
+				
+				//logger.debug("from = " + userInfo.getEmail());
+	        	//logger.debug("to = " + uvo.getMail());
+	        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	}
         	
-        	// 가입승인된 사용자에게만 메일을 발송하도록 작성자의 이메일로 체크 (커뮤니티 탈퇴했다면 게시물 접근권한 없으므로 메일 발송 안함)
-        	InternetAddress to = new InternetAddress();
-        	boolean chkUser = checkUserInCommunity(boardInfo.getC_ClubNo(), uvo.getCn(), userInfo.getTenantId());
-			if (chkUser == true) {
-				to.setPersonal(uvo.getDisplayName(), "UTF-8");
-	        	to.setAddress(uvo.getMail());
-	        } else {
-	        	return;
-	        }
-        	
-        	//logger.debug("from = " + userInfo.getEmail());
-        	//logger.debug("to = " + uvo.getMail());
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	String boardType = boardInfo.getGubun();
+    		String linkUrl = "";
+    		String linkUrlMobile = "";
+    		
+    		String tempItemID = encodeURIComponent(itemID);
+    		String tempBoardID = encodeURIComponent(boardID);
+    		
+    		switch (boardType) {
+    		case "3":
+    		case "4":
+    			linkUrl += "/ezCommunity/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+    			break;
+    		case "7":
+    			linkUrl += "/ezCommunity/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+    			break;
+    		default:
+    			linkUrl += "/ezCommunity/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID) + "&code=" + boardInfo.getC_ClubNo();
+    			break;
+    		}
+    		
+        	String notiSubType = "REPLY";
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), uvo.getCn() , "COMMUNITY", notiSubType, boardInfo.getBoardName() + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
+			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
 			
 		}
 		
@@ -7921,5 +7982,20 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("checkUserInCommunity ended, result = " + result);
 		return result;
+	}
+	
+	// 2023-12-07 한태훈 - java에서 encodeURIComponent 메소드 구현
+	@Override
+	public String encodeURIComponent(String s) throws Exception {
+	    String result = null;
+    	result = URLEncoder.encode(s, "UTF-8")
+                         .replaceAll("\\+", "%20")
+                         .replaceAll("\\%21", "!")
+                         .replaceAll("\\%27", "'")
+                         .replaceAll("\\%28", "(")
+                         .replaceAll("\\%29", ")")
+                         .replaceAll("\\%7E", "~");
+	 
+	    return result;
 	}
 }

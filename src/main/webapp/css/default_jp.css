@@ -3967,3 +3967,5 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
     background-clip: padding-box;
     border: 2px solid transparent;
 }
+
+.resetBtn {line-height: 0px;}

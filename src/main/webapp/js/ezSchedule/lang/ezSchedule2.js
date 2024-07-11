@@ -139,6 +139,7 @@ var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Group Schedule";
 var strLang130_1 = "Group";
+var strLang131 = "Show on top";
 
 var strLang253 = "Do not have the resources selected."
 var strLang254 = "The selected resource can not be deleted."
@@ -214,7 +215,7 @@ var strLang127_2 = "Company";
 var strLang130_2 = "Group";
 var strLang131_2 = "Collabo";
 var strLang141_2 = "Google";
-var strLangHSBScPt1 = "-";
+var strLangHSBScPt1 = ".";
 var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "";
 

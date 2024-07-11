@@ -986,9 +986,9 @@
 	
 	<insert id="EzCommonDAO.insertPortletComp">
 		INSERT INTO TBL_PORTAL_PORTLET_COMP 
-			(COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) 
+			(COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID, CONNECTION_URL)
 		VALUES 
-			(#companyId#, #tenantId#, #portletId#, #menuId#, #portletUsed#, #portletOrder#, #boardId#)
+			(#companyId#, #tenantId#, #portletId#, #menuId#, #portletUsed#, #portletOrder#, #boardId#, #connectionUrl#)
 	</insert>
 	
 	<insert id="EzCommonDAO.insertRsPortletName">
@@ -1008,7 +1008,7 @@
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 			VALUES (#portletId#, #menuId#, 1, #tenantId#, #companyId#, '개인폴더')			
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Personal Folder')			
+			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'My Folder')
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 			VALUES (#portletId#, #menuId#, 3, #tenantId#, #companyId#, 'Webフォルダ')
 		SELECT *
@@ -2580,6 +2580,12 @@
 			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Chart')
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
 			VALUES (#portletId#, #menuId#, 3, #tenantId#, #companyId#, '図表')
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 4, #tenantId#, #companyId#, '図表')
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 5, #tenantId#, #companyId#, 'Chart')
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 6, #tenantId#, #companyId#, 'Chart')
 		SELECT *
 		FROM DUAL
 	</insert>
@@ -4633,4 +4639,263 @@
 		  AND
 			COMPANYID = #companyId#
 	</delete>
+
+	<select id="EzCommonDAO.checkTblPortalPortletSize" resultClass="Integer">
+		SELECT SIZE_ID FROM TBL_PORTAL_PORTLET_SIZE WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.createPortalPortletSize">
+		CREATE TABLE TBL_PORTAL_PORTLET_SIZE
+		(
+			SIZE_ID    NUMBER NOT NULL
+				CONSTRAINT PK_TBL_PORTAL_PORTLET_SIZE
+					PRIMARY KEY,
+			CLASS_SIZE VARCHAR2(100)
+		)
+	</statement>
+
+	<statement id="EzCommonDAO.createPortalPortletCompanySize">
+		CREATE TABLE TBL_PORTAL_PORTLET_COMPANY_SIZE
+		(
+			TENANT_ID    NUMBER        NOT NULL,
+			COMPANY_ID   NVARCHAR2(100) NOT NULL,
+			PORTLET_ID   NUMBER        NOT NULL,
+			THEME_ID     NUMBER        NOT NULL,
+			SIZE_ID      NUMBER        NOT NULL
+				CONSTRAINT FK_TBL_PORTAL_PORTLET_COMPANY_SIZE
+					REFERENCES TBL_PORTAL_PORTLET_SIZE,
+			DEFAULT_FLAG NUMBER,
+			CONSTRAINT PK_TBL_PORTAL_PORTLET_COMPANY_SIZE
+				PRIMARY KEY (TENANT_ID, COMPANY_ID, THEME_ID, PORTLET_ID, SIZE_ID)
+		)
+	</statement>
+
+	<statement id="EzCommonDAO.createPortalPortletUserSize">
+		CREATE TABLE TBL_PORTAL_PORTLET_USER_SIZE
+		(
+			USER_ID    NVARCHAR2(100) NOT NULL,
+			TENANT_ID  NUMBER        NOT NULL,
+			COMPANY_ID NVARCHAR2(100) NOT NULL,
+			PORTLET_ID NUMBER        NOT NULL,
+			THEME_ID   NUMBER        NOT NULL,
+			SIZE_ID    NUMBER
+				CONSTRAINT FK_TBL_PORTAL_PORTLET_USER_SIZE_TBL_PORTAL_PORTLET_SIZE_SIZE_ID
+					REFERENCES TBL_PORTAL_PORTLET_SIZE,
+			CONSTRAINT PK_TBL_PORTAL_PORTLET_USER_SIZE
+				PRIMARY KEY (TENANT_ID, COMPANY_ID, THEME_ID, PORTLET_ID, USER_ID)
+		)
+	</statement>
+
+	<insert id="EzCommonDAO.insertUsePortletSize">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (0, 'usePortletSize', 'Y', 'Y: 사용 N: 사용안함 (default: N)', '포탈 포틀릿 커스텀 사이즈 사용 여부', TO_DATE('2023-11-20 00:00:00','yyyy-mm-dd hh24:mi:ss'), '포탈')
+	</insert>
+
+	<insert id="EzCommonDAO.insertPortalPortletSizeDefault">
+		INSERT ALL
+			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (0, 'one_by_one')
+			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (1, 'two_by_one')
+			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (2, 'one_by_two')
+		SELECT * FROM DUAL
+	</insert>
+
+	<select id="EzCommonDAO.checkTblPortalTopUser" resultClass="String">
+		SELECT 1 FROM TBL_PORTAL_TOP_USER WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblPortalTopUser">
+		CREATE TABLE TBL_PORTAL_TOP_USER
+		(
+			USER_ID    VARCHAR2(100)       NOT NULL,
+			TENANT_ID  NUMBER(5) DEFAULT 0 NOT NULL,
+			COMPANY_ID VARCHAR2(100)       NOT NULL,
+			TYPE       NUMBER(5) DEFAULT 0 NOT NULL,
+			CONSTRAINT TBL_PORTAL_TOP_USER
+				PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblRealTimeNotification">
+		<![CDATA[
+		SELECT NOTISEQ FROM TBL_REALTIME_NOTIFICATION WHERE ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblRealTimeNotification">
+		CREATE TABLE tbl_realtime_notification (
+		    NOTISEQ NUMBER(20) NOT NULL,
+		    USERID VARCHAR2(80) NOT NULL,
+		    MAINTYPE VARCHAR2(20) NOT NULL,
+		    SUBTYPE VARCHAR2(20),
+		    NOTICONTENT VARCHAR2(3000),
+		    SENDERID VARCHAR2(80),
+		    SENDERNAME VARCHAR2(100),
+		    REGDATE DATE,
+		    ISREAD CHAR(1) DEFAULT 'N',
+		    READDATE DATE,
+		    ETCDATA VARCHAR2(400),
+		    ISDELETE CHAR(1) DEFAULT 'N',
+		    DELETEDATE DATE,
+		    LINKURL VARCHAR2(4000),
+		    LINKURL_MOBILE VARCHAR2(4000),
+		    VIEWTYPE VARCHAR2(10),
+		    VIEWWIDTH NUMBER(11),
+		    VIEWHEIGHT NUMBER(11),
+		    TENANT_ID NUMBER(5) NOT NULL,
+		    COMPANYID VARCHAR2(200),
+		    CONSTRAINT PK_TBL_REALTIME_NOTIFICATION
+		    PRIMARY KEY (NOTISEQ,TENANT_ID)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.getNotiStoragePeriodConfig" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			PROPERTY_NAME = 'notiStoragePeriod'
+	]]>
+	</select>
+
+	<insert id="EzCommonDAO.addNotiStoragePeriodConfig"  parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, TO_DATE(#regdate#, 'YYYY-MM-DD HH24:MI:SS'), #configType#)
+	</insert>
+
+	<select id="EzCommonDAO.getNotiPollingIntervalConfig" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			PROPERTY_NAME = 'notiPollingInterval'
+	]]>
+	</select>
+
+	<insert id="EzCommonDAO.addNotiPollingIntervalConfig"  parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, TO_DATE(#regdate#, 'YYYY-MM-DD HH24:MI:SS'), #configType#)
+	</insert>
+
+	<select id="EzCommonDAO.checkTblPortalTopCompany" resultClass="String">
+		SELECT 1 FROM TBL_PORTAL_TOP_COMPANY WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblPortalTopCompany">
+		CREATE TABLE TBL_PORTAL_TOP_COMPANY
+		(
+			COMPANY_ID VARCHAR2(100)       NOT NULL,
+			TYPE       NUMBER(5) DEFAULT 0 NOT NULL,
+			TENANT_ID  NUMBER(5) DEFAULT 0 NOT NULL,
+			CONSTRAINT PK_TBL_PORTAL_TOP_COMPANY
+				PRIMARY KEY (COMPANY_ID, TENANT_ID)
+		)
+	</statement>
+
+    <select id="EzCommonDAO.checkQuickLinkCompanyID">
+		<![CDATA[
+        SELECT
+            COMPANYID
+        FROM
+            TBL_PS_QUICKLINK
+        WHERE
+            ROWNUM <= 1
+        ]]>
+	</select>
+
+    <statement id="EzCommonDAO.addQuickLinkCompanyID">
+        ALTER TABLE
+            TBL_PS_QUICKLINK
+            ADD
+                COMPANYID varchar(20) DEFAULT 'Top' NOT NULL
+    </statement>
+
+	<select id="EzCommonDAO.checkUserThemePagination">
+		<![CDATA[
+		SELECT	USEPAGING
+		FROM	TBL_PORTAL_THEME_USER
+		WHERE
+            ROWNUM <= 1
+        ]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterUserThemePagination">
+		ALTER TABLE
+			TBL_PORTAL_THEME_USER
+		ADD
+			USEPAGING	NUMBER(1)	DEFAULT	1	NOT NULL
+	</statement>
+
+	 <select id="EzCommonDAO.checkThemeInformation" resultClass="string">
+    	SELECT
+    		THEME_CONTENT
+    	FROM
+    		TBL_PORTAL_THEME
+    	WHERE
+    		THEME_ID=1
+    </select>
+
+    <update id="EzCommonDAO.alterThemeInformation" parameterClass="Map">
+    	<![CDATA[
+			UPDATE
+					TBL_PORTAL_THEME
+			SET
+					THEME_CONTENT = #themeContent1#,
+					THEME_CONTENT2 = #themeContent2#,
+					THEME_CONTENT3 = #themeContent3#,
+					THEME_CONTENT4 = #themeContent4#,
+					THEME_CONTENT5 = #themeContent5#,
+					THEME_CONTENT6 = #themeContent6#
+			WHERE
+					THEME_ID = #themeId#
+		]]>
+    </update>
+
+	<select id="EzCommonDAO.checkCompanyMenuIconUrl">
+		SELECT	ICON_URL
+		FROM	TBL_PORTAL_MENU_COMP
+					LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterCompanyMenuIconUrl">
+		ALTER TABLE
+			TBL_PORTAL_MENU_COMP
+			ADD
+				ICON_URL varchar(200) DEFAULT NULL
+	</statement>
+
+
+	<!-- 2024-07-17 이주원 - 일정관리 > 상단표시 컬럼 추가 -->
+	<select id="EzCommonDAO.checkTblScheduleForShowtop" resultClass="String">
+		<![CDATA[
+		SELECT
+			SHOWTOP
+		FROM
+			tbl_schedule
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblScheduleForShowtop">
+		<![CDATA[
+		ALTER TABLE
+			tbl_schedule
+		ADD (
+			SHOWTOP VARCHAR2(2) DEFAULT 'N'
+			)
+		]]>
+	</statement>
+
 </sqlMap>

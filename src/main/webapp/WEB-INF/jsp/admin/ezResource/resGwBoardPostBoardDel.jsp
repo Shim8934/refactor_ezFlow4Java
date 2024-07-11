@@ -72,7 +72,7 @@
 						return;
 					}else{
 						alert("<spring:message code="ezResource.t64" />");
-						parent.window.location.reload();
+						window.parent.board_menu.location.href = "/admin/ezResource/gwBoardListManagelistLeft.do?flag=SELECT_YES&selCompany=" + pCompanyID;
 					}
 				}
 			}

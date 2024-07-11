@@ -93,6 +93,9 @@
 				fileExtensionViewType = 0;
 				parent.frames[1].location.href = "/admin/ezSystem/systemFileExtension.do";
 				break;
+			case "NOTISETTING":
+				parent.frames[1].location.href = "/admin/ezSystem/notiSetting.do";
+				break;
 	    }
 	    
 	    $("#left .adminListBox h2 span").click(function(){
@@ -166,6 +169,7 @@
 	            	<h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh21' /></span></h2>
 	            </c:if>
 				<h2><span id="FILEEXTENSION" style="display:inline-block;width:100%;" onClick="menu_change('FILEEXTENSION')" ><spring:message code='ezSystem.x0009' /></span></h2>
+				<h2><span id="NOTISETTING" style="display:inline-block;width:100%;" onClick="menu_change('NOTISETTING')" ><spring:message code='ezNotification.hth21' /></span></h2>
 			</div>
       	</div>
     </body>

@@ -49,6 +49,7 @@
 	<typeAlias  alias="ApprGGroupDocInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO"/>
 	<typeAlias  alias="ApprGOutOfOfficeInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO"/>
     <typeAlias  alias="OrganDeptVO" 		type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
+	<typeAlias  alias="ApprGSusinProcessInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO"/>
 
 	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
 		<result property="companyID"					column="companyID"						/>
@@ -59,7 +60,7 @@
         <result property="cn"					column="cn"						/>
         <result property="displayName"					column="displayName"						/>
     </resultMap>
-	
+
 <!-- 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO"> -->
 <!-- 		{CALL EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -443,7 +444,7 @@
 		         						DocState <> '017'
 		         					AND
 		         					    FUNCTIONTYPE <> '004'
-		         					AND 
+		         					AND
 					      				VAPRWILLDOCLIST.TENANT_ID = #v_TENANTID# 
 					      			AND
 					      				VAPRWILLDOCLIST.COMPANYID IN (
@@ -1005,7 +1006,7 @@
                                     *
                                 FROM
                                     (
-								SELECT  
+								SELECT
 									A.SN, 
 									A.OWNERID || '@'|| CAST(A.SN AS VARCHAR(10)) AS DOCID ,
 									A.FORMID,
@@ -4989,7 +4990,7 @@
                      WHEN B.CN IS NULL THEN 'N'
                      ELSE 'Y'
                  END AS RETIRECHK
-             FROM 
+             FROM
 		         TBL_DEPTTEMPLETDETAIL A
              LEFT OUTER JOIN
 		         TBL_DEPTMASTER D
@@ -10272,8 +10273,10 @@
 			* 
         FROM ( 
         		SELECT 
-        			  APRMEMBERSN ,
-                      APRMEMBERID 
+        			  APRMEMBERSN,
+                      APRMEMBERID,
+              		  APRMEMBERNAME,
+                      APRMEMBERDEPTID
         		FROM 
         			  TBL_APRLINEINFO 
 				WHERE 
@@ -13699,7 +13702,7 @@
 		<isNotEqual property="v_LISTTYPE" compareValue="21">
 		<isNotEqual property="v_LISTTYPE" compareValue="11">
         <isNotEqual property="v_LISTTYPE" compareValue="24">
-			SELECT 
+			SELECT
 				COUNT(DOCID) 
 			FROM (
 					SELECT
@@ -36219,7 +36222,7 @@
 
 	<select id="EzApprovalG.getTotalDownloadAll" parameterClass="Map" resultClass="ApprGAttachInfoVO">
 		<isEqual property="v_PMODE" compareValue="END">
-			SELECT 
+			SELECT
 				'DOC' TYPE,
 				DOCID,
 				ENDDATE,
@@ -36228,9 +36231,9 @@
 				1 AS TYPESN,
 				1 AS VIEWSN,
 				1 AS ATTACHFILESN
-			FROM 
+			FROM
 				TBL_ENDAPRDOCINFO
-			WHERE  
+			WHERE
 				TBL_ENDAPRDOCINFO.DOCID IN
 			 	<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
 			 		#vDocIDMap[]#
@@ -36239,10 +36242,10 @@
 		    	TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 			AND
 		   		TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
-			
-			UNION ALL 
-			
-			SELECT 
+
+			UNION ALL
+
+			SELECT
 				'ATT' TYPE,
 				TBL_ENDAPRDOCINFO.DOCID,
 				ENDDATE,
@@ -36251,7 +36254,7 @@
 				2 AS TYPESN,
 	       	 	NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
 	       	 	ATTACHFILESN
-			FROM 
+			FROM
 				TBL_ENDATTACHINFO
 		    INNER JOIN
 	    		TBL_ENDAPRDOCINFO
@@ -36261,7 +36264,7 @@
 				TBL_ENDATTACHINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
 		    AND
 		    	TBL_ENDATTACHINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
-			WHERE  
+			WHERE
 				TBL_ENDAPRDOCINFO.DOCID IN
 				<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
 			 		#vDocIDMap[]#
@@ -36270,10 +36273,10 @@
 	        	TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 		    AND
 		    	TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
-		    	
-			UNION ALL 
-			
-			SELECT 
+
+			UNION ALL
+
+			SELECT
 				'ATTDOC' TYPE,
 				TBL_ENDAPRDOCINFO.DOCID,
 				ENDDATE,
@@ -36282,7 +36285,7 @@
 				3 AS TYPESN,
 	        	ATTACHSN AS VIEWSN,
 	        	1 AS ATTACHFILESN
-			FROM 
+			FROM
 				TBL_ENDAPRDOCATTACHINFO
 		    INNER JOIN
 	    		TBL_ENDAPRDOCINFO
@@ -36292,7 +36295,7 @@
 	        	TBL_ENDAPRDOCATTACHINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
 		    AND
 		    	TBL_ENDAPRDOCATTACHINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
-			WHERE  
+			WHERE
 				TBL_ENDAPRDOCINFO.DOCID IN
 				<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
 			 		#vDocIDMap[]#
@@ -36305,21 +36308,21 @@
 		    	ENDDATE DESC, TYPESN ASC, ATTACHFILESN ASC, VIEWSN ASC
 		 </isEqual>
 	</select>
-	
-	<select id="EzApprovalG.getDocsOpinionInfo" parameterClass="Map" resultClass="ApprGOpinionVO"> 
-		SELECT 
-			DOCID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID 
-		FROM 
-			TBL_ENDAPROPINIONINFO  
-		WHERE 
+
+	<select id="EzApprovalG.getDocsOpinionInfo" parameterClass="Map" resultClass="ApprGOpinionVO">
+		SELECT
+			DOCID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID
+		FROM
+			TBL_ENDAPROPINIONINFO
+		WHERE
 			DOCID IN
 			<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
 				#vDocIDMap[]#
 			</iterate>
-		AND 
+		AND
 			TENANT_ID = #v_TENANTID#
 		AND
-			COMPANYID = #companyID#	
+			COMPANYID = #companyID#
 		ORDER BY
 			DOCID DESC, OPINIONSN DESC
 	</select>
@@ -36328,13 +36331,13 @@
 		INSERT ALL
 		 <dynamic>
 			<iterate prepend="" property="v_DOCIDlist" conjunction=" " >
-		    	INTO TBL_TOTAL_HISTORY(DOCID, USERID, REGDATE, GUBUN, USERJOBTITLE, USERDEPTID, USERDEPTNAME, 
+		    	INTO TBL_TOTAL_HISTORY(DOCID, USERID, REGDATE, GUBUN, USERJOBTITLE, USERDEPTID, USERDEPTNAME,
 		                        USERNAME, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID)
 		    	VALUES(#v_DOCIDlist[]#, #v_USERID#, sysdate, #v_GUBUN#, #v_USERJOBTITLE#, #v_USERDEPTID#, #v_USERDEPTNAME#,
 	            	#v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE2#, #v_USERDEPTNAME2#, #v_TENANT_ID#, #v_COMPANYID#)
-			</iterate>                       
+			</iterate>
 		</dynamic>
-		SELECT * 
+		SELECT *
 		FROM DUAL
 	</insert>
 
@@ -36570,4 +36573,211 @@
         AND
             TENANT_ID = #tenantID#
     </update>
+
+    <select id ="EzApprovalG.isExistDocAttach" parameterClass="Map" resultClass="Integer" remapResults="true">
+        SELECT COUNT(*)
+        FROM TBL_ENDAPRDOCINFO DI
+                 JOIN (SELECT DOCID, ATTACHDOCURL, COMPANYID, TENANT_ID
+                       FROM TBL_APRDOCATTACHINFO
+                       UNION ALL
+                       SELECT DOCID, ATTACHDOCURL, COMPANYID, TENANT_ID
+                       FROM TBL_ENDAPRDOCATTACHINFO) AT
+                      ON AT.ATTACHDOCURL = DI.HREF
+                          AND AT.COMPANYID = DI.COMPANYID
+                          AND AT.TENANT_ID = DI.TENANT_ID
+        WHERE AT.DOCID = #v_ParentID#
+          AND DI.COMPANYID = #companyID#
+          AND DI.TENANT_ID = #v_TENANTID#
+          AND DI.DOCID = #v_DOCID#
+    </select>
+
+    <select id="EzApprovalG.getDraftUserInfo" parameterClass="Map" resultClass="ApprGAprDocInfoVO">
+        <isEqual property="v_FLAG" compareValue="ING">
+		    SELECT
+		    	WRITERID,
+		    	WRITERNAME,
+		    	WRITERNAME2,
+		    	WRITERJOBTITLE,
+		    	WRITERJOBTITLE2,
+		    	WRITERDEPTID,
+		    	WRITERDEPTNAME,
+		    	WRITERDEPTNAME2
+		    FROM
+		    	TBL_APRDOCINFO
+		    WHERE
+		    	DOCID = #v_DOCID#
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		    AND
+		    	COMPANYID = #companyID#
+	    </isEqual>
+	    <isEqual property="v_FLAG" compareValue="END">
+		    SELECT
+		    	WRITERID,
+		    	WRITERNAME,
+		    	WRITERNAME2,
+		    	WRITERJOBTITLE,
+		    	WRITERJOBTITLE2,
+		    	WRITERDEPTID,
+		    	WRITERDEPTNAME,
+		    	WRITERDEPTNAME2
+		    FROM
+		    	TBL_ENDAPRDOCINFO
+		    WHERE
+		    	DOCID = #v_DOCID#
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		    AND
+		    	COMPANYID = #companyID#
+	    </isEqual>
+    </select>
+    <select id="EzApprovalG.getDocInfoForNoti" parameterClass="Map" resultClass="ApprGDocListVO">
+    	 <isEqual property="v_FLAG" compareValue="ING">
+		    SELECT
+		    	DOCID,
+				FORMID,
+				ORGDOCID,
+				DOCTYPE,
+				DOCSTATE,
+				FUNCTIONTYPE,
+				HREF,
+				DOCTITLE,
+				DOCNO,
+				HASATTACHYN,
+				HASOPINIONYN,
+				STARTDATE,
+				ENDDATE,
+		    	WRITERID,
+		    	WRITERNAME,
+		    	WRITERNAME2,
+		    	WRITERJOBTITLE,
+		    	WRITERDEPTID,
+		    	WRITERDEPTNAME,
+		    	WRITERJOBTITLE2,
+		    	WRITERDEPTNAME2,
+		    	ISPUBLIC,
+		    	COMPANYID
+		    FROM
+		    	TBL_APRDOCINFO
+		    WHERE
+		    	DOCID = #v_DOCID#
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		    AND
+		    	COMPANYID = #companyID#
+	    </isEqual>
+	    <isEqual property="v_FLAG" compareValue="END">
+		    SELECT
+		    	DOCID,
+				FORMID,
+				ORGDOCID,
+				DOCTYPE,
+				DOCSTATE,
+				FUNCTIONTYPE,
+				HREF,
+				DOCTITLE,
+				DOCNO,
+				HASATTACHYN,
+				HASOPINIONYN,
+				STARTDATE,
+				ENDDATE,
+		    	WRITERID,
+		    	WRITERNAME,
+		    	WRITERNAME2,
+		    	WRITERJOBTITLE,
+		    	WRITERJOBTITLE2,
+		    	WRITERDEPTID,
+		    	WRITERDEPTNAME,
+		    	WRITERDEPTNAME2,
+		    	ISPUBLIC,
+		    	COMPANYID
+		    FROM
+		    	TBL_ENDAPRDOCINFO
+		    WHERE
+		    	DOCID = #v_DOCID#
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		    AND
+		    	COMPANYID = #companyID#
+	    </isEqual>
+
+    </select>
+    <select id="EzApprovalG.getUserInfoForNoti" parameterClass="Map" resultClass="OrganUserVO">
+    	SELECT
+    		DISPLAYNAME,
+    		TITLE
+    	FROM
+    		TBL_USERMASTER
+    	WHERE
+    		CN = #userID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </select>
+
+    <select id="EzApprovalG.getAprMemberSnForNoti" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+			(SELECT
+				DOCID,
+				ORGDOCID,
+				FORMID,
+				HREF,
+				HASATTACHYN,
+				APRMEMBERID,
+				APRMEMBERNAME,
+				APRMEMBERNAME2,
+				APRMEMBERDEPTID,
+				DOCSTATE,
+				DOCTITLE,
+				APRMEMBERSN,
+				APRSTATE
+			FROM
+				VAPRDOINGDOCLIST
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID#
+			AND
+				APRMEMBERSN IN (SELECT APRMEMBERSN FROM TBL_APRDOCINFO WHERE APRMEMBERID = #userID#)
+			)
+			WHERE ROWNUM <= 1
+		]]>
+	</select>
+
+	<select id="EzApprovalG.getSusinProcessInfo" parameterClass="Map" resultClass="ApprGSusinProcessInfoVO">
+		SELECT
+			APRSTATE,
+			PROCESSYN,
+			PROCESSORID,
+			PROCESSDOCID
+		FROM
+			TBL_APRRECEIPTPROCESSINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			RECEIVEDDEPTID = #deptId#
+	</select>
+
+	<select id="EzApprovalG.getGongramAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+	SELECT
+		APRMEMBERID,
+		APRMEMBERNAME,
+		APRMEMBERDEPTID
+	FROM
+		TBL_APRLINEINFO
+	WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</select>
 </sqlMap>

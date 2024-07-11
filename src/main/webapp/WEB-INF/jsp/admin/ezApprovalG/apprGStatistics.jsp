@@ -28,33 +28,38 @@
 	        var listview = new ListView();
 	        var pMode = "";
 			var searchInfo = null;
-	        
-	        $(document).ready(function(){
-//	            document.getElementById("SCompID").value = pCompanyID;
+
+			function staticsInit() {
+				$('#lvSDoc').empty();
 				pCompanyID = document.getElementById("ListCompany").value;
-	            document.getElementById("SYear").value = "<c:out value = '${tempPYear}' />";
-	            document.getElementById("SMonth").value = "<c:out value = '${tempPMonth}' />";
-	            document.getElementById("EYear").value = "<c:out value = '${tempYear}' />";
-	            document.getElementById("EMonth").value = "<c:out value = '${tempMonth}' />";
-	            document.getElementsByName("condition")[0].checked = false;
-	            document.getElementsByName("condition")[1].checked = false;
-	            document.getElementsByName("Dept")[0].checked = false;
-	            document.getElementsByName("Dept")[1].checked = false;
-	            document.getElementsByName("Dept")[2].checked = false;
-	            document.getElementsByName("UserFlag")[0].checked = false;
-	            document.getElementsByName("UserFlag")[1].checked = false;
-	            document.getElementsByName("UserFlag")[2].checked = false;
-	            document.getElementsByName("UserFlag")[3].checked = false;
-	            
-	            if (approvalFlag == 'S') {
-	            	$(".approvalG").hide();
+				document.getElementById("SYear").value = "<c:out value = '${tempPYear}' />";
+				document.getElementById("SMonth").value = "<c:out value = '${tempPMonth}' />";
+				document.getElementById("EYear").value = "<c:out value = '${tempYear}' />";
+				document.getElementById("EMonth").value = "<c:out value = '${tempMonth}' />";
+				document.getElementsByName("condition")[0].checked = false;
+				document.getElementsByName("condition")[1].checked = false;
+				document.getElementsByName("Dept")[0].checked = false;
+				document.getElementsByName("Dept")[1].checked = false;
+				document.getElementsByName("Dept")[2].checked = false;
+				document.getElementsByName("UserFlag")[0].checked = false;
+				document.getElementsByName("UserFlag")[1].checked = false;
+				document.getElementsByName("UserFlag")[2].checked = false;
+				document.getElementsByName("UserFlag")[3].checked = false;
+
+				if (approvalFlag == 'S') {
+					$(".approvalG").hide();
 // 	            	$(".approvalS").show();
-	            } else {
-	            	$(".approvalS").hide();
+				} else {
+					$(".approvalS").hide();
 // 	            	$(".approvalG").show();
-	            }
-	            Initlvtlist();
-	        });
+				}
+				Initlvtlist();
+			}
+
+			$(document).ready(function(){
+//	            document.getElementById("SCompID").value = pCompanyID;
+				staticsInit();
+			});
 	        
 	        function Initlvtlist() {
 
@@ -253,6 +258,7 @@
 	            if (pCompanyID != document.getElementById("ListCompany").value) {
 	                pCompanyID = document.getElementById("ListCompany").value;
 	            }
+				staticsInit();
 	        }
 	        
 		    /* 2020-07-15 홍승비 - 숫자 이외의 값 입력 방지 함수 */

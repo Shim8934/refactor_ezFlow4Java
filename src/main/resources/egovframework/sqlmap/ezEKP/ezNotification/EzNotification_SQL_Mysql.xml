@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezNotification">
+	<typeAlias  alias="NotificationVO" 			type="egovframework.ezEKP.ezNotification.vo.NotificationVO"/>
+
+	<insert id="EzNotificationDAO.insertUserNoti" parameterClass="Map">
+	INSERT INTO 
+		TBL_REALTIME_NOTIFICATION
+		(USERID, MAINTYPE, SUBTYPE, NOTICONTENT, SENDERID, SENDERNAME, REGDATE, ETCDATA, LINKURL, LINKURL_MOBILE, VIEWTYPE, VIEWWIDTH, VIEWHEIGHT, TENANT_ID, COMPANYID)
+	VALUES
+		(#recipientId#, #mainType#, #subType#, #notiContent#, #senderId#, #senderName#, #regDate#, #etcData#, #linkUrl#, #linkUrlMobile#, #viewType#, #viewWidth#, #viewHeight#, #tenantId#, #companyId#)	
+    </insert>
+     
+    <select id="EzNotificationDAO.getTotalNotiListCnt" parameterClass="Map" resultClass="int">
+    	SELECT
+     		COUNT(*)
+    	FROM
+    		TBL_REALTIME_NOTIFICATION
+		WHERE
+     		USERID = #userId#
+     	AND
+     		TENANT_ID = #tenantId#
+     	AND
+     		COMPANYID = #companyId#
+     	AND
+     		ISDELETE = 'N'
+     	<isEqual property="mode" compareValue="NOTREAD">
+     	AND
+     		ISREAD = 'N'
+     	</isEqual>
+	</select>
+     
+    <select id="EzNotificationDAO.getMyNotiList" parameterClass="Map" resultClass="NotificationVO">
+    SELECT
+	    NOTISEQ AS notiSeq,
+		USERID AS userId,
+		MAINTYPE AS mainType,
+		SUBTYPE AS subType,
+		NOTICONTENT AS notiContent,
+		SENDERID AS senderId,
+		SENDERNAME AS senderName,
+		DATE_ADD(REGDATE, INTERVAL #offSet# MINUTE) AS regDate,
+		ISREAD AS isRead,
+		CASE
+			WHEN READDATE IS NULL THEN READDATE
+			ELSE DATE_ADD(READDATE, INTERVAL #offSet# MINUTE)
+		END AS readDate,
+		ETCDATA AS etcData,
+		ISDELETE AS isDelete,
+		DELETEDATE AS deleteDate,
+		LINKURL AS linkUrl,
+		LINKURL_MOBILE AS linkUrlMobile,
+		VIEWTYPE AS viewType,
+		VIEWWIDTH AS viewWidth,
+		VIEWHEIGHT AS viewHeight,
+		TENANT_ID AS tenantId,
+		COMPANYID AS companyId
+	FROM
+		TBL_REALTIME_NOTIFICATION
+	WHERE
+		USERID = #userId#
+	AND
+   		TENANT_ID = #tenantId#
+   	AND
+   		COMPANYID = #companyId#
+   	AND
+     	ISDELETE = 'N'
+    ORDER BY
+    	 REGDATE DESC
+    LIMIT
+    	#limit#, #rowCount#
+    </select>
+     
+    <update id="EzNotificationDAO.updateNoti" parameterClass="Map">
+    	UPDATE
+    		TBL_REALTIME_NOTIFICATION
+    	SET
+    	<isEqual property="mode" compareValue="READ">
+    		ISREAD = 'Y',
+    		READDATE = #processDate#
+    	</isEqual>
+    	<isEqual property="mode" compareValue="DELETE">
+    		ISDELETE = 'Y',
+    		DELETEDATE = #processDate#
+    	</isEqual>	
+    	WHERE
+    		NOTISEQ = #notiSeq#
+    	AND
+    		COMPANYID = #companyId# 
+    	AND
+    		TENANT_ID = #tenantId#   		
+    </update>
+    
+     <update id="EzNotificationDAO.updateNotiAll" parameterClass="Map">
+    	UPDATE
+    		TBL_REALTIME_NOTIFICATION
+    	SET
+    	<isEqual property="mode" compareValue="READ">
+    		ISREAD = 'Y',
+    		READDATE = #processDate#
+    	</isEqual>
+    	<isEqual property="mode" compareValue="DELETE">
+    		ISDELETE = 'Y',
+    		DELETEDATE = #processDate#
+    	</isEqual>	
+    	WHERE
+    		USERID = #userId#
+    	<isEqual property="mode" compareValue="DELETE">
+    	AND
+    		ISREAD = 'Y'
+    	</isEqual>		
+    	AND
+    		COMPANYID = #companyId# 
+    	AND
+    		TENANT_ID = #tenantId#
+    </update>
+    
+     <select id="EzNotificationDAO.getTotalSearchNotiListCnt" parameterClass="Map" resultClass="int">
+    	SELECT
+     		COUNT(*)
+     	FROM
+ 		(    
+     	SELECT
+     		*
+    	FROM
+    		TBL_REALTIME_NOTIFICATION
+		WHERE
+     		USERID = #userId#
+     	AND
+     		TENANT_ID = #tenantId#
+     	AND
+     		COMPANYID = #companyId#
+     	AND
+     		ISDELETE = 'N'
+     	<isNotEmpty property="keyWord">
+     	AND
+     	<![CDATA[
+     		REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(NOTICONTENT, '&', '&AMP;'), '<', '&lt;'), '>', '&gt;'), '\'', '&apos;'), '\"' ,'&quot;') LIKE CONCAT('%',#keyWord#,'%')
+     	]]>
+     	</isNotEmpty>
+     	<isNotEmpty property="notiFilterList">
+     	AND
+     		MAINTYPE IN 
+	     	<iterate property="notiFilterList" open="(" close=")" conjunction=",">
+		   			#notiFilterList[]#
+		   	</iterate>
+	   	</isNotEmpty>
+	   	<isEmpty property="notiFilterList">
+	   	AND
+     		MAINTYPE IN ('')
+	   	</isEmpty>
+	   	<isNotEqual property="isRead" compareValue="ALL">
+	   	AND
+	   		ISREAD = #isRead#
+	   	</isNotEqual>
+     	) A
+     	<isEqual property="mode" compareValue="NOTREAD">
+     	WHERE
+     		ISREAD = 'N'
+     	</isEqual>
+	</select>
+	
+	<select id="EzNotificationDAO.getSearchNotiList" parameterClass="Map" resultClass="NotificationVO">
+	 SELECT
+	    NOTISEQ AS notiSeq,
+		USERID AS userId,
+		MAINTYPE AS mainType,
+		SUBTYPE AS subType,
+		NOTICONTENT AS notiContent,
+		SENDERID AS senderId,
+		SENDERNAME AS senderName,
+		DATE_ADD(REGDATE, INTERVAL #offSet# MINUTE) AS regDate,
+		ISREAD AS isRead,
+		CASE
+			WHEN READDATE IS NULL THEN READDATE
+			ELSE DATE_ADD(READDATE, INTERVAL #offSet# MINUTE)
+		END AS readDate,
+		ETCDATA AS etcData,
+		ISDELETE AS isDelete,
+		DELETEDATE AS deleteDate,
+		LINKURL AS linkUrl,
+		LINKURL_MOBILE AS linkUrlMobile,
+		VIEWTYPE AS viewType,
+		VIEWWIDTH AS viewWidth,
+		VIEWHEIGHT AS viewHeight,
+		TENANT_ID AS tenantId,
+		COMPANYID AS companyId
+	FROM
+		TBL_REALTIME_NOTIFICATION
+	WHERE
+		USERID = #userId#
+	AND
+   		TENANT_ID = #tenantId#
+   	AND
+   		COMPANYID = #companyId#
+   	AND
+     	ISDELETE = 'N'
+    <isNotEmpty property="keyWord">
+    AND
+    <![CDATA[
+     		REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(NOTICONTENT, '&', '&AMP;'), '<', '&lt;'), '>', '&gt;'), '\'', '&apos;'), '\"' ,'&quot;') LIKE CONCAT('%',#keyWord#,'%')
+     	]]>
+    </isNotEmpty>
+    <isNotEmpty property="notiFilterList">
+	    AND
+	    	MAINTYPE IN 
+		<iterate property="notiFilterList" open="(" close=")" conjunction=",">
+			#notiFilterList[]#
+	    </iterate>
+	</isNotEmpty>
+	<isEmpty property="notiFilterList">
+	AND
+    	MAINTYPE IN ('')
+	</isEmpty>
+	<isNotEqual property="isRead" compareValue="ALL">
+	AND
+		ISREAD = #isRead#
+	</isNotEqual>
+    ORDER BY
+    	 REGDATE DESC
+    LIMIT
+    	#limit#, #rowCount#
+	</select>
+	
+	<select id="EzNotificationDAO.getSearchNotiListForMobile" parameterClass="Map" resultClass="NotificationVO">
+	 SELECT
+	    NOTISEQ AS notiSeq,
+		USERID AS userId,
+		MAINTYPE AS mainType,
+		SUBTYPE AS subType,
+		NOTICONTENT AS notiContent,
+		SENDERID AS senderId,
+		SENDERNAME AS senderName,
+		DATE_ADD(REGDATE, INTERVAL #offSet# MINUTE) AS regDate,
+		ISREAD AS isRead,
+		CASE
+			WHEN READDATE IS NULL THEN READDATE
+			ELSE DATE_ADD(READDATE, INTERVAL #offSet# MINUTE)
+		END AS readDate,
+		ETCDATA AS etcData,
+		ISDELETE AS isDelete,
+		DELETEDATE AS deleteDate,
+		LINKURL AS linkUrl,
+		LINKURL_MOBILE AS linkUrlMobile,
+		VIEWTYPE AS viewType,
+		VIEWWIDTH AS viewWidth,
+		VIEWHEIGHT AS viewHeight,
+		TENANT_ID AS tenantId,
+		COMPANYID AS companyId
+	FROM
+		TBL_REALTIME_NOTIFICATION
+	WHERE
+		USERID = #userId#
+	AND
+   		TENANT_ID = #tenantId#
+   	AND
+   		COMPANYID = #companyId#
+   	AND
+     	ISDELETE = 'N'
+    <isNotEmpty property="keyWord">
+    AND
+    <![CDATA[
+     		REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(NOTICONTENT, '&', '&AMP;'), '<', '&lt;'), '>', '&gt;'), '\'', '&apos;'), '\"' ,'&quot;') LIKE CONCAT('%',#keyWord#,'%')
+     	]]>
+    </isNotEmpty>
+    <isNotEmpty property="notiFilterList">
+	    AND
+	    	MAINTYPE IN 
+		<iterate property="notiFilterList" open="(" close=")" conjunction=",">
+			#notiFilterList[]#
+	    </iterate>
+	</isNotEmpty>
+	<isEmpty property="notiFilterList">
+	AND
+    	MAINTYPE IN ('')
+	</isEmpty>
+	<isNotEqual property="isRead" compareValue="ALL">
+	AND
+		ISREAD = #isRead#
+	</isNotEqual>
+	<isNotEqual property="lastNotiSeq" compareValue="-1">
+	<![CDATA[
+	AND
+		notiseq < #lastNotiSeq#
+	]]>
+	</isNotEqual>
+    ORDER BY
+    	 REGDATE DESC, notiseq desc
+    LIMIT
+    	#rowCount#
+	</select>
+	
+	<update id="EzNotificationAdminDAO.updateStoragePeriod" parameterClass="Map">
+		<![CDATA[
+		UPDATE
+			TBL_TENANT_CONFIG
+		SET
+			PROPERTY_VALUE=#storagePeriod#
+		WHERE
+			PROPERTY_NAME='notiStoragePeriod'
+		AND
+		    TENANT_ID=#tenantId#
+		]]>
+	</update>
+	
+	<delete id="EzNotificationAdminDAO.deleteOldNotification" parameterClass="Map">
+	<![CDATA[
+	DELETE	FROM
+		TBL_REALTIME_NOTIFICATION 
+	WHERE
+		DATEDIFF(DATE_ADD(#nowDate#, INTERVAL #offSet# MINUTE), DATE_ADD(REGDATE, INTERVAL #offSet# MINUTE)) > #notiStoragePeriod#
+	AND
+		TENANT_ID=#tenantId#
+	]]>
+	</delete>
+	
+    <select id="EzNotificationDAO.getNewNotiCnt" parameterClass="Map" resultClass="int">
+    <![CDATA[
+    	SELECT
+     		COUNT(*)
+    	FROM
+    		TBL_REALTIME_NOTIFICATION
+		WHERE
+     		USERID = #userId#
+     	AND
+     		TENANT_ID = #tenantId#
+     	AND
+     		COMPANYID = #companyId#
+     	AND
+     		REGDATE > #pollStime# and REGDATE <= #pollEtime#
+     ]]>
+	</select>
+	
+	<select id="EzNotificationDAO.isJavaApprovalUse" parameterClass="Map" resultClass="boolean">
+	SELECT
+	 	CASE WHEN
+	 		COUNT(*) > 0
+	 	THEN
+	 		TRUE
+	 	ELSE
+	 		FALSE
+	 	END
+	FROM
+		TBL_PORTAL_MENU TPM
+	INNER JOIN
+		TBL_PORTAL_MENU_COMP TPMC
+	ON
+		TPM.MENU_ID = TPMC.MENU_ID 
+	AND
+		TPM.MENUCODE = 'approval'
+	AND
+		TPMC.COMPANY_ID = #companyId#
+	AND
+		TPMC.TENANT_ID = #tenantId#
+	AND
+		TPM.MENU_URL = '/ezApprovalG/apprGMain.do'
+	AND
+		TPMC.MENU_USED = '1'
+	</select>
+	
+</sqlMap>

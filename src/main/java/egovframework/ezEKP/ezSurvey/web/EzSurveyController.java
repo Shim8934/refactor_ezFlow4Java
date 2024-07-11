@@ -286,6 +286,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 				case 1 : messageCode = "ezSurvey.err1"; break;
 				case 2 : messageCode = "ezSurvey.err2"; break;
 				case 3 : messageCode = "ezSurvey.err3"; break;
+				case -1 : messageCode = "ezSurvey.err4"; break;
 				default: messageCode = "ezSurvey.err1"; break;
 			}
 			

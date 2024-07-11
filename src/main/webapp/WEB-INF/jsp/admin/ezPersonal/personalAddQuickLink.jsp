@@ -398,6 +398,7 @@
 	            createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", LinkTypeURL);
 	            createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
 	            createNodeAndInsertText(xmlpara, objNode, "pURL", document.getElementById("txtURL").value);
+	            createNodeAndInsertText(xmlpara, objNode, "companyID", document.getElementById("ListCompany").value);
 	
 	            if (eval("chk_Full").checked == true) {
 	                createNodeAndInsertText(xmlpara, objNode, "pSize", "FULL");

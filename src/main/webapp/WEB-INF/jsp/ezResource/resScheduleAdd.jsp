@@ -70,6 +70,8 @@
 		    var allday_chk, onck = "1";	
 	    	var sDT				="${startDateTime}";
 	    	var eDT				="${endDateTime}";
+	    	var sDT2				="${startDateTime2}";
+	    	var eDT2				="${endDateTime2}";
 	    	var flag = false;
 	    	var startDateTimeRepeat = "${startDateTimeRepeat}";
 	    	var endDateTimeRepeat = "${endDateTimeRepeat}";

@@ -139,6 +139,7 @@ var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Jadwal Grup";
 var strLang130_1 = "Grup";
+var strLang131 = "tampilkan di bagian atas";
 
 var strLang253 = "Sumber daya tidak dipilih."
 var strLang254 = "Sumber daya yang dipilih tidak dapat dihapus."
@@ -214,7 +215,7 @@ var strLang127_2 = "Company";
 var strLang130_2 = "Group";
 var strLang131_2 = "Collabo";
 var strLang141_2 = "Google";
-var strLangHSBScPt1 = "-";
+var strLangHSBScPt1 = ".";
 var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "";
 

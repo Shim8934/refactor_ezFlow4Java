@@ -329,7 +329,7 @@ public interface EzCommonService {
 
 	/** 2023-06-26 한태훈 - 통합 PC 저장 이력 남기는 테이블(차후 다른 목적으로도 쓰일 수 있음) 추가 */
 	public void createTblTotalHistory() throws Exception;
-    
+
 	public void insertdelAttachByOthersConfing() throws Exception;
 
 	public void insertUseHideHeaderArea() throws Exception;
@@ -349,19 +349,48 @@ public interface EzCommonService {
 	public void insertApprNonElecRecTypeConfing() throws Exception;
 
     public void insertRecordHeaderClassTitle() throws Exception;
-    
+
 	public void insertUseReceiptDeptFileAttach() throws Exception;
 
 	public void insertDocBinderListOption() throws Exception;
-	
+
 	public void insertEndDateOptionConfig() throws Exception;
 
 	/* 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그 */
 	public void insertReturnByDesignationUsedConfig() throws Exception;
 
 	public void alterDocAttachNameCol() throws Exception;
-    
+
 	public void insertNonUseDocAttachYN() throws Exception;
 
 	public void insertReadingRecordHeader() throws Exception;
+
+    void insertPortalPortletSizeTables();
+
+	void insertTblPortalTopUser();
+	
+	// 2024-03-28 한태훈 > 통합알림 테이블 생성하는 메소드
+	public void createTblRealTimeNotification() throws Exception;
+
+	// 2024-03-28 한태훈 > 알림 보관기간 테넌트 컨피그 추가 메소드
+	public void addNotiStoragePeriodConfig() throws Exception;
+	
+	// 2024-03-28 한태훈 > 통합알림 polling 방식 이용시 알림 데이터 새로고침 주기 설정
+	public void addNotiPollingIntervalConfig() throws Exception;
+
+	void insertFixPortlet();
+
+	public void insertTblPortalTopCompany() throws Exception;
+
+	public void insertPortalTopCompanyInitdata() throws Exception;
+
+    void addQuickLinkCompanyID() throws Exception;
+
+	public void alterUserThemePagination() throws Exception;
+
+	public void alterThemeInformation() throws Exception;
+	
+	public void alterCompanyMenuIconUrl() throws Exception;
+
+    public void alterTblScheduleForShowtop() throws Exception;
 }

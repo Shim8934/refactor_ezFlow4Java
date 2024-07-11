@@ -443,7 +443,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("type")));
 		String dept = request.getParameter("dept"); 
 		String tagName = request.getParameter("tagName");
-		
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		userInfo.setDeptID(dept);
@@ -452,6 +453,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("type", type);
 		model.addAttribute("tagName", tagName);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("companyID", companyID);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
 		logger.debug("selectPerson ended");
@@ -1528,7 +1530,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 				cookieValue1 = commonUtil.getDecryptedLoginCookie(loginCookie);
 
 				//loginCookie에 lang값, locale값 설정
-				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2] + "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///" + lang + "///" + timeZone  + "///" + userInfo.getTenantId() + "///" + userInfo.getDeptID() +  "///" + userInfo.getCompanyID();
+				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2]
+						+ "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///"
+						+ lang + "///" + timeZone  + "///" + userInfo.getTenantId() + "///" + userInfo.getDeptID() +  "///" + userInfo.getCompanyID()
+						+ "///" + Optional.ofNullable(userInfo.getJobId()).orElse("");
+
 				loginCookie = egovFileScrty.encryptAES(cInfo);
 				
 				if (useDbSession) {
@@ -2536,7 +2542,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		return result;
 	}
 
-	// gbp-todo 다른 개발자가 부재중 설정 관련 개발중이라 기존의 로직을 그대로 쓰는 것으로 임시 처리.
 	@PostMapping("/ezPersonal/clearAbsence.do")
 	@ResponseBody
 	public String clearAbsence(@CookieValue("loginCookie") String loginCookie) {

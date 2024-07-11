@@ -37,6 +37,8 @@
         <result property="sabun"              	column="sabun"                		columnIndex="24"/>
 		<result property="password_updatedt"    column="password_updatedt"			columnIndex="25"/>
 		<result property="extensionattribute5"	column="extensionattribute5"		columnIndex="26"/>
+		<result property="jobId"				column="jobId"						columnIndex="27"/>
+		<result property="roleId"				column="roleId"						columnIndex="28"/>
 	</resultMap>	
 
 	<resultMap id="session" class="egovframework.let.user.login.vo.SessionVO">
@@ -66,9 +68,7 @@
 	<!-- 일반 로그인 -->
 	<select id="loginDAO.selectUser" resultMap="login">
 		<!-- 일반회원 -->
-		<isEmpty property="deptID">
-			<![CDATA[
-				SELECT 
+				SELECT
 					cn,
 					password,				
 			     	displayname,
@@ -94,17 +94,24 @@
 	                extensionattribute2 as userFileUrl,
 	                extensionattribute14 as sabun,
 	                password_updatedt,
-	                extensionattribute5
+					extensionattribute5,
+					EXTENSIONATTRIBUTE7  as jobId,
+					EXTENSIONATTRIBUTE8  as roleId
 			  	FROM 
 			  		TBL_USERMASTER a
 			 	WHERE 
 			 		(cn = #id# OR extensionattribute14 = #id#) AND tenant_id = #tenantId#
-	   			]]> 
-	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+					<isNotEmpty property="deptID">
+						and department = NVL(#deptID#, department)
+					</isNotEmpty>
+					<isNotEmpty property="jobId">
+						and EXTENSIONATTRIBUTE7 = NVL(#jobId#, EXTENSIONATTRIBUTE7)
+					</isNotEmpty>
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >
 	            password = #password#
 	        </isNotEqual>
-	    </isEmpty>
 	    <isNotEmpty property="deptID">
+			UNION
 	            SELECT 
 					u.cn,
 					u.password,               
@@ -113,31 +120,19 @@
 					d.cn department,              
 					d.displayname description,
 					d.displayname2 description2,
-					case u.department
-				    when TO_NCHAR(#deptID#)
-				    then u.title
-				    else
-					(select title from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title,
-					case u.department
-				    when TO_NCHAR(#deptID#)
-				    then u.title2
-				    else
-					(select title2 from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title2,
+					b.title as title,
+					b.title2 as title2,
 					d.EXTENSIONATTRIBUTE2 companyid,
 					d.EXTENSIONATTRIBUTE3 company,
 					d.COMPNM2 company2,
 					u.updatedt,
 					case u.department
-				    when TO_NCHAR(#deptID#)
-				    then u.extensionattribute1
-				    else
-					TO_NCHAR('c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;')
-				    end
-				    as rollinfo,
+						when TO_NCHAR(#deptID#)
+						then u.extensionattribute1
+						else
+						CAST(b.ROLL_INFO AS NVARCHAR2(200))
+						end
+						as rollinfo,
 					u.telephonenumber,
 					u.mail,
 					u.extensionattribute10 as jikchek,
@@ -149,16 +144,23 @@
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
 					u.password_updatedt,
-					u.extensionattribute5
-				FROM 
-					TBL_USERMASTER u
+					u.extensionattribute5,
+					CAST(B.JOBID AS NVARCHAR2(200)) as jobId,
+					CAST(B.ROLEID AS NVARCHAR2(200)) as roleId
+				FROM
+					TBL_ADDJOBMASTER b
+				JOIN
+					TBL_USERMASTER u ON b.CN = u.CN AND b.TENANT_ID = u.TENANT_ID
 				inner join
 					tbl_deptMaster d
 				on (u.tenant_id = d.tenant_id)
+				AND d.CN = b.DEPTID
+				and b.JOBID = #jobId#
 				WHERE 
 					(u.cn = #id# OR u.extensionattribute14 = #id#) 
 				    AND u.tenant_id = #tenantId#
 				    and d.cn = #deptID#
+					and b.jobid = #jobId#
 	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
 	            password = #password#
 	        </isNotEqual>
@@ -167,9 +169,7 @@
 	
 	<select id="loginDAO.selectUserWithCnOnly" resultMap="login">
         <!-- 일반회원 -->
-        <isEmpty property="deptID">
-	        <![CDATA[
-	            SELECT 
+	            SELECT
 	                cn,
 	                password,               
 	                displayname,
@@ -195,17 +195,24 @@
 	                extensionattribute2 as userFileUrl,
 	                extensionattribute14 as sabun,
 	                password_updatedt,
-	                extensionattribute5
+	                extensionattribute5,
+					EXTENSIONATTRIBUTE7  as jobId,
+					EXTENSIONATTRIBUTE8  as roleId
 	            FROM 
 	                TBL_USERMASTER a
 	            WHERE 
 	                cn = #id# AND tenant_id = #tenantId#
-	        ]]>
-	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+				<isNotEmpty property="deptID">
+					and department = NVL(#deptID#, department)
+				</isNotEmpty>
+				<isNotEmpty property="jobId">
+					and EXTENSIONATTRIBUTE7 = NVL(#jobId#, EXTENSIONATTRIBUTE7)
+				</isNotEmpty>
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >
 	            password = #password#
 	        </isNotEqual>
-        </isEmpty>
-	    <isNotEmpty property="deptID">      
+	    <isNotEmpty property="deptID">
+		UNION
             SELECT 
 					u.cn,
 					u.password,               
@@ -214,20 +221,8 @@
 					d.cn department,              
 					d.displayname description,
 					d.displayname2 description2,
-					case u.department
-				    when TO_NCHAR(#deptID#)
-				    then u.title
-				    else
-					(select title from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title,
-					case u.department
-				    when TO_NCHAR(#deptID#)
-				    then u.title2
-				    else
-					(select title2 from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title2,
+					b.title as title,
+					b.title2 as title2,
 					d.EXTENSIONATTRIBUTE2 companyid,
 					d.EXTENSIONATTRIBUTE3 company,
 					d.COMPNM2 company2,
@@ -236,7 +231,7 @@
 				    when TO_NCHAR(#deptID#)
 				    then u.extensionattribute1
 				    else
-					TO_NCHAR('c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;')
+					CAST(b.ROLL_INFO AS NVARCHAR2(200))
 				    end
 				    as rollinfo,
 					u.telephonenumber,
@@ -250,15 +245,22 @@
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
 					u.password_updatedt,
-					u.extensionattribute5
+					u.extensionattribute5,
+					CAST(B.JOBID AS NVARCHAR2(200)) as jobId,
+					CAST(B.ROLEID AS NVARCHAR2(200)) as roleId
 				FROM 
-					TBL_USERMASTER u
+					TBL_ADDJOBMASTER b
+				JOIN
+					TBL_USERMASTER u ON b.CN = u.CN AND b.TENANT_ID = u.TENANT_ID
 				inner join
 					tbl_deptMaster d
 				on (u.tenant_id = d.tenant_id)
+				AND d.CN = b.DEPTID
+				and b.JOBID = #jobId#
 				WHERE 
 					u.cn = #id# AND u.tenant_id = #tenantId#
 				    and d.cn = #deptID#
+					and b.jobid = #jobId#
 	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
 	            password = #password#
 	        </isNotEqual>

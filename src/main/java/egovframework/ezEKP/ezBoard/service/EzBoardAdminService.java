@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezBoard.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
@@ -147,4 +148,6 @@ public interface EzBoardAdminService {
 	public void updateTabBoard(int tabId, String boardID, int tenantId, String companyID, String boardName, String boardName2) throws Exception;
 
 	public String getUseFormFlag(String boardID, int tenantID) throws Exception;
+
+	List<OrganDeptVO> getListCompanyInBoard(String userID, String primary, int tenantID);
 }

@@ -142,6 +142,7 @@ var strLang128 = "时";
 var strLang129 = "分钟";
 var strLang130 = "群组日程";
 var strLang130_1 = "群组日程";
+var strLang131 = "在顶部显示";
 
 var strLang253 ="没有选择的资源。"
 var strLang254 ="你不能删除选定的资源。"
@@ -216,7 +217,7 @@ var strLang127_2 = "Company";
 var strLang130_2 = "Group";
 var strLang131_2 = "Collabo";
 var strLang141_2 = "Google";
-var strLangHSBScPt1 = "-";
+var strLangHSBScPt1 = ".";
 var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "";
 

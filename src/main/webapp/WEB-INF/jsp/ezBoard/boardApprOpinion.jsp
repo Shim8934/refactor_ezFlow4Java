@@ -28,7 +28,7 @@
 					type : "POST",
 					dataType : "text",
 					async : false,
-					url : "/ezBoard/sendReturnNoticeMail.do",
+					url : "/ezBoard/sendReturnNotice.do",
 					data : { 
 							 content   : document.getElementById("txt_OpinionContent").value,
 							 itemID    : ItemList

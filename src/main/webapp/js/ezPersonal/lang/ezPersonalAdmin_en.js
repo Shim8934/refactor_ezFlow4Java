@@ -13,12 +13,12 @@ var strLanghyh12 = "Are you sure you want to delete the notification in progress
 var strLanghyh13 = "Are you sure you want to delete the notice?";
 var strLanghyh14 = "Error occurred while deleting notice.";
 var strLanghyh15 = "Deleted notice.";
-var strLangkhj1 = "Quick Link";
+var strLangkhj1 = "Quick Menu";
 var strLangkhj2 = "Registrant";
 var strLangkhj3 = "Date";
 var strLangkhj4 = "Modified";
 var strLangkhj5 = "Add";
-var strLangkhj6 = " a quick link.";
+var strLangkhj6 = " a quick Menu.";
 var strLangkhj7 = "Regist";
 var strLangkhj8 = "Edit";
 var strLangkhj9 = "Korean";
@@ -27,7 +27,7 @@ var strLangkhj11 = "Japanese";
 var strLangkhj12 = "name";
 var strLangkhj13 = "Open type";
 var strLangkhj14 = "PopUp Size";
-var strLangkhj15 = "Link";
+var strLangkhj15 = "Menu";
 var strLangkhj16 = "Permissions";
 var strLangkhj17 = "Registering Permissions";
 var strLangkhj18 = "Save";
@@ -50,3 +50,5 @@ var srtLangHSBEx01 = "Unacceptable extension.";
 
 /* 2022-11-22 조소정 - 관리자 > 포탈 > 빠른링크 > 중국어 버전 추가 */
 var strLangCSJQL01 = "Chinese";
+
+var strLangQuickLinkSize01 = "&nbsp&nbsp&nbsp(The image size is 100*50 pixels.)";

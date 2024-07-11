@@ -341,8 +341,12 @@
 		    	if (alldaycheck.checked == true) {
 		    		repetition += "|1";
 		    		allDayString = strLang39;
+		    		// 반복일정 상단표시
+		    		window.parent.document.getElementById("topcheck").checked = false;
+		    		window.parent.document.getElementById("topcheck").disabled = true;
 		    	} else {
 		    		repetition += "|0";
+                    window.parent.document.getElementById("topcheck").disabled = false;
 		    	}
 		    		
 		    	if (mpDaily.checked == true) {		    		
@@ -965,8 +969,38 @@
 					setTimePickerReadOnly();
 		    	}else if(sTimeTemp != null){
 		    		setTimePickerModifiable();
-		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
-		    		$('#Etimepicker').timepicker("setTime", eTimeTemp == "23:59" ? "23:30" : eTimeTemp);
+		    		// 종일일정 해제 후 현재시각에 맞게 설정
+		    		var now = new Date();
+
+                    //시작시간
+                    var startTime;
+                    var hour = now.getHours();
+                    var time = now.getMinutes();
+
+                    if (parseInt(time) < 30) {
+                        startTime = hour + ":00:00";
+                    } else {
+                        startTime = hour + ":30:00";
+                    }
+
+                    //종료시간
+                    var endTime;
+                    now.setMinutes(now.getMinutes() + 30);
+
+                    hour = now.getHours();
+                    time = now.getMinutes();
+
+                    if (parseInt(time) < 30) {
+                        endTime = hour + ":00:00";
+                    } else {
+                        endTime = hour + ":30:00";
+                    }
+
+		    		$('#Stimepicker').timepicker("setTime", startTime);
+		    		$('#Etimepicker').timepicker("setTime", eTimeTemp == "23:59" ? "23:30" :endTime);
+
+		    		//$('#Stimepicker').timepicker("setTime", sTimeTemp);
+		    		//$('#Etimepicker').timepicker("setTime", eTimeTemp == "23:59" ? "23:30" : eTimeTemp);
 		    	}
 		    	else {
 		    		setTimePickerModifiable();
