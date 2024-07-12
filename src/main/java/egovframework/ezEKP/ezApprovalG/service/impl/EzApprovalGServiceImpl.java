@@ -36156,10 +36156,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			mContainerMode = "CIR";
 			linkMobileUrl = "";
 			break;
-		case "ING":
-			mContainerMode = "DO";
 		case "END":
 			mContainerMode = "END";
+			break;
 		default:
 			mContainerMode = "DO";
 			break;
