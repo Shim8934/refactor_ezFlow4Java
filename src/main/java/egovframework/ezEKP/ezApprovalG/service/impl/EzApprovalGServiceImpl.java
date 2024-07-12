@@ -14266,7 +14266,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
         boolean resultStr = false;
-
+        
+        String notiType = "BAN";
+        if (aprState.equals("")) {
+        	notiType = "HESONG";
+        }
+		
         if (approvalFlag.equals("G")) {
 			map.put("companyID", companyID);
 			map.put("v_DOCID", orgDocID);
@@ -14283,8 +14288,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     //type1 : 다음 결재권자에게 진행
                     //displayName : 회사/부서명, displayName2 : 회사/부서명 (다국어), department : 부서ID
                     doApprove(orgDocID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo, curDocNum, "", "", "");
-                    sendMsg(orgDocID, "", "BAN", companyID, lang, userInfo.getTenantId());
-            		sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", "BAN", companyID, lang, userInfo.getTenantId());
+                    sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
+            		sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
 
                 } else {
                     //type2 : 원 기안자에게 반송
@@ -14305,8 +14310,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     // APRMEMBERSN='1'인 경우. 즉, 기안자인 경우 -> APRSTATE를 '진행'으로 변경
                     ezApprovalGDAO.updateBanSongAprLineInfo2(map);
 
-                    sendMsg(orgDocID, "", "BAN", companyID, lang, userInfo.getTenantId());
-            		sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", "BAN", companyID, lang, userInfo.getTenantId());
+                    sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
+            		sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
                 }
 			} else {
 				map.put("v_AprState", aprState);
@@ -14320,8 +14325,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				// APRMEMBERSN='1'인 경우. 즉, 기안자인 경우 -> APRSTATE를 '진행'으로 변경
 				ezApprovalGDAO.updateBanSongAprLineInfo2(map); 
 				
-				sendMsg(orgDocID, "", "BAN", companyID, lang, userInfo.getTenantId());
-        		sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", "BAN", companyID, lang, userInfo.getTenantId());
+				sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
+        		sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
 			}
 		} else {
 			// 개인병렬합의/협조 관련 반송타입
@@ -14352,9 +14357,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (resultStr) {
 				doApprove(orgDocID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo, curDocNum, "", "", "");
-				sendMsg(orgDocID, "", "BAN", companyID, lang, userInfo.getTenantId());
-				
-        		sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", "BAN", companyID, lang, userInfo.getTenantId());
+				sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
+        		sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
 
 			} else {
 				String pBansongType = getCode2Name("SA25", "002", companyID, lang, userInfo.getTenantId());		// 이 값이 Y면 반송함 자동 등록.
@@ -27639,6 +27643,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} else if(aprType.equals(staATBuSeuByungRyulHyubJo)) {
 					// 부서병렬합의에서 회송일 경우, 결재선에서 합의부서 상태값을 015로 넣어주기 위해 추가. 추후 else를 이걸로 수정해도 될듯. 2019-03-05 홍대표
 					result = doApprove(pOrgDocID, pDeptID, staASWheSong, ezOrganService.getPropertyValue(pDeptID, "DisplayName", tenantID), ezOrganService.getPropertyValue(pDeptID, "DisplayName2", tenantID), dirPath, pDeptID, "", pOrgCompanyID, lang, userInfo, curDocNum, "", "", "");
+					sendNoti(pOrgDocID, userInfo.getId(), userInfo.getDisplayName(), "", "", "", "HESONG", pOrgCompanyID, userInfo.getLang(), userInfo.getTenantId());
 
 					if (result.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
@@ -27646,7 +27651,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} else {
 					// 표준모듈 (2007.05.07) : 다국어
 					result = doApprove(pOrgDocID, "", staASWheSong, ezOrganService.getPropertyValue(pDeptID, "DisplayName", tenantID), ezOrganService.getPropertyValue(pDeptID, "DisplayName2", tenantID), dirPath, pDeptID, "", pOrgCompanyID, lang, userInfo, curDocNum, "", "", "");
-
+					sendNoti(pOrgDocID, userInfo.getId(), userInfo.getDisplayName(), "", "", "", "HESONG", pOrgCompanyID, userInfo.getLang(), userInfo.getTenantId());
+					
 					if (result.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
 					}
@@ -36235,4 +36241,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return gongramAprLineInfo;
 	}
 
+    // 첨부된 문서의 권한 체크
+    public boolean isAttachDoc(String docID, String parentDocID, String userID, String companyID, int tenantID) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("v_ParentID", parentDocID);
+        map.put("v_DOCID", docID);
+        map.put("v_TENANTID", tenantID);
+        map.put("companyID", companyID);
+
+        return ezApprovalGDAO.isExistDocAttach(map) > 0;
+    }
 }

@@ -19,7 +19,6 @@
 	#theme2Body .two_column{width:48%;}
 	/*#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}*/
 	.top_two_column {margin : 0px 0px 25px 0px;}
-	.orbit-wrapper .timer {display:none;}
 	.linkIcon {display: block; margin: 0 auto; padding: 9px 0px 5px 0px; text-align: center;}
 	.linkTxt {display: block; width: 78px; text-align: center; color: #333; font-size: 12px; height: 27px; letter-spacing: 0px; overflow: hidden;margin: 0 auto; padding: 2px 0px 0px 0px; word-break: break-all; line-height: 15px; text-overflow: ellipsis; white-space: nowrap;}
 </style>

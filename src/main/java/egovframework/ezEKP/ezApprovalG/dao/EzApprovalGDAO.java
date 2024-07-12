@@ -3966,4 +3966,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<ApprGAprLineVO>) list("EzApprovalG.getGongramAprLineInfo", map);
 	}
 
+    public int isExistDocAttach(Map<String, Object> map)  throws Exception {
+        return (int) select("EzApprovalG.isExistDocAttach", map);
+    }
 }
