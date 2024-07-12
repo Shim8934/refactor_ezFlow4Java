@@ -393,3 +393,50 @@ nav .navUL li.on{color:#388CE5;}
 #theme2Body .scalendar_mini th{color:#F3F3F3;}
 
 #theme2Body .collaborate_tab{background:none;}
+
+
+#theme3Body .portlet{background:#272829;}
+#theme3Body .top_info_area{background:#2F3031;}
+#theme3Body .top_info_area_wrap .top_info_toggle_btn{background-color:#2F3031;}
+#theme3Body .top_info_area_wrap.position .top_info_toggle_btn{background-color:#2F3031;}
+#theme3Body .my_info_wrap{background:#313233; border-color:#313233; box-shadow:0 3px 30px rgba(0,0,0,0.14);}
+#theme3Body .my_info_wrap .my_info span.team{color:#B5B5B5;}
+
+#theme3Body .top_info_area ul li > span{background:#313233; border-color:#313233; box-shadow:0 3px 21px rgba(0,0,0,0.13);}
+#theme3Body .top_info_area ul li > span > span{color:#fff;}
+#theme3Body .top_info_area ul li > span em{color:#F3F3F3;}
+
+#theme3Body .top_info_area ul li:last-child{background:#313233; border-color:#313233; box-shadow:0 3px 21px rgba(0,0,0,0.13);}
+#theme3Body .top_info_area ul li:last-child h3{color:#fff;}
+#theme3Body .top_info_area ul li:last-child .noti .swiper_txt{color:#fff;}
+
+
+#theme3Body #Center{background:#1E1E20;}
+#theme3Body .box_shadow{background:#272829 !important;}
+#theme3Body .portlet_list li .txt{color:#F3F3F3;}
+
+#theme3Body .schedule_calendar.box_shadow{border-color:rgba(68,68,68,0.5);}
+#theme3Body .sscheduleUL .scheduleLi_nodata{background:none;}
+
+#theme3Body .voteTitle_all{background:#343638;}
+
+#theme3Body .first_approval .approval_content{background:#343638;}
+
+#theme3Body .bookmark > li{background-color:#343638;}
+
+#theme3Body .weather_mini{background:none;}
+
+#theme3Body .time_check{background:none;}
+#theme3Body .presentTime .timeTxt{background:none;}
+#theme3Body .main_time .timeCheckIn{background:#343638; border-color:#3C3C3C;}
+#theme3Body .main_time .timeCheckOut{background:#343638; border-color:#3C3C3C;}
+
+#theme3Body .noti_portlet_list .notiLI dl{background:#343638;}
+
+#theme3Body .writebanner.box_shadow{background:none !important;}
+#theme3Body .writebannerTop li{background:#272829;}
+
+#theme3Body .resource_listBoxUL .resource_listBoxDL dd > .resource_list_item{background:#343638; color:#F3F3F3;}
+#theme3Body .resource_listBoxUL .resource_listBoxDL dd .resource_list_add{background:none;}
+
+#theme3Body .mailGraph .mGraph{background:#343638;}
