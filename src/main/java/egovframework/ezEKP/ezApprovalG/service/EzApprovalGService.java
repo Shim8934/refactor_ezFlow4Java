@@ -1,11 +1,28 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
-import egovframework.ezEKP.ezApprovalG.vo.*;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachOptionVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
-
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
@@ -14,13 +31,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.UnsupportedEncodingException;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.time.ZonedDateTime;
-import java.util.*;
 import java.util.zip.ZipOutputStream;
+import java.util.Optional;
 
 public interface EzApprovalGService {
 
@@ -917,5 +934,8 @@ public interface EzApprovalGService {
 	public List<ApprGAprLineVO> getGongramAprLineInfo(String docID, String companyID, int tenantId) throws Exception;
 	
 	// 2024-04-23 한태훈 > 결재 알림 발송
-	public String sendNoti(String docID, String senderId, String senderName, String recipientId, String recipientName, String recipientDeptId, String mode, String companyID, String lang, int tenantID) throws Exception; 
+	public String sendNoti(String docID, String senderId, String senderName, String recipientId, String recipientName, String recipientDeptId, String mode, String companyID, String lang, int tenantID) throws Exception;
+
+    // 문서가 parentDocID 의 문서첨부가 맞는지 확인
+    public boolean isAttachDoc(String docID, String parentDocID, String userID, String companyID, int tenantID) throws Exception;
 }

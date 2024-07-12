@@ -2307,6 +2307,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			return;
 		}
 	}
+
+	// 2024-06-17 이주원 - 일정관리 > 상단표시 컬럼 추가
+	public void alterTblScheduleForShowtop() {
+		try {
+			select(("EzCommonDAO.checkTblScheduleForShowtop"));
+		} catch (Exception e) {
+			logger.debug("tbl_schedule showtop column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterTblScheduleForShowtop");
+		}
+	}
 	
 	public void insertMobileTheme() throws Exception {
 		if ((int)select("EzCommonDAO.checkMobileTheme") < 1) {

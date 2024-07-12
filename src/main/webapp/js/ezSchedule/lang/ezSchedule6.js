@@ -139,6 +139,7 @@ var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Jadwal Grup";
 var strLang130_1 = "Grup";
+var strLang131 = "tampilkan di bagian atas";
 
 var strLang253 = "Sumber daya tidak dipilih."
 var strLang254 = "Sumber daya yang dipilih tidak dapat dihapus."

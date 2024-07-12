@@ -231,6 +231,9 @@ function getCalWeekViewSource_after() {
                             tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                             aheadDataCell(tempData[k], k)
                             CalWeekDataBind(tempData[k], k);
+                            if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                                CalWeekTopDataBind(tempData[k], k);
+                            }
                             DataSDT.setDate(DataSDT.getDate() + 1);
                             k += 1;
                         }
@@ -238,6 +241,9 @@ function getCalWeekViewSource_after() {
                         tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                         aheadDataCell(tempData[k], k)
                         CalWeekDataBind(tempData[k], k);
+                        if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                            CalWeekTopDataBind(tempData[k], k);
+                        }
                         k += 1;
                     }
             }
@@ -332,46 +338,52 @@ function getCalDayViewSource_after() {
             OrgDataSDT = new Date(DataSDT);
             OrgDataEDT = new Date(DataEDT);
             if (SelectSingleNodeValue(objNodes, "DATETYPE") != "2") {
-                    if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
+                if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) {
 
-                        var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
-                        var day = 1000 * 60 * 60 * 24;
-                        betweenDay = parseInt(betweenDay / day, 10);
-                        for (var j = 0; j <= betweenDay; j++) {
-                            var toDay = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
-                            var DataDay = DataSDT.getFullYear() + "-" + leadingZeros((DataSDT.getMonth() + 1), 2) + "-" + leadingZeros(DataSDT.getDate(), 2)
-                            if (toDay == DataDay) {
-                                if (betweenDay >= 1) {
-                                    if (j == 0) {
-                                        DataEDT.setHours(23);
-                                        DataEDT.setMinutes(59);
-                                    }
-                                    else if (j < betweenDay) {
-                                        DataSDT.setHours(0);
-                                        DataSDT.setMinutes(0);
-                                        DataEDT.setHours(23);
-                                        DataEDT.setMinutes(59);
-                                    }
-                                    else {
-                                        DataSDT.setHours(0);
-                                        DataSDT.setMinutes(0);
-                                        DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
-                                    }
+                    var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
+                    var day = 1000 * 60 * 60 * 24;
+                    betweenDay = parseInt(betweenDay / day, 10);
+                    for (var j = 0; j <= betweenDay; j++) {
+                        var toDay = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
+                        var DataDay = DataSDT.getFullYear() + "-" + leadingZeros((DataSDT.getMonth() + 1), 2) + "-" + leadingZeros(DataSDT.getDate(), 2)
+                        if (toDay == DataDay) {
+                            if (betweenDay >= 1) {
+                                if (j == 0) {
+                                    DataEDT.setHours(23);
+                                    DataEDT.setMinutes(59);
                                 }
-                                tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
-                                aheadDataCell(tempData[k], k);
-                                CalDayDataBind(tempData[k], k);
-
-                                k += 1;
+                                else if (j < betweenDay) {
+                                    DataSDT.setHours(0);
+                                    DataSDT.setMinutes(0);
+                                    DataEDT.setHours(23);
+                                    DataEDT.setMinutes(59);
+                                }
+                                else {
+                                    DataSDT.setHours(0);
+                                    DataSDT.setMinutes(0);
+                                    DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+                                }
                             }
-                            DataSDT.setDate(DataSDT.getDate() + 1);
+                            tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                            aheadDataCell(tempData[k], k);
+                            CalDayDataBind(tempData[k], k);
+                            if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                                CalDayTopDataBind(tempData[k], k);
+                            }
+
+                            k += 1;
                         }
-                    } else {
-                        tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
-                        aheadDataCell(tempData[k], k);
-                        CalDayDataBind(tempData[k], k);
-                        k += 1;
+                        DataSDT.setDate(DataSDT.getDate() + 1);
                     }
+                } else {
+                    tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                    aheadDataCell(tempData[k], k);
+                    CalDayDataBind(tempData[k], k);
+                    if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                        CalDayTopDataBind(tempData[k], k);
+                    }
+                    k += 1;
+                }
             }
             else {
                 if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
@@ -1237,6 +1249,138 @@ function CalWeekAllDataBind(oAppointment, order) {
     oAppointment = null;
 }
 
+// 상단표시 (주보기)
+function CalWeekTopDataBind(oAppointment, order) {
+
+    var objDivS = document.getElementById(oAppointment.trID.substring(0, 10) + "TOP");
+    if (objDivS) {
+
+        var oDiv = document.createElement("DIV");
+        oDiv.style.whiteSpace = "noWrap";
+        oDiv.style.overflow = "hidden";
+        var oSpan = document.createElement("SPAN");
+
+        if (oAppointment.ScheduleType == 3) {
+
+            oDiv.className = "calendar_data_company";
+            oSpan.className = "company";
+        }
+        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
+            oDiv.className = "calendar_data_individual";
+            oSpan.className = "individual";
+        }
+        else if (oAppointment.ScheduleType == 6) {
+            oDiv.className = "calendar_data_individual";
+            oSpan.className = "individual";
+        }
+        else if (oAppointment.ScheduleType == 7) {
+            oDiv.className = "calendar_data_Group";
+            oSpan.className = "Group";
+        }
+        else if (oAppointment.ScheduleType == 4) {
+            oDiv.className = "calendar_data_collaboration";
+            oSpan.className = "collaboration";
+        }
+        else {
+            oDiv.className = "calendar_data_department";
+            oSpan.className = "department";
+        }
+
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
+        }
+
+        oDiv.appendChild(oSpan);
+        oDiv.style.overflow = "hidden";
+        oDiv.style.textOverflow = "ellipsis";
+        if (oAppointment.Importance == 1) {
+            var oSpan = document.createElement("SPAN");
+            oSpan.className = "icon_l";
+            oDiv.appendChild(oSpan);
+        } else if (oAppointment.Importance == 3) {
+            var oSpan = document.createElement("SPAN");
+            oSpan.className = "icon_h";
+            oDiv.appendChild(oSpan);
+        }
+
+        var pTime = "";
+        var pSubject;
+
+        if (oAppointment.DateType != 2) {
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+            pSubject = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay + " " + oAppointment.Subject;
+        }
+        else {
+            pTime = strLang39;
+            pSubject = oAppointment.Subject;
+        }
+
+        var oTextSpan = document.createElement("SPAN");
+        var oText = document.createTextNode(pSubject);
+
+    	if (oAppointment.CompleteFG == "Y" && ((oAppointment.RepStartDate == oAppointment.StartDateNoTZ && oAppointment.IsAllRep == "N") || (oAppointment.IsAllRep == "Y"))) {
+    		oTextSpan.style.textDecoration = "line-through";
+    	}
+
+        //oDiv.innerHTML += pSubject;
+    	oTextSpan.appendChild(oText);
+    	oDiv.appendChild(oTextSpan);
+
+        oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
+        oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
+        oDiv.setAttribute("ScheduleChangeKey", oAppointment.ScheduleChangeKey);
+        oDiv.setAttribute("ParentID", oAppointment.ParentID);
+        oDiv.setAttribute("OwnerID", oAppointment.OwnerID);
+        oDiv.setAttribute("CreatorID", oAppointment.CreatorID);
+        oDiv.setAttribute("ModifierID", oAppointment.ModifierID);
+        oDiv.setAttribute("ScheduleType", oAppointment.ScheduleType);
+        oDiv.setAttribute("Importance", oAppointment.Importance);
+        oDiv.setAttribute("IsReadOnly", oAppointment.IsReadOnly);
+        oDiv.setAttribute("DateType", oAppointment.DateType);
+        oDiv.setAttribute("Subject", oAppointment.Subject);
+        oDiv.setAttribute("StartDate", oAppointment.StartDate);
+        oDiv.setAttribute("EndDate", oAppointment.EndDate);
+        oDiv.setAttribute("RepeatCount", oAppointment.RepeatCount);
+        oDiv.setAttribute("Location", oAppointment.Location);
+        oDiv.setAttribute("dtstartUTC", oAppointment.dtstartUTC);
+        oDiv.setAttribute("dtendUTC", oAppointment.dtendUTC);
+        oDiv.setAttribute("dtstartHour", oAppointment.dtstartHour);
+        oDiv.setAttribute("dtstartMinute", oAppointment.dtstartMinute);
+        oDiv.setAttribute("dtendHour", oAppointment.dtendHour);
+        oDiv.setAttribute("dtendMinute", oAppointment.dtendMinute);
+        oDiv.setAttribute("dtstartDisplay", oAppointment.dtstartDisplay);
+        oDiv.setAttribute("dtendDisplay", oAppointment.dtendDisplay);
+
+        oDiv.setAttribute("OrgStartDate", oAppointment.OrgStartDate);
+        oDiv.setAttribute("OrgEndDate", oAppointment.OrgEndDate);
+
+        oDiv.setAttribute("command", "open");
+        oDiv.setAttribute("ptime", pTime);
+
+        oDiv.setAttribute("completefg", oAppointment.CompleteFG);
+
+        oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
+        oDiv.setAttribute("onmouseout", "hideTooltip(this)");
+        var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        if(oAppointment.scheduleFlag == "google") {
+        	oDiv.setAttribute("isGoogle", "Y");
+        	oDiv.setAttribute("googleId", oAppointment.googleId);
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+            oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+        } else {
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        }
+        objDivS.appendChild(oDiv);
+
+    }
+    objDivS = null;
+    oAppointment = null;
+}
+
 
 function CalDayDataBind(oAppointment, order) {
     
@@ -1524,6 +1668,138 @@ function CalDayAllDataBind(oAppointment, order) {
         oDiv.setAttribute("dtendMinute", oAppointment.dtendMinute);
         oDiv.setAttribute("dtstartDisplay", oAppointment.dtstartDisplay);
         oDiv.setAttribute("dtendDisplay", oAppointment.dtendDisplay);
+
+        oDiv.setAttribute("OrgStartDate", oAppointment.OrgStartDate);
+        oDiv.setAttribute("OrgEndDate", oAppointment.OrgEndDate);
+
+        oDiv.setAttribute("command", "open");
+        oDiv.setAttribute("ptime", pTime);
+        
+        oDiv.setAttribute("completefg", oAppointment.CompleteFG);
+        
+        oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
+        oDiv.setAttribute("onmouseout", "hideTooltip(this)");
+        var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        if(oAppointment.scheduleFlag == "google") {
+        	oDiv.setAttribute("isGoogle", "Y");
+        	oDiv.setAttribute("googleId", oAppointment.googleId);
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+	        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        } else {
+	        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+	        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        }
+        
+        objDivS.appendChild(oDiv);
+
+    }
+    objDivS = null;
+    oAppointment = null;
+}
+
+// 상단표시 (일보기)
+function CalDayTopDataBind(oAppointment, order) {
+
+    var objDivS = document.getElementById(oAppointment.trID.substring(0, 10) + "TOP");
+    if (objDivS) {
+
+        var oDiv = document.createElement("DIV");
+
+        var oSpan = document.createElement("SPAN");
+
+        if (oAppointment.ScheduleType == 3) {
+
+            oDiv.className = "calendar_data_company";
+            oSpan.className = "company";
+        }
+        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
+            oDiv.className = "calendar_data_individual";
+            oSpan.className = "individual";
+        }
+        else if (oAppointment.ScheduleType == 6) {
+            oDiv.className = "calendar_data_individual";
+            oSpan.className = "individual";
+        }
+        else if (oAppointment.ScheduleType == 7) {
+            oDiv.className = "calendar_data_Group";
+            oSpan.className = "Group";
+        }
+        else if (oAppointment.ScheduleType == 4) {
+            oDiv.className = "calendar_data_collaboration";
+            oSpan.className = "collaboration";
+        }
+        else {
+            oDiv.className = "calendar_data_department";
+            oSpan.className = "department";
+        }
+
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
+        }
+
+        oDiv.appendChild(oSpan);
+
+        if (oAppointment.Importance == 1) {
+            var oSpan = document.createElement("SPAN");
+            oSpan.className = "icon_l";
+            oDiv.appendChild(oSpan);
+        } else if (oAppointment.Importance == 3) {
+            var oSpan = document.createElement("SPAN");
+            oSpan.className = "icon_h";
+            oDiv.appendChild(oSpan);
+        }
+
+        var pTime = "";
+        var pSubject;
+
+        if (oAppointment.DateType != 2) {
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+            pSubject = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay + " " + oAppointment.Subject;
+        }
+        else {
+            pTime = strLang39;
+            pSubject = oAppointment.Subject;
+        }
+
+        var oTextSpan = document.createElement("SPAN");
+        var oText = document.createTextNode(pSubject);
+        
+    	if (oAppointment.CompleteFG == "Y" && ((oAppointment.RepStartDate == oAppointment.StartDateNoTZ && oAppointment.IsAllRep == "N") || (oAppointment.IsAllRep == "Y"))) {
+    		oTextSpan.style.textDecoration = "line-through";
+    	}
+    	
+        //oDiv.innerHTML += pSubject;
+    	oTextSpan.appendChild(oText);
+    	oDiv.appendChild(oTextSpan);
+       
+        oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
+        oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
+        oDiv.setAttribute("ScheduleChangeKey", oAppointment.ScheduleChangeKey);
+        oDiv.setAttribute("ParentID", oAppointment.ParentID);
+        oDiv.setAttribute("OwnerID", oAppointment.OwnerID);
+        oDiv.setAttribute("CreatorID", oAppointment.CreatorID);
+        oDiv.setAttribute("ModifierID", oAppointment.ModifierID);
+        oDiv.setAttribute("ScheduleType", oAppointment.ScheduleType);
+        oDiv.setAttribute("Importance", oAppointment.Importance);
+        oDiv.setAttribute("IsReadOnly", oAppointment.IsReadOnly);
+        oDiv.setAttribute("DateType", oAppointment.DateType);
+        oDiv.setAttribute("Subject", oAppointment.Subject);
+        oDiv.setAttribute("StartDate", oAppointment.StartDate);
+        oDiv.setAttribute("EndDate", oAppointment.EndDate);
+        oDiv.setAttribute("RepeatCount", oAppointment.RepeatCount);
+        oDiv.setAttribute("Location", oAppointment.Location);
+        oDiv.setAttribute("dtstartUTC", oAppointment.dtstartUTC);
+        oDiv.setAttribute("dtendUTC", oAppointment.dtendUTC);
+        oDiv.setAttribute("dtstartHour", oAppointment.dtstartHour);
+        oDiv.setAttribute("dtstartMinute", oAppointment.dtstartMinute);
+        oDiv.setAttribute("dtendHour", oAppointment.dtendHour);
+        oDiv.setAttribute("dtendMinute", oAppointment.dtendMinute);
+        oDiv.setAttribute("dtstartDisplay", oAppointment.dtstartDisplay);
+        oDiv.setAttribute("dtendDisplay", oAppointment.dtendDisplay);
+        oDiv.setAttribute("showtop", oAppointment.showtop);
 
         oDiv.setAttribute("OrgStartDate", oAppointment.OrgStartDate);
         oDiv.setAttribute("OrgEndDate", oAppointment.OrgEndDate);

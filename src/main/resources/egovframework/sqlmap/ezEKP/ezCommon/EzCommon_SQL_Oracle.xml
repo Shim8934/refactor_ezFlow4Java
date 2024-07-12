@@ -1008,7 +1008,7 @@
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 			VALUES (#portletId#, #menuId#, 1, #tenantId#, #companyId#, '개인폴더')			
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'My Folder')			
+			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'My Folder')
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 			VALUES (#portletId#, #menuId#, 3, #tenantId#, #companyId#, 'Webフォルダ')
 		SELECT *
@@ -4718,13 +4718,13 @@
 				PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
 		)
 	</statement>
-	
+
 	<select id="EzCommonDAO.checkTblRealTimeNotification">
 		<![CDATA[
 		SELECT NOTISEQ FROM TBL_REALTIME_NOTIFICATION WHERE ROWNUM <= 1
 		]]>
 	</select>
-	
+
 	<statement id="EzCommonDAO.createTblRealTimeNotification">
 		CREATE TABLE tbl_realtime_notification (
 		    NOTISEQ NUMBER(20) NOT NULL,
@@ -4751,12 +4751,12 @@
 		    PRIMARY KEY (NOTISEQ,TENANT_ID)
 		)
 	</statement>
-	
+
 	<select id="EzCommonDAO.getNotiStoragePeriodConfig" parameterClass="Map" resultClass="String">
 	<![CDATA[
-		SELECT 
+		SELECT
 			PROPERTY_VALUE
-		FROM 
+		FROM
 			TBL_TENANT_CONFIG
 		WHERE
 			tenant_id = #tenantId#
@@ -4764,19 +4764,19 @@
 			PROPERTY_NAME = 'notiStoragePeriod'
 	]]>
 	</select>
-	
+
 	<insert id="EzCommonDAO.addNotiStoragePeriodConfig"  parameterClass="Map">
-		INSERT INTO TBL_TENANT_CONFIG 
+		INSERT INTO TBL_TENANT_CONFIG
 			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES
-			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, TO_DATE(#regdate#, 'YYYY-MM-DD HH24:MI:SS'), #configType#) 
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, TO_DATE(#regdate#, 'YYYY-MM-DD HH24:MI:SS'), #configType#)
 	</insert>
 
 	<select id="EzCommonDAO.getNotiPollingIntervalConfig" parameterClass="Map" resultClass="String">
 	<![CDATA[
-		SELECT 
+		SELECT
 			PROPERTY_VALUE
-		FROM 
+		FROM
 			TBL_TENANT_CONFIG
 		WHERE
 			tenant_id = #tenantId#
@@ -4784,14 +4784,14 @@
 			PROPERTY_NAME = 'notiPollingInterval'
 	]]>
 	</select>
-	
+
 	<insert id="EzCommonDAO.addNotiPollingIntervalConfig"  parameterClass="Map">
-		INSERT INTO TBL_TENANT_CONFIG 
+		INSERT INTO TBL_TENANT_CONFIG
 			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES
-			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, TO_DATE(#regdate#, 'YYYY-MM-DD HH24:MI:SS'), #configType#) 
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, TO_DATE(#regdate#, 'YYYY-MM-DD HH24:MI:SS'), #configType#)
 	</insert>
-	
+
 	<select id="EzCommonDAO.checkTblPortalTopCompany" resultClass="String">
 		SELECT 1 FROM TBL_PORTAL_TOP_COMPANY WHERE ROWNUM = 1
 	</select>
@@ -4824,7 +4824,7 @@
             ADD
                 COMPANYID varchar(20) DEFAULT 'Top' NOT NULL
     </statement>
-    
+
 	<select id="EzCommonDAO.checkUserThemePagination">
 		<![CDATA[
 		SELECT	USEPAGING
@@ -4840,7 +4840,7 @@
 		ADD
 			USEPAGING	NUMBER(1)	DEFAULT	1	NOT NULL
 	</statement>
-	
+
 	 <select id="EzCommonDAO.checkThemeInformation" resultClass="string">
     	SELECT
     		THEME_CONTENT
@@ -4849,21 +4849,21 @@
     	WHERE
     		THEME_ID=1
     </select>
-    
+
     <update id="EzCommonDAO.alterThemeInformation" parameterClass="Map">
     	<![CDATA[
-			UPDATE  
+			UPDATE
 					TBL_PORTAL_THEME
-			SET		
+			SET
 					THEME_CONTENT = #themeContent1#,
 					THEME_CONTENT2 = #themeContent2#,
 					THEME_CONTENT3 = #themeContent3#,
 					THEME_CONTENT4 = #themeContent4#,
 					THEME_CONTENT5 = #themeContent5#,
 					THEME_CONTENT6 = #themeContent6#
-			WHERE 	
+			WHERE
 					THEME_ID = #themeId#
-		]]>	
+		]]>
     </update>
 
 	<select id="EzCommonDAO.checkCompanyMenuIconUrl">
@@ -4881,6 +4881,30 @@
 			ADD
 				ICON_URL varchar(200) DEFAULT NULL
 	</statement>
+
+
+	<!-- 2024-07-17 이주원 - 일정관리 > 상단표시 컬럼 추가 -->
+	<select id="EzCommonDAO.checkTblScheduleForShowtop" resultClass="String">
+		<![CDATA[
+		SELECT
+			SHOWTOP
+		FROM
+			tbl_schedule
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblScheduleForShowtop">
+		<![CDATA[
+		ALTER TABLE
+			tbl_schedule
+		ADD (
+			SHOWTOP VARCHAR2(2) DEFAULT 'N'
+			)
+		]]>
+	</statement>
+
     
 	<!--2024-07-12 황인경 - 모바일 포탈 개발 -->
 	<select id="EzCommonDAO.checkMobileTheme" resultClass="Integer">

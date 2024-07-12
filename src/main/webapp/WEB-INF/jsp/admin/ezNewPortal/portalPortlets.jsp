@@ -26,7 +26,7 @@
   	.portlet, .newPortlet {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
   	.portlet-header {padding:0px 0px 0px 15px;margin:0px;position: relative;border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; border:1px solid #2196f3;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
-  	.portlet-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:250px;}
+  	.portlet-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:250px; overflow:auto;}
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
 	.col, .newPortlet {padding:0px;}
 	.addPortlet:hover {cursor:pointer;}
@@ -39,7 +39,7 @@
 	.portletInfoTH, .portletInfoTD {}
 	.boardNotUsed {height:2.6em;}
 	.portletInfo {width : 100%;}
-	.portletInfoTD {width:100%;}
+	.portletInfoTD {width:100%; position:relative;}
 	.portletInfoTD input[type='text'] {width:100%; height:27px; font-size:12px; padding:0px 0px 0px 5px; color:#393939;}
 	.addPortlet {border:1px dashed #aab2ba; text-align:center;height:289.006px; border-radius:0px;}
 	.addPortlet dl {margin:87px;}
@@ -100,8 +100,8 @@
 	
 	.portletAuthSetting {
 		position: absolute;
-	    right: 17px;
-	    top: 53px;
+	    right: 0px;
+	    top: 6px;
         cursor: pointer;
         display: inline-block;
 	}
@@ -833,6 +833,7 @@
 			toastArea.style.top = topPosition + "px";
 			toastArea.style.left = leftPosition + "px";
 			toastArea.style.display = "block";
+			toastArea.style.zIndex = 9999;
 			toastArea.id = "toast" + portletId;
 			
 			$("#portlet" + portletId).prepend(toastArea);

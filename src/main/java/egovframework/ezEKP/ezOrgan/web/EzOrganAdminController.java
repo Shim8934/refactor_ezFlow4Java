@@ -235,6 +235,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.alterSubPermittedForQuicklinkAcl(); /* 2024-05-28 김유진 - 포탈 > 빠른링크관리 하위부서 허용여부, 유저타입 컬럼 추가 */
 			ezCommonService.alterDocAttachNameCol(); // 2024-06-24 민지수 > 전자결재 > 비전자 기록물 > 본문첨부 파일명 컬럼 추가
 			ezCommonService.alterUserThemePagination();
+			ezCommonService.alterTblScheduleForShowtop(); /* 2024-06-17 이주원 - 일정관리 > 상단표시 컬럼 추가 */
 			ezCommonService.insertInitMobileTheme(); // 2024-07-12 황인경 > 모바일 포탈 > 포틀릿, 테마, 권한 추가
 
 			// tenant config

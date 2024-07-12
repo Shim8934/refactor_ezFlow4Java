@@ -2969,7 +2969,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("insertTabBoardPortlet started");
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("portletCode", tapBoardCode);
-		
+
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
 		map.put("portletId", ezCommonDAO.getNewPortletId());
 		map.put("portletName1", "탭게시판");
@@ -3501,17 +3501,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertPrvwConfig() throws Exception {
 		ezCommonDAO.insertPrvwConfig();
 	}
-    
+
     @Override
     public void insertPermissionBasisDeptYN_Config() throws Exception {
         ezCommonDAO.insertPermissionBasisDeptYN_Config();
     }
-    
+
     @Override
     public void createTblDbLog() {
         ezCommonDAO.createTblDbLog();
     }
-    
+
     // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
 	@Override
 	public void insertPortalMenuChinese() throws Exception {
@@ -3597,7 +3597,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			ezCommonDAO.insertTenantConfigLangQuaternary(map);
 		}		
 	}
-	
+
     @Override
     public void insertLoadTimeForApprAllConfig() {
     	ezCommonDAO.insertLoadTimeForApprAllConfig();
@@ -3939,6 +3939,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.alterCompanyMenuIconUrl();
     }
 
+    @Override
+    public void alterTblScheduleForShowtop() throws Exception {
+        ezCommonDAO.alterTblScheduleForShowtop();
+    }
     @Override
     public void insertInitMobileTheme() throws Exception {
 
