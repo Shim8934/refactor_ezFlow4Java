@@ -3336,7 +3336,7 @@ function NameChange_onClick() {
             mail_select_dlmember_cross_dialogArguments[0] = rtnValue;
             mail_select_dlmember_cross_dialogArguments[1] = dlmember_click_Complete;
             mail_select_dlmember_cross_dialogArguments[2] = DivPopUpHidden;
-            DivPopUpShow(601, 470, "/ezEmail/mailSelectDLMember.do?name=" + name+ "&cn=" + checkDistributionName + "&mailAddress=" + mailAddress + "&newMailFlag=Y");
+            DivPopUpShow(601, 470, "/ezEmail/mailSelectDLMember.do?name=" + javaURLEncode(name) + "&cn=" + checkDistributionName + "&mailAddress=" + mailAddress + "&newMailFlag=Y");
         } else{
             GetMailAddresses(name);
             rgParams["addrBook"] = m_addrBook;
