@@ -41,6 +41,7 @@
 			var pOpenYear = "<c:out value = '${openYear}'/>";
 			var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 			var selectYear = "ALL";
+			var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임 / 2: 상위부서 + 수신처장)
 
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {

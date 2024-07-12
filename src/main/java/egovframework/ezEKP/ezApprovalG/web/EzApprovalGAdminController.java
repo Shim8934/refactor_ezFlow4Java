@@ -3099,6 +3099,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
 		
 		logger.debug("forAprDoc ended.");
 		
@@ -3310,6 +3311,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
 		
 		logger.debug("forDoc ended.");
 		

@@ -1418,7 +1418,7 @@ function SetAutoPropertyValue() {
 
 				case "chief" :        
 					if (SendName != "")
-						message.PutFieldText(Fields[i], SendName + "장");
+						message.PutFieldText(Fields[i], SendName + strLang93);
 					break;
 			}
 		} else {

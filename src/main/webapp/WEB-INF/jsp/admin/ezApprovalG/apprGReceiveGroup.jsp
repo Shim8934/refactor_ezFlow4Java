@@ -49,7 +49,7 @@
 	        var lvtDept = new ListView();
 	        var lvtDeptSelect = new ListView();
 	        var treeView = new TreeView();
-	        var useReceiveInfoName = "<c:out value='${useReceiveInfoName}'/>";
+	        var useReceiveInfoName = "<c:out value='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임 / 2: 상위부서 + 수신처장)	        
 		    
 		    $(document).ready(function(){
 		    	document.getElementById("SCompID").value = companySelectID;
@@ -175,17 +175,37 @@
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(nodeIdx.NodeID);
 
-		        var deptid = treeNode.GetNodeData("CN"); 
-		        if (!isgetUser(deptid)) {
+		        var deptId = treeNode.GetNodeData("CN"); 
+		        if (!isgetUser(deptId)) {
 		            var pAlertContent = strLang291 + strLang1102;
 		            alert(pAlertContent);
 		            return;
 		        }
-		        if (!isReceiverChk(deptid)) {
+		        if (!isReceiverChk(deptId)) {
 		            var pAlertContent = strLang1101 + strLang1102;
 		            alert(pAlertContent);
 		            return;
 		        }
+		        
+		        var companyId = document.getElementById("SCompID").value;
+		        var upperDeptName = getParentDeptNameForDB(deptId);
+		        var deptName = treeNode.GetNodeData("DISPLAYNAME1");
+		        var resultDeptName = "";
+		        
+                if (useReceiveInfoName == '1') {
+                    //현재부서명 + 장
+                    resultDeptName = deptName + strLang93;
+                } else if (useReceiveInfoName == '2') {
+                    // 상위부서명(현재부서명 + 장)
+                    if (!upperDeptName || deptId === companyId) { // 회사
+                        resultDeptName = deptName + strLang93;
+                    } else { // 부서
+                        resultDeptName = upperDeptName + "(" + deptName + strLang93 + ")";
+                    }
+                } else {
+                    //default
+                    resultDeptName = deptName;
+                }
 
 		        
 		        $.ajax({
@@ -195,11 +215,11 @@
 		        	async : false,
 		        	data : {
 		        		node1 : p_groupid,
-		        		node2 : treeNode.GetNodeData("CN"),
-		        		node3 : treeNode.GetNodeData("DISPLAYNAME1"),
-		        		node4 : document.getElementById("SCompID").value,
+		        		node2 : deptId,
+		        		node3 : resultDeptName,
+		        		node4 : companyId,
 // 		        		node5 : treeNode.GetNodeData("EXTENSIONATTRIBUTE2"),
-		        		node6 : treeNode.GetNodeData("DISPLAYNAME2")
+		        		node6 : resultDeptName
 		        	},
 		        	success : function() {
 		        		getAdminReceivItem(p_groupid);
@@ -567,12 +587,26 @@
 	            if (!isReceiverChk(aDeptID)) { 
 	                return;
 	            }
+	            
+	            var upperDeptName = getParentDeptNameForDB(aDeptID);
+	            var resultDeptName = aDeptName;
+	            if (useReceiveInfoName == '1') {
+                    //현재부서명 + 장
+                    resultDeptName = aDeptName + strLang93;
+                } else if (useReceiveInfoName == '2') {
+                    // 상위부서명(현재부서명 + 장)
+                    if (!upperDeptName || aDeptID === aCompanyID) { // 회사
+                        resultDeptName = aDeptName + strLang93;
+                    } else { // 부서
+                        resultDeptName = upperDeptName + "(" + aDeptName + strLang93 + ")";
+                    }
+                }
 
 	            $.ajax({
 	            	type : "POST",
 	            	url : "/admin/ezApprovalG/setGroupSubItemInfo.do",
 	            	async : false,
-	            	data : { node1 : p_groupid, node2 : aDeptID, node3 : aDeptName, node4 : document.getElementById("SCompID").value, node5 : aCompanyID, node6 : aDeptName2 },
+	            	data : { node1 : p_groupid, node2 : aDeptID, node3 : resultDeptName, node4 : document.getElementById("SCompID").value, node5 : aCompanyID, node6 : aDeptName2 },
 	            	success : function(result) {
 	            	}
 	            });
@@ -728,6 +762,29 @@
 				lvtDept_SelChange();
 				initializeApprGReceoveGroup();
 			}
+			
+			function getParentDeptNameForDB(deptID) {
+                var rtnVal = "";
+                
+                $.ajax({
+                    type : "GET",
+                    dataType : "json",
+                    async : false,
+                    url : "/ezOrgan/getUpperDeptName.do",
+                    data : {
+                        deptID : deptID
+                    },
+                    success: function(result) {
+                        rtnVal = result.upperDeptName;
+                    },
+                    error: function(xhr, status, error){
+                        console.log(error);
+                        alert(strLang199);
+                    },
+                });
+                
+                return rtnVal;
+            }
 		</script>
 	</head>
 	<body class="mainbody">

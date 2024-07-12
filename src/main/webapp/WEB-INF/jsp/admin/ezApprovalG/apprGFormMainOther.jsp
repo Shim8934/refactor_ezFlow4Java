@@ -75,6 +75,8 @@
 			
 			/* 2022-01-07 홍승비 - 일괄기안 옵션 추가 */
 			var useDraftAll = "<c:out value='${useDraftAll}'/>";
+			
+			var useReceiveInfoName = "<c:out value='${useReceiveInfoName}'/>";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -507,6 +509,7 @@
 		
 		    function TreeViewNodeClick(pNodeID, pNodeNM) {
 		        TreeIdx = pNodeID;
+		        nodeIdx = pNodeID;
 		        treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
 		        displayUserList(treeNode.GetNodeData("CN"));
@@ -572,11 +575,13 @@
 		    		return;
 		    	}		    	
 		    	
-		        var pAlertContent = "<spring:message code='ezApprovalG.t1361'/><spring:message code='ezApprovalG.t1362'/>";
-		        var Ans = OpenInformationUI(pAlertContent, insertAllCont_complete);
+		    	if (isReceiverChk(deptid)) {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t1361'/><spring:message code='ezApprovalG.t1362'/>";
+                    var Ans = OpenInformationUI(pAlertContent, insertAllCont_complete);
 		        
-		        if (!Ans) {
-		            return;
+		        } else {
+		            var pAlertContent = strLang1101+strLang1102;
+                    var Ans = OpenInformationUI(pAlertContent, insertAllCont_complete);
 		        }
 		    }
 		    
@@ -589,32 +594,44 @@
 		    	chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("VALUE"));
 		    	DivPopUpHidden();
 		    }
-		
+		    
+		    var nodeIdx;
 		    function chkAllDept(aDeptID, aDeptName) {
 		        try {
-		            var DuplicateFlag = DuplicateAprDeptCheck(aDeptID);
-		            if (DuplicateFlag && isReceiverChk(aDeptID))
-		                AprLineAddDept(aDeptName, aDeptID, "D");
-		
-		            var xmlHTTP = createXMLHttpRequest();
-		            var xmlpara = createXmlDom();
-		
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "DATA");
-		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", aDeptID);
-		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
-		
-		            xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
-		            xmlHTTP.send(xmlpara);
-		
-		            var xmlNodes = createXmlDom();
-		            xmlNodes = loadXMLString(xmlHTTP.responseText);
-		
-		            var objNodes = SelectNodes(xmlNodes, "NODES/NODE");
-		            if (objNodes.length > 0) {
-		                for (var i = 0; i < objNodes.length; i++) {
-		                    chkAllDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
-		                }
+		            if (nodeIdx != "") {
+		                if (isExistDept(true)) {
+                            var pAlertContent = strLang244 + "</br>" + strLang245;
+                            OpenAlertUI(pAlertContent);
+                            return;
+                        }
+		            
+                        var treeNode = new TreeNode();
+                        treeNode.LoadFromID(nodeIdx);
+                    
+                        var DuplicateFlag = DuplicateAprDeptCheck(aDeptID);
+                        if (DuplicateFlag && isReceiverChk(aDeptID))
+                            AprLineAddDept(aDeptName, aDeptID, "D");
+            
+                        var xmlHTTP = createXMLHttpRequest();
+                        var xmlpara = createXmlDom();
+            
+                        var objNode;
+                        createNodeInsert(xmlpara, objNode, "DATA");
+                        createNodeAndInsertText(xmlpara, objNode, "DEPTID", aDeptID);
+                        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
+            
+                        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
+                        xmlHTTP.send(xmlpara);
+            
+                        var xmlNodes = createXmlDom();
+                        xmlNodes = loadXMLString(xmlHTTP.responseText);
+            
+                        var objNodes = SelectNodes(xmlNodes, "NODES/NODE");
+                        if (objNodes.length > 0) {
+                            for (var i = 0; i < objNodes.length; i++) {
+                                chkAllDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
+                            }
+                        }
 		            }
 		            return;
 		        }
@@ -636,6 +653,28 @@
 		        }
 		        return true;
 		    }
+		    
+		    function isExistDept(ExtFlag) {
+                var listview = new ListView();
+                listview.LoadFromID("lvtForm");
+                var CurSelRow = listview.GetDataRows();
+                var rtnVal = false;
+                for (i = 0; i < CurSelRow.length; i++) {
+                    if (ExtFlag) {
+                        if (GetAttribute(CurSelRow[0], "DATA3") == "Y")
+                            rtnVal = true;
+                    }
+                    else {
+                        if (GetAttribute(CurSelRow[0], "DATA3") == "N")
+                            rtnVal = true;
+                    }
+            
+                    if (GetAttribute(CurSelRow[0], "DATA1") == "Address1") {
+                        rtnVal = true;
+                    }
+                }
+                return rtnVal;
+            }
 		
 		    function AprLineAddDept(TNAME, TID, TYPE) {
 		        var Resultxml = createXmlDom();
@@ -646,8 +685,40 @@
 		        	Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1></CELL></ROW></ROWS></LISTVIEWDATA>");
 		        }
 		        
+		        //2015-05-08 추가 - KSK
+                if (GetEntryInfo(TID) == "N") {
+                    return;
+                }
+        
+                if (!isgetUser(TID)) {
+                    return;
+                }
+        
+                if (!isReceiverChk(TID)) {
+                    return;
+                }
+		        
 		        var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
-		        setNodeText(GetChildNodes(objNodes[0])[0], TNAME);
+		        //setNodeText(GetChildNodes(objNodes[0])[0], TNAME); //연본
+		        
+                var upperDeptName = getParentDeptNameForDB(TID);
+                if (useReceiveInfoName == '1') {
+                    //현재부서명 + 장
+                    setNodeText(GetChildNodes(objNodes[0])[0], TNAME + strLang93);
+                } else if (useReceiveInfoName == '2') {
+                    // 상위부서명(현재부서명 + 장)
+
+                    if (!upperDeptName || TID === companyID) { // 회사
+                        reName = TNAME + strLang93
+                    } else { // 부서
+                        reName = upperDeptName + "(" + TNAME + strLang93 + ")";
+                    }
+                    setNodeText(GetChildNodes(objNodes[0])[0], reName);
+                } else {
+                    //default
+                    setNodeText(GetChildNodes(objNodes[0])[0], TNAME);
+                }
+		        
 		        setNodeText(GetChildNodes(objNodes[0])[1], TID);
 		        
 		        if (approvalFlag == 'S') {
@@ -1268,6 +1339,29 @@
 					});
 				}
 			}
+            
+            function getParentDeptNameForDB(deptID) {
+                var rtnVal = "";
+                
+                $.ajax({
+                    type : "GET",
+                    dataType : "json",
+                    async : false,
+                    url : "/ezOrgan/getUpperDeptName.do",
+                    data : {
+                        deptID : deptID
+                    },
+                    success: function(result) {
+                        rtnVal = result.upperDeptName;
+                    },
+                    error: function(xhr, status, error){
+                        console.log(error);
+                        alert(strLang199);
+                    },
+                });
+                
+                return rtnVal;
+            }
 		</script>
 		<!-- FormBuilder -->
 		<c:if test="${useReform}">

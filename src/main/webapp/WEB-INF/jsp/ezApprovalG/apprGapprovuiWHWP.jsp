@@ -2138,7 +2138,7 @@
                     if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0 || useReceiveInfoName == "0") {
                         createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim());
                     } else {
-                        createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? "장" : ""));
+                        createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? strLang93 : ""));
                     }
                     createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTID", SelectSingleNodeValue(dataNodes[0], "DATA1").trim());
                     createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME", SelectSingleNodeValue(dataNodes[0], "DATA2").trim());

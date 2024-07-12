@@ -947,7 +947,7 @@ function SetAutoPropertyValue()
 
 				case "chief" :        
 					if (SendName != "")
-						HwpCtrl.SetFieldText(Fields[i], SendName + "장");
+						HwpCtrl.SetFieldText(Fields[i], SendName + strLang93);
 					break;
 			}
 		}

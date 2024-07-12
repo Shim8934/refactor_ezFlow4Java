@@ -190,6 +190,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("underDeptFlag", underDeptShowFlag);
 		model.addAttribute("underDeptList", underDeptList);
 		model.addAttribute("selSendStatus", selSendStatus);
+		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
 		
 		logger.debug("cabinetMain ended");
 		
@@ -3064,6 +3065,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("useAprPreview", useAprPreview);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useDraftAll", ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId()));
+		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
 		
 		logger.debug("readingRecord ended");
 		

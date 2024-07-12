@@ -605,6 +605,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("nonElecRecType", nonElecRecType);
 		model.addAttribute("previewInfo", previewInfo);
 		model.addAttribute("useAprPreview", useAprPreview);
+		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
 		
 		logger.debug("aprManage ended.");
 		
@@ -8140,6 +8141,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		model.addAttribute("previewInfo", previewInfo);
 		model.addAttribute("useAprPreview", useAprPreview);
+		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
 		
  		logger.debug("getContainerInfo ended");
 		
@@ -9961,6 +9963,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	    model.addAttribute("receipts", receipts);
 	    model.addAttribute("susinGroupPrefix", susinGroupPrefix);
 	    model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
+		
 	    logger.debug("ezReceiptInfo ended");
 	    
 	    return "ezApprovalG/apprGezReceiptInfoIng";

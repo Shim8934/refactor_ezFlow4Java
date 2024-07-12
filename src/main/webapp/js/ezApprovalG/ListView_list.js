@@ -386,7 +386,7 @@ function ListView() {
 
             var oTHeader = GetTableHeaderObj();
             var oTBody = GetTableBodyObj();
-
+            
             if (_SelectFlag && _firstRowID != "") {
                 oTable.setAttribute("lastSelectedRowID", _firstRowID);
             }
