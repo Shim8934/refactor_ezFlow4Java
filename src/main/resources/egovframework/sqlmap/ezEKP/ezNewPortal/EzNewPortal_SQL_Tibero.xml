@@ -2428,11 +2428,11 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	<select id="ezNewPortal.getApprovalStatistics" parameterClass="Map" resultClass="egovframework.ezEKP.ezNewPortal.vo.LowerKeyMap">
 		<![CDATA[
 			SELECT
-                COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - INTERVAL '6' HOUR), 'YY/MM/DD')) THEN 1 END ) AS HOUR,
-                COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - 1), 'YY/MM/DD') AND TO_DATE((sysdate - INTERVAL '6' HOUR), 'YY/MM/DD') > DOCINFO.startdate) THEN 1 END ) AS DAY,
-	            COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - 7), 'YY/MM/DD') AND TO_DATE((sysdate - 1), 'YY/MM/DD') > DOCINFO.STARTDATE) THEN 1 END) AS WEEK,
-	            COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE(ADD_MONTHS(sysdate, -1), 'YY/MM/DD') AND TO_DATE((sysdate - 7), 'YY/MM/DD') > DOCINFO.STARTDATE) THEN 1 END) AS MONTH,
-	            COUNT(CASE WHEN (TO_DATE(ADD_MONTHS(sysdate, -1), 'YY/MM/DD') > DOCINFO.startdate) THEN 1 END) AS OTHER
+                COUNT(CASE WHEN (DOCINFO.startdate >= (sys_extract_utc(systimestamp) - INTERVAL '6' HOUR)) THEN 1 END ) AS HOUR,
+                COUNT(CASE WHEN (DOCINFO.startdate >= (sys_extract_utc(systimestamp) - 1) AND (sys_extract_utc(systimestamp) - INTERVAL '6' HOUR) > DOCINFO.startdate) THEN 1 END ) AS DAY,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= (sys_extract_utc(systimestamp) - 7) AND (sys_extract_utc(systimestamp) - 1) > DOCINFO.STARTDATE) THEN 1 END) AS WEEK,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= ADD_MONTHS(sys_extract_utc(systimestamp), -1) AND (sys_extract_utc(systimestamp) - 7) > DOCINFO.STARTDATE) THEN 1 END) AS MONTH,
+	            COUNT(CASE WHEN (ADD_MONTHS(sys_extract_utc(systimestamp), -1) > DOCINFO.startdate) THEN 1 END) AS OTHER
 			FROM 
 				TBL_APRDOCINFO DOCINFO
 			JOIN 
