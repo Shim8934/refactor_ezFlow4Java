@@ -9,7 +9,7 @@ var SurveyMessages = {
     strAdd: "Thêm",
     strPublic1: "Mở",
     strPublic2: "Bí mật",
-    
+    strPublic3: "công bố chỉ định",
     strPublic4: "Sau cuộc khảo sát",
     strPublic5: "Ngày",
     strAnoynym1: "Hiển thị tên",
@@ -24,6 +24,9 @@ var SurveyMessages = {
     strUser6: "Công ty",
     
     strUser8: "Cài đặt",
+    strUser9     : "địa vị, chức vụ",
+    strUser10    : "Chức trách",
+    strUser11    : "nhóm",
     strDate1: "Chỉ định ngày bắt đầu nhanh hơn ngày kết thúc.",
     strDate2: "Vui lòng chỉ định ngày kết thúc của cụm từ tìm kiếm.",
     strDate3: "Vui lòng chỉ định ngày bắt đầu của cụm từ tìm kiếm.",
