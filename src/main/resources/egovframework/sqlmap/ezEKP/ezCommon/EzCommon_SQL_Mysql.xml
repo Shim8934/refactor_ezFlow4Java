@@ -995,7 +995,8 @@
 		VALUES
 			(1, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
 			(2, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
-			(3, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0)
+			(3, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
+			(4, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0)
 	</insert>
 	
 	<insert id="EzCommonDAO.insertPortalPortletAuth">
@@ -1843,7 +1844,8 @@
 		VALUES
 			(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
 			(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-			(3, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+			(3, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+			(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
 	]]>
 	</insert>
 	
@@ -4573,8 +4575,83 @@
 	<statement id="EzCommonDAO.alterCompanyMenuIconUrl">
 		ALTER TABLE
 			TBL_PORTAL_MENU_COMP
-			ADD
-				ICON_URL varchar(200) DEFAULT NULL COMMENT '회사별 기본 아이콘 변경'
+		ADD
+			ICON_URL varchar(200) DEFAULT NULL COMMENT '회사별 기본 아이콘 변경'
 	</statement>
+	
+	<!--2024-07-12 황인경 - 모바일 포탈 개발 -->
+	<select id="EzCommonDAO.checkMobileTheme" resultClass="Integer">
+		SELECT
+			count(*)
+		FROM
+			TBL_PORTAL_THEME
+		WHERE
+			theme_id = 4
+	</select>
+
+	<insert id="EzCommonDAO.insertMobileTheme">
+		INSERT INTO TBL_PORTAL_THEME (
+			theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6
+		)
+		VALUES (
+			4, '테마4', 'Theme4', 'Theme4', '모바일용 포틀릿 테마 입니다.', 'Theme For Mobile', 'モバイルのテーマ', '手机主题', 'Theme For Mobile', 'Theme For Mobile'
+		)
+	</insert>
+
+	<select id="EzCommonDAO.checkMobileFrame" resultClass="Integer">
+		SELECT
+			count(*)
+		FROM
+			TBL_PORTAL_FRAME
+		WHERE
+			theme_id = 4
+	</select>
+
+	<insert id="EzCommonDAO.insertMobileFrame">
+		INSERT INTO TBL_PORTAL_FRAME (
+			frame_id, frame_name, theme_id
+		) 
+		VALUES 
+			(9, 'Frame1', 4)
+	</insert>
+
+	<insert id="EzCommonDAO.insertMobileFrameComp" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO TBL_PORTAL_FRAME_COMP (
+			COMPANY_ID, TENANT_ID, THEME_ID, FRAME_ID, FRAME_USED, FRAME_DEFAULT
+		)
+		VALUES (
+			#companyId#, #tenantId#, 4, 9, 1, 1
+		)
+		]]>	
+	</insert>
+
+	<select id="EzCommonDAO.checkMobileThemeInitAuth" parameterClass="Map" resultClass="Integer">
+		SELECT
+			count(*)
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			theme_id = 4
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+
+	<insert id="EzCommonDAO.insertMobileThemeInitAuth">
+		INSERT INTO TBL_PORTAL_THEME_AUTH (
+			THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED
+		)
+		VALUES 
+			(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+	</insert>
+
+	<update id="EzCommonDAO.resetMobileUser">
+		<![CDATA[
+		UPDATE TBL_USERMOBILEINFO 
+		SET MAINTYPE = 'D'
+		]]>	
+	</update>
 	
 </sqlMap>

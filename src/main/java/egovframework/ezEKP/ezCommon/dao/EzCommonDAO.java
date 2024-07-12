@@ -941,6 +941,11 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				logger.debug("tbl_theme_auth data doesn't exist. insert the data of " + map.get("companyId") + "...");
 				insert("EzCommonDAO.insertThemeAuthInit", map);
 			}
+			// 2024-07-12 황인경 - 모바일 포탈 > 회사별 테마 권한 init 추가
+			if ((int)select("EzCommonDAO.checkMobileThemeInitAuth", map) < 1) {
+				logger.debug("tbl_theme_auth MobileFrameInitAuth doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertMobileThemeInitAuth", map);
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -2300,6 +2305,40 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("In TBL_PORTAL_MENU_COMP doesn't exist icon_url column. creating the column...");
 			update("EzCommonDAO.alterCompanyMenuIconUrl");
 			return;
+		}
+	}
+	
+	public void insertMobileTheme() throws Exception {
+		if ((int)select("EzCommonDAO.checkMobileTheme") < 1) {
+			logger.debug("insertMobileTheme mobile Theme doesn't exist. insert data...");
+			insert("EzCommonDAO.insertMobileTheme");
+		}
+	}
+	
+	public void insertMobileFrame() throws Exception {
+		if ((int)select("EzCommonDAO.checkMobileFrame") < 1) {
+			logger.debug("insertMobileFrame mobile Frame doesn't exist. insert data...");
+			insert("EzCommonDAO.insertMobileFrame");
+		}
+	}
+	
+	public void insertMobileFrameComp(Map<String, Object> map) throws Exception {
+		logger.debug("insertMobileFrameComp started.");
+		try {
+			insert("EzCommonDAO.insertMobileFrameComp", map);
+			logger.debug("insertMobileFrameComp ended.");
+		} catch (Exception e) {
+			logger.debug("insertMobileFrameComp failed.");
+		}
+	}
+	
+	public void resetMobileUser() throws Exception {
+		logger.debug("resetMobileUser started.");
+		try {
+			update("EzCommonDAO.resetMobileUser");
+			logger.debug("resetMobileUser ended.");
+		} catch (Exception e) {
+			logger.debug("resetMobileUser failed.");
 		}
 	}
 }

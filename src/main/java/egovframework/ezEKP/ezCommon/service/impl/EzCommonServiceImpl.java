@@ -3939,4 +3939,80 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.alterCompanyMenuIconUrl();
     }
 
+    @Override
+    public void insertInitMobileTheme() throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        ezCommonDAO.resetMobileUser(); // 모바일 메인화면 타입 포틀릿으로 통합 "D"
+
+        String[] checkMobileCodes = {"mFixTop", "mFixBottom", "mSchedule", "mResource", "mApprovallist", "mReceivedmail", "mNotice", "mPhotoboard"};
+        
+        int[] menuId = {4, 4, 2, 6, 3, 1, 4, 4};
+        
+        String[] portletUrl = {
+            "/mobile/ezNewPortal/getCustomBoardInfo.do",
+            "/mobile/ezNewPortal/getCustomBoardInfo.do",
+            "/mobile/ezNewPortal/schedulePortlet.do",
+            "/mobile/ezNewPortal/resourcePortlet.do",
+            "/mobile/ezNewPortal/approvalListPortlet.do",
+            "/mobile/ezNewPortal/receivedMailPortlet.do",
+            "/mobile/ezNewPortal/noticePortlet.do",
+            "/mobile/ezNewPortal/photoBoardPortlet.do"
+        };
+
+        String[][] portletNames = {
+            {"고정 포틀릿","fixed portlet","固定ポートレット","固定门户组件","portlet cố định","portlet tetap"},
+            {"고정 포틀릿","fixed portlet","固定ポートレット","固定门户组件","portlet cố định","portlet tetap"},
+            {"일정","Schedule","日程","附表","Schedule","Schedule"},
+            {"자원관리","Resource","設備管理","教学资源","Resource","Resource"},
+            {"결재리스트","Approval List","電子決裁リスト","批准名单","Approval List","Approval List"},
+            {"받은 메일","Mail","受信トレイ","收件邮件","Mail","Mail"},
+            {"공지사항","Notice","お知らせ","公告","Notice","Notice"},
+            {"포토 갤러리","Photo Gallery","フォトギャラリー","相片集","Photo Gallery","Photo Gallery"}
+        };
+        
+        int portletId = ezCommonDAO.getNewPortletId();
+       
+        if ((int)ezCommonDAO.checkPortletCodeString("mFixTop") < 1) { // 모바일 init data 유무 판단
+           ezCommonDAO.insertMobileTheme(); // portal_theme
+           ezCommonDAO.insertMobileFrame(); // portal_frame
+           for (int i = 0;  i < checkMobileCodes.length; i++) {
+               if ((int)ezCommonDAO.checkPortletCodeString(checkMobileCodes[i]) < 1) {
+                   map.put("portletId", portletId);
+                   map.put("menuId", menuId[i]);
+                   map.put("portletUrl", portletUrl[i]);
+                   map.put("connectionUrl", portletUrl[i]);
+                   map.put("portletType", "MG");
+                   map.put("portletUsed", "1");
+                   if (i < 2) {
+                       map.put("defaultOrder", i-2);
+                       map.put("portletOrder", i-2);
+                   } else {
+                       map.put("defaultOrder", i-1);
+                       map.put("portletOrder", i-1);
+                   }
+                   map.put("portletCode", checkMobileCodes[i]);
+                   ezCommonDAO.insertPortletWithCode(map); //portal_portlet
+    
+                   for (int j = 0; j < portletNames[i].length; j++) {
+                       map.put("portletName" + (j + 1), portletNames[i][j]);
+                   }
+                   
+                   // portlet_comp, portlet_name, theme_portlet, portal_portlet_auth
+                   for (int j = 0; j < companyList.size(); j++) {
+                       CompanyInfoVO company = companyList.get(j);
+                       if (company.getCompanyId() != null) {
+                           map.put("companyId", company.getCompanyId());
+                           map.put("tenantId", company.getTenantId());
+                           ezCommonDAO.insertPortletInfoData(map);
+                           ezCommonDAO.insertMobileFrameComp(map);
+                        }
+                    }
+                }
+                portletId++;
+            }
+        }
+    }
+
 }

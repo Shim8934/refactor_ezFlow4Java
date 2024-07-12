@@ -2357,7 +2357,8 @@
 	    	VALUES 
 		    		(#companyID#, #tenantID#, 1, 1, 1),
 		    		(#companyID#, #tenantID#, 2, 1, 0),
-		    		(#companyID#, #tenantID#, 3, 1, 0)
+		    		(#companyID#, #tenantID#, 3, 1, 0),
+					(#companyID#, #tenantID#, 4, 1, 0)
   		]]>
 	    		
     </insert>
@@ -2375,7 +2376,8 @@
 		    		(#companyID#, #tenantID#, 2, 5, 1, 1),
 		    		(#companyID#, #tenantID#, 2, 7, 1, 0),
 		    		(#companyID#, #tenantID#, 3, 6, 1, 1),
-		    		(#companyID#, #tenantID#, 3, 8, 1, 0)
+		    		(#companyID#, #tenantID#, 3, 8, 1, 0),
+		    		(#companyID#, #tenantID#, 4, 9, 1, 1)
   		]]>
     </insert>
     
@@ -2593,7 +2595,15 @@
 	    		(#companyID#, #tenantID#, 70, 10, 1, 22, null),
 	    		(#companyID#, #tenantID#, 73, 19, 1, 20, null),
 				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, 23, null),
-				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 1, 24, null)
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 1, 24, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 1, -2, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 1, -1, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 1, 1, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 1, 2, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 1, 3, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 1, 4, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 1, 5, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 1, 6, null)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I29" parameterClass="Map">
@@ -2745,7 +2755,56 @@
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 3, #tenantID#, #companyID#, '固定ポートレット'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 4, #tenantID#, #companyID#, '固定门户组件'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 5, #tenantID#, #companyID#, 'portlet cố định'),
-				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 6, #tenantID#, #companyID#, 'portlet tetap')
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 6, #tenantID#, #companyID#, 'portlet tetap'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 1, #tenantID#, #companyID#, '고정 포틀릿'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 2, #tenantID#, #companyID#, 'fixed portlet'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 3, #tenantID#, #companyID#, '固定ポートレット'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 4, #tenantID#, #companyID#, '固定门户组件'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 5, #tenantID#, #companyID#, 'portlet cố định'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 6, #tenantID#, #companyID#, 'portlet tetap'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 1, #tenantID#, #companyID#, '고정 포틀릿'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 2, #tenantID#, #companyID#, 'fixed portlet'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 3, #tenantID#, #companyID#, '固定ポートレット'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 4, #tenantID#, #companyID#, '固定门户组件'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 5, #tenantID#, #companyID#, 'portlet cố định'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 6, #tenantID#, #companyID#, 'portlet tetap'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 1, #tenantID#, #companyID#, '일정'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 2, #tenantID#, #companyID#, 'Schedule'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 3, #tenantID#, #companyID#, '日程'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 4, #tenantID#, #companyID#, '附表'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 5, #tenantID#, #companyID#, 'Schedule'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 6, #tenantID#, #companyID#, 'Schedule'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 1, #tenantID#, #companyID#, '자원관리'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 2, #tenantID#, #companyID#, 'Resource'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 3, #tenantID#, #companyID#, '設備管理'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 4, #tenantID#, #companyID#, '教学资源'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 5, #tenantID#, #companyID#, 'Resource'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 6, #tenantID#, #companyID#, 'Resource'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 1, #tenantID#, #companyID#, '결재리스트'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 2, #tenantID#, #companyID#, 'Approval List'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 3, #tenantID#, #companyID#, '電子決裁リスト'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 4, #tenantID#, #companyID#, '批准名单'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 5, #tenantID#, #companyID#, 'Approval List'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 6, #tenantID#, #companyID#, 'Approval List'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 1, #tenantID#, #companyID#, '받은 메일'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 2, #tenantID#, #companyID#, 'Mail'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 3, #tenantID#, #companyID#, '受信トレイ'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 4, #tenantID#, #companyID#, '收件邮件'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 5, #tenantID#, #companyID#, 'Mail'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 6, #tenantID#, #companyID#, 'Mail'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 1, #tenantID#, #companyID#, '공지사항'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 2, #tenantID#, #companyID#, 'Notice'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 3, #tenantID#, #companyID#, 'お知らせ'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 4, #tenantID#, #companyID#, '公告'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 5, #tenantID#, #companyID#, 'Notice'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 6, #tenantID#, #companyID#, 'Notice'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 1, #tenantID#, #companyID#, '포토 갤러리'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 2, #tenantID#, #companyID#, 'Photo Gallery'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 3, #tenantID#, #companyID#, 'フォトギャラリー'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 4, #tenantID#, #companyID#, '相片集'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 5, #tenantID#, #companyID#, 'Photo Gallery'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 6, #tenantID#, #companyID#, 'Photo Gallery')
+	    
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I30" parameterClass="Map">
@@ -2829,7 +2888,15 @@
 	    		(3, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
 	    		(3, #tenantID#, #companyID#, 73, 1, 20, 19, 0),
 				(3, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 1, 23, 4, 0),
-				(3, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 1, 24, 3, 0)
+				(3, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 1, 24, 3, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 1, -2, 4, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 1, -1, 4, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 1, 1, 2, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 1, 2, 6, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 1, 3, 3, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 4, 1, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 1, 5, 4, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 1, 6, 4, 0)
   		]]>
     </insert>
     
@@ -2841,7 +2908,9 @@
 	    VALUES 
 	    		(1, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
 	    		(2, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
-	    		(3, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+	    		(3, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+	    		(4, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+	    		
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I32" parameterClass="Map">
