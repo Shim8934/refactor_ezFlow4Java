@@ -313,6 +313,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.alterBoardExtentionAttrByteSize(); // 2024-07-31 전인하 - 게시판 > 확장컬럼 > 저장할 수 있는 데이터 크기 변경 (mysql, oracle 일괄 500자)
 			ezCommonService.insertDotNetTotalNotificationConfig(); // 2024-08-21 유길상 닷넷 통합알림 컨피그
 			ezCommonService.updateInProcessJpCodeName3(); // 2024-08-22 유길상 - CODELIST > a04(진행) 일본어 변경 
+			ezCommonService.createServeyResultviewPermTbl(); // 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 테이블 추가
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

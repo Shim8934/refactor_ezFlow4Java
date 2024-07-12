@@ -424,4 +424,6 @@ public interface EzCommonService {
 	public void createTblDistributeinfo() throws Exception;
 	
 	public void createExecutiveTable() throws Exception;
+ 
+	public void createServeyResultviewPermTbl() throws Exception;
 }

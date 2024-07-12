@@ -2504,4 +2504,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createExecutiveTable");
 		}
 	}
+
+	// 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 테이블 추가
+	public void createServeyResultviewPermTbl() {
+		try {
+			select("EzCommonDAO.checkServeyResultviewPermTbl");
+		} catch (Exception e) {
+			logger.debug("TBL_SERVEY_RESULTVIEWPERMISSION doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createServeyResultviewPermTbl");
+		}
+	}
 }
