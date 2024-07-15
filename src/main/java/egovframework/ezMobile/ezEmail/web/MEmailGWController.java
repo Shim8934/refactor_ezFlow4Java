@@ -16,7 +16,9 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -71,6 +73,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.rest.Result;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
@@ -2200,11 +2203,11 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String[] sExt = new String[cnt];
 			String pDirTempPath = "";
 
-			if (request.getParameter("STATUS") != null && !request.getParameter("STATUS").equals("")) {
-				tempFolderName = request.getParameter("STATUS");
+			if (StringUtils.isNotEmpty(request.getParameter("tempFolderName"))) {
+				tempFolderName = request.getParameter("tempFolderName");
 				tempFolderName = commonUtil.detectPathTraversal(tempFolderName);
 			} else {
-				logger.debug("NODATA");
+				logger.debug("NODATA tempFolderName");
 
 				result.put("status", "error");
 				result.put("code", 1);
@@ -2214,7 +2217,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			}
 
 			if (multiFile == null) {
-				logger.debug("NODATA");
+				logger.debug("NODATA multiFile");
 
 				result.put("status", "error");
 				result.put("code", 1);
@@ -2245,7 +2248,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				// 파일명과 확장자를 구한다.
 				for (int i = 0; i < cnt; i++) {
 					// postman으로 테스트 시 파일명이 한글일 경우 파일명이 깨지는 오류가 있어 해당 처리
-					_pFileName = new String(multiFile.get(i).getOriginalFilename().getBytes("8859_1"),"UTF-8");
+					// 비즈메카고도화 - URL 인코딩해서 보내주심
+					_pFileName = URLDecoder.decode(multiFile.get(i).getOriginalFilename(), "UTF-8");
+					// _pFileName = new String(_pFileName.getBytes("8859_1"),"UTF-8");
 					totalFileSize += multiFile.get(i).getSize();
 
 					// 폴더 경로를 제외한 파일명만을 구한다.
@@ -2270,7 +2275,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				}
 
 				if (totalFileSize > bigMaxSize) {
-					logger.debug("OVERFLOW");
+					logger.debug("OVERFLOW totalFileSize > bigMaxSize");
 
 					result.put("status", "error");
 					result.put("code", 1);
@@ -2280,7 +2285,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				}
 
 				if (isEmpty) {
-					logger.debug("OVERFLOW");
+					logger.debug("OVERFLOW isEmpty");
 
 					result.put("status", "error");
 					result.put("code", 1);
@@ -2803,19 +2808,19 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					uid = Long.parseLong(uidStr);
 				}
 			}
-			
+
 			if (uid != 0) {
 				NodeList rows = root.getElementsByTagName("ROW");
-				
+
 				if (rows != null && rows.item(0) != null) {
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 							userEmail, password);
-					
+
 					IMAPAccess ia = null;
 					try {
 						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 								userEmail, password, egovMessageSource, locale, ezEmailUtil);
-						
+
 						Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 						folder.open(Folder.READ_WRITE);
 						Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
@@ -2900,7 +2905,93 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		
 		return result;
 	}
-	
+
+	/**
+	 * 대용량 첨부파일 삭제 실행 함수
+	 */
+
+	@RequestMapping(value="/mobile/ezemail/mails/deletesmail/big/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@ResponseBody
+	public Result mailDelBigAttach(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
+		logger.debug("MOBILE G/W MAIL mailDelBigAttach started.");
+		logger.debug("mailDelBigAttach userId={}, jsonObject={}", userId, jsonObject);
+
+		Result result = null;
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String attachName = (String) jsonObject.get("attachName");
+			String tempFolderName = (String) jsonObject.get("tempFolderName");
+
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String realPath = commonUtil.getRealPath(request);
+			String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId());
+			String xmlPath = pDirPath + commonUtil.separator + "templist" + commonUtil.separator + tempFolderName + ".txt";
+
+			// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+			String largeFilePath = pDirPath;
+			String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", info.getTenantId());
+
+			if (useSeparatedLargeFileFolder.equals("YES")) {
+				largeFilePath += commonUtil.separator + "largeFile";
+			}
+
+			File templistFile = new File(xmlPath);
+			if (templistFile.exists()) {
+				StringBuilder strXml = new StringBuilder();
+				try (InputStreamReader isr = new InputStreamReader(Files.newInputStream(templistFile.toPath()))) {
+					int read = 0;
+					while ((read = isr.read()) != -1) {
+						strXml.append((char) read);
+					}
+				}
+
+				Document xmlDom = commonUtil.convertStringToDocument(strXml.toString());
+				NodeList nodeList = xmlDom.getElementsByTagName("NODE");
+
+				if (nodeList != null) {
+					for (int i = 0; i < nodeList.getLength(); i++) {
+						if (xmlDom.getElementsByTagName("PFILENAME").item(i).getTextContent().equals(attachName)
+								&& xmlDom.getElementsByTagName("PBIGFILEUPLOAD").item(i).getTextContent().equals("Y")) {
+							String fileLocation = nodeList.item(i).getChildNodes().item(4).getTextContent();
+							String[] fileLocationArray = fileLocation.split("\\|!\\|");
+							String pRealFilePath = largeFilePath + commonUtil.separator + fileLocationArray[0] + commonUtil.separator + fileLocationArray[1];
+							pRealFilePath = commonUtil.detectPathTraversal(pRealFilePath);
+
+							File bigAttachFile = new File(pRealFilePath);
+
+							if (bigAttachFile.exists()) {
+								bigAttachFile.delete();
+								File bigAttachNameFile = new File(pRealFilePath + "__.txt");
+								bigAttachNameFile.delete();
+							}
+
+							nodeList.item(i).getParentNode().removeChild(nodeList.item(i));
+						}
+					}
+				}
+
+				String strXml2 = commonUtil.convertDocumentToString(xmlDom);
+				logger.debug("strXml : {}", strXml);
+				logger.debug("strXml2 : {}", strXml2);
+
+				try (OutputStreamWriter osw = new OutputStreamWriter(Files.newOutputStream(templistFile.toPath()), StandardCharsets.UTF_8)) {
+					osw.write(strXml2);
+				}
+			}
+
+			result = Result.success();
+		} catch (Exception e) {
+			logger.error("mailDelBigAttach error:", e);
+			result = Result.failureWithCode(1);
+		}
+
+		logger.debug("mailDelBigAttach result={}", result);
+		logger.debug("MOBILE G/W MAIL mailDelBigAttach ended.");
+
+		return result;
+	}
+
 	/**
 	 * 모바일 G/W 이메일 [POST] 메일발송(send) & 임시보관함 저장(save)
 	 */
@@ -2942,7 +3033,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String replyReadTime = "";
 			String textOption = "";
 			List<Map<String, Object>> addressCheck = null;
-			JSONArray bigAttaches = null;
+			String tempFolderName = null;
 
 			JSONParser jp = new JSONParser();
 			jsonObject = (JSONObject) jp.parse(jsonObject.toJSONString());
@@ -2951,8 +3042,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				subject = (String) jsonObject.get("subject");
 			}
 
-			if (jsonObject.get("bigAttaches") != null) {
-				bigAttaches = (JSONArray) jsonObject.get("bigAttaches");
+			if (jsonObject.get("tempFolderName") != null) {
+				tempFolderName = (String) jsonObject.get("tempFolderName");
 			}
 			
 			if (jsonObject.get("to") != null) {
@@ -3247,62 +3338,102 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						// 모바일에서 보내오는 서명의 이미지들을 relatedPart 로 넣기
 						List<MimeBodyPart> imageParts = new LinkedList<>();
 
-						String protocol = ezCommonService.getTenantConfig("USE_HTTPS", info.getTenantId()).equalsIgnoreCase("YES") ? "https" : "http";
-						String bigSizeAttachLimitCount = ezCommonService.getTenantConfig("MailBigSizeAttachLimitCount", info.getTenantId());
-						String pBigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", info.getTenantId());
-						String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("MailBigSizeAttachDownloadLimitCount", info.getTenantId());
+						appendBigAttachesHtml: if (StringUtils.isNotEmpty(tempFolderName)) {
+							// 클라이언트가 지정한 UUID인 tempFolderName을 이름으로 하는 첨부파일 목록 저장용 파일을 구한다.
+							String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId());
+							String xmlPath = pDirPath + commonUtil.separator + "templist" + commonUtil.separator + tempFolderName + ".txt";
+							File templistFile = new File(xmlPath);
 
-						String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
-						int pBigAttachLimitCount = bigSizeAttachLimitCount == null || bigSizeAttachLimitCount.equals("") ? 0 : Integer.parseInt(bigSizeAttachLimitCount);
-						int pBigAttachDownloadLimitCount = bigSizeAttachDownloadLimitCount == null || bigSizeAttachDownloadLimitCount.equals("") ? 0 : Integer.parseInt(bigSizeAttachDownloadLimitCount);
+							if (templistFile.exists()) {
+								String protocol = ezCommonService.getTenantConfig("USE_HTTPS", info.getTenantId()).equalsIgnoreCase("YES") ? "https" : "http";
+								String bigSizeAttachLimitCount = ezCommonService.getTenantConfig("MailBigSizeAttachLimitCount", info.getTenantId());
+								String pBigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", info.getTenantId());
+								String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("MailBigSizeAttachDownloadLimitCount", info.getTenantId());
+								String mailLinkHostname = "";
 
-						StringBuilder html = new StringBuilder();
-						html.append( "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;margin-bottom:10px;'>" +
-								"<tr>" +
-								"<td colspan='2' style='color:#333;font-weight:bold; padding:0px; margin:0px 0px 1px 0px; height:20px;border-bottom:1px solid #dadada;font-size:12px;'><img src='" + protocol + "//" +serverName+ "/images/icon_addfile.gif' width='7' height='12' style='margin-right:5px;'>"+ egovMessageSource.getMessage("ezEmail.Nam23", locale)+ "</td>" +
-								"</tr>");
+								if (ezCommonService.getTenantConfig("useMailLinkHostname", info.getTenantId()).equalsIgnoreCase("YES")) {
+									mailLinkHostname = ezCommonService.getTenantConfig("mailLinkHostname", info.getTenantId());
+								}
 
-						DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-						DocumentBuilder builder = factory.newDocumentBuilder();
+								String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
+								int pBigAttachLimitCount = bigSizeAttachLimitCount == null || bigSizeAttachLimitCount.equals("") ? 0 : Integer.parseInt(bigSizeAttachLimitCount);
+								int pBigAttachDownloadLimitCount = bigSizeAttachDownloadLimitCount == null || bigSizeAttachDownloadLimitCount.equals("") ? 0 : Integer.parseInt(bigSizeAttachDownloadLimitCount);
 
-						for (Object bigAttachObject : bigAttaches) {
-							String bigAttachObjectStr = String.valueOf(bigAttachObject);
+								StringBuilder html = new StringBuilder();
+								html.append( "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;margin-bottom:10px;'>" +
+										"<tr>" +
+										"<td colspan='2' style='color:#333;font-weight:bold; padding:0px; margin:0px 0px 1px 0px; height:20px;border-bottom:1px solid #dadada;font-size:12px;'><img src='" + protocol + "://" + mailLinkHostname + "/images/icon_addfile.gif' width='7' height='12' style='margin-right:5px;'>"+ egovMessageSource.getMessage("ezEmail.Nam23", locale)+ "</td>" +
+										"</tr>");
 
-							String strTarget = "target=''";
-							Document document = builder.parse(new InputSource(new StringReader(bigAttachObjectStr)));
-							String fileName = document.getElementsByTagName("PFILENAME").item(0).getChildNodes().item(0).getNodeValue();
-							fileName = fileName.replaceAll("&", "&amp;");
+								StringBuilder strXml = new StringBuilder();
+                                try (InputStreamReader isr = new InputStreamReader(Files.newInputStream(templistFile.toPath()))) {
+                                    int read = 0;
+                                    while ((read = isr.read()) != -1) {
+                                        strXml.append((char) read);
+                                    }
+                                }
 
-							String fileId = document.getElementsByTagName("PUPLOADSN").item(0).getChildNodes().item(0).getNodeValue();
-							String fileSize = document.getElementsByTagName("FILESIZE").item(0).getChildNodes().item(0).getNodeValue();
-							String fileLocation = document.getElementsByTagName("FILELOCATION").item(0).getChildNodes().item(0).getNodeValue();
-							String fileDate = fileLocation.split("\\|!\\|")[0];
-							String strFileExt = fileName.substring(fileName.lastIndexOf("."));
+								Document xmlDom = commonUtil.convertStringToDocument(strXml.toString());
+								NodeList nodeList = xmlDom.getElementsByTagName("NODE");
 
-							strFileExt = strFileExt.toLowerCase();
+								if (nodeList != null) {
+									String strTarget = "target=''";
+									boolean hasBigAttach = false;
 
-							String emailHref = protocol + "://" + serverName + "/ezEmail/downloadAttachCommon.do?fileid=" + fileId + "&filedate=" + fileDate + "&tid=" + info.getTenantId();
-							html.append( "<tr>" +
-									"<td colspan='2' style='border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 10px 5px 10px; margin:0px;list-style:none;'>" +
-									"<a href='" + emailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + protocol + "://" + serverName + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;vertical-align:middle' border='0'/></a>" +
-									"<a id='BigSizeFileLink' href='" + emailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + fileName + " (" + fileSize + ")</a></td>" +
-									"</tr>");
+									for (int i = 0; i < nodeList.getLength(); i++) {
+										if ("N".equalsIgnoreCase(xmlDom.getElementsByTagName("PBIGFILEUPLOAD").item(i).getChildNodes().item(0).getNodeValue())) {
+											continue;
+										}
 
+										hasBigAttach = true;
+										String fileName = xmlDom.getElementsByTagName("PFILENAME").item(i).getChildNodes().item(0).getNodeValue();
+										fileName = fileName.replaceAll("&", "&amp;");
+
+										String fileId = xmlDom.getElementsByTagName("PUPLOADSN").item(i).getChildNodes().item(0).getNodeValue();
+										String fileSize = xmlDom.getElementsByTagName("FILESIZE").item(i).getChildNodes().item(0).getNodeValue();
+										String fileLocation = xmlDom.getElementsByTagName("FILELOCATION").item(i).getChildNodes().item(0).getNodeValue();
+										String fileDate = fileLocation.split("\\|!\\|")[0];
+										String strFileExt = fileName.substring(fileName.lastIndexOf("."));
+
+										strFileExt = strFileExt.toLowerCase();
+										fileSize = commonUtil.getSizeWithUnit(Integer.parseInt(fileSize));
+
+										String emailHref = protocol + "://" + mailLinkHostname + "/ezEmail/downloadAttachCommon.do?fileid=" + fileId + "&filedate=" + fileDate + "&tid=" + info.getTenantId();
+										html.append("<tr>" +
+												"<td colspan='2' style='border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 10px 5px 10px; margin:0px;list-style:none;'>" +
+												"<a href='" + emailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + protocol + "://" + mailLinkHostname + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;vertical-align:middle' border='0'/></a>" +
+												"<a id='BigSizeFileLink' href='" + emailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + fileName + " (" + fileSize + ")</a></td>" +
+												"</tr>");
+									}
+
+									if (!hasBigAttach) {
+										break appendBigAttachesHtml;
+									}
+								}
+
+								String strXml2 = commonUtil.convertDocumentToString(xmlDom);
+								logger.debug("strXml : "+strXml);
+								logger.debug("strXml2 : "+strXml2);
+
+                                try (OutputStreamWriter osw = new OutputStreamWriter(Files.newOutputStream(templistFile.toPath()), StandardCharsets.UTF_8)) {
+                                    osw.write(strXml2);
+                                }
+
+								html.append("<tr>" +
+										"<td width='50%' style='font-size:11px; font-weight:normal; color:#666666; padding-left:10px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" + egovMessageSource.getMessage("ezEmail.Nam19", locale) + "<span style='color:#FF0000 ;'>" + pBigAttachDownloadPeriod + "</span></td>" +
+										"<td width='50%' align='right' style='font-size:11px; font-weight:normal; color:#666666; padding-right:10px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" + egovMessageSource.getMessage("ezEmail.Nam20", locale) + "<span style='color:#FF0000 ;'>" + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.Nam21", locale) +"</span>"+egovMessageSource.getMessage("ezEmail.Nam22", locale));
+
+								if (pBigAttachDownloadLimitCount == 1) {
+									html.append(" / " + "" + " <span style='color:#FF0000 ;'>" + pBigAttachDownloadLimitCount + "</span>" + egovMessageSource.getMessage("ezEmail.Nam18", locale));
+								} else if (pBigAttachDownloadLimitCount > 1) {
+									html.append(" / " + "" + " <span style='color:#FF0000 ;'>" + pBigAttachDownloadLimitCount + "</span>" + egovMessageSource.getMessage("ezEmail.Nam18", locale));
+								}
+
+								html.append("</div></td></tr></table></div>");
+
+								textBody = html + textBody;
+							}
 						}
-
-						html.append("<tr>" +
-								"<td width='50%' style='font-size:11px; font-weight:normal; color:#666666; padding-left:10px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" + egovMessageSource.getMessage("ezEmail.Nam19", locale) + "<span style='color:#FF0000 ;'>" + pBigAttachDownloadPeriod + "</span></td>" +
-								"<td width='50%' align='right' style='font-size:11px; font-weight:normal; color:#666666; padding-right:10px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" + egovMessageSource.getMessage("ezEmail.Nam20", locale) + "<span style='color:#FF0000 ;'>" + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.Nam21", locale) +"</span>"+egovMessageSource.getMessage("ezEmail.Nam22", locale));
-
-						if (pBigAttachDownloadLimitCount == 1) {
-							html.append(" / " + "" + " <span style='color:#FF0000 ;'>" + pBigAttachDownloadLimitCount + "</span>" + egovMessageSource.getMessage("ezEmail.Nam18", locale));
-						} else if (pBigAttachDownloadLimitCount > 1) {
-							html.append(" / " + "" + " <span style='color:#FF0000 ;'>" + pBigAttachDownloadLimitCount + "</span>" + egovMessageSource.getMessage("ezEmail.Nam18", locale));
-						}
-
-						html.append("</div></td></tr></table></div>");
-
-						textBody = html + textBody;
 
 						Matcher imageMatcher = MOBILE_DOWNLOAD_IMAGE_PATTERN.matcher(textBody);
 						StringBuffer sb = new StringBuffer();
