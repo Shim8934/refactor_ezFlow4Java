@@ -1133,7 +1133,7 @@
 										fontFamily: fontFamily,
 										customMagicLineStyle: 'background-color:#888;',
 										customAlignMenu: customAlignMenu,
-										useMenuBar: false,
+										useMenuBar: true,
 										useHTMLMode: true,
 										useTextMode: false,
 										usePreviewMode: false,
