@@ -611,7 +611,9 @@
                 extensionattribute14 as sabun,
                 password_updatedt,
                 mobile,
-                extensionattribute5
+                extensionattribute5,
+                extensionattribute7 as JOBID,
+                '' ROLEID
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -695,7 +697,9 @@
                 extensionattribute14 as sabun,
                 password_updatedt,
                 mobile,
-                extensionattribute5
+                extensionattribute5,
+                extensionattribute7 as JOBID,
+                '' ROLEID
             FROM 
                 TBL_USERMASTER a
             WHERE 

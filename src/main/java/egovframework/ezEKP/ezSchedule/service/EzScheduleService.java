@@ -75,11 +75,11 @@ public interface EzScheduleService {
 	public int getResourceCount(String scheduleId, int tenantId) throws Exception;
 	
 	public int updateSchedule(String scheduleid, String creatorid, String creatorname, String creatorname2, String importance, String ispublic, String datetype, String startdate, String enddate,
-			String repetition, String title, String location, String content, NodeList attach, String defaultPath, int tenantId, String companyID) throws Exception;
+			String repetition, String title, String location, String content, NodeList attach, String defaultPath, int tenantId, String companyID, String showtop) throws Exception;
 
 	public int insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
 			String ispublic, String datetype, String startdate, String enddate, String repetition, String title, String location, String content, NodeList attach, NodeList attendantId, 
-			NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId ,String companyID) throws Exception;	
+			NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId ,String companyID, String showtop) throws Exception;
 
 	public void deleteScheduleGroup(String groupId, int tenantId) throws Exception;	
 
@@ -115,7 +115,7 @@ public interface EzScheduleService {
 
 	public void updateAttendantSchedule(String hasAttendant, String scheduleId, int tenantId) throws Exception;	
 
-	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId) throws Exception;
+	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId, String showtop) throws Exception;
 
 	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId ,String companyID) throws Exception;
 

@@ -36156,10 +36156,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			mContainerMode = "CIR";
 			linkMobileUrl = "";
 			break;
-		case "ING":
-			mContainerMode = "DO";
 		case "END":
 			mContainerMode = "END";
+			break;
 		default:
 			mContainerMode = "DO";
 			break;
@@ -36242,4 +36241,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return gongramAprLineInfo;
 	}
 
+    // 첨부된 문서의 권한 체크
+    public boolean isAttachDoc(String docID, String parentDocID, String userID, String companyID, int tenantID) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("v_ParentID", parentDocID);
+        map.put("v_DOCID", docID);
+        map.put("v_TENANTID", tenantID);
+        map.put("companyID", companyID);
+
+        return ezApprovalGDAO.isExistDocAttach(map) > 0;
+    }
 }

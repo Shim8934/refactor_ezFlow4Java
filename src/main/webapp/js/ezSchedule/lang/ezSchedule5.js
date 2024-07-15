@@ -134,7 +134,8 @@ var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Lịch trình nhóm";
 var strLang130_1 = "Lịch trình nhóm";
- 
+var strLang131 = "hiển thị ở trên cùng";
+
 var strLang253 = "Không có tài nguyên được chọn."
 var strLang254 = "Không thể xóa tài nguyên đã chọn."
 var strLang255 = "Dự trữ tài nguyên không thành công."

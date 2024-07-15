@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static egovframework.ezEKP.ezOrgan.vo.OrganAuth.Scope.ALL;
@@ -28,28 +29,35 @@ public class OrganAuth {
         String[] split = info.split(";", -1);
         for (String s : split) {
             // 비어있거나, 추출된 권한이 "=1"로 끝나지 않으면 continue
-            if (StringUtils.isEmpty(s) || !"=1".equals(StringUtils.right(s, 2))) {
+            if (StringUtils.isBlank(s) || !"=1".equals(StringUtils.right(s, 2))) {
                 continue;
             }
 
             s = StringUtils.remove(s, "=1");
-            AdminAuth auth = AdminAuth.getAdminAuthByCode(s);
-            switch (auth.scope) {
-                case ALL:
-                    allSet.add(auth);
-                    break;
-                case DEPT:
-                    deptSet.computeIfAbsent(deptId, k -> new HashSet<>()).add(auth);
-                    break;
-                case COMPANY:
-                    compSet.computeIfAbsent(companyId, k -> new HashSet<>()).add(auth);
-                    break;
+            Optional<AdminAuth> optionalAuth = AdminAuth.getAdminAuthByCode(s);
+            if (optionalAuth.isPresent()) {
+                AdminAuth auth = optionalAuth.get();
+                switch (auth.scope) {
+                    case ALL:
+                        allSet.add(auth);
+                        break;
+                    case DEPT:
+                        deptSet.computeIfAbsent(deptId, k -> new HashSet<>()).add(auth);
+                        break;
+                    case COMPANY:
+                        compSet.computeIfAbsent(companyId, k -> new HashSet<>()).add(auth);
+                        break;
+                }
             }
         }
         return this;
     }
 
     public boolean isAuth(AdminAuth auth, String id) {
+        if (auth == null) {
+            return false;
+        }
+        
         switch (auth.scope) {
             case ALL:
                 return allSet.contains(auth);
@@ -65,6 +73,10 @@ public class OrganAuth {
      * 겸직을 포함에서 부서, 회사 등 스코프에 상관없이 권한이 존재하는지 체크
      */
     public boolean isAuth(AdminAuth auth) {
+        if (auth == null) {
+            return false;
+        }
+        
         switch (auth.scope) {
             case ALL:
                 return allSet.contains(auth);
@@ -85,7 +97,8 @@ public class OrganAuth {
     }
 
     public boolean isAuth(String authCode, String id) {
-        return isAuth(AdminAuth.getAdminAuthByCode(authCode), id);
+        Optional<AdminAuth> auth = AdminAuth.getAdminAuthByCode(authCode);
+        return auth.filter(adminAuth -> isAuth(adminAuth, id)).isPresent();
     }
 
 
@@ -123,7 +136,7 @@ public class OrganAuth {
          */
         TASK_MANAGER("w", COMPANY),
         /**
-         * 기록물관리책임자
+         * 기록물관리책임자 "w", COMPANY
          */
         ARCHIVE_MANAGER("m", COMPANY),
         /**
@@ -152,8 +165,8 @@ public class OrganAuth {
             return code;
         }
 
-        public static AdminAuth getAdminAuthByCode(String code) {
-            return Arrays.stream(AdminAuth.values()).filter(auth -> auth.getCode().equals(code)).findFirst().orElse(null);
+        public static Optional<AdminAuth> getAdminAuthByCode(String code) {
+            return Arrays.stream(AdminAuth.values()).filter(auth -> auth.getCode().equals(code)).findFirst();
         }
 
         private Scope getScope() {
