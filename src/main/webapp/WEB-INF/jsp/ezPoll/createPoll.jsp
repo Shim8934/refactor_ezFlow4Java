@@ -17,6 +17,19 @@
 			background-color:white;
 		}
 		.qstSettingSpan{width: 130px !important;}
+
+		.attachInnerNotice_p_on {
+			text-align: center;
+			margin: 10px 0 0 0;
+		}
+
+		.attachInnerNotice_p_off {
+			display: none;
+		}
+
+		.attachInnerNotice_span {
+			line-height: 55px;
+		}
 	</style>
 	 
 	<script src="${util.addVer('/js/jquery/jquery.min.js')}"></script> 
@@ -27,7 +40,9 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezPoll/dropzone.js')}"></script>
   	<script src="${util.addVer('/js/jquery-ui/jquery-ui.js')}"></script>
-  	<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	  
+  	<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 	<script type="text/javascript">	
 		var messageCode1	  = '<spring:message code="ezPoll.t164"/>';
 		var messageCode2	  = '<spring:message code="ezPoll.t165"/>';
@@ -92,8 +107,9 @@
 		    	}
 				
 		    });
-			
+			document.getElementById("lstAttachLink").appendChild(getAttachInnerNoticeObject());
 			fileUploadStart();
+			setAttachSortable();
 		}
 
 		window.addEventListener('popstate', function(event) {
@@ -1229,7 +1245,7 @@
 							</div>
 							<div style="clear: both"></div>
 						</div>
-						<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #ddd;overflow: auto; margin:8px 0px 0px 0px;">
+						<div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #ddd;overflow: auto; margin:8px 0px 0px 0px;">
 							<div id="addFile" class="pollAddFile">
 								<img src="/images/poll/pollAddFile_Addicon.png" style="height:23px;width:20px;vertical-align:middle; margin:-4px 5px 0px 0px; padding:0px; cursor: pointer;" onclick="uploadbtn()">
 								<spring:message code="ezPoll.t151"/>

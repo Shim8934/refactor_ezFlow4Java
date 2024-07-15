@@ -8,6 +8,25 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<style>
+			#lstAttachLink {
+				height: 115px;
+				border: 1px solid #d2d2d2;
+			}
+
+			.attachInnerNotice_p_on {
+				text-align: center;
+				margin: 10px 0 0 0;
+			}
+
+			.attachInnerNotice_p_off {
+				display: none;
+			}
+
+			.attachInnerNotice_span {
+				line-height: 55px;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/ConvertSaveImage.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -41,7 +60,9 @@
 		<!-- time picker -->
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
-
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
+		
 		<c:choose>
 			<c:when test="${pMode == 'new' || pUrl != ''}">
 				<title><spring:message code='ezCommunity.t1128' /></title>
@@ -110,6 +131,8 @@
 			var mailFG_Post = "<c:out value = '${boardInfo.mailFG_Post}'/>"; // 게시알림
 			var mailFG_Mod = "<c:out value = '${boardInfo.mailFG_Mod}'/>"; // 수정알림
 			var editor = "<c:out value = '${editor}'/>";
+			var isfileup = false;
+			var xhr = new XMLHttpRequest();
 			
 			<c:if test="${isCrossBrowser != true}">
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");
@@ -168,6 +191,7 @@
 		        InitializeSettings();
 		        ChkPermanent();
 		        rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+				setAttachSortable();
 		    }
 			
 			$(function(){
@@ -1198,17 +1222,21 @@
 						<c:when test="${isCrossBrowser != true}">
 							<table class="file">
 								<form name="multicheck">
-									<tr>
-										<th><spring:message code='ezCommunity.t141' /></th>
-										<td class="pos1"><script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans", "125%", "100%");</script>
-											<div id="lstAttachLink"
-												style="display: none; OVERFLOW: auto; HEIGHT: 50px;">&nbsp;</div>
-										</td>
-										<td class="pos2">
-											<a class="imgbtn imgbck"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177' /></span></a><br>
-											<a class="imgbtn imgbck"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
-										</td>
-									</tr>
+									<div style="width:100%;white-space:nowrap;display:inline-block; height: 23px;">
+										<div style="float:left">
+											<a class="imgbtn imgbck" id="btn_AttachAdd" onclick="btn_AttachSelect_onclick()"><span><spring:message code='ezCommunity.t1177' /></span></a>
+											<a class="imgbtn imgbck" id="btn_AttachDel" onclick="btn_AttachDel_onclick()"><span><spring:message code='ezCommunity.t1178' /></span></a>
+										</div>
+										<div id="progdiv" class="progarea" style="display:none">
+											<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
+										</div>
+									</div>
+										<%--<th><spring:message code='ezCommunity.t141' /></th>--%>
+									<div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+										<table id="filelist" class="sublist" style="width: 100%;"><tr><th style="width: 15px;"><input type="checkbox" id="checkboxall"></th><th style="width: 87%;"><spring:message code='ezCommunity.t1135' /></th><th style="width: 13%;"><spring:message code='ezCommunity.t1136' /></th></tr></table>
+										<p id="attachInnerNotice" class="attachInnerNotice_p_on"><span class="attachInnerNotice_span"><spring:message code='ezJournal.AttachMJS01' /></span></p></div>
+									<input id="file" type="file" onchange="filechange(event)" multiple="" style="display:none">
+									<input type="hidden" value="upload" onclick="fileupload()">
 								</form>
 							</table>
 						</c:when>
@@ -1222,21 +1250,21 @@
 								<input type="hidden" name="cnt" id="cnt" />
 								<input type="hidden" name="mailGubun" id="mailgubun" />
 							</form>
-							<table class="file">
-								<form name="multicheck">
-									<tr>
-										<th><spring:message code='ezCommunity.t141' /></th>
-										<td class="pos1">
-											<div id="lstAttachLink">&nbsp;</div>
-										</td>
-										<td class="pos2" style ="white-space:normal;">
-											<a class="imgbtn imgbck" style="margin-bottom: 3px !important;"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
-											<br>
-											<a class="imgbtn imgbck"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
-										</td>
-									</tr>
-								</form>
-							</table>
+									<div style="width:100%;white-space:nowrap;display:inline-block; height: 23px;">
+										<div style="float:left">
+											<a class="imgbtn imgbck" id="btn_AttachAdd" onclick="btn_AttachSelect_onclick()"><span><spring:message code='ezCommunity.t1177' /></span></a>
+											<a class="imgbtn imgbck" id="btn_AttachDel" onclick="btn_AttachDel_onclick()"><span><spring:message code='ezCommunity.t1178' /></span></a>
+										</div>
+										<div id="progdiv" class="progarea" style="display:none">
+											<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
+										</div>
+									</div>
+										<%--<th><spring:message code='ezCommunity.t141' /></th>--%>
+											<div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+												<table id="filelist" class="sublist" style="width: 100%;"><tr><th style="width: 15px;"><input type="checkbox" id="checkboxall"></th><th style="width: 87%;"><spring:message code='ezCommunity.t1135' /></th><th style="width: 13%;"><spring:message code='ezCommunity.t1136' /></th></tr></table>
+												<p id="attachInnerNotice" class="attachInnerNotice_p_on"><span class="attachInnerNotice_span"><spring:message code='ezJournal.AttachMJS01' /></span></p></div>
+											<input id="file" type="file" onchange="filechange(event)" multiple="" style="display:none">
+											<input type="hidden" value="upload" onclick="fileupload()">
 						</c:otherwise>
 					</c:choose>	
 				</td>

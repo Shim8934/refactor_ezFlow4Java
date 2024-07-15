@@ -1982,7 +1982,9 @@ function setAttachFileInfo(strXML) {
         var listtable;
 
         listtable = dadiframe.document.getElementById("filelist");
-        dadiframe.document.getElementById("lstAttachLink").appendChild(listtable);
+		var lstAttachLink = dadiframe.document.getElementById("lstAttachLink");
+		lstAttachLink.insertBefore(listtable, lstAttachLink.firstChild);
+		dadiframe.document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
 
         var extCheck = false;
         for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
@@ -1993,6 +1995,7 @@ function setAttachFileInfo(strXML) {
                 objTr = document.createElement("TR");
                 objTr.setAttribute("fileinfo", fileinfo);
                 objTr.setAttribute("attid", attid);
+				objTr.setAttribute("draggable", true);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";

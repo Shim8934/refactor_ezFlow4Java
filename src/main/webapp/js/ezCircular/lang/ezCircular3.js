@@ -29,3 +29,8 @@ var strLang28 = "選択した回覧がありません";
 var strLang29 = "/blank_jp.htm";
 var strLang30 = "検索結果がありません";
 var strLang50 = "検索結果がありません";
+
+// 2024-06-28 민지수 - 회람판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "Drag＆Dropでファイルを追加および追加したファイルの並び順を変更できます。";
+var strLangMJS02 = "添付ファイル名"
+var strLangMJS03 = "ファイルサイズ"

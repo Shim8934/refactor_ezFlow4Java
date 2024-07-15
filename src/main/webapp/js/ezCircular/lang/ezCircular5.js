@@ -29,3 +29,8 @@ var strLang28 = "These circulars are not.";
 var strLang29 = "/blank_vi.htm";
 var strLang30 = "no circulation.";
 var strLang50 = "No results were found for your search.";
+
+// 2024-06-28 민지수 - 회람판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "Bạn có thể kéo và thả để thêm tệp và thay đổi thứ tự của các tệp đã thêm.";
+var strLangMJS02 = "Tên tệp đính kèm"
+var strLangMJS03 = "Định cỡ tệp"
