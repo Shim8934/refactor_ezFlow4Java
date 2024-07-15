@@ -241,11 +241,10 @@
 				parameter[0] = tempDocID;
 				parameter[1] = "Show";
 				parameter[2] = orgCompanyID;
-				console.log(pDocID);
 
 				aprendopinion_dialogArgument[0] = parameter;
 				aprendopinion_dialogArgument[1] = openOpinionUI_Complete;
-				DivPopUpShow(430, 420, "/ezApprovalG/aprEndOpinion.do");
+				DivPopUpShow(430, 420, "/ezApprovalG/aprEndOpinion.do?resize=true");
 			}
 			function openOpinionUI_Complete() {
 				DivPopUpHidden();

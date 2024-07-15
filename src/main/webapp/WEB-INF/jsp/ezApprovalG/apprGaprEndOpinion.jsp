@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -34,6 +35,7 @@
 	        }
 	        var orgCompanyID;
 	        var ReturnFunction;
+			var resize = "<c:out value='${resize}'/>"; // 결재완료문서 > 하단 수신자탭 > 의견
 	        window.onload = function () {
 	            try {
 	                dialogArguments = parent.aprendopinion_dialogArgument[0];
@@ -68,6 +70,11 @@
 	            }
 	            if (!CrossYN())
 	                window.returnValue = "cancel";
+				
+				if (resize == "true") { // 결재완료문서 > 하단 수신자탭 > 의견
+					document.getElementById("newbtnPosition").style.display = "none";
+					document.getElementById("txt_OpinionContent").style.height = "119px";
+				}
 	        };
 	        function DisplayFirstOpinionInfo() {
 	            var listview = new ListView();
@@ -210,7 +217,7 @@
 	
 	    <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" onfocus="return txt_OpinionContent_onfocus()" onchange="return txt_OpinionContent_onchange()"></textarea>
 	
-	  	<div class="btnposition btnpositionNew">
+	  	<div class="btnposition btnpositionNew" id="newbtnPosition">
 	      <a class="imgbtn" id="bbtn_OpinionAdd" ><span id="btn_OpinionAdd" onClick="return btn_OpinionAdd_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>
 	      <a class="imgbtn" id="bbtn_OpinionDel"><span id="btn_OpinionDel" onClick="return btn_OpinionDel_onclick()" ><spring:message code='ezApprovalG.t266'/></span></a>
 	      <a class="imgbtn" id="bbtn_OpinionCancel" style="display:none"><span id="btn_OpinionCancel" onClick="return btn_OpinionCancel_onclick()"><spring:message code='ezApprovalG.t64'/></span></a>
