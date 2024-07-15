@@ -773,7 +773,7 @@ function ListConstr(data) {
                     }
                     else if (headerData[j].colName == "ISPUBLIC") {
                         objTd.style.textAlign = "center";
-                        if (oCells[j].ISPUBLIC != "Y") {
+                        if (oCells[j].ISPUBLIC == "N") {
                             var _img = document.createElement("img");
                             _img.src = "/images/icon_lock.png";
                             objTd.appendChild(_img);

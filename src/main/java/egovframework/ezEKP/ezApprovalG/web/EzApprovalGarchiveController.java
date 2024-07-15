@@ -237,7 +237,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		}
 		
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
-		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 		
 		if (pass.equals("<RESULT>TRUE</RESULT>")) {
 			String readRecXML = "<PARAMETER><DOCID>" + commonUtil.cleanValue(docID) +

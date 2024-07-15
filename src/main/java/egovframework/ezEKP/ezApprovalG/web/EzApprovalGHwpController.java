@@ -756,9 +756,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1") && !userInfo.getRollInfo().contains("m=1")) {
-			pass = ezApprovalGService.getAccessYNGforAPR(docID, accessInfo, approvalFlag, userInfo);
-
-			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
 		}
@@ -1599,7 +1597,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			if (docAprEnd.equals("APR")) {
 				pass = ezApprovalGService.getAccessYNGforAPR(docID, accessInfo, approvalFlag, userInfo);
 			} else {
-				pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+				pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 			}
 			// 2024-06-11 양지혜 - 취약점보완 : 보안결재 체크
 			String securityDate = ezApprovalGService.checkSecurityApprovalDate(docID, userInfo.getCompanyID(), userInfo.getTenantId(), docAprEnd);

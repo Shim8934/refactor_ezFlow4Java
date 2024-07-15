@@ -1418,17 +1418,20 @@
 		            pPublicityCode = ret[11];
 		            tempSecurityDate = ret[14];
 		            pPublicityYN = ret[21];
+		            
+		            if (pPublicityYN.substring(0,1) == "N") {
+                        tempPublic = "N";
+                    } else if (pPublicityYN.substring(0,1) == "Y") {
+                        tempPublic = "Y";
+                    } else if (pPublicityYN.substring(0,1) == "B") {
+                        tempPublic = "B";
+                    }
 
 		            if (approvalFlag == "G") {
                         pSpecialRecordCode = ret[10];
                         pLimitRange = ret[12];
                         pPageNum = ret[13];
 
-                        if (ret[21].substring(0,1) == "N") {
-                            tempPublic = "N";
-                        } else if (ret[21].substring(0,1) == "Y") {
-                            tempPublic = "Y";
-                        }
                         setPublicFlag();
                         setKeepPeriod();
 
