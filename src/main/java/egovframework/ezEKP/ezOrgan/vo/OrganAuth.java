@@ -54,7 +54,7 @@ public class OrganAuth {
     }
 
     public boolean isAuth(AdminAuth auth, String id) {
-        if (auth == null || StringUtils.isEmpty(id)) {
+        if (auth == null) {
             return false;
         }
         
