@@ -227,7 +227,7 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSearchMember.do", method=RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/getSearchMember.do", method=RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String jsonGetSearchMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetSearchMember started");
