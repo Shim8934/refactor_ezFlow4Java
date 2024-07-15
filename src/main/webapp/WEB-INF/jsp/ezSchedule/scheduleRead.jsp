@@ -59,7 +59,8 @@
 	        var isOnlyGoogle = "<c:out value='${isOnlyGoogle}' />";
 	        var repetition = "<c:out value='${repetition}' />";
 	        var lang = "<c:out value='${lang}' />";
-	        
+	        var showtop = "<c:out value='${showtop}' />";
+
 	        /* 2021-11-25 홍승비 - 일정완료 관련 데이터 추가 (반복일정 대응) */
 	        var repeatCount = "<c:out value='${repeatCount}' />";
 	        var repStartDate = "<c:out value='${repStartDate}' />";
@@ -365,7 +366,7 @@
 	            /* 2021-11-25 홍승비 - 일정 수정 시 반복일정의 repeatCount와 repStartDate를 전달 */
 	            if (CrossYN()) {
 	                win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
-	                		+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                		+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate) + "&showtop=" + showtop, "", "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            } else {
 	            	win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
 	            			+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");

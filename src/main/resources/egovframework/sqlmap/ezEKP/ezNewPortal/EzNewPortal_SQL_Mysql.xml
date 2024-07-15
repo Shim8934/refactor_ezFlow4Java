@@ -3039,8 +3039,22 @@ SELECT A.PORTLET_ID,
  	AND F.PORTLET_LANG = #menuLang# 
   WHERE A.COMPANY_ID = #companyId#
     AND A.TENANT_ID = #tenantId#
-  ORDER BY A.portlet_order
 ]]>
+	<isEmpty property="portletType">
+	<![CDATA[
+		AND C.portlet_type <> 'MG'
+		AND C.portlet_type <> 'MA'
+	]]>
+	</isEmpty>
+	<isNotEmpty property="portletType">
+	<![CDATA[
+		AND C.portlet_type <> 'G'
+		AND C.portlet_type <> 'A'
+	]]>
+	</isNotEmpty>
+	<![CDATA[
+		ORDER BY A.portlet_order
+	]]>
 </select>
 
 <select id="ezNewPortal.getPortletNameList"	parameterClass="Map" resultMap="PortletNameInfoVO">

@@ -713,7 +713,7 @@
 						
 					}
 					if (responseResult == 'fail') {
-						break;
+						return;
 					}
 				}
 			}
@@ -820,24 +820,27 @@
 			
 			if (!isNaN(optId)) {
 				if (checkedBtn.attr("otherFlag") == 1) {
+					var checked = checkedBtn.prop("checked");
 					var otherValue = $("#othInput" + id).val().trim();
 					
-					if (otherValue != "") {
+					if (checked && otherValue != "") {
 						optionId['otherFlag'] = 1;
 						optionId['texts'] = otherValue;
-					}
-					else {
+					} else {
 						result = "fail";
 						alert(id + SurveyMessages.writeOthers);
 					}
 				}
-				optionId['optionId'] = optId;
-				optionId['responseId'] = responseId;
-				answer.push(optionId);
-				answerObj['answers'] = answer;
-				answerObj['type'] = type;
-				answerObj['questionLevel'] = id;
-				resposeObj.responses.push(answerObj);
+
+				if (result !== "fail") {
+					optionId['optionId'] = optId;
+					optionId['responseId'] = responseId;
+					answer.push(optionId);
+					answerObj['answers'] = answer;
+					answerObj['type'] = type;
+					answerObj['questionLevel'] = id;
+					resposeObj.responses.push(answerObj);
+				}
 			}
 			
 			return result;
@@ -860,17 +863,18 @@
 					
 					if (!isNaN(optId)) {
 						if (checkBox[i].getAttribute('otherFlag') == 1) {
+							var checked = checkBox[i].checked;
 							var otherValue = $("#othInput" + id).val().trim();
 							
-							if (otherValue != "") {
+							if (checked && otherValue != "") {
 								optionId['otherFlag'] = 1;
 								optionId['texts']     = otherValue;
-							}
-							else {
+							} else {
 								result = "fail";
 								alert(id + SurveyMessages.writeOthers);
 							}
 						}
+						// 기타추가가 현재 1개만 생성 가능하게 되어있으므로 하위 로직은 분기처리 안하고 일단 둔다.
 						optionId['optionId'] = optId;
 						optionId['responseId'] = responseId;
 						answer.push(optionId);
@@ -878,7 +882,7 @@
 				}
 			}
 			
-			if (answer.length > 0) {
+			if (answer.length > 0 && result !== "fail") {
 				answerObj['answers']       = answer;
 				answerObj['type']          = type;
 				answerObj['questionLevel'] = id;

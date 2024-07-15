@@ -139,6 +139,7 @@ var strLang128 = "시";
 var strLang129 = "분";
 var strLang130 = "그룹일정";
 var strLang130_1 = "그룹일정";
+var strLang131 = "상단표시";
 
 var strLang253 = "선택된 자원이 없습니다."
 var strLang254 = "선택된 자원은 삭제할 수 없습니다."

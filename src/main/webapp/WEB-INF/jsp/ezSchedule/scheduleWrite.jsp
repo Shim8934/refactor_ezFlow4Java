@@ -75,7 +75,9 @@
 		    var permissionBasisDeptYN = "<c:out value='${permissionBasisDeptYN}'/>"; // 겸직/사용자 기준 권한부여 옵션 여부
 		    var adminDeptListTemp = "<c:out value='${AdminDeptList}'/>"; // 부서관리자 권한이 존재하는 부서 id string
 		    var adminDeptList = adminDeptListTemp.split(";").filter(Boolean);
-		    
+			var chkPublic = "<c:out value='${chkSchedulePublic}'/>"; // 개인일정 작성시 공개/비공개값 설정가능 여부
+		    var showtop = "<c:out value='${showtop}'/>";
+
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";
@@ -90,7 +92,38 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        // 상단표시로 바로 작성할 때
+                if (showtop == 'Y') {
+                    document.getElementById("topcheck").checked = true;
+                    var now = new Date();
 
+                    //시작시간
+                    var startTime;
+                    var hour = now.getHours();
+                    var time = now.getMinutes();
+
+                    if (parseInt(time) < 30) {
+                        startTime = hour + ":00:00";
+                    } else {
+                        startTime = hour + ":30:00";
+                    }
+
+                    //종료시간
+                    var endTime;
+                    now.setMinutes(now.getMinutes() + 30);
+
+                    hour = now.getHours();
+                    time = now.getMinutes();
+
+                    if (parseInt(time) < 30) {
+                        endTime = hour + ":00:00";
+                    } else {
+                        endTime = hour + ":30:00";
+                    }
+
+                    $('#Stimepicker').timepicker('setTime', startTime);
+                    $('#Etimepicker').timepicker('setTime', endTime);
+                }
 		        if (scheduleid != "") {
 		            document.getElementById("importantSelect").value = importance;
 		            document.getElementById("publicSelect").value = ispublic;	                
@@ -155,7 +188,7 @@
 		        if (hasattach == "Y") {
 		            setAttachFileInfo("${strAttach}");
 		        }
-		        
+
 		        if(ispublic != "") {
 		        	document.getElementById("publicSelect").value = ispublic;
 		        }
@@ -633,6 +666,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3" id="LabelOwner">
                                                 ${strLabelOwner}
+                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck">상단표시</label>
                                             </td>
                                         </tr>
                                         </c:if>
@@ -640,6 +674,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3">
                                             	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;">${strOwnerID}</select>
+                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck">상단표시</label>
                                             </td>
                                         </tr>
 	                                    <tr>

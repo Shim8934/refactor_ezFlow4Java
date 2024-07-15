@@ -388,7 +388,7 @@
 					// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가 (모든 안 공통)
 					setAttachGuideText();
 
-					if (parameters.length != 0) {
+					if (parameters != undefined && parameters.length != 0) {
 						extractParameters();
 					}
 	            } catch (e) {
