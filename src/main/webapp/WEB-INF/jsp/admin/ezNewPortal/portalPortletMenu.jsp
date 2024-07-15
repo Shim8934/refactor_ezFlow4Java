@@ -27,6 +27,8 @@
 <div id="close"><ul><li><span></span></ul></div>
 <div class='full_menu_toggle'>
 <ul class='full_menu_toggleUL'>
+<c:choose>
+	<c:when test="${empty webType}">
 	<c:forEach items="${menuList }" var="menu">
 		<li id="menu${menu.menuId }" class="menuList">
 			<dl class="full_menu_toggleDL">
@@ -35,6 +37,22 @@
 			</dl>
 		</li>
 	</c:forEach>
+	</c:when>
+	<c:otherwise>
+		<li id="menu4" class="menuList">
+			<dl class="full_menu_toggleDL">
+				<dt><span class='icon_topmenu icon_nav_board'></span></dt>
+				<dd><span><spring:message code='ezPortal.jjs04' /></span></dd>
+			</dl>
+		</li>
+		<li id="menu3" class="menuList">
+			<dl class="full_menu_toggleDL">
+				<dt><span class='icon_topmenu icon_nav_approval'></span></dt>
+				<dd><span><spring:message code='main.t25' /></span></dd>
+			</dl>
+		</li>
+	</c:otherwise>
+</c:choose>
 		<li id="menu0" class="menuList">
 			<dl class="full_menu_toggleDL">
 				<dt><span style="display:inline-block"><img src="/images/admin/noMenu.png" /></span></dt>
@@ -46,6 +64,8 @@
 <div id="selMenu" class="btnposition btnpositionNew"><a class="imgbtn"><span><spring:message code='ezNewPortal.t049' /></span></a></div>
 
 <script type="text/javascript">
+var webType = "<c:out value='${webType}'/>";
+
 $(function(){
 	$(".menuList").on("click", selectLi);
 	$("#selMenu").on("click", selectMenu);
@@ -81,13 +101,21 @@ var selectMenu = function() {
 		if (menuId == 3) {
 			window.opener.document.getElementById("newPortlet").querySelector("#cabinetSelRow").style.display = "table-row";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
-			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/apprPortlet.do";
+			if (webType == "mobile") {
+				window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/mobile/ezNewPortal/approvalListPortlet.do";
+			} else {
+				window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/apprPortlet.do";
+			}
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletMenu").value = menuName;
 			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "none";
 		} else if (menuId == 4) {
 			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "table-row";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
-			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
+			if (webType == "mobile") {
+				window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/mobile/ezNewPortal/boardPortlet.do";
+			} else {
+				window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
+			}
 			window.opener.document.getElementById("newPortlet").querySelector("#cabinetSelRow").style.display = "none";
 		} else {
 			
@@ -124,12 +152,21 @@ var selectMenu = function() {
 		if (menuId == 4) {
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "table-row";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "none";
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "/ezNewPortal/boardPortlet.do");
+			if (webType == "mobile") {
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/mobile/ezNewPortal/boardPortlet.do";
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "/mobile/ezNewPortal/boardPortlet.do");
+			} else {
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "/ezNewPortal/boardPortlet.do");
+			}
 		} else if (menuId == 3) {
 			window.opener.document.getElementById("portlet" + portletId).querySelector("#cabinetSelRow" + portletId).style.display = "table-row";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "none";
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/apprPortlet.do";
+			if (webType == "mobile") {
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/mobile/ezNewPortal/approvalListPortlet.do";
+			} else {
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/apprPortlet.do";
+			}
 			window.opener.document.getElementById("portletMenu" + portletId).value =  menuName;
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".notUsedTR").style.display = "none";
 		} else {

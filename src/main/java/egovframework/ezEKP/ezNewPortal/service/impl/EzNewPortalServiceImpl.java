@@ -1489,10 +1489,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
 		connectionUrl = specialCharacterToEmptyString(URLDecoder.decode(connectionUrl, "UTF-8"));
 		
+		String webType = map.get("type").toString();
+
 		map.put("connectionUrl", connectionUrl);
 		map.put("menuId", commonUtil.stripScriptTags(map.get("menuId").toString()));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("type", webType);
+
 		boolean portletUsed = Boolean.parseBoolean(map.get("portletUsed").toString());
 		
 		//포틀릿 insert 후에 아이디 가져옴
@@ -1544,8 +1548,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int themeCount = themeList.size();
 		
 		//테마별로 넣어주기
-		for (int i = 0; i < themeCount; i ++) {
-			map.put("themeId", themeList.get(i).getThemeId());
+		if (webType != null && !webType.equals("mobile")) {
+			for (int i = 0; i < themeCount; i ++) {
+				if (i != 3) { // 모바일 제외
+					map.put("themeId", themeList.get(i).getThemeId());
+					map.put("portletUsed", portletUsed);
+					map.put("portletId", portletId);
+					map.put("isFixed", 0); // default 0
+					ezNewPortalDAO.updateThemePortletUsed(map);
+				}
+			}
+		} else {
+			map.put("themeId", 4);
 			map.put("portletUsed", portletUsed);
 			map.put("portletId", portletId);
 			map.put("isFixed", 0); // default 0
@@ -2804,13 +2818,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang) {
+	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang, String type) {
 		logger.debug("getPortletList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("menuLang", menuLang);
+		map.put("portletType", type);
 		
 		List<PortletInfoVO> portetList = ezNewPortalDAO.getPortletList(map);
 		

@@ -195,7 +195,7 @@ public interface EzNewPortalService {
 	 * @return List<PortletInfoVO>
 	 * @throws Exception
 	 */
-	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang);
+	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang, String type);
 	// 2024-07-10 조수빈 - 다국어 사용 여부 판단 로직 추가 위해 수정함. 
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId) throws Exception;
 	public void setWeather() throws Exception;

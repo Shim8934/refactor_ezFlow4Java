@@ -2810,8 +2810,9 @@ public class EzNewPortalGWController {
 			String lang = info.getLang();
 			
 			JSONObject data = new JSONObject();
+			String webType = request.getParameter("type");
 
-			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
+			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang), webType);
 			
 			//1. tenant config가 NO인 경우 관리자 포틀릿 관리에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -3095,11 +3096,17 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
+			String webType = "";
+			if (jsonParam.get("type").toString() != null) {
+				webType = jsonParam.get("type").toString();
+			}
+			
 			JSONObject portletInfo = new JSONObject();
 			portletInfo.put("boardId", jsonParam.get("boardId"));
 			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
 			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
 			portletInfo.put("menuId", jsonParam.get("menuId"));
+			portletInfo.put("type", webType);
 			
 			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
 			
@@ -5296,11 +5303,11 @@ public class EzNewPortalGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
 			String lang = userInfo.getLang();
-			
+			String webType = "";
 			List<PortletInfoVO> themePortletList = ezNewPortalService.getThemePortletList(themeId, tenantId, companyId, lang);
 			
 			if (themePortletList == null || themePortletList.isEmpty()) {
-				themePortletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
+				themePortletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang), webType);
 			}
 			
 			//1. tenant config가 NO인 경우 관리자 포틀릿 관리에서도 나오면 안됨

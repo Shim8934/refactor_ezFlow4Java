@@ -193,6 +193,7 @@
 					var themesHTML = "";
 					
 					themes.forEach(function (item, index) {
+						if (index != 3) { // 모바일 테마 제외
 						themesHTML += "<li>";
 						themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
 						
@@ -231,6 +232,7 @@
 						themesHTML += "<table class='frameList'></table>";
 						themesHTML += "</div>";
 						themesHTML += "</div>"; */
+						}
 					});
 					
 					$("#themeList").html(themesHTML);

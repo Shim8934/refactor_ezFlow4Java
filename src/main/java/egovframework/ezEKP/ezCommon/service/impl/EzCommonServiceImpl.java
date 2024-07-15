@@ -3977,7 +3977,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         };
         
         int portletId = ezCommonDAO.getNewPortletId();
-       
+        map.put("webType", "mobile");
         if ((int)ezCommonDAO.checkPortletCodeString("mFixTop") < 1) { // 모바일 init data 유무 판단
            ezCommonDAO.insertMobileTheme(); // portal_theme
            ezCommonDAO.insertMobileFrame(); // portal_frame
@@ -4011,6 +4011,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                            map.put("tenantId", company.getTenantId());
                            ezCommonDAO.insertPortletInfoData(map);
                            ezCommonDAO.insertMobileFrameComp(map);
+                           ezCommonDAO.insertMobileThemeComp(map);
                         }
                     }
                 }

@@ -993,10 +993,14 @@
 		INSERT INTO TBL_PORTAL_THEME_PORTLET
 			(THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
 		VALUES
+		<isNotEqual property="webType" compareValue="mobile">
 			(1, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
 			(2, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
-			(3, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
+			(3, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0)
+		</isNotEqual>
+		<isEqual property="webType" compareValue="mobile">
 			(4, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0)
+		</isEqual>
 	</insert>
 	
 	<insert id="EzCommonDAO.insertPortalPortletAuth">
@@ -4659,12 +4663,36 @@
 			TENANT_ID = #tenantId#
 	</select>
 
-	<insert id="EzCommonDAO.insertMobileThemeInitAuth">
+	<insert id="EzCommonDAO.insertMobileThemeInitAuth" parameterClass="Map">
 		INSERT INTO TBL_PORTAL_THEME_AUTH (
 			THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED
 		)
 		VALUES 
 			(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+	</insert>
+	
+	<select id="EzCommonDAO.checkMobileThemeInitComp" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				TBL_PORTAL_THEME_COMP
+			WHERE
+				theme_id = 4
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertMobileThemeInitComp" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_THEME_COMP
+				(COMPANY_ID, TENANT_ID, THEME_ID, THEME_USED, THEME_DEFAULT)
+			VALUES 
+				(#companyId#, #tenantId#, 4, 1, 0)
+		]]>	
 	</insert>
 
 	<update id="EzCommonDAO.resetMobileUser">

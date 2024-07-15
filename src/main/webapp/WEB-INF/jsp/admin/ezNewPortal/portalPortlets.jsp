@@ -144,6 +144,7 @@
 		var useChinese = "${useChinese}";
 		var useVietnamese = "${useVietnamese}";
 		var useIndonesian = "${useIndonesian}";
+		var webType = "${type}";
 
 		// 일반 게시판 포틀릿의 표출 타입 enum.
 		var BoardViewType = Object.freeze({
@@ -280,7 +281,7 @@
 			}
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/addPortlet.do', true);
+			request.open('POST', '/admin/ezNewPortal/addPortlet.do?type=' + webType, true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
@@ -459,7 +460,7 @@
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/getPortlets.do', true);
+			request.open('POST', '/admin/ezNewPortal/getPortlets.do?type=' + webType, true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
@@ -806,13 +807,18 @@
 	        var wWeight = "662";
 	        var wHeight = "445";
 	
+			if (webType == 'mobile') {
+				wWeight = 450;
+				wHeight = 300;
+			}
+
 	        var heigth = window.screen.availHeight;
 	        var width = window.screen.availWidth;
 	
 	        var left = (width - wWeight) / 2;
 	        var top = (heigth - wHeight) / 2;
 	        
-	        window.open("/admin/ezNewPortal/openPortalMenu.do?portletId=" + portletId + "&companyId=" + companyId, "",
+	        window.open("/admin/ezNewPortal/openPortalMenu.do?portletId=" + portletId + "&companyId=" + companyId +"&type=" + webType, "",
 	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		}
 		

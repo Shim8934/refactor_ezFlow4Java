@@ -658,6 +658,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("useVietnamese", useVietnamese);
 				model.addAttribute("useIndonesian", useIndonesian);
 				model.addAttribute("approvalFlag", ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId()));
+				model.addAttribute("type", request.getParameter("type"));
 
 				if ("Y".equals(usePortletSize)) {
 					List<String> allSize = ezNewPortalService.getAllAvailablePortletSize();
@@ -711,6 +712,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String url = "/rest/admin/ezPortal/portlets/companies/" + companyId;
 		
 		paramMap.put("userId", userInfo.getId());		
+		paramMap.put("type", req.getParameter("type"));		
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "get", null);
 		String result = resultBody.get("status").toString();
@@ -866,7 +868,10 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String companyId = json.get("companyId").toString();
 		String url = "/rest/admin/ezPortal/portlets/companies/" + companyId;
 		
+		String type = req.getParameter("type");
+
 		json.put("userId", userInfo.getId());
+		json.put("type", req.getParameter("type"));
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "post", json);
 		
@@ -934,6 +939,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			//게시판이 top인 목록 가져오기
 			String userId = userInfo.getId();
 			String companyId = request.getParameter("companyId");
+			String webType = request.getParameter("type");
 			
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userId);
@@ -947,6 +953,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("menuList", resultBody.get("data"));
 				model.addAttribute("companyId", companyId);
 				model.addAttribute("portletId", commonUtil.stripScriptTags(request.getParameter("portletId")));
+				model.addAttribute("webType", webType);
 			}
 			
 			logger.debug("openPortalMenu ended.");

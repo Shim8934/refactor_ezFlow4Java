@@ -589,9 +589,18 @@
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_PORTLET
 				(portlet_id, menu_id, portlet_url, portlet_type, default_order)
-			VALUES
-				(#portletId#, #menuId#, #connectionUrl#, 'A', (SELECT MAX(A.portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE A.tenant_id = #tenantId# AND A.company_id = #companyId#))
-		]]>
+			VALUES		  
+			]]>
+		<isNotEqual property="type" compareValue="mobile">
+			<![CDATA[
+				(#menuId#, #connectionUrl#, 'A', (SELECT MAX(A.portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE A.tenant_id = #tenantId# AND A.company_id = #companyId#))
+			]]>
+		</isNotEqual>
+		<isEqual property="type" compareValue="mobile">
+			<![CDATA[
+				(#menuId#, #connectionUrl#, 'MA', (SELECT MAX(A.portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE A.tenant_id = #tenantId# AND A.company_id = #companyId# AND connection_url like '/mobile/%'))
+			 ]]>
+		</isEqual>
 	</insert>
 	
 	<insert id="ezNewPortal.insertPortletComp" parameterClass="Map">
@@ -600,9 +609,19 @@
 			(company_id,	tenant_id,		portlet_id,		menu_id,	portlet_category, 
 			connection_url,	portlet_used,	portlet_order, 	board_id)
 		VALUES
-			(#companyId#,	#tenantId#,		#portletId#,	#menuId#,	#portletCategory#,
-			#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId#),	#boardId#)
-	]]>
+		  ]]>
+		<isNotEqual property="type" compareValue="mobile">
+			<![CDATA[
+				(#companyId#,	#tenantId#,		#portletId#,	#menuId#,	#portletCategory#,
+				#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId#),	#boardId#)
+			]]>
+		</isNotEqual>
+		<isEqual property="type" compareValue="mobile">
+			<![CDATA[
+				(#companyId#,	#tenantId#,		#portletId#,	#menuId#,	#portletCategory#,
+				#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId# AND connection_url like '/mobile/%'),	#boardId#)
+			]]>
+		</isEqual>
 	</insert>
 	
 	<update id="ezNewPortal.updateCompanyPortletNameInfo" parameterClass="Map">

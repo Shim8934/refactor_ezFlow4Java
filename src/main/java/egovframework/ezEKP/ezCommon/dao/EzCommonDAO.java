@@ -2341,6 +2341,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("insertMobileFrameComp failed.");
 		}
 	}
+
+	public void insertMobileThemeComp(Map<String, Object> map) throws Exception {
+		if ((int)select("EzCommonDAO.checkMobileThemeInitComp", map) < 1) {
+			logger.debug("insertMobileThemeComp mobile ThemeCompany doesn't exist. insert data...");
+			insert("EzCommonDAO.insertMobileThemeInitComp", map);
+		}
+	}
 	
 	public void resetMobileUser() throws Exception {
 		logger.debug("resetMobileUser started.");
