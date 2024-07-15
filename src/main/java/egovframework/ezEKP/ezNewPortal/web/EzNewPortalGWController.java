@@ -4383,6 +4383,10 @@ public class EzNewPortalGWController {
 					pidListSub = pidListSub.substring(0, pidListSub.length()-1);
 				}
 				
+				if (pidList != null && pidListSub != null && pidListSub.substring(0,1) != ",") {
+					pidList += ",\'\'";
+				}
+				
 				pidList += pidListSub;
 				
 			} else if(idList.equals("chkAllFalse")) {
