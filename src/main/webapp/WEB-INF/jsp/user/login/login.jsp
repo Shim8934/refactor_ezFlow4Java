@@ -582,7 +582,7 @@
 			</span>
 			<p><span>[<strong class="yellow_txt">Caps Lock</strong>]?pCapsLockMsg?></span></p>
 		</div>
-		<div id="exDiv" style="margin-bottom: 100px;padding: 67px 20px 32px;" class="modal">
+		<div id="exDiv" style="display: none; margin-bottom: 100px;padding: 67px 20px 32px;" class="modal">
 			<div id="close">
 				<ul>
 					<li><a rel="modal:close"><span></span></a></li>
