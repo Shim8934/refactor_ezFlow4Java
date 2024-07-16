@@ -283,19 +283,21 @@ function getWorkspaceAppPath() {
 
 function getThisSchedule(selectedDate) {
 	selectedDate = selectedDate.replace(/\./gi, '-');
-	var selectedTDId = 'TDMINI_' + selectedDate + '_Day'
-	var selectedTD = $('#' + selectedTDId);   
 	
+	document.getElementById("iYear").value = new Date(selectedDate).getFullYear();
+	document.getElementById("iMon").value = new Date(selectedDate).getMonth() + 1;
+	changeMonth();
+	
+	var selectedTDId = 'TDMINI_' + selectedDate + '_Day'
+	var selectedTD = $('#' + selectedTDId);
+
+	var $selTD = $("#"+g_selTDID);
 	if (usedTheme == 3) {
-    	$("#"+g_selTDID).parent().removeClass('schedule');
+    	$selTD.parent().removeClass('schedule');
     	$("#"+g_selTRID).parent().removeClass('schedule');
     } else {
-    	if ($("#"+g_selTDID)) {
-    		$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
-    	}
-    	
-    	if ($("#"+g_selTRID)) {
-    		$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    	if ($selTD.length > 0) {
+    		$selTD.parent().removeClass('select');
     	}
     }
 	
@@ -306,16 +308,16 @@ function getThisSchedule(selectedDate) {
     	} else {
     		selectedTD.parent().addClass('schedule');
     	}
-    } else {
-    	if (selectedTD.parent().attr('class').indexOf('sun') > -1) {
-    		selectedTD.parent().css("background","#f0f6ff").css("border-radius","20px").css("color","red");
-    	} else {
-    		selectedTD.parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
-    	}
     }
 		
 	g_selTRID = document.querySelector('#' + selectedTDId).parentNode.parentNode.getAttribute("id");
     g_selTDID = 'TDMINI_' + selectedDate + '_Day';
+
+	if (usedTheme != 3) {
+		if ($("#" + g_selTDID).length > 0) {
+			$("#" + g_selTDID).parent().addClass('select');
+		}
+	}
 
     date = selectedDate;
     getScheduleList(date, "P");
