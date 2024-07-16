@@ -975,6 +975,10 @@ public class EzPollServiceImpl implements EzPollService{
 	public void deleteQstImages(Map<String, Object> map) throws Exception {
 		String realPath = (String)map.get("realPath");
 		String content = getContent((int)map.get("qst_id"), (int)map.get("tenant_id"));
+		
+		if (content == null) {
+			content = "";
+		}
 
 		Document document = Jsoup.parse(content);
 		Elements elements = document.getElementsByTag("img");
