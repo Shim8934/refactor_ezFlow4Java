@@ -870,7 +870,7 @@
 	            <td height="20">
 	                <div id="menu">
 	                    <ul>
-	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo('14')"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo('15')"><spring:message code='ezApprovalG.t1742'/></span></li>
 	                        <li id="btnSetAprLine" style="display: none"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
 	                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 	                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
