@@ -2317,7 +2317,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase()); // TBL_C_BOARD(2024-07-16 기준 커뮤니티 공지사항으로 사용되는 테이블), TBL_C_NOTICE, TBL_C_CLUBNOTICE
 		map.put("primary", primary);
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
@@ -2336,7 +2336,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("bbsListGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("primary", primary);
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
@@ -2357,7 +2357,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", no : " + no + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", no);
 		map.put("tenantID", tenantID);
 		
@@ -2374,7 +2374,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", no : " + no + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", no);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
@@ -2393,7 +2393,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", no : " + no + ", primary : " + primary + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", no);
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
@@ -2411,7 +2411,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCBoardVO> list = ezCommunityDAO.bbsViewNewGet2(map);
@@ -2427,7 +2427,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", itemNo : " + itemNo + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", itemNo);
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
@@ -2981,6 +2981,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pEndDate", commonUtil.getDateStringInUTC(endDateTime, userInfo.getOffset(), true));
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", userInfo.getTenantId());
+		
+		/* 2024-07-16 홍승비 - 커뮤니티 팝업홈 > 게시판 검색 시 카운트 쿼리에서 누락된 게시자명 다국어 검색조건 추가 */
+		map.put("v_strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		
 		int result = ezCommunityDAO.searchItemCount(map);
 		//logger.debug("result=" + result);
@@ -3536,6 +3539,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		StringBuilder strHTML = new StringBuilder();
 		int iColSpan = 5;
 		
+		// tbl_c_clubpds, tbl_c_clubpds1는 실제로 존재하는 테이블이 아니며, 분기처리를 위해 임의로 사용하는 테이블명임
 		if (bName.equals("tbl_c_clubpds") || bName.equals("tbl_c_clubpds1")) {
 			iColSpan = 6;
 		}
@@ -3648,7 +3652,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String textContent = request.getParameter("textContent");
 		String MHTcontent = request.getParameter("content");
 		String title = request.getParameter("title");
-		String attachList = request.getParameter("attachList");
+		String attachList = request.getParameter("attachList"); // 2024-07-11 기준 전달되지 않는 파라미터로 확인
 		String userNm = request.getParameter("userNM");
 		String userNm2 = request.getParameter("userNM2");
 		String realPath = commonUtil.getRealPath(request);
@@ -4884,6 +4888,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
+		/* 2024-07-16 홍승비 - 커뮤니티 팝업홈 > 관리메뉴 > 게시판 검색 시 카운트 쿼리에서 누락된 게시자명 다국어 검색조건 추가 */
+		map.put("v_strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		
 		int result = ezCommunityDAO.adminSearchItemCount(map);
 		
 		logger.debug("adminSearchItemCount ended.");
@@ -5648,13 +5655,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("searchCop started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_searchName", search);
+		map.put("v_searchName", search.toUpperCase()); // C_CLUBNAME, C_CLUBNAME2, C_CLUBDESC
 		map.put("v_searchValue", keyword);
 		map.put("v_pStart", startRow);
 		map.put("mariaStart", startRow - 1);
 		map.put("v_pEnd", endRow);
 		map.put("mariaEnd", endRow - startRow + 1);
-		map.put("v_mode", mode);
+		map.put("v_mode", mode); // SEA (리스트), CNT (카운트)
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -5794,8 +5801,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", tenantID);
 		map.put("offset", offset);
 		
-		//logger.debug("psortBY");
-		//logger.debug(pSortBy);
+		/* 2024-07-11 홍승비 - SQL Injection 수정 > 정렬 조건을 쿼리 내부에서 분기처리 하도록 수정 (현재 포토게시판은 리스트 헤더 정렬 기능이 없고, 정렬 조건으로 공백만 전달됨) */
+		if (!pSortBy.equals("")) {
+			String orderCell = pSortBy.split(" ")[0].toUpperCase();
+			String orderSort = pSortBy.split(" ").length > 1 ? pSortBy.split(" ")[1].toUpperCase() : "";
+			
+			map.put("v_orderCell", orderCell); // BOARDNAME, TITLE, WRITERCOMPANYNAME, WRITERDEPTNAME, WRITERNAME, WRITEDATE, ATTACHMENTS, READCOUNT
+			map.put("v_orderSort", orderSort); // "" or DESC
+		}
+		
 		List<CommunityBoardItemVO> itemList = ezCommunityDAO.boardItemListPhotoGet2(map);
 		
 		sb.append("<NODES>");
@@ -6151,7 +6165,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", no : " + no + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", no);
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
@@ -6447,13 +6461,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return strReturn;
 	}
 	
+	/* 2024-07-11 홍승비 - SQL Injection 수정 > 의미없는 칼럼 셀렉트 분기처리 제거 (maxIdFieldName값은 항상 C_NO 칼럼을 전달함) */
 	public int bbsEditOkGet2(String maxIdFieldName, String bName, String code, int tenantID) throws Exception {
 		logger.debug("bbsEditOkGet2 started.");
 		//logger.debug("maxIdFieldName : " + maxIdFieldName + ", bName : " + bName + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
-		map.put("v_BNAME", bName);	
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
 		
@@ -6469,8 +6483,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("maxIdFieldName : " + maxIdFieldName + ", bName : " + bName + ", code : " + code + ", strMaxNum : " + maxNum + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
-		map.put("v_BNAME", bName);	
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_CODE", code);
 		map.put("v_STRMAXNUM", Integer.toString(maxNum));
 		map.put("tenantID", tenantID);
@@ -6524,6 +6537,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PENDROW", pEndRow);
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+		
+		/* 2024-07-11 홍승비 - SQL Injection 수정 > 정렬 조건을 쿼리 내부에서 분기처리 하도록 수정 */
+		if (!pSortBy.equals("")) {
+			String orderCell = pSortBy.split(" ")[0].toUpperCase();
+			String orderSort = pSortBy.split(" ").length > 1 ? pSortBy.split(" ")[1].toUpperCase() : "";
+			
+			map.put("v_orderCell", orderCell); // BOARDNAME, TITLE, WRITERCOMPANYNAME, WRITERDEPTNAME, WRITERNAME, WRITEDATE, ATTACHMENTS, READCOUNT
+			map.put("v_orderSort", orderSort); // "" or DESC
+		}
 		
 		/* 2018-10-02 홍승비 - 게시자의 writerDeptID를 가져오도록 수정 */
 		List<CommunityBoardListVO> list = ezCommunityDAO.boardItemListGet2(map);
@@ -6870,7 +6892,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : "+ bName + ", title : " + title + ", no : " + no + ", code : " + code + ", attachList : " + attachList + ", textContent : " + textContent);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_TITLE", title);
 		map.put("v_NO", no);
 		map.put("v_CODE", code);
@@ -6888,7 +6910,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName);		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_bName", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_myRef", myRef);
 		map.put("v_myStep", myStep);
 		map.put("v_code", code);
@@ -6899,6 +6921,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("bbsEditOkSet2 ended.");
 	}
 	
+	/* 2024-07-11 홍승비 - SQL Injection 수정 > 의미없는 칼럼 셀렉트 분기처리 제거 (maxIdFieldName값은 항상 C_NO 칼럼을 전달함) */
 	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName, String no, int tenantID) throws Exception {
 		logger.debug("bbsEditOkInsert started.");
 /*		logger.debug("bName : " + bName + ", myRef : " + myRef + ", newStep : " + newStep + ", newLevel : " + newLevel + ", attachList : " + attachList + ", number : " + number);
@@ -6906,7 +6929,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug(", userNm : " + userNm + ", userNm2 : " + userNm2 + ", title : " + title + ", maxIdFieldName : " + maxIdFieldName + ", tenantID : " + tenantID);
 		*/
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_MYREF", myRef);
 		map.put("v_NEWSTEP", newStep);
 		map.put("v_NEWLEVEL", newLevel);
@@ -6921,7 +6944,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_DISPLAYNAME1", userNm);
 		map.put("v_USERINFO_DISPLAYNAME2", userNm2);
 		map.put("v_TITLE", title);
-		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
 		map.put("v_NO", no); // TBL_C_BOARD에 등록될 공지사항 답변인 경우, 전달받은 부모 공지사항의 no값이 존재한다면 UPPERNO 칼럼에 기록
 		map.put("tenantID", tenantID);
 		
@@ -6935,7 +6957,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", itemNo : " + itemNo + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", itemNo);
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
