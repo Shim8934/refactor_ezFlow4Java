@@ -33,7 +33,8 @@
 				var skinCss = document.getElementById("skinCss");
 				var mainFrame = window.parent.document.getElementById("mainFrame").contentWindow;
 				var mainSkinCss = mainFrame.document.getElementById("mainSkinCss");
-				var mainSkinLink = document.createElement("link");
+				var notiFrame = window.parent.document.getElementById("iframeNoti").contentWindow;
+				var notiSkinCss = notiFrame.document.getElementById("notiSkinCss");
 				var themeId = mainFrame.document.querySelector(".mainbg");
 
 				if(skinCss){
@@ -49,11 +50,23 @@
 				if(mainSkinCss){
 					mainSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
 				} else {
-					mainSkinLink.id = "mainSkinCss";
-					mainSkinLink.rel = "stylesheet";
-					mainSkinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
-					mainFrame.document.head.appendChild(mainSkinLink);
+					skinLink = document.createElement("link");
+					skinLink.id = "mainSkinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					mainFrame.document.head.appendChild(skinLink);
 				}
+
+				if(notiSkinCss){
+					notiSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					skinLink = document.createElement("link");
+					skinLink.id = "notiSkinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					notiFrame.document.head.appendChild(skinLink);
+				}
+
 
 				if(skinId == "dark"){
 					document.querySelector(".logo img").src = "/images/ezNewPortal/skin/dark/logo_white.png";
