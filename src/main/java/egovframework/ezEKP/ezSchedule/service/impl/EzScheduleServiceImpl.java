@@ -2090,7 +2090,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				//bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' >" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(periodContent);
-				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='attendanceChk' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick='openAttendChk()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='attendanceChk' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick='openAttendChk()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03", userInfo.getLocale()) + "</span>");
 				
 				//bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2', '', 'width=1400px, height=900px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=0' )\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
@@ -2100,7 +2100,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss04", userInfo.getLocale()) + "</br><br>" + " ");
 				bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + commonUtil.cleanValue(title) + "</br>");
 				bodyContent.append(periodContent);
-				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03", userInfo.getLocale()) + "</span>");
 				break;
 			case "acc" :		// 참석 수락
 				subject = egovMessageSource.getMessage("ezSchedule.kmss05", userInfo.getLocale());
@@ -2109,7 +2109,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				//bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' >" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(periodContent);
-				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03", userInfo.getLocale()) + "</span>");
 				//bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2', '', 'width=1400px, height=900px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=0' )\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
 			case "rej" :		// 참석 거절
@@ -2119,7 +2119,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				//bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' >" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(periodContent);
-				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+				bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03", userInfo.getLocale()) + "</span>");
 				//bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2', '', 'width=1400px, height=900px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=0' )\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
 		}
