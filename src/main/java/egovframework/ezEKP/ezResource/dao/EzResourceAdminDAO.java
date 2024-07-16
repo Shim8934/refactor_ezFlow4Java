@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -150,6 +151,16 @@ public class EzResourceAdminDAO extends EgovAbstractDAO {
 	
 	public void updateBoardName(Map<String, Object> map) {
 		update("EzResourceAdminDAO.updateBoardName", map);
-	}	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleVO> getScheduleList(Map<String, Object> map) {
+		return (List<ResGetScheduleVO>) list("EzResourceAdminDAO.getScheduleList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleVO> getScheduleListRepetiti(Map<String, Object> map){
+		return  (List<ResGetScheduleVO>) list("EzResourceAdminDAO.getScheduleListRepetiti", map);
+	}
 	
 }
