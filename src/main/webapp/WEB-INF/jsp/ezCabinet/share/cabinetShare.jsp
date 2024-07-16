@@ -90,7 +90,7 @@
 											</table>
 											
 											<div id="txtlist_Layer" class="cabOrganTextListDiv">
-												<table id="shareTable" class="organCabTbl">
+												<table id="shareTable" class="mainlist">
  													<tr class="trCabTxt">
 														<td><spring:message code="ezCabinet.t18" /></td>
 														<td><spring:message code="ezCabinet.t97" /></td>
