@@ -1346,7 +1346,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .mailGraph .mGraph{background: #D8DDE5;}
 #theme3Body .scheduleDate .dayT{margin:0px; padding:5px 0px 0px 0px; font-size:13px; color:#333;}
 #theme3Body .scheduleDate .dayN{margin:0px; padding:0px; font-size:30px; font-weight:bold; color:#0470e4;}
-#theme3Body .scalendar_mini td.todaysun{color:red; background:url(/images/ezNewPortal/theme3Img/scalendar_today_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 #theme3Body .sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px;clear:both;overflow:hidden;border-top:none; height:203px; background: none}
 #theme3Body .sscheduleUL .scheduleLi .scheduleTime .Tdept_timeText{color:#333333; font-size:13px; margin:0px 0px 0px 8px;}
 
@@ -1364,7 +1363,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .voteLay{height: inherit;}
 #theme3Body .pollLay{height: inherit;}
 
-#theme3Body .scalendar_mini td.todaysun{ color:#fff; background:#fff; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+#theme3Body .scalendar_mini td.todaysun{ color:red; background:#fff; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 #theme3Body .scalendar_mini td.schedule{color:#fff; background: #5cb5b4; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 #theme3Body .scalendar_mini_title .btn_prev{padding-right:5px;}
 
