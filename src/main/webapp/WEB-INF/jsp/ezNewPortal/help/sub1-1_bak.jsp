@@ -35,57 +35,37 @@
 	<img src="../../images/ezNewPortal/help/portal/theme.png" alt="테마선택" title="테마선택" />
 	
 	<h2> 테마1 </h2>
-	<h3 class="sub_content"> 고정 포틀릿이 상단에 있는 테마입니다. </h3>
+	<h3 class="sub_content"> 고정 포틀릿이 좌우에 있는 테마입니다. </h3>
 	<img src="../../images/ezNewPortal/help/portal/theme1.png" alt="테마1" title="테마1" />
 	
 	<h2> 테마2 </h2>
 	<h3 class="sub_content"> 고정 포틀릿이 상단에 있는 테마입니다. </h3>
-	<img src="../../images/ezNewPortal/help/portal/theme2.png" alt="테마2" title="테마2" />	
+	<img src="../../images/ezNewPortal/help/portal/theme2.png" alt="테마2" title="테마2" />
 	
-	<!-- <h2> 테마3 </h2>
+	<h2> 테마3 </h2>
 	<h3 class="sub_content"> 고정 포틀릿이 없는 테마입니다. </h3>
 	<img src="../../images/ezNewPortal/help/portal/theme3.png" alt="테마3" title="테마3" />
-	-->
 	
-	<h2> 상단영역 설정 </h2>
-	<h3 class="sub_content"> 관리자가 설정한 상단 고정영역 포틀릿을 개인별로 사용 여부를 설정할 수 있습니다.</h3>
-	<ol class="content">
-		<li>기본영역의 스위치 버튼을 이용하여 선택합니다.</li>
-		<li>선택에 따라 상단 고정영역 포틀릿의 유/무가 존재합니다.</li>
-	</ol>
-	<h4 class="explan"> ※ 관리자가 사용안함으로 설정 시 상단 고정영역 포틀릿과 스위치는 표시되지 않으며, 테마1에만 존재합니다. </h4>
-	<img src="../../images/ezNewPortal/help/portal/portlet_upper.png" alt="상단영역 설정" title="상단영역 설정" />
-	
-	<h2> 포틀릿 설정 </h2>
-	<h3 class="sub_content"> 관리자가 설정한 포틀릿을 개인별로 사용 여부를 설정할 수 있습니다. </h3>
-	<ol class="content">
-		<li>기본영역의 포탈설정 아이콘을 클릭합니다. </li>
-		<li>화면에 보일 포틀릿을 스위치 버튼을 이용하여 선택합니다. </li>
-		<li>설정을 마치면 <b>[저장]</b> 버튼을 클릭합니다. </li>
-	</ol>
-	<h4 class="explan"> ※ 관리자가 사용안함으로 설정한 포틀릿은 표시되지 않습니다. </h4>
-	<img src="../../images/ezNewPortal/help/portal/portlet_set.png" alt="포틀릿 설정" title="포틀릿 설정" />
-	
-	<h2> 포틀릿 크기와 위치 설정 </h2>
-	<h3 class="sub_content"> 포틀릿별로 크기와 위치를 조절할 수 있습니다. </h3>
-	<ol class="content">
-		<li>포틀릿 우측 하단 크기조절 아이콘을 클릭합니다.</li>
-		<li>사용자가 원하는 크기를 선택할 수 있습니다. </li>
-		<li>사용자가 원하는 배치를 선택할 수 있습니다.</li>
-	</ol>
-	<img src="../../images/ezNewPortal/help/portal/portlet_sizeposition.png" alt="포틀릿 크기와 위치 설정" title="포틀릿 크기와 위치 설정" />
-	
-	<!--<h2> 화면 프레임 설정 </h2>
-	<h3 class="sub_content"> 테마별로 표시되는 포틀릿의 개수를 설정할 수 있습니다. </h3>
+	<h2> 화면 프레임 설정 </h2>
+	<h3 class="sub_content"> 테마별로 표시되는 포틀릿의 개수와 기본영역의 위치를 설정할 수 있습니다. </h3>
 	<ol class="content">
 		<li>기본영역의 포틀릿설정 아이콘을 클릭합니다. </li>
 		<li>포틀릿 설정 팝업창에서 사용할 화면 프레임을 선택합니다. </li>
 		<li>화면 프레임 선택 후 <b>[저장]</b> 버튼을 클릭합니다. </li>
 	</ol>
 	<h4 class="explan"> ※ 테마3의 경우 기본영역이 없습니다. </h4>
-	<!--<img src="../../images/ezNewPortal/help/portal/frame_set.png" alt="프레임 설정" title="프레임 설정" />
-	<img src="../image/help/portal/frame_set.png" alt="프레임 설정" title="프레임 설정" />-->
+	<img src="../../images/ezNewPortal/help/portal/frame_set.png" alt="프레임 설정" title="프레임 설정" />
 	
+	<h2> 포틀릿 설정 </h2>
+	<h3 class="sub_content"> 관리자가 설정한 포틀릿을 개인별로 사용 여부를 설정할 수 있습니다. </h3>
+	<ol class="content">
+		<li>기본영역의 포틀릿설정 아이콘을 클릭합니다. </li>
+		<li>화면에 보일 포틀릿을 스위치 버튼을 이용하여 선택합니다. </li>
+		<li>설정을 마치면 <b>[저장]</b> 버튼을 클릭합니다. </li>
+	</ol>
+	<h4 class="explan"> ※ 관리자가 사용안함으로 설정한 포틀릿은 표시되지 않습니다. </h4>
+	<img src="../../images/ezNewPortal/help/portal/portlet_set.png" alt="포틀릿 설정" title="포틀릿 설정" />
+
     <!--내용끝 -->
 </body>
 </html>
