@@ -4,6 +4,8 @@
 
 /* top */
 header{background:#272829; border-bottom:1px solid #2F2F31;}
+nav{background:none;}
+nav .navUL li{color:#fff;}
 .employee_search input{color:#B5B5B5; border-color:#444444; background:#343638;}
 .employee_search span:before{border-color:#F3F3F3;}
 .employee_search span:after{background:#F3F3F3;}
@@ -23,6 +25,46 @@ header{background:#272829; border-bottom:1px solid #2F2F31;}
 .quick_menu_list p{color:#fff;}
 .quick_menu_list ul li .quick_img{border-color:#454749;}
 .quick_menu_list ul li span{color:#fff;}
+
+nav{background:none;}
+nav .navUL li{color:#fff;}
+nav .navUL li:hover{color:#388CE5;}
+nav .navUL li:before{background:#388CE5;}
+nav .navUL li:after{background:#388CE5;}
+nav .navUL li.on{color:#388CE5;}
+
+
+
+/* 통합알림 */
+.notification{background:#272829; border-color:#383C3C;}
+.noti_header h3{color:#fff;}
+.noti_header .noti_btn_list li{background-color:#414141;}
+.noti_header .noti_btn_list li.noti_refresh{background-image:url(../../images/ezNewPortal/skin/dark/noti_refresh.svg);}
+.noti_header .noti_btn_list li.noti_write{background-image:url(../../images/ezNewPortal/skin/dark/noti_write.svg);}
+.noti_header .noti_btn_list li.noti_filter{background-image:url(../../images/ezNewPortal/skin/dark/noti_filter.svg);}
+
+.noti_view span{border:1px solid #444444; line-height:30px; color:#808080; background:none;}
+.noti_view span.on{border-color:#388CE5; background:rgba(155,155,155,0.09); color:#388CE5;}
+.noti_view span.on em{color:#388CE5;}
+
+.noti_list_wrap .noti_list_date:before{background:#B5B5B5;}
+.noti_list_wrap .noti_list_date span{color:#B5B5B5; background:#272829;}
+.noti_list li dl dt{color:#fff;}
+.noti_list li dl dt i{background-color:#313233;}
+.noti_list li dl dd .name{color:#B5B5B5;}
+.noti_list li dl dd .date{color:#B5B5B5;}
+.noti_list li dl dd .date:before{background:#B5B5B5;}
+.noti_list li .list_info{box-shadow:none; background:#313233;}
+.noti_list li .list_info .title{color:#fff;}
+.noti_list li .list_del{background-image:url(../../images/ezNewPortal/skin/dark/list_del.svg);}
+
+.filter_pop{background:#313233; border-color:#454749;}
+.filter_pop .check_list h2{color:#fff; border-color:#454749;}
+.filter_pop .check_list h3{color:#CBCBCB;}
+.filter_pop .check_list .check_ul li .input_check input[type="checkbox"] + label{color:#CBCBCB;}
+
+.filter_pop .noti_bot_btn span{background:#47494B; border-color:#555757; color:#fff;}
+.filter_pop .noti_bot_btn span.ok{background:#47494B; border-color:#555757; color:#fff;}
 
 
 /* lnb */
