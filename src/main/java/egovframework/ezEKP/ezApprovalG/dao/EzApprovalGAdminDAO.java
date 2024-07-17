@@ -746,4 +746,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void contMove(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdmin.contMove", map);
 	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 리스트 호출  */
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getSNFContList(Map<String, Object> map){
+		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getSNFContList",map);
+	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 실행 함수  */
+	public void setContSN(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.setContSN", map);
+	}
 }

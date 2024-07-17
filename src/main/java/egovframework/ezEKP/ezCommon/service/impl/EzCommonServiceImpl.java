@@ -4135,4 +4135,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createServeyResultviewPermTbl() throws Exception {
         ezCommonDAO.createServeyResultviewPermTbl();
     }
+
+    /* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
+    @Override
+    public void addTblFormContainerSN() throws Exception {
+        ezCommonDAO.addTblFormContainerSN();
+    }
 }

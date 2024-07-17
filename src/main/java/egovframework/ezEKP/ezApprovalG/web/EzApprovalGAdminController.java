@@ -5389,4 +5389,51 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		return "json";
 	}
+
+	/**
+	 * 전자결재 관리 양식함 순서조정 페이지
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/moveSNFcontSelect.do", method = RequestMethod.GET)
+	public String moveSNFcontSelect(@CookieValue ("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("moveSNFcontSelect started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String contID = request.getParameter("contID");
+		String companyID = request.getParameter("companyID");
+		
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
+			return "cmm/error/adminDenied";
+		}
+
+		List<ApprGFormVO> contList = ezApprovalGAdminService.getSNFContList(contID,companyID,userInfo.getTenantId());
+
+		model.addAttribute("contList",contList);
+		model.addAttribute("userInfo", userInfo);
+		logger.debug("moveSNFcontSelect ended.");
+
+		return "admin/ezApprovalG/apprGMoveSNFcontSelect";
+	}
+
+	/**
+	 * 전자결재 관리 양식함 순서조정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/moveContSN.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String moveContSN(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("moveContSN started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String contID = request.getParameter("CONTID");
+		String groupList = request.getParameter("GROUPLIST");
+		String companyID = request.getParameter("COMPANYID");
+
+		String result = ezApprovalGAdminService.moveContSN(contID, groupList, companyID, userInfo.getTenantId());
+
+		logger.debug("moveContSN ended.");
+
+		return result;
+	}
 }

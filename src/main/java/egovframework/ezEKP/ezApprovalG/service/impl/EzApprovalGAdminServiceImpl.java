@@ -6030,4 +6030,47 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return "OK";
 	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 리스트 호출  */
+	@Override
+	public List<ApprGFormVO> getSNFContList(String contID, String companyID, int tenantID) throws Exception {
+		logger.debug("getSNFContList started");
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("contID", contID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprGFormVO> contList = ezApprovalGAdminDAO.getSNFContList(map);
+
+		logger.debug("getSNFContList ended");
+		return contList;
+	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 실행 함수  */
+	@Override
+	public String moveContSN(String contID, String groupList, String companyID, int tenantID) throws Exception {
+		logger.debug("moveContSN started.");
+
+		int index = 0;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("contID", contID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		for (String targetContID : groupList.split(";")) {
+			map.put("targetContID", targetContID);
+			map.put("order", ++index);
+
+			logger.debug("index=" + index);
+
+			ezApprovalGAdminDAO.setContSN(map);
+		}
+
+		logger.debug("moveContSN ended.");
+
+		return "OK";
+
+	}
 }

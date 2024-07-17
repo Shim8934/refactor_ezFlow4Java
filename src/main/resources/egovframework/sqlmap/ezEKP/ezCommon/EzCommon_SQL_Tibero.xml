@@ -5301,4 +5301,24 @@
 		)
 	</statement>
     
+
+	<!-- 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 -->
+	<select id="EzCommonDAO.checkTblFormContainerSN">
+        <![CDATA[
+			SELECT
+				SN
+			FROM
+				TBL_FORMCONTAINER
+			WHERE
+				ROWNUM <= 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addTblFormContainerSN">
+		ALTER TABLE
+			TBL_FORMCONTAINER
+		ADD (
+			SN NUMBER(20) DEFAULT NULL
+			)
+	</statement>
 </sqlMap>

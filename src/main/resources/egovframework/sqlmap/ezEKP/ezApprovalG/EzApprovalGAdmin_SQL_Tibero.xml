@@ -6263,7 +6263,8 @@
 			UPDATE
 				TBL_FORMCONTAINER
 			SET
-				FORMCONTPARENTS = #selContID#
+				FORMCONTPARENTS = #selContID#,
+				SN = NULL
 			WHERE
 				TENANT_ID = #tenantID#
 		  	AND
@@ -6272,5 +6273,40 @@
 				FORMCONTID = #contID#
 		]]>
 	</update>
-	
+
+	<select id="EzApprovalGAdmin.getSNFContList" parameterClass="Map" resultClass="ApprGFormVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_FORMCONTAINER
+			WHERE
+				TENANT_ID = #tenantID#
+		  	AND
+				COMPANYID = #companyID#
+		  	AND
+				FORMCONTPARENTS = #contID#
+			ORDER BY
+				CASE WHEN SN IS NOT NULL THEN 0 ELSE 1 END,
+				SN,
+				FORMCONTID
+		]]>
+	</select>
+
+	<update id="EzApprovalGAdmin.setContSN" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_FORMCONTAINER
+			SET
+				SN = #order#
+			WHERE
+				TENANT_ID = #tenantID#
+		  	AND
+				COMPANYID = #companyID#
+		  	AND
+				FORMCONTPARENTS = #contID#
+		  	AND
+				FORMCONTID = #targetContID#
+		]]>
+	</update>
 </sqlMap>

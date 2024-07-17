@@ -4606,7 +4606,8 @@
                 NVL(FORMCONTNAME2, FORMCONTNAME) FORMCONTNAME2  ,
                 FORMCONTOWNDEPID ,
                 FORMCONTPARENTS ,
-                FORMCONTDESCRIPTION 
+                FORMCONTDESCRIPTION ,
+                SN
            FROM 
            		TBL_FormContainer 
            WHERE  
@@ -4623,7 +4624,8 @@
                 NVL(FORMCONTNAME2, FORMCONTNAME) FORMCONTNAME2  ,
                 FORMCONTOWNDEPID ,
                 FORMCONTPARENTS ,
-                FORMCONTDESCRIPTION 
+                FORMCONTDESCRIPTION ,
+                SN
            FROM 
            		TBL_FormContainer 
            WHERE  
@@ -4640,7 +4642,8 @@
 	                         NVL(TBL_FormContainer.FormContName2, TBL_FormContainer.FormContName) FORMCONTNAME2  ,
 	                         TBL_FormContainer.FormContOwnDepID ,
 	                         TBL_FormContainer.FormContParents ,
-	                         TBL_FormContainer.FormContdescription 
+	                         TBL_FormContainer.FormContdescription ,
+	                         TBL_FormContainer.SN 
 	        FROM 
 	           		TBL_FormContainer 
 	        LEFT JOIN 
@@ -4665,7 +4668,9 @@
 	        	    TBL_FormContainer.COMPANYID = #companyID#
 		</isNotEmpty>
 		ORDER BY
-			TBL_FORMCONTAINER.formcontid
+            CASE WHEN TBL_FORMCONTAINER.SN IS NOT NULL THEN 0 ELSE 1 END,
+            TBL_FORMCONTAINER.SN,
+            TBL_FORMCONTAINER.FORMCONTID
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSecurityType" parameterClass="Map" resultClass="ApprGLeftVO"> -->
 <!-- 		{CALL EZSP_GETSECURITYTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->

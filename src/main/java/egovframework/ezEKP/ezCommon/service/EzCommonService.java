@@ -426,4 +426,7 @@ public interface EzCommonService {
 	public void createExecutiveTable() throws Exception;
  
 	public void createServeyResultviewPermTbl() throws Exception;
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
+	public void addTblFormContainerSN() throws Exception;
 }

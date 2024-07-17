@@ -695,6 +695,48 @@
 					InitFormCont();
 				}
 			}
+
+			var fContMainSN_dialogArguments = new Array();
+			function btnMoveSNFcont_onclick() {
+				var para = new Array();
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+
+				var nodeIdx = treeView.GetSelectNode();
+
+				if (nodeIdx != null) {
+					para[0] = nodeIdx.GetNodeData("DATA1"); //CONT ID
+					para[1] = companyID;
+					var url = "/admin/ezApprovalG/moveSNFcontSelect.do?contID=" + para[0] + "&companyID=" + para[1];
+
+
+					if (CrossYN()) {
+						fContMainSN_dialogArguments[0] = para;
+						fContMainSN_dialogArguments[1] = btnMoveSNFcont_onclick_Complete;
+
+						var moveForm_Cross = window.open(url, "SelectTaskCategory", GetOpenWindowfeature(460, 590));
+						try {
+							SelectTaskCategory_Cross.focus();
+						} catch (e) {
+						}
+					} else {
+						var retVal = window.showModalDialog(url, para, "dialogWidth:460px;dialogHeight:580px;status:no;help:no;scroll:no;edge:sunken");
+						if (retVal[0] == "OK") {
+							Tree_setconfig();
+							InitFormCont();
+						}
+					}
+				}else{
+					OpenAlertUI("<spring:message code ='ezApprovalG.KMHF06' />");
+				}
+			}
+
+			function  btnMoveSNFcont_onclick_Complete(retVal) {
+				if (retVal[0] == "OK") { 
+					Tree_setconfig(); 
+					InitFormCont(); 
+				} 
+			} 
 		</script>
 	
 	</head>
@@ -745,6 +787,7 @@
 		        <li id="btnUpFcont"><span onclick="return btnUpFcont_onclick()"><spring:message code = 'ezApprovalG.t1627' /></span></li>
 		        <li id="btnDelFcont"><span onclick="return btnDelFcont_onclick()"><spring:message code = 'ezApprovalG.t1628' /></span></li>
 				<li id="btnMoveFcont"><span onclick="return btnMoveFcont_onclick()"><spring:message code = 'ezApprovalG.KMHF05' /></span></li>
+				<li id="btnMoveSNFcont"><span onclick="return btnMoveSNFcont_onclick()"><spring:message code = 'ezApprovalG.KMHF07' /></span></li>
 		        <!-- <li style="background: none;"><img src="/images/i_bar.gif" style="vertical-align: middle"></li> -->
 		        <li class="important" id="btnInsForm1"><span onclick="return btnInsForm_onclick('MHT')"><spring:message code = 'ezApprovalG.t1667' /></span></li>
             	<li class="important" id="btnInsForm2" style = 'display:none;'><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>

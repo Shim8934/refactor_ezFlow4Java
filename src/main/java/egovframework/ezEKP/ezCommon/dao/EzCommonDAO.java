@@ -2515,4 +2515,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createServeyResultviewPermTbl");
 		}
 	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
+	public void addTblFormContainerSN() {
+		try {
+			select("EzCommonDAO.checkTblFormContainerSN");
+		} catch (Exception e) {
+			logger.debug("tbl_formcontainer SN column doesn't exist. creating the column...");
+			update("EzCommonDAO.addTblFormContainerSN");
+		}
+
+	}
 }
