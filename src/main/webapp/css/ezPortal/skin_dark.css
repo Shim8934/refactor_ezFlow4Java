@@ -4,6 +4,8 @@
 
 /* top */
 header{background:#272829; border-bottom:1px solid #2F2F31;}
+nav{background:none;}
+nav .navUL li{color:#fff;}
 .employee_search input{color:#B5B5B5; border-color:#444444; background:#343638;}
 .employee_search span:before{border-color:#F3F3F3;}
 .employee_search span:after{background:#F3F3F3;}

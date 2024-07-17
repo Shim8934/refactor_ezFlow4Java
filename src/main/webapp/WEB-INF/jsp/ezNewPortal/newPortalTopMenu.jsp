@@ -130,9 +130,11 @@
 	</head>
 	<body>
 		<%-- ui 확인용 버튼(추후 삭제 예정)-조기완 --%>
-		<div class="skin_test" style="position:absolute; left:50%; top:0; transform:translateX(-50%); z-index:10000; display:none;">
+		<div class="skin_test" style="position:absolute; left:50%; top:0; transform:translateX(-50%); z-index:10000; user-select:none; display:none;">
 			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('');">기본</span>
-			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer;" onclick="skin('dark');">다크</span>
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('dark');">다크</span>
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('blue');">블루</span>
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer;" onclick="skin('red');">레드</span>
 		</div>
 		<header id="top"></header>
 		<div class="lnb">

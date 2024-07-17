@@ -221,7 +221,7 @@
 	<c:if test="${useBoard eq 'YES'}">
     <div class="sec1Layout_btm_left">
         <dl class="portlet_title">
-            <dt class="portletText"><img src="/images/ezNewPortal/theme2Img/sec1_noti.png" alt=""><spring:message code='main.t65'/></dt>
+			<dt class="portletText"><span></span><spring:message code='main.t65'/></dt>
             <dd class="portletPlus" id="theme2Sec1NoticePlusBtn">
                 <img src="/images/ezNewPortal/portlet_Plus2_t2.png">
             </dd>
