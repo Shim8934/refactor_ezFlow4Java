@@ -3107,6 +3107,8 @@ public class EzNewPortalGWController {
 			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
 			portletInfo.put("menuId", jsonParam.get("menuId"));
 			portletInfo.put("type", webType);
+			portletInfo.put("portletCode", jsonParam.get("portletCode"));
+			portletInfo.put("connectionId", jsonParam.get("connectionId"));
 			
 			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
 			
@@ -3178,6 +3180,8 @@ public class EzNewPortalGWController {
 			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
 			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
 			portletInfo.put("menuId", jsonParam.get("menuId"));
+			portletInfo.put("portletCode", jsonParam.get("portletCode"));
+			portletInfo.put("connectionId", jsonParam.get("connectionId"));
 			
 			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
 			ezNewPortalService.updateCompanyPortletInfo(portletInfo, portletNames, companyId, tenantId);

@@ -1484,7 +1484,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//메뉴
 		map = new ObjectMapper().readValue(portletInfo.toJSONString(), Map.class);
 		map.put("boardId", map.get("boardId") != null? commonUtil.stripScriptTags(map.get("boardId").toString()) : null);
-		
+		map.put("connectionId", map.get("connectionId") != null? commonUtil.stripScriptTags(map.get("connectionId").toString()) : null);
+		map.put("portletCode", map.get("portletCode") != null? commonUtil.stripScriptTags(map.get("portletCode").toString()) : null);
 		String connectionUrl = commonUtil.stripScriptTags(map.get("connectionUrl").toString());
 		connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
 		connectionUrl = specialCharacterToEmptyString(URLDecoder.decode(connectionUrl, "UTF-8"));
@@ -1583,6 +1584,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			map.put("boardId", commonUtil.stripScriptTags(map.get("boardId").toString()));
 		}
 		
+		if (map.get("connectionId") != null) {
+			map.put("connectionId", map.get("connectionId") != null? commonUtil.stripScriptTags(map.get("connectionId").toString()) : null);
+		}
+		
+		map.put("portletCode", map.get("portletCode") != null? commonUtil.stripScriptTags(map.get("portletCode").toString()) : null);
+		
 		if (map.get("connectionUrl") != null) {
 			String connectionUrl = map.get("connectionUrl").toString();
 			
@@ -1599,7 +1606,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		if (map.get("connectionUrl") != null) {
+		if (map.get("connectionUrl") != null || map.get("portletCode") != null) {
 			ezNewPortalDAO.updateCompanyPortletInfo2(map); //포틀릿 정보 테이블 업데이트
 		}
 		

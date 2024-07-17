@@ -108,7 +108,7 @@
 		var useChinese = "${useChinese}";
 		var useVietnamese = "${useVietnamese}";
 		var useIndonesian = "${useIndonesian}";
-		
+		var connectMenuId = -1; // 연계메뉴 id는 -1
 		$(function(){
 			getCompanies();
 			getMenus();
@@ -194,6 +194,10 @@
 					}
 					
 					menuList.forEach(function (item, index) {
+						if (item.menuId == connectMenuId) { // 연계메뉴는 표출 안함.
+							return;
+						}
+						
 						menusHTML += "<li class='menu draggable-item' id='menu" + item.menuId + "'>";
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";

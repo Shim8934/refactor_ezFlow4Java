@@ -548,17 +548,17 @@
 	<insert id="ezNewPortal.insertPortlet" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_PORTLET
-				(menu_id, portlet_url, portlet_type, default_order)
+				(menu_id, portlet_url, portlet_type, default_order, portletcode)
 			VALUES
 		  ]]>
 		<isNotEqual property="type" compareValue="mobile">
 			<![CDATA[
-				(#menuId#, #connectionUrl#, 'A', (SELECT MAX(A.portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE A.tenant_id = #tenantId# AND A.company_id = #companyId#))
+				(#menuId#, #connectionUrl#, 'A', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('A', 'G')), #portletCode#)
 			]]>
 		</isNotEqual>
 		<isEqual property="type" compareValue="mobile">
 			<![CDATA[
-				(#menuId#, #connectionUrl#, 'MA', (SELECT MAX(A.portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE A.tenant_id = #tenantId# AND A.company_id = #companyId# AND connection_url like '/mobile/%'))
+				(#menuId#, #connectionUrl#, 'MA', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('MA', 'MG')), #portletCode#)
 			 ]]>
 		</isEqual>
 		<selectKey keyProperty="portletId" resultClass="Integer">
@@ -570,19 +570,19 @@
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_PORTLET_COMP
 			(company_id,	tenant_id,		portlet_id,		menu_id,	portlet_category, 
-			connection_url,	portlet_used,	portlet_order, 	board_id)
+			connection_url,	portlet_used,	portlet_order, 	board_id, connection_id)
 		VALUES
 		  ]]>
 		<isNotEqual property="type" compareValue="mobile">
 			<![CDATA[
 				(#companyId#,	#tenantId#,		#portletId#,	#menuId#,	#portletCategory#,
-				#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId#),	#boardId#)
+				#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId#),	#boardId#, #connectionId#)
 			]]>
 		</isNotEqual>
 		<isEqual property="type" compareValue="mobile">
 			<![CDATA[
 				(#companyId#,	#tenantId#,		#portletId#,	#menuId#,	#portletCategory#,
-				#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId# AND connection_url like '/mobile/%'),	#boardId#)
+				#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId# AND connection_url like '/mobile/%'),	#boardId#, #connectionId#)
 			]]>
 		</isEqual>
 	</insert>
@@ -621,18 +621,15 @@
 			TBL_PORTAL_PORTLET_COMP
 		SET
 			menu_id = #menuId#,
-			portlet_used = #portletUsed#
+			portlet_used = #portletUsed#,
+			connection_id = #connectionId#,
+			board_id = #boardId#
 	]]>
 	<isNotNull property="connectionUrl" prepend=",">
 	<![CDATA[
 			connection_url = #connectionUrl#
 	]]>
 	</isNotNull>
-	<isNotEmpty property="boardId" prepend=",">
-	<![CDATA[
-			board_id = #boardId#
-	]]>
-	</isNotEmpty>
 	<![CDATA[
 		WHERE
 			tenant_id = #tenantId#
@@ -644,17 +641,16 @@
 	</update>
 	
 	<update id="ezNewPortal.updateCompanyPortletInfo2" parameterClass="Map">
-	<isNotNull property="connectionUrl">
-	<![CDATA[
 		UPDATE
 			TBL_PORTAL_PORTLET
 		SET
-			portlet_url = #connectionUrl#,
-			menu_id = #menuId#
+			menu_id = #menuId#,
+			portletcode = #portletCode#
+		<isNotNull property="connectionUrl" prepend=",">
+			portlet_url = #connectionUrl#
+		</isNotNull>
 		WHERE
 			portlet_id = #portletId#
-	]]>
-	</isNotNull>
 	</update>
 	
 	<delete id="ezNewPortal.deletePortletName" parameterClass="map">

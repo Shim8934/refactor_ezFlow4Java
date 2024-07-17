@@ -148,6 +148,8 @@
 <result property="portletName" 				column="PORTLET_NAME" />
 <result property="portletCode" 				column="PORTLETCODE" />
 <result property="menuCode" 				column="MENUCODE" />
+<result property="portletConnectionId" 		column="SYSTEMCONFIG_CODE" />
+<result property="connectionName" 			column="SYSTEMCONFIG_DESCRIPTION" />
 <result property="boardGubun" 				column="BOARDGUBUN" />
 </resultMap>
 <resultMap class="PortletNameInfoVO" id="PortletNameInfoVO">
@@ -3384,6 +3386,8 @@ SELECT A.PORTLET_ID,
        F.PORTLET_NAME,
 	   C.PORTLETCODE,
        G.MENUCODE,
+       H.CODE AS SYSTEMCONFIG_CODE,
+       H.DESCRIPTION AS SYSTEMCONFIG_DESCRIPTION,
 	   NVL(D.GUBUN, -1) AS BOARDGUBUN
   FROM TBL_PORTAL_PORTLET_COMP A
   JOIN TBL_PORTAL_PORTLET C
@@ -3403,7 +3407,11 @@ SELECT A.PORTLET_ID,
  	ON A.COMPANY_ID = F.COMPANY_ID
  	AND A.TENANT_ID = F.TENANT_ID
  	AND A.PORTLET_ID = F.PORTLET_ID
- 	AND F.PORTLET_LANG = #menuLang# 
+ 	AND F.PORTLET_LANG = #menuLang#
+  LEFT JOIN TBL_SYSTEMCONFIG H
+ 	ON A.connection_id = H.CODE
+ 	AND A.TENANT_ID = H.TENANT_ID
+ 	AND A.COMPANY_ID = H.COMPANY_ID
   WHERE A.COMPANY_ID = #companyId#
     AND A.TENANT_ID = #tenantId#
 	]]>
