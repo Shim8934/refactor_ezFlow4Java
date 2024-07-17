@@ -512,7 +512,11 @@
 				A.boardid  as id,
 				A.parentboardid as parent,
 				A.boardname as boardname1,
-				A.boardname2 as boardname2,
+				CASE
+					WHEN (A.Boardname2 = '' OR A.Boardname2 IS NULL)
+					THEN A.Boardname
+					ELSE A.Boardname2
+				END as boardname2,
 				A.treevieworder as sort,
 				B.parentboardid as topParent,
 				A.boardcolor,
