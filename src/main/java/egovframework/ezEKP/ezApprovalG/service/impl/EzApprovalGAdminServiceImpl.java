@@ -5987,4 +5987,47 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public ArrayList<String> getIronListYear(String companyID, int tenantID) throws Exception {
 		return ezApprovalGAdminDAO.getIronListYear(companyID, tenantID);
 	}
+
+	/* 2024-07-16 기민혁 - 전자결재 > 양식함 이동 */
+	@Override
+	public String contMove(String companyID, String contID, String selContID, String parentContID, int tenantID) throws Exception {
+
+		boolean Loop = true;
+		ArrayList<String> checkList = new ArrayList<String>();
+		ArrayList<String> resultCheckList = new ArrayList<String>();
+		checkList.add(contID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("contID", contID);
+		map.put("selContID", selContID);
+		map.put("parentContID", parentContID);
+		map.put("tenantID", tenantID);
+		map.put("checkList", checkList);
+
+		logger.debug("contMove started. contID = " + contID + " || selContID = " + selContID + " || parentContID = " + parentContID);
+
+		while (Loop) {
+			List<String> list = ezApprovalGAdminDAO.checkContList(map);
+
+			if (list.size() > 0) {
+				checkList.clear();
+				for (String re : list) {
+					checkList.add(re);
+					resultCheckList.add(re);
+				}
+				map.put("checkList", checkList);
+			}else{
+				Loop = false;
+			}
+		}
+		
+		if(resultCheckList.contains(selContID)){
+			return "CHILD";
+		} else {
+			ezApprovalGAdminDAO.contMove(map);	
+		}
+		
+		return "OK";
+	}
 }

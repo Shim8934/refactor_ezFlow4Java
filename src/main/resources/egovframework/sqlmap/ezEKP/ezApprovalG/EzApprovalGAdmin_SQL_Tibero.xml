@@ -6244,4 +6244,33 @@
 		ORDER BY
 			PRODUCTIONYEAR DESC
 	</select>
+
+	<select id="EzApprovalGAdminDAO.checkContList" parameterClass="Map" resultClass="String">
+		SELECT
+			FORMCONTID
+		FROM
+			TBL_FORMCONTAINER
+		WHERE
+			FORMCONTPARENTS IN (<iterate property="checkList" conjunction=","> #checkList[]# </iterate>)
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</select>
+	
+	<update id="EzApprovalGAdmin.contMove" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_FORMCONTAINER
+			SET
+				FORMCONTPARENTS = #selContID#
+			WHERE
+				TENANT_ID = #tenantID#
+		  	AND
+				COMPANYID = #companyID#
+		  	AND
+				FORMCONTID = #contID#
+		]]>
+	</update>
+	
 </sqlMap>

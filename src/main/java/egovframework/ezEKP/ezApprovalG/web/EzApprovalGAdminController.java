@@ -5347,4 +5347,46 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		return "json";
 	}
+
+	/**
+	 * 전자결재G관리 양식함 이동 페이지
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/moveFcontSelect.do", method = RequestMethod.GET)
+	public String moveFcontSelect(@CookieValue ("loginCookie") String loginCookie) throws Exception {
+		logger.debug("moveFcontSelect started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
+			return "cmm/error/adminDenied";
+		}
+
+		logger.debug("moveFcontSelect ended.");
+
+		return "admin/ezApprovalG/apprGMoveFcontSelect";
+	}
+
+	/**
+	 * 전자결재G관리 양식함 이동 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/contMove.do", method = RequestMethod.POST)
+	public String contMove(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("contMove started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		String contID = request.getParameter("contID");
+		String selContID = request.getParameter("selContID");
+		String parentContID = request.getParameter("parentContID");
+
+		String result = ezApprovalGAdminService.contMove(companyID, contID, selContID, parentContID, userInfo.getTenantId());
+
+		model.addAttribute("result", result);
+
+		logger.debug("contMove ended.");
+
+		return "json";
+	}
 }

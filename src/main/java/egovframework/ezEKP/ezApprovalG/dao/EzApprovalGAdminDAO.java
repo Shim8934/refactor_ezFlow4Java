@@ -735,4 +735,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 			}}
 		);
 	}
+
+	/* 2024-07-16 기민혁 - 전자결재 > 양식함 이동 하위 문서함 체크 */
+	@SuppressWarnings("unchecked")
+	public List<String> checkContList(Map<String, Object> map) {
+		return (List<String>) list("EzApprovalGAdminDAO.checkContList", map);
+	}
+	
+	/* 2024-07-16 기민혁 - 전자결재 > 양식함 이동 */
+	public void contMove(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.contMove", map);
+	}
 }
