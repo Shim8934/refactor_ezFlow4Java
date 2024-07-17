@@ -140,7 +140,8 @@
 		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
 		    var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // 스크랩 테넌트 컨피그 (TYPE1 / TYPE2 /NONE)
 			var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
-		    
+			var boardItemCount = 0;
+			
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onresize = function ()
@@ -402,6 +403,7 @@
 		    function getBoardList_after(xml) {
 		        try {
 		            var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+					boardItemCount = cntNode.textContent;
 		            var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 		            var pagenode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 		            var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
@@ -733,6 +735,12 @@
 		    }
 		    
 		    function NewItem_onclick() {
+				if (gubun == "9" && boardItemCount >= 1) {
+					alert("<spring:message code = 'ezBoard.fileViewerBoard.msg2' />");
+
+					return;
+				}
+
 		        if (Write_FG != "true") {
 		            alert("<spring:message code='ezBoard.t262' />");
 		            return;
@@ -1734,12 +1742,14 @@
 			  <ul>
 		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02' /></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
+			  <c:if test = "${ boardInfo.guBun != '9' }">
 		        <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274' /></span></li>
 		        <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134' /></span></li>
 		        <%-- <c:if test="${boardInfo.guBun ne '2'}">
 		        	<li><span onClick="ReservationItem_onclick()"><spring:message code='ezBoard.t276' /></span></li> 
 		        </c:if> --%>
-		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052' /></span></li> 
+		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052' /></span></li>
+			  </c:if>
 		        <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">

@@ -180,6 +180,8 @@
 			var writerFlag = "${boardInfo.writerFlag}"; // 2025-01-21 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그
 			var writerNameType = parseInt("<c:out value='${boardListVO.writerNameType}'/>"); // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
 
+			var parentItemID = "${parentItemID}";
+
 		    window.onload = function () {
 		    	
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
@@ -684,6 +686,11 @@
 			            return;
 			        }
 		    	}
+
+				if (gubun == 9 && pMode != "temp" && (pAttachListXml == "" || pAttachListXml.getElementsByTagName("ROWS")[0].childNodes.length == 0)) {
+					alert("<spring:message code = 'ezBoard.fileViewerBoard.attachNotice' />");
+					return;
+				}
 		
 		        //추가항목
 				var must = new Array();
@@ -1161,6 +1168,8 @@
 				    }
 				}
 
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "parentItemID", parentItemID == "" ? newID : parentItemID);
+
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
 		        xmlhttp.send(xmlDom);
 				if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
@@ -1320,18 +1329,26 @@
 					try{
 						if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
 							parent.opener.getBoardList_NewBoardSTD();
+						} else if (gubun === "9") {
+							parent.location.href = "/ezBoard/fileViewerBoard.do?boardID="  + encodeURIComponent(pBoardID);
 						}
 					} catch (e) {console.log(e); }
 					
 
 		            window.close();
 		        } else {
-		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS")
-		                alert("<spring:message code='ezBoard.t00001' />");
-		            else if (getNodeText(loadXMLString(xmlhttp.responseText)) == "INACCESSIBLE")
-		                alert(strLang173);
-		            else
-		                alert("<spring:message code='ezBoard.t403' />" + getNodeText(loadXMLString(xmlhttp.responseText)));
+		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS") {
+						alert("<spring:message code='ezBoard.t00001' />");
+					}
+		            else if (getNodeText(loadXMLString(xmlhttp.responseText)) == "INACCESSIBLE") {
+						alert(strLang173);
+					}
+					else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "DUPLICATED") {
+						alert(strLangFileViewr01);
+					}
+		            else {
+						alert("<spring:message code='ezBoard.t403' />" + getNodeText(loadXMLString(xmlhttp.responseText)));
+					}
 		        }
 		        xmlhttp = null;
 		        xmlDom = null;
@@ -2992,8 +3009,8 @@
 			                        <li><span onclick="PreventSaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:otherwise>
 		                    	</c:choose>
-		                    	<c:if test="${boardInfo.guBun != '3'}">
-			                        <li><span onclick="PreviewItem();"><spring:message code='ezBoard.t431' /></span></li>
+								<c:if test="${boardInfo.guBun != '3' && boardInfo.guBun != '9'}">
+									<li><span onclick="PreviewItem();"><spring:message code='ezBoard.t431' /></span></li>
 		                    	</c:if>
 		                    	<c:if test="${boardInfo.guBun != '2' && (mode != 'modify' && mode != 'reply')}">
 			                        <li><span onclick="PreventSaveItem('temp');"><spring:message code='ezBoard.t10034' /></span></li>
@@ -3019,11 +3036,13 @@
 	                    	</c:if>
 	                    </ul>
 	                </div>
+					<c:if test = "${ boardInfo.guBun != '9' }">
 	                <div id="close">
 	                    <ul>
 	                        <li><span onclick="window.close();"></span></li>
 	                    </ul>
 	                </div>
+					</c:if>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	                </script>
@@ -3036,7 +3055,9 @@
 	                <div class="portlet_tabpart03" style="margin:0px;border-top:0px;padding:0px;margin-bottom:4px">
 	                    <div class="portlet_tabpart03_top" id="tab1">
 	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.hsbJP02' /></span></p>
+							<c:if test = "${ boardInfo.guBun != '9' }">	<%-- File Viewer 게시판 특성 상 예약게시는 구조와 맞지 않다고 판단되어 display none 처리 --%>
 	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.hsbJP01' /></span></p>
+							</c:if>
 	                    </div>
 	                </div>
 	            </td>
@@ -3104,7 +3125,7 @@
 		                                &nbsp;<input type="checkbox" style="display: none" id="noticePost" />
 	                            	</c:otherwise>
 	                            </c:choose>
-								<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && mode != 'reply' && reservedItem == '' }">
+								<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && mode != 'reply' && reservedItem == '' && boardInfo.guBun != '9' }">
 						              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="readCount" /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t00002' /></span>
 								</c:if>	
 		                        </td>

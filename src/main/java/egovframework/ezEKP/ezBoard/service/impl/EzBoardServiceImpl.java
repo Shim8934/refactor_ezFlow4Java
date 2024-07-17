@@ -18,6 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
+import java.nio.file.attribute.FileTime;
+import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -67,6 +70,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -5599,6 +5604,64 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("confirmBoardItemDeletion ends");
 		return ezBoardDAO.confirmBoardItemDeletion(map);
+    }
+
+	@Override
+	public BoardItemVO getFileViewerBoardInfo(HttpServletRequest request, LoginVO userInfo, String versionYN) throws Exception {
+		logger.info("getFileViewerBoardItem started");
+
+		BoardItemVO boardItemInfo = null;
+
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("boardID", request.getParameter("boardID"));
+			map.put("companyID", userInfo.getCompanyID());
+			map.put("tenantID", userInfo.getTenantId());
+			map.put("versionYN", versionYN != null ? versionYN : "N");
+
+			boardItemInfo = ezBoardDAO.getFileViewerBoardItemID(map);
+
+			if (boardItemInfo != null) {
+				makeCallURL(boardItemInfo, request, userInfo);
+			}
+		} catch (SQLException se) {
+			logger.error(se.getMessage(), se);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.info("getFileViewerBoardItem ended");
+		return boardItemInfo;
+	}
+
+	private void makeCallURL(BoardItemVO boardItemInfo, HttpServletRequest request, LoginVO userInfo) throws Exception {
+		logger.info("makeCallURL started");
+
+		String satConvertServer = ezCommonService.getTenantConfig("SATimageConvertServerURL", userInfo.getTenantId());
+		String attachFileName = boardItemInfo.getAttachFileName();
+		String attachFileExt = attachFileName.substring(attachFileName.lastIndexOf(".") + 1);
+//		String serverName = request.getServerName().equals("localhost") ? "10.0.120.68" : request.getServerName();
+		String serverName = request.getServerName();
+
+		String callURL = satConvertServer +
+						"?filepath=" + (request.isSecure() ? "https://" : "http://") + serverName + ":" + request.getServerPort() + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + URLEncoder.encode(boardItemInfo.getAttachFilePath()) +
+						"&filename=" + URLEncoder.encode(attachFileName, "UTF-8") +
+						"&fileext=" + URLEncoder.encode(attachFileExt, "UTF-8") +
+						"&viewerselect=image" +
+						"&userid=" + userInfo.getId();
+
+		boardItemInfo.setSatCallURL(callURL);
+
+		logger.info("makeCallURL ended");
+	}
+
+	public String hasBoardItemFlag(String boardID, int tenantID) throws Exception {
+		return ezBoardDAO.hasBoardItemFlag(
+			new HashMap() {{
+				put("boardID", boardID);
+				put("tenantID", tenantID);
+			}}
+		);
 	}
 	
 	@Override
@@ -7357,5 +7420,26 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		return boardName;
+	}
+
+	@Override
+	public boolean isPostDuplicated(String versionYN, String boardID, String parentItemID, int tenantId) throws Exception {
+		logger.debug("isPostDuplicated started.");
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantId);
+
+		logger.debug("isPostDuplicated ended.");
+		if ("N".equals(versionYN)) {
+			return ezBoardDAO.isPostDuplicated1(map);
+		} else {
+			String itemID = ezBoardDAO.isPostDuplicated2(map);
+			if (itemID != null && !parentItemID.equals(itemID)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 }

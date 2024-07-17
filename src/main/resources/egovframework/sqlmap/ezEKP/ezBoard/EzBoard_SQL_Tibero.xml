@@ -26,6 +26,7 @@
 	<typeAlias  alias="BoardUserScrapContListVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO"/>
 	<typeAlias  alias="BoardThumbnailVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO"/>
 	<typeAlias  alias="MealDataVO" 					type="egovframework.ezEKP.ezBoard.vo.MealDataVO"/>
+	<typeAlias  alias="BoardItemVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardItemVO"/>
 
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
@@ -2268,6 +2269,8 @@
 					A.TENANT_ID = B.TENANT_ID
 				AND
 					A.BoardID = B.BoardID
+				AND
+					B.GUBUN != 9
 				LEFT OUTER JOIN 
 					(SELECT 
 						COUNT(USERID) AS TOTALCOUNT, 
@@ -4471,6 +4474,8 @@
 				StartDate < #nowDate# 
 			AND 
 				EndDate > #nowDate#
+			AND
+			    B.GUBUN != 9
 		]]>
 	</select>
 	<select id="EzBoardDAO.getMyBoardTotalItemCountTemp" parameterClass="Map" resultClass="Integer">
@@ -10506,5 +10511,105 @@
 		  	AND
 				TENANT_ID = #tenant_id#
 		]]>
+	</select>
+
+	<select id = "EzBoardDAO.getFileViewerBoardItemID" parameterClass = "map" resultClass = "BoardItemVO">
+		SELECT
+			A.BOARDID,
+			B.ITEMID,
+			B.WRITERID,
+			B.CONTENTLOCATION AS FILEPATH,
+			C.FILEPATH AS ATTACHFILEPATH,
+			C.FILENAME AS ATTACHFILENAME
+		FROM
+			TBL_BOARD_BOARDINFO A
+				JOIN
+			TBL_BOARD_ITEM B
+			ON
+				A.BOARDID = B.BOARDID
+				JOIN
+			TBL_BOARD_ITEM_ATTACHMENTS C
+			ON
+				B.ITEMID = C.ITEMID
+		<isEqual property="versionYN" compareValue="Y">
+		JOIN
+		(
+			SELECT
+				ITEMID
+			FROM
+			(
+				SELECT
+					ROW_NUMBER() OVER(
+						ORDER BY
+						VERSION DESC
+					) RN,
+					ITEMID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+					ITEMID IN (
+						SELECT
+							ITEMID
+						FROM
+							TBL_BOARD_ITEM
+						WHERE
+							BOARDID = #boardID#
+						AND
+							TENANT_ID = #tenantID#
+					)
+			) M
+			WHERE
+				M.RN = 1
+		) D
+		ON
+			B.ITEMID = D.ITEMID
+		</isEqual>
+		WHERE
+			A.BOARDID = #boardID#
+		  AND
+			A.COMPANYID = #companyID#
+		  AND
+			A.TENANT_ID = #tenantID#
+		  AND
+			C.GUID = 0
+	</select>
+
+	<select id = "EzBoardDAO.hasBoardItemFlag" parameterClass = "map" resultClass = "String">
+		SELECT
+			CASE
+				WHEN COUNT(1) >= 1 THEN
+					'Y'
+				ELSE
+					'N'
+				END
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			BOARDID = #boardID#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<select id="EzBoardDAO.isPostDuplicated1" parameterClass="map" resultClass="Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			BOARDID = #boardID#
+		  AND TENANT_ID = #tenantID#
+	</select>
+	<select id="EzBoardDAO.isPostDuplicated2" parameterClass="map" resultClass="String">
+		SELECT
+			DISTINCT PARENTITEMID
+		FROM
+			TBL_BOARD_MODIFYHISTORY A
+		JOIN
+			TBL_BOARD_ITEM B
+		ON
+			A.ITEMID = B.ITEMID
+		WHERE
+			B.BOARDID = #boardID#
+		  AND B.TENANT_ID = #tenantID#
 	</select>
 </sqlMap>

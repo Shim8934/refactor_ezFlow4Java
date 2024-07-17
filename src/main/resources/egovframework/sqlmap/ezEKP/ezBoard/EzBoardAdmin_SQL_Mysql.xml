@@ -438,7 +438,7 @@
 		          			A.PARENTBOARDID = #v_pRootBoardID#
 		                AND 
 		                	A.BoardID <> #v_pExcludeBoardID#
-		           		ORDER BY 
+		           		ORDER BY
 		           			A.TreeViewOrder ASC
 					]]>
 				</isEqual>
@@ -606,7 +606,7 @@
 						AND
 							B.TYPE = 'GROUP'
 		                )
-		                
+
 		                ORDER BY 
 		                	TreeViewOrder ASC
 		        	]]>
@@ -653,7 +653,7 @@
 	          			A.PARENTBOARDID = #v_pRootBoardID#
 	                AND 
 	                	A.BoardID <> #v_pExcludeBoardID#
-	           		ORDER BY 
+	           		ORDER BY
 	           			A.TreeViewOrder ASC
 				]]>
 			</isEqual>
@@ -694,7 +694,7 @@
 	          			A.PARENTBOARDID = #v_pRootBoardID#
 	                AND 
 	                	A.BoardID <> #v_pExcludeBoardID#
-	           		ORDER BY 
+	           		ORDER BY
 	           			A.TreeViewOrder ASC)
 	           	]]>
 <!-- 그룹사게시판에 대해서 개별(개인, 직위직책, 부서 단독권한들) 권한 체크하여 UNION -->
@@ -779,7 +779,7 @@
 		          		AND
 		          			A.PARENTBOARDID = #v_pRootBoardID#
 		                AND 
-		                	A.BoardID <> #v_pExcludeBoardID#	
+		                	A.BoardID <> #v_pExcludeBoardID#
 				]]>
 				<!-- 권한그룹이 아닌 개별 권한(PERSON, JIKWI, JIKCEHK, DEPT)만을 체크 -->
 				<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">

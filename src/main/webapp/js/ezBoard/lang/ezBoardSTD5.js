@@ -105,3 +105,5 @@ var strLangMJS01 = "Bạn có thể kéo và thả để thêm tệp và thay đ
 var strLangLHR001 = "0점은 평가할 수 없습니다.";
 var strLangLHR002 = "기존과 동일한 점수로는 평가하기를 할 수 없습니다.";
 var strLangLHR003 = "별점이 성공적으로 저장되었습니다.";
+
+var strLangFileViewr01 = "해당 게시판은 하나의 글만 등록 가능합니다.\n새로운 글을 등록하려면 기존 글을 먼저 삭제해야 합니다.";

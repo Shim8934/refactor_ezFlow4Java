@@ -106,3 +106,5 @@ var strLangMJS01 = "You can drag and drop to add files and change the order of a
 var strLangLHR001 = "You cannot evaluate with a score of 0";
 var strLangLHR002 = "You can't rate with the same score as before";
 var strLangLHR003 = "The score was successfully saved.";
+
+var strLangFileViewr01 = "Only one post is allowed in this board.\nTo create a new post, please delete the existing one first.";

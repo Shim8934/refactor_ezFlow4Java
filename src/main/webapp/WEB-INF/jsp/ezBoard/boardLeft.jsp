@@ -438,6 +438,8 @@
 				            	rightFrame.src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				            } else if (gubun == 8) {
 				            	rightFrame.src = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+				            } else if (gubun == 9) {
+				            	rightFrame.src = "/ezBoard/fileViewerBoard.do?boardID="  + encodeURIComponent(SelectedBoardID);
 				            } else if (gubun == 10) {
 								return;
 							} else {
@@ -462,6 +464,8 @@
 			                	window.parent.frames["right"].location.href = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				            } else if (gubun == 8) {
 			                	window.parent.frames["right"].location.href = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+				            } else if (gubun == 9) {
+								window.parent.frames["right"].location.href = "/ezBoard/fileViewerBoard.do?boardID="  + encodeURIComponent(SelectedBoardID);
 				            } else if (gubun == 10) {
 								return;
 							} else {
@@ -564,6 +568,8 @@
 			            	rightFrame.src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else if (chkPhotoBrd == 8) {
 			            	rightFrame.src = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			            } else if (chkPhotoBrd == 9) {
+			            	rightFrame.src = "/ezBoard/fileViewerBoard.do?boardID="  + encodeURIComponent(SelectedBoardID);
 			            } else if (chkPhotoBrd == 10) { // 카테고리 게시판인 경우 동작하지 않음.
 							return;
 						} else {
@@ -587,6 +593,8 @@
 		                	window.parent.frames["right"].location.href = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else if (chkPhotoBrd == 8) {
 		                	window.parent.frames["right"].location.href = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+						} else if (chkPhotoBrd == 9) {
+							window.parent.frames["right"].location.href = "/ezBoard/fileViewerBoard.do?boardID="  + encodeURIComponent(SelectedBoardID);
 			            } else if (chkPhotoBrd == 10) {
                             return;
 						} else {

@@ -81,6 +81,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -1338,6 +1339,7 @@ public class EzBoardController extends EgovFileMngUtil{
             boardInfo.setPublicFlag(strProp.getPublicFlag()); // 게시물 공개여부 선택
 			boardInfo.setWriterFlag(strProp.getWriterFlag());
 			boardInfo.setStarRatingFlag(strProp.getStarRatingFlag()); // 별점 사용여부 플래그 추가
+			boardInfo.setVersionManage(strProp.getVersionManage()); // 버전관리 사용여부 플래그 추가
 
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();
@@ -4797,15 +4799,20 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         
         Document doc = commonUtil.convertStringToDocument(xmlData.toString());
-    	
+		BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
+		
     	if (gubun.equals("2")) {
     		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
     		String rpwd = EgovFileScrty.decryptRsa(pk, doc.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
     		
     		doc.getElementsByTagName("DOCPASSWORD").item(0).setTextContent(EgovFileScrty.encryptPassword(rpwd, "unknown"));
-    	}   	
-    	
-        BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
+    	} else if ("9".equals(gubun) && !"temp".equals(pMode) && !"modify".equals(pMode)) { // 2025-05-29 양지혜 - 파일뷰어게시판 > 글 중복 등록 체크 추가
+			String boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
+			String parentItemID = doc.getElementsByTagName("parentItemID").item(0).getTextContent();
+			if (ezBoardService.isPostDuplicated(boardInfo.getVersionManage(), boardID, parentItemID, userInfo.getTenantId())) {
+				return 	"<RESULT>DUPLICATED</RESULT>";
+			}
+		}
         
         if (boardInfo.getWrite_FG().equals("false")) {
             return "<RESULT>INACCESSIBLE</RESULT>";
@@ -11936,17 +11943,82 @@ public class EzBoardController extends EgovFileMngUtil{
 
 	// 2023-12-07 한태훈 - java에서 encodeURIComponent 메소드 구현
 	private String encodeURIComponent(String s) throws Exception {
-	    String result = null;
-    	result = URLEncoder.encode(s, "UTF-8")
-                         .replaceAll("\\+", "%20")
-                         .replaceAll("\\%21", "!")
-                         .replaceAll("\\%27", "'")
-                         .replaceAll("\\%28", "(")
-                         .replaceAll("\\%29", ")")
-                         .replaceAll("\\%7E", "~");
+		String result = null;
+		result = URLEncoder.encode(s, "UTF-8")
+				.replaceAll("\\+", "%20")
+				.replaceAll("\\%21", "!")
+				.replaceAll("\\%27", "'")
+				.replaceAll("\\%28", "(")
+				.replaceAll("\\%29", ")")
+				.replaceAll("\\%7E", "~");
 
-	    return result;
+		return result;
 	}
+	@GetMapping("/ezBoard/fileViewerBoard.do")
+	public String fileViewerBoard(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.info("fileViewerBoard started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String boardID = request.getParameter("boardID");
+		String mode = request.getParameter("mode") == null ? "new" : request.getParameter("mode");
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
+
+		BoardItemVO boardItemInfo = ezBoardService.getFileViewerBoardInfo(request, userInfo, boardInfo.getVersionManage());
+
+		if ("modify".equals(mode)) {
+			// 게시물과 게시판의 boardID 정보가 서로 맞지 않는 경우 오류 페이지 리턴
+			if (boardItemInfo.getBoardID() == null || boardID == null || !boardItemInfo.getBoardID().equals(boardID)) {
+				return "main/warning";
+			}
+			// 해당 게시판에 관리자 권한이 없으면서 다른 사용자의 게시물을 수정하려는 경우 오류 페이지 리턴
+			else if ((boardInfo.getBoardAdmin_FG() == null || (boardInfo.getBoardAdmin_FG() != null && boardInfo.getBoardAdmin_FG().equals("false"))) &&
+					!boardItemInfo.getWriterID().equals(userInfo.getId())) {
+				return "main/warning";
+			}
+		}
+
+		String expireDays = boardInfo.getExpireDays() != null ? boardInfo.getExpireDays() : "-1";
+		String endDateTime = "-1".equals(expireDays) ? "9999-12-31" : EgovDateUtil.addDay(today, Integer.parseInt(expireDays), "yyyy-MM-dd");
+		
+		/* 
+		* 2025-06-19 master 반영시점에 자동저장 기능이 없어서 주석처리 
+		* 추후 자동저장 master 반영되면 아래 주석 해제 및 fileViewerBoard.jsp 에 자동저장 관련 로직 추가해야 함.
+		String useAutoSaveFlag = ezCommonService.getTenantConfig("useAutoSaveBoardItem", userInfo.getTenantId());
+		if ("Y".equals(useAutoSaveFlag)) {
+			BoardConfigVO boardConfig = ezBoardService.getBoardList_Config(userInfo.getId(), userInfo.getTenantId());
+			model.addAttribute("autoSaveTime", boardConfig != null ? boardConfig.getAutoSaveTime() : 0);
+		} else {
+			model.addAttribute("autoSaveTime", 0);
+		}
+		**/
+
+		if (boardItemInfo != null) {
+			BoardListVO bi = ezBoardService.getBrdGetItemInfo(boardID, boardItemInfo.getItemID(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+			model.addAttribute("bi", bi);
+		}
+
+		model.addAttribute("boardItemInfo", boardItemInfo);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("boardName", request.getParameter("boardName"));
+		model.addAttribute("isCrossBrowser", true);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("strNow", today);
+		model.addAttribute("endDateTime", endDateTime);
+		model.addAttribute("newGuid", UUID.randomUUID().toString());
+		model.addAttribute("mode", mode);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("reservedItem", "false"); // 파일뷰어게시판은 예약게시 불가
+		model.addAttribute("uploadFilePath", uploadFilePath);
+		model.addAttribute("itemID", boardItemInfo == null ? "" : boardItemInfo.getItemID());
+		model.addAttribute("boardHref", boardItemInfo == null ? "" : boardItemInfo.getFilePath());
+
+		logger.info("fileViewerBoard ended");
+		return "ezBoard/fileViewerBoard";
+	}
+
 	
 	// 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 > 유저 선택 팝업 호출
 	@RequestMapping(value = "/ezBoard/boardSelectUser.do", method = RequestMethod.GET)
