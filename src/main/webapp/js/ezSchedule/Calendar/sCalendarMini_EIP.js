@@ -346,6 +346,9 @@ function DayOnMouseClick(event) {
     	*/
         $(".schedule_calendar .scalendar_mini td").removeClass("select");
         $("#"+event.getAttribute("id")).parent().addClass("select");
+        if (event.parentNode.getAttribute("class").split(' ').includes("today")) {
+            document.getElementsByClassName("today")[0].style.color = "#333333";
+        }
     }
 	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
 	
@@ -476,6 +479,9 @@ function clickDay(val01) {
     	// $("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
         $(".schedule_calendar .scalendar_mini td").removeClass("select");
         $("#"+val01).parent().addClass("select");
+        if ($("#"+val01).parent().attr("class").split(' ').includes("today")) {
+            $(".today").css("color", "#333333");
+        }
     } 
 	
     g_selTRID = $("#"+val01).parent().parent().attr("id");
