@@ -638,7 +638,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void retireEntry(String cn, String domain, String adminPassword, int tenantID, String offset) throws Exception {
+	public void retireEntry(String cn, String domain, int tenantID, String offset) throws Exception {
 	    logger.debug("retireEntry started");
 	    logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantID + ",offset=" + offset);
 	    
@@ -646,7 +646,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		// 퇴직자의 암호를 현재 관리자의 암호와 동일하게 변경한다.
 		// 이후 과정에서 에러가 발생했을 때 암호를 롤백할 방법이 없는 문제가 있다. 
-		setPasswordWithEmailSystem(cn, domain, adminPassword, tenantID);
+		//setPasswordWithEmailSystem(cn, domain, adminPassword, tenantID);
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
@@ -657,7 +657,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("timeUTC", timeUTC);
 		
 	    ezOrganAdminDao.retireDBData_I(map);
-	    /*ezOrganAdminDao.retireDBData(map);*/
+	    // usermaster 정보 삭제
+	    ezOrganAdminDao.retireDBData(map);
+	    // addjobmaster 정보 삭제
 	    ezOrganAdminDao.retireDBData_D3(map);
 	    
 	    /**

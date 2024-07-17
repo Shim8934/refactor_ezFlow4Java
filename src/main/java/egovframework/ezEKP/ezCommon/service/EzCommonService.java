@@ -361,6 +361,8 @@ public interface EzCommonService {
 
 	public void alterDocAttachNameCol() throws Exception;
 
+	public void addColumnsRetireTblCompareWithUserTbl() throws Exception;
+
 	public void insertNonUseDocAttachYN() throws Exception;
 
 	public void insertReadingRecordHeader() throws Exception;

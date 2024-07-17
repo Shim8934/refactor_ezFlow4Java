@@ -811,7 +811,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }*/
 	
     private void restoreRetireEntryForLocal(Map<String, Object> map) throws Exception {
-        moveGroupUser_U(map);
+        //moveGroupUser_U(map);
+    	restoreRetireEntry_I(map);
     }
 	
 	public void restoreRetireEntry(Map<String, Object> map) throws Exception{
@@ -997,6 +998,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    retireDBDataForJMocha(map);
 	}*/
 	
+	public void retireDBData(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.retireDBData", map);
+	}
+	
     private void setAddJobForLocal(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.setAddJob", map);
     }
@@ -1051,6 +1056,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void restoreRetireEntry_D (Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.restoreRetireEntry_D", map);
+	}
+
+	public void restoreRetireEntry_I (Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.restoreRetireEntry", map);
 	}
 							
 	public void moveGroupUser_U (Map<String, Object> map) throws Exception {

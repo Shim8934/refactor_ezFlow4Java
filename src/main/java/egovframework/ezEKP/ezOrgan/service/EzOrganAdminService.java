@@ -84,7 +84,7 @@ public interface EzOrganAdminService {
 
 	public String changePasswordWithEmailSystem(String cn, int tenantId, String decryptedOldPassword, String decryptedNewPassword) throws Exception;
 	
-	public void retireEntry(String cn, String domain, String adminPassword, int tenantID, String offset) throws Exception;
+	public void retireEntry(String cn, String domain, int tenantID, String offset) throws Exception;
 
 	public void updateDBData_user(OrganUserVO vo) throws Exception;
 

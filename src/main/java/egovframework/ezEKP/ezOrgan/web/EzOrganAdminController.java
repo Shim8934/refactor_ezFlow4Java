@@ -236,6 +236,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.alterDocAttachNameCol(); // 2024-06-24 민지수 > 전자결재 > 비전자 기록물 > 본문첨부 파일명 컬럼 추가
 			ezCommonService.alterUserThemePagination();
 			ezCommonService.alterTblScheduleForShowtop(); /* 2024-06-17 이주원 - 일정관리 > 상단표시 컬럼 추가 */
+			ezCommonService.addColumnsRetireTblCompareWithUserTbl(); // 2024-07-09 장혜연 - tbl_usermaster에만 존재하는 컬럼을 조회해 tbl_usermaster_retire에 추가
 
 			// tenant config
 	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
@@ -1453,7 +1454,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         }
                 
         // UUID로 pass 변경
-        String adminPassword = UUID.randomUUID().toString();
+        //String adminPassword = UUID.randomUUID().toString();
         
         int tenantID = userInfo.getTenantId();
         String offset = userInfo.getOffset();
@@ -1492,11 +1493,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (rc != -100) { // updateGroupDel 성공(부모(그룹)나 자식(유저)을 찾지못해도 성공으로 봄.)
 					try {
 						// 로컬 시스템에서 해당 User의 계정을 퇴직처리한다.
-						ezOrganAdminService.retireEntry(cn[i], domain, adminPassword, tenantID, offset);
+						ezOrganAdminService.retireEntry(cn[i], domain, tenantID, offset);
 					} catch (Exception e) { // Exception이 발생하면 복구 처리를 한다.
 						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 						ezEmailUserAdminService.restoreUser(mailAddr);
-						
 						result = "EMAIL_ERROR";
 						break;
 					}					
@@ -1851,6 +1851,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				// 해당 사용자의 메일 템플릿을 모두 제거한다
 	    		rc = ezEmailService.deleteUserMailTemplate(mailAddr, "", "all", realPath, tenantID);
 	    		logger.debug("deleteMailUserTemplate rc=" + rc);
+	    		
+	    		// 메일 자동 전달, 자동분류 설정 삭제
+				rc = ezEmailUserAdminService.removeUserMailSetting(mailAddr);
+				logger.debug("removeUserMailSetting rc=" + rc);
 			}
 			if("OK".equals(result)) {
 				//2023-07-03 장혜연 사용자 변경 히스토리 테이블에 insert  
@@ -3265,6 +3269,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	
         	return "EMAIL_ERROR";
         }
+        // UUID로 pass 변경
+        String restorePwd = UUID.randomUUID().toString();
         
         int tenantID = userInfo.getTenantId();        
         String cnList = request.getParameter("cn");
@@ -3330,7 +3336,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						} catch (Exception e) {
 							logger.error(e.getMessage(), e);
 						}
-
+						
+						ezOrganAdminService.setPasswordWithEmailSystem(cn[i], domain, restorePwd, tenantID);
+						
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						ezEmailUserAdminService.retireUser(mailAddr);
