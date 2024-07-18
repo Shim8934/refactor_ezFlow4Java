@@ -1007,9 +1007,6 @@
 
 	$(function() {
 		makePortletsShell(portletOrder)
-		if (!!fixedPortletList) {
-			makeFixPortlet(fixedPortletList);
-		}
 		makePortlets(portletOrder);
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";
