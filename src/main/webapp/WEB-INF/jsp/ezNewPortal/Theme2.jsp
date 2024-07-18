@@ -289,7 +289,7 @@
         <article class="exellentEmployee">
 			<dl class="portlet_title">
 	            <dt class="portletText">
-	                <img src="/images/ezNewPortal/theme2Img/icon_excellent.png"><spring:message code='ezNewPortal.t127'/> <spring:message code='ezNewPortal.t128'/>
+	                <span></span><spring:message code='ezNewPortal.t127'/> <spring:message code='ezNewPortal.t128'/>
 	            </dt>
 	        </dl>
             <dl class="excellent_info" id="excellentcontent">
