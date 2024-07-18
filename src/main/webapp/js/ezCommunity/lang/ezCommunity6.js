@@ -48,8 +48,8 @@ var strLangLHM01 = "Cannot be longer than ";
 //2018-01-12 강민수92
 var strLang85 = "You must upload an image file.";
 //2018-02-13 장진혁
-var strLang86 = "No My Community";
-var strLang87 = "Join the Community";
+var strLang86 = "You aren't in any communities...";
+var strLang87 = "Join a Community!";
 var strLang88 = "No communities open";
 
 var strLang89 = "Please select a file to delete.";
