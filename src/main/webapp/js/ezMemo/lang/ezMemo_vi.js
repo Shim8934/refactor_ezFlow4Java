@@ -1,5 +1,5 @@
 var memoMessages = {
-	strLangMemo4 : "Are you sure you want to delete this memo?",
+	strLangMemo4 : "Are you sure you want to delete this note?",
 	strLangMemo5 : "Confrim",
 	strLangMemo6 : "Cancel",
 	strLangMemo7 : "No notes available.",
@@ -11,7 +11,7 @@ var memoMessages = {
 	strLangMemo14 : "Can not be used as a query.",
 	strLangMemo17 : "Please select a list.",
 	strLangMemo18 : "Do you want to delete?",
-	strLangMemo20 : "All memo",
+	strLangMemo20 : "All Notes",
 	strLangMemo21 : "An error has occurred",
 	strLangMemo22 : "Default notes box",
 	strLangMemo23 : "'vi'",
