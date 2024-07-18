@@ -44,7 +44,7 @@ var strLangKHJ03 = "你确定要恢复%s个社员吗吗？";
 var strLangKJE01 = "确定要删除所有兼职吗？";
 var strLangKSM01 = "请选择部门";
 
-var strLangLS06 = "You can't change it to the password you used most recently."; // ezOrgan.ls001
+var strLangLS06 = "最近使用的密码（%s个）无法更改。"; // ezOrgan.ls001
 var strLangLS07 = "Consecutive numbers with more than 3 digits, identical numbers, phone numbers, and birthdays are not allowed."; // ezOrgan.ls008
 var strLangKSA06 = "Error checking password policy."; // ezSystem.ksaPwPolicy34
 var strLangKSA07 = "Password policy is not met."; // ezSystem.ksaPwPolicy35

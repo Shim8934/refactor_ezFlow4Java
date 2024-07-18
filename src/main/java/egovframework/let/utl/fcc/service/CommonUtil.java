@@ -2223,18 +2223,33 @@ public class CommonUtil {
 			boolean useChkPrevPwd = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"));
 
 			if (checkPrevPassword && useChkPrevPwd && StringUtils.isNotBlank(userId)) {
-
+				// 2024-07-17 김대현 : 가장 최근 암호 사용금지 -> 기억할 암호 수에 따른 사용금지 변경
 				String encryptedNewPassword = EgovFileScrty.encryptPassword(pwStr, userId);
-				String prevPassword = ezCommonService.getPrevPwd(tenantId, userId);
+				String[] prevPasswords = ezCommonService.getPrevPwd(tenantId, userId).split(":");
 
-				if (encryptedNewPassword.equals(prevPassword)) {
-					logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
-					eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
-					break process;
+				int rememberPWCount = Integer.parseInt(ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount"));
+				int startIdx = Math.max(0, prevPasswords.length - rememberPWCount);
+
+				for (int i = prevPasswords.length - 1; i >= startIdx; i--) {
+					String prevPassword = prevPasswords[i];
+					
+					if (encryptedNewPassword.equals(prevPassword)) {
+						logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
+						eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
+						break process;
+					}
 				}
+//				for (String prevPassword : prevPasswords) {
+//					if (encryptedNewPassword.equals(prevPassword)) {
+//						logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
+//						eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
+//						break process;
+//					}
+//				}
 			}
 
 			// 0-2. 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
+
 			boolean checkPasswordNumber = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("checkPasswordNumber", tenantId));
 
 			if (checkPasswordNumber) {

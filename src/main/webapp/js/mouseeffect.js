@@ -374,8 +374,9 @@ function checkPasswordPolicy(dataParams, path) {
 			if (data == "OK") {
 				result = true;
 
-			} else if (data == "PREVERROR") { // 2021-10-26 이사라 : 최근사용 비밀번호는 사용할 수 없는 로직 추가
-				alert(strLangLS06);
+			} else if (data.includes("PREVERROR")) { // 2021-10-26 이사라 : 최근사용 비밀번호는 사용할 수 없는 로직 추가
+				var rememberPWCount = data.split('|');
+				alert(strLangLS06.replace("%s",rememberPWCount[1]));
 			} else if (data == "NUMBERERROR") { // 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
 				alert(strLangLS07);
 			} else {
