@@ -1105,9 +1105,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		if (userID == null || userID.equals("")) userID = loginVO.getId();
 		
+		List<ScheduleGroupListVO> mList = new ArrayList<>();
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+
 		/* 2023-07-19 홍승비 - 일정그룹관리로 접근한 경우, 해당 일정그룹의 관리자(그룹장) USERID 추가 (그룹관리가 아니라면 공백 리턴) */
 		if (type.equalsIgnoreCase("group") && !groupID.equals("")) {
 			groupOwnerID = ezScheduleService.getScheduleGroupCreatorID(groupID);
+			mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getPrimary(),loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
 		}
 		
 		model.addAttribute("title", title);
@@ -1123,6 +1127,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("lang", loginVO.getPrimary());
 		model.addAttribute("groupOwnerID", groupOwnerID);
+		model.addAttribute("mList", mList);
 		
 		return "ezSchedule/scheduleSelectAttendant";
 	}	
@@ -1155,8 +1160,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberId = (String) obj.get("memberID");
 			String memberName = (String) obj.get("memberName1");
 			String memberName2 = (String) obj.get("memberName2");
+			String writePermission = (String) obj.get("writePermission");
 			
-			ezScheduleService.insertScheduleGroupMember(groupId, memberId, memberName, memberName2, loginVO.getTenantId());
+			ezScheduleService.insertScheduleGroupMember(groupId, memberId, memberName, memberName2, loginVO.getTenantId(), writePermission);
 			
 			ScheduleGroupListVO scheduleGroup = ezScheduleService.selectScheduleGroupInfo(groupId, loginVO.getTenantId());
 			String groupName = scheduleGroup.getGroupName();
@@ -1223,10 +1229,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginVO.getTenantId());
 		String groupColor = request.getParameter("groupColor");
+		String type = request.getParameter("type");
 
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("groupColor", groupColor);
+		model.addAttribute("type", type);
 		
 		return "/ezSchedule/scheduleGroupWrite";
 	}
@@ -1311,8 +1319,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberId = (String) obj.get("memberID");
 			String memberName = (String) obj.get("memberName1");
 			String memberName2 = (String) obj.get("memberName2");
+			String writePermission = (String) obj.get("writePermission");
 			
-			ezScheduleService.insertScheduleGroupMember(gUID, memberId, memberName, memberName2, loginVO.getTenantId());
+			ezScheduleService.insertScheduleGroupMember(gUID, memberId, memberName, memberName2, loginVO.getTenantId(), writePermission);
 			
 			//KT텔레캅 통합알람 푸쉬 코드
 		    if(dotNetTotalNotification.equalsIgnoreCase("yes")) {
@@ -1363,6 +1372,24 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}
 		    }
 		}
+	}
+	
+	/**
+	 * 일정그룹관리 작성 권한 저장
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleSaveWritePermission.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void scheduleSaveWritePermission(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> data, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleSaveWritePermission started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+	    String groupId = (String) data.get("groupId");
+	    @SuppressWarnings("unchecked")
+		List<Map<String, String>> memberList = (List<Map<String, String>>) data.get("memberList");
+		
+		ezScheduleService.updateScheduleWritePermission(groupId, memberList, loginVO.getTenantId());
 	}
 	
 	/**
@@ -2130,13 +2157,26 @@ public class EzScheduleController extends EgovFileMngUtil {
 					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t374", locale) + " " + commonUtil.cleanValue(loginVO.getCompanyName2()) + "</option>");
 					count++;
 				}
-            	
+
+        		//그룹 일정
             	List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, loginVO.getTenantId(), loginVO.getCompanyID());
-            	
+
             	for (ScheduleGroupListVO vo : gList) {
-            		//그룹 일정
-            		strOwnerID.append("<option value='7;;" + vo.getGroupId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t375", locale) + " " + commonUtil.cleanValue(vo.getGroupName()) + "</option>");
-            		count++;
+                	List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(vo.getGroupId(), loginVO.getPrimary(),loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
+                	boolean hasWritePermission = false;
+
+                    for (ScheduleGroupListVO member : mList) {
+                        if (userId.equals(member.getMemberId()) && "Y".equals(member.getWritePermission())) {
+                            hasWritePermission = true;
+                            break;
+                        }
+                    }
+                    
+                    // 조건: creatorId가 userId와 같거나, hasWritePermission이 true일 때
+                    if (userId.equals(vo.getCreatorId()) || hasWritePermission) {
+                		strOwnerID.append("<option value='7;;" + vo.getGroupId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t375", locale) + " " + commonUtil.cleanValue(vo.getGroupName()) + "</option>");
+                		count++;
+            		}
             	}
         	}
 			String cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), loginVO.getOffset(), false);				

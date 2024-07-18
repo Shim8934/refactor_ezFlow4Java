@@ -113,6 +113,7 @@
 		<result property="description"		column="DESCRIPTION"		columnIndex="3"/>
 		<result property="createDate"		column="CREATEDATE"			columnIndex="4"/>
 		<result property="groupColor"		column="GROUPCOLOR"			columnIndex="5"/>
+		<result property="creatorId"		column="CREATORID"			columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO">
@@ -208,7 +209,8 @@
 				groupname,
 				'' as description,
               	'' as createdate,
-              	a.groupcolor as groupcolor
+              	a.groupcolor as groupcolor,
+              	creatorid
         	from
         		tbl_schedulegroup a left join tbl_schedulegroupmember b on a.groupid = b.groupid and a.tenant_id = b.tenant_id
        		where
@@ -606,7 +608,8 @@
 			 	date_add(a.responsedate, interval +#v_OFFSETMIN# minute) as responsedate,
              	'' as mail,
              	'' as department,
-             	'' as info  
+             	'' as info,
+             	A.writepermission
              from ( select              		
                   	groupid,
                   	memberid,
@@ -614,7 +617,8 @@
                   	membername2,
                   	status,
                   	responsedate,
-                  	tenant_id
+                  	tenant_id,
+                  	writepermission
                      from 
                      	tbl_schedulegroupmember 
                      where  
@@ -1330,9 +1334,9 @@
 	<insert id="EzScheduleDAO.insertScheduleGroupMember" parameterClass="map">
 		<![CDATA[
 			insert into tbl_schedulegroupmember(
-				groupid, 			memberid, 				membername, 			membername2, 			status, 			responsedate,		tenant_id
+				groupid, 			memberid, 				membername, 			membername2, 			status, 			responsedate,		tenant_id,		writepermission
 			) values (
-				#v_GROUPID#,		#v_MEMBERID#,			#v_MEMBERNAME#,			#v_MEMBERNAME2#,		0,					utc_timestamp(),	#v_TENANTID#
+				#v_GROUPID#,		#v_MEMBERID#,			#v_MEMBERNAME#,			#v_MEMBERNAME2#,		0,					utc_timestamp(),	#v_TENANTID#,	#v_WRITEPERMISSION#
 			)
    		]]>
 	</insert>
@@ -2173,7 +2177,6 @@
   		]]>
 	</insert>
 	
-	
 	<update id="EzScheduleDAO.updateReminderSchedule" parameterClass="map">
 	UPDATE
 		TBL_SCHEDULE_REMINDER_SCHEDULER
@@ -2551,5 +2554,18 @@
     ]]>
 	</select>
 	
+	<update id="EzScheduleDAO.updateWritePermission" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_SCHEDULEGROUPMEMBER
+			SET
+				WRITEPERMISSION = #v_WRITEPERMISSION#
+			WHERE
+				GROUPID = #v_GROUPID#
+			AND
+				MEMBERID = #v_MEMBERID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
 </sqlMap>
-

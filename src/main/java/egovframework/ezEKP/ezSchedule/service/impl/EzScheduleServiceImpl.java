@@ -1300,13 +1300,14 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId) throws Exception {
+	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId, String writePermission) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GROUPID", groupId);
 		map.put("v_MEMBERID", memberId);
 		map.put("v_MEMBERNAME", memberName);
 		map.put("v_MEMBERNAME2", memberName2);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_WRITEPERMISSION", writePermission);
 		
 		ezScheduleDAO.insertScheduleGroupMember(map);
 	}
@@ -4147,5 +4148,26 @@ public class EzScheduleServiceImpl implements EzScheduleService{
         calendar.set(Calendar.MILLISECOND, 0);
     }
 
+	@Override
+	public void updateScheduleWritePermission(String groupId, List<Map<String, String>> memberList, int tenantId) throws Exception {
+		logger.debug("updateScheduleWritePermission started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+   		map.put("v_GROUPID", groupId);
+		map.put("v_TENANTID", tenantId);
+		
+		for (Map<String, String> member : memberList) {
+            String memberId = member.get("memberId");
+            String writePermission = member.get("writePermission");
+            
+    		map.put("v_MEMBERID", memberId);
+    		map.put("v_WRITEPERMISSION", writePermission);
+
+            ezScheduleDAO.updateWritePermission(map);
+		}
+
+		logger.debug("updateScheduleWritePermission ended");
+	}
 }
 

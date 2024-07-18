@@ -99,7 +99,7 @@ public interface EzScheduleService {
 	
 	public void updateAttendantStatus(String scheduleId, String attendantId, String status, int tenantId) throws Exception;	
 
-	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId) throws Exception;
+	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId, String writePermission) throws Exception;
 
 	public void insertScheduleGroup(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID, String groupColor) throws Exception;	
 	
@@ -200,4 +200,7 @@ public interface EzScheduleService {
 	public void sendReminderMail(ScheduleReminderVO reminderSche) throws Exception;
 	public ScheduleGroupListVO selectScheduleGroupInfo(String groupId, int tenantId) throws Exception;
 	public void updateAllDaySTimeForReminder(String allDaySTimeForReminder, int tenantId) throws Exception;
+
+	public void updateScheduleWritePermission(String groupId, List<Map<String, String>> memberList, int tenantId) throws Exception;
+
 }

@@ -541,11 +541,25 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				}
 			}
 			
+			// 그룹 일정
 			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId(), info.getCompanyId());
+			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			
 			for (ScheduleGroupListVO vo : gList) {
-        		//그룹 일정 (특수문자 파싱 추가)
-				sb.append("<option value='7;;" + vo.getGroupId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t375", locale) + " " + commonUtil.cleanValue(vo.getGroupName()) + "</option>");
+            	List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(vo.getGroupId(), info.getPrimary(), info.getTenantId(), offSetMin, info.getCompanyId());
+            	boolean hasWritePermission = false;
+
+                for (ScheduleGroupListVO member : mList) {
+                    if (userId.equals(member.getMemberId()) && "Y".equals(member.getWritePermission())) {
+                        hasWritePermission = true;
+                        break;
+                    }
+                }
+
+                // 조건: creatorId가 userId와 같거나, hasWritePermission이 true일 때
+				if (userId.equals(vo.getCreatorId()) || hasWritePermission) {
+					sb.append("<option value='7;;" + vo.getGroupId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t375", locale) + " " + commonUtil.cleanValue(vo.getGroupName()) + "</option>");
+				}
         	}
 			
 			String chkSchedulePublic = ezCommonService.getTenantConfig("chkSchedulePublic", info.getTenantId());
