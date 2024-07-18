@@ -157,30 +157,34 @@ public class EzNotificationGWController {
 				break;
 			case "SCHEDULE":
 				pushNotiContent = "[" + "일정" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "A";
+				mainTypeForMobilePush = "101";
 				break;
 			case "RESOURCE":
 				pushNotiContent = "[" + "자원관리" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "B";
+				mainTypeForMobilePush = "102";
 				break;
 			case "SURVEY":
 				pushNotiContent = "[" + "전자설문" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "C";
+				mainTypeForMobilePush = "103";
 				break;
 			case "POLL":
 				pushNotiContent = "[" + "투표" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "D";
+				mainTypeForMobilePush = "104";
 				break;
 			case "COMMUNITY":
 				pushNotiContent = "[" + "커뮤니티" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "E";
+				mainTypeForMobilePush = "105";
 				break;
 			case "WEBFOLDER":
 				pushNotiContent = "[" + "웹폴더" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "F";
+				mainTypeForMobilePush = "106";
+				break;
+			case "JOURNAL":
+				pushNotiContent = "[" + "업무일지" + "] " + pushNotiContent;
+				mainTypeForMobilePush = "107";
 				break;
 			default:
-				mainTypeForMobilePush = "Z";
+				mainTypeForMobilePush = "100";
 				break;
 			}
 			
