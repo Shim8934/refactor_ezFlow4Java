@@ -125,8 +125,6 @@
 		<result property="mail"				column="MAIL"				columnIndex="6"/>
 		<result property="department"		column="DEPARTMENT"			columnIndex="7"/>
 		<result property="info"				column="INFO"				columnIndex="8"/>
-		<result property="description"		column="DESCRIPTION"		columnIndex="9"/>
-		<result property="description2"		column="DESCRIPTION2"		columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO2">
@@ -2673,9 +2671,7 @@
 					CASE #v_LANG#
 						WHEN '1' THEN CONCAT(A.MEMBERNAME, CONCAT(CONCAT( '(', BB.DESCRIPTION) ,')') )
 						WHEN '2' THEN CONCAT(A.MEMBERNAME2, CONCAT(CONCAT( '(', BB.DESCRIPTION2) ,')') )
-					END INFO,
-				    BB.DESCRIPTION,
-				    BB.DESCRIPTION2,
+					END INFO
 					ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT
 				FROM (
 					SELECT

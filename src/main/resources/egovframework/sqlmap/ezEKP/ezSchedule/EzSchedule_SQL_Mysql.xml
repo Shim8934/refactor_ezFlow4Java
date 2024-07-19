@@ -2726,8 +2726,7 @@
 				case #v_LANG#
 					when '1' then concat(A.memberName, '(', BB.description, ')')
 					when '2' then concat(A.memberName2, '(', BB.description2, ')')
-				end info,
-			    BB.DESCRIPTION, BB.DESCRIPTION2
+				end info
 			from (
 				select
 					M.groupid, M.memberid, M.membername, M.membername2, M.tenant_id, G.groupname
