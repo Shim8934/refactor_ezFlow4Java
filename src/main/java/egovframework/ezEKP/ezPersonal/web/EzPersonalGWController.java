@@ -34,7 +34,7 @@ public class EzPersonalGWController {
 	 * @param subType {@link NotiType} 참고
 	 */
 	@GetMapping("/rest/ezPersonal/{userId}/disable-notifications/platforms")
-	public Result getPlatformsWithDisableNotification(@RequestHeader("x-user-host") String serverName, @PathVariable String userId, @RequestParam String mainType, @RequestParam String subType) {
+	public Result getPlatformsWithDisableNotification(@RequestHeader("x-user-host") String serverName, @PathVariable String userId, @RequestParam int mainType, @RequestParam int subType) {
 		logger.debug("getPlatformsWithDisableNotification started. userId: {}, mainType: {}, subType: {}", userId, mainType, subType);
 		Result result;
 
