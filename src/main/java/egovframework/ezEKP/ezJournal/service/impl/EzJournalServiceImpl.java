@@ -3,11 +3,7 @@ package egovframework.ezEKP.ezJournal.service.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -1249,15 +1245,37 @@ public class EzJournalServiceImpl implements EzJournalService {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
-		
-		List<DeptViewVO> cheifDeptList = ezJournalDAO.selectCheifBossList(param);
-		List<DeptViewVO> addCheifDeptList = new ArrayList<DeptViewVO>();
+
+		List<DeptViewVO> cheifDeptList = ezJournalDAO.selectCheifBossList(param); // 부서장인 부서 리스트
+		List<DeptViewVO> subCheifDeptList = new ArrayList<DeptViewVO>();
 		
 		for (DeptViewVO deptViewVO : cheifDeptList) {
 			param.put("deptId", deptViewVO.getId());
-			addCheifDeptList.addAll(ezJournalDAO.selectCheifBoss(param));
+			subCheifDeptList.addAll(ezJournalDAO.selectCheifBoss(param)); // 부서장인 부서의 하위부서 리스트
 		}
-		cheifDeptList.addAll(addCheifDeptList);
+		
+		Set<String> tempIds = new HashSet<>();
+		List<DeptViewVO> filteredList = new ArrayList<>();
+		// 하위부서 리스트에 중복값이 존재할 경우 제거
+		for (DeptViewVO deptViewVO : subCheifDeptList) {
+			if (tempIds.add(deptViewVO.getId())) {
+				filteredList.add(deptViewVO);
+			}
+		}
+
+		subCheifDeptList = filteredList;
+		List<DeptViewVO> toBeRemoved = new ArrayList<>();
+		// 부서장인 부서 리스트와 하위부서 리스트에 중복값이 존재할 경우 제거
+		for (DeptViewVO cheifDept : cheifDeptList) {
+			for (DeptViewVO subCheifDept : subCheifDeptList) {
+				if (cheifDept.getId().equals(subCheifDept.getId())) {
+					toBeRemoved.add(cheifDept);
+				}
+			}
+		}
+		
+		cheifDeptList.removeAll(toBeRemoved);
+		cheifDeptList.addAll(subCheifDeptList);
 		
 		logger.debug("getCheifBoss ended");
 		return cheifDeptList;
