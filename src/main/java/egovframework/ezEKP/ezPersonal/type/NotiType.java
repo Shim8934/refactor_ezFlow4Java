@@ -86,7 +86,7 @@ public enum NotiType {
 	}
 
 	public static NotiType valueOf(String mainType, String subType) {
-		return Arrays.stream(values()).filter(notiType -> notiType.mainType == mainType && notiType.subType == subType).findAny().orElseThrow(IllegalArgumentException::new);
+		return Arrays.stream(values()).filter(notiType -> notiType.mainType.equals(mainType) && notiType.subType.equals(subType)).findAny().orElseThrow(IllegalArgumentException::new);
 	}
 
 	public String mainType() {
