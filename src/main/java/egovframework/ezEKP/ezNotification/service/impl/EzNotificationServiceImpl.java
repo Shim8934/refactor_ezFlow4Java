@@ -250,12 +250,12 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 		}
 
 		NotiType notiType = null;
-		String mainTypeValue = "-1";
-		String subTypeValue = "0";
+		int mainTypeIntValue = -1;
+		int subTypeIntValue = 0;
 		if (!mainType.equals("ETC") && (etcData == null || etcData.indexOf("notChkSetting") < 0)) {
 			notiType = NotiType.fromString(notiName);
-			mainTypeValue = notiType.mainType();
-			subTypeValue = subType != "" ? notiType.subType() : "0";
+			mainTypeIntValue = notiType.mainType();
+			subTypeIntValue = subType != "" ? notiType.subType() : 0;
 		}
 		
 		String[] recipientIdArr = recipientIdList.split(";;");
@@ -293,9 +293,9 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 				
 				if (useMobilePush) {
 					
-					String tempMainTypeValue = mainTypeValue;
+					int tempMainTypeIntValue = mainTypeIntValue;
 					
-					boolean mobilePushSuccess = ezEmailService.addEzTalkNotification(recipientId, senderName, StringEscapeUtils.unescapeHtml4(pushNotiContent), tempMainTypeValue + "", subTypeValue + "", linkUrlMobile);
+					boolean mobilePushSuccess = ezEmailService.addEzTalkNotification(recipientId, senderName, StringEscapeUtils.unescapeHtml4(pushNotiContent), tempMainTypeIntValue + "", subTypeIntValue + "", linkUrlMobile);
 					
 					if (mobilePushSuccess) {
 						resultStr += "mobile:ok};";
