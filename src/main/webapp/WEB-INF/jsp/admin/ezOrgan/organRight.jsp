@@ -224,6 +224,7 @@
 							type : typeContent,
 							adminOrgan : "y"
 					},
+					async : false,
 					success : function(xml){
 						result=loadXMLString(xml);
 						var headerData = createXmlDom();
@@ -305,22 +306,37 @@
 					method : "POST",
 					dataType : "json",
 					data : {
-						deptID : tempDeptID
+						deptID : tempDeptID,
+						adminOrgan : "y" 
 					},
 					success : function(result) { // && !pSeach 
 						if (organSelectDeptNM.getAttribute("countinfo") != "1" && !pSeach) {
 							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							var totalCount = 0;
+							
+							// 부서가 회사인지 확인하기 위해
+							var treeView = new TreeView();
+							treeView.LoadFromID("FromTreeView");
+						    var selectNode = treeView.GetSelectNode();
+							var companyID = selectNode.GetNodeData("extensionattribute2");
+							
+// 							if (tempDeptID != 'Top') {
+// 								totalCount = result.totalCount;
+// 							} else {
+// 								totalCount = result.totalCount2;
+// 							}
 
-							if (tempDeptID != 'Top') {
-								totalCount = result.totalCount;
-							} else {
-								totalCount = result.totalCount2;
-							}
+							totalCount = result.totalCount;
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span> / <span class='totalCount'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								//2024.07.17 한슬기 : totalCount표시 조건 변경
+								if(tempDeptID == companyID){ // 회사인 경우
+									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span> / <span class='totalCount'>" + result.totalCount2 + "</span>";
+								} else { // 부서인 경우
+									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span> / <span class='totalCount'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								}
+
 							} else {
 								document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span>";
 							}
