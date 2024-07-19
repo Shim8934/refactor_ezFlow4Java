@@ -9132,6 +9132,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("adminFlag", adminFlag);
 		model.addAttribute("listHeaderString", listHeaderString);
 
+		/* 상위부서문서함 사용 시 관련 정보 같이 전달 */
+		String upperDeptCode = "";
+		Map<String, String> upDeptInfo = ezApprovalGService.getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
+		if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+			upperDeptCode = upDeptInfo.get("upperDeptCode");
+		}
+		model.addAttribute("upperDeptCode", upperDeptCode);
+
 		logger.debug("cabTransfer ended");
 		
 		return "ezApprovalG/apprGcabTransfer";

@@ -55,10 +55,13 @@ function TaskSCateList_rowclick() {
 function InitCategorySelection() {
 	var result = "";
     
-    // 상위부서문서함 사용 시 상위부서의 기록물철을 표출
-    if (upperDeptCode !== "") {
+    // 2024-07-19 양지혜 - 전자결재G > 상위부서문서함 사용 > 상위부서로 확인
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
         g_DeptCode = upperDeptCode;
+    } else if (typeof upperDeptCode === "undefined" && typeof opener.upperDeptCode !== "undefined" && opener.upperDeptCode !== "") { // 기록물철 인계
+        g_DeptCode = opener.upperDeptCode;
     }
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",

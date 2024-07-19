@@ -24815,6 +24815,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    cabinetListVO.setNowDate(commonUtil.getTodayUTCTime(""));
 	    cabinetListVO.setNowYear(commonUtil.getTodayUTCTime("yyyy"));
 	    cabinetListVO.setTenantID(userInfo.getTenantId());
+        
+        /* 2024-07-18 양지혜 - 전자결재G > 상위부서문서함 */
         if (!xmlDom.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent().equals("")) {
             cabinetListVO.setUpperDeptCode(xmlDom.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent());
         }
