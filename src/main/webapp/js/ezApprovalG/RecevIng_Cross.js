@@ -484,6 +484,10 @@ function setBtnEnable() {
 		        btnReDistribute.style.display = "none"; //재배부요청
 		        // 재접수 기능이 아직 없어서 주석처리.
 //		        btnRefresh.style.display = ""; //재접수
+                if (pAprState === "014") {
+                    btnReqReSend.style.display = "none";
+                    btnReDistribute.style.display = "";
+                }
 		    }
 		    else {  //일반부서
 		        btnReqReSend.style.display = "none";     //재전송요청
