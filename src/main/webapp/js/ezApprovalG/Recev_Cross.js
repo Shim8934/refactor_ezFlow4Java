@@ -1121,7 +1121,7 @@ function getDeptSymbol(DeptID, DeptName)
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
-			cn : DeptID,
+            cn : upperDeptCode === "" ? DeptID : upperDeptCode,
 			prop : "extensionAttribute6",
 			cate  : "group"
 		},
@@ -1135,7 +1135,7 @@ function getDeptSymbol(DeptID, DeptName)
     var RtnVal = getNodeText(dataNodes[0]);
 
     if (RtnVal == "") {
-        return DeptName;
+        return upperDeptName === "" ? DeptName : upperDeptName;
     }
     else {
         return RtnVal;

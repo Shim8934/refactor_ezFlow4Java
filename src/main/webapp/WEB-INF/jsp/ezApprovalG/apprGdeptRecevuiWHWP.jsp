@@ -130,6 +130,10 @@
 			/* 2023-11-03 홍승비 - G버전에서는 부서합의문서 접수 시에도 기안자의 대결/전결이 가능하므로, 기안자의 결재유형 체크 변수 추가 */
 			var CurAprType = "";
 			
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+			
 			window.onresize = function () {
 				document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 170 + "px";
 				var mHeight = document.documentElement.clientHeight - 180 - document.getElementById("messageWHWPEditor").offsetTop + "px";
@@ -236,7 +240,7 @@
 	
 			function window_onload() {
 			    IsSkipDrafter = "TRUE";
-			    DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+				DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], arr_userinfo[5]) : getDeptSymbol(upperDeptCode, upperDeptName);
 			    SetBtnStateTrue();
 			    getReceiveDocInfo();
 			    
@@ -588,9 +592,9 @@
 	            }
 				
 	            if (LastSignSN == 1 || DraftLastFlag) {
-	                rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+	                rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
 	            } else {
-	                rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+	                rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
 	            }
 	            
 	            if (!rtnval) {

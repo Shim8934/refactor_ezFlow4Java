@@ -242,7 +242,11 @@
 
             var isfileup = false;
 			var convertedImgInfo;
-	        
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);

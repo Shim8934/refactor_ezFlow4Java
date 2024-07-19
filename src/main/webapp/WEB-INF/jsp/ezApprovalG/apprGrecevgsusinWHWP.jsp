@@ -161,6 +161,11 @@
             var wAprMemberSN = "1";
 			var isRelay = GetRelayDocInfo(); // 중계문서인지의 여부를 true/false로 반환;
 						
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
+
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -591,7 +596,7 @@
 				} else if (deptCheckFlag == "4") {
 					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}	
@@ -725,7 +730,7 @@
 		     	pOrgHtml = html;
 	          	var rtnval = true;
 	          	if (approvalFlag == "G")
-                    rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+                    rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
                 if (!rtnval) {
                     UndoSignInfo(rtnSignInfo);
                     
@@ -1087,7 +1092,7 @@
 				  } else if (deptCheckFlag == "4") {
 				  	  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 				  	  return;
-			  	  } else if (deptCheckFlag == "2") {
+			  	  } else if (deptCheckFlag == "2" && upperDeptCode == "") {
 				  	  alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					  return;
 				  }
@@ -1183,7 +1188,7 @@
 				} else if (deptCheckFlag == "4") {
 					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
@@ -1301,7 +1306,7 @@
 				} else if (deptCheckFlag == "4") {
 					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
@@ -1499,7 +1504,7 @@
 				} else if (deptCheckFlag == "4") {
 					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}

@@ -532,4 +532,7 @@ public interface EzCommonService {
 	// 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 일자 설정
 	public void addBoardAllNewBoardListDate() throws Exception;
 
+
+	/* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
+	public void alterUseUpperDeptBox() throws Exception;
 }

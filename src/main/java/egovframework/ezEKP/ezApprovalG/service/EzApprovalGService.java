@@ -202,7 +202,7 @@ public interface EzApprovalGService {
 
     public String getEA5Value(String msg, int tenantID, String companyID) throws Exception;
 
-    public String getMyTaskCode(String userID, String deptID, String companyID, String lang, int tenantID) throws Exception;
+    public String getMyTaskCode(String userID, String deptID, String companyID, String lang, int tenantID, String upperDeptCode) throws Exception;
 
     public String setMyTaskCode(String userID, String deptID, String cabinetID, String taskCode, String type, String companyID, int tenantID) throws Exception;
 
@@ -395,7 +395,7 @@ public interface EzApprovalGService {
 
     public String changeRecordInfo(Document xmlDom, String lang, String offset, int tenantID) throws Exception;
 
-    public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, String extReceptYN, LoginVO userInfo) throws Exception;
+    public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, String extReceptYN, LoginVO userInfo, String upperDeptCode) throws Exception;
 
     public String getNewID(String companyID, int tenantID) throws Exception;
 
@@ -998,4 +998,8 @@ public interface EzApprovalGService {
     public String getRedirectUrl(String docID, String mode, LoginVO userInfo);
 
 	public Map<String, Object> getDocRightInfoForAttachApr(String[] docIdList, String userId, String deptId, String rollInfo, String accessInfo, String approvalFlag, String lang, String companyId, int tenantId) throws Exception;
+
+    public Map<String, String> getUpperDeptInfo(String pDeptID, int tenantId) throws Exception;
+
+    public String getSameDeptBoxUseID(String deptID, int tenantId) throws Exception;
 }

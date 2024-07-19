@@ -173,6 +173,10 @@
 	        var formAprOption = "<c:out value='${formAprOption}'/>";
 	        var passAprLine = "";
 	        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 	        
 	        var gpGubun;
 			//부서감사 관련 2020-01-14 홍대표
@@ -190,7 +194,7 @@
 	                HwpCtrl.SetSaveMode(1);
 	
 	                IsSkipDrafter = "FALSE"
-	                DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+	                DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], arr_userinfo[5]) : getDeptSymbol(upperDeptCode, upperDeptName);
 	                drafterDeptid = arr_userinfo[4];
 	                getDraftInfo();
 	                SetBtnStateFalse();

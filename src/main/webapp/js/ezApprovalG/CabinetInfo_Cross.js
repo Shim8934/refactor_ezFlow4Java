@@ -7,7 +7,7 @@
 		async : false,
 		url : "/ezApprovalG/getCabinetSimpleList.do",
 		data : {
-			processDeptCode   : pDeptCode,
+			processDeptCode   : upperDeptCode === "" ? pDeptCode : upperDeptCode,
 			companyID         : CompanyID,
 			produceYear 	  : pProduceYear,
 			langType		  : UserLang,

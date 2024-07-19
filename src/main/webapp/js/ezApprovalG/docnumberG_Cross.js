@@ -190,6 +190,8 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 	var fields;
 	var docnumber;
 	var SN = "";
+
+	pDeptID = upperDeptCode === "" ? pDeptID : upperDeptCode;
 	
 	name = pPrefix + "docnumber";
 	
@@ -477,7 +479,7 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     		url : "/ezApprovalG/rollbackCabinetSN.do",
     		data : {
     			docID : pDocID,
-    			deptID : pDeptID,
+    			deptID : upperDeptCode === "" ? pDeptID : upperDeptCode,
     			docNumber : docnumber
     		},
     		success: function(xml){

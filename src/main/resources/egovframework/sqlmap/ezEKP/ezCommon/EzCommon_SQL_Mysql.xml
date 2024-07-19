@@ -6281,4 +6281,19 @@
 				ALLNEWBOARDLISTDATE INT(10) DEFAULT 5
 	</statement>
 
+
+	<select id="EzCommonDAO.checkUseUpperDeptBox" resultClass="String">
+		SELECT
+			USEUPPERDEPTBOX
+		FROM
+			TBL_DEPTMASTER
+				LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterUseUpperDeptBox">
+		ALTER TABLE
+			TBL_DEPTMASTER
+			ADD
+				USEUPPERDEPTBOX varchar(4) DEFAULT 'N' COMMENT '상위부서문서함 사용 여부'
+    </statement>
 </sqlMap>

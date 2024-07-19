@@ -867,9 +867,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getUseContInfo started.");
 
 		String listHeader = getListHeader("106", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+        /* 상위부서의 부서문서함을 가져오도록 함 */
+        String upperDeptCode = "";
+        Map<String, String> upDeptInfo = getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
+        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+            upperDeptCode = upDeptInfo.get("upperDeptCode");
+        }
+
 		List<ApprGLeftVO> apprGLeftVOList = new ArrayList<ApprGLeftVO>();
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("deptID", userInfo.getDeptID());
+		map.put("deptID", upperDeptCode.equals("") ? userInfo.getDeptID() : upperDeptCode);
 		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		
@@ -3331,8 +3339,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //		        receipt.setReceiptMemberJobTitle2(rowNode.item(i).getChildNodes().item(14).getTextContent());
 //		        receipt.setDeptMemberSN(String.valueOf(j));
 //		    } else if ("S".equals(approvalFlag)) {
-		        receipt.setReceiptPointID(rowNode.item(i).getChildNodes().item(4).getTextContent());
-		        receipt.setReceiptPointName(rowNode.item(i).getChildNodes().item(12).getTextContent());
+                String pDeptID = rowNode.item(i).getChildNodes().item(4).getTextContent();
+                String upperDeptCode = "";
+                String upperDeptName = "";
+                Map<String, String> upDeptInfo = getUpperDeptInfo(pDeptID, tenantID);
+                if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                    upperDeptCode = upDeptInfo.get("upperDeptCode");
+                    upperDeptName = upDeptInfo.get("upperDeptName");
+                }
+		        receipt.setReceiptPointID(upperDeptCode.equals("") ? pDeptID : upperDeptCode);
+		        receipt.setReceiptPointName(upperDeptName.equals("") ? rowNode.item(i).getChildNodes().item(12).getTextContent() : upperDeptName);
 		        receipt.setReceiptPointName2(rowNode.item(i).getChildNodes().item(13).getTextContent());
 		        receipt.setExtReceptYN(rowNode.item(i).getChildNodes().item(5).getTextContent());
 		        receipt.setProcessYN(rowNode.item(i).getChildNodes().item(6).getTextContent());
@@ -9501,6 +9517,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         recordListVO.setNowDate(commonUtil.getTodayUTCTime(""));
 		recordListVO.setRelayFormID(config.getProperty("Relay_FormID", ""));
 
+        /* 전자결재G > 상위부서문서함 사용 > 상위부서ID 전달 */
+        if (!doc.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent().equals("")) {
+            recordListVO.setupperDeptCode(doc.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent());
+        }
+
 		switch (recordListVO.getListFlag()) {
 		case "0" :	// 기록물 대장
 			recordListVO.setListType("001");
@@ -10704,7 +10725,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getMyTaskCode(String userID, String deptID, String companyID, String lang, int tenantID) throws Exception {
+	public String getMyTaskCode(String userID, String deptID, String companyID, String lang, int tenantID, String upperDeptCode) throws Exception {
 		logger.debug("getMyTaskCode started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -10713,6 +10734,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DEPTID", deptID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+        map.put("upperDeptCode", upperDeptCode);
 		
 		/* 2023-01-03 홍승비 - 전자결재G > 기산월을 체크하는 회계연도 조건을 미리 만들어서 전달하도록 수정 (쿼리 상에서 년-월 조건 분리된 부분 제거) */
 		// 사용자에게 표출되는 기록물철의 종료연도는 현재 기준으로 계산된 회계년도보다 크거나 같아야 함
@@ -12257,6 +12279,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
+
+        /* 전자결재G > 부서수신함 > 상위부서문서 사용 시 deptID에 상위부서ID를 사용 */
+        Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, tenantID);
+        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+            deptID = upDeptInfo.get("upperDeptCode");
+        }
+
 		int totalCount = getReceiveDocListCount(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), searchQueryMap, companyID, tenantID);
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
 		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
@@ -17398,6 +17427,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docID = "";
 		String processDate = "";
 		String nonElecRecYN = "";
+        
+        /* 전자결재G > 상위부서문서함 사용 > 상위부서 정보로 record 정보를 저장 */
+        Map<String, String> upDeptInfo = getUpperDeptInfo(deptCode, tenantID);
+        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+            deptCode = upDeptInfo.get("upperDeptCode");
+            deptName = upDeptInfo.get("upperDeptName");
+        }
 		
 		if (manualFlag.equals("1")) { // 수기등록문서일 경우
 			registerDate = objParam.getElementsByTagName("REGISTERDATE").item(0).getTextContent();
@@ -17802,8 +17838,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (docState.equals(staDSGongRam)) {
 					orgDeptID = deptID;
 				}
-				
-				String containerID = returnContainerID(orgDeptID, docState, companyID, tenantID);
+
+                /* 전자결재G > 상위부서문서함 사용 > 상위부서 conainerID 사용 */
+                String upperDeptCode = "";
+                Map<String, String> upDeptInfo = getUpperDeptInfo(orgDeptID, tenantID);
+                if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                    upperDeptCode = upDeptInfo.get("upperDeptCode");
+                }
+
+				String containerID = returnContainerID((upperDeptCode.equals("") ? orgDeptID : upperDeptCode), docState, companyID, tenantID);
 				String extFileName = getExtendedFileName(href);
 				String oldYear = getDocHrefYear(docID, companyID, tenantID);
 				String endURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
@@ -24436,7 +24479,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String getDeliveryList(String p_DeptID, String pageSize, String pageNum, String SortHeader, String SortOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, String extReceptYN, LoginVO userInfo) throws Exception {
+	public String getDeliveryList(String p_DeptID, String pageSize, String pageNum, String SortHeader, String SortOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, String extReceptYN, LoginVO userInfo, String upperDeptCode) throws Exception {
 	    int tenantID = userInfo.getTenantId();
 	    String offset = userInfo.getOffset();
 	    
@@ -24463,6 +24506,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_EREGDATE", eregdate);
 		map.put("v_EXTRECEPTYN", extReceptYN);
 		map.put("v_TENANTID", tenantID);
+        if (!upperDeptCode.equals("")) {
+            map.put("upperDeptCode", upperDeptCode);
+        }
 		
 		int totalCount = ezApprovalGDAO.getDeliveryListCount(map);
         int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
@@ -24769,6 +24815,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    cabinetListVO.setNowDate(commonUtil.getTodayUTCTime(""));
 	    cabinetListVO.setNowYear(commonUtil.getTodayUTCTime("yyyy"));
 	    cabinetListVO.setTenantID(userInfo.getTenantId());
+        if (!xmlDom.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent().equals("")) {
+            cabinetListVO.setUpperDeptCode(xmlDom.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent());
+        }
 
 		switch (cabinetListVO.getListFlag()) {
 		case "0" :	// 기록물철 대장 (기록물철등록부)
@@ -33747,6 +33796,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String relayFormID = config.getProperty("Relay_FormID", "");
 		map.put("v_RELAYFORMID", relayFormID);
+        
+        /* 전자결재G > 상위부서문서함 사용 > 부서수신함 카운트 상위부서정보로 확인 */
+        Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, tenantID);
+        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+            map.put("upperDeptCode", upDeptInfo.get("upperDeptCode"));
+            String[] upperDeptIDArr = getDocManageDeptInfo(upDeptInfo.get("upperDeptCode"), tenantID).replace(" ", "").replace("\'", "").split(",");
+            map.put("upperDeptIDArr", upperDeptIDArr);
+        }
 		
 		Map<String, Object> result = ezApprovalGDAO.getLeftDocCountNew(map); 
 		
@@ -38753,4 +38810,55 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         logger.debug("getDocRightInfoForAttachApr ended.");
         return resultMap;
     }
+
+    @Override
+    public Map<String, String> getUpperDeptInfo(String pDeptID, int tenantId) throws Exception {
+        logger.debug("getUpperDeptInfo started");
+        
+        Map<String, Object> map = new HashMap<>();
+        map.put("pDeptID", pDeptID);
+        map.put("tenantId", tenantId);
+        
+        Map<String, String> upDeptInfo = ezApprovalGDAO.getUpperDeptInfo(map);
+        
+        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+            String upDeptUseUpperCheck = "Y";
+            String upperDeptCode = upDeptInfo.get("EXTENSIONATTRIBUTE1");
+            
+            while (upDeptUseUpperCheck.equals("Y")) {
+                map.put("pDeptID", upperDeptCode);
+                Map<String, String> tmpInfo = ezApprovalGDAO.getUpperDeptInfo(map);
+                upDeptInfo.put("upperDeptName", tmpInfo.get("DISPLAYNAME"));
+                if (tmpInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                    upperDeptCode = tmpInfo.get("EXTENSIONATTRIBUTE1");
+                } else {
+                    upDeptUseUpperCheck = "N";
+                    upDeptInfo.put("upperDeptCode", upperDeptCode);
+                }
+            }
+        }
+        
+        logger.debug("getUpperDeptInfo ended");
+        return upDeptInfo;
+    }
+
+    @Override
+    public String getSameDeptBoxUseID(String deptID, int tenantId) throws Exception {
+        logger.debug("getSameDeptBoxUseID started");
+        
+        Map<String, Object> map = new HashMap<>();
+        map.put("deptID", deptID);
+        map.put("tenantId", tenantId);
+        
+        List<String> allowDeptList = ezApprovalGDAO.getSameDeptBoxUseID(map);
+        
+        String allowDeptIDs = "";
+        for (String cn : allowDeptList) {
+            allowDeptIDs += cn + ";";
+        }
+        
+        logger.debug("getSameDeptBoxUseID ended");
+        return allowDeptIDs;
+    }
+
 }

@@ -6117,7 +6117,12 @@
 						  <isNotEqual property="tempDeptCode" compareValue="ALL">
 						  <isNotEqual property="listType" compareValue="012">
 						  AND
-						  		OwnerDeptID = #tempDeptCode#
+                              <isEmpty property="upperDeptCode">
+                                  OwnerDeptID = #tempDeptCode#
+                              </isEmpty>
+                              <isNotEmpty property="upperDeptCode">
+						          OwnerDeptID = #upperDeptCode#
+                              </isNotEmpty>
 						  </isNotEqual>
 						  </isNotEqual>
 						</isEmpty>
@@ -6868,6 +6873,7 @@
 <!-- 2023-01-03 홍승비 - 전자결재G > 기산월을 체크하는 회계연도 조건을 미리 만들어서 전달하도록 수정 (쿼리 상에서 년-월 조건 분리된 부분 제거) -->
 <!-- 2023-01-03 홍승비 - 전자결재 일반(S) >  분류코드 즐겨찾기 셀렉트 시 종료연도를 조건으로 사용하던 오류 수정 (일반버전의 분류코드는 종료연도 조건 필요없음) -->
     <!-- 이유정 - SQL Injection 제거 : 다국어 컬럼 수정 -->
+<!-- 2024-07-02 양지혜 - 전자결재G > 사용자의 부서로 등록된 기록물 철만 표출하도록 수정 -->
     <select id="EzApprovalG.getMyTaskCode" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<!-- G버전 -->
 		<isEmpty property="approvalFlag">
@@ -6954,9 +6960,16 @@
 				TBL_MYTASKCODE.DEPTID = #v_DEPTID#
 			AND 
 				TBL_CABINETCLASS.EXPIRATIONYEAR >= #v_ACCOUNTYEAR#
+        ]]>
+			AND
+            <isEqual property="upperDeptCode" compareValue="">
+                TBL_CABINETCLASS.OWNERDEPTID = #v_DEPTID#
+            </isEqual>
+            <isNotEqual property="upperDeptCode" compareValue="">
+                TBL_CABINETCLASS.OWNERDEPTID = #upperDeptCode#
+            </isNotEqual>
 			ORDER BY 
-				TBL_CABINETCLASS.Title 
-		]]>
+				TBL_CABINETCLASS.Title
 		</isEmpty>
 		<!-- S버전 -->
 		<isNotEmpty property="approvalFlag">
@@ -13148,7 +13161,12 @@
             <isNotEqual property="tempDeptCode" compareValue="ALL">
             <isNotEqual property="listType" compareValue="012">
                 AND
+                  <isEmpty property="upperDeptCode">
                 	OwnerDeptID = #tempDeptCode#
+                  </isEmpty>
+                  <isNotEmpty property="upperDeptCode">
+                      OwnerDeptID = #upperDeptCode#
+                  </isNotEmpty>
             </isNotEqual>
             </isNotEqual>
         </isEmpty>
@@ -20315,14 +20333,24 @@
 	    AND
 	        EXTRECEPTYN = #v_EXTRECEPTYN#
 	    <isNotEmpty property="v_DEPTID" prepend="AND">
-	   		DEPTID = #v_DEPTID# 
+            <isEmpty property="upperDeptCode">
+                DEPTID = #v_DEPTID#
+            </isEmpty>
+            <isNotEmpty property="upperDeptCode">
+                DEPTID = #upperDeptCode#
+            </isNotEmpty>
 	    </isNotEmpty>
 	   	<!-- v_SUBQUERY 에 넘어오는 값 없으므로 제거 -->
 	   	<isNotEmpty property="v_MANAGEDEPTID" prepend="AND">
 	   	 	MANAGEDEPTID = #v_MANAGEDEPTID#
 	   	</isNotEmpty>
-	   	<isNotEmpty property="v_ORGANID" prepend="AND">
-	   	  	ORGANID = #v_ORGANID# 
+        <isNotEmpty property="v_ORGANID" prepend="AND">
+            <isEmpty property="upperDeptCode">
+                ORGANID = #v_ORGANID#
+            </isEmpty>
+            <isNotEmpty property="upperDeptCode">
+                ORGANID = #upperDeptCode#
+            </isNotEmpty>
 	   	</isNotEmpty>
 	   	<isNotEmpty property="v_DOCTITLE" prepend="AND">
 	   	 	DOCTITLE LIKE CONCAT(CONCAT('%', #v_DOCTITLE#), '%')
@@ -20373,7 +20401,12 @@
 				        AND
 				            B.EXTRECEPTYN = #v_EXTRECEPTYN#
 				        <isNotEmpty property="v_DEPTID" prepend="AND">
-				            B.DEPTID = #v_DEPTID# 
+                            <isEmpty property="upperDeptCode">
+                                B.DEPTID = #v_DEPTID#
+                            </isEmpty>
+				            <isNotEmpty property="upperDeptCode">
+                                B.DEPTID = #upperDeptCode#
+                            </isNotEmpty>
 				        </isNotEmpty>
 				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE" prepend="AND">
 				   			B.SN BETWEEN #iv_PAGESIZE2# AND #iv_PAGESIZE#
@@ -20382,7 +20415,12 @@
 				   		 	B.MANAGEDEPTID = #v_MANAGEDEPTID#
 				   		</isNotEmpty>
 				   		<isNotEmpty property="v_ORGANID" prepend="AND">
+                                <isEmpty property="upperDeptCode">
 				   		 	B.ORGANID = #v_ORGANID#
+                                </isEmpty>
+                                <isNotEmpty property="upperDeptCode">
+                                    B.ORGANID = #upperDeptCode#
+                                </isNotEmpty>
 				   		</isNotEmpty>
 				   		<isNotEmpty property="v_DOCTITLE" prepend="AND">
 				   			B.DOCTITLE LIKE CONCAT(CONCAT('%',#v_DOCTITLE#),'%')
@@ -20526,21 +20564,24 @@
 		  		  	  AND 
 		  		  	  		TBL_CABINET.CabinetTransferFlag = '2'
 		  		  	  AND 
-		  		  	  		( 
-		  		  	  			( OwnerDeptID = #deptCode#
+		  		  	  		(
+		  		  	  		    (   <isEmpty property="upperDeptCode">OwnerDeptID = #deptCode#</isEmpty>
+                                    <isNotEmpty property="upperDeptCode">OwnerDeptID = #upperDeptCode#</isNotEmpty>
 		  		  	  				AND
-		  		  	  			  ConfirmFlag = '0' ) 
-		  		  	  			OR 
-		  		  	  			( TBL_CABINETCLASS.ProcessDeptCode = #deptCode# 
+		  		  	  			        ConfirmFlag = '0' )
+                                OR
+		  		  	  			(   <isEmpty property="upperDeptCode">TBL_CABINETCLASS.ProcessDeptCode = #deptCode#</isEmpty>
+		  		  	                <isNotEmpty property="upperDeptCode">TBL_CABINETCLASS.ProcessDeptCode = #upperDeptCode#</isNotEmpty>
 		  		  	  				AND 
-		  		  	  			  ConfirmFlag = '1') 
+		  		  	  			        ConfirmFlag = '1')
 		  		  	  		)
 		  		  </isEqual>
 		  		  <!-- 2023-02-22 홍승비 - 인계목록 메뉴가 아닌 경우, 인계한 기록물철은 편철확정여부와 상관없이 인계부서에서 표출하지 않도록 ConfirmFlag = '0' 조건 제거 -->
 		  		  <isNotEqual property="listFlag" compareValue="9" prepend="AND">
 						TBL_CABINET.CabinetTransferFlag != '2'
 	  		  	    <isNotEmpty property="deptCode" prepend="AND">
-						TBL_CABINETCLASS.OwnerDeptID = #deptCode# 
+						<isEmpty property="upperDeptCode">TBL_CABINETCLASS.OwnerDeptID = #deptCode#</isEmpty>
+                        <isNotEmpty property="upperDeptCode">TBL_CABINETCLASS.OwnerDeptID = #upperDeptCode#</isNotEmpty>
 	  		  	    </isNotEmpty>
 		  		  </isNotEqual>
                   <isNotEmpty property="title" prepend="AND">
@@ -20834,19 +20875,22 @@
 	  	  		TBL_CABINET.CabinetTransferFlag = '2'
 	  	  AND 
 	  	  		( 
-	  	  			( OwnerDeptID = #deptCode#
+	  	  			(   <isEmpty property="upperDeptCode">OwnerDeptID = #deptCode#</isEmpty>
+  	                    <isNotEmpty property="upperDeptCode">OwnerDeptID = #upperDeptCode#</isNotEmpty>
 	  	  				AND
-	  	  			  ConfirmFlag = '0' ) 
+	  	  			        ConfirmFlag = '0' )
 	  	  			OR 
-	  	  			( TBL_CABINETCLASS.ProcessDeptCode = #deptCode# 
+	  	  			(   <isEmpty property="upperDeptCode">TBL_CABINETCLASS.ProcessDeptCode = #deptCode#</isEmpty>
+  	                    <isNotEmpty property="upperDeptCode">TBL_CABINETCLASS.ProcessDeptCode = #upperDeptCode#</isNotEmpty>
 	  	  				AND 
-	  	  			  ConfirmFlag = '1') 
+	  	  			        ConfirmFlag = '1')
 	  	  		)
 	  </isEqual>
 	  <isNotEqual property="listFlag" compareValue="9" prepend="AND">
                 TBL_CABINET.CabinetTransferFlag != '2'
         <isNotEmpty property="deptCode" prepend="AND">
-                TBL_CABINETCLASS.OwnerDeptID = #deptCode#
+                <isEmpty property="upperDeptCode">TBL_CABINETCLASS.OwnerDeptID = #deptCode#</isEmpty>
+  	            <isNotEmpty property="upperDeptCode">TBL_CABINETCLASS.OwnerDeptID = #upperDeptCode#</isNotEmpty>
         </isNotEmpty>
 	  </isNotEqual>
 	  <isNotEmpty property="title" prepend="AND">
@@ -31712,18 +31756,32 @@
 		   		WHERE 
 		   			TBL_APRRECEIPTPROCESSINFO.PROCESSYN != 'Y'
 		   		AND 
-		   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
-		   		AND 
-		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
+                (
+                    (
+		   			    (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# 
+		                    AND 
+		                        <isEmpty property="upperDeptCode">TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#</isEmpty>
+		                        <isNotEmpty property="upperDeptCode">TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #upperDeptCode#</isNotEmpty>
+                        )
+		   		    AND
+		   			    (TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011')
+                    )
 		   			
 	   		<isEqual property="v_USERFLAG" compareValue="admin">
 	   			OR 
 	   				(
 	   					TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID 
 	   					IN 
-	   					<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
-	   						#v_DEPTIDS[]#
-	   					</iterate>
+		                <isEmpty property="upperDeptCode">
+                            <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+                                #v_DEPTIDS[]#
+                            </iterate>
+                        </isEmpty>
+		                <isNotEmpty property="upperDeptCode">
+                            <iterate property="upperDeptIDArr" open="(" close=")" conjunction=",">
+                                #upperDeptIDArr[]#
+                            </iterate>
+                        </isNotEmpty>
 	   				AND 
 	   					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
                     AND
@@ -31734,7 +31792,12 @@
 		     		(
 		     			(TBL_APRDOCINFO.WRITERID = #v_USERID# AND TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID#) 
 	     			AND
-		     			TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
+                        <isEmpty property="upperDeptCode">
+                            TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
+                        </isEmpty>
+                        <isNotEmpty property="upperDeptCode">
+                            TBL_RECORD_TEMP.PROCESSDEPTCODE = #upperDeptCode#
+                        </isNotEmpty>
 		     		AND
 		     			(TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID = '')
 		     		AND
@@ -35331,4 +35394,29 @@
 		AND
 			TENANT_ID = #tenantId#
 	</select>
+    <select id="EzApprovalG.getUpperDeptInfo" parameterClass="Map" resultClass="HashMap">
+        SELECT
+            EXTENSIONATTRIBUTE1,
+            USEUPPERDEPTBOX,
+            DISPLAYNAME
+        FROM
+            TBL_DEPTMASTER
+        WHERE
+            CN = #pDeptID#
+          AND
+            TENANT_ID = #tenantId#
+    </select>
+    
+    <select id="EzApprovalG.getSameDeptBoxUseID" parameterClass="Map" resultClass="String">
+        SELECT
+            CN
+        FROM
+            TBL_DEPTMASTER
+        WHERE
+            DEPT_CD_PATH LIKE CONCAT('%', #deptID#,'%')
+        AND
+            TENANT_ID = #tenantId#
+        AND
+            USEUPPERDEPTBOX = 'Y'
+    </select>    
 </sqlMap>

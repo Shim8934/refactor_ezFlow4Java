@@ -210,6 +210,10 @@
 
 			// 2024-06-24 양지혜 - 지정반송 기능 사용여부
 			var useReturnByDesignation = "<c:out value ='${useReturnByDesignation}'/>";
+			
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 	        
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -436,7 +440,7 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
-		            DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
+					DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5])) : getDeptSymbol(upperDeptCode, upperDeptName);
 		            
 			    	if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();

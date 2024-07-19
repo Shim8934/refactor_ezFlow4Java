@@ -140,6 +140,15 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		deptInfo  = doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
 		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent().trim();
+
+		/* 상위부서문서함 사용 시 관련 정보 같이 전달 */
+		String upperDeptCode = "";
+		String upperDeptName = "";
+		Map<String, String> upDeptInfo = ezApprovalGService.getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
+		if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+			upperDeptCode = upDeptInfo.get("upperDeptCode");
+			upperDeptName = upDeptInfo.get("upperDeptName");
+		}
 		
 		// 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 전자결재 미리보기영역 관련 변수 추가
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -152,9 +161,10 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 
 		// 2024-06-07 전인하 - 기록물대장 > 하위부서 문서함 조회
 		// 하위부서문서함은 다음과 같은 경우에 표출된다 ; 관리자 권한(전체관리자, 회사관리자, 기록물관리책임자 중 1)이 존재하면서 기록물등록대장, 기록물접수목록, 기록물발송목록, 기록물철등록부일 경우
+		// 2024-07-18 양지혜 - 상위부서문서함을 사용하고 있는 경우 하위부서문서함 기능을 표출하지 않음
 		String underDeptShowFlag = "FALSE";
 		List<String> needUnderDeptsFlag = new ArrayList<>(Arrays.asList("m01", "m02", "m05", "m06"));
-		if (needUnderDeptsFlag.contains(sFlag) && commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;m")) {
+		if (needUnderDeptsFlag.contains(sFlag) && commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;m") && upperDeptCode.equals("")) {
 			underDeptShowFlag = "TRUE";
 		}
 
@@ -188,6 +198,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("useDraftAll", ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId()));
 		model.addAttribute("underDeptFlag", underDeptShowFlag);
 		model.addAttribute("underDeptList", underDeptList);
+		model.addAttribute("upperDeptCode", upperDeptCode);
+		model.addAttribute("upperDeptName", upperDeptName);
 		
 		logger.debug("cabinetMain ended");
 		
@@ -611,9 +623,11 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String sregdate = "";
         String eregdate = "";
         String debenturer = "";
+		String upperDeptCode = xmlDom.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent();
         
         if (xmlDom.getElementsByTagName("search").item(0).getTextContent().equals("0")) {
-        	result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, sregdate, eregdate, debenturer, isdocprint, extReceptYN, userInfo);
+        	result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(),
+					userInfo.getLang(), deptcode, deptcode2, title, sregdate, eregdate, debenturer, isdocprint, extReceptYN, userInfo, upperDeptCode);
         } else {
             deptcode = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(0).getTextContent().trim();
             deptcode2 = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(1).getTextContent().trim();
@@ -621,7 +635,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
             sregdate = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(3).getTextContent();
             eregdate = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(4).getTextContent();
             debenturer = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(5).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
-            result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), true), commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), true), debenturer, isdocprint, extReceptYN, userInfo);
+            result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(),
+					userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), true),
+					commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), true), debenturer, isdocprint, extReceptYN, userInfo, upperDeptCode);
         }
         
         logger.debug("getDeliveryList ended");
@@ -961,6 +977,17 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
+
+		/* 상위부서문서함 사용 시 관련 정보 같이 전달 */
+		String upperDeptCode = "";
+		String upperDeptName = "";
+		Map<String, String> upDeptInfo = ezApprovalGService.getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
+		if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+			upperDeptCode = upDeptInfo.get("upperDeptCode");
+			upperDeptName = upDeptInfo.get("upperDeptName");
+		}
+		model.addAttribute("upperDeptCode", upperDeptCode);
+		model.addAttribute("upperDeptName", upperDeptName);
 		
 		logger.debug("regCabinet ended");
 		

@@ -259,6 +259,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.alterAddThumbnailForTPI(); /* 2024-10-28 김우철 - 게시판 > 동영상게시판 > 썸네일 추가 여부 컬럼 추가 */
 			ezCommonService.alterThumbnailExtForTPI(); /* 2024-10-28 김우철 - 게시판 > 동영상게시판 > 썸네일 확장자 컬럼 추가 */
 			ezCommonService.alterAttachmentsForCBoard(); /* 2024-10-18 김우철 - 커뮤니티 > 공지사항 >  첨부 여부 컬럼 추가 */
+			ezCommonService.alterUseUpperDeptBox(); /* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
 
 			// tenant config
 	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add

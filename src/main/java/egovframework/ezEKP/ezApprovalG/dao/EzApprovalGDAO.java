@@ -4032,4 +4032,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getPublicityYN(Map<String, Object> map) {
 		return (String) select("EzApprovalG.getPublicityYN", map);
 	}
+	
+	public Map<String, String> getUpperDeptInfo(Map<String, Object> map) throws Exception {
+		return (Map<String, String>) select("EzApprovalG.getUpperDeptInfo", map);
+	}
+
+	public List<String> getSameDeptBoxUseID(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.getSameDeptBoxUseID", map);
+	}
 }

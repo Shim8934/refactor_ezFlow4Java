@@ -58,7 +58,7 @@ function rollbackDocNumber(pDeptID, pPrefix) {
     createNodeInsert(xmlpara, objNode, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "DATA", fractionsymbol);
     createNodeAndInsertText(xmlpara, objNode, "DATA", docnumber);
-    createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
+    createNodeAndInsertText(xmlpara, objNode, "DATA", upperDeptCode === "" ? pDeptID : upperDeptCode);
 
     xmlhttp.open("Post", "../docnum/aspx/rollbackdocnumber.aspx", false);
     xmlhttp.send(xmlpara);

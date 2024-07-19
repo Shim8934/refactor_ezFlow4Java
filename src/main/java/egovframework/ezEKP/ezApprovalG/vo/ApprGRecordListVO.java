@@ -100,6 +100,9 @@ public class ApprGRecordListVO {
 	
 	private String docNum;
 	
+	/* 상위부서아이디 */
+	private String upperDeptCode;
+
 	public int getTenantID() {
 		return tenantID;
 	}
@@ -422,4 +425,12 @@ public class ApprGRecordListVO {
 	public String getDocNum() { return docNum; }
 
 	public void setDocNum(String docNum) { this.docNum = docNum; }
+	
+	public String getupperDeptCode() {
+		return upperDeptCode;
+	}
+	
+	public void setupperDeptCode(String upperDeptCode) {
+		this.upperDeptCode = upperDeptCode;
+	}
 }

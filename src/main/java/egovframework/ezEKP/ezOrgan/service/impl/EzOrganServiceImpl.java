@@ -379,6 +379,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 			    if (vo.getExtensionAttribute11().toUpperCase().equals("N")) {
 			        nodeInfo.append("<SETTEXTCOLORBYNAME>GRAY</SETTEXTCOLORBYNAME>");
 			    }		    
+				if (vo.getUseUpperDeptBox() != null) { // 상위부서문서함 사용여부
+					nodeInfo.append("<USEUPPERDEPTBOX>" + vo.getUseUpperDeptBox() + "</USEUPPERDEPTBOX>");
+				}
 			}
 		}
 

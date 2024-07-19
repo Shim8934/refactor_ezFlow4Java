@@ -334,6 +334,10 @@
 			var parameters;
 			var attachedDocList;
 
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var orgCompanyID_ = "<c:out value = '${orgCompanyID}'/>";
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+
     		// 일괄기안문서를 재기안하는 경우, 기존 문서와 양식 등의 정보를 배열에 부여
     		$(document).ready(function() {
                 pDraftFlag = DraftFlag; // 모든 문서 공통이므로 ready 시 바로 부여
@@ -381,7 +385,7 @@
 	                dragNdrapNo();
 	                
 	                IsSkipDrafter = "FALSE"
-	                DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+	                DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], arr_userinfo[5]) : getDeptSymbol(upperDeptCode, upperDeptName);
 	                drafterDeptid = arr_userinfo[4];
 	                getDraftInfo();
 	                
@@ -520,7 +524,7 @@
 				} else if (deptCheckFlag == "4") {
 					alert("기안창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 기안창을 새로 띄워주시기바랍니다.");
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}	
@@ -2290,7 +2294,7 @@
                 setMenuBar("btnSendDraft", true);
 
                 IsSkipDrafter = "FALSE"
-                DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+                DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], arr_userinfo[5]) : getDeptSymbol(upperDeptCode, upperDeptName);
                 
                 pFormHrefAry[0] = FormHref;
                 pSusinSN = SusinSN;

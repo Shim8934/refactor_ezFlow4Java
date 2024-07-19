@@ -1351,7 +1351,7 @@ function SetAutoPropertyValue() {
 					message.PutFieldText(Fields[i], getNodeText(objNodes.item(4)));
 					break;													
 				case "department" :		  	
-					message.PutFieldText(Fields[i], arr_userinfo[5]);
+					message.PutFieldText(Fields[i], upperDeptName === "" ? arr_userinfo[5] : upperDeptName);
 					break;												
 				case "parantdept" :       
 					message.PutFieldText(Fields[i], getNodeText(objNodes.item(3)));

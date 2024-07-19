@@ -19,6 +19,7 @@
 			var isAdd = true;
 			var pageType = "${pageType}";
 	        var selectDomain = "${companyMailDomain}";
+			var isDocReceived = "";
 			
 			$(document).ready(function(){
 			    if (CrossYN()){
@@ -36,7 +37,7 @@
 			    	
 			    	var windowHeight = window.outerHeight - window.innerHeight;
 			    	windowHeight += content.offsetTop;
-			    	windowHeight += content.offsetHeight + 10;
+			    	windowHeight += content.offsetHeight + 40;
 			    	windowHeight += btnSpace.offsetHeight;
 			    	
 			    	window.resizeTo(window.outerWidth, windowHeight);
@@ -49,6 +50,9 @@
 			        ParentID.value = RetValue[0];
 					if(approvalFlag == 'G') {
 				    	document.getElementById("ouDoumentReceiveYN").checked = true;
+						if (RetValue[2] == "1") {
+							document.getElementById("tr_upperDeptBoxYN").style.display = "";
+						}
 					}
 				}else{
 			    	isAdd = false;
@@ -66,7 +70,7 @@
 						dataType : "text",
 						url : "/admin/ezOrgan/getEntryInfo.do",
 						async : false,
-						data : {cn : DeptID.value, prop : "displayName;extensionAttribute9;extensionAttribute1;extensionAttribute2;extensionAttribute3;extensionAttribute4;extensionAttribute5;extensionAttribute6;extensionAttribute8;extensionAttribute10;extensionAttribute15;extensionAttribute11;deptTreeFlag", pMode : "dept" },
+						data : {cn : DeptID.value, prop : "displayName;extensionAttribute9;extensionAttribute1;extensionAttribute2;extensionAttribute3;extensionAttribute4;extensionAttribute5;extensionAttribute6;extensionAttribute8;extensionAttribute10;extensionAttribute15;extensionAttribute11;deptTreeFlag;useupperdeptbox;deptLevel", pMode : "dept" },
 						success : function(result){
 							xmlDom = loadXMLString(result);
 							DeptName.value = SelectSingleNodeValueNew(xmlDom,"DATA/DISPLAYNAME1").trim();
@@ -90,9 +94,17 @@
 								}
 							}
 				            /* 2015-06-30 표준모듈:추가(결재문서수신여부) - KSK */
-							if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE11") == "Y"){
+							isDocReceived = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE11");
+							if (isDocReceived == "Y"){
 								if(approvalFlag == 'G') {
 							    	document.getElementById("ouDoumentReceiveYN").checked = true;
+								}
+							}
+							if (approvalFlag == 'G' && SelectSingleNodeValueNew(xmlDom, "DATA/DEPTLEVEL") > 2) {
+									document.getElementById("tr_upperDeptBoxYN").style.display = "";
+								if (SelectSingleNodeValueNew(xmlDom, "DATA/USEUPPERDEPTBOX") == "Y") {
+									document.getElementById("upperDeptBoxYN").checked = true;
+									document.getElementById("ouDoumentReceiveYN").disabled = true;
 								}
 							}
 						}
@@ -184,6 +196,8 @@
 				var extensionattribute8 = "0";
 				/* 2017-12-29 장진혁 - 조직도에서 기본적으로 해당 부서를 수신처로 등록할 수 있게 수정 */
 				var extensionattribute11 = "";
+				/* 2024-07-01 양지혜 - 조직도 > 부서정보 수정 > 상위부서문서함 사용여부 */
+				var useUpperDeptBox = "";
 				
 				if (OldDeptName == ""){
 					parentCn = ParentID.value;
@@ -200,6 +214,12 @@
 						extensionattribute11 = "Y";
 					} else {
 						extensionattribute11 = "N";
+					}
+
+					if (document.getElementById("upperDeptBoxYN").checked){
+						useUpperDeptBox = "Y";
+					} else {
+						useUpperDeptBox = "N";
 					}
 				}
 
@@ -220,7 +240,7 @@
 					data : {parentCn: parentCn, cn: DeptID.value, displayName: DeptName.value.trim(), displayName2: DeptName2.value.trim(), extensionAttribute10: SusinSymbol.value, 
 						    extensionAttribute15: SortNum.value, extensionAttribute9: Manager.value, extensionAttribute5: BalsinPerson.value, extensionAttribute6: SimpleName.value, 
 						    extensionAttribute4: DocManage.value, extensionAttribute8: extensionattribute8, extensionAttribute11: extensionattribute11, manualFlag: "Y",
-						    selectDomain: selectDomain, histParentCn: histParentCn, deptTreeFlag: deptTreeFlagValue},
+						    selectDomain: selectDomain, histParentCn: histParentCn, deptTreeFlag: deptTreeFlagValue, useUpperDeptBox: useUpperDeptBox},
 					success : function(result){						
 						if (result == "PRE"){
 							OpenAlertUI("<spring:message code='ezOrgan.t119'/>");
@@ -279,6 +299,16 @@
 		    $(document).on("change", "#selectDomain", function() {
 	        	selectDomain = $(this).val();
 	        });
+			
+			function disableDocReceive() {
+				if (document.getElementById("upperDeptBoxYN").checked) {
+					document.getElementById("ouDoumentReceiveYN").checked = false;
+					document.getElementById("ouDoumentReceiveYN").disabled = true;
+				} else {
+					document.getElementById("ouDoumentReceiveYN").checked = (isDocReceived === "Y");
+					document.getElementById("ouDoumentReceiveYN").disabled = false;
+				}
+			}
 	    </script>
 	</head>
 	<body class="popup">
@@ -366,7 +396,11 @@
 		    <tr> 
 		    	<th><spring:message code='ezOrgan.t990' /></th> 
 		    	<td><input type="checkbox" id="ouDoumentReceiveYN" value="checkbox"></td> 
-		  	</tr> 
+		  	</tr>
+			<tr id="tr_upperDeptBoxYN" style="display: none">
+				<th><spring:message code='ezOrgan.jhy001' /></th>
+				<td><input type="checkbox" id="upperDeptBoxYN" value="checkbox" onclick="disableDocReceive()"></td>
+			</tr>
 		  	</c:if>
 			<tr class="treeFlag">
 				<th ><spring:message code='ezOrgan.kdh07' /></th>

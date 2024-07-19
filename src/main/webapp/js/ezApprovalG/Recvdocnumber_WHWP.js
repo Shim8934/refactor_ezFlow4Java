@@ -5,7 +5,7 @@ function setDocNumFormat() {
     var d = new Date();
 
     var numHeader = ""
-    var DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+    var DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], arr_userinfo[5]) : getDeptSymbol(upperDeptCode, upperDeptName);
 
     if (!message.FieldExist("receiptnumber"))
         return;
@@ -109,7 +109,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
                 });
 
                 if (!message.FieldExist(name)) {
-                    var DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+                var DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], arr_userinfo[5]) : getDeptSymbol(upperDeptCode, upperDeptName);
                     var SN = getNodeText(GetChildNodes(result)[0]);
 
                     //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정이 안먹혀서 주석
@@ -242,7 +242,7 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     		url : "/ezApprovalG/rollbackCabinetSN.do",
     		data : {
     			docID : pDocID,
-    			deptID : pDeptID,
+    			deptID : upperDeptCode === "" ? pDeptID : upperDeptCode,
     			docNumber : docnumber
     		},
     		success: function(xml){

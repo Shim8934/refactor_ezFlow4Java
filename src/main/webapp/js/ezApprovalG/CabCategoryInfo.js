@@ -63,6 +63,11 @@ function TaskSCateList_rowclick()
 function InitCategorySelection()
 {
 	var result = "";
+
+	// 상위부서문서함 사용 시 상위부서의 기록물철을 표출
+	if (upperDeptCode !== "") {
+		g_DeptCode = upperDeptCode;
+	}
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -523,7 +528,7 @@ function FindTask(pTitle, pCode, pFlag, pDeptCode)
 	    var tempValue = "";
 	    for (var y = 0; y < CateSubcnt; y++) {
 	        var simpleCode = getNodeText(SelectSingleNode(GetChildNodes(SelectNodes(rtnXml, "LISTVIEWDATA/ROWS/ROW")[y])[0], "DATA1"));  //철코드
-	        var simpleXml = GetSimpleList(arr_userinfo[4], "", simpleCode, g_SelCabID, g_InitFlag);
+			var simpleXml = GetSimpleList((upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode), "", simpleCode, g_SelCabID, g_InitFlag);
 	        var simpleCnt = SelectNodes(simpleXml, "LISTVIEWDATA/ROWS/ROW").length;
 	        var curSubCategory = SelectNodes(rtnXml, "LISTVIEWDATA/ROWS/ROW")[y];
 	        

@@ -11,7 +11,9 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt, currIdx) {
 	var docnumber;
 	var SN = "";
 	//var currIfrm = document.getElementById("ifrm" + currIdx); // 각 안별 웹한글기안기 iframe을 사용 (해당 함수는 자식창이 아닌 부모창에서 호출된다.)
-	
+
+	pDeptID = upperDeptCode === "" ? pDeptID : upperDeptCode;
+
 	name = pPrefix + "docnumber";
 	
 	try {
@@ -207,7 +209,7 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID, currIdx) {
     		url : "/ezApprovalG/rollbackCabinetSN.do",
     		data : {
     			docID : pDocID,
-    			deptID : pDeptID,
+    			deptID : upperDeptCode === "" ? pDeptID : upperDeptCode,
     			docNumber : docnumber
     		},
     		success: function(xml){

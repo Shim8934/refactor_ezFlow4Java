@@ -138,7 +138,11 @@
 
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
-	        
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+
 			window.onload = function () {
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
@@ -364,7 +368,7 @@
 		        if (flag == false) {
 		            flag = true;
 		            IsSkipDrafter = "TRUE";
-		            DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+					DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], arr_userinfo[5]) : getDeptSymbol(upperDeptCode, upperDeptName); // 부서심볼
 		            drafterDeptid = arr_userinfo[4];
 		            SetBtnStateTrue();
 		            getReceiveDocInfo();
@@ -619,9 +623,9 @@
 		        }
 		        
 		        if (LastSignSN == 1 || DraftLastFlag)
-		            rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+		            rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
 		        else
-		            rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+		            rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
 		
 		        if (!rtnval) {
 		            var pAlertContent = "[<spring:message code='ezApprovalG.t1493'/>";

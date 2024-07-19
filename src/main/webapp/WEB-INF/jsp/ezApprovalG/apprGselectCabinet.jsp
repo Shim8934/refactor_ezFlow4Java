@@ -59,7 +59,10 @@
 	        if (opener) {
 	        	receiptFlag = opener.receiptFlag;
 	        }
-	        
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+
 	        window.onload = function () {
 	            try {
 	                RetValue = parent.selectcabinet_cross_dialogArguments[0];

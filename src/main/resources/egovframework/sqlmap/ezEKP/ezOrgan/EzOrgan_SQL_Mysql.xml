@@ -1495,7 +1495,8 @@
 	            UPDATEDT ,
 	            'dept' TYPE ,
 	            TENANT_ID as tenantId,
-	            deptTreeFlag
+	            deptTreeFlag,
+	            USEUPPERDEPTBOX
 			FROM
 	        	TBL_DEPTMASTER 
 	       WHERE
@@ -3359,7 +3360,9 @@
 	            adspath ,
 	            updatedt ,
 	            'dept' type,
-	            deptTreeFlag
+	            deptTreeFlag,
+	            deptlevel,
+	            useupperdeptbox
 			FROM 
 				TBL_DEPTMASTER 
 			WHERE  

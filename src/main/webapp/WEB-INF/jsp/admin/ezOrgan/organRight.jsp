@@ -483,6 +483,7 @@
 				var args = new Array();
 				args[0] = treeNode.GetNodeData("CN");
 				args[1] = "";
+				args[2] = nodeIdx.NodeID.split("_").length > 3 ? "1" : "0";
 				
 				var deptInfoURL = "/admin/ezOrgan/deptInfo.do?selectCN=" + args[0]; 
 				

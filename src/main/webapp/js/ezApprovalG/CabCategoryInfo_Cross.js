@@ -54,7 +54,11 @@ function TaskSCateList_rowclick() {
 
 function InitCategorySelection() {
 	var result = "";
-	
+    
+    // 상위부서문서함 사용 시 상위부서의 기록물철을 표출
+    if (upperDeptCode !== "") {
+        g_DeptCode = upperDeptCode;
+    }
     $.ajax({
 		type : "POST",
 		dataType : "text",

@@ -3085,4 +3085,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardAllNewBoardListDate");
 		}
 	}
+
+	/* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
+	public void alterUseUpperDeptBox() {
+		try {
+			select(("EzCommonDAO.checkUseUpperDeptBox"));
+		} catch (Exception e) {
+			logger.debug("TBL_DEPTMASTER USEUPPERDEPTBOX column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterUseUpperDeptBox");
+		}
+	}
 }

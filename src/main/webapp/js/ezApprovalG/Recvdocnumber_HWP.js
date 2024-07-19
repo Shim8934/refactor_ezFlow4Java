@@ -291,7 +291,7 @@ var result = "";
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
-			cn : DeptID,
+            cn : upperDeptCode === "" ? DeptID : upperDeptCode,
 			prop : "extensionAttribute6",
 			cate  : "group"
 		},
@@ -304,7 +304,7 @@ var result = "";
     var RtnVal = getNodeText(dataNodes[0]);
 
     if (RtnVal == "") {
-        return DeptName;
+        return upperDeptName === "" ? DeptName : upperDeptName;
     }
     else {
         return RtnVal;

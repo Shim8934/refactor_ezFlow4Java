@@ -123,6 +123,9 @@
 
 			var isRelay = GetRelayDocInfo(); // 중계문서인지의 여부를 true/false로 반환;
 
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -559,7 +562,7 @@
 		
 		        if (cabinetID != "") {
 		        	LastSignSN = "1";
-		        	getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+		        	getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
 		        	setSusinUpdataDocID();
 		
 		         	$.ajax({
@@ -1170,7 +1173,7 @@
 		    function saveSuSinDocInfo() {
 		        var rtnval = true;
 		        if (approvalFlag == "G") {
-		        	rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+		        	rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
 		        }
 		        if (!rtnval) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t2101'/>";

@@ -6,7 +6,7 @@ function setDocNumFormat() {
     var d = new Date();
 
     var numHeader = "";
-    var DeptSymbol = arr_userinfo[5];
+    var DeptSymbol = upperDeptCode === "" ? arr_userinfo[5] : upperDeptName;
 
     var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, "receiptnumber");
@@ -216,7 +216,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
 	        	});
 		        
 		        if (!field) {
-		            var DeptSymbol = arr_userinfo[5];
+		            var DeptSymbol = upperDeptCode === "" ? arr_userinfo[5] : upperDeptName;
 		            var SN = getNodeText(GetChildNodes(result)[0]);
 		            
 		            //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정이 안먹혀서 주석
@@ -345,7 +345,7 @@ function rollbackDocNumber(pDeptID, pDocID) {
     		url : "/ezApprovalG/rollbackCabinetSN.do",
     		data : {
     			docID : pDocID,
-    			deptID : pDeptID,
+    			deptID : upperDeptCode === "" ? pDeptID : upperDeptCode,
     			docNumber : docnumber
     		},
     		success: function(xml){

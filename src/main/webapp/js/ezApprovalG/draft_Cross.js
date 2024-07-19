@@ -2500,7 +2500,7 @@ function SetAutoPropertyValue() {
                         break;
 
                     case "department":
-                        field.textContent = arr_userinfo[5];
+                        field.textContent = upperDeptName === "" ? arr_userinfo[5] : upperDeptName;
                         break;
 
                     case "parantdept":
@@ -2990,7 +2990,7 @@ function SaveDraftDocInfo_ilban(pState) {
         createNodeAndInsertText(xmlpara, objNode, "ORGHTML", "");
         createNodeAndInsertText(xmlpara, objNode, "PUSERID", arr_userinfo[1]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME", arr_userinfo[2]);
-        createNodeAndInsertText(xmlpara, objNode, "PDEPTID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "PDEPTID", (upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode));
 
         createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
         createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
