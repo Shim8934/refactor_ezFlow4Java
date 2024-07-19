@@ -6979,6 +6979,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			upperDeptCode = upDeptInfo.get("upperDeptCode");
 		}
 		model.addAttribute("upperDeptCode", upperDeptCode);
+		String allowDeptIDs = ezApprovalGService.getSameDeptBoxUseID(upperDeptCode.equals("") ? userInfo.getDeptID() : upperDeptCode, userInfo.getTenantId());
+		model.addAttribute("allowDeptIDs", allowDeptIDs);
 
 		logger.debug("recevG ended.");
 		

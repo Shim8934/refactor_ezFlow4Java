@@ -358,8 +358,12 @@
 	}
 
 	function checkIdInList (checkID) {
-		var idList = parent.allowDeptIDs.split(";").filter(id => id !== '');
-		return idList.includes(checkID);
+		if (typeof parent.allowDeptIDs === "undefined") {
+			return false;
+		} else {
+			var idList = parent.allowDeptIDs.split(";").filter(id => id !== '');
+			return idList.includes(checkID);
+		}
 	}
 	</script>
 	<style>
