@@ -34,6 +34,7 @@
             var adminFlag = "<c:out value ='${adminFlag}'/>"; // 2024-06-12 전인하 - 관리자 여부 판별 플래그
             var listHeaderString = "${listHeaderString}"; // 2024-06-12 전인하 - 리스트헤더 정보
 			var deptCabFlag = "N";
+			var upperDeptCode = "";
                         
 	        var date = new Date();
             var nowYear = date.getFullYear();
