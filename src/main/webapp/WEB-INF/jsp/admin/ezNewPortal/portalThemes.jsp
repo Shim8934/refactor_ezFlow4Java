@@ -169,6 +169,9 @@
 					
 					document.getElementById("ListCompany").addEventListener('change', function() {
 						getThemes();
+						if (webType == "mobile") {
+							getThemePortletList();
+						}
 					});
 				} else {
 					// We reached our target server, but it returned an error
