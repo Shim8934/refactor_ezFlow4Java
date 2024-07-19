@@ -57,8 +57,8 @@
 				</c:if>
 				<h2 class="off"><span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezNewPortal.mobilePortal01' /></span></h2>
 				<ul class="lnbUL off">
-					<li><span  class = "list_text leftMenu_btn" id="MTheme"><spring:message code='ezNewPortal.t054' /></span></li>
 					<li><span  class = "list_text leftMenu_btn" id="MPortlets"><spring:message code='ezNewPortal.t056' /></span></li>
+					<li><span  class = "list_text leftMenu_btn" id="MTheme"><spring:message code='ezNewPortal.mobilePortal02' /></span></li>
 					<li><span  class = "list_text leftMenu_btn" id="MMenus"><spring:message code = 'ezNewPortal.t055' /></span></li>
 				</ul>
 			</div>
@@ -95,9 +95,9 @@
 						// case "MMenus" :
 						// 	url = "/admin/ezNewPortal/portalPortlets.do?type=mobile";
 						// 	break;
-						// case "MTheme" :
-						// 	url = "/admin/ezNewPortal/portalThemes.do?type=mobile";
-						// 	break;
+						case "MTheme" :
+							url = "/admin/ezNewPortal/portalThemes.do?type=mobile";
+							break;
 					}
 					
 					window.open(url,"right");

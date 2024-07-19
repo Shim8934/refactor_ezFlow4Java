@@ -143,7 +143,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 포탈 테마관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalThemes.do", method=RequestMethod.GET)
-	public String portalThemes(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String portalThemes(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest requset) throws Exception {
 		logger.debug("portalThemes started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -152,6 +152,12 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 
 		if ("Y".equals(usePortletSize)) {
 			model.addAttribute("allSize", ezNewPortalService.getAllAvailablePortletSize());
+		}
+
+		String webType = requset.getParameter("type");
+
+		if (webType != null && webType.equals("mobile")) {
+			model.addAttribute("webType", webType);
 		}
 
 		if (userInfo == null) {
@@ -1248,9 +1254,14 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String themeId = json.get("themeId").toString();
 		String companyId = json.get("companyId").toString();
 		String userId = userInfo.getId();
+		String webType = "web";
+		if (json.get("webType") != null) {
+			webType = json.get("webType").toString();
+		}
 		
 		String url = "/rest/admin/ezPortal/themes/" + themeId + "/portlets/companies/" + companyId;
 		json.put("userId", userId);
+		json.put("webType", webType);
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, request, "patch", json);
 		
