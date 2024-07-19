@@ -1787,25 +1787,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			WHERE
 				DOCINFO.tenant_id = #tenantId#
 			AND
-				DOCINFO.companyid IN (SELECT
-										extensionattribute2
-									FROM
-										TBL_DEPTMASTER
-									JOIN
-										TBL_ADDJOBMASTER
-									ON
-										TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
-									AND
-										TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
-									WHERE
-										TBL_ADDJOBMASTER.tenant_id = #tenantId#
-									AND
-										TBL_ADDJOBMASTER.cn = #userId#
-									UNION ALL
-									SELECT physicaldeliveryofficename
-									FROM TBL_USERMASTER
-									WHERE cn = #userId#
-									  AND tenant_id = #tenantId#)
+				DOCINFO.companyid = #companyId#
 		  AND (LINEINFO.aprmemberid in ($userIDs$)
 	   ]]>
 		<isNotEmpty property="proxyList">
@@ -1911,30 +1893,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			WHERE
 				TBL_APRDOCINFO.tenant_id = #tenantId#
 			AND
-				TBL_APRDOCINFO.companyid IN (SELECT
-									extensionattribute2
-								FROM
-									TBL_DEPTMASTER
-								JOIN
-									TBL_ADDJOBMASTER
-								ON
-									TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
-								AND
-									TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
-								WHERE
-									TBL_ADDJOBMASTER.tenant_id = #tenantId#
-								AND
-									TBL_ADDJOBMASTER.cn = #userId#
-								UNION ALL
-								SELECT
-									physicaldeliveryofficename
-								FROM
-									TBL_USERMASTER
-								WHERE
-									cn = #userId#
-								AND
-									tenant_id = #tenantId#
-								)
+				TBL_APRDOCINFO.companyid = #companyId#
 			AND
 				aprmemberid = #userId#
 			AND
@@ -1993,30 +1952,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			WHERE
 				DOCINFO.tenant_id = #tenantId#
 			AND
-				DOCINFO.companyid IN (SELECT
-										extensionattribute2
-									FROM
-										TBL_DEPTMASTER
-									JOIN
-										TBL_ADDJOBMASTER
-									ON
-										TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
-									AND
-										TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
-									WHERE
-										TBL_ADDJOBMASTER.tenant_id = #tenantId#
-									AND
-										TBL_ADDJOBMASTER.cn = #userId#
-									UNION ALL
-									SELECT
-										physicaldeliveryofficename
-									FROM
-										TBL_USERMASTER
-									WHERE
-										cn = #userId#
-									AND
-										tenant_id = #tenantId#
-									)
+				DOCINFO.companyid = #companyId#
 			AND
 				LINEINFO.aprmemberid = #userId#
 			AND
@@ -2062,31 +1998,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				DOCINFO.DOCID = GRP.DOCID
 			WHERE
 				DOCINFO.tenant_id = #tenantId#
-			AND
-				DOCINFO.companyid IN (SELECT
-										extensionattribute2
-									FROM
-										TBL_DEPTMASTER
-									JOIN
-										TBL_ADDJOBMASTER
-									ON
-										TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
-									AND
-										TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
-									WHERE
-										TBL_ADDJOBMASTER.tenant_id = #tenantId#
-									AND
-										TBL_ADDJOBMASTER.cn = #userId#
-									UNION ALL
-									SELECT
-										physicaldeliveryofficename
-									FROM
-										TBL_USERMASTER
-									WHERE
-										cn = #userId#
-									AND
-										tenant_id = #tenantId#
-									)
+			AND 
+				DOCINFO.companyid = #companyId#
 			AND
 				(LINEINFO.aprmemberid in ($userIDs$)
 		]]>
