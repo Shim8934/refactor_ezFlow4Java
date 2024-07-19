@@ -125,7 +125,7 @@
 		        	OpenAlertUI("<spring:message code='ezApprovalG.t1126'/>");
 		        }
 				else if (arrDeptInfo[2] == "Y") { // 상위부서문서함 사용여부 확인
-					OpenAlertUI("<spring:message code='ezApprovalG.yjh06'/>");
+					OpenAlertUI("<spring:message code='ezApprovalG.yjh07'/>");
 				}
 		        else {
 		            rtnVal[0] = "TRUE";
