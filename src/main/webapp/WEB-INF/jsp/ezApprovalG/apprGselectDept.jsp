@@ -71,7 +71,7 @@
 		
 		        arrDeptInfo[0] = treeNode.GetNodeData("CN");
 		        arrDeptInfo[1] = treeNode.GetNodeData("VALUE");
-				arrDeptInfo[2] = treeNode.GetNodeData("useupperdeptbox");
+				arrDeptInfo[2] = treeNode.GetNodeData("USEUPPERDEPTBOX");
 		        document.getElementById("tdSelDept").innerHTML = ReplaceText(arrDeptInfo[1], "&", "&amp;");
 		    }
 		    function btSearchDept_onclick() {
@@ -98,7 +98,7 @@
 		        var tr = selnode[0];
 		        arrDeptInfo[0] = GetAttribute(tr, "DATA2");
 		        arrDeptInfo[1] = tr.cells[0].innerText;
-				arrDeptInfo[2] = GetAttribute(tr, "DATA3");
+				arrDeptInfo[2] = GetAttribute(tr, "USEUPPERDEPTBOX");
 		        if(CrossYN())
 		            tdSelDept.textContent = arrDeptInfo[1];
 		        else

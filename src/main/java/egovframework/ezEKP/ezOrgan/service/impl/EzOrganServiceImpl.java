@@ -806,7 +806,12 @@ public class EzOrganServiceImpl implements EzOrganService {
                             propvalue = "";
                         }
                         
-                        nodeInfo.append("<DATA" + (j + 3) + ">" + commonUtil.cleanValue(propvalue) + "</DATA" + (j + 3) + ">");
+						/* 2024-07-19 양지혜 - 전자결재G > 상위부서문서함 사용 체크 */
+						if (!proplist[j].equals("useupperdeptbox")) {
+							nodeInfo.append("<DATA" + (j + 3) + ">" + commonUtil.cleanValue(propvalue) + "</DATA" + (j + 3) + ">");	
+						} else {
+							nodeInfo.append("<USEUPPERDEPTBOX>" + commonUtil.cleanValue(propvalue) + "</USEUPPERDEPTBOX>");
+						}
                     }
                 }
             }
