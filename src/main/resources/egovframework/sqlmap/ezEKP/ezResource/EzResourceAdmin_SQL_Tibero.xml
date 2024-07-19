@@ -4,6 +4,7 @@
 <sqlMap namespace="ezResourceAdmin">
 	<typeAlias  alias="ResGetSubClsListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO"/>
 	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
+	<typeAlias  alias="ResGetScheduleVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
 	
 	<resultMap class="ResGetSubClsListVO" 	id="resGetSubClsListVO">
 		<result property="brdID"						column="BRD_ID"					columnIndex="1"/>
@@ -635,8 +636,8 @@
 	            A.title title  ,
 	            LOCATION ,
 	            TIMEDISPLAY ,
-	            DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-	            DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+	            TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+	            TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
 	            ALERTTIME ,
 	            REFLAG ,
 	            GRESFLAG ,
@@ -644,14 +645,14 @@
 	            IMPORTANCE ,
 	            ENTRYLIST ,
 	            ALLDAY ,
-	            DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+	            TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
 	            ATTACHFLAG ,
 	            CHARACTERID ,
 	            A.APPROVEFLAG APPROVEFLAG ,
 	            A.RETURNFLAG RETURNFLAG ,
 				B.APPROVEFLAG USEAPPROVE ,
 				B.RETURNFLAG USERETURN ,
-				STR_TO_DATE(#v_PNOWDATE#, '%Y-%m-%d %T') NOWDATE ,
+				TO_CHAR(#v_PNOWDATE#, 'YYYY-MM-DD HH24:MI:SS') NOWDATE ,
 				U.DISPLAYNAME OWNERNM ,
 				U.DESCRIPTION DEPTNM ,
 				A.COMPANYID COMPANYID
@@ -674,9 +675,9 @@
 			AND
 				A.REFLAG = '0'
 			AND
-				STARTDATE <= STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T')
+				STARTDATE <= to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
-				STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T') <= ENDDATE
+				to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
 		]]>
 		<isEqual property="v_PTYPE" compareValue="approve">
 			AND
@@ -689,13 +690,13 @@
 		<isEqual property="v_PTYPE" compareValue="end">
 		<![CDATA[
 			AND 
-				ENDDATE <= STR_TO_DATE(#v_PNOWDATE#, '%Y-%m-%d %T')
+				ENDDATE <= to_date(#v_PNOWDATE#, 'YYYY-MM-DD HH24:MI:SS')
 		]]>
 		</isEqual>
 		<isNotEqual property="v_PTYPE" compareValue="end">
 		<![CDATA[
 			AND 
-				ENDDATE > STR_TO_DATE(#v_PNOWDATE#, '%Y-%m-%d %T')
+				ENDDATE > to_date(#v_PNOWDATE#, 'YYYY-MM-DD HH24:MI:SS')
 		]]>
 		</isNotEqual>
 			AND 
@@ -714,8 +715,8 @@
 	            A.TITLE TITLE ,
 	            LOCATION ,
 	            TIMEDISPLAY ,
-	            DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-	            DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+	            TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+	            TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
 	            ALERTTIME ,
 	            REFLAG ,
 	            GRESFLAG ,
@@ -723,14 +724,14 @@
 	            IMPORTANCE ,
 	            ENTRYLIST ,
 	            ALLDAY ,
-	            DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+	            TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
 	            ATTACHFLAG ,
 	            CHARACTERID ,
 	            A.APPROVEFLAG APPROVEFLAG ,
 	            A.RETURNFLAG RETURNFLAG ,
 				B.APPROVEFLAG USEAPPROVE ,
 				B.RETURNFLAG USERETURN ,
-				STR_TO_DATE(#v_PNOWDATE#, '%Y-%m-%d %T') NOWDATE ,
+				TO_CHAR(#v_PNOWDATE#, 'YYYY-MM-DD HH24:MI:SS') NOWDATE ,
 				U.DISPLAYNAME OWNERNM ,
 				U.DESCRIPTION DEPTNM ,
 				A.COMPANYID COMPANYID
@@ -755,7 +756,7 @@
 			AND
 				A.TENANT_ID = C.TENANT_ID
 			WHERE
-				STARTDATE <= STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T')
+				STARTDATE <= to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
 				A.COMPANYID = #v_PCOMPANYID#
 			AND
@@ -763,7 +764,7 @@
 			AND
 				A.REFLAG = '1'
 			AND
-				(STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T') >= ENDDATETIME )
+				(to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME )
 			AND
 				A.TENANT_ID = #tenantID#
 			]]>
