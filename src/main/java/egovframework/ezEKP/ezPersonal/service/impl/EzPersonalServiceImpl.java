@@ -778,7 +778,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	public List<Integer> getAllPlatformFromNotiDisableItem(String userId, NotiType type, int tenantId) {
 		logger.debug("getAllPlatformFromNotiDisableItem started. userId={}, type={} tenantId={}", userId, type, tenantId);
 		List<Integer> result = ezPersonalDAO.getAllNotiDisableItem(userId, tenantId).stream()
-				.filter(it -> it.getMainType() + "" == type.mainType() && it.getSubType() + "" == type.subType())
+				.filter(it -> (it.getMainType() + "").equals(type.mainType()) && (it.getSubType() + "").equals(type.subType()))
 				.map(PersonalNotiDisableItemVO::getPlatform).collect(Collectors.toList());
 		logger.debug("getAllPlatformFromNotiDisableItem ended. result={}", result);
 		return result;
