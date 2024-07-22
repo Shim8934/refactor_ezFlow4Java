@@ -464,31 +464,7 @@
 		         					AND
 					      				VAPRWILLDOCLIST.TENANT_ID = #v_TENANTID# 
 					      			AND
-										VAPRWILLDOCLIST.COMPANYID IN (
-												SELECT 
-													EXTENSIONATTRIBUTE2 
-												FROM 
-													TBL_DEPTMASTER 
-												INNER JOIN 
-													TBL_ADDJOBMASTER 
-												ON
-													(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-													AND 
-													TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-												WHERE 
-													TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-												AND 
-													TBL_ADDJOBMASTER.CN = #v_USERID#
-												UNION ALL
-												SELECT 
-													PHYSICALDELIVERYOFFICENAME
-												FROM
-													TBL_USERMASTER
-												WHERE
-													CN = #v_USERID#
-												AND
-													TENANT_ID = #v_TENANTID# 
-												)
+										VAPRWILLDOCLIST.COMPANYID = #companyID#
 									AND
 										IFNULL(GRP.TABSN, 1) = 1
 								) AS LIST2
@@ -621,31 +597,7 @@
 			            			AND 
 					      				VAPRWILLDOCLIST.TENANT_ID = #v_TENANTID# 
 					      			AND
-										VAPRWILLDOCLIST.COMPANYID IN (
-												SELECT 
-													EXTENSIONATTRIBUTE2 
-												FROM 
-													TBL_DEPTMASTER 
-												INNER JOIN 
-													TBL_ADDJOBMASTER 
-												ON
-													(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-													AND 
-													TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-												WHERE 
-													TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-												AND 
-													TBL_ADDJOBMASTER.CN = #v_USERID#
-												UNION ALL
-												SELECT 
-													PHYSICALDELIVERYOFFICENAME
-												FROM
-													TBL_USERMASTER
-												WHERE
-													CN = #v_USERID#
-												AND
-													TENANT_ID = #v_TENANTID# 
-												)
+										VAPRWILLDOCLIST.COMPANYID = #companyID#
 											
 											  AND VAPRWILLDOCLIST.docid in (
 												SELECT 
@@ -657,31 +609,7 @@
 												AND
 													tenant_id = #v_TENANTID#
 												AND
-                                                    companyid IN(
-                                                        SELECT
-                                                            extensionattribute2
-                                                        FROM
-                                                            TBL_DEPTMASTER
-                                                        INNER JOIN
-                                                            TBL_ADDJOBMASTER
-                                                        ON
-                                                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
-                                                        AND
-                                                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
-                                                        WHERE
-                                                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
-                                                        AND
-                                                            TBL_ADDJOBMASTER.cn = #v_USERID#
-                                                        UNION ALL
-                                                        SELECT
-                                                            physicaldeliveryofficename
-                                                        FROM
-                                                            TBL_USERMASTER
-                                                        WHERE
-                                                            cn = #v_USERID#
-                                                        AND
-                                                            tenant_id = #v_TENANTID#
-                                                    )
+                                                    COMPANYID = #companyID#
 												)
 											AND
 												IFNULL(GRP.TABSN, 1) = 1
@@ -765,31 +693,7 @@
 		               				AND 
 					      				TENANT_ID = #v_TENANTID# 
               ]]>					AND
-										COMPANYID IN (
-												SELECT 
-													EXTENSIONATTRIBUTE2 
-												FROM 
-													TBL_DEPTMASTER 
-												INNER JOIN 
-													TBL_ADDJOBMASTER 
-												ON
-													(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-													AND 
-													TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-												WHERE 
-													TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-												AND 
-													TBL_ADDJOBMASTER.CN = #v_USERID#
-												UNION ALL
-												SELECT 
-													PHYSICALDELIVERYOFFICENAME
-												FROM
-													TBL_USERMASTER
-												WHERE
-													CN = #v_USERID#
-												AND
-													TENANT_ID = #v_TENANTID# 
-												)
+                                        COMPANYID = #companyID#
 			               	<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      		 		AND 
 				      		 			$v_SPSUBQUERY$
@@ -932,31 +836,7 @@
 		                  	AND 
 					      		TBL_APRLINEINFO.TENANT_ID = #v_TENANTID# 
 					      	AND
-								TBL_APRLINEINFO.COMPANYID IN (
-										SELECT 
-											EXTENSIONATTRIBUTE2 
-										FROM 
-											TBL_DEPTMASTER 
-										INNER JOIN 
-											TBL_ADDJOBMASTER 
-										ON
-											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-											AND 
-											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-										WHERE 
-											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-										AND 
-											TBL_ADDJOBMASTER.CN = #v_USERID#
-										UNION ALL
-										SELECT 
-											PHYSICALDELIVERYOFFICENAME
-										FROM
-											TBL_USERMASTER
-										WHERE
-											CN = #v_USERID#
-										AND
-											TENANT_ID = #v_TENANTID# 
-										)
+								TBL_APRLINEINFO.COMPANYID = #companyID#
                 ]]>
 		                <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 			      		    AND 
@@ -1169,31 +1049,7 @@
 			                     						AND 
 			                     							TENANT_ID = #v_TENANTID#
 			                     						AND
-															COMPANYID IN (
-																		SELECT 
-																			EXTENSIONATTRIBUTE2 
-																		FROM 
-																			TBL_DEPTMASTER 
-																		INNER JOIN 
-																			TBL_ADDJOBMASTER 
-																		ON
-																			(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-																			AND 
-																			TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-																		WHERE 
-																			TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-																		AND 
-																			TBL_ADDJOBMASTER.CN = #v_USERID#
-																		UNION ALL
-																		SELECT 
-																			PHYSICALDELIVERYOFFICENAME
-																		FROM
-																			TBL_USERMASTER
-																		WHERE
-																			CN = #v_USERID#
-																		AND
-																			TENANT_ID = #v_TENANTID# 
-																		)
+															COMPANYID = #companyID#
 																		]]>
 			                     						<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 											      		AND 
@@ -9714,31 +9570,7 @@
 								</isNotEmpty>
 								<isEmpty property="v_CONTID">
 						   		AND
-									TBL_ENDAPRDOCINFO.COMPANYID IN (
-											SELECT 
-												EXTENSIONATTRIBUTE2 
-											FROM 
-												TBL_DEPTMASTER 
-											INNER JOIN 
-												TBL_ADDJOBMASTER 
-											ON
-												(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-												AND 
-												TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-											WHERE 
-												TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-											AND 
-												TBL_ADDJOBMASTER.CN = #v_USERID#
-											UNION ALL
-											SELECT 
-												PHYSICALDELIVERYOFFICENAME
-											FROM
-												TBL_USERMASTER
-											WHERE
-												CN = #v_USERID#
-											AND
-												TENANT_ID = #v_TENANTID# 
-											)
+									TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 								</isEmpty>
 							   	<isEqual property="approvalFlag" compareValue="S">
 							   	  INNER JOIN 
@@ -9780,32 +9612,8 @@
 								</isNotEmpty>
 								<isEmpty property="v_CONTID">
 						   		AND
-									TBL_ENDAPRDOCINFO.COMPANYID IN (
-											SELECT 
-												EXTENSIONATTRIBUTE2 
-											FROM 
-												TBL_DEPTMASTER 
-											INNER JOIN 
-												TBL_ADDJOBMASTER 
-											ON
-												(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-												AND 
-												TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-											WHERE 
-												TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-											AND 
-												TBL_ADDJOBMASTER.CN = #v_USERID#
-											UNION ALL
-											SELECT 
-												PHYSICALDELIVERYOFFICENAME
-											FROM
-												TBL_USERMASTER
-											WHERE
-												CN = #v_USERID#
-											AND
-												TENANT_ID = #v_TENANTID# 
-											)
-								</isEmpty>
+									TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+                                </isEmpty>
 							   	<isEqual property="approvalFlag" compareValue="S">
 							   	   AND  C.CODE1 ='SA02'
    									AND  D.CODE1 ='A04'
@@ -9934,31 +9742,7 @@
 										</isNotEmpty>
 										<isEmpty property="v_CONTID">
 								   		AND
-											TBL_ENDAPRDOCINFO.COMPANYID IN (
-													SELECT 
-														EXTENSIONATTRIBUTE2 
-													FROM 
-														TBL_DEPTMASTER 
-													INNER JOIN 
-														TBL_ADDJOBMASTER 
-													ON
-														(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-														AND 
-														TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-													WHERE 
-														TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-													AND 
-														TBL_ADDJOBMASTER.CN = #v_USERID#
-													UNION ALL
-													SELECT 
-														PHYSICALDELIVERYOFFICENAME
-													FROM
-														TBL_USERMASTER
-													WHERE
-														CN = #v_USERID#
-													AND
-														TENANT_ID = #v_TENANTID# 
-													)
+											TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 										</isEmpty>
 							      				) = 'Y')
 							   	</isEqual>
@@ -13585,31 +13369,7 @@
          	AND
 				VAPRWILLDOCLIST.TENANT_ID = #v_TENANTID#
 			AND
-				VAPRWILLDOCLIST.COMPANYID IN (
-						SELECT 
-							EXTENSIONATTRIBUTE2 
-						FROM 
-							TBL_DEPTMASTER 
-						INNER JOIN 
-							TBL_ADDJOBMASTER 
-						ON
-							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-						WHERE 
-							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-						AND 
-							TBL_ADDJOBMASTER.CN = #v_USERID#
-						UNION ALL
-						SELECT 
-							PHYSICALDELIVERYOFFICENAME
-						FROM
-							TBL_USERMASTER
-						WHERE
-							CN = #v_USERID#
-						AND
-							TENANT_ID = #v_TENANTID# 
-						)
+				VAPRWILLDOCLIST.COMPANYID = #companyID#
 			AND
 				IFNULL(GRP.TABSN, 1) = 1
 		) AS LIST2
@@ -13652,31 +13412,7 @@
            	AND
 				VAPRWILLDOCLIST.TENANT_ID = #v_TENANTID#
 			AND
-				VAPRWILLDOCLIST.COMPANYID IN (
-						SELECT 
-							EXTENSIONATTRIBUTE2 
-						FROM 
-							TBL_DEPTMASTER 
-						INNER JOIN 
-							TBL_ADDJOBMASTER 
-						ON
-							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-						WHERE 
-							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-						AND 
-							TBL_ADDJOBMASTER.CN = #v_USERID#
-						UNION ALL
-						SELECT 
-							PHYSICALDELIVERYOFFICENAME
-						FROM
-							TBL_USERMASTER
-						WHERE
-							CN = #v_USERID#
-						AND
-							TENANT_ID = #v_TENANTID# 
-						)
+				VAPRWILLDOCLIST.COMPANYID = #companyID#
 			AND VAPRWILLDOCLIST.docid in
 				(SELECT
 					docid
@@ -13687,31 +13423,7 @@
 				AND
 					tenant_id = #v_TENANTID#
 				AND
-					companyid IN(
-						SELECT
-							extensionattribute2
-						FROM
-							TBL_DEPTMASTER
-						INNER JOIN
-							TBL_ADDJOBMASTER
-						ON
-							(TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
-						AND
-							TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
-						WHERE
-							TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
-						AND
-							TBL_ADDJOBMASTER.cn = #v_USERID#
-						UNION ALL
-						SELECT
-							physicaldeliveryofficename
-						FROM
-							TBL_USERMASTER
-						WHERE
-							cn = #v_USERID#
-						AND
-							tenant_id = #v_TENANTID#
-					))
+                    COMPANYID = #companyID#)
 			AND
 				IFNULL(GRP.TABSN, 1) = 1
 			) AS LIST3
@@ -13732,31 +13444,7 @@
 			 AND
 				TENANT_ID =#v_TENANTID#
 			 AND
-				COMPANYID IN (
-						SELECT 
-							EXTENSIONATTRIBUTE2 
-						FROM 
-							TBL_DEPTMASTER 
-						INNER JOIN 
-							TBL_ADDJOBMASTER 
-						ON
-							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-						WHERE 
-							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-						AND 
-							TBL_ADDJOBMASTER.CN = #v_USERID#
-						UNION ALL
-						SELECT 
-							PHYSICALDELIVERYOFFICENAME
-						FROM
-							TBL_USERMASTER
-						WHERE
-							CN = #v_USERID#
-						AND
-							TENANT_ID = #v_TENANTID# 
-						)
+				COMPANYID = #companyID#
 		]]>
 		</isEqual>
 		<!-- 공람할 문서 -->
@@ -13808,31 +13496,7 @@
              AND
 				TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
 			AND
-				TBL_APRDOCINFO.COMPANYID IN (
-						SELECT 
-							EXTENSIONATTRIBUTE2 
-						FROM 
-							TBL_DEPTMASTER 
-						INNER JOIN 
-							TBL_ADDJOBMASTER 
-						ON
-							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-						WHERE 
-							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-						AND 
-							TBL_ADDJOBMASTER.CN = #v_USERID#
-						UNION ALL
-						SELECT 
-							PHYSICALDELIVERYOFFICENAME
-						FROM
-							TBL_USERMASTER
-						WHERE
-							CN = #v_USERID#
-						AND
-							TENANT_ID = #v_TENANTID# 
-						)
+				TBL_APRDOCINFO.COMPANYID = #companyID#
 		]]>
 		</isEqual>
 		<!-- 한양대 추가 사항 (서버저장문서) -->
@@ -13926,31 +13590,7 @@
 					AND
 						TENANT_ID = #v_TENANTID#
 					AND
-						COMPANYID IN (
-								SELECT 
-									EXTENSIONATTRIBUTE2 
-								FROM 
-									TBL_DEPTMASTER 
-								INNER JOIN 
-									TBL_ADDJOBMASTER 
-								ON
-									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-									AND 
-									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-								WHERE 
-									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-								AND 
-									TBL_ADDJOBMASTER.CN = #v_USERID#
-								UNION ALL
-								SELECT 
-									PHYSICALDELIVERYOFFICENAME
-								FROM
-									TBL_USERMASTER
-								WHERE
-									CN = #v_USERID#
-								AND
-									TENANT_ID = #v_TENANTID# 
-								)
+                        COMPANYID = #companyID#
 						
 					UNION ALL
 					
@@ -13963,31 +13603,7 @@
 					AND
 						TENANT_ID = #v_TENANTID#
 					AND
-						COMPANYID IN (
-								SELECT 
-									EXTENSIONATTRIBUTE2 
-								FROM 
-									TBL_DEPTMASTER 
-								INNER JOIN 
-									TBL_ADDJOBMASTER 
-								ON
-									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-									AND 
-									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-								WHERE 
-									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-								AND 
-									TBL_ADDJOBMASTER.CN = #v_USERID#
-								UNION ALL
-								SELECT 
-									PHYSICALDELIVERYOFFICENAME
-								FROM
-									TBL_USERMASTER
-								WHERE
-									CN = #v_USERID#
-								AND
-									TENANT_ID = #v_TENANTID# 
-								)
+					    COMPANYID = #companyID#
 					) AS B
 					WHERE 
 						1 = 1
@@ -15609,31 +15225,7 @@
 		</isNotEmpty>
 		<isEmpty property="v_CONTID">
    		AND
-			TBL_ENDAPRDOCINFO.COMPANYID IN (
-					SELECT 
-						EXTENSIONATTRIBUTE2 
-					FROM 
-						TBL_DEPTMASTER 
-					INNER JOIN 
-						TBL_ADDJOBMASTER 
-					ON
-						(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-						AND 
-						TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-					WHERE 
-						TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-					AND 
-						TBL_ADDJOBMASTER.CN = #v_USERID#
-					UNION ALL
-					SELECT 
-						PHYSICALDELIVERYOFFICENAME
-					FROM
-						TBL_USERMASTER
-					WHERE
-						CN = #v_USERID#
-					AND
-						TENANT_ID = #v_TENANTID# 
-					)
+			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 		</isEmpty>
 		<isEqual property="approvalFlag" compareValue="S">
 		 AND  
@@ -15776,38 +15368,8 @@
 							              AND
 												TENANT_ID = #v_TENANTID#
 							   		]]>
-							   			<isNotEmpty property="deptId">
 											AND
-									   			COMPANYID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptId# AND TENANT_ID = #v_TENANTID#)
-										</isNotEmpty>
-								   		<isEmpty property="deptId">
-										  AND
-												COMPANYID IN (
-														SELECT 
-															EXTENSIONATTRIBUTE2 
-														FROM 
-															TBL_DEPTMASTER 
-														INNER JOIN 
-															TBL_ADDJOBMASTER 
-														ON
-															(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-															AND 
-															TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-														WHERE 
-															TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-														AND 
-															TBL_ADDJOBMASTER.CN = #v_USERID#
-														UNION ALL
-														SELECT 
-															PHYSICALDELIVERYOFFICENAME
-														FROM
-															TBL_USERMASTER
-														WHERE
-															CN = #v_USERID#
-														AND
-															TENANT_ID = #v_TENANTID# 
-														)
-								   		</isEmpty>
+                                            COMPANYID = #companyID#
 							      				) = 'Y')
 							   	</isEqual>
 							   	<isEqual property="v_SECURITYLINEFLAG" compareValue="N">
@@ -32990,31 +32552,7 @@
 	            STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	            ]]>
 			AND
-				VAPRWILLDOCLIST.COMPANYID IN (
-						SELECT 
-							EXTENSIONATTRIBUTE2 
-						FROM 
-							TBL_DEPTMASTER  D1
-						INNER JOIN 
-							TBL_ADDJOBMASTER  D2
-						ON
-							(D2.TENANT_ID = D1.TENANT_ID 
-							AND 
-							D1.CN = D2.DEPTID) 
-						WHERE 
-							D2.TENANT_ID = #v_TENANTID#
-						AND 
-							D2.CN = #v_USERID#
-						UNION ALL
-						SELECT 
-							UM.PHYSICALDELIVERYOFFICENAME
-						FROM
-							TBL_USERMASTER UM
-						WHERE
-							UM.CN = #v_USERID#
-						AND
-							UM.TENANT_ID = #v_TENANTID#
-						)
+				VAPRWILLDOCLIST.COMPANYID = #companyID#
 			AND VAPRWILLDOCLIST.docid in
 				(SELECT
 					TA.docid
@@ -33025,31 +32563,7 @@
 				AND
 					TA.tenant_id = #v_TENANTID#
 				AND
-					companyid IN(
-						SELECT
-							TD.extensionattribute2
-						FROM
-							TBL_DEPTMASTER TD
-						INNER JOIN
-							TBL_ADDJOBMASTER TA
-						ON
-							(TA.tenant_id = TD.tenant_id
-						AND
-							TD.cn = TA.deptid)
-						WHERE
-							TA.tenant_id = #v_TENANTID#
-						AND
-							TA.cn = #v_USERID# 
-						UNION ALL
-						SELECT
-							TU2.physicaldeliveryofficename
-						FROM
-							TBL_USERMASTER TU2
-						WHERE
-							TU2.cn = #v_USERID#
-						AND
-							TU2.tenant_id = #v_TENANTID#
-					)
+					companyid = #companyID#
 				)
 			AND
 				IFNULL(GRP.TABSN, 1) = 1
@@ -33096,31 +32610,7 @@
 	   		AND	
 	   			D.TENANT_ID = #v_TENANTID#
 	   		AND
-				D.COMPANYID IN (
-						SELECT 
-							EXTENSIONATTRIBUTE2 
-						FROM 
-							TBL_DEPTMASTER 
-						INNER JOIN 
-							TBL_ADDJOBMASTER 
-						ON
-							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-						WHERE 
-							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-						AND 
-							TBL_ADDJOBMASTER.CN = #v_USERID#
-						UNION ALL
-						SELECT 
-							PHYSICALDELIVERYOFFICENAME
-						FROM
-							TBL_USERMASTER
-						WHERE
-							CN = #v_USERID#
-						AND
-							TENANT_ID = #v_TENANTID# 
-						)
+				D.COMPANYID = #companyID#
 			AND
 				IFNULL(GRP.TABSN, 1) = 1
         ]]>) AS 'count3', <!--기안한 문서-->
@@ -33296,6 +32786,7 @@
 	                <![CDATA[TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')]]> 
 	            AND 
 	                TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+                AND TBL_APRDOCINFO.COMPANYID = #companyID#
             ) AS 'count5', <!-- 유통수신함 -->
 			(
 				<![CDATA[
@@ -33323,6 +32814,8 @@
 	   		 		PROCESSDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		 	AND	
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+		   		AND
+		   		    TBL_APRDOCINFO.COMPANYID = #companyID#
 	   		]]>
 			) AS 'count6', <!-- 유통발송함 혹은 발송의뢰문서함 -->
 			(
@@ -33362,24 +32855,7 @@
 		   		AND	
 		   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
 		   		AND
-					TBL_ENDAPRDOCINFO.COMPANYID IN (
-							SELECT 
-								EXTENSIONATTRIBUTE2 
-							FROM 
-								TBL_DEPTMASTER 
-							INNER JOIN 
-								TBL_ADDJOBMASTER 
-							ON
-								TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
-							WHERE 
-								TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-							AND 
-								TBL_ADDJOBMASTER.CN = #v_USERID#
-							UNION ALL
-							SELECT #companyID#
-							)
+					TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 	   		]]>			
 			) AS 'count7', <!-- 직인 의뢰함 -->
 			SUM(CASE WHEN
@@ -33414,6 +32890,8 @@
 	                TBL_APRLINEINFO.AprState = '010'
 	             AND
 	                TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
+                AND
+                    TBL_APRDOCINFO.COMPANYID = #companyID#
 			) AS 'count10', <!-- 공람한 문서 -->
 			(
 			<![CDATA[
@@ -33485,6 +32963,8 @@
 			   	]]>
 			   		AND	
 			   			D.TENANT_ID = #v_TENANTID#
+		            AND
+		                D.COMPANYID = #companyID#
 			   		UNION ALL
 			   		SELECT
 						COUNT(D.DOCID) AS COUNT
@@ -33524,6 +33004,8 @@
 			   	]]>
 			   		AND	
 			   			D.TENANT_ID = #v_TENANTID#
+                    AND
+                        D.COMPANYID = #companyID#
 		   		) A
 			) AS 'count11'
 		</isEqual>
@@ -33651,31 +33133,7 @@
 				AND 
 					D.TENANT_ID = #v_TENANTID#
 				AND 
-					D.COMPANYID IN (
-						SELECT 
-							EXTENSIONATTRIBUTE2 
-						FROM 
-							TBL_DEPTMASTER 
-						INNER JOIN 
-							TBL_ADDJOBMASTER 
-						ON
-							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-						WHERE 
-							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-						AND 
-							TBL_ADDJOBMASTER.CN = #v_USERID#
-						UNION ALL
-						SELECT 
-							PHYSICALDELIVERYOFFICENAME
-						FROM
-							TBL_USERMASTER
-						WHERE
-							CN = #v_USERID#
-						AND
-							TENANT_ID = #v_TENANTID# 
-					)
+					D.COMPANYID = #companyID#
 				AND
 					IFNULL(GRP.TABSN, 1) = 1
 				GROUP BY 
@@ -33759,31 +33217,7 @@
 				AND 
 					D.TENANT_ID = #v_TENANTID#
 				AND 
-					D.COMPANYID IN (
-						SELECT 
-							EXTENSIONATTRIBUTE2 
-						FROM 
-							TBL_DEPTMASTER 
-						INNER JOIN 
-							TBL_ADDJOBMASTER 
-						ON
-							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-						WHERE 
-							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-						AND 
-							TBL_ADDJOBMASTER.CN = #v_USERID#
-						UNION ALL
-						SELECT 
-							PHYSICALDELIVERYOFFICENAME
-						FROM
-							TBL_USERMASTER
-						WHERE
-							CN = #v_USERID#
-						AND
-							TENANT_ID = #v_TENANTID# 
-					)
+					D.COMPANYID = #companyID#
 				AND
 					IFNULL(GRP.TABSN, 1) = 1
 				GROUP BY

@@ -154,8 +154,10 @@ public class EzJournalController extends EgovFileMngUtil {
 		String listType = request.getParameter("listType");
 		String typeId = request.getParameter("typeId");
 		String userDept = userInfo.getDeptID();
+		String userCompany = userInfo.getCompanyID();
 
-		HashMap<String, Object> param = new HashMap<String, Object>();
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("userCompany", userCompany);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/" + userInfo.getId() + "/author-depts", param, request,"get",null);
 		String status = resultBody.get("status").toString();

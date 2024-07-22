@@ -5493,10 +5493,11 @@ public class EzNewPortalGWController {
 
 			JSONArray themePortletList = (JSONArray)jsonParam.get("themePortletList");
 			JSONArray sizeList = (JSONArray)jsonParam.get("sizeList");
+			String webType = jsonParam.get("webType").toString();
 
 			ezNewPortalService.updateThemePortletUsed(themeId, tenantId, companyId, themePortletList);
 
-			if (usePortletSize) {
+			if (!webType.equals("mobile") && usePortletSize) {
 				ezNewPortalService.updateThemePortletSize(themeId, tenantId, companyId, sizeList);
 			}
 

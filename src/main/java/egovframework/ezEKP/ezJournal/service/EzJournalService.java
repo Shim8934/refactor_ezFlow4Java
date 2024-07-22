@@ -103,7 +103,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalAuthorVO> getAuthDeptList (int tenantId, String userId,String lang) throws Exception;
+	public List<JournalAuthorVO> getAuthDeptList (int tenantId, String userId,String lang, String userCompany) throws Exception;
 	
 	/**
 	 * 조직도에 쓸 부서 리스트 가져오기
