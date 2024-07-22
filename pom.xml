@@ -17,7 +17,7 @@
 	</licenses>
 
 	<properties>
-		<spring.maven.artifact.version>5.3.27</spring.maven.artifact.version>
+		<spring.maven.artifact.version>5.3.37</spring.maven.artifact.version>
 		<org.egovframe.rte.version>4.2.0</org.egovframe.rte.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webappLib>${basedir}/src/main/webapp/WEB-INF/lib</webappLib>
@@ -531,14 +531,6 @@
 			<version>1.2.3</version>
 		</dependency>
 		
-		
-		<!-- https://mvnrepository.com/artifact/org.ehcache/jcache -->
-		<dependency>
-		    <groupId>org.ehcache</groupId>
-		    <artifactId>jcache</artifactId>
-		    <version>1.0.1</version>
-		</dependency>
-
 		<!-- google api -->
 		<dependency>
 			<groupId>com.google.api-client</groupId>
