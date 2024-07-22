@@ -250,12 +250,13 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalAuthorVO> getAuthDeptList(int tenantId, String userId, String lang) throws Exception {
+	public List<JournalAuthorVO> getAuthDeptList(int tenantId, String userId, String lang, String userCompany) throws Exception {
 		logger.debug("getAuthDeptList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
+		param.put("userCompany", userCompany);
 		param.put("lang", lang);
 		List<JournalAuthorVO> deptList = ezJournalDAO.getAuthDeptList(param);
 		for(int i=0; i < deptList.size(); i++) {
