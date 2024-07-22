@@ -1548,14 +1548,14 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("insertStemConfig started");
 		
 		String CODE = doc.getElementsByTagName("CODE").item(0).getTextContent();
-		String CODENAME = doc.getElementsByTagName("CODENAME").item(0).getTextContent();
+		String CODEVALUE = doc.getElementsByTagName("CODEVALUE").item(0).getTextContent();
 		String DESCRIPTION = doc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String typeCode = doc.getElementsByTagName("TYPECODE").item(0).getTextContent();
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("CODE", CODE);
-		map.put("CODENAME", CODENAME);
+		map.put("CODEVALUE", CODEVALUE);
 		map.put("DESCRIPTION", DESCRIPTION);
 		map.put("WRITERID", WRITERID);
 		map.put("WRITERNAME", WRITERNAME);
@@ -1579,7 +1579,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("updateStemConfig started");
 		
 		String CODE = doc.getElementsByTagName("CODE").item(0).getTextContent();
-		String CODENAME = doc.getElementsByTagName("CODENAME").item(0).getTextContent();
+		String CODEVALUE = doc.getElementsByTagName("CODEVALUE").item(0).getTextContent();
 		String DESCRIPTION = doc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String typeCode = doc.getElementsByTagName("TYPECODE").item(0).getTextContent();
@@ -1587,7 +1587,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("CODE", CODE);
-		map.put("CODENAME", CODENAME);
+		map.put("CODEVALUE", CODEVALUE);
 		map.put("DESCRIPTION", DESCRIPTION);
 		map.put("WRITERID", WRITERID);
 		map.put("WRITERNAME", WRITERNAME);

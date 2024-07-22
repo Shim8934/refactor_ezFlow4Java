@@ -1498,7 +1498,7 @@
 			AND
 				(CODE LIKE '%' || #searchValue# || '%'
 			OR
-				CODENAME LIKE '%' || #searchValue# || '%'
+				CODEVALUE LIKE '%' || #searchValue# || '%'
 			OR
 				DESCRIPTION LIKE '%' || #searchValue# || '%')
 			]]>
@@ -1527,7 +1527,7 @@
 			AND
 				(CODE LIKE '%' || #searchValue# || '%'
 			OR
-				CODENAME LIKE '%' || #searchValue# || '%'
+				CODEVALUE LIKE '%' || #searchValue# || '%'
 			OR
 				DESCRIPTION LIKE '%' || #searchValue# || '%')
 			]]>
@@ -1549,7 +1549,7 @@
 			FROM (
 				SELECT
 					A.CODE,
-					A.CODENAME,
+					A.CODEVALUE,
 					A.DESCRIPTION,
 					A.WRITERID,
 					A.WRITERNAME,
@@ -1579,7 +1579,7 @@
 				AND
 					(A.CODE LIKE '%' || #searchValue# || '%'
 				OR
-					A.CODENAME LIKE '%' || #searchValue# || '%'
+					A.CODEVALUE LIKE '%' || #searchValue# || '%'
 				OR
 					A.DESCRIPTION LIKE '%' || #searchValue# || '%')
 				]]>
@@ -1610,7 +1610,7 @@
 			FROM (
 				SELECT
 					A.CODE,
-					A.CODENAME,
+					A.CODEVALUE,
 					A.DESCRIPTION,
 					A.WRITERID,
 					A.WRITERNAME,
@@ -1640,7 +1640,7 @@
 				AND
 					(A.CODE LIKE '%'||#searchValue#||'%'
 				OR
-					A.CODENAME LIKE '%'||#searchValue#||'%'
+					A.CODEVALUE LIKE '%'||#searchValue#||'%'
 				OR
 					A.DESCRIPTION LIKE '%'||#searchValue#||'%')
 				]]>
@@ -1666,7 +1666,7 @@
 		<![CDATA[
 			SELECT
 				A.CODE,
-				A.CODENAME,
+				A.CODEVALUE,
 				A.DESCRIPTION, 
 				A.WRITERID,
 				A.WRITERNAME,
@@ -1715,8 +1715,8 @@
 	<insert id="EzSystemAdminDAO.insertStemConfig" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO 
-				TBL_SYSTEMCONFIG (CODE, CODENAME, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
-			VALUES(#CODE#, #CODENAME#, #DESCRIPTION#, #WRITERID#, #WRITERNAME#, #WRITEDATE#, #v_TENANT_ID#, #companyID#, #typeCode#) 
+				TBL_SYSTEMCONFIG (CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
+			VALUES(#CODE#, #CODEVALUE#, #DESCRIPTION#, #WRITERID#, #WRITERNAME#, #WRITEDATE#, #v_TENANT_ID#, #companyID#, #typeCode#) 
 		]]>
 	</insert>
 	
@@ -1725,7 +1725,7 @@
 			UPDATE 
 				TBL_SYSTEMCONFIG 
 			SET 
-				CODENAME = #CODENAME#,
+				CODEVALUE = #CODEVALUE#,
 				DESCRIPTION = #DESCRIPTION#, 
 				WRITERID = #WRITERID#,
 				WRITERNAME = #WRITERNAME#,

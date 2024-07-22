@@ -2358,4 +2358,68 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("resetMobileUser failed.");
 		}
 	}
+
+	public void createTblSystemConfig() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblSystemConfig");
+		} catch (Exception e) {
+			logger.debug("TBL_SYSTEMCONFIG table doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblSystemConfig");
+		}		
+	}
+
+	public void createTblSystemConfigType() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblSystemConfigType");
+		} catch (Exception e) {
+			logger.debug("TBL_SYSTEMCONFIG_TYPE table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblSystemConfigType");
+		}		
+	}
+
+	public void addConnectionIDtoTblPortalPortletComp() throws Exception {
+		try {
+			select("EzCommonDAO.checkConnectionId");
+		} catch (Exception e) {
+			logger.debug("TBL_PORTAL_PORTLET_COMP table doesn't have connection_id column. altering table...");
+			update("EzCommonDAO.createConnectionIdOnTblPortalPortletComp");
+		}
+	}
+
+	public String checkConnectionMenu() throws Exception {
+		return (String) select("EzCommonDAO.checkConnectionMenu");
+	}
+
+	public void insertConnectionMenu() throws Exception {
+		try {
+			insert("EzCommonDAO.insertConnectionMenu");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}		
+	}
+
+	public void insertConnectMenuInfo(Map<String, Object> map) throws Exception {
+		try {
+			insert("EzCommonDAO.insertConnectionMenuComp", map);
+			insert("EzCommonDAO.insertConnectionMenuAuth", map);
+			insert("EzCommonDAO.insertConnectionMenuName", map);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	public void insertStandardSystemConfigData(Map<String, Object> map) {
+		int totalConfigCnt = (Integer) select("EzCommonDAO.selectSystemConfigTotalCnt", map);
+		if (totalConfigCnt <= 0) {
+			int portletSystemConfigCnt = (Integer) select("EzCommonDAO.chkPortletSystemConfigType", map);
+			
+			if (portletSystemConfigCnt <= 0) {
+				insert("EzCommonDAO.insertPortletSystemConfigType", map);
+			}
+			
+			insert("EzCommonDAO.insertStandardSystemConfigData", map);
+		}
+		
+	}
 }

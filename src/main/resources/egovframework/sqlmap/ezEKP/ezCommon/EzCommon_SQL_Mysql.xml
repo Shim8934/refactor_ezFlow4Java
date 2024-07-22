@@ -4702,4 +4702,197 @@
 		]]>	
 	</update>
 	
+	<select id="EzCommonDAO.chkTblSystemConfig" resultClass="String">
+        SELECT
+        	CODE
+        FROM
+        	TBL_SYSTEMCONFIG
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblSystemConfig">
+	    CREATE TABLE `TBL_SYSTEMCONFIG` (
+		  `CODE` varchar(50) NOT NULL,
+		  `CODEVALUE` varchar(8000) NOT NULL,
+		  `DESCRIPTION` varchar(1000) DEFAULT NULL,
+		  `WRITERID` varchar(50) DEFAULT NULL,
+		  `WRITERNAME` varchar(100) DEFAULT NULL,
+		  `WRITEDATE` datetime DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANY_ID` varchar(80) NOT NULL,
+		  `TYPECODE` varchar(80) DEFAULT NULL,
+		  PRIMARY KEY (`CODE`,`TENANT_ID`,`COMPANY_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblSystemConfigType" resultClass="String">
+        SELECT
+        	TYPECODE
+        FROM
+        	TBL_SYSTEMCONFIG_TYPE
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblSystemConfigType">
+	   CREATE TABLE `TBL_SYSTEMCONFIG_TYPE` (
+		  `TYPECODE` varchar(50) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANY_ID` varchar(80) NOT NULL,
+		  `TYPENAME` varchar(1000) DEFAULT NULL,
+		  `TYPENAME2` varchar(1000) DEFAULT NULL,
+		  `DESCRIPTION` varchar(3000) DEFAULT NULL,
+		  `WRITERID` varchar(50) DEFAULT NULL,
+		  `WRITERNAME` varchar(100) DEFAULT NULL,
+		  `WRITERNAME2` varchar(100) DEFAULT NULL,
+		  `WRITEDATE` datetime DEFAULT NULL,
+		  PRIMARY KEY (`TYPECODE`,`TENANT_ID`,`COMPANY_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+    <select id="EzCommonDAO.checkConnectionId" resultClass="String">
+		SELECT
+			CONNECTION_ID
+		FROM
+			TBL_PORTAL_PORTLET_COMP
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createConnectionIdOnTblPortalPortletComp">
+		ALTER TABLE
+			TBL_PORTAL_PORTLET_COMP
+		ADD
+			COLUMN connection_id VARCHAR(200) NULL DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkConnectionMenu" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			menu_id
+		FROM
+			tbl_portal_menu
+		WHERE
+			menu_url = '/connectionMenu.do'
+		AND
+			menu_type = 'G'
+		AND
+			menu_id = '-1'
+		LIMIT 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertConnectionMenu" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU 
+			(menu_id, menu_url, menu_type, icon_url, default_order)
+		VALUES
+			(-1, '/connectionMenu.do', 'G', 'icon_topmenu icon_nav_connection', -1)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertConnectionMenuComp" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_COMP 
+			(company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+		VALUES
+			(#companyId#, #tenantId#, -1, 1, 1, -1)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertConnectionMenuAuth" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_AUTH
+			(menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted)
+		VALUES
+			(-1, #companyId#, #tenantId#, #companyId#, 1, 0, 0, 'Y')
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertConnectionMenuName" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_NAME 
+			(menu_id, menu_lang, company_id, tenant_id, menu_name)
+		VALUES
+	    	(-1, 1, #companyId#, #tenantId#, '연계'),
+	    	(-1, 2, #companyId#, #tenantId#, 'Connection'),
+	    	(-1, 3, #companyId#, #tenantId#, '連携'),
+	    	(-1, 4, #companyId#, #tenantId#, '关联'),
+	    	(-1, 5, #companyId#, #tenantId#, 'Connection'),
+	    	(-1, 6, #companyId#, #tenantId#, 'Connection')
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.selectSystemConfigTotalCnt" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_SYSTEMCONFIG
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			COMPANY_ID = #companyId#
+	</select>
+	
+	<select id="EzCommonDAO.chkPortletSystemConfigType" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_SYSTEMCONFIG_TYPE
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TYPECODE = 'PORTLET'
+	</select>
+	
+	<insert id="EzCommonDAO.insertPortletSystemConfigType" parameterClass="Map">
+		INSERT INTO TBL_SYSTEMCONFIG_TYPE 
+			(TYPECODE, TENANT_ID, COMPANY_ID, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE)
+		VALUES
+	    	('PORTLET', #tenantId#, #companyId#, '포틀릿', 'Portlet', '(연계)포틀릿 컨피그', #companyId#,
+	    	(SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#), (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = #companyId#), #nowDate#)
+	</insert>
+	
+	<insert id="EzCommonDAO.insertStandardSystemConfigData" parameterClass="Map">
+	<![CDATA[
+INSERT INTO TBL_SYSTEMCONFIG 
+	(CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
+VALUES
+	('PORTLET_STANDARD',
+	'{
+		"portletType":"standard",\n
+		"viewType": "list",\n
+		"paging":"",\n
+		"linkUrl": "",\n
+		"mobileLinkUrl": "",\n
+		"connectType": "",\n
+		"restUrl": "",\n
+		"httpMethodType":"",\n
+		"dataParam" : "{    }",\n
+		"dataParamType" : "",\n
+		"dataResultType" : "",\n
+		"dataResultFormat" : {\n
+			"rootPath" : "",\n 
+			"totalCnt" : "",\n
+			"dataInfo" : {\n
+				"title" : "",\n
+				"writer" : "",\n
+				"date" : "",\n
+				"linkUrl" : "",\n
+				"moblieLinkUrl" : ""\n
+			}\n
+		},\n
+		"dbType": "",\n
+		"dbIp": "",\n
+		"dbPort": "",\n
+		"dataBase": "",\n
+		"dbUser": "",\n
+		"dbPwd": "",\n
+		"dbQuery": "",\n
+		"driverClassName" : ""\n
+	}',
+	'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#), #nowDate#, #tenantId#, #companyId#, 'PORTLET'
+) ]]>
+	</insert>
+	
 </sqlMap>

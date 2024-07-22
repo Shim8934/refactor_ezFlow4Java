@@ -3913,7 +3913,7 @@ public class EzSystemAdminController {
             } else {
             	result.append("<DATA3>" + commonUtil.cleanValue(vo.getTypeName2()) + "</DATA3>");
             }
-            result.append("<DATA4>" + commonUtil.cleanValue(vo.getCodename()) + "</DATA4>");
+            result.append("<DATA4>" + commonUtil.cleanValue(vo.getCodeValue()) + "</DATA4>");
             result.append("<DATA5>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA5>");
             result.append("<DATA6>" + commonUtil.cleanValue(vo.getWriterid()) + "</DATA6>");
             result.append("<DATA7>" + commonUtil.cleanValue(vo.getWritername()) + "</DATA7>");
@@ -3930,7 +3930,7 @@ public class EzSystemAdminController {
             }
             result.append("</CELL>");
             result.append("<CELL>");
-            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCodename()) + "</VALUE>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCodeValue()) + "</VALUE>");
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE>" + commonUtil.cleanValue(vo.getDescription()) + "</VALUE>");
@@ -3999,7 +3999,7 @@ public class EzSystemAdminController {
         	result.append("<CELL>");
         	result.append("<VALUE>" + commonUtil.cleanValue(vo.getCode()) + "</VALUE>");
             result.append("<DATA1>" + commonUtil.cleanValue(vo.getCode()) + "</DATA1>");
-            result.append("<DATA2>" + commonUtil.cleanValue(vo.getCodename()) + "</DATA2>");
+            result.append("<DATA2>" + commonUtil.cleanValue(vo.getCodeValue()) + "</DATA2>");
             result.append("<DATA3>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA3>");
             result.append("<DATA4>" + commonUtil.cleanValue(vo.getWriterid()) + "</DATA4>");
             result.append("<DATA5>" + commonUtil.cleanValue(vo.getWritername()) + "</DATA5>");
@@ -4009,7 +4009,7 @@ public class EzSystemAdminController {
             result.append("<VALUE>" + commonUtil.cleanValue(vo.getCode()) + "</VALUE>");
             result.append("</CELL>");
             result.append("<CELL>");
-            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCodename()) + "</VALUE>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCodeValue()) + "</VALUE>");
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE>" + commonUtil.cleanValue(vo.getDescription()) + "</VALUE>");
@@ -4119,8 +4119,8 @@ public class EzSystemAdminController {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
-		String FLAG;
-		FLAG = doc.getElementsByTagName("FLAG").item(0).getTextContent();
+		String flag;
+		flag = doc.getElementsByTagName("FLAG").item(0).getTextContent();
 		// 관리자 권한 체크
 		if (userInfo == null) {
 			return "ERROR";
@@ -4128,9 +4128,9 @@ public class EzSystemAdminController {
 		
 		String result = "";
 		
-		if (FLAG.equals("add")) {
+		if (flag.equals("add")) {
 			result = ezSystemAdminService.insertStemConfig(doc, userInfo.getId(), userInfo.getDisplayName(), userInfo.getTenantId());
-		} else {
+		} else if (flag.equals("mod")){
 			// 수정
 			result = ezSystemAdminService.updateStemConfig(doc, userInfo.getId(), userInfo.getDisplayName(), userInfo.getTenantId());
 		}

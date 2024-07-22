@@ -6,6 +6,11 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
@@ -27,6 +34,7 @@ import com.google.gson.Gson;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
+import egovframework.ezEKP.ezNewPortal.vo.ConnectPortletDTO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
@@ -39,10 +47,19 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.ChineseCalendar;
@@ -80,6 +97,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -3633,5 +3651,298 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		logger.debug("updateTopMenuDisplayModeForCompany ended");
 	}
+	@Override
+	public SystemConfigVO getSystemConfig(int portletId, String companyId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("portletId", portletId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		
+		SystemConfigVO systemConfig = ezNewPortalDAO.getSystemConfig(map);
+		
+		return systemConfig;
+	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getConnectPortletData(ConnectPortletDTO connectPortletDto) throws Exception {
+		
+		JSONParser parser = new JSONParser();
+		JSONObject returnObj = new JSONObject();
+		JSONObject data = new JSONObject();
+		try {
+			String result = "";
+			JSONObject connectionData = (JSONObject) parser.parse(connectPortletDto.getSystemConfig().getCodeValue());
+			
+			if (connectionData.get("portletType") != null) {
+				data.put("portletType", connectionData.get("portletType").toString());
+			}
+			// 표준 방식으로 포틀릿 만듦.
+			if (connectionData.get("portletType") != null && connectionData.get("portletType").equals("standard")) {
+				// #userId#와 같이 지정된 값을 실제 값으로 매핑할 때 필요.
+				Map<String, Object> changeDataMap = new HashMap<String, Object>();
+				changeDataMap.put("userId", connectPortletDto.getUserId());
+				changeDataMap.put("deptId", connectPortletDto.getDeptId());
+				changeDataMap.put("startRow", connectPortletDto.getStartRow());
+				changeDataMap.put("listCnt", connectPortletDto.getListCnt());
+				changeDataMap.put("endRow", connectPortletDto.getEndRow());
+				changeDataMap.put("tenantId", connectPortletDto.getTenantId());
+				String viewType = null;
+				String linkUrl = null;
+				String mLinkUrl = null;
+				String dataResultType = null;
+				String connectType = null;
+				String dataResultFormat = null;
+				String paging = null;
+				if (connectionData.get("viewType") != null) {
+					viewType= connectionData.get("viewType").toString();
+				}
+				
+				if (connectionData.get("linkUrl") != null) {
+					linkUrl= changeDataValueForUrl(changeDataMap, connectionData.get("linkUrl").toString());
+				}
+				
+				if (connectionData.get("mLinkUrl") != null) {
+					mLinkUrl= changeDataValueForUrl(changeDataMap, connectionData.get("mLinkUrl").toString());
+				}
+				
+				if (connectionData.get("dataResultType") != null) {
+					dataResultType = connectionData.get("dataResultType").toString();
+				}
+				
+				if (connectionData.get("dataResultFormat") != null) {
+					dataResultFormat = connectionData.get("dataResultFormat").toString();
+				}
+				
+				if (connectionData.get("paging") != null) {
+					paging = connectionData.get("paging").toString();
+					if (paging.equals("limit")) {
+						changeDataMap.put("listCnt", 10); // 무한 페이징 처리가 안될 땐 리스트 10개 가져오기.
+					}
+				}
+				
+				data.put("viewType", viewType);
+				data.put("linkUrl", linkUrl);
+				data.put("mLinkUrl", mLinkUrl);
+				data.put("dataResultType", dataResultType);
+				data.put("dataResultFormat", dataResultFormat);
+				data.put("paging", paging);
+				
+				if (connectionData.get("connectType") != null) {
+					connectType = connectionData.get("connectType").toString();
+				}
+				
+				if (connectType.equalsIgnoreCase("rest")) {
+					String restUrl = changeDataValueForUrl(changeDataMap, connectionData.get("restUrl").toString());;
+					String httpMethodType = connectionData.get("httpMethodType").toString();
+					String dataParam = changeDataValue(changeDataMap, connectionData.get("dataParam").toString());
+					String dataParamType = connectionData.get("dataParamType").toString();
+					
+					result = getDataFromRestApi(restUrl, dataParam, dataParamType, connectPortletDto.getRequest(), httpMethodType);
+					data.put("portletDataStr", result);
+					
+				} else if (connectType.equalsIgnoreCase("db")) {
+					String dbType = connectionData.get("dbType").toString();
+					String dbIp = connectionData.get("dbIp").toString();
+					String dbPort = connectionData.get("dbPort").toString();
+					String dataBase = connectionData.get("dataBase").toString();
+					String dbUser = connectionData.get("dbUser").toString();
+					String dbPwd = connectionData.get("dbPwd").toString();
+					String dbQuery = connectionData.get("dbQuery").toString();
+					String preparedQuery = dbQuery.replaceAll("#(.*?)#", "?");
+					String driverClassName = connectionData.get("driverClassName").toString();
+					
+					ResultSet rs = null;
+					try (Connection connection = connDatabase(dbType, dbIp, dbPort, dataBase, driverClassName, dbUser, dbPwd);
+						PreparedStatement pstmt = connection.prepareStatement(preparedQuery)) {
+						// 데이터 추출
+						setDbParamData(changeDataMap, dbQuery, pstmt);
+						rs = pstmt.executeQuery();
+						
+						ResultSetMetaData metaData = rs.getMetaData();
+						int sizeOfColumn = metaData.getColumnCount();
+						
+						Map<String, Object> map;
+						String column;
+						JSONArray dataList = new JSONArray();
+						
+						while (rs.next()) {
+							map = new HashMap<String, Object>();
+							for (int indexOfcolumn = 0; indexOfcolumn < sizeOfColumn; indexOfcolumn++) {
+								column = metaData.getColumnLabel(indexOfcolumn + 1);
+								map.put(column, commonUtil.htmlUnescape(rs.getString(column)));
+							}
+							dataList.add(map);
+						}
+						
+						result = dataList.toString();
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					} finally {
+						rs.close();
+					} 
+					
+				}
+				
+				data.put("portletDataStr", result);
+			}
+			
+			returnObj.put("status", "ok");
+			returnObj.put("data", data);
+			returnObj.put("code", 0);
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			returnObj.put("status", "error");
+			returnObj.put("data", null);
+			returnObj.put("code", 1);
+		}
+		
+		return returnObj;
+	}
+	
+	public Connection connDatabase (String type, String ip, String port, String dataBase, String driverClassName, String userId, String userPw) throws Exception {
+		String url = "";
+		if ( type.equalsIgnoreCase("mssql") ) {
+			//url = "jdbc:sqlserver://" + ip + ":" + port + ";DatabaseName=" + database + ";trustServerCertificate=true;encrypt=true";
+			url = String.format("jdbc:sqlserver://%s:%s;DatabaseName=%s;trustServerCertificate=true;encrypt=true", ip, port, dataBase);
+		} else if ( type.equalsIgnoreCase("oracle") ) {
+			//url = "jdbc:oracle:thin:@" + ip + ":" + port + "/" + database;
+			url = String.format("jdbc:oracle:thin:@%s:%s/%s", ip, port, dataBase);
+		} else {
+			//url = "jdbc:mariadb://" + ip + ":" + port + "/" + database;
+			url = String.format("jdbc:mariadb://%s:%s/%s", ip, port, dataBase);
+		}
+		String schema = userId;
+		String pwd = userPw;
+		
+		Connection conn = null;
+		
+		Class.forName(driverClassName);
+		
+		conn = DriverManager.getConnection(url, schema, pwd);		
+		
+		return conn;
+	}
+	
+	public void setDbParamData(Map<String, Object> changeDataMap, String dbQuery, PreparedStatement pstmt) throws Exception {
+		String regex = "#(.*?)#";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(dbQuery);
+		
+		int idx = 1;
+		while (matcher.find()) {
+		    String matchStr = matcher.group(1);
+		    String[] paramInfo = matchStr.split("::");
+		    switch (paramInfo[1]) {
+		    case "string":
+		    	pstmt.setString(idx, changeDataMap.get(paramInfo[0]).toString());
+		    	break;
+		    case "int":
+		    	pstmt.setInt(idx, (Integer) changeDataMap.get(paramInfo[0]));
+		    	break;
+		    case "date":
+		    	pstmt.setDate(idx, (java.sql.Date) changeDataMap.get(paramInfo[0]));
+		    	break;
+		    }
+		    idx++;
+		}
+	}
+	
+	public String changeDataValue(Map<String, Object> changeDataMap, String targetData) throws Exception {
+		String result = targetData;
+		for (String key : changeDataMap.keySet()) {
+			String value = changeDataMap.get(key).toString();
+			result = result.replaceAll("#" + key + "#", value);
+		}
+		
+		return result;
+	}
+	
+	public String changeDataValueForUrl(Map<String, Object> changeDataMap, String targetData) throws Exception {
+		String result = targetData;
+		for (String key : changeDataMap.keySet()) {
+			String value = changeDataMap.get(key).toString();
+			result = result.replaceAll("#" + key + "#", encodeURIComponent(value));
+		}
+		
+		return result;
+	}
+	
+	public String getDataFromRestApi(String restUrl, String paramString, String paramType, HttpServletRequest request, String methodType) throws Exception {
+		return getDataFromRestApi(restUrl, paramString, paramType, request, methodType, -1, -1);
+	}
+	
+	public String getDataFromRestApi(String restUrl, String paramString, String paramType, HttpServletRequest request, String methodType, int connectionTimeout, int readTimeout) throws Exception {
+		logger.debug("getJsonFromRestApi started.");
+		String url = restUrl;
+		
+		HttpHeaders headers = new HttpHeaders();
+		
+		if (paramType.equalsIgnoreCase("json")) {
+			headers.setContentType(MediaType.APPLICATION_JSON);
+		} else if (paramType.equalsIgnoreCase("xml")) {
+			headers.setContentType(MediaType.APPLICATION_XML);
+		}
+		
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<String> entity = new HttpEntity<>(paramString, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		RestTemplate rest = null;
+		
+		if (methodType.equals("patch")) {
+			ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			rest = new RestTemplate(httpRequestFactory);
+		} else if (connectionTimeout > 0 || readTimeout > 0) {
+			HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			httpRequestFactory.setConnectTimeout(connectionTimeout);
+			httpRequestFactory.setReadTimeout(readTimeout);
+			rest = new RestTemplate(httpRequestFactory);
+		} else {
+			rest = new RestTemplate();
+		}
+		
+		String result = "";
+		HttpMethod httpMethod = null;
+		methodType = methodType.toLowerCase();
+		switch (methodType) {
+		case "get": // url로 파람 전송
+			httpMethod = HttpMethod.GET;
+			break;
+		case "put":
+			httpMethod = HttpMethod.PUT;
+			break;
+		case "post":
+			httpMethod = HttpMethod.POST;
+			break;
+		case "delete":
+			httpMethod = HttpMethod.DELETE;
+			break;
+		case "patch":
+			httpMethod = HttpMethod.PATCH;
+			break;
+		}
+		result = rest.exchange(builder.build().encode().toUri(), httpMethod, entity, String.class).getBody();
+		
+		logger.debug("getJsonFromRestApi ended.");
+		return result;
+	}
+	
+	private String encodeURIComponent(String s) throws Exception {
+	    String result = null;
+    	result = URLEncoder.encode(s, "UTF-8")
+                         .replaceAll("\\+", "%20")
+                         .replaceAll("\\%21", "!")
+                         .replaceAll("\\%27", "'")
+                         .replaceAll("\\%28", "(")
+                         .replaceAll("\\%29", ")")
+                         .replaceAll("\\%7E", "~");
+
+	    return result;
+	}
 }

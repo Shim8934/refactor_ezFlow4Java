@@ -60,7 +60,7 @@
 				if (flag == "add") {
 					code = document.getElementById('prefixCode').value + document.getElementById('suffixCode').value 
 				} else {
-					code = document.getElementById('code');
+					code = document.getElementById('code').value;
 				}
 				
 				var typeSelectElem = document.getElementById('typeSelect');
@@ -79,7 +79,7 @@
 			            return;
 			        }
 					
-					if (suffixCodeElem.value.length + document.getElementById('prefixCode').value.length > 15) {
+					if (suffixCodeElem.value.length + document.getElementById('prefixCode').value.length > 20) {
 						alert("<spring:message code = 'ezSystem.config.hth03'/>");
 						suffixCodeElem.focus();
 						return;
@@ -111,7 +111,7 @@
 					
 				}
 
-		        if (get_length(document.getElementById("codename").value) > 8000) {
+		        if (get_length(document.getElementById("codevalue").value) > 8000) {
 		            alert("<spring:message code = 'ezSystem.w014'/>");
 		            return;
 		        }
@@ -122,7 +122,7 @@
 				createNodeInsert(xmlDom, objRoot, "DATA"); 
 				createNodeAndInsertText(xmlDom, objNode, "FLAG", flag);
 				createNodeAndInsertText(xmlDom, objNode, "CODE", code);
-				createNodeAndInsertCDataText(xmlDom, objNode, "CODENAME", document.getElementById("codename").value);
+				createNodeAndInsertCDataText(xmlDom, objNode, "CODEVALUE", document.getElementById("codevalue").value);
 				createNodeAndInsertCDataText(xmlDom, objNode, "DESCRIPTION", document.getElementById("description").value);
 				createNodeAndInsertCDataText(xmlDom, objNode, "COMPANYID", companyID);
 				createNodeAndInsertCDataText(xmlDom, objNode, "TYPECODE", typeCode);
@@ -220,23 +220,7 @@
 		<table class="content" style="margin-top:3px">
 			<tr> 
 		    	<th rowspan="3"><spring:message code = 'ezSystem.w009' /></th>
-		    	<th><spring:message code = 'ezSystem.w010' /></th> 
-		  		<td>
-		  		<c:choose>
-					<c:when test="${flag eq 'add' }">
-						<input type="text" id="prefixCode" disabled="disabled" style="width: 30%; background-color:#d3d3d3;"  value=""><input type="text" id="suffixCode" style="width: 70%" value="">
-					</c:when>
-					<c:when test="${flag eq 'view'}">
-						<input type="text" id="code" style="width: 100%;" value="<c:out value = '${configVO.code}' />" readonly="true">
-					</c:when>
-					<c:otherwise>
-						<input type="text" id="code" style="width: 100%; background-color:#d3d3d3;" value="<c:out value = '${configVO.code}' />" readonly="true">
-					</c:otherwise>
-				</c:choose>
-		  		</td>
-		  	</tr>
-		  	<tr>
-		  		<th><spring:message code = 'ezSystem.config.hth07' /></th>
+		    	<th><spring:message code = 'ezSystem.config.hth07' /></th>
 		  		<td>
 	  				<select id = "typeSelect" onchange="makePrefixCode()">
 	  					<c:forEach var="configType" items="${configTypeList}">
@@ -252,9 +236,25 @@
 	  				</select>
 		  		</td>
 		  	</tr>
+		  	<tr>
+		  		<th><spring:message code = 'ezSystem.w010' /></th> 
+		  		<td>
+		  		<c:choose>
+					<c:when test="${flag eq 'add' }">
+						<input type="text" id="prefixCode" disabled="disabled" style="width: 30%; background-color:#d3d3d3;"  value=""><input type="text" id="suffixCode" style="width: 70%" value="">
+					</c:when>
+					<c:when test="${flag eq 'view'}">
+						<input type="text" id="code" style="width: 100%;" value="<c:out value = '${configVO.code}' />" readonly="true">
+					</c:when>
+					<c:otherwise>
+						<input type="text" id="code" style="width: 100%; background-color:#d3d3d3;" value="<c:out value = '${configVO.code}' />" readonly="true">
+					</c:otherwise>
+				</c:choose>
+		  		</td>
+		  	</tr>
 		  	<tr> 
 		    	<th>VALUE</th>
-		  		<td><textarea <c:if test="${flag eq 'view'}">disabled = "disabled"</c:if> style="height:280px;WIDTH:98%;margin:10 10 10 10;" id="codename"><c:out value = '${configVO.codename}' /></textarea></td>
+		  		<td><textarea <c:if test="${flag eq 'view'}">disabled = "disabled"</c:if> style="height:280px;WIDTH:98%;margin:10 10 10 10;" id="codevalue"><c:out value = '${configVO.codeValue}' /></textarea></td>
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code = 'ezSystem.w011' /></th> 
@@ -262,7 +262,7 @@
 		  	</tr>
 		</table> 
 		<div class="btnpositionNew">
-			<c:if test="${flag ne 'view'}">
+			<c:if test="${flag ne 'view'}"> 
 			    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezSystem.kbh09' /></span></a>
 			    &nbsp;
 		    </c:if>

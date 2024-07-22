@@ -3,8 +3,8 @@ package egovframework.ezEKP.ezSystem.vo;
 public class SystemConfigVO {
 	/** CODE */
 	private String code;
-	/** CODENAME */
-	private String codename;
+	/** CODEVALUE */
+	private String codeValue;
 	/** DESCRIPTION */
 	private String description;
 	/** WRITERID */
@@ -20,6 +20,10 @@ public class SystemConfigVO {
 	
 	private String typeName2;
 	
+	private int tenantId;
+	
+	private String companyId;
+	
 	public String getCode() {
 		return code;
 	}
@@ -29,12 +33,12 @@ public class SystemConfigVO {
 	}
 
 	
-	public String getCodename() {
-		return codename;
+	public String getCodeValue() {
+		return codeValue;
 	}
 
-	public void setCodename(String codename) {
-		this.codename = codename;
+	public void setCodeValue(String codeValue) {
+		this.codeValue = codeValue;
 	}
 
 	
@@ -93,6 +97,22 @@ public class SystemConfigVO {
 
 	public void setTypeName2(String typeName2) {
 		this.typeName2 = typeName2;
+	}
+
+	public int getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(int tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 	
 }
