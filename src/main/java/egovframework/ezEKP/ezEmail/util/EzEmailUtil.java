@@ -1121,7 +1121,16 @@ public class EzEmailUtil {
 		// Content-Type: text/html; charset="ks_c_5601-1987"
 		// Content-ID: <67617439CE1CE54088B6FC9F88EE8937@mobis.co.kr>
 		// Content-Transfer-Encoding: quoted-printable
-		if (!part.isMimeType("text/html") && !part.isMimeType("text/plain") && ((MimePart)part).getContentID() != null) {
+		// 
+		// dhlee : 20240722
+		//   text/html 본문이 있으면서 첨부로 text/html 파트가 있고 해당 파트에 Content-ID가 있는 경우가 발견되어
+		//   이미 text/html 본문이 발견된 경우에는 text/html 혹은 text/plain 파트라도 Content-ID가 있는 경우
+		//   해당 Content-ID가 본문에서 참조되는지 여부를 살펴보도록 수정함
+		//   예)
+		//      Content-Type: text/html; name="NTS_eTaxInvoice.html"
+		//      Content-Description: NTS_eTaxInvoice.html
+		//      Content-Disposition: attachment; filename="NTS_eTaxInvoice.html"; size=93696;
+		if ((!part.isMimeType("text/html") && !part.isMimeType("text/plain") || extraMap.get("htmlBody") != null) && ((MimePart)part).getContentID() != null) {
 			String htmlBodyContent = (String)extraMap.get("htmlBody");
 			String contentID = ((MimePart) part).getContentID();
 			
