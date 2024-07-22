@@ -374,8 +374,14 @@ function getDeptSymbol(DeptID, DeptName) {
     var xmlhttp = createXMLHttpRequest();
     var xmlRtn = createXmlDom();
     var objNode;
+
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+        DeptID = upperDeptCode;
+        DeptName = upperDeptName;
+    }
+    
     createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "CN", (upperDeptCode === "" ? DeptID : upperDeptCode));
+    createNodeAndInsertText(xmlpara, objNode, "CN", DeptID);
     createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute6");
     createNodeAndInsertText(xmlpara, objNode, "CATE", "group");
     xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx", false);
@@ -384,7 +390,7 @@ function getDeptSymbol(DeptID, DeptName) {
     var dataNodes = GetChildNodes(loadXMLString(xmlhttp.responseText).documentElement);
     var RtnVal = getNodeText(dataNodes[0]);
     if (RtnVal == "") {
-        return upperDeptName === "" ? DeptName : upperDeptName;
+        return DeptName;
     }
     else {
         return RtnVal;

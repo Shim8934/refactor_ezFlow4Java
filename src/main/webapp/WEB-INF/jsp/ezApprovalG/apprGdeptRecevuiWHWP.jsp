@@ -240,7 +240,7 @@
 	
 			function window_onload() {
 			    IsSkipDrafter = "TRUE";
-				DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], arr_userinfo[5]) : getDeptSymbol(upperDeptCode, upperDeptName);
+				DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
 			    SetBtnStateTrue();
 			    getReceiveDocInfo();
 			    
@@ -592,9 +592,9 @@
 	            }
 				
 	            if (LastSignSN == 1 || DraftLastFlag) {
-	                rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
+					rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 	            } else {
-	                rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
+					rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 	            }
 	            
 	            if (!rtnval) {

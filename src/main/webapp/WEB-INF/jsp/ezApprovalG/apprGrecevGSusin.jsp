@@ -727,7 +727,7 @@
 		    function saveSuSinDocInfo() {
 		        var rtnval = true;
 		        if (approvalFlag == "G") {
-		        	rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
+		        	rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 		        }
 		        if (!rtnval) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t2101'/>";
@@ -1555,6 +1555,11 @@
 		    function getDocRecevState() {
 		        try {
 					var result = "FALSE";
+
+					var pDeptID = arr_userinfo[4];
+					if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+						pDeptID = upperDeptCode;
+					}
 		        	
 		        	$.ajax({
 		        		type : "POST",
@@ -1563,7 +1568,7 @@
 		        		url : "/ezApprovalG/getDocState.do",
 		        		data : {
 		        			docID : pDocID,
-		        			deptID: upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode
+		        			deptID: pDeptID
 		        		},
 		        		success: function(text){
 		        			result = text;

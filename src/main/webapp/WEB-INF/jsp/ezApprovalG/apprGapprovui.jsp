@@ -440,7 +440,7 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
-					DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5])) : getDeptSymbol(upperDeptCode, upperDeptName);
+					DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		            
 			    	if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();

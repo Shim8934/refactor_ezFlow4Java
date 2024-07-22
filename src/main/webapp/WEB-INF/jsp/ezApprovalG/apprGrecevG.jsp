@@ -563,7 +563,7 @@
 		
 		        if (cabinetID != "") {
 		        	LastSignSN = "1";
-		        	getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
+		        	getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 		        	setSusinUpdataDocID();
 		
 		         	$.ajax({
@@ -1174,7 +1174,7 @@
 		    function saveSuSinDocInfo() {
 		        var rtnval = true;
 		        if (approvalFlag == "G") {
-		        	rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
+		        	rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 		        }
 		        if (!rtnval) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t2101'/>";

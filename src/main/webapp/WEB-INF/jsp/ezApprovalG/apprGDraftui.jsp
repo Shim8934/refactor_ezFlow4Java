@@ -1690,7 +1690,7 @@
 		            if (flag == false) {
 		                flag = true;
 		                IsSkipDrafter = "FALSE";
-		                DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5])) : getDeptSymbol(upperDeptCode, upperDeptName);
+		                DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		                drafterDeptid = arr_userinfo[4];
 		                getDraftInfo();
 		                if (isUsed == "reuse") {

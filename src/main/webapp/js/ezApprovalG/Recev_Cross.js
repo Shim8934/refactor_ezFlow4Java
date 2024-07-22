@@ -1114,6 +1114,11 @@ function getDraftUserInfo()
 function getDeptSymbol(DeptID, DeptName)
 {
 	var result = "";
+
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+        DeptID = upperDeptCode;
+        DeptName = upperDeptName;
+    }
 	
 	$.ajax({
 		type : "POST",
@@ -1121,7 +1126,7 @@ function getDeptSymbol(DeptID, DeptName)
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
-            cn : upperDeptCode === "" ? DeptID : upperDeptCode,
+            cn : DeptID,
 			prop : "extensionAttribute6",
 			cate  : "group"
 		},
@@ -1135,7 +1140,7 @@ function getDeptSymbol(DeptID, DeptName)
     var RtnVal = getNodeText(dataNodes[0]);
 
     if (RtnVal == "") {
-        return upperDeptName === "" ? DeptName : upperDeptName;
+        return DeptName;
     }
     else {
         return RtnVal;

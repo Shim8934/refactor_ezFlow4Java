@@ -192,13 +192,14 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 	var fields;
 	var docnumber;
 	var SN = "";
-
-	pDeptID = upperDeptCode === "" ? pDeptID : upperDeptCode;
-
 	name = pPrefix + "docnumber";
 	
 	try {
 		if (approvalFlag == "G") {
+			if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+				pDeptID = upperDeptCode;
+			}
+			
 			if (pDraftFlag == "SUSIN" && useReceiveDocNo == "NO") {
 				name = "receiptnumber";
 				
@@ -398,6 +399,10 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
         }
 
     	var result = "";
+
+		if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+			pDeptID = upperDeptCode;
+		}
     	
     	$.ajax({
     		type : "POST",
@@ -406,7 +411,7 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     		url : "/ezApprovalG/rollbackCabinetSN.do",
     		data : {
     			docID : pDocID,
-    			deptID : upperDeptCode === "" ? pDeptID : upperDeptCode,
+    			deptID : pDeptID,
     			docNumber : docnumber
     		},
     		success: function(xml){

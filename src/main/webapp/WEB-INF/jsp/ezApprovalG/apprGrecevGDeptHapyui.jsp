@@ -368,7 +368,7 @@
 		        if (flag == false) {
 		            flag = true;
 		            IsSkipDrafter = "TRUE";
-					DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], arr_userinfo[5]) : getDeptSymbol(upperDeptCode, upperDeptName); // 부서심볼
+					DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
 		            drafterDeptid = arr_userinfo[4];
 		            SetBtnStateTrue();
 		            getReceiveDocInfo();
@@ -623,9 +623,9 @@
 		        }
 		        
 		        if (LastSignSN == 1 || DraftLastFlag)
-		            rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
+		            rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 		        else
-		            rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
+		            rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 		
 		        if (!rtnval) {
 		            var pAlertContent = "[<spring:message code='ezApprovalG.t1493'/>";

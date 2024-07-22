@@ -1286,6 +1286,11 @@ function SetAutoPropertyValue() {
 	SignCount = 0;
 	gamsaCount = 0;
 
+    var pDeptName = arr_userinfo[5];
+    if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+        pDeptName = upperDeptName;
+    }
+
 	var Fields = message.GetFieldList(0, 1);
 	
 	for (i = 0 ; i < Fields.length ; i ++) {
@@ -1351,7 +1356,7 @@ function SetAutoPropertyValue() {
 					message.PutFieldText(Fields[i], getNodeText(objNodes.item(4)));
 					break;													
 				case "department" :		  	
-					message.PutFieldText(Fields[i], upperDeptName === "" ? arr_userinfo[5] : upperDeptName);
+					message.PutFieldText(Fields[i], pDeptName);
 					break;												
 				case "parantdept" :       
 					message.PutFieldText(Fields[i], getNodeText(objNodes.item(3)));

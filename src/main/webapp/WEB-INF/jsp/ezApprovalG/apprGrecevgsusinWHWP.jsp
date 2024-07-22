@@ -730,7 +730,7 @@
 		     	pOrgHtml = html;
 	          	var rtnval = true;
 	          	if (approvalFlag == "G")
-                    rtnval = getRecvDocNumber(upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode, docNumZeroCnt);
+                    rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
                 if (!rtnval) {
                     UndoSignInfo(rtnSignInfo);
                     

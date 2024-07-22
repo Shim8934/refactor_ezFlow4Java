@@ -4481,6 +4481,12 @@ function getDeptSymbol(DeptID, DeptName) {
 			}        			
 		});
 	} else {
+        
+        if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+            DeptID = upperDeptCode;
+            DeptName = upperDeptName;
+        }
+        
 		$.ajax({
 			type : "POST",
 			dataType : "text",

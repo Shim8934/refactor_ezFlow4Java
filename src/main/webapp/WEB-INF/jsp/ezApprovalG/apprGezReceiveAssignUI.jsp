@@ -155,7 +155,7 @@
 	                var pAlertContent = "<spring:message code='ezApprovalG.t425'/>";
 	                OpenAlertUI(pAlertContent);
 	            }
-	            else {
+	            else { // G버전
 	                if (trim_Cross(pCurSelRow[0].getAttribute("DATA3")) == InitTreeVal 
 							|| checkIdInList(trim_Cross(pCurSelRow[0].getAttribute("DATA3")))) { // 상위부서문서함 사용중인 부서인지 확인
 	                    var RtnVal = setReceiveAssign(pCurSelRow);

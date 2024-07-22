@@ -11,9 +11,6 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt, currIdx) {
 	var docnumber;
 	var SN = "";
 	//var currIfrm = document.getElementById("ifrm" + currIdx); // 각 안별 웹한글기안기 iframe을 사용 (해당 함수는 자식창이 아닌 부모창에서 호출된다.)
-
-	pDeptID = upperDeptCode === "" ? pDeptID : upperDeptCode;
-
 	name = pPrefix + "docnumber";
 	
 	try {
@@ -23,6 +20,9 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt, currIdx) {
 				name = "receiptnumber";
 			}
 			*/
+			if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+				pDeptID = upperDeptCode;
+			}
 			
 			/* 2022-08-19 홍승비 - 접수문서가 아닌 경우, 문서번호 필드가 없으면 문서번호 부여 로직이 스킵되어 결재가 정상 진행되는 분기 오류 수정 (파일 백지화 현상과도 관련있음) */
 			if (!FieldExist(name)) {
@@ -201,6 +201,10 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID, currIdx) {
         }
 
     	var result = "";
+
+		if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+			pDeptID = upperDeptCode;
+		}
     	
     	$.ajax({
     		type : "POST",
@@ -209,7 +213,7 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID, currIdx) {
     		url : "/ezApprovalG/rollbackCabinetSN.do",
     		data : {
     			docID : pDocID,
-    			deptID : upperDeptCode === "" ? pDeptID : upperDeptCode,
+    			deptID : pDeptID,
     			docNumber : docnumber
     		},
     		success: function(xml){

@@ -209,7 +209,7 @@
 	                dragNdrapNo();
 	
 	                IsSkipDrafter = "FALSE"
-					DeptSymbol = upperDeptCode === "" ? getDeptSymbol(arr_userinfo[4], arr_userinfo[5]) : getDeptSymbol(upperDeptCode, upperDeptName);
+					DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
 	                drafterDeptid = arr_userinfo[4];
 	                getDraftInfo();
 	                SetBtnStateFalse();

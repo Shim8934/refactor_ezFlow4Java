@@ -6,7 +6,11 @@ function setDocNumFormat() {
     var d = new Date();
 
     var numHeader = "";
-    var DeptSymbol = upperDeptCode === "" ? arr_userinfo[5] : upperDeptName;
+    var DeptSymbol = arr_userinfo[5];
+    
+    if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+        DeptSymbol = upperDeptName;
+    }
 
     var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, "receiptnumber");
@@ -197,6 +201,12 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
         if (approvalFlag =='G') {
 	        name = "receiptnumber";
 	        var field = message.GetListItem(fields, name);
+
+            var deptName = arr_userinfo[5];
+            if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+                pDeptID = upperDeptCode;
+                deptName = upperDeptName;
+            }
 	        
 	        if (LastSignSN == 1 || useReceiveDocNo != 'NO' || (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU")) {
 	        	//전결,편철 or config값에 따라 접수시 채번
@@ -216,7 +226,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
 	        	});
 		        
 		        if (!field) {
-		            var DeptSymbol = upperDeptCode === "" ? arr_userinfo[5] : upperDeptName;
+		            var DeptSymbol = deptName;
 		            var SN = getNodeText(GetChildNodes(result)[0]);
 		            
 		            //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정이 안먹혀서 주석
@@ -337,6 +347,10 @@ function rollbackDocNumber(pDeptID, pDocID) {
         docnumber = docnumber.replace(fractionsymbol, "");
 
     	var result = "";
+
+        if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+            pDeptID = upperDeptCode;
+        }
     	
     	$.ajax({
     		type : "POST",
@@ -345,7 +359,7 @@ function rollbackDocNumber(pDeptID, pDocID) {
     		url : "/ezApprovalG/rollbackCabinetSN.do",
     		data : {
     			docID : pDocID,
-    			deptID : upperDeptCode === "" ? pDeptID : upperDeptCode,
+    			deptID : pDeptID,
     			docNumber : docnumber
     		},
     		success: function(xml){

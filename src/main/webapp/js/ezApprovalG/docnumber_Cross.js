@@ -52,13 +52,17 @@ function rollbackDocNumber(pDeptID, pPrefix) {
 
     docnumber = field.textContent;
 
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+        pDeptID = upperDeptCode;
+    }
+
     var xmlpara = createXmlDom();
 
     var objNode;
     createNodeInsert(xmlpara, objNode, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "DATA", fractionsymbol);
     createNodeAndInsertText(xmlpara, objNode, "DATA", docnumber);
-    createNodeAndInsertText(xmlpara, objNode, "DATA", upperDeptCode === "" ? pDeptID : upperDeptCode);
+    createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
 
     xmlhttp.open("Post", "../docnum/aspx/rollbackdocnumber.aspx", false);
     xmlhttp.send(xmlpara);
