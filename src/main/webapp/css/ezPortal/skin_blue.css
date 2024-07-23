@@ -212,3 +212,18 @@ nav .navUL li:after{background:#003497;}
 /* 서브 */
 .btn_writeBox .btn_write01:hover{border-color:#3A67BE; background:#EEF4FE; color:#003497;}
 .btn_writeBox .btn_write02:hover{border-color:#3A67BE; background:#EEF4FE; color:#003497;}
+
+.pagenavi span:hover{background-color:#EEF4FE; border-color:#003497; color:#003497;}
+.pagenavi span.on{border-color:#003497; color:#003497;}
+.pagenavi span.btnimg.first{background-image:url(../../images/ezNewPortal/skin/blue/btn_p_prev.svg);}
+.pagenavi span.btnimg.prev{background-image:url(../../images/ezNewPortal/skin/blue/btn_prev.svg);}
+.pagenavi span.btnimg.next{background-image:url(../../images/ezNewPortal/skin/blue/btn_next.svg);}
+.pagenavi span.btnimg.last{background-image:url(../../images/ezNewPortal/skin/blue/btn_n_next.svg);}
+
+#mainmenu li:hover{background-color:#EEF4FE; border-color:#3A67BE; color:#003497;}
+
+.imgbtn:hover{background-color:#EEF4FE; border-color:#3A67BE !important; color:#003497;}
+.btnpositionNew a.imgbtn:hover{background-color:#EEF4FE; border-color:#3A67BE !important; color:#003497;}
+
+.lnbUL li.on .list_text{color:#003497;}
+.lnbUL li.on .list_text span{color:#003497;}

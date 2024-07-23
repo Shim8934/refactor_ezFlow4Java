@@ -212,3 +212,16 @@ nav .navUL li:after{background:#A20000;}
 /* 서브 */
 .btn_writeBox .btn_write01:hover{border-color:#A20000; background:#FBF6F6; color:#A20000;}
 .btn_writeBox .btn_write02:hover{border-color:#A20000; background:#FBF6F6; color:#A20000;}
+
+.pagenavi span:hover{background-color:#FBF6F6; border-color:#A20000; color:#A20000;}
+.pagenavi span.on{border-color:#A20000; color:#A20000;}
+.pagenavi span.btnimg.first{background-image:url(../../images/ezNewPortal/skin/red/btn_p_prev.svg);}
+.pagenavi span.btnimg.prev{background-image:url(../../images/ezNewPortal/skin/red/btn_prev.svg);}
+.pagenavi span.btnimg.next{background-image:url(../../images/ezNewPortal/skin/red/btn_next.svg);}
+.pagenavi span.btnimg.last{background-image:url(../../images/ezNewPortal/skin/red/btn_n_next.svg);}
+
+#mainmenu li:hover{background-color:#FBF6F6; border-color:#A20000; color:#A20000;}
+
+.imgbtn:hover{background-color:#FBF6F6; border-color:#A20000 !important; color:#A20000;}
+.btnpositionNew a.imgbtn:hover{background-color:#FBF6F6; border-color:#A20000 !important; color:#A20000;}
+
