@@ -20,6 +20,8 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -243,22 +245,16 @@ public class EzAddressController{
 		
 		String pFolderId = request.getParameter("folderid") == null ? "normal" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
-		
-		boolean gyumJikChk = true;
-		
-		if (userInfo.getGyumJik() != null) {
-			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) > -1 || userInfo.getGyumJik().indexOf(userInfo.getDeptID()) > -1) { 
-				gyumJikChk = false;
-			}
-		}
 
-		if (gyumJikChk) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-	        	compAdmin = "Y";
-	        	deptAdmin = "Y";
-	        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-	        	deptAdmin = "Y";
-	        }
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		
+		if (organAuth.isAuth(AdminAuth.DEPT_MANAGER, userInfo.getDeptID())) {
+			deptAdmin = "Y";
+		}
+		
+		if (organAuth.isAuth(AdminAuth.COMPANY_MANAGER, userInfo.getCompanyID())) {
+			compAdmin = "Y";
+			deptAdmin = "Y";
 		}
 		
 		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
@@ -415,24 +411,17 @@ public class EzAddressController{
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		String compAdmin = "";
 		String deptAdmin = "";
-		
-		// 20190523 조진호 - url로 ownerId를 변경하여 접근하는 경우 사용자의 권한 확인
-		boolean gyumJikChk = true;
-		
-		if (userInfo.getGyumJik() != null) {
-			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) > -1 || userInfo.getGyumJik().indexOf(userInfo.getDeptID()) > -1) { 
-				gyumJikChk = false;
-			}
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (organAuth.isAuth(AdminAuth.DEPT_MANAGER, userInfo.getDeptID())) {
+			deptAdmin = "Y";
 		}
 
-		if (gyumJikChk) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-	        	compAdmin = "Y";
-	        	deptAdmin = "Y";
-	        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-	        	deptAdmin = "Y";
-	        }
-		}
+		if (organAuth.isAuth(AdminAuth.COMPANY_MANAGER, userInfo.getCompanyID())) {
+			compAdmin = "Y";
+			deptAdmin = "Y";
+		}		
 		
 		// ownerId가 없으면 디비에서 구하기(주소록수정 시 ownerId가 null이기 때문에)
 		if (ownerId.trim().equals("")) {
