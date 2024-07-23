@@ -12,7 +12,7 @@
 		<div class="layDIV">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">${portletName}</dt>
-				<dd class="portletPlus" onclick="window.open('${iframeUrl}')"><img src="/images/ezNewPortal/portlet_Plus1.png"></dd>
+				<dd class="portletPlus plus" onclick="window.open('${iframeUrl}')"></dd>
 			</dl>
 			<iframe id="iframePortlet${portletId}" src="${iframeUrl}" style="width: 100%; height: calc(100% - 53px); border: none;"></iframe>
 		</div>

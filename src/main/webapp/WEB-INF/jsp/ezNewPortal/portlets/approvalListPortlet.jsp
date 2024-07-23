@@ -20,9 +20,7 @@
 	<%--                <dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>                	 --%>
 					</dl>
 					<dl class="portlet_tab_plus">
-						<dd class="portletPlus" onclick="Appmore_btnClick('${portletId}')">
-							<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-						</dd>
+						<dd class="portletPlus plus" onclick="Appmore_btnClick('${portletId}')"></dd>
 					</dl>
 				</div>
             	<ul id ="ApprList${portletId}" class="portlet_list"></ul>

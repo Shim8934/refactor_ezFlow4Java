@@ -34,7 +34,7 @@
     <div class="layDIV">
         <dl class="portlet_title sortablePortlet" style="">
             <dt class="portletText">협업</dt>
-            <dd class="portletPlus" id="ezWorkspacePlus"><img src="/images/ezNewPortal/portlet_Plus1.png"></dd>
+            <dd class="portletPlus plus" id="ezWorkspacePlus"></dd>
         </dl>
         <ul class="collaborate_tab" id="divSpaceListResults" style="overflow-y: auto; height: 204px;">
             <li id="li_0" onclick="GetNewsFeedData(0,1)" class="on"><span
