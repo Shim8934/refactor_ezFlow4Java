@@ -2487,7 +2487,7 @@
 					parent.left.attachedDocList = attachedDocList;
 				}
 
-				if (useDraftAll) {
+				if (useDraftAll === "YES") {
 					let draftInfo = [
 						{
 							"msg" : "단건기안",
