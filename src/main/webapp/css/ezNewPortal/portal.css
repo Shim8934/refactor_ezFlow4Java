@@ -1931,7 +1931,7 @@ div.orbit img{border-radius: 5px;}
 
 .filter_pop .noti_bot_btn{display:flex; justify-content:center; padding-bottom:18px;}
 .filter_pop .noti_bot_btn span{display:inline-block; width:135px; height:40px; line-height:38px; text-align:center; border-radius:6px; background:#EFEFEF; color:#737373; font-size:14px; margin-right:10px; cursor:pointer;}
-.filter_pop .noti_bot_btn span.ok{margin-right:0; background:#388CE5; color:#fff;}
+.filter_pop .noti_bot_btn span.close{margin-right:0; background:#388CE5; color:#fff;}
 
 
 /* 프로필 */

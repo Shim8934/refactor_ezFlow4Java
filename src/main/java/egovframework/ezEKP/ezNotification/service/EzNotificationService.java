@@ -13,9 +13,6 @@ public interface EzNotificationService {
 	// 2024-03-28 한태훈 - 통합알림 > 알림 리스트 총 개수 가져오기
 	public int getTotalNotiListCnt(String userId, String mode, String companyId, int tenantId) throws Exception;
 
-	// 2024-03-28 한태훈 - 통합알림 > 사용자 알림 리스트 가져오기
-	public List<NotificationVO> getMyNotiList(String userId, int limit, int rowCount, int tenantId, String companyId, String offSet) throws Exception;
-	
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 개별 알림 읽음 또는 삭제
 	public void updateNoti(String notiSeq, String mode, String processDate, String companyId, int tenantId) throws Exception;
 	
@@ -26,7 +23,7 @@ public interface EzNotificationService {
 	public int getTotalSearchNotiListCnt(String userId, String mode, String isRead, String notiFilter, String keyWord, String companyId, int tenantId) throws Exception;
 	
 	// 2024-03-28 한태훈 - 통합알림 > 검색 알림 리스트 가져오기
-	public List<NotificationVO> getSearchNotiList(String userId, int limit, int rowCount, String isRead, String notiFilter, String keyWord, int tenantId, String companyId, String offSet) throws Exception;
+	public List<NotificationVO> getSearchNotiList(String userId, Integer lastNotiSeq, int rowCount, String isRead, String notiFilter, String keyWord, int tenantId, String companyId, String offSet) throws Exception;
 	
 	// 2024-03-28 한태훈 - 통합알림 > 알림 전송
 	public String sendNoti(HttpServletRequest request, String senderId, String senderName, String recipientIdList, String mainType, String subType, String notiContent, String viewType, String viewWidth, String viewHeight, String linkUrl, String linkUrlMobile, String etcData) throws Exception;

@@ -84,5 +84,7 @@ subType["poll"]["new"] = "신규등록";
 subType["community"]["new"] = "신규게시";
 
 var notiMessages = {
-	strLang1 : '"데이터가 없습니다."'
+	strLang1 : '"데이터가 없습니다."',
 }
+
+var notiDayNames = ["일", "월", "화", "수", "목", "금", "토"];

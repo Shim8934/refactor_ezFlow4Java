@@ -101,25 +101,6 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 		
 	}
 	
-	// 2024-03-28 한태훈 - 통합알림 > 사용자 알림 리스트 가져오기.
-	@Override
-	public List<NotificationVO> getMyNotiList(String userId, int limit, int rowCount, int tenantId, String companyId, String offSet) throws Exception {
-		logger.debug("getMyNotiList started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("limit", limit);
-		map.put("rowCount", rowCount);
-		map.put("offSet", offSet);
-		map.put("companyId", companyId);
-		map.put("tenantId", tenantId);
-		List<NotificationVO> notiList = ezNotificationDAO.getMyNotiList(map);
-		
-		logger.debug("getMyNotiList ended");
-		
-		return notiList;
-	}
-	
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 개별 알림 읽음 또는 삭제.
 	@Override
 	public void updateNoti(String notiSeq, String mode, String processDate, String companyId, int tenantId) throws Exception {
@@ -174,12 +155,12 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 	
 	// 2024-03-28 한태훈 - 통합알림 > 검색 알림 리스트 가져오기.
 	@Override
-	public List<NotificationVO> getSearchNotiList(String userId, int limit, int rowCount, String isRead, String notiFilter, String keyWord, int tenantId, String companyId, String offSet) throws Exception {
+	public List<NotificationVO> getSearchNotiList(String userId, Integer lastNotiSeq, int rowCount, String isRead, String notiFilter, String keyWord, int tenantId, String companyId, String offSet) throws Exception {
 		logger.debug("getSearchNotiList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
-		map.put("limit", limit);
+		map.put("lastNotiSeq", lastNotiSeq);
 		map.put("rowCount", rowCount);
 		map.put("isRead", isRead);
 		String[] notiFilterList = notiFilter.split("\\|"); 
