@@ -219,8 +219,34 @@
 				
 				function windowResize() {$(".surveyList").height(window.innerHeight - 105);}
 				
+				function cancelSurvey (id) {
+					if (surveyId != -1 || isInCreateSurvey == true) {
+						if (surveyId != -1) {
+							changeSurveyState();
+						}
+						switch (id) {
+							case 'surveyConfig':
+								getConfigPage();
+								break;
+							case 'totalSurvey':
+								getAllSurveyList();
+								break;
+							case 'processingSurvey':
+								getProcessingSurveyList();
+								break;
+							case 'finishedSurvey':
+								getFinishedSurveyPage();
+								break;
+							case 'mySurvey':
+								getMySurveyPage();
+								break;
+						}
+						isInCreateSurvey = false;
+					}
+				}
+				
 				return {
-					
+					cancelSurvey:cancelSurvey
 				};
 			}();
 			
