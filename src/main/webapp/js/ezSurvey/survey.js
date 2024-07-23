@@ -222,6 +222,11 @@ var SurveyCreate     = function() {
 			changeSurveyState();
 			window.parent.frames["left"].surveyId = -1;
 			window.parent.frames["left"].isInCreateSurvey = false; // 신규 설문 생성 취소
+			var ingSurveyLi = window.parent.frames["left"].document.getElementById("processingSurvey");
+			if (ingSurveyLi.querySelector(".list_text") && ingSurveyLi.tagName == "LI") {
+				window.parent.frames["left"].$(".node_selected").attr("class", "list_text");
+				ingSurveyLi.querySelector(".list_text").setAttribute("class", "list_text node_selected");
+			}
 			window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
 		}
 	}
