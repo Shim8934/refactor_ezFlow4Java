@@ -86,6 +86,7 @@
 				function init() {
 					$(".cabinetListBox").mCustomScrollbar({theme : "dark"});
 					resizeWindow();
+					window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=21";
 				}
 				
 				function resizeWindow() {
@@ -106,6 +107,14 @@
 					});
 					
 					cabinetTree.makeTree({cabinetNode : "root"});
+					
+					var checkInterval = setInterval(function() {
+						var targetSpan = document.querySelector("#cabinetTree div span.list_text[role='21']");
+						if (targetSpan) {
+							targetSpan.className = "list_text node_selected selectedNode";
+							clearInterval(checkInterval);
+						}
+					}, 100);
 					
 					document.getElementById("myCabinet"        ).addEventListener("click", function(e) {getMyCabinet();     }, false);
 					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();    }, false);
