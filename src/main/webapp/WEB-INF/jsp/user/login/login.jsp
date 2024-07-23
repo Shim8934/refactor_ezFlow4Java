@@ -91,7 +91,8 @@
 		<script type="text/javascript">
 			var lastLoginAttempt = 0;
 			var loginCooldown = 1000; // 1초 (1000 밀리초)
-
+			var pwPolicyExplain = "${pwPolicyExplain}";
+		
 			function actionLogin() {
 				var currentTime = new Date().getTime();
 
@@ -593,9 +594,17 @@
 					<span class="password_lock"></span>
 					<div class="password_tit">
 						<p class="tit_01">
-							<c:if test="${isFirstLogin != 'Y'&& resetPassword != 'Y'}"><spring:message code='login.kdh030'/></c:if>
-							<c:if test="${isFirstLogin == 'Y'&& resetPassword != 'Y'}"><spring:message code='login.kdh029'/> </c:if>
-							<c:if test="${isFirstLogin != 'Y'&& resetPassword == 'Y'}"><spring:message code='login.kdh032'/> </c:if>
+							<c:choose>
+								<c:when test="${isFirstLogin == 'Y' && resetPassword != 'Y'}">
+									<spring:message code='login.kdh029'/>
+								</c:when>
+								<c:when test="${isFirstLogin != 'Y' && resetPassword != 'Y'}">
+									<spring:message code='login.kdh030'/>
+								</c:when>
+								<c:otherwise>
+									<spring:message code='login.kdh032'/>
+								</c:otherwise>
+							</c:choose>
 						</p>
 						<p class="tit_02">
 <%--							<span><spring:message code='main.login.design03'/></span>--%>
@@ -604,6 +613,9 @@
 					</div>
 				</div>
 				<ul class="passwordForm">
+					<li>
+						<div>${pwPolicyExplain}</div>
+					</li>
 					<li style="padding-top:10px;">
 						<span class="formText"><spring:message code='main.jjh09'/></span>
 						<span class="formID" id="chooseId" data-userId="${userId}">${loginId}</span>

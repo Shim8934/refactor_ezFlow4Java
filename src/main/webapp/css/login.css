@@ -284,7 +284,7 @@ a{
 
 
 /* 비밀번호 변경 */
-.password_change{ margin:0 auto; padding:0px; width:405px;}
+.password_change{ margin:0 auto; padding:0px; width:470px;}
 .password_change .passwordTitle{ margin:0px; padding:0px; display:flex; justify-content:center; align-items:center;}
 .password_change .passwordTitle .password_lock{display:inline-block; width:38px; height:50px; background:url(../images/kr/login/login_lock.svg) no-repeat center / 35px 50px; margin-right:20px;}
 .password_change .passwordTitle .tit_01{margin:0; padding:0; font-size:15px; color:#333; letter-spacing:-0.5px; border:none;}
@@ -293,11 +293,14 @@ a{
 .password_change .passwordForm{ margin:15px 0px 0px; padding:8px 5px; list-style:none;}
 .password_change .passwordForm li{ margin:0px 0px 14px 0px; padding:0px 15px 0px; font-size:13px; clear:both; overflow:hidden;}
 .password_change .passwordForm li .formText{ display:inline-block; line-height:35px; font-size:14px; font-weight: bold;}
-.password_change .passwordForm li .formID{ display:inline-block; font-weight:bold;font-size:13px; float:right; width:199px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px; text-align:center; box-sizing:border-box;}
+.password_change .passwordForm li .formID{ display:inline-block; font-weight:bold;font-size:13px; float:right; width:240px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px; text-align:center; box-sizing:border-box;}
 .password_change .passwordForm li .formInput{ display:inline-block; float:right; font-size:13px;}
-.password_change .passwordForm li .formInput input{font-size:13px; width:199px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px; padding:0px 0px 0px 5px;}
+.password_change .passwordForm li .formInput input{font-size:13px; width:240px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px; padding:0px 0px 0px 5px;}
 .password_change .passwordForm li .formInput input:focus{border:1px solid #181818;}
 .password_change .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
+.password_change p{font-weight: bold;}
+.password_change p span{font-size:13px;line-height: 18px;display: inline-block; font-weight:500;}
+.password_change p span:nth-child(2){margin-top: 5px;}
 #exDiv3 dl{margin-top: 20px;}
 .warning_wrap .layerTitle{margin-bottom: 20px;}
 .modal{max-width: 600px !important;}

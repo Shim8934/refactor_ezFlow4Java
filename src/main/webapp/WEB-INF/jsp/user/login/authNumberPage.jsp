@@ -126,7 +126,7 @@
                     timer = setInterval(timerCheck, 1000);
                 }
             }
-    
+
             //타이머
             function timerCheck() {
                 limit = limit - 1;
