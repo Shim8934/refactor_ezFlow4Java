@@ -2363,4 +2363,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void insertCompanyTopMenuInfo(Map<String, Object> map) {
 		insert("EzOrganAdminDAO.insertCompanyTopMenuInfo", map);
 	}
+	
+	// 2024-07-23 한태훈 > 회사 추가시 연계메뉴 및 기본 시스템 컨피그 추가
+	public void insertConnectMenuForNewCompany(Map<String, Object> map) {
+		insert("EzOrganAdminDAO.insertConnectMenuForCompany", map);
+		insert("EzOrganAdminDAO.insertConnectMenuAuthForCompany", map);
+		insert("EzOrganAdminDAO.insertConnectionMenuNameForCompany", map);
+		insert("EzOrganAdminDAO.insertSystemConfigTypeForCompany", map);
+		insert("EzOrganAdminDAO.insertDefaultSystemConfigForCompany", map);
+	}
 }
