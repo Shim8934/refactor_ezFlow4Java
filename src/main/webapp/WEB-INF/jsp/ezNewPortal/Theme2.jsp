@@ -85,8 +85,8 @@
                    		</c:when>
                    		<c:otherwise>
                    		<li>
-                       		<dl class="writebannerDL" id="NewMail">
-                       		 	<dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="<spring:message code='ezNewPortal.t015' />"></dt>
+                       		<dl class="writebannerDL banner_mail" id="NewMail">
+                       		 	<dt class="banner_img"></dt>
                            		<dt><spring:message code='ezNewPortal.t015' /></dt>
                            		<dd id="unreadMailCount" class="iconCount_none">0</dd>
                        		</dl>
@@ -103,8 +103,8 @@
                    		</c:when>
                    		<c:otherwise>
                    		<li>
-                       		<dl class="writebannerDL" id="AprSign">
-                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="<spring:message code='ezNewPortal.t016' />"></dt>
+                       		<dl class="writebannerDL banner_apr" id="AprSign">
+                           		<dt class="banner_img"></dt>
                            		<dt><spring:message code='ezNewPortal.t016' /></dt>
                            		<dd id="approvalCount" class="iconCount_none">0</dd>
                        		</dl>
@@ -121,8 +121,8 @@
                    		</c:when>
                    		<c:otherwise>
                    		<li>
-                       		<dl class="writebannerDL" id="Schedule">
-                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="<spring:message code='ezNewPortal.gu3' />"></dt>
+                       		<dl class="writebannerDL banner_schedule" id="Schedule">
+                           		<dt class="banner_img"></dt>
                            		<dt><spring:message code='ezNewPortal.gu3' /></dt>
                            		<dd id="scheduleCount" class="iconCount_none">0</dd>
                        		</dl>
@@ -154,8 +154,8 @@
                    		</c:when>
                    		<c:otherwise>
                    		<li>
-                       		<dl class="writebannerDL" id="Survey">
-                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
+                       		<dl class="writebannerDL banner_survey" id="Survey">
+                           		<dt class="banner_img"></dt>
                            		<dt><spring:message code='ezNewPortal.gu4' /></dt>
                            		<dd id="surveyCount" class="iconCount_none">0</dd>
                       		</dl>
@@ -172,8 +172,8 @@
 								</dl>
                     		</c:when>
                     		<c:otherwise>
-                        		<dl class="writebannerDL" id="Circular">
-                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="<spring:message code='ezNewPortal.gu5' />"></dt>
+                        		<dl class="writebannerDL banner_circular" id="Circular">
+                            		<dt class="banner_img"></dt>
                             		<dt><spring:message code='ezNewPortal.gu5' /></dt>
                             		<dd id="circularCount" class="iconCount_none">0</dd>
                         		</dl>
@@ -182,8 +182,8 @@
                     </li>
 					<c:if test="${useEzWorkspace}">
 					<li>
-	                    <dl class="writebannerDL" id="ezWorkspace">
-	                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="협업"></dt>
+	                    <dl class="writebannerDL banner_workspace" id="ezWorkspace">
+	                        <dt class="banner_img"></dt>
 	                        <dt><spring:message code='ezNewPortal.pjg01' /></dt>
 	                        <dd class="iconCount_none" id="workspaceCnt">0</dd>
 	                    </dl>
@@ -191,23 +191,23 @@
                 	</c:if>                        
                     <%-- 조직도, 커뮤니티, 메모 영역 추가 (카운트 없음) --%>
 					<li>
-                    <dl class="writebannerDL" id="Organ">
-                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="조직도"></dt>
+                    <dl class="writebannerDL banner_organ" id="Organ">
+                        <dt class="banner_img"></dt>
                         <dt><spring:message code='ezNewPortal.t024'/></dt>
                     </dl>
                     </li>
                     <c:if test="${useCommunity eq 'YES'}">
 					<li>
-	                    <dl class="writebannerDL" id="Community">
-	                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner07.png" alt="커뮤니티"></dt>
+	                    <dl class="writebannerDL banner_community" id="Community">
+	                        <dt class="banner_img"></dt>
 	                        <dt><spring:message code='main.t1006'/></dt>
 	                    </dl>
                     </li>
                     </c:if>
                     <c:if test="${useMemo eq 'YES'}">
 					<li>
-	                    <dl class="writebannerDL" id="Memo">
-	                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner08.png" alt="메모"></dt>
+	                    <dl class="writebannerDL banner_memo" id="Memo">
+	                        <dt class="banner_img"></dt>
 	                        <dt><spring:message code='ezMemo.t001'/></dt>
 	                    </dl>
                     </li>
@@ -222,9 +222,7 @@
     <div class="sec1Layout_btm_left">
         <dl class="portlet_title">
 			<dt class="portletText"><span></span><spring:message code='main.t65'/></dt>
-            <dd class="portletPlus" id="theme2Sec1NoticePlusBtn">
-                <img src="/images/ezNewPortal/portlet_Plus2_t2.png">
-            </dd>
+            <dd class="portletPlus plus" id="theme2Sec1NoticePlusBtn"></dd>
         </dl>
         <ul id="theme2Sec1NoticeBoardUL" class="portlet_list">
 			<dl class="nodata">

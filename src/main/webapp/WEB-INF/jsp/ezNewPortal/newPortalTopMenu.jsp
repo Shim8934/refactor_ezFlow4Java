@@ -277,7 +277,7 @@
 						mainFrame.style.position = "static";
 						
 					} else if (menuDisplayMode == "1") {// 메뉴 left에 생성
-						menuLi.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu"); // 탑메뉴 아이콘과 구분하기 위해서 _leftmenu 추가
+						if (!!item.iconUrl && item.iconUrl.split(" ").length > 0) menuLi.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu"); // 탑메뉴 아이콘과 구분하기 위해서 _leftmenu 추가
 						menuLi.classList.add('sortable-item');
 						menuLi.setAttribute('id', 'menu_' + item.menuId);
 						var liSpan = document.createElement('span');
@@ -679,7 +679,7 @@
 				menuAllListSpan.textContent = item.menuName;
 				menuAllList.appendChild(menuAllListSpan);
 				menuAllList.setAttribute("id", item.menuId);
-				menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
+				if (!!item.iconUrl && item.iconUrl.split(" ").length > 0)  menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
 				menuAllList.classList.add('sortable-item');
 				
 				if (menuCount < 5) {

@@ -1432,14 +1432,6 @@
 		u.CN = #userId#
 		and
 		u.tenant_id = #tenantId#
-		and
-		(
-		((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0
-		and
-		d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
-		or
-		(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
-		)
 		<isNotEmpty property="companyId">
 			and
 			d.EXTENSIONATTRIBUTE2 = #companyId#

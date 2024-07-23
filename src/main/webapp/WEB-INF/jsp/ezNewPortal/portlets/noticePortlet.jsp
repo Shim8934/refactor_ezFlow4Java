@@ -12,9 +12,7 @@
 	<div class="layDIV">
 		<dl class="portlet_title sortablePortlet">
 			<dt class="portletText"><c:out value='${portletName }'/></dt>
-			<dd class="portletPlus" id="noticePlus">
-				<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png">
-			</dd>
+			<dd class="portletPlus plus" id="noticePlus"></dd>
 		</dl>
 		<div>
 			<ul id="BoardList_NewBoard" class='noti_portlet_list portletPagingArea'></ul>
