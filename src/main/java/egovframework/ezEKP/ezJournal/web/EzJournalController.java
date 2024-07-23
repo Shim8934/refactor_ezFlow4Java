@@ -280,7 +280,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals-count", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
-		int totalCount =0;
+		int totalCount = 0;
 		if (status.equals("ok")) {			
 			totalCount = Integer.parseInt((String) resultBody.get("data"));
 		}
@@ -289,9 +289,13 @@ public class EzJournalController extends EgovFileMngUtil {
 		model.addAttribute("paging", paging);
 		
 		param.put("startCount", paging.getStartCount());
+		
+		// 정렬 칼럼 번호 : 2(제목), 3(작성일), 4(부서공유여부), 5(작성자), 6(부서명), 7(양식명), 8(일지함), 10(첨부파일), 11(조회), 12(수신), 14(읽음여부), 16(취합여부)
 		if (param.get("orderNum") == null || param.get("orderNum").equals("")) {
 			param.put("orderNum", 3);
 		}
+		
+		// asc, desc
 		if (param.get("orderHow") == null || param.get("orderHow").equals("")) {
 			param.put("orderHow", "desc");
 		}
@@ -311,7 +315,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			}
 			*/
 			model.addAttribute("journalList", journalList);
-			model.addAttribute("totalCount",totalCount);
+			model.addAttribute("totalCount", totalCount);
 		}
 		model.addAttribute("listType",listType);
 		logger.debug("journalList ended");
