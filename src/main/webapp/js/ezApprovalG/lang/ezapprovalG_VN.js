@@ -684,7 +684,7 @@ var strLang1027 = "Nhận xét cố định";
 var strLang1028 = "Năm";
 var strLang1029 = "Tháng";
 var strLang1030 = "Ngày";
-var strLang1031 = "Không thể gửi E-mail / phê duyệt-tài liệu lên bảng ảnh hoặc bảng ẩn danh hoặc URL-link-board.";
+var strLang1031 = "Chỉ đăng bài trên các diễn đàn chung và diễn đàn hỏi đáp.";
 var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "Người dùng được chọn không có office.</br> Bạn có muốn thêm nó không?";
 

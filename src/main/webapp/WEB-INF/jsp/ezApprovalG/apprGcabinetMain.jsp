@@ -2163,11 +2163,12 @@
 		            alert("<spring:message code='ezApprovalG.t1160'/>");
 		            return;
 		        }
-		
-		        if (document.getElementById("trRecSubMenu").style.display == "") {
+
+				var tempDeptID = DeptID;
+				// 하위부서 선택시 서브메뉴가 사라지기 때문에 하위부서를 선택했을 경우에도 분기를 탈 수 있도록 조건 추가해줌.
+		        if (document.getElementById("trRecSubMenu").style.display == "" || (underDeptFlag === "TRUE" && document.getElementById("recordRight").style.display == "")) {
 		            var radiosearch = document.getElementById('selectType');
 
-					var tempDeptID = DeptID;
 					if (checkRecordAll()) {
 						tempDeptID = "ALL";
 					}
@@ -2207,7 +2208,7 @@
 		                    GetRecordListXml();
 		            }
 		        }
-		        else if (document.getElementById("trCabSubMenu").style.display == "") {
+		        else if (document.getElementById("trCabSubMenu").style.display == "" || (underDeptFlag === "TRUE" && document.getElementById("rec_underDept2"))) {
 		            var radiosearch = document.getElementById('selectType');
 		            
 		            if (underDeptFlag === "TRUE" && g_sFlag === 'm02' && GetSelectVal("rec_underDept2") != "default" ) {
