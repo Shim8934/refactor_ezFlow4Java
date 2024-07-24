@@ -180,7 +180,7 @@
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	<script type="text/javascript">
 		var connectMenuId = -1;
-	
+		var maxMenuCount = 7;
 		// 상단 메뉴시 화면 작아질시 좌측으로 이동 함수 start(테스트용/UIUX-조기완)
 		/* function calcWidth(obj){
 			var totalWidth = 0;
@@ -266,7 +266,7 @@
 					return; //연계메뉴 표출 x
 				}
 				
-				if (menuCount <= 4) { // 최대5개 표출
+				if (menuCount < maxMenuCount) { // 최대 7개 표출
 					var menuLi = document.createElement('li');
 					var mainFrame = window.parent.document.getElementById("mainFrame");
 					if (menuDisplayMode == "0") { // 메뉴 top에 생성
@@ -682,7 +682,7 @@
 				if (!!item.iconUrl && item.iconUrl.split(" ").length > 0)  menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
 				menuAllList.classList.add('sortable-item');
 				
-				if (menuCount < 5) {
+				if (menuCount < maxMenuCount) {
 					menuAllList.classList.add('on');
 				}
 				
