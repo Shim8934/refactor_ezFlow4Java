@@ -518,6 +518,8 @@
 			a.user_id = #userId#
 		and 
 			a.tenant_id = #tenantId#
+		  and
+			d.EXTENSIONATTRIBUTE2 = #userCompany#
 		union
 		select
 			d.DISPLAYNAME$lang$ dept_name,
@@ -531,6 +533,8 @@
 			u.CN = #userId#
 		and 
 			u.TENANT_ID = #tenantId#
+		and 
+		    d.EXTENSIONATTRIBUTE2 = #userCompany#
 		union
 		select
 			d.DISPLAYNAME$lang$ dept_name,
@@ -544,6 +548,8 @@
 			a.CN = #userId#
 		and 
 			a.TENANT_ID = #tenantId#
+		and 
+		    d.EXTENSIONATTRIBUTE2 = #userCompany#
 		order by dept_name
 	</select>
 

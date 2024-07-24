@@ -31,59 +31,6 @@
      	</isEqual>
 	</select>
      
-    <select id="EzNotificationDAO.getMyNotiList" parameterClass="Map" resultClass="NotificationVO">
-    SELECT
-    	*
-    FROM
-    (SELECT
-    	A.*, ROWNUM AS RNUM
-    FROM (
-	    SELECT
-		    NOTISEQ AS notiSeq,
-		    USERID AS userId,
-		    MAINTYPE AS mainType,
-		    SUBTYPE AS subType,
-		    NOTICONTENT AS notiContent,
-		    SENDERID AS senderId,
-		    SENDERNAME AS senderName,
-		    REGDATE + #offSet# / (24 * 60) AS regDate,
-		    ISREAD AS isRead,
-		    CASE
-		        WHEN READDATE IS NULL THEN READDATE
-		        ELSE READDATE + #offSet# / (24 * 60)
-		    END AS readDate,
-		    ETCDATA AS etcData,
-		    ISDELETE AS isDelete,
-		    DELETEDATE AS deleteDate,
-		    LINKURL AS linkUrl,
-		    LINKURL_MOBILE AS linkUrlMobile,
-		    VIEWTYPE AS viewType,
-		    VIEWWIDTH AS viewWidth,
-		    VIEWHEIGHT AS viewHeight,
-		    TENANT_ID AS tenantId,
-		    COMPANYID AS companyId
-		FROM
-		    TBL_REALTIME_NOTIFICATION
-		WHERE
-		    USERID = #userId#
-		AND
-		    TENANT_ID = #tenantId#
-		AND
-		    COMPANYID = #companyId#
-		AND
-		    ISDELETE = 'N'
-		ORDER BY
-		    REGDATE DESC
-	) A
-	<![CDATA[
-	WHERE 
-		ROWNUM <= #limit# + #rowCount#
-	)
-	WHERE
-		RNUM >= #limit# + 1
-	]]>	
-    </select>
-     
     <update id="EzNotificationDAO.updateNoti" parameterClass="Map">
     	UPDATE
     		TBL_REALTIME_NOTIFICATION
@@ -235,14 +182,20 @@
 			AND
 				ISREAD = #isRead#
 			</isNotEqual>
+			<isNotEqual property="lastNotiSeq" compareValue="-1">
+			<![CDATA[
+			AND
+				notiseq < #lastNotiSeq#
+			]]>
+			</isNotEqual>
 		    ORDER BY
-		    	 REGDATE DESC
+		    	 REGDATE DESC, NOTISEQ DESC
 	        ) A
 	     <![CDATA[
-		    WHERE ROWNUM <= #limit# + #rowCount#
+		    WHERE ROWNUM <= #rowCount#
 	   )
     WHERE
-		RNUM >= #limit# + 1
+		RNUM >= 1
 	]]>	
 	</select>
 	

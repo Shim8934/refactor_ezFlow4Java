@@ -21,6 +21,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
@@ -153,8 +154,10 @@ public class EzJournalController extends EgovFileMngUtil {
 		String listType = request.getParameter("listType");
 		String typeId = request.getParameter("typeId");
 		String userDept = userInfo.getDeptID();
+		String userCompany = userInfo.getCompanyID();
 
-		HashMap<String, Object> param = new HashMap<String, Object>();
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("userCompany", userCompany);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/" + userInfo.getId() + "/author-depts", param, request,"get",null);
 		String status = resultBody.get("status").toString();
@@ -1870,6 +1873,8 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		String replyContent = request.getParameter("replyContent");
 		String journalTitle = request.getParameter("journalTitle");
+		journalTitle = StringEscapeUtils.unescapeHtml4(journalTitle);
+		
 		String journalWriter = request.getParameter("journalWriter");
 		String journalId = request.getParameter("journalId");
 		HashMap<String, Object> param = new HashMap<String, Object>();

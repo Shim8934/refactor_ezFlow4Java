@@ -27,9 +27,7 @@ $(function() {
 				<dt class="portletText">
 					<c:out value="${portletName }"/>
 				</dt>
-				<dd id="<c:out value='portletPlus${portletId}'/>" class="portletPlus" data1="<c:out value='${boardId }'/>">
-					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-				</dd>
+				<dd id="<c:out value='portletPlus${portletId}'/>" class="portletPlus plus" data1="<c:out value='${boardId }'/>"></dd>
 				<!-- 
 				<dd class="portletPlus nextBtn" onclick="<c:out value='nextPageBoardPortlet(${portletId})'/>">
 					<img src="/images/ezNewPortal/photo_next.png">

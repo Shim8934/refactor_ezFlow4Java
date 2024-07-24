@@ -86,3 +86,5 @@ subType["community"]["new"] = "新規登録";
 var notiMessages = {
 	strLang1 : '"没有数据."'
 }
+
+var notiDayNames = ["日", "月", "火", "水", "木", "金", "土"];

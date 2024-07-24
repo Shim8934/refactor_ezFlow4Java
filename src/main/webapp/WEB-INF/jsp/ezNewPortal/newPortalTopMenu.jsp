@@ -179,6 +179,8 @@
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	<script type="text/javascript">
+		var connectMenuId = -1;
+		var maxMenuCount = 7;
 		// 상단 메뉴시 화면 작아질시 좌측으로 이동 함수 start(테스트용/UIUX-조기완)
 		/* function calcWidth(obj){
 			var totalWidth = 0;
@@ -257,41 +259,47 @@
 				mainMenuElem = document.getElementById('mainMenuListLeft');
 				document.getElementById('mainMenuListLeft').classList.add("lnb_list");
 			}
+			
+			var menuCount = 0;
 			menuList.some(function (item, index) {
-				if (index > 4) { // 최대5개 표출
-					return true;
+				if (item.menuId == connectMenuId) {
+					return; //연계메뉴 표출 x
 				}
 				
-				var menuLi = document.createElement('li');
-				var mainFrame = window.parent.document.getElementById("mainFrame");
-				if (menuDisplayMode == "0") { // 메뉴 top에 생성
-					menuLi.setAttribute('id', 'menu_' + item.menuId);
-					menuLi.textContent = item.menuName;
-					mainFrame.style.width = "100%";
-					mainFrame.style.float = "none";
-					mainFrame.style.position = "static";
+				if (menuCount < maxMenuCount) { // 최대 7개 표출
+					var menuLi = document.createElement('li');
+					var mainFrame = window.parent.document.getElementById("mainFrame");
+					if (menuDisplayMode == "0") { // 메뉴 top에 생성
+						menuLi.setAttribute('id', 'menu_' + item.menuId);
+						menuLi.textContent = item.menuName;
+						mainFrame.style.width = "100%";
+						mainFrame.style.float = "none";
+						mainFrame.style.position = "static";
+						
+					} else if (menuDisplayMode == "1") {// 메뉴 left에 생성
+						if (!!item.iconUrl && item.iconUrl.split(" ").length > 0) menuLi.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu"); // 탑메뉴 아이콘과 구분하기 위해서 _leftmenu 추가
+						menuLi.classList.add('sortable-item');
+						menuLi.setAttribute('id', 'menu_' + item.menuId);
+						var liSpan = document.createElement('span');
+						liSpan.textContent = item.menuName;
+						menuLi.appendChild(liSpan);
+						mainFrame.style.width = "calc(100% - 81px)";
+						mainFrame.style.float = "right";
+						mainFrame.style.position = "relative"; // 이거 빼면 mainFrame 스크롤도 안되고 동작도 안됨.
+					}
+	
+					menuLi.addEventListener('click', function () {
+						offMenuAll();
+						this.classList.add("on");
+						subMenuClickEvent('off', item.menuUrl, item.openType);
+						notice_all_close();
+						closeNoti();
+					});
 					
-				} else if (menuDisplayMode == "1") {// 메뉴 left에 생성
-					menuLi.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu"); // 탑메뉴 아이콘과 구분하기 위해서 _leftmenu 추가
-					menuLi.classList.add('sortable-item');
-					menuLi.setAttribute('id', 'menu_' + item.menuId);
-					var liSpan = document.createElement('span');
-					liSpan.textContent = item.menuName;
-					menuLi.appendChild(liSpan);
-					mainFrame.style.width = "calc(100% - 81px)";
-					mainFrame.style.float = "right";
-					mainFrame.style.position = "relative"; // 이거 빼면 mainFrame 스크롤도 안되고 동작도 안됨.
+					mainMenuElem.appendChild(menuLi);
+					menuCount++;
 				}
-
-				menuLi.addEventListener('click', function () {
-					offMenuAll();
-					this.classList.add("on");
-					subMenuClickEvent('off', item.menuUrl, item.openType);
-					notice_all_close();
-					closeNoti();
-				});
 				
-				mainMenuElem.appendChild(menuLi);
 				// 메뉴리스트 객체 생성
 				newPortalTopMenu.menuListObj['menu_'+ item.menuId] = {
 					menuId: item.menuId,
@@ -661,7 +669,11 @@
 
 			removeAllChildernElem(document.getElementById('menuListAll'));
 			
+			var menuCount = 0;
 			menuList.forEach(function (item, index) {
+				if (item.menuId == connectMenuId) {
+					return; //연계메뉴 표출 x
+				}
 				// 컨텍스트메뉴와 연동하기 위함.
 				if(item.menuUrl.indexOf('ezMemo') > -1 && item.menuUsed) {
 					parent.useMemoContextMenu = true;
@@ -672,10 +684,10 @@
 				menuAllListSpan.textContent = item.menuName;
 				menuAllList.appendChild(menuAllListSpan);
 				menuAllList.setAttribute("id", item.menuId);
-				menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
+				if (!!item.iconUrl && item.iconUrl.split(" ").length > 0)  menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
 				menuAllList.classList.add('sortable-item');
 				
-				if (index < 5) {
+				if (menuCount < maxMenuCount) {
 					menuAllList.classList.add('on');
 				}
 				
@@ -691,6 +703,7 @@
 				
 				document.getElementById('menuListAll').appendChild(menuAllList);
 				//str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
+				menuCount++;
 			});
 		}
 		

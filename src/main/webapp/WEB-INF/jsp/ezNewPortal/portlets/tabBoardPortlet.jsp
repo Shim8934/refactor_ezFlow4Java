@@ -19,9 +19,7 @@
 					<dt id="tabBoardList3Tab" class="tabBoardTab" style="display: none;"><span></span></dt>
 			</dl>
 			<dl class="portlet_tab_plus">
-				<dd class="portletPlus" id="tabBoardPlus" onclick="tabBoardPlus()">
-					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-				</dd>
+				<dd class="portletPlus plus" id="tabBoardPlus" onclick="tabBoardPlus()"></dd>
 			</dl>
 			<div id="notexistence" class="portlet_list" style="display:none;">
 				<dl class='nodata'>

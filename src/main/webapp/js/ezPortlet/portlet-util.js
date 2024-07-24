@@ -160,10 +160,12 @@ function changePortletSize(pot, size) {
     if (typeof usedTheme == 'undefined' || !usedTheme) usedTheme = document.querySelector('.portletList').getAttribute('data-themeid');
     userPortletUpdateWithSize(usedTheme);
 
-    var portletPagingArea = pot.querySelectorAll('.portletPagingArea');
-    if (portletPagingArea != null && portletPagingArea.length > 0) { // 포틀릿 페이지네이션 처리
-        changePortletViewCount(pot.id.replace('Portlet', ''), portletPagingArea);
+    var portletPagingArea = pot.querySelector('.portletPagingArea');
+    var portletLimitPagingArea = pot.querySelector('.portletLimitPagingArea');
+    if (portletPagingArea || portletLimitPagingArea) { // 포틀릿 페이지네이션 처리
+        changePortletViewCount(pot.id.replace('Portlet', ''));
     }
+    
 }
 
 // 포틀릿 사이즈 변경 팝업 만들기
@@ -504,7 +506,7 @@ function Paging() {
     };
 }
 
-function changePortletViewCount(portletId, portletPagingArea) {
+function changePortletViewCount(portletId) {
     var portletInfoObj = portletInfoMap["portlet" + portletId];
     var portletPageObj = null;
     if (portletInfoObj.portletCode == "tabBoard") {

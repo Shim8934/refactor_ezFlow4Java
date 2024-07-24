@@ -22,6 +22,7 @@ import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezNewPortal.vo.ConnectPortletDTO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
@@ -96,6 +97,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -3065,6 +3067,8 @@ public class EzNewPortalGWController {
 			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
 			portletInfo.put("menuId", jsonParam.get("menuId"));
 			portletInfo.put("type", webType);
+			portletInfo.put("portletCode", jsonParam.get("portletCode"));
+			portletInfo.put("connectionId", jsonParam.get("connectionId"));
 			
 			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
 			
@@ -3136,6 +3140,8 @@ public class EzNewPortalGWController {
 			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
 			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
 			portletInfo.put("menuId", jsonParam.get("menuId"));
+			portletInfo.put("portletCode", jsonParam.get("portletCode"));
+			portletInfo.put("connectionId", jsonParam.get("connectionId"));
 			
 			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
 			ezNewPortalService.updateCompanyPortletInfo(portletInfo, portletNames, companyId, tenantId);
@@ -5445,10 +5451,11 @@ public class EzNewPortalGWController {
 
 			JSONArray themePortletList = (JSONArray)jsonParam.get("themePortletList");
 			JSONArray sizeList = (JSONArray)jsonParam.get("sizeList");
+			String webType = jsonParam.get("webType").toString();
 
 			ezNewPortalService.updateThemePortletUsed(themeId, tenantId, companyId, themePortletList);
 
-			if (usePortletSize) {
+			if (!webType.equals("mobile") && usePortletSize) {
 				ezNewPortalService.updateThemePortletSize(themeId, tenantId, companyId, sizeList);
 			}
 
@@ -6206,4 +6213,36 @@ public class EzNewPortalGWController {
 		return result;
 	}
 	
+	/**
+	 * 포탈 G/W [GET] 포틀릿 - 연계 포틀릿 정보 조회
+	 */
+	@RequestMapping(value = "/rest/ezPortal/portlets/connect/list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getConnectPortlet(HttpServletRequest request) throws Exception {
+		logger.debug("ezNewPortal G/W getConnectPortlet started.");
+
+		String serverName = request.getHeader("x-user-host");
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String deptId = request.getParameter("deptId");
+		int currentPage = Integer.parseInt((String)request.getParameter("currentPage"));
+		int listCnt = Integer.parseInt(request.getParameter("listCnt"));
+		MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+		int tenantId = info.getTenantId();
+		int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
+
+		SystemConfigVO systemConfig = ezNewPortalService.getSystemConfig(portletId, companyId, tenantId);
+		ConnectPortletDTO connectPortletDTO = new ConnectPortletDTO();
+		connectPortletDTO.setUserId(userId);
+		connectPortletDTO.setDeptId(deptId);
+		connectPortletDTO.setSystemConfig(systemConfig);
+		connectPortletDTO.setRequest(request);
+		connectPortletDTO.setCurrentPage(currentPage);
+		connectPortletDTO.setListCnt(listCnt);
+		connectPortletDTO.setTenantId(tenantId);
+		JSONObject resultData = ezNewPortalService.getConnectPortletData(connectPortletDTO);
+		
+		logger.debug("ezNewPortal G/W getConnectPortlet ended.");
+
+		return resultData;
+	}
 }

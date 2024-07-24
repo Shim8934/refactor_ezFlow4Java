@@ -22,7 +22,7 @@
 			<ul class="noti_btn_list">
 				<li class="noti_refresh" title="<spring:message code="ezNotification.hth02"/>" onclick="notiRefresh_onclick()"></li>	
 				<li class="noti_write"></li>
-				<li class="noti_filter" id="notFillterPopBtn" onclick="popUpNotFillter();"></li>
+				<li class="noti_filter" id="notFillterPopBtn" onclick="popUpNotiFillter();"></li>
 			</ul>
             
         </div>
@@ -32,7 +32,7 @@
                 <input type="text" id="searchNotiContent" onkeypress="searchInput()" placeholder="<spring:message code='ezNotification.hth30'/>" onselectstart="event.cancelBubble=true;event.returnValue=true" maxlength="100" autocomplete="off">
                 <span onclick="searchOnClick()"></span>
             </div>
-            <span id="notFillterPopBtn" class="noti_filter" onclick="popUpNotFillter()"></span>
+            <span id="notFillterPopBtn" class="noti_filter" onclick="popUpNotiFillter()"></span>
         </div>
         
         <div class="filter_pop" id="notFillterPop" onclick="stopPropa()" style="display: none;">
@@ -67,7 +67,7 @@
             </div>
             <div class="noti_bot_btn">
                 <span onclick="filterAllSelect_onclick()"><spring:message code="ezNotification.hth09"/></span>
-                <span class="ok">확인</span>
+                <span onclick="popUpNotiFillter()" class="close"><spring:message code="main.t3"/></span>
             </div>
         </div>
         
@@ -82,21 +82,12 @@
             </div>
         </div>
 
-        <div class="noti_list_wrap">
-            <%-- 개발 필요 (noti_list_date & noti_list 가 한묶음 이 2개가 반복되면서 날짜 + 리스트 형태) --%>
-            <div class="noti_list_date"><span>2024.08.13 (화)</span></div>
+        <div class="noti_list_wrap" id="notiwrap">
             <ul class="noti_list" id="notiList" >
                 
             </ul>
         </div>
 
-		<div class="noti_paging" style="display:none;">
-            <span class="prev" onclick="moveNotiPage('down')"></span>
-            <span class="page_num">
-                <input type="text" id="notiCurrentPage" autocomplete="off" value="1" onkeypress="return moveInputPage()">&nbsp;/&nbsp;<span  id="notiTotalPage"></span>
-            </span>
-            <span class="next" onclick="moveNotiPage('up')"></span>
-        </div>
         <div id="notiListProgress" style="position: relative; width: 100%; height: 639px; top: -640px; left: 0px; background-color: rgb(210, 210, 210); opacity: 0.4; z-index: 100; display: none;">
                <div style="top: 300px; left: 80px" id="MailProgress"></div>
 		</div>   
@@ -106,13 +97,34 @@
 <script>
 	var userDeptId = "<c:out value = '${deptID}'/>"
 	var userId = "<c:out value = '${userID}'/>"
-	var notiListCnt = 10;
-	var curPageNum = 1;
+	var notiListCnt = 5;
 	var searchTitle = "";
 	var proxyInfo = "<c:out value = '${proxyInfo}'/>";
+	var lastNotiSeq = "";
+	var notiListFlag = true;
+	var isNotiLoading = false; 
+	var notiDateEndPoint = "";
 	window.onload = function () {
+		notiListFlag = true;
+		document.getElementById('notiwrap').addEventListener("scroll", notiScroll);
 		makeMainTypeList();
-		getNotiList(1);
+		searchNoti('first');
+	}
+	
+	function notiScroll() {
+		if (isNotiLoading) {
+			return;
+		}
+		
+		var notiScrollArea = document.getElementById('notiwrap');
+		var scrollTop = notiScrollArea.scrollTop;
+		var scrollHeight = notiScrollArea.scrollHeight;
+		var clientHeight = notiScrollArea.clientHeight;
+
+	    if (scrollHeight - scrollTop - clientHeight < 100 && notiListFlag) {
+	    	searchNoti('scroll');
+	    }
+
 	}
 	
 	function makeMainTypeList() {
@@ -129,45 +141,41 @@
 		notiTypeElem.insertAdjacentHTML('beforeend', str);
 	}
 	
-	function getNotiList(pageNum) {
-		$.ajax({
-			type: "GET",
-			url: "/ezNotification/getNotiList.do",
-			dataType: "JSON",
-			data:{
-				curPageNum : pageNum,
-				notiListCnt : notiListCnt			
-			},
-			async: true,
-			success: function(result) {
-				makeNotiList(result);
-			},
-			error: function (xhr, status, e){
-				
-			}
-		});
-	}
-	
 	function makeNotiList(result) {
 		var notiListElement = document.getElementById('notiList');
 		try {
 			document.getElementById('notiTotalCount').textContent = result.totalListCnt;
 			document.getElementById('notiUnreadCount').textContent = result.notReadListCnt;
-			document.getElementById('notiTotalPage').textContent = parseInt(result.lastPageNum) > 0 ? result.lastPageNum : 1;
 			var notiList = result.notiList;
-			while (notiListElement.firstChild) {
-				notiListElement.removeChild(notiListElement.firstChild);
-			}
 			
 			var str = "";
 			if (notiList == "") {
-				str += '<div class="notiZero">'
-				str	+= '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + notiMessages.strLang1 + '</dd></dl>'
-				str += '</div>';
-				curPageNum = 1;
+				if (lastNotiSeq == "") {
+					str += '<div class="notiZero">'
+					str	+= '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + notiMessages.strLang1 + '</dd></dl>'
+					str += '</div>';	
+				} else {
+					str += '<div class="noti_list_date"></div>'
+				}
+				notiListFlag = false;
+				notiDateEndPoint = "";
 			} else {
 				for (var i = 0; i < notiList.length; i++) {
 					var noti = notiList[i];
+					if (notiDateEndPoint == "") {
+						str += '<div class="noti_list_date"><span>' + makeNotiDateFormat(noti.regDate.substring(0, 10)) + '</span></div>'
+						notiDateEndPoint = noti.regDate.substring(0, 10);
+					} else {
+						if (notiDateEndPoint != noti.regDate.substring(0, 10)) {
+							str += '<div class="noti_list_date"><span>' + makeNotiDateFormat(noti.regDate.substring(0, 10)) + '</span></div>'
+							notiDateEndPoint = noti.regDate.substring(0, 10);
+						}
+						
+					}
+					
+					if (i == notiList.length - 1) {
+						lastNotiSeq = noti.notiSeq;
+					}
 					var linkUrl = noti.linkUrl ? noti.linkUrl : "";
 					str += noti.isRead == "Y" ? '<li class = \"read\" ' : '<li class = \"\" ';
 					str += 'onclick=\"updateNoti(\'read\'); openLink();\" ';
@@ -181,18 +189,20 @@
 					str += '<div class=\"list_info\">'
 					str += '<span class=\"read_point\"></span>'
 					str += '<p class=\"title ellipsis2\">'
-					// if (noti.mainType.toLowerCase() != "etc") {
-					// 	str += '<em>[' + mainType[noti.mainType.toLowerCase()] + ']</em>';
-					// 	str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : ' ';
-					// }
+					if (noti.mainType.toLowerCase() != "etc") {
+					 	str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : '';
+					}
 					str += ConvertCharToEntityReference(noti.notiContent) + '</p>';
                     str += '<span class=\"list_del blind\" onclick="updateNoti(\'delete\')"></span>';
                     str += '</div></li>';
 				}
 		
 			}
-			document.getElementById('notiCurrentPage').value = curPageNum;
 			notiListElement.insertAdjacentHTML('beforeend', str);
+			
+			if (document.querySelectorAll('#notiList li').length < notiListCnt && document.querySelectorAll('#notiList li').length > 0 && notiListFlag) {
+				searchNoti('scroll'); // 알림 개수가 notiListCnt보다 작은 경우 마지막 날짜 경계선 만들어주기 위해 한 번 더 호출.
+			}
 			
 			setTimeout(function() {
 				var notiElem = null;
@@ -222,17 +232,33 @@
 				
 			}, 3000);
 		} catch (error) {
+			while (notiListElement.firstChild) {
+				notiListElement.removeChild(notiListElement.firstChild);
+			}
 			var errorStr = '<br/><div class="notiError"><span><spring:message code="ezNotification.hth13"/></span></div>'
 			notiListElement.insertAdjacentHTML('beforeend', errorStr);
-			document.getElementById('notiCurrentPage').value = 1;
+			lastNotiSeq = "";
+			notiListFlag = false;
 		}
 	}
 	
-	function notiRefresh_onclick() {
-		searchNoti('pageMove');
+	function makeNotiDateFormat(targetDate) {
+		var year = targetDate.substring(0, 4);
+		var month = targetDate.substring(5, 7);
+		var date = targetDate.substring(8);
+		var dateStr = year + "." + month + "." + date + " ";
+		
+		var tempDate = new Date(year, month, date);
+		dateStr += "(" + notiDayNames[tempDate.getDay()] + ")";
+		
+		return dateStr;
 	}
 	
-	function popUpNotFillter() {
+	function notiRefresh_onclick() {
+		searchNoti('first');
+	}
+	
+	function popUpNotiFillter() {
 		 if (document.getElementById('notFillterPop').style.display == "none") {
 			 document.getElementById('notFillterPop').style.display = "block";
 		 } else {
@@ -240,68 +266,12 @@
 		 }
 	 }
 	
-	function moveInputPage() {
-		if (event.keyCode >= 48 && event.keyCode <= 57) {
-			return true;
-		} else if(event.keyCode == 13) {
-			var notiCurrentPageVal = document.getElementById("notiCurrentPage").value;
-			if (notiCurrentPageVal == "" || isNaN(notiCurrentPageVal)) {
-				return false;
-			}
-			
-			var pageNum = parseInt(document.getElementById("notiCurrentPage").value);
-			
-			var lastPageNum = parseInt(document.getElementById("notiTotalPage").textContent);
-			if (pageNum < 1 || pageNum > lastPageNum) {
-				alert('<spring:message code="ezNotification.hth14"/>');
-				document.getElementById("notiCurrentPage").value = curPageNum;
-				return false;
-			}
-			document.getElementById("notiCurrentPage").value = pageNum;
-			curPageNum = pageNum;
-			searchNoti('pageMove');
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
-	
-	function moveNotiPage(mode) {
-		var lastPageNum = parseInt(document.getElementById("notiTotalPage").textContent);
-		if (mode == 'up') {
-			var pageNum = curPageNum + 1; 
-			if (pageNum > lastPageNum) {
-				alert('<spring:message code="ezNotification.hth15"/>');
-				return;
-			}
-			
-		} else if (mode == 'down') {
-			var pageNum = curPageNum - 1; 
-			if (pageNum < 1) {
-				alert('<spring:message code="ezNotification.hth16"/>');
-				return;
-			}
-		}
-		curPageNum = pageNum;
-		document.getElementById("notiCurrentPage").value = curPageNum;
-		searchNoti('pageMove');
-	}
-	
 	function updateNoti(mode) {
 		stopPropa();
 		
 		if (mode == "delete") {
 			if (!confirm('<spring:message code="ezNotification.hth17"/>')) {
 				return;	
-			}
-			var lastPageNum = parseInt(document.getElementById("notiTotalPage").textContent);
-			if (curPageNum == lastPageNum && document.querySelectorAll('#notiList li').length == 1) {
-				if (lastPageNum == 1) {
-					curPageNum = 1;
-				} else {
-					curPageNum = lastPageNum - 1;
-				}
 			}
 		}
 		
@@ -317,12 +287,52 @@
 			},
 			async: true,
 			success: function(result) {
+				var readYN = notiLiElem[0].getAttribute("isread");
+				if (mode == 'read') {
+					notiLiElem[0].setAttribute("isread", "Y");
+					notiLiElem[0].querySelector('.read_point').style.display = "none";
+				} else if (mode == 'delete') {
+					var previousSibling = notiLiElem[0].previousElementSibling;
+					var nextSibling = notiLiElem[0].nextElementSibling;
+
+				    if (previousSibling && previousSibling.classList.contains("noti_list_date") && nextSibling && nextSibling.classList.contains("noti_list_date")) {
+				        previousSibling.remove();
+				    }
+					notiLiElem[0].remove();
+					document.getElementById('notiTotalCount').textContent = document.getElementById('notiTotalCount').textContent - 1;
+					
+					if (document.querySelectorAll('#notiList li').length == 3 && notiListFlag) {
+						// 삭제 시 리스트가 비는 현상 방지.  
+						searchNoti('scroll');
+					}
+				}
+				
+				if (readYN == 'N') {
+					var notiUnreadCount = document.getElementById("notiUnreadCount").textContent - 1;
+					document.getElementById("notiUnreadCount").textContent = notiUnreadCount;
+				}
+				
+				if (document.getElementById("notiUnreadCount").textContent == 0) {
+					var notiElem = null;
+		            var topFrame = window.parent.frames["topFrame"];
+		            if (!topFrame) return;
+		            if (navigator.userAgent.indexOf("MSIE") !== -1 || navigator.userAgent.indexOf("Trident") !== -1) {
+						notiElem = topFrame.document.querySelector('#util_noti > span #notiin');
+					} else {
+						notiElem = topFrame.contentWindow.document.querySelector('#util_noti > span #notiin');
+					}
+		            
+		            if (!!notiElem) {
+		            	notiElem.style.display = "none";
+		            }
+				}
+				
+				if (document.getElementById('notiTotalCount').textContent == 0) {
+					searchNoti('first');
+				}
 			},
 			error: function (xhr, status, e) {
 				alert('<spring:message code="ezNotification.hth34"/>');
-			},
-			complete: function() {
-				searchNoti('pageMove');
 			}
 		});
 	}
@@ -350,11 +360,9 @@
 			async: true,
 			success: function(result) {
 				if (mode == "delete") {
-					curPageNum = 1;
-					document.getElementById("notiCurrentPage").value = 1;
 					filterAllSelect_onclick();
 				} else if (mode == "read") {
-					searchNoti('pageMove');
+					searchNoti('first');
 				}
 			},
 			error: function (xhr, status, e){
@@ -388,7 +396,7 @@
 	 		}
 		 }
 		 
-		 searchNoti('search');
+		 searchNoti('first');
 	}
 	
 	function filterAllSelect_onclick() {
@@ -401,7 +409,7 @@
 		for (var i = 0; i < readFilterElems.length; i++) {
 			readFilterElems[i].checked = true;
 		}
-		searchNoti('search');
+		searchNoti('first');
 	}
 	
 	function hideFilter() {
@@ -419,12 +427,19 @@
 	}
 	
 	function searchNoti(mode) {
+		isNotiLoading = true;
 		document.getElementById("loadingLayer").style.display = "";
 		document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) - (document.getElementById("loadingLayer").offsetHeight / 2) + "px";
 		document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - (document.getElementById("loadingLayer").offsetWidth / 2) + "px";
 		
-		if (mode == "search") {
-			curPageNum = 1;
+		if (mode == "first") {
+			var notiListElement = document.getElementById('notiList'); 
+			while (notiListElement.firstChild) {
+				notiListElement.removeChild(notiListElement.firstChild);
+			}
+			lastNotiSeq = "";
+			notiListFlag = true;
+			notiDateEndPoint = "";
 		}
 		
 		var readFlag = document.getElementById("filter_read").checked;
@@ -467,7 +482,7 @@
 				isRead : isRead,
 				notiFilter: notiFilter,
 				keyWord : searchTitle,
-				curPageNum : curPageNum,
+				lastNotiSeq : lastNotiSeq,
 				notiListCnt : notiListCnt
 			},
 			async: true,
@@ -475,9 +490,11 @@
 				makeNotiList(result);
 			},
 			error: function (xhr, status, e){
-				
+				notiListFlag = false;
+				lastNotiSeq = "";
 			},
 			complete: function() {
+				isNotiLoading = false;
 				document.getElementById("loadingLayer").style.display = "none";
 			}
 		});

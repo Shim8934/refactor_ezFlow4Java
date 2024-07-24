@@ -4024,5 +4024,54 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void alterMenuOpenType() throws Exception {
 		ezCommonDAO.alterMenuOpenType();
 	}
+	
+	@Override
+	public void createSystemConfig() throws Exception {
+		logger.debug("createSystemConfig started");
+		ezCommonDAO.createTblSystemConfig();
+		ezCommonDAO.createTblSystemConfigType();
+		ezCommonDAO.addConnectionIDtoTblPortalPortletComp();
+		logger.debug("createSystemConfig ended");
+	}
+
+	@Override
+	public void createConnectionMenu() throws Exception {
+		logger.debug("createConnectionMenu started");
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		
+		String connectMenuId = ezCommonDAO.checkConnectionMenu();
+		
+		if (connectMenuId == null) {
+			logger.debug("connectionMenu doesn't exist. add connection menu data...");
+			ezCommonDAO.insertConnectionMenu();
+			for (CompanyInfoVO company : companyList) {
+				if (company.getCompanyId() != null) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("companyId", company.getCompanyId());
+					map.put("tenantId", company.getTenantId());
+					ezCommonDAO.insertConnectMenuInfo(map);
+				}
+			}
+		}
+		logger.debug("createConnectionMenu ended");
+	}
+
+	@Override
+	public void insertStandardSystemConfigData() throws Exception {
+		logger.debug("insertStandardSystemConfigData started");
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		String nowDate = commonUtil.getTodayUTCTime("");
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("nowDate", nowDate);
+				ezCommonDAO.insertStandardSystemConfigData(map);
+			}
+		}
+		
+		logger.debug("insertStandardSystemConfigData ended");
+	}
 
 }

@@ -98,7 +98,10 @@ function getTabList(portletId) {
     		    }
     		    
 		        // 2023-06-22 황인경 - 디자인 개선 > 즐겨찾기 포틀릿 > '+' 더보기 태그 위치 변경
-		        plusHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/ezNewPortal/portlet_Plus" + usedTheme + ".png'></dd>";
+		        // plusHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/ezNewPortal/portlet_Plus" + usedTheme + ".png'></dd>";
+
+				// img태그 > 백그라운드처리(css) (uiux팀 - 조기완)
+				plusHTML += "<dd class='portletPlus plus' onclick='Boardmore_NewBoardSTD_btnClick()'></dd>";
 		        document.getElementById("BoardTabPlus").innerHTML = plusHTML;
 				document.getElementById("BoardTab").innerHTML = listHTML;
 		        favoriteBoardId = $('#Board0').attr('data1');

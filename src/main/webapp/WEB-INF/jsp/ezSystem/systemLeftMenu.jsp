@@ -96,6 +96,9 @@
 			case "NOTISETTING":
 				parent.frames[1].location.href = "/admin/ezSystem/notiSetting.do";
 				break;
+			case "SYSTEMCONFIG":
+				parent.frames[1].location.href = "/admin/ezSystem/systemConfigList.do";
+				break;
 	    }
 	    
 	    $("#left .adminListBox h2 span").click(function(){
@@ -170,6 +173,7 @@
 	            </c:if>
 				<h2><span id="FILEEXTENSION" style="display:inline-block;width:100%;" onClick="menu_change('FILEEXTENSION')" ><spring:message code='ezSystem.x0009' /></span></h2>
 				<h2><span id="NOTISETTING" style="display:inline-block;width:100%;" onClick="menu_change('NOTISETTING')" ><spring:message code='ezNotification.hth21' /></span></h2>
+		        <h2><span id="SYSTEMCONFIG" style="display:inline-block;width:100%;" onClick="menu_change('SYSTEMCONFIG')" >SYSTEM CONFIG</span></h2>
 			</div>
       	</div>
     </body>

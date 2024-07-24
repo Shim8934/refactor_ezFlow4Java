@@ -15,9 +15,7 @@
 				<dt class="portletText">
 					<c:out value='${portletName }'/>
 				</dt>
-				<dd class="portletPlus" onclick="Mailmore_btnClick()">
-					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-				</dd>
+				<dd class="portletPlus plus" onclick="Mailmore_btnClick()"></dd>
 				<dd class="mailGraph" id="mailGraph"></dd>
 			</dl>
 			<ul id="MailList" class="portlet_list portletPagingArea"></ul>

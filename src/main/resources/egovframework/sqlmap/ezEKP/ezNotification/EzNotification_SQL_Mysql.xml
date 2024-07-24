@@ -30,48 +30,7 @@
      		ISREAD = 'N'
      	</isEqual>
 	</select>
-     
-    <select id="EzNotificationDAO.getMyNotiList" parameterClass="Map" resultClass="NotificationVO">
-    SELECT
-	    NOTISEQ AS notiSeq,
-		USERID AS userId,
-		MAINTYPE AS mainType,
-		SUBTYPE AS subType,
-		NOTICONTENT AS notiContent,
-		SENDERID AS senderId,
-		SENDERNAME AS senderName,
-		DATE_ADD(REGDATE, INTERVAL #offSet# MINUTE) AS regDate,
-		ISREAD AS isRead,
-		CASE
-			WHEN READDATE IS NULL THEN READDATE
-			ELSE DATE_ADD(READDATE, INTERVAL #offSet# MINUTE)
-		END AS readDate,
-		ETCDATA AS etcData,
-		ISDELETE AS isDelete,
-		DELETEDATE AS deleteDate,
-		LINKURL AS linkUrl,
-		LINKURL_MOBILE AS linkUrlMobile,
-		VIEWTYPE AS viewType,
-		VIEWWIDTH AS viewWidth,
-		VIEWHEIGHT AS viewHeight,
-		TENANT_ID AS tenantId,
-		COMPANYID AS companyId
-	FROM
-		TBL_REALTIME_NOTIFICATION
-	WHERE
-		USERID = #userId#
-	AND
-   		TENANT_ID = #tenantId#
-   	AND
-   		COMPANYID = #companyId#
-   	AND
-     	ISDELETE = 'N'
-    ORDER BY
-    	 REGDATE DESC
-    LIMIT
-    	#limit#, #rowCount#
-    </select>
-     
+          
     <update id="EzNotificationDAO.updateNoti" parameterClass="Map">
     	UPDATE
     		TBL_REALTIME_NOTIFICATION
@@ -217,10 +176,16 @@
 	AND
 		ISREAD = #isRead#
 	</isNotEqual>
+	<isNotEmpty property="lastNotiSeq">
+	<![CDATA[
+	AND
+		NOTISEQ < #lastNotiSeq#
+	]]>
+	</isNotEmpty>
     ORDER BY
-    	 REGDATE DESC
+    	 REGDATE DESC, NOTISEQ DESC
     LIMIT
-    	#limit#, #rowCount#
+    	#rowCount#
 	</select>
 	
 	<select id="EzNotificationDAO.getSearchNotiListForMobile" parameterClass="Map" resultClass="NotificationVO">
