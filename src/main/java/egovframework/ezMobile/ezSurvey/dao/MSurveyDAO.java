@@ -24,7 +24,7 @@ import egovframework.ezMobile.ezSurvey.vo.MSimpleUserVO;
 import egovframework.ezMobile.ezSurvey.vo.MSurveyItemSearchVO;
 import egovframework.ezMobile.ezSurvey.vo.MSurveyParticipantVO;
 import egovframework.ezMobile.ezSurvey.vo.MSurveyVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @SuppressWarnings("unchecked")
 @Repository("MSurveyDAO")

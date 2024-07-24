@@ -8,7 +8,7 @@ import egovframework.ezEKP.ezNotification.vo.EmergencyNotiItemVO;
 import egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO;
 import egovframework.ezEKP.ezNotification.vo.NotiRecipientVO;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzNotificationDAO")
 public class EzNotificationDAO extends EgovAbstractDAO {
