@@ -2004,7 +2004,7 @@
 			AND
 				IPADDRESS = #ipAddress#
 			AND
-				ALLOW_ACCESS = 'NO'
+				ALLOW_ACCESS = 'YES'
 		]]>
 	</select>
 

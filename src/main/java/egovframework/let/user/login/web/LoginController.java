@@ -1230,7 +1230,7 @@ public class LoginController {
 
 						logger.debug("checkCnt : {}, checkIp : {} ", checkCnt, checkIp);
 						if (checkCnt == 4) {
-							if (!checkIp && getAccess.equals("YES")) {
+							if (checkIp && getAccess.equals("YES")) {
 								returnValue = false;
 								break;
 							} else if (!checkIp) {
