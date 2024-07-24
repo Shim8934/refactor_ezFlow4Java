@@ -4020,4 +4020,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
     }
 
+	@Override
+	public void alterMenuOpenType() throws Exception {
+		ezCommonDAO.alterMenuOpenType();
+	}
+
 }

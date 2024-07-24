@@ -64,6 +64,7 @@
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
+		<c:if test="${type != 'mobile' }">
 		<div style="margin-bottom:10px;">
 			<span style="font-size: 14px; font-weight: 500;">▒ <spring:message code="ezNewPortal.topMenu.hth01"/></span> <span style="font-size: 11px; font-weight: 400;">(<spring:message code="ezNewPortal.topMenu.hth02"/></span>)</span>
 			<form id="Form1" method="post">
@@ -83,7 +84,7 @@
 				</div>
 			</form>
 		</div>
-		
+		</c:if>
 		<%-- <div id="mainmenu">
 			<ul style="margin-top: 15px;">
 				<li class="menuOrderResetButton" id="menuOrderReset"><span><spring:message code='ezNewPortal.t003' /></span></li>
@@ -108,6 +109,7 @@
 		var useChinese = "${useChinese}";
 		var useVietnamese = "${useVietnamese}";
 		var useIndonesian = "${useIndonesian}";
+		var type = "${type}";
 		
 		$(function(){
 			getCompanies();
@@ -273,7 +275,8 @@
 			request.onerror = function() {}
 			
 			var data = JSON.stringify({
-				companyId : companyValue
+				companyId : companyValue,
+				type : type
 			});
 			 
 			request.send(data);
@@ -384,6 +387,17 @@
 					
 					menusHTML += "</table>";
 					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
+					
+					// 2024-07-19 조수빈 - 웹인 경우 새 탭 / 새 창 / iframe으로 띄우는 옵션 설정 행 추가
+					if (type != 'mobile') {
+						menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewportal.openType' /></th><td class='menuIconTD'>";
+						menusHTML += "<select id='menuOpenType' style='margin-left:10px'>";
+						menusHTML += "<option value='tab' " + (menuInfo.openType == 1 ? "selected" : "") + "><spring:message code='ezNewportal.openNewTab' /></option>";
+						menusHTML += "<option value='window' " + (menuInfo.openType == 2 ? "selected" : "") + "><spring:message code='ezNewportal.openNewWindow' /></option>";
+						menusHTML += "<option value='iframe' " + (menuInfo.openType == 3 ? "selected" : "") + "><spring:message code='ezNewportal.openIframe' /></option>";
+						menusHTML += "</select></td></tr>";
+					}
+					
 					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
 					
 					if (menuAuthsY != null && menuAuthsY.length != 0) {
@@ -548,6 +562,9 @@
 				alert("<spring:message code='ezNewPortal.t084' />");
 				return;
 			}
+
+			var openType = document.getElementById("menuOpenType").value;
+			var mapping = {'tab': 1, 'window': 2, 'iframe': 3};
 			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
@@ -557,7 +574,8 @@
 				"menuUsed" : menuUsed,
 				"menuUrl" : menuUrl,
 				"menuType" : menuType,
-				"iconUrl" : iconUrl
+				"iconUrl" : iconUrl,
+				"openType" : mapping[openType]
 			}
 			
 			for (var i = 0; i < menuNamesCount; i++) {
@@ -605,7 +623,8 @@
 				companyId : companyValue,
 				menuNames : menuNameList,
 				menuInfo : menuInfo, 
-				menuAuths : menuAuths
+				menuAuths : menuAuths,
+				type : type
 			});
 			 
 			request.send(data);
@@ -732,6 +751,17 @@
 			}
 			menusHTML += "</table>";
 			menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
+
+			// 2024-07-19 조수빈 - 웹인 경우 새 탭 / 새 창 / iframe으로 띄우는 옵션 설정 행 추가
+			if (type != 'mobile') {
+				menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewportal.openType' /></th><td class='menuIconTD'>";
+				menusHTML += "<select id='menuOpenType' style='margin-left:10px'>";
+				menusHTML += "<option value='tab'><spring:message code='ezNewportal.openNewTab' /></option>";
+				menusHTML += "<option value='window'><spring:message code='ezNewportal.openNewWindow' /></option>";
+				menusHTML += "<option value='iframe'><spring:message code='ezNewportal.openIframe' /></option>";
+				menusHTML += "</select></td></tr>";
+			}
+			
 			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div></div></td></tr>";
 			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'><div></div></td></tr></table>";
 			menusHTML += "<div class='bottomBtn'><a class='btnA addMenuBtn'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
@@ -809,14 +839,18 @@
 				return;
 			}
 			
+			var openType = document.getElementById("menuOpenType").value;
+			var mapping = {'tab': 1, 'window': 2, 'iframe': 3};
+			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
 			
 			var menuInfo = {
 				"menuUsed" : menuUsed,
 				"menuUrl" : menuUrl,
-				"menuType" : "A",
-				"iconUrl" : iconUrl
+				"menuType" : type == "mobile" ? "MA" : "A",
+				"iconUrl" : iconUrl,
+				"openType" : mapping[openType]
 			}
 			
 			for (var i = 0; i < menuNamesCount; i++) {
@@ -892,7 +926,8 @@
 				
 				var data = JSON.stringify({
 					menuId : menuId,
-					companyId : companyValue
+					companyId : companyValue,
+					type : type
 				});
 				 
 				request.send(data);

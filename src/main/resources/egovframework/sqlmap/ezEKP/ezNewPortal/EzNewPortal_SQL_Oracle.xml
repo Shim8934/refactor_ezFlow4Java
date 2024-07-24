@@ -1091,7 +1091,8 @@ AND
                 A.menu_url         AS menuUrl,
                 A.icon_urL         AS iconUrl,
                 COMP.company_order    AS companyOrder,
-                A.menucode
+                A.menucode,
+                COMP.OPENTYPE
             FROM
                 tbl_portal_menu A
             JOIN

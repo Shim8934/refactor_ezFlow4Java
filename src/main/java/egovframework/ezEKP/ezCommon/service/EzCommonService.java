@@ -395,5 +395,7 @@ public interface EzCommonService {
     public void alterTblScheduleForShowtop() throws Exception;
 	
 	public void insertInitMobileTheme() throws Exception;
+
+	public void alterMenuOpenType() throws Exception;
 	
 }

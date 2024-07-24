@@ -136,7 +136,7 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 회사별 메뉴목록조회
 	 */
-	public List<MenuInfoVO> getMenus(String companyId, int tenantId, String menuLang) throws Exception;
+	public List<MenuInfoVO> getMenus(String companyId, int tenantId, String menuLang, String type) throws Exception;
 	/**
 	 * 관리자 메뉴상세정보조회
 	 */

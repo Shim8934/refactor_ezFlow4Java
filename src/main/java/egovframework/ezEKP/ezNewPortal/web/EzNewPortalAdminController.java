@@ -180,6 +180,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("useChinese", ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId()));
 			model.addAttribute("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId()));
 			model.addAttribute("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId()));
+			model.addAttribute("type", requset.getParameter("type"));
 
 			response.setHeader("Pragma", "no-cache"); //HTTP 1.0
 			response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
@@ -413,6 +414,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("type", paramMap.get("type"));
 		
 		String url = "/rest/admin/ezPortal/menus/companies/" + paramMap.get("companyId");
 		
