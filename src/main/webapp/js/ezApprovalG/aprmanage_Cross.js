@@ -2154,6 +2154,9 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceiptAll").style.display = "none";
         document.getElementById("tbtnRJunkyulAll").style.display = "none";
+        document.getElementById("tbtnAssignList").style.display = "none";
+        document.getElementById("tbtnAssign").style.display = "none";
+        document.getElementById("tbtnDeptRecevList").style.display = "none";
         document.getElementById("tbtnJiJungAll").style.display = "none";
         document.getElementById("tbtnBebuAll").style.display = "none";
     }
