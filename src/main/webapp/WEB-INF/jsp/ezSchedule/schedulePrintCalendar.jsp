@@ -76,6 +76,8 @@
 		    var LunarUse = false;		    
 		    var primaryLang = "<c:out value='${userInfo.primary}'/>";		// 2018-12-26 김민성 - 일정관리 기념일 다국어 처리
 		    var typeCal = "<c:out value='${typeCal}'/>";
+		    var pStartDate = "<c:out value='${pStartDate}'/>";
+		    var pEndDate = "<c:out value='${pEndDate}'/>";
 		    
 		    /* 2020-05-18 협업-일정 연동 관련 추가 */
 		    var WorkspaceUrl = "<c:out value='${workspaceHostUrl}'/>";     // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
@@ -241,17 +243,6 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        //if (pDefaultview == 2) {
-		            //typeCal = 0;
-		            // 2018-06-07 구해안 미니 호출 부분 주석처리
-		            //parent.frames["left"].typeCal = 0;
-		        //} else if (pDefaultview == 1) {
-		            //typeCal = 1;
-		            //parent.frames["left"].typeCal = 1;
-		        //} else if (pDefaultview == 0) {
-		            //typeCal = 2;
-		            //parent.frames["left"].typeCal = 2;
-		        //}
 
 		        if (pStartday == 1)
 		            DefaultView = 1
@@ -274,7 +265,30 @@
 		            windowonload_Complete("empty");
 		        }
 		        
+		        myVar = setInterval(function () { DocumentComplate(); }, 1000);
+		        
 		    }
+		    
+		    function DocumentComplate() {
+            	if (CrossYN()) {
+            		window.print();
+            	} else {
+            		preview_print();
+            	}
+            
+            	clearInterval(myVar);
+            }
+            
+            function preview_print() { //미리보기 기능 선언
+            	var OLECMDID = 7; //7이 미리보기,6이 인쇄,8이 페이지설정
+            	var PROMPT = 1;
+            	var WebBrowser = '<OBJECT ID="WebBrowser1" WIDTH=0 HEIGHT=0 CLASSID="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2"></OBJECT>';
+            	document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
+            	WebBrowser1.ExecWB(OLECMDID, PROMPT);
+            	WebBrowser1.outerHTML = "";
+            	return false;
+            }
+		    
 		    
 		    window.onresize = function(){
 		    	if($("#iFramePanel") != undefined) {
@@ -593,111 +607,8 @@
 		            } */
 		        }
 		    }
-			
-		    function WriteDateSchedule(e) {
-		        var srcEl;
-
-		        if (CrossYN()) {		            
-		            srcEl = e;
-		        } else {
-		            srcEl = window.event.srcElement;
-		        }
-
-		        var sdate, edate, datetype;
-                var showtop = "N";
-
-		        // 2018-11-09 김민성 - 일보기/주보기일 때 종일일정 클릭시 시간 종일로 변경
-		        // 일보기, 주보기의 시간대 클릭
-		        if (GetAttribute(srcEl, "dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
-		            datetype = "1";
-		            sdate = GetAttribute(srcEl, "dispTime");
-
-		        	// 2020-01-28 김민성 - 일보기/주보기에서 단위 시간 체크 추가
-		            var timeString = GetAttribute(srcEl, "dispTime").substring(11,16);
-		            var sdateTime = GetAttribute(srcEl, "id").split(":")[1][0];
-		            
-		            edateSplit = sdate.split(" ")[1].split(":");
-					edate = sdate.replace(sdate.split(" ")[1], edateSplit[0] + ":" + leadingZeros(edateSplit[1]*1+30, 2) + ":" + edateSplit[2]);
-		        } 
-		        // 월보기 클릭
-		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0 && GetAttribute(srcEl, "id").indexOf("TOP") == -1 ) {
-		        	datetype = "1";
-		        	// 시간데이터가 없는 경우 임의 시간
-		        	sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
-		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
-		        }
-		        // 상단표시
-		        else if (GetAttribute(srcEl, "id").indexOf("TOP") !== -1) {
-		            showtop = "Y"
-		            datetype = "1";
-                    sdate = GetAttribute(srcEl, "dispdate");
-                    edate = sdate;
-		        }
-		        // 일보기, 주보기의 종일일정 클릭
-		        else {
-		            datetype = "2";
-		            sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
-		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
-		        }
-
-		        var popupHeight = 830;
-		        var popupWidth = 790;
-		        var pheight = window.screen.availHeight;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - popupHeight) / 2;
-		        var pLeft = (pwidth - popupWidth) / 2;
-		
-		       	var dualScreenTop = window.screenY;
-		        var dualScreenLeft = window.screenX;
-		        	
-		       	pTop += dualScreenTop;
-		       	pLeft += dualScreenLeft;
-		       				
-				if (/MSIE|Trident/.test(window.navigator.userAgent)) {
-		       		if (window.screenLeft > window.screen.width) {
-		       			pTop -= 223;
-		       			pLeft -= 375;
-		       		}
-		       	}
-		        
-		        if (otherid == "") {
-		            /* var index = idSelect.selectedIndex;
-		            if (index == -1) */
-		            var index = 0;
-
-		            var feature = GetOpenPosition(790, 760);
-		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate) + "&showtop=" + showtop, "", "height = 830px, width = 790px,top=" + pTop + ", left=" + pLeft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		            /* } else {
-		                if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                    window.open("schedule_write.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate) + "&showtop=" + showtop, "",
-						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		                }
-		                else {
-		                    window.open("schedule_write_IE.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate) + "&showtop=" + showtop, "",
-						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		                }
-		            } */
-
-		        } else {
-		            var type = GetAttribute(secretarySelect.options[secretarySelect.selectedIndex], "type") == "user" ? "6" : "8";
-		            var feature = GetOpenPosition(790, 760);
-		            
-		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&type=" + type + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate) + "&showtop=" + showtop, "",
-						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		            /* } else {
-		                if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                    window.open("schedule_write.aspx?otherid=" + escape(otherid) + "&type=" + type + "&othername=" + escape(getNodeText(secretarySelect.options[secretarySelect.selectedIndex])) + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
-						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		                }
-		                else {
-		                    window.open("schedule_write_IE.aspx?otherid=" + escape(otherid) + "&type=" + type + "&othername=" + escape(getNodeText(secretarySelect.options[secretarySelect.selectedIndex])) + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
-						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		                }
-		            } */
-		        }
-		    }
+		    
+		    
 		    function WriteDateSchedule_left(obj) {
 		        var sdate, edate, datetype;
                 datetype = "2";
@@ -815,7 +726,8 @@
 		        //DateChange(szCmd);
 
 		    }
-
+            
+            
 		    function DateChange(szCmd) {
 		        switch (szCmd) {
 		            case "DAY":
@@ -952,18 +864,6 @@
                 
                 DivPopUpShow(350, 350, "/ezSchedule/schedulePrintMode.do");
                 
-                //var year = sStartDate.split("-")[0];
-                //var month = sStartDate.split("-")[1];
-                //var day = sStartDate.split("-")[2];
-                //var view = typeCal;
-                //var date = year + "-" + month + "-" + day;
-                //if (idlist == "")
-                //    idlist = idtype;
-                //var feature = GetOpenPosition(837, 660);
-                //if (idlist == "G")
-                //    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
-                //else
-                //    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
             }
             
             function PrintModeSelect(rtn) {
@@ -2051,18 +1951,634 @@
                 }
                 
             }
+            function CalViewSource(chk_str) {
+            	xmlhttp = createXMLHttpRequest();
+            	var xmlpara;
+                
+                xmlpara ="STARTDATE="+pStartDate+"&ENDDATE="+pEndDate+"&APP="+chk_str+"&GROUPID="+groupid+"&IDLIST=T";
+                
+                
+                if (!delFlag) {
+                	xmlhttp.open("POST", "/ezSchedule/scheduleGetList.do", true);
+                } else {
+                	xmlhttp.open("POST", "/ezResource/scheduleGetList.do", false);
+                }
+                
+                xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                
+                if (typeCal == 0) {
+                    if (!delFlag) {
+                        xmlhttp.onreadystatechange = getCalMonthViewSource_after;
+                        xmlhttp.send(xmlpara);
+                    }
+                    else {
+                        xmlhttp.send(xmlpara);
+                        getCalMonthViewSource_after();
+                    }
+                }
+                else if (typeCal == 1) {
+                    if (!delFlag) {
+                        xmlhttp.onreadystatechange = getCalWeekViewSource_after;
+                        xmlhttp.send(xmlpara);
+                    }
+                    else {
+                    	xmlhttp.send(xmlpara);
+                        getCalWeekViewSource_after();
+                    }
+            
+                }
+                else if (typeCal == 2) {
+                    if (!delFlag) {
+                        xmlhttp.onreadystatechange = getCalDayViewSource_after;
+                        xmlhttp.send(xmlpara);
+                    }
+                    else {
+                        xmlhttp.send(xmlpara);
+                        getCalDayViewSource_after();
+                    }
+                }
+                delFlag = false;
+            }
+            
+            function getCalMonthViewSource_after() {
+                var tempData = new Array();
+                if (xmlhttp == null || xmlhttp.readyState != 4) return;
+                
+                try {        
+                	if (xmlhttp.responseText == "") return;
+                	var listNode = loadXMLString(xmlhttp.responseText);
+                    var nlength = SelectNodes(listNode, "DATA/ROW").length;
+                    var k = 0;
+                    for (var i = 0; i < nlength; i++) {
+                        var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
+                        var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
+                        var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");    
+                        var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
+                        var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+                        OrgDataSDT = new Date(DataSDT);
+                        OrgDataEDT = new Date(DataEDT);
+                        if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
+            
+                            var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
+                            var day = 1000 * 60 * 60 * 24;
+                            betweenDay = parseInt(betweenDay / day, 10);
+                            
+                            for (var j = 0; j <= betweenDay; j++) {
+                                tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                                CalMonthDataBind(tempData[k]);
+                                DataSDT.setDate(DataSDT.getDate() + 1);
+                                if (dateDiff(DataSDT, DataEDT) < 1 && _Dtend.substring(10) == " 00:00:00.0") {
+                                	break;
+                                }
+                                k += 1;
+                            }
+                        } else {
+                            tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                            CalMonthDataBind(tempData[k]);
+                            k += 1;
+                        }
+                        DataSDT = null;
+                        DataEDT = null;
+                    }        
+                    tempData = null;
+                    //chk_scheduleCSS();
+                }
+                catch (e) {
+                    alert("getCalMonthViewSource_after : " + e.description);
+                }
+            }
+            
+            function getCalWeekViewSource_after() {
+                var tempData = new Array();
+                if (xmlhttp == null || xmlhttp.readyState != 4) return;
+                
+                try {        
+                	if (xmlhttp.responseText == "") return;
+                	var listNode = loadXMLString(xmlhttp.responseText);
+                    var nlength = SelectNodes(listNode, "DATA/ROW").length;
+                    var k = 0;
+                    for (var i = 0; i < nlength; i++) {
+                    	var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
+            
+                    	// 2020-02-24 김정언 - 근태 현황은 [월보기]에서만 지원한다.
+                    	if (SelectSingleNodeValue(objNodes, "DATETYPE") == "4") {
+                    		continue;
+                    	}
+                    	
+                        var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
+                        var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
+                        var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
+                        var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+            
+                        sStartDate = sStartDate.split("-")[0] + "-" + leadingZeros(sStartDate.split("-")[1], 2) + "-" + leadingZeros(sStartDate.split("-")[2], 2)
+                        sEndDate = sEndDate.split("-")[0] + "-" + leadingZeros(sEndDate.split("-")[1], 2) + "-" + leadingZeros(sEndDate.split("-")[2], 2)
+                        OrgDataSDT = new Date(DataSDT);
+                        OrgDataEDT = new Date(DataEDT);
+                        if (SelectSingleNodeValue(objNodes, "DATETYPE") != "2") {
+                                if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
+            
+                                    var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
+                                    var day = 1000 * 60 * 60 * 24;
+                                    betweenDay = parseInt(betweenDay / day, 10);
+                                    for (var j = 0; j <= betweenDay; j++) {
+                                        if (j == 0) {
+                                            DataEDT.setHours(23);
+                                            DataEDT.setMinutes(59);
+                                        }
+                                        else if (j < betweenDay) {
+                                            DataSDT.setHours(0);
+                                            DataSDT.setMinutes(0);
+                                            DataEDT.setHours(23);
+                                            DataEDT.setMinutes(59);
+                                        }
+                                        else {
+                                            DataSDT.setHours(0);
+                                            DataSDT.setMinutes(0);
+                                            DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+                                        }
+                                        tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                                        aheadDataCell(tempData[k], k)
+                                        CalWeekDataBind(tempData[k], k);
+                                        DataSDT.setDate(DataSDT.getDate() + 1);
+                                        k += 1;
+                                    }
+                                } else {
+                                    tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                                    aheadDataCell(tempData[k], k)
+                                    CalWeekDataBind(tempData[k], k);
+                                    k += 1;
+                                }
+                        }
+                        else {
+                            if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
+                                var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
+                                var day = 1000 * 60 * 60 * 24;
+                                betweenDay = parseInt(betweenDay / day, 10);
+                                if (_Dtend.substring(10) == " 00:00:00.0") {
+                                	betweenDay = betweenDay - 1;
+                                }
+                            } else
+                                betweenDay = 0;
+            
+                            for (var j = 0; j <= betweenDay; j++) {
+                                tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                                CalWeekAllDataBind(tempData[k], k);
+                                DataSDT.setDate(DataSDT.getDate() + 1);
+                                k += 1;
+                            }
+                        }
+                        DataSDT = null;
+                        DataEDT = null;
+                    }
+                    
+            
+                    for (var i = 0; i < tempData.length; i++) {
+                        if (tempData[i].DateType != "2")
+                            CalDataSize(tempData[i], i, tempData);
+                    }
+            
+                    for (var i = 0; i < tempData.length; i++) {
+                        if (tempData[i].DateType != "2")    
+                            CalDataWidth(tempData[i], i, tempData);
+                    }
+                    tempData = null;
+                    //chk_scheduleCSS();
+                    
+                    //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
+                  if(objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
+                    $("div[id$='ALL'").children().draggable({
+                    	addClasses: false,
+                    	revert : "invalid",
+                    	helper : function(event) {
+                    		return $(event.target).clone().css({
+                    			width: $(event.target).width()
+                    		});
+                    	},
+                    	appendTo: "body",
+                    	containment: "#calTR"
+                    });
+                    
+                  //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
+                  $("#dayDiv").find("div[id^='div_']").draggable({
+                    	addClasses: false,
+                    	cursorAt: { top: 1, left: 1 },
+                    	scroll: false,
+                    	handle: "td", 
+                    	helper: "clone"
+                    });
+                  }
+                }
+                catch (e) {
+                    alert("getCalWeekViewSource_after : " + e.description);
+                }
+            }
+            function getCalDayViewSource_after() {
+                var tempData = new Array();
+                if (xmlhttp == null || xmlhttp.readyState != 4) return;
+                
+                try {        
+                	if (xmlhttp.responseText == "") return;
+                	var listNode = loadXMLString(xmlhttp.responseText);
+                    var nlength = SelectNodes(listNode, "DATA/ROW").length;
+                    var k = 0;
+                    for (var i = 0; i < nlength; i++) {
+                        var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
+            
+                        // 2020-02-24 김정언 - 근태 현황은 [월보기]에서만 지원한다.
+                        if (SelectSingleNodeValue(objNodes, "DATETYPE") == "4") {
+                        	continue;
+                        }
+                        
+                        var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
+                        var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
+                        var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
+                        var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+                        OrgDataSDT = new Date(DataSDT);
+                        OrgDataEDT = new Date(DataEDT);
+                        if (SelectSingleNodeValue(objNodes, "DATETYPE") != "2") {
+                                if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
+            
+                                    var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
+                                    var day = 1000 * 60 * 60 * 24;
+                                    betweenDay = parseInt(betweenDay / day, 10);
+                                    for (var j = 0; j <= betweenDay; j++) {
+                                        var toDay = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
+                                        var DataDay = DataSDT.getFullYear() + "-" + leadingZeros((DataSDT.getMonth() + 1), 2) + "-" + leadingZeros(DataSDT.getDate(), 2)
+                                        if (toDay == DataDay) {
+                                            if (betweenDay >= 1) {
+                                                if (j == 0) {
+                                                    DataEDT.setHours(23);
+                                                    DataEDT.setMinutes(59);
+                                                }
+                                                else if (j < betweenDay) {
+                                                    DataSDT.setHours(0);
+                                                    DataSDT.setMinutes(0);
+                                                    DataEDT.setHours(23);
+                                                    DataEDT.setMinutes(59);
+                                                }
+                                                else {
+                                                    DataSDT.setHours(0);
+                                                    DataSDT.setMinutes(0);
+                                                    DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+                                                }
+                                            }
+                                            tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                                            aheadDataCell(tempData[k], k);
+                                            CalDayDataBind(tempData[k], k);
+            
+                                            k += 1;
+                                        }
+                                        DataSDT.setDate(DataSDT.getDate() + 1);
+                                    }
+                                } else {
+                                    tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                                    aheadDataCell(tempData[k], k);
+                                    CalDayDataBind(tempData[k], k);
+                                    k += 1;
+                                }
+                        }
+                        else {
+                            if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
+                                var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
+                                var day = 1000 * 60 * 60 * 24;
+                                betweenDay = parseInt(betweenDay / day, 10);
+                                if (_Dtend.substring(10) == " 00:00:00.0") {
+                                	betweenDay = betweenDay - 1;
+                                }
+                            } else
+                                betweenDay = 0;
+            
+                            for (var j = 0; j <= betweenDay; j++) {
+                                tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                                CalDayAllDataBind(tempData[k], k);
+                                DataSDT.setDate(DataSDT.getDate() + 1);
+                                if (dateDiff(DataSDT, DataEDT) < 1 && _Dtend.substring(10) == " 00:00:00.0") {
+                                	break;
+                                }
+                                k += 1;
+                            }
+            
+                        }
+                        DataSDT = null;
+                        DataEDT = null;
+                    }
+            
+                    for (var i = 0; i < tempData.length; i++) {
+                        if(tempData[i].DateType != "2")
+                            CalDataSize(tempData[i], i, tempData);
+                    }
+            
+                    for (var i = 0; i < tempData.length; i++) {
+                        if (tempData[i].DateType != "2")
+                            CalDataWidth(tempData[i], i, tempData);
+                    }        
+                    tempData = null;
+                    //chk_scheduleCSS();
+                    if(objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
+                    //2018-11-05 김혜정  일보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
+                    $("#CalDiv").find("div[id^='div_']").draggable({
+                    	addClasses: false,
+                    	scroll: true,
+                    	helper : "clone",
+                    	cursorAt: { top: 1, left: 1 }
+                    });
+                    }
+                }
+                catch (e) {
+                    alert("getCalDayViewSource_after : " + e.description);
+                }
+            }
+            
+            function GetMonthBodyObj() {
+            	// 2018-06-08 구해안 mini에서 호출하는 부분 삭제
+                /*var year = parent.frames["left"].document.getElementById("iYear").value;
+                var month = parseInt(parent.frames["left"].document.getElementById("iMon").value, 10);*/
+            	var year = parseInt(pStartDate.split('-')[0]);
+                var month = parseInt(pStartDate.split('-')[1]) + 1;
+            
+                oBeforeDate = new Date(new Date(year, month - 1, 1) - 86400000);  
+                oThisDate = new Date(year, month - 1, 1); 
+                oBeforeDate.setTime(oBeforeDate.getTime() + (oBeforeDate.getTimezoneOffset() + (oBeforeDate.getHours() * 60) + oBeforeDate.getMinutes()) * 60 * 1000);
+                oThisDate.setTime(oThisDate.getTime() + (oThisDate.getTimezoneOffset() + (oThisDate.getHours() * 60) + oThisDate.getMinutes()) * 60 * 1000);
+            
+                var oBeforeMaxDay = oBeforeDate.getDate();
+                var startThisDay = oThisDate.getDay();
+                oThisMonth = oThisDate.getMonth() + 1;
+            
+                if (oThisMonth == 12) {
+                    oThisMonth = 0;
+                }
+            
+                oBeforeDate.setDate(oBeforeMaxDay - startThisDay + 1 + DefaultView); 
+            
+                var oTbody = document.createElement("TBODY");
+                var objTr = document.createElement("TR");
+            
+                
+                for (var j = 0; j < 7; j++) {
+                    var objTh = document.createElement("TH");
+                    var oText = document.createTextNode(dayOfWeeks.split(";")[j]);
+            
+                    if (DefaultView == 0 && j == 0)
+                        objTh.className = "sun";
+                    else if (DefaultView == 0 && j == 6)
+                        objTh.className = "sat";
+            
+                    if (DefaultView == 1 && j == 6)
+                        objTh.className = "sun";
+                    else if (DefaultView == 1 && j == 5)
+                        objTh.className = "sat";
+            
+                    var className = "";
+                    if (DefaultView == 0 && j == 0 || DefaultView == 1 && j == 6)
+                        className = "sun";
+                    else if (DefaultView == 0 && j == 6 || DefaultView == 1 && j == 5)
+                        className = "sat";
+            
+                    objTh.appendChild(oText);
+                    objTr.appendChild(objTh);
+                    objTh = null;
+                }
+                oTbody.appendChild(objTr);
+                
+                if (oBeforeMaxDay != 0) {
+                    oThisDate = oBeforeDate;
+                }
+                sStartDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
+            
+                
+                var TDIndex = 0;
+                for (var i = 0; i < 6; i++) {
+                    var objTr = document.createElement("TR");
+            
+                    for (var j = 0; j < 7; j++) {
+                        var objTd = MonthData(oThisDate, TDIndex);
+                        TDIndex++;
+                        objTr.appendChild(objTd);
+                        objTd = null;
+                    }
+                    oTbody.appendChild(objTr);
+                }
+                
+                oThisDate.setDate(oThisDate.getDate()-1);
+                sEndDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
+                objTr = null;
+            
+                return oTbody;
+            }
+            
+            function GetWeekBodyObj() {
+                startOfWeek = new Date(pStartDate);
+                //startOfWeek.setDate(sDate.getDate() - sDate.getDay() + DefaultView);
+                var startYear = startOfWeek.getFullYear();
+                var startMonth = startOfWeek.getMonth();
+                var startDate = startOfWeek.getDate();
+            
+                sStartDate = startYear + "-" + (startMonth + 1) + "-" + startDate
+                endOfWeek = new Date(pEndDate);
+                //endOfWeek.setDate(sDate.getDate() + (6 - sDate.getDay()) + DefaultView);
+            
+                var endYear = endOfWeek.getFullYear();
+                var endMonth = endOfWeek.getMonth();
+                var endDate = endOfWeek.getDate();
+            
+                sEndDate = endYear + "-" + (endMonth + 1) + "-" + endDate
+                var oTbody = document.createElement("TBODY");
+                var oTr = document.createElement("TR");
+                var oTD = document.createElement("TD");
+                oTD.className = "calendar_time";
+            
+                var oText = document.createTextNode(" " + startYear + "-" + leadingZeros((startMonth + 1), 2) + "-" + leadingZeros(startDate, 2) + " ~ " + endYear + "-" + leadingZeros((endMonth + 1), 2) + "-" + leadingZeros(endDate, 2) + " ");
+            
+                var mSpan = document.createElement("SPAN");
+                mSpan.className = "icon16 calendarleft";
+                mSpan.setAttribute("onclick", "preWeek()");
+                
+                //2018-06-12 구해안 week 달력생성
+                var uploadSDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
+                var datePick = document.createElement("INPUT");
+                datePick.setAttribute("type", "hidden");
+                datePick.setAttribute("name", "datePick");
+                datePick.setAttribute("class", "datePick");
+                datePick.setAttribute("value", uploadSDate);
+                
+                var mSpan2 = document.createElement("SPAN");
+                mSpan2.className = "icon16 calendarright";
+                mSpan2.setAttribute("onclick", "nextWeek()");
+                
+                $("#preM").html("");
+                $("#preM").append(mSpan);
+                
+                $("#calTitle").html("");
+                $("#calTitle").append(oText);
+                $("#calTitle").append(datePick);
+                
+                $("#preN").html("");
+                $("#preN").append(mSpan2);
+                
+                for (var k = 0; k < 24; k++) {
+                    var dTable = document.createElement("TABLE")
+                    var dTbody = document.createElement("TBODY");
+                    dTable.setAttribute("cellpadding", "0");
+                    dTable.setAttribute("cellspacing", "0");
+                    dTable.setAttribute("border", "0");
+                    dTable.setAttribute("width", "100%");
+                    dTable.className = "calendar_row";
+                    var dTr = document.createElement("TR")
+                    var dTd = document.createElement("TD")
+                    dTd.className = "calendar_t_time";
+            
+                    if (k == 0)
+                        dTd.innerHTML = strLang1 + " <span class=\"point\">12</span> " + strLang128;
+                    else if (k == 12)
+                        dTd.innerHTML = strLang2 + " <span class=\"point\">" + k + "</span> " + strLang128;
+                    else
+                        dTd.innerHTML = "<span class=\"point\">" + k + "</span> " + strLang128;
+                    dTr.appendChild(dTd);
+                    dTbody.appendChild(dTr);
+                    var dTr = document.createElement("TR")
+                    var dTd = document.createElement("TD")
+                    dTr.appendChild(dTd);
+                    dTbody.appendChild(dTr);
+                    dTable.appendChild(dTbody);
+                    oTD.appendChild(dTable);
+                }
+                oTr.appendChild(oTD);
+                
+                for (var j = 0; j < 7; j++) {
+                    var objTD = WeekData(startOfWeek, dayOfWeeks.split(";")[j], j);
+                    oTr.appendChild(objTD);
+            
+                    startOfWeek.setDate(startOfWeek.getDate() + 1)
+                    endOfWeek.setDate(endOfWeek.getDate() + 1)
+            
+                }
+            
+                var calTr = document.getElementById("calTR");
+                if (calTr) {
+                    var objTd = document.createElement("TD");
+                    objTd.className = "calendar_td_last"
+                    calTr.appendChild(objTd);
+                }
+                // 상단표시 (주보기)
+                var topTr = document.getElementById("topTR");
+                topTr.setAttribute("style","border-top: 1px solid #dedede")
+                if (topTr) {
+                    var objtTd = document.createElement("TD");
+                    objtTd.className = "calendar_td_last"
+                    topTr.appendChild(objtTd);
+                }
+                oTbody.appendChild(oTr);
+                oTr = null;
+                $('#hiddensStartDate').val(sStartDate);
+                $('#hiddensEndDate').val(sEndDate);
+                return oTbody;
+            }
+            
+            function GetDayBodyObj() {
+                var oTbody = document.createElement("TBODY");
+                var objTr = document.createElement("TR");
+                var objTd = document.createElement("TD");
+                objTd.className = "calendar_time";
+            
+                for (var k = 0; k < 24; k++) {
+                    var dTable = document.createElement("TABLE")
+                    var dTbody = document.createElement("TBODY");
+                    dTable.setAttribute("cellpadding", "0");
+                    dTable.setAttribute("cellspacing", "0");
+                    dTable.setAttribute("border", "0");
+                    dTable.setAttribute("width", "100%");
+                    dTable.className = "calendar_row";
+                    var dTr = document.createElement("TR")
+                    var dTd = document.createElement("TD")
+                    dTd.className = "calendar_t_time";
+            
+                    if (k == 0)
+                        dTd.innerHTML = strLang1 + " <span class=\"point\">12</span> " + strLang128;
+                    else if (k == 12)
+                        dTd.innerHTML = strLang2 + " <span class=\"point\">" + k + "</span> " + strLang128;
+                    else
+                        dTd.innerHTML = "<span class=\"point\">" + k + "</span> " + strLang128;
+                    dTr.appendChild(dTd);
+                    dTbody.appendChild(dTr);
+                    var dTr = document.createElement("TR")
+                    var dTd = document.createElement("TD")
+                    dTr.appendChild(dTd);
+                    dTbody.appendChild(dTr);
+                    dTable.appendChild(dTbody);
+                    objTd.appendChild(dTable);
+                }
+            
+                objTr.appendChild(objTd);
+            
+            
+                var objTd = document.createElement("TD");
+                objTd.className = "td_list";
+            
+                for (var j = 0; j < 24; j++) {
+            
+                    var objTD = DayData(j);
+                    objTd.appendChild(objTD);
+                }
+                objTr.appendChild(objTd);
+                oTbody.appendChild(objTr);
+            
+                objTr = null;
+                //sStartDate = pStartDate;
+                //sEndDate = pEndDate;
+                sStartDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
+                sEndDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
+                return oTbody;
+            }
+            
+            function DayData(j) {
+            
+                var divID = pStartDate;//sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
+                var sTable = document.createElement("TABLE");
+                sTable.setAttribute("cellpadding", "0");
+                sTable.setAttribute("cellspacing", "0");
+                sTable.setAttribute("border", "0");
+                sTable.setAttribute("width", "100%");
+                if (pDisplaySTime <= j && pDisplayETime > j)
+                    sTable.className = "calendar_row today";
+                else
+                    sTable.className = "calendar_row";
+                var s_Tr = document.createElement("TR");
+                var s_Td = document.createElement("TD");
+                s_Td.className = "calendar_t_time";
+                s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":0_Value");
+                if(chk_usersearch != "UserSearch"){
+                    s_Td.setAttribute("onclick", "WriteDateSchedule(this)");
+                    s_Td.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                }
+                s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":00:00");
+                s_Tr.appendChild(s_Td);
+                sTable.appendChild(s_Tr);
+                var s_Tr = document.createElement("TR");
+                var s_Td = document.createElement("TD");
+                s_Td.className = "calendar_t_text";
+                if(chk_usersearch != "UserSearch"){
+                    s_Td.setAttribute("onclick", "WriteDateSchedule(this)");
+                    s_Td.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                }
+                s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":3_Value");
+                s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":30:00");
+                s_Tr.appendChild(s_Td);
+                sTable.appendChild(s_Tr);
+                return sTable;
+            }
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px">
-        <h1 id="titleimg">${defaultTitle}</h1>
-        <div id="mainmenu">
+        <h1 id="titleimg" style="text-align: center;">${defaultTitle}</h1>
+        <div id="mainmenu" style="display:none;">
             <ul class="on">
             	<li class="important"><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
             	<li><span class="icon16 icon16_print" onClick="PrintSchedule()"></span></li>
               	<li><span class="icon16 icon16_refresh" onClick="RefreshView()"></span></li>
             </ul>
 		</div>
-		<div class="calendar_pagenav">
+		<div class="calendar_pagenav" style="display:none;">
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"></li>
 	            <li class="contentlayout_right" id="preN"></li>
@@ -2070,17 +2586,17 @@
 	            </li>
 	        </ul>
 	    </div>
-	    <div class="mainmenuTab">
+	    <div class="mainmenuTab" style="display:none;">
 	        <ul class="mainmenuTabUL">
 	            <li id="dayView" class="${defaultView == '0' ? 'on' : 'off' }"><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="${defaultView == '1' ? 'on' : 'off' }"><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="${defaultView == '2' ? 'on' : 'off' }"><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
 	        </ul>
 	    </div>
-	    <c:if test="${useAnnualScheduleYN ne '0'}">
+	    <!--<c:if test="${useAnnualScheduleYN ne '0'}">
 		    <div style="margin-bottom:10px;">
 			    <span style="color:#3d8fea;"><spring:message code='ezSchedule.kje01'/></span>
 		    </div>	    
 	    </c:if>
-	    
+	    --!>
         <script type="text/javascript">
             //selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
         </script>

@@ -885,16 +885,22 @@ function CalMonthDataBind(oAppointment) {
         	if(oAppointment.scheduleFlag == "google") {
         		oTd.setAttribute("isGoogle", "Y");
         		oTd.setAttribute("googleId", oAppointment.googleId);
-        		oTd.setAttribute("onclick", "ReadGoogleSchedule(" + divID + ")");
-        		oTd.setAttribute("ondblclick", "ReadGoogleSchedule(" + divID + ")");
+        		if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+        		    oTd.setAttribute("onclick", "ReadGoogleSchedule(" + divID + ")");
+        		    oTd.setAttribute("ondblclick", "ReadGoogleSchedule(" + divID + ")");
+                }
       	    } else {
-        		oTd.setAttribute("onclick", "ReadSchedule(" + divID + ")");
-        		oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+      	        if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+        		    oTd.setAttribute("onclick", "ReadSchedule(" + divID + ")");
+        		    oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+                }
         	}
+        	if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+                oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
+                oTd.setAttribute("onmouseout", "hideTooltip(this)");
+            } 
         }
-        oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
-        oTd.setAttribute("onmouseout", "hideTooltip(this)");
-
+        
         // 일정완료 시 취소선 표출하기 위해 span 추가
         var oTextSpan = document.createElement("SPAN");
         var oText = document.createTextNode(pSubject);
