@@ -14829,7 +14829,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.insertRejectEndAprReceiptProcessInfoS(map);
 				ezApprovalGDAO.insertRejectExpendAprDocInfoS(map);
 				ezApprovalGDAO.insertRejectExpendAprLineS(map);
-				ezApprovalGDAO.deleteRejectOrgDocOpinions(map);
 			} else {
 				ezApprovalGDAO.insertRejectEndAprDocInfoS(map);
 				ezApprovalGDAO.insertRejectEndAprLineInfoS(map);

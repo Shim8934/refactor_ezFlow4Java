@@ -2519,6 +2519,13 @@ function getReceiptExists(pDocID, mode) {
 
 // 일괄기안된 문서의 반송의견 삭제 함수 오버라이드 (반송 시 의견작성은 1안 기준이나, 모든 안으로 복사되므로 각 안마다 삭제함)
 function delOpinionInfoForDraftAll(currIdx) {
+	var opinionType = "";
+	if (useRedraftOpinionKeep != "YES") {
+		opinionType = "100"
+	} else {
+		opinionType = "003";
+	}
+	
 	$.ajax({
 		type : "POST",
 		dataType : "json",
@@ -2526,7 +2533,7 @@ function delOpinionInfoForDraftAll(currIdx) {
 		url : "/ezApprovalG/deleteOpinionTypeInfo.do",
 		data : {
 			docID : pDocIDAry[currIdx],
-			opinionType : "002",
+			opinionType : opinionType
 		},
 		success: function(result) {}
 	});

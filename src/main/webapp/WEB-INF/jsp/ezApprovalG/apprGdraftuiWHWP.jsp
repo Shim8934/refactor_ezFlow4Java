@@ -806,8 +806,7 @@
 
                 setDrafterAddress();
 
-                /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
-                if (pDraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
+                if (pDraftFlag == "REDRAFT") {
                     delOpinionInfo();
                 }
                 

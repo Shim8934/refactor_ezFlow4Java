@@ -3794,6 +3794,13 @@ function setFirstDrafter(type, beforDocID) {
     return;
 }
 function delOpinionInfo() {
+	var opinionType = "";
+	if (useRedraftOpinionKeep != "YES") {
+		opinionType = "100"
+	} else {
+		opinionType = "003";
+	}
+
 	$.ajax({
 		type : "POST",
 		dataType : "json",
@@ -3801,7 +3808,7 @@ function delOpinionInfo() {
 		url : "/ezApprovalG/deleteOpinionTypeInfo.do",
 		data : {
 			docID : pDocID,
-			opinionType : "002",
+			opinionType : opinionType
 		},
 		success: function(result) {
 			

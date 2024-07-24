@@ -28272,9 +28272,15 @@
 				tenant_id = #tenantID#
 			AND
 				docid= #docID#
+		]]>
+		<isEqual property="opinionType" compareValue="100">
+			AND
+				(opiniongb = '002' OR opiniongb = '003')
+		</isEqual>
+		<isNotEqual property="opinionType" compareValue="100">
 			AND
 				opiniongb = #opinionType#
-		]]>
+		</isNotEqual>
 	</delete>
 	
 	<delete id="EzApprovalG.OpinionDel2" parameterClass="Map">
