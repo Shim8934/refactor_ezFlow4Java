@@ -36304,4 +36304,18 @@
 		AND
 			COMPANYID = #companyID#
 	</select>
+	
+	<!-- 2024-06-11 조소정 - 공람할문서 또는 공람완료문서 재사용 시 원문서 ID 가져오기 -->
+	<select id="EzApprovalG.getOrgDocIDfromGongram" parameterClass="Map" resultClass="String">
+		SELECT
+			DISTINCT ORGDOCID 
+		FROM 
+			VGONGRAMAPRDOINGDOCLIST
+		WHERE 
+			DOCID = #v_BEFOREDOCID#
+		AND 
+			COMPANYID = #v_COMPANYID#
+		AND 
+			TENANT_ID = #v_TENANTID#
+	</select>
 </sqlMap>

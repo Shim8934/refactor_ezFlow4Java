@@ -685,7 +685,7 @@ var strLang1027 = "意见已修改。";
 var strLang1028 = "年";
 var strLang1029 = "月";
 var strLang1030 = "日";
-var strLang1031 = "不得在匿名公告栏、照片公告栏或URL链接公告栏上发布邮件/审批文件。。";
+var strLang1031 = "您只能在普通公告栏和问答公告栏上发帖。";
 var strLang1038 = "外部发送文档正文中不能包含图像和链接。";
 var strLang1039 = "所选择的用户不在。</br>确定要添加吗?";
 
