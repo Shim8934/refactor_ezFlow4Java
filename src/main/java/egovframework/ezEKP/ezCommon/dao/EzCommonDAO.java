@@ -2044,4 +2044,30 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertApprNonElecRecTypeConfing", map);
 		}
 	}
+	public void addUserDeptHideFlag() {
+		try {
+			select("EzCommonDAO.checkUserHideFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster userHideFlag Columns doesn't exist. creating the column...");
+	
+			update("EzCommonDAO.addUserHideFlag");
+		}
+
+		try {
+			select("EzCommonDAO.checkAddJobHideFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster userHideFlag Columns doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addAddJobHideFlag");
+		}
+	
+		try {
+			select("EzCommonDAO.checkDeptHideFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_deptmaster deptHideFlag Columns doesn't exist. creating the column...");
+	
+			update("EzCommonDAO.addDeptHideFlag");
+		}
+		
+	}
 }

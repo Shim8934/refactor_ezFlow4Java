@@ -3569,4 +3569,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertApprNonElecRecTypeConfing(map);
         }
     }
+    
+    public void addUserDeptHideFlag() throws Exception {
+            ezCommonDAO.addUserDeptHideFlag();
+    }
 }
