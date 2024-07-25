@@ -6188,7 +6188,7 @@ public class EzNewPortalGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezPortal/setMenuDisplayMode/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezPortal/setMenuDisplayMode/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject setUserMenuDisplayMode(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		logger.debug("ezPortal G/W setUserMenuDisplayMode started.");
 
