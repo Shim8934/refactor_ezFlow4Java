@@ -2304,11 +2304,12 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
 			String menuLang = userInfo.getLang();
-			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId(), menuLang);
+			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId(), menuLang, type);
 			
 			//tenant config가 NO인 경우 관리자 메뉴 관리에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -2561,61 +2562,18 @@ public class EzNewPortalGWController {
 			if (menuNamesCount > 2) {
 				List<MenuNameVO> menuNamesWithOrder = new ArrayList<MenuNameVO>();
 				
-				if (menuNamesCount > 3 && menuNamesCount < 5) {
-					int[] langOrder = new int[4];
-					
-					if (primaryLang.equals("2")) {
-						langOrder[0] = 2;
-						langOrder[1] = 1;
-						langOrder[2] = 3;
-						langOrder[3] = 4;
-					} else if (primaryLang.equals("3")){
-						langOrder[0] = 3;
-						langOrder[1] = 1;
-						langOrder[2] = 2;
-						langOrder[3] = 4;
-					} else {
-						langOrder[0] = 1;
-						langOrder[1] = 2;
-						langOrder[2] = 3;
-						langOrder[3] = 4;
+				// 사용 언어가 가장 먼저 위치하도록 순서 조정.
+				menuNamesWithOrder.add(menuNames.get(Integer.parseInt(primaryLang) - 1));
+				
+				for (MenuNameVO vo : menuNames) {
+					if (!vo.getMenuLang().equals(primaryLang)) {
+						menuNamesWithOrder.add(vo);
 					}
-					
-					for (int i = 0; i < langOrder.length; i++) {
-						int langIndex = langOrder[i] - 1;
-						
-						menuNamesWithOrder.add(menuNames.get(langIndex));
-					}
-					
-					data.put("menuNames", menuNamesWithOrder);
-				} else if (menuNamesCount > 2 && menuNamesCount < 4) {
-					int[] langOrder = new int[3];
-					
-					if (primaryLang.equals("2")) {
-						langOrder[0] = 2;
-						langOrder[1] = 1;
-						langOrder[2] = 3;
-					} else if (primaryLang.equals("3")){
-						langOrder[0] = 3;
-						langOrder[1] = 1;
-						langOrder[2] = 2;
-					} else {
-						langOrder[0] = 1;
-						langOrder[1] = 2;
-						langOrder[2] = 3;
-					}
-					
-					for (int i = 0; i < langOrder.length; i++) {
-						int langIndex = langOrder[i] - 1;
-						
-						menuNamesWithOrder.add(menuNames.get(langIndex));
-					}
-					data.put("menuNames", menuNamesWithOrder);
 				}
-			}
-			else {
-				data.put("menuNames", menuNames);
-			}
+				
+				data.put("menuNames", menuNamesWithOrder);
+			} 
+			data.put("menuNames", menuNames);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

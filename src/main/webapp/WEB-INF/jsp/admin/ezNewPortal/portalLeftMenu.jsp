@@ -92,9 +92,9 @@
 						case "MPortlets" :
 							url = "/admin/ezNewPortal/portalPortlets.do?type=mobile";
 							break;
-						// case "MMenus" :
-						// 	url = "/admin/ezNewPortal/portalPortlets.do?type=mobile";
-						// 	break;
+						case "MMenus" :
+							url = "/admin/ezNewPortal/portalMenus.do?type=mobile";
+							break;
 						case "MTheme" :
 							url = "/admin/ezNewPortal/portalThemes.do?type=mobile";
 							break;

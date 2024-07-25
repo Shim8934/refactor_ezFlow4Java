@@ -291,7 +291,7 @@
 					menuLi.addEventListener('click', function () {
 						offMenuAll();
 						this.classList.add("on");
-						subMenuClickEvent('off', item.menuUrl);
+						subMenuClickEvent('off', item.menuUrl, item.openType);
 						notice_all_close();
 						closeNoti();
 					});
@@ -631,7 +631,7 @@
 		} */
 		
 		// 확장버튼 UI 이벤트 함수
-		var subMenuClickEvent = function (type, menuUrl) {
+		var subMenuClickEvent = function (type, menuUrl, openType) {
 			if(type === 'on') {
 				toggleAllMenu(type);
 				
@@ -641,11 +641,16 @@
 				toggleDivMenu(document.querySelector('#profileContainer') ,type);
 				closeNoti(); // 통합알림 팝업창 닫기
 
-				if (menuUrl != undefined && menuUrl.toString().indexOf("http") != -1) {
-					window.open(menuUrl);
+				if (menuUrl && menuUrl.toString().indexOf("http") != -1) {
+					if (openType == 1) {
+						window.open(menuUrl, '_blank');
+					} else if (openType == 2) {
+						window.open(menuUrl, '_blank', 'width=1000,height=900');
+					}
 				} else if (menuUrl != null) {
 					window.open(menuUrl, 'main', '');
 				}
+				
 				// 취소버튼과 같은 역할
 				var editMenuCancel = document.getElementById('editMenuCancel');
 				editMenuCancel.click();	
@@ -692,7 +697,7 @@
 					if (!!document.getElementById("menu_" + menuId)) {
 						document.getElementById("menu_" + menuId).classList.add("on");
 					}
-					subMenuClickEvent('off', item.menuUrl);
+					subMenuClickEvent('off', item.menuUrl, item.openType);
 					notice_all_close();
 				});
 				

@@ -1223,6 +1223,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			beforeDocID = "";
 		}
 		
+		String fromGongram = request.getParameter("fromGongram");
+		String orgDocID = request.getParameter("orgDocID");
+		
+		if (!beforeDocID.isEmpty()) {
+			if (fromGongram != null && fromGongram.equals("1") && isUsed.equals("reuse")) {
+				beforeDocID = orgDocID;
+			}
+			beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
+		}
+		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -1297,14 +1307,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
-		
-		
-		//재사용 추가
-		if (approvalFlag.equals("S")) {
-			if (!beforeDocID.equals("")) {
-				beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
-			}
-		}
 		
 		//2020-01-28 김은석 추가
 		String useAnnualSusinYN = ezCommonService.getTenantConfig("useAnnualSusinYN", userInfo.getTenantId());
@@ -4126,20 +4128,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				signCheck = resultXML.getElementsByTagName("SIGNCHECK").item(0).getTextContent().trim();
 			}
 			
-			//일반 결재 일 때 재사용 기능 사용
-			if (approvalFlag.equals("S")) {
-				if (title == null || title.equals("")) {
-					String reUseInfo = ezApprovalGService.getDocInfoS(docID, docAprEnd, "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE, TBL_EXPENDAPRDOCINFO.FORMVERSION", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
-					Document resultXML2 = commonUtil.convertStringToDocument(reUseInfo);
-					if (resultXML2.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
-						formUrl = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
-					}
-					if (resultXML2.getElementsByTagName("FORMDOCTYPE").getLength() > 0) {
-						formDocType = resultXML2.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
-					}
-					if (resultXML2.getElementsByTagName("FORMVERSION").getLength() > 0) {
-						formVersion = resultXML2.getElementsByTagName("FORMVERSION").item(0).getTextContent().trim(); 
-					}
+			if (title == null || title.equals("")) {
+				String reUseInfo = ezApprovalGService.getDocInfoS(docID, docAprEnd, "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE, TBL_EXPENDAPRDOCINFO.FORMVERSION", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+				Document resultXML2 = commonUtil.convertStringToDocument(reUseInfo);
+				if (resultXML2.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
+					formUrl = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+				}
+				if (resultXML2.getElementsByTagName("FORMDOCTYPE").getLength() > 0) {
+					formDocType = resultXML2.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+				}
+				if (resultXML2.getElementsByTagName("FORMVERSION").getLength() > 0) {
+					formVersion = resultXML2.getElementsByTagName("FORMVERSION").item(0).getTextContent().trim(); 
 				}
 			}
 		} 
@@ -7033,6 +7032,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String pageType = request.getParameter("pageType");
 		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
+		String formID = request.getParameter("formID");
 		
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
 		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
@@ -7169,6 +7169,26 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
 		String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
 
+		// 2024-06-12 조소정 - 공람할문서, 공람완료문서 게시판 게시, 재사용 기능 추가
+		String formUrl = "";
+		String formDocType = "";
+		String formVersion = "";
+		String docAprEnd = "";
+		String reUseInfo = ezApprovalGService.getDocInfoS(orgDocID, docAprEnd, "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE, TBL_EXPENDAPRDOCINFO.FORMVERSION", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+		Document resultXML2 = commonUtil.convertStringToDocument(reUseInfo);
+		
+		if (resultXML2.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
+			formUrl = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+		}
+		
+		if (resultXML2.getElementsByTagName("FORMDOCTYPE").getLength() > 0) {
+			formDocType = resultXML2.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+		}
+		
+		if (resultXML2.getElementsByTagName("FORMVERSION").getLength() > 0) {
+			formVersion = resultXML2.getElementsByTagName("FORMVERSION").item(0).getTextContent().trim(); 
+		}
+
 		model.addAttribute("docID", docID);
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("susinAdmin", susinAdmin);
@@ -7191,6 +7211,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("useBoard", ezCommonService.getTenantConfig("useBoard", userInfo.getTenantId()));
+		model.addAttribute("formID", formID);
+		model.addAttribute("formUrl", formUrl);
+		model.addAttribute("formDocType", formDocType);
+		model.addAttribute("formVersion", formVersion);
 		
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간

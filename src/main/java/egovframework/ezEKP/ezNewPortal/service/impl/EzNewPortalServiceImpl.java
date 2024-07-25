@@ -2328,13 +2328,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<MenuInfoVO> getMenus(String companyId, int tenantId, String menuLang) throws Exception {
+	public List<MenuInfoVO> getMenus(String companyId, int tenantId, String menuLang, String type) throws Exception {
 		logger.debug("getMenus started. companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("menuLang", menuLang);
+		map.put("type", type);
 		
 		List<MenuInfoVO> list = ezNewPortalDAO.getMenus(map);
 		
@@ -2433,6 +2434,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		map.put("menuUrl", menuUrl);
 		map.put("menuType", menuInfo.get("menuType"));
+		map.put("openType", menuInfo.get("openType"));
 		map.put("iconUrl", iconUrl);
 		map.put("menuUsed", menuUsed);
 		map.put("companyLang", menuInfo.get("companyLang"));

@@ -2277,7 +2277,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	public void alterUserThemePagination() throws Exception {
 		try {
-			select(("EzCommonDAO.checkUserThemePagination"));
+			select("EzCommonDAO.checkUserThemePagination");
 		} catch (Exception e) {
 			logger.debug("In TBL_PORTAL_THEME_USER doesn't exist usePaging column. creating the column...");
 
@@ -2359,6 +2359,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void alterMenuOpenType() throws Exception {
+		try {
+			select("EzCommonDAO.checkMenuOpenType");
+		} catch (Exception e) {
+			logger.debug("In TBL_PORTAL_MENU_COMP doesn't exist openType column. creating the column...");
+
+			update("EzCommonDAO.alterMenuOpenType");
+		}
+	}
+	
 	public void createTblSystemConfig() throws Exception {
 		try {
 			select("EzCommonDAO.chkTblSystemConfig");

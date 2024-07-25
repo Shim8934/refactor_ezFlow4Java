@@ -396,6 +396,8 @@ public interface EzCommonService {
 	
 	public void insertInitMobileTheme() throws Exception;
 
+	public void alterMenuOpenType() throws Exception;
+	
 	public void createSystemConfig() throws Exception;
 
 	public void createConnectionMenu() throws Exception;

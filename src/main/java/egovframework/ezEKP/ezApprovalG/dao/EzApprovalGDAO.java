@@ -3969,4 +3969,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public int isExistDocAttach(Map<String, Object> map)  throws Exception {
         return (int) select("EzApprovalG.isExistDocAttach", map);
     }
+
+    /* 2024-06-11 조소정 - 공람할문서 또는 공람완료문서 재사용 시 원문서 ID 가져오기 */
+	public String getOrgDocIDfromGongram(Map<String, Object> map) {
+		return (String) select("EzApprovalG.getOrgDocIDfromGongram", map);
+	}
 }

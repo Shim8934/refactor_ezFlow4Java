@@ -4702,6 +4702,19 @@
 		]]>	
 	</update>
 	
+    <select id="EzCommonDAO.checkMenuOpenType">
+		SELECT	OPENTYPE
+		FROM	TBL_PORTAL_MENU_COMP
+		LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.alterMenuOpenType">
+		ALTER TABLE
+			TBL_PORTAL_MENU_COMP
+		ADD
+			OPENTYPE	TINYINT	DEFAULT	3	NOT NULL	COMMENT '메뉴 열기 방식'
+    </statement>
+    
 	<select id="EzCommonDAO.chkTblSystemConfig" resultClass="String">
         SELECT
         	CODE
