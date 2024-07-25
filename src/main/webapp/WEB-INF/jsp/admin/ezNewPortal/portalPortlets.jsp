@@ -361,6 +361,10 @@
 			var portletId = event.data.portletId;
 	 		var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+			var portletCode = "";
+			if (portletId != null) {
+				portletCode = document.getElementById("portlet" + portletId).getAttribute("data3");
+			}
 			
 	        var wWeight = "355";
 	        var wHeight = "600";
@@ -371,7 +375,7 @@
 	        var left = (width - wWeight) / 2;
 	        var top = (heigth - wHeight) / 2;
 	        
-	        window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId, "",
+	        window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId + "&code=" + portletCode, "",
 	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		}
 		  
@@ -1078,7 +1082,7 @@
 
 		function isFixBoardPortlet(code) {
 			if (!code) return false;
-			return code === 'fixLeft' || code === 'fixRight';
+			return code === 'fixLeft' || code === 'fixRight' || code === 'mFixTop' || code === 'mFixBottom';
 		}
 
 		// 단어설정 버튼 표출 조건

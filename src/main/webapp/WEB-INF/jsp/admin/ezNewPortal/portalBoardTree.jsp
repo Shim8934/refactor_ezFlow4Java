@@ -47,6 +47,7 @@
     </div>
 <script type="text/javascript">
 var board_alertArguments = new Array();
+var portletCode = "<c:out value="${portletCode}"/>"
 
 $(function(){
 	$("#close").on("click", function(){
@@ -87,7 +88,7 @@ var selectBoard = function(event) {
 			var portletId = "<c:out value='${portletId}'/>";
 			var gubun = selBoard.attr("gubun");
 		
-			if (portletId == 9 && (gubun != 3 && gubun != 4)) {
+			if (portletId == 9 && (gubun != 3 && gubun != 4) || portletCode == "mPhotoboard") {
 		    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.t051' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.t051' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 				DivPopUpShow(330, 205, url);
 				return;
