@@ -5922,7 +5922,10 @@
 		                TBL_RECORD.COMPANYID
 				  <isEqual property="usePublicFlag" compareValue="true">
 				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval 
-				  </isEqual> 
+				  <isNotEqual property="listType" compareValue="012">
+                        , TBL_EXPENDAPRDOCINFO.FORMNAME
+                  </isNotEqual>
+				  </isEqual>
 						$extraSelectClause$,
 			            TBL_CABINETCLASS.TITLE,
                         ENDDOCNO.DOCNO SIHANGNO
@@ -7046,13 +7049,22 @@
 		        APRTYPE ,
 		        APRSTATE ,
 		        PROCESSDATE ,
-		        RECEIVEDDATE
+		        RECEIVEDDATE ,
+                APRMEMBERID
 		    FROM 
 		    	TBL_APRLINEINFO 
 		    WHERE  
 		    	DOCID = #v_DOCID#
 		    AND
-		    	APRMEMBERID = #v_USERID#
+                <isNotEmpty property="v_DEPTID2">
+                    APRMEMBERID IN
+                    <iterate property="v_DEPTID2" open="(" close=")" conjunction=",">
+                        #v_DEPTID2[]#
+                    </iterate>
+                </isNotEmpty>
+                <isEmpty property="v_DEPTID2">
+                    APRMEMBERID = #v_USERID#
+                </isEmpty>
 		     <isEqual property="v_CHAMSTATE" compareValue="017">
 	      	AND 
 	      	 	(APRSTATE = '000' OR APRSTATE = '002') 
@@ -7080,7 +7092,15 @@
 		    WHERE  
 		    	DOCID = #v_DOCID#
 		    AND
-		    	APRMEMBERID = #v_USERID#
+            <isNotEmpty property="v_DEPTID2">
+                APRMEMBERID IN
+                <iterate property="v_DEPTID2" open="(" close=")" conjunction=",">
+                    #v_DEPTID2[]#
+                </iterate>
+            </isNotEmpty>
+            <isEmpty property="v_DEPTID2">
+                APRMEMBERID = #v_USERID#
+            </isEmpty>
 		      <isEqual property="v_CHAMSTATE" compareValue="017">
 	      	AND 
 	      	 	(APRSTATE = '000' OR APRSTATE = '002')
@@ -8354,6 +8374,12 @@
 		     	(   TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID IS NULL )
 		     	AND
 		     		TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013')
+                OR
+                    (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
+                and
+                    TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+                and
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012')
 		     </isEqual>
 	      	)
 	      	<isEqual property="v_MODE" compareValue="relay">
@@ -14896,6 +14922,12 @@
 	     	(   TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID IS NULL )
 	     	AND
 		     		TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013')
+             OR
+                (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
+             AND
+                TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+             AND
+                TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012')
 	     </isEqual>
 	     	)  
 	    <isEqual property="v_MODE" compareValue="relay">
@@ -19945,6 +19977,29 @@
          		NAME = #v_DOCSTATE#
 	</select>
 
+    <select id="EzApprovalG.getReceiptProInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+        <![CDATA[
+        select *
+        from (
+            select DOCID,
+                    RECEIVEDDEPTID,
+                    RECEIVEDDEPTNAME,
+                    RECEIVEDDEPTNAME2
+            from TBL_APRRECEIPTPROCESSINFO
+            where TENANT_ID = #v_TENANTID#
+              and COMPANYID = #companyID#
+              and DOCID = #v_DOCID#
+            ]]>
+            <isNotEmpty property="v_RECEIVESN">
+                AND  RECEIVESN = #v_RECEIVESN#
+            </isNotEmpty>
+        <![CDATA[
+        )
+        WHERE
+            ROWNUM <= 1
+        ]]>
+    </select>
+
 	<update id="EzApprovalG.jiJungUpdateReceiptProInfo3" parameterClass="Map">
 		UPDATE 
 			TBL_APRRECEIPTPROCESSINFO
@@ -19979,11 +20034,13 @@
             PROCESSORNAME = #v_PROCESSORNAME#,
             PROCESSORNAME2 = #v_PROCESSORNAME2#,
             PROCESSORJOBTITLE = #v_PROCESSORJOBTITLE#,
-            PROCESSORJOBTITLE2 = #v_PROCESSORJOBTITLE2#,
+            PROCESSORJOBTITLE2 = #v_PROCESSORJOBTITLE2#
+        <isEmpty property="v_RECEIVEDDEPTID2" open=",">
             RECEIVEDDEPTID = #v_RECEIVEDDEPTID#,
             RECEIVEDDEPTNAME = #v_RECEIVEDDEPTNAME#,
             RECEIVEDDEPTNAME2 = #v_RECEIVEDDEPTNAME2#
-        WHERE
+        </isEmpty>
+        WHERE  
         	TENANT_ID=#v_TENANTID#
         AND
        		COMPANYID = #companyID#
@@ -19991,8 +20048,14 @@
         	DOCID = #v_DOCID#
         AND 
         	RECEIVESN = #v_RECEIVESN#
-        AND
-        	RECEIVEDDEPTID = #v_RECEIVEDDEPTID#
+        <isNotEmpty property="v_RECEIVEDDEPTID2">
+            AND
+            RECEIVEDDEPTID = #v_RECEIVEDDEPTID2#
+        </isNotEmpty>
+        <isEmpty property="v_RECEIVEDDEPTID2">
+            AND
+            RECEIVEDDEPTID = #v_RECEIVEDDEPTID#
+        </isEmpty>
 	</update>
 	
 <!-- 	<procedure id="EzApprovalG.gongRamUpdate" parameterClass="Map"> -->
@@ -25331,7 +25394,12 @@
    		Where 
    			DocID = #v_DOCID# 
 		AND
-			ReceivedDeptID = #v_DEPTID#
+       <isNotEmpty property="v_DEPTID2">
+           ReceivedDeptID = #v_DEPTID2#
+       </isNotEmpty>
+       <isEmpty property="v_DEPTID2">
+           ReceivedDeptID = #v_DEPTID#
+       </isEmpty>
 		AND 
 			TENANT_ID = #v_TENANTID#
 		AND 
@@ -25348,7 +25416,12 @@
 		WHERE 
 			DocID = #v_DOCID# 
 		AND
-			ManageDeptID = #v_DEPTID#
+       <isNotEmpty property="v_DEPTID2">
+           ManageDeptID = #v_DEPTID2#
+       </isNotEmpty>
+       <isEmpty property="v_DEPTID2">
+           ManageDeptID = #v_DEPTID#
+       </isEmpty>
 		AND 
 			TENANT_ID = #v_TENANTID#
 		AND 
@@ -33097,6 +33170,17 @@
 		     		AND
 			     		TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013'
 			     	)
+                OR
+                    (
+                        TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
+                    AND
+                        TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
+                    <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+                        #v_DEPTIDS[]#
+                    </iterate>
+                    AND
+                        TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
+                    )
 		     </isEqual>
 	   		 	 )
 	   		 	AND (
@@ -35469,7 +35553,14 @@
 	   		WHERE 
 	   			DOCID = #v_ORGDOCID# 
 			AND 
-				RECEIPTPOINTID = #v_RECEIVEDDEPTID#
+		]]>
+            <isNotEmpty property="v_RECEIVEDDEPTID2">
+                RECEIPTPOINTID = #v_RECEIVEDDEPTID2#
+            </isNotEmpty>
+            <isEmpty property="v_RECEIVEDDEPTID2">
+                RECEIPTPOINTID = #v_RECEIVEDDEPTID#
+            </isEmpty>
+        <![CDATA[
 			AND 
 				TENANT_ID = #v_TENANTID#
 			AND

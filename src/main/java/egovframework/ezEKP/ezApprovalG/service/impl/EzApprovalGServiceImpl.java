@@ -9878,6 +9878,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(k).getTextContent()).trim() + "]]></DATA16>");
 					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()).trim() + "]]></DATA17>");
 
+                    resultXML.append("<DATA99><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "]]></DATA99>");
+
                     /* 2023-06-26 민지수 - 추가의견 존재 여부 저장 (TRUE, FALSE) */
                     resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
                     resultXML.append("<HASOPINIONYN>" + hasopinionYn + "</HASOPINIONYN>");
@@ -12408,7 +12410,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String getDocRecvState(String docID, String deptID, String companyID, int tenantID) throws Exception {
 		logger.debug("getDocRecvState started");
-
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyID", companyID);
@@ -12417,6 +12419,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		String result = ezApprovalGDAO.getDocRecvState(map);
+
+        /* 2024-06-20 김유진 - 문서과로 저장한 부서의 문서를 처리할 경우, 해당 부서ID로 설정  */
+        if (approvalFlag.equals("G") && (result == null || "".equals(result))) {
+            ApprGReceiveDocVO receivedDeptinfo = ezApprovalGDAO.getReceiptProInfo(map);
+            if (receivedDeptinfo != null && !deptID.equals(receivedDeptinfo.getReceivedDeptID())) {
+                String[] manageDeptArray = getDocManageDeptInfo(deptID, tenantID).replace("'", "").split(",\\s*");
+                List<String> manageDeptList = new ArrayList<>(Arrays.asList(manageDeptArray));
+                for (String manageDept : manageDeptList) {
+                    if (manageDept.equals(receivedDeptinfo.getReceivedDeptID())) {
+                        map.put("v_DEPTID", manageDept);
+                        result = ezApprovalGDAO.getDocRecvState(map);
+                        break;
+                    }
+                }
+            }
+        }
 
 		logger.debug("getDocRecvState ended");
 		
@@ -12465,6 +12483,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (docState.equals("015") || code.equals("015")) {
 				ezApprovalGDAO.jiJungUpdateReceiptProInfo3(map);
 			} else {
+                /* 2024-06-20 김유진 - 문서과로 저장한 부서의 문서를 처리할 경우, 해당 부서ID로 설정  */
+                ApprGReceiveDocVO  receivedDeptinfo = ezApprovalGDAO.getReceiptProInfo(map);
+                if (receivedDeptinfo != null && !receivedDeptID.equals(receivedDeptinfo.getReceivedDeptID())) {
+                    String[] manageDeptArray = getDocManageDeptInfo(receivedDeptID, tenantID).replace("'", "").split(",\\s*");
+                    List<String> manageDeptList = new ArrayList<>(Arrays.asList(manageDeptArray));
+                    for (String manageDept : manageDeptList) {
+                        if (manageDept.equals(receivedDeptinfo.getReceivedDeptID())) {
+                            map.put("v_RECEIVEDDEPTID2", manageDept);
+                            break;
+                        }
+                    }
+                }
 				ezApprovalGDAO.jiJungUpdateReceiptProInfo4(map);
 			}
 			ezApprovalGDAO.jiJungDeleteReceiptProInfo(map);
@@ -12516,6 +12546,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_APRSTATE", staASJubSu);
 		map.put("v_DEPTID", deptID);
 		map.put("v_TENANTID", tenantID);
+
+        /* 2024-06-20 김유진 - 문서과로 저장한 부서의 문서를 처리할 경우, 해당 부서ID로 설정  */
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+        if (approvalFlag.equals("G")) {
+            ApprGReceiveDocVO  receivedDeptinfo = ezApprovalGDAO.getReceiptProInfo(map);
+            if (receivedDeptinfo != null && !deptID.equals(receivedDeptinfo.getReceivedDeptID())) {
+                String[] manageDeptArray = getDocManageDeptInfo(deptID, tenantID).replace("'", "").split(",\\s*");
+                List<String> manageDeptList = new ArrayList<>(Arrays.asList(manageDeptArray));
+                for (String manageDept : manageDeptList) {
+                    if (manageDept.equals(receivedDeptinfo.getReceivedDeptID())) {
+                        map.put("v_DEPTID2", manageDept);
+                        break;
+                    }
+                }
+            }
+        }
 		
 		ezApprovalGDAO.updateJubsuAprReceiptProcessInfo(map);
 		
@@ -12526,7 +12572,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		ezApprovalGDAO.updateJubsuDocDelivery(map);
 		
-		String result = updateSusinResult(orgDocID, deptID, userID, "I", displayName1, displayName2, companyID, tenantID);
+		String result = updateSusinResult(orgDocID, docID, deptID, userID, "I", displayName1, displayName2, companyID, tenantID);
 		
 		if (!result.equals("TRUE")) {
 			logger.debug("updateSusinDocInfo ended");
@@ -14545,6 +14591,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfoForPassAprLine(map);
 		} else {
 			apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
+            /* 2024-06-20 김유진 - 문서과로 저장한 부서의 문서를 처리할 경우, 해당 부서ID로 설정  */
+            if (apprGAprLineVOList.size() < 1 && approvalFlag.equals("G")) {
+                Map<String, Object> map5 = new HashMap<String, Object>();
+                map5.put("deptId", userID.trim());
+                map5.put("tenantID", userInfo.getTenantId());
+                String checkDeptYN = ezOrganDAO.getDeptPath(map5);
+                if (checkDeptYN != null && checkDeptYN != "") {
+                    String[] manageDeptArray = getDocManageDeptInfo(userID.trim(), userInfo.getTenantId()).replace("'", "").split(",\\s*");
+                    map.put("v_DEPTID2", Arrays.asList(manageDeptArray));
+                    apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
+                }
+            }
 		}
 		 
 		if (apprGAprLineVOList.size() < 1) {
@@ -14578,6 +14636,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			curAprMemberSN = makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent());
 			curAprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(0).getTextContent());
 			beforeAprMemberSN = makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent());
+            String deptID2 = makeListField(docXML.getElementsByTagName("APRMEMBERID").item(0).getTextContent());
 			Map<String, Object> updateAprLineInfo1 = new HashMap<String, Object>();
 //			if (!curAprType.equals("007"))	{
 
@@ -14590,6 +14649,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			updateAprLineInfo1.put("beforeAprMemberSN", beforeAprMemberSN);
 			updateAprLineInfo1.put("companyID", userInfo.getCompanyID());
 			updateAprLineInfo1.put("tenantID", userInfo.getTenantId());
+            /* 2024-06-20 김유진 - 문서과로 저장한 부서의 문서를 처리할 경우, 해당 부서ID로 설정  */
+            if(map.get("v_DEPTID2") != null && deptID2 != "") {
+                updateAprLineInfo1.put("userID", deptID2);
+            }
 			
 			if (!(passAprLine != null && passAprLine.equals("Y"))) {
 				ezApprovalGDAO.updateAprLineInfo1(updateAprLineInfo1);
@@ -15607,7 +15670,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
-				subSQL = updateSusinResult(orgDocID, aprLinersDeptID, aprLinersID, "Y", aprLinersName, aprLinersName2, orgCompanyID, userInfo.getTenantId());
+				subSQL = updateSusinResult(orgDocID, docID, aprLinersDeptID, aprLinersID, "Y", aprLinersName, aprLinersName2, orgCompanyID, userInfo.getTenantId());
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
@@ -16310,7 +16373,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (apprGAprLineVOList.get(k).getAprMemberDeptID().toLowerCase().equals(deptID.toLowerCase()) && apprGAprLineVOList.get(k).getAprMemberIsDeptYN().toUpperCase().equals("Y") && apprGAprLineVOList.get(k).getAprState().equals("002")) {
 				aprSN = k + 1;
 				break;
-			}
+			} else if (apprGAprLineVOList.get(k).getAprMemberIsDeptYN().toUpperCase().equals("Y") && apprGAprLineVOList.get(k).getAprState().equals("002")) {
+                /* 2024-06-20 김유진 - 문서과로 저장한 부서의 문서를 처리하는지 체크 */
+                String aprMemberDeptID = apprGAprLineVOList.get(k).getAprMemberDeptID();
+                String[] manageDeptArray = getDocManageDeptInfo(deptID, userInfo.getTenantId()).replace("'", "").split(",\\s*");
+                if (Arrays.asList(manageDeptArray).stream()
+                        .anyMatch(deptId -> deptId.equalsIgnoreCase(aprMemberDeptID))) {
+                    aprSN = k + 1;
+                    break;
+                }
+            }
 			
 			if (apprGAprLineVOList.get(k).getAprMemberDeptID().toLowerCase().equals(deptID.toLowerCase()) && apprGAprLineVOList.get(k).getAprMemberIsDeptYN().toUpperCase().equals("Y") && apprGAprLineVOList.get(k).getAprState().equals("015")) {
 				aprSN = k + 1;
@@ -16758,10 +16830,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	 * 완료문서에 대한 수신처 정보 변경
 	 * PROCESSFLAG->ProcessYN, SYSDATE->ProcessDate
 	 * */
-	public String updateSusinResult(String orgDocID, String deptID, String userID, String mode, String userName, String userName2, String companyID, int tenantID) throws Exception {
+	public String updateSusinResult(String orgDocID, String docID, String deptID, String userID, String mode, String userName, String userName2, String companyID, int tenantID) throws Exception {
 		logger.debug("updateSusinResult started");
 
 		String processFlag = mode.toUpperCase();
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		
 		if (!userID.trim().equals("")) {
 			userName = ezOrganService.getPropertyValue(userID, "displayName", tenantID);
@@ -16774,6 +16847,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DEPTID", deptID);
 		map.put("v_TENANTID", tenantID);
 		//수신처 아이디 추출
+        /* 2024-06-20 김유진 - 문서과로 저장한 부서의 문서를 처리할 경우, 해당 부서ID로 설정  */
+        if (approvalFlag.equals("G") && !"".equals(docID)) {
+            Map<String, Object> map2 = new HashMap<String, Object>();
+            map2.put("companyID", companyID);
+            map2.put("v_DOCID", docID);
+            map2.put("v_TENANTID", tenantID);
+            ApprGReceiveDocVO  receivedDeptinfo = ezApprovalGDAO.getReceiptProInfo(map2);
+            if (receivedDeptinfo != null && !deptID.equals(receivedDeptinfo.getReceivedDeptID())) {
+                String[] manageDeptArray = getDocManageDeptInfo(deptID, tenantID).replace("'", "").split(",\\s*");
+                List<String> manageDeptList = new ArrayList<>(Arrays.asList(manageDeptArray));
+                for (String manageDept : manageDeptList) {
+                    if (manageDept.equals(receivedDeptinfo.getReceivedDeptID())) {
+                        map.put("v_DEPTID", manageDept);
+                        break;
+                    }
+                }
+            }
+        }
 		String receiptUserID = makeListField(ezApprovalGDAO.updateSusinResultReceipt(map));
 		logger.debug("receiptUserID = " + receiptUserID);
 		
@@ -16781,7 +16872,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_PROCESSFLAG", processFlag);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			map.put("v_ORGDOCID", orgDocID);
-			map.put("v_DEPTID", deptID);
+//			map.put("v_DEPTID", deptID);
 			map.put("v_USERID", userID);
 			map.put("v_TENANTID", tenantID);
 			
@@ -16791,7 +16882,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_PROCESSFLAG", processFlag);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			map.put("v_ORGDOCID", orgDocID);
-			map.put("v_DEPTID", deptID);
+//			map.put("v_DEPTID", deptID);
 			map.put("v_USERNAME", userName);
 			map.put("v_USERNAME2", userName2);
 			map.put("v_USERID", userID);
@@ -20640,7 +20731,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.deleteHesongExpAprLine(map);
 					ezApprovalGDAO.deleteHesongAprLineInfo(map);
 					
-					subSQL = updateSusinResult(orgDocID, deptID, userID, "H", userName, userName2, orgCompanyID, tenantID);
+					subSQL = updateSusinResult(orgDocID, docID, deptID, userID, "H", userName, userName2, orgCompanyID, tenantID);
 					
 					if (subSQL == null || subSQL.equals("")) {
 						rtnVal= false;
@@ -20673,7 +20764,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.deleteHesongExpAprLine(map);
 				ezApprovalGDAO.deleteHesongAprLineInfo(map);
 				
-				subSQL = updateSusinResult(orgDocID, deptID, userID, "H", userName, userName2, orgCompanyID, tenantID);
+				subSQL = updateSusinResult(orgDocID, docID, deptID, userID, "H", userName, userName2, orgCompanyID, tenantID);
 				
 				if (subSQL == null || subSQL.equals("")) {
 					rtnVal= false;
@@ -20780,7 +20871,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 					}
 					
-					subSQL = updateSusinResult(orgDocID, deptID, userID, "H", userName, userName2, companyID, tenantID);
+					subSQL = updateSusinResult(orgDocID, docID, deptID, userID, "H", userName, userName2, companyID, tenantID);
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
@@ -20834,7 +20925,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.aprDeleteDocInfo(map);
 				ezApprovalGDAO.deleteApprLineInfo(map);
 				
-				subSQL = updateSusinResult(orgDocID, deptID, userID, "H", userName, userName2, companyID, tenantID);
+				subSQL = updateSusinResult(orgDocID, docID, deptID, userID, "H", userName, userName2, companyID, tenantID);
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
@@ -20879,7 +20970,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					return "<RESULT>FALSE</RESULT>"; 
 				}
 				
-				subSQL = updateSusinResult(orgDocID, deptID, userID, "H", userName, userName2, companyID, tenantID);
+				subSQL = updateSusinResult(orgDocID, docID, deptID, userID, "H", userName, userName2, companyID, tenantID);
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
@@ -27531,6 +27622,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String pOrgDocID = "";
 		String pOrgCompanyID = "";
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
@@ -27632,6 +27724,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (rtnVal) {
 				map.put("v_PDOCID", pOrgDocID);
 				map.put("v_PDEPTID", pDeptID);
+
+                /* 2024-06-20 김유진 - 문서과로 저장한 부서의 문서를 처리할 경우, 해당 부서ID로 설정  */
+                if ("G".equals(approvalFlag) && companyID.equals(pOrgCompanyID)){
+                    Map<String, Object> map3 = new HashMap<String, Object>();
+                    map3.put("v_DOCID", docID);
+                    map3.put("companyID", companyID);
+                    map3.put("v_TENANTID", tenantID);
+                    map3.put("v_RECEIVESN", pReceiveSN);
+                    ApprGReceiveDocVO  receivedDeptinfo = ezApprovalGDAO.getReceiptProInfo(map3);
+                    String receivedDeptId = receivedDeptinfo.getReceivedDeptID();
+                    if (!pDeptID.equals(receivedDeptId)) {
+                        String[] manageDeptArray = getDocManageDeptInfo(pDeptID, tenantID).replace("'", "").split(",\\s*");
+                        if (Arrays.asList(manageDeptArray).stream()
+                                .anyMatch(deptId -> deptId.equalsIgnoreCase(receivedDeptId))) {
+                            pDeptID = receivedDeptId;
+                            map.put("v_PDEPTID", pDeptID);
+                        }
+                    }
+                }
+
 				List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doHabyuiHesongTypeS(map);
 				String aprType = aprTypeList.get(0).getAprType();
 				
