@@ -6287,13 +6287,13 @@
 			USEUPPERDEPTBOX
 		FROM
 			TBL_DEPTMASTER
-				LIMIT 1
+		LIMIT 1
 	</select>
 
 	<statement id="EzCommonDAO.alterUseUpperDeptBox">
 		ALTER TABLE
 			TBL_DEPTMASTER
-			ADD
-				USEUPPERDEPTBOX varchar(4) DEFAULT 'N' COMMENT '상위부서문서함 사용 여부'
+		ADD
+			USEUPPERDEPTBOX varchar(4) DEFAULT 'N' COMMENT '상위부서문서함 사용 여부'
     </statement>
 </sqlMap>

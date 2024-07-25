@@ -6757,13 +6757,14 @@
 			USEUPPERDEPTBOX
 		FROM
 			TBL_DEPTMASTER
-				LIMIT 1
+		WHERE
+			ROWNUM = 1
 	</select>
 
 	<statement id="EzCommonDAO.alterUseUpperDeptBox">
 		ALTER TABLE
 			TBL_DEPTMASTER
-			ADD
-				USEUPPERDEPTBOX varchar(4) DEFAULT 'N'
+		ADD
+			USEUPPERDEPTBOX varchar(4) DEFAULT 'N'
 	</statement>
 </sqlMap>
