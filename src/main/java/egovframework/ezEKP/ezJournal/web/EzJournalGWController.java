@@ -468,7 +468,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 열람권한 상세정보
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/author-depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/author-depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject authorDepts(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W authorDepts started.");
 		logger.debug("userId=" + userId);
@@ -1413,7 +1413,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 수신자 즐겨찾기 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/favorites", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getFavoriteList(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W getFavoriteList started.");
 		logger.debug("userId=" + userId);
@@ -1443,7 +1443,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [POST] 수신자 즐겨찾기 저장
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/favorites", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveFavorite(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W saveFavorite started.");
 		logger.debug("userId=" + userId);
@@ -1474,7 +1474,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [PUT] 수신자 즐겨찾기 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/favorites/{favoriteId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateFavorite(@PathVariable String userId, @PathVariable String favoriteId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W updateFavorite started.");
 		logger.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -1506,7 +1506,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [DELETE] 수신자 즐겨찾기 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/favorites/{favoriteId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteFavorite(@PathVariable String userId, @PathVariable String favoriteId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W deleteFavorite started.");
 		logger.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -1537,7 +1537,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 수신자 즐겨찾기 유저 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId}/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/favorites/{favoriteId}/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getFavoriteUserList(@PathVariable String userId, @PathVariable String favoriteId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W getFavoriteUserList started.");
 		logger.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -1666,7 +1666,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [POST] 환경설정 정보 저장
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/options", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/options", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveOption(@RequestParam Map<String,Object> param, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W saveOption started.");
 
@@ -1697,7 +1697,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 환경설정 정보 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getOption(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W getOption started.");
 		
@@ -1732,7 +1732,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 수신일지개수 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/recv-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/recv-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getRecvJournalCount(@PathVariable String userId,HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W getRecvJournalCount started.");
 		
@@ -1982,7 +1982,7 @@ public class EzJournalGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/noti/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/noti/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getNotiOption(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W getNotiOption started.");
 		
