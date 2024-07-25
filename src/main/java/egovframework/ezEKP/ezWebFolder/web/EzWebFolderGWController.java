@@ -3151,7 +3151,7 @@ public class EzWebFolderGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezwebfolder/users/{userid}/env/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userid:.+}/env/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getListCount(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		logger.debug("getListCount start");
 		String serverName = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host") : "";
@@ -3753,7 +3753,7 @@ public class EzWebFolderGWController {
 		return;
 	}
 
-	@RequestMapping(value = "/rest/ezwebfolder/{userId}/upload-limit", method = RequestMethod.GET)
+	@RequestMapping(value = "/rest/ezwebfolder/{userId:.+}/upload-limit", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getUploadLimit(@PathVariable String userId, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("getUploadLimit start");
@@ -3780,7 +3780,7 @@ public class EzWebFolderGWController {
 		return result;
 	}
 
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checknotinherit", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/checknotinherit", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject checkNotInherit(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) {
 		logger.debug("checkNotInherit started.");
 
@@ -3820,7 +3820,7 @@ public class EzWebFolderGWController {
 		return jsonObj;
 	}
 
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checkencryptcreator", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/checkencryptcreator", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject checkEncryptCreator(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) {
 		logger.debug("checkEncryptCreator started.");
 

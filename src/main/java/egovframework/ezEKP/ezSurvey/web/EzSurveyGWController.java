@@ -182,7 +182,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezsurvey/list-type/userid/{userid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/list-type/userid/{userid:.+}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
