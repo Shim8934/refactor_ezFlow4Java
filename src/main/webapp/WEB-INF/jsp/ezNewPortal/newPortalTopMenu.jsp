@@ -74,63 +74,37 @@
 					document.querySelector(".logo img").src = "/files/upload_portal/Top/Logo/logo.gif";
 				}
 
-				var plusBtn = mainFrame.document.querySelectorAll(".portletPlus");
-				plusBtn.forEach(function(item){
-					var btnImg = item.querySelector("img");
+				var leftFrame = mainFrame.document.getElementsByName("left")[0].contentWindow;
+				var leftSkinCss = leftFrame.document.getElementById("leftSkinCss");
 
-					if(skinId == "dark"){
-						if(btnImg && btnImg.src.includes("/images/ezNewPortal/portlet_Plus")){
-							btnImg.src = "/images/ezNewPortal/skin/dark/portlet_Plus.png";
-						} else if(btnImg && btnImg.src.includes("/images/ezNewPortal/portlet_setting")){
-							btnImg.src = "/images/ezNewPortal/skin/dark/portlet_setting.png";
-						}
-					} else{
-						if(btnImg && btnImg.src.includes("/images/ezNewPortal/skin/dark/portlet_Plus")){
-							if(themeId.id == "theme1Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_Plus1.png";
-							} else if(themeId.id == "theme2Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_Plus2.png";
-							} else if(themeId.id == "theme3Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_Plus3.png";
-							}
-						} else if(btnImg && btnImg.src.includes("/images/ezNewPortal/skin/dark/portlet_setting")){
-							if(themeId.id == "theme1Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_setting1.png";
-							} else if(themeId.id == "theme2Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_setting2.png";
-							} else if(themeId.id == "theme3Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_setting3.png";
-							}
-						}
-					}
-				})
+				if(leftSkinCss){
+					leftSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					skinLink = document.createElement("link");
+					skinLink.id = "leftSkinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					leftFrame.document.head.appendChild(skinLink);
+				}
 
-				if(themeId.id == "theme2Body"){
-					var theme2Img = mainFrame.document.querySelectorAll("#theme2Body .writebanner .writebannerDL dt");
-					theme2Img.forEach(function(item){
-						var listImg = item.querySelector("img");
-						if(listImg){
-							if(skinId == "dark"){
-								listImg.src = listImg.src.replace("/images/ezNewPortal/theme2Img","/images/ezNewPortal/skin/dark");
-							} else {
-								listImg.src = listImg.src.replace("/images/ezNewPortal/skin/dark","/images/ezNewPortal/theme2Img");
-							}
-						}
-					})
+				var rightFrame = mainFrame.document.getElementsByName("right")[0].contentWindow;
+				var rightSkinCss = rightFrame.document.getElementById("rightSkinCss");
 
-					var theme2Img2 = mainFrame.document.querySelector("#theme2Body .exellentEmployee .portlet_title .portletText img");
-					if(skinId == "dark"){
-						theme2Img2.src = theme2Img2.src.replace("/images/ezNewPortal/theme2Img","/images/ezNewPortal/skin/dark");
-					} else {
-						theme2Img2.src = theme2Img2.src.replace("/images/ezNewPortal/skin/dark","/images/ezNewPortal/theme2Img");
-					}
+				if(rightSkinCss){
+					rightSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					skinLink = document.createElement("link");
+					skinLink.id = "rightSkinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					rightFrame.document.head.appendChild(skinLink);
 				}
 			}
 		</script>
 	</head>
 	<body>
 		<%-- ui 확인용 버튼(추후 삭제 예정)-조기완 --%>
-		<div class="skin_test" style="position:absolute; left:50%; top:0; transform:translateX(-50%); z-index:10000; user-select:none; display:none;">
+		<div class="skin_test" style="position:absolute; left:50%; top:0; transform:translateX(-50%); z-index:10000; user-select:none; display:;">
 			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('');">기본</span>
 			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('dark');">다크</span>
 			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('blue');">블루</span>

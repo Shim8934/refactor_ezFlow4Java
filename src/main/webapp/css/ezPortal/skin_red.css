@@ -15,6 +15,7 @@
 nav .navUL li:hover{color:#A20000;}
 nav .navUL li:before{background:#A20000;}
 nav .navUL li:after{background:#A20000;}
+nav .navUL li.on{color:#A20000;}
 
 
 .util li span.util_admin:hover{background-image:url(../../images/ezNewPortal/skin/red/util_admin.svg);}
@@ -220,8 +221,42 @@ nav .navUL li:after{background:#A20000;}
 .pagenavi span.btnimg.next{background-image:url(../../images/ezNewPortal/skin/red/btn_next.svg);}
 .pagenavi span.btnimg.last{background-image:url(../../images/ezNewPortal/skin/red/btn_n_next.svg);}
 
+#mainmenu li.important{border-color:#D0ABAB; color:#A20000;}
 #mainmenu li:hover{background-color:#FBF6F6; border-color:#A20000; color:#A20000;}
+#mainmenu li.important:hover{background-color:#FBF6F6;}
 
 .imgbtn:hover{background-color:#FBF6F6; border-color:#A20000 !important; color:#A20000;}
 .btnpositionNew a.imgbtn:hover{background-color:#FBF6F6; border-color:#A20000 !important; color:#A20000;}
 
+.lnbUL li.on{text-decoration-color:#A20000 !important;}
+.lnbUL li.on .list_text{color:#A20000;}
+.lnbUL li.on .list_text span{color:#A20000;}
+
+.popup{background-image:url(../../images/ezNewPortal/skin/red/popup_bg.png);}
+.popupJQLayer{background-image:url(../../images/ezNewPortal/skin/red/popup_bg.png);}
+
+.node_selected{color:#A20000 !important;}
+.node_div span.node_normal:hover{color:#A20000 !important;}
+
+.btnposition input:hover{color:#A20000; border-color:#A20000; background:#FBF6F6;}
+.btnpositionLayer a.imgbtn:hover{color:#A20000; border-color:#A20000; background:#FBF6F6;}
+
+.popup_noti_content table .ctxt{background-image:url(../../images/ezNewPortal/skin/red/icon_notification01.png);}
+
+#menu li span:hover{background-color:#F9EEEE !important; border-color:#A20000; color:#A20000;}
+
+.portlet_tabpart02_top p .tabover{color:#A20000 !important; border-color:#A20000 !important;}
+.portlet_tabpart02_top p .tabon{color:#A20000 !important; border-color:#A20000 !important;}
+
+.mainbody > h1 > span > span{color:#A20000 !important;}
+.mainbody > div > h1 > span > span{color:#A20000 !important;}
+
+.icon16{background-image:url(../../images/ezNewPortal/skin/red/icon_16.png) !important;}
+
+.portlet_tabnew01_top p span{border-color:#D0ABAB; color:#A20000; background-image:url(../../images/ezNewPortal/skin/red/tabnew_bg.png); background-color:#fff;}
+.portlet_tabnew01_top p span.tabover{border-color:#A20000; color:#A20000; background-color:#FBF6F6; background-image:url(../../images/ezNewPortal/skin/red/tabnew_bg.png);}
+
+.receiver_tltype01 span{color:#0A0A0A;}
+
+.mainmenuTab .mainmenuTabUL li.on span{border-color:#D8A6A6; color:#A20000;}
+.mainmenuTab .mainmenuTabUL li:hover span{border-color:#A71111; color:#A20000; background:#FBF6F6;}
