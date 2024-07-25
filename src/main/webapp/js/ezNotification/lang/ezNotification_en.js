@@ -86,3 +86,5 @@ subType["community"]["new"] = "New registration";
 var notiMessages = {
 	strLang1 : '"No data."'
 }
+
+var notiDayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

@@ -165,6 +165,8 @@ nav .navUL li.on{color:#388CE5;}
 .box_shadow{border-color:#1E1E20; background:#272829}
 .layDIV{background:#272829;}
 .portlet_title .portletText{color:#F3F3F3;}
+.portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/skin/dark/portlet_Plus.png) !important;}
+.portlet_title .portletPlus.setting{background-image:url(../../images/ezNewPortal/skin/dark/portlet_setting.png) !important;}
 .portlet_list li{border-color:#444444;}
 .portlet_list li .txt{color:#F3F3F3;}
 .portlet_list li:hover .txt{color:#fff;}
@@ -370,6 +372,14 @@ nav .navUL li.on{color:#388CE5;}
 #theme2Body .section1 .sec1Layout_btm_left .portlet_list li .txt{color:#F3F3F3;}
 
 #theme2Body .writebanner .writebannerDL dt{color:#F3F3F3;}
+#theme2Body .writebanner .writebannerDL.banner_mail dt.banner_img{background-image:url(../../images/ezNewPortal/skin/dark/writebanner01.png);}
+#theme2Body .writebanner .writebannerDL.banner_apr dt.banner_img{background-image:url(../../images/ezNewPortal/skin/dark/writebanner02.png);}
+#theme2Body .writebanner .writebannerDL.banner_schedule dt.banner_img{background-image:url(../../images/ezNewPortal/skin/dark/writebanner03.png);}
+#theme2Body .writebanner .writebannerDL.banner_survey dt.banner_img{background-image:url(../../images/ezNewPortal/skin/dark/writebanner04.png);}
+#theme2Body .writebanner .writebannerDL.banner_workspace dt.banner_img{background-image:url(../../images/ezNewPortal/skin/dark/writebanner05.png);}
+#theme2Body .writebanner .writebannerDL.banner_organ dt.banner_img{background-image:url(../../images/ezNewPortal/skin/dark/writebanner06.png);}
+#theme2Body .writebanner .writebannerDL.banner_community dt.banner_img{background-image:url(../../images/ezNewPortal/skin/dark/writebanner07.png);}
+#theme2Body .writebanner .writebannerDL.banner_memo dt.banner_img{background-image:url(../../images/ezNewPortal/skin/dark/writebanner08.png);}
 
 #theme2Body .section1 .sec1Layout_middle{background:#272829;}
 #theme2Body .section1 .sec1Layout_middle .scalendar_mini td div{border:none;}

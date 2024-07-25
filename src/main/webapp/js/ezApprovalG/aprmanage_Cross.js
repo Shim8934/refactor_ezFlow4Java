@@ -1085,6 +1085,7 @@ function openViewDocInfo(type) {
     var formURL = GetAttribute(tr, "DATA3");
     var DocID = GetAttribute(tr, "DATA1");
     var orgCompanyID = GetAttribute(tr, "orgCompanyID");
+    var formID = GetAttribute(tr, "DATA17");
 
     pArgument[0] = DocID;
     pArgument[1] = formURL;
@@ -1109,6 +1110,7 @@ function openViewDocInfo(type) {
         }
         
         pArgument[7] = pListTypeValue;
+        pArgument[8] = formID;
     }
 
     var openLocation;
@@ -1167,7 +1169,8 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
         openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
         openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
-        if (shareUser == "shareUser") {
+        openLocation = openLocation + "&formID=" + encodeURI(pArgument[8]);
+        if (shareUser = "shareUser") {
         	openLocation += "&pageType=admin";
         }
     }
@@ -1196,7 +1199,6 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                 openLocation = "";
                 
                 if (GetAttribute(pCurSelRow,"DATA15") == "001") {
-                	//언제타는지 궁금하구나
                 	openLocation = "/ezApprovalG/recevG.do";
                 } else {
                 	openLocation = "/ezApprovalG/recevGSusin.do";
@@ -1946,29 +1948,34 @@ function makePageSelPage() {
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
     if (totalPage > 1 && pageNum != 1) {
-        strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        // strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
         PagingHTML += strtext;
     } else {
-        strtext = "<span class='btnimg'><a >";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        // strtext = "<span class='btnimg'><a >";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        strtext = "<span class='btnimg first disabled'></span>";
         PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            // strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            // strtext = "<span class='btnimg'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            strtext = "<span class='btnimg prev disabled'></span>";
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+        strtext = "<span class='btnimg prev disabled'></span>";
         PagingHTML += strtext;
     }
     var MaxNum;
@@ -1996,30 +2003,35 @@ function makePageSelPage() {
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            // strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            strtext = "<span class='btnimg next' onclick='return selafterBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+            // strtext = "<span class='btnimg'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+            strtext = "<span class='btnimg next disabled'></span>";
 
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+        strtext = "<span class='btnimg next disabled'></span>";
         PagingHTML += strtext;
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif'/></span>";
+        // strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif'/></span>";
+        strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        strtext = "<span class='btnimg last disabled'></span>";
         PagingHTML += strtext;
     }
     PagingHTML += "</div>";

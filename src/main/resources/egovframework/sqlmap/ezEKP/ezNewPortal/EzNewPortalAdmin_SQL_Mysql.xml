@@ -172,9 +172,15 @@
 				A.tenant_id = #tenantId#
 			AND
 				A.company_id = #companyId#
+		]]>
+		<isNotEqual property="type" compareValue="mobile">
+			AND B.menu_type IN ('G', 'A')
+		</isNotEqual>
+		<isEqual  property="type" compareValue="mobile">
+			AND B.menu_type IN ('MG', 'MA')
+		</isEqual>
 			ORDER BY
 				defaultorder
-		]]>
 	</select>
 	
 	<!-- 메뉴쪽은 일단 만들어놓고 쓰다가 필요없는거 날려야할듯 -->
@@ -195,7 +201,8 @@
 					THEN B.default_order
 					ELSE A.company_order
 				END AS defaultorder,
-				B.menucode
+				B.menucode,
+				A.openType
 			FROM
 				TBL_PORTAL_MENU_COMP A
 			JOIN
@@ -348,7 +355,8 @@
 			UPDATE
 				TBL_PORTAL_MENU_COMP 
 			SET
-				menu_used = #menuUsed#
+				menu_used = #menuUsed#,
+				openType = #openType#
 			]]>
 			<isEqual property="menuType" compareValue="G" prepend=",">
 				<![CDATA[
@@ -512,7 +520,11 @@
 				A.boardid  as id,
 				A.parentboardid as parent,
 				A.boardname as boardname1,
-				A.boardname2 as boardname2,
+				CASE
+					WHEN (A.Boardname2 = '' OR A.Boardname2 IS NULL)
+					THEN A.Boardname
+					ELSE A.Boardname2
+				END as boardname2,
 				A.treevieworder as sort,
 				B.parentboardid as topParent,
 				A.boardcolor,
@@ -1365,14 +1377,6 @@
 		u.CN = #userId#
 		and
 		u.tenant_id = #tenantId#
-		and
-		(
-		((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0
-		and
-		d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
-		or
-		(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
-		)
 		and
 		not((d.extensionattribute1 is null or d.extensionattribute1 = '') and d.cn <![CDATA[<>]]> d.extensionattribute2)
 		<isNotEmpty property="companyId">

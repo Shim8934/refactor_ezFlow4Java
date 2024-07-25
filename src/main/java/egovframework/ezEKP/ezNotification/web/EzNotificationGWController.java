@@ -264,57 +264,6 @@ public class EzNotificationGWController {
 		}
 	}
 	
-	// 2024-03-28 한태훈 - 통합알림 > 알림 리스트 가져오기
-	@RequestMapping(value = "/rest/ezNotification/{userId}/myNotiList", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getMyNotiList(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/myNotiList] started.");
-		JSONObject result = new JSONObject();
-		try {
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			int curPageNum = request.getParameter("curPageNum") == null ? 1 : Integer.parseInt(request.getParameter("curPageNum"));
-			int notiListCnt = Integer.parseInt(request.getParameter("notiListCnt"));
-			String companyId = info.getCompanyId();
-			int tenantId = info.getTenantId();
-			String mode = "ALL";
-			int totalListCnt = ezNotificationService.getTotalNotiListCnt(userId, mode, companyId, tenantId);
-			mode = "NOTREAD";
-			int notReadListCnt = ezNotificationService.getTotalNotiListCnt(userId, mode, companyId, tenantId);
-
-			int limit = 0;
-			if (curPageNum < Integer.MAX_VALUE && notiListCnt < Integer.MAX_VALUE) {
-				limit = (curPageNum - 1) * notiListCnt;
-			}
-			
-			int rowCount = notiListCnt;
-			int lastPageNum = (int) Math.ceil((double) totalListCnt / notiListCnt);
-			List<NotificationVO> myNotiList = ezNotificationService.getMyNotiList(userId, limit, rowCount, tenantId, companyId, commonUtil.getMinuteUTC(info.getOffSet()));
-			Map<String, Object> resultMap = new HashMap<String, Object> ();
-			resultMap.put("notiList", myNotiList);
-			resultMap.put("totalListCnt", totalListCnt);
-			resultMap.put("notReadListCnt", notReadListCnt);
-			resultMap.put("notReadTotalListCnt", notReadListCnt);
-			resultMap.put("lastPageNum", lastPageNum);
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", resultMap);
-
-			logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/myNotiList] ended.");
-			
-			return result;
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-			
-			logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/myNotiList] ended.");
-
-			return result;
-		}
-		
-	}
-	
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 개별 알림 읽음 또는 삭제
 	@RequestMapping(value = "/rest/ezNotification/updateNoti/{notiSeq}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject updateNoti(@PathVariable String notiSeq, HttpServletRequest request) throws Exception {
@@ -372,11 +321,11 @@ public class EzNotificationGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			int curPageNum = request.getParameter("curPageNum") == null ? 1 : Integer.parseInt(request.getParameter("curPageNum"));
 			int notiListCnt = Integer.parseInt(request.getParameter("notiListCnt"));
 			String isRead = request.getParameter("isRead");
 			String notiFilter = request.getParameter("notiFilter");
 			String keyWord = request.getParameter("keyWord");
+			Integer lastNotiSeq = request.getParameter("lastNotiSeq").isEmpty() ? null : Integer.parseInt(request.getParameter("lastNotiSeq"));
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String mode = "ALL";
@@ -386,20 +335,13 @@ public class EzNotificationGWController {
 			mode = "NOTREAD";
 			int notReadTotalListCnt = ezNotificationService.getTotalNotiListCnt(userId, mode, companyId, tenantId);
 			
-			int limit = 0;
-			if (curPageNum < Integer.MAX_VALUE && notiListCnt < Integer.MAX_VALUE) {
-				limit = (curPageNum - 1) * notiListCnt;
-			}
-
 			int rowCount = notiListCnt;
-			int lastPageNum = (int) Math.ceil((double) totalListCnt / notiListCnt);
 			
-			List<NotificationVO> searchList = ezNotificationService.getSearchNotiList(userId, limit, rowCount, isRead, notiFilter, keyWord, tenantId, companyId, commonUtil.getMinuteUTC(info.getOffSet()));
+			List<NotificationVO> searchList = ezNotificationService.getSearchNotiList(userId, lastNotiSeq, rowCount, isRead, notiFilter, keyWord, tenantId, companyId, commonUtil.getMinuteUTC(info.getOffSet()));
 			Map<String, Object> resultMap = new HashMap<String, Object> ();
 			resultMap.put("notiList", searchList);
 			resultMap.put("totalListCnt", totalListCnt);
 			resultMap.put("notReadListCnt", notReadListCnt);
-			resultMap.put("lastPageNum", lastPageNum);
 			resultMap.put("notReadTotalListCnt", notReadTotalListCnt);
 			result.put("status", "ok");
 			result.put("code", 0);

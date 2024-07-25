@@ -16,9 +16,7 @@
 					<c:out value="${portletName }" />
 					(<span id="voteCount"><c:out value='${voteCount }' /></span>)
 				</dt>
-				<dd class="portletPlus" id="votePlus">
-					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-				</dd>
+				<dd class="portletPlus plus" id="votePlus"></dd>
 			</dl>
 			<c:choose>
 				<c:when test="${voteCount ne 0 }">

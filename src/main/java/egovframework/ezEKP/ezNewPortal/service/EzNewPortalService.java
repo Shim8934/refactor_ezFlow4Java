@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
+import egovframework.ezEKP.ezNewPortal.vo.ConnectPortletDTO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
@@ -34,6 +35,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -136,7 +138,7 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 회사별 메뉴목록조회
 	 */
-	public List<MenuInfoVO> getMenus(String companyId, int tenantId, String menuLang) throws Exception;
+	public List<MenuInfoVO> getMenus(String companyId, int tenantId, String menuLang, String type) throws Exception;
 	/**
 	 * 관리자 메뉴상세정보조회
 	 */
@@ -278,5 +280,9 @@ public interface EzNewPortalService {
 	public Optional<TopFrameType> getTopMenuDisplayModeForCompany(String companyId, int tenantId) throws Exception;
 	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 수정하는 메소드
 	public void updateTopMenuDisplayModeForCompany(int type, String companyId, int tenantId) throws Exception;
+	
+	public SystemConfigVO getSystemConfig(int portletId, String companyId, int tenantId) throws Exception;
+	
+	public JSONObject getConnectPortletData(ConnectPortletDTO connectPortletDto) throws Exception;
 	
 }

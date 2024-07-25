@@ -19,12 +19,6 @@ public class EzNotificationDAO extends EgovAbstractDAO {
 		return (Integer) select("EzNotificationDAO.getTotalNotiListCnt", map);
 	}
 	
-	// 2024-03-28 한태훈 - 통합알림 > 사용자 알림 가져오기
-	@SuppressWarnings("unchecked")
-	public List<NotificationVO> getMyNotiList(Map<String, Object> map) throws Exception {
-		return (List<NotificationVO>) list("EzNotificationDAO.getMyNotiList", map);
-	}
-
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 개별 알림 읽음 또는 삭제
 	public void updateNoti(Map<String, Object> map) throws Exception {
 		update("EzNotificationDAO.updateNoti", map);

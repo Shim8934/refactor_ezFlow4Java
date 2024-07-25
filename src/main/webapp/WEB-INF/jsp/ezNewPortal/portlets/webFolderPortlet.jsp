@@ -13,9 +13,7 @@
     <div class="layDIV">
         <dl class="portlet_title sortablePortlet">
             <dt class="portletText"><c:out value="${portletName}"></c:out></dt>
-            <dd class="portletPlus" onclick="openWebFolderPage()">
-            	<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png">
-            </dd>
+            <dd class="portletPlus plus" onclick="openWebFolderPage()"></dd>
             <dd class="mailGraph" id="webFolderGraph">
             	<p class="mGraph">
             		<span id="usedRate"></span>

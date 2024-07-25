@@ -5012,4 +5012,19 @@
 		]]>	
 	</update>
     
+    <select id="EzCommonDAO.checkMenuOpenType">
+    	<![CDATA[
+		SELECT	OPENTYPE
+		FROM	TBL_PORTAL_MENU_COMP
+		WHERE	ROWNUM <= 1
+		]]>
+    </select>
+
+    <statement id="EzCommonDAO.alterMenuOpenType">
+		ALTER TABLE
+			TBL_PORTAL_MENU_COMP
+		ADD
+			OPENTYPE	NUMBER(1)	DEFAULT	3	NOT NULL
+    </statement>
+    
 </sqlMap>

@@ -36251,4 +36251,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         return ezApprovalGDAO.isExistDocAttach(map) > 0;
     }
+
+    /* 2024-06-11 조소정 - 공람할문서 또는 공람완료문서 재사용 시 원문서 ID 가져오기 */
+	@Override
+	public String getOrgDocIDfromGongram(String beforeDocID, String companyID, int tenantId) throws Exception {
+		logger.debug("getOrgDocIDfromGongram started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BEFOREDOCID", beforeDocID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantId);
+
+		String orgDocID = ezApprovalGDAO.getOrgDocIDfromGongram(map);
+		
+		logger.debug("getOrgDocIDfromGongram ended");
+		return orgDocID;
+	}
 }

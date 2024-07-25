@@ -1874,6 +1874,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","메일");
 			put("property","USEEACHMAILDEFAULT"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
 		}});
+		test.add(new HashMap<String, Object>(){{
+			put("confName","useFormContOnReuseForWHWP");
+			put("property_value","YES");
+			put("config_name","웹한글 문서 재사용 시 양식선택창 표출여부");
+			put("regdate","2024-06-26 00:00:00");
+			put("description","웹한글 문서 재사용 시 양식선택창을 표출한다. YES: 양식선택창 표출, NO: 양식선택창 표출하지 않고 바로 기안창 호출 (default : YES)");
+			put("config_type","전자결재G");
+		}});
 
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
@@ -4019,5 +4027,59 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
         }
     }
+
+	@Override
+	public void alterMenuOpenType() throws Exception {
+		ezCommonDAO.alterMenuOpenType();
+	}
+	
+	@Override
+	public void createSystemConfig() throws Exception {
+		logger.debug("createSystemConfig started");
+		ezCommonDAO.createTblSystemConfig();
+		ezCommonDAO.createTblSystemConfigType();
+		ezCommonDAO.addConnectionIDtoTblPortalPortletComp();
+		logger.debug("createSystemConfig ended");
+	}
+
+	@Override
+	public void createConnectionMenu() throws Exception {
+		logger.debug("createConnectionMenu started");
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		
+		String connectMenuId = ezCommonDAO.checkConnectionMenu();
+		
+		if (connectMenuId == null) {
+			logger.debug("connectionMenu doesn't exist. add connection menu data...");
+			ezCommonDAO.insertConnectionMenu();
+			for (CompanyInfoVO company : companyList) {
+				if (company.getCompanyId() != null) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("companyId", company.getCompanyId());
+					map.put("tenantId", company.getTenantId());
+					ezCommonDAO.insertConnectMenuInfo(map);
+				}
+			}
+		}
+		logger.debug("createConnectionMenu ended");
+	}
+
+	@Override
+	public void insertStandardSystemConfigData() throws Exception {
+		logger.debug("insertStandardSystemConfigData started");
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		String nowDate = commonUtil.getTodayUTCTime("");
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("nowDate", nowDate);
+				ezCommonDAO.insertStandardSystemConfigData(map);
+			}
+		}
+		
+		logger.debug("insertStandardSystemConfigData ended");
+	}
 
 }

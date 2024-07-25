@@ -1460,4 +1460,45 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("getBoardList End");
 		return data;
 	}
+	
+	@RequestMapping(value = "/ezNewPortal/connectionPortlet.do", method=RequestMethod.GET)
+	public String connectionPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("connectionPortlet started");
+		
+		model.addAttribute("portletId", req.getParameter("portletId"));
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+		
+		logger.debug("connectionPortlet ended");
+		
+		return "/ezNewPortal/portlets/connectPortlet";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ezNewPortal/getConnectList.do", method=RequestMethod.GET)
+	public JSONObject getConnectList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getConnectList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("portletId", req.getParameter("portletId"));
+		param.put("currentPage", req.getParameter("currentPage"));
+		param.put("listCnt", req.getParameter("listCnt"));
+		
+		String url = "/rest/ezPortal/portlets/connect/list";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+		if (status.equals("ok")) {
+			data = (JSONObject) resultBody.get("data");
+		}
+		
+		logger.debug("getConnectList End");
+		return data;
+	}
 }

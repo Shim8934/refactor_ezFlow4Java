@@ -23,6 +23,9 @@
 	        var pListSusin = "<c:out value='${listSusin}'/>";
 	        var porgDocID = "<c:out value='${orgDocID}'/>";
 	        var pFormID = "<c:out value='${formID}'/>";
+	        var formUrl = "<c:out value='${formUrl}'/>";
+	        var formDocType = "<c:out value='${formDocType}'/>";
+	        var useFormContOnReuseForWHWP = "<c:out value='${useFormContOnReuseForWHWP}'/>";
 	        var pTitle = "<c:out value='${docTitle}'/>";
 	        var pOpinionFlag;
 	        var pListTypeValue = 4;
@@ -491,7 +494,7 @@
 		            var pTop = (pheight - 720) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 		            
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 		                alert(strLang1031);
 		            }
 		            else {
@@ -530,28 +533,35 @@
 		var editable = "";
 	 	function btnReuse_onclick(type) {
 	 		editable = type;
-	 		var parameter = new Array();
-	        parameter[0] = "sol2";
-	        parameter[1] = "A01000";
-	        
-	        url = "/ezApprovalG/getFormCont.do";
-	        
-	        if (CrossYN()) {
-	            getformcont_cross_dialogArguments[0] = parameter;
-	            getformcont_cross_dialogArguments[1] = btnReuse_onclick_complete;
-	            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
-	            
-	            try { getFormCont_Cross.focus(); } catch (e) {}
-	        } else {
-	            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
-	            var ret = window.showModalDialog(url, parameter, feature);
-	            formURL = ret[0];
-	            formDocType = ret[1];
-	            
-	            if (formURL != "cancel") {
-	                openDraftUI(formURL, formDocType);
-	            }
-	        }
+	 		if (useFormContOnReuseForWHWP === "YES") {
+		 		var parameter = new Array();
+		        parameter[0] = "sol2";
+		        parameter[1] = "A01000";
+		        
+		        url = "/ezApprovalG/getFormCont.do";
+		        
+		        if (CrossYN()) {
+		            getformcont_cross_dialogArguments[0] = parameter;
+		            getformcont_cross_dialogArguments[1] = btnReuse_onclick_complete;
+		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            
+		            try { getFormCont_Cross.focus(); } catch (e) {}
+		        } else {
+		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+		            var ret = window.showModalDialog(url, parameter, feature);
+		            formURL = ret[0];
+		            formDocType = ret[1];
+		            
+		            if (formURL != "cancel") {
+		                openDraftUI(formURL, formDocType);
+		            }
+		        }
+	 		}
+	 		else {
+	 			newFormURL = formUrl;
+	 			newFormDocType = formDocType;
+	 	        openDraftUI("DRAFT");
+	 		}
 	 	}
 	 	
 	 	var editable = "";
@@ -595,37 +605,40 @@
 	     }
 		 
 		function openDraftUI(pDraftFlag) {
-			var param = {
-				formURL : newFormURL,
-				draftFlag : pDraftFlag,
-				formDocType : newFormDocType,
-				susinSN : "0",
-				docstate : "",
-				listType : "1",
-				aprState : "",
-				isTmpDoc : "",
-				isUsed : editable,
-				beforeDocID : pDocID
-			}
+			var pArgument = new Array();
+			
+	        pArgument[0] = newFormURL;
+	        pArgument[1] = pDraftFlag;
+	        pArgument[2] = newFormDocType;
+            pArgument[3] = "0";
+            pArgument[4] = "";
+            pArgument[5] = "1";
+            pArgument[6] = "";
+            pArgument[7] = "";
+            pArgument[8] = editable;
+            pArgument[9] = pDocID;
+            
+			var params = {
+				formURL: escape(pArgument[0]),
+				draftFlag: escape(pArgument[1]),
+				formDocType: escape(pArgument[2]),
+				susinSN: escape(pArgument[3]),
+				docstate: escape(pArgument[4]),
+				listType: escape(pArgument[5]),
+				aprState: escape(pArgument[6]),
+				isTmpDoc: escape(pArgument[7]),
+				isUsed: escape(pArgument[8]),
+				beforeDocID: escape(pArgument[9])
+			};
 	        
 			var openLocation = "";
 			
-			if(useWebHWP == "YES")
-				openLocation = "/ezApprovalG/draftuiWHWP.do";
-			else 
-				openLocation = "/ezApprovalG/draftuiHWP.do";
-			
-			openLocation = openLocation
-				+ "?formURL=" + escape(param.formURL)
-				+ "&draftFlag=" + escape(param.draftFlag)
-				+ "&formDocType=" + escape(param.formDocType)
-				+ "&susinSN=" + escape(param.susinSN) 
-				+ "&docState=" + escape(param.docstate) 
-				+ "&listType=" + escape(param.listType) 
-				+ "&aprState=" + escape(param.aprState)
-				+ "&isTmpDoc=" + escape(param.isTmpDoc) 
-				+ "&isUsed=" +  escape(param.isUsed)
-				+ "&beforeDocID=" + escape(param.beforeDocID);
+			if(useWebHWP == "YES") {
+				openLocation = "/ezApprovalG/draftuiWHWP.do?" + new URLSearchParams(params);
+			}
+			else {
+				openLocation = "/ezApprovalG/draftuiHWP.do?" + new URLSearchParams(params);
+			}
 	        
 	        var result = GetOpenWindow(openLocation, "", 1050, 970, "YES");
 	        window.close();

@@ -24,6 +24,7 @@
 <typeAlias alias="webFolderFileVO" type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
 <typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
 <typeAlias alias="PortalTopVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalTopVO"/>
+<typeAlias alias="SystemConfigVO" type="egovframework.ezEKP.ezSystem.vo.SystemConfigVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -1093,7 +1094,8 @@ AND
                 A.menu_url         AS menuUrl,
                 A.icon_urL         AS iconUrl,
                 COMP.company_order    AS companyOrder,
-                A.menucode
+                A.menucode,
+                COMP.OPENTYPE
             FROM
                 tbl_portal_menu A
             JOIN
@@ -4194,5 +4196,34 @@ ORDER BY
 			TENANT_ID = #tenantId#
 		]]>
 </select>
+
+	<select id="ezNewPortal.getSystemConfig" parameterClass="Map" resultClass="SystemConfigVO">
+	SELECT
+		A.CODE,
+		A.CODEVALUE,
+		A.DESCRIPTION,
+		A.WRITERID,
+		A.WRITERNAME,
+		A.WRITEDATE,
+		A.TENANT_ID,
+		A.COMPANY_ID,
+		A.TYPECODE
+	FROM
+		TBL_SYSTEMCONFIG A
+	INNER JOIN
+		TBL_PORTAL_PORTLET_COMP B
+	ON
+		A.TENANT_ID = B.TENANT_ID
+	AND
+		A.COMPANY_ID = B.COMPANY_ID
+	AND
+		A.CODE = B.CONNECTION_ID
+	WHERE
+		B.PORTLET_ID = #portletId#
+	AND
+		A.TENANT_ID = #tenantId#
+	AND
+		A.COMPANY_ID = #companyId#
+	</select>
 	
 </sqlMap>

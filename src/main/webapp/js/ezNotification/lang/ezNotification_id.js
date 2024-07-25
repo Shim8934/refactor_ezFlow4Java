@@ -86,3 +86,5 @@ subType["community"]["new"] = "Pendaftaran baru";
 var notiMessages = {
 	strLang1 : '"No data."'
 }
+
+var notiDayNames = ["Mg", "Sn", "Sl", "Rb", "Km", "Jm", "Sb"];

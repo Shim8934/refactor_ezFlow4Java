@@ -86,3 +86,5 @@ subType["community"]["new"] = "新注册";
 var notiMessages = {
 	strLang1 : '"没有数据."'
 }
+
+var notiDayNames = ["日", "一", "二", "三", "四", "五", "六"];

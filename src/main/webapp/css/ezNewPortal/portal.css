@@ -246,6 +246,18 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .portlet_title{ margin:0px; padding:0 8px 0 0px; height:53px; line-height:53px; box-sizing:border-box; overflow:hidden;}
 .portlet_title .portletText{ margin:0px; padding:0px 0px 0px 20px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden; width:calc(100% - 90px); text-overflow:ellipsis; white-space:nowrap; box-sizing:border-box;}
 .portlet_title .portletPlus{ margin:12px 12px 0 0; float:right; overflow:hidden; cursor:pointer; line-height:normal;}
+.portlet_title .portletPlus.plus{width:30px; height:30px; background-repeat:no-repeat; background-position:center;}
+#theme1Body .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus1.png);}
+#theme2Body .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus2.png);}
+#theme2Body .sec1Layout_btm_left .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus2_t2.png);}
+#theme3Body .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus3.png);}
+
+
+.portlet_title .portletPlus.setting{width:30px; height:30px; background-repeat:no-repeat; background-position:center;}
+#theme1Body .portlet_title .portletPlus.setting{background-image:url(../../images/ezNewPortal/portlet_setting1.png);}
+#theme2Body .portlet_title .portletPlus.setting{background-image:url(../../images/ezNewPortal/portlet_setting2.png);}
+#theme3Body .portlet_title .portletPlus.setting{background-image:url(../../images/ezNewPortal/portlet_setting3.png);}
+
 .portlet_title .portletRefresh{ margin:17px 10px 0 0; float:right; overflow:hidden; cursor:pointer; line-height:normal;}
 .sortablePortlet:hover {cursor : move;}
 /* photoboard 클래스가 있을 경우 text너비 변경 */
@@ -1115,6 +1127,15 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .writebanner .writebannerUL li{float:left; width:12.5%; margin:0px 0px 19px 0px; padding:0px; text-align:center; cursor:pointer;}
 #theme2Body .writebanner .writebannerDL{position:relative; margin:0px; padding:0px;}
 #theme2Body .writebanner .writebannerDL dt{margin:10px 0px; padding:0px; text-align:center; color:#444; font-size:14px;}
+#theme2Body .writebanner .writebannerDL dt.banner_img{height:41px; background-repeat:no-repeat; background-position:center;}
+#theme2Body .writebanner .writebannerDL.banner_mail dt.banner_img{background-image:url(../../images/ezNewPortal/theme2Img/writebanner01.png);}
+#theme2Body .writebanner .writebannerDL.banner_apr dt.banner_img{background-image:url(../../images/ezNewPortal/theme2Img/writebanner02.png);}
+#theme2Body .writebanner .writebannerDL.banner_schedule dt.banner_img{background-image:url(../../images/ezNewPortal/theme2Img/writebanner03.png);}
+#theme2Body .writebanner .writebannerDL.banner_survey dt.banner_img{background-image:url(../../images/ezNewPortal/theme2Img/writebanner04.png);}
+#theme2Body .writebanner .writebannerDL.banner_workspace dt.banner_img{background-image:url(../../images/ezNewPortal/theme2Img/writebanner05.png);}
+#theme2Body .writebanner .writebannerDL.banner_organ dt.banner_img{background-image:url(../../images/ezNewPortal/theme2Img/writebanner06.png);}
+#theme2Body .writebanner .writebannerDL.banner_community dt.banner_img{background-image:url(../../images/ezNewPortal/theme2Img/writebanner07.png);}
+#theme2Body .writebanner .writebannerDL.banner_memo dt.banner_img{background-image:url(../../images/ezNewPortal/theme2Img/writebanner08.png);}
 #theme2Body .writebanner .writebannerDL dd{position:absolute; top:-9px; right:calc(50% - 35px); margin:0px 0px 0px 16px; padding:1px 8px 2px 8px; color:#ffffff; text-align:center; font-size:12px; font-weight:500; background:rgba(2, 4, 6, 0.4);  border-radius:40px;-webkit-border-radius:40px;-moz-border-radius:40px;}
 #theme2Body .writebanner .writebannerDL dd.iconCount_none{background:rgba(2, 4, 6, 0.2);}
 #theme2Body .writebanner .iconCircle_none{width:65px; height:65px; margin:0px auto; padding:0px; background:#f3f3f3; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;border:1px solid #e9e9e9;}
@@ -1573,10 +1594,10 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 /* resource 포틀릿*/
 .resources_portlet{}
 .resources_portlet .portlet_title .portletText{ width:130px;}
-.resources_portlet .resources_calendal{ margin:0px; padding:17px 12px 0px 10px; float:right; overflow:hidden; position:relative; line-height:normal;}
+.resources_portlet .resources_calendal{ margin:0px; padding:12px 12px 0px 10px; float:right; overflow:hidden; position:relative; line-height:normal;}
 .resources_portlet .resources_calendal .DatePicker_class{ height:30px; margin:0px; width:110px; text-align:center; vertical-align:top; border:1px solid #E2E2E2; border-radius:6px;}
 .resources_portlet input {box-sizing: border-box; border: 1px solid #dedede; font-size: 13px; color: #444; text-decoration: none; outline: none;}
-.resources_portlet .resources_calendal img{position:absolute; right:18px; top:24px; margin:0px 0px 0px 0px; padding:0px 0px 0px 0px; cursor:pointer;}
+.resources_portlet .resources_calendal img{position:absolute; right:18px; top:19px; margin:0px 0px 0px 0px; padding:0px 0px 0px 0px; cursor:pointer;}
 .resources_portlet .resources_setting{ margin:17px 12px 0 0; padding:0; float:right; cursor:pointer;}
 
 .resources_setting{margin:0px; padding:18px 15px; float:right; overflow:hidden; cursor:pointer;}
@@ -1741,7 +1762,8 @@ div.orbit img{border-radius: 5px;}
 
 .portlet_tab_plus {position: absolute; right:20px; top:12px; cursor: pointer; margin:0;}
 .portlet_tab_plus .portletPlus{margin:0;}
-/* #theme3Body .portlet_tab dt{float:left; height:40px; line-height:40px;  margin:0 5px; color:#333; cursor:pointer; font-weight:500; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:170px;} */
+.portlet_tab_plus .portletPlus.plus{width:30px; height:30px; background-repeat:no-repeat; background-position:center;}
+#theme1Body .portlet_tab_plus .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus1.png);}
 
 
 /* .quickMenuBtnDiv span{max-width:60px !important;} */
@@ -1931,7 +1953,7 @@ div.orbit img{border-radius: 5px;}
 
 .filter_pop .noti_bot_btn{display:flex; justify-content:center; padding-bottom:18px;}
 .filter_pop .noti_bot_btn span{display:inline-block; width:135px; height:40px; line-height:38px; text-align:center; border-radius:6px; background:#EFEFEF; color:#737373; font-size:14px; margin-right:10px; cursor:pointer;}
-.filter_pop .noti_bot_btn span.ok{margin-right:0; background:#388CE5; color:#fff;}
+.filter_pop .noti_bot_btn span.close{margin-right:0; background:#388CE5; color:#fff;}
 
 
 /* 프로필 */
@@ -2023,6 +2045,7 @@ div.orbit img{border-radius: 5px;}
 .lnb_menu_all ul.active li{border:1px dashed #DCDCDC; border-left:none; border-top:none;}
 .lnb_menu_all ul.active li:nth-child(5n-4){border-left:1px dashed #DCDCDC;}
 .lnb_menu_all ul.active li:nth-child(-n+5){border:1px dashed #59ACFF; background:#E3EEF9; border-left:none;}
+.lnb_menu_all ul.active li:nth-child(1) {border: 1px dashed #59ACFF;}
 
 
 .input_radio{display:inline-block;}
@@ -2126,6 +2149,10 @@ div.orbit img{border-radius: 5px;}
 .img_slide .fix-portlet .swiper-slide .slide_txt dl{margin:0; padding:0;}
 .img_slide .fix-portlet .swiper-slide .slide_txt dl dt{margin:0 0 10px; padding:0; font-size:16px; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .img_slide .fix-portlet .swiper-slide .slide_txt dl dd{margin:0; padding:0; font-size:14px; line-height:1.5; display:-webkit-box; word-wrap:break-word; -webkit-line-clamp:2; -webkit-box-orient:vertical; text-overflow:ellipsis; overflow:hidden;}
+
+#theme1Body .img_slide .fix-portlet .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus1_white.png);}
+#theme2Body .img_slide .fix-portlet .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus1_white.png);}
+#theme3Body .img_slide .fix-portlet .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus1_white.png);}
 
 .img_slide .fix-portlet .swiper-pagination{width:auto; left:auto; right:20px; bottom:15px; background:rgba(255,255,255,0.7); height:24px; line-height:24px; border-radius:12px; padding:0 8px; letter-spacing:-1px; color:#484848; font-size:14px;}
 .img_slide .fix-portlet .swiper-pagination .swiper-pagination-current{font-weight:bold;}

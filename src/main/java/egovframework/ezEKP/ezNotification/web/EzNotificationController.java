@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezNotification.web;
 
-import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -25,14 +24,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -128,45 +124,6 @@ public class EzNotificationController {
 		return resultBody;
 	}
 	
-	// 2024-03-28 한태훈 - 통합알림 > 알림 리스트 가져오기.
-	@RequestMapping(value = "/ezNotification/getNotiList.do", method=RequestMethod.GET)
-	@ResponseBody
-	public JSONObject getMyNotiList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getMyNotiList started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String gwServerUrl = config.getProperty("config.notificationGWServerURL");
-		String url = gwServerUrl + "/rest/ezNotification/" + userInfo.getId() + "/myNotiList";
-		
-		String curPageNum = request.getParameter("curPageNum");
-		String notiListCnt = request.getParameter("notiListCnt");
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("curPageNum", curPageNum)
-				.queryParam("notiListCnt", notiListCnt);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		String status = resultBody.get("status").toString();
-		JSONObject resultJson = new JSONObject();
-		if (status.equals("ok")) {
-			resultJson = (JSONObject) resultBody.get("data");
-		}
-		
-		logger.debug("getMyNotiList ended");
-		
-		return resultJson;
-	}
-	
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 개별 알림 읽음 또는 삭제
 	@RequestMapping(value = "/ezNotification/updateNoti.do", method=RequestMethod.POST)
 	@ResponseBody
@@ -247,7 +204,7 @@ public class EzNotificationController {
 		String isRead = request.getParameter("isRead");
 		String notiFilter = request.getParameter("notiFilter");
 		String keyWord = request.getParameter("keyWord");
-		String curPageNum = request.getParameter("curPageNum");
+		String lastNotiSeq = request.getParameter("lastNotiSeq");
 		String notiListCnt = request.getParameter("notiListCnt");
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -259,7 +216,7 @@ public class EzNotificationController {
 				.queryParam("isRead", isRead)
 				.queryParam("notiFilter", notiFilter)
 				.queryParam("keyWord", keyWord)
-				.queryParam("curPageNum", curPageNum)
+				.queryParam("lastNotiSeq", lastNotiSeq)
 				.queryParam("notiListCnt", notiListCnt);
 		
 		RestTemplate rest = new RestTemplate();

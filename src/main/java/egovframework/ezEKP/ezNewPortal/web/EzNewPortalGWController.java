@@ -22,6 +22,7 @@ import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezNewPortal.vo.ConnectPortletDTO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
@@ -96,6 +97,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -2302,11 +2304,12 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
 			String menuLang = userInfo.getLang();
-			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId(), menuLang);
+			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId(), menuLang, type);
 			
 			//tenant config가 NO인 경우 관리자 메뉴 관리에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -2559,61 +2562,18 @@ public class EzNewPortalGWController {
 			if (menuNamesCount > 2) {
 				List<MenuNameVO> menuNamesWithOrder = new ArrayList<MenuNameVO>();
 				
-				if (menuNamesCount > 3 && menuNamesCount < 5) {
-					int[] langOrder = new int[4];
-					
-					if (primaryLang.equals("2")) {
-						langOrder[0] = 2;
-						langOrder[1] = 1;
-						langOrder[2] = 3;
-						langOrder[3] = 4;
-					} else if (primaryLang.equals("3")){
-						langOrder[0] = 3;
-						langOrder[1] = 1;
-						langOrder[2] = 2;
-						langOrder[3] = 4;
-					} else {
-						langOrder[0] = 1;
-						langOrder[1] = 2;
-						langOrder[2] = 3;
-						langOrder[3] = 4;
+				// 사용 언어가 가장 먼저 위치하도록 순서 조정.
+				menuNamesWithOrder.add(menuNames.get(Integer.parseInt(primaryLang) - 1));
+				
+				for (MenuNameVO vo : menuNames) {
+					if (!vo.getMenuLang().equals(primaryLang)) {
+						menuNamesWithOrder.add(vo);
 					}
-					
-					for (int i = 0; i < langOrder.length; i++) {
-						int langIndex = langOrder[i] - 1;
-						
-						menuNamesWithOrder.add(menuNames.get(langIndex));
-					}
-					
-					data.put("menuNames", menuNamesWithOrder);
-				} else if (menuNamesCount > 2 && menuNamesCount < 4) {
-					int[] langOrder = new int[3];
-					
-					if (primaryLang.equals("2")) {
-						langOrder[0] = 2;
-						langOrder[1] = 1;
-						langOrder[2] = 3;
-					} else if (primaryLang.equals("3")){
-						langOrder[0] = 3;
-						langOrder[1] = 1;
-						langOrder[2] = 2;
-					} else {
-						langOrder[0] = 1;
-						langOrder[1] = 2;
-						langOrder[2] = 3;
-					}
-					
-					for (int i = 0; i < langOrder.length; i++) {
-						int langIndex = langOrder[i] - 1;
-						
-						menuNamesWithOrder.add(menuNames.get(langIndex));
-					}
-					data.put("menuNames", menuNamesWithOrder);
 				}
-			}
-			else {
-				data.put("menuNames", menuNames);
-			}
+				
+				data.put("menuNames", menuNamesWithOrder);
+			} 
+			data.put("menuNames", menuNames);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -6253,4 +6213,36 @@ public class EzNewPortalGWController {
 		return result;
 	}
 	
+	/**
+	 * 포탈 G/W [GET] 포틀릿 - 연계 포틀릿 정보 조회
+	 */
+	@RequestMapping(value = "/rest/ezPortal/portlets/connect/list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getConnectPortlet(HttpServletRequest request) throws Exception {
+		logger.debug("ezNewPortal G/W getConnectPortlet started.");
+
+		String serverName = request.getHeader("x-user-host");
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String deptId = request.getParameter("deptId");
+		int currentPage = Integer.parseInt((String)request.getParameter("currentPage"));
+		int listCnt = Integer.parseInt(request.getParameter("listCnt"));
+		MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+		int tenantId = info.getTenantId();
+		int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
+
+		SystemConfigVO systemConfig = ezNewPortalService.getSystemConfig(portletId, companyId, tenantId);
+		ConnectPortletDTO connectPortletDTO = new ConnectPortletDTO();
+		connectPortletDTO.setUserId(userId);
+		connectPortletDTO.setDeptId(deptId);
+		connectPortletDTO.setSystemConfig(systemConfig);
+		connectPortletDTO.setRequest(request);
+		connectPortletDTO.setCurrentPage(currentPage);
+		connectPortletDTO.setListCnt(listCnt);
+		connectPortletDTO.setTenantId(tenantId);
+		JSONObject resultData = ezNewPortalService.getConnectPortletData(connectPortletDTO);
+		
+		logger.debug("ezNewPortal G/W getConnectPortlet ended.");
+
+		return resultData;
+	}
 }

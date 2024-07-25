@@ -180,7 +180,7 @@
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	<script type="text/javascript">
 		var connectMenuId = -1;
-	
+		var maxMenuCount = 7;
 		// 상단 메뉴시 화면 작아질시 좌측으로 이동 함수 start(테스트용/UIUX-조기완)
 		/* function calcWidth(obj){
 			var totalWidth = 0;
@@ -266,7 +266,7 @@
 					return; //연계메뉴 표출 x
 				}
 				
-				if (menuCount <= 4) { // 최대5개 표출
+				if (menuCount < maxMenuCount) { // 최대 7개 표출
 					var menuLi = document.createElement('li');
 					var mainFrame = window.parent.document.getElementById("mainFrame");
 					if (menuDisplayMode == "0") { // 메뉴 top에 생성
@@ -277,7 +277,7 @@
 						mainFrame.style.position = "static";
 						
 					} else if (menuDisplayMode == "1") {// 메뉴 left에 생성
-						menuLi.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu"); // 탑메뉴 아이콘과 구분하기 위해서 _leftmenu 추가
+						if (!!item.iconUrl && item.iconUrl.split(" ").length > 0) menuLi.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu"); // 탑메뉴 아이콘과 구분하기 위해서 _leftmenu 추가
 						menuLi.classList.add('sortable-item');
 						menuLi.setAttribute('id', 'menu_' + item.menuId);
 						var liSpan = document.createElement('span');
@@ -291,7 +291,7 @@
 					menuLi.addEventListener('click', function () {
 						offMenuAll();
 						this.classList.add("on");
-						subMenuClickEvent('off', item.menuUrl);
+						subMenuClickEvent('off', item.menuUrl, item.openType);
 						notice_all_close();
 						closeNoti();
 					});
@@ -631,7 +631,7 @@
 		} */
 		
 		// 확장버튼 UI 이벤트 함수
-		var subMenuClickEvent = function (type, menuUrl) {
+		var subMenuClickEvent = function (type, menuUrl, openType) {
 			if(type === 'on') {
 				toggleAllMenu(type);
 				
@@ -641,11 +641,16 @@
 				toggleDivMenu(document.querySelector('#profileContainer') ,type);
 				closeNoti(); // 통합알림 팝업창 닫기
 
-				if (menuUrl != undefined && menuUrl.toString().indexOf("http") != -1) {
-					window.open(menuUrl);
+				if (menuUrl && menuUrl.toString().indexOf("http") != -1) {
+					if (openType == 1) {
+						window.open(menuUrl, '_blank');
+					} else if (openType == 2) {
+						window.open(menuUrl, '_blank', 'width=1000,height=900');
+					}
 				} else if (menuUrl != null) {
 					window.open(menuUrl, 'main', '');
 				}
+				
 				// 취소버튼과 같은 역할
 				var editMenuCancel = document.getElementById('editMenuCancel');
 				editMenuCancel.click();	
@@ -679,10 +684,10 @@
 				menuAllListSpan.textContent = item.menuName;
 				menuAllList.appendChild(menuAllListSpan);
 				menuAllList.setAttribute("id", item.menuId);
-				menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
+				if (!!item.iconUrl && item.iconUrl.split(" ").length > 0)  menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
 				menuAllList.classList.add('sortable-item');
 				
-				if (menuCount < 5) {
+				if (menuCount < maxMenuCount) {
 					menuAllList.classList.add('on');
 				}
 				
@@ -692,7 +697,7 @@
 					if (!!document.getElementById("menu_" + menuId)) {
 						document.getElementById("menu_" + menuId).classList.add("on");
 					}
-					subMenuClickEvent('off', item.menuUrl);
+					subMenuClickEvent('off', item.menuUrl, item.openType);
 					notice_all_close();
 				});
 				

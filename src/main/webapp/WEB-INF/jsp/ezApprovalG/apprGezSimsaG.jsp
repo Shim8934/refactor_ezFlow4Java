@@ -468,7 +468,7 @@
 		            var pTop = (pheight - 870) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 		
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4") {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8") {
 		                alert(strLang1031);
 		            }
 		            else {
