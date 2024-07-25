@@ -23,6 +23,9 @@
 	    <script type="text/javascript">
 	        var docID = "<c:out value='${docID}'/>";
 	        var docHref = "<c:out value='${docHref}'/>";
+	        var formUrl = "<c:out value='${formUrl}'/>";
+	        var formDocType = "<c:out value='${formDocType}'/>";
+	        var useFormContOnReuseForWHWP = "<c:out value='${useFormContOnReuseForWHWP}'/>";
 	        var opinionFlag = "<c:out value='${opinionFlag}'/>";
 	        var listTypeValue = "<c:out value='${listTypeValue}'/>";
 	        var listSusin = "<c:out value='${listSusin}'/>";
@@ -721,32 +724,39 @@
 			var getformcont_cross_dialogArguments = new Array();
 		 	function btnReuse_onclick(type) {
 		 		editable = type;
-		 		var parameter = new Array();
-		        parameter[0] = "sol2";
-		        parameter[1] = "A01000";
-		        
-		        url = "/ezApprovalG/getFormCont.do";
-		        
-		        if (CrossYN()) {
-		            getformcont_cross_dialogArguments[0] = parameter;
-		            getformcont_cross_dialogArguments[1] = btnReuse_onclick_complete;
-		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
-		            
-		            try {
-		            	getFormCont_Cross.focus(); 
-		            } catch (e) {
-		            	console.error('Error focusing window:', e);
-		            }
-		        } else {
-		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
-		            var ret = window.showModalDialog(url, parameter, feature);
-		            formURL = ret[0];
-		            formDocType = ret[1];
-		            
-		            if (formURL != "cancel") {
-		                openDraftUI(formURL, formDocType);
-		            }
-		        }
+		 		if (useFormContOnReuseForWHWP === "YES") {
+			 		var parameter = new Array();
+			        parameter[0] = "sol2";
+			        parameter[1] = "A01000";
+			        
+			        url = "/ezApprovalG/getFormCont.do";
+			        
+			        if (CrossYN()) {
+			            getformcont_cross_dialogArguments[0] = parameter;
+			            getformcont_cross_dialogArguments[1] = btnReuse_onclick_complete;
+			            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+			            
+			            try {
+			            	getFormCont_Cross.focus();
+			            } catch (e) {
+			            	console.error('Error focusing window:', e);
+			            }
+			        } else {
+			            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+			            var ret = window.showModalDialog(url, parameter, feature);
+			            formURL = ret[0];
+			            formDocType = ret[1];
+			            
+			            if (formURL != "cancel") {
+			                openDraftUI(formURL, formDocType);
+			            }
+			        }
+		 		}
+		 		else {
+		 			newFormURL = formUrl;
+		 			newFormDocType = formDocType;
+		 	        openDraftUI("DRAFT");
+		 		}
 		 	}	
 		 	
 		 	var editable = "";
