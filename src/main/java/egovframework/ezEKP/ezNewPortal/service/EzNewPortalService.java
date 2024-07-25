@@ -47,7 +47,7 @@ public interface EzNewPortalService {
 	/**
 	 * 박종균
 	 * */
-	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize) throws Exception;
+	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize, int portletId) throws Exception;
 	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId, String offset) throws Exception;
 	public List<PersonalLightPollVO> getPollPortletResult(String companyId, int tenantId, int itemSeq) throws Exception;
 	public List<Map<String, Object>> getAssemblePollData(PersonalLightPollVO poll, List<PersonalLightPollVO> pollResult) throws Exception;
@@ -75,7 +75,7 @@ public interface EzNewPortalService {
 	public int getPhotoBoardPortletTotalCnt(int tenantId, String boardId, String offset) throws Exception;
 	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception;
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId) throws Exception;
-	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId, String deptPath, String portletLang) throws Exception;
+	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId, String deptPath, String portletLang, String type) throws Exception;
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId, JSONArray portletOrder, String portletLang, int themeId) throws Exception;
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow, String lang) throws Exception;
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month) throws Exception;
