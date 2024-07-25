@@ -258,13 +258,23 @@
 			        	    // } else if (result == "DIFF_COMPANY") {
 			        	    //	alert(strLangLHM01);
 			        	    } else {
-			        	        alert(strLang10);
-			        	    }
-			        	},
-			        	error : function(){
-			        		alert(strLang10);	
-			        	}
-			        });
+								if (result == "EMAIL_ERROR") {
+										alert("<spring:message code='ezOrgan.t269' />");
+									} else if (result == "NO_LICENSE_KEY") {
+										alert("<spring:message code='ezOrgan.x0010' />");
+									} else if (result == "INVALID_LICENSE_KEY") {
+										alert("<spring:message code='ezOrgan.x0011' />");
+									} else if (result == "MAX_USER_REACHED") {
+										alert("<spring:message code='ezOrgan.x0012' />");
+									} else {
+										alert(strLang10);
+								}
+							}
+								},
+								error : function() {
+									alert(strLang10);
+								}
+						});
 
 			        retireUserList();
 			    }

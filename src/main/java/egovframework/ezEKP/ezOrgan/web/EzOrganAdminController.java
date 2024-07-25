@@ -3301,7 +3301,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			//	logger.debug("restoreRetireUser ended. result=DIFF_COMPANY");
 			//	return "DIFF_COMPANY";
 			//}
-			
+
+			String checkResult = checkLicenseKey(tenantID, domain);
+
+			if (!checkResult.equals("OK")) {
+				return checkResult;
+			}
+
 			// dhlee
 			String mailAddr = cn[i] + "@" + domain;
 			
