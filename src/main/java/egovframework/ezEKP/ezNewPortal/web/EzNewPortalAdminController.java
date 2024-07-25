@@ -822,6 +822,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("boardList", resultBody.get("data"));
 				model.addAttribute("companyId", companyId);
 				model.addAttribute("portletId", request.getParameter("portletId"));
+				model.addAttribute("portletCode", request.getParameter("code"));
 			}
 			
 			logger.debug("openBoardTree ended.");
