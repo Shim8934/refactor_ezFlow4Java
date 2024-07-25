@@ -188,7 +188,7 @@ public class EzCabinetGWController_h {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezCabinet/list-type/userid/{userid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezCabinet/list-type/userid/{userid:.+}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -219,7 +219,7 @@ public class EzCabinetGWController_h {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezCabinet/list-type/userid/{userid}/save", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezCabinet/list-type/userid/{userid:.+}/save", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
 		String listType   = request.getParameter("listType") != null ? request.getParameter("listType") : "";
