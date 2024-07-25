@@ -73,7 +73,7 @@ public class EzNotificationGWController {
 	private Properties config;
 	
 	// 2024-03-28 한태훈 - 통합알림 > 알림 전송 
-	@RequestMapping(value = "/rest/ezNotification/notiSend/{senderId}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/notiSend/{senderId:.+}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject notiSend(@PathVariable String senderId, HttpServletRequest request, @RequestBody NotificationVO notiVO) throws Exception {
 		logger.debug("G/W EzNotification [POST /rest/ezNotification/notiSend/{senderId}] started.");
 		
@@ -265,7 +265,7 @@ public class EzNotificationGWController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 개별 알림 읽음 또는 삭제
-	@RequestMapping(value = "/rest/ezNotification/updateNoti/{notiSeq}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/updateNoti/{notiSeq:.+}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject updateNoti(@PathVariable String notiSeq, HttpServletRequest request) throws Exception {
 		logger.debug("G/W EzNotification [POST /rest/ezNotification/updateNoti/{notiSeq}] started.");
 		JSONObject result = new JSONObject();
@@ -290,7 +290,7 @@ public class EzNotificationGWController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 전체 알림 읽음 또는 삭제
-	@RequestMapping(value = "/rest/ezNotification/{userId}/updateNotiAll", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/{userId:.+}/updateNotiAll", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject updateNotiAll(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("G/W EzNotification [POST /rest/ezNotification/{userId}/updateNotiAll] started.");
 		JSONObject result = new JSONObject();
@@ -314,7 +314,7 @@ public class EzNotificationGWController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 알림 검색
-	@RequestMapping(value = "/rest/ezNotification/{userId}/searchNoti", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/{userId:.+}/searchNoti", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject searchNoti(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/searchNoti] started.");
 		JSONObject result = new JSONObject();
@@ -361,7 +361,7 @@ public class EzNotificationGWController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 읽지 않은 알림 개수 구하기
-	@RequestMapping(value = "/rest/ezNotification/{userId}/unreadNotiCnt", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/{userId:.+}/unreadNotiCnt", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject unreadNotiCnt(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/unreadNotiCnt] started.");
 		JSONObject result = new JSONObject();
@@ -390,7 +390,7 @@ public class EzNotificationGWController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 새로운 알림 카운트 개수 구하기
-	@RequestMapping(value = "/rest/ezNotification/{userId}/newNotiCnt", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/{userId:.+}/newNotiCnt", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getNewNotiCnt(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/newNotiCnt] started.");
 		JSONObject result = new JSONObject();
