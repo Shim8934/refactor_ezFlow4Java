@@ -46,6 +46,7 @@
 		    };
 		    
 		    $(document).ready(function(){
+				useOrganHideFlag = "${useOrganHideFlag}";
 		    	getDeptFullTree(topid);
 				
 				if (topid != "Top"){
@@ -101,7 +102,7 @@
 		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
-				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 
 				g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -151,6 +152,7 @@
 			    createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 			    createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");
 			    createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
+			    createNodeAndInsertText(xmlpara, objNode, "ADMINORGAN", "y");
 			    
 			    xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 			    xmlHTTP.send(xmlpara);
@@ -202,7 +204,7 @@
 				}
 				
 				if (listOpt1.checked == true){
-					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10";
+					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10;userTreeFlag";
 					typeContent = "userWithMasterAdmin";
 					document.getElementsByClassName('searchForm')[0].style.display = "";
 				}else{
@@ -218,8 +220,9 @@
 					data : {
 							deptID : DeptID,
 							cell : cellContent,
-							prop : "userType",
-							type : typeContent
+							prop : "department;userType;extensionAttribute7",
+							type : typeContent,
+							adminOrgan : "y"
 					},
 					success : function(xml){
 						result=loadXMLString(xml);
@@ -259,10 +262,14 @@
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 							totalUserCount = xmlRtn.getElementsByTagName('ROW').length;
 				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
-				            	if($(this).find("DATA3").text() == "addJob"){
+				            	if($(this).find("DATA4").text() == "addJob"){
 				            		var orgPosition = $(this).find("CELL").eq(4).find("VALUE").text();
 				            		$(this).find("CELL").eq(4).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
 				            	}
+								if ("YES" === useOrganHideFlag && $(this).find("CELL").eq(6).find("VALUE").text() === 'N') {
+									var userName = $(this).find("CELL").eq(1).find("VALUE").text();
+									$(this).find("CELL").eq(1).find("VALUE").text(userName+"(X)");
+								}
 				            });
 				            var Node = headerData.importNode(xmlRtn, true);
 				            headerData.documentElement.appendChild(Node);
@@ -552,11 +559,11 @@
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = info_dept_Complete;
 				    
-				    var OpenWin = window.open(deptInfoURL, "DeptInfo", GetOpenWindowfeature(435, 350));
+				    var OpenWin = window.open(deptInfoURL, "DeptInfo", GetOpenWindowfeature(435, 400));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else {
-				    var rtnValue = window.showModalDialog(deptInfoURL, args, "dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 350));
+				    var rtnValue = window.showModalDialog(deptInfoURL, args, "dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 400));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.t7' />");
@@ -794,7 +801,7 @@
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";		            
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -822,7 +829,7 @@
 						data : {
 							search : search_type.value + "::" + encodeURIComponent(keyword.value),
 							cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
-							prop : "department;usertype",
+							prop : "department;usertype;extensionAttribute7",
 							type : "user",
 							page : pageNum,
 							adminOrgan : "y"
@@ -928,7 +935,7 @@
 						return;
 					} else if (adCount == 1){
 						g_xmlHTTP = createXMLHttpRequest();
-						var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+						var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 						g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 						g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 						g_xmlHTTP.send(strQuery);
@@ -948,7 +955,7 @@
 							if (rgParams["deptid"] != "") {
 								g_xmlHTTP = createXMLHttpRequest();
 								// 20110412 사용자 추가시 필요 정보 추가처리.
-								var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+							var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 								g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 								g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 								g_xmlHTTP.send(strQuery);
@@ -1095,7 +1102,7 @@
 
 				for (var i = 0 ; i < listview.GetDataRows().length ; i++){
 					objNode += listview.GetDataRows()[i].getAttribute("DATA2");
-					userType += listview.GetDataRows()[i].getAttribute("DATA3");
+					userType += listview.GetDataRows()[i].getAttribute("DATA4");
 					
 					if(i != listview.GetDataRows().length){
 						objNode += ",";
@@ -1216,15 +1223,22 @@
 				args[2] = listview.GetSelectedRows()[0].getAttribute("DATA2");
 				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
 				args[4] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
-				args[5] = listview.GetSelectedRows()[0].getAttribute("DATA3");
+				args[5] = listview.GetSelectedRows()[0].getAttribute("DATA4");
+				args[6] = listview.GetSelectedRows()[0].getAttribute("DATA3");
 				
 				//2016-04-18 장진혁과장 -- Cross 버전 사용으로 인한 주석처리
 				//if (CrossYN()) {
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(900, 460));
-			    try { OpenWin.focus(); } catch (e) { }
+				var OpenWin = "";
+				if (args[5] === 'addJob') {
+					var jobId = listview.GetSelectedRows()[0].getAttribute("DATA5");
+					OpenWin = window.open("/admin/ezOrgan/addJobInfo.do?selectDeptId=" + encodeURIComponent(args[6]) +"&jobId="+encodeURIComponent(jobId), "AddJobInfo", GetOpenWindowfeature(830, 440));
+				} else {
+					OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+				}
+				try { OpenWin.focus(); } catch (e) { }
 			}
 			
 		    function info_user_Complete(rtnValue) {
@@ -1253,7 +1267,7 @@
 		        } else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t44' />");
 		            return;
-		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA4") == 'addJob'){
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
 			    }
@@ -1280,7 +1294,7 @@
 				} else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t46' />");
 		            return;
-		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA4") == 'addJob'){
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
 			    }
@@ -1320,7 +1334,7 @@
 	                    alert(strLang13);
 	                    return;
 				    } else {
-				    	if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+				    	if (listview.GetSelectedRows()[0].getAttribute("DATA4") == 'addJob'){
 				    		alert("<spring:message code='ezOrgan.psb02' />");
 							return;
 				    	}
@@ -1620,7 +1634,7 @@
 				for (i; i < cnt; i++) {
 					var tempLV = doc.getElementById('lvUserList_TR_' + i);
 					var userID = tempLV.getAttribute('DATA2');
-					var gyumInfo = tempLV.getAttribute('DATA3');
+					var gyumInfo = tempLV.getAttribute('DATA4');
 					// 3 암호관리 4 사원이동 5 퇴직
 					if(tempLV.children[0].innerHTML != "") {
 						tempLV.children[0].innerHTML = "<span><img id='pwd" + userID +"' class='deptMaster' src='/images/admin/deptmaster.png'></span>";
@@ -1794,7 +1808,7 @@
 
 				// 겸직자가 한명이라도 있으면 return
 				for (i = 0; i < len; i++) {
-					isAddJob = listview.GetSelectedRows()[i].getAttribute("DATA3") == 'addJob' ? true : false;
+					isAddJob = listview.GetSelectedRows()[i].getAttribute("DATA4") == 'addJob' ? true : false;
 					if (isAddJob) {
 						alert("<spring:message code='ezOrgan.psb02' />");
 						return;

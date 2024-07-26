@@ -2,7 +2,13 @@ package egovframework.ezEKP.ezOrgan.dao;
 
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.naming.NamingEnumeration;
@@ -15,6 +21,7 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -2362,5 +2369,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	// 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
 	public void insertCompanyTopMenuInfo(Map<String, Object> map) {
 		insert("EzOrganAdminDAO.insertCompanyTopMenuInfo", map);
+	}
+
+	// 2024-05-27 관리자 > 조직도 > 겸직 사용자 상세정보 내용 호출 함수
+	public OrganAddJobVO getAddJobPorpValue(Map<String, Object> map) throws Exception {
+		return (OrganAddJobVO) select("EzOrganAdminDAO.getAddJobPorpValue", map);
+	}
+	
+	public void updateAddJobInfo(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateAddJobInfo", map);
 	}
 }
