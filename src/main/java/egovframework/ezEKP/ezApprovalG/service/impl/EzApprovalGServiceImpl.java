@@ -3339,16 +3339,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //		        receipt.setReceiptMemberJobTitle2(rowNode.item(i).getChildNodes().item(14).getTextContent());
 //		        receipt.setDeptMemberSN(String.valueOf(j));
 //		    } else if ("S".equals(approvalFlag)) {
-                String pDeptID = rowNode.item(i).getChildNodes().item(4).getTextContent();
+                /* 2024-07-26 양지혜 - 수신부서가 상위부서문서함 사용중인 경우 처리 */
+                String receiptDeptID = rowNode.item(i).getChildNodes().item(4).getTextContent();
                 String upperDeptCode = "";
                 String upperDeptName = "";
-                Map<String, String> upDeptInfo = getUpperDeptInfo(pDeptID, tenantID);
-                if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
-                    upperDeptCode = upDeptInfo.get("upperDeptCode");
-                    upperDeptName = upDeptInfo.get("upperDeptName");
+                if (rowNode.item(i).getChildNodes().item(5).getTextContent().equals("N")) { // 외부수신처가 아닌 경우에만 확인
+                    Map<String, String> upDeptInfo = getUpperDeptInfo(receiptDeptID, tenantID);
+                    if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                        upperDeptCode = upDeptInfo.get("upperDeptCode");
+                        upperDeptName = upDeptInfo.get("upperDeptName");
+                    }
                 }
-		        receipt.setReceiptPointID(upperDeptCode.equals("") ? pDeptID : upperDeptCode);
-		        receipt.setReceiptPointName(upperDeptName.equals("") ? rowNode.item(i).getChildNodes().item(12).getTextContent() : upperDeptName);
+                receipt.setReceiptPointID(upperDeptCode.equals("") ? receiptDeptID : upperDeptCode);
+                receipt.setReceiptPointName(upperDeptName.equals("") ? rowNode.item(i).getChildNodes().item(12).getTextContent() : upperDeptName);
 		        receipt.setReceiptPointName2(rowNode.item(i).getChildNodes().item(13).getTextContent());
 		        receipt.setExtReceptYN(rowNode.item(i).getChildNodes().item(5).getTextContent());
 		        receipt.setProcessYN(rowNode.item(i).getChildNodes().item(6).getTextContent());
