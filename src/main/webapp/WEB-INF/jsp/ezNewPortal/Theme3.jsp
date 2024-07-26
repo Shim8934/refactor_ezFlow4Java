@@ -65,7 +65,7 @@
 					</div>
 
 					<div class="portal_setting" onclick="viewPortletEnv()"><spring:message code = 'ezNewPortal.HSBPT01' /></div>
-					<div class="config_setting">환경설정</div>
+					<div class="config_setting" onclick="infoSetClick()">환경설정</div>
 
 					<div class="news_setting" style="display:none;">
 						<input type="checkbox" id="portal_set" onchange="displayFixPortlet()">
@@ -745,11 +745,16 @@
 				$(".top_info_area_wrap").css("width","0");
 			}
 			$(this).toggleClass("on");
+
 			if($(".top_info_area_wrap").hasClass("position")) {
 				$(".section_main").attr("class","section_main");
 			} else {
 				$(".section_main").toggleClass("active");
 			}
+			
+			$(".top_info_area_wrap").one("transitionend", function() {
+				resizePortlet();
+			});
 		})
 
 		$(window).resize(function(){
