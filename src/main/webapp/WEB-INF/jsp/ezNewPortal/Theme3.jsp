@@ -745,11 +745,16 @@
 				$(".top_info_area_wrap").css("width","0");
 			}
 			$(this).toggleClass("on");
+
 			if($(".top_info_area_wrap").hasClass("position")) {
 				$(".section_main").attr("class","section_main");
 			} else {
 				$(".section_main").toggleClass("active");
 			}
+			
+			$(".top_info_area_wrap").one("transitionend", function() {
+				resizePortlet();
+			});
 		})
 
 		$(window).resize(function(){
