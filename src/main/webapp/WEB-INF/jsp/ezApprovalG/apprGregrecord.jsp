@@ -311,7 +311,7 @@
     }
     function openFileAttachUI() {
         try {
-            DivPopUpShow(570, 285, "/ezApprovalG/regRecordAttach.do?docID=" + pDocID + "&orgCompanyID=" + orgCompanyID);
+            DivPopUpShow(800, 610, "/ezApprovalG/aprAttach.do?formID=&docID=" + encodeURI(pDocID) + "&draftFlag=DRAFT" + "&orgCompanyID=" + CompanyID + "&ext=" + ext);
         }
         catch (e) {
             alert("openFileAttachUI()" + e.description);
