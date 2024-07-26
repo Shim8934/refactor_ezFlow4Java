@@ -127,9 +127,9 @@
 		    	case "3": 
 		    		lang = "ja";
 		    		break;
-		    	case "4": 
+		    	/*case "4":
 		    		lang = "cn";
-		    		break;
+		    		break;*/
 		    	default :
 		    		lang = "en";
 		    		break;
