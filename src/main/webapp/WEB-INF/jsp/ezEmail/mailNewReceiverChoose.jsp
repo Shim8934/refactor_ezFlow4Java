@@ -285,12 +285,14 @@
 					remove_key_event();
 	
 	                document.getElementById("dept_select").style.display = "none";
-	            }
+ 	            }
 	            else {
 	                document.getElementById("h1Title").style.marginBottom = "0px";
 	                document.getElementById("mailReceiverInfoTxt").style.display = "block";
 	                
-	                window.resizeTo(window.outerWidth, window.outerHeight+18);
+	                // 2024.07.25 한슬기 : 새로고침시 화면 사이즈가 계속 늘어나는 문제가 있어 변경
+	                window.resizeTo(window.outerWidth, window.outerHeight);
+	                //window.resizeTo(window.outerWidth, window.outerHeight+18);
 	                
 	                SelectReceiverWindow(eval('<c:out value="${defaultWin}"/>' + "Title"), eval("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
 	            }

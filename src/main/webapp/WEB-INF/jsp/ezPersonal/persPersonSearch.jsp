@@ -66,7 +66,7 @@
 	        	}
 
 	        	if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
-		            window.resizeTo(770, 645);
+		            window.resizeTo(770, 720);
 	        	}
 	        	ListTypeChangeIcon();
 	        	
