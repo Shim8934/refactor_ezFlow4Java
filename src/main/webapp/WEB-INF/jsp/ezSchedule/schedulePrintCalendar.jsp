@@ -265,7 +265,7 @@
 		            windowonload_Complete("empty");
 		        }
 		        
-		        myVar = setInterval(function () { DocumentComplate(); }, 1000);
+		        //myVar = setInterval(function () { DocumentComplate(); }, 1000);
 		        
 		    }
 		    
@@ -608,56 +608,8 @@
 		        }
 		    }
 		    
+		    function WriteDateSchedule(e) {}
 		    
-		    function WriteDateSchedule_left(obj) {
-		        var sdate, edate, datetype;
-                datetype = "2";
-                sdate = GetAttribute(obj, "dispDate") + " 00:00:00";
-                edate = GetAttribute(obj, "dispDate") + " 23:59:00";
-
-		        var pheight = window.screen.availHeight;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 760) / 2;
-		        var pLeft = (pwidth - 790) / 2;
-		        
-		        if (otherid == "") {
-		            var index = idSelect.selectedIndex - 1;
-		            if (index == -1)
-		                index = 0;
-
-		            var feature = GetOpenPosition(790, 760);
-		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
-						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		            /* } else {
-		                if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                    window.open("schedule_write.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
-						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		                }
-		                else {
-		                    window.open("schedule_write_IE.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
-						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		                }
-		            } */
-		        } else {
-		            var feature = GetOpenPosition(790, 760);
-		            
-		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
-						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		            /* } else {
-		                if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                    window.open("schedule_write.aspx?otherid=" + escape(otherid) + "&othername=" + escape(getNodeText(secretarySelect.options[secretarySelect.selectedIndex])) + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
-						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		                }
-		                else {
-		                    window.open("schedule_write_IE.aspx?otherid=" + escape(otherid) + "&othername=" + escape(getNodeText(secretarySelect.options[secretarySelect.selectedIndex])) + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
-						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		                }
-		            } */
-		        }
-		    }
-				
 		    function ViewChange(szCmd) {
 		    	var chk_str = parent.frames["left"].document.getElementById('chk_str').value;
 		        switch (szCmd.toUpperCase()) {
@@ -1110,6 +1062,7 @@
 		        var objDiv = document.getElementById('CalDiv');
 		        if (objDiv) {
 		            objDiv.style.height = w + "px";
+		            objDiv.style.overflowY = "";
 		        }
 		    }
             
@@ -1567,18 +1520,11 @@
                             dTd.className = "calendar_t_time";
                             var dDiv = document.createElement("DIV")
                             dDiv.setAttribute("id", dayText.substring(0,10) + "ALL");
-                            if(chk_usersearch != "UserSearch"){
-                                dDiv.setAttribute("onclick", "WriteDateSchedule(this)");
-                                dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
-                            }
                             dDiv.setAttribute("dispDate", dayText.substring(0,10));
                             dDiv.style.width = "100%"
                             dDiv.style.height = "100px";
                             dDiv.style.overflowY = "auto";
                             //2018-06-28 구해안 종일일정 클릭시에도 글 쓸 수 있도록 변경
-                            if(chk_usersearch != "UserSearch"){
-                                dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
-                            }
                             dTd.appendChild(dDiv);
                             dTr.appendChild(dTd);
                             dTable.appendChild(dTr);
@@ -1586,7 +1532,6 @@
                             var dTd = document.createElement("TD")
                             dTd.className = "calendar_t_text";
                             dTd.setAttribute("dispDate", dayText);
-                            dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
                             dTr.appendChild(dTd);
                             dTable.appendChild(dTr);*/
                             oTd.appendChild(dTable);
@@ -1633,14 +1578,10 @@
                             dtTd.className = "calendar_t_time";
                             var dtDiv = document.createElement("DIV")
                             dtDiv.setAttribute("id", dayText.substring(0,10) + "TOP");
-                            dtDiv.setAttribute("onclick", "WriteDateSchedule(this)");
-                            dtDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
                             dtDiv.setAttribute("dispDate", dayText.substring(0,10));
                             dtDiv.style.width = "100%"
                             dtDiv.style.height = "100px";
                             dtDiv.style.overflowY = "auto";
-                            //2018-06-28 구해안 종일일정 클릭시에도 글 쓸 수 있도록 변경
-                            dtDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
                             dtTd.appendChild(dtDiv);
                             dtTr.appendChild(dtTd);
                             dtTable.appendChild(dtTr);
@@ -1648,7 +1589,6 @@
                             var dTd = document.createElement("TD")
                             dTd.className = "calendar_t_text";
                             dTd.setAttribute("dispDate", dayText);
-                            dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
                             dTr.appendChild(dTd);
                             dTable.appendChild(dTr);*/
                             otTd.appendChild(dtTable);
@@ -2354,6 +2294,9 @@
                     for (var j = 0; j < 7; j++) {
                         var objTd = MonthData(oThisDate, TDIndex);
                         TDIndex++;
+                        objTd.style.verticalAlign = "baseline";
+                        objTd.style.height = "93px";
+                        objTd.childNodes[1].style.display = 'inline';
                         objTr.appendChild(objTd);
                         objTd = null;
                     }
@@ -2458,6 +2401,7 @@
                 if (calTr) {
                     var objTd = document.createElement("TD");
                     objTd.className = "calendar_td_last"
+                    objTd.style.display = "none";
                     calTr.appendChild(objTd);
                 }
                 // 상단표시 (주보기)
@@ -2465,9 +2409,14 @@
                 topTr.setAttribute("style","border-top: 1px solid #dedede")
                 if (topTr) {
                     var objtTd = document.createElement("TD");
-                    objtTd.className = "calendar_td_last"
+                    objtTd.className = "calendar_td_last";
+                    objtTd.style.display = "none";
                     topTr.appendChild(objtTd);
                 }
+                
+                var calThLassTh = document.getElementsByClassName("calendar_th_last")[0];
+                calThLassTh.style.display = "none";
+                
                 oTbody.appendChild(oTr);
                 oTr = null;
                 $('#hiddensStartDate').val(sStartDate);
@@ -2547,20 +2496,12 @@
                 var s_Td = document.createElement("TD");
                 s_Td.className = "calendar_t_time";
                 s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":0_Value");
-                if(chk_usersearch != "UserSearch"){
-                    s_Td.setAttribute("onclick", "WriteDateSchedule(this)");
-                    s_Td.setAttribute("ondblclick", "WriteDateSchedule(this)");
-                }
                 s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":00:00");
                 s_Tr.appendChild(s_Td);
                 sTable.appendChild(s_Tr);
                 var s_Tr = document.createElement("TR");
                 var s_Td = document.createElement("TD");
                 s_Td.className = "calendar_t_text";
-                if(chk_usersearch != "UserSearch"){
-                    s_Td.setAttribute("onclick", "WriteDateSchedule(this)");
-                    s_Td.setAttribute("ondblclick", "WriteDateSchedule(this)");
-                }
                 s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":3_Value");
                 s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":30:00");
                 s_Tr.appendChild(s_Td);

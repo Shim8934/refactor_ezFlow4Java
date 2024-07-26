@@ -854,7 +854,7 @@ function MonthData(oThisDate, TDIndex) {
     subTd.setAttribute("id", "TD_" + cell_ID + "_Day");
     subTd.setAttribute("onmouseover", "MonthlyViewHeader_onMouseOver(this)");
     subTd.setAttribute("onmouseout", "MonthlyViewHeader_onMouseOut(this)");
-    if(chk_usersearch != "UserSearch"){ 
+    if(chk_usersearch != "UserSearch" || window.location.href.indexOf('schedulePrintCalendar') == -1){ 
         subTd.setAttribute("onclick", "WriteDateSchedule(this)");
         subTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
     }
