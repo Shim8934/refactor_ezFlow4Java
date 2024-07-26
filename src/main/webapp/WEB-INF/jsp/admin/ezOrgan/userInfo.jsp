@@ -139,6 +139,7 @@
 		            DeptID = RetValue[0];	
 		            document.getElementById('btn_PhotoAdd').style.display = "none";
 		            document.getElementById('btn_PhotoDel').style.display = "none";
+					document.getElementById("CompanyName").value = RetValue[6];
 		            
 		            getJobInfoInit();
 		            

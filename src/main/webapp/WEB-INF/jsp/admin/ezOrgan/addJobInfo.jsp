@@ -148,6 +148,7 @@
 		            DeptID = RetValue[0];	
 		            document.getElementById('btn_PhotoAdd').style.display = "none";
 		            document.getElementById('btn_PhotoDel').style.display = "none";
+					document.getElementById('CompanyName').value = RetValue[7];
 		            
 		        } else {
 		            OrgUserID = RetValue[2];
@@ -161,6 +162,7 @@
 		            document.getElementById("UserName").focus();
 		            document.getElementById("mailtitle").innerText = "<spring:message code='ezOrgan.t99' />";
 		            document.getElementById("mailcontext").style.display = "none";
+					document.getElementById('CompanyName').value = RetValue[7];
 	
 		            var xmlDom = createXmlDom();
 		            
@@ -575,8 +577,9 @@
 	        </tr>
 	        </tr>
 			<tr>
-				<th style="width: 71px; text-align:center"></th>
+				<th style="width: 71px; text-align:center"><spring:message code='ezOrgan.khj002' /></th>
 				<td style="width: 240px;">
+					<input id="CompanyName" style="width: 100%" readonly="readonly" maxlength="50"/>
 				</td>
 				<th class="treeFlag" style="width: 71px; text-align:center"><spring:message code='ezOrgan.kdh07' /></th>
 				<td class="treeFlag" style="width: 240px;">
