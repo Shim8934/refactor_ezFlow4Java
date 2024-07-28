@@ -240,6 +240,7 @@ nav .navUL li.on{color:#A20000;}
 
 .btnposition input:hover{color:#A20000; border-color:#A20000; background:#FBF6F6;}
 .btnpositionLayer a.imgbtn:hover{color:#A20000; border-color:#A20000; background:#FBF6F6;}
+.surveyConfig .surveyBttn a.imgbtn:hover{color:#A20000; border-color:#A20000; background:#FBF6F6;}
 
 .popup_noti_content table .ctxt{background-image:url(../../images/ezNewPortal/skin/red/icon_notification01.png);}
 
@@ -260,3 +261,21 @@ nav .navUL li.on{color:#A20000;}
 
 .mainmenuTab .mainmenuTabUL li.on span{border-color:#D8A6A6; color:#A20000;}
 .mainmenuTab .mainmenuTabUL li:hover span{border-color:#A71111; color:#A20000; background:#FBF6F6;}
+
+.contents_listCategory li span.bold{color:#A20000;}
+.contents_searchCategory dl dd{background:#A20000;}
+
+.draft-survey{border-color:#D8A6A6; color:#A20000;}
+.draft-survey:hover{border-color:#A71111; background:#FBF6F6; color:#A20000;}
+
+.headpanel .crust:hover, .headpanel .crust.selected{background-image:url(../../images/ezNewPortal/skin/red/survey_progressBG_on.png);}
+.headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb{color:#A20000;}
+.headpanel .crust:hover a .crust_info, .headpanel .crust.selected a .crust_info{background-image:url(../../images/ezNewPortal/skin/red/survey_progress01_on.png);}
+.headpanel .crust:hover a .crust_write, .headpanel .crust.selected a .crust_write{background-image:url(../../images/ezNewPortal/skin/red/survey_progress02_on.png);}
+.headpanel .crust:hover a .crust_logic, .headpanel .crust.selected a .crust_logic{background-image:url(../../images/ezNewPortal/skin/red/survey_progress03_on.png);}
+.headpanel .crust:hover a .crust_check, .headpanel .crust.selected a .crust_check{background-image:url(../../images/ezNewPortal/skin/red/survey_progress04_on.png);}
+
+.imgbtnSurvey:hover{border-color:#A20000; background:#FBF6F6; color:#A20000;}
+.survey_atchBtn li:hover{border-color:#A20000; background-color:#FBF6F6;}
+.imgbtnSurvey_save{border-color:#D0ABAB;}
+.imgbtnSurvey_save span{color:#A20000;}
