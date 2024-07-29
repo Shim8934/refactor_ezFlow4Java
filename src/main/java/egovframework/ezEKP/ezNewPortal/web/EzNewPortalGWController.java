@@ -4021,11 +4021,11 @@ public class EzNewPortalGWController {
 					totalCnt = ezBoardService.getBrdTotalItemCount(brdVo);
 					// 권한이 true이면 boardList불러오기
 					List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
+					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize, portletId);
 					
 					if (currentPage > 1 && noticeList.size() < 1) {
 						currentPage--;
-						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
+						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize, portletId);
 					}
 					
 					int noticeCount = noticeList.size();
