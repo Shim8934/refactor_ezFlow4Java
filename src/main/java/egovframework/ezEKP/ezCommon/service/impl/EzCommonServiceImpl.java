@@ -8526,4 +8526,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblBoardModifyHistory() throws Exception {
 		ezCommonDAO.createTblBoardModifyHistory();
 	}
+
+    /* 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 */
+    @Override
+    public void insertUseSendOutState() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        String property = "useSendOutState";
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantID", tenantVo.getTenantId());
+            map.put("property", property.toUpperCase());
+            ezCommonDAO.insertUseSendOutState(map);
+        }
+    }
 }

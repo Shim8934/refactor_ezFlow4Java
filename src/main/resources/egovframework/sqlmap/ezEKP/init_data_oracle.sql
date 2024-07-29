@@ -345,6 +345,9 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'MyBoardScrapFlag', '게시판 스크랩기능 사용여부', 'TYPE1', 'NONE: 사용안함 / TYPE1: 마이게시판 하위 스크랩함 / TYPE2: 게시판 트리 하위 개인화 스크랩함 (default: TYPE1)', TO_DATE('2023-06-14 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '게시판');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useStatMenu', '메뉴 통계 사용 여부', 'YES', '메뉴 관련 통계 집계, 및 사용 여부 (default:YES)', '2025-03-21 00:00:00', '포탈');
 
+--2024.07.22 양지혜 - 관리자 > 대외발송현황 메뉴 표출여부
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES (0, 'useSendOutState', 'NO', '관리자페이지 대외발송현황 메뉴 표출여부 YES: 사용 NO: 사용안함 (default:NO)', '발송현황 메뉴 표출여부', TO_DATE('2024-07-22 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
+
 --Board insert
 
 INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 'Top', 0);
