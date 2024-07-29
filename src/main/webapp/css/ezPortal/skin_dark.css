@@ -68,8 +68,8 @@ nav .navUL li.on{color:#388CE5;}
 
 
 /* lnb */
-.lnb_list{background:#272829; border-right:1px solid rgba(221,221,221,0.09);}
-.lnb ul li:before{background-color:#343638;}
+header + .lnb_list{background:#272829; border-right:1px solid rgba(221,221,221,0.09);}
+header + .lnb ul li:before{background-color:#343638;}
 .total_menu span{background-image:url(../../images/ezNewPortal/skin/dark/total_menu_white.svg);}
 .util li span.util_employee_search{background-image:url(../../images/ezNewPortal/skin/dark/util_employee_search_white.svg);}
 .util li span.util_alarm{background-image:url(../../images/ezNewPortal/skin/dark/util_alarm_white.svg);}
@@ -123,8 +123,8 @@ nav .navUL li.on{color:#388CE5;}
 .lnb ul li.icon_nav_car_leftmenu:hover:before, .lnb ul li.on.icon_nav_car_leftmenu:before{background-image:url(/images/lnb/lnb_car.svg);}
 .lnb ul li.icon_nav_work_leftmenu:hover:before, .lnb ul li.on.icon_nav_work_leftmenu:before{background-image:url(/images/lnb/lnb_work.svg);}
 
-.lnb ul li span{color:#fff;}
-.lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
+header + .lnb ul li span{color:#fff;}
+header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 
 .lnb_menu_setting{background:#3E3F41;}
 .lnb_menu_setting .menu_set span{color:#fff; background-image:url(../../images/ezNewPortal/skin/dark/set_icon.svg);}

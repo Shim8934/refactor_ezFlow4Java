@@ -2893,8 +2893,8 @@ h2, #menu span {font-size: 12px;}
 .overY {overflow-y: hidden !important;}
 .surveyConfig {margin: 0px 10px;}
 .surveyConfig .surveyBttn {width: 680px; text-align: center;}
-.surveyConfig .surveyBttn a.imgbtn {box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
-.surveyConfig .surveyBttn a.imgbtn span {height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
+.surveyConfig .surveyBttn a.imgbtn {border: 1px solid #c3c3c3; height: 24px;}
+.surveyConfig .surveyBttn a.imgbtn span {height: 24px; line-height: 24px; font-size: 12px;}
 .surveyPrevMode {width: 100px;}
 .surveySelectConf {width: 50px;}
 .content.config {width: 680px; margin-top: 5px;}
@@ -3217,20 +3217,20 @@ h2, #menu span {font-size: 12px;}
 .headpanel .crust.selected{background:url(../images/ezSurvey/survey_progressBG_on.png) top center no-repeat;}
 .headpanel .crust:hover{background:url(../images/ezSurvey/survey_progressBG_on.png) top center no-repeat;}
 
-.headpanel .crust a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01.png) no-repeat;}
-.headpanel .crust a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02.png) no-repeat;}
-.headpanel .crust a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03.png) no-repeat;}
-.headpanel .crust a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04.png) no-repeat;}
+.headpanel .crust a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01.png) no-repeat center;}
+.headpanel .crust a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02.png) no-repeat center;}
+.headpanel .crust a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03.png) no-repeat center;}
+.headpanel .crust a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04.png) no-repeat center;}
 
-.headpanel .crust:hover a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01_on.png) no-repeat;}
-.headpanel .crust:hover a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02_on.png) no-repeat;}
-.headpanel .crust:hover a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03_on.png) no-repeat;}
-.headpanel .crust:hover a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04_on.png) no-repeat;}
+.headpanel .crust:hover a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01_on.png) no-repeat center;}
+.headpanel .crust:hover a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02_on.png) no-repeat center;}
+.headpanel .crust:hover a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03_on.png) no-repeat center;}
+.headpanel .crust:hover a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04_on.png) no-repeat center;}
 
-.headpanel .crust.selected a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01_on.png) no-repeat;}
-.headpanel .crust.selected a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02_on.png) no-repeat;}
-.headpanel .crust.selected a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03_on.png) no-repeat;}
-.headpanel .crust.selected a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04_on.png) no-repeat;}
+.headpanel .crust.selected a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01_on.png) no-repeat center;}
+.headpanel .crust.selected a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02_on.png) no-repeat center;}
+.headpanel .crust.selected a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03_on.png) no-repeat center;}
+.headpanel .crust.selected a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04_on.png) no-repeat center;}
 /*** survey tab end ***/
 
 /**** survey information table start ****/

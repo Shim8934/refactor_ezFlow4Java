@@ -240,6 +240,7 @@ nav .navUL li.on{color:#003497;}
 
 .btnposition input:hover{color:#003497; border-color:#3A67BE; background:#EEF4FE;}
 .btnpositionLayer a.imgbtn:hover{color:#003497; border-color:#3A67BE; background:#EEF4FE;}
+.surveyConfig .surveyBttn a.imgbtn:hover{color:#003497; border-color:#3A67BE; background:#EEF4FE;}
 
 .popup_noti_content table .ctxt{background-image:url(../../images/ezNewPortal/skin/blue/icon_notification01.png);}
 
@@ -260,3 +261,21 @@ nav .navUL li.on{color:#003497;}
 
 .mainmenuTab .mainmenuTabUL li.on span{border-color:#7E9AD1; color:#003497;}
 .mainmenuTab .mainmenuTabUL li:hover span{border-color:#3A67BE; color:#003497; background:#EEF4FE;}
+
+.contents_listCategory li span.bold{color:#003497;}
+.contents_searchCategory dl dd{background:#042F81;}
+
+.draft-survey{border-color:#7E9AD1; color:#003497;}
+.draft-survey:hover{border-color:#3A67BE; background:#EEF4FE; color:#003497;}
+
+.headpanel .crust:hover, .headpanel .crust.selected{background-image:url(../../images/ezNewPortal/skin/blue/survey_progressBG_on.png);}
+.headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb{color:#003497;}
+.headpanel .crust:hover a .crust_info, .headpanel .crust.selected a .crust_info{background-image:url(../../images/ezNewPortal/skin/blue/survey_progress01_on.png);}
+.headpanel .crust:hover a .crust_write, .headpanel .crust.selected a .crust_write{background-image:url(../../images/ezNewPortal/skin/blue/survey_progress02_on.png);}
+.headpanel .crust:hover a .crust_logic, .headpanel .crust.selected a .crust_logic{background-image:url(../../images/ezNewPortal/skin/blue/survey_progress03_on.png);}
+.headpanel .crust:hover a .crust_check, .headpanel .crust.selected a .crust_check{background-image:url(../../images/ezNewPortal/skin/blue/survey_progress04_on.png);}
+
+.imgbtnSurvey:hover{border-color:#3A67BE; background:#EEF4FE; color:#003497;}
+.survey_atchBtn li:hover{border-color:#3A67BE; background-color:#EEF4FE;}
+.imgbtnSurvey_save{border-color:#7E9AD1;}
+.imgbtnSurvey_save span{color:#003497;}
