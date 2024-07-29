@@ -265,7 +265,7 @@
 		            windowonload_Complete("empty");
 		        }
 		        
-		        //myVar = setInterval(function () { DocumentComplate(); }, 1000);
+		        myVar = setInterval(function () { DocumentComplate(); }, 1000);
 		        
 		    }
 		    
