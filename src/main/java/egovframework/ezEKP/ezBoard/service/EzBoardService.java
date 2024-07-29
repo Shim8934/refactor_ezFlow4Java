@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.json.simple.JSONObject;
+import egovframework.ezEKP.ezBoard.vo.BoardHistoryVO;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
@@ -77,7 +78,7 @@ public interface EzBoardService {
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
 
-	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantID) throws Exception;
+	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantID, String useVersion) throws Exception;
 	
 	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, String adminType, int tenantID) throws Exception;
 	
@@ -587,4 +588,16 @@ public interface EzBoardService {
 	public String hasBoardItemFlag(String boardID, int tenantID) throws Exception;
 
 	public boolean isPostDuplicated(String versionYN, String boardID, String parentItemID, int tenantId) throws Exception;
+
+	public List<BoardHistoryVO> getModifiedHistoryOfItem(String boardID, String OffSetMin, String itemID, String companyID, int tenantID) throws Exception;
+
+	public String getUseVersionFlag(String boardID, int tenantID) throws Exception;
+
+	public String getItemVersion(String itemID, String companyID, int tenantID) throws Exception;
+
+	public String getParentItemID(String itemID, String companyID, int tenantID) throws Exception;
+
+	public String checkIsNewestVersion(String boardID, String itemID, int tenantID, String version) throws Exception;
+
+	public String getBoardTitle(String contentLocation, int tenantId) throws Exception;
 }

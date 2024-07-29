@@ -603,4 +603,6 @@ public interface EzCommonService {
 	// 2025-04-21 조수빈 - 기본 일정(개인, 부서, 회사)별 사용자 설정 값 저장 테이블 추가
 	public void createUserScheduleTypeConfigTable() throws Exception;
 
+	// 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
+	public void createTblBoardModifyHistory() throws Exception;
 }

@@ -6482,8 +6482,10 @@ public class EzNewPortalGWController {
 			String itemIDEncode = "";
 			String boardIDEncode = "";
 			
-			List<HashMap<String, Object>> boardTopItemList = ezBoardService.getNoticePostItemList(bId, userId, 1, 10, 0, "", "", "1", 0);			
-			List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(bId, userId, 1, 10, 0, "", "", new HashMap<String, String>(), "1", 0);
+			Map<String, String> orderByMap = new HashMap<String, String>();
+			String useVersion = ezBoardService.getUseVersionFlag(bId, info.getTenantId());
+			List<HashMap<String, Object>> boardTopItemList = ezBoardService.getNoticePostItemList(bId, userId, 1, 10, 0, "", "", "1", 0);
+			List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(bId, userId, 1, 10, 0, "", "", orderByMap, "1", 0, useVersion);
 
 			JSONArray ja = new JSONArray();			
 			int added = 0;

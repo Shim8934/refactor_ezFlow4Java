@@ -3477,6 +3477,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String orderOption2 = "";
 		String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
 		String primaryData = commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId());
+		String useVersion = ezBoardService.getUseVersionFlag(boardVO.getBoardId(), userInfo.getTenantId());
 		
 		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(userInfo, boardVO);
 		
@@ -3521,6 +3522,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardMyFavoriteVO.setType(type);
 		boardMyFavoriteVO.setTenantID(userInfo.getTenantId());
 		boardMyFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+		boardMyFavoriteVO.setUseVersion(useVersion);
 		
 		int boardCount = ezBoardService.getBrdTotalItemCount(boardMyFavoriteVO);
 		int startRow = 1;
@@ -3694,7 +3696,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if ("3".equals(boardVO.getBoardType())) {
 			boardListItem = ezBoardService.getPhotoBoardListItem(boardVO.getBoardId(), userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap, type, userInfo.getTenantId(), boardVO.getBoardType());
 		} else {
-			boardListItem = ezBoardService.getBoardListItem(boardVO.getBoardId(), userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap, type, userInfo.getTenantId());
+			boardListItem = ezBoardService.getBoardListItem(boardVO.getBoardId(), userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap, type, userInfo.getTenantId(), useVersion);
 		}
 		
 		int dlength = boardListItem.size();
@@ -3848,12 +3850,14 @@ public class EzBoardController extends EgovFileMngUtil{
 				if (nList != null) {
 					for (int i = 0; i < nList.getLength(); i++) {
 						Node node = nList.item(i);
+						String boardID = node.getChildNodes().item(2).getTextContent();
 						
-						myFavoriteVO.setBoardId(node.getChildNodes().item(2).getTextContent());
+						myFavoriteVO.setBoardId(boardID);
 						myFavoriteVO.setUserId(userInfo.getId());
 						myFavoriteVO.setType("1");
 						myFavoriteVO.setTenantID(userInfo.getTenantId());
 						myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+						myFavoriteVO.setUseVersion(ezBoardService.getUseVersionFlag(boardID, userInfo.getTenantId()));
 						
 						if (node.getChildNodes().item(6).getTextContent().equals("4")) {
 							intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
@@ -4285,6 +4289,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			useBoardFilePrvw = "0";
 		}
+
+		String version = request.getParameter("version") == null ? "" : request.getParameter("version");
 		
 		// 2024-08-14 전인하 - 게시판 > json data 이용 시 문제가 되는 특정 특수문자 이스케이프 추가 
 		JsonSerializer<String> stringSerializer = new JsonSerializer<String>() {
@@ -4309,6 +4315,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
 			keywordList = ezBoardService.selectBoardKeywordByBoardItem(boardItem.getItemID(), boardItem.getBoardID(), userInfo.getTenantId());
 		}
+
+		String useVersion = ezBoardService.getUseVersionFlag(boardID, userInfo.getTenantId());
 		
 		/* 2023-05-03 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */
 		String isScrap = ezBoardService.getScrapItemCount(userInfo.getId(), itemID, boardID, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -4363,6 +4371,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useAI", useAI);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
+		model.addAttribute("useVersion", useVersion);
+		model.addAttribute("historyCheck", request.getParameter("historyCheck"));
+		model.addAttribute("leftAddr", request.getParameter("leftAddr"));
+		model.addAttribute("rightAddr", request.getParameter("rightAddr"));
+		model.addAttribute("selectedAddr", request.getParameter("selectedAddr"));
+		model.addAttribute("selectedViewFlag", request.getParameter("selectedViewFlag"));
+		model.addAttribute("historyModify", request.getParameter("historyModify") == null ? "false" : request.getParameter("historyModify"));
+		model.addAttribute("version", version);
+		model.addAttribute("newestVersionFlag", ezBoardService.checkIsNewestVersion(boardID, itemID, userInfo.getTenantId(), version));
 		
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -4460,6 +4477,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2024-05-21 김유진 - 일정 > 게시판 게시에 사용 */
 		String scheduleId = request.getParameter("scheduleId") != null ? request.getParameter("scheduleId") : "";
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
 		
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
 		
@@ -4703,6 +4722,22 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardListVO.setWriterNameType("0");
 		}
 		
+		// 버전관리 사용 여부
+		String useVersion = ezBoardService.getUseVersionFlag(boardID, tenantID);
+		
+		if (useVersion.equals("Y")) {
+			String newestVersion = "";
+			if (!mode.equals("reply")) {
+				newestVersion = ezBoardService.getItemVersion(itemID, companyID, tenantID);
+			}
+			
+			model.addAttribute("newestVersion", newestVersion);
+			
+			if (!itemID.isEmpty() && !mode.equals("reply")) {
+				model.addAttribute("parentItemID", ezBoardService.getParentItemID(itemID, companyID, tenantID));
+			}
+		}
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -4747,6 +4782,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		if ("Y".equals(boardInfo.getWriterFlag())) {
 			model.addAttribute("writerOption", ezBoardService.getWriterOption(userInfo));
 		}
+		model.addAttribute("useVersion", useVersion);
+		model.addAttribute("historyModify", request.getParameter("historyModify") == null ? "false" : request.getParameter("historyModify"));
+		String version = "";
+		if (!mode.equals("reply")) {
+			version = request.getParameter("version") == null ? "" : request.getParameter("version");
+		}
+		model.addAttribute("version", version);
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -11032,6 +11074,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				myFavoriteVO.setType("1");
 				myFavoriteVO.setTenantID(userInfo.getTenantId());
 				myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+				myFavoriteVO.setUseVersion(ezBoardService.getUseVersionFlag(boardID, userInfo.getTenantId()));
 				
 				if (boardInfo.getGuBun().equals("4")) {
 					intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
@@ -11727,7 +11770,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String guBun = boardInfo.getGuBun();
 		
 		// 공지사항을 무시하고 가장 최신 게시물 하나의 정보를 가져온다. 기본적으로 관리자단 리스트 표출 순서와 동일함
-		List<HashMap<String, Object>> boardListItem = ezBoardService.getBoardListItem(boardID, userInfo.getId(), 1, 1, 1, "", "", new HashMap<String, String>(), "1", userInfo.getTenantId());
+		List<HashMap<String, Object>> boardListItem = ezBoardService.getBoardListItem(boardID, userInfo.getId(), 1, 1, 1, "", "", new HashMap<String, String>(), "1", userInfo.getTenantId(), "");
 		
 		if (boardListItem.size() > 0) {
 			itemID = (String) boardListItem.get(0).get("ITEMID");
@@ -12014,6 +12057,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("uploadFilePath", uploadFilePath);
 		model.addAttribute("itemID", boardItemInfo == null ? "" : boardItemInfo.getItemID());
 		model.addAttribute("boardHref", boardItemInfo == null ? "" : boardItemInfo.getFilePath());
+		model.addAttribute("useVersion", ezBoardService.getUseVersionFlag(boardID, userInfo.getTenantId()));
 
 		logger.info("fileViewerBoard ended");
 		return "ezBoard/fileViewerBoard";
@@ -13520,5 +13564,38 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("restMenuList ended");
 		
 		return returnJson;
+	}
+
+	@GetMapping("/ezBoard/modifyHistory")
+	public String modifyHistory(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception {
+		logger.info("modifiyHistory started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		BoardListVO itemInfo = ezBoardService.getItemInfo("", itemID, userInfo.getLang(), tenantID);
+		itemInfo.setWriteDate(commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), userInfo.getOffset(), false));
+		model.addAttribute("itemInfo", itemInfo);
+		model.addAttribute("endDate", itemInfo.getEndDate() != null && itemInfo.getEndDate().substring(0, 4).equals("9999") ? "영구게시" : itemInfo.getEndDate());
+		model.addAttribute("history", ezBoardService.getModifiedHistoryOfItem(boardID, userInfo.getOffset(), itemID, companyID, tenantID));
+
+		logger.info("modifiyHistory ended");
+		return "ezBoard/modifyHistory";
+	}
+
+	@RequestMapping(value = {"/ezBoard/getBoardTitle.do"}, produces = "text/plain; charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getBoardTitle(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getBoardTitle started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String contentLocation = request.getParameter("href");
+
+		logger.debug("getBoardTitle ended.");
+		return ezBoardService.getBoardTitle(contentLocation, userInfo.getTenantId());
 	}
 }

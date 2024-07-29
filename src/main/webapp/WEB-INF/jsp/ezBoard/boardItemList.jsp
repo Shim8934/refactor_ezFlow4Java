@@ -569,6 +569,12 @@
 		            endtime = new Date().getTime();
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 		            MailOptionHidden();
+					
+					try {
+						if (url === "/ezBoard/getBoardList.do") {
+							window.parent.itemCnt = boardItemCount;
+						}
+					} catch (e) { console.log(e); }
 		        }
 		        catch (e) {
 		            console.log(e);

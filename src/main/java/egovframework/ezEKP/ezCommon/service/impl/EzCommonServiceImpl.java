@@ -2242,6 +2242,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("AFTER_MYSQL", "CHARACTER SET utf8mb4 DEFAULT NULL");
 		}});
 
+        test.add(   // 게시판 버전관리
+            new HashMap() {{
+                put("TABLE", "TBL_BOARD_BOARDINFO");
+                put("COLUMN", "VERSIONMANAGE");
+                put("TYPE_MYSQL", "VARCHAR(1)");
+                put("TYPE_ORACLE", "NCHAR(1)");
+                put("AFTER", "DEFAULT 'N'");
+            }}
+        );
+
 		// TBL_BOARD_BOARDMANAGE
 		test.add(new HashMap<String, Object>(){{ // 2019-09-19 홍승비 - 게시판 권한그룹 적용을 위한 TYPE 칼럼 추가 commit e5c8200214
 			put("TABLE","TBL_BOARD_BOARDMANAGE");
@@ -8510,5 +8520,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createUserScheduleTypeConfigTable();
 		
 		logger.debug("createUserScheduleTypeConfigTable ended");
+	}
+
+	@Override
+	public void createTblBoardModifyHistory() throws Exception {
+		ezCommonDAO.createTblBoardModifyHistory();
 	}
 }

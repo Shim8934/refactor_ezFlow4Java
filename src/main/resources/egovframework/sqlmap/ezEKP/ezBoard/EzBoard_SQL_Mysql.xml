@@ -27,6 +27,7 @@
 	<typeAlias  alias="BoardThumbnailVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO"/>
 	<typeAlias  alias="MealDataVO" 					type="egovframework.ezEKP.ezBoard.vo.MealDataVO"/>
 	<typeAlias  alias="BoardItemVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardItemVO"/>
+	<typeAlias  alias="BoardHistoryVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardHistoryVO"/>
 
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
@@ -779,7 +780,32 @@
 			  	A.TENANT_ID = P.TENANT_ID
 			AND
 			  	A.BOARDID = P.BOARDID
-			AND 
+			LEFT OUTER JOIN
+			(
+				SELECT
+					ITEMID, TENANT_ID
+				FROM
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+				WHERE
+					M1.RN = 1
+			) M2
+			ON
+				A.ITEMID = M2.ITEMID
+			AND
+				A.TENANT_ID = M2.TENANT_ID  	
+			WHERE 
 			  	A.TENANT_ID = #v_TENANTID#
 	 		AND
             	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
@@ -811,6 +837,10 @@
 							 	S.USERID = #v_pUserID# 
 							 AND 
 							 	S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
+			AND
+				(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					OR
+			    P.VERSIONMANAGE = 'N')
 		]]>
 <!-- 		오류 발생시 이것으로 대체 -->
 <!--             	A.StartDate > DATE_SUB(DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL 5 DAY) -->
@@ -888,7 +918,9 @@
 	                    A.ITEMID,
 	                    A.WRITERID,
 	                    A.WRITERDEPTID,
-						A.TOPWRITERID
+						A.TOPWRITERID,
+						A.WRITEDATE,
+                    	A.ENDDATE
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -1269,6 +1301,31 @@
 				A.TENANT_ID = B.TENANT_ID
 			AND
 				A.BOARDID = B.BOARDID
+			LEFT OUTER JOIN
+			(
+				SELECT
+					ITEMID, TENANT_ID
+				FROM
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+				WHERE
+					M1.RN = 1
+			) M2
+			ON
+				A.ITEMID = M2.ITEMID
+			AND
+				A.TENANT_ID = M2.TENANT_ID
 			INNER JOIN
 				TBL_BOARD_BOARDINFO P
 			ON
@@ -1315,6 +1372,11 @@
 				A.ITEMID = F.ITEMID
 			AND
 				A.TENANT_ID = F.TENANT_ID
+			WHERE
+				(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+			OR
+			    P.VERSIONMANAGE = 'N'		
+			)
 			GROUP BY
 				A.ITEMID, A.TITLE
      	]]>
@@ -1442,6 +1504,24 @@
 					A.ITEMID = D.ITEMID
 		  	]]>
 	  	</isEqual>
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
 		<isNotEqual property="bType" compareValue="3">
 			LEFT OUTER JOIN
 				TBL_BOARD_ITEM_ATTACHMENTS F
@@ -1462,6 +1542,12 @@
 				A.TENANT_ID = #v_TENANTID#
 			AND
 				B.BOARDID = #v_PBOARDID#
+			  <isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			  	M1.RN = 1
+			  </isEqual>
+		      <isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			  </isNotEqual>
 			  <isNotEmpty property="tempString" prepend="AND">
 			  	A.APPRFLAG = 'Y'
 			  </isNotEmpty>
@@ -2886,8 +2972,26 @@
 				A.ITEMID = F.ITEMID
 			AND
 				A.TENANT_ID = F.TENANT_ID
-			WHERE
 		]]>
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
+			WHERE
 		<isEqual property="v_PSUBFLAG" compareValue="Y">
 			(A.BOARDID = #v_PBOARDID# OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PBOARDID#))
 		</isEqual>
@@ -2909,6 +3013,12 @@
 				A.APPRFLAG IS NULL
 			 )
 			]]>
+		<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			M1.RN = 1
+		</isEqual>
+		<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			(M1.ITEMID IS NULL OR M1.RN = 1)
+		</isNotEqual>
 		<!-- 20240215 : 김진홍 : CSAP 인증 처리 Mapper 수정 : v_PSUBQUERY 대체 쿼리 제작 -->
 		<isNotEmpty property="v_SEARCH_TITLE">
 			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
@@ -4037,20 +4147,44 @@
 	
 	<select id="EzBoardDAO.getBrdTotalItemCount2" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
+			SELECT
+				COUNT(A.ITEMID)  TOTALCOUNT
+			FROM
+				TBL_Board_Item A
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+						TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
+			WHERE
+				A.TENANT_ID = #tenantID#
+			AND
+				BOARDID = #boardId#
+			AND
 			<![CDATA[
-				SELECT 
-					COUNT(ITEMID)  TOTALCOUNT
-              	FROM 
-              		TBL_Board_Item 
-             	WHERE  
-             		TENANT_ID = #tenantID#
-             	AND
-             		BOARDID = #boardId#
-                AND 
-                	STARTDATE < #nowDate#
-                AND 
-                	ENDDATE > #nowDate#
+				STARTDATE < #nowDate#
+			AND
+				ENDDATE > #nowDate#
 			]]>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
 		</isEqual>
 		<isEqual property="type" compareValue="2">
 			<![CDATA[
@@ -4078,6 +4212,26 @@
                 	A.TENANT_ID = D.TENANT_ID
                 AND
                 	A.ItemID = D.ITEMID
+                ]]>
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+						TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
+			<![CDATA[
                 WHERE  
                 	A.TENANT_ID = #tenantID#
                 AND
@@ -4089,22 +4243,54 @@
                 AND 
                 	D.TOTALCOUNT IS NULL
 			]]>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
 		</isEqual>
 		<isEqual property="type" compareValue="3">
 			<![CDATA[
 				SELECT 
-					COUNT(ITEMID)  TOTALCOUNT
+					COUNT(A.ITEMID)  TOTALCOUNT
                 FROM 
-                	TBL_Board_Item 
-                WHERE
-                	TENANT_ID = #tenantID#
+                	TBL_Board_Item A
+            ]]>
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+						TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
+			<![CDATA[
+            	WHERE
+                	A.TENANT_ID = #tenantID#
                 AND  
-                	BOARDID = #boardId#
+                	A.BOARDID = #boardId#
                 AND 
                 	STARTDATE < #nowDate#
                 AND 
                 	ENDDATE < #nowDate#
 			]]>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
 		</isEqual>
 	</select>
 	
@@ -4402,6 +4588,24 @@
 			COUNT(ITEMID)
 		FROM
 			TBL_BOARD_ITEM A
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
 		WHERE
 		<isEqual property="v_PSUBFLAG" compareValue="Y">
 			(A.BOARDID = #v_PBOARDID# OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PBOARDID#))
@@ -4424,6 +4628,12 @@
    			AND
    				ENDDATE > #nowDate#
 		]]>
+		<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			M1.RN = 1
+		</isEqual>
+		<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			(M1.ITEMID IS NULL OR M1.RN = 1)
+		</isNotEqual>
 		<isNotEmpty property="v_SEARCH_TITLE">
 			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
 		</isNotEmpty>
@@ -5621,7 +5831,28 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content, ntstartdate, ntenddate, PUBLICFLAG, writerNameType
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#, #publicFlag#, #writerNameType#
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#,
+				<isNotEmpty property = "versionManage">
+					<isEqual property = "version" compareValue = "0.0">
+						( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ),
+					</isEqual>
+					<isNotEqual property = "version" compareValue = "0.0">
+						(
+							SELECT
+								DOCNO
+							FROM
+								TBL_BOARD_ITEM A
+							WHERE
+								ITEMID = #itemID#
+							AND
+								TENANT_ID = #tenantID#
+						),
+					</isNotEqual>
+				</isNotEmpty>
+				<isEmpty property = "versionManage">
+					( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ),
+				</isEmpty>
+				#docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#, #publicFlag#, #writerNameType#
 	        )
 		</isEqual>
 		<isNotEqual property="parentWriteDate" compareValue="docNO">
@@ -5629,7 +5860,28 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content, ntstartdate, ntenddate, PUBLICFLAG, writerNameType
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#, #publicFlag#, #writerNameType#
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#,
+				<isNotEmpty property = "versionManage">
+					<isEqual property = "version" compareValue = "0.0">
+						( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ),
+					</isEqual>
+					<isNotEqual property = "version" compareValue = "0.0">
+						(
+							SELECT
+								DOCNO
+							FROM
+								TBL_BOARD_ITEM A
+							WHERE
+								ITEMID = #parentItemID#
+							AND
+								TENANT_ID = #tenantID#
+						),
+					</isNotEqual>
+				</isNotEmpty>
+				<isEmpty property = "versionManage">
+					( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ),
+				</isEmpty>
+	            #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#, #publicFlag#, #writerNameType#
 	        )
 		</isNotEqual>
 	</insert>
@@ -6859,6 +7111,31 @@
 			AND
 				B.MAIN_FLAG = PART.MAIN_FLAG
 		</isNotEmpty>
+			LEFT OUTER JOIN
+			(
+				SELECT
+					ITEMID, TENANT_ID
+				FROM
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+				WHERE
+					M1.RN = 1
+			) M2
+			ON
+				A.ITEMID = M2.ITEMID
+			AND
+				A.TENANT_ID = M2.TENANT_ID
 			WHERE
 		<isEqual property="v_PSUBFLAG" compareValue="A">
 			(1=1)
@@ -6971,6 +7248,10 @@
 					)
 				)
 		</isNotEmpty>
+		AND
+			(I.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+				OR
+			I.VERSIONMANAGE = 'N')
 		GROUP BY
             A.ITEMID, A.TITLE
 		ORDER BY
@@ -7013,6 +7294,31 @@
 			(I.COMPANYID = #v_pCompanyID# OR TRIM(I.COMPANYID) = '' OR I.COMPANYID IS NULL)
 		AND
 			A.BOARDID = I.BOARDID
+		LEFT OUTER JOIN
+			(
+				SELECT
+					ITEMID, TENANT_ID
+				FROM
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+						TBL_BOARD_MODIFYHISTORY
+				) M1
+				WHERE
+					M1.RN = 1
+			) M2
+			ON
+				A.ITEMID = M2.ITEMID
+			AND
+				A.TENANT_ID = M2.TENANT_ID
         <isNotEmpty property="v_SEARCH_CONTENT">
             INNER JOIN
                 TBL_Photo_ImageItem B
@@ -7173,6 +7479,10 @@
 					)
 				)
 		</isNotEmpty>
+		AND
+		(I.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+			OR
+		I.VERSIONMANAGE = 'N')
 	</select>
 	
 	<update id="EzBoardDAO.modUpdateDate" parameterClass="Map">
@@ -8388,7 +8698,32 @@
 			  	A.TENANT_ID = P.TENANT_ID
 			AND
 			  	A.BOARDID = P.BOARDID
-			AND 
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ITEMID, TENANT_ID
+					FROM
+						(
+							SELECT
+								ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+									ITEMID,
+								TENANT_ID
+							FROM
+								TBL_BOARD_MODIFYHISTORY
+						) M1
+					WHERE
+						M1.RN = 1
+				) M2
+				ON
+							A.ITEMID = M2.ITEMID
+						AND
+							A.TENANT_ID = M2.TENANT_ID
+			WHERE
 			  	A.TENANT_ID = #v_TENANTID#
 	 		AND
             	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
@@ -8402,6 +8737,10 @@
 			  	A.ENDDATE > #nowDate#
 			AND
 				P.GUBUN != '5'
+			AND
+				(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					OR
+				 P.VERSIONMANAGE = 'N')
 		]]>
 	</select>
 	
@@ -8459,10 +8798,32 @@
 				ON
 					A.TENANT_ID = P.TENANT_ID
 				AND
-					(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
-						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
-				AND
 					A.BOARDID = P.BOARDID
+				LEFT OUTER JOIN
+				(
+					SELECT
+						ITEMID, TENANT_ID
+					FROM
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+						TBL_BOARD_MODIFYHISTORY
+					) M1
+					WHERE
+						M1.RN = 1
+				) M2
+				ON
+					A.ITEMID = M2.ITEMID
+				AND
+					A.TENANT_ID = M2.TENANT_ID
 				LEFT OUTER JOIN
 					TBL_BOARD_ITEM_ATTACHMENTS F
 				ON
@@ -8483,6 +8844,10 @@
 					A.ENDDATE > #nowDate#
 				AND
 					P.GUBUN != '5'
+				AND
+					(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+						OR
+			    	P.VERSIONMANAGE = 'N')
 				GROUP BY
 					A.ITEMID, A.TITLE
 		]]>
@@ -9225,7 +9590,32 @@
 			  	A.TENANT_ID = P.TENANT_ID
 			AND
 			  	A.BOARDID = P.BOARDID
-			AND 
+			LEFT OUTER JOIN
+			(
+				SELECT
+					ITEMID, TENANT_ID
+				FROM
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+				WHERE
+					M1.RN = 1
+			) M2
+			ON
+				A.ITEMID = M2.ITEMID
+			AND
+				A.TENANT_ID = M2.TENANT_ID
+			WHERE 
 			  	A.TENANT_ID = #v_TENANTID#
 	 		AND
             	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
@@ -9250,6 +9640,10 @@
 				P.ALLNEWBOARDFLAG = 'Y'
 			AND
 				P.GUBUN != '5'
+			AND
+				(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					OR
+	    		P.VERSIONMANAGE = 'N')
 		]]>
 		<!-- 		오류 발생시 이것으로 대체 -->
 		<!--             	A.StartDate > DATE_SUB(DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL 5 DAY) -->
@@ -9304,48 +9698,77 @@
 				P.BOARDGROUPID
 			FROM
 				TBL_BOARD_ITEM A
-					INNER JOIN
+			INNER JOIN
 				TBL_BOARD_BOARDINFO P
-				ON
-							A.TENANT_ID = P.TENANT_ID
-						AND
-							(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
-								OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
-						AND
-							A.BOARDID = P.BOARDID
-						AND
-							A.TENANT_ID = #v_TENANTID#
-						AND
-							(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
-								OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
-						AND
-							(A.APPRFLAG = 'Y'
-								OR A.APPRFLAG IS NULL)
-						AND
-							A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL IFNULL((SELECT 
-																					ALLNEWBOARDLISTDATE 
-																				FROM 
-																					TBL_BOARD_CONFIGURATION 
-																				WHERE 
-																					USERID = #v_PUSERID# 
-																				 AND 
-																					TENANT_ID = #v_TENANTID#), 5) DAY)
-						AND
-							A.STARTDATE <= #nowDate#
-						AND
-							A.ENDDATE > #nowDate#
-					   	AND
-						   	P.ALLNEWBOARDFLAG = 'Y'
-				LEFT OUTER JOIN
-					TBL_BOARD_ITEM_ATTACHMENTS F
-				ON
-					A.ITEMID = F.ITEMID
-				AND
-					A.TENANT_ID = F.TENANT_ID
-				WHERE
-					P.GUBUN != '5'
-				GROUP BY
-					A.ITEMID, A.TITLE
+			ON
+				A.TENANT_ID = P.TENANT_ID
+			AND
+				(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+					OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+			AND
+				A.BOARDID = P.BOARDID
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ITEMID, TENANT_ID
+					FROM
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+						TBL_BOARD_MODIFYHISTORY
+					) M1
+					WHERE
+						M1.RN = 1
+				) M2
+			ON
+				A.ITEMID = M2.ITEMID
+			AND
+				A.TENANT_ID = M2.TENANT_ID
+			LEFT OUTER JOIN
+				TBL_BOARD_ITEM_ATTACHMENTS F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
+			WHERE
+				A.TENANT_ID = #v_TENANTID#
+			AND
+				(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+					OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+			AND
+				(A.APPRFLAG = 'Y'
+					OR A.APPRFLAG IS NULL)
+			AND
+				A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL IFNULL((SELECT 
+																		ALLNEWBOARDLISTDATE 
+																	FROM 
+																		TBL_BOARD_CONFIGURATION 
+																	WHERE 
+																		USERID = #v_PUSERID# 
+																	 AND 
+																		TENANT_ID = #v_TENANTID#), 5) DAY)
+			AND
+				A.STARTDATE <= #nowDate#
+			AND
+				A.ENDDATE > #nowDate#
+			AND
+				P.ALLNEWBOARDFLAG = 'Y'
+			AND
+				P.GUBUN != '5'
+			AND
+				(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					OR
+				P.VERSIONMANAGE = 'N')
+			GROUP BY
+				A.ITEMID, A.TITLE
 		]]>
 			ORDER BY
 					<isEqual property="iv_PORDERBYCOL1" compareValue="BOARDNAME"> P.BOARDNAME </isEqual>
@@ -10099,5 +10522,249 @@
 		WHERE
 			B.BOARDID = #boardID#
 		  AND B.TENANT_ID = #tenantID#
+	</select>
+
+	<select id = "EzBoardDAO.getModifiedHistoryOfItem" parameterClass = "map" resultClass = "BoardHistoryVO">
+		SELECT
+			*
+		FROM
+			TBL_BOARD_BOARDINFO A
+				JOIN
+			TBL_BOARD_ITEM B
+			ON
+				A.BOARDID = B.BOARDID
+				JOIN
+			TBL_BOARD_MODIFYHISTORY C
+			ON
+				B.ITEMID = C.ITEMID
+		WHERE
+			A.BOARDID = #boardID#
+		  AND
+				C.PARENTITEMID IN (
+				SELECT
+					PARENTITEMID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+					ITEMID = #itemID#
+			)
+		  AND
+			A.TENANT_ID = #tenantID#
+		ORDER BY
+			VERSION DESC
+	</select>
+
+	<select id = "EzBoardDAO.getUseVersionFlag" parameterClass = "map" resultClass = "String">
+		SELECT
+			VERSIONMANAGE
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			BOARDID = #boardID#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<select id = "EzBoardDAO.getItemVersion" parameterClass = "map" resultClass = "String">
+		SELECT
+			A.*
+		FROM
+			(
+				SELECT
+					VERSION,
+					ROW_NUMBER() OVER(
+					ORDER BY
+						VERSION DESC
+				) AS RN
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+						PARENTITEMID = (
+						SELECT
+							PARENTITEMID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						WHERE
+							ITEMID = #itemID#
+					)
+				  AND
+					TENANT_ID = #tenantID#
+			) A
+		WHERE
+			A.RN = 1
+	</select>
+
+	<insert id = "EzBoardDAO.addModifyHistory" parameterClass = "BoardListVO">
+		INSERT INTO
+			TBL_BOARD_MODIFYHISTORY (
+			ITEMID,
+			PARENTITEMID,
+			VERSION,
+			MODIFYUSERID,
+			MODIFYUSERNAME,
+			MODIFIEDDATE,
+			TENANT_ID
+		)
+		VALUES (
+				   #itemID#,
+				   #parentItemID#,
+				   #version#,
+				   #writerID#,
+				   #writerName#,
+				   #writeDate#,
+				   #tenantID#
+			   )
+	</insert>
+
+	<select id = "EzBoardDAO.getParentItemID" parameterClass = "map" resultClass = "String">
+		SELECT
+			PARENTITEMID
+		FROM
+			TBL_BOARD_MODIFYHISTORY
+		WHERE
+			ITEMID = #itemID#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<delete id = "EzBoardDAO.deleteVersionedItem" parameterClass = "map">
+		DELETE FROM
+			TBL_BOARD_ITEM
+		WHERE
+				ITEMID IN (
+				SELECT
+					ITEMID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+						PARENTITEMID = (
+						SELECT
+							PARENTITEMID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						WHERE
+							ITEMID = #itemID#
+					)
+			)
+		  AND
+			TENANT_ID = #tenantID#
+	</delete>
+
+	<delete id = "EzBoardDAO.deleteVersionedItemReply" parameterClass = "map">
+		DELETE FROM
+			TBL_Board_OneLineReply
+		WHERE
+				ITEMID IN (
+				SELECT
+					ITEMID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+						PARENTITEMID = (
+						SELECT
+							PARENTITEMID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						WHERE
+							ITEMID = #itemID#
+					)
+			)
+		  AND
+			TENANT_ID = #tenantID#
+	</delete>
+
+	<delete id = "EzBoardDAO.deleteVersionedItemRead" parameterClass = "map">
+		DELETE FROM
+			TBL_Board_Item_Read
+		WHERE
+				ITEMID IN (
+				SELECT
+					ITEMID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+						PARENTITEMID = (
+						SELECT
+							PARENTITEMID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						WHERE
+							ITEMID = #itemID#
+					)
+			)
+		  AND
+			TENANT_ID = #tenantID#
+	</delete>
+
+	<select id = "EzBoardDAO.versionedItemHrefList" parameterClass = "map" resultClass = "String">
+		SELECT
+			CONTENTLOCATION
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+				ITEMID IN (
+				SELECT
+					ITEMID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+						PARENTITEMID = (
+						SELECT
+							PARENTITEMID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						WHERE
+							ITEMID = #itemID#
+					)
+			)
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<select id = "EzBoardDAO.getNewestVersion" parameterClass = "map" resultClass = "String">
+		WITH TMP AS (
+			SELECT
+				PARENTITEMID
+			FROM
+				TBL_BOARD_MODIFYHISTORY
+			WHERE
+				ITEMID = #itemID#
+			  AND
+				TENANT_ID = #tenantID#
+		)
+
+		SELECT
+			A.VERSION
+		FROM
+			(
+				SELECT
+					ROW_NUMBER() OVER(
+					ORDER BY
+						VERSION DESC
+				) RN,
+						TBL_BOARD_MODIFYHISTORY.VERSION
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+						PARENTITEMID = (
+						SELECT
+							*
+						FROM
+							TMP
+					)
+			) A
+		WHERE
+			A.RN = 1
+	</select>
+	
+	<select id="EzBoardDAO.getBoardTitle" parameterClass="map" resultClass="String">
+		SELECT
+		    TITLE
+		FROM
+		    TBL_BOARD_ITEM
+		WHERE
+		    BOARDID = #boardID#
+		  AND ITEMID = #itemID#
+		  AND TENANT_ID = #tenantID#
 	</select>
 </sqlMap>

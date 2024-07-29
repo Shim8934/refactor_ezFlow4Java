@@ -89,6 +89,7 @@
 		var viewContentFlag = false;
 		var viewAttachFlag = false;
 		var strWriterID = "${boardItem.writerID}";
+		var useVersion = "${ useVersion }";
 
 		window.onload = () => {
 			if (boardItemInfo == null) {
@@ -544,6 +545,17 @@
 		function OpenUserInfo(pUserID, pDeptID) {
 			var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "UserInfo", 420, 450, "NO");
 		}
+
+		function viewModifyHistory() {
+			var heigth = window.screen.availHeight;
+			var width = window.screen.availWidth;
+			var left = (width - 620) / 2;
+			var top = (heigth - 425) / 2;
+			var href = "/ezBoard/modifyHistory?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemID);
+			var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
+
+			DivPopUpShow(620, 425, href);
+		}
 	</script>
 </head>
 <body class="mainbody">
@@ -573,6 +585,12 @@
 						<li class = "important" onclick = "viewContent()">
 							<span id = "viewContentBtn"><spring:message code = 'ezBoard.fileViewerBoard.viewContent' /></span>
 						</li>
+
+						<c:if test = "${ useVersion eq 'Y' }">
+							<li class = "important" onclick = "viewModifyHistory()">
+								<span id = "viewModifyHistoryByn"><spring:message code = 'ezBoard.versionManage.msg2' /></span>
+							</li>
+						</c:if>
 
 						<li class onclick = "deleteItem()">
 							<span class = "icon16 icon16_delete"></span>
@@ -773,5 +791,10 @@
 			</c:otherwise>
 		</c:choose>
 	</c:if>
+
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
+	</div>
 </body>
 </html>

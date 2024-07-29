@@ -108,3 +108,7 @@ var strLangLHR002 = "You can't rate with the same score as before";
 var strLangLHR003 = "The score was successfully saved.";
 
 var strLangFileViewr01 = "Only one post is allowed in this board.\nTo create a new post, please delete the existing one first.";
+
+// 2025-06-12 양지혜 - 게시글 버전관리 > 버전 히스토리 생성 안내 문구 추가
+var strLangVersion01 = "Version history will be created to enable post version control.\nIf many posts are already registered, this process may take some time.\nDo you want to continue?";
+var strLangVersion02 = "Unable to save settings due to a failure in creating post version history.\nTurn off version control and try again, or contact the administrator.";

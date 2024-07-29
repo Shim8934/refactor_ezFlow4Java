@@ -149,6 +149,16 @@
             var boardItemTemp = '<c:out value="${boardItemJson}"/>';
             var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
 	        
+			var version = "${ version }";
+			var useVersion = "${ useVersion }";
+			var leftAddr = "${ leftAddr }";
+			var rightAddr = "${ rightAddr }";
+			var selectedAddr = "${ selectedAddr }"
+			var addrInfo = [];
+			var selectedViewFlag = "${ selectedViewFlag }";
+			var historyModify = "${ historyModify }";
+			var newestVersionFlag = "${ newestVersionFlag }";
+
 	        function Bigger(doc) {     
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                if (MozNowZoom < MozMaxZoom) {
@@ -519,7 +529,7 @@
 		    }
 		    
 		    var checkpassword_dialogArguments = new Array();
-		    function btn_Delete_Onclick() {
+		    function btn_Delete_Onclick(param) {
 		        if (CheckIfHasReplies()) {
 		            alert("<spring:message code='ezBoard.t196' />");
 		            return;
@@ -592,7 +602,7 @@
 		            if (BoardAdmin_FG == "true" || gubun != "2") {
 		                if (!confirm("<spring:message code='ezBoard.t197' />")) return;
 		                var xmlhttp = createXMLHttpRequest();
-		                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
+		                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";" + "&mode=" + param, false);
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "NO") {
@@ -745,11 +755,11 @@
 		        
 		        var portletId = "";
 		     	// 게시판 포틀릿 리스트 업데이트 되도록 수정
-	            if (parent.opener.refreshBordPortletInfo != undefined) {
+	            if (parent.opener != null && parent.opener.refreshBordPortletInfo != undefined) {
 	            	portletId = "<c:out value='${portletId}'/>";
 	            }
 		     	
-	            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+	            if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
 					parent.opener.getBoardList_NewBoardSTD();
 				}
 	            
@@ -772,10 +782,11 @@
 		        }
 		        
 		        if (gubun != "2") {
-					window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
-					window.resizeTo(785, 780);
+	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId + "&historyModify=" + historyModify + "&version=" + version;
+		            window.resizeTo(785, 780);
 		        }
 		    }
+		    
 		    function btn_Modify_Onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		
@@ -1880,7 +1891,108 @@
 					}
 				});
 			}
-	
+	        
+			function viewModifyHistory() {
+				var heigth = window.screen.availHeight;
+				var width = window.screen.availWidth;
+				var left = (width - 620) / 2;
+				var top = (heigth - 425) / 2;
+				var href = "/ezBoard/modifyHistory?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID);
+				var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
+
+				DivPopUpShow(620, 425, href);
+			}
+
+			function viewContent(loc) {
+				selectedViewFlag = loc;
+
+				getItemAddrInfo(loc);
+
+				var pheight = window.screen.availHeight;
+				var pwidth = window.screen.availWidth;
+				var pTop = (pheight - 720) / 2;
+				var pLeft = (pwidth - 790) / 2;
+				var url = "/ezBoard/boardItemView.do?showAdjacent=&location=GENERAL&historyCheck=true";
+
+				url += "&itemID=" + encodeURIComponent(addrInfo[2]);
+				url += "&boardID=" + encodeURIComponent(addrInfo[1]);
+				url += "&version=" + addrInfo[3];
+				url += "&leftAddr=" + encodeURI(leftAddr);
+				url += "&rightAddr=" + encodeURI(rightAddr);
+				url += "&selectedAddr=" + encodeURI(selectedAddr);
+				url += "&selectedViewFlag=" + loc;
+				url += "&historyModify=true";
+
+				window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
+				window.close();
+			}
+
+			function getItemAddrInfo(loc) {
+				switch (loc) {
+					case "left" : {
+						addrInfo = leftAddr.split(";");
+
+						break;
+					}
+
+					case "right" : {
+						addrInfo = rightAddr.split(";");
+
+						break;
+					}
+
+					case "my" : {
+						addrInfo = selectedAddr.split(";");
+
+						break;
+					}
+
+					default : {}
+				}
+			}
+
+			function showModifyHistory() {
+				var compareTargetHref = getCompareTarget();
+
+				if (leftAddr != null) {
+					pUrl = "/ezApprovalG/docViewerCompare.do?docHrefAfter=" + encodeURI(compareTargetHref) + "&docHrefBefore=" + encodeURI(selectedAddr.split(";")[0]);
+
+					openwindow2(pUrl);
+
+					return;
+				}
+			}
+
+			function getCompareTarget() {
+				switch (selectedViewFlag) {
+					case "left" : {
+						return leftAddr.split(";")[0];
+					}
+
+					case "right" : {
+						return rightAddr.split(";")[0];
+					}
+
+					default : {}
+				}
+			}
+
+			function openwindow2(wfileLocation) {
+				try {
+					var heigth = window.screen.availHeight;
+					var width = window.screen.availWidth;
+					var left = 0;
+					var top = 0;
+					var pleftpos;
+
+					heigth = parseInt(heigth) - 70;
+					width = parseInt(width) - 20;
+
+					window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+				} catch (e) {
+					alert("openwindow :: " + e.description);
+				}
+			}
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">
@@ -1888,6 +2000,44 @@
 		  <tr>
 		    <td style="vertical-align: top; height: 10px;">
 		      <div id="menu">
+			  <c:if test = "${ historyCheck eq 'true' }">
+				  <ul>
+					  <c:if test = "${ selectedViewFlag ne 'right' && rightAddr ne '' }">
+					  <li>
+						  <span onclick = "viewContent('right')"><spring:message code='ezBoard.versionManage.msg8' /></span>
+					  </li>
+					  </c:if>
+
+					  <c:if test = "${ selectedViewFlag ne 'my' }">
+					  <li>
+						  <span onclick = "viewContent('my')"><spring:message code='ezBoard.versionManage.msg10' /></span>
+					  </li>
+					  </c:if>
+
+					  <c:if test = "${ selectedViewFlag ne 'left' && leftAddr ne '' }">
+					  <li>
+						  <span onclick = "viewContent('left')"><spring:message code='ezBoard.versionManage.msg9' /></span>
+					  </li>
+					  </c:if>
+
+					  <%-- 수정 : 선택한 버전의 글만 수정 가능 --%>
+					  <c:if test = "${ selectedViewFlag eq 'my' }">
+					  	  <li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+					  </c:if>
+
+					  <%-- 삭제 : 최종 수정본이 아닌 중간 버전의 글만 삭제 가능 --%>
+					  <c:if test = "${ newestVersionFlag ne 'Y' }">
+					  	  <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick(`only`)'></span></li>
+					  </c:if>
+
+					  <c:if test = "${ selectedViewFlag ne 'my' }">
+					  <li>
+						  <span onclick = "showModifyHistory()"><spring:message code='ezBoard.versionManage.msg11' /></span>
+					  </li>
+					  </c:if>
+				  </ul>
+			  </c:if>
+			  <c:if test = "${ historyCheck ne 'true' }">
 		        <ul>
 		        	<c:choose>
 		        		<c:when test="${pReservedItem == 'true'}">
@@ -1944,6 +2094,11 @@
 										<li ID='btn_Move'><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
 			                        	<li ID='btn_Reader'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
 			                    	</c:if>
+									<c:if test = "${ useVersion eq 'Y' }">
+										<li id = "btn_modifyHistory">
+											<span onclick = "viewModifyHistory()"><spring:message code = "ezBoard.versionManage.msg2" /></span>
+										</li>
+									</c:if>
 			                    	<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 		                        	<li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
 		                        	<c:if test="${useExternalMailServer eq 'NO' }">
@@ -1958,6 +2113,11 @@
 									<!--		강민수92 end -->			        				
 			                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 			                        <li ID='btn_Read' ><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
+									<c:if test = "${ useVersion eq 'Y' }">
+										<li id = "btn_modifyHistory">
+											<span onclick = "viewModifyHistory()"><spring:message code = "ezBoard.versionManage.msg2" /></span>
+										</li>
+									</c:if>
 			                        <li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon" ></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
 			                        <li ID='btn_Mail' style="display:none;" onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon" ></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
 			        			</c:otherwise>
@@ -1993,6 +2153,7 @@
 						</c:choose>
 					</c:if>
 		        </ul>
+			  </c:if>
 		      </div>    
 		      <div id="close">
 		        <ul>

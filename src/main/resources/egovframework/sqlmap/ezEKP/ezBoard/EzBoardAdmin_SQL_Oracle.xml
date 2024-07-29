@@ -10,6 +10,7 @@
 	<typeAlias  alias="MyFavoriteVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardBackgroundVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO"/>
 	<typeAlias  alias="BoardListHeaderVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
+	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
 	
 	<resultMap id="getBoardTree_Get2" class="EzBoardVO">
 		<result property="boardId" 					column="BOARDID" 					columnIndex="1"/>
@@ -2470,7 +2471,8 @@
 	      			PUBLICFLAG = #v_PUBLICFLAG#,
 	      			ALLNEWBOARDFLAG = #v_ALLNEWBOARDFLAG#,
 	      			WRITERFLAG = #v_WRITERFLAG#,
-	      			STARRATINGFLAG = #v_STARRATINGFLAG#
+	      			STARRATINGFLAG = #v_STARRATINGFLAG#,
+	      			VERSIONMANAGE = #versionManage#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  
@@ -3005,4 +3007,27 @@
 		FROM TBL_USERSCRAPCONTLIST
 		WHERE BOARDID = #boardID#
 	</delete>
+
+	<select id="EzBoardAdminDAO.getCreateHistoryTarget" parameterClass="map" resultClass="BoardListVO">
+		SELECT
+			DISTINCT A.ITEMID ITEMID,
+					 A.ITEMID PARENTITEMID,
+					 '0.0' VERSION,
+					 WRITERID,
+					 WRITERNAME,
+					 WRITEDATE,
+					 A.TENANT_ID TENANTID
+		FROM
+			TBL_BOARD_ITEM A
+				LEFT OUTER JOIN
+			TBL_BOARD_MODIFYHISTORY B
+			ON
+				A.ITEMID = B.ITEMID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+		WHERE
+			BOARDID = #boardId#
+		  AND A.TENANT_ID = #tenantId#
+		  AND B.ITEMID IS NULL
+	</select>
 </sqlMap>

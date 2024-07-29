@@ -92,6 +92,11 @@
 	                } else {
 	                	pDocTitle = getNodeText(message2.document.getElementById("doctitle")).trim();
 	                }
+
+					<%-- 2025-05-28 양지혜 - 게시판 > 버전관리 > 문서비교 시 본문에 제목없어 발생하는 오류 수정 --%>
+					if (pDocTitle == "" && -1 != pDocHref.lastIndexOf("upload_board")) {
+						pDocTitle = getBoardTitle(pDocHref);
+					}
 	            } catch (e) {
 	                pDocTitle = "No Title";
 	                pDocID = "No DocID";
@@ -152,6 +157,25 @@
 	        	document.getElementById("messageTD").style.display = "none";
 	        	document.getElementById("message2TD").style.display = "";
 	        }
+			
+			function getBoardTitle(itemHref) {
+				var title = "";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getBoardTitle.do",
+					data : {
+						href : itemHref
+					},
+					success: function(text){
+						title = text;
+					}
+				});
+				
+				return title;
+			}
 	        
 	    </script>
 	</head>

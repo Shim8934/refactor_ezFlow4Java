@@ -2217,4 +2217,18 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	@RequestMapping(value = "/admin/ezBoard/createModifyHistory.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String createModifyHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("createModifyHistory started");
+		String res = "FAIL";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardId = request.getParameter("boardID");
+
+		res = ezBoardAdminService.createModifyHistory(boardId, userInfo.getTenantId());
+
+		logger.debug("createModifyHistory ended");
+		return res;
+	}
 }
