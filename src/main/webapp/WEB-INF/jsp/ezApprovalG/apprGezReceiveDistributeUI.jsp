@@ -1474,19 +1474,11 @@
 	    		} else if (cnt <= 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
 	    	        document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	    	        document.getElementById("btnaddress").style.display = "";
-	    	        if (useReceiveInfoName == '1') {
-//	                	document.getElementById("btnaddressChange").style.display = "";
-	                } else {
-	                	document.getElementById("btnaddressChange").style.display = "";
-	                }
+	    	        document.getElementById("btnaddressChange").style.display = "";
 	    		} else if (checkOuter == "Y" && checkAddress.indexOf("Address") != -1) {
 	    			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	    	        document.getElementById("btnaddress").style.display = "";
-	    	        if (useReceiveInfoName == '1') {
-//	                	document.getElementById("btnaddressChange").style.display = "";
-	                } else {
-	                	document.getElementById("btnaddressChange").style.display = "";
-	                }
+	    	        document.getElementById("btnaddressChange").style.display = "";
 	    		} else {
 	    			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	    	        document.getElementById("btnaddress").style.display = "";

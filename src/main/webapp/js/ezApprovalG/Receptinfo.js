@@ -92,11 +92,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptTemp").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "";
         document.getElementById("ReceptDoc24").style.display = "none";
-        if (useReceiveInfoName == '1') {
-//        	document.getElementById("btnaddressChange").style.display = "";
-        } else {
-        	document.getElementById("btnaddressChange").style.display = "";
-        }
+        document.getElementById("btnaddressChange").style.display = "";
         
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "none";
@@ -645,9 +641,9 @@ function AprLineAddDept(nodeIdx, tr) {
         listview.AddDataRow(objTr, Resultxml.documentElement.getElementsByTagName("ROW")[0]);
     }
     
-    if (useReceiveInfoName == '0') {
-    	document.getElementById("btnaddressChange").style.display = "none";
-    }
+    // if (useReceiveInfoName == '0') {
+    //     document.getElementById("btnaddressChange").style.display = "none";
+    // }
     
     //DeptAddIndex = DeptAddIndex + 1;
 }
@@ -1187,11 +1183,7 @@ function btnSearchDept_onClick_Complete(reParam) {
                 document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                 document.getElementById("inputSummaryOuterReceiverList").value = "";
                 document.getElementById("btnaddress").style.display = "";
-                if (useReceiveInfoName == '1') {
-//                	document.getElementById("btnaddressChange").style.display = "";
-                } else {
-                	document.getElementById("btnaddressChange").style.display = "";
-                }
+                document.getElementById("btnaddressChange").style.display = "";
             }
         } else {
             var pAlertContent = strLang247 + "<br>  " + strLang248;
@@ -1353,11 +1345,7 @@ function btnSearchDept_onClick_Complete(reParam) {
                     document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                     document.getElementById("inputSummaryOuterReceiverList").value = "";
                     document.getElementById("btnaddress").style.display = "";
-                    if (useReceiveInfoName == '1') {
-//                    	document.getElementById("btnaddressChange").style.display = "";
-                    } else {
-                    	document.getElementById("btnaddressChange").style.display = "";
-                    }
+                    document.getElementById("btnaddressChange").style.display = "";
                 }
 
             } else {
@@ -1724,11 +1712,7 @@ function AprLineAddDeptG_New(outDeptID) {
 			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 			document.getElementById("inputSummaryOuterReceiverList").value = "";
 			document.getElementById("btnaddress").style.display = "";
-			if (useReceiveInfoName == '1') {
-				//document.getElementById("btnaddressChange").style.display = "";
-			} else {
-				document.getElementById("btnaddressChange").style.display = "";
-			}
+			document.getElementById("btnaddressChange").style.display = "";
 		}
 	}
 }
@@ -1872,11 +1856,7 @@ function AprLineAddDeptG(nodeIdx, tr) {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
-        if (useReceiveInfoName == '1') {
-//        	document.getElementById("btnaddressChange").style.display = "";
-        } else {
-        	document.getElementById("btnaddressChange").style.display = "";
-        }
+        document.getElementById("btnaddressChange").style.display = "";
     }
 
 }
@@ -2326,9 +2306,9 @@ function AprLineAddDeptAddress(AddressName) {
 
     DeptAddIndex = DeptAddIndex + 1;
     
-    if (useReceiveInfoName == '0') {
-	    document.getElementById("btnaddressChange").style.display = "";
-	}
+    // if (useReceiveInfoName == '0') {
+	//     document.getElementById("btnaddressChange").style.display = "";
+	// }
     
     /* 2023-01-12 홍승비 - 결재정보 > 수신자 수기입력 완료 후 ROW 추가 시, 수기입력된 수신처ID를 전체적으로 갱신 ("Address" + 숫자 형태의 ID를 가지는 경우에만) */
     refreshAllDeptAddressRowID();
@@ -2805,11 +2785,7 @@ function AddOuter(strOuterDeptId, strOuterDeptName) {
             document.getElementById("trSummaryOuterReceiverList").style.display = "none";
             document.getElementById("inputSummaryOuterReceiverList").value = "";
             document.getElementById("btnaddress").style.display = "";
-            if (useReceiveInfoName == '1') {
-//            	document.getElementById("btnaddressChange").style.display = "";
-            } else {
-            	document.getElementById("btnaddressChange").style.display = "";
-            }
+            document.getElementById("btnaddressChange").style.display = "";
         }
 
     } catch (e) {
