@@ -223,14 +223,6 @@ public class EzNewPortalGWController {
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
 			String jobId = Optional.ofNullable(request.getParameter("jobId")).orElse("");
-			String webType = request.getParameter("type");
-			
-			if (webType != null && webType.equals("mobile")) {
-				companyId = info.getCompanyId();
-				deptId = info.getDeptId();
-				jobId = info.getJobId();
-			}
-			
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
@@ -246,12 +238,8 @@ public class EzNewPortalGWController {
 			OrganUserVO organUserVO = userInfo.get();
 
 			// 사용자 설정 테마/프레임 가져오기
-			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, portletLang, webType);
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, portletLang);
 			//logger.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame()); // 로그정리 : 서비스에서 찍어 줌
-
-			if (webType != null && webType.equals("mobile")) {
-				userThemeSetting.setUsedTheme(4);
-			}
 			
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(userThemeSetting.getUsedTheme(), portletLang, userId, tenantId, companyId, deptId, false);
 			
@@ -819,7 +807,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String deptId = request.getParameter("deptId");
 			String lang = info.getLang();
-			String webType = request.getParameter("webType");
+			
 			// deptpath 구하기
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			
@@ -828,7 +816,7 @@ public class EzNewPortalGWController {
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
 			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId, deptPath, lang);
-			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, lang, webType);
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, lang);
 			
 			boolean hasUserDefault = false;
 			int usedTheme = 0;
@@ -1604,22 +1592,11 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
-			String webType = request.getParameter("type");
-			
-			if (webType != null && webType.equals("mobile")) {
-				companyId = info.getCompanyId();
-				deptId = info.getDeptId();
-			}
-			
 			String portletLang = info.getLang();
 
 			JSONObject data = new JSONObject();
 			
 			int themeId = ezNewPortalService.getThemeId(userId, companyId, tenantId);
-			
-			if (webType != null && webType.equals("mobile")) {
-				themeId = 4;
-			}
 			
 			List<PortletInfoVO> portletList = ezNewPortalService.getUserPortletList(themeId, portletLang, userId, tenantId, companyId, deptId, true);
 			
@@ -3934,11 +3911,7 @@ public class EzNewPortalGWController {
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
-			String webType = request.getParameter("type");
 			String rollInfo = info.getRollInfo();
-			if (webType != null && webType.equals("mobile")) {
-				deptId = info.getDeptID();
-			}
 			int tenantId = info.getTenantId();
 			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의  포틀릿 아이디
 			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
@@ -4012,12 +3985,6 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
-			String webType = request.getParameter("type");
-			
-			if (webType != null && webType.equals("mobile")) {
-				deptId = info.getDeptID();
-			}
-			
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone,top,Top," + deptPath + "," + userId;
 			String rollInfo = info.getRollInfo();
@@ -4054,17 +4021,11 @@ public class EzNewPortalGWController {
 					totalCnt = ezBoardService.getBrdTotalItemCount(brdVo);
 					// 권한이 true이면 boardList불러오기
 					List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-
-					if (webType != null && webType.equals("mobile")) {
-					} else {
-						portletId = 2;
-					}
-
-					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize, portletId);
+					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
 					
 					if (currentPage > 1 && noticeList.size() < 1) {
 						currentPage--;
-						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize, portletId);
+						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
 					}
 					
 					int noticeCount = noticeList.size();

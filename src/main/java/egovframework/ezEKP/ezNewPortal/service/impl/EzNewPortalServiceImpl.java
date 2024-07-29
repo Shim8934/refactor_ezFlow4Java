@@ -130,13 +130,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	private CommonUtil commonUtil;
 	
 	// public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset, String lang) throws Exception {
-	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize, int portletId) throws Exception {
+	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 //		map.put("limit", limit);
-		map.put("portletId", portletId);
+		map.put("portletId", 2); // 공지사항 포틀릿 ID 는 2
 		map.put("nowDate", nowDate);
 		
 		if (!lang.equals("1")) {
@@ -507,8 +507,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			frameId = "5";
 		} else if (themeId.equals("3")) {
 			frameId = "8";
-		} else if (themeId.equals("4")) {
-			frameId = "9";
 		}
 		
 		map.put("userId", userId);
@@ -832,17 +830,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId, String deptPath, String portletLang, String type) throws Exception {
+	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId, String deptPath, String portletLang) throws Exception {
 		logger.debug("[Serivce] getUserPortalSetting Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("lang", portletLang);
-		
-		if (type != null && type.equals("mobile")) {
-			map.put("usedTheme", 4);
-		}
 		
 		UserPortalSettingVO userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
 		
@@ -854,11 +848,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				UserPortalSettingVO tempSetting = new UserPortalSettingVO();
 				tempSetting.setUsedFrame("Frame1");
 				tempSetting.setUsedTheme(1);
-				
-//				if (type != null && type.equals("mobile")) {
-//					tempSetting.setUsedFrame("Frame1");
-//					tempSetting.setUsedTheme(4);
-//				}
 				
 				userPortalSetting = tempSetting;
 			} else {
@@ -944,13 +933,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("portletLang", portletLang);
 				map.put("themeId", themeId);
 				map.put("portletUsed", 1);
-
-				// 모바일 테마
-				if (themeId == 4) {
-					int mPortletUsed = (int)portlet.get("portletUsed");
-					map.put("portletUsed", mPortletUsed);
-				}
-				
 				ezNewPortalDAO.updatePortletOrderUser(map);
 
 				/*int portletId = Integer.parseInt(portlet.get("portletId").toString());
@@ -962,12 +944,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		boolean usePortletSize = "Y".equals(ezCommonService.getTenantConfig("usePortletSize", tenantId));
 
-		if (themeId != 4) {
-			if (usePortletSize) {
-				ezNewPortalDAO.clearPortletSizeUser(map);
-				ezNewPortalDAO.insertPortletSizeUser(sizeList);
-			}
+		if (usePortletSize) {
+			ezNewPortalDAO.clearPortletSizeUser(map);
+			ezNewPortalDAO.insertPortletSizeUser(sizeList);
 		}
+
 
 		//tbl_portal_portlet_user에는 있는데 포틀릿 순서에 없었던 목록 가져오기
 		/*map.put("portletIdList", portletIdList);
