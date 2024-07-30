@@ -34,6 +34,9 @@ nav .navUL li.on{color:#A20000;}
 .noti_header .noti_btn_list li:hover{background-color:#FBF6F6;}
 .noti_btn span:first-child{color:#A20000;}
 .noti_btn span:hover{color:#A20000; text-decoration:underline;}
+.noti_bot_btn span.close{background:#A20000;}
+.urgent_cont .add_btn{border-color:#D8A6A6; color:#CD3838;}
+.urgent_cont .add_btn:hover{border-color:#A20000; background:#FBF6F6; color:#CD3838;}
 
 .noti_list li i.icon_mail{background-image:url(/images/ezNewPortal/skin/red/lnb_mail.svg);}
 .noti_list li i.icon_approval{background-image:url(/images/ezNewPortal/skin/red/lnb_approval.svg);}

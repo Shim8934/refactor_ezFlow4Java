@@ -70,6 +70,64 @@
                 <span onclick="popUpNotiFillter()" class="close"><spring:message code="main.t3"/></span>
             </div>
         </div>
+
+        <div class="urgent_noti">
+            <div class="noti_header">
+                <h3>긴급공지</h3>
+            </div>
+
+            <div class="urgent_cont">
+                <h3>제목</h3>
+                <input type="text" placeholder="제목">
+            </div>
+
+            <div class="urgent_cont">
+                <h3>내용</h3>
+                <textarea ></textarea>
+            </div>
+
+            <div class="urgent_cont">
+                <h3>수신자추가<span class="add_btn">수신자추가</span></h3>
+                <ul>
+                    <li>
+                        <p>홍길동[개발부서개발부서개발부서]홍길동[개발부서개발부서개발부서]홍길동[개발부서개발부서개발부서]홍길동[개발부서개발부서개발부서]홍길동[개발부서개발부서개발부서]</p>
+                        <span class="del_btn"></span>
+                    </li>
+                    <li>
+                        <p>홍길동[개발부서개발부서개발부서]</p>
+                        <span class="del_btn"></span>
+                    </li>
+                    <li>
+                        <p>홍길동[개발부서개발부서개발부서]</p>
+                        <span class="del_btn"></span>
+                    </li>
+                    <li>
+                        <p>홍길동[개발부서개발부서개발부서]</p>
+                        <span class="del_btn"></span>
+                    </li>
+                    <li>
+                        <p>홍길동[개발부서개발부서개발부서]</p>
+                        <span class="del_btn"></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="noti_bot_btn">
+                <span>취소</span>
+                <span class="close">확인</span>
+            </div>
+        </div>
+        <script>
+            document.querySelector(".noti_write").addEventListener("click",function(){
+                document.querySelector(".urgent_noti").style.display = "block";
+            })
+
+            document.querySelectorAll(".urgent_noti .noti_bot_btn span").forEach(function(span){
+                span.addEventListener("click",function(){
+                    document.querySelector(".urgent_noti").style.display = "none";
+                })
+            })
+        </script>
         
         <div class="noti_info">
             <div class="noti_view">

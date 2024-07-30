@@ -1861,7 +1861,7 @@ div.orbit img{border-radius: 5px;}
 
 /* 2024-05-02 한태훈 > 통합알림 */
 .total_alarm_frame{position:absolute; width:390px; height:600px; right:0; top:57px; display:none;}
-.notification{width:380px; height:595px; background:#fff; border:1px solid #E5E5E5; border-radius:12px; box-shadow:0 3px 6px rgba(0,0,0,0.16); margin:0 5px; padding:0; box-sizing:border-box;}
+.notification{width:380px; height:595px; background:#fff; border:1px solid #E5E5E5; border-radius:12px; box-shadow:0 3px 6px rgba(0,0,0,0.16); margin:0 5px; padding:0; box-sizing:border-box; position:relative;}
 .noti_header{display:flex; justify-content:space-between; align-items:center; height:70px; padding:0 20px;}
 .noti_header h3{margin:0; padding:0; font-size:20px; font-weight:bold; color:#333;}
 .noti_header .noti_btn_list{overflow:hidden; list-style:none;}
@@ -1870,14 +1870,6 @@ div.orbit img{border-radius: 5px;}
 .noti_header .noti_btn_list li.noti_refresh{background-image:url(../../images/ezNewPortal/noti_refresh.svg); background-size:20px;}
 .noti_header .noti_btn_list li.noti_write{background-image:url(../../images/ezNewPortal/noti_write.svg); background-size:20px;}
 .noti_header .noti_btn_list li.noti_filter{background-image:url(../../images/ezNewPortal/noti_filter.svg); background-size:20px;}
-
-
-/* .noti_search{display:flex;}
-.noti_search .noti_search_input{flex:1; position:relative; border:1px solid #DFDFE0; border-radius:3px; height:40px; box-sizing:border-box; margin-right:10px; background:#F6F6F6;}
-.noti_search .noti_search_input input{border:none; height:100%; background:transparent; padding-left:15px; width:calc(100% - 50px);}
-.noti_search .noti_search_input span{float:right; width:30px; height:30px; background:url(/images/ezNotification/employee_search.svg) no-repeat center / 20px 20px; cursor:pointer; margin:4px 10px;}
-.noti_search .noti_filter{width:40px; height:40px; border-radius:3px; border:1px solid #DFDFE0; box-sizing:border-box; background:url(/images/ezNotification/icon_fillter.svg) no-repeat center / 16px 16px #F6F6F6; cursor:pointer;}
-.noti_search .noti_filter:hover{border-color:#e6e6e6; background-color:#f8f9fb;} */
 
 .noti_info{display:flex; justify-content:space-between; padding:0 20px;}
 .noti_view{overflow:hidden;}
@@ -1951,9 +1943,22 @@ div.orbit img{border-radius: 5px;}
 .filter_pop .check_list .check_ul li .input_check input[type="checkbox"] + label:before{content:""; position:absolute; left:0; top:0; width:16px; height:16px; border:1px solid #ccc; border-radius:3px; background-color:#fff; box-sizing:border-box;}
 .filter_pop .check_list .check_ul li .input_check input[type="checkbox"]:checked + label:before{background:url(/images/ezNewPortal/bg_checkbox.png) no-repeat 2px center; background-color:#0075FF; border-color:#0075FF;}
 
-.filter_pop .noti_bot_btn{display:flex; justify-content:center; padding-bottom:18px;}
-.filter_pop .noti_bot_btn span{display:inline-block; width:135px; height:40px; line-height:38px; text-align:center; border-radius:6px; background:#EFEFEF; color:#737373; font-size:14px; margin-right:10px; cursor:pointer;}
-.filter_pop .noti_bot_btn span.close{margin-right:0; background:#388CE5; color:#fff;}
+.noti_bot_btn{display:flex; justify-content:center; padding-bottom:18px;}
+.noti_bot_btn span{display:inline-block; width:135px; height:40px; line-height:38px; text-align:center; border-radius:6px; background:#EFEFEF; color:#737373; font-size:14px; margin-right:10px; cursor:pointer;}
+.noti_bot_btn span.close{margin-right:0; background:#388CE5; color:#fff;}
+
+.urgent_noti{position:absolute; top:0; left:0; width:100%; height:100%; background:#fff; z-index:1; border-radius:12px; display:none;}
+.urgent_noti .noti_bot_btn{margin-top:35px;}
+.urgent_cont{margin-bottom:20px; padding:0 20px;}
+.urgent_cont h3{margin:0 0 5px 0; padding:0; font-size:14px; color:#000; line-height:27px;}
+.urgent_cont input[type="text"]{width:100%; height:40px; border:1px solid #E6E6E6; border-radius:5px; padding:0 15px; font-size:13px; line-height:40px;}
+.urgent_cont textarea{resize:none; width:100%; height:150px; border:1px solid #E6E6E6; border-radius:5px; box-sizing:border-box; font-size:13px; color:#000; padding:10px 15px; line-height:1.5;}
+.urgent_cont .add_btn{float:right; padding:0 10px; height:27px; line-height:25px; border:1px solid #388CE5; color:#388CE5; border-radius:4px; box-sizing:border-box; font-size:13px; cursor:pointer; font-weight:normal;}
+.urgent_cont ul{list-style:none; margin:10px 0 0; padding:0; height:78px; overflow-y:auto;}
+.urgent_cont ul li{margin:0; padding:0; height:26px; line-height:26px; font-size:13px; color:#000;}
+.urgent_cont ul li p{max-width:calc(100% - 30px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden; margin:0; display:inline-block; vertical-align:top;}
+.urgent_cont ul li .del_btn{float:right; width:12px; height:12px; margin:7px 5px 0 0; cursor:pointer; background:url(../../images/ezNewPortal/del_icon.png) no-repeat center;}
+
 
 
 /* 프로필 */
