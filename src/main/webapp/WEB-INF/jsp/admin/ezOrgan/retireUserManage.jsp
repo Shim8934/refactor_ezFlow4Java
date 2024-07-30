@@ -688,9 +688,6 @@
 				<c:if test="${dotNetIntegration != 'YES'}">
 		    		<li><span onClick="Restore_onclick()"><spring:message code='ezOrgan.t312'/></span></li>
 		    	</c:if>		        
-		        <c:if test="${dotNetIntegration != 'YES'}">
-                	<li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
-                </c:if>
                 <li><span class="icon16 icon16_delete" onClick="Delete_onclick()"></span></li>
                 <li><span class="icon16 icon16_refresh" onClick="reload()"></span></li>
 		  	</ul>
