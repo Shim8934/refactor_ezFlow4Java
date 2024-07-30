@@ -2486,7 +2486,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				
 				if (approvalFlag.equals("S")) {
 					if (j == 0) {
-						sb.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getDeptID(), "displayName" + multiData, tenantID)) + "</VALUE>");
+						sb.append("<VALUE>" + commonUtil.cleanValue(bodyVo.getDeptName()) + "</VALUE>");
 						sb.append("<DATA1>" + bodyVo.getDeptID() + "</DATA1>");
 						sb.append("<DATA2>" + bodyVo.getUserID() + "</DATA2>");
 					} else {
