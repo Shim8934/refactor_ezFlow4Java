@@ -213,6 +213,9 @@ nav .navUL li.on{color:#003497;}
 /* 서브 */
 .btn_writeBox .btn_write01:hover{border-color:#3A67BE; background:#EEF4FE; color:#003497;}
 .btn_writeBox .btn_write02:hover{border-color:#3A67BE; background:#EEF4FE; color:#003497;}
+.btn_writeBox_work .btn_write01{border-color:#7E9AD1; color:#003497;}
+.btn_writeBox_work .btn_write01:hover{background-color:#EEF4FE; border-color:#3A67BE; color:#003497;}
+.btn_writeBox_work .btn_write02:hover{background-color:#EEF4FE; border-color:#3A67BE; color:#003497;}
 
 .pagenavi span:hover{background-color:#EEF4FE; border-color:#003497; color:#003497;}
 .pagenavi span.on{border-color:#003497; color:#003497;}
@@ -231,6 +234,7 @@ nav .navUL li.on{color:#003497;}
 .lnbUL li.on{text-decoration-color:#003497 !important;}
 .lnbUL li.on .list_text{color:#003497;}
 .lnbUL li.on .list_text span{color:#003497;}
+.lnbUL li .list_text.node_selected span{color:#003497;}
 
 .popup{background-image:url(../../images/ezNewPortal/skin/blue/popup_bg.png);}
 .popupJQLayer{background-image:url(../../images/ezNewPortal/skin/blue/popup_bg.png);}
@@ -255,12 +259,14 @@ nav .navUL li.on{color:#003497;}
 .icon16{background-image:url(../../images/ezNewPortal/skin/blue/icon_16.png) !important;}
 
 .portlet_tabnew01_top p span{border-color:#7E9AD1; color:#003497; background-image:url(../../images/ezNewPortal/skin/blue/tabnew_bg.png); background-color:#fff;}
+.portlet_tabnew01_top p span.tabon{border-color:#7E9AD1; color:#003497; background-color:#EEF4FE; background-image:url(../../images/ezNewPortal/skin/blue/tabnew_bg.png);}
 .portlet_tabnew01_top p span.tabover{border-color:#7E9AD1; color:#003497; background-color:#EEF4FE; background-image:url(../../images/ezNewPortal/skin/blue/tabnew_bg.png);}
 
 .receiver_tltype01 span{color:#003497;}
 
 .mainmenuTab .mainmenuTabUL li.on span{border-color:#7E9AD1; color:#003497;}
 .mainmenuTab .mainmenuTabUL li:hover span{border-color:#3A67BE; color:#003497; background:#EEF4FE;}
+.mainmenuTab .mainmenuTabUL li.on span:hover{border-color:#3A67BE; color:#003497; background:#EEF4FE;}
 
 .contents_listCategory li span.bold{color:#003497;}
 .contents_searchCategory dl dd{background:#042F81;}
@@ -279,3 +285,5 @@ nav .navUL li.on{color:#003497;}
 .survey_atchBtn li:hover{border-color:#3A67BE; background-color:#EEF4FE;}
 .imgbtnSurvey_save{border-color:#7E9AD1;}
 .imgbtnSurvey_save span{color:#003497;}
+
+.txt_color{color:#003497;}

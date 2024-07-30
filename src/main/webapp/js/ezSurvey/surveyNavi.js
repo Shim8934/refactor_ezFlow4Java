@@ -77,8 +77,8 @@ var SurveyNavi = function() {
 				spanElmt4.className = _totalPages != pageNum ? _imgClass + " last" : _imgClass + " last disabled";
 			}
 			else {
-				spanElmt1.className = _imgClass = " first disabled";
-				spanElmt4.className = _imgClass = " last disabled";
+				spanElmt1.className = _imgClass + " first disabled";
+				spanElmt4.className = _imgClass + " last disabled";
 			}
 			
 			divElmt.appendChild(spanElmt1);
