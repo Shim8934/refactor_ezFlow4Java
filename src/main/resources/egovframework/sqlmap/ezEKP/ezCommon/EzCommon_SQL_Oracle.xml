@@ -4909,4 +4909,58 @@
 		]]>
 	</statement>
 
+
+	<select id="EzCommonDAO.checkUserHideFlag">
+		<![CDATA[
+			SELECT
+				USERTREEFLAG
+			FROM
+				TBL_USERMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkAddJobHideFlag">
+		<![CDATA[
+			SELECT
+				USERTREEFLAG
+			FROM
+				TBL_ADDJOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkDeptHideFlag">
+		<![CDATA[
+			SELECT
+				DEPTTREEFLAG
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addUserHideFlag">
+		ALTER TABLE
+			tbl_usermaster
+		ADD
+			USERTREEFLAG CHAR(1) DEFAULT 'Y'
+	</statement>
+
+	<statement id="EzCommonDAO.addAddJobHideFlag">
+		ALTER TABLE 
+		    tbl_deptmaster 
+		ADD 
+		    DEPTTREEFLAG char(1) DEFAULT 'Y'
+	</statement>
+
+	<statement id="EzCommonDAO.addDeptHideFlag">
+		ALTER TABLE 
+		    tbl_addjobmaster 
+		ADD 
+		    USERTREEFLAG char(1) DEFAULT 'Y'
+	</statement>
 </sqlMap>

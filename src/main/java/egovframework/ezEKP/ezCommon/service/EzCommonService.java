@@ -395,4 +395,6 @@ public interface EzCommonService {
 	public void alterCompanyMenuIconUrl() throws Exception;
 
     public void alterTblScheduleForShowtop() throws Exception;
+	
+	public void addUserDeptHideFlag() throws Exception;
 }

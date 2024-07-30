@@ -522,7 +522,7 @@
 		            alert("getBoardList_after : " + e.description);
 		        }
 		    }
-		    function MakeSubCondition() {
+		    function MakeSubCondition(type) {
 		        var TYPE = "";
 		        var DATA = "";
 		        //하위 게시판 검색할 건지에 대한 조건
@@ -530,7 +530,7 @@
 		        {
 		            TYPE += "SEARCHSUBBOARD;";
 		        }
-		        if (document.getElementById("txt_keyword").value != "") {
+		        if (type == "quick") {
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
@@ -1255,7 +1255,7 @@
 		        }
 		        CurPage = "1";
 		        BoardSearchOptionHidden();
-		        MakeSubCondition();
+		        MakeSubCondition(type);
 		        getBoardList();
 		    }
 		    function check_presence() {

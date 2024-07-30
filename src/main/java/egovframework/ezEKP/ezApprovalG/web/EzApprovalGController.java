@@ -8519,7 +8519,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			ingFlag = ezApprovalGService.aprAttachMail(docID, "2", userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			xmlQuery = commonUtil.convertStringToDocument(ingFlag);
-			rtnVal = xmlQuery.getDocumentElement().getTextContent();
+			NodeList nodeList = xmlQuery.getElementsByTagName("DOCTITLE");
+			if (nodeList.getLength() > 0) {
+				rtnVal = nodeList.item(0).getTextContent();
+			} else {
+				rtnVal = xmlQuery.getDocumentElement().getTextContent();
+			}
 			
 			if (!rtnVal.equals("")) {
 				ingFlag = ezApprovalGService.aprAttachMail(docID, "3", userInfo.getCompanyID(), userInfo.getTenantId());
@@ -8527,7 +8532,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				ingFlag = ezApprovalGService.aprAttachMail(docID, "6", userInfo.getCompanyID(), userInfo.getTenantId());
 				
 				xmlQuery = commonUtil.convertStringToDocument(ingFlag);
-				rtnVal = xmlQuery.getDocumentElement().getTextContent();
+				nodeList = xmlQuery.getElementsByTagName("DOCTITLE");
+				if (nodeList.getLength() > 0) {
+					rtnVal = nodeList.item(0).getTextContent();
+				} else {
+					rtnVal = xmlQuery.getDocumentElement().getTextContent();
+				}
 				
 				ingFlag = ezApprovalGService.aprAttachMail(docID, "7", userInfo.getCompanyID(), userInfo.getTenantId());
 			}
@@ -8537,8 +8547,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			ingFlag = ezApprovalGService.aprAttachMail(docID, "4", userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			xmlQuery = commonUtil.convertStringToDocument(ingFlag);
-			rtnVal = xmlQuery.getDocumentElement().getTextContent();
-			
+			NodeList nodeList = xmlQuery.getElementsByTagName("DOCTITLE");
+			if (nodeList.getLength() > 0) {
+				rtnVal = nodeList.item(0).getTextContent();
+			} else {
+				rtnVal = xmlQuery.getDocumentElement().getTextContent();
+			}
+
 			ingFlag = ezApprovalGService.aprAttachMail(docID, "5", userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			rtnVal = "<ATTACHINFO><DOCTITLE>" + makeXMLString(rtnVal) + "</DOCTITLE>" + ingFlag + "</ATTACHINFO>";

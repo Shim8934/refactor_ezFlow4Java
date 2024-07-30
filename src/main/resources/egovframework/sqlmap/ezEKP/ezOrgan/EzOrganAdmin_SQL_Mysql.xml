@@ -10,6 +10,7 @@
 	<typeAlias alias="OrganGroupVO" type="egovframework.ezEKP.ezOrgan.vo.OrganGroupVO"/>
 	<typeAlias alias="OrganLoginStopUserVO" type="egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO"/>
 	<typeAlias alias="PermissionInfoVO" type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO"/>
+	<typeAlias alias="OrganAddJobVO" type="egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO"/>
 	
 	<resultMap id="userAddJobList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>
@@ -224,7 +225,7 @@
 			INSERT INTO
 				TBL_DEPTMASTER
     			(CN, DISPLAYNAME, DISPLAYNAME2, USEFLAG, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE15, ADFLAG, ADSPATH, UPDATEDT, CREATEDT, MANUAL_FLAG, TENANT_ID,
-                    EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPT_CD_PATH, DEPTLEVEL, EXTENSIONATTRIBUTE11
+                    EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPT_CD_PATH, DEPTLEVEL, EXTENSIONATTRIBUTE11, DEPTTREEFLAG
                  )
      		VALUES
      			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, #nowDate#, #nowDate#, #v_MANUAL_FLAG#, #v_TENANT_ID#,
@@ -233,7 +234,7 @@
                     (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     CONCAT((SELECT DEPT_CD_PATH FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#), ',', #v_CN#),
                     (SELECT DEPTLEVEL + 1 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
-                    #v_EXTATTR11#
+                    #v_EXTATTR11#, #v_DEPTTREEFLAG#
                  )
 		]]>
 	</insert>
@@ -251,7 +252,7 @@
 			INSERT INTO
 				TBL_USERMASTER
    				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, CREATEDT, MANUAL_FLAG, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
-                    DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, PASSWORD_UPDATEDT, FURIGANA, EXTENSIONPHONE, OFFICEMOBILE
+                    DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, PASSWORD_UPDATEDT, FURIGANA, EXTENSIONPHONE, OFFICEMOBILE, USERTREEFLAG
                 )
    			VALUES
    				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR7#, #v_EXTATTR8#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR11#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #nowDate#, #v_MANUAL_FLAG#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
@@ -260,7 +261,7 @@
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
-                    #nowDate#, #v_FURIGANA#, #v_EXTENSION_PHONE#, #v_OFFICE_MOBILE#
+                    #nowDate#, #v_FURIGANA#, #v_EXTENSION_PHONE#, #v_OFFICE_MOBILE#, #v_USERTREEFLAG#
                 )
 		]]>
 	</insert>
@@ -3958,6 +3959,7 @@
 		<isNotNull property="extensionAttribute13" prepend=","> <![CDATA[extensionattribute13 = #extensionAttribute13#]]></isNotNull>
 		<isNotNull property="extensionAttribute14" prepend=","> <![CDATA[extensionattribute14 = #extensionAttribute14#]]></isNotNull>
 		<isNotNull property="extensionAttribute15" prepend=","> <![CDATA[extensionattribute15 = #extensionAttribute15#]]></isNotNull>   	
+		<isNotNull property="deptTreeFlag" prepend=","> <![CDATA[deptTreeFlag = #deptTreeFlag#]]></isNotNull>   	
    		<![CDATA[     			
       		WHERE  
       			cn = #cn#
@@ -4001,6 +4003,7 @@
 	  		<isNotNull property="mailboxQuota" prepend=","> <![CDATA[mailboxQuota = #mailboxQuota#]]></isNotNull>
 	  		<isNotNull property="extensionPhone" prepend=","> <![CDATA[extensionPhone = #extensionPhone#]]></isNotNull>
 	  		<isNotNull property="officeMobile" prepend=","> <![CDATA[officeMobile = #officeMobile#]]></isNotNull>
+			<isNotNull property="userTreeFlag" prepend=","> <![CDATA[userTreeFlag = #userTreeFlag#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE
@@ -4603,9 +4606,17 @@
 			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
 			TBL_USERMASTER.EXTENSIONATTRIBUTE7 AS JOBID,
 			TBL_USERMASTER.EXTENSIONATTRIBUTE8 AS ROLEID,
-			'user' AS USERTYPE
+			'user' AS USERTYPE,
+			TBL_USERMASTER.USERTREEFLAG,
+			TBL_DEPTMASTER.DEPTTREEFLAG
 		FROM 
 			TBL_USERMASTER
+		JOIN
+			TBL_DEPTMASTER
+		ON
+			TBL_DEPTMASTER.CN = TBL_USERMASTER.DEPARTMENT
+		AND
+			TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
 		<isEqual property="v_TYPE" compareValue="001">
 		<![CDATA[
 			JOIN 
@@ -4658,7 +4669,9 @@
 			    TBL_ADDJOBMASTER.TITLE2,
 				TBL_ADDJOBMASTER.JOBID,
 				TBL_ADDJOBMASTER.ROLEID,
-			    'addJob' AS USERTYPE
+			    'addJob' AS USERTYPE,
+			    TBL_ADDJOBMASTER.USERTREEFLAG,
+			    TBL_DEPTMASTER.DEPTTREEFLAG
 			FROM
 				TBL_USER_JOBMASTER
 			JOIN 
@@ -4720,6 +4733,12 @@
 				FROM
 					TBL_USERMASTER
 				JOIN
+					TBL_DEPTMASTER
+				ON
+					TBL_DEPTMASTER.CN = TBL_USERMASTER.DEPARTMENT
+				AND
+					TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+				JOIN
 					TBL_USER_JOBMASTER
 				ON 
 					TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
@@ -4737,6 +4756,11 @@
 					TBL_USERMASTER.TENANT_ID = #v_TENANTID#
 				AND 
 		            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+				<isEqual property="v_ADMINORGAN" compareValue="n" prepend="AND">
+					USERTREEFLAG = 'Y'
+				AND
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
 			)+(
 				SELECT
 					COUNT(*)
@@ -4764,15 +4788,27 @@
 					TBL_USER_JOBMASTER.JOBID = #v_JOBID#
 				AND
 					TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+				<isEqual property="v_ADMINORGAN" compareValue="n" prepend="AND">
+					TBL_ADDJOBMASTER.USERTREEFLAG = 'Y'
+				AND
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
 			) AS COUNT
 			FROM
 				DUAL
 		</isEqual>
 		<isEqual property="v_TYPE" compareValue="002">
+		SELECT (
 			SELECT 
 				COUNT(*)
 			FROM 
 				TBL_USERMASTER
+			JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_DEPTMASTER.CN = TBL_USERMASTER.DEPARTMENT
+			AND
+				TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
 			JOIN 
 				TBL_USER_JOBMASTER
 			ON 
@@ -4791,6 +4827,46 @@
 				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
 			AND 
 	            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+			<isEqual property="v_ADMINORGAN" compareValue="n" prepend="AND">
+				USERTREEFLAG = 'Y'
+			AND
+				DEPTTREEFLAG = 'Y'
+			</isEqual>
+			)+(
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_USER_JOBMASTER
+				JOIN
+					TBL_ADDJOBMASTER
+				ON
+					TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.ROLEID
+				AND
+					TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+				JOIN
+					TBL_USERMASTER
+				ON
+					TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+				AND
+					TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+				JOIN
+					TBL_DEPTMASTER
+				ON
+					TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+				AND
+					TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+				WHERE
+					TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+				AND
+					TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+				<isEqual property="v_ADMINORGAN" compareValue="n" prepend="AND">
+					TBL_ADDJOBMASTER.USERTREEFLAG = 'Y'
+				AND
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+					) AS COUNT
+				FROM
+					DUAL
 		</isEqual>
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleUserListCnt2" parameterClass="Map" resultClass="int" remapResults="true">
@@ -5836,4 +5912,39 @@
     	VALUES
     		(#companyID#, #tenantID#, #menuType#)
 	</insert>
+	
+	<select id="EzOrganAdminDAO.getAddJobPorpValue" parameterClass="map" resultClass="OrganAddJobVO">
+		<![CDATA[
+			SELECT
+				A.JOBID, A.TITLE, A.TITLE2, A.ROLE, A.ROLE2, A.USERTREEFLAG, A.ORDERBY
+			FROM
+			    TBL_ADDJOBMASTER A
+			WHERE
+			    JOBID = #v_JOBID#
+			AND
+				A.CN = #v_CN#
+			AND 
+			    A.DEPTID = #v_DEPTID#
+			AND 
+			    A.TENANT_ID = #v_TENANT_ID#
+		]]>
+	</select>
+	
+	<update id="EzOrganAdminDAO.updateAddJobInfo" parameterClass="map">
+		<![CDATA[
+		UPDATE
+			TBL_ADDJOBMASTER
+		SET
+			ORDERBY = #v_ORDERBY#,
+			USERTREEFLAG = #v_USERTREEFLAG#
+		WHERE
+			CN = #v_CN#
+		  AND
+			DEPTID = #v_DEPTID#
+		  AND
+			JOBID = #v_JOBID#
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
 </sqlMap>

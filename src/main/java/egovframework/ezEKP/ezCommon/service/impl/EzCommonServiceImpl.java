@@ -3974,4 +3974,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterTblScheduleForShowtop() throws Exception {
         ezCommonDAO.alterTblScheduleForShowtop();
     }
+
+    @Override
+    public void addUserDeptHideFlag() throws Exception {
+        ezCommonDAO.addUserDeptHideFlag();
+    }
 }
