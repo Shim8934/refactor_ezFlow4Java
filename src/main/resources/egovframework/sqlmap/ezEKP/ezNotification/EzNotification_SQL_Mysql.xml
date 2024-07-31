@@ -2,7 +2,9 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezNotification">
-	<typeAlias  alias="NotificationVO" 			type="egovframework.ezEKP.ezNotification.vo.NotificationVO"/>
+	<typeAlias  alias="NotificationVO" 			  type="egovframework.ezEKP.ezNotification.vo.NotificationVO"/>
+	<typeAlias  alias="EmergencyNotiPermissionVO" type="egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO"/>
+	<typeAlias  alias="NotiRecipientVO" type="egovframework.ezEKP.ezNotification.vo.NotiRecipientVO"/>
 
 	<insert id="EzNotificationDAO.insertUserNoti" parameterClass="Map">
 	INSERT INTO 
@@ -323,5 +325,528 @@
 	AND
 		TPMC.MENU_USED = '1'
 	</select>
+	
+	<select id="EzNotificationDAO.getEmergencyPermissionList" parameterClass="Map" resultClass="EmergencyNotiPermissionVO">
+	<![CDATA[
+		(SELECT
+			T1.PERMISSION_CODE as permissionCode,
+			T1.CN as cn,
+			T2.DISPLAYNAME as displayName,
+			T2.DISPLAYNAME2 as displayName2,
+			T1.USER_TYPE as userType,
+			T1.COMPANY_ID as companyId,
+			T1.TENANT_ID as tenantId,
+			T2.DESCRIPTION as deptName,
+			T2.DESCRIPTION2 as deptName2,
+			T2.TITLE as title,
+			T2.TITLE2 as title2,
+			T1.REGDATE as regDate,
+			T1.DEPTID as deptId,
+			T1.JOBID as jobId,
+			T1.ROLEID as roleId,
+			T2.ROLENAME as roleName,
+			T2.ROLENAME2 as roleName2
+		FROM
+			TBL_NOTI_EMERGENCY_PERMISSION T1
+		INNER JOIN
+			((SELECT
+				D.CN,
+                D.COMPANY,
+                D.DESCRIPTION,
+                D.DISPLAYNAME,
+                D.TITLE,
+                D.COMPANY2,
+                D.DESCRIPTION2,
+                D.DISPLAYNAME2,
+                D.TITLE2,
+                D.DEPARTMENT as DEPTID,
+				D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+				D.TENANT_ID,
+				D.EXTENSIONATTRIBUTE7 as JOBID,
+				D.EXTENSIONATTRIBUTE8 as ROLEID,
+				D.EXTENSIONATTRIBUTE10 as ROLENAME,
+				D.EXTENSIONATTRIBUTE102 as ROLENAME2
+			FROM
+				TBL_USERMASTER D
+			WHERE
+				D.TENANT_ID = #tenantId#
+			AND
+				D.PHYSICALDELIVERYOFFICENAME = #companyId#)
+				
+			UNION ALL
+			
+			(SELECT
+				B.CN,
+                C.EXTENSIONATTRIBUTE3 as COMPANY,
+                C.DISPLAYNAME as DESCRIPTION,
+                B.DISPLAYNAME,
+                A2.TITLE,
+                C.COMPNM2 as COMPANY2,
+                C.DISPLAYNAME2 as DESCRIPTION2,
+                B.DISPLAYNAME2,
+                A2.TITLE2,
+				A2.DEPTID,
+				C.EXTENSIONATTRIBUTE2 as COMPANYID,
+				A2.TENANT_ID,
+				A2.JOBID as JOBID,
+				A2.ROLEID as ROLEID,
+				A2.ROLE as ROLENAME,
+				A2.ROLE2 as ROLENAME2
+			FROM
+				TBL_USERMASTER B
+			INNER JOIN
+				TBL_ADDJOBMASTER A2
+			ON
+				A2.CN = B.CN
+			AND
+				A2.TENANT_ID = B.TENANT_ID
+			INNER JOIN
+				TBL_DEPTMASTER C
+			ON
+				A2.DEPTID = C.CN
+			AND
+				B.TENANT_ID = C.TENANT_ID
+			AND
+				C.EXTENSIONATTRIBUTE2 = #companyId#
+			)) T2
+            ON
+				T1.CN = T2.CN
+			AND
+				T1.TENANT_ID = T2.TENANT_ID
+        	WHERE 
+        		T1.TENANT_ID = #tenantId#
+			AND
+				T1.COMPANY_ID = #companyId#
+			AND
+				T1.DEPTID = T2.DEPTID
+			AND
+				T1.JOBID = T2.JOBID
+			AND
+				T1.ROLEID = T2.ROLEID
+			)	
+		
+		UNION
+		
+		(SELECT
+			T1.PERMISSION_CODE as permissionCode,
+			T1.CN as cn,
+			DISPLAYNAME as displayName,
+			DISPLAYNAME2 as displayName2,
+			T1.USER_TYPE as userType,
+			NULL as companyId,
+			T1.TENANT_ID as tenantId,
+			NULL as deptName,
+			NULL as deptName2,
+			NULL as title,
+			NULL as title2,
+			T1.REGDATE as regDate,
+			T1.DEPTID as deptId,
+			T1.JOBID as jobId,
+			T1.ROLEID as roleId,
+			NULL as ROLENAME,
+			NULL as ROLENAME2
+		FROM
+			TBL_NOTI_EMERGENCY_PERMISSION T1
+		JOIN 
+       		TBL_DEPTMASTER T3   
+       	ON 
+       		T1.TENANT_ID = T3.TENANT_ID
+       	AND
+       		T1.CN = T3.CN
+   		WHERE
+   			T1.TENANT_ID = #tenantId#
+   		AND  
+   			T1.COMPANY_ID = #companyId#)
+   			
+   		UNION
+   		
+   		(SELECT
+   			T1.PERMISSION_CODE as permissionCode,
+			T1.CN as cn,
+			GROUP_NAME as displayName,
+			GROUP_NAME as displayName2,
+			T1.USER_TYPE as userType,
+			NULL as companyId,
+			T1.TENANT_ID as tenantId,
+			NULL as deptName,
+			NULL as deptName2,
+			NULL as title,
+			NULL as title2,
+			T1.REGDATE as regDate,
+			T1.DEPTID as deptId,
+			T1.JOBID as jobId,
+			T1.ROLEID as roleId,
+			NULL as ROLENAME,
+			NULL as ROLENAME2
+       	FROM
+       		TBL_NOTI_EMERGENCY_PERMISSION T1
+       	JOIN
+       		TBL_PERMISSIONGROUPLIST
+       	ON
+       		T1.TENANT_ID = TBL_PERMISSIONGROUPLIST.TENANT_ID
+       	AND
+       		T1.CN = TBL_PERMISSIONGROUPLIST.GROUP_ID
+		WHERE
+       		T1.TENANT_ID = #tenantId#
+       	AND
+       		TBL_PERMISSIONGROUPLIST.COMPANY_ID = #companyId#
+		AND
+       		T1.USER_TYPE = 'GROUP')
+       	
+       	UNION
+       	
+       	(SELECT
+       		T1.PERMISSION_CODE as permissionCode,
+			T1.CN as cn,
+			TBL_USER_JOBMASTER.DISPLAYNAME as displayName,
+			TBL_USER_JOBMASTER.DISPLAYNAME as displayName2,
+			T1.USER_TYPE as userType,
+			NULL as companyId,
+			T1.TENANT_ID as tenantId,
+			NULL as deptName,
+			NULL as deptName2,
+			NULL as title,
+			NULL as title2,
+			T1.REGDATE as regDate,
+			T1.DEPTID as deptId,
+			T1.JOBID as jobId,
+			T1.ROLEID as roleId,
+			NULL as ROLENAME,
+			NULL as ROLENAME2
+       	FROM
+       		TBL_NOTI_EMERGENCY_PERMISSION T1
+       	JOIN
+       		TBL_USER_JOBMASTER
+       	ON
+       		T1.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+       	AND
+       		T1.CN = TBL_USER_JOBMASTER.JOBID
+		WHERE
+       		T1.TENANT_ID = #tenantId#
+		AND
+       		TBL_USER_JOBMASTER.COMPANYID = #companyId#
+		AND
+       		(T1.USER_TYPE = 'JIKWI' OR T1.USER_TYPE = 'JIKCHEK')
+       	)
+       	
+       	ORDER BY REGDATE
+		]]>
+	</select>
+	
+	<select id="EzNotificationDAO.selectPermission" parameterClass="Map" resultClass="boolean">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_NOTI_EMERGENCY_PERMISSION
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		<isEqual property="userType" compareValue="PERSON">
+		AND	
+			CN = #cn#
+		AND
+			DEPTID = #deptId#
+		AND
+			JOBID = #jobId#
+		AND
+			ROLEID = #roleId#
+		</isEqual>
+		<isNotEqual property="userType" compareValue="PERSON">
+		AND
+			CN = #cn#
+		</isNotEqual>
+	</select>
+	
+	<insert id="EzNotificationDAO.addPermission" parameterClass="Map">
+	INSERT INTO
+		TBL_NOTI_EMERGENCY_PERMISSION (CN, DEPTID, JOBID, ROLEID, USER_TYPE, COMPANY_ID, TENANT_ID, REGDATE)
+	VALUES
+			(#cn#, #deptId#, #jobId#, #roleId#, #userType#, #companyId#, #tenantId#, #nowDate#)
+	</insert>
+	
+	<delete id="EzNotificationDAO.deletePermission" parameterClass="Map">
+	DELETE FROM
+		TBL_NOTI_EMERGENCY_PERMISSION
+	WHERE
+		PERMISSION_CODE = #permissionCode#
+	AND
+		COMPANY_ID = #companyId#
+	AND
+		TENANT_ID = #tenantId#
+	</delete>
+	
+	<select id="EzNotificationDAO.getEmergencyContent" parameterClass="Map" resultClass="String">
+	SELECT
+		EMERGENCY_CONTENT 
+	FROM
+		TBL_NOTI_EMERGENCY_COMPANY
+	WHERE
+		COMPANY_ID = #companyId#
+	AND
+		TENANT_ID = #tenantId#
+	</select>
+	
+	<insert id="EzNotificationDAO.addEmergencyCompanyContent" parameterClass="Map">
+	INSERT INTO
+		TBL_NOTI_EMERGENCY_COMPANY(COMPANY_ID, TENANT_ID, EMERGENCY_CONTENT, WRITERID, WRITEDATE)
+	VALUES (#companyId#, #tenantId#, #emergencyContent#, #writerId#, #nowDate#)
+	ON DUPLICATE KEY UPDATE
+	    COMPANY_ID = VALUES(COMPANY_ID),
+	    TENANT_ID = VALUES(TENANT_ID),
+	    EMERGENCY_CONTENT = VALUES(EMERGENCY_CONTENT),
+	    WRITERID = VALUES(WRITERID),
+	    WRITEDATE = VALUES(WRITEDATE)
+	</insert>
+	
+	<select id="EzNotificationDAO.checkEmergencyPermission" parameterClass="Map" resultClass="boolean">
+		SELECT
+			COUNT(*)
+		FROM
+		<isEqual  property="userType" compareValue="PERSON">
+		 	((SELECT
+				D.CN,
+                D.COMPANY,
+                D.DESCRIPTION,
+                D.DISPLAYNAME,
+                D.TITLE,
+                D.COMPANY2,
+                D.DESCRIPTION2,
+                D.DISPLAYNAME2,
+                D.TITLE2,
+                D.DEPARTMENT as DEPTID,
+				D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+				D.TENANT_ID,
+				D.EXTENSIONATTRIBUTE7 as JOBID,
+				D.EXTENSIONATTRIBUTE8 as ROLEID,
+				D.EXTENSIONATTRIBUTE10 as ROLENAME,
+				D.EXTENSIONATTRIBUTE102 as ROLENAME2,
+				D.TENANT_ID as TENANTID
+			FROM
+				TBL_USERMASTER D
+			WHERE
+				D.TENANT_ID = #tenantId#
+			AND
+				D.PHYSICALDELIVERYOFFICENAME = #companyId#)
+				
+			UNION ALL
+			
+			(SELECT
+				B.CN,
+                C.EXTENSIONATTRIBUTE3 as COMPANY,
+                C.DISPLAYNAME as DESCRIPTION,
+                B.DISPLAYNAME,
+                A2.TITLE,
+                C.COMPNM2 as COMPANY2,
+                C.DISPLAYNAME2 as DESCRIPTION2,
+                B.DISPLAYNAME2,
+                A2.TITLE2,
+				A2.DEPTID,
+				C.EXTENSIONATTRIBUTE2 as COMPANYID,
+				A2.TENANT_ID,
+				A2.JOBID as JOBID,
+				A2.ROLEID as ROLEID,
+				A2.ROLE as ROLENAME,
+				A2.ROLE2 as ROLENAME2,
+				A2.TENANT_ID as TENANTID
+			FROM
+				TBL_USERMASTER B
+			INNER JOIN
+				TBL_ADDJOBMASTER A2
+			ON
+				A2.CN = B.CN
+			AND
+				A2.TENANT_ID = B.TENANT_ID
+			INNER JOIN
+				TBL_DEPTMASTER C
+			ON
+				A2.DEPTID = C.CN
+			AND
+				B.TENANT_ID = C.TENANT_ID
+			AND
+				C.EXTENSIONATTRIBUTE2 = #companyId#
+			)) T1
+		INNER JOIN
+			TBL_NOTI_EMERGENCY_PERMISSION T2
+		ON
+			T1.CN = T2.CN
+		AND
+			T1.TENANTID = T2.TENANT_ID
+		AND
+			T1.DEPTID = T2.DEPTID
+		AND
+			T1.ROLEID = T2.ROLEID
+		AND
+			T1.JOBID = T2.JOBID
+		AND
+			T1.COMPANYID = T2.COMPANY_ID
+		WHERE
+			T1.CN = #userId#
+		AND
+			T1.DEPTID = #deptId#
+		AND
+			T1.JOBID = #jobId#
+		AND
+			T1.ROLEID = #roleId#
+		AND
+			T1.TENANTID = #tenantId#
+		AND
+			T1.COMPANYID = #companyId#
+		</isEqual>
+		
+		<isEqual  property="userType" compareValue="DEPT">
+			TBL_NOTI_EMERGENCY_PERMISSION
+		WHERE
+			CN = #deptId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			USER_TYPE = #userType#
+		</isEqual>
+		
+		<isEqual  property="userType" compareValue="JIKWI">
+			TBL_NOTI_EMERGENCY_PERMISSION
+		WHERE
+			CN = #jobId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			USER_TYPE = #userType#
+		</isEqual>
+		
+		<isEqual  property="userType" compareValue="JIKCHEK">
+			TBL_NOTI_EMERGENCY_PERMISSION
+		WHERE
+			CN = #roleId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			USER_TYPE = #userType#
+		</isEqual>
+	
+	</select>
+	
+	<select id="EzNotificationDAO.checkEmergencyGroupPermission" parameterClass="map" resultClass="boolean">
+	SELECT
+		COUNT(*)
+	FROM
+		(
+	SELECT
+		A.CN, A.COMPANY_ID, A.TENANT_ID
+	FROM
+		TBL_NOTI_EMERGENCY_PERMISSION A
+	INNER JOIN
+		TBL_PERMISSIONGROUPINFO B
+	ON
+		A.CN = B.GROUP_ID
+	AND
+		A.TENANT_ID = B.TENANT_ID
+	AND
+		A.COMPANY_ID = B.TENANT_ID
+	WHERE
+		A.USER_TYPE = 'GROUP'
+	AND
+		(
+			(B.MEMBER_ID = #userId#
+		AND
+			B.MEMBER_TYPE = 'USER')
+		OR
+			(
+			B.MEMBER_ID = #deptId#
+		AND	
+			B.MEMBER_TYPE = 'DEPT'
+		AND
+			B.SUB_DEPT_YN = 'N'
+			)
+		OR
+			(
+			<iterate prepend="B.MEMBER_ID IN " property="deptPathList" open="(" conjunction="," close=")">
+				<![CDATA[
+					#deptPathList[]#
+				]]>
+			</iterate>
+		AND
+			B.SUB_DEPT_YN = 'Y'
+			)
+		)
+	) C
+	</select>
+	
+	<select id="EzNotificationDAO.getNotiRecipientByDeptId" parameterClass="map" resultClass="NotiRecipientVO">
+	(SELECT
+		A.CN AS CN, B.EXTENSIONATTRIBUTE2 AS COMPANYID 
+	FROM
+		TBL_USERMASTER A
+	INNER JOIN
+		TBL_DEPTMASTER B
+	ON
+		A.DEPARTMENT = B.CN 
+	AND
+		A.TENANT_ID = B.TENANT_ID 
+	WHERE
+		A.TENANT_ID = #tenantId#
+	<isEqual  property="subDeptYn" compareValue="N">
+	AND
+		B.CN = #cn#
+	</isEqual>
+	<isEqual  property="subDeptYn" compareValue="Y">
+	AND
+		(B.DEPT_CD_PATH LIKE CONCAT(#cn#, ',%')
+	OR
+		B.DEPT_CD_PATH = #cn#
+	OR
+		B.DEPT_CD_PATH LIKE CONCAT('%,', #cn#, ',%'))
+	</isEqual>
+	)
+	UNION
+	(
+	SELECT
+		C.CN AS CN, D.EXTENSIONATTRIBUTE2 AS COMPANYID
+	FROM
+	    TBL_ADDJOBMASTER C
+	INNER JOIN
+	    TBL_DEPTMASTER D
+	ON
+		C.DEPTID = D.CN 
+	AND
+		C.TENANT_ID = D.TENANT_ID
+	WHERE
+		C.TENANT_ID = #tenantId#
+	<isEqual  property="subDeptYn" compareValue="N">
+	AND
+		D.CN = #cn#
+	</isEqual>
+	<isEqual  property="subDeptYn" compareValue="Y">
+	AND		
+		(D.DEPT_CD_PATH LIKE CONCAT(#cn#, ',%')
+	OR
+		D.DEPT_CD_PATH = #cn#
+	OR
+		D.DEPT_CD_PATH LIKE CONCAT('%,', #cn#, ',%'))	
+	</isEqual>
+	)
+	</select>
+	
+	<insert id="EzNotificationDAO.addEmergencyNotiContent" parameterClass="map">
+		INSERT INTO
+			TBL_NOTI_EMERGENCY_CONTENT (WRITERID, NOTITITLE, NOTIBODY, COMPANY_ID, TENANT_ID, WRITEDATE) 
+		VALUES
+			(#writerId#, #notiTitle#, #notiBody#, #companyId#, #tenantId#, #nowDate#)
+		<selectKey keyProperty="notiId" resultClass="int">
+			SELECT
+				IFNULL(MAX(NOTIID), 0) as notiId
+			FROM
+				TBL_NOTI_EMERGENCY_CONTENT
+			WHERE
+				TENANT_ID = #tenantId#
+		</selectKey>
+	</insert>
+	
 	
 </sqlMap>

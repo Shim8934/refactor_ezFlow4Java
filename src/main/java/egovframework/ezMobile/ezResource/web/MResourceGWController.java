@@ -1,6 +1,7 @@
 package egovframework.ezMobile.ezResource.web;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -578,7 +579,19 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	
 	    	String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + ownerId + "&type=Master&startDate=" + startDate.substring(0,10) + "&endDate=" + endDate.substring(0,10);
 	    	String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + ownerId + "&num=" + num + "&startDate=" + startDate.substring(0,19) + "&endDate=" + endDate.substring(0,19) + "&type=" + "res";
-	    	ezNotificationService.sendNoti(request, userId, info.getUserName(), resVO.getManagerIds().replaceAll(",", ";;"), "RESOURCE", "RESERVE", resVO.getBrdNm() + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting");	    	
+	    	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+	    	
+	    	String[] managerArray = resVO.getManagerIds().split(",");
+	    	
+	    	for (String manager : managerArray) {
+	    		Map<String, Object> recipientMap = new HashMap<String, Object>();
+	    		recipientMap.put("userType", "PERSON");
+	    		recipientMap.put("companyId", info.getCompanyId());
+	    		recipientMap.put("cn", manager);
+	    		notiRecipientList.add(recipientMap);
+	    	}
+	    	
+	    	ezNotificationService.sendNoti(request, userId, info.getUserName(), notiRecipientList, "RESOURCE", "RESERVE", resVO.getBrdNm() + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting");	    	
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");	
@@ -1009,7 +1022,17 @@ public class MResourceGWController extends EgovFileMngUtil {
 				notiSubType = "REJECT";
 				break;
 			}
-	    	ezNotificationService.sendNoti(request, userId, info.getUserName(), resVO.getManagerIds().replaceAll(",", ";;"), "RESOURCE", notiSubType, resVO.getBrdNm() + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "");	    	
+	    	
+	    	String[] managerList = resVO.getManagerIds().split(",");
+	    	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+	    	for (String manager : managerList) {
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", info.getCompanyId());
+				recipientMap.put("cn", manager);
+				notiRecipientList.add(recipientMap);
+	    	}
+	    	ezNotificationService.sendNoti(request, userId, info.getUserName(), notiRecipientList, "RESOURCE", notiSubType, resVO.getBrdNm() + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "");	    	
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

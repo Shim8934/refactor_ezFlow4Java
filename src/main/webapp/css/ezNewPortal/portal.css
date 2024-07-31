@@ -1947,18 +1947,18 @@ div.orbit img{border-radius: 5px;}
 .noti_bot_btn span{display:inline-block; width:135px; height:40px; line-height:38px; text-align:center; border-radius:6px; background:#EFEFEF; color:#737373; font-size:14px; margin-right:10px; cursor:pointer;}
 .noti_bot_btn span.close{margin-right:0; background:#388CE5; color:#fff;}
 
-.urgent_noti{position:absolute; top:0; left:0; width:100%; height:100%; background:#fff; z-index:1; border-radius:12px; display:none;}
+.urgent_noti{position:absolute; top:0; left:0; width:100%; height:100%; background:#fff; z-index:1; border-radius:12px;}
 .urgent_noti .noti_bot_btn{margin-top:35px;}
 .urgent_cont{margin-bottom:20px; padding:0 20px;}
 .urgent_cont h3{margin:0 0 5px 0; padding:0; font-size:14px; color:#000; line-height:27px;}
 .urgent_cont input[type="text"]{width:100%; height:40px; border:1px solid #E6E6E6; border-radius:5px; padding:0 15px; font-size:13px; line-height:40px;}
-.urgent_cont textarea{resize:none; width:100%; height:150px; border:1px solid #E6E6E6; border-radius:5px; box-sizing:border-box; font-size:13px; color:#000; padding:10px 15px; line-height:1.5;}
+.urgent_cont textarea{resize:none; width:100%; height:130px; border:1px solid #E6E6E6; border-radius:5px; box-sizing:border-box; font-size:13px; color:#000; padding:10px 15px; line-height:1.5;}
 .urgent_cont .add_btn{float:right; padding:0 10px; height:27px; line-height:25px; border:1px solid #388CE5; color:#388CE5; border-radius:4px; box-sizing:border-box; font-size:13px; cursor:pointer; font-weight:normal;}
 .urgent_cont ul{list-style:none; margin:10px 0 0; padding:0; height:78px; overflow-y:auto;}
 .urgent_cont ul li{margin:0; padding:0; height:26px; line-height:26px; font-size:13px; color:#000;}
 .urgent_cont ul li p{max-width:calc(100% - 30px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden; margin:0; display:inline-block; vertical-align:top;}
 .urgent_cont ul li .del_btn{float:right; width:12px; height:12px; margin:7px 5px 0 0; cursor:pointer; background:url(../../images/ezNewPortal/del_icon.png) no-repeat center;}
-
+.noti_company_content{margin-bottom: 10px; padding: 0 20px;color:#ff0014;font-size:14px;}
 
 
 /* 프로필 */

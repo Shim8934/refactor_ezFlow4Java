@@ -1915,7 +1915,15 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			
 			if (reStatus.equalsIgnoreCase("OK")) {
 	        	String notiSubType = "OPEN_ADMIT";
-				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), applicantId, "WEBFOLDER", notiSubType, folderName, "", "", "", "", "", "");
+	        	
+	        	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+	        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+	        	recipientMap.put("userType", "PERSON");
+	        	recipientMap.put("companyId", userInfo.getCompanyID());
+	        	recipientMap.put("cn", applicantId);
+	        	notiRecipientList.add(recipientMap);
+	        	
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "WEBFOLDER", notiSubType, folderName, "", "", "", "", "", "");
 				logger.debug("webfolder " +  notiSubType + " noti status : " + notiStatus);
 				
 				if (!ezPersonalService.hasNotiDiableItem(applicantId, NotiType.fromString("WEBFOLDER_OPEN_ADMIT"), NotiPlatform.MAIL, tenantId)) {
@@ -1971,7 +1979,15 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			
 			if (reStatus.equalsIgnoreCase("OK")) {
 				String notiSubType = "OPEN_REJECT";
-				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), applicantId, "WEBFOLDER", notiSubType, folderName, "", "", "", "", "", "");
+				
+				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", userInfo.getCompanyID());
+				recipientMap.put("cn", applicantId);
+				notiRecipientList.add(recipientMap);
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "WEBFOLDER", notiSubType, folderName, "", "", "", "", "", "");
 				logger.debug("webfolder " +  notiSubType + " noti status : " + notiStatus);
 				
 				

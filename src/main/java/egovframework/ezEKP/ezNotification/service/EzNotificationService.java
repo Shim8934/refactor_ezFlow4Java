@@ -1,9 +1,13 @@
 package egovframework.ezEKP.ezNotification.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO;
+import egovframework.ezEKP.ezNotification.vo.NotiRecipientVO;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
 
 public interface EzNotificationService {
@@ -26,10 +30,10 @@ public interface EzNotificationService {
 	public List<NotificationVO> getSearchNotiList(String userId, Integer lastNotiSeq, int rowCount, String isRead, String notiFilter, String keyWord, int tenantId, String companyId, String offSet) throws Exception;
 	
 	// 2024-03-28 한태훈 - 통합알림 > 알림 전송
-	public String sendNoti(HttpServletRequest request, String senderId, String senderName, String recipientIdList, String mainType, String subType, String notiContent, String viewType, String viewWidth, String viewHeight, String linkUrl, String linkUrlMobile, String etcData) throws Exception;
+	public String sendNoti(HttpServletRequest request, String senderId, String senderName, List<Map<String, Object>> recipient, String mainType, String subType, String notiContent, String viewType, String viewWidth, String viewHeight, String linkUrl, String linkUrlMobile, String etcData) throws Exception;
 	
-	// 2024-05-13 한태훈 - 통합알림 > 알림 전송 (request 사용 못하는 경우 db에 직접 삽입 ex) 스케줄러 이용시)
-	public void sendNoti(String senderId, String senderName, String recipientIdList, String mainType, String subType, String notiContent, String viewType, String viewWidth, String viewHeight, String linkUrl, String linkUrlMobile, String etcData, int tenantId, String companyId) throws Exception;
+	// 2024-05-13 한태훈 - 통합알림 > 알림 전송 (request 사용 못하는 경우 스케줄러 이용시)
+	public String sendNoti(String senderId, String senderName, List<Map<String, Object>> recipient, String mainType, String subType, String notiContent, String viewType, String viewWidth, String viewHeight, String linkUrl, String linkUrlMobile, String etcData) throws Exception;
 	
 	// 2024-03-28 한태훈 - 통합알림 > 모바일 리스트 가져오기
 	public List<NotificationVO> getSearchNotiListForMobile(String userId, int lastNotiSeq, int rowCount, String isRead, String notiFilter, String keyWord, int tenantId, String companyId, String offSet) throws Exception;
@@ -44,5 +48,21 @@ public interface EzNotificationService {
 	public int getNewNotiCnt(String userId, String pollSTime, String pollETime, String companyId, int tenantId) throws Exception;
 
 	public boolean isJavaApprovalUse(String companyId, int tenantId) throws Exception;
+
+	public String getEmergencyPermissionList(String useLang, String companyId, int tenantId) throws Exception;
+
+	public void addPermission(List<EmergencyNotiPermissionVO> permissionList, String companyId, int tenantId) throws Exception;
+
+	public void deletePermission(List<EmergencyNotiPermissionVO> permissionList, String companyId, int tenantId) throws Exception;
+
+	public String getEmergencyContent(String companyId, int tenantId) throws Exception;
+
+	public void addEmergencyCompanyContent(String userId, String emergencyContent, String companyId, int tenantId) throws Exception;
+
+	public String checkEmergencyPermission(String rollInfo, String userId, String deptId, String deptPath, String jobId, String roleId, String companyId, int tenantId) throws Exception;
+
+	public Set<NotiRecipientVO> getNotiRecipientList(List<Map<String, Object>> recipient, int tenantId) throws Exception;
+
+	public int addEmergencyNotiContent(String userId, String notiTitle, String notiBody, String companyId, int tenantId) throws Exception;
 
 }

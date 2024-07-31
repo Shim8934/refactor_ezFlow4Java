@@ -9,6 +9,7 @@ var mainType = {
 	community : "Community",
 	webfolder : "Web folder",
 	journal : "Work Journal",
+	noti : "Notice",
 	etc : "Etc"
 }
 
@@ -71,6 +72,9 @@ var subType = {
 	journal : {
 		comment : "New comment",
 		recv : "Received Journal"
+	},
+	noti : {
+		emergency : "Emergency Notice"
 	}
 }
 

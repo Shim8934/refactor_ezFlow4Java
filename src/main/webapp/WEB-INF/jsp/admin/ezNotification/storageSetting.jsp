@@ -72,7 +72,7 @@
 			
 			$.ajax({
 				type: "POST",
-				url: "/admin/ezSystem/updateStoragePeriod.do",
+				url: "/admin/ezNotification/updateStoragePeriod.do",
 				data:{
 					storagePeriod : storagePeriod			
 				},

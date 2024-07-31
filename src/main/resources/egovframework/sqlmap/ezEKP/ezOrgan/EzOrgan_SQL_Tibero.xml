@@ -85,6 +85,7 @@
 		<result property="role1" 							    column="role1" 						    columnIndex="46"  nullValue=""/>
 		<result property="role2" 							    column="role2" 						    columnIndex="47"  nullValue=""/>
 		<result property="physicalDeliveryOfficeName1" 			column="physicalDeliveryOfficeName1" 	columnIndex="44"/>
+		<result property="companyId" 			                column="companyId" 	                    columnIndex="48"/>
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
@@ -1225,7 +1226,8 @@
 	            'user' TYPE  ,
 	            SIPURI ,
 	            POSITIONCD ,
-	            'user' USERTYPE
+	            'user' USERTYPE,
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1341,7 +1343,8 @@
              'user' TYPE  ,
              SIPURI ,
              B.POSITIONCD ,
-	         'addJob' USERTYPE
+	         'addJob' USERTYPE,
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
@@ -1463,7 +1466,8 @@
 	            SIPURI ,
 	            POSITIONCD ,
 	            PHYSICALDELIVERYOFFICENAME AS PHYSICALDELIVERYOFFICENAME1 ,
-	            'user' USERTYPE
+	            'user' USERTYPE,
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1566,7 +1570,7 @@
              CAST(B.PROXY AS NVARCHAR2(200)) AS EXTENSIONATTRIBUTE5 ,
              A.EXTENSIONATTRIBUTE6 ,
              B.JOBID as EXTENSIONATTRIBUTE7 ,
-             A.EXTENSIONATTRIBUTE8 ,
+             B.ROLEID as EXTENSIONATTRIBUTE8 ,
              A.EXTENSIONATTRIBUTE9 ,
              CASE
              	#v_LANGDATA#
@@ -1588,7 +1592,8 @@
              'user' TYPE  ,
              SIPURI ,
              B.POSITIONCD ,
-	         'addJob' USERTYPE
+	         'addJob' USERTYPE,
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
