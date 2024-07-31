@@ -37,6 +37,12 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -154,6 +160,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+
+	@Resource(name = "EzScheduleService")
+	private EzScheduleService ezScheduleService;
 	
 	/**
 	 * 모바일 G/W 포탈 [GET] 메인 리스트 (일반/폴더/포탈/타임라인)
@@ -1400,6 +1409,174 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		logger.debug("MOBILE G/W getReceivedMainPortlet ended.");
+		return result;
+	}
+
+	// 모바일 일정 포틀릿 조회  
+	@RequestMapping(value = "/mobile/ezportal/portlets/schedulePortlet", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getSchedulePortlet(HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W getSchedulePortlet started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+
+			String offset = info.getOffSet();
+			String offSetMin = commonUtil.getMinuteUTC(offset);
+
+			String startDate = (request.getParameter("STARTDATE") == null || request.getParameter("STARTDATE").equals("")) ? request.getParameter("selectDate") : request.getParameter("STARTDATE");
+			String endDate = (request.getParameter("ENDDATE") == null || request.getParameter("ENDDATE").equals("")) ? request.getParameter("selectDate") : request.getParameter("ENDDATE");
+			String idList = (request.getParameter("IDLIST") == null || request.getParameter("IDLIST").equals("")) ? "T" : request.getParameter("IDLIST");
+
+			String indiList = "";
+			String pidList = "";
+			String pidListSub = "";
+			String indiListSub = "";
+
+			if(startDate != null && !startDate.equals("")) {
+				String[] sDate = startDate.split("-");
+				String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+				String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+
+				startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
+			}
+
+			if(endDate != null && !endDate.equals("")) {
+				String[] eDate = endDate.split("-");
+				String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+				String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+
+				endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+			}
+
+			String utcStartTime = commonUtil.getDateStringInUTC(startDate, offset, true);
+			String utcEndTime = commonUtil.getDateStringInUTC(endDate, offset, true);
+
+			String lang = info.getPrimary();
+			int tenantId = info.getTenantId();
+			String companyId = request.getParameter("companyId");
+			String deptId = info.getDeptId();
+			//2020-02-24 김정언
+			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
+
+			List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userId, lang, tenantId ,companyId);
+			List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userId, lang, tenantId ,companyId);
+			List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userId, lang, tenantId, companyId);
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId() ,companyId);
+
+			if (idList == null) {
+				idList = "";
+			}
+
+			//2018-06-08 구해안 T인 경우를 제외하고 나머지는 id값 그대로 가공해서 넘기기
+			if (idList.equals("T") || idList.equals("")) {
+				indiList = "'" + userId + "'";
+
+				if(tList != null && tList.size()>0){
+					for (int i = 0; i < tList.size(); i++) {
+						if (i == 0) {
+							indiListSub += ",";
+						}
+						ScheduleSecretaryVO data = tList.get(i);
+						indiListSub += "\'" + data.getSecId()+ "\',";
+					}
+				}
+
+				pidList = "'" + deptId + "'," + "'" + companyId + "'";
+
+
+				if(dList != null && dList.size()>0){
+					for (int i = 0; i < dList.size(); i++) {
+						if(tList == null || tList.size()<=0){
+							if (i == 0) {
+								pidListSub += ",";
+							}
+						}
+						ScheduleDeptVO data = dList.get(i);
+						pidListSub += "\'" + data.getDeptId()+ "\',";
+					}
+				}
+
+				if(cList != null && cList.size()>0 ){
+					for (int i = 0; i < cList.size(); i++) {
+						if(dList == null || dList.size()<=0){
+							if (i == 0) {
+								pidListSub += ",";
+							}
+						}
+						ScheduleCumulerVO data = cList.get(i);
+						pidListSub += "\'" + data.getDeptId()+ "\',";
+					}
+				}
+
+				for (int i = 0; i < gList.size(); i++) {
+					if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+						if (i == 0) {
+							pidListSub += ",";
+						}
+					}
+					ScheduleGroupListVO data = gList.get(i);
+					pidListSub += "\'" + data.getGroupId() + "\',";
+						
+						/*if (i != gList.size()-1) {
+							pidListSub += ",";
+						}*/
+				}
+
+				if(indiListSub == null || indiListSub.equals("")){
+					indiListSub = ",\'\'";
+				}else{
+					indiListSub = indiListSub.substring(0, indiListSub.length()-1);
+				}
+
+				indiList += indiListSub;
+
+				if(pidListSub == null || pidListSub.equals("")){
+					pidListSub = ",\'\'";
+				}else{
+					pidListSub = pidListSub.substring(0, pidListSub.length()-1);
+				}
+
+				if (pidList != null && pidListSub != null && pidListSub.substring(0,1) != ",") {
+					pidList += ",\'\'";
+				}
+
+				pidList += pidListSub;
+
+			} else if(idList.equals("chkAllFalse")) {
+				indiList = "";
+				pidList = "\'\'";
+			} else if (idList.equals("P")) {
+				indiList = "'" + userId + "'";
+				pidList = "";
+			}else {
+				pidList = idList;
+			}
+
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId, deptId, useAnnualScheduleYN);
+
+			// 구글연동 일정 가져오기(포탈 일정포틀릿)
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", userInfo.getTenantId());
+			if(useGoogleCalendar.equals("YES")) {
+				List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());
+				sList.addAll(googleList);
+			}
+
+			Collections.sort(sList, new EzScheduleCompareUtil());
+
+			logger.debug("sList : " + sList.toString());
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", sList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		logger.debug("MOBILE G/W getSchedulePortlet ended.");
 		return result;
 	}
 	
