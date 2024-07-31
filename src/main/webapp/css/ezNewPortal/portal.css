@@ -1783,7 +1783,7 @@ div.orbit img{border-radius: 5px;}
 #addr{height: 12px !important;}
 /* .dataHave{left: 36%;} */
 #theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{display: block; border: none; margin-left:1px; top:2px; left:0; }
-.full_menu_toggleUL > li{height: 118px;}
+.full_menu_toggleUL > li{height: 105px;}
 
 /* 20231030 디자인 css 추가 */
 .bestEmployee .emDL .nodata dd{text-align:left}
@@ -1984,7 +1984,7 @@ div.orbit img{border-radius: 5px;}
 .lnb ul{list-style:none; margin:0; box-sizing:border-box;}
 .lnb_list{padding:40px 0 0; width:81px; height:100%; background:#fff; border-right:1px solid #ddd; overflow:auto;}
 .lnb ul li{cursor:pointer; text-align:center; margin-bottom:22px;}
-.lnb ul li:before{content:""; display:block; width:40px; height:40px; margin:0 auto; background-color:#F2F3F5; border-radius:8px; background-position:center; background-repeat:no-repeat;}
+.lnb ul li:before{content:""; display:block; width:40px; height:40px; margin:0 auto; background-color:#F2F3F5; border-radius:8px; background-position:center; background-repeat:no-repeat; box-sizing:border-box;}
 .lnb ul.menu_list_all.active li:hover:before{background-color:#F2F3F5 !important; box-shadow:none !important;}
 .lnb ul li.icon_nav_mail_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_mail_leftmenu:hover:before {background-image:url(/images/lnb/lnb_mail.svg); background-size:22px 22px;}
 .lnb ul li.icon_nav_approval_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_approval_leftmenu:hover:before {background-image:url(/images/lnb/lnb_approval.svg); background-size:22px 22px;}
@@ -2030,6 +2030,16 @@ div.orbit img{border-radius: 5px;}
 .lnb ul li.icon_nav_work_leftmenu:hover:before, .lnb ul li.on.icon_nav_work_leftmenu:before{background-image:url(/images/lnb/lnb_work_on.svg); background-size:22px 22px;}
 .lnb ul li.layer:before{background-color:rgba(0,0,0,0.1);}
 
+.lnb ul li.icon_nav_menuset_leftmenu:before{background-image:url(../../images/lnb/lnb_menuset.svg); border:1px solid #CECECE; background-color:#fff !important; background-size:18px 18px;}
+.lnb ul li.icon_nav_menuset_leftmenu:hover:before{box-shadow:none; background-image:url(../../images/lnb/lnb_menuset_on.svg); border-color:#BFCEEA; background-color:#E3EEF9;}
+.lnb ul li.icon_nav_menuset_leftmenu span{color:#9FA4AE !important;}
+.lnb ul li.icon_nav_menuset_leftmenu:hover span{color:#000 !important;}
+
+.lnb ul.active li.icon_nav_menuset_leftmenu{background:url(../../images/lnb/lnb_menuset.svg) no-repeat center #F2F2F2; cursor:default; border:none;}
+.lnb ul.active li.icon_nav_menuset_leftmenu:before{display:none;}
+.lnb ul.active li.icon_nav_menuset_leftmenu span{display:none;}
+
+
 .lnb ul li span{display:block; padding:0 5px; font-size:14px; font-weight:500; color:#000; margin-top:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; word-wrap:break-word; text-overflow:ellipsis; overflow:hidden}
 .lnb_menu_all{width:456px; height:100%; position:absolute; left:-456px; top:0; background:#fff; overflow:auto;}
 .lnb_menu_setting{height:48px; line-height:48px; background:#F2F3F5;}
@@ -2043,14 +2053,16 @@ div.orbit img{border-radius: 5px;}
 
 
 .lnb_menu_all ul{display:flex; flex-wrap:wrap; padding:7px 30px 0;}
-.lnb_menu_all ul li{width:20%; margin:0; padding:18px 0 20px; box-sizing:border-box;}
-.lnb_menu_all ul li:nth-child(-n+5){border-bottom:1px solid #DEDEDE;}
+.lnb_menu_all ul li{width:25%; margin:0; padding:18px 0 20px; box-sizing:border-box;}
+.lnb_menu_all ul li:nth-child(-n+8){border-bottom:1px solid #DEDEDE;}
+.lnb_menu_all ul li:nth-child(-n+4){border-bottom:none;}
 
 .lnb_menu_all ul.active{padding-top:20px;}
 .lnb_menu_all ul.active li{border:1px dashed #DCDCDC; border-left:none; border-top:none;}
-.lnb_menu_all ul.active li:nth-child(5n-4){border-left:1px dashed #DCDCDC;}
-.lnb_menu_all ul.active li:nth-child(-n+5){border:1px dashed #59ACFF; background:#E3EEF9; border-left:none;}
-.lnb_menu_all ul.active li:nth-child(1) {border: 1px dashed #59ACFF;}
+.lnb_menu_all ul.active li:nth-child(4n-3){border-left:1px dashed #DCDCDC;}
+.lnb_menu_all ul.active li:nth-child(-n+7){border:1px dashed #59ACFF; background:#E3EEF9; border-left:none; border-top:none;}
+.lnb_menu_all ul.active li:nth-child(-n+4){border-top: 1px dashed #59ACFF;}
+.lnb_menu_all ul.active li:nth-child(1), .lnb_menu_all ul.active li:nth-child(5){border-left: 1px dashed #59ACFF;}
 
 
 .input_radio{display:inline-block;}
