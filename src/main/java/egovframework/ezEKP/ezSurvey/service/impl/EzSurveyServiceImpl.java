@@ -663,23 +663,27 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			
 			sendMailList.addAll(userList);
 			sendMailList.addAll(subDeptList);
-			String receipientIds = "";
-			String separator = ";;";
-			for (int i = 0; i < userList.size(); i++) {
-				SurveyParticipantVO userinfo = userList.get(i);
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+			Set<String> sendNotiSet = new HashSet<String> ();
+			for (int i = 0; i < sendMailList.size(); i++) {
+				SurveyParticipantVO userinfo = sendMailList.get(i);
 				String userAccount = userinfo.getEmail();
 				String receiveId = userAccount.split("@")[0];
-				receipientIds += receiveId;
-				if (i != userList.size() - 1) {
-					receipientIds += separator;
-				}
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", userInfo.getCompanyID());
+				recipientMap.put("cn", receiveId);
 				
+				if (!sendNotiSet.contains(receiveId)) {
+					notiRecipientList.add(recipientMap);
+					sendNotiSet.add(receiveId);
+				}
 			}
 			
 			if (mode == "NEW") {
 				String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId;
 		    	String linkUrlMobile = "";
-		    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), receipientIds, "SURVEY", mode, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+		    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "SURVEY", mode, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 			
 			//Send notice mail

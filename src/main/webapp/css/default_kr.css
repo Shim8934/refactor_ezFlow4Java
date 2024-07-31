@@ -4005,3 +4005,5 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 #fixRight {width:calc(40% - 10px); margin:5px}
 
 .resetBtn {line-height: 0px;}
+
+.txt_point{color:#017BEC;}

@@ -34,6 +34,9 @@ nav .navUL li.on{color:#A20000;}
 .noti_header .noti_btn_list li:hover{background-color:#FBF6F6;}
 .noti_btn span:first-child{color:#A20000;}
 .noti_btn span:hover{color:#A20000; text-decoration:underline;}
+.noti_bot_btn span.close{background:#A20000;}
+.urgent_cont .add_btn{border-color:#D8A6A6; color:#CD3838;}
+.urgent_cont .add_btn:hover{border-color:#A20000; background:#FBF6F6; color:#CD3838;}
 
 .noti_list li i.icon_mail{background-image:url(/images/ezNewPortal/skin/red/lnb_mail.svg);}
 .noti_list li i.icon_approval{background-image:url(/images/ezNewPortal/skin/red/lnb_approval.svg);}
@@ -77,13 +80,19 @@ nav .navUL li.on{color:#A20000;}
 .lnb ul li.icon_nav_car_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_car_leftmenu:hover:before{background-image:url(/images/lnb/lnb_car_on.svg);}
 .lnb ul li.icon_nav_work_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_work_leftmenu:hover:before{background-image:url(/images/lnb/lnb_work_on.svg);}
 
+.lnb ul li.icon_nav_menuset_leftmenu:hover:before{border-color:#C84949; background-image:url(../../images/ezNewPortal/skin/red/lnb_menuset_on.svg);}
+
 .lnb ul li:hover:before, .lnb ul li.on:before{background-color:#CA6E6E; box-shadow:2px 3px 5px rgba(0,0,0,0.33);}
 .lnb ul li span{color:#fff;}
 .lnb ul:not(.lnb_list) li:before{background-color:#A20000;}
 .lnb ul:not(.lnb_list) li.on:before{background-color:#CA6E6E;}
 .lnb ul:not(.lnb_list) li:hover:before, .lnb ul:not(.lnb_list) li.on:before{box-shadow:none; background-color:#CA6E6E;}
 
-.lnb_menu_all ul.active li:nth-child(-n+5){background-color:#F0F0F0; border-color:#464646;}
+.lnb_menu_all ul.active li:nth-child(-n+7){background-color:#F1E8E8; border-color:#B75656;}
+.lnb_menu_all ul.active li:nth-child(-n+7):before{background-color:#C84949;}
+.lnb_menu_all ul.active li:nth-child(-n+7):hover:before{background-color:#8A0000;}
+.lnb_menu_all ul.active li:nth-child(-n+4){border-top: 1px dashed #B75656;}
+.lnb_menu_all ul.active li:nth-child(1), .lnb_menu_all ul.active li:nth-child(5){border-left: 1px dashed #B75656;}
 .lnb ul:not(.lnb_list) li span{color:#000;}
 
 .lnb_menu_setting{background:#A20000;}
@@ -213,6 +222,9 @@ nav .navUL li.on{color:#A20000;}
 /* 서브 */
 .btn_writeBox .btn_write01:hover{border-color:#A20000; background:#FBF6F6; color:#A20000;}
 .btn_writeBox .btn_write02:hover{border-color:#A20000; background:#FBF6F6; color:#A20000;}
+.btn_writeBox_work .btn_write01{border-color:#A20000; color:#A20000;}
+.btn_writeBox_work .btn_write01:hover{background-color:#FBF6F6; border-color:#A71111; color:#A20000;}
+.btn_writeBox_work .btn_write02:hover{background-color:#FBF6F6; border-color:#A71111; color:#A20000;}
 
 .pagenavi span:hover{background-color:#FBF6F6; border-color:#A20000; color:#A20000;}
 .pagenavi span.on{border-color:#A20000; color:#A20000;}
@@ -231,6 +243,7 @@ nav .navUL li.on{color:#A20000;}
 .lnbUL li.on{text-decoration-color:#A20000 !important;}
 .lnbUL li.on .list_text{color:#A20000;}
 .lnbUL li.on .list_text span{color:#A20000;}
+.lnbUL li .list_text.node_selected span{color:#A20000;}
 
 .popup{background-image:url(../../images/ezNewPortal/skin/red/popup_bg.png);}
 .popupJQLayer{background-image:url(../../images/ezNewPortal/skin/red/popup_bg.png);}
@@ -255,12 +268,14 @@ nav .navUL li.on{color:#A20000;}
 .icon16{background-image:url(../../images/ezNewPortal/skin/red/icon_16.png) !important;}
 
 .portlet_tabnew01_top p span{border-color:#D0ABAB; color:#A20000; background-image:url(../../images/ezNewPortal/skin/red/tabnew_bg.png); background-color:#fff;}
+.portlet_tabnew01_top p span.tabon{border-color:#A20000; color:#A20000; background-color:#FBF6F6; background-image:url(../../images/ezNewPortal/skin/red/tabnew_bg.png);}
 .portlet_tabnew01_top p span.tabover{border-color:#A20000; color:#A20000; background-color:#FBF6F6; background-image:url(../../images/ezNewPortal/skin/red/tabnew_bg.png);}
 
 .receiver_tltype01 span{color:#0A0A0A;}
 
 .mainmenuTab .mainmenuTabUL li.on span{border-color:#D8A6A6; color:#A20000;}
 .mainmenuTab .mainmenuTabUL li:hover span{border-color:#A71111; color:#A20000; background:#FBF6F6;}
+.mainmenuTab .mainmenuTabUL li.on span:hover{border-color:#A71111; color:#A20000; background:#FBF6F6;}
 
 .contents_listCategory li span.bold{color:#A20000;}
 .contents_searchCategory dl dd{background:#A20000;}
@@ -279,3 +294,5 @@ nav .navUL li.on{color:#A20000;}
 .survey_atchBtn li:hover{border-color:#A20000; background-color:#FBF6F6;}
 .imgbtnSurvey_save{border-color:#D0ABAB;}
 .imgbtnSurvey_save span{color:#A20000;}
+
+.txt_color{color:#A20000;}

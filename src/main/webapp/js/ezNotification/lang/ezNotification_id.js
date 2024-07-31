@@ -9,6 +9,7 @@ var mainType = {
 	community : "masyarakat",
 	webfolder : "folder web",
 	journal : "Jurnal Kerja",
+	noti : "Pemberitahuan",
 	etc : "dll."
 }
 
@@ -71,6 +72,9 @@ var subType = {
 	journal : {
 		comment : "Tulis komentar",
 		recv : "Pemberitahuan Penerimaan"
+	},
+	noti : {
+		emergency : "Pemberitahuan Darurat"
 	}
 }
 

@@ -20,21 +20,13 @@
         <div class="noti_header">
             <h3><spring:message code="ezNotification.hth01"/></h3>
 			<ul class="noti_btn_list">
-				<li class="noti_refresh" title="<spring:message code="ezNotification.hth02"/>" onclick="notiRefresh_onclick()"></li>	
-				<li class="noti_write"></li>
+				<li class="noti_refresh" title="<spring:message code="ezNotification.hth02"/>" onclick="notiRefresh_onclick()"></li>
+				<li id="emergency_write_btn" onclick="moveToEmergencyNoti()" class="noti_write"></li>
 				<li class="noti_filter" id="notFillterPopBtn" onclick="popUpNotiFillter();"></li>
 			</ul>
             
         </div>
 
-        <div class="noti_search" style="display:none;">
-            <div class="noti_search_input">
-                <input type="text" id="searchNotiContent" onkeypress="searchInput()" placeholder="<spring:message code='ezNotification.hth30'/>" onselectstart="event.cancelBubble=true;event.returnValue=true" maxlength="100" autocomplete="off">
-                <span onclick="searchOnClick()"></span>
-            </div>
-            <span id="notFillterPopBtn" class="noti_filter" onclick="popUpNotiFillter()"></span>
-        </div>
-        
         <div class="filter_pop" id="notFillterPop" onclick="stopPropa()" style="display: none;">
             <div class="check_list">
                 <h2><spring:message code="ezNotification.hth03"/></h2>
@@ -43,13 +35,13 @@
                     <ul class="check_ul">
                         <li>
                             <div class="input_check">
-                                <input type="checkbox" id="filter_read" onchange="searchNoti('search')" type="checkbox" name="readfilter" maintype="n" value="read" checked="checked">
+                                <input type="checkbox" id="filter_read" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="read" checked="checked">
                                 <label for="filter_read"><spring:message code="ezNotification.hth05"/></label>
                             </div>
                         </li>
                         <li>
                             <div class="input_check">
-                                <input type="checkbox" id="filter_unread" onchange="searchNoti('search')" type="checkbox" name="readfilter" maintype="n" value="unread" checked="checked">
+                                <input type="checkbox" id="filter_unread" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="unread" checked="checked">
                                 <label for="filter_unread"><spring:message code="ezNotification.hth06"/></label>
                             </div>
                         </li>
@@ -70,7 +62,7 @@
                 <span onclick="popUpNotiFillter()" class="close"><spring:message code="main.t3"/></span>
             </div>
         </div>
-        
+
         <div class="noti_info">
             <div class="noti_view">
                 <span class="on"><spring:message code="ezNotification.hth08"/><em id="notiTotalCount"></em></span>
@@ -97,14 +89,16 @@
 <script>
 	var userDeptId = "<c:out value = '${deptID}'/>"
 	var userId = "<c:out value = '${userID}'/>"
-	var notiListCnt = 5;
+	var notiListCnt = 50;
 	var searchTitle = "";
 	var proxyInfo = "<c:out value = '${proxyInfo}'/>";
 	var lastNotiSeq = "";
 	var notiListFlag = true;
 	var isNotiLoading = false; 
 	var notiDateEndPoint = "";
+	var emergencyNotiPermission = "";
 	window.onload = function () {
+		checkEmergencyPermission();
 		notiListFlag = true;
 		document.getElementById('notiwrap').addEventListener("scroll", notiScroll);
 		makeMainTypeList();
@@ -188,7 +182,7 @@
                     str += '</dd></dl>'
 					str += '<div class=\"list_info\">'
 					str += '<span class=\"read_point\"></span>'
-					str += '<p class=\"title ellipsis2\">'
+					str += '<p class=\"title ellipsis2\" title=\"' + ConvertCharToEntityReference(noti.notiContent) +'">'
 					if (noti.mainType.toLowerCase() != "etc") {
 					 	str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : '';
 					}
@@ -499,18 +493,6 @@
 			}
 		});
 		
-	}
-	
-	function searchOnClick() {
-		searchTitle = MakeXMLString(document.getElementById('searchNotiContent').value.trim());
-		searchNoti('search');
-	}
-	
-	function searchInput() {
-		if (event.keyCode == 13) {
-			searchTitle = MakeXMLString(document.getElementById('searchNotiContent').value.trim());
-			searchNoti('search');
-		}
 	}
 	
 	function openLink() {
@@ -1114,6 +1096,33 @@
         openLocation = openLocation + "?docID=" + encodeURI(docID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&containerState=" + encodeURI(containerState) + "&orgCompanyID=" + encodeURI(orgCompanyID);
         
         return openLocation;
+	}
+	
+	function checkEmergencyPermission() {
+		$.ajax({
+			type: "GET",
+			url: "/ezNotification/checkEmergencyPermission.do",
+			dataType:"text",
+			async: false,
+			success: function(result) {
+				if (result != null && result == "emergencyAdmin") {
+					document.getElementById('emergency_write_btn').style.display = "block";
+				} else {
+					document.getElementById('emergency_write_btn').style.display = "none";
+				}
+				
+				emergencyNotiPermission = result;
+			},
+			error: function (xhr, status, e) {
+				console.log(e);
+				return;
+			}
+		});
+	}
+	
+	function moveToEmergencyNoti() {
+		var notiFrame = window.parent.frames["iframeNoti"];
+		notiFrame.setAttribute("src", "/ezNotification/emergencyNoti.do?emergencyNotiPermission=" + emergencyNotiPermission);
 	}
 	
 </script>

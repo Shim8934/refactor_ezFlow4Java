@@ -7550,7 +7550,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	
         	String linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + clubVO.getC_ClubNo();
         	String linkUrlMobile = "";
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), clubMasterID, "COMMUNITY", notiSubType, clubVO.getC_ClubName(), "popup", "1300", "900", linkUrl, linkUrlMobile, "notChkSetting");
+        	
+        	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+        	recipientMap.put("userType", "PERSON");
+        	recipientMap.put("companyId", userInfo.getCompanyID());
+        	recipientMap.put("cn", clubMasterID);
+        	notiRecipientList.add(recipientMap);
+        	
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "COMMUNITY", notiSubType, clubVO.getC_ClubName(), "popup", "1300", "900", linkUrl, linkUrlMobile, "notChkSetting");
 			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
         }
 		
@@ -7589,7 +7597,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	String notiSubType = "WITHDRAWAL";
         	String linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + code;
         	String linkUrlMobile = "";
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), vo.getC_SysopID(), "COMMUNITY", notiSubType, vo.getC_ClubName(), "popup", "1300", "900", linkUrl, linkUrlMobile, "notChkSetting");
+        	
+        	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+        	recipientMap.put("userType", "PERSON");
+        	recipientMap.put("companyId", userInfo.getCompanyID());
+        	recipientMap.put("cn", vo.getC_SysopID());
+        	notiRecipientList.add(recipientMap);
+        	
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "COMMUNITY", notiSubType, vo.getC_ClubName(), "popup", "1300", "900", linkUrl, linkUrlMobile, "notChkSetting");
 			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
         }
         
@@ -7640,7 +7656,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	
         	String linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + code;
         	String linkUrlMobile = "";
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), cID, "COMMUNITY", notiSubType, cvo.getC_ClubName(), "popup", "1300", "900", linkUrl, linkUrlMobile, "");
+        	
+        	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+        	recipientMap.put("userType", "PERSON");
+        	recipientMap.put("companyId", userInfo.getCompanyID());
+        	recipientMap.put("cn", cID);
+        	notiRecipientList.add(recipientMap);
+        	
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "COMMUNITY", notiSubType, cvo.getC_ClubName(), "popup", "1300", "900", linkUrl, linkUrlMobile, "");
 			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
         }
         
@@ -7866,7 +7891,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
     		}
     		
         	String notiSubType = "REPLY";
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), uvo.getCn() , "COMMUNITY", notiSubType, boardInfo.getBoardName() + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
+        	
+        	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+        	recipientMap.put("userType", "PERSON");
+        	recipientMap.put("companyId", userInfo.getCompanyID());
+        	recipientMap.put("cn", uvo.getCn());
+        	notiRecipientList.add(recipientMap);
+        	
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList , "COMMUNITY", notiSubType, boardInfo.getBoardName() + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
 			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
 			
 		}
