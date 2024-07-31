@@ -5,6 +5,7 @@
 	<typeAlias  alias="NotificationVO" 			  type="egovframework.ezEKP.ezNotification.vo.NotificationVO"/>
 	<typeAlias  alias="EmergencyNotiPermissionVO" type="egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO"/>
 	<typeAlias  alias="NotiRecipientVO" type="egovframework.ezEKP.ezNotification.vo.NotiRecipientVO"/>
+	<typeAlias  alias="EmergencyNotiItemVO" type="egovframework.ezEKP.ezNotification.vo.EmergencyNotiItemVO"/>
 
 	<insert id="EzNotificationDAO.insertUserNoti" parameterClass="Map">
 	INSERT INTO 
@@ -833,20 +834,52 @@
 	)
 	</select>
 	
-	<insert id="EzNotificationDAO.addEmergencyNotiContent" parameterClass="map">
+	<insert id="EzNotificationDAO.addEmergencyNotiItem" parameterClass="map">
 		INSERT INTO
-			TBL_NOTI_EMERGENCY_CONTENT (WRITERID, NOTITITLE, NOTIBODY, COMPANY_ID, TENANT_ID, WRITEDATE) 
+			TBL_NOTI_EMERGENCY_ITEM (WRITERID, NOTITITLE, NOTIBODY, COMPANY_ID, TENANT_ID, WRITEDATE) 
 		VALUES
 			(#writerId#, #notiTitle#, #notiBody#, #companyId#, #tenantId#, #nowDate#)
 		<selectKey keyProperty="notiId" resultClass="int">
 			SELECT
 				IFNULL(MAX(NOTIID), 0) as notiId
 			FROM
-				TBL_NOTI_EMERGENCY_CONTENT
+				TBL_NOTI_EMERGENCY_ITEM
 			WHERE
 				TENANT_ID = #tenantId#
 		</selectKey>
 	</insert>
 	
+	
+	<select id="EzNotificationDAO.getEmergencyNotiItem" parameterClass="map" resultClass="EmergencyNotiItemVO">
+		SELECT
+			A.NOTIID as notiId,
+			A.WRITERID as writerId,
+			A.TENANT_ID as tenantId,
+			A.NOTITITLE as notiTitle,
+			A.NOTIBODY as notiBody,
+			DATE_ADD(A.WRITEDATE, INTERVAL #offSet# MINUTE) AS writeDate,
+			B.DISPLAYNAME as writerName,
+			B.DISPLAYNAME2 as writerName2,
+			C.DISPLAYNAME as writerDeptName,
+			C.DISPLAYNAME2 as writerDeptName2
+		FROM
+			TBL_NOTI_EMERGENCY_ITEM A
+		INNER JOIN
+			TBL_USERMASTER B
+		ON
+			A.WRITERID = B.CN
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		INNER JOIN
+			TBL_DEPTMASTER C
+		ON
+			B.DEPARTMENT = C.CN
+		AND
+			B.TENANT_ID = C.TENANT_ID
+		WHERE
+			A.NOTIID = #emergencyItemId#
+		AND
+			A.TENANT_ID = #tenantId#
+	</select>
 	
 </sqlMap>

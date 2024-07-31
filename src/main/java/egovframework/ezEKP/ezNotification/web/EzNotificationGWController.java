@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezNotification.service.EzNotificationService;
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiItemVO;
 import egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO;
 import egovframework.ezEKP.ezNotification.vo.NotiRecipientVO;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
@@ -716,10 +717,9 @@ public class EzNotificationGWController {
 		}
 	}
 	
-	
-	@RequestMapping(value = "/rest/ezNotification/emergency/notiContent/{userId:.+}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/emergency/notiItem/{userId:.+}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addEmergencyNotiContent(HttpServletRequest request, @PathVariable String userId, @RequestBody NotificationVO notiContent) throws Exception {
-		logger.debug("G/W EzNotification [POST /rest/ezNotification/emergency/notiContent/] started.");
+		logger.debug("G/W EzNotification [POST /rest/ezNotification/emergency/notiItem/] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -731,17 +731,48 @@ public class EzNotificationGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			int notiId = ezNotificationService.addEmergencyNotiContent(userId, notiTitle, notiBody, companyId, tenantId);		
+			int notiId = ezNotificationService.addEmergencyNotiItem(userId, notiTitle, notiBody, companyId, tenantId);		
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", notiId);
-			logger.debug("G/W EzNotification [POST /rest/ezNotification/emergency/notiContent/] ended.");
+			logger.debug("G/W EzNotification [POST /rest/ezNotification/emergency/notiItem/] ended.");
 			return result;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
-			logger.debug("G/W EzNotification [GET /rest/ezNotification/company/add/emergency/content] ended.");
+			logger.debug("G/W EzNotification [POST /rest/ezNotification/emergency/notiItem/] ended.");
+			return result;
+		}
+	}
+	
+	@RequestMapping(value = "/rest/ezNotification/user/get/emergency/item", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getEmergencyNotiItem(HttpServletRequest request) throws Exception {
+		logger.debug("G/W EzNotification [GET /rest/ezNotification/user/get/emergency/item] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String emergencyItemId = request.getParameter("emergencyItemId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			JSONObject data = new JSONObject();
+			
+			EmergencyNotiItemVO emergencyNotiItem = ezNotificationService.getEmergencyNotiItem(emergencyItemId, commonUtil.getMinuteUTC(info.getOffSet()), tenantId);
+			data.put("emergencyNotiItem", emergencyNotiItem);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/user/get/emergency/item] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/user/get/emergency/item] ended.");
 			return result;
 		}
 	}

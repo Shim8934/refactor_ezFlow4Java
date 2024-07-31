@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiItemVO;
 import egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO;
 import egovframework.ezEKP.ezNotification.vo.NotiRecipientVO;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
@@ -63,6 +64,8 @@ public interface EzNotificationService {
 
 	public Set<NotiRecipientVO> getNotiRecipientList(List<Map<String, Object>> recipient, int tenantId) throws Exception;
 
-	public int addEmergencyNotiContent(String userId, String notiTitle, String notiBody, String companyId, int tenantId) throws Exception;
+	public int addEmergencyNotiItem(String userId, String notiTitle, String notiBody, String companyId, int tenantId) throws Exception;
+
+	public EmergencyNotiItemVO getEmergencyNotiItem(String emergencyItemId, String offSet, int tenantId) throws Exception;
 
 }

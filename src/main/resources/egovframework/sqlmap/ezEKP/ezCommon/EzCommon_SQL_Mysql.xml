@@ -4927,16 +4927,16 @@ VALUES
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     </statement>
     
-    <select id="EzCommonDAO.chkTblNotiEmergencyContent" resultClass="String">
+    <select id="EzCommonDAO.chkTblNotiEmergencyItem" resultClass="String">
         SELECT
         	NOTIID
         FROM
-        	TBL_NOTI_EMERGENCY_CONTENT
+        	TBL_NOTI_EMERGENCY_ITEM
         LIMIT 1
     </select>
 
-    <statement id="EzCommonDAO.createTblNotiEmergencyContent">
-	CREATE TABLE `tbl_noti_emergency_content` (
+    <statement id="EzCommonDAO.createTblNotiEmergencyItem">
+	CREATE TABLE `tbl_noti_emergency_item` (
 	  `NOTIID` bigint(20) NOT NULL AUTO_INCREMENT,
 	  `WRITERID` varchar(80) NOT NULL,
 	  `COMPANY_ID` varchar(200) NOT NULL,

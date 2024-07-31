@@ -2442,12 +2442,12 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}	
 	}
 
-	public void createTblNotiEmergencyContent() throws Exception {
+	public void createTblNotiEmergencyItem() throws Exception {
 		try {
-			select("EzCommonDAO.chkTblNotiEmergencyContent");
+			select("EzCommonDAO.chkTblNotiEmergencyItem");
 		} catch (Exception e) {
-			logger.debug("TBL_NOTI_EMERGENCY_CONTENT table doesn't exist. creating the table...");
-			update("EzCommonDAO.createTblNotiEmergencyContent");
+			logger.debug("TBL_NOTI_EMERGENCY_ITEM table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblNotiEmergencyItem");
 		}	
 	}
 

@@ -44,8 +44,6 @@ public class NotificationVO {
 	private String tenantId;
 	/** 회사 아이디 **/
 	private String companyId;
-	/** 알림 수신자 Id List **/
-	private String recipientIdList;
 	
 	private List<Map<String, Object>> recipient;
 	
@@ -172,12 +170,6 @@ public class NotificationVO {
 		this.companyId = companyId;
 	}
 	
-	public String getRecipientIdList() {
-		return recipientIdList;
-	}
-	public void setRecipientIdList(String recipientIdList) {
-		this.recipientIdList = recipientIdList;
-	}
 	public List<Map<String, Object>> getRecipient() {
 		return recipient;
 	}

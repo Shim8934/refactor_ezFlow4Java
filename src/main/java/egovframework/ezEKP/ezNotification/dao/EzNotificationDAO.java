@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiItemVO;
 import egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO;
 import egovframework.ezEKP.ezNotification.vo.NotiRecipientVO;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
@@ -105,8 +106,12 @@ public class EzNotificationDAO extends EgovAbstractDAO {
 		return (List<NotiRecipientVO>) list("EzNotificationDAO.getNotiRecipientByDeptId", map);
 	}
 
-	public int addEmergencyNotiContent(Map<String, Object> map) throws Exception {
-		return (int) insert("EzNotificationDAO.addEmergencyNotiContent", map);
+	public int addEmergencyNotiItem(Map<String, Object> map) throws Exception {
+		return (int) insert("EzNotificationDAO.addEmergencyNotiItem", map);
+	}
+
+	public EmergencyNotiItemVO getEmergencyNotiItem(Map<String, Object> map) throws Exception {
+		return (EmergencyNotiItemVO) select("EzNotificationDAO.getEmergencyNotiItem", map);
 	}
 
 }

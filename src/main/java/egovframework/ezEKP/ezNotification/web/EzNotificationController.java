@@ -109,7 +109,7 @@ public class EzNotificationController {
 		String gwServerUrl = config.getProperty("config.notificationGWServerURL");
 		String senderId = notiData.getSenderId();
 		String url = gwServerUrl + "/rest/ezNotification/notiSend/" + senderId;
-		String recipientIdList = notiData.getRecipientIdList();
+		List<Map<String, Object>> recipient = notiData.getRecipient();
 		String senderName = notiData.getSenderName();
 		String notiContent = notiData.getNotiContent();
 		String mainType = notiData.getMainType();
@@ -128,7 +128,7 @@ public class EzNotificationController {
 		
 		JSONObject jsonParam = new JSONObject();
 		jsonParam.put("senderName", senderName);
-		jsonParam.put("recipientIdList", recipientIdList);
+		jsonParam.put("recipient", recipient);
 		jsonParam.put("mainType", mainType);
 		jsonParam.put("subType", subType);
 		jsonParam.put("notiContent", notiContent);
@@ -415,7 +415,7 @@ public class EzNotificationController {
 		headers.set("x-user-host", request.getServerName());
 		headers.set("Content-type", "application/json;charset=UTF-8");
 		
-		String emergencyContentUrl = "/rest/ezNotification/emergency/notiContent/" + senderId;
+		String emergencyContentUrl = "/rest/ezNotification/emergency/notiItem/" + senderId;
 		
 		JSONObject jsonEmergencyParam = new JSONObject();
 		jsonEmergencyParam.put("notiBody", notiBody);
@@ -423,10 +423,10 @@ public class EzNotificationController {
 		jsonEmergencyParam.put("notiContent", notiContent);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), emergencyContentUrl, null, request, "post", jsonEmergencyParam);
-		long emergencyContentId = 0;
+		long emergencyItemId = 0;
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {
-			emergencyContentId = (long) resultBody.get("data");
+			emergencyItemId = (long) resultBody.get("data");
 			
 			String notiSendUrl = gwServerUrl + "/rest/ezNotification/notiSend/" + senderId;
 			List<Map<String, Object>> recipient = notiData.getRecipient();
@@ -438,9 +438,9 @@ public class EzNotificationController {
 			jsonParam.put("subType", "EMERGENCY");
 			jsonParam.put("notiContent", notiContent);
 			jsonParam.put("viewType", "layer");
-			jsonParam.put("viewWidth", "1000");
-			jsonParam.put("viewHeight", "800");
-			jsonParam.put("linkUrl", "");
+			jsonParam.put("viewWidth", "700");
+			jsonParam.put("viewHeight", "400");
+			jsonParam.put("linkUrl", "/ezNotification/emergencyNotiItem.do?emergencyItemId=" + emergencyItemId);
 			jsonParam.put("linkUrlMobile", "");
 			jsonParam.put("etcData", "notChkSetting");
 			
@@ -464,5 +464,33 @@ public class EzNotificationController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezNotification/emergencyNotiItem.do", method=RequestMethod.GET)
+	public String emergencyNotiItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("emergencyNotiItem started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String emergencyItemId = request.getParameter("emergencyItemId");
+		
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		String url = "/rest/ezNotification/user/get/emergency/item";
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("companyId", companyId);
+		paramMap.put("userId", userId);
+		paramMap.put("emergencyItemId", emergencyItemId);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), url, paramMap, request, "get", null);
+		String status = resultBody.get("status").toString();
+		JSONObject resultData = new JSONObject();
+		if (status.equals("ok")) {
+			resultData = (JSONObject) resultBody.get("data");
+			model.addAttribute("emergencyNotiItem", resultData.get("emergencyNotiItem"));
+		}
+		
+		logger.debug("emergencyNotiItem ended");
+		return "/ezNotification/emergencyNotiItem";
+	}
+	
 	
 }

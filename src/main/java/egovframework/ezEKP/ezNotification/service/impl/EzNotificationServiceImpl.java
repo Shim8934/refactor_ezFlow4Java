@@ -30,6 +30,7 @@ import org.springframework.web.client.RestTemplate;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezNotification.dao.EzNotificationDAO;
 import egovframework.ezEKP.ezNotification.service.EzNotificationService;
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiItemVO;
 import egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO;
 import egovframework.ezEKP.ezNotification.vo.NotiRecipientVO;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
@@ -584,8 +585,8 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 	}
 
 	@Override
-	public int addEmergencyNotiContent(String userId, String notiTitle, String notiBody, String companyId, int tenantId) throws Exception {
-		logger.debug("addEmergencyNotiContent started");
+	public int addEmergencyNotiItem(String userId, String notiTitle, String notiBody, String companyId, int tenantId) throws Exception {
+		logger.debug("addEmergencyNotiItem started");
 		
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("writerId", userId);
@@ -595,11 +596,26 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 		map.put("tenantId", tenantId);
 		map.put("nowDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
 		
-		int notiId = ezNotificationDAO.addEmergencyNotiContent(map);
+		int notiId = ezNotificationDAO.addEmergencyNotiItem(map);
 		
-		logger.debug("addEmergencyNotiContent ended");
+		logger.debug("addEmergencyNotiItem ended");
 		
 		return notiId;
+	}
+
+	@Override
+	public EmergencyNotiItemVO getEmergencyNotiItem(String emergencyItemId, String offSet, int tenantId) throws Exception {
+		logger.debug("getEmergencyNotiItem started");
+		
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("emergencyItemId", emergencyItemId);
+		map.put("tenantId", tenantId);
+		map.put("offSet", offSet);
+		
+		logger.debug("getEmergencyNotiItem ended");
+		
+		return ezNotificationDAO.getEmergencyNotiItem(map);
+		
 	}
 
 }

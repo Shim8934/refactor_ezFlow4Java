@@ -4087,7 +4087,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("createEmergencyNotiTable started");
 		
 		ezCommonDAO.createTblNotiEmergencyCompany();
-		ezCommonDAO.createTblNotiEmergencyContent();
+		ezCommonDAO.createTblNotiEmergencyItem();
 		ezCommonDAO.createTblNotiEmergencyPermission();
 		
 		logger.debug("createEmergencyNotiTable ended");
