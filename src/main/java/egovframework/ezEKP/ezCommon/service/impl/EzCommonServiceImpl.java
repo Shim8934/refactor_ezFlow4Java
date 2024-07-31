@@ -4096,5 +4096,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterSaveFlagForCbShare() throws Exception {
         ezCommonDAO.alterSaveFlagForCbShare();
     }
-
+    
+    @Override
+    public void alterBoardExtentionAttrByteSize() throws Exception {
+        ezCommonDAO.alterBoardExtentionAttrByteSize();
+    }
 }

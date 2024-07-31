@@ -413,4 +413,6 @@ public interface EzCommonService {
 
 	// 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
 	public void alterSaveFlagForCbShare() throws Exception;
+	
+	public void alterBoardExtentionAttrByteSize() throws Exception;
 }

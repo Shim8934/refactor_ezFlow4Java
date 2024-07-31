@@ -213,6 +213,25 @@
 						addheight = AtttributeCount * 30;
 		            }
 		            
+		            // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입, textArea 타입 출력값 가공
+		            var userLang = "${userInfo.lang}"
+		            var boardAttrListTemp = '<c:out value="${boardAttrJson}"/>';
+		            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+		            var boardItemTemp = '<c:out value="${boardItemJson}"/>';
+                    var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
+                    
+		            for (let i = 0 ; i < boardAttrListJson.length ; i++ ) {
+		                var boardAttr = boardAttrListJson[i];
+		                if (boardAttr.colType == 'people') {
+		                    var peoplePickerString = peoplePickerDisplay(boardItemJson[boardAttr.tableCol], userLang);
+		                    document.getElementById(boardAttr.tableCol).innerText = peoplePickerString;
+		                } else if (boardAttr.colType == 'textArea') {
+		                    var peoplePickerString = boardItemJson[boardAttr.tableCol];
+		                    peoplePickerString = peoplePickerString.replace(/<script.*?>(.*?)<\/script>/gs, '$1');
+		                    document.getElementById(boardAttr.tableCol).innerHTML = unescapeForJson(peoplePickerString);
+		                }
+		            }
+		            
 		            /* 2019-11-05 홍승비 - 본문 하단에 댓글영역 표출 */
  		            if (OneLineReplyFlag == "2") {
  		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
@@ -294,6 +313,7 @@
 		            if (g_progresswin) g_progresswin.close();
 		        }
 		        catch (e) {
+		            console.log(e);
 		            alert(e.description);
 		        }
 		    };
@@ -1748,6 +1768,12 @@
 									</c:choose>
 					                <td colspan="5">
 					                	<c:choose>
+                                            <c:when test="${boardAttr.colType == 'people' || boardAttr.colType == 'textArea'}">                                         
+                                                <span id="${boardAttr.tableCol}"></span>
+                                            </c:when>
+                                            <c:when test="${boardAttr.colType == 'people'}">
+                                                <span id="${boardAttr.tableCol}"></span>
+                                            </c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
 					                			<c:out value="${boardItem.extensionAttribute6}"/>
 					                		</c:when>

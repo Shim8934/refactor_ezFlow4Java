@@ -5182,4 +5182,11 @@
 				SAVEFLAG NUMBER(3,0)
 		]]>
     </statement>
+
+	<statement id="EzCommonDAO.alterBoardExtentionAttrByteSize" parameterClass="Map">
+		ALTER TABLE
+			$table$
+		MODIFY
+			($column$ $dataTypeOracle$)
+	</statement>
 </sqlMap>

@@ -4840,4 +4840,11 @@
 				SAVEFLAG tinyint(4)
 		]]>
     </statement>
+
+	<statement id="EzCommonDAO.alterBoardExtentionAttrByteSize" parameterClass="Map">
+		ALTER TABLE
+			$table$
+		MODIFY
+			$column$ $dataTypeMysql$
+	</statement>
 </sqlMap>
