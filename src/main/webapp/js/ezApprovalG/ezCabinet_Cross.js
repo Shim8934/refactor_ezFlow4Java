@@ -705,7 +705,6 @@ function GetCaninetListXml() {
     createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", PageSize);
     createNodeAndInsertText(xmlpara, objNode, "PAGENO", curpage);
     createNodeAndInsertText(xmlpara, objNode, "ORDERBY", g_OrderBy);
-    createNodeAndInsertText(xmlpara, objNode, "UPPERDEPTCODE", (typeof upperDeptCode === "undefined" ? "" : upperDeptCode));
 
     if (g_CabSearchParamXml != "")	
     {
@@ -846,7 +845,7 @@ function GetRecordListXml() {
     createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", PageSize);
     createNodeAndInsertText(xmlpara, objNode, "PAGENO", curpage);
     createNodeAndInsertText(xmlpara, objNode, "ORDERBY", g_OrderBy);
-    createNodeAndInsertText(xmlpara, objNode, "UPPERDEPTCODE", (typeof upperDeptCode === "undefined" ? "" : upperDeptCode));
+    
     /**
      *  g_RecSearchParamXml 사용자가 입력한 검색조건
      *  입력한 검색 조건을 XML에 추가

@@ -9495,7 +9495,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getRecordList(Document doc, String lang, int tenantID, String offset) throws Exception {
+	public String getRecordList(Document doc, String lang, int tenantID, String offset, String deptID) throws Exception {
 		logger.debug("getRecordList started.");
 		
 		// List 조회를 위한 parameter값을 recordListVO에 설정
@@ -9521,8 +9521,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		recordListVO.setRelayFormID(config.getProperty("Relay_FormID", ""));
 
         /* 전자결재G > 상위부서문서함 사용 > 상위부서ID 전달 */
-        if (!doc.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent().equals("")) {
-            recordListVO.setupperDeptCode(doc.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent());
+        Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, tenantID);
+        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+            recordListVO.setupperDeptCode(upDeptInfo.get("upperDeptCode"));
+        } else {
+            recordListVO.setupperDeptCode(upDeptInfo.get(""));
         }
 
 		switch (recordListVO.getListFlag()) {
@@ -24820,8 +24823,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    cabinetListVO.setTenantID(userInfo.getTenantId());
         
         /* 2024-07-18 양지혜 - 전자결재G > 상위부서문서함 */
-        if (!xmlDom.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent().equals("")) {
-            cabinetListVO.setUpperDeptCode(xmlDom.getElementsByTagName("UPPERDEPTCODE").item(0).getTextContent());
+        Map<String, String> upDeptInfo = getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
+        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+            cabinetListVO.setUpperDeptCode(upDeptInfo.get("upperDeptCode"));
+        } else {
+            cabinetListVO.setUpperDeptCode(upDeptInfo.get(""));
         }
 
 		switch (cabinetListVO.getListFlag()) {

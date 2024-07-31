@@ -180,7 +180,7 @@ public interface EzApprovalGService {
 
     public String getListInfoXml(String listFlag, String listType, String companyID, String lang, LoginVO userInfo) throws Exception;
 
-    public String getRecordList(Document doc, String lang, int tenantID, String offset) throws Exception;
+    public String getRecordList(Document doc, String lang, int tenantID, String offset, String deptID) throws Exception;
 
     public String getCodeInfo(String companyID, String lang, int tenantID) throws Exception;
 
