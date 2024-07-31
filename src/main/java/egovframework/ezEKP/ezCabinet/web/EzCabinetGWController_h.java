@@ -131,11 +131,12 @@ public class EzCabinetGWController_h {
 			String primary   = userInfo.getPrimary();
 			String sqlQuery  = "";
 			
+			/* 2024-07-31 홍승비 - 잘못된 검색 조건 설정 코드 수정, SQL Injection 대응은 쿼리단에서 $ 기호 제거로 처리함 */
 			switch(searchOpt) {
 				case "displayname": sqlQuery = "display_name"   ; break;
 				case "description": sqlQuery = "department_name"; break;
 				case "cn"         : sqlQuery = "cn"             ; break;
-				default: sqlQuery = "display_name";
+				default: sqlQuery = searchOpt;
 			}
 			
 			List<SimpleUserVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId());
@@ -275,10 +276,11 @@ public class EzCabinetGWController_h {
 			String primary                 = userInfo.getPrimary();
 			String sqlQuery                = "";
 			
+			/* 2024-07-31 홍승비 - 잘못된 검색 조건 설정 코드 수정, SQL Injection 대응은 쿼리단에서 $ 기호 제거로 처리함 */
 			switch(srchOption) {
 				case "displayname": sqlQuery = primary.equals("1") ? srchOption : "displayname2" ; break;
 				case "description": sqlQuery = primary.equals("1") ? srchOption : "description2" ; break;
-				default: sqlQuery = "displayname";
+				default: sqlQuery = srchOption;
 			}
 			
 			int startPoint                 = (currentPage - 1) * 50;

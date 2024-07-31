@@ -92,7 +92,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("cabinetId",   cabinetId);
 		map.put("userId",      userId);
-		map.put("sqlQuery",    sqlQuery);
+		map.put("sqlQuery",    sqlQuery.toUpperCase());
 		map.put("searchValue", searchValue);
 		map.put("primary",     primary);
 		map.put("tenantId",    tenantId);
@@ -131,7 +131,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("startPoint", startPoint);
 		map.put("listCount",  listCount);
-		map.put("srchOption", srchOption);
+		map.put("srchOption", srchOption.toUpperCase());
 		map.put("srchValue",  srchValue);
 		map.put("primary",    primary);
 		map.put("tenantId",   tenantId);
@@ -142,7 +142,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	@Override
 	public int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("srchOption", sqlQuery);
+		map.put("srchOption", sqlQuery.toUpperCase());
 		map.put("srchValue",  srchValue);
 		map.put("tenantId",   tenantId);
 		
