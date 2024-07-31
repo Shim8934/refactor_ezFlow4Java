@@ -271,6 +271,9 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 		// 2020-02-24 김정언 - 근태 현황 일정관리 연동
 		if (!useAnnualScheduleYN.equals("0")) {
+			/* 2024-07-25 홍승비 - SQL Injection 수정 > 근태 현황 관련 다국어 처리를 위한 lang 파라미터 추가 */
+			map.put("lang", commonUtil.getMultiData(ezCommonService.selectUserGetLang(userID, tenantId), tenantId));
+			
 			List<AttitudeVO> aList = ezAttitudeDAO.getAnuualListSchedule(map);
 
 			for (int j = 0; j < aList.size(); j++) {
