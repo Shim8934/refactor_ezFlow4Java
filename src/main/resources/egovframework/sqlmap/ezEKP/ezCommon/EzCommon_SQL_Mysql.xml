@@ -4908,4 +4908,67 @@ VALUES
 ) ]]>
 	</insert>
 	
+	<select id="EzCommonDAO.chkTblNotiEmergencyCompany" resultClass="String">
+        SELECT
+        	COMPANY_ID
+        FROM
+        	TBL_NOTI_EMERGENCY_COMPANY
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyCompany">
+	 CREATE TABLE `tbl_noti_emergency_company` (
+	  `COMPANY_ID` varchar(200) NOT NULL,
+	  `TENANT_ID` mediumint(9) NOT NULL,
+	  `EMERGENCY_CONTENT` varchar(200) DEFAULT NULL,
+	  `WRITERID` varchar(80) NOT NULL,
+	  `WRITEDATE` datetime DEFAULT NULL,
+	  PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblNotiEmergencyContent" resultClass="String">
+        SELECT
+        	NOTIID
+        FROM
+        	TBL_NOTI_EMERGENCY_CONTENT
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyContent">
+	CREATE TABLE `tbl_noti_emergency_content` (
+	  `NOTIID` bigint(20) NOT NULL AUTO_INCREMENT,
+	  `WRITERID` varchar(80) NOT NULL,
+	  `COMPANY_ID` varchar(200) NOT NULL,
+	  `TENANT_ID` mediumint(9) NOT NULL,
+	  `NOTITITLE` varchar(3000) DEFAULT NULL,
+	  `NOTIBODY` varchar(8000) DEFAULT NULL,
+	  `WRITEDATE` datetime DEFAULT NULL,
+	  PRIMARY KEY (`NOTIID`,`TENANT_ID`)
+	) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblNotiEmergencyPermission" resultClass="String">
+        SELECT
+        	PERMISSION_CODE
+        FROM
+        	TBL_NOTI_EMERGENCY_PERMISSION
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyPermission">
+	CREATE TABLE `tbl_noti_emergency_permission` (
+	  `PERMISSION_CODE` bigint(20) NOT NULL AUTO_INCREMENT,
+	  `CN` varchar(80) NOT NULL,
+	  `DEPTID` varchar(80) DEFAULT NULL,
+	  `JOBID` varchar(80) DEFAULT NULL,
+	  `ROLEID` varchar(80) DEFAULT NULL,
+	  `USER_TYPE` varchar(50) DEFAULT NULL,
+	  `COMPANY_ID` varchar(200) NOT NULL,
+	  `TENANT_ID` mediumint(9) NOT NULL,
+	  `REGDATE` datetime DEFAULT NULL,
+	  PRIMARY KEY (`PERMISSION_CODE`)
+	) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
+    </statement>
+	
 </sqlMap>

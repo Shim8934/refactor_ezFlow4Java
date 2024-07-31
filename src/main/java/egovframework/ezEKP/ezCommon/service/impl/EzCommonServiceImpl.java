@@ -4082,4 +4082,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("insertStandardSystemConfigData ended");
 	}
 
+	@Override
+	public void createEmergencyNotiTable() throws Exception {
+		logger.debug("createEmergencyNotiTable started");
+		
+		ezCommonDAO.createTblNotiEmergencyCompany();
+		ezCommonDAO.createTblNotiEmergencyContent();
+		ezCommonDAO.createTblNotiEmergencyPermission();
+		
+		logger.debug("createEmergencyNotiTable ended");
+	}
+
 }

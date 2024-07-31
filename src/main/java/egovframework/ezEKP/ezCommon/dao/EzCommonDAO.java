@@ -2432,4 +2432,31 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 		
 	}
+
+	public void createTblNotiEmergencyCompany() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblNotiEmergencyCompany");
+		} catch (Exception e) {
+			logger.debug("TBL_NOTI_EMERGENCY_COMPANY table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblNotiEmergencyCompany");
+		}	
+	}
+
+	public void createTblNotiEmergencyContent() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblNotiEmergencyContent");
+		} catch (Exception e) {
+			logger.debug("TBL_NOTI_EMERGENCY_CONTENT table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblNotiEmergencyContent");
+		}	
+	}
+
+	public void createTblNotiEmergencyPermission() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblNotiEmergencyPermission");
+		} catch (Exception e) {
+			logger.debug("TBL_NOTI_EMERGENCY_PERMISSION table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblNotiEmergencyPermission");
+		}	
+	}
 }

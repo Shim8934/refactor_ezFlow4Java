@@ -403,5 +403,7 @@ public interface EzCommonService {
 	public void createConnectionMenu() throws Exception;
 
 	public void insertStandardSystemConfigData() throws Exception;
+
+	public void createEmergencyNotiTable() throws Exception;
 	
 }
