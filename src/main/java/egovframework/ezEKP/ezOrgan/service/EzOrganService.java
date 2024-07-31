@@ -19,18 +19,21 @@ public interface EzOrganService {
 	public String getDeptFullPath(String deptID, int tenantID) throws Exception;
 	
 	public String getDeptTreeInfo(String userID, String deptID, String topID, String propList, String primary, String displayTrashDept, int tenantID) throws Exception;
+	public String getDeptTreeInfo(String userID, String deptID, String topID, String propList, String primary, String displayTrashDept, int tenantID, String adminOrgan) throws Exception;
 
 	public List<OrganDeptVO> getDeptMemberList(String pClass, String deptID, String lang, int tenantID) throws Exception;
 	
 	public String getDeptMemberList(String deptid, String celllist, String proplist, String listtype, String lang, int tenantID, String noAddJob) throws Exception;
+	public String getDeptMemberList(String deptid, String celllist, String proplist, String listtype, String lang, int tenantID, String noAddJob, String adminOrgan) throws Exception;
 	
 	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID) throws Exception;
+	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID, String adminOrgan) throws Exception;
 	
 	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID, String adminOrgan) throws Exception;
 
 	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID) throws Exception;
 
-	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID, boolean displayTrashDept) throws Exception;
+	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID, boolean displayTrashDept, String adminOrgan) throws Exception;
 	
 	public String convertAddandConvert(String pClass, String pProvValue) throws Exception;
 	
@@ -99,6 +102,7 @@ public interface EzOrganService {
 	public int getMemberListCount2(String pDeptID, List<String> companyList, int totalCount2, String containCompany, int tenantId) throws Exception;
 	
 	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception;
+	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID, String adminOrgan) throws Exception;
 	
 	public String getPhysicalDeliveryOfficeName(String userID,  String property, int tenantID) throws Exception;
 
@@ -121,7 +125,7 @@ public interface EzOrganService {
 	
 	public String getJobMasterTreeInfo(String type, String pComID, String lang, int tenantID) throws Exception;
 	
-	public String getJobMasterMemberList(String type, String jobID, String celllist, String proplist, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception;
+	public String getJobMasterMemberList(String type, String jobID, String celllist, String proplist, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID,String adminOrgan) throws Exception;
 	
 	public List<OrganUserVO> getOrgUserInfo(String userID, int tenantID, String companyID) throws Exception;
 

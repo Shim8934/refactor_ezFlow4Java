@@ -218,4 +218,9 @@ public interface EzOrganAdminService {
 	Optional<String> getJobIdForFirstUser(String userId, int tenantId) throws Exception;
 
 	List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary) throws Exception;
+	
+	// 2024-05-27 관리자 > 조직도 > 겸직 사용자 상세정보 내용 호출 함수
+	public String getEntryAddJobInfo(String cn, String deptId, String jobId, String language, int tenantID, String prop) throws Exception;
+	
+	public void updateAddJobInfo(String cn, String deptId, String jobId, int tenantID, String orderBy, String userTreeFlag) throws Exception;
 }

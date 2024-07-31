@@ -4602,6 +4602,43 @@
 		    COLUMN SHOWTOP VARCHAR(2) DEFAULT 'N'
 		]]>
 	</statement>
+
+	<select id="EzCommonDAO.checkUserHideFlag">
+		SELECT
+			USERTREEFLAG
+		FROM
+			TBL_USERMASTER
+				LIMIT 1
+	</select>
+
+	<select id="EzCommonDAO.checkAddJobHideFlag">
+		SELECT
+			USERTREEFLAG
+		FROM
+			TBL_ADDJOBMASTER
+				LIMIT 1
+	</select>
+
+	<select id="EzCommonDAO.checkDeptHideFlag">
+		SELECT
+			DEPTTREEFLAG
+		FROM
+			TBL_DEPTMASTER
+				LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addUserHideFlag">
+		ALTER TABLE tbl_usermaster  ADD COLUMN USERTREEFLAG char(1) DEFAULT 'Y' COMMENT '조직도사용여부Y:사용 N:숨김'
+	</statement>
+
+	<statement id="EzCommonDAO.addAddJobHideFlag">
+		ALTER TABLE tbl_addjobmaster ADD COLUMN USERTREEFLAG char(1) DEFAULT 'Y' COMMENT '조직도사용여부Y:사용 N:숨김'
+	</statement>
+
+	<statement id="EzCommonDAO.addDeptHideFlag">
+		ALTER TABLE tbl_deptmaster ADD COLUMN DEPTTREEFLAG char(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'Y' NULL COMMENT '조직도사용여부 Y:사용 N:숨김'
+	</statement>
+	
 	
 	<!--2024-07-12 황인경 - 모바일 포탈 개발 -->
 	<select id="EzCommonDAO.checkMobileTheme" resultClass="Integer">

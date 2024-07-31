@@ -5609,7 +5609,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String cn = request.getParameter("cn");
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String companyName = userInfo.getCompanyName();
-
+		String name = request.getParameter("name");
+		String mailAddress = request.getParameter("mailAddress");
+		String newMailFlag = request.getParameter("newMailFlag");
+		
 		/* 사용자 정의 공용배포그룹 컨피그가 활성화 되어있을때 공용배포그룹의 구성원 보기는 공개정책에 의해서 공개 허용 여부가 정해짐
 		 * 공개 허용 : policy가 all일 경우, policy가 멤버이면서 구성원일 경우, 관리자 페이지에서 생성된 공용배포그룹일 경우
 		 */
@@ -5748,7 +5751,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-		
+
+		model.addAttribute("name", name);
+		model.addAttribute("mailAddress", mailAddress);
+		model.addAttribute("newMailFlag", newMailFlag);
 		model.addAttribute("list", list);
 		
 		logger.debug("mailSelectDLMember ended.");
@@ -6684,6 +6690,42 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 		return addCopyrightStr;
 	}
+
+	/**
+	 * 메일쓰기 - 공용배포그룹(받는사람,참조,숨은참조) 확인
+	 */
+	@RequestMapping(value="/ezEmail/CheckDistributionExist.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String CheckDistributionExist(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("CheckDistributionExist started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String groupName = request.getParameter("groupName");
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String companyId = userInfo.getCompanyID();
+
+		String response = null;
+		try {
+			String inputParams = "groupName=" + URLEncoder.encode(groupName, "UTF-8")
+					+ "&domainName=" + URLEncoder.encode(domainName, "UTF-8")
+					+ "&companyId=" + URLEncoder.encode(companyId, "UTF-8");
+
+			logger.debug("inputParams=" + inputParams);
+
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionUserName";
+			response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+			logger.debug("response=" + response);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return response;
+
+	}
+	
 	
 	/**
 	 * 일반 첨부파일 순서 저장 함수
