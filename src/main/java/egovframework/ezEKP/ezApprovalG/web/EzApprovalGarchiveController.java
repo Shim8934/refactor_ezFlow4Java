@@ -2243,7 +2243,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("delAttachByOthers", delAttachByOthers);
 		model.addAttribute("draftAllFlag", draftAllFlag);
 		model.addAttribute("anNo", anNo);
-
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		
 		logger.debug("aprDocAttach ended");
 		
 		return "ezApprovalG/apprGaprdocattach";

@@ -1842,6 +1842,7 @@ function openergetDocInfo() {
         // 선택한 row 유지를 위한 Flag 설정
         selRowChangeFlag = true;
         GetRecordList();
+        listLoading(false);
     }
     else {
         GetDocDeliveryList(g_DeliverySearchParamXml);

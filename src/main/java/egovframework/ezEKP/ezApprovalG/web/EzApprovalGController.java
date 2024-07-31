@@ -3831,6 +3831,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("draftAllFlag", draftAllFlag);
 		model.addAttribute("anNo", anNo);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("aprCabinetAttach ended.");
 		
