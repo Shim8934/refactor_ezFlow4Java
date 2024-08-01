@@ -4946,14 +4946,14 @@
 			USERTREEFLAG CHAR(1) DEFAULT 'Y'
 	</statement>
 
-	<statement id="EzCommonDAO.addAddJobHideFlag">
+	<statement id="EzCommonDAO.addDeptHideFlag">
 		ALTER TABLE 
 		    tbl_deptmaster 
 		ADD 
 			DEPTTREEFLAG char(1) DEFAULT 'Y'
 	</statement>
 
-	<statement id="EzCommonDAO.addDeptHideFlag">
+	<statement id="EzCommonDAO.addAddJobHideFlag">
 		ALTER TABLE 
 		    tbl_addjobmaster 
 		ADD 
