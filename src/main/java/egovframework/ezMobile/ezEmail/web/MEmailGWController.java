@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -5595,7 +5596,64 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 		return result;
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezemail/users/{userId:.+}/mailRequestDenial", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject mailRequestDenial(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject, Locale locale) {
+		logger.debug("MOBILE G/W MAIL mailRequestDenial started.");
+		logger.debug("uesrId={}", userId);
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String senderAddress = (String) jsonObject.get("senderAddress");
+			String senderName = (String) jsonObject.get("senderName");
+
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+
+			StringBuilder sb = new StringBuilder();
+
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+
+			logger.debug("userEmail=" + userEmail);
+
+			sb.append("userId=" + URLEncoder.encode(userEmail, "UTF-8"));
+
+			String address = senderName +" "+ "<" + senderAddress + ">";
+			address = address.replaceAll(":", "");
+
+			if (senderName == null) {
+				senderName = senderAddress;
+			}
+
+			if (senderAddress != null) {
+				String displayName = address + " " + egovMessageSource.getMessage("ezEmail.t270", locale);
+				sb.append("&displayName=" + URLEncoder.encode(displayName, "UTF-8"));
+				sb.append("&rejectId=" + URLEncoder.encode(senderAddress, "UTF-8"));
+			}
+
+			String inputParams = sb.toString();
+			logger.debug("inputParams=" + inputParams);
+
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setRejectRule", inputParams);
+
+			JSONParser parser = new JSONParser();
+			result = (JSONObject)parser.parse(strJson);
+
+			logger.debug("result = {}", result.get("resultCode").toString());
+
+		} catch (Exception e){
+			logger.error(e.getMessage(), e);
+
+		}
+
+		logger.debug("MOBILE G/W MAIL mailRequestDenial ended.");
+
+		return result;
+	}
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId:.+}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getAddressInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String addressId) {		
