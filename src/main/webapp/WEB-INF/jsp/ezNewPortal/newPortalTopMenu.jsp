@@ -642,9 +642,24 @@
 			}
 
 			removeAllChildernElem(document.getElementById('menuListAll'));
-			
-			var menuCount = 0;
-			menuList.forEach(function (item, index) {
+			console.log("menuList size: ", menuList.length);
+			var menuCount = 1;
+			for (var i = 0; i < menuList.length; i++) {
+				if (menuCount == 8) {
+					var menuResetBtn = document.createElement('li');
+					var menuResetBtnSpan = document.createElement('span');
+					menuResetBtnSpan.textContent = '<spring:message code="ezNewPortal.topMenu.hth08" />';
+					menuResetBtn.appendChild(menuResetBtnSpan);
+					menuResetBtn.setAttribute("id", "menuResetting");
+					menuResetBtn.classList.add("icon_nav_menuset_leftmenu");
+					menuResetBtn.addEventListener('click', menuReset);
+					document.getElementById('menuListAll').appendChild(menuResetBtn);
+					menuCount++;
+					i--;
+					continue;
+				}
+				
+				var item = menuList[i];
 				if (item.menuId == connectMenuId) {
 					return; //연계메뉴 표출 x
 				}
@@ -660,8 +675,9 @@
 				menuAllList.setAttribute("id", item.menuId);
 				if (!!item.iconUrl && item.iconUrl.split(" ").length > 0)  menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
 				menuAllList.classList.add('sortable-item');
+				menuAllList.classList.add('menu-icon');
 				
-				if (menuCount < maxMenuCount) {
+				if (menuCount <= maxMenuCount) {
 					menuAllList.classList.add('on');
 				}
 				
@@ -677,8 +693,73 @@
 				
 				document.getElementById('menuListAll').appendChild(menuAllList);
 				//str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
+				
 				menuCount++;
+			}
+			
+			//  메뉴 개수가 8개보다 작아서 메뉴정렬 버튼이 표출되지 않는 경우, 마지막에 버튼 추가
+			if (menuList.length <= maxMenuCount) {
+				var menuResetBtn = document.createElement('li');
+				var menuResetBtnSpan = document.createElement('span');
+				menuResetBtnSpan.textContent = '<spring:message code="ezNewPortal.topMenu.hth08" />';
+				menuResetBtn.appendChild(menuResetBtnSpan);
+				menuResetBtn.setAttribute("id", "menuResetting");
+				menuResetBtn.classList.add("icon_nav_menuset_leftmenu");
+				menuResetBtn.addEventListener('click', menuReset);
+				document.getElementById('menuListAll').appendChild(menuResetBtn);
+				
+				var ddd = document.querySelectorAll('.lnb_menu_all ul li');
+				for (var j = 0 ; j < ddd.length; j++) {
+					ddd[j].style.border = "none";
+				}
+			}
+		}
+		
+		var menuReset = function () {
+			HTMLCollection.prototype.forEach = Array.prototype.forEach;
+			$(".menu_position").css("display","flex");	// 메인 메뉴 위치 설정
+			$('#menuListAll li').removeClass("on");							
+			$("#menuListAll .sortable-item").draggable({
+			    revert: "invalid",
+			    containment: "parent",
+			    zIndex: 100,
+			    start: function (event, ui) {
+			    	var dragElem = $(this);
+			    	dragElem.css({
+			    		"cursor": "move",
+			    		"opacity": "0.6"
+			    	});
+			    },
+			    snap:'#menuListAll li',
+			    stop : function(event, ui) {
+			    	var dragElem = $(this);
+			    	dragElem.css({
+			    		"cursor": "pointer",
+			    		"opacity": ""
+			    	});
+			    },
+			    helper : "clone"
 			});
+			  
+			$("#menuListAll .sortable-item").droppable({
+			    tolerance: "intersect",
+			    drop: function(event, ui) {
+				var dragElem = ui.draggable;
+				var dropElem = $(this);
+				changePosition(dragElem, dropElem);
+				if(newPortalTopMenu.isInitOrder === true) {
+					newPortalTopMenu.isInitOrder = false;
+				}
+			  }
+			});
+			
+			var sortedMenu = document.getElementById('menuListAll');
+			sortedMenu.className = 'full_menu_toggleUL_edit';
+
+			// 하단 메뉴 변경
+			var editMenuBtn = document.getElementById('editMenuBtn');
+			editMenuBtn.style.display = 'block';
+            $("#menuAllContainer ul").addClass("active");
 		}
 		
 		// 확장메뉴 버튼에서 나오는 메뉴리스트 및 이벤트
@@ -686,64 +767,11 @@
 
 			setExpandMenuList(); // 확장메뉴 리스트
 			
-			// 편집모드로 변경 이벤트
-			var editBtn = document.getElementById('editBtn');
-			var menuResetting = document.querySelector('#menuResetting');
-			menuResetting.addEventListener('click', function () {
-				HTMLCollection.prototype.forEach = Array.prototype.forEach;
-				$(".menu_position").css("display","flex");	// 메인 메뉴 위치 설정
-				$('#menuListAll li').removeClass("on");							
-				$("#menuListAll .sortable-item").draggable({
-				    revert: "invalid",
-				    containment: "parent",
-				    zIndex: 100,
-				    start: function (event, ui) {
-				    	var dragElem = $(this);
-				    	dragElem.css({
-				    		"cursor": "move",
-				    		"opacity": "0.6"
-				    	});
-				    },
-				    snap:'#menuListAll li',
-				    stop : function(event, ui) {
-				    	var dragElem = $(this);
-				    	dragElem.css({
-				    		"cursor": "pointer",
-				    		"opacity": ""
-				    	});
-				    },
-				    helper : "clone"
-				});
-				  
-				$("#menuListAll .sortable-item").droppable({
-				    tolerance: "intersect",
-				    drop: function(event, ui) {
-					var dragElem = ui.draggable;
-					var dropElem = $(this);
-					changePosition(dragElem, dropElem);
-					if(newPortalTopMenu.isInitOrder === true) {
-						newPortalTopMenu.isInitOrder = false;
-					}
-				  }
-				});
-				
-				var sortedMenu = document.getElementById('menuListAll');
-				sortedMenu.className = 'full_menu_toggleUL_edit';
-
-				// 하단 메뉴 변경
-				var editMenuBtn = document.getElementById('editMenuBtn');
-				editBtn.style.display = 'none';
-				editMenuBtn.style.display = 'block';
-	            $("#menuAllContainer ul").addClass("active");
-				
-			});
-			
 			// 취소버튼
 			var editMenuCancel = document.getElementById('editMenuCancel');
 			editMenuCancel.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
 				document.getElementById('editMenuBtn').style.display = 'none';
-				document.getElementById('editBtn').style.display = 'block';
 				$("#menuAllContainer ul").removeClass("active");
 				
 				var sortedMenu = document.getElementById('menuListAll');
@@ -761,17 +789,16 @@
 			editMenuSave.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
 				document.getElementById('editMenuBtn').style = 'none';
-				document.getElementById('editBtn').style = 'block';
-				 $("#menuAllContainer ul").removeClass("active");
+				$("#menuAllContainer ul").removeClass("active");
 				 
-				var sortedMenu = document.getElementById('menuListAll');
-				sortedMenu.className = 'full_menu_toggleUL';
+				var menuListAll = document.getElementById('menuListAll');
+				menuListAll.className = 'full_menu_toggleUL';
 				
 				$('#menuListAll .sortable-item').draggable("disable");
 				$('#menuListAll .sortable-item').droppable("disable");
 				
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
-				var sortedMenu = document.getElementById('menuListAll').getElementsByTagName('li');
+				var sortedMenu = document.getElementById('menuListAll').getElementsByClassName('sortable-item');
 				
 				var userMenuDisplayModeBtn = document.getElementsByName('userMenuDisplayMode');
 				for (var i = 0; i < userMenuDisplayModeBtn.length; i++) {
@@ -831,39 +858,6 @@
 				}
 				
 			});			
-			
-			// 메뉴 순서 초기화 버튼
-			/* var editcompanyOrder = document.getElementById('editcompanyOrder');
-			editcompanyOrder.addEventListener('click', function() {
- 
-				var elements = document.getElementById('toggleMenu').childNodes;
-	 			Array.prototype.forEach.call(elements, function (item, index) { 				
-					newPortalTopMenu.companyOrder[index] = {
-						menuId: item.id,
-						companyOrder: item.dataset.companyorder*1,
-						iconUrl: newPortalTopMenu.menuListObj['menu_'+item.id].iconUrl,
-						menuName: newPortalTopMenu.menuListObj['menu_'+item.id].menuName,
-						menuUrl: newPortalTopMenu.menuListObj['menu_'+item.id].menuUrl,
-					};
-				});
-	 			
-	 			var temp = [];
-	 			for(var i=0; i<newPortalTopMenu.companyOrder.length; i++ ) {
-	 				for(var j=i; j<newPortalTopMenu.companyOrder.length; j++) {
-	 					if(newPortalTopMenu.companyOrder[i].companyOrder > newPortalTopMenu.companyOrder[j].companyOrder ) {
-	 						temp = newPortalTopMenu.companyOrder[i];
-	 						newPortalTopMenu.companyOrder[i] = newPortalTopMenu.companyOrder[j];
-	 						newPortalTopMenu.companyOrder[j] = temp;
-	 					}
-	 				}
-	 			};
-	 			
-				// 확장메뉴 재배치	
-	 			setExpandMenuList(newPortalTopMenu.companyOrder);
-				
-				// 메뉴 순서 초기화 값 true로 변경
-				newPortalTopMenu.isInitOrder = true;
-			});	 */		
 		}
 		
 		function changePosition(dragElem, dropElem) {
