@@ -480,16 +480,52 @@ public class EzNotificationController {
 		paramMap.put("companyId", companyId);
 		paramMap.put("userId", userId);
 		paramMap.put("emergencyItemId", emergencyItemId);
+		
+		String adminFlag = "N";
+		LoginVO adminChk = commonUtil.checkAdmin(loginCookie);
+		if (adminChk != null) {
+			adminFlag = "Y";
+		}
+		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), url, paramMap, request, "get", null);
 		String status = resultBody.get("status").toString();
 		JSONObject resultData = new JSONObject();
 		if (status.equals("ok")) {
 			resultData = (JSONObject) resultBody.get("data");
 			model.addAttribute("emergencyNotiItem", resultData.get("emergencyNotiItem"));
+		} else if (status.equals("empty")) {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", userInfo.getLocale()));
+			logger.debug("emergencyNotiItem ended");
+			return "/common/error";
 		}
+		
+		model.addAttribute("adminFlag", adminFlag);
+		model.addAttribute("userId", userInfo.getId());
 		
 		logger.debug("emergencyNotiItem ended");
 		return "/ezNotification/emergencyNotiItem";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ezNotification/deleteEmergencyNoti.do", method=RequestMethod.POST)
+	public String deleteEmergencyNoti(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("deleteEmergencyNoti started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String emergencyItemId = request.getParameter("notiId");
+		
+		String userId = userInfo.getId();
+		String url = "/rest/ezNotification/user/delete/emergency/item";
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userId", userId);
+		paramMap.put("emergencyItemId", emergencyItemId);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), url, paramMap, request, "delete", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("deleteEmergencyNoti ended");
+		return status;
 	}
 	
 	

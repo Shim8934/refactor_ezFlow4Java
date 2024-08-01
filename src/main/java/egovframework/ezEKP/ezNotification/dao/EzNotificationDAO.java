@@ -114,4 +114,8 @@ public class EzNotificationDAO extends EgovAbstractDAO {
 		return (EmergencyNotiItemVO) select("EzNotificationDAO.getEmergencyNotiItem", map);
 	}
 
+	public void deleteEmergencyNoti(Map<String, Object> map) throws Exception {
+		delete("EzNotificationDAO.deleteEmergencyNoti", map);
+	}
+
 }

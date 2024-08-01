@@ -68,4 +68,6 @@ public interface EzNotificationService {
 
 	public EmergencyNotiItemVO getEmergencyNotiItem(String emergencyItemId, String offSet, int tenantId) throws Exception;
 
+	public void deleteEmergencyNoti(String notiId, int tenantId) throws Exception;
+
 }

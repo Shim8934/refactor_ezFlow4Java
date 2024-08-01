@@ -761,6 +761,13 @@ public class EzNotificationGWController {
 			JSONObject data = new JSONObject();
 			
 			EmergencyNotiItemVO emergencyNotiItem = ezNotificationService.getEmergencyNotiItem(emergencyItemId, commonUtil.getMinuteUTC(info.getOffSet()), tenantId);
+			
+			if (emergencyNotiItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);
+				result.put("data", "");
+				return result;
+			}
 			data.put("emergencyNotiItem", emergencyNotiItem);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -773,6 +780,33 @@ public class EzNotificationGWController {
 			result.put("code", 1);
 			result.put("data", "");
 			logger.debug("G/W EzNotification [GET /rest/ezNotification/user/get/emergency/item] ended.");
+			return result;
+		}
+	}
+	
+	@RequestMapping(value = "/rest/ezNotification/user/delete/emergency/item", method=RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteEmergencyNoti(HttpServletRequest request) throws Exception {
+		logger.debug("G/W EzNotification [DELETE /rest/ezNotification/user/delete/emergency/item] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String notiId = request.getParameter("emergencyItemId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezNotificationService.deleteEmergencyNoti(notiId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			logger.debug("G/W EzNotification [DELETE /rest/ezNotification/user/delete/emergency/item] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			logger.debug("G/W EzNotification [DELETE /rest/ezNotification/user/delete/emergency/item] ended.");
 			return result;
 		}
 	}

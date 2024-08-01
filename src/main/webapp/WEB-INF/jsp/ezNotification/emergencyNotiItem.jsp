@@ -13,13 +13,17 @@
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}" ></script>
 	</head>
 	<body class="popup">
+		<input type="hidden" id="notiId" value="<c:out value='${emergencyNotiItem.notiId}'/>">
+	
 		<table class="layout" style=width:100%;">
 	  		<tbody>
 	  			<tr>
 	  				<td colspan="4" style="vertical-align: top; height: 10px;">
 		      		    <div id="menu">
 		        			<ul class="">
-		                    	<li id="btn_Delete"><span class="icon16 popup_icon16_delete" onclick="btn_Delete_Onclick()"></span></li>
+		        				<c:if test="${adminFlag == 'Y' or emergencyNotiItem.writerId eq userId}">
+		                    		<li id="btn_Delete" onclick="delEmergencyNoti()"><span class="icon16 popup_icon16_delete" onclick="btn_Delete_Onclick()"></span></li>
+		                    	</c:if>
 					        </ul>
 				        </div>    
 				        <div id="close">
@@ -31,15 +35,15 @@
 	  			</tr>
 	  			<table class="content2" style="width:100%;">
 		  			<tr> 
-			  			<th style="width:10%">제&nbsp;목</th>
+			  			<th style="width:10%"><spring:message code='ezNotification.hth58' /></th>
 		      			<td style="width:40%"><c:out value='${emergencyNotiItem.notiTitle}'/></td>
-		      			<th style="width:10%">작성일</th>
+		      			<th style="width:10%"><spring:message code='ezNotification.hth84' /></th>
 		      			<td style="width:40%"><c:out value='${emergencyNotiItem.writeDate}'/></td>
 					</tr>
 					<tr> 
-						<th style="width:10%">작성자</th>
+						<th style="width:10%"><spring:message code='ezBoard.t207' /></th>
 						<td style="width:40%"><c:out value='${emergencyNotiItem.writerName}'/></td>
-						<th style="width:10%">부서</th>
+						<th style="width:10%"><spring:message code='main.t75' /></th>
 						<td style="width:40%"><c:out value='${emergencyNotiItem.writerDeptName}'/></td>
 					</tr>
 					<tr>
@@ -51,5 +55,34 @@
 			</tbody>
 		</table>
 	</body>
+	
+	<script>
+	function btnClose_onclick() {
+		window.close();
+	}
+	
+	function delEmergencyNoti() {
+		if (!confirm("<spring:message code='ezNotification.hth17'/>")) {
+			return;
+		}
+		
+		var notiId = document.getElementById('notiId').value;
+		$.ajax({
+			type: "POST",
+			url: "/ezNotification/deleteEmergencyNoti.do",
+			dataType:"text",
+			data:{
+				notiId : notiId
+			},
+			success: function(result) {
+				alert("<spring:message code='ezMain.delete.hth01'/>");
+				window.close();
+			},
+			error: function (xhr, status, e) {
+				alert("<spring:message code='ezNotification.hth34'/>");
+			}
+		});
+	}
+	</script>
 	
 </html>

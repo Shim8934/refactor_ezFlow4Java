@@ -618,4 +618,17 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 		
 	}
 
+	@Override
+	public void deleteEmergencyNoti(String notiId, int tenantId) throws Exception {
+		logger.debug("deleteEmergencyNoti started");
+		
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("notiId", notiId);
+		map.put("tenantId", tenantId);
+		
+		logger.debug("deleteEmergencyNoti ended");
+		
+		ezNotificationDAO.deleteEmergencyNoti(map);
+	}
+
 }

@@ -882,4 +882,13 @@
 			A.TENANT_ID = #tenantId#
 	</select>
 	
+	<delete id="EzNotificationDAO.deleteEmergencyNoti" parameterClass="Map">
+	DELETE	FROM
+		TBL_NOTI_EMERGENCY_ITEM 
+	WHERE
+		NOTIID = #notiId#
+	AND
+		TENANT_ID = #tenantId#
+	</delete>
+	
 </sqlMap>
