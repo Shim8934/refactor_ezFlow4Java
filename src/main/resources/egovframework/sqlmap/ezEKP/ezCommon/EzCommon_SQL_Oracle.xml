@@ -4863,9 +4863,12 @@
     </update>
 
 	<select id="EzCommonDAO.checkCompanyMenuIconUrl">
+		<![CDATA[
 		SELECT	ICON_URL
 		FROM	TBL_PORTAL_MENU_COMP
-					LIMIT 1
+		WHERE
+			ROWNUM <= 1
+		]]>
 	</select>
 
 	<statement id="EzCommonDAO.alterCompanyMenuIconUrl">
