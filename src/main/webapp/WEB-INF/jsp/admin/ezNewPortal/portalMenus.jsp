@@ -850,6 +850,11 @@
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
 			
+			if (iconUrl == null || iconUrl == "") {
+				alert("<spring:message code='ezNewPortal.adminMenu.hth01' />");
+				return;
+			}
+			
 			var menuInfo = {
 				"menuUsed" : menuUsed,
 				"menuUrl" : menuUrl,
