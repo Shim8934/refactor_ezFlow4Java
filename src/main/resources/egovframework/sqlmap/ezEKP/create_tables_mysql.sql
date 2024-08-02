@@ -13868,6 +13868,83 @@ CREATE TABLE `jmocha_mailbox_progress` (
   PRIMARY KEY (`USER_KEY`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 
+-- Table structure for table `jmocha_appr_allowed_domain`
+--
+DROP TABLE IF EXISTS `jmocha_appr_allowed_domain`;
+CREATE TABLE `jmocha_appr_allowed_domain` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`,`DOMAIN_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_user`
+--
+DROP TABLE IF EXISTS `jmocha_appr_user`;
+CREATE TABLE `jmocha_appr_user` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_TYPE` varchar(10) NOT null,
+  PRIMARY KEY (`TENANT_ID`, `COMPANY_ID`, `USER_ID`,`USER_TYPE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_history`
+--
+DROP TABLE IF EXISTS `jmocha_appr_history`;
+CREATE TABLE `jmocha_appr_history` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `MAIL_UID` bigint(20) NOT NULL,
+  `SUBJECT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDEREMAIL` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) DEFAULT NULL,
+  `USER_NAME2` varchar(100) DEFAULT NULL,
+  `USER_DEPTID` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME2` varchar(100) DEFAULT NULL,
+  `WRITE_DATE` datetime DEFAULT NULL,
+  `APPROVER_ID` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME2` varchar(100) DEFAULT NULL,
+  `updatedt` datetime DEFAULT NULL,
+  `STATE` varchar(10) DEFAULT NULL,
+  `MEMO` varchar(200) DEFAULT NULL,
+  `DEL_FLAG` varchar(10) DEFAULT 'N',
+  PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_comp_history`
+--
+DROP TABLE IF EXISTS `jmocha_appr_comp_history`;
+CREATE TABLE `jmocha_appr_comp_history` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `MAIL_UID` bigint(20) NOT NULL,
+  `SUBJECT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDEREMAIL` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) DEFAULT NULL,
+  `USER_NAME2` varchar(100) DEFAULT NULL,
+  `USER_DEPTID` varchar(100) DEFAULT NULL, 
+  `USER_DEPTNAME` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME2` varchar(100) DEFAULT NULL,
+  `WRITE_DATE` datetime DEFAULT NULL,
+  `APPROVER_ID` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME2` varchar(100) DEFAULT NULL,
+  `updatedt` datetime DEFAULT NULL,
+  `STATE` varchar(10) DEFAULT NULL,
+  `MEMO` varchar(200) DEFAULT NULL,
+  `DEL_FLAG` varchar(10) DEFAULT 'N',
+  PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Temporary view structure for view `vaprdoingdoclist`
 --

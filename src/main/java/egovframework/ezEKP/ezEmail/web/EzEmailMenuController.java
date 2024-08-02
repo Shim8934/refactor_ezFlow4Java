@@ -150,7 +150,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String useSpamSniper = ezCommonService.getTenantConfig("useSpamSniper", loginInfo.getTenantId());
 		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree + ",useBottomFrameOnly=" + useBottomFrameOnly 
 				+ ",useMailBoxBackUp=" + useMailBoxBackUp + ",useMailReceiveScreen=" + useMailReceiveScreen + ",useSharedMailbox=" + useSharedMailbox);
-		
+		boolean useApprMail = commonUtil.checkTenantConfigBool(loginInfo.getTenantId(), "useApprMail", "false")
+							? ezEmailUtil.useApprMailPolicy(loginInfo.getTenantId(), loginInfo.getCompanyID()) : false; // 2024-03-06 이사라 - 승인메일 사용 여부
+        boolean isApprMailApprover = useApprMail ? ezEmailService.checkApprMailApprover(loginInfo.getTenantId(), loginInfo.getCompanyID(), loginInfo.getId()) : false; // 2024-03-06 이사라 - 승인자 여부 확인
+		logger.debug("useApprMail={}, isApprMailApprover={}", useApprMail, isApprMailApprover);
+        
 		if (useMailReceiveScreen.equals("YES")) {
 			model.addAttribute("useMailReceiveScreen", useMailReceiveScreen);
 		}
@@ -317,6 +321,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("refreshInterval", mailGeneralVO.getRefreshInterval());
 		model.addAttribute("withoutNodeSelect", withoutNodeSelect);
+		model.addAttribute("useApprMail", useApprMail); // 승인메일 정책에서 하나라도 사용이면 true
+		model.addAttribute("isApprMailApprover", isApprMailApprover);
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
 		
