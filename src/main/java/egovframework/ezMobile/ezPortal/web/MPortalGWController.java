@@ -25,6 +25,7 @@ import javax.ws.rs.GET;
 
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
@@ -1577,6 +1578,99 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		logger.debug("MOBILE G/W getSchedulePortlet ended.");
+		return result;
+	}
+
+	@RequestMapping(value = "/mobile/ezPortal/portlets/customBoardPortlet", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getCustomBoardPortlet(HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W getCustomBoardPortlet started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String fileName = request.getParameter("fileName");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			String companyId = request.getParameter("companyId");
+			String deptId = info.getDeptID();
+			String rollInfo = info.getRollInfo();
+			int tenantId = info.getTenantId();
+			int portletId = Integer.parseInt(request.getParameter("portletId"));
+			int itemCount = Integer.parseInt(request.getParameter("photoCount"));
+			int currentPage = commonUtil.isIntNumber(request.getParameter("currentPage"),1);
+			String portletLang = info.getLang();
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
+			deptPath = "everyone,top,Top," + deptPath + "," + userId;
+			JSONObject data = new JSONObject();
+
+			// 회사의 포틀릿 정보 가져오기
+			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
+			String boardId = portlet.getPortletBoardId();
+			if (boardId.equals("null")) {
+				data.put("boardId", boardId);
+			} else {
+				data.put("boardId", boardId);
+				data.put("portletName", portlet.getPortletName());
+	
+				// 게시판 권한 체크
+				boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+				if (!accessCheck) {
+					data.put("access", "false");
+					data.put("boardList", null);
+					data.put("boardListTotalCnt", 0);
+					data.put("currentPage", 1);
+				} else {
+					BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
+					String guBun = boardPropertyVO.getGuBun();
+					// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
+					boolean isQnANormal = "5".equals(guBun);
+					if (isQnANormal) {
+						// 관리자가 아니면 Q&A 게시판 로직으로 변경
+						isQnANormal = !ezBoardService.isBoardAdmin(boardId, userId, deptId, companyId, tenantId, rollInfo);
+					}
+	
+					// 권한이 true이면 boardList불러오기
+					int boardListTotalCnt = ezNewPortalService.getBoardPortletTotalCnt(userId, tenantId, boardId, companyId, info.getOffset(), isQnANormal);
+	
+					int totalPages  = (boardListTotalCnt + itemCount - 1) / itemCount;
+					currentPage = currentPage > totalPages ? totalPages : currentPage;
+					currentPage = currentPage == 0         ? 1          : currentPage;
+					int startRow  = (currentPage - 1) * itemCount;
+	
+					List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal, startRow);
+	
+					// 리스트 개수로 utc time 적용시키기
+					int boardListCount = boardList.size();
+					for (int i = 0; i < boardListCount; i++) {
+						BoardListVO boardListVO = boardList.get(i);
+						String writeDate = boardListVO.getStartDate();
+	
+						boardListVO.setStartDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
+						if (StringUtils.isNotBlank(boardListVO.getAttachments()) && "1".equals(boardListVO.getAttachments())) {
+							Optional<BoardAttachVO> boardAttach = ezBoardService.getBoardAttachByName(boardListVO.getItemID(), fileName, tenantId);
+							boardListVO.setThumbnail(boardAttach.map(BoardAttachVO::getFilePath).orElse(""));
+						}
+					}
+					
+					data.put("access", "true");
+					data.put("boardList", boardList);
+					data.put("boardListTotalCnt", boardListTotalCnt);
+					data.put("currentPage", currentPage);
+				}
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		logger.debug("MOBILE G/W getCustomBoardPortlet ended.");
+
 		return result;
 	}
 	
