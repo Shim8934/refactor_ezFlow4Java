@@ -221,43 +221,7 @@
         		+ "<span id='countInfo'></span>";
 		        SelectDeptNM.setAttribute("countinfo", "")
 					
-		        if (isfirst && cn != "") {
-		            document.getElementById('search_type').selectedIndex = 1;
-		            
-		            $.ajax({
-			        	type : "POST",
-			        	dataType : "text",
-			        	url : "/ezOrgan/getSearchList.do",
-			        	async : false,
-			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype;department;extensionattribute7;extensionattribute8;role1;role2;companyid', type : 'user', adminOrgan : "y"},
-			        	success : function(xml){	
-			        		result=loadXMLString(xml);
-			        		var headerData = createXmlDom();
-		                    headerData = result;
-
-		                    if (CrossYN()) {
-		                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-		                        var Node = headerData.importNode(xmlRtn, true);
-		                        headerData.documentElement.appendChild(Node);
-		                    } else {
-		                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-		                        headerData.documentElement.appendChild(xmlRtn);
-		                    }
-		                    pListXML_Info = headerData;
-		                    pSeach = true;
-		                    DisplayUserImageList();
-
-		                    if ("<c:out value='${use_ocs}'/>" == "YES") {
-		                        check_presence();
-		                    }
-			        	},
-			        	error : function(error){
-			        		alert("<spring:message code='ezOrgan.t9' />" + error);
-			        	}
-			        });			           
-		        } else {
-		            displayUserList(nodeIdx.GetNodeData("CN"));
-		        }
+		        displayUserList(nodeIdx.GetNodeData("CN"));
 		        
 		        m_selectedTree = "dept";
 		    }

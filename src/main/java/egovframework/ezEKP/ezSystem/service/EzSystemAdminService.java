@@ -97,7 +97,7 @@ public interface EzSystemAdminService {
 	public int getSystemConfigTypeListCount(String searchValue, String companyID, int tenantId) throws Exception;
 	public String getSystemConfigTypeList(String searchValue, String offset, int startRow, int pageSize, String searchMode, String primaryLang, String companyID, int tenantId) throws Exception;
 	public void deleteSystemConfigType(String typeCode, String companyID, int tenantId) throws Exception;
-	List<SystemConfigTypeVO> getSystemConfigTypeListNotXml(String searchValue, String offset, int startRow,	int pageSize, String searchMode, String primary, String companyID, int tenantId) throws Exception;
+	List<SystemConfigTypeVO> getSystemConfigTypeListNotXml(String searchValue, String offset, int startRow,	int pageSize, String searchMode, String companyID, int tenantId) throws Exception;
 	public String checkDuplicateCode(String code, int tenantId, String companyID) throws Exception;
 	public SystemConfigTypeVO getSystemConfigType(String typeCode, String offset, String companyID, int tenantId) throws Exception;
 	public String checkDuplicateTypeCode(String typeCode, int tenantId, String companyID) throws Exception;

@@ -436,18 +436,23 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 	}
 
 	@Override
-	public void addPermission(List<EmergencyNotiPermissionVO> permissionList, String companyId, int tenantId) throws Exception {
+	public void addPermission(List<EmergencyNotiPermissionVO> permissionList, int tenantId) throws Exception {
 		logger.debug("addPermission started");
 		
 		for (int i = 0; i < permissionList.size(); i ++) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("companyId", companyId);
 			map.put("tenantId", tenantId);
 			map.put("cn", permissionList.get(i).getCn());
 			map.put("userType", permissionList.get(i).getUserType());
 			map.put("deptId", permissionList.get(i).getDeptId());
 			map.put("jobId", permissionList.get(i).getJobId());
 			map.put("roleId", permissionList.get(i).getRoleId());
+			String companyId = permissionList.get(i).getCompanyId();
+			if (permissionList.get(i).getUserType().equals("DEPT")) {
+				companyId = ezNotificationDAO.selecetCompanyIdByDeptId(map);
+			}
+			
+			map.put("companyId", companyId);
 			map.put("nowDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
 			boolean isExist = ezNotificationDAO.selectPermission(map);
 			if (!isExist) {

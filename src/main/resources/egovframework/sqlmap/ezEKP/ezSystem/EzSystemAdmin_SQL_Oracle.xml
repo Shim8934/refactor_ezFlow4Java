@@ -1486,9 +1486,7 @@
 		FROM
 			TBL_SYSTEMCONFIG
 		WHERE
-		<![CDATA[
-			CODE IS NOT NULL AND CODE <> ''
-		]]>
+			CODE IS NOT NULL
 		<isNotEqual property="typeCode" compareValue="ALL">
 		AND
 			TYPECODE = #typeCode#
@@ -1515,9 +1513,7 @@
 		FROM
 			TBL_SYSTEMCONFIG
 		WHERE
-		<![CDATA[
-			CODE IS NOT NULL AND CODE <> ''
-		]]>
+			CODE IS NOT NULL
 		<isNotEqual property="typeCode" compareValue="ALL">
 		AND
 			TYPECODE = #typeCode#
@@ -1568,7 +1564,7 @@
 				AND
 					A.COMPANY_ID = B.COMPANY_ID
 				WHERE
-					CODE IS NOT NULL AND CODE <> ''
+					A.CODE IS NOT NULL
 				]]>
 				<isNotEqual property="typeCode" compareValue="ALL">
 				AND
@@ -1629,7 +1625,7 @@
 				AND
 					A.COMPANY_ID = B.COMPANY_ID 
 				WHERE
-					CODE IS NOT NULL AND CODE <> ''
+					A.CODE IS NOT NULL
 			]]>
 			<isNotEqual property="typeCode" compareValue="ALL">
 				AND
@@ -1685,7 +1681,7 @@
 			AND
 				A.COMPANY_ID = B.COMPANY_ID			
 			WHERE
-				CODE IS NOT NULL AND CODE <> ''
+				A.CODE IS NOT NULL
 		]]>
 		<isNotEmpty property="CODE">
 			<![CDATA[
@@ -1716,7 +1712,7 @@
 		<![CDATA[
 			INSERT INTO 
 				TBL_SYSTEMCONFIG (CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
-			VALUES(#CODE#, #CODEVALUE#, #DESCRIPTION#, #WRITERID#, #WRITERNAME#, #WRITEDATE#, #v_TENANT_ID#, #companyID#, #typeCode#) 
+			VALUES(#CODE#, #CODEVALUE#, #DESCRIPTION#, #WRITERID#, #WRITERNAME#, TO_DATE(#WRITEDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANT_ID#, #companyID#, #typeCode#) 
 		]]>
 	</insert>
 	
@@ -1729,7 +1725,7 @@
 				DESCRIPTION = #DESCRIPTION#, 
 				WRITERID = #WRITERID#,
 				WRITERNAME = #WRITERNAME#,
-				WRITEDATE = #WRITEDATE#
+				WRITEDATE = TO_DATE(#WRITEDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE 
 				CODE = #CODE#
 			AND
@@ -1896,7 +1892,7 @@
 		<![CDATA[
 			INSERT INTO 
 				TBL_SYSTEMCONFIG_TYPE (TYPECODE, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE, TENANT_ID, COMPANY_ID)
-			VALUES(#typeCode#, #typeName#, #typeName2#, #description#, #writerId#, #writerName#, #writerName2#, #writeDate#, #tenantId#, #companyId#) 
+			VALUES(#typeCode#, #typeName#, #typeName2#, #description#, #writerId#, #writerName#, #writerName2#, TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantId#, #companyId#) 
 		]]>
 	</insert>
 	
@@ -1911,7 +1907,7 @@
 				WRITERID = #writerId#,
 				WRITERNAME = #writerName#,
 				WRITERNAME2 = #writerName2#,
-				WRITEDATE = #writeDate#
+				WRITEDATE = TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE 
 				TYPECODE = #typeCode#
 			AND

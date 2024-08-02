@@ -52,7 +52,7 @@ public interface EzNotificationService {
 
 	public String getEmergencyPermissionList(String useLang, String companyId, int tenantId) throws Exception;
 
-	public void addPermission(List<EmergencyNotiPermissionVO> permissionList, String companyId, int tenantId) throws Exception;
+	public void addPermission(List<EmergencyNotiPermissionVO> permissionList, int tenantId) throws Exception;
 
 	public void deletePermission(List<EmergencyNotiPermissionVO> permissionList, String companyId, int tenantId) throws Exception;
 

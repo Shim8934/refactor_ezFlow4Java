@@ -8015,4 +8015,88 @@
 			TENANT_ID = #v_TENANTID#
 		]]>
 	</update>
+	
+	
+	<insert id="EzOrganAdminDAO.insertConnectMenuForCompany" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_COMP 
+			(company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+		VALUES
+			(#companyID#, #tenantID#, -1, 1, 1, 999)
+	]]>
+	</insert>
+	
+	<insert id="EzOrganAdminDAO.insertConnectMenuAuthForCompany" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_AUTH
+			(menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted)
+		VALUES
+			(-1, #companyID#, #tenantID#, #companyID#, 1, 0, 0, 'Y')
+	]]>
+	</insert>
+	
+	<insert id="EzOrganAdminDAO.insertConnectionMenuNameForCompany" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_NAME 
+			(menu_id, menu_lang, company_id, tenant_id, menu_name)
+		VALUES
+	    	(-1, 1, #companyID#, #tenantID#, '연계'),
+	    	(-1, 2, #companyID#, #tenantID#, 'Connection'),
+	    	(-1, 3, #companyID#, #tenantID#, '連携'),
+	    	(-1, 4, #companyID#, #tenantID#, '关联'),
+	    	(-1, 5, #companyID#, #tenantID#, 'Connection'),
+	    	(-1, 6, #companyID#, #tenantID#, 'Connection')
+	]]>
+	</insert>
+	<insert id="EzOrganAdminDAO.insertSystemConfigTypeForCompany" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_SYSTEMCONFIG_TYPE 
+			(TYPECODE, TENANT_ID, COMPANY_ID, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE)
+		VALUES
+	    	('PORTLET', #tenantID#, #companyID#, '포틀릿', 'Portlet', '(연계)포틀릿 컨피그', #companyID#,
+	    	#companyName#, #companyName2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
+	]]> 
+	</insert>
+	
+	<insert id="EzOrganAdminDAO.insertDefaultSystemConfigForCompany" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_SYSTEMCONFIG 
+			(CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
+		VALUES
+			('PORTLET_STANDARD',
+			'{
+				"portletType":"standard",
+				"viewType": "list",
+				"paging":"",
+				"linkUrl": "",
+				"mobileLinkUrl": "",
+				"connectType": "",
+				"restUrl": "",
+				"httpMethodType":"",
+				"dataParam" : "{    }",
+				"dataParamType" : "",
+				"dataResultType" : "",
+				"dataResultFormat" : {
+					"rootPath" : "", 
+					"totalCnt" : "",
+					"dataInfo" : {
+						"title" : "",
+						"writer" : "",
+						"date" : "",
+						"linkUrl" : "",
+						"moblieLinkUrl" : ""
+					}
+				},
+				"dbType": "",
+				"dbIp": "",
+				"dbPort": "",
+				"dataBase": "",
+				"dbUser": "",
+				"dbPwd": "",
+				"dbQuery": "",
+				"driverClassName" : ""
+			}',
+			'연계 포틀릿 기본 설정', #companyID#, #companyName#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantID#, #companyID#, 'PORTLET'
+		) ]]>
+	</insert>
 </sqlMap>
