@@ -1647,6 +1647,26 @@ function callMsgDlg(szContentClass, Href) {
     }
 }
 
+function callMsgDlgAppr(href) {
+    var pheight = window.screen.availHeight;
+    var conHeight = 720;
+    var pwidth = window.screen.availWidth;
+    var conWidth = pwidth * 0.8;
+    if (conWidth > 1200)
+        conWidth = 1200;
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - 1200) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1";
+
+    var pURI = "/ezEmail/mailApprRead.do?URL=" + encodeURIComponent(href);
+
+    ReadMailOpenNewWin = window.open(pURI, "", feature);
+
+    if (ReadMailOpenNewWin != null) {
+        ReadMailOpenNewWin.focus();
+    }
+}
+
 var PcSaveArrayList = new Array();
 
 function mail_export() {
