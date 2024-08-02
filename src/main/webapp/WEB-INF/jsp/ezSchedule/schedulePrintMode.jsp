@@ -90,9 +90,9 @@
 		<span id=pMessageContent></span>
 		<table class="content" style="margin-top:10px">
 			<tr><th><input id='list' name ='radioBtn'  type='radio' ></th>
-			<td><span id="ext1"><spring:message code='ezSchedule.t261'/></span></td></tr>
+			<td><label for="list"><spring:message code='ezSchedule.t261'/></span></td></tr>
 			<tr><th ><input id='calendar' name='radioBtn'  type='radio' ></th>
-			<td><span id="ext2"><spring:message code='ezSchedule.lhr01'/></span></td> </tr>
+			<td><label for="calendar"><spring:message code='ezSchedule.lhr01'/></span></td> </tr>
 		</table>
 		<div class="btnposition btnpositionNew">
 		    <a id="okbtn" class="imgbtn" onClick="return ok_click()" ><span><spring:message code='ezSchedule.t4'/></span></a>

@@ -249,21 +249,7 @@
 		        else
 		            DefaultView = 0            
        
-				if (receivecount != "0") {
-					parent.frames["left"].document.body.style.overflow = "hidden";
-		            schedule_receive_attendant_cross_dialogArguments[0] = this;
-		            schedule_receive_attendant_cross_dialogArguments[1] = windowonload_Complete;
-		           
-		            DivPopUpShow(980,470,"/ezSchedule/scheduleReceiveAttendant.do");
-		        	
-		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
-		            /* var popupX = parent.document.body.clientWidth/2 - (730/2) - 305;
-		        	$("#iFramePanel").css("left", popupX); */
-
-		            try { OpenWin.focus(); } catch (e) { }
-		        } else {
-		            windowonload_Complete("empty");
-		        }
+                windowonload_Complete("empty"); //참석자 초대 팝업을 띄우지 않는다.
 		        
 		        myVar = setInterval(function () { DocumentComplate(); }, 1000);
 		        
@@ -1806,88 +1792,8 @@
                 
                 if(chk_usersearch != "UserSearch"){
                     //2018-11-05 김혜정 월보기화면에서 드래그앤드롭을 위해 추가
-                    $("td[id^='index_']").droppable({
-                        tolerance: "pointer",
-                        drop: function(event, ui) {
-                            var typeCal = 0;
-                            var dragId  = ui.draggable.children().attr("scheduleid");
-                            var dragDay = ui.draggable.children().attr("id");
-                            var dragType = ui.draggable.children().attr("datetype");
-                            var dropDay = $(this).attr("day");
-            
-                            if (dragDay.substring(4, 14) == dropDay) {
-                                return;
-                            }
-            
-                            if (dragType == "2") {
-                                dragDay += "ALL";
-                            }
-            
-                            if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
-                                RefreshView();
-                            }
-                        }
-                    });
                     //2018-11-05 김혜정 주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
-                    $("div[id$='ALL'").droppable({
-                        tolerance: "pointer",
-                        addClasses: false,
-                        drop: function(event, ui) {
-                            var dataType = ui.draggable.attr("datetype");
-            
-                            if (dataType == "1") {
-                                ui.draggable.draggable("option", "revert", true);
-                            }
-                            else {
-                                var typeCal = 1;
-                                var dragId  = ui.draggable.attr("scheduleid");
-                                var dropDay = $(this).attr("id");
-                                var dragDay = ui.draggable.attr("id");
-            
-                                if (dragDay.substring(4, 14) == dropDay.substring(0, 10)) {
-                                    return;
-                                }
-            
-                                dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
-                                dragDay = changeDateFormat(dragDay);
-            
-                                if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
-                                    RefreshView();
-                                }
-                            }
-                        }
-                    });
                     //2018-11-06 김혜정 주보기/일보기 화면에서 드래그앤드롭을 위해 추가 - 시간지정
-                    $("td[id^='TD_'][id$='_Value']").droppable({ //뒤에가 Value로 끝나는
-                        tolerance: "pointer",
-                        drop: function(event, ui) {
-                            var dataType = ui.draggable.attr("datetype");
-            
-                            if (dataType == "2") {
-                                ui.draggable.draggable("option", "revert", true);
-                            }
-                            else {
-                                var typeCal = 1;
-                                var dragId  = ui.draggable.attr("scheduleid");
-                                var dropId  = $(this).attr("Id");
-                                var dropDay = dropId.substring(3, dropId.indexOf("_Value"));
-                                var dragDay = ui.draggable.attr("id");
-            
-                                dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
-            
-                                if (dragDay == dropDay) {
-                                    return;
-                                }
-            
-                                dragDay = changeDateFormat(dragDay);
-                                dropDay = changeDateFormat(dropDay);
-            
-                                if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
-                                    RefreshView();
-                                }
-                            }
-                        }
-                    });
                 }
                 
             }
@@ -2085,28 +1991,7 @@
                     //chk_scheduleCSS();
                     
                     //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
-                  if(objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
-                    $("div[id$='ALL'").children().draggable({
-                    	addClasses: false,
-                    	revert : "invalid",
-                    	helper : function(event) {
-                    		return $(event.target).clone().css({
-                    			width: $(event.target).width()
-                    		});
-                    	},
-                    	appendTo: "body",
-                    	containment: "#calTR"
-                    });
-                    
                   //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
-                  $("#dayDiv").find("div[id^='div_']").draggable({
-                    	addClasses: false,
-                    	cursorAt: { top: 1, left: 1 },
-                    	scroll: false,
-                    	handle: "td", 
-                    	helper: "clone"
-                    });
-                  }
                 }
                 catch (e) {
                     alert("getCalWeekViewSource_after : " + e.description);
@@ -2214,15 +2099,7 @@
                     }        
                     tempData = null;
                     //chk_scheduleCSS();
-                    if(objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
                     //2018-11-05 김혜정  일보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
-                    $("#CalDiv").find("div[id^='div_']").draggable({
-                    	addClasses: false,
-                    	scroll: true,
-                    	helper : "clone",
-                    	cursorAt: { top: 1, left: 1 }
-                    });
-                    }
                 }
                 catch (e) {
                     alert("getCalDayViewSource_after : " + e.description);

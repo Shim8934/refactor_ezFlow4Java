@@ -841,9 +841,11 @@ function MonthData(oThisDate, TDIndex) {
 
     objTd.setAttribute("id", "index_" + TDIndex);
     objTd.setAttribute("day", cell_ID);
-    objTd.onmousedown = function (event) { MultiSelectStart(this, event); };
-    objTd.onmouseup = function (event) { MultiSelectEnd(this, event); };
-    //objTd.onmouseover = function (event) { MultiSelectItems(this, event); };
+    if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+        objTd.onmousedown = function (event) { MultiSelectStart(this, event); };
+        objTd.onmouseup = function (event) { MultiSelectEnd(this, event); };
+        //objTd.onmouseover = function (event) { MultiSelectItems(this, event); };
+    }
     var subTable = document.createElement("TABLE")
     var subTr = document.createElement("TR")
     var subTd = document.createElement("TD")
@@ -854,7 +856,7 @@ function MonthData(oThisDate, TDIndex) {
     subTd.setAttribute("id", "TD_" + cell_ID + "_Day");
     subTd.setAttribute("onmouseover", "MonthlyViewHeader_onMouseOver(this)");
     subTd.setAttribute("onmouseout", "MonthlyViewHeader_onMouseOut(this)");
-    if(chk_usersearch != "UserSearch" || window.location.href.indexOf('schedulePrintCalendar') == -1){ 
+    if (chk_usersearch != "UserSearch" || window.location.href.indexOf('schedulePrintCalendar') == -1){ 
         subTd.setAttribute("onclick", "WriteDateSchedule(this)");
         subTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
     }
