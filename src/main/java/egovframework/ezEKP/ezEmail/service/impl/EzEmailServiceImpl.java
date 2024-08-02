@@ -5008,6 +5008,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	@Override
 	public void actionTrashMailAllDelete(IMAPAccess ia, String folderId) throws Exception {
+		logger.debug("actionTrashMailAllDelete started.");
+		
 		IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
 		sourceFolder.open(Folder.READ_WRITE);
 		
@@ -5022,11 +5024,13 @@ public class EzEmailServiceImpl implements EzEmailService {
 				sourceFolder.expunge();
 			}
 		}
+		logger.debug("actionTrashMailAllDelete ended.");
 	}
 
 	@Override
 	public void actionMailMoveTrash(IMAPAccess ia, String folderId, String cmd, long[] uids, Locale locale, int tenantID, String userEmail, String domainName) throws Exception {
-
+		logger.debug("actionMailMoveTrash started.");
+		
 		boolean isNewUserQuotaNeeded = false;
 		boolean isThereUserLevelQuota = false;
 		Double userQuota = 0.0;
@@ -5093,5 +5097,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 				ezEmailUtil.deleteUserQuota(userEmail);
 			}
 		}
+
+		logger.debug("actionMailMoveTrash ended.");
 	}
 }
