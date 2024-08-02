@@ -1637,7 +1637,7 @@
         	<div class="taskListBox" style="overflow:hidden; padding-right: 0;">
 		        <h2 class="on" id="h2Mail" onclick="Email_Menu_Click();">
 		        	<span class="sub_iconLNB tree_arrow_down"></span>
-		        	<span class="h2Title" id="h2TitleMail" style="display:inline-block"><spring:message code="ezEmail.t99000012" /></span><span id="totalUnreadCount" style="color:#0470e4; position:absolute;"></span>
+		        	<span class="h2Title" id="h2TitleMail" style="display:inline-block"><spring:message code="ezEmail.t99000012" /></span><span id="totalUnreadCount" class="txt_color" style="position:absolute;"></span>
 		        </h2>
 		        <ul class="lnbUL" id="ulMail">
 		        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
@@ -1724,7 +1724,7 @@
 			        		 onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
 			        		<span class="sub_iconLNB tree_plus"></span>
 			        		<span class="h2Title" id="h2Title_${shareInfo.shareId}" style="display:inline-block"><c:out value="${shareInfo.shareName}" /></span>
-			        		<span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;">
+			        		<span id="totalUnreadCount_${shareInfo.shareId}" class="txt_color" style="position:absolute;">
 			        			<c:if test="${shareInfo.totalUnreadCount != '0'}">(${shareInfo.totalUnreadCount})</c:if>
 			        		</span>
 			        	</h2>

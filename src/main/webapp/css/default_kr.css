@@ -2470,7 +2470,7 @@ div#txtContent table {margin:auto;}
 #left h2.on .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px;} /* tree h2 화살표 up */
 #left h2 .tree_arrow_down{background-position:0px -182px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px;} /* tree h2 화살표 down */
 .tree_plus{ background-position:0px -104px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;} /* tree 플러스 */
-.tree_minus{ background-position:0px -78px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;} /* tree 마이너스 */
+.tree_minus{ background-position:0px -78px; width:16px; height:16px; display:inline-block; margin: 4px 0px 0px 0px; cursor:pointer;} /* tree 마이너스 */
 .tree_blank{ background-position:20px 20px; margin: 8px 0px 0px 0px; width:16px; height:16px; display:inline-block;} /* tree 빈공간 */
 .tree_tree{ background-position:1px -208px; margin: 8px 0px 0px 0px; width:16px; height:16px; display:inline-block;} /* tree 하위모양 */
 .tree_mail{ background-position:-25px 0px; width:20px; height:20px; display:inline-block; margin:8px 0px 0px 0px;} /* tree 받은메일 */

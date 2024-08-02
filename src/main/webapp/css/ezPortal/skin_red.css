@@ -248,6 +248,7 @@ nav .navUL li.on{color:#A20000;}
 .popup{background-image:url(../../images/ezNewPortal/skin/red/popup_bg.png);}
 .popupJQLayer{background-image:url(../../images/ezNewPortal/skin/red/popup_bg.png);}
 
+.node_normal:hover{color:#A20000 !important;}
 .node_selected{color:#A20000 !important;}
 .node_div span.node_normal:hover{color:#A20000 !important;}
 
@@ -279,6 +280,7 @@ nav .navUL li.on{color:#A20000;}
 
 .contents_listCategory li span.bold{color:#A20000;}
 .contents_searchCategory dl dd{background:#A20000;}
+.contents_listCategory li span.bold{color:#A20000;}
 
 .draft-survey{border-color:#D8A6A6; color:#A20000;}
 .draft-survey:hover{border-color:#A71111; background:#FBF6F6; color:#A20000;}
@@ -295,4 +297,10 @@ nav .navUL li.on{color:#A20000;}
 .imgbtnSurvey_save{border-color:#D0ABAB;}
 .imgbtnSurvey_save span{color:#A20000;}
 
-.txt_color{color:#A20000;}
+.txt_color{color:#A20000 !important;}
+
+.jstree-node .jstree-clicked{color:#A20000 !important;}
+
+.voteIcon_ul .img_description div{background:#A20000;}
+
+.gameType_wrap ul li:hover{border-color:#A20000 !important; background-color:#FBF6F6 !important;}

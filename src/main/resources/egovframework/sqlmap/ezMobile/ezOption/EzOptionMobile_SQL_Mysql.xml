@@ -62,7 +62,7 @@
                 b.mail as email,
                 b.telephonenumber,
                 DATE_FORMAT(b.lastlogin, '%Y-%c-%d %T') as lastLogin,
-				b.extensionattribute7 as jobId
+				b.extensionattribute7
 			FROM
 				TBL_USERMOBILEINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE
@@ -332,7 +332,7 @@
                 b.mail as email,
                 b.telephonenumber,
                 DATE_FORMAT(b.lastlogin, '%Y-%c-%d %T') as lastLogin,
-                b.extensionattribute7 as jobId
+                b.extensionattribute7
 			FROM
 				TBL_USERLOCALINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE
