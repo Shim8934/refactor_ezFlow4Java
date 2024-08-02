@@ -299,21 +299,7 @@
 		    		$(parent.frames["left"].document.getElementById("blockLeft")).remove();
 		    	}
 		        
-		    	if (groupcount != "0") {
-		    		parent.frames["left"].document.body.style.overflow = "hidden";
-		            schedule_receive_member_dialogArguments[0] = this;
-		            schedule_receive_member_dialogArguments[1] = windowonload_Complete2;
-		            
-		            DivPopUpShow(730,370,"/ezSchedule/scheduleReceiveMember.do");
-		            
-		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
-		        	/* var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
-		        	$("#iFramePanel").css("left", popupX); */
-		        	
-		            try { OpenWin.focus(); } catch (e) { }
-		        } else {
-		            windowonload_Complete2("empty");
-		        }
+                windowonload_Complete2("empty");
 		    }
 
 		    function windowonload_Complete2(ret) {
