@@ -182,71 +182,68 @@
 			}
 		    
 	    function btnAssign_onclick() {
-	        try {
-	        	var result = "";
-	        	if (approvalFlag == "S" && isReDraft != undefined && isReDraft == "Y") {
-	        		$.ajax({
-			    		type : "POST",
-			    		dataType : "text",
-			    		async : false,
-			    		url : "/ezApprovalG/checkAprState.do",
-			    		data : {
-			    			docID : pDocID,
-			    			docState : pDocState,
-			    			userID : '',
-			    			aprMemberSN : pReceiveSN,
-			    			orgCompanyID : orgCompanyID
-			    		},
-			    		success : function(text) {
-			    			result = text;
-			    		}
-			    	});
-	        		if (result == "FALSE") {
-	        			if (ReturnFunction != null) {
-                            ReturnFunction("DUPL");
-                        }
-                        else {
-                            window.returnValue = "DUPL";
-                            window.close();
-                        }
-		    			return;
-	        		}
-	        	}
-	            var listview = new ListView();
-	            listview.LoadFromID("listAPRLINE1");
-	            var oArrRows = listview.GetDataRows();
-	            
-	            if (oArrRows[0].textContent != strLang944) {
-	                var RtnVal = setReceiveDistribute();
-	                
-	                if (RtnVal == "TRUE") {
-	                    if (ReturnFunction != null) {
-							var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
-							if (CrossYN()) {
-		                        ReturnFunction("true");
-		                        window.close();
-                            } else {
-                                OpenAlertUI(pAlertContent);
-                                try { opener.btnDistribute_onclick_Complete(true); } catch (e) { console.log(e); }
-							}
-							window.close();
-                        } else {
-	                        window.returnValue = "true";
-	                        window.close();
-	                    }
-                    } else {
-	                    var pAlertContent = "<spring:message code='ezApprovalG.t426'/>" + RtnVal;
-	                    OpenAlertUI(pAlertContent);
-	                    return;
-	                }
-                } else {
-	                var pAlertContent = "<spring:message code='ezApprovalG.t429'/>";
-	                OpenAlertUI(pAlertContent);
-	                return;
-	            }
-	        } catch (ErrMsg) {
-	            alert(ErrMsg.description);
-	        }
+	    	try {
+	    		var result = "";
+	    		if (approvalFlag == "S" && isReDraft != undefined && isReDraft == "Y") {
+	    			$.ajax({
+	    				type : "POST",
+	    				dataType : "text",
+	    				async : false,
+	    				url : "/ezApprovalG/checkAprState.do",
+	    				data : {
+	    					docID : pDocID,
+	    					docState : pDocState,
+	    					userID : '',
+	    					aprMemberSN : pReceiveSN,
+	    					orgCompanyID : orgCompanyID
+	    				},
+	    				success : function(text) {
+	    					result = text;
+	    				}
+	    			});
+	    			if (result == "FALSE") {
+	    				if (ReturnFunction != null) {
+	    					ReturnFunction("DUPL");
+	    				}
+	    				else {
+	    					window.returnValue = "DUPL";
+	    					window.close();
+	    				}
+	    				return;
+	    			}
+	    		}
+	    		var listview = new ListView();
+	    		listview.LoadFromID("listAPRLINE1");
+	    		var oArrRows = listview.GetDataRows();
+	    		
+	    		/* 2023-03-15 임정은 - 배부 기능 비동기화 */
+	    		if (oArrRows[0].textContent != strLang944) {
+	    			var RtnVal = setReceiveDistribute();
+					
+	    			if (ReturnFunction != null) {
+	    				if (CrossYN()) {
+		    				ReturnFunction("true");
+		    			} else {
+		    				var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
+		    				OpenAlertUI(pAlertContent);
+		    				try {
+		    					opener.btnDistribute_onclick_Complete(true);
+		    				} catch (e) {
+		    					console.log(e.description);
+		    				}
+		    			}
+	    			} else {
+	    				window.returnValue = "true";
+	    			}
+	    			window.close();
+	    		} else {
+	    			var pAlertContent = "<spring:message code='ezApprovalG.t429'/>";
+	    			OpenAlertUI(pAlertContent);
+	    			return;
+	    		}
+	    	} catch (ErrMsg) {
+	    		alert(ErrMsg.description);
+	    	}
 	    }
 	    
         function btnCancel_onclick() {
@@ -287,13 +284,13 @@
 	            }
 	            
 	            if ("<c:out value ='${mode}'/>" == "add") {
-	                xmlhttp.open("POST", "/ezApprovalG/addBebu.do", false);
+	                xmlhttp.open("POST", "/ezApprovalG/addBebu.do", true);
 	            } else {
-	                xmlhttp.open("POST", "/ezApprovalG/setBebu.do", false);
+	                xmlhttp.open("POST", "/ezApprovalG/setBebu.do", true);
 	            }
 	            
 	            xmlhttp.send(xmlpara);
-	            return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+	            //return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
 	        } catch (ErrMsg) {
 	            alert(ErrMsg.description);
 	        }
