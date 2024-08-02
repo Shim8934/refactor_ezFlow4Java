@@ -341,6 +341,41 @@ var strLangKWCHd01 = "An error occurred while saving security HWP document. Plea
 var strLangNJK01 = "Restricted special characters for an email folder name(";
 var strLangNJK02 = "are included.";
 
+//승인메일
+var strLangAppr01 = "因为没有全体管理者，所以不能申请全公司邮件批准。";
+var strLangAppr02 = "批准者不存在。";
+var strLangAppr03 = "发生批准邮件错误";
+var strLangAppr04 = "批准邮件不能预约发送。";
+var strLangAppr05 = "发给全公司的邮件要经过经理的批准才能真正发送。 确定要发送吗？";
+
+// 스팸신고
+var strLangHSG01 = "由于找不到电子邮件地址，无法进行垃圾邮件举报。";
+var strLangHSG02 = "垃圾邮件举报未能成功处理。";
+
+//new ui
+const strLangFolderManage = "管理文件夹";
+const strLangSubscribe = "订阅";
+const strLangPlzCheckSearchInput = "请输入搜索词。";
+const strLangSearchFetchError = "获取搜索结果时出错 。 -";
+const strLangNoSuchDept = "没有搜索到的部门。";
+const strLangDistributionFetchError = "获取公用分配组列表时发生错误 。 -";
+const strLangAddJobSimplyMark = "(谦) ";
+const strLangCompany = "公司";
+const strLangDistributionAdd = "添加发布列表";
+const strLangAddressFetchError = "读取地址列表时出错";
+const strLangPlzSelectGroupMail = "请选择群发邮件。";
+const strLangPlzSelectDistribution = "请选择公用分配组。";
+const strLangNotAllowedSpecialChar = "名称中不能输入相应的特殊字符";
+
+const strLangSelectDept = "选择部门";
+const strLangSelectTitle = "职位选择";
+const strLangSelectRole = "选岗";
+const strLangPlzCheckSearchNameInput = "请输入要搜索的名称。";
+const strLangOrgFetchError = "获取组织图时发生错误";
+const strLangSelectProxyApproverWarning = "请选择一名指定为代理裁决者";
+
+const strLangTempSaveAttachmentsWarning = "保存时将删除附加文件。您要保存吗？";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")
