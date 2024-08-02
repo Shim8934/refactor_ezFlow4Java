@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -198,4 +199,6 @@ public interface EzEmailService {
 	public String checkInnerDomain(String forwardAddress, int tenantId) throws Exception;
 
 	public JSONObject getDistributionMemberList(String domain, String cn) throws Exception;
+	public void actionTrashMailAllDelete(IMAPAccess ia, String folderId) throws Exception;
+	public void actionMailMoveTrash(IMAPAccess ia, String folderId, String cmd, long[] uids, Locale locale, int tenantID, String userEmail, String domainName) throws Exception;
 }
