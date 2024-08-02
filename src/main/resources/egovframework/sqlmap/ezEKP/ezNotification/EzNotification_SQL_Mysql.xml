@@ -891,4 +891,15 @@
 		TENANT_ID = #tenantId#
 	</delete>
 	
+	<select id="EzNotificationDAO.selecetCompanyIdByDeptId" parameterClass="map" resultClass="string">
+		SELECT
+			EXTENSIONATTRIBUTE2
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			CN = #cn#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
 </sqlMap>

@@ -180,7 +180,6 @@ public class EzNotificationAdminController {
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String userId = user.getId();
-		String companyId = request.getParameter("companyId");
 		String url = config.getProperty("config.notificationGWServerURL") + "/rest/ezNotification/emergency/add/permissions/" + userId;
 		
 		JSONArray jsonArray = new JSONArray();
@@ -193,6 +192,7 @@ public class EzNotificationAdminController {
 		    itemObject.put("deptId", item.getDeptId());
 		    itemObject.put("jobId", item.getJobId());
 		    itemObject.put("roleId", item.getRoleId());
+		    itemObject.put("companyId", item.getCompanyId());
 		    jsonArray.add(itemObject);
 		}
 		
@@ -202,8 +202,7 @@ public class EzNotificationAdminController {
 		
 		HttpEntity<?> entity = new HttpEntity<>(jsonArray, headers);
 
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId",companyId);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 		
 		RestTemplate rest = new RestTemplate();
 		

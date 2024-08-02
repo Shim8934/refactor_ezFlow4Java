@@ -72,6 +72,7 @@
 	        var topid = "<c:out value='${topid}'/>";
 	        var primary = "<c:out value='${primary}'/>";
 		    var isAllGroupBoard = "";
+	        var companyId = "<c:out value='${companyID}'/>";
 	        
 	        window.onload = function () {
 				try {
@@ -223,8 +224,8 @@
 		        	async : true,
 		        	data : {
 		        		deptID : DeptID,
-		        		cell : "company;description;displayName;title;telephoneNumber;extensionattribute10;",
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;extensionattribute7;extensionattribute8;usertype;role1;role2",
+		        		cell : "company;description;displayName;title;telephoneNumber;extensionattribute10",
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;extensionattribute7;extensionattribute8;usertype;role1;role2;companyId",
 		        		type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
@@ -320,7 +321,7 @@
 		        	data : {
 		        		search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;extensionattribute10;" + document.getElementById("search_type").value, 
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;extensionattribute7;extensionattribute8;usertype;role1;role2", 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;extensionattribute7;extensionattribute8;usertype;role1;role2;companyId", 
 		        		type : "user",
 		        		adminOrgan : pAdminOrgan
 		        	},
@@ -413,7 +414,7 @@
 	            if (dataCnt == 0) {
 	            	var M_TR = document.createElement("TR");
 	            	var M_TR_TD = document.createElement("TD");
-	            	M_TR_TD.textContent = "데이터가 없습니다.";
+	            	M_TR_TD.textContent ='<spring:message code="main.t00026" />';
 	            	M_TR_TD.style.textAlign = "center";
 					if (pListType == "IMG") {
 						var MainTable = document.createElement("TABLE");
@@ -516,7 +517,7 @@
 	                    
 	                    var addJobFlag = M_TR.getAttribute("_DATA13");
                         var title = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
-                        var titleRoleContent = addJobFlag == 'addJob' ? "(겸) " + title : title;
+                        var titleRoleContent = addJobFlag == 'addJob' ? "<spring:message code='ezOrgan.psb03' />" + " " + title : title;
                         var role = dataRow.childNodes.item(5).childNodes.item(0).textContent;
                         titleRoleContent += role == "" ? "" : " " + role;
                         
@@ -894,6 +895,7 @@
 		                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
 		                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
 		                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
+		                    pparsingXML = pparsingXML + "<DATA9></DATA9>";
 		                    
 							if (primary == "1") { // 부서이름 다국어 처리
 								pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + "</VALUE>";
@@ -937,17 +939,18 @@
 		                if (listContentArry != "") {
 		                    for (var i = 0; i < listContentArry.length; i++) {
 		                        var strId = document.getElementById(listContentArry[i]).getAttribute("_data2"); // cn
-		                        var strName = document.getElementById(listContentArry[i]).getAttribute("_data16"); // 이름(기본어) / 기존값 data4
-		                        var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data17"); // 이름(다국어)
-		                        var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data18"); // 부서명 (기본어)
- 		                        var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data19"); // 부서명 (다국어)
+		                        var strName = document.getElementById(listContentArry[i]).getAttribute("_data17"); // 이름(기본어) / 기존값 data4
+		                        var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data18"); // 이름(다국어)
+		                        var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data19"); // 부서명 (기본어)
+ 		                        var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data20"); // 부서명 (다국어)
 		                        var strDeptID = document.getElementById(listContentArry[i]).getAttribute("_data10");
 		                        var strJobID = document.getElementById(listContentArry[i]).getAttribute("_data11");
-		                        var strJobName = document.getElementById(listContentArry[i]).getAttribute("_data20");
-		                        var strJobName2 = document.getElementById(listContentArry[i]).getAttribute("_data21");
+		                        var strJobName = document.getElementById(listContentArry[i]).getAttribute("_data21");
+		                        var strJobName2 = document.getElementById(listContentArry[i]).getAttribute("_data22");
 		                        var strRoleID = document.getElementById(listContentArry[i]).getAttribute("_data12");
 		                        var strRoleName = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                        var strRoleName2 = document.getElementById(listContentArry[i]).getAttribute("_data15");
+		                        var companyId = document.getElementById(listContentArry[i]).getAttribute("_data16");
 		                        
 		                        var listid = "MsgToList";
 		                        var getlistview = new ListView();
@@ -970,6 +973,7 @@
 				                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strJobID.trim() + "]]></DATA6>";
 				                    pparsingXML = pparsingXML + "<DATA7><![CDATA["+ strRoleID.trim() + "]]></DATA7>";
 				                    pparsingXML = pparsingXML + "<DATA8>" + strId + strDeptID.trim() + strJobID.trim() + strRoleID.trim() + "</DATA8>";
+				                    pparsingXML = pparsingXML + "<DATA9>" + companyId + "</DATA9>";
 		                            
 				                    var deptJobRoleContent = "";
 									if (primary == "1") {
@@ -1045,6 +1049,7 @@
 			                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
 			                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
 			                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
+			                    pparsingXML = pparsingXML + "<DATA9></DATA9>";
 			                    
 								if (primary == "1") { // 부서이름 다국어 처리
 									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + "</VALUE>";
@@ -1122,6 +1127,7 @@
     		                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
     		                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
     		                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
+    		                    pparsingXML = pparsingXML + "<DATA9>" + topId + "</DATA9>";
         	                    
 								if (primary == "1") { // 직위이름 다국어 처리
 									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + MakeXMLString(arrRows[i].getAttribute("DISPLAYNAME")) + "</VALUE>";
@@ -1199,7 +1205,7 @@
     		                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
     		                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
     		                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
-    	                        
+    		                    pparsingXML = pparsingXML + "<DATA9>" + topId + "</DATA9>";
 								if (primary == "1") { // 직책이름 다국어 처리
 									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + MakeXMLString(arrRows[i].getAttribute("DISPLAYNAME")) + "</VALUE>";
 								} else {
@@ -1274,6 +1280,8 @@
 			                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
 			                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
 			                    pparsingXML = pparsingXML + "<DATA8>" + groupID + "</DATA8>";
+			                    pparsingXML = pparsingXML + "<DATA9>" + topId + "</DATA9>";
+			                    
 	                            pparsingXML = pparsingXML + "<VALUE>권한그룹 : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
@@ -1957,6 +1965,7 @@
 					var deptId = listviewSelected[i].getAttribute("data5");
 					var jobId = listviewSelected[i].getAttribute("data6");
 					var roleId = listviewSelected[i].getAttribute("data7");
+					var paramCompanyId = listviewSelected[i].getAttribute("data9");
 					
 					dataObj.cn = cn;
 					dataObj.displayName = name;
@@ -1965,12 +1974,13 @@
 					dataObj.deptId = deptId;
 					dataObj.jobId = jobId;
 					dataObj.roleId = roleId;
+					dataObj.companyId = paramCompanyId;
 					data.push(dataObj); 
 				}
 	
 				$.ajax({
 					type : "POST",
-		        	url : "/admin/ezNotification/addPermission.do?companyId=" + topid,
+		        	url : "/admin/ezNotification/addPermission.do",
 		        	async : true,
 		        	data : JSON.stringify(data),
 		        	contentType:"application/json; charset=utf-8",

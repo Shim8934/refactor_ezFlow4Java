@@ -4024,7 +4024,7 @@ public class EzSystemAdminController {
 			}
 		}
 		
-		List<SystemConfigTypeVO> configTypeList = ezSystemAdminService.getSystemConfigTypeListNotXml("", userInfo.getOffset(), 0, 0, "ALL", userInfo.getPrimary(), companyID, userInfo.getTenantId());
+		List<SystemConfigTypeVO> configTypeList = ezSystemAdminService.getSystemConfigTypeListNotXml("", commonUtil.getMinuteUTC(userInfo.getOffset()), 0, 0, "ALL", companyID, userInfo.getTenantId());
 		model.addAttribute("configTypeList", configTypeList);
 		model.addAttribute("flag", sFlag);
 		model.addAttribute("configVO", configVO);

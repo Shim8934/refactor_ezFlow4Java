@@ -584,11 +584,10 @@ public class EzNotificationGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			String companyId = request.getParameter("companyId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			ezNotificationService.addPermission(permissionList, companyId, tenantId);
+			ezNotificationService.addPermission(permissionList, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -1671,7 +1671,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 	
 	@Override
-	public List<SystemConfigTypeVO> getSystemConfigTypeListNotXml(String searchValue, String offset, int startRow, int pageSize, String searchMode, String primary, String companyID, int tenantId) throws Exception {
+	public List<SystemConfigTypeVO> getSystemConfigTypeListNotXml(String searchValue, String offset, int startRow, int pageSize, String searchMode, String companyID, int tenantId) throws Exception {
 		logger.debug("getSystemConfigTypeListNotXml started");
 		Map<String, Object> map = new HashMap<String, Object>();
 

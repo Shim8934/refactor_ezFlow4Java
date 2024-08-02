@@ -4833,9 +4833,9 @@
 	<insert id="EzCommonDAO.insertConnectionMenu" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_MENU 
-			(menu_id, menu_url, menu_type, icon_url, default_order)
+			(menu_id, menu_url, menu_type, icon_url, default_order, menucode)
 		VALUES
-			(-1, '/connectionMenu.do', 'G', 'icon_topmenu icon_nav_connection', 999)
+			(-1, '/connectionMenu.do', 'G', 'icon_topmenu icon_nav_connection', 999, 'connectPortlet')
 	]]>
 	</insert>
 	
@@ -4956,7 +4956,7 @@ VALUES
     <statement id="EzCommonDAO.createTblNotiEmergencyCompany">
 	 CREATE TABLE `tbl_noti_emergency_company` (
 	  `COMPANY_ID` varchar(200) NOT NULL,
-	  `TENANT_ID` mediumint(9) NOT NULL,
+	  `TENANT_ID` mediumint(5) NOT NULL,
 	  `EMERGENCY_CONTENT` varchar(200) DEFAULT NULL,
 	  `WRITERID` varchar(80) NOT NULL,
 	  `WRITEDATE` datetime DEFAULT NULL,
@@ -4977,7 +4977,7 @@ VALUES
 	  `NOTIID` bigint(20) NOT NULL AUTO_INCREMENT,
 	  `WRITERID` varchar(80) NOT NULL,
 	  `COMPANY_ID` varchar(200) NOT NULL,
-	  `TENANT_ID` mediumint(9) NOT NULL,
+	  `TENANT_ID` mediumint(5) NOT NULL,
 	  `NOTITITLE` varchar(3000) DEFAULT NULL,
 	  `NOTIBODY` varchar(8000) DEFAULT NULL,
 	  `WRITEDATE` datetime DEFAULT NULL,
@@ -5002,7 +5002,7 @@ VALUES
 	  `ROLEID` varchar(80) DEFAULT NULL,
 	  `USER_TYPE` varchar(50) DEFAULT NULL,
 	  `COMPANY_ID` varchar(200) NOT NULL,
-	  `TENANT_ID` mediumint(9) NOT NULL,
+	  `TENANT_ID` mediumint(5) NOT NULL,
 	  `REGDATE` datetime DEFAULT NULL,
 	  PRIMARY KEY (`PERMISSION_CODE`)
 	) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
