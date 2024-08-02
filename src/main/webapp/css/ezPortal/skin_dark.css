@@ -167,7 +167,7 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .portlet_title .portletText{color:#F3F3F3;}
 .portletPlus.plus{background-image:url(../../images/ezNewPortal/skin/dark/portlet_Plus.png) !important;}
 .portletPlus.setting{background-image:url(../../images/ezNewPortal/skin/dark/portlet_setting.png) !important;}
-#theme1Body .img_slide .fix-portlet .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus1_white.png);}
+#theme1Body .img_slide .fix-portlet .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus1_white.png) !important;}
 .portlet_list li{border-color:#444444;}
 .portlet_list li .txt{color:#F3F3F3;}
 .portlet_list li:hover .txt{color:#fff;}
@@ -453,3 +453,12 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 #theme3Body .resource_listBoxUL .resource_listBoxDL dd .resource_list_add{background:none;}
 
 #theme3Body .mailGraph .mGraph{background:#343638;}
+
+.mainbg .ui-datepicker{border:1px solid #5D5D5D; background:#272829;}
+.mainbg .ui-datepicker .ui-datepicker-header{background:#343638;}
+.mainbg .ui-datepicker .ui-datepicker-title select{color:#F3F3F3;}
+.mainbg .ui-datepicker th span{color:#fff;}
+.mainbg .ui-state-default, .mainbg .ui-widget-content .ui-state-default, .mainbg .ui-widget-header .ui-state-default{color:#F3F3F3;}
+.mainbg .ui-widget-content .ui-state-hover{color:#333;}
+.mainbg .ui-datepicker-prev span{background-image:url(../../images/ezNewPortal/skin/dark/datepicker_prev.png);}
+.mainbg .ui-datepicker-next span{background-image:url(../../images/ezNewPortal/skin/dark/datepicker_next.png);}
