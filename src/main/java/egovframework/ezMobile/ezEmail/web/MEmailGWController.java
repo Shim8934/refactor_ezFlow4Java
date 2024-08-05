@@ -284,8 +284,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			int totalUnreadCount = ezEmailService.getTotalUnreadCount(info.getUserId(), info.getTenantId());
-			
-			boolean useApprMail = ezEmailUtil.useApprMailPolicy(info.getTenantId(), info.getCompanyId()); // 승인정책 설정 중 하나라도 사용이면 true
+
+			boolean useApprMail = commonUtil.checkTenantConfigBool(info.getTenantId(), "useApprMail", "false")
+					? ezEmailUtil.useApprMailPolicy(info.getTenantId(), info.getCompanyId()) : false; // 2024-03-06 이사라 - 승인메일 사용 여부
 			boolean isApprMailApprover = useApprMail ? ezEmailService.checkApprMailApprover(info.getTenantId(), info.getCompanyId(), info.getUserId()) : false;
 			
 			JSONObject data = new JSONObject();
