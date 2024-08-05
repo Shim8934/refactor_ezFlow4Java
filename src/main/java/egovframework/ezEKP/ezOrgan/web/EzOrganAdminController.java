@@ -3343,6 +3343,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						// 로컬 시스템에서 해당 User의 복원처리를 수행한다.
 						ezOrganAdminService.restoreRetireEntry(cn[i], deptID, tenantID, offset);
 
+						// 사용자의 mail을 실제 주소로 업데이트 한다.
+						ezOrganAdminService.updateUserMailAddress(cn[i], mailAddr, tenantID);
+
 						//사용자 변경 히스토리 테이블에 insert
 						UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
 						userChangeInfoVO.setUserId(cn[i]);

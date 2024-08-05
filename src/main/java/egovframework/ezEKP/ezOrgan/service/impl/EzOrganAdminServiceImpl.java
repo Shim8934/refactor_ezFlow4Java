@@ -3702,4 +3702,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("updateDBData_user ended");
 	}
+
+	@Override
+	public void updateUserMailAddress(String cn, String mailAddress, int tenantID) throws Exception {
+		logger.debug("updateUserMailAddress started");
+		ezOrganAdminDao.setUserPrimaryMail(cn, tenantID, mailAddress);
+		logger.debug("updateUserMailAddress ended");
+	}
 }

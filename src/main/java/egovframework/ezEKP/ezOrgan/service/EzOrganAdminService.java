@@ -223,4 +223,6 @@ public interface EzOrganAdminService {
 	public String getEntryAddJobInfo(String cn, String deptId, String jobId, String language, int tenantID, String prop) throws Exception;
 	
 	public void updateAddJobInfo(String cn, String deptId, String jobId, int tenantID, String orderBy, String userTreeFlag) throws Exception;
+
+	public void updateUserMailAddress(String cn, String mailAddress, int tenantID) throws Exception;
 }
