@@ -337,15 +337,16 @@
 		/* (추가/수정) 팝업창 작업 완료 이벤트 */
 		function titleInfo_complete(rtnVal) {
 	        if (typeof (rtnVal) != "undefined") {
-	        	if (rtnVal[0] == "TRUE") {
-	        		if (rtnVal[1] == "Add") {
+	        	// 2024.07.05 한슬기 : alert위치 변경(safari에서 alert이 팝업창에 가려 안보이는 현상이 있어 변경)
+	        	/*if (rtnVal[0] == "TRUE") {
+	        		if (rtnVal[1] == "Add") { 
 		        		alert("<spring:message code = 'ezBoard.t269'/>");
 	        		} else {
 		        		alert("<spring:message code = 'ezCommunity.t8'/>");
 	        		}
 	        	} else {
 	        		alert("<spring:message code = 'main.sp12'/>");
-	        	}
+	        	}*/
 	        	
 	        	job_list();
 	        	job_userList();
@@ -378,9 +379,10 @@
 		
 		/* 유저수정 팝업창 완료 이벤트 */
 		function info_user_complete(rtnValue) {
-	        if (typeof (rtnValue) != "undefined") {
+			// 2024.07.05 한슬기 : alert위치 변경(safari에서 alert이 팝업창에 가려 안보이는 현상이 있어 변경)
+			/*if (typeof (rtnValue) != "undefined") {
 	        	alert("<spring:message code='ezOrgan.t11' />");
-	        }
+	        }*/
 	        
 	        job_userList();
 	    }

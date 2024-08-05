@@ -621,7 +621,7 @@
 		        receiverData["window"] = this;
 		        mail_newreceiverchoose_dialogArguments[0] = receiverData;
 		        mail_newreceiverchoose_dialogArguments[1] = addReceiver;
-		        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 655));
+		        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 720));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function addReceiver(pListView) {

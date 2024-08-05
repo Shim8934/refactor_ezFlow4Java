@@ -1061,8 +1061,14 @@ CREATE TABLE `jmocha_stat_mail_log` (
   KEY `IDX_RECIPIENT_NAME` (`RECIPIENT_NAME`),
   KEY `IDX_MESSAGESUBJECT` (`MESSAGESUBJECT`(768)),
   KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`(768)),
-  KEY `IDX_MESSAGEID` (`MESSAGEID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `IDX_MESSAGEID` (`MESSAGEID`),
+  FULLTEXT KEY `SENDER` (`SENDER`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+  FULLTEXT KEY `SENDER_NAME` (`SENDER_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+  FULLTEXT KEY `RECIPIENT` (`RECIPIENT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+  FULLTEXT KEY `RECIPIENT_NAME` (`RECIPIENT_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+  FULLTEXT KEY `MESSAGESUBJECT` (`MESSAGESUBJECT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+  FULLTEXT KEY `ATTACHED_FILENAME` (`ATTACHED_FILENAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"'
+) ENGINE=Mroonga AUTO_INCREMENT=6406249 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='engine "InnoDB"';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -13866,6 +13872,83 @@ CREATE TABLE `jmocha_mailbox_progress` (
   `PERCENT` mediumint(100) NOT NULL,
   `UPDATEDT` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`USER_KEY`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_allowed_domain`
+--
+DROP TABLE IF EXISTS `jmocha_appr_allowed_domain`;
+CREATE TABLE `jmocha_appr_allowed_domain` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`,`DOMAIN_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_user`
+--
+DROP TABLE IF EXISTS `jmocha_appr_user`;
+CREATE TABLE `jmocha_appr_user` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_TYPE` varchar(10) NOT null,
+  PRIMARY KEY (`TENANT_ID`, `COMPANY_ID`, `USER_ID`,`USER_TYPE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_history`
+--
+DROP TABLE IF EXISTS `jmocha_appr_history`;
+CREATE TABLE `jmocha_appr_history` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `MAIL_UID` bigint(20) NOT NULL,
+  `SUBJECT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDEREMAIL` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) DEFAULT NULL,
+  `USER_NAME2` varchar(100) DEFAULT NULL,
+  `USER_DEPTID` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME2` varchar(100) DEFAULT NULL,
+  `WRITE_DATE` datetime DEFAULT NULL,
+  `APPROVER_ID` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME2` varchar(100) DEFAULT NULL,
+  `updatedt` datetime DEFAULT NULL,
+  `STATE` varchar(10) DEFAULT NULL,
+  `MEMO` varchar(200) DEFAULT NULL,
+  `DEL_FLAG` varchar(10) DEFAULT 'N',
+  PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_comp_history`
+--
+DROP TABLE IF EXISTS `jmocha_appr_comp_history`;
+CREATE TABLE `jmocha_appr_comp_history` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `MAIL_UID` bigint(20) NOT NULL,
+  `SUBJECT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDEREMAIL` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) DEFAULT NULL,
+  `USER_NAME2` varchar(100) DEFAULT NULL,
+  `USER_DEPTID` varchar(100) DEFAULT NULL, 
+  `USER_DEPTNAME` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME2` varchar(100) DEFAULT NULL,
+  `WRITE_DATE` datetime DEFAULT NULL,
+  `APPROVER_ID` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME2` varchar(100) DEFAULT NULL,
+  `updatedt` datetime DEFAULT NULL,
+  `STATE` varchar(10) DEFAULT NULL,
+  `MEMO` varchar(200) DEFAULT NULL,
+  `DEL_FLAG` varchar(10) DEFAULT 'N',
+  PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

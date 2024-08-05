@@ -4157,6 +4157,86 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
 		VALUES (#v_TENANTID#, 'ApprNonElecRecType', '전자결재G 비전자문서등록 양식 확장자', 'HWP', '전자결재 G버전의 비전자문서 등록 시, 양식 확장자를 설정한다. (MHT 또는 HWP) (default : HWP)', '2021-04-07 00:00:00', '전자결재G')
 	</insert>
+	
+	<statement id="EzCommonDAO.createJmochaApprAllowedDomain">
+		CREATE TABLE JMOCHA_APPR_ALLOWED_DOMAIN (
+		  TENANT_ID int(11) NOT NULL,
+		  COMPANY_ID varchar(80) NOT NULL,
+		  DOMAIN_NAME varchar(100) NOT NULL,
+		  PRIMARY KEY (TENANT_ID,COMPANY_ID,DOMAIN_NAME)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createJmochaApprUser">
+		CREATE TABLE JMOCHA_APPR_USER (
+		  TENANT_ID int(11) NOT NULL,
+		  COMPANY_ID varchar(80) NOT NULL,
+		  USER_ID varchar(100) NOT NULL,
+		  USER_TYPE varchar(10) NOT null,
+		  PRIMARY KEY (TENANT_ID, COMPANY_ID, USER_ID,USER_TYPE)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createJmochaApprHistory">
+		CREATE TABLE JMOCHA_APPR_HISTORY (
+		  TENANT_ID int(11) NOT NULL,
+		  COMPANY_ID varchar(80) NOT NULL,
+		  MAIL_UID bigint(20) NOT NULL,
+		  SUBJECT longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+		  SENDEREMAIL varchar(100) DEFAULT NULL,
+		  USER_ID varchar(100) NOT NULL,
+		  USER_NAME varchar(100) DEFAULT NULL,
+		  USER_NAME2 varchar(100) DEFAULT NULL,
+		  USER_DEPTID varchar(100) DEFAULT NULL,
+		  USER_DEPTNAME varchar(100) DEFAULT NULL,
+		  USER_DEPTNAME2 varchar(100) DEFAULT NULL,
+		  WRITE_DATE datetime DEFAULT NULL,
+		  APPROVER_ID varchar(100) DEFAULT NULL,
+		  APPROVER_NAME varchar(100) DEFAULT NULL,
+		  APPROVER_NAME2 varchar(100) DEFAULT NULL,
+		  UPDATEDT datetime DEFAULT NULL,
+		  STATE varchar(10) DEFAULT NULL,
+		  MEMO varchar(200) DEFAULT NULL,
+		  DEL_FLAG varchar(10) DEFAULT 'N',
+		  PRIMARY KEY (TENANT_ID,MAIL_UID,USER_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createJmochaApprCompHistory">
+		CREATE TABLE JMOCHA_APPR_COMP_HISTORY (
+		  TENANT_ID int(11) NOT NULL,
+		  COMPANY_ID varchar(80) NOT NULL,
+		  MAIL_UID bigint(20) NOT NULL,
+		  SUBJECT longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+		  SENDEREMAIL varchar(100) DEFAULT NULL,
+		  USER_ID varchar(100) NOT NULL,
+		  USER_NAME varchar(100) DEFAULT NULL,
+		  USER_NAME2 varchar(100) DEFAULT NULL,
+		  USER_DEPTID varchar(100) DEFAULT NULL, 
+		  USER_DEPTNAME varchar(100) DEFAULT NULL,
+		  USER_DEPTNAME2 varchar(100) DEFAULT NULL,
+		  WRITE_DATE datetime DEFAULT NULL,
+		  APPROVER_ID varchar(100) DEFAULT NULL,
+		  APPROVER_NAME varchar(100) DEFAULT NULL,
+		  APPROVER_NAME2 varchar(100) DEFAULT NULL,
+		  UPDATEDT datetime DEFAULT NULL,
+		  STATE varchar(10) DEFAULT NULL,
+		  MEMO varchar(200) DEFAULT NULL,
+		  DEL_FLAG varchar(10) DEFAULT 'N',
+		  PRIMARY KEY (TENANT_ID,MAIL_UID,USER_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTable" resultClass="String" parameterClass="Map">
+		SELECT 
+			#v_COLUMN#
+		FROM
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_allowed_domain">jmocha_appr_allowed_domain</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_user">jmocha_appr_user</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_history">jmocha_appr_history</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_comp_history">jmocha_appr_comp_history</isEqual>
+		LIMIT 1
+	</select>
 
     <select id="EzCommonDAO.checkRecordHeadereOption" resultClass="String">
         <![CDATA[
@@ -4241,7 +4321,7 @@
 		VALUES
 			('095', 1, '이름', 140, 'TBL_CABINETCLASS', 'TITLE', null, null, 'Simple기록물철', '이름', 'Name', '綴じ名', '名稱', #tenantId#, #companyId#),
 			('095', 2, '생산연도', 50, 'TBL_CABINETCLASS', 'PRODUCTIONYEAR', null, null, 'Simple기록물철', '생산연도', 'Productionyear', '生産年度', '生产年度', #tenantId#, #companyId#),
-			('095', 3, '단위업무명(분류코드)', 140, 'TBL_CABINETCLASS', 'TASKNAME', null, null, 'Simple기록물철', '단위업무명(분류코드)', 'Taskname', '単位業務名', '单位业务名称',  #tenantId#, #companyId#),
+			('095', 3, '단위업무명(분류코드)', 160, 'TBL_CABINETCLASS', 'TASKNAME', null, null, 'Simple기록물철', '단위업무명(분류코드)', 'Taskname', '単位業務名', '单位业务名称',  #tenantId#, #companyId#),
 			('095', 4, '형태', 100, 'TBL_CABINETCLASS', 'RECTYPECODE', null, null, 'Simple기록물철', '형태', 'FORM', '形態', '表', #tenantId#, #companyId#),
 			('095', 5, '연번', 50, 'TBL_CABINETCLASS', 'REGSERIALNO', null, null, 'Simple기록물철', '연번', 'SN.', '連番', '序列号', #tenantId#, #companyId#),
 			('095', 6, '권호수', 40, 'TBL_CABINET', 'VOLUMENO', null, null, 'Simple기록물철', '권호수', 'VOL.', '巻号数', '卷湖',  #tenantId#, #companyId#)

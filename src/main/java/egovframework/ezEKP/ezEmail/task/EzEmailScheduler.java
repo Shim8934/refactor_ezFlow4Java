@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -1599,5 +1600,70 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		
 		logger.debug("getWebServiceResultForGw ended.");
 		return result;
+	}
+
+	/**
+	 * 승인메일 : 자동삭제 - (전사/일반) 승인신청한 메일이 n개월이 지나면 자동삭제 (상태변경)
+	 * 자동삭제 상태로 변경되는 메일은 신청자의 임시보관함으로 이동 및 알림메일 발송
+	 */
+	@Scheduled(cron = "${config.cron.autoDeleteApprMailHistory}")
+	public void autoDeleteApprMailHistroy() throws Exception {
+		logger.debug("autoDeleteApprMailHistroy scheduler started.");
+		
+		try {
+			for (TenantVO tenantVO : ezCommonService.getTenantList()) {
+				int tenantId = tenantVO.getTenantId();
+				String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+				
+				// 자동삭제 대상 리스트 조회
+				List<Map<String, String>> hisList = ezEmailService.getAutoDeleteApprMailHistoryList(tenantId, "1");
+				
+				for (Map<String, String> m : hisList) {
+					long uid = Long.parseLong(m.get("mailUID"));
+					String companyId = m.get("companyId");
+					String applicantId = m.get("userId");
+					String applicantEmail = applicantId + "@" + domainName;
+					logger.debug("uid={}, applicantEmail={}, companyId={}", uid, applicantEmail, companyId);
+
+					// 상태변경 및 알림메일 발송
+					ezEmailService.setApprMailAutoDelete(tenantId, companyId, applicantEmail, uid);
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		logger.debug("autoDeleteApprMailHistroy scheduler");
+	}
+
+	/**
+	 * 승인메일 : 오래된 로그 삭제 - (일반) n개월이 지난 승인대기 상태 그외의 로그 삭제
+	 */
+	@Scheduled(cron = "${config.cron.deleteOldApprMailHistory}")
+	public void deleteOldApprMailHistory() throws Exception {
+		logger.debug("deleteOldApprMailHistory scheduler started.");
+		
+		try {
+			for (TenantVO tenantVO : ezCommonService.getTenantList()) {
+				int tenantId = tenantVO.getTenantId();
+				String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+				
+				// 로그 삭제 대상 리스트 조회
+				List<Map<String, String>> hisList = ezEmailService.getOldApprMailHistoryList(tenantId, "1");
+				
+				for (Map<String, String> m : hisList) {
+					long uid = Long.parseLong(m.get("mailUID"));
+					String companyId = m.get("companyId");
+					String applicantId = m.get("userId");
+					String applicantEmail = applicantId + "@" + domainName;
+					logger.debug("uid={}, applicantEmail={}, companyId={}", uid, applicantEmail, companyId);
+
+					// 삭제
+					ezEmailService.setOldApprMailDelete(tenantId, companyId, applicantEmail, uid);
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		logger.debug("deleteOldApprMailHistory scheduler");
 	}
 }

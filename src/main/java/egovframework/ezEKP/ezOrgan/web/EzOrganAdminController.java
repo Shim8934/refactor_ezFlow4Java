@@ -33,6 +33,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.BooleanUtils;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.lang3.StringUtils;
@@ -157,6 +158,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	logger.debug("init started.");
     	try {
 			// create table
+    		ezCommonService.createTables(); // 2024-07-01 김수아 - 테이블 생성 공통함수 추가
 	    	ezCommonService.createMailTemplateSequence();
     		ezCommonService.createJmochaMailboxProgress();
 	    	ezCommonService.createTblSession(); // 2023-11-07 이사라 - DB 기반 세션 테이블 생성
@@ -1946,6 +1948,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		// masteradmin 사용자를 제외하기 위해 1을 뺀다.
 		userCount--;
+		// 승인메일 공유사서함이 있으면 해당 계정은 라이센스에서 제외
+		Boolean apprSharedExist = BooleanUtils.toBoolean(ezOrganAdminService.userCheck("__approved_mail", tenantID));
+		if (apprSharedExist) {
+			userCount--;
+		}
 		
 		logger.debug("licensedUserCount=" + licensedUserCount + ",userCount=" + userCount);
 				
