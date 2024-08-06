@@ -441,7 +441,7 @@ public class EzNotificationController {
 			jsonParam.put("viewWidth", "700");
 			jsonParam.put("viewHeight", "400");
 			jsonParam.put("linkUrl", "/ezNotification/emergencyNotiItem.do?emergencyItemId=" + emergencyItemId);
-			jsonParam.put("linkUrlMobile", "");
+			jsonParam.put("linkUrlMobile", "/mobile/ezNotification/emergencyNotiItem.do?emergencyItemId=" + emergencyItemId);
 			jsonParam.put("etcData", "notChkSetting");
 			
 			HttpEntity<?> notiEntity = new HttpEntity<>(jsonParam.toJSONString(), headers);

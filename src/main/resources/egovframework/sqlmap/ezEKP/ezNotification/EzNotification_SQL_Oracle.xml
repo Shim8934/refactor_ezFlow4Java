@@ -259,14 +259,14 @@
 	AND
 		ISREAD = #isRead#
 	</isNotEqual>
-	<isNotEqual property="lastNotiSeq" compareValue="-1">
+	<isNotEmpty property="lastNotiSeq">>
 	<![CDATA[
 	AND
 		notiseq < #lastNotiSeq#
 	]]>
-	</isNotEqual>
+	</isNotEmpty>
     ORDER BY
-    	 REGDATE DESC, notiseq desc
+    	 REGDATE DESC, NOTISEQ DESC
     )
     <![CDATA[
     WHERE ROWNUM <= #rowCount#

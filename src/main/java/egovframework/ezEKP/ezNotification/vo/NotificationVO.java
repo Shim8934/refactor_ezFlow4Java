@@ -193,6 +193,4 @@ public class NotificationVO {
 				+ ", tenantId=" + tenantId + ", companyId=" + companyId + "]";
 	}
 	
-	
-	
 }
