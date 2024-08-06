@@ -190,7 +190,7 @@
                                     AND DOCNO LIKE '%' || #DOCNO# || '%'
                                 </isEqual>
                                 <isEqual property="doctitleSearch" compareValue="1">
-                                    AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+                                    AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
                                 </isEqual>
                                 <isEqual property="writerNameSearch" compareValue="1">
                                     AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'
@@ -6068,6 +6068,26 @@
 	                    RESENDFLAG <isEqual property="sort" compareValue="ASC">ASC</isEqual>
 	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
 	                </isEqual>
+	                <isEqual property="orderBy" compareValue="WRITERDEPTNAME">
+	                    WRITERDEPTNAME <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+	                </isEqual>
+	                <isEqual property="orderBy" compareValue="FORMNAME">
+	                    FORMNAME <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+	                </isEqual>
+	                <isEqual property="orderBy" compareValue="ISPUBLIC">
+	                    ISPUBLIC <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+	                </isEqual>
+	                <isEqual property="orderBy" compareValue="RECNAME">
+	                    TITLE <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+	                </isEqual>
+	                <isEqual property="orderBy" compareValue="SIHANGNO">
+	                    SIHANGNO <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+	                </isEqual>
 	            </isNotEmpty>
 	            <isEmpty property="orderBy">
 	                CREATEDATE DESC, RECORDID DESC, SEPERATEATTACHNO DESC
@@ -6116,12 +6136,15 @@
 		                TBL_RECORD.TENANT_ID,
 		                TBL_RECORD.COMPANYID,
 		                TBL_CABINETCLASS.TITLE,
-                        ENDDOCNO.DOCNO SIHANGNO
+                        ENDDOCNO.DOCNO SIHANGNO,
+                        CASE WHEN #multiLang# IS NULL OR #multiLang# = ''
+                        	THEN TBL_ENDAPRDOCINFO.WriterDeptName
+                        	ELSE TBL_ENDAPRDOCINFO.WriterDeptName2
+                        END AS WriterDeptName,
+                        TBL_ENDAPRDOCINFO.ISPUBLIC
 				  <isEqual property="usePublicFlag" compareValue="true">
 				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval
-				  	<isNotEqual property="listType" compareValue="012">
                         , TBL_EXPENDAPRDOCINFO.FORMNAME
-                  	</isNotEqual>
 				  </isEqual>
 				<isNotEmpty property="dispRegisterNo" prepend=",">
 	                 <isEqual property="listType" compareValue="001">
@@ -8777,7 +8800,7 @@
                     (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
                 and
                     TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
-					<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+                    <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
 						#v_DEPTIDS[]#
 					</iterate>
                 and
@@ -8805,7 +8828,7 @@
 				<![CDATA[TBL_APRDOCINFO.DOCNO LIKE '%' || #col_where_DOCNO# || '%']]>
 			</isNotEmpty>
 			<isNotEmpty property="col_where_DOCTITLE" prepend="AND">
-				<![CDATA[TBL_APRDOCINFO.DOCTITLE LIKE '%' || #col_where_DOCTITLE# || '%']]>
+				<![CDATA[TBL_APRDOCINFO.DOCTITLE LIKE '%' || #col_where_DOCTITLE# || '%' ESCAPE '\']]>
 			</isNotEmpty>
 			<isNotEmpty property="col_where_WRITERNAME" prepend="AND">
 				<![CDATA[TBL_APRDOCINFO.WRITERNAME LIKE '%' || #col_where_WRITERNAME# || '%']]>
@@ -13093,7 +13116,7 @@
                 DOCNO LIKE CONCAT(CONCAT('%', #DOCNO#), '%')
             </isEqual>
             <isEqual property="doctitleSearch" compareValue="1" prepend="AND">
-                DocTitle LIKE CONCAT(CONCAT('%', #DOCTITLE#), '%')
+                DocTitle LIKE CONCAT(CONCAT('%', #DOCTITLE#), '%') ESCAPE '\'
             </isEqual>
             <isEqual property="writerNameSearch" compareValue="1" prepend="AND">
                 WRITERNAME2 LIKE CONCAT(CONCAT('%', #WRITERNAME#), '%')
@@ -14689,7 +14712,7 @@
 			<![CDATA[TBL_APRDOCINFO.DOCNO LIKE '%' || #col_where_DOCNO# || '%']]>
 		</isNotEmpty>
 		<isNotEmpty property="col_where_DOCTITLE" prepend="AND">
-			<![CDATA[TBL_APRDOCINFO.DOCTITLE LIKE '%' || #col_where_DOCTITLE# || '%']]>
+			<![CDATA[TBL_APRDOCINFO.DOCTITLE LIKE '%' || #col_where_DOCTITLE# || '%' ESCAPE '\']]>
 		</isNotEmpty>
 		<isNotEmpty property="col_where_WRITERNAME" prepend="AND">
 			<![CDATA[TBL_APRDOCINFO.WRITERNAME LIKE '%' || #col_where_WRITERNAME# || '%']]>
@@ -14893,7 +14916,7 @@
 	   		 	DOCNO LIKE '%' || #v_DOCNUMBER# || '%'
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_DOCTITLE" prepend="AND"> 
-	   		 	DOCTITLE LIKE '%' || #v_DOCTITLE# || '%'
+	   		 	DOCTITLE LIKE '%' || #v_DOCTITLE# || '%' ESCAPE '\'
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_DRAFTER" prepend="AND"> 
 	   			CASE #v_MULTIDATALANG#
@@ -23469,7 +23492,7 @@
 	   		INSERT INTO 
 	   			TBL_RECORD_TEMP
 	   		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
-	   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID, DocAttachName)
+	   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID, DocAttachName) 
 	   		VALUES 
 	   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_REGISTERDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
 	   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_DOCATTACHNAME#)
@@ -26453,10 +26476,10 @@
    			TENANT_ID = #v_TENANTID#
    		AND
    			COMPANYID = #companyID#
-        <isNotEmpty property="v_AprMemberSN">
-            AND
-                APRMEMBERSN = #v_AprMemberSN#
-        </isNotEmpty>
+		<isNotEmpty property="v_AprMemberSN">
+			AND
+				APRMEMBERSN = #v_AprMemberSN#
+		</isNotEmpty>
    	</delete>
    	
    	<delete id="EzApprovalG.deleteGongRamSaveExpAprLine" parameterClass="Map"> 
@@ -26468,10 +26491,10 @@
    			TENANT_ID = #v_TENANTID#
    		AND
    			COMPANYID = #companyID#
-        <isNotEmpty property="v_AprMemberSN">
-            AND
-                APRMEMBERSN = #v_AprMemberSN#
-        </isNotEmpty>
+		<isNotEmpty property="v_AprMemberSN">
+			AND
+				APRMEMBERSN = #v_AprMemberSN#
+		</isNotEmpty>
    	</delete>
    	
    	<insert id="EzApprovalG.insertGongRamSaveAprLineInfo" parameterClass="Map"> 

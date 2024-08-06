@@ -190,7 +190,7 @@
                                     AND DOCNO LIKE '%' || #DOCNO# || '%'
                                 </isEqual>
                                 <isEqual property="doctitleSearch" compareValue="1">
-                                    AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+                                    AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
                                 </isEqual>
                                 <isEqual property="writerNameSearch" compareValue="1">
                                     AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'
@@ -6068,6 +6068,26 @@
 	                    RESENDFLAG <isEqual property="sort" compareValue="ASC">ASC</isEqual>
 	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
 	                </isEqual>
+	                <isEqual property="orderBy" compareValue="WRITERDEPTNAME">
+	                    WRITERDEPTNAME <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+	                </isEqual>
+	                <isEqual property="orderBy" compareValue="FORMNAME">
+	                    FORMNAME <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+	                </isEqual>
+	                <isEqual property="orderBy" compareValue="ISPUBLIC">
+	                    ISPUBLIC <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+	                </isEqual>
+	                <isEqual property="orderBy" compareValue="RECNAME">
+	                    TITLE <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+	                </isEqual>
+	                <isEqual property="orderBy" compareValue="SIHANGNO">
+	                    SIHANGNO <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+	                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+	                </isEqual>
 	            </isNotEmpty>
 	            <isEmpty property="orderBy">
 	                CREATEDATE DESC, RECORDID DESC, SEPERATEATTACHNO DESC
@@ -6116,12 +6136,15 @@
 		                TBL_RECORD.TENANT_ID,
 		                TBL_RECORD.COMPANYID,
 		                TBL_CABINETCLASS.TITLE,
-                        ENDDOCNO.DOCNO SIHANGNO
+                        ENDDOCNO.DOCNO SIHANGNO,
+                        CASE WHEN #multiLang# IS NULL OR #multiLang# = ''
+                        	THEN TBL_ENDAPRDOCINFO.WriterDeptName
+                        	ELSE TBL_ENDAPRDOCINFO.WriterDeptName2
+                        END AS WriterDeptName,
+                        TBL_ENDAPRDOCINFO.ISPUBLIC
 				  <isEqual property="usePublicFlag" compareValue="true">
 				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval
-				  	<isNotEqual property="listType" compareValue="012">
                         , TBL_EXPENDAPRDOCINFO.FORMNAME
-                  	</isNotEqual>
 				  </isEqual>
 				<isNotEmpty property="dispRegisterNo" prepend=",">
 	                 <isEqual property="listType" compareValue="001">
@@ -8805,7 +8828,7 @@
 				<![CDATA[TBL_APRDOCINFO.DOCNO LIKE '%' || #col_where_DOCNO# || '%']]>
 			</isNotEmpty>
 			<isNotEmpty property="col_where_DOCTITLE" prepend="AND">
-				<![CDATA[TBL_APRDOCINFO.DOCTITLE LIKE '%' || #col_where_DOCTITLE# || '%']]>
+				<![CDATA[TBL_APRDOCINFO.DOCTITLE LIKE '%' || #col_where_DOCTITLE# || '%' ESCAPE '\']]>
 			</isNotEmpty>
 			<isNotEmpty property="col_where_WRITERNAME" prepend="AND">
 				<![CDATA[TBL_APRDOCINFO.WRITERNAME LIKE '%' || #col_where_WRITERNAME# || '%']]>
@@ -13093,7 +13116,7 @@
                 DOCNO LIKE CONCAT(CONCAT('%', #DOCNO#), '%')
             </isEqual>
             <isEqual property="doctitleSearch" compareValue="1" prepend="AND">
-                DocTitle LIKE CONCAT(CONCAT('%', #DOCTITLE#), '%')
+                DocTitle LIKE CONCAT(CONCAT('%', #DOCTITLE#), '%') ESCAPE '\'
             </isEqual>
             <isEqual property="writerNameSearch" compareValue="1" prepend="AND">
                 WRITERNAME2 LIKE CONCAT(CONCAT('%', #WRITERNAME#), '%')
@@ -14689,7 +14712,7 @@
 			<![CDATA[TBL_APRDOCINFO.DOCNO LIKE '%' || #col_where_DOCNO# || '%']]>
 		</isNotEmpty>
 		<isNotEmpty property="col_where_DOCTITLE" prepend="AND">
-			<![CDATA[TBL_APRDOCINFO.DOCTITLE LIKE '%' || #col_where_DOCTITLE# || '%']]>
+			<![CDATA[TBL_APRDOCINFO.DOCTITLE LIKE '%' || #col_where_DOCTITLE# || '%' ESCAPE '\']]>
 		</isNotEmpty>
 		<isNotEmpty property="col_where_WRITERNAME" prepend="AND">
 			<![CDATA[TBL_APRDOCINFO.WRITERNAME LIKE '%' || #col_where_WRITERNAME# || '%']]>
@@ -14893,7 +14916,7 @@
 	   		 	DOCNO LIKE '%' || #v_DOCNUMBER# || '%'
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_DOCTITLE" prepend="AND"> 
-	   		 	DOCTITLE LIKE '%' || #v_DOCTITLE# || '%'
+	   		 	DOCTITLE LIKE '%' || #v_DOCTITLE# || '%' ESCAPE '\'
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_DRAFTER" prepend="AND"> 
 	   			CASE #v_MULTIDATALANG#

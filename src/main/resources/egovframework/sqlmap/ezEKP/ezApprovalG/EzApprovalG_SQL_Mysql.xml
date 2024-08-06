@@ -6100,12 +6100,15 @@
                         SUBSTR(TBL_RECORD.RegisterNo, -6) RECREGSN,
                         M.AprmemberId as ORGUSERID,
                         TBL_CABINET.TITLE,
-                        ENDDOCNO.DOCNO AS SIHANGNO
+                        ENDDOCNO.DOCNO AS SIHANGNO,
+                        CASE WHEN #multiLang# IS NULL OR #multiLang# = ''
+                        	THEN TBL_ENDAPRDOCINFO.WriterDeptName
+                        	ELSE TBL_ENDAPRDOCINFO.WriterDeptName2
+                        END AS WriterDeptName,
+                        TBL_ENDAPRDOCINFO.ISPUBLIC
                   <isEqual property="usePublicFlag" compareValue="true">
                         , TBL_EXPENDAPRDOCINFO.SecurityApproval
-                  	<isNotEqual property="listType" compareValue="012">
                         , TBL_EXPENDAPRDOCINFO.FORMNAME
-                  	</isNotEqual>
                   </isEqual>
                     <isNotEmpty property="dispRegisterNo" prepend=",">
                         <isEqual property="listType" compareValue="001">
@@ -6643,6 +6646,26 @@
                 </isEqual>
                 <isEqual property="orderBy" compareValue="RESENDFLAG">
                     RESENDFLAG <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+                </isEqual>
+                <isEqual property="orderBy" compareValue="WRITERDEPTNAME">
+                    WRITERDEPTNAME <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+                </isEqual>
+                <isEqual property="orderBy" compareValue="FORMNAME">
+                    FORMNAME <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+                </isEqual>
+                <isEqual property="orderBy" compareValue="ISPUBLIC">
+                    ISPUBLIC <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+                </isEqual>
+                <isEqual property="orderBy" compareValue="RECNAME">
+                    TITLE <isEqual property="sort" compareValue="ASC">ASC</isEqual>
+                    <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
+                </isEqual>
+                <isEqual property="orderBy" compareValue="SIHANGNO">
+                    SIHANGNO <isEqual property="sort" compareValue="ASC">ASC</isEqual>
                     <isNotEqual property="sort" compareValue="ASC">DESC</isNotEqual>
                 </isEqual>
             </isNotEmpty>

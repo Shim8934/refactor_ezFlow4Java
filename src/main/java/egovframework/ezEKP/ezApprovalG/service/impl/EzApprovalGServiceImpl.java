@@ -9568,7 +9568,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
         /* 이유정 - [웹취약점] EzApprovalG.getRecordList 관련 orderby절 수정 (파라미터 추가) */
-        String orderColumn = "REGISTERTYPE;REGISTERDATE;DISPREGISTERNO;SEPERATEATTACHNO;RECTITLE;DISPCLASSNO;APRMEMBERTITLE;DRAFTERNAME;RECEIPTNAME;ATTACHFLAG;REJECTFLAG;RESENDFLAG";
+        String orderColumn = "REGISTERTYPE;REGISTERDATE;DISPREGISTERNO;SEPERATEATTACHNO;RECTITLE;DISPCLASSNO;APRMEMBERTITLE;DRAFTERNAME;";
+        orderColumn += "RECEIPTNAME;ATTACHFLAG;REJECTFLAG;RESENDFLAG;WRITERDEPTNAME;FORMNAME;ISPUBLIC;RECNAME;SIHANGNO";
         String[] columns = orderColumn.split(";");
         
         if (!recordListVO.getOrderBy().equals("")) {
@@ -9620,6 +9621,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 recordListVO.setTransYear("TRANSYEAR");
                 recordListVO.setDisplayReason("DISPLAYREASON");
                 break;
+            /* 2024-08-06 홍승비 - 전자결재G 열람문서함 대응을 위한 분기 추가 */
+            case "012" :
+            	recordListVO.setDispRegisterNo("DISPREGISTERNO");
+            	recordListVO.setRecTitle("RECTITLE");
+            	recordListVO.setReSendFlag("SETRESENDFLAG");
+            	break;
         }
         
 		recordListVO.setTempDeptCode(recordListVO.getDeptCode());

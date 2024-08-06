@@ -8054,11 +8054,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = "";
 	
 		docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
-		if (dbType.equals("mysql")) {
-			docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\");
-		} else {
-			docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
-		}
+		docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
         drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
         String draftfrom = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
         String draftto = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
