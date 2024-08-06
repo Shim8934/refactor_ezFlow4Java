@@ -207,4 +207,9 @@ public class EzMainAdminController {
 		
 		return "cmm/error/accessBlock";
 	}
+	
+	@RequestMapping(value="/admin/adminDenied.do")
+	public String adminDeniedPage(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		return "cmm/error/adminDenied";
+	}
 }

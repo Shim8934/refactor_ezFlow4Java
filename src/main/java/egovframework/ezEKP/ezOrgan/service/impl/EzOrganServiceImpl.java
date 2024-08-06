@@ -628,7 +628,35 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return totalCount;
 	}
 	
+	/**
+	 * 하위부서 포함하여 카운트 필요시 사용
+	 * 2024.07.19 한슬기 : 조직도 숨김처리 기능 사용시 관리자페이지, 사용자페이지 구분하기위해 오버로딩
+	 * @param companyList 하위회사 목록
+	 * @param containLow YES일때 본인포함 하위, NO일때 본인제외 하위 (하위가 회사인경우를 위해 추가함)
+	 * @param tenantID
+	 * @param adminOrgan y: 관리자페이지에서 호출, n: 사용자페이지에서 호출
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
+	public int getMemberListCount2(String deptCN, List<String> companyList, int totalCount, String containLow, int tenantID, String adminOrgan) throws Exception {
+		logger.debug("getMemberListCount2 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptCN", deptCN);
+		map.put("containConfig", containLow);
+		map.put("tenantID", tenantID);
+		map.put("adminOrgan", adminOrgan);
+		
+		totalCount = ezOrganDAO.getMemberListCount2(map);
+		
+		logger.debug("totalCount2 = {}, adminOrgan = {} ", totalCount, adminOrgan);
+		
+		logger.debug("getMemberListCount2 ended.");
+		
+		return totalCount;
+	}	
+	
 	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception {
 		return getDeptMemberListCount(deptID,containLow,primary,tenantID,"n");
 	}

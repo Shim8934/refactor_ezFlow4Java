@@ -261,5 +261,9 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	public int deleteMailboxProgress(Map<String, Object> map) {
 		return delete("EzEmailDAO.deleteMailboxProgress", map);
 	}
-	
+
+	// 승인메일
+	public int checkApprMailApprover(Map<String, Object> map) {
+		return (int) select("EzEmailDAO.checkApprMailApprover", map);
+	}
 }

@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -30,6 +31,8 @@ import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -51,6 +54,7 @@ import org.w3c.dom.NodeList;
 import com.google.gson.JsonObject;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.Globals;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -58,6 +62,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailApprVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
@@ -3393,6 +3398,7 @@ public class EzEmailAdminController {
 		logger.debug("useCopyrightMenu=" + useCopyrightMenu);
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", user.getTenantId());
+		boolean useApprMail = commonUtil.checkTenantConfigBool(user.getTenantId(), "useApprMail", "false");
 		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("useLetter", useLetter);
@@ -3401,8 +3407,1117 @@ public class EzEmailAdminController {
 		model.addAttribute("cChk", cChk);
 		model.addAttribute("kChk", kChk);
 		model.addAttribute("useCopyrightMenu", useCopyrightMenu);
+		model.addAttribute("useApprMail", useApprMail);
 		
 		return "admin/ezEmail/adminMailLeft";
 	}
+
+    /**
+     * 승인메일 :
+	 * 전체메일승인 메인페이지
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/main.do" }, method = RequestMethod.GET)
+	public String apprAllHandsMain(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprAllHandsMain started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		List<OrganDeptVO> list 			= ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList 	= new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		logger.debug("apprAllHandsMain ended.");
+		return "admin/ezEmail/apprAllHandsMain";
+	}
 	
+    /**
+     * 승인메일 : 
+	 * 전체메일승인 > 승인정책관리 페이지, 메일승인관리 > 승인정책 페이지
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/policy.do", "/admin/ezEmail/appr/policy.do"}, method = RequestMethod.GET)
+	public String apprPolicy(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("apprPolicy started.");
+
+		boolean isAllHandsPage = request.getRequestURI().contains("/allHands/");
+		logger.debug("isAllHandsPage={}", isAllHandsPage);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userCompanyId = userInfo.getCompanyID();
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}, userCompanyId={}", tenantId, userCompanyId);
+		
+		// Parameter ...
+		String companyId = StringUtils.defaultIfBlank(request.getParameter("companyId"), userCompanyId);
+		logger.debug("companyId={}", companyId);
+
+		Map<String, Object> configMap = new HashMap<String, Object>();
+		if (isAllHandsPage) {
+			configMap.put("useApprMailAllHands", "UNUSED"); // 전사메일 발송 시 승인기능 사용여부 : USAGE|UNUSED, default:UNUSED
+		} else {
+			configMap.put("useApprMailOut", "UNUSED"); // 외부로 메일 발송 시 승인기능 사용여부 : USAGE|USAGE_ATTACH|UNUSED, default:UNUSED
+			configMap.put("useApprMailIn", "UNUSED"); // 내부로 메일 발송 시 승인기능 사용여부 : USAGE|USAGE_ATTACH|UNUSED, default:UNUSED
+		}
+
+		configMap.forEach((k,v) -> {
+			try {
+				String configValue = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(tenantId, companyId, k), (String) v);
+				model.addAttribute(k, configValue);
+				logger.debug("{}:{}", k, configValue);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		});
+		
+		model.addAttribute("companyId", companyId);
+		
+		String rePage =  isAllHandsPage ? "admin/ezEmail/apprAllHandsPolicy" : "admin/ezEmail/apprPolicy";
+		logger.debug("apprPolicy ended.");
+		return rePage;
+	}
+	
+    /**
+     * 승인메일 : 
+	 * 승인정책 저장
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/setPolicy.do", "/admin/ezEmail/appr/setPolicy.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public String apprSetPolicy(@CookieValue("loginCookie")String loginCookie, Model model, Locale locale, HttpServletRequest request) throws Exception {
+		logger.debug("apprSetPolicy started.");
+
+		boolean isAllHandsPage = request.getRequestURI().contains("/allHands/");
+		logger.debug("isAllHandsPage={}", isAllHandsPage);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}", tenantId);
+
+		// Parameter ...
+		String companyId = request.getParameter("companyId");
+		String policyData = request.getParameter("policyData");
+		logger.debug("companyId={}, policyData={}", companyId, policyData);
+		
+		Map<String, String> configMap = new HashMap<String, String>();
+		if (isAllHandsPage) {
+			configMap.put("ALLHANDS", "useApprMailAllHands");
+		} else {
+			configMap.put("OUT", "useApprMailOut");
+			configMap.put("IN", "useApprMailIn");
+		}
+		
+		Map<String, String> policyDataMap = new ObjectMapper().readValue(policyData,new TypeReference<Map<String,String>> (){});	
+		policyDataMap.forEach((k,v) -> {
+			String realKey = configMap.get(k);
+			logger.debug("{} {}:{}", realKey, k, v);
+			
+			try {
+				// 승인메일 공유사서함 생성 (메일 발송시에도 체크하여 생성하지만 여러 사람이 동시에 생성할 가능성이 있어 동시에 적용할 가능성이 적은 설정변경 시에 생성될 수 있도록 수정, 단 사용함으로 변경할 떄만)
+				if (v.toUpperCase().contains("USAGE")) { 
+					ezEmailUtil.getApprSharedMailBox(tenantId, locale);
+				}
+				
+				String hasConfig = ezCommonService.getCompanyConfig(tenantId, companyId, realKey);
+				
+				if (StringUtils.isEmpty(hasConfig))  {
+					ezCommonService.insertCompanyConfig(tenantId, companyId, realKey, v);
+				} else {
+					ezCommonService.updateCompanyConfig(tenantId, companyId, realKey, v);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		});
+		
+		logger.debug("apprSetPolicy ended.");
+		return "OK";
+    }
+	
+	/**
+	 * 승인메일 : 
+	 * 전사승인메일 > 승인대기목록 페이지
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/pending.do" }, method = RequestMethod.GET)
+	public String apprAllHandsPending(@CookieValue("loginCookie")String loginCookie, @RequestParam String startNum, Model model, HttpServletRequest request)
+			throws Exception {
+		logger.debug("apprAllHandsPending started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		int tenantId = userInfo.getTenantId();
+		String userCompanyId = userInfo.getCompanyID();
+		String userId = userInfo.getId();
+		String lang = userInfo.getLang();
+		Locale locale = userInfo.getLocale();
+		String type = "pending"; // 대기
+		String type2 = "apprCompPending"; // 대기
+
+		// Parameter ...
+		String companyId = StringUtils.defaultIfBlank(request.getParameter("companyId"), userCompanyId);
+		logger.debug("companyId={}", companyId);
+		
+		int pageBlockSize = 10;
+
+		// set model
+		model.addAttribute("shareId", Globals.APPR_MAIL_SHARED_ID);
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("pageBlockSize", pageBlockSize);
+
+		logger.debug("apprAllHandsPending ended.");
+		return "admin/ezEmail/apprAllHandsPending";
+	}
+	
+    /**
+     * 승인메일 : 
+	 * 전사승인메일 > 승인로그 페이지
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/completeLog.do" }, method = RequestMethod.GET)
+	public String apprAllHandsCompleteLog(@CookieValue("loginCookie")String loginCookie, @RequestParam String startNum, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprAllHandsCompleteLog started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		int tenantId = userInfo.getTenantId();
+		String userCompanyId = userInfo.getCompanyID();
+		String userId = userInfo.getId();
+		String lang = userInfo.getLang();
+		Locale locale = userInfo.getLocale();
+		String type = "complete"; // 완료
+		String type2 = "apprCompLog"; // 완료
+
+		// Parameter ...
+		String companyId = StringUtils.defaultIfBlank(request.getParameter("companyId"), userCompanyId);
+		logger.debug("companyId={}", companyId);
+		
+		int pageBlockSize = 10;
+
+		// set model
+		model.addAttribute("shareId", Globals.APPR_MAIL_SHARED_ID);
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("pageBlockSize", pageBlockSize);
+
+		logger.debug("apprAllHandsCompleteLog ended.");
+		return "admin/ezEmail/apprAllHandsCompleteLog";
+	}
+
+    /**
+     * 승인메일 :
+	 * 메일승인관리 메인페이지
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/main.do" }, method = RequestMethod.GET)
+	public String apprMain(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprMain started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		List<OrganDeptVO> list 			= ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList 	= new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		logger.debug("apprMain ended.");
+		return "admin/ezEmail/apprMain";
+	}
+
+    /**
+     * 승인메일 :
+	 * 메일승인관리 > 승인관리자 페이지
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/manager.do" }, method = RequestMethod.GET)
+	public String apprManager(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprManager started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userCompanyId = userInfo.getCompanyID();
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}, userCompanyId={}", tenantId, userCompanyId);
+
+		// Parameter ...
+		String companyId = StringUtils.defaultIfBlank(request.getParameter("companyId"), userCompanyId);
+		logger.debug("companyId={}", companyId);
+		
+		model.addAttribute("companyId", companyId);
+		
+		logger.debug("apprManager ended.");
+		return "admin/ezEmail/apprManager";
+	}
+
+    /**
+     * 승인메일 :
+	 * 메일승인관리 > 승인관리자 > 발송허용 도메인 추가 페이지
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allowDomainPopUp.do" }, method = RequestMethod.GET)
+	public String allowDomainPopUp(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("allowDomainPopUp started.");
+		logger.debug("allowDomainPopUp ended.");
+		return "admin/ezEmail/apprAllowDomainPopUp";
+	}
+	
+	/**
+     * 승인메일 :
+	 * 발송허용 도메인 리스트 가져오기
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/getAllowDomainList.do" }, method = RequestMethod.POST)
+	@ResponseBody
+	public List<String> apprGetAllowDomainList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprGetAllowDomainList started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}", tenantId);
+
+		// Parameter ...
+		String companyId = request.getParameter("companyId");
+		logger.debug("companyId={}", companyId);
+		
+		List<String> allowedDomainList = ezEmailService.getApprAllowedDomainList(tenantId, companyId);
+		logger.debug("allowed={}", allowedDomainList);
+		
+		logger.debug("apprGetAllowDomainList ended.");
+		return allowedDomainList;
+	}
+
+    /**
+     * 승인메일 :
+	 * 발송허용 도메인 추가
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/addAllowDomain.do" }, method = RequestMethod.POST)
+	@ResponseBody
+	public String apprAddAllowDomain(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprAddAllowDomain started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}", tenantId);
+
+		// Parameter ...
+		String companyId = request.getParameter("companyId");
+		String domainName = request.getParameter("domainName");
+		logger.debug("companyId={}, domainName={}", companyId, domainName);
+
+		int resultInt = ezEmailService.insertApprAllowedDomain(tenantId, companyId, domainName);
+
+		String returnStr = (resultInt == -1) ? "DUPLICATION" : "OK";
+		
+		logger.debug("apprAddAllowDomain ended.");
+		return returnStr;
+	}
+
+    /**
+     * 승인메일 :
+	 * 발송허용 도메인 삭제
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/deleteAllowDomain.do" }, method = RequestMethod.POST)
+	@ResponseBody
+	public String apprDeleteAllowDomain(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprAddAllowDomain started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}", tenantId);
+
+		// Parameter ...
+		String companyId = request.getParameter("companyId");
+		String[] domainList = request.getParameterValues("domainList[]");
+		logger.debug("companyId={}, domainList={}", companyId, domainList);
+
+		int resultInt = ezEmailService.deleteApprAllowedDomain(tenantId, companyId, domainList);
+		
+		if (resultInt < 0) { throw new Exception(); }
+		
+		logger.debug("apprAddAllowDomain ended.");
+		return "OK";
+	}
+
+    /**
+     * 승인메일 :
+	 * 메일승인관리 > 승인관리자 > 승인자/예외자 추가 페이지
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/addApproverPopUp.do", "/admin/ezEmail/appr/addExceptionUserPopUp.do" }, method = RequestMethod.GET)
+	public String apprManagerUser(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprManager started.");
+		
+		String popUpType = request.getRequestURI().contains("/addApproverPopUp.do") ? "approver" : "exception";
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userCompanyId = userInfo.getCompanyID();
+
+		// Parameter ...
+		String companyId = StringUtils.defaultIfBlank(request.getParameter("companyId"), userCompanyId);
+		
+		model.addAttribute("popUpType", popUpType);
+		model.addAttribute("companyId", companyId);
+		
+		logger.debug("apprManager ended.");
+		return "admin/ezEmail/apprUserSettingPopUp";
+	}
+
+	/**
+     * 승인메일 :
+	 * 승인자/예외자 리스트 가져오기
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/getApproverList.do", "/admin/ezEmail/appr/getExceptionUserList.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public List<Map<String, String>> apprGetApprUserList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprGetApprUserList started.");
+
+		boolean isApprover = request.getRequestURI().contains("/getApproverList.do");
+		logger.debug("isApprover={}", isApprover);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String lang = userInfo.getPrimary();
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}", tenantId);
+
+		// Parameter ...
+		String companyId = request.getParameter("companyId");
+		logger.debug("companyId={}", companyId);
+		
+		List<String> userList = new ArrayList<String>();
+		if (isApprover) {
+			userList = ezEmailService.getApproverList(tenantId, companyId);
+		} else {
+			userList = ezEmailService.getExceptionUserList(tenantId, companyId);
+		}
+		logger.debug("userList={}", userList);
+		
+		List<Map<String, String>> reUserList = new ArrayList<Map<String,String>>();
+		if (userList != null && userList.size() > 0) {
+			for(String user : userList) {
+				OrganUserVO userVO = ezOrganService.getUserInfo(user, lang, tenantId);
+				String uCn 			= (userVO != null) ? userVO.getCn() 			: user;
+				String uName 		= (userVO != null) ? userVO.getDisplayName() 	: "retire";
+				String uDeptId 		= (userVO != null) ? userVO.getDepartment() 	: "null";
+				String uDeptName 	= (userVO != null) ? userVO.getDescription() 	: "null";
+				String uTitle 		= (userVO != null) ? userVO.getTitle() 			: "null";
+				
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("userId", uCn);
+				map.put("userName", uName);
+				map.put("deptId", uDeptId);
+				map.put("deptName", uDeptName);
+				map.put("userTitle", uTitle);
+				
+				reUserList.add(map);
+			}
+		}
+
+		logger.debug("apprGetApprUserList ended.");
+		return reUserList;
+	}
+
+	/**
+     * 승인메일 :
+	 * 승인자 리스트 검색
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/getApproverSearchList.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public List<Map<String, String>> apprGetApprUserSearchList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprGetApprUserSearchList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String lang = userInfo.getPrimary();
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}", tenantId);
+
+		// Parameter ...
+		String companyId = request.getParameter("companyId");
+		String searchType = request.getParameter("searchType");
+		String searchValue = request.getParameter("searchValue");
+		logger.debug("companyId={}, searchType={}, searchValue={}", companyId);
+		
+		List<OrganUserVO> userList = ezEmailService.getApproverSearchList(tenantId, companyId, lang, searchType, searchValue);
+		logger.debug("userList={}", userList);
+		
+		List<Map<String, String>> reUserList = new ArrayList<Map<String,String>>();
+		if (userList != null && userList.size() > 0) {
+			for(OrganUserVO userVO : userList) {
+				
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("userId", 		userVO.getCn());
+				map.put("userName", 	userVO.getDisplayName());
+				map.put("deptId", 		userVO.getDepartment());
+				map.put("deptName", 	userVO.getDescription());
+				map.put("userTitle", 	userVO.getTitle());
+				
+				reUserList.add(map);
+			}
+		}
+
+		logger.debug("apprGetApprUserSearchList ended.");
+		return reUserList;
+	}
+
+    /**
+     * 승인메일 :
+	 * 승인자/예외자 추가
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/addApprover.do", "/admin/ezEmail/appr/addExceptionUser.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public String apprAddApprUser(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprAddApprUser started.");
+
+		boolean isApprover = request.getRequestURI().contains("/addApprover.do");
+		logger.debug("isApprover={}", isApprover);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}", tenantId);
+
+		// Parameter ...
+		String companyId = request.getParameter("companyId");
+		String[] userList = request.getParameterValues("userList[]");
+		logger.debug("companyId={}, userList={}", companyId, userList);
+
+		int resultInt = 0;
+		if (isApprover) {
+			resultInt = ezEmailService.resetApprover(tenantId, companyId, userList);
+		} else {
+			resultInt = ezEmailService.resetExceptionUser(tenantId, companyId, userList);
+		}
+
+		if (resultInt < 0) { throw new Exception(); }
+		
+		logger.debug("apprAddApprUser ended.");
+		return "OK";
+	}
+
+    /**
+     * 승인메일 :
+	 * 승인자/예외자 삭제
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/deleteApprover.do", "/admin/ezEmail/appr/deleteExceptionUser.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public String apprDeleteApprUser(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprDeleteApprUser started.");
+
+		boolean isApprover = request.getRequestURI().contains("/deleteApprover.do");
+		logger.debug("isApprover={}", isApprover);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}", tenantId);
+
+		// Parameter ...
+		String companyId = request.getParameter("companyId");
+		String[] userList = request.getParameterValues("userList[]");
+		logger.debug("companyId={}, userList={}", companyId, userList);
+
+		int resultInt = 0;
+		if (isApprover) {
+			resultInt = ezEmailService.deleteApprover(tenantId, companyId, userList);
+		} else {
+			resultInt = ezEmailService.deleteExceptionUser(tenantId, companyId, userList);
+		}
+		
+		if (resultInt < 0) { throw new Exception(); }
+		
+		logger.debug("apprDeleteApprUser ended.");
+		return "OK";
+	}
+	
+    /**
+     * 승인메일 :
+	 * 메일승인관리 > 승인로그
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/completeLog.do" }, method = RequestMethod.GET)
+	public String apprCompleteLog(@CookieValue("loginCookie")String loginCookie, @RequestParam String startNum, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprCompleteLog started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		int tenantId = userInfo.getTenantId();
+		String userCompanyId = userInfo.getCompanyID();
+		String userId = userInfo.getId();
+		String lang = userInfo.getLang();
+		Locale locale = userInfo.getLocale();
+		String type = "complete"; // 완료
+		String type2 = "apprLog"; // 완료
+
+		// Parameter ...
+		String companyId = StringUtils.defaultIfBlank(request.getParameter("companyId"), userCompanyId);
+		logger.debug("companyId={}", companyId);
+		
+		// 페이지네이션
+		int pageMax = 0;
+		int pageStartNum = 1;
+		int listCount =  20; // 고정
+		int pageBlockSize = 10;
+
+		if (StringUtils.isNotBlank(startNum)) {
+			pageStartNum = Integer.parseInt(startNum);
+		}
+
+		logger.debug("apprCompleteLog id={}, type={}, tenantId={}, companyId={}, lang={}, pageStartNum={}, listCount={}", 
+				userId, type, tenantId, companyId, lang, pageStartNum, listCount);
+
+		JSONArray resultArry = new JSONArray();
+
+		try {
+			JSONArray array = ezEmailService.getAdminApprMailList(tenantId, companyId, type, userId, lang, pageStartNum, listCount);
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset());
+			JSONArray array3 = ezEmailService.setHref(array2);
+			resultArry = ezEmailService.setStateByLocale(array3, locale);
+
+			int pageTotalCount = ezEmailService.getAdminApprMailListCount(tenantId, companyId, type2, userId);
+			pageMax = (int) Math.ceil((double) pageTotalCount / listCount);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		// set model
+		model.addAttribute("shareId", Globals.APPR_MAIL_SHARED_ID);
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("resultArry", resultArry);
+		model.addAttribute("pageStartNum", pageStartNum);
+		model.addAttribute("pageMax", pageMax);
+		model.addAttribute("pageBlockSize", pageBlockSize);
+		
+		logger.debug("apprCompleteLog ended.");
+		return "admin/ezEmail/apprCompleteLog";
+	}
+	
+    /**
+     * 승인메일 : 
+	 * 승인대기목록 리스트 가져오기
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/getPendingList.do"}, method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject apprAllHandsGetPendingList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprAllHandsGetPendingList started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		int tenantId = userInfo.getTenantId();
+		String userCompanyId = userInfo.getCompanyID();
+		String userId = userInfo.getId();
+		String lang = userInfo.getLang();
+		String offset = userInfo.getOffset();
+		Locale locale = userInfo.getLocale();
+		String type = "pending"; // 대기
+		String type2 = "apprCompPending"; // 대기
+		logger.debug("tenantId={}, userCompanyId={}, userId={}, lang={}, locale={}, type={}, type2={}",
+				tenantId, userCompanyId, userId, lang, locale, type, type2);
+
+		// param
+		String companyId = StringUtils.defaultIfBlank(request.getParameter("companyId"), userCompanyId);
+		String startNum = StringUtils.defaultIfBlank(request.getParameter("startNum"), "1");
+		logger.debug("companyId={}, startNum={}", companyId, startNum);
+
+		// 페이지네이션
+		int pageMax = 0;
+		int pageStartNum = Integer.parseInt(startNum);
+		int listCount =  20; // 고정
+		int pageTotalCount = 0;
+		logger.debug("pageStartNum={}, listCount={}", pageStartNum, listCount);
+
+		// 로그 리스트
+		JSONArray logList = new JSONArray();
+		try {
+			JSONArray array = ezEmailService.getAdminCompApprMailList(tenantId, companyId, type, userId, lang, pageStartNum, listCount);
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, offset);
+			JSONArray array3 = ezEmailService.setHref(array2);
+			logList = ezEmailService.setStateByLocale(array3, locale);
+
+			pageTotalCount = ezEmailService.getAdminApprMailListCount(tenantId, companyId, type2, userId);
+			pageMax = (int) Math.ceil((double) pageTotalCount / listCount);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		JSONObject returnData = new JSONObject();
+		returnData.put("shareId", Globals.APPR_MAIL_SHARED_ID);
+		returnData.put("lang", lang);
+		returnData.put("companyId", companyId);
+		returnData.put("userId", userId);
+		returnData.put("resultArry", logList);
+		returnData.put("pageStartNum", pageStartNum);
+		returnData.put("pageMax", pageMax);
+		returnData.put("totalCnt", pageTotalCount);
+		
+		logger.debug("apprAllHandsGetPendingList ended.");
+        return returnData;
+	}
+	
+    /**
+     * 승인메일 : 
+	 * 전사 승인메일 발송승인
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/setApproval.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public String apprAllHandsSetApproval(@CookieValue("loginCookie")String loginCookie, @RequestBody MailApprVO request) 
+			throws Exception {
+		logger.debug("apprAllHandsSetApproval started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		String companyId = userInfo.getCompanyID();
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+        logger.debug("apprSetApproval userId={}, tenantId={}, companyId={}, domainName={}", userId, tenantId, companyId, domainName);
+        
+		String returnValue = "OK";
+		int errorInt = 0; // 오류난 개수
+		// param
+		String[] hrefArray = request.getHrefArray();
+
+		for(String encryptedHref : hrefArray) {
+			// decrypt & mailbox/uid
+			String href = egovFileScrty.decryptAES(encryptedHref);
+			String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
+			long uid = Long.parseLong(href.split("/")[1]);
+			
+			// 신청자 정보
+			String applicantId = hrefUserId;
+			String applicantEmail = hrefUserId + "@" + domainName;
+			OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
+			if (applicantVO != null) {
+				applicantId = applicantVO.getCn();
+				applicantEmail = applicantId + "@" + domainName;
+			}
+
+			logger.debug("apprSetApproval userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
+					userId, href, hrefUserId, uid, applicantId, applicantEmail);
+
+	        int resultInt = ezEmailService.setApprCompMailApproval(loginCookie, applicantEmail, uid);
+	        if (resultInt != 0) {
+	        	errorInt++;
+	        }
+		}
+		
+		if (errorInt > 0) {
+			returnValue = "ERROR_" + errorInt;
+		}
+        
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("apprAllHandsSetApproval ended.");
+		
+		return returnValue;
+	}
+	
+	/**
+	 * 승인메일 :
+	 * 전사 승인메일 발송거부 요청 화면
+	 */
+	@RequestMapping(value = "/admin/ezEmail/appr/allHands/setReject.do", method = RequestMethod.GET)
+	public String apprSetReject(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("apprSetReject started & ended. userId={}", commonUtil.userInfo(loginCookie).getId());
+
+		return "admin/ezEmail/apprRejectPopUp";
+	}
+
+    /**
+     * 승인메일 : 
+	 * 전사 승인메일 발송거부 action
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/setRejectAction.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public String apprAllHandsSetReject(@CookieValue("loginCookie")String loginCookie, @RequestBody MailApprVO request) throws Exception {
+		logger.debug("apprAllHandsSetReject started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		String companyId = userInfo.getCompanyID();
+		logger.debug("tenantId={}, companyId={}", tenantId, companyId);
+
+        String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+        
+		String returnValue = "OK";
+		int errorInt = 0; // 오류난 개수
+		// param
+		String[] hrefArray = request.getHrefArray();
+	    String memo = request.getMemo().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;");
+
+	    for(String encryptedHref : hrefArray) {
+			// decrypt & mailbox/uid
+			String href = egovFileScrty.decryptAES(encryptedHref);
+			String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
+			long uid = Long.parseLong(href.split("/")[1]);
+			
+			// 신청자 정보
+			String applicantId = hrefUserId;
+			String applicantEmail = hrefUserId + "@" + domainName;
+			OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
+			if (applicantVO != null) {
+				applicantId = applicantVO.getCn();
+				applicantEmail = applicantId + "@" + domainName;
+			}
+
+			logger.debug("apprAllHandsSetReject userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
+					userId, href, hrefUserId, uid, applicantId, applicantEmail);
+
+	        int resultInt = ezEmailService.setApprCompMailReject(loginCookie, applicantEmail, uid, memo);
+	        if (resultInt != 0) {
+	        	errorInt++;
+	        }
+		}
+		
+		if (errorInt > 0) {
+			returnValue = "ERROR_" + errorInt;
+		}
+        
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("apprAllHandsSetReject ended.");
+		
+		return returnValue;
+	}
+	
+    /**
+     * 승인메일 : 
+	 * 전체메일승인 > 승인로그 목록 리스트 가져오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/getCompleteLogList.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject apprAllHandsGetCompleteLogList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprAllHandsGetCompleteLogList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		int tenantId = userInfo.getTenantId();
+		String userCompanyId = userInfo.getCompanyID();
+		String userId = userInfo.getId();
+		String lang = userInfo.getLang();
+		String offset = userInfo.getOffset();
+		Locale locale = userInfo.getLocale();
+		logger.debug("tenantId={}, userCompanyId={}, userId={}, lang={}, locale={}",
+				tenantId, userCompanyId, userId, lang, locale);
+		
+		// param
+		String companyId = StringUtils.defaultIfBlank(request.getParameter("companyId"), userCompanyId);
+		String startNum = StringUtils.defaultIfBlank(request.getParameter("startNum"), "1");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String sDate = StringUtils.isNotBlank(request.getParameter("sDate")) ? 
+						sdf.format(new Date(request.getParameter("sDate"))) : null;
+		String eDate = StringUtils.isNotBlank(request.getParameter("eDate")) ? 
+				sdf.format(new Date(request.getParameter("eDate"))) : null;
+		logger.debug("companyId={}, startNum={}, sDate={}, eDate={}", companyId, startNum, sDate, eDate);
+		
+		// 페이지네이션
+		int pageMax = 0;
+		int pageStartNum = Integer.parseInt(startNum);
+		int listCount =  20; // 고정
+		int pageTotalCount = 0;
+		logger.debug("pageStartNum={}, listCount={}", pageStartNum, listCount);
+
+		// 로그 리스트
+		List<Map<String, String>> logList = new ArrayList<Map<String,String>>();
+		try {
+			logList = ezEmailService.getApprCompMailHistorySearchList(tenantId, companyId, lang, locale, offset, sDate, eDate, pageStartNum, listCount);
+			pageTotalCount = ezEmailService.getApprCompMailHistorySearchListCnt(tenantId, companyId, sDate, eDate);
+			pageMax = (int) Math.ceil((double) pageTotalCount / listCount);
+			logger.debug("pageMax={}, logList Size={}", pageMax, logList.size());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		
+		JSONObject returnData = new JSONObject();
+		returnData.put("shareId", Globals.APPR_MAIL_SHARED_ID);
+		returnData.put("lang", lang);
+		returnData.put("companyId", companyId);
+		returnData.put("userId", userId);
+		returnData.put("resultArry", logList);
+		returnData.put("pageStartNum", pageStartNum);
+		returnData.put("pageMax", pageMax);
+		returnData.put("totalCnt", pageTotalCount);
+		
+		logger.debug("apprAllHandsGetCompleteLogList ended.");
+		return returnData;
+	}
+	
+    /**
+     * 승인메일 : 
+	 * 승인로그 검색 리스트 가져오기
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/getCompleteLogListSearch.do"}, method = RequestMethod.POST)
+	public void apprAllHandsGetCompleteLogListSearch(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprAllHandsGetCompleteLogListSearch started.");
+		logger.debug("apprAllHandsGetCompleteLogListSearch ended.");
+	}
+	
+    /**
+     * 승인메일 : 
+	 * 전체메일 > 승인로그 엑셀 다운로드
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/getCompleteLogListDownload.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public void apprAllHandsGetCompleteLogListDownload(@CookieValue("loginCookie")String loginCookie, Model model, Locale locale, HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+		logger.debug("apprAllHandsGetCompleteLogListDownload started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userCompanyId = userInfo.getCompanyID();
+		String lang = userInfo.getLang();
+		String offset = userInfo.getOffset();
+		int tenantId = userInfo.getTenantId();
+		logger.debug("userCompanyId={}, tenantId={}", userCompanyId, tenantId);
+		
+		String companyId = StringUtils.defaultIfEmpty(request.getParameter("companyId"), userCompanyId);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String sDate = StringUtils.isNotBlank(request.getParameter("sDate")) ? 
+						sdf.format(new Date(request.getParameter("sDate"))) : null;
+		String eDate = StringUtils.isNotBlank(request.getParameter("eDate")) ? 
+				sdf.format(new Date(request.getParameter("eDate"))) : null;
+		logger.debug("companyId={}, sDate={}, eDate={}", companyId, sDate, eDate);
+		
+		// 검색 조건에 맞는 리스트 가져오기
+		List<Map<String, String>> logList = ezEmailService.getApprCompMailHistorySearchList(tenantId, companyId, lang, locale, offset, sDate, eDate);
+		List<Map<String, String>> userCntList = ezEmailService.getApprCompMailHistorySearchUserCnt(tenantId, companyId, lang, sDate, eDate);
+
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			ezEmailUtil.apprLogExcelExport(workbook, locale, "logs_allHands", "userStatistics_allHands", logList, userCntList);
+			
+			String fileName = "apprMailLog_allHands";
+			if (sDate != null && eDate != null) {
+				fileName += sDate + "~" + eDate;
+			}
+			
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName.replaceAll("\r", "").replaceAll("\n", "") + ".xls");
+			response.setContentType("application/vnd.ms-excel");
+			
+			workbook.write(response.getOutputStream());
+			//workbook.close();
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("apprAllHandsGetCompleteLogListDownload ended.");
+	}
+	
+    /**
+     * 승인메일 : 
+	 * 전체메일승인 > 승인로그 삭제
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/allHands/deleteCompleteLogList.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public String apprAllHandsDeleteCompleteLogList(@CookieValue("loginCookie")String loginCookie, @RequestBody MailApprVO request) 
+			throws Exception {
+		logger.debug("apprAllHandsDeleteCompleteLogList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		logger.debug("tenantId={}", tenantId);
+
+        String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+        
+		String returnValue = "OK";
+		int errorInt = 0; // 오류난 개수
+		// param
+		String[] hrefArray = request.getHrefArray();
+
+		for(String encryptedHref : hrefArray) {
+			// decrypt & mailbox/uid
+			String href = egovFileScrty.decryptAES(encryptedHref);
+			String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
+			long uid = Long.parseLong(href.split("/")[1]);
+			
+			// 신청자 정보
+			OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
+			String applicantId = applicantVO.getCn();
+			String applicantEmail = applicantId + "@" + domainName;
+			
+			logger.debug("apprAllHandsDeleteCompleteLogList userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
+					userId, href, hrefUserId, uid, applicantId, applicantEmail);
+			
+			int resultInt = ezEmailService.setApprCompMailDelete(loginCookie, applicantEmail, uid);
+
+	        if (resultInt != 0) {
+	        	errorInt++;
+	        }
+		}
+		
+		if (errorInt > 0) {
+			returnValue = "ERROR_" + errorInt;
+		}
+		
+		logger.debug("apprAllHandsDeleteCompleteLogList ended. userId={}, returnValue={}", userId, returnValue);
+		
+		return returnValue;
+	}
+
+    /**
+     * 승인메일 :
+	 * 예외자 리스트 가져오기
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/getExceptionUserList.do" }, method = RequestMethod.GET)
+	public void apprGetExceptionUserList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprGetExceptionUserList started.");
+		logger.debug("apprGetExceptionUserList ended.");
+	}
+
+    /**
+     * 승인메일 : 
+	 * (일반메일)승인로그 목록 리스트 가져오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = {"/admin/ezEmail/appr/getCompleteLogList.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject apprGetCompleteLogList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprGetCompleteLogList started.");logger.debug("apprAllHandsGetCompleteLogList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		int tenantId = userInfo.getTenantId();
+		String userCompanyId = userInfo.getCompanyID();
+		String userId = userInfo.getId();
+		String lang = userInfo.getLang();
+		String offset = userInfo.getOffset();
+		Locale locale = userInfo.getLocale();
+		logger.debug("tenantId={}, userCompanyId={}, userId={}, lang={}, locale={}",
+				tenantId, userCompanyId, userId, lang, locale);
+		
+		// param
+		String companyId = StringUtils.defaultIfBlank(request.getParameter("companyId"), userCompanyId);
+		String startNum = StringUtils.defaultIfBlank(request.getParameter("startNum"), "1");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String sDate = StringUtils.isNotBlank(request.getParameter("sDate")) ? 
+						sdf.format(new Date(request.getParameter("sDate"))) : null;
+		String eDate = StringUtils.isNotBlank(request.getParameter("eDate")) ? 
+				sdf.format(new Date(request.getParameter("eDate"))) : null;
+		logger.debug("companyId={}, startNum={}, sDate={}, eDate={}", companyId, startNum, sDate, eDate);
+		
+		// 페이지네이션
+		int pageMax = 0;
+		int pageStartNum = Integer.parseInt(startNum);
+		int listCount =  20; // 고정
+		int pageTotalCount = 0;
+		logger.debug("pageStartNum={}, listCount={}", pageStartNum, listCount);
+
+		// 로그 리스트
+		List<Map<String, String>> logList = new ArrayList<Map<String,String>>();
+		try {
+			logList = ezEmailService.getApprMailHistorySearchList(tenantId, companyId, lang, locale, offset, sDate, eDate, pageStartNum, listCount);
+			pageTotalCount = ezEmailService.getApprMailHistorySearchListCnt(tenantId, companyId, sDate, eDate);
+			pageMax = (int) Math.ceil((double) pageTotalCount / listCount);
+			logger.debug("pageMax={}, logList Size={}", pageMax, logList.size());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		
+		JSONObject returnData = new JSONObject();
+		returnData.put("shareId", Globals.APPR_MAIL_SHARED_ID);
+		returnData.put("lang", lang);
+		returnData.put("companyId", companyId);
+		returnData.put("userId", userId);
+		returnData.put("resultArry", logList);
+		returnData.put("pageStartNum", pageStartNum);
+		returnData.put("pageMax", pageMax);
+		returnData.put("totalCnt", pageTotalCount);
+		
+		logger.debug("apprGetCompleteLogList ended.");
+		return returnData;
+	}
+	
+    /**
+     * 승인메일 : 
+	 * (일반메일)승인로그 검색 리스트 가져오기
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/getCompleteLogListSearch.do"}, method = RequestMethod.POST)
+	public void apprGetCompleteLogListSearch(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
+			throws Exception {
+		logger.debug("apprGetCompleteLogListSearch started.");
+		logger.debug("apprGetCompleteLogListSearch ended.");
+	}
+	
+    /**
+     * 승인메일 : 
+	 * 메일승인관리 > 승인로그 엑셀 다운로드
+	 */
+	@RequestMapping(value = {"/admin/ezEmail/appr/getCompleteLogListDownload.do"}, method = RequestMethod.POST)
+	public void apprGetCompleteLogListDownload(@CookieValue("loginCookie")String loginCookie, Model model, Locale locale, HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+		logger.debug("apprGetCompleteLogListDownload started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userCompanyId = userInfo.getCompanyID();
+		String lang = userInfo.getLang();
+		String offset = userInfo.getOffset();
+		int tenantId = userInfo.getTenantId();
+		logger.debug("userCompanyId={}, tenantId={}", userCompanyId, tenantId);
+		
+		String companyId = StringUtils.defaultIfEmpty(request.getParameter("companyId"), userCompanyId);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		@SuppressWarnings("deprecation")
+		String sDate = StringUtils.isNotBlank(request.getParameter("sDate")) ? 
+						sdf.format(new Date(request.getParameter("sDate"))) : null;
+		String eDate = StringUtils.isNotBlank(request.getParameter("eDate")) ? 
+				sdf.format(new Date(request.getParameter("eDate"))) : null;
+		logger.debug("companyId={}, sDate={}, eDate={}", companyId, sDate, eDate);
+		
+		// 검색 조건에 맞는 리스트 가져오기
+		List<Map<String, String>> logList = ezEmailService.getApprMailHistorySearchList(tenantId, companyId, lang, locale, offset, sDate, eDate);
+		List<Map<String, String>> userCntList = ezEmailService.getApprMailHistorySearchUserCnt(tenantId, companyId, lang, sDate, eDate);
+
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			ezEmailUtil.apprLogExcelExport(workbook, locale, "logs", "userStatistics", logList, userCntList);
+			
+			String fileName = "apprMailLog_";
+			if (sDate != null && eDate != null) {
+				fileName += sDate + "~" + eDate;
+			}
+			
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName.replaceAll("\r", "").replaceAll("\n", "") + ".xls");
+			response.setContentType("application/vnd.ms-excel");
+			
+			workbook.write(response.getOutputStream());
+			//workbook.close();
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("apprGetCompleteLogListDownload ended.");
+	}
 }

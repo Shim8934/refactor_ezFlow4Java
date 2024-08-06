@@ -1298,8 +1298,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 
   CREATE TABLE "JMOCHA_USER_QUOTA" 
    (	"USER_ID" NVARCHAR2(100), 
-	"MAX_STORAGE" NUMBER(10,5) DEFAULT 0, 
-	"WARN_STORAGE" NUMBER(10,5) DEFAULT 0
+	"MAX_STORAGE" NUMBER(15,5) DEFAULT 0, 
+	"WARN_STORAGE" NUMBER(15,5) DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table OPENJPA_SEQUENCE_TABLE
@@ -8387,6 +8387,73 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"PERCENT" NUMBER(5,0) NOT NULL, 
 	"UPDATEDT" DATE DEFAULT SYSDATE
    ) ;
+-------------------------------------------------------- 
+--  DDL for Table JMOCHA_APPR_ALLOWED_DOMAIN
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_APPR_ALLOWED_DOMAIN" 
+   (	"TENANT_ID" NUMBER(5,0) NOT NULL, 
+	"COMPANY_ID" NVARCHAR2(80) NOT NULL, 
+	"DOMAIN_NAME" NVARCHAR2(100) NOT NULL
+   ) ;
+-------------------------------------------------------- 
+--  DDL for Table JMOCHA_APPR_USER
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_APPR_USER" 
+   (	"TENANT_ID" NUMBER(5,0) NOT NULL, 
+	"COMPANY_ID" NVARCHAR2(80) NOT NULL, 
+	"USER_ID" NVARCHAR2(100) NOT NULL, 
+	"USER_TYPE" NVARCHAR2(10) NOT NULL
+   ) ;
+-------------------------------------------------------- 
+--  DDL for Table JMOCHA_APPR_HISTORY
+--------------------------------------------------------
+  CREATE TABLE "JMOCHA_APPR_HISTORY" (
+  "TENANT_ID" NUMBER(5,0) NOT NULL,
+  "COMPANY_ID" NVARCHAR2(80) NOT NULL,
+  "MAIL_UID" NUMBER NOT NULL,
+  "SUBJECT" CLOB,
+  "SENDEREMAIL" NVARCHAR2(100),
+  "USER_ID" NVARCHAR2(100) NOT NULL,
+  "USER_NAME" NVARCHAR2(100),
+  "USER_NAME2" NVARCHAR2(100),
+  "USER_DEPTID" NVARCHAR2(100),
+  "USER_DEPTNAME" NVARCHAR2(100),
+  "USER_DEPTNAME2" NVARCHAR2(100),
+  "WRITE_DATE" DATE,
+  "APPROVER_ID" NVARCHAR2(100),
+  "APPROVER_NAME" NVARCHAR2(100),
+  "APPROVER_NAME2" NVARCHAR2(100),
+  "updatedt" DATE,
+  "STATE" NVARCHAR2(10),
+  "MEMO" NVARCHAR2(200),
+  "DEL_FLAG" NVARCHAR2(10) DEFAULT 'N'
+  );
+-------------------------------------------------------- 
+--  DDL for Table JMOCHA_APPR_COMP_HISTORY
+--------------------------------------------------------
+CREATE TABLE "JMOCHA_APPR_COMP_HISTORY" (
+  "TENANT_ID" NUMBER(5,0) NOT NULL,
+  "COMPANY_ID" NVARCHAR2(80) NOT NULL,
+  "MAIL_UID" NUMBER NOT NULL,
+  "SUBJECT" CLOB,
+  "SENDEREMAIL" NVARCHAR2(100),
+  "USER_ID" NVARCHAR2(100) NOT NULL,
+  "USER_NAME" NVARCHAR2(100),
+  "USER_NAME2" NVARCHAR2(100),
+  "USER_DEPTID" NVARCHAR2(100), 
+  "USER_DEPTNAME" NVARCHAR2(100),
+  "USER_DEPTNAME2" NVARCHAR2(100),
+  "WRITE_DATE" DATE,
+  "APPROVER_ID" NVARCHAR2(100),
+  "APPROVER_NAME" NVARCHAR2(100),
+  "APPROVER_NAME2" NVARCHAR2(100),
+  "updatedt" DATE,
+  "STATE" NVARCHAR2(10),
+  "MEMO" NVARCHAR2(200),
+  "DEL_FLAG" NVARCHAR2(10) DEFAULT 'N'
+);
 --------------------------------------------------------
 --  DDL for Sequence DBOBJECTID_SEQUENCE
 --------------------------------------------------------
@@ -12262,6 +12329,30 @@ CREATE INDEX "TBL_SEPERATEATTACH_DELFLAG_IDX" ON "TBL_SEPERATEATTACH" ("DELFLAG"
 --------------------------------------------------------
 
   CREATE INDEX "JMOCHA_MAILBOX_PROGRESS_PK" ON "JMOCHA_MAILBOX_PROGRESS" ("USER_KEY", "TENANT_ID") 
+  ;
+-------------------------------------------------------- 
+--  DDL for Index JMOCHA_APPR_ALLOWED_DOMAIN_PK
+-------------------------------------------------------- 
+
+  CREATE INDEX "JMOCHA_APPR_ALLOWED_DOMAIN_PK" ON "JMOCHA_APPR_ALLOWED_DOMAIN" ("COMPANY_ID", "TENANT_ID", "DOMAIN_NAME") 
+  ;
+-------------------------------------------------------- 
+--  DDL for Index JMOCHA_APPR_USER_PK
+--------------------------------------------------------
+
+  CREATE INDEX "JMOCHA_APPR_USER_PK" ON "JMOCHA_APPR_USER" ("COMPANY_ID", "TENANT_ID", "USER_ID", "USER_TYPE") 
+  ;
+-------------------------------------------------------- 
+--  DDL for Index JMOCHA_APPR_HISTORY_PK
+--------------------------------------------------------
+
+  CREATE INDEX "JMOCHA_APPR_HISTORY_PK" ON "JMOCHA_APPR_HISTORY" ("TENANT_ID", "MAIL_UID", "USER_ID") 
+  ;
+-------------------------------------------------------- 
+--  DDL for Index JMOCHA_APPR_COMP_HISTORY_PK
+--------------------------------------------------------
+
+  CREATE INDEX "JMOCHA_APPR_COMP_HISTORY_PK" ON "JMOCHA_APPR_COMP_HISTORY" ("TENANT_ID", "MAIL_UID", "USER_ID") 
   ;
 --------------------------------------------------------
 --  DDL for Trigger TRG_TBL_ADMINRECEIPTGROUP_MAIN
@@ -17852,6 +17943,18 @@ END;
 --------------------------------------------------------
 
   ALTER TABLE "JMOCHA_MAILBOX_PROGRESS" ADD CONSTRAINT "JMOCHA_MAILBOX_PROGRESS_PK" PRIMARY KEY ("USER_KEY", "TENANT_ID")
+  USING INDEX; 
+-------------------------------------------------------- 
+--  Constraints for Table JMOCHA_APPR_ALLOWED_DOMAIN
+--------------------------------------------------------
+
+  ALTER TABLE "JMOCHA_APPR_ALLOWED_DOMAIN" ADD CONSTRAINT "JMOCHA_APPR_ALLOWED_DOMAIN_PK" PRIMARY KEY ("COMPANY_ID", "TENANT_ID", "DOMAIN_NAME")
+  USING INDEX; 
+-------------------------------------------------------- 
+--  Constraints for Table JMOCHA_APPR_USER
+--------------------------------------------------------
+
+  ALTER TABLE "JMOCHA_APPR_USER" ADD CONSTRAINT "JMOCHA_APPR_USER_PK" PRIMARY KEY ("COMPANY_ID", "TENANT_ID", "USER_ID", "USER_TYPE")
   USING INDEX; 
 --------------------------------------------------------
 --  Ref Constraints for Table TBL_WEBFOLDER_SHARE_HIDE

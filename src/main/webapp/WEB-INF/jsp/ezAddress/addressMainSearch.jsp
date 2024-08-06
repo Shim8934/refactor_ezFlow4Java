@@ -191,6 +191,7 @@
 	            }
 	        }
 	        var address_movecopy_dialogArguments = new Array();
+	        var address_movecopyOpenWin = "";
 	        function move_address() {
 	            if (listContentArry.length == 0) {
 	                alert("<spring:message code='ezAddress.t216' />");
@@ -214,8 +215,8 @@
 	                    address_movecopy_dialogArguments[1] = move_address_Complete;
 	                    address_movecopy_dialogArguments[2] = "CLOSE";
 	                    address_movecopy_dialogArguments[3] = xmlDom;
-	                    var OpenWin = window.open("/ezAddress/addressMoveCopy.do", "address_movecopy", GetOpenWindowfeature(500, 375));
-	                    try { OpenWin.focus(); } catch (e) { }
+	                    address_movecopyOpenWin = window.open("/ezAddress/addressMoveCopy.do", "address_movecopy", GetOpenWindowfeature(500, 375));
+	                    try { address_movecopyOpenWin.focus(); } catch (e) { }
 	                }
 	                else {
 	                    var feature = "dialogHeight:375px; dialogWidth:500px; status:no; help:no; edge:sunken";
@@ -262,6 +263,7 @@
 	            }
 	        }
 	        function move_address_Complete(moveUrl) {
+	        	
 	            try {
 	                if (typeof (moveUrl) == "undefined")
 	                    return;
@@ -289,8 +291,30 @@
 	                var xmlHTTP = createXMLHttpRequest();
 	                xmlHTTP.open("POST", "/ezAddress/addressSaveMoveCopy.do", false);
 	                xmlHTTP.send(address_movecopy_dialogArguments[3]);
-	
-	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+	                
+	            	// 2024.07.05 한슬기 : 팝업창이 완전히 닫혔는지 체크 후에 alert을 띄우도록 변경(safari에서 alert이 가려지는 문제가 있음)
+	                var checkChildClosed = setInterval(function() {
+						if (address_movecopyOpenWin.closed){
+							
+							clearInterval(checkChildClosed);
+							
+			                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+			                    alert("<spring:message code='ezAddress.t218' />");
+			                else {
+			                    alert("<spring:message code='ezAddress.t219' />");
+			                    if (moveUrl["cmd"] == "MOVE") {
+			                    	pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
+			                        if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize){
+			                            pCurrentPage--;
+			                        }
+			                        Get_SearchAddressList();
+			                    }
+			                }
+						}
+						
+					}, 100);
+	                
+	                /*if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
 	                    alert("<spring:message code='ezAddress.t218' />");
 	                else {
 	                    alert("<spring:message code='ezAddress.t219' />");
@@ -301,7 +325,7 @@
 	                        Get_SearchAddressList();
 	                        //Get_SearchAddressList();
 	                    }
-	                }
+	                }*/
 	            } catch (e) { }
 	        }
 	        function delete_address() {
