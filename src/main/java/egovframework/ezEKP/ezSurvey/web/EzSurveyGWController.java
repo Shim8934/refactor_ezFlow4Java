@@ -451,10 +451,7 @@ public class EzSurveyGWController {
 			JSONObject infor    = survey.get("infor")            != null ? (JSONObject) survey.get("infor")       : null;
 			JSONArray questions = survey.get("questions")        != null ? (JSONArray) survey.get("questions")    : null;
 			String serverName   = request.getHeader("host-name") != null ? request.getHeader("host-name")         : "";
-			String loginCookie = surveyItem.get("loginCookie") != null ? (String) surveyItem.get("loginCookie") : "";
-			
-			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			String userId = userInfo.getId();
+			String userId       = surveyItem.get("userId")       != null ? surveyItem.get("userId").toString()    : "";
 			
 			if (serverName.equals("") || userId.equals("") || ((questions == null || questions.isEmpty()) && draftMode == 0) || infor == null || infor.toJSONString().equals("")) {
 				logger.debug("Parameter error!");
@@ -478,7 +475,6 @@ public class EzSurveyGWController {
 			int useStatus           = infor.get("status")     != null ? ((Long)infor.get("status")).intValue()     : 1;
 			JSONArray attchList     = infor.get("attach")     != null ? (JSONArray)infor.get("attach")             : null;
 			JSONArray users         = infor.get("users")      != null ? (JSONArray)infor.get("users")              : null;
-			JSONArray resultViewTarget = infor.get("resultViewTarget") != null ? (JSONArray) infor.get("resultViewTarget") : null;
 			int userFlag            = (users == null || users.size() == 0) ? 0 : 1;
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			
@@ -489,13 +485,9 @@ public class EzSurveyGWController {
 				return result;
 			}
 			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String realPath  = request.getServletContext().getRealPath("");
 			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
-		
-			if (publicFlag == 2 && resultViewTarget != null) {
-				Long NewSurveyId = (Long) result.get("survey_id");
-				surveyService.saveSurveyResultViewTarget(userInfo, NewSurveyId, resultViewTarget);
-			}
 		}
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -578,7 +570,6 @@ public class EzSurveyGWController {
 	public JSONObject deleteItems(@RequestParam(value = "itemList") List<String> itemList, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
 		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
-		String loginCookie = request.getParameter("loginCookie") != null ? request.getParameter("loginCookie") : "";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemList: " + String.join(",", itemList));
@@ -591,7 +582,7 @@ public class EzSurveyGWController {
 		}
 		
 		try {
-			LoginVO userInfo       = commonUtil.userInfo(loginCookie);
+			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
 			List<Long> itemIdList  = itemList.stream().map(Long::parseLong).collect(Collectors.toList());
 			
 			//Add checking permission here

@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezSurvey.vo;
 
-import org.json.simple.JSONArray;
-
 import java.util.List;
 
 public class SurveyVO {
@@ -33,8 +31,6 @@ public class SurveyVO {
 	private int totalUser;
 	private int updateMode;
 	private List<SurveyParticipantVO> userList;
-	/** 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 */
-	private JSONArray resultViewTarget; 
 	private List<AttachVO> attachList;
 	private int mailFlag;
 	private int popupFlag;
@@ -285,13 +281,5 @@ public class SurveyVO {
 
 	public void setPopupFlag(int popupFlag) {
 		this.popupFlag = popupFlag;
-	}
-
-	public JSONArray getResultViewTarget() {
-		return resultViewTarget;
-	}
-
-	public void setResultViewTarget(JSONArray resultViewTarget) {
-		this.resultViewTarget = resultViewTarget;
 	}
 }

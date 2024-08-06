@@ -217,7 +217,6 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		String url                = "/rest/ezsurvey/survey-item/delete";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId",   userId);
-		param.put("loginCookie", request.getAttribute("loginCookie"));
 		param.put("itemList", String.join(",", itemList));
 		JSONObject resultBody     = getJsonResult(url, param, request, "delete", null);
 		return resultBody;

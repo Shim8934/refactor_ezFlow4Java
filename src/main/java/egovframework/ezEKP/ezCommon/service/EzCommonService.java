@@ -397,6 +397,4 @@ public interface EzCommonService {
     public void alterTblScheduleForShowtop() throws Exception;
 	
 	public void addUserDeptHideFlag() throws Exception;
-	
-	public void createServeyResultviewPermTbl() throws Exception;
 }

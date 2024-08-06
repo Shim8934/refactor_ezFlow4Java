@@ -4713,25 +4713,4 @@
 		ALTER TABLE tbl_deptmaster ADD COLUMN DEPTTREEFLAG char(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'Y' NULL COMMENT '조직도사용여부 Y:사용 N:숨김'
 	</statement>
 	
-	<select id="EzCommonDAO.checkServeyResultviewPermTbl">
-		SELECT
-			SURVEY_ID
-		FROM
-			TBL_SURVEY_RESULTVIEWPERMISSION
-		LIMIT 1
-	</select>
-
-	<statement id="EzCommonDAO.createServeyResultviewPermTbl">
-	CREATE TABLE TBL_SURVEY_RESULTVIEWPERMISSION (
-		SURVEY_ID 			INT(11) 		NOT NULL,
-		COMPANY_ID 			VARCHAR(100) 	NOT NULL,
-		TENANT_ID 			INT(9) 			NOT NULL,
-		CN 					VARCHAR(100) 	NOT NULL 	COMMENT '권한자 아이디',
-		USER_TYPE 			VARCHAR(30) 				COMMENT '권한자 타입',
-		SUBDEPT_PERMITTED 	VARCHAR(30) 	DEFAULT 'N' COMMENT 'Y(하위 가능), N(하위 불가)',
-		CNNAME 				VARCHAR(120) 				COMMENT '권한자 이름',
-		CNNAME2 			VARCHAR(120) 				COMMENT '권한자 이름',
-		PRIMARY KEY (SURVEY_ID, COMPANY_ID, TENANT_ID, CN)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '설문 지정공개대상자 리스트 테이블'
-	</statement>
 </sqlMap>

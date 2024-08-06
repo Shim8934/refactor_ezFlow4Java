@@ -74,9 +74,7 @@
 	        var deptId = "<c:out value='${dept}'/>";
 	        var authList = [];
 	        var primary = "<c:out value='${lang}'/>";
-	        // 2024-07-11 전인하 - 'survey' - 설문자 지정 / 'result' - 설문결과 지정공개 대상자 지정
-	        var mode = "<c:out value='${mode}'/>";
-	         	        
+	        
 	        window.onload = function () {
 	            
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -153,13 +151,8 @@
 	        }
 		
 	        function getSurveydata(){
-	    		if (window.opener.SurveyCreate) {
-	    		    if (mode == 'survey') {
-	    		        crrList = window.opener.SurveyCreate.getUsers();
-	    		    } else if (mode == 'result') {
-	    		        crrList = window.opener.SurveyCreate.getResultUsers();
-	    		    }
-	    		}
+	        	var crrList = [];
+	    		if (window.opener.SurveyCreate) {crrList = window.opener.SurveyCreate.getUsers();}
 	    		loadSelectedList(crrList);
 	    		
 	        }
@@ -760,11 +753,7 @@
 	    		}
 	    		
 	    		if (window.opener.SurveyCreate) {
-	    		    if (mode == "survey") {
-	    		        window.opener.SurveyCreate.setUsers(userList);
-	    		    } else if (mode == "result") {
-	    		        window.opener.SurveyCreate.setResultUsers(userList);
-	    		    }
+	    			window.opener.SurveyCreate.setUsers(userList);
 	    			closeWindow();
 	    		}
 	    		else {

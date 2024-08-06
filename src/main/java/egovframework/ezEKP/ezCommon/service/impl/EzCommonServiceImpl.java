@@ -3999,9 +3999,4 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addUserDeptHideFlag() throws Exception {
         ezCommonDAO.addUserDeptHideFlag();
     }
-    
-    @Override
-    public void createServeyResultviewPermTbl() throws Exception {
-        ezCommonDAO.createServeyResultviewPermTbl();
-    }
 }

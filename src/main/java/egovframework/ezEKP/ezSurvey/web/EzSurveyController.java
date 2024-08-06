@@ -49,7 +49,6 @@ import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
 import egovframework.ezEKP.ezSurvey.vo.ResponseVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @SuppressWarnings("unchecked")
@@ -160,13 +159,12 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jspGetCreateSurveyPage started");
 
 		/* 2024-03-26 양지혜 - 설문종료 후 게시기간 제한 */
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String maxPeriod = ezSurveyService.checkTenantConfig("SurveyPostingMaxPeriod", user.getTenantId());
 		if (maxPeriod == null || maxPeriod.equals("")) {
 			maxPeriod = "999";
 		}
 		model.addAttribute("maxPeriod", maxPeriod);
-		model.addAttribute("companyId", user.getCompanyID());
 
 		logger.debug("jspGetCreateSurveyPage ended");
 
@@ -176,7 +174,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/reuseItem.do", method = RequestMethod.GET)
 	public String jspGetReuseSurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetReuseSurveyPage started");
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String itemId      = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
 		
 		if (itemId.equals("")) {
@@ -212,7 +210,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 			maxPeriod = "999";
 		}
 		model.addAttribute("maxPeriod", maxPeriod);
-		model.addAttribute("companyId", user.getCompanyID());
 
 		logger.debug("jspGetReuseSurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
@@ -221,7 +218,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/modifyItem.do", method = RequestMethod.GET)
 	public String jspGetModifySurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetModifySurveyPage started");
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String itemId      = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
 		
 		if (itemId.equals("")) {
@@ -250,8 +247,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("reasonMessage", messageCode);
 			return "ezSurvey/surveyAccessDenied";
 		}
-		
-		model.addAttribute("companyId", user.getCompanyID());
 		
 		logger.debug("jspGetModifySurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
@@ -351,7 +346,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/selectUsers.do", method = RequestMethod.GET)
 	public String jspGetSelectUesrPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetSelectUesrPage started");
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		JSONObject result = surveyRestService.getUserListType(request, user.getId());
 		if (result.get("status").toString().equals("ok")) {
@@ -359,8 +354,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("listType", listType);
 		}
 		
-		// survey - 설문대상자 선택, result - 설문결과 지정공개 대상자 선택
-		model.addAttribute("mode", request.getParameter("mode"));
 		model.addAttribute("cn",user.getId());
 		model.addAttribute("companyId",user.getCompanyID());
 		model.addAttribute("dept",user.getDeptID());
@@ -474,8 +467,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@ResponseBody
 	public JSONObject jsonSaveSurveyItem(@RequestBody JSONObject surveyItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jsonSaveSurveyItem started");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		surveyItem.put("userId", user.getId());
 		
-		surveyItem.put("loginCookie", loginCookie);
 		JSONObject resultObj = surveyRestService.saveSurveyItem(request, surveyItem);
 		
 		logger.debug("jsonSaveSurveyItem ended");
@@ -486,7 +480,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@ResponseBody
 	public JSONObject jsonDeleteItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonDeleteItems start");
-		LoginVO user   = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultObj = new JSONObject();
 		
 		if (itemList.size() == 0) {
@@ -494,7 +488,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 			resultObj.put("status", "error");
 			return resultObj;
 		}
-		request.setAttribute("loginCookie", loginCookie);
+		
 		resultObj = surveyRestService.deleteItems(request, user.getId(), itemList);
 		
 		logger.debug("jsonDeleteItems end");
