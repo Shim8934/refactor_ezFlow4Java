@@ -2119,6 +2119,33 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		
 	}
 
+	public void createTable(String tableName) throws Exception {
+		String queryId 		= "";
+		String chkColumn 	= "TENANT_ID";
+		
+		switch(tableName) {
+			case "jmocha_appr_allowed_domain": 			queryId = "EzCommonDAO.createJmochaApprAllowedDomain"; break;
+			case "jmocha_appr_user": 					queryId = "EzCommonDAO.createJmochaApprUser"; break;
+			case "jmocha_appr_history": 				queryId = "EzCommonDAO.createJmochaApprHistory"; break;
+			case "jmocha_appr_comp_history": 			queryId = "EzCommonDAO.createJmochaApprCompHistory"; break;
+		}
+		
+		try {
+			checkTable(chkColumn, tableName);
+		} catch (Exception e) {
+			logger.debug("{} doesn't exist. creating the table...", tableName);
+			update(queryId);
+		}
+	}
+	
+	private void checkTable(String column, String tableName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COLUMN", column);
+		map.put("v_TABLE", tableName);
+
+		select("EzCommonDAO.checkTable", map);
+	}
+	
     public void insertRecordHeaderClassTitle(Map<String, Object> map) throws Exception {
         String companyId = (String) select("EzCommonDAO.checkRecordHeadereOption", map);
         try {
@@ -2337,5 +2364,35 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_schedule showtop column doesn't exist. creating the column...");
 			update("EzCommonDAO.alterTblScheduleForShowtop");
 		}
+	}
+
+	public void insertGongRamListOption(Map<String, Object> map) throws Exception {
+		map.put("listOption", "014"); // APR
+		String companyId = checkGongRamListOption(map);
+
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertGongRamListOption", map);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		map.put("listOption", "015"); // END
+		companyId = checkGongRamListOption(map);
+
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertGongRamListOption", map);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private String checkGongRamListOption(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkGongRamListOption", map);
 	}
 }

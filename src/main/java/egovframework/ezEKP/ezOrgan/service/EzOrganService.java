@@ -101,6 +101,8 @@ public interface EzOrganService {
 
 	public int getMemberListCount2(String pDeptID, List<String> companyList, int totalCount2, String containCompany, int tenantId) throws Exception;
 	
+	public int getMemberListCount2(String pDeptID, List<String> companyList, int totalCount2, String containCompany, int tenantId,  String adminOrgan) throws Exception;
+	
 	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception;
 	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID, String adminOrgan) throws Exception;
 	

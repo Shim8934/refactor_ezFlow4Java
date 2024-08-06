@@ -26340,6 +26340,10 @@
    			TENANT_ID = #v_TENANTID#
    		AND
    			COMPANYID = #companyID#
+		<isNotEmpty property="v_AprMemberSN">
+			AND
+				APRMEMBERSN = #v_AprMemberSN#
+		</isNotEmpty>
    	</delete>
    	
    	<delete id="EzApprovalG.deleteGongRamSaveExpAprLine" parameterClass="Map"> 
@@ -26351,6 +26355,10 @@
    			TENANT_ID = #v_TENANTID#
    		AND
    			COMPANYID = #companyID#
+		<isNotEmpty property="v_AprMemberSN">
+			AND
+				APRMEMBERSN = #v_AprMemberSN#
+		</isNotEmpty>
    	</delete>
    	
    	<insert id="EzApprovalG.insertGongRamSaveAprLineInfo" parameterClass="Map">
@@ -35323,4 +35331,39 @@
 		AND 
 			TENANT_ID = #v_TENANTID#
 	</select>
+
+	<!-- 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 중간순번 공람회수 시 delete -->
+	<update id="EzApprovalG.updateOtherGongRamExpAprLine" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_EXPAPRLINE
+			SET
+				APRMEMBERSN = APRMEMBERSN - 1
+			WHERE
+				DOCID = #v_DocID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				APRMEMBERSN = #v_AprMemberSN#
+		]]>
+   </update>
+
+   <update id="EzApprovalG.updateOtherGongRamAprLineInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APRLINEINFO
+			SET
+				APRMEMBERSN = APRMEMBERSN - 1
+			WHERE
+				DOCID = #v_DocID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				APRMEMBERSN = #v_AprMemberSN#
+		]]>
+   </update>
 </sqlMap>

@@ -171,11 +171,11 @@
 					}
 				});
 	        	
-	            var feature = GetOpenPosition(420, 450);
+	            // var feature = GetOpenPosition(420, 450);
 	            if (userid.indexOf('@') > 0)
-	                window.open("/ezCommon/showPersonInfo.do?email=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?email=" + userid+"&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
 	            else
-	                window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
 	        }
 	
 			/* function group_info() {

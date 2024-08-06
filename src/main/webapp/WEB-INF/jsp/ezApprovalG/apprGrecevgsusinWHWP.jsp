@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AutoAprLine_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 		<script type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "<c:out value = '${docID}'/>";
@@ -153,6 +154,8 @@
 			// 문서보기 Flag
 			var viewDoc = "<c:out value = '${viewDocFlag}'/>";
 
+			var type = "ING"; // 2023-07-24 임정은 - 공람 추가
+			
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -1721,6 +1724,14 @@
 	                            basis = ret[29];
 	                            reason = ret[30];
 	                            limitDate = ret[31];
+							}
+
+							// 2023-07-24 임정은 - 공람 추가
+							if (ret[22] == "noItem") {
+								delAprLineInfoCC();
+							} else if (ret[22] == "sameItem") {
+							} else {
+								SaveAprLineInfoCC(ret[22]);
 							}
 		                } else {
 		                	tempKeep = ret[16];

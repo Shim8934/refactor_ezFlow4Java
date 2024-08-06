@@ -11,7 +11,7 @@ var strLang10 = "Tanggal dihapus";
 var strLang11 = "Ke";                                                                                                                                         
 var strLang12 = "Ukuran";                                                                                                                                     
 var strLang13 = "Dengan Subyek";                                                                                                                              
-var strLang14 = "SAYA";                                                                                                                                       
+var strLang14 = "SAYA";
 var strLang15 = "PM";                                                                                                                                         
 var strLang16 = "Matahari";                                                                                                                                   
 var strLang17 = "Senin";                                                                                                                                      
@@ -341,6 +341,34 @@ var strLangKWCHd01 = "An error occurred while saving security HWP document. Plea
 
 var strLangNJK01 = "Restricted special characters for an email folder name(";
 var strLangNJK02 = "are included.";
+
+// 스팸신고
+var strLangHSG01 = "Laporan spam tidak dapat dilakukan karena alamat email tidak ditemukan.";
+var strLangHSG02 = "Laporan spam tidak diproses dengan berhasil.";
+
+//new ui
+const strLangFolderManage = "Manage folder";
+const strLangSubscribe = "Subscribe";
+const strLangPlzCheckSearchInput = "Enter search term.";
+const strLangSearchFetchError = "Error occurred while retrieving search results. -";
+const strLangNoSuchDept = "There is no department found.";
+const strLangDistributionFetchError = "Error occurred while retrieving public distribution group list. -";
+const strLangAddJobSimplyMark = "(Concurrent) ";
+const strLangCompany = "Company";
+const strLangDistributionAdd = "Add distribution list";// ezEmail.t60 = 배포목록추가
+const strLangAddressFetchError = "Error occurred while reading address list";// ezEmail.t585 = 주소목록을 읽는중에 오류발생
+const strLangPlzSelectGroupMail = "Select group message.";// ezEmail.t581 = 그룹메일을 선택해주세요.
+const strLangPlzSelectDistribution = "Select public distribution group.";// ezEmail.t580 = 공용배포그룹을 선택해주세요.
+const strLangNotAllowedSpecialChar = "The special character can't be entered.";
+
+const strLangSelectDept = "Pilih Departemen";
+const strLangSelectTitle = "Pemilihan Posisi";
+const strLangSelectRole = "Seleksi Langsung";
+const strLangPlzCheckSearchNameInput = "Masukkan nama untuk mencari.";
+const strLangOrgFetchError = "- Terjadi kesalahan saat mengunggah.\\n\\nKesalahan Server";
+const strLangSelectProxyApproverWarning = "Pilih seseorang untuk wakil.";
+
+const strLangTempSaveAttachmentsWarning = "File yang dilampirkan akan dihapus saat disimpan. Apakah Anda ingin menyimpan?";
 
 function GetLocalTime(Offset , pDateTime)
 {

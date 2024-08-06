@@ -4073,15 +4073,15 @@
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 1, #companyID#, #tenantID#, '메모')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (18, 2, #companyID#, #tenantID#, 'Memo')
+		    VALUES (18, 2, #companyID#, #tenantID#, 'Notes')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 3, #companyID#, #tenantID#, 'メモ帳')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 4, #companyID#, #tenantID#, '记事本')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (18, 5, #companyID#, #tenantID#, 'Memo')
+		    VALUES (18, 5, #companyID#, #tenantID#, 'Notes')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (18, 6, #companyID#, #tenantID#, 'Memo')
+		    VALUES (18, 6, #companyID#, #tenantID#, 'Notes')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 		    VALUES (19, 1, #companyID#, #tenantID#, '전자설문')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
@@ -7801,36 +7801,45 @@
 	<select id="EzOrganAdminDAO.getUserExtension15" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
-				EXTENSIONATTRIBUTE15
-			FROM
-				(SELECT
+				EXTENSIONATTRIBUTE15 + 1 AS EXTENSIONATTRIBUTE15
+			FROM 
+			    (
+				SELECT
 					EXTENSIONATTRIBUTE15
 				FROM
-					TBL_USERMASTER
-				WHERE
-					DEPARTMENT = #v_PARENTCN#
-				AND
-					CN NOT IN  (SELECT
-									CN
-								FROM
-									TBL_USERMASTER_RETIRE
-								WHERE
-									TENANT_ID = #v_TENANT_ID#)
-				AND
-					TENANT_ID = #v_TENANT_ID#
-
-				UNION ALL
-
-				SELECT
-					ORDERBY
-				FROM
-					TBL_ADDJOBMASTER
-				WHERE
-					DEPTID = #v_PARENTCN#
-				AND
-					TENANT_ID = #v_TENANT_ID#) AA
+					(
+					SELECT
+						EXTENSIONATTRIBUTE15
+					FROM
+						TBL_USERMASTER
+					WHERE
+						DEPARTMENT = #v_PARENTCN#
+					AND
+						CN NOT IN  (
+									SELECT
+										CN
+									FROM
+										TBL_USERMASTER_RETIRE
+									WHERE
+										TENANT_ID = #v_TENANT_ID#
+									)
+					AND
+						TENANT_ID = #v_TENANT_ID#
+					
+					UNION ALL
+					
+					SELECT
+						ORDERBY
+					FROM
+						TBL_ADDJOBMASTER
+					WHERE
+						DEPTID = #v_PARENTCN#
+					AND
+						TENANT_ID = #v_TENANT_ID#
+					) AA
 				ORDER BY
-					EXTENSIONATTRIBUTE15 DESC)
+					EXTENSIONATTRIBUTE15 DESC
+				)
 			WHERE
 				ROWNUM = 1
 		]]>

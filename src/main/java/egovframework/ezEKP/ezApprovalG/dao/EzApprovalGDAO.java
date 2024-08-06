@@ -3976,4 +3976,13 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getOrgDocIDfromGongram(Map<String, Object> map) {
 		return (String) select("EzApprovalG.getOrgDocIDfromGongram", map);
 	}
+
+	/* 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 중간순번 공람회수 시 delete */
+	public void updateOtherGongRamExpAprLine(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOtherGongRamExpAprLine", map);
+	}
+
+	public void updateOtherGongRamAprLineInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOtherGongRamAprLineInfo", map);
+	}
 }

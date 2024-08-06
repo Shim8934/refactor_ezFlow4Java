@@ -97,6 +97,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -2097,6 +2098,20 @@ public class CommonUtil {
 		
 		return String.format("<DIV id=\"msgBody\" style=\"font-size: %s; font-family: %s;\" name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", fontSize, fontFamily, content);
 	}
+
+	/** 
+	 * <p>
+	 * 자동 발신 알림 메일 내용 생성:승인메일용<br>
+	 * 메일로 보낼 내용을 받아서 에디터 기본 폰트스타일과 감싸는 태그를 붙여 리턴함
+	 * </p>
+	 * @param content
+	 * @param tenantID
+	 * @param locale
+	 * @return 완성된 html 태그 스트링
+	 */
+	public String createNotiMailContentForApprMail(String content, int tenantID, Locale locale) throws Exception {
+		return String.format("<DIV id=\"msgBody\" style=\"padding: 10px 0;margin: 40px 0 20px;background:#E4F2FF;border-radius:5px;color: #004B8E;font-size: 18px;text-align: center;width: 80%%;font-weight: 400;font-family: 'Noto Sans KR','Malgun Gothic', 맑은 고딕, Dotum,돋움, Gulim, 굴림, Arial, Helvetica, sans-serif;\"  name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", content);
+	}
 	
 	public List<CountryVO> getCountryInfo(String ip) throws Exception {
 		List<CountryVO> countryInfo = new ArrayList<CountryVO>();
@@ -3239,6 +3254,12 @@ public class CommonUtil {
 		return adminCount > 0;
 	}
 
+	/**
+	 * 테넌트 컨피그 boolean 설정 값 확인용
+	 */
+	public boolean checkTenantConfigBool(int tenantId, String propertyName, String defaultValue) throws Exception {
+		return BooleanUtils.toBoolean(StringUtils.defaultIfBlank(ezCommonService.getTenantConfig(propertyName, tenantId), defaultValue));
+	}
 	public OrganAuth makeOrganAuth(String userId, int tenantId) throws Exception {
 		List<OrganUserVO> allUserinfo = ezOrganService.getAllUserinfo(userId, tenantId);
 		OrganAuth organAuth = new OrganAuth();

@@ -9141,12 +9141,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 분리첨부 철변경 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/selectCabinetInTask.do", method = RequestMethod.GET)
-	public String selectCabinetInTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) {
+	public String selectCabinetInTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("gongRamUpdate started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
+		String currYear = commonUtil.getTodayUTCTime("yyyy");
+
 		model.addAttribute("userInfo", userInfo);
-		
+		model.addAttribute("openYear", openYear);
+		model.addAttribute("currYear", currYear);
+
 		logger.debug("gongRamUpdate ended");
 		
 		return "ezApprovalG/apprGselectCabinetInTask";
@@ -13203,5 +13208,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		return result;
 	}
+	
+	/**
+	 * 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 공람회수
+	 */
+	@RequestMapping(value = "/ezApprovalG/gongRamCancel.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String gongRamCancel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("gongRamCancel started");
 
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		int count = Integer.parseInt(request.getParameter("count"));
+		int aprMemberSN = Integer.parseInt(request.getParameter("aprMemberSN"));
+
+		String result = ezApprovalGService.gongRamCancel(docID, count, aprMemberSN, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		logger.debug("gongRamCancel ended");
+
+		return result;
+	}
 }

@@ -378,8 +378,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardItemList_favorite started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useRunTime", useRunTime);
 
 		logger.debug("boardItemList_favorite ended");
     	return "ezBoard/boardItemList_favorite";

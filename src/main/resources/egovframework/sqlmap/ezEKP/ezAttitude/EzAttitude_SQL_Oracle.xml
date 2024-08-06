@@ -2763,25 +2763,31 @@
 						(START_DATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
 					)
 				]]>
-				<isNotEmpty property="v_PKEYWORD">
-					<isEqual property="v_PFILTER" compareValue="title">
-	            	AND 
-	            		B.TYPE_NAME like ('%' || #v_PKEYWORD# || '%')
-					</isEqual>
-					<isEqual property="v_PFILTER" compareValue="location">
-	            	AND 
-	            		A.REGION like ('%' || #v_PKEYWORD# || '%')		
-					</isEqual>
-					<isEqual property="v_PFILTER" compareValue="IsPublic">
-		            	<isNotEmpty property="v_INDILIST">
-			            	AND 
-			            		A.WRITER_ID IN
-			            		<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
-									#v_INDILIST[]#
-								</iterate>
-		            	</isNotEmpty>
-					</isEqual>
-            	</isNotEmpty>
+				<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 근태 연동 시 전체검색, 지역검색 추가 -->
+				<isNotEmpty property="v_SEARCHTITLE">
+					AND
+						B.TYPE_NAME like concat(concat('%', #v_SEARCHTITLE#), '%')
+				</isNotEmpty>
+				<isNotEmpty property="v_SEARCHLOCATION">
+					AND
+						A.REGION like concat(concat('%', #v_SEARCHLOCATION#), '%')
+				</isNotEmpty>
+				<isNotEmpty property="v_SEARCHALL">
+					AND (
+							B.TYPE_NAME like concat(concat('%', #v_SEARCHALL#), '%')
+						OR
+							A.REGION like concat(concat('%', #v_SEARCHALL#), '%')
+						)
+				</isNotEmpty>
+				<isEqual property="v_PFILTER" compareValue="ISPUBLIC">
+					<isNotEmpty property="v_INDILIST">
+					AND
+						A.WRITER_ID IN
+						<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
+							#v_INDILIST[]#
+						</iterate>
+					</isNotEmpty>
+				</isEqual>
 	</select>
 	
 	<select id="ezAttitudeDAO.getAttitudeTime" parameterClass="Map" resultClass="String">

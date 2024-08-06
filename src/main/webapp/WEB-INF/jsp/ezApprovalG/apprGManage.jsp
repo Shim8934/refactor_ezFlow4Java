@@ -2770,10 +2770,13 @@
 				    <p><span id="tagsub2"><spring:message code='ezApprovalG.t950'/></span></p>
 				    <p><span id="tagsub3"><spring:message code='ezApprovalG.t56'/></span></p>
 				    <p><span id="tagsub4"><spring:message code='ezApprovalG.t55'/></span></p>
-				    <c:if test="${approvalFlag != 'G'}">
+					<c:if test="${approvalFlag != 'G'}">
 					   	<p><span id="tagsub5"><spring:message code='ezApprovalG.hyj24'/></span></p>
-				    </c:if>
-			  	</div>	
+					</c:if>
+					<c:if test="${approvalFlag == 'G'}">
+					   	<p><span id="tagsub5"><spring:message code='ezApprovalG.LJEAppr06'/></span></p>
+					</c:if>
+			  	</div>
 			</div>
 			
 			<div style="WIDTH:100%;HEIGHT:241px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">

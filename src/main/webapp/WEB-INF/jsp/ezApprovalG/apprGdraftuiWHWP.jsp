@@ -34,6 +34,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraft_WHWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 	    <script type="text/javascript">
 	        var FormHref = "<c:out value ='${formURL}'/>";
 	        var DraftFlag = "<c:out value ='${draftFlag}'/>";
@@ -180,14 +181,15 @@
 			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
 
 			var formPath = "<c:out value ='${formPath}'/>";
-			
+			var type = "ING"; // 2023-05-23 임정은 - 공람 추가
+
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 
 			var attachedDocList = "${ attachedDocList }";
 
 			var pTenantID = "<c:out value='${userInfo.tenantId}'/>";
-	        
+
 	        window.onload = function () {
 	            try {
 	                pSusinSN = SusinSN;
@@ -1508,6 +1510,14 @@
                         limitDate = ret[31];
                         // passAprLine = ret[32];
 					}
+
+		         	// 2023-05-23 임정은 - 공람 추가
+                	if (ret[22] == "noItem") {
+                		delAprLineInfoCC();
+                	} else if (ret[22] == "sameItem") {
+                	} else {
+                		SaveAprLineInfoCC(ret[22]);
+                	}
 		        }
 			}
 	

@@ -107,8 +107,8 @@ var getOpenWindowfeature = function (popUpW, popUpH) {
 	pleftpos = parseInt(width) - popUpW;
 	heigth = parseInt(heigth) - popUpH;
 	width = parseInt(width) - pleftpos;
-	left = pleftpos / 2;
-	top = heigth / 2;
+	left = window.outerWidth / 2 + window.screenX - (popUpW / 2);
+	top = window.outerHeight / 2 + window.screenY - (popUpH / 2);
 	var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
 	return feature;
 }
@@ -218,14 +218,14 @@ var handleQuickMenuOpen = function (menu) {
 			
 	if (conWidth > 890) conWidth = 890;
 		        
-	var pTop = (pheight - conHeight) / 2;
-	var pLeft = (pwidth - 890) / 2;			
+	// var pTop = (pheight - conHeight) / 2;
+	// var pLeft = (pwidth - 890) / 2;			
 
 	switch (menu) {
 		case 'mail':    
 		    url = '/ezEmail/mailWrite.do?cmd=NEW';
 			location = '';
-			option = 'top='+pTop+', left='+pLeft+', height='+conHeight+', width='+conWidth+', status=no, toolbar=no, menubar=no, location=no, resizable=1';
+			option = getOpenWindowfeature(conWidth, conHeight) + ', resizable=1';
 			break;
 		case 'appr':
 			openForm();
@@ -233,15 +233,11 @@ var handleQuickMenuOpen = function (menu) {
 		case 'schedule':		
 			url = '/ezSchedule/scheduleWrite.do?defaultid=0';
 			location = '';
-			pTop = (pheight - 819) / 2;
-			pLeft = (pwidth - 890) / 2;	
-			option = 'top='+pTop+', left='+pLeft+ ',height='+ '830' +', width='+'790'+', status=no, toolbar=no, menubar=no, location=no, resizable=1';
+			option = getOpenWindowfeature(890, 819) + ', resizable=1';
 			break;
 		case 'organ':
 			url = '/ezPersonal/personSearch.do';
-			pTop = (pheight - 670) / 2;
-			pLeft = (pwidth - 750) / 2;	
-			option = 'top='+pTop+', left='+pLeft+ ',height=670px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0';			
+			option = getOpenWindowfeature(750, 670) + ', resizable=0';			
 			break;
 	}
 	

@@ -1955,7 +1955,7 @@ public class EzNewPortalGWController {
 				}
 
 				pidList += pidListSub;
-				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, offsetMin, "", "", "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
 				
 				// 구글연동 일정 가져오기(포탈 카운트)
 				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
@@ -4392,7 +4392,7 @@ public class EzNewPortalGWController {
 				pidList = idList;
 			}		
 			
-			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId, deptId, useAnnualScheduleYN);		
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, offSetMin, "", "", "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);		
 			
 			// 구글연동 일정 가져오기(포탈 일정포틀릿)
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
@@ -4906,7 +4906,7 @@ public class EzNewPortalGWController {
 				}
 
 				pidList += pidListSub;
-				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, offsetMin, "", "", "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
 
 				// 구글연동 일정 가져오기(포탈 카운트 포틀릿)
 				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);

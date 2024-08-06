@@ -509,7 +509,7 @@
         		<tr>
             		<th><spring:message code='ezPersonal.t2003'/></th>
             		<td colspan="3" class="manualFlagNotYClickOff">
-                		<input type="text" id="txtBirth" class="manualFlagNotYDisabled" style="width:80px;text-align:center;" value="${txtBirth}" oninput="this.value=this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" onkeydown="return checkKey()">
+                		<input type="text" id="txtBirth" class="manualFlagNotYDisabled" style="width:80px;text-align:center;" value="${txtBirth}" oninput="this.value=this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" onkeydown="return checkKey()" readonly="readonly">
                 			<img id="TempCalImage" src="/images/ImgIcon/calendar-month.png" style="margin-bottom:-5px"/>
                 			&nbsp;&nbsp;
              			   <c:choose>

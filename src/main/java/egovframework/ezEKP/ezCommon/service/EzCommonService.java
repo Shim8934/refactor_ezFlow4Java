@@ -347,6 +347,8 @@ public interface EzCommonService {
 	public void alterSubPermittedForQuicklinkAcl() throws Exception;
 
 	public void insertApprNonElecRecTypeConfing() throws Exception;
+	
+	public void createTables() throws Exception;
 
     public void insertRecordHeaderClassTitle() throws Exception;
 
@@ -395,4 +397,6 @@ public interface EzCommonService {
     public void alterTblScheduleForShowtop() throws Exception;
 	
 	public void addUserDeptHideFlag() throws Exception;
+
+	public void insertGongRamListOption() throws Exception;
 }
