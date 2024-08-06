@@ -358,7 +358,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					//일정관리 조인
 					String tempSDate = nowDate.substring(0, 10) + " 00:00:00";
 					String tempEDate = nowDate.substring(0, 10) + " 23:59:59";
-					List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "");
+					List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "", "");
 					
 					String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 					if(useGoogleCalendar.equals("YES")) {
