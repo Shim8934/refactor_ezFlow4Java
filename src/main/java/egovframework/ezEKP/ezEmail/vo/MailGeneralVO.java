@@ -30,6 +30,16 @@ public class MailGeneralVO {
 	
 	private String mailSearchPeriod;
 	
+	private String mailSendResult;
+
+	public String getMailSendResult() {
+		return mailSendResult;
+	}
+
+	public void setMailSendResult(String mailSendResult) {
+		this.mailSendResult = mailSendResult;
+	}
+
 	public String getMailSearchPeriod() {
 		return mailSearchPeriod;
 	}

@@ -165,6 +165,7 @@
 	    var defaultFontAndSize = "${defaultFontAndSize}";
 	    var isCrossBrowser = "${isCrossBrowser}";
 	    var previewMail = "${previewMail}";
+	    var mailSendResult = "${mailSendResult}";
 	    var useSecureMail = "${useSecureMail}";
 	    var isSecureMail = "${isSecureMail}";
 	    var securePassword = "";

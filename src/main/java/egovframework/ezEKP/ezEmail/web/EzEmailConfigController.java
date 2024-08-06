@@ -216,6 +216,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewMail = mailGeneralVO.getPreviewMail() == null ? "N" : mailGeneralVO.getPreviewMail();
 		String dotnetFlag = request.getParameter("dotnetFlag");
 		String mailSearchPeriod = mailGeneralVO.getMailSearchPeriod() == null ? "sixMonth" : mailGeneralVO.getMailSearchPeriod();
+		String mailSendResult = mailGeneralVO.getMailSendResult() == null ? "failure" : mailGeneralVO.getMailSendResult();
 		
 		if (dotnetFlag != null) {
 			dotnetFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(dotnetFlag));
@@ -247,7 +248,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				 + ",previewHContentSize=" + previewHContentSize + ",previewWListSize=" + previewWListSize + ",previewWContentSize=" + previewWContentSize
 				 + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength + ",mailSendObject=" + mailSendObject
 				 + ",previewSubtree=" + previewSubtree + ",useOnlyInnerMail=" + useOnlyInnerMail + ",usePreviewSubTree=" + usePreviewSubTree
-				 + ",previewMailImage=" + previewMailImage + ",previewMail=" + previewMail + ",textOption=" + textOption + ",mailSearchPeriod=" + mailSearchPeriod);
+				 + ",previewMailImage=" + previewMailImage + ",previewMail=" + previewMail + ",textOption=" + textOption + ",mailSearchPeriod=" + mailSearchPeriod
+				 + ",mailSendResult=" + mailSendResult);
 		
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
@@ -265,6 +267,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("previewMail", previewMail);
 		model.addAttribute("textOption", textOption);
 		model.addAttribute("mailSearchPeriod", mailSearchPeriod);
+		model.addAttribute("mailSendResult", mailSendResult);
 		model.addAttribute("dotnetFlag", dotnetFlag);
 		
 		logger.debug("mailGeneral ended.");
@@ -346,6 +349,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewMail = doc.getElementsByTagName("PREVIEWMAIL").item(0).getTextContent();
 		String textOption = doc.getElementsByTagName("TEXTOPTION").item(0).getTextContent();
 		String mailSearchPeriod = doc.getElementsByTagName("MAILSEARCHPERIOD").item(0).getTextContent();
+		String mailSendResult = doc.getElementsByTagName("MAILSENDRESULT").item(0).getTextContent();
 		String mailSenderNm = "";
 		String previewSubTree = "";
 		
@@ -366,6 +370,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ ",mailSenderNm=" + mailSenderNm + ",previewSubTree=" + previewSubTree
 				+ ",previewMailImage=" + previewMailImage + ",textOption=" + textOption
 				+ ",mailSearchPeriod=" + mailSearchPeriod + ",previewMail=" +  previewMail
+				+ ",mailSendResult=" + mailSendResult
 				);
 
 		String rtnValue= "OK";
@@ -387,6 +392,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setPreviewMail(previewMail);
 			mailGeneral.setTextOption(textOption);
 			mailGeneral.setMailSearchPeriod(mailSearchPeriod);
+			mailGeneral.setMailSendResult(mailSendResult);
 			
 			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode);
 		} catch (Exception e) {

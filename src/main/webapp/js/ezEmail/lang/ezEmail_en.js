@@ -382,6 +382,7 @@ const strLangSelectProxyApproverWarning = "Select a person for deputy.";
 const strLangTempSaveAttachmentsWarning = "Attached files will be deleted upon saving. Do you want to save?";
 
 var strNoSubject = "Enter title.";
+var strSendOK = "The email has been sent successfully.";
 
 function GetLocalTime(Offset , pDateTime)
 {

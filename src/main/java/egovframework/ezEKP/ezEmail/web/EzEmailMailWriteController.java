@@ -1359,6 +1359,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         isEach = useEachMailDefault.equals("YES") ? "true" : isEach;
 
 		String preViewMail = StringUtils.isBlank(mailGeneralVO.getPreviewMail()) ? "N" : mailGeneralVO.getPreviewMail();
+		String mailSendResult = StringUtils.isBlank(mailGeneralVO.getMailSendResult()) ? "failure" : mailGeneralVO.getMailSendResult();
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
@@ -1398,6 +1399,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("reSendFlag", reSendFlag);
 		model.addAttribute("mailAttachLimit", mailAttachLimit);
 		model.addAttribute("previewMail", preViewMail);
+		model.addAttribute("mailSendResult", mailSendResult);
 		model.addAttribute("bigSizeMailAttachLimit", bigSizeMailAttachLimit);
 		model.addAttribute("totBigSizeMailAttachLimit", totBigSizeMailAttachLimit);
 		model.addAttribute("bigSizeMailAttachDelDate", bigSizeMailAttachDelDate);

@@ -122,6 +122,7 @@
 				                "<PREVIEWMAILIMAGE>" + document.getElementById("previewMailImage").value + "</PREVIEWMAILIMAGE>" +
 				                "<PREVIEWMAIL>" + document.getElementById("previewMail").value + "</PREVIEWMAIL>" +
 				                "<MAILSEARCHPERIOD>" + document.getElementById("searchPeriod").value + "</MAILSEARCHPERIOD>" +
+				                "<MAILSENDRESULT>" + document.getElementById("sendResult").value + "</MAILSENDRESULT>" +
 				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>";
 				
                 if (usePreviewSubTree == "YES") {
@@ -496,6 +497,15 @@
 		          </select>
 		      </td>
 		  </tr>
+		  <tr>
+              <th><spring:message code="ezEmail.send.result"/></th>
+              <td>
+                  <select id="sendResult" style="width:100px;">
+                    <option value=failure <c:if test="${mailSendResult == 'failure'}">selected</c:if>><spring:message code="ezEmail.general.fail" /></option>
+                    <option value=always <c:if test="${mailSendResult == 'always'}">selected</c:if>><spring:message code="ezEmail.general.always" /></option>
+                  </select>
+              </td>
+          </tr>
 		</table>
 		<div align="center" style="width:680px;">
 			<div class="btnpositionJsp">

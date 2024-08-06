@@ -186,6 +186,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setPreviewMail((String)obj.get("previewMail"));
         		mailGeneral.setTextOption(textOption);
         		mailGeneral.setMailSearchPeriod(mailSearchPeriod);
+        		mailGeneral.setMailSendResult((String)obj.get("mailSendResult"));
         		
         		mailGeneralList.add(mailGeneral);
         	}
@@ -214,6 +215,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setPreviewMail("N");
 			mailGeneral.setTextOption(textOption);
 			mailGeneral.setMailSearchPeriod("sixMonth");
+			mailGeneral.setMailSearchPeriod("failure");
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -246,6 +248,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String previewMailParam = "previewMail=" + URLEncoder.encode(mailGeneral.getPreviewMail(), "UTF-8");
 		String textOptionParam = "textOption=" + URLEncoder.encode(mailGeneral.getTextOption(), "UTF-8");
 		String mailSearchPeriodParam = "mailSearchPeriod=" + URLEncoder.encode(mailGeneral.getMailSearchPeriod(), "UTF-8");
+		String mailSendResultParam = "mailSendResult=" + URLEncoder.encode(mailGeneral.getMailSendResult(), "UTF-8");
 		
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
@@ -255,7 +258,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
 				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + previewMailParam + "&" + textOptionParam
-				+ "&" + mailSearchPeriodParam;
+				+ "&" + mailSearchPeriodParam + "&" + mailSendResultParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailGeneral", inputParams);
