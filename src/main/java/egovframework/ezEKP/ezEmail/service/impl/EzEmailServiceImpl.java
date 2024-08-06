@@ -183,6 +183,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setMailSenderNm((String)obj.get("mailSenderName"));
         		mailGeneral.setPreviewSubTree((String)obj.get("previewSubTree"));
         		mailGeneral.setPreviewMailImage((String)obj.get("previewMailImage"));
+        		mailGeneral.setPreviewMail((String)obj.get("previewMail"));
         		mailGeneral.setTextOption(textOption);
         		mailGeneral.setMailSearchPeriod(mailSearchPeriod);
         		
@@ -210,6 +211,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setMailSenderNm("");
 			mailGeneral.setPreviewSubTree("N");
 			mailGeneral.setPreviewMailImage("Y");
+			mailGeneral.setPreviewMail("N");
 			mailGeneral.setTextOption(textOption);
 			mailGeneral.setMailSearchPeriod("sixMonth");
 			
@@ -241,6 +243,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String previewSubTreeParam = "previewSubTree=" + URLEncoder.encode(mailGeneral.getPreviewSubTree(), "UTF-8");
 		String usePreviewSubTreeParam = "usePreviewSubTree=" + usePreviewSubTree;
 		String previewMailImageParam = "previewMailImage=" + URLEncoder.encode(mailGeneral.getPreviewMailImage(), "UTF-8");
+		String previewMailParam = "previewMail=" + URLEncoder.encode(mailGeneral.getPreviewMail(), "UTF-8");
 		String textOptionParam = "textOption=" + URLEncoder.encode(mailGeneral.getTextOption(), "UTF-8");
 		String mailSearchPeriodParam = "mailSearchPeriod=" + URLEncoder.encode(mailGeneral.getMailSearchPeriod(), "UTF-8");
 		
@@ -251,7 +254,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
-				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + textOptionParam
+				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + previewMailParam + "&" + textOptionParam
 				+ "&" + mailSearchPeriodParam;
 		logger.debug("inputParams=" + inputParams);
 		

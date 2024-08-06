@@ -64,6 +64,7 @@
 		    var sendPermission = "${sendPermission}";
 		    var managePermission = "${managePermission}";
 		    var mailWritePreview = "${mailWritePreview}"; // 메일 작성 > 미리보기
+		    var mailWritePreviewSend = "${mailWritePreviewSend}"; // 메일 작성 > 발송 전 미리보기
 		    var g_uid = "${uid}";
 		    var countryName = "${countryName}";
 		    var countryIP = "${countryIP}";
@@ -144,7 +145,7 @@
 		        	btnDelete.style.display = "none";
 		        }
 		        
-		        if (useCountryIP == "YES" && mailWritePreview != "true") {
+		        if (useCountryIP == "YES" && (mailWritePreview != "true" ||  mailWritePreviewSend == "false")) {
 		        	if (useShowSystemCountry == "YES" || (useShowSystemCountry != "YES" && countryCode != systemCountryCode)) {
 			        	
 		        		if (document.getElementById("nationalFlag") != null) {
@@ -166,6 +167,10 @@
 			    
 			    if (mailWritePreview == "true") {
 			    	$("#menu > ul:first-child").css("display","none");
+			    	$("#menu > ul:nth-child(2)").css("display", "none");
+			    } else if (mailWritePreviewSend == "true") {
+			        $("#menu > ul:first-child").css("display","none");
+			        $("#menu > ul:nth-child(2)").css("display", "block");
 			    }
 
 				<c:if test="${useMailTag}">
@@ -210,6 +215,12 @@
 					});
 				</c:if>
 			}
+
+			function send() {
+			    window.opener.Send_onClick();
+			    window.close();
+			}
+
 		    function btnPrint_onClick()
 		    {
 		        var pheight = window.screen.availHeight;
@@ -603,10 +614,11 @@
 		    }
 		    
 		    function mailWritePreviewDel() {
-		    	if (mailWritePreview != "true") {return; }
-		    	// 메일 작성 > 미리보기 메일 삭제
-				window.opener.parent.delDrafts(g_uid);
-				window.parent.opener.parent.previewChk = false;
+		    	if (mailWritePreview == "true" || mailWritePreviewSend == "true") {
+                    // 메일 작성 > 미리보기 메일 삭제
+                    window.opener.parent.delDrafts(g_uid);
+                    window.parent.opener.parent.previewChk = false;
+				}
 		    }
 		    
 		    /* 2020-08-31 홍승비 - 메일 커뮤니티 게시판에 게시 기능 추가 */
@@ -722,6 +734,10 @@
 								</ul>
 							</li>
 		                </ul>
+		                <ul style="display:none">
+                            <li><span id="" onClick="send()"><spring:message code='ezEmail.t674' /></span></li>
+                            <li><span id="" onClick="OnBtnClose()"><spring:message code='ezEmail.t39' /></span></li>
+                        </ul>
 		            </div>
 		            <div id="close"><ul><li><span onClick="OnBtnClose()"></span></li></ul></div>	
 		        </td> 

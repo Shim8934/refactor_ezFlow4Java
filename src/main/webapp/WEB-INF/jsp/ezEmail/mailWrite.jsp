@@ -164,6 +164,7 @@
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFontAndSize = "${defaultFontAndSize}";
 	    var isCrossBrowser = "${isCrossBrowser}";
+	    var previewMail = "${previewMail}";
 	    var useSecureMail = "${useSecureMail}";
 	    var isSecureMail = "${isSecureMail}";
 	    var securePassword = "";
@@ -1139,7 +1140,7 @@
 	    /* 2020-09-11 홍승비 - 버튼에서 온클릭 이벤트를 분리하여 업무일지, ezPMS 등의 발송버튼 활성화되지 않는 오류 수정 */
 	    function setOnclickFunction() {
 	        return setTimeout(function () {
-	        	document.getElementById("spanT674").setAttribute("onclick", "Send_onClick()");
+	        	document.getElementById("spanT674").setAttribute("onclick", "Send_onClick_preview()");
 	        	document.getElementById("spanT48").setAttribute("onclick", "Save_onClick('tempsave')");
 	        }, 20);
 	    }
@@ -2339,6 +2340,7 @@
 				Save_onClick('preview');
 			}
 		}
+
 		function filePickerOpen() {
 	    	filePick.open(pickerData);
 	    }

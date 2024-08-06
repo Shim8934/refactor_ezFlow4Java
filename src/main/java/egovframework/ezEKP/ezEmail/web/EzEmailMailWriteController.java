@@ -1357,6 +1357,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		// 2024-02-01 장혜연 : 개별발신 디폴트 사용여부 값을 가져옴
         String useEachMailDefault = ezCommonService.getTenantConfig("useEachMailDefault", loginInfo.getTenantId());
         isEach = useEachMailDefault.equals("YES") ? "true" : isEach;
+
+		String preViewMail = StringUtils.isBlank(mailGeneralVO.getPreviewMail()) ? "N" : mailGeneralVO.getPreviewMail();
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
@@ -1395,6 +1397,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("userPrimary", userPrimary);
 		model.addAttribute("reSendFlag", reSendFlag);
 		model.addAttribute("mailAttachLimit", mailAttachLimit);
+		model.addAttribute("previewMail", preViewMail);
 		model.addAttribute("bigSizeMailAttachLimit", bigSizeMailAttachLimit);
 		model.addAttribute("totBigSizeMailAttachLimit", totBigSizeMailAttachLimit);
 		model.addAttribute("bigSizeMailAttachDelDate", bigSizeMailAttachDelDate);
@@ -4315,7 +4318,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            // this deletion code block has been moved here because
 		            // it needs to be kept in Drafts if an error occurs during the above process.
 		    		// modeFlag=='preview'는 메일작성 미리보기로 이전에 저장된 메일을 삭제하면 안된다(미리보기용으로 저장된 메일이 아닌 임시저장용 메일)
-		            if (oldMessage != null && !modeFlag.equalsIgnoreCase("preview") ) {
+					boolean isPreview = "preview".equalsIgnoreCase(modeFlag) || "previewSend".equalsIgnoreCase(modeFlag);
+
+		            if (oldMessage != null && !isPreview) {
 		            	oldMessage.setFlag(Flags.Flag.DELETED, true);
 		            }
 		            
@@ -4804,7 +4809,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        
 		        pResult = "<RESULT>OK</RESULT>";
 		        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
-		        if (cmd.equalsIgnoreCase("SAVE") && modeFlag.equalsIgnoreCase("preview")) {
+		        if (cmd.equalsIgnoreCase("SAVE")
+						&& (modeFlag.equalsIgnoreCase("preview") || modeFlag.equalsIgnoreCase("previewSend"))) {
 		        	pResult += "<MESSAGEID><![CDATA[" + ezEmailUtil.getDraftsFolderId(locale) + "]]></MESSAGEID>";
 		        }
 		        

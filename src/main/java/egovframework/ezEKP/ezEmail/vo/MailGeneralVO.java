@@ -23,7 +23,9 @@ public class MailGeneralVO {
 	private String previewSubTree;
 	
 	private String previewMailImage;
-	
+
+	private String previewMail;
+
 	private String textOption;
 	
 	private String mailSearchPeriod;
@@ -124,6 +126,14 @@ public class MailGeneralVO {
 	
 	public void setPreviewMailImage(String previewMailImage) {
 		this.previewMailImage = previewMailImage;
+	}
+
+	public String getPreviewMail() {
+		return previewMail;
+	}
+
+	public void setPreviewMail(String previewMail) {
+		this.previewMail = previewMail;
 	}
 	
 	public String getTextOption() {

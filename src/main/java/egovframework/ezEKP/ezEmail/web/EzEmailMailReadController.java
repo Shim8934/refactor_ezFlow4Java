@@ -268,6 +268,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String sentDateMsg = ""; // 전달, 회신 시 보낸 시간
 		boolean mailWritePreview = false; // 메일 작성 > 미리보기 
 		String mailBox = "";
+		boolean mailWritePreviewSend = false; // 메일 전송 > 미리보기
 		
 		// 읽기 화면에서 리스트 출력 위한 데이터
 		String countryName = "";
@@ -469,7 +470,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				subject = commonUtil.cleanValue(subject);
 				
-				if (contentClass.equalsIgnoreCase("PREVIEW")) {
+				if (contentClass.equalsIgnoreCase("PREVIEW") || contentClass.equalsIgnoreCase("PREVIEWSEND")) {
 					title = egovMessageSource.getMessage("ezEmail.t487", locale) + " -" + subject;
 				} else {
 					title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
@@ -529,7 +530,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					mailWritePreview = true;
 					dateStr = "";
 					logger.debug("mailWritePreview=" + mailWritePreview + ", dateStr=" + dateStr);
-				}								
+				} else if (contentClass.equalsIgnoreCase("PREVIEWSEND")) {
+					mailWritePreviewSend = true;
+					dateStr = "";
+					logger.debug("mailWritePreviewSend=" + mailWritePreviewSend + ", dateStr=" + dateStr);
+				}
 
 				String tagsStr = commonUtil.cleanValue(mailInfo.get("TAGS"));
 				if (StringUtils.isBlank(tagsStr)) {
@@ -910,7 +915,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						}
 						
 						subject = commonUtil.cleanValue(subject);
-						if(contentClass.equalsIgnoreCase("PREVIEW")){
+						if(contentClass.equalsIgnoreCase("PREVIEW") || contentClass.equalsIgnoreCase("PREVIEWSEND")){
 							title = egovMessageSource.getMessage("ezEmail.t487", locale) + " -" + subject;
 						} else {
 							title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
@@ -977,6 +982,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						mailWritePreview = true;
 						dateStr = "";
 						logger.debug("mailWritePreview=" + mailWritePreview + ", dateStr=" + dateStr);
+					} else if (contentClass.equalsIgnoreCase("PREVIEWSEND")) {
+						mailWritePreviewSend = true;
+						dateStr = "";
+						logger.debug("mailWritePreviewSend=" + mailWritePreview + ", dateStr=" + dateStr);
 					}
 					
 					f.close(true);
@@ -1046,6 +1055,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("useReSend", useReSend);
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
 		model.addAttribute("mailWritePreview", mailWritePreview); // 메일작성 > 미리보기
+		model.addAttribute("mailWritePreviewSend", mailWritePreviewSend); // 메일작성 > 미리보기
 		model.addAttribute("useCabinet", use_cabinet); 
 		model.addAttribute("countryName", countryName); 
 		model.addAttribute("countryIP", countryIP); 
@@ -1058,7 +1068,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("mailBox", mailBox);
 
 		// 메일 태그를 사용중인지 확인 (미리보기 모드라면 무조건 false)
-		boolean useMailTag = !mailWritePreview && "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", loginInfo.getTenantId()));
+		boolean useMailTag = !(mailWritePreview || mailWritePreviewSend) && "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", loginInfo.getTenantId()));
 
 		// 메일 태그를 사용한다면 사용자가 기능을 활성화 했는지 확인
 		if (useMailTag) {
