@@ -26,7 +26,7 @@
 		            ReturnFunction = opener.schedule_select_secretary_cross_dialogArguments[1];
 		        } catch (e) {}
 		        
-		        getDeptFullTree('${deptID}');
+		        getDeptFullTree('${companyID}');
 		    }
 	
 		    function Tree_setconfig() {
@@ -40,9 +40,10 @@
 		        }
 		    }
 	
-		    function getDeptFullTree(deptid) {
+		    function getDeptFullTree(text) {
+				var companyId = text;
 		        g_xmlHTTP = createXMLHttpRequest();
-		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>"+companyID+"/other</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>"+companyId+"/other</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;

@@ -4910,4 +4910,25 @@
 			 PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SN`,`DOCID`,`ORGANID`(255))
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='배부이력 정보'
 	</statement>
+
+	<select id="EzCommonDAO.checkExecutiveTable" resultClass="String">
+		SELECT
+			CN
+		FROM
+			TBL_EXECUTIVE
+				LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createExecutiveTable">
+		CREATE TABLE `TBL_EXECUTIVE` (
+			  `CN` VARCHAR(50) NOT NULL,
+			  `PRIORITY` INT(11) NOT NULL,
+			  `USAGE` CHAR(1) NOT NULL,
+			  `CREATEUSER` VARCHAR(50) NOT NULL,
+			  `LASTUPDATE` DATETIME NOT NULL,
+			  `COMPANYID` VARCHAR(50) NOT NULL,
+			  `TENANT_ID` MEDIUMINT DEFAULT 0 NOT NULL,
+			  PRIMARY KEY (`CN`,`COMPANYID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
 </sqlMap>

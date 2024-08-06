@@ -374,6 +374,7 @@
 		    			<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282'/></c:if>
 		    			<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t12'/></c:if>
 		    			<c:if test="${item.scheduleType == '9'}"><spring:message code='ezSchedule.google12'/></c:if>
+						<c:if test="${item.scheduleType == '10'}"><spring:message code='ezSchedule.lyj09'/></c:if>
 		    		</td>
 		    		<c:if test="${primary == '1'}">
 		    			<td style="width:80px">${item.ownerName}</td> 

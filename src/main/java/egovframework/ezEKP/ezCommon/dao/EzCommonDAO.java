@@ -2493,4 +2493,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblDistributeinfo");
 		}
 	}
+
+	// 2024-08-06 이유정 - 임원일정 > 테이블 추가
+	public void createExecutiveTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkExecutiveTable");
+		} catch (Exception e) {
+			logger.debug("tbl_executive doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createExecutiveTable");
+		}
+	}
 }

@@ -4125,4 +4125,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createTblDistributeinfo() throws Exception {
         ezCommonDAO.createTblDistributeinfo();
     }
+    
+    @Override
+    public void createExecutiveTable() throws Exception {
+        ezCommonDAO.createExecutiveTable();
+    }
 }

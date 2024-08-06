@@ -643,6 +643,11 @@
 	                        alert("<spring:message code='ezSchedule.t352' />"); // 작성자는 선택할 수 없습니다.
 	                        continue;
 	                    }
+
+						if (type != "group" && strId == "<c:out value='${executive}'/>") {
+							alert("<spring:message code='ezSchedule.lyj11' />"); // 임원은 선택할 수 없습니다.
+							continue;
+						}
 	                    
 	                    /* 2023-07-17 홍승비 - 관리자 > 일정관리 > 일정 그룹 관리 > 그룹 관리 > 구성원 추가 시 그룹장이 아닌 경우 추가 가능하도록 수정 */
 	                    // 그룹관리인 경우 -> 관리자단에서 그룹장이 아닌 사용자도 그룹 관리가 가능하므로, 추가하려는 구성원이 그룹장인지 체크

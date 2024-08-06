@@ -291,6 +291,9 @@ function save_schedule(pageFrom)
 	        case "8": //겸직일정
 	            patternType = "8";
 	            break;
+			case "10": // 임원일정
+				patternType = "10";
+				break;
 	    }
 	    setNodeText(xmlDom.getElementsByTagName("SCHEDULETYPE")[0], patternType)
 	}

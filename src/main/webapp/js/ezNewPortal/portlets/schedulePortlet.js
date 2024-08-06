@@ -72,6 +72,8 @@ function getScheduleList_after(resultList, mode, date) {
 					classNameForTheme = "company";
 				} else if (SCHEDULETYPE == 7) {
 					classNameForTheme = "group";
+				} else if (SCHEDULETYPE == 10) {
+					classNameForTheme = "executive";
 				}
 				
 				strLangArrForTheme[0] = strLang125_2; // 개인
@@ -80,6 +82,7 @@ function getScheduleList_after(resultList, mode, date) {
 				strLangArrForTheme[3] = strLang130_2; // 그룹
 				strLangArrForTheme[4] = strLang131_2; // 협업
 				strLangArrForTheme[5] = strLang141_2; // 구글
+				strLangArrForTheme[6] = strLang151_2; // 임원
 				
 				// 2020-02-25 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
 				if (DATETYPE == "4") {
@@ -120,6 +123,9 @@ function getScheduleList_after(resultList, mode, date) {
 				} else if (SCHEDULETYPE == 9) {
 					timeClass = "Tindividual";
 					listHTML += "<span class='Tindividual'>" + strLangArrForTheme[5] + "</span>";
+				} else if (SCHEDULETYPE == 10) {
+					timeClass = "Texecutive";
+					listHTML += "<span class='Texecutive'>" + strLangArrForTheme[6] + "</span>";
 				} else {
 					listHTML += "";
 				}

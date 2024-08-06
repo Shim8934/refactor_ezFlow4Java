@@ -443,5 +443,13 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void updateWritePermission(Map<String, Object> map) throws Exception {
 		update("EzScheduleDAO.updateWritePermission", map);
 	}
+	
+	public String checkExecutiveType(Map<String, Object> map) throws Exception {
+		return (String) select("EzScheduleDAO.checkExecutiveType", map);
+	}
+
+	public String checkExecutiveUsage(Map<String, Object> map) throws Exception {
+		return (String) select("EzScheduleDAO.checkExecutiveUsage", map);
+	}
 }
 
