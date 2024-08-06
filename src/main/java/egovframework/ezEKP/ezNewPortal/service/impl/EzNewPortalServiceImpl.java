@@ -123,7 +123,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("nowDate", nowDate);
 		
 		if (!lang.equals("1")) {
-			map.put("lang", 2);
+			map.put("lang", "2");
 		}
 		
 		map.put("startRow", (currentPage - 1) * listCntSize);
@@ -1079,8 +1079,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("month", monthStr);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		
 		if (lang != null && !lang.equals("") && !lang.equals("1")) {
-			map.put("lang", 2);
+			map.put("lang", "2");
 		}
 
 		List<PortalUserInfoVO> tempList = ezNewPortalDAO.getMonthlyBirthdayEmployees(map);
@@ -3570,7 +3571,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("iv_PORDERBYSUB", " A.WRITEDATE DESC ");
+		//map.put("iv_PORDERBYSUB", " A.WRITEDATE DESC ");
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", itemCount);
 		map.put("limit", startRow);

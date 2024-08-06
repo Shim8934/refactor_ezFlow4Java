@@ -8840,7 +8840,10 @@
                 OR
                     (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
                 and
-                    TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+                    TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
+                    <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+						#v_DEPTIDS[]#
+					</iterate>
                 and
                     TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012')
 		     </isEqual>
@@ -11210,7 +11213,6 @@
         	 A.COMPANYID = #companyID#
 	</select>
 
-    <!--20240229 나병민 - $v_LANGTYPE$ $ 변경-->
 <!-- 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap"> -->
 <!-- 		{CALL EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -11265,7 +11267,6 @@
 		</isEqual>
 	</select>
 
-<!--20240229 나병민 - ezEKP365G  NAME$v_LANGTYPE$ 변경-->
 <!-- 	<procedure id="EzApprovalG.getCode2Name" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETCODE2NAME(#v_CODE1#, #v_CODE2#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -11335,7 +11336,6 @@
 	</select>
 
 <!-- 2024-04-15 홍승비 - SQL Injection 다국어 수정으로 누락된  v_NAME 비교 조건 추가 -->
-<!--20240304 나병민 - ezEKP365G  NAME$v_LANGTYPE$ 변경 -->
 <!-- 	<procedure id="EzApprovalG.getName2Code" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETNAME2CODE(#v_CODE1#, #v_NAME#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -12186,7 +12186,6 @@
 	</select>
 	
 <!-- 2024-04-15 홍승비 - 잘못 처리된 다국어 칼럼 분기 수정 (#lang#값은 '' 또는 '2') -->
-<!-- 	20240304 나병민 - ezEKP365G APRMEMBERNAME$lang$ 수정 -->
 <!-- 	<procedure id="EzApprovalG.updateHabyuiResultAprMemberNM" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_UPDATEHABYUIRESULT_APRM_2(#v_DOCID#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -12213,7 +12212,6 @@
 	</select>
 	
 <!-- 2024-04-15 홍승비 - 잘못 처리된 다국어 칼럼 분기 수정 (#lang#값은 '' 또는 '2') -->
-<!-- 	20240304 나병민 - ezEKP365G APRMEMBERJOBTITLE$lang$ 수정 -->
 <!-- 	<procedure id="EzApprovalG.updateHabyuiResultAprMemberJobTitle" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_UPDATEHABYUIRESULT_APRM_1(#v_DOCID#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -14687,7 +14685,10 @@
             OR
                 (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
             AND
-                TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+                TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
+                <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+					#v_DEPTIDS[]#
+				</iterate>
             AND
                 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012')
 	     </isEqual>

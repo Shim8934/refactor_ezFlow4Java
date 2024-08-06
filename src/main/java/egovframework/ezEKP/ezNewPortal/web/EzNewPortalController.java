@@ -1173,7 +1173,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
     	int startRow = 0;
     	int itemCount = 10;
     	try {
-    		if("".equals(boardId)) {
+    		if ("".equals(boardId)) {
     			throw new Exception();
     		}
 			BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, userInfo.getTenantId());
@@ -1187,18 +1187,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	
 			List<BoardListVO> boardList = null;
 			// 권한이 true이면 boardList불러오기
-			if(boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새 게시물일 때
+			if (boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새 게시물일 때
 				boolean isAdmin = ezBoardService.isBoardAdmin(boardId, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getRollInfo());
 				String boardUserType = isAdmin ? "admin" : "user";
 				boardList = ezNewPortalService.getNewBoardPortletInfo(userInfo, boardUserType, startRow, itemCount);
-			}else {
+			} else {
 				boardList = ezNewPortalService.getBoardPortletInfo(userInfo.getId(), userInfo.getTenantId(), boardId, itemCount, userInfo.getCompanyID(), userInfo.getOffset(), isQnANormal);
 			}
+			
 			json.put("status", "ok");
 			json.put("message", "success");
 			json.put("boardList", boardList);
     	} catch (Exception e) {
-    		logger.debug("error in boardItemListToTopMenu >> " + e.getMessage());
+    		logger.debug("error in boardItemListToTopMenu");
+    		logger.error(e.getMessage(), e);
     		json.put("status", "fail");
     		json.put("message", "fail to get boardItem");
     	}

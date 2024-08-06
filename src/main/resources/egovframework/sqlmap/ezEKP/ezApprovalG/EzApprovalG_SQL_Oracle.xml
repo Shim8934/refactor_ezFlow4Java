@@ -8776,7 +8776,10 @@
                 OR
                     (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
                 and
-                    TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+                    TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
+                    <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+						#v_DEPTIDS[]#
+					</iterate>
                 and
                     TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012')
 		     </isEqual>
@@ -14659,7 +14662,10 @@
              OR
                 (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
              AND
-                TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+                TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
+                <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+					#v_DEPTIDS[]#
+				</iterate>
              AND
                 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012')
 	     </isEqual>
