@@ -568,7 +568,8 @@
 				return;
 			}
 
-			var openType = document.getElementById("menuOpenType").value;
+			// 2024-08-05 조수빈 - 모바일은 해당 기능을 사용하지 않으나 not null인 값이므로 임의로 tab에 해당하는 1을 넣도록 한다.
+			var openType = document.getElementById("menuOpenType") ? document.getElementById("menuOpenType").value : 'tab';
 			var mapping = {'tab': 1, 'window': 2, 'iframe': 3};
 			
 			//아이콘
@@ -844,7 +845,8 @@
 				return;
 			}
 			
-			var openType = document.getElementById("menuOpenType").value;
+			// 2024-08-05 조수빈 - 모바일은 해당 기능을 사용하지 않으나 not null인 값이므로 임의로 tab에 해당하는 1을 넣도록 한다.
+			var openType = document.getElementById("menuOpenType") ? document.getElementById("menuOpenType").value : 'tab';
 			var mapping = {'tab': 1, 'window': 2, 'iframe': 3};
 			
 			//아이콘

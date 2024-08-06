@@ -363,15 +363,18 @@
 	</update>
 	
 	<update id="ezNewPortal.updateCompanyMenuInfo" parameterClass="Map">
-		<![CDATA[
 			UPDATE
 				TBL_PORTAL_MENU
 			SET
-				menu_url = #menuUrl#,
+				menu_url = #menuUrl#
+		<isEqual property="menuType" compareValue="A" prepend=",">
 				icon_url = #iconUrl#
+		</isEqual>
+		<isEqual property="menuType" compareValue="MA" prepend=",">
+				icon_url = #iconUrl#
+		</isEqual>
 			WHERE
 				menu_id = #menuId#
-		]]>
 	</update>
 	
 	<update id="ezNewPortal.updateCompanyMenuNameInfo" parameterClass="Map">

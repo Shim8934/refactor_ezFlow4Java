@@ -29,6 +29,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
@@ -833,6 +834,44 @@ public class MPortalGWController extends EgovFileMngUtil {
 		}		
 		
 		logger.debug("getAddJobFlag End");
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezPortal/users/menuList", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject menuList(HttpServletRequest request) throws Exception {
+		logger.debug("menuList Start");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			
+			Map<String, Object> userInfoMap = new HashMap<>();
+			userInfoMap.put("companyId", request.getParameter("companyId"));
+			userInfoMap.put("tenantId", request.getParameter("tenantId"));
+			userInfoMap.put("langType", request.getParameter("langType"));
+			userInfoMap.put("userId", request.getParameter("userId"));
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, (String) userInfoMap.get("userId"));
+			userInfoMap.put("deptId", info.getDeptId());
+			
+			Map<String, Object> dataObject = new HashMap<String, Object>();
+			List<MenuInfoVO> mobileMenuList = mOptionService.getMobileMenuList(userInfoMap);
+			dataObject.put("mobileMenuList", mobileMenuList);
+	        
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", dataObject);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("menuList End");
 		
 		return result;
 	}

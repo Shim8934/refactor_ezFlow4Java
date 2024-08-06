@@ -1136,9 +1136,17 @@ AND
                 COMP.menu_used = 1        
             AND
             	(AUTH.access_yn IS NOT NULL)    
+            ]]>
+            <isNotEmpty property="mobile">
+            AND
+            	A.MENU_TYPE IN ('MA', 'MG')
+            </isNotEmpty>
+            <isEmpty property="mobile">
+            AND
+            	A.MENU_TYPE IN ('A', 'G')
+            </isEmpty>
             ORDER BY
                 menuOrder
-            ]]>
     </select>
 
 <!-- 포틀릿 정보 불러오기 -->
