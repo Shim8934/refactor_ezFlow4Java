@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>    
 <!DOCTYPE html>
-<html style="height:100%">
+<html>
 	<head>
 		<title><spring:message code='ezNotification.hth57' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -22,7 +23,7 @@
 		      		    <div id="menu">
 		        			<ul class="">
 		        				<c:if test="${adminFlag == 'Y' or emergencyNotiItem.writerId eq userId}">
-		                    		<li id="btn_Delete" onclick="delEmergencyNoti()"><span class="icon16 popup_icon16_delete" onclick="btn_Delete_Onclick()"></span></li>
+		                    		<li id="btn_Delete" onclick="delEmergencyNoti()"><span class="icon16 popup_icon16_delete"></span></li>
 		                    	</c:if>
 					        </ul>
 				        </div>    
@@ -38,7 +39,7 @@
 			  			<th style="width:10%"><spring:message code='ezNotification.hth58' /></th>
 		      			<td style="width:40%"><c:out value='${emergencyNotiItem.notiTitle}'/></td>
 		      			<th style="width:10%"><spring:message code='ezNotification.hth84' /></th>
-		      			<td style="width:40%"><c:out value='${emergencyNotiItem.writeDate}'/></td>
+		      			<td style="width:40%"><c:out value='${fn:substring(emergencyNotiItem.writeDate, 0, 16)}'/></td>
 					</tr>
 					<tr> 
 						<th style="width:10%"><spring:message code='ezBoard.t207' /></th>

@@ -39,7 +39,7 @@
 
     <div class="urgent_cont">
         <h3 id="notiTargetBtn" onclick="openAddRecipient()"><spring:message code="ezNotification.hth61"/><span class="add_btn"><spring:message code="ezNotification.hth60"/></span></h3>
-        <ul id="notiList">
+        <ul id="emergencyNotiUserList">
         </ul>
     </div>
 
@@ -90,7 +90,7 @@ function openAddRecipient() {
 
 function notiListSelect_complete(notiRecipientArray) {
 	//notiRecipientArray = emergency_noti_dialogArguments[0]
-	var notiListElem = document.getElementById("notiList");
+	var notiListElem = document.getElementById("emergencyNotiUserList");
 	while (notiListElem.firstChild) {
 		notiListElem.removeChild(notiListElem.firstChild);
 	}
@@ -117,7 +117,7 @@ function notiListSelect_complete(notiRecipientArray) {
 		notiDelBtn.classList.add("del_btn");
 		notiLiElem.appendChild(notiPElem);
 		notiLiElem.appendChild(notiDelBtn);
-		document.getElementById("notiList").appendChild(notiLiElem);
+		document.getElementById("emergencyNotiUserList").appendChild(notiLiElem);
 	}
 }
 
@@ -141,12 +141,12 @@ function sendEmergencyNoti() {
 	}
 	
 	if (notiTitle.length > 30) {
-		alert('제목은 30자까지만 입력가능합니다.');
+		alert('<spring:message code="ezNotification.hth87"/>');
 		return;
 	}
 	
 	if (notiContent.length > 2500) {
-		alert("내용은 2500자까지만 입력가능합니다.");
+		alert('<spring:message code="ezNotification.hth88"/>');
 		return;
 	}
 	
@@ -193,6 +193,7 @@ function sendEmergencyNoti() {
 			moveToNotiMain();
 		},
 		error : function(e) {
+			alert('<spring:message code="ezNotification.hth83"/>');
 			console.log(e)
 		}
 	});

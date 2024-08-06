@@ -96,7 +96,6 @@
 	var notiListFlag = true;
 	var isNotiLoading = false; 
 	var notiDateEndPoint = "";
-	var emergencyNotiPermission = "";
 	window.onload = function () {
 		checkEmergencyPermission();
 		notiListFlag = true;
@@ -282,6 +281,7 @@
 			async: true,
 			success: function(result) {
 				var readYN = notiLiElem[0].getAttribute("isread");
+
 				if (mode == 'read') {
 					notiLiElem[0].setAttribute("isread", "Y");
 					notiLiElem[0].querySelector('.read_point').style.display = "none";
@@ -518,7 +518,7 @@
 	    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + popupHeight + ",width=" + popupWidth + ",top=" + pTop + ",left=" + pLeft;
 	    
 	    if (linkUrl == "") {
-	    	alert("링크가 존재하지 않습니다.");
+	    	alert('<spring:message code="ezNotification.hth85"/>');
 	    	return;
 	    }
 	    
@@ -540,7 +540,7 @@
 	    }
 	    
 	    if (linkUrl == null || linkUrl == "") {// 결재 링크 생성 에러 발생 시 동작안하도록 추가 
-	    	alert("링크가 없습니다.");
+	    	alert('<spring:message code="ezNotification.hth85"/>');
 	    	return;
 	    }
 	    
@@ -595,7 +595,7 @@
 			async: false,
 			success: function(result) {
 				if (result.status != "ok") {
-					alert("에러가 발생했습니다.");
+					alert('<spring:message code="ezNotification.hth34"/>');
 					return null;
 				}
 				
@@ -614,7 +614,7 @@
 				functionType = result.data.functionType;
 			},
 			error: function (xhr, status, e) {
-				alert("에러가 발생했습니다.");
+				alert('<spring:message code="ezNotification.hth34"/>');
 				return;
 			}
 		});
@@ -700,7 +700,7 @@
 		var aprMemberSN = "";
 		var docInfo = null;
 		if (p_userDeptId != userDeptId) {
-			alert("결재부서와 현 부서가 다릅니다.");
+			alert('<spring:message code="ezNotification.hth86"/>');
 			return;
 		}
 		
@@ -717,7 +717,7 @@
 			async: false,
 			success: function(result) {
 				if (result.status != "ok") {
-					alert("에러가 발생했습니다.");
+					alert('<spring:message code="ezNotification.hth34"/>');
 					return null;
 				}
 				
@@ -737,7 +737,7 @@
 		        useWebHWP = result.useWebHWP;
 			},
 			error: function (xhr, status, e) {
-				alert("에러가 발생했습니다.");
+				alert('<spring:message code="ezNotification.hth34"/>');
 				return;
 			}
 		});
@@ -827,7 +827,7 @@
 			async: false,
 			success: function(result) {
 				if (result.status != "ok") {
-					alert("에러가 발생했습니다.");
+					alert('<spring:message code="ezNotification.hth34"/>');
 					return null;
 				}
 								
@@ -863,7 +863,7 @@
 			    }
 			},
 			error: function (xhr, status, e) {
-				alert("에러가 발생했습니다.");
+				alert('<spring:message code="ezNotification.hth34"/>');
 				return;
 			}
 		});
@@ -957,7 +957,7 @@
 				
 			},
 			error: function (xhr, status, e) {
-				alert("에러가 발생했습니다.");
+				alert('<spring:message code="ezNotification.hth34"/>');
 				return;
 			}
 		});
@@ -1003,7 +1003,7 @@
 				
 			},
 			error: function (xhr, status, e) {
-				alert("에러가 발생했습니다.");
+				alert('<spring:message code="ezNotification.hth34"/>');
 				return;
 			}
 		});
@@ -1111,7 +1111,6 @@
 					document.getElementById('emergency_write_btn').style.display = "none";
 				}
 				
-				emergencyNotiPermission = result;
 			},
 			error: function (xhr, status, e) {
 				console.log(e);
@@ -1122,7 +1121,7 @@
 	
 	function moveToEmergencyNoti() {
 		var notiFrame = window.parent.frames["iframeNoti"];
-		notiFrame.setAttribute("src", "/ezNotification/emergencyNoti.do?emergencyNotiPermission=" + emergencyNotiPermission);
+		notiFrame.setAttribute("src", "/ezNotification/emergencyNoti.do");
 	}
 	
 </script>

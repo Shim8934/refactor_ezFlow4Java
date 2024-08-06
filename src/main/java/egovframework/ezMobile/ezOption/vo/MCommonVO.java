@@ -50,6 +50,8 @@ public class MCommonVO {
 	private String jobId;
 	
 	private Locale locale;
+	/** 2024-08-05 한태훈 - 직책 ID 추가 */
+	private String roleId;
 	
 	public String getLastLogin() {
 		return lastLogin;
@@ -226,4 +228,13 @@ public class MCommonVO {
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
+
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+	
 }

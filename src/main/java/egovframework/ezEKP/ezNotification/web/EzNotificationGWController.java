@@ -28,8 +28,7 @@ import egovframework.ezEKP.ezNotification.vo.EmergencyNotiItemVO;
 import egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO;
 import egovframework.ezEKP.ezNotification.vo.NotiRecipientVO;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
 import egovframework.ezEKP.ezPersonal.type.NotiType;
@@ -77,7 +76,7 @@ public class EzNotificationGWController {
     private LoginService loginService;
 	
 	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
+	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private Properties config;
@@ -452,8 +451,8 @@ public class EzNotificationGWController {
 			String isRead = request.getParameter("isRead");
 			String notiFilter = request.getParameter("notiFilter");
 			String keyWord = request.getParameter("keyWord");
-			int lastNotiSeq = Integer.parseInt(request.getParameter("lastNotiSeq"));
-			int rowCount = 50;
+			Integer lastNotiSeq = request.getParameter("lastNotiSeq").isEmpty() ? null : Integer.parseInt(request.getParameter("lastNotiSeq"));
+			int rowCount = Integer.parseInt(request.getParameter("notiListCnt"));
 			String mode = "ALL";
 			int totalListCnt = ezNotificationService.getTotalSearchNotiListCnt(userId, mode, isRead, notiFilter, keyWord, info.getCompanyId(), info.getTenantId());
 			mode = "NOTREAD";
@@ -691,15 +690,16 @@ public class EzNotificationGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			String deptId = request.getParameter("deptId");
-			String roleInfo = request.getParameter("roleInfo");
-			String jobId = request.getParameter("jobId");
-			String roleId = request.getParameter("roleId");
-			String companyId = request.getParameter("companyId");
-			String deptPath = request.getParameter("deptPath");
-			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
+			
+			String deptId = request.getParameter("deptId") == null ? info.getDeptId() : request.getParameter("deptId");
+			String roleInfo = request.getParameter("roleInfo") == null ? info.getRollInfo() : request.getParameter("roleInfo");
+			String jobId = request.getParameter("jobId") == null ? info.getJobId() : request.getParameter("jobId");
+			String roleId = request.getParameter("roleId") == null ? info.getRoleId() : request.getParameter("roleId");
+			String companyId = request.getParameter("companyId") == null ? info.getCompanyId() : request.getParameter("companyId");
+			String deptPath = request.getParameter("deptPath") == null ? ezOrganService.getDeptPath(deptId, tenantId) : request.getParameter("deptPath");
+			
 			String adminFlag = ezNotificationService.checkEmergencyPermission(roleInfo, userId, deptId, deptPath, jobId, roleId, companyId, tenantId);		
 			result.put("status", "ok");
 			result.put("code", 0);

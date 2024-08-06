@@ -305,6 +305,14 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			
+			if (boardItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);			
+				result.put("data", "");
+				return result;
+			}
+			
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			boardItem.setNotiStart(commonUtil.getDateStringInUTC(boardItem.getNotiStart(), info.getOffSet(),false));
 			boardItem.setNotiEnd(commonUtil.getDateStringInUTC(boardItem.getNotiEnd(), info.getOffSet(),false));
@@ -403,6 +411,13 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			
+			if (boardItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);			
+				result.put("data", "");
+				return result;
+			}
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			
 			//boardInfo
@@ -1222,6 +1237,14 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			
+			if (boardItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);			
+				result.put("data", "");
+				return result;
+			}
+			
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
@@ -1344,12 +1367,16 @@ public class MBoardGWController {
 	        InternetAddress[] toArray = new InternetAddress[1]; // 한번에 한 사람에게만 발송
 	        List<BoardAccessVO> list = ezBoardService.getPostNotiMailUserList(boardId, primary, mobileInfo.getTenantId());
 	        
-	        String separator = ";;";
-	        String notiRecipientParam = "";
+	        List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 	        logger.debug("Sending mail starts");
 
 	        for (BoardAccessVO vo : list) {
-	        	notiRecipientParam += vo.getAccessID() + separator;
+	        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", info.getCompanyId());
+				recipientMap.put("cn", vo.getAccessID());
+				notiRecipientList.add(recipientMap);
+				
 	        	try {
 	        		InternetAddress from = new InternetAddress();
 
@@ -1402,7 +1429,7 @@ public class MBoardGWController {
 	        
 	        logger.debug("Sending mail ends");
 
-	        if (notiRecipientParam.length() <= 0) {
+	        if (notiRecipientList == null || notiRecipientList.size() == 0) {
 				result.put("status", "ok");
 				result.put("code", 0);
 				result.put("data", null);
@@ -1410,8 +1437,6 @@ public class MBoardGWController {
 			}
 
 	        // 2024-03-29 한태훈 - 모바일 > 게시판 > 관리자 신규 게시 통합알림 추가
- 			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
-
  			String boardStatus = "";
 			String boardType = boardInfo.getGuBun();
 			String linkUrl = "";
@@ -1447,7 +1472,7 @@ public class MBoardGWController {
 			}
 
  			Map<String, Object> data = new HashMap<String, Object>();
- 			data.put("notiRecipientParam", notiRecipientParam);
+ 			data.put("notiRecipientParam", notiRecipientList);
  			data.put("notiContent", notiContent);
  			data.put("linkUrl", linkUrl);
  			data.put("linkUrlMobile",linkUrlMobile);
@@ -1494,8 +1519,7 @@ public class MBoardGWController {
 			String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String userEmail = userID + "@" + domainName;
 			String password = jspw;
-			String notiRecipientParam = "";
-			String separator = ";;";
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 			boolean disableMail = false;
 
 			// 게시판 옵션에서 메일알림을 사용하는 경우에만 발송한다.
@@ -1523,7 +1547,11 @@ public class MBoardGWController {
 
 					if (!notiRecipientIds.contains(writerID)) {
 						notiRecipientIds.add(writerID);
-						notiRecipientParam += writerID + ";;";
+						Map<String, Object> recipientMap = new HashMap<String, Object>();
+						recipientMap.put("userType", "PERSON");
+						recipientMap.put("companyId", info.getCompanyId());
+						recipientMap.put("cn", writerID);
+						notiRecipientList.add(recipientMap);
 					}
 				}
 			} else if (mode.equals("comment") && boardInfo.getMailFG_Comment() != null && boardInfo.getMailFG_Comment().equals("Y")) {
@@ -1541,7 +1569,11 @@ public class MBoardGWController {
 					}
 
 					notiRecipientIds.add(writerID);
-					notiRecipientParam += writerID + ";;";
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+					recipientMap.put("userType", "PERSON");
+					recipientMap.put("companyId", info.getCompanyId());
+					recipientMap.put("cn", writerID);
+					notiRecipientList.add(recipientMap);
 				}
 			}
 			// 메일발송 하지 않는 경우, 바로 리턴
@@ -1651,7 +1683,6 @@ public class MBoardGWController {
 				return result;
 			}
 			
-			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
 			String notiContent = boardInfo.getBoardName() + " - " + boardItem.getTitle();
 			
 			// 게시물 링크, 게시일 정보 등 생성
@@ -1691,7 +1722,7 @@ public class MBoardGWController {
 			}
 
 			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("notiRecipientParam", notiRecipientParam);
+			data.put("notiRecipientParam", notiRecipientList );
 			data.put("notiContent", notiContent);
 			data.put("linkUrl", linkUrl);
 			data.put("linkUrlMobile",linkUrlMobile);
