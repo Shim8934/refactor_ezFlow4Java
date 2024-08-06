@@ -95,6 +95,10 @@ function ezCabMunuCtl(MenuType, selRow) {
         pMenuFlag = "";
     else
         pMenuFlag = "none";
+        
+    if (g_sFlag === "m02" && underDeptFlag === "TRUE" && GetSelectVal("rec_underDept2") != "default") {
+        MenuType = "cabinetUnderDept";
+    }
 
     switch (MenuType) {
         case "0":
@@ -102,13 +106,13 @@ function ezCabMunuCtl(MenuType, selRow) {
                 document.getElementById("tdNewVol").style.display = "none"; // 권호수 안보이게
             }
 
-            if (typeof (tdModifyCab) != "undefined" && typeof (tdModifyCab) != "unknown") {
+            if (typeof (tdModifyCab) != "undefined" && typeof (tdModifyCab) != "unknown" && ListTypeFlag !== "15") {
 
                 document.getElementById("tdModifyCab").style.display = pMenuFlag;
             }
 
             // 20200824 김보혜 기록물철 관련 버튼들 전체적으로 수정 (한사대) 
-            if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
+            if ((g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") && ListTypeFlag !== "15") {
                 document.getElementById("tdBtnCabDel").style.display = "";    
             }
 
@@ -158,7 +162,7 @@ function ezCabMunuCtl(MenuType, selRow) {
 
 
             if (typeof (tdSetCharger) != "undefined" && typeof (tdSetCharger) != "unknown") {
-                if (GetCabChargerRight() == "true")
+                if (GetCabChargerRight() == "true" && ListTypeFlag !== "15")
                     document.getElementById("tdSetCharger").style.display = "";
                 else
                     document.getElementById("tdSetCharger").style.display = "none";
@@ -167,8 +171,13 @@ function ezCabMunuCtl(MenuType, selRow) {
             break;
 
         case "1":
+        	
+        	if (typeof (ListTypeFlag) != "undefined" && ListTypeFlag == "25") {
+        		return;
+        	}
+        	
         	/* 2023-06-28 한태훈 - 통합 PC 저장 시 지워졌던 네 개의 버튼 - 등록정보, 공람정보, 철검색, 목록출력 버튼 보이기 (나머지 버튼들은 아래 if문으로 조절됨) */
-			document.getElementById("tDocInfo").style.display = "";
+        	document.getElementById("tDocInfo").style.display = "";
 			document.getElementById("tdViewRecInfo").style.display = "";
 			document.getElementById("tdCabSelect").style.display = "";
 			document.querySelector("#trRecSubMenu #tdDocListPrint").style.display = "";
@@ -328,6 +337,9 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
             
+            break;
+            
+            case "cabinetUnderDept" : 
             break;
     }
 
@@ -587,10 +599,16 @@ function GetRecordList() {
             nowday = "0" + nowday;
 
         var tempDeptID = DeptID;
-        if (checkRecordAll()) {
-            tempDeptID = "ALL";
+
+        if (typeof underDeptFlag !== "undefined" && underDeptFlag === "TRUE" && GetSelectVal("rec_underDept") != "default") {
+            tempDeptID = GetSelectVal("rec_underDept");
         }
-        
+
+        // if (checkRecordAll()) {
+        //  checkRecordAll : 기존 소스를 찾을 수 없어 임시 주석처리
+        //     tempDeptID = "ALL";
+        // }
+
         /* 2022-07-20 홍승비 - 기록물철등록부 > 기록물철 선택 후 기록물보기로 진입한 경우, 선택한 기록물철의 생산 년도를 기준으로 표출 (검색조건 없을 시의 기본 표출) */
         if (typeof(isCabinetToRecordFirst) != "undefined" && isCabinetToRecordFirst == true && typeof(g_sFlag) != "undefined" && g_sFlag == "m02") { // 기록물철등록부의 g_sFlag는 'm02'
         	// 생산년도의 01월 01일부터 12월 31일까지를 검색 범위로 설정
@@ -1089,6 +1107,10 @@ function GetHearderXml() {
 }
 
 function lvtDoclist_HeaderClick(pHeader) {
+    if (DocList_Flag === "RECORD" && pHeader === "") {
+        return;
+    }
+
     if (OrderCell == pHeader) {
         if (OrderOption == "")
             OrderOption = "DESC";
@@ -1622,6 +1644,9 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     if (document.getElementById("rec_year") != null) {
         $('#rec_year').val("ALL");
         /*$('#rec_year').selectmenu('refresh');*/
+    }
+    if (document.getElementById("rec_underDept") != null) {
+        $('#rec_underDept').val("default");
     }
 }
 

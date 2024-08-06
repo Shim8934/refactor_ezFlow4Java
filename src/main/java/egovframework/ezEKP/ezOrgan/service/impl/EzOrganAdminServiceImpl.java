@@ -13,6 +13,9 @@ import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +34,8 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -93,6 +98,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
     @Autowired
     private EzPersonalDAO ezPersonalDAO; // 2021-11-01 이사라 추가
+    
+    @Autowired
+    private EzNewPortalDAO ezNewPortalDAO;
     
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
@@ -810,7 +818,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				map1.put("topMenuLogoJaUUID", UUID.randomUUID().toString());
 				map1.put("topMenuLogoEnUUID", UUID.randomUUID().toString());
 				map1.put("PrimaryLang", ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()));
-				
+				map1.put("menuType", "0");
 				for (int i = 0; i < 112; i++) {
 					map1.put("menuItemUUID"+String.valueOf(i), UUID.randomUUID().toString());
 				}
@@ -865,6 +873,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_IJHS1(map1);
 				//차량관리 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_I33(map1);
+				
+				PortalTopVO portalTopVO = new PortalTopVO();
+				portalTopVO.setCompanyID(cn);
+				portalTopVO.setTenantID(tenantID);
+				portalTopVO.setType(0);
+				ezNewPortalDAO.insertTopMenuDisplayModeForCompany(portalTopVO); // 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
@@ -981,23 +995,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
 		map.put("v_MANUAL_FLAG", vo.getManualFlag() != null ? vo.getManualFlag() : "N");
 		map.put("v_LDAPPATH", "");
+		map.put("v_DEPTTREEFLAG",vo.getDeptTreeFlag() != null ? vo.getDeptTreeFlag() : "Y");
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
-		
-		// 트리뷰순서값이 null일 경우 현재 추가한 부서가 제일 위에 오도록
-		// 나머지 부서들의 트리뷰순서값들을 1씩 증가
+
+		// 신규 부서 추가 시 제일 하위에 위치하도록 순서 조정
 		if (vo.getManualFlag() != null && vo.getManualFlag().equals("Y")) {
 			if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
-				vo.setExtensionAttribute15("0");
-				ezOrganAdminDao.updateDBData_deptOrderIsNull(map);		
+				vo.setExtensionAttribute15(ezOrganAdminDao.getDeptExtension15(map));
+//				ezOrganAdminDao.updateDBData_deptOrderIsNull(map);
 			}
 			
-			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
-			
-			ezOrganAdminDao.updateDBData_deptOrder(map); // 부서 트리뷰순서값 1씩 증가
+//			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+//			
+//			ezOrganAdminDao.updateDBData_deptOrder(map); // 부서 트리뷰순서값 1씩 증가
 		}
 		
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
@@ -1077,12 +1091,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
 		
-		// 트리뷰순서값이 null일 경우 현재 추가한 사원이 제일 위에 오도록
-		// 나머지 사원들의 트리뷰순서값들을 1씩 증가
+		// 신규 사원 추가 시 제일 하위에 위치하도록 순서 조정
 		if (vo.getManualFlag() != null && vo.getManualFlag().equals("Y")) {
 			if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
-				vo.setExtensionAttribute15(ezOrganAdminDao.getDeptInfo(map).getExtensionAttribute15());
-//				ezOrganAdminDao.updateDBData_userOrderIsNull(map);		
+				vo.setExtensionAttribute15(ezOrganAdminDao.getUserExtension15(map));
+//				ezOrganAdminDao.updateDBData_userOrderIsNull(map);
 			}
 			
 //			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
@@ -1101,6 +1114,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		}
 		
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+		map.put("v_USERTREEFLAG", vo.getUserTreeFlag() != null ? vo.getUserTreeFlag() : "Y");
 		ezOrganAdminDao.insertDBData_user(map);
 				
 		logger.debug("insertDBData_user ended");
@@ -1430,8 +1444,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		date.setTimeZone(TimeZone.getTimeZone("GMT"));
             		String nowDate = date.format(new Date());
             		map.put("nowDate", nowDate);
-					map.put("v_EXTATTR15", ezOrganAdminDao.getDeptInfo(map).getExtensionAttribute15());
-                    
+					map.put("v_EXTATTR15", ezOrganAdminDao.getUserExtension15(map));
+
             		String bizmekaResult = "ERROR";
             		
             		try {
@@ -3031,7 +3045,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String createExcelPermissionsList(String realPath, String dirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale) throws Exception {
+	public String createExcelPermissionsList(String realPath, String dirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale, boolean isRollC) throws Exception {
 		logger.debug("createExcelPermissionsList start");
 
 		Date date = new Date();
@@ -3117,34 +3131,35 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 		// 액셀 라이브러리가 지원하는 row수: 65536건
 		// 사용자의 권한을 타입별로 나눠준다 (전체관리자)
-		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
-			Row newRow1 = sheet1.createRow(i);
+		if (isRollC) {
+			for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+				Row newRow1 = sheet1.createRow(i);
 
-			if (exportPermissionInfo.getExtensionAttribute1().contains("c=1")) {
-				permission = egovMessageSource.getMessage("ezOrgan.t291", locale).trim();
+				if (exportPermissionInfo.getExtensionAttribute1().contains("c=1")) {
+					permission = egovMessageSource.getMessage("ezOrgan.t291", locale).trim();
 
-				newRow1.createCell(0).setCellValue(permission); // 권한
-				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
-				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
-				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
-				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
-				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
-				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
-				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+					newRow1.createCell(0).setCellValue(permission); // 권한
+					newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+					newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+					newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+					newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+					newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+					newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+					newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
 
-				newRow1.getCell(0).setCellStyle(centerStyle2);
-				newRow1.getCell(1).setCellStyle(centerStyle2);
-				newRow1.getCell(2).setCellStyle(centerStyle2);
-				newRow1.getCell(3).setCellStyle(centerStyle2);
-				newRow1.getCell(4).setCellStyle(centerStyle2);
-				newRow1.getCell(5).setCellStyle(centerStyle2);
-				newRow1.getCell(6).setCellStyle(centerStyle2);
-				newRow1.getCell(7).setCellStyle(centerStyle2);
+					newRow1.getCell(0).setCellStyle(centerStyle2);
+					newRow1.getCell(1).setCellStyle(centerStyle2);
+					newRow1.getCell(2).setCellStyle(centerStyle2);
+					newRow1.getCell(3).setCellStyle(centerStyle2);
+					newRow1.getCell(4).setCellStyle(centerStyle2);
+					newRow1.getCell(5).setCellStyle(centerStyle2);
+					newRow1.getCell(6).setCellStyle(centerStyle2);
+					newRow1.getCell(7).setCellStyle(centerStyle2);
 
-				i++;
+					i++;
+				}
 			}
 		}
-
 		// 사용자의 권한을 타입별로 나눠준다 (회사관리자)
 		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
 			Row newRow1 = sheet1.createRow(i);
@@ -3513,5 +3528,176 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public int retireUserCountCheck(String cn, int tenantID) throws Exception {
 		return ezOrganAdminDao.retireUserCountCheck(cn, tenantID);
+	}
+
+	@Override
+	public Optional<String> getJobIdForFirstUser(String userId, int tenantId) throws Exception {
+		List<OrganUserVO> allUserInfo = ezOrganService.getAllUserinfo(userId, tenantId);
+		return Optional.ofNullable(allUserInfo.get(0).getJobID());
+	}
+
+
+	/**
+	 * 일반적인 관리자의 관리 회사 리스트를 불러온다.
+	 * @param id      the ID of the admin user
+	 * @param tenantID the ID of the tenant
+	 * @param primary  the primary parameter
+	 * @return 전체관리자 - 모든 회사 리스트 / 회사관리자 - 권한이 있는 회사리스트
+	 * @throws Exception if an error occurs while retrieving the company list
+	 */
+	public List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary) throws Exception {
+		List<OrganDeptVO> list = getCompanyList(primary, tenantID);
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(id, tenantID);
+
+        if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER, "")) {
+            list.removeIf(vo -> !organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn()));
+        }
+
+        return list;
+	}
+
+	// 2024-05-27 관리자 > 조직도 > 겸직 사용자 상세정보 내용 호출 함수
+	@Override
+	public String getEntryAddJobInfo(String cn, String deptId, String language, String jobId, int tenantID, String prop) throws Exception {
+		logger.debug("getEntryAddJobInfo started");
+
+		String info="";
+		StringBuilder sb = new StringBuilder();
+		String[] propList = prop.split(";");
+		String propValue = "";
+		OrganAddJobVO propVO = new OrganAddJobVO();
+		OrganDeptVO vo = new OrganDeptVO();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_CN", cn);
+		map.put("v_DEPTID", deptId);
+		map.put("v_JOBID", jobId);
+
+
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("userID", deptId);
+		map1.put("primary", language);
+		map1.put("v_TENANT_ID", tenantID);
+		try {
+			propVO = ezOrganAdminDao.getAddJobPorpValue(map);
+			vo = ezOrganDao.getDeptInfo(map1);
+		} catch (NullPointerException e) {
+			logger.debug("getAddJobPorpValue failed.");
+			return "ERROR";
+		}
+
+		try {
+			for (int i = 0; i < propList.length; i++) {
+				switch(propList[i]) {
+					case "title" :
+						try {
+							if ("1".equals(language)) {
+								propValue = propVO.getTitle();
+							} else {
+								propValue = propVO.getTitle2();
+							}
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+					case "role" :
+						try {
+							if ("1".equals(language)) {
+								propValue = propVO.getRole();
+							} else {
+								propValue = propVO.getRole2();
+							}
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+
+					case "userTreeFlag" :
+						try {
+							propValue = propVO.getUserTreeFlag();
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+
+					case "topMenuType" :
+						try {
+							propValue = propVO.getTopMenuType();
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+						
+					case "orderBy" :
+						try {
+							propValue = propVO.getOrderBy();
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+					case "deptName" :
+						try {
+							propValue = vo.getDisplayName1();
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+					case "deptName2" :
+						try {
+							propValue = vo.getDisplayName2();
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+					default :
+						map.put("v_FIELD", propList[i]);
+						propValue = ezOrganDao.getPropertyValue_S4(map);
+						propValue = propValue == null ? "" : propValue;
+						propValue = propList[i] + ":" + propValue + "\\";
+
+						break;
+				}
+
+				sb.append(propValue);
+				continue;
+			}
+
+		} catch (Exception e) {
+			logger.debug("getEntryAddJobInfo failed.");
+			return "ERROR";
+		}
+
+		info = sb.toString();
+		info = info.substring(0, info.length() - 1); // 마지막 "\"는 제거
+
+		logger.debug("getEntryAddJobInfo ended");
+		return info;
+	}
+
+	@Override
+	public void updateAddJobInfo(String cn, String deptId, String jobId, int tenantID, String orderBy, String userTreeFlag)throws Exception {
+		logger.debug("updateDBData_user started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CN", cn);
+		map.put("v_DEPTID", deptId);
+		map.put("v_JOBID", jobId);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_ORDERBY", orderBy);
+		map.put("v_USERTREEFLAG", userTreeFlag);
+		
+		ezOrganAdminDao.updateAddJobInfo(map);
+		
+		logger.debug("updateDBData_user ended");
 	}
 }

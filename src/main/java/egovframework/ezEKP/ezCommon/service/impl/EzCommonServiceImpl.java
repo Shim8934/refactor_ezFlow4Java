@@ -1,12 +1,5 @@
 package egovframework.ezEKP.ezCommon.service.impl;
 
-import egovframework.ezMobile.ezOption.dao.MOptionDAO;
-import egovframework.ezMobile.ezOption.vo.MOptionVO;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
@@ -19,12 +12,21 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.ezMobile.ezOption.dao.MOptionDAO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
-
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
@@ -38,19 +40,44 @@ import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO.FixBoardCode;
 
 @Service("EzCommonService")
 public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonService {
@@ -347,18 +374,67 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         List<String> imgSrcs = new ArrayList<String>();
 
-        Elements elements = document.getElementsByTag("img");
-        if (!elements.isEmpty()) {
-            for (Element element : elements) {
-                imgSrcs.add(element.attr("src"));
-            }
-        }
-
-        imgSrcs = imgSrcs.stream().distinct().collect(Collectors.toList());
+        getImgfilePath(imgSrcs, document);
 
         logger.debug("extractImageSource ended.");
 
         return imgSrcs;
+    }
+
+    private void getImgfilePath(List<String> imgSrcs, Document document) throws Exception {
+        logger.info("getImgfilePath started");
+
+        Elements elements = null;
+        Element element = null;
+        int imgTagCnt = document.getElementsByTag("img").size();
+        String extractProcessType;
+
+        if (imgTagCnt != 0) {
+            extractProcessType = "0";
+
+            elements = document.getElementsByTag("img");
+        } else {
+            extractProcessType = "1";
+
+            element = document.getElementById("imagediv");
+        }
+
+        try {
+            switch (extractProcessType) {
+                case "0" : {
+                    for (Element e : elements) {
+                        imgSrcs.add(e.attr("src"));
+                    }
+
+                    break;
+                }
+
+                case "1" : {
+                    /* 2024-06-17 김유진 - 백그라운드 이미지는 extractBackgroundSource 에서 처리되어 주석 처리함  */
+//                    String attrList[] = element.attr("style").split(";");
+//                    String imgPath;
+//
+//                    for (String s : attrList) {
+//                        if (!s.contains("background-image")) {
+//                            continue;
+//                        }
+//
+//                        imgPath = "/" + s.substring(s.indexOf("url(\'") + 5, s.indexOf("\')"));
+//                        imgSrcs.add(imgPath);
+//                    }
+//
+//                    break;
+                }
+            }
+
+            imgSrcs = imgSrcs.stream().distinct().collect(Collectors.toList());
+        } catch (IndexOutOfBoundsException iobe) {
+            logger.error(iobe.getMessage(), iobe);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        logger.info("getImgfilePath ended");
     }
 
 	/**
@@ -465,7 +541,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
 
             logger.debug("imgSrc = " + imgSrc);
+            /*
+                imgSrc compile 중 boardID의 {}로 에러가 발생, 임시로 !!Q, !!W로 치환
+            */
+            imgSrc = imgSrc.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
+            tempHtml = tempHtml.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
             tempHtml = Pattern.compile(imgSrc).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
+            tempHtml = Pattern.compile(imgSrc.substring(1)).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
+
+            imgSrc = imgSrc.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
+            tempHtml = tempHtml.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
 
             imagesBuilder.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
             imagesBuilder.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
@@ -529,7 +614,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 }
             } else {
                 try {
-                    in = new FileInputStream(realPath + imgSrc);
+                    String fisPath = new File(realPath + imgSrc).exists() ? realPath + imgSrc : realPath + "/" + imgSrc;
+                    in = new FileInputStream(fisPath);
+
                     logger.debug(realPath + imgSrc + " is exist.");
                 } catch (Exception e) {
                     try {
@@ -612,6 +699,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 extension = "." + contentType.split("/")[1];
             }
 
+            // imgSrc compile 중 boardID의 {}로 에러가 발생, 임시로 !!Q, !!W로 치환
+            backgroundImgSrc = backgroundImgSrc.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
+            tempHtml = tempHtml.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
+            tempHtml = Pattern.compile(backgroundImgSrc).matcher(tempHtml).replaceAll("file:///C:/BACKGROUNDIMAGE" + (backgroundImgSrc.indexOf(backgroundImgSrc) + 1) + extension);
+
+            backgroundImgSrc = backgroundImgSrc.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
+            tempHtml = tempHtml.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
+
             backgroundImagesBuilder.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
             backgroundImagesBuilder.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
             backgroundImagesBuilder.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (backgroundImgSrcs.indexOf(backgroundImgSrc) + 1) + extension + commonUtil.CRLF);
@@ -674,7 +769,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 }
             } else {
                 try {
-                    in = new FileInputStream(realPath + backgroundImgSrc);
+                    String fisPath = new File(realPath + backgroundImgSrc).exists() ? realPath + backgroundImgSrc : realPath + "/" + backgroundImgSrc;
+                    in = new FileInputStream(fisPath);
                     logger.debug(realPath + backgroundImgSrc + " is exist.");
                 } catch (Exception e) {
                     try {
@@ -1778,6 +1874,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","메일");
 			put("property","USEEACHMAILDEFAULT"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
 		}});
+		test.add(new HashMap<String, Object>(){{
+			put("confName","useFormContOnReuseForWHWP");
+			put("property_value","YES");
+			put("config_name","웹한글 문서 재사용 시 양식선택창 표출여부");
+			put("regdate","2024-06-26 00:00:00");
+			put("description","웹한글 문서 재사용 시 양식선택창을 표출한다. YES: 양식선택창 표출, NO: 양식선택창 표출하지 않고 바로 기안창 호출 (default : YES)");
+			put("config_type","전자결재G");
+		}});
 
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
@@ -2865,19 +2969,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	@Override
 	public void insertTabBoardPortlet() throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("portletCode", "tabBoard");
-		
-		if ( ezCommonDAO.checkPortletCodeString(map) > 0) {
+        String tapBoardCode = "tabBoard";
+        if ( ezCommonDAO.checkPortletCodeString(tapBoardCode) > 0) {
 			return;
 		}
 		
 		logger.debug("insertTabBoardPortlet started");
-		
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("portletCode", tapBoardCode);
+
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
 		map.put("portletId", ezCommonDAO.getNewPortletId());
 		map.put("portletName1", "탭게시판");
-		map.put("portletName2", "tabBoard");
+		map.put("portletName2", "tab board");
 		map.put("portletName3", "タブボード");
 		map.put("menuId", 4);
 		map.put("portletUrl", "/ezNewPortal/tabBoardPortlet.do");
@@ -2966,6 +3070,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         map.put("portletName1", "전자문서 차트");
         map.put("portletName2", "chart");
         map.put("portletName3", "図表");
+        map.put("portletName4", "图表");
+        map.put("portletName5", "chart");
+        map.put("portletName6", "chart");
         map.put("menuId", 3);
         map.put("portletUrl", "/ezNewPortal/chartPortlet.do");
         map.put("portletType", "G");
@@ -3402,17 +3509,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertPrvwConfig() throws Exception {
 		ezCommonDAO.insertPrvwConfig();
 	}
-    
+
     @Override
     public void insertPermissionBasisDeptYN_Config() throws Exception {
         ezCommonDAO.insertPermissionBasisDeptYN_Config();
     }
-    
+
     @Override
     public void createTblDbLog() {
         ezCommonDAO.createTblDbLog();
     }
-    
+
     // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
 	@Override
 	public void insertPortalMenuChinese() throws Exception {
@@ -3498,7 +3605,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			ezCommonDAO.insertTenantConfigLangQuaternary(map);
 		}		
 	}
-	
+
     @Override
     public void insertLoadTimeForApprAllConfig() {
     	ezCommonDAO.insertLoadTimeForApprAllConfig();
@@ -3524,8 +3631,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterFileNameForWebfolderHistory() throws Exception {
         ezCommonDAO.alterFileNameForWebfolderHistory();
     }
-	
-	/** 2023-06-27 한태훈 - 전자결재 > 통합PC저장 다운로드 이력 남기는 테이블 생성(차후에 다른 이력을 남기기 위한 테이블로 쓸 수 있음) */	
+
+	/** 2023-06-27 한태훈 - 전자결재 > 통합PC저장 다운로드 이력 남기는 테이블 생성(차후에 다른 이력을 남기기 위한 테이블로 쓸 수 있음) */
 	@Override
 	public void createTblTotalHistory() throws Exception {
 		logger.debug("createTblTotalHistory started");
@@ -3542,11 +3649,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertdelAttachByOthersConfing(map);
         }
     }
-    
+
     @Override
     public void insertUseHideHeaderArea() throws Exception {
     	List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
-    	
+
     	for (TenantVO tenantVo : tenantIdList) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("v_TENANTID", tenantVo.getTenantId());
@@ -3608,12 +3715,245 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     @Override
     public void insertUseReceiptDeptFileAttach() throws Exception {
     	List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
-    	
+
     	for (TenantVO tenantVo : tenantIdList) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("v_TENANTID", tenantVo.getTenantId());
             ezCommonDAO.insertUseReceiptDeptFileAttach(map);
         }
     }
-    
+
+
+    public void insertDocBinderListOption() throws Exception {
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+                ezCommonDAO.insertDocBinderListOption(map);
+            }
+        }
+    }
+
+    @Override
+    public void insertEndDateOptionConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+
+            ezCommonDAO.insertEndDateOptionConfig(map);
+        }
+    }
+
+    // 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그
+    @Override
+    public void insertReturnByDesignationUsedConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        String property = "ReturnByDesignationUsed";
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantID", tenantVo.getTenantId());
+            map.put("property", property.toUpperCase());
+
+            ezCommonDAO.insertReturnByDesignationUsedConfig(map);
+        }
+    }
+
+    public void alterDocAttachNameCol() throws Exception {
+        ezCommonDAO.alterDocAttachNameCol();
+    }
+
+    public void insertNonUseDocAttachYN() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertNonUseDocAttachYN(map);
+        }
+    }
+
+    @Override
+    public void insertReadingRecordHeader() throws Exception {
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+                ezCommonDAO.insertReadingRecordHeader(map);
+            }
+        }
+    }
+
+    @Override
+    public void insertPortalPortletSizeTables() {
+        ezCommonDAO.insertPortalPortletSizeTables();
+    }
+
+    @Override
+    public void insertTblPortalTopUser() {
+        ezCommonDAO.insertTblPortalTopUser();
+    }
+
+    // 2024-03-28 한태훈 > 통합알림 테이블 생성하는 메소드
+	@Override
+	public void createTblRealTimeNotification() throws Exception {
+		ezCommonDAO.createTblRealTimeNotification();
+	}
+
+	// 2024-03-28 한태훈 > 통합알림 보관기간 tenant config 생성하는 메소드
+	@Override
+	public void addNotiStoragePeriodConfig() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("propertyName", "notiStoragePeriod");
+		map.put("propertyValue", "10");
+		map.put("description", "통합알림 데이터 보관 기간(default: 10)(일)");
+		map.put("configName", "통합알림 데이터 보관 기간");
+		map.put("regdate", "2024-04-25 00:00:00");
+		map.put("configType", "통합알림");
+
+		for (TenantVO tenantVo : tenantIdList) {
+			map.put("tenantId", tenantVo.getTenantId());
+			ezCommonDAO.addNotiStoragePeriodConfig(map);
+		}
+	}
+
+	// 2024-03-28 한태훈 > 통합알림 polling 방식 이용시 알림 데이터 새로고침 주기 설정
+	@Override
+	public void addNotiPollingIntervalConfig() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("propertyName", "notiPollingInterval");
+		map.put("propertyValue", "60000"); // 1분이 기본값. 단위는 밀리초
+		map.put("description", "통합알림 데이터 새로고침 주기 설정(단위는 밀리초)");
+		map.put("configName", "통합알림 데이터 새로고침 주기");
+		map.put("regdate", "2024-04-25 00:00:00");
+		map.put("configType", "통합알림");
+
+		for (TenantVO tenantVo : tenantIdList) {
+			map.put("tenantId", tenantVo.getTenantId());
+			ezCommonDAO.addNotiPollingIntervalConfig(map);
+		}
+
+	}
+
+    @Override
+    public void insertFixPortlet() {
+        int cnt = ezCommonDAO.checkPortletCodeString(FixBoardCode.FIX_LEFT.getCode());
+        if (cnt > 0) return;
+        int portletID = ezCommonDAO.getNewPortletId();
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        FixBoardCode[] codes = FixBoardCode.values();
+        int order = codes.length * -1;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("portletName1", "고정 포틀릿");
+        map.put("portletName2", "fixed portlet");
+        map.put("portletName3", "固定ポートレット");
+        map.put("portletName4", "固定门户组件");
+        map.put("portletName5", "portlet cố định");
+        map.put("portletName6", "portlet tetap");
+        map.put("menuId", 4);
+        map.put("portletUrl", "/ezNewPortal/getCustomBoardInfo.do");
+        map.put("connectionUrl", "/ezNewPortal/getCustomBoardInfo.do");
+        map.put("portletType", "G");
+
+        for(FixBoardCode code : codes) {
+            map.put("portletId", portletID);
+            map.put("defaultOrder", order);
+            map.put("portletUsed", 1);
+            map.put("portletOrder", order);
+            map.put("boardId", null);
+            map.put("portletCode", code.getCode());
+            ezCommonDAO.insertPortletWithCode(map);
+
+            for (CompanyInfoVO company : companyList) {
+                if (company.getCompanyId() != null) {
+                    map.put("companyId", company.getCompanyId());
+                    map.put("tenantId", company.getTenantId());
+                    ezCommonDAO.insertPortletInfoData(map); // 회사별 있는지 확인후 insert
+                }
+            }
+            portletID++;
+            order++;
+        }
+    }
+
+	@Override
+	public void insertTblPortalTopCompany() throws Exception {
+		ezCommonDAO.insertTblPortalTopCompany();
+	}
+
+	@Override
+	public void insertPortalTopCompanyInitdata() throws Exception {
+		ezCommonDAO.insertPortalTopCompanyInitdata();
+	}
+
+    @Override
+	public void addQuickLinkCompanyID() throws Exception {
+		ezCommonDAO.addQuickLinkCompanyID();
+	}
+
+	@Override
+	public void alterUserThemePagination() throws Exception {
+		ezCommonDAO.alterUserThemePagination();
+	}
+
+	@Override
+	public void alterThemeInformation() throws Exception {
+		String themeContent1 = ezCommonDAO.checkThemeInformation().trim();
+		if (themeContent1.equals("왼쪽 혹은 오른쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.")) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("themeId", 1);
+			map.put("themeContent1", "소식 및 상단영역이 있는 디자인의 테마입니다.");
+			map.put("themeContent2", "A theme with a design that includes news and a top area.");
+			map.put("themeContent3", "ニュースやトップエリアのあるデザインのテーマです。");
+			map.put("themeContent4", "这是一个包含新闻和顶部区域的设计主题。");
+			map.put("themeContent5", "A theme with a design that includes news and a top area.");
+			map.put("themeContent6", "A theme with a design that includes news and a top area.");
+			ezCommonDAO.alterThemeInformation(map);
+			map.put("themeId", 2);
+			map.put("themeContent1", "위쪽에 정보 및 바로가기가 있는 디자인의 테마입니다.");
+			map.put("themeContent2", "A theme with a design that has information and shortcuts at the top.");
+			map.put("themeContent3", "上部に情報やショートカットがあるデザインのテーマです。");
+			map.put("themeContent4", "该主题的设计在顶部包含信息和快捷方式。");
+			map.put("themeContent5", "A theme with a design that has information and shortcuts at the top.");
+			map.put("themeContent6", "A theme with a design that has information and shortcuts at the top.");
+			ezCommonDAO.alterThemeInformation(map);
+			map.put("themeId", 3);
+			map.put("themeContent1", "정보 관련 고정영역이 없어 포틀릿에 집중할 수 있는 테마입니다.");
+			map.put("themeContent2", "A theme that allows to focus on portlets without any fixed areas related to information.");
+			map.put("themeContent3", "情報関連の固定領域がなくてもポートレットに集中できるテーマです。");
+			map.put("themeContent4", "该主题允许您专注于 portlet，而无需任何与信息相关的固定区域。");
+			map.put("themeContent5", "A theme that allows to focus on portlets without any fixed areas related to information.");
+			map.put("themeContent6", "A theme that allows to focus on portlets without any fixed areas related to information.");
+			ezCommonDAO.alterThemeInformation(map);
+		}
+
+	}
+
+    @Override
+    public void alterCompanyMenuIconUrl() throws Exception {
+        ezCommonDAO.alterCompanyMenuIconUrl();
+    }
+
+    @Override
+    public void alterTblScheduleForShowtop() throws Exception {
+        ezCommonDAO.alterTblScheduleForShowtop();
+    }
+
+    @Override
+    public void addUserDeptHideFlag() throws Exception {
+        ezCommonDAO.addUserDeptHideFlag();
+    }
 }

@@ -143,8 +143,12 @@
 		            if (filepath.indexOf(pBoardID) != -1) {
 		                strRet += filepath + "|";
 		            } else {
-		                strRet += "tempUploadFile/" + filepath + "|";
-		                document.getElementById("filelist").childNodes[i + 1].setAttribute("DATA2", "tempUploadFile/" + filepath);
+                        var tempUploadFileStr = '';
+                        if (filepath.split('/')[0]  != "tempUploadFile") {
+                            tempUploadFileStr = 'tempUploadFile/';
+                        }
+		                strRet += tempUploadFileStr + filepath + "|";
+		                document.getElementById("filelist").childNodes[i + 1].setAttribute("DATA2", tempUploadFileStr + filepath);
 		            }
 		        }
 		        window.parent.attachxml = strRet;

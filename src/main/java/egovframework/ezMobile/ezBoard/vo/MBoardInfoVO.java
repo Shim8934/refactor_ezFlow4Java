@@ -130,6 +130,7 @@ public class MBoardInfoVO {
 	/** 2021-09-08 홍승비 - 메일알림 관련 플래그 추가 */
 	private String mailFG_Post; // 게시알림
 	private String mailFG_Mod; // 수정알림
+	private String mailFG_Comment; // 댓글알림
 	
 	@Override
 	public String toString() {
@@ -553,6 +554,12 @@ public class MBoardInfoVO {
 	}
 	public void setMailFG_Mod(String mailFG_Mod) {
 		this.mailFG_Mod = mailFG_Mod;
+	}
+	public String getMailFG_Comment() {
+		return mailFG_Comment;
+	}
+	public void setMailFG_Comment(String mailFG_Comment) {
+		this.mailFG_Comment = mailFG_Comment;
 	}
 	
 }

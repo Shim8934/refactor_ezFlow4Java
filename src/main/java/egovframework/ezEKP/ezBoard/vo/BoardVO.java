@@ -26,7 +26,7 @@ public class BoardVO {
 	private String lang;
 	/** 검색 조건 */
 	private String searchQuery;
-	/** 리스트타입*/
+	/** 리스트 타입 (1: 일반보기, 2: 안읽은 게시물 보기, 3: 완료게시물 보기) */
 	private String type;
 	/** 검색조건 제목*/
 	private String title;

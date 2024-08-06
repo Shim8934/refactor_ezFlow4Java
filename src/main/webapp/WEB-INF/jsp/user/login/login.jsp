@@ -48,7 +48,7 @@
 			.password_reset .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
 			#exDiv3 dl{margin-top: 20px;}
 			.warning_wrap .layerTitle{margin-bottom: 20px;}
-			.modal{max-width: 600px !important;}
+			.modal:not(#exDiv10){max-width: 600px !important;}
 			
 			/* 2018-11-06 포탈개인화 로고 설정 - 유은정 */
 			/*.logo img {width:137px; height:38px;} */
@@ -88,8 +88,18 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
-		<script type="text/javascript">		
+		<script type="text/javascript">
+			var lastLoginAttempt = 0;
+			var loginCooldown = 1000; // 1초 (1000 밀리초)
+
 			function actionLogin() {
+				var currentTime = new Date().getTime();
+
+				// 중복 실행 방지: 1초 이내에 다시 로그인 시도를 막음
+				if (currentTime - lastLoginAttempt < loginCooldown) {
+					return;
+				}
+
 			    if (document.loginForm.id.value =="") {
 			        alert("<spring:message code='main.jjs02'/>");
 			        document.loginForm.id.focus();
@@ -113,6 +123,8 @@
 					frm.otp.value = "";
 					frm.action="<c:url value='/user/login/actionLogin.do'/>";        
 					frm.submit();
+
+					lastLoginAttempt = new Date().getTime();
 			    }
 			}
 			
@@ -224,6 +236,9 @@
 			    } else if (message === "loginSessionFlag") {
 					$("#imgMnt9").html("<img src='/images/warning2.png'>");
 					$("#exDiv9").modal();
+				} else if (message === "loginBlock") {
+					$("#imgMnt10").html("<img src='/images/warning2.png'>");
+					$("#exDiv10").modal();
 				} else if (message != "") {
 // 			        alert(message);
 					$("#layerTitle").text(message);
@@ -832,6 +847,30 @@
 					<dl>
 						<dt id="layerTitle9" class="layerTitle" style="width: 346.38px"><spring:message code="ezOrgan.hj01" /></dt>
 						<dd><spring:message code="ezOrgan.hj02" /></dd>
+					</dl>
+				</div>
+			</div>
+
+			<div id="exDiv10" style="display:none;max-width:690px;height:190px;padding-top:27px;margin-bottom:100px">
+				<div id="close">
+					<ul>
+						<li><a rel="modal:close"><span></span></a></li>
+					</ul>
+				</div>
+				<div class="warning_wrap" style="margin:10px 0px 10px 27px; width:640px;">
+					<p style="border:0px" id="imgMnt10"></p>
+					<dl sty`le="margin:-108px 0px 0px 150px;">
+						<dt>${message1}</dt>
+						<br>
+						<dd>${message2}</dd>
+						<c:choose>
+							<c:when test="${useOTP}">
+								<dd><spring:message code='fail.common.login.otp.warning2'/></dd>
+							</c:when>
+							<c:otherwise>
+								<dd><spring:message code='fail.common.login.warning6'/></dd>
+							</c:otherwise>
+						</c:choose>
 					</dl>
 				</div>
 			</div>

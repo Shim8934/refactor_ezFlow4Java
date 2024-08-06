@@ -54,5 +54,17 @@ var messages = {
 	strLang599 : "前一个月",
 	strLang600 : "下个月",
 	strLang601 : "关闭",
-	strLang602 : "zh"
+	strLang602 : "zh",
+	strLangSchedule01 : "星期日;星期一;星期二;星期三;星期四;星期五;星期六",
+	strLangFavorPortlet : "收藏夹",
+	strLangCommunity01 : "会员数",
+	strLangCommunity02 : "名",
+	apprPortlet001 : "为止设置为不在中。",
+	apprPortlet002 : "Turn off Out-of-Office setting",
+	apprPortlet003 : "没有数据。",
+	apprPortlet004 : "起案",
+	apprPortlet005 : "文档无法恢复不是由其他公司发起的。",
+	apprPortlet006 : "韩文样式只能在《专栏》中看到。",
+	apprPortlet007 : "联动样式不能重新制定。",
+	apprPortlet008 : "确定要取消构件设置吗 ？"
 }

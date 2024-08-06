@@ -420,14 +420,15 @@
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("<c:out value='${adminType}'/>" == "y") {
-	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + encodeURIComponent(BoardID);
-	            			return;	            			
+							if (!!parent.parent.board_menu && !!parent.parent.board_menu.refreshLeft) {
+	            				parent.parent.board_menu.refreshLeft();
+							}
 	            		} else {
-	            			parent.frames.location = parent.frames.location;
+							if (!!parent.board_menu && !!parent.board_menu.refreshLeft) {
+								parent.board_menu.refreshLeft();
+							}
 	            		}
-	            		
-	            		location.href = location.href;
-	            	}	            		
+	            	}
 	            });
 	        }
 			
@@ -589,7 +590,7 @@
 					$("#chktabBoard1").prop("disabled", true);
 					$("#chktabBoard2").prop("disabled", true);
 					$("#chktabBoard3").prop("disabled", true);
-					
+
                     document.getElementById("chkApprBoard").checked = false;
                     checkApprBoard();                   
                     document.getElementById("chkExpires").checked = false;
@@ -923,7 +924,14 @@
 					$("#chkBoardReplyReact").prop("disabled", true);
 		    	}
 		    }
-		    
+
+			function setMenuBtnDisplay() {
+				if (parent != null) {
+					let configFormBtn = parent.document.getElementById("1tab5");
+
+					configFormBtn.style.display = document.getElementById("chkform").checked ? "" : "none";
+				}
+			}
 	    </script>
 	    <style type="text/css">
 	    	.mainlist tr {
@@ -1194,7 +1202,7 @@
 	        
 	        <%-- 2021-06-21 홍승비 - 메일알림 옵션 분리, 게시알림 / 수정알림 / 댓글알림 추가 --%>
 			<tr id="boardMailOptionTR" style="${style}">
-	        	<th><spring:message code="ezBoard.HSBMail00" /></th>
+	        	<th><spring:message code="ezNotification.hth38" /></th>
 	        	<td>
 	        		<c:if test="${model.mailFG_Post == 'Y'}">	
 	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail01" />&nbsp;</span>

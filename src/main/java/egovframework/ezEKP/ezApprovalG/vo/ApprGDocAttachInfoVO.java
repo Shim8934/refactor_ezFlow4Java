@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezApprovalG.vo;
 public class ApprGDocAttachInfoVO {
 	/** 문서아이디*/
 	private String docID;
+	/* 첨부될 문서 아이디 */
+	private String newDocID;
 	/** 첨부순번*/
 	private String attachSN;
 	/** 첨부문서이름*/
@@ -27,12 +29,20 @@ public class ApprGDocAttachInfoVO {
 	private String attachUserJobTitle2;
 	/** 첨부자부서이름(다국어)*/
 	private String attachUserDeptName2;
+	private String companyID;
+	private int tenantID;
 	
 	public String getDocID() {
 		return docID;
 	}
 	public void setDocID(String docID) {
 		this.docID = docID;
+	}
+	public String getNewDocID() {
+		return newDocID;
+	}
+	public void setNewDocID(String newDocID) {
+		this.newDocID = newDocID;
 	}
 	public String getAttachSN() {
 		return attachSN;
@@ -106,7 +116,16 @@ public class ApprGDocAttachInfoVO {
 	public void setAttachUserDeptName2(String attachUserDeptName2) {
 		this.attachUserDeptName2 = attachUserDeptName2;
 	}
-	
-	
-
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
 }

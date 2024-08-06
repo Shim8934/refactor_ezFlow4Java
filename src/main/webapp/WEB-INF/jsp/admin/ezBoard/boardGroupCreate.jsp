@@ -63,6 +63,7 @@
 				}
 				
 				var newID = "{" + GetGUID() + "}";
+				var selectedComp = !!parent.frames['board_menu'] ? !!parent.frames['board_menu'].companySelectID ? parent.frames['board_menu'].companySelectID : "" : "";
 
 				$.ajax({
 					type : "POST",
@@ -73,12 +74,12 @@
 						boardGroupName2 : encodeURIComponent(name2),
 						boardGroupName3 : encodeURIComponent(name3),
 						boardGroupName4 : encodeURIComponent(name4),
+						companyID : selectedComp,
 						guBun : guBun
 					},
 					success: function(result){						
 						alert("<spring:message code='ezBoard.t121'/>");	
-						window.location.reload(true);
-						window.parent.frames[0].location.reload();
+						window.parent.frames[0].refreshLeft();
 					}  
 				});				
 			}

@@ -54,7 +54,8 @@
 		    var isfirst = true;
 		    var preObj = "";
 			var deptTreeTopId = "${deptTreeTopId}";
-		    
+			var selCompany = "${selCompany}";
+
 		    $(document).ready(function(){
 		    	try {
 	                ReturnFunction = opener.addjob_config_dialogArguments[1];
@@ -74,12 +75,15 @@
 		            }
 		        } catch (e) { }
 		        
-		        document.getElementById('keyword').value = cn;	
-		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		        document.getElementById('keyword').value = cn;
+				// 무조건 선택된 회사의 조직도가 나오게 변경 함.
+		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>" + selCompany + "/organ</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 	
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
 		        xmlHTTP.send(strQuery);
+
+				document.getElementById("TreeFrame").src = "/admin/ezOrgan/addjobAdd.do?companyID=" + selCompany;
 	
 		        ListTypeChangeIcon();
 		        
@@ -128,6 +132,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 		        createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
 		        createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
+				createNodeAndInsertText(xmlpara, objNode, "ADMINORGAN", "y");
 
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(xmlpara);
@@ -200,7 +205,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user",adminOrgan : "y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -968,7 +973,14 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : "displayname::" + encodeURIComponent(document.all("deptkeyword").value), cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "cn", type : 'group', adminOrgan : "y"},
+		        	data : {
+						search: "displayname::" + encodeURIComponent(document.all("deptkeyword").value),
+						cell: "extensionAttribute3;displayname;extensionAttribute9;",
+						prop: "cn",
+						type: 'group',
+						company: selCompany,
+						adminOrgan: "y"
+					},
 		        	success : function(xml){	
 		        		result=loadXMLString(xml);
 		        		xmlDOM = result;
@@ -988,9 +1000,9 @@
 		            g_xmlHTTP = createXMLHttpRequest();
 
 		            if (CrossYN()) {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + selCompany + "/organ</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		            } else {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + selCompany + "/organ</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		            }
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -1012,7 +1024,7 @@
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + selCompany + "/organ</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
@@ -1024,7 +1036,7 @@
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + selCompany + "/organ</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -1073,8 +1085,14 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",		        	
-		        	data : {search : document.getElementById("search_type").value + "::" + encodeURIComponent(document.getElementById("keyword").value), cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
-		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user", adminOrgan : "y"},
+		        	data : {
+						search: document.getElementById("search_type").value + "::" + encodeURIComponent(document.getElementById("keyword").value),
+						cell: "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value,
+						prop: "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype",
+						type: "user",
+						company: selCompany,
+						adminOrgan: "y"
+					},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
@@ -1462,7 +1480,7 @@
 	                <table class="content" style="width:300px">                    
 	                    <tr>
 	                        <td colspan="2" style="padding:0px; margin:0px;">
-	                            <iframe id="TreeFrame" style="border:0px; height: 300px;" src="/admin/ezOrgan/addjobAdd.do" scrolling="auto"></iframe>
+	                            <iframe id="TreeFrame" style="border:0px; height: 300px;" scrolling="auto"></iframe>
 	                        </td>
 	                    </tr>
 	                    <tr>

@@ -302,9 +302,14 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useRedraftOpinionKeep', '전자결재 반송의견 재기안 시 유지 여부', 'NO', '전자결재 반송문서 재기안 시 반송의견을 유지하는 기능을 사용한다. YES:사용 NO:사용안함 (default: NO)', TO_DATE('2024-03-27 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재');
 -- 전자설문 종료 후 게시기간 설정 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'SurveyPostingMaxPeriod', '전자설문 종료 후 게시기간 설정', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', TO_DATE('2024-03-26 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자설문');
+-- 만료게시물 조회 가능 여부
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'endDateOptionConfig', 'NOPE', '게시판 게시물 리스트 조회 시 만료게시물 조회가능 여부 / NOPE:불가, ADMIN:관리자만 조회가능, ALWAYS:전부 조회 가능 (default:NOPE)', '만료게시물 조회가능 여부', TO_DATE('2024-05-24 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '게시판');
+
 
 -- 누락된 컨피그 추가 (문서24 관련)
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useDoc24', '문서24 사용여부', 'YES', '문서24 사용여부 YES:사용함 NO:사용안함 (default:NO)', TO_DATE('2021-03-16 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'switchUserCompany', '포탈 유저 회사 변경 기능', 'N', '유저의 사간 겸직 변경 허용 여부. Y:허용 그외: 불가', '2023-11-03 00:00:00', '포탈');
 
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useCopyright', 'NO');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'ExpirePassPeriod', '0');
@@ -315,10 +320,13 @@ INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_V
 -- 중복 로그인 비허용시 PC, Mobile 통합 체크 (기본값: NO, 따로 체크)
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useMobileIntergratedMultiLogin', 'NO');
 
-INSERT INTO tbl_deptmaster (TENANT_ID,CN,DISPLAYNAME,DISPLAYNAME2,USEFLAG,MAIL,COMPNM2,DEPTLEVEL,DEPT_CD_PATH,DEPT_NM_PATH,EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE2,EXTENSIONATTRIBUTE3,EXTENSIONATTRIBUTE4,EXTENSIONATTRIBUTE5,EXTENSIONATTRIBUTE6,EXTENSIONATTRIBUTE7,EXTENSIONATTRIBUTE8,EXTENSIONATTRIBUTE9,EXTENSIONATTRIBUTE10,EXTENSIONATTRIBUTE11,EXTENSIONATTRIBUTE12,EXTENSIONATTRIBUTE13,EXTENSIONATTRIBUTE14,EXTENSIONATTRIBUTE15,ADFLAG,ADSPATH,UPDATEDT) VALUES (0,'Top','조직도','OrganizationChart',NULL,'Top@jtest.kaoni.com','OrganizationChart','1','Top','조직도',NULL,'Top','조직도',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Y','CN=Top,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com',sysdate);
-INSERT INTO tbl_usermaster (TENANT_ID,CN,DISPLAYNAME,DISPLAYNAME2,MAIL,MAILNICKNAME,UPNNAME,DEPARTMENT,DESCRIPTION,DESCRIPTION2,DESCRIPTION3,PHYSICALDELIVERYOFFICENAME,COMPANY,COMPANY2,TITLE,TITLE2,TELEPHONENUMBER,HOMEPHONE,FACSIMILETELEPHONENUMBER,MOBILE,POSTALCODE,STREETADDRESS,INFO,EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE2,EXTENSIONATTRIBUTE3,EXTENSIONATTRIBUTE4,EXTENSIONATTRIBUTE5,EXTENSIONATTRIBUTE6,EXTENSIONATTRIBUTE7,EXTENSIONATTRIBUTE8,EXTENSIONATTRIBUTE9,EXTENSIONATTRIBUTE10,EXTENSIONATTRIBUTE102,EXTENSIONATTRIBUTE11,EXTENSIONATTRIBUTE12,EXTENSIONATTRIBUTE13,EXTENSIONATTRIBUTE14,EXTENSIONATTRIBUTE15,ADSPATH,SIPURI,UPDATEDT,MOBILE_ENABLE,MOBILE_NOTUSE,MOBILE_PIN,POSITIONCD,BIRTH,BIRTHTYPE,PASSWORD,IPADDRESS,LASTLOGIN,LOGINCNT, LISTTYPE) VALUES (0,'masteradmin','Master','MasterAdmin','masteradmin@jtest.kaoni.com','masteradmin',NULL,'Top','조직도','OrganizationChart',NULL,'Top','조직도','OrganizationChart','MasterAdmin','MasterAdmin',NULL,NULL,NULL,NULL,NULL,NULL,' ','c=1;a=1;k=1;i=1;g=1;l=1;n=0;m=0;w=0;t=0;',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'마스터관리자','MasterAdmin',NULL,NULL,NULL,NULL,'1','CN=masteradmin,OU=사용자,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com',NULL,sysdate,NULL,'N',NULL,NULL,NULL,'Y','m7jsQtm1Uqm+n51H00wciQOeQm9rlarZxD0wuM9QVCU=','0:0:0:0:0:0:0:1',sysdate,0,'TXT');
+INSERT INTO tbl_deptmaster (TENANT_ID,CN,DISPLAYNAME,DISPLAYNAME2,USEFLAG,MAIL,COMPNM2,DEPTLEVEL,DEPT_CD_PATH,DEPT_NM_PATH,EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE2,EXTENSIONATTRIBUTE3,EXTENSIONATTRIBUTE4,EXTENSIONATTRIBUTE5,EXTENSIONATTRIBUTE6,EXTENSIONATTRIBUTE7,EXTENSIONATTRIBUTE8,EXTENSIONATTRIBUTE9,EXTENSIONATTRIBUTE10,EXTENSIONATTRIBUTE11,EXTENSIONATTRIBUTE12,EXTENSIONATTRIBUTE13,EXTENSIONATTRIBUTE14,EXTENSIONATTRIBUTE15,ADFLAG,ADSPATH,UPDATEDT,DEPTTREEFLAG) VALUES (0,'Top','조직도','OrganizationChart',NULL,'Top@jtest.kaoni.com','OrganizationChart','1','Top','조직도',NULL,'Top','조직도',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Y','CN=Top,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com',sysdate,'Y');
+INSERT INTO tbl_usermaster (TENANT_ID,CN,DISPLAYNAME,DISPLAYNAME2,MAIL,MAILNICKNAME,UPNNAME,DEPARTMENT,DESCRIPTION,DESCRIPTION2,DESCRIPTION3,PHYSICALDELIVERYOFFICENAME,COMPANY,COMPANY2,TITLE,TITLE2,TELEPHONENUMBER,HOMEPHONE,FACSIMILETELEPHONENUMBER,MOBILE,POSTALCODE,STREETADDRESS,INFO,EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE2,EXTENSIONATTRIBUTE3,EXTENSIONATTRIBUTE4,EXTENSIONATTRIBUTE5,EXTENSIONATTRIBUTE6,EXTENSIONATTRIBUTE7,EXTENSIONATTRIBUTE8,EXTENSIONATTRIBUTE9,EXTENSIONATTRIBUTE10,EXTENSIONATTRIBUTE102,EXTENSIONATTRIBUTE11,EXTENSIONATTRIBUTE12,EXTENSIONATTRIBUTE13,EXTENSIONATTRIBUTE14,EXTENSIONATTRIBUTE15,ADSPATH,SIPURI,UPDATEDT,MOBILE_ENABLE,MOBILE_NOTUSE,MOBILE_PIN,POSITIONCD,BIRTH,BIRTHTYPE,PASSWORD,IPADDRESS,LASTLOGIN,LOGINCNT, LISTTYPE, USERTREEFLAG) VALUES (0,'masteradmin','Master','MasterAdmin','masteradmin@jtest.kaoni.com','masteradmin',NULL,'Top','조직도','OrganizationChart',NULL,'Top','조직도','OrganizationChart','MasterAdmin','MasterAdmin',NULL,NULL,NULL,NULL,NULL,NULL,' ','c=1;a=1;k=1;i=1;g=1;l=1;n=0;m=0;w=0;t=0;',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'마스터관리자','MasterAdmin',NULL,NULL,NULL,NULL,'1','CN=masteradmin,OU=사용자,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com',NULL,sysdate,NULL,'N',NULL,NULL,NULL,'Y','m7jsQtm1Uqm+n51H00wciQOeQm9rlarZxD0wuM9QVCU=','0:0:0:0:0:0:0:1',sysdate,0,'TXT','Y');
 
---Board insert 
+-- 전자결재 > 지정반송 사용여부 컨피그 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'ReturnByDesignationUsed', '지정반송 사용여부', 'NO', '지정반송 사용여부 (default:NO)', TO_DATE('2024-06-18 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재');
+
+--Board insert
 
 INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 'Top', 0);
 --INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 'Top', 0);
@@ -1174,10 +1182,12 @@ INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DT
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('094',13,'주요열람용도',0,'DISPLAYUSAGE',null,null,null,'단위업무이력관리','주요열람용도','주요열람용도E','주요열람용도J','주요열람용도C','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('094',14,'단위업무설명',0,'DESCRIPTION',null,null,null,'단위업무이력관리','단위업무설명','단위업무설명E','단위업무설명J','단위업무설명C','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('094',15,'소기능',0,'SUBCATEGORYCODE','CODE',null,null,'단위업무이력관리','소기능','소기능E','二次カテゴリコード','次要类别代码','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('095',1,'이름',140,null,null,null,null,'Simple기록물철','이름','Name','綴じ名','名稱','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('095',2,'형태',100,null,null,null,null,'Simple기록물철','형태','FORM','形態','表','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('095',3,'연번',50,null,null,null,null,'Simple기록물철','연번','SN.','連番','序列号','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('095',4,'권호수',40,null,null,null,null,'Simple기록물철','권호수','VOL.','巻号数','卷湖','Top',0);
+INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('095',1,'이름',140,'TBL_CABINETCLASS','TITLE',null,null,'Simple기록물철','이름','Name','綴じ名','名稱','Top',0);
+INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('095',2,'생산연도',50,'TBL_CABINETCLASS','PRODUCTIONYEAR',null,null,'Simple기록물철','생산연도','Productionyear','生産年度','生产年度','Top',0);
+INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('095',3,'단위업무명(분류코드)',140,'TBL_CABINETCLASS','TASKNAME',null,null,'Simple기록물철','단위업무명(분류코드)','Taskname','単位業務名','单位业务名称','Top',0);
+INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('095',4,'형태',100,'TBL_CABINETCLASS','RECTYPECODE',null,null,'Simple기록물철','형태','FORM','形態','表','Top',0);
+INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('095',5,'연번',50,'TBL_CABINETCLASS','REGSERIALNO',null,null,'Simple기록물철','연번','SN.','連番','序列号','Top',0);
+INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('095',6,'권호수',40,'TBL_CABINET','VOLUMENO',null,null,'Simple기록물철','권호수','VOL.','巻号数','卷湖','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('096',1,'대기능',140,null,null,null,null,'기록물철리스트','대기능','MajorCategoryCode','主なカテゴリコード','主要类别代码','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('096',2,'중기능',140,null,null,null,null,'기록물철리스트','중기능','MiddleCategoryCode','中間のカテゴリコード','中间类别代码','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('096',3,'소기능',140,null,null,null,null,'기록물철리스트','소기능','MinorCategoryCode','二次カテゴリコード','次要类别代码','Top',0);
@@ -1358,18 +1368,19 @@ INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, Tabl
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S005', 5, '도착일자', 'Date recevied', '到着日付', '接收日', 150, 'TBL_APRRECEIPTPROCESSINFO', 'ProcessDate', NULL, NULL, '심사진행기', '도착일자', 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S005', 6, '첨부', 'Attach', '添付', '附件', 50, 'TBL_APRRECEIPTPROCESSINFO', 'HASATTACHYN', NULL, NULL, '심사진행기', '첨부', 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S005', 7, '공개', 'Public', '公開', '公开', 50, 'TBL_APRRECEIPTPROCESSINFO', 'ISPUBLIC', NULL, NULL, '심사진행기', '공개', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 1, '문서번호', 'Doc. No.', '文書番号', '文件号', 140, 'TBL_ENDAPRDOCINFO', 'DocNo', NULL, NULL, '문서함문서', '문서번호', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 2, '제목', 'Title', 'タイトル', '标题', 320, 'TBL_ENDAPRDOCINFO', 'DocTitle', NULL, NULL, '문서함문서', '제목', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 3, '기안자', 'Drafter', '起案者', '起草人', 90, 'TBL_ENDAPRDOCINFO', 'WriterName', NULL, NULL, '문서함문서', '기안자', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 4, '회사', 'Company', '会社', '公司', 110, 'TBL_ENDAPRDOCINFO', 'companyName', NULL, NULL, '결재할 문서', '회사', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 5, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 110, 'TBL_ENDAPRDOCINFO', 'WriterDeptName', NULL, NULL, '문서함문서', '기안부서명', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 6, '완료일시', 'Date completed', '完了日時', '结束日期', 110, 'TBL_ENDAPRDOCINFO', 'EndDate', NULL, NULL, '문서함문서', '완료일시', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 7, '양식명', 'Form title', '文書名', '文件名', 100, 'TBL_ENDAPRDOCINFO', 'FormName', NULL, NULL, '문서함문서', '양식명', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 8, '이관', 'Transfer', '移管', '移交', 50, 'TBL_EXPENDAPRDOCINFO', 'EDMSYN', NULL, 'NoUse', '문서함문서', 'EDMS이관여부', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 9, '구분', 'Type', '区分', '区分', 50, 'TBL_ENDAPRDOCINFO', 'DocStateName', NULL, NULL, '문서함문서', '문서상태', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 10, '발송상태', 'Sending status', '送信状態', '发送状态', 50, NULL, 'SendFlag', NULL, NULL, '문서함문서', '발송상태', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 11, '첨부', 'Attach', '添付', '附件', 20, NULL, 'HASATTACHYN', NULL, NULL, '문서함문서', '첨부', 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 12, '공개', 'Public', '公開', '公开', 20, NULL, 'ISPUBLIC', NULL, NULL, '문서함문서', '공개', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 1, '순번', 'SN', 'SN', 'SN', 50, 'No_Table', 'SN', NULL, NULL, '', '', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 2, '문서번호', 'Doc. No.', '文書番号', '文件号', 140, 'TBL_ENDAPRDOCINFO', 'DocNo', NULL, NULL, '문서함문서', '문서번호', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 3, '제목', 'Title', 'タイトル', '标题', 320, 'TBL_ENDAPRDOCINFO', 'DocTitle', NULL, NULL, '문서함문서', '제목', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 4, '기안자', 'Drafter', '起案者', '起草人', 90, 'TBL_ENDAPRDOCINFO', 'WriterName', NULL, NULL, '문서함문서', '기안자', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 5, '회사', 'Company', '会社', '公司', 110, 'TBL_ENDAPRDOCINFO', 'companyName', NULL, NULL, '결재할 문서', '회사', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 6, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 110, 'TBL_ENDAPRDOCINFO', 'WriterDeptName', NULL, NULL, '문서함문서', '기안부서명', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 7, '완료일시', 'Date completed', '完了日時', '结束日期', 110, 'TBL_ENDAPRDOCINFO', 'EndDate', NULL, NULL, '문서함문서', '완료일시', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 8, '양식명', 'Form title', '文書名', '文件名', 100, 'TBL_ENDAPRDOCINFO', 'FormName', NULL, NULL, '문서함문서', '양식명', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 9, '이관', 'Transfer', '移管', '移交', 50, 'TBL_EXPENDAPRDOCINFO', 'EDMSYN', NULL, 'NoUse', '문서함문서', 'EDMS이관여부', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 10, '구분', 'Type', '区分', '区分', 50, 'TBL_ENDAPRDOCINFO', 'DocStateName', NULL, NULL, '문서함문서', '문서상태', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 11, '발송상태', 'Sending status', '送信状態', '发送状态', 50, NULL, 'SendFlag', NULL, NULL, '문서함문서', '발송상태', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 12, '첨부', 'Attach', '添付', '附件', 20, NULL, 'HASATTACHYN', NULL, NULL, '문서함문서', '첨부', 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S006', 13, '공개', 'Public', '公開', '公开', 20, NULL, 'ISPUBLIC', NULL, NULL, '문서함문서', '공개', 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S007', 1, '제목', 'Title', 'タイトル', '标题', 300, 'TBL_TMPAPRDOCINFO', 'DocTitle', NULL, NULL, '서버저장문서', '제목', 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S007', 2, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 130, 'TBL_TMPAPRDOCINFO', 'WriterDeptName', NULL, NULL, '서버저장문서', '기안부서', 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S007', 3, '기안자', 'Drafter', '起案者', '起草人', 120, 'TBL_TMPAPRDOCINFO', 'WriterName', NULL, NULL, '서버저장문서', '기안자', 'Top', 0);
@@ -1731,6 +1742,16 @@ INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYP
 INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('004',8,'보존방법',160,'TBL_CABINETCLASS','TBL_CABINETCLASS.KeepingMethod','KeepingMethod','dtKeepMethod','기록물철 생상현황보고',null,'CONSERVATION METHOD','保存方法','如何保存','Top',0);
 INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('004',9,'보존장소',80,'TBL_CABINETCLASS','TBL_CABINETCLASS.KeepingPlace','KeepingPlace','dtKeepPlace','기록물철 생상현황보고',null,'보존장소E','保存場所','保护区','Top',0);
 INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('004',10,'등록일',70,'TBL_CABINET','TBL_CABINET.CreateDate','CreateDate','dtDate','기록물철 생상현황보고',null,'RegisterDate','登録日','注册','Top',0);
+INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('012',1,'문서번호',110,null,'CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, ''-''), SUBSTR(TBL_RECORD.RegisterNo, -6))','DispRegisterNo','Default','열람문서함',null,'Doc. No.','登録番号','註冊號','Top',0);
+INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('012',2,'제목',200,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.Title','RecTitle','Default','열람문서함',null,'Title','タイトル','标题','Top',0);
+INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('012',3,'기안자',50,'TBL_RECORD','TBL_RECORD.DrafterName','DrafterName','Default','열람문서함',null,'Drafter','起案者','起草人','Top',0);
+INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('012',4,'기안부서',70,'TBL_ENDAPRDOCINFO','TBL_ENDAPRDOCINFO.WriterDeptName','WriterDeptName','Default','열람문서함',null,'Dept.(draft)','起案部署','起草部门','Top',0);
+INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('012',5,'등록일',100,'TBL_RECORD','TBL_RECORD.RegisterDate','RegisterDate','dtDateTime','열람문서함',null,'RegisterDate','登録日','注册','Top',0);
+INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('012',6,'문서명',80,'TBL_EXPENDAPRDOCINFO','TBL_EXPENDAPRDOCINFO.FormName','FormName','Default','열람문서함',null,'Form title','文書名','文件名','Top',0);
+INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('012',7,'첨부',40,'TBL_RECORD','TBL_RECORD.AttachFlag','AttachFlag','dtBool','열람문서함','첨부여부','AttachFlag','添付','附件','Top',0);
+INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('012',8,'공개',40,'TBL_ENDAPRDOCINFO','TBL_ENDAPRDOCINFO.ISPUBLIC','IsPublic','Default','열람문서함',null,'Public','公開','公开','Top',0),
+INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('012',9,'반려',40,'TBL_RECORD','TBL_RECORD.RejectFlag','RejectFlag','dtBool','열람문서함','반려여부','RejectFlag','差し戻し','伴侣区分','Top',0);
+INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('012',10,'수신',40,'TBL_RECORD','CASE WHEN TBL_ENDAPRDOCINFO.DocType = ''003'' AND TBL_SEPERATEATTACH.RegisterType = ''1'' THEN ''발송'' ELSE ''없음'' END','ReSendFlag','Default','열람문서함','발송여부','ReSendFlag','受信','接待区分','Top',0);
 
 INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('000','1','일반문서',1,'일반문서','기록물형태 코드(기록물철)','General Documents','Top',0);
 INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('000','2','도면류',1,'도면류',null,'Drawings kinds','Top',0);
@@ -2661,9 +2682,9 @@ INSERT INTO TBL_ATTITUDE_FORM (FORM_ID, TENANT_ID, FORM_NAME, FORM_NAME2, FORM_H
 INSERT INTO TBL_ATTITUDE_CONF (COMPANY_ID, TENANT_ID, WORK_STARTTIME, WORK_ENDTIME, CLOSED_DAY, ATTITUDE_MOD_APPL, CLOSED_DATE_ATTITUDE, CONF_SET_DATE) VALUES ('Top', 0, '00:00', '09:00', '1,0,0,0,0,0,1', '1', '1', SYSDATE);
 
 -- attitude Type
-INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval, 'A01', 'Top', 0, '출근', 'go to work', '1', 'inOut', null, 1);
+INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval, 'A01', 'Top', 0, '출근', 'check in', '1', 'inOut', null, 1);
 INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval, 'A02', 'Top', 0, '지각', 'late', '1', 'inOut', null, 2);
-INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval, 'A03', 'Top', 0, '퇴근', 'off work', '1', 'inOut', null, 3);
+INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval, 'A03', 'Top', 0, '퇴근', 'check out', '1', 'inOut', null, 3);
 INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval, 'A07', 'Top', 0, '휴근', 'working Holiday', '1', 'inOut', null, 6);
 INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval, 'A04', 'Top', 0, '외근', 'outside work', '1', 'trip', null, 8);
 INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval, 'A06', 'Top', 0, '외출', 'outing', '1', 'trip', null, 6);
@@ -2716,9 +2737,9 @@ INSERT INTO tbl_weather (SN,CITYCODE,CITYNAME,DISPLAYCITYNAME,PRIMARYLANG,CURREN
 INSERT INTO tbl_weather (SN,CITYCODE,CITYNAME,DISPLAYCITYNAME,PRIMARYLANG,CURRENTWEATHER,TODAYWEATHER) VALUES ('2','6697514','Asahi','旭市','3',NULL,NULL);
 
 -- 포탈 개인화
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (1, '테마1', 'Theme1', 'Theme1', '왼쪽 혹은 오른쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.', 'A theme with a fixed area on the left or right.', '固定領域を画面の右または左に配置できるテーマです。', '左侧或右侧有固定区域的主题。', 'A theme with a fixed area on the left or right.', 'A theme with a fixed area on the left or right.');
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (2, '테마2', 'Theme2', 'Theme2', '위쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.', 'A theme with a fixed area on the top.', '固定領域が画面の上部に表示されるテーマです。', '顶部有固定区域的主题。', 'A theme with a fixed area on the top.', 'A theme with a fixed area on the top.');
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (3, '테마3', 'Theme3', 'Theme3', '기본 정보관련 영역이 없이 포틀릿에 집중할 수 있는 테마 입니다.', 'A theme that consists of only portlets without fixed areas.', '固定領域がなく、すべてのポートレットを自由に配置できるテーマです。', '仅由没有固定区域的 portlet 组成的主题。', 'A theme that consists of only portlets without fixed areas.', 'A theme that consists of only portlets without fixed areas.');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (1, '테마1', 'Theme1', 'Theme1', '소식 및 상단영역이 있는 디자인의 테마입니다.', 'A theme with a design that includes news and a top area.', 'ニュースやトップエリアのあるデザインのテーマです。', '这是一个包含新闻和顶部区域的设计主题。', 'A theme with a design that includes news and a top area.', 'A theme with a design that includes news and a top area.');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (2, '테마2', 'Theme2', 'Theme2', '위쪽에 정보 및 바로가기가 있는 디자인의 테마입니다.', 'A theme with information and shortcuts at the top.', '上部に情報やショートカットがあるデザインのテーマです。', '该主题的设计在顶部包含信息和快捷方式。', 'A theme with information area and shortcuts at the top.', 'A theme with information area and shortcuts at the top.');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (3, '테마3', 'Theme3', 'Theme3', '정보 관련 고정영역이 없이 포틀릿에 집중할 수 있는 테마입니다.', 'A theme that allows to focus on portlets without any fixed areas related to information.', '情報関連の固定領域がなくてもポートレットに集中できるテーマです。', '该主题允许您专注于 portlet，而无需任何与信息相关的固定区域。', 'A theme that allows to focus on portlets without any fixed areas related to information.', 'A theme that allows to focus on portlets without any fixed areas related to information.');
 
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (0, '/ezNewPortal/newPortalPortalPage.do', 'G', '', 0, 'portal');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (1, '/ezEmail/mailMain.do', 'G', 'icon_topmenu icon_nav_mail', 1, 'mail');
@@ -2753,6 +2774,8 @@ INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (6, 'Frame1
 INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (7, 'Frame2', 2);
 INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (8, 'Frame2', 3);
 
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (15, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -2, 'fixLeft');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (16, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -1, 'fixRight');
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (1, 1, '/ezNewPortal/receivedMailPortlet.do', 'G', 2, 'receivedmail');
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (2, 4, '/ezNewPortal/noticePortlet.do', 'G', 1, 'notice');
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (4, 15, '/ezNewPortal/votePortlet.do', 'G', 3, 'vote');
@@ -2952,6 +2975,8 @@ INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MEN
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 5, 'Top', 0, 'Car');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 6, 'Top', 0, 'Car');
 
+INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, CONNECTION_URL, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',0, 15, 4, '/ezNewPortal/getCustomBoardInfo.do', 1, -2, null);
+INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, CONNECTION_URL, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',0, 16, 4, '/ezNewPortal/getCustomBoardInfo.do', 1, -1, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top', 0, 1, 1, 1, 2, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top', 0, 2, 4, 1, 1, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top', 0, 4, 15, 1, 3, null);
@@ -2972,13 +2997,25 @@ INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID,
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top', 0, 51, 6, 1, 21, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top', 0, 70, 10, 1, 22, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top', 0, 73, 19, 1, 20, null);
-                
+
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 1, 0, 'Top', '고정 포틀릿');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 2, 0, 'Top', 'fixed portlet');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 3, 0, 'Top', '固定ポートレット');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 4, 0, 'Top', '固定门户组件');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 5, 0, 'Top', 'portlet cố định');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (15, 4, 6, 0, 'Top', 'portlet tetap');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 1, 0, 'Top', '고정 포틀릿');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 2, 0, 'Top', 'fixed portlet');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 3, 0, 'Top', '固定ポートレット');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 4, 0, 'Top', '固定门户组件');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 5, 0, 'Top', 'portlet cố định');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (16, 4, 6, 0, 'Top', 'portlet tetap');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 1, 0, 'Top', '받은 메일');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 2, 0, 'Top', 'Received Mail');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 2, 0, 'Top', 'Mail');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 3, 0, 'Top', '受信トレイ');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 4, 0, 'Top', '收件邮件');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 5, 0, 'Top', 'Received Mail');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 6, 0, 'Top', 'Received Mail');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 5, 0, 'Top', 'Mail');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 6, 0, 'Top', 'Mail');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (2, 4, 1, 0, 'Top', '공지사항');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (2, 4, 2, 0, 'Top', 'Notice');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (2, 4, 3, 0, 'Top', 'お知らせ');
@@ -3082,11 +3119,11 @@ INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_I
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (51, 6, 5, 0, 'Top', 'Resource');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (51, 6, 6, 0, 'Top', 'Resource');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 1, 0, 'Top', '개인폴더');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 2, 0, 'Top', 'Personal Folder');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 2, 0, 'Top', 'My Folder');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 3, 0, 'Top', 'Webフォルダ');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 4, 0, 'Top', '个人文件夹');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 5, 0, 'Top', 'Personal Folder');
-INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 6, 0, 'Top', 'Personal Folder');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 5, 0, 'Top', 'My Folder');
+INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (70, 10, 6, 0, 'Top', 'My Folder');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (73, 19, 1, 0, 'Top', '전자설문');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (73, 19, 2, 0, 'Top', 'Survey');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (73, 19, 3, 0, 'Top', '電子アンケート');
@@ -3094,6 +3131,12 @@ INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_I
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (73, 19, 5, 0, 'Top', 'Survey');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (73, 19, 6, 0, 'Top', 'Survey');
 
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (1, 0, 'Top', 15, 1, 4, -2, 0);
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (2, 0, 'Top', 15, 1, 4, -2, 0);
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (3, 0, 'Top', 15, 1, 4, -2, 0);
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (1, 0, 'Top', 16, 1, 4, -1, 0);
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (2, 0, 'Top', 16, 1, 4, -1, 0);
+INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (3, 0, 'Top', 16, 1, 4, -1, 0);
 INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (1, 0, 'Top', 1, 1, 1, 1, 0);
 INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (1, 0, 'Top', 2, 1, 2, 4, 0);
 INSERT INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) VALUES (1, 0, 'Top', 4, 1, 3, 15, 0);
@@ -3162,6 +3205,8 @@ INSERT INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACC
 INSERT INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (2, 'Top', 0, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (3, 'Top', 0, 'Top', 1, 0, 1);
 
+INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (15, 'Top',0, 'Top', 1, 0, 1);
+INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (16, 'Top',0, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (1, 'Top', 0, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (2, 'Top', 0, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) VALUES (4, 'Top', 0, 'Top', 1, 0, 1);
@@ -3265,18 +3310,30 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 VALUES (0, 'LangTertiary5', '멀티언어5', '', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (#v_TENANTID#, 'LangQuaternary1', '멀티언어1', '중문', '시스템 언어에 따른 멀티언어 셋팅(중국어)', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangQuaternary1', '멀티언어1', '중문', '시스템 언어에 따른 멀티언어 셋팅(중국어)', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (#v_TENANTID#, 'LangQuaternary2', '멀티언어2', 'Chinese', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangQuaternary2', '멀티언어2', 'Chinese', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (#v_TENANTID#, 'LangQuaternary3', '멀티언어3', '中文', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangQuaternary3', '멀티언어3', '中文', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (#v_TENANTID#, 'LangQuaternary4', '멀티언어4', '中文', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangQuaternary4', '멀티언어4', '中文', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (#v_TENANTID#, 'LangQuaternary5', '멀티언어5', '', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangQuaternary5', '멀티언어5', '', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+VALUES(0, 'useOrganHideFlag', 'YES', '조직도 사용자,부서 숨김 기능의 사용 여부 YES: 사용 NO: 사용안함 (default)', '조직도 사용자,부서 숨김 기능', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '조직도');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
 VALUES(0, 'useWorkspaceSchedule', '협업 일정 연동 여부', 'NO', 'YES: 사용 NO: 사용안함', TO_DATE('2024-05-22 00:00:00','yyyy-mm-dd hh24:mi:ss'), '협업');
 
 INSERT INTO tbl_tenant_config (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(0, 'delAttachByOthers', '0', '결재에서 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값(0 : 불가 1 : 허용), (default:0) ', '결재에서 첨부파일을 다른사람이 지울수있는 여부', TO_DATE('2021-03-05 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'usePortletSize', 'Y', 'Y: 사용 N: 사용안함 (default: Y)', '포탈 포틀릿 커스텀 사이즈 사용 여부', TO_DATE('2023-11-20 00:00:00','yyyy-mm-dd hh24:mi:ss'), '포탈');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+VALUES(0, 'notiStoragePeriod', '통합알림 데이터 보관 기간', '10', '통합알림 데이터 보관 기간(default: 10)(일)', '2024-04-25 00:00:00', '통합알림');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+VALUES(0, 'notiPollingInterval', '통합알림 데이터 새로고침 주기', '60000', '통합알림 데이터 새로고침 주기 설정(단위는 밀리초)', '2024-04-25 00:00:00', '통합알림');
+
+INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (0, 'one_by_one');
+INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (1, 'two_by_one');
+INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (2, 'one_by_two');

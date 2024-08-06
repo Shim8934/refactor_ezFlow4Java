@@ -134,7 +134,8 @@ var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Lịch trình nhóm";
 var strLang130_1 = "Lịch trình nhóm";
- 
+var strLang131 = "hiển thị ở trên cùng";
+
 var strLang253 = "Không có tài nguyên được chọn."
 var strLang254 = "Không thể xóa tài nguyên đã chọn."
 var strLang255 = "Dự trữ tài nguyên không thành công."
@@ -210,9 +211,11 @@ var strLang127_2 = "Company";
 var strLang130_2 = "Group";
 var strLang131_2 = "Collabo";
 var strLang141_2 = "Google";
-var strLangHSBScPt1 = "-";
+var strLangHSBScPt1 = ".";
 var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "";
 
 /* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
 var ezSchedule_kyj1 = "Không thể gửi lịch trình đến liệu lên bảng ảnh hoặc bảng ẩn danh hoặc URL-link-board.";
+/* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
+var ezSchedule_kyj2 = "Vui lòng kiểm tra lại chu kỳ lặp lại một lần nữa.";

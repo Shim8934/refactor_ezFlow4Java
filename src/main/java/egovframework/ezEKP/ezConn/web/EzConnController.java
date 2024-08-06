@@ -185,14 +185,13 @@ public class EzConnController {
 
 					if (!decryptedLoginCookie.split("///")[1].equals(orgId)) {
 						commonUtil.updateLoginInfo(request, resultVO);
+						loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
 					}
 
 				} else {
 					commonUtil.updateLoginInfo(request, resultVO);
+					loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
 				}
-				
-				// 로그인쿠키는 새로 생성
-				loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
 
 				// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
 				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함

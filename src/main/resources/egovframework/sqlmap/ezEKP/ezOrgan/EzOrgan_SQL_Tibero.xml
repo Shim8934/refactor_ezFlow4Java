@@ -5,7 +5,7 @@
 
 	<typeAlias alias="OrganDeptVO"							    type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganUserVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>	
-	<typeAlias alias="OrganProxyVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>	
+	<typeAlias alias="OrganProxyVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>
 	
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
@@ -85,6 +85,7 @@
 		<result property="role1" 							    column="role1" 						    columnIndex="46"  nullValue=""/>
 		<result property="role2" 							    column="role2" 						    columnIndex="47"  nullValue=""/>
 		<result property="physicalDeliveryOfficeName1" 			column="physicalDeliveryOfficeName1" 	columnIndex="44"/>
+		<result property="userTreeFlag" 						column="usertreeflag" 					columnIndex="48"/>
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
@@ -293,7 +294,12 @@
 		              				CN NOT LIKE 'trash\_dept\_%' ESCAPE '\'
 		              		]]>
               			</isEmpty>
-              			
+		 				<isEqual property="adminOrgan" compareValue="n">
+						 	<![CDATA[ 
+								 AND 
+									DEPTTREEFLAG = 'Y'
+							]]>
+						 </isEqual>
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
@@ -334,6 +340,12 @@
 									CN NOT LIKE 'trash\_dept\_%' ESCAPE '\'
 							]]>
 						</isEmpty>
+						<isEqual property="adminOrgan" compareValue="n">
+							<![CDATA[ 
+								 AND 
+									DEPTTREEFLAG = 'Y'
+							 ]]>
+						</isEqual>
 		<![CDATA[
                			AND
                				TENANT_ID = #v_TENANT_ID#	 ) A
@@ -373,6 +385,14 @@
                                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                        		AND
                        			TENANT_ID = #v_TENANT_ID#	
+			]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 
+							 AND 
+								USERTREEFLAG = 'Y'
+						]]>
+			</isEqual>
+			<![CDATA[
                        	UNION ALL 
                        		SELECT
                        			A.CN ,
@@ -399,7 +419,16 @@
                   			WHERE
                   				B.DEPTID = #v_CN#
                   			AND
-                  				B.TENANT_ID = #v_TENANT_ID#	 ) AA
+                  				B.TENANT_ID = #v_TENANT_ID#
+					]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 
+							 AND 
+								B.USERTREEFLAG = 'Y'
+						]]>
+			</isEqual>
+			<![CDATA[ 		
+                  			) AA
                   			ORDER BY
                   				EXTENSIONATTRIBUTE15 ASC,
                   			DISPLAYNAME ASC
@@ -630,7 +659,15 @@
                                         AND 
                                             CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                                 		AND
-                                			TENANT_ID = #v_TENANT_ID#	
+                                			TENANT_ID = #v_TENANT_ID#
+                                					]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 	
+										 AND 
+											USERTREEFLAG = 'Y'
+				]]>
+			</isEqual>
+			<![CDATA[
 	                               UNION ALL 
                                			SELECT
                                				A.CN ,
@@ -656,7 +693,16 @@
                               			WHERE
                               				B.DEPTID = #v_CN#
                               			AND
-                              				B.TENANT_ID = #v_TENANT_ID#	 ) AA ) BB
+                              				B.TENANT_ID = #v_TENANT_ID#	 
+		  	]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 
+										 AND 
+											B.USERTREEFLAG = 'Y'
+									]]>
+			</isEqual>
+			<![CDATA[ 
+ 							) AA ) BB
                   			WHERE
                   				ROWNUM_ >= #v_STARTROW#
                   			AND
@@ -822,7 +868,15 @@
                     AND 
                         CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                		AND
-               			TENANT_ID = #v_TENANT_ID#	
+               			TENANT_ID = #v_TENANT_ID#
+		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[ 
+					 AND 
+						USERTREEFLAG = 'Y'
+				]]>
+		</isNotEqual>
+		<![CDATA[
 	              UNION ALL 
 		            SELECT
 		            	B.CN 
@@ -833,8 +887,15 @@
               		WHERE
               			B.DEPTID = #v_CN#
               		AND
-              			B.TENANT_ID = #v_TENANT_ID#) AA
+              			B.TENANT_ID = #v_TENANT_ID#
 		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[ 
+					AND 
+						B.USERTREEFLAG = 'Y'
+		]]>
+		</isNotEqual>
+		) AA
 	</select>
 	
 	<select id="EzOrganDAO.getMemberListCount2" parameterClass="Map" resultClass="Integer">
@@ -843,44 +904,6 @@
 				COUNT(CN) TOTALCOUNT  
         	FROM
         		(
-		]]>
-		
-		<isEqual property="containConfig" compareValue="YES">
-			<![CDATA[
-				SELECT
-					CN 
-				FROM
-					TBL_USERMASTER 
-				WHERE
-					DEPARTMENT = #deptCN#
-				AND
-					CN <> 'masteradmin'
-				AND 
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)
-				AND
-					TENANT_ID = #tenantID#	
-				UNION ALL
-				 
-				SELECT
-					B.CN 
-				FROM
-					TBL_ADDJOBMASTER B
-				JOIN
-					TBL_USERMASTER A
-				ON
-					A.CN = B.CN
-				AND
-					A.TENANT_ID = B.TENANT_ID
-				WHERE
-					B.DEPTID = #deptCN#
-				AND
-					B.TENANT_ID = #tenantID#
-					
-				UNION ALL
-			]]>
-		</isEqual>
-		
-		<![CDATA[
 			SELECT
 				C.cn
 			FROM
@@ -903,7 +926,14 @@
 					(INSTR(dept_cd_path, (SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#)) = 1
 				OR
 					extensionattribute1 = #deptCN#))
-					
+		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				 AND
+					C.USERTREEFLAG = 'Y'
+			]]>
+		</isNotEqual>
+		<![CDATA[
 			UNION ALL
 			
 			SELECT
@@ -929,7 +959,16 @@
 				AND
 					(INSTR(dept_cd_path, (SELECT CONCAT(dept_cd_path, ',') FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #deptCN#)) = 1)
 				OR
-					extensionattribute1 = #deptCN#)) AA
+					extensionattribute1 = #deptCN#)
+		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				 AND
+					D.USERTREEFLAG = 'Y'
+			]]>
+		</isNotEqual>
+		<![CDATA[
+					) AA
 		]]>
 	</select>
 	
@@ -1034,7 +1073,8 @@
 		            ADSPATH ,
 		            UPDATEDT ,
 		            'dept' TYPE ,
-		            TENANT_ID as tenantId
+		            TENANT_ID as tenantId,
+	           		DEPTTREEFLAG
 				FROM
 		        	TBL_DEPTMASTER 
 		       WHERE
@@ -1098,7 +1138,8 @@
 		            ADSPATH ,
 		            UPDATEDT ,
 		            'dept' TYPE ,
-		            TENANT_ID as tenantId
+		            TENANT_ID as tenantId,
+	           		DEPTTREEFLAG
 				FROM
 		        	TBL_DEPTMASTER 
 		       WHERE
@@ -1463,7 +1504,8 @@
 	            SIPURI ,
 	            POSITIONCD ,
 	            PHYSICALDELIVERYOFFICENAME AS PHYSICALDELIVERYOFFICENAME1 ,
-	            'user' USERTYPE
+	            'user' USERTYPE,
+	            USERTREEFLAG
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1551,7 +1593,7 @@
              A.STREETADDRESS ,
              A.INFO ,
             ]]>
-			<!-- 2023-08-22 전인하 - 유저 겸직 부서/사용자 기준 설정 - 
+			<!-- 2023-08-22 전인하 - 유저 겸직 부서/사용자 기준 설정 -
 			permissionBasisDeptYN 옵션에 따라 addJobMaster 테이블에 ROLLINFO 컬럼 사용시 분기 처리, JOBID 정보를 정확한 ID로 호출 -->
 			<isEqual property="permissionBasisDeptYN" compareValue="Y">
 				B.ROLL_INFO AS EXTENSIONATTRIBUTE1 ,
@@ -1559,7 +1601,7 @@
 			<isNotEqual  property="permissionBasisDeptYN" compareValue="Y">
 				A.EXTENSIONATTRIBUTE1 ,
 			</isNotEqual>
-			<![CDATA[     
+			<![CDATA[
              A.EXTENSIONATTRIBUTE2 ,
              A.EXTENSIONATTRIBUTE3 ,
              A.EXTENSIONATTRIBUTE4 ,
@@ -1588,7 +1630,8 @@
              'user' TYPE  ,
              SIPURI ,
              B.POSITIONCD ,
-	         'addJob' USERTYPE
+	         'addJob' USERTYPE,
+	         B.USERTREEFLAG
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
@@ -1969,7 +2012,12 @@
 	           	AND
 	           		CN <> 'masteradmin'
             ]]>
-	    	
+			<isNotEqual property="adminOrgan" compareValue="y">
+				<![CDATA[
+					 AND
+						USERTREEFLAG = 'Y'
+				]]>
+			</isNotEqual>
 	    	<isNotEmpty property="companyId">
 		    	AND 
 		    		PHYSICALDELIVERYOFFICENAME IN 
@@ -1990,7 +2038,13 @@
 	                'Y' ISADDJOB	
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-	            $strGyumjikForOracle$ 
+	            $strGyumjikForOracle$
+				<isNotEqual property="adminOrgan" compareValue="y">
+					<![CDATA[
+					 AND
+						A.USERTREEFLAG = 'Y'
+				]]>
+				</isNotEqual> 
 	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 				<include refid="organSearchTrashDept_user"/>
 	            AND A.TENANT_ID = #v_TENANT_ID#
@@ -2032,7 +2086,7 @@
 			</isEqual>	  
 			<!-- 2023-08-30 전인하 - 리스트에 겸직, 원직 함께 나타날 때 원직을 상위에, 겸직을 하위에 나타나게 함 -->
 			$strSize$
-			) ORDER BY type DESC, ISADDJOB DESC, NAME ASC	 			
+			) ORDER BY type DESC, ISADDJOB DESC, NAME ASC
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
@@ -2046,6 +2100,12 @@
 	    		TBL_DEPTMASTER 
             $strSQL$ 
             AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 
+					 AND 
+						DEPTTREEFLAG = 'Y'
+				]]>
+			</isEqual>
 			<include refid="organSearchTrashDept_dept"/>
             AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
 	    </isEqual>
@@ -2090,6 +2150,12 @@
 			       		 AND
 		            		 CN <> 'masteradmin'
 						]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[
+						 AND
+							A.USERTREEFLAG = 'Y'
+				]]>
+			</isEqual>
 							<include refid="organSearchTrashDept_user"/>
 						<![CDATA[
 		            		 
@@ -2114,6 +2180,12 @@
 							$strSQL$ 
 							AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 						]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[
+							 AND
+								A.USERTREEFLAG = 'Y'
+							]]>
+			</isEqual>
 							<include refid="organSearchTrashDept_user"/>
 						<![CDATA[
 							AND A.TENANT_ID = #v_TENANT_ID#
@@ -2236,6 +2308,12 @@
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 				]]>
 					<include refid="organSearchTrashDept_user"/>
+		<isEqual property="adminOrgan" compareValue="n">
+			<![CDATA[
+					 AND
+						A.USERTREEFLAG = 'Y'
+				]]>
+		</isEqual>
 				<![CDATA[
 				AND 
 					A.TENANT_ID = #v_TENANT_ID#
@@ -2254,6 +2332,12 @@
 				AND 
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 				]]>
+		<isEqual property="adminOrgan" compareValue="n">
+			<![CDATA[
+					 AND
+						B.USERTREEFLAG = 'Y'
+				]]>
+		</isEqual>
 					<include refid="organSearchTrashDept_user"/>
 				<![CDATA[
 				AND 
@@ -2278,6 +2362,12 @@
 		      			extensionattribute2 <> CN
 			     ]]> 
     		</isEmpty>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[
+      				AND
+      		    		DEPTTREEFLAG = 'Y'
+      			]]>
+			</isEqual>
     		<![CDATA[
       		AND
       			tenant_id = #tenantId#	
@@ -2343,7 +2433,8 @@
 	            extensionattribute15 ,
 	            adspath ,
 	            updatedt ,
-	            'dept' type  
+	            'dept' type,
+				deptTreeFlag
 			FROM 
 				TBL_DEPTMASTER 
 			WHERE  
@@ -2763,7 +2854,7 @@
 													 DESCRIPTION,
 			   DESCRIPTION                           DESCRIPTION1,
 			   DESCRIPTION2,
-			   PHYSICALDELIVERYOFFICENAME,
+			   PHYSICALDELIVERYOFFICENAME AS COMPANYID,
 			   CASE
 				   #v_LANGDATA#
 				   WHEN
@@ -2818,7 +2909,10 @@
 			   SIPURI,
 			   POSITIONCD,
 			   'user'                                USERTYPE,
-			   ''	JOBID
+			   EXTENSIONATTRIBUTE7                   JOBID,
+			   CAST('' AS NVARCHAR2(50))			JOBTYPE,
+			   EXTENSIONATTRIBUTE8                  AS ROLEID,
+			   EXTENSIONATTRIBUTE1 AS ROLEINFO
 		FROM TBL_USERMASTER
 		WHERE CN = #v_CN#
 		  AND TENANT_ID = #v_TENANT_ID#
@@ -2850,7 +2944,7 @@
 												  DESCRIPTION,
 			   C.DISPLAYNAME                      DESCRIPTION1,
 			   C.DISPLAYNAME2                     DESCRIPTION2,
-			   A.PHYSICALDELIVERYOFFICENAME,
+			   C.EXTENSIONATTRIBUTE2 COMPANYID,
 			   CASE
 				   #v_LANGDATA#
 				   WHEN
@@ -2881,7 +2975,7 @@
 			   A.FACSIMILETELEPHONENUMBER,
 			   A.STREETADDRESS,
 			   A.INFO,
-			   A.EXTENSIONATTRIBUTE1,
+			   CAST(B.ROLL_INFO AS NVARCHAR2(200)) AS EXTENSIONATTRIBUTE1,
 			   A.EXTENSIONATTRIBUTE2,
 			   A.EXTENSIONATTRIBUTE3,
 			   A.EXTENSIONATTRIBUTE4,
@@ -2902,18 +2996,23 @@
 			   SIPURI,
 			   B.POSITIONCD,
 			   'addJob'                           USERTYPE,
-			   JOBID
+			   CAST(B.JOBID AS NVARCHAR2(200))                       AS JOBID,
+			   J.TYPE                        AS JOBTYPE,
+			   CAST(B.ROLEID AS NVARCHAR2(200))                       AS ROLEID,
+			   CAST(B.ROLL_INFO AS NVARCHAR2(200)) AS ROLEINFO
 		FROM TBL_ADDJOBMASTER B
 				 JOIN
 			 TBL_USERMASTER A ON B.CN = A.CN AND B.TENANT_ID = A.TENANT_ID
 				 JOIN
 			 TBL_DEPTMASTER C ON C.CN = B.DEPTID AND C.TENANT_ID = B.TENANT_ID
+				 JOIN
+			 TBL_USER_JOBMASTER J ON J.JOBID = B.JOBID AND J.TENANT_ID = B.TENANT_ID
 		WHERE B.CN = #v_CN#
 		  AND B.TENANT_ID = #v_TENANT_ID#
 	</select>
 
-	<select id="EzOrganDAO.getRetireUserMail" parameterClass="Integer" resultClass="OrganUserVO">
-		SELECT MAIL FROM
-		TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#
-	</select>
+    <select id="EzOrganDAO.getRetireUserMail" parameterClass="Integer" resultClass="OrganUserVO">
+        SELECT MAIL FROM
+            TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#
+    </select>
 </sqlMap>

@@ -1,16 +1,22 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,18 +29,27 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.StringJoiner;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.FileCopyUtils;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -59,6 +74,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -5093,5 +5109,174 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			logger.error("isBoardAdmin error : " + e.getMessage(), e);
         }
 		return result;
+	}
+
+	@Override
+	public void downloadBackgroundItemFile(HttpServletRequest request, HttpServletResponse response, String realPath, String filePath, String fileName) throws Exception {
+		logger.info("downloadBackgroundItemFile started");
+
+		ZipOutputStream zos = null;
+		FileInputStream fis = null;
+
+		String saveZipPath = "";
+
+		saveZipPath = createZipFile(zos, fis, realPath, filePath, fileName);
+		downloadFile(request, response, zos, fis, saveZipPath, fileName);
+
+		logger.info("downloadBackgroundItemFile ended");
+	}
+
+	private String createZipFile(ZipOutputStream zos, FileInputStream fis, String realPath, String filePath, String fileName) throws Exception {
+		logger.info("createZipFile started");
+
+		String saveZipPath = "";
+		String ext = ".zip";
+
+		byte buffer[] = new byte[4096];
+		int length = 0;
+
+		try {
+			try {
+				saveZipPath = filePath.substring(0, filePath.lastIndexOf("/")) + commonUtil.separator + fileName.substring(0, fileName.lastIndexOf(".")) + ext;
+
+				zos = new ZipOutputStream(
+					new FileOutputStream(realPath + saveZipPath),
+					StandardCharsets.UTF_8
+				);
+				fis = new FileInputStream(realPath + filePath);
+
+				zos.putNextEntry(new ZipEntry(fileName));
+
+				while ((length = fis.read(buffer)) > 0) {
+					zos.write(buffer, 0, length);
+				}
+
+				zos.flush();
+				zos.close();
+				fis.close();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		} catch (Exception e) {
+
+		}
+
+		logger.info("createZipFile ended");
+
+		return saveZipPath;
+	}
+
+	private void downloadFile(HttpServletRequest request, HttpServletResponse response, ZipOutputStream zos, FileInputStream fis, String filePath, String fileName) throws Exception {
+		logger.info("downloadFile started");
+
+		fileName = fileName.substring(0, fileName.lastIndexOf(".")) + ".zip";
+		int buffer = 2048;
+
+		String downFileName = EgovStringUtil.isNullToString(commonUtil.getRealPath(request) + filePath);
+		String orgFileName = EgovStringUtil.isNullToString(fileName);
+
+		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
+
+		File file = new File(commonUtil.detectPathTraversal(downFileName));
+
+		if (!file.exists()) {
+			throw new FileNotFoundException(downFileName);
+		}
+
+		if (!file.isFile()) {
+			throw new FileNotFoundException(downFileName);
+		}
+
+		long fSize = file.length();
+		if (fSize > 0) {
+			BufferedInputStream in = null;
+
+			try {
+				in = new BufferedInputStream(new FileInputStream(file));
+
+				String mimetype = "application/octet-stream"; //"application/x-msdownload"
+
+				String nfcFilename = commonUtil.normalizeFileName(orgFileName);
+
+				response.setBufferSize(buffer);
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");
+				response.setHeader("Content-Length", Long.toString(fSize));
+
+				FileCopyUtils.copy(in, response.getOutputStream());
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+				}
+			}
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}
+
+		logger.info("downloadFile ended");
+	}
+
+	/**
+	 * 이미지 파일명을 조사하여 첫번째 포함 파일 객체를 리턴
+	 * @param itemID 조사할 게시판 id
+	 * @param fileName 포함될 단어
+	 * @param tenantID tenant ID
+	 * @return	해당하는 첨부 이미지 객체
+	 * @throws Exception 해당 게시판 조회 쿼리(when itemID, tenantID) 가 예외 발생
+	 */
+	public Optional<BoardAttachVO> getBoardAttachByName(String itemID, String fileName, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+
+		// 파일이름이 없을경우 empty 리턴
+		if (StringUtils.isBlank(fileName)) return Optional.empty();
+
+		List<BoardAttachVO> voList = ezBoardDAO.brdGetItemAttachmentInfo(map);
+		for (BoardAttachVO vo : voList) {
+			// 파일이름이 비어있거나 이미지 파일의 확장자가 아닌경우 스킵
+			if (StringUtils.isBlank(vo.getFileName()) || !commonUtil.checkImgExtension(FilenameUtils.getExtension(vo.getFileName()))) {
+				continue;
+			}
+
+			// 파일이름에 주어진 단어가 포함된 경우 vo 바로 리턴
+			if (FilenameUtils.getBaseName(vo.getFileName()).contains(fileName)) {
+				return Optional.of(vo);
+			}
+		}
+
+		return Optional.empty();
+	}
+	
+	@Override
+	/* 2024-04-01 한태훈 - 게시판 즐겨찾기 추가 구성원 리스트 가져오는 메소드 */
+	public List<OrganUserVO> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception {
+		logger.debug("getFavoriteBoardUserList starts");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardId", boardId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		logger.debug("getFavoriteBoardUserList ends");
+		return ezBoardDAO.getFavoriteBoardUserList(map);
+	}
+
+	@Override
+	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception {
+		logger.debug("confirmBoardItemDeletion starts");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantId);
+		map.put("itemID", itemID);
+
+		logger.debug("confirmBoardItemDeletion ends");
+		return ezBoardDAO.confirmBoardItemDeletion(map);
 	}
 }

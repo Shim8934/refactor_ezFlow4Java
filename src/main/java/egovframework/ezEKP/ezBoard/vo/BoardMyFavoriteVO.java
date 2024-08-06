@@ -50,7 +50,7 @@ public class BoardMyFavoriteVO {
 	private String nowDate;
 	/** 현재시간 -5*/
 	private String fromNow;
-	/** */
+	/** 리스트 타입 (1: 일반보기, 2: 안읽은 게시물 보기, 3: 완료게시물 보기) */
 	private String type;
 	/** */
 	private String boardAdmin_FG;

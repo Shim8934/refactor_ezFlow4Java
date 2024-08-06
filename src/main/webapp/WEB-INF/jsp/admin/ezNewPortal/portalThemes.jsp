@@ -50,11 +50,11 @@
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
 			.ui-portlet-content { font-weight: bold; display: inline-block; float: left;cursor:move; border:1px dotted #000;}
 			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
-			.ui-portlet-span { display: inline-block; width: 68%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-top:12px;}
+			.ui-portlet-span { display: inline-block; width: calc(100% - 70px); font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-top:12px;}
 			/* .portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin:13px 0px 10px 0px; vertical-align:top;} */
 			.portlet_switch {margin: 1px 0px 10px 14px;}
 			.portlet_switch .slider {z-index:10;}
-			.admin_theme_portlet {width : 1042px;}
+			.admin_theme_portlet {width : 1151px;}
 			.bottomBtn {clear:both;}
 			#themePortletList {display:inline-block;}
 			
@@ -91,11 +91,19 @@
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezPortlet/web-animations.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezPortlet/muuri.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezPortlet/portlet-util.js')}"></script>
+	<link rel="stylesheet" href="${util.addVer('/css/ezPortlet/portlet.css')}" type="text/css" />
+
 	<script type="text/javascript">
 		var defaultTheme = "";
 		var isBtnClicked = false;
 		var themeAuths = [];
-		
+		var usePortletSize = "<c:out value='${usePortletSize}'/>" === "Y";
+		var allSize = !!"<c:out value='${allSize}'/>" ? "<c:out value='${allSize}'/>".slice(1, -1).split(", ") : [];
+
 		$(function() {
 			getCompanies();
 			getThemes();
@@ -354,7 +362,9 @@
 					}
 					
 					themesHTML += "</table>";
-					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'><spring:message code='ezNewPortal.t002'/></a><a class='btnA previewBtn' ><spring:message code='ezNewPortal.t113' /></a><a class='btnA themeAuthBtn' ><spring:message code='ezNewPortal.t086' /></a></div>";
+					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'><spring:message code='ezNewPortal.t002'/></a>";
+					<%--themesHTML += "<a class='btnA previewBtn' ><spring:message code='ezNewPortal.t113' /></a>";--%>
+					themesHTML += "<a class='btnA themeAuthBtn' ><spring:message code='ezNewPortal.t086' /></a></div>";
 					themesHTML += "</div></div></div>";
 					
 
@@ -647,38 +657,104 @@
 		
 		//2018-12-03 ~ 2018-12-06 테마별 포틀릿 on/off 개발
 		var getThemePortletList = function (event) {
-			
+
 			isBtnClicked = true;
-			
+
 			var themeId = event.data.themeId;
 			var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
 			var themeName = event.data.themeName;
-			
+			var frameSize = -1;
+			var availableSize = {};
+
+			if (usePortletSize) {
+				frameSize = getFrameSize(themeId);
+				availableSize = getAvailablePortletSize(companyId, themeId);
+			}
+
 			var request = new XMLHttpRequest();
 			request.open('POST', '/admin/ezNewPortal/getThemePortletList.do', true);
 			request.setRequestHeader('Content-Type', 'application/json');
 			
 			request.onload = function() {
 				if (request.status >= 200 && request.status < 400) {
-					var portletList = JSON.parse(request.responseText);
-					var portletListCount = portletList.length;
-					
+					var data = JSON.parse(request.responseText);
+					var fixList = data['fixBoard'];
+					var portletList = data['poList'];
+
 					var listHTML = "<div id='themePortletList" + themeId + "' class='portletList' data-themeid='" + themeId + "'>";
 					listHTML += "<div class='admin_thema admin_theme_portlet'>";
 					listHTML += "<dl class='admin_menuDL'>";
 					listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
 					listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'><spring:message code='ezNewPortal.t134' /></span></dd>";
+					if (usePortletSize) {
+						var dd = document.createElement("dd");
+						dd.className = "admin_menuX";
+						var btnR = document.createElement("div");
+						btnR.className = "btn_size";
+						btnR.id = "removeAllSize";
+						btnR.innerText = "<spring:message code='ezNewPortal.pgb02' />";
+						dd.append(btnR);
+						var dd2 = dd.cloneNode(true);
+						dd2.childNodes[0].innerText = "<spring:message code='ezNewPortal.pgb01' />";
+						dd2.childNodes[0].id = "addAllSize";
+						listHTML += dd.outerHTML + dd2.outerHTML;
+					}
 					listHTML += "</dl>";
+					if (fixList != null) {
+						listHTML += "<div class='admin_menu_content'>";
+
+						var fixCount = fixList.length * - 1;
+						fixList.forEach(function (item) {
+							var portletId = item.portletId;
+	
+							listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content'";
+							listHTML += " id='" + item.portletCode + "'";
+							listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "' data-fix=" + fixCount++ + ">";
+							listHTML += "<span class='ui-portlet-span'>";
+	
+							listHTML += ConvertCharToEntityReference(item.portletName);
+							listHTML += "</span>";
+							listHTML += "<label class='portlet_switch switch' title='"+ "<spring:message code='ezNewPortal.fixportlet.theme2' />" +"'>";
+	
+							listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' ";
+							listHTML += item.fixBoard ? " data-fix=true " : "";
+	
+							if (themeId == 2) {
+								listHTML +=  " disabled > ";
+							} else {
+								listHTML += item.portletUsed ? " checked>" : ">";
+							}
+	
+							listHTML += "<span class='slider round'></span></label>";
+							listHTML += "</div>";
+						});
+						listHTML += "</div>";
+					}
 					listHTML += "<div class='admin_menu_content'>";
-					listHTML += "<div id='themePortletList'>";
-					
+					if (usePortletSize) {
+						listHTML += "<div id='themePortletList' class=" + ClassPortlet.AREA_PORTLET + ">";
+					} else {
+						listHTML += "<div id='themePortletList'>";
+					}
+
 					portletList.forEach(function (item, index) {
 						var portletId = item.portletId;
-						
-						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content' data-portletid='" + portletId + "' data-menuid='" + item.menuId + "'>";
+
+						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content";
+						if (usePortletSize) {
+							listHTML += " " + ClassPortlet.PORTLET + " " + item.classSize ;
+							listHTML += item.portletUsed ? "'" : " off_portlet'";
+							listHTML += " data-size='" + item.classSize + "' ";
+						} else {
+							listHTML += "'";
+						}
+						listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "'>";
+						if (usePortletSize) {
+							listHTML += "<div class=wrap_title>";
+						}
 						listHTML += "<span class='ui-portlet-span'>";
-						
+
 						if (item.fixed) {
 							listHTML += "<img class='fixedPortlet' id='fixedPortlet" + portletId + "' src='/images/ezNewPortal/portlet_fixed.png'>";
 						} else {
@@ -687,23 +763,51 @@
 
 						listHTML += ConvertCharToEntityReference(item.portletName);
 						listHTML += "</span>";
+						if (usePortletSize) {
+							listHTML += "<div class='sortablePortlet'></div>";
+						}
 						listHTML += "<label class='portlet_switch switch'>";
-						
+
 						if (item.portletUsed) {
 							listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' checked>";
 						} else {
 							listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "'>";
 						}
-						
+
 						listHTML += "<span class='slider round'></span></label>";
-						listHTML += "</div>";
+						if (usePortletSize) {
+							listHTML += "</div><div class='" + ClassPortlet.BODY_POP + "'>";
+							var btnSet = document.createElement("img");
+							btnSet.src = "/images/verified.png?version=23110801";
+							btnSet.className = "btn_set";
+							listHTML += btnSet.outerHTML;
+							for (var i = 0; i < allSize.length; i++) {
+								var size = allSize[i];
+								var img = document.createElement("img");
+								img.src = "/images/portal/" + size + ".svg?version=23110801"; // queryString. 이미지 변경시 YYMMDD + 넘버링 (01, 02, 03)
+								img.className = size;
+								img.dataset.size = size;
+								if (size !== GridSize.ONE_BY_ONE && item.classSize !== size
+										&& (availableSize[portletId] === undefined || availableSize[portletId].indexOf(size) === -1)) {
+									img.classList.add(ClassPortlet.UNAVAILABLE_SIZE);
+								} else {
+									img.classList.add(ClassPortlet.AVAILABLE_SIZE);
+								}
+								listHTML += img.outerHTML;
+							}
+							listHTML += "</div></div>";
+						} else {
+							listHTML += "</div>";
+						}
 					});
-					
+
 					listHTML += "</div>";
 					listHTML += "<div class='bottomBtn'><a class='btnA updateThemePortletBtn'><spring:message code='ezNewPortal.t002'/></a></div>";
 					listHTML += "</div>";
-					listHTML += "</div>";
-					
+					if (usePortletSize) {
+						listHTML += "</div>";
+					}
+
 					var nowShowList = document.getElementsByClassName("portletList")[0]; 
 					
 					if (nowShowList != undefined) {
@@ -726,38 +830,100 @@
 							$(".portletList").not("#themePortletList" + themeId).remove();
 						});
 					}
-					
+
 					if (nowShowList != themeId) {
-						
-						if (nowShowList == null || nowShowList == undefined) {
-							$("#themeList").after(listHTML);
-							
-							$(".portletList").slideDown(function(){
-								isBtnClicked = false;
-							});
-						} else {
-							$("#themeList").after(listHTML);
-							  
-							$(".portletList").slideDown(function(){
-								isBtnClicked = false;
-							});
-						}
+						$("#themeList").after(listHTML);
+
+						$(".portletList").slideDown(function(){
+							isBtnClicked = false;
+						});
 					}
-					
+
 					//drag and drop
-					$("#themePortletList").sortable({
-						items : ".portlets",
-						scroll: false
-					});
-					
+					if (usePortletSize) {
+						gridElement = null;
+						startGridElement();
+					} else {
+						$("#themePortletList").sortable({
+							items : ".portlets",
+							scroll: false
+						});
+					}
+
 					$("#themePortletList").disableSelection();
-					
+
 					//저장버튼 활성화
 					$(".updateThemePortletBtn").on("click", {"themeId" : themeId}, updateThemePortlet);
 					//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
 					$(".ui-portlet-span").find("img").on("click", changeFixed);
 					$(".portlet_switch").find("input").on("change", checkFixedInput);
-					
+
+					if (usePortletSize) {
+						// 포틀릿 사이즈 변경
+						var btnList = document.querySelectorAll("img[data-size]");
+						Array.prototype.forEach.call(btnList, function (btn) {
+							btn.addEventListener("click", function (e) {
+								var target = e.target;
+								if (target.classList.contains(ClassPortlet.EDITING)) {
+									// edit 중일때 동작 - 포틀릿 사용가능 사이즈 지정
+									if (target.classList.contains(ClassPortlet.AVAILABLE_SIZE)) {
+										target.classList.remove(ClassPortlet.AVAILABLE_SIZE);
+										target.classList.add(ClassPortlet.UNAVAILABLE_SIZE);
+									} else {
+										target.classList.remove(ClassPortlet.UNAVAILABLE_SIZE);
+										target.classList.add(ClassPortlet.AVAILABLE_SIZE);
+									}
+								} else {
+									// edit 중이지 않을때 - 포틀릿 사이즈 변경
+									changePortletSize(target.closest("." + ClassPortlet.PORTLET), target.dataset.size);
+								}
+							});
+						});
+
+						// 포틀릿 사용가능 사이즈 설정 버튼
+						var btnSetList = document.querySelectorAll(".body_pop_for_size .btn_set");
+						Array.prototype.forEach.call(btnSetList, function (btn) {
+							btn.addEventListener("click", function (e) {
+								var target = e.target;
+								var siblings = !!target && target.parentElement.querySelectorAll("img:not(." + GridSize.ONE_BY_ONE + ")") || [];
+								Array.prototype.forEach.call(siblings, function (node) {
+									if (node.classList.contains(ClassPortlet.UNAVAILABLE_SIZE)) {
+										var portlet = node.closest("." + ClassPortlet.PORTLET);
+										if (portlet.classList.contains(node.dataset.size)) {
+											changePortletSize(portlet, GridSize.ONE_BY_ONE);
+										}
+									}
+									node.classList.toggle(ClassPortlet.EDITING);
+								});
+							});
+						});
+
+						// 사이즈 일괄 추가
+						var btnAList = document.getElementById("addAllSize");
+						btnAList.addEventListener("click", function (e) {
+							var nodes = document.querySelectorAll("." + ClassPortlet.UNAVAILABLE_SIZE);
+							Array.prototype.forEach.call(nodes, function (node) {
+								node.classList.remove(ClassPortlet.UNAVAILABLE_SIZE);
+								node.classList.add(ClassPortlet.AVAILABLE_SIZE);
+							});
+						});
+
+						// 사이즈 일괄 제거
+						var btnRList = document.getElementById("removeAllSize");
+						btnRList.addEventListener("click", function (e) {
+							var nodes = document.querySelectorAll("." + ClassPortlet.AVAILABLE_SIZE + ":not(." + GridSize.ONE_BY_ONE + ")");
+							Array.prototype.forEach.call(nodes, function (node) {
+								node.classList.remove(ClassPortlet.AVAILABLE_SIZE);
+								node.classList.add(ClassPortlet.UNAVAILABLE_SIZE);
+							});
+
+							var notDefaultSizePortletList = document.querySelectorAll("." + ClassPortlet.PORTLET + ":not(." + GridSize.ONE_BY_ONE + ")");
+							Array.prototype.forEach.call(notDefaultSizePortletList, function (portlet) {
+								changePortletSize(portlet, GridSize.ONE_BY_ONE);
+							});
+						});
+					}
+
 				}else {
 					// We reached our target server, but it returned an error
 				}
@@ -779,32 +945,65 @@
 			var themeId = event.data.themeId;
 			var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
-			
+
+			if (usePortletSize) gridElement.synchronize();
 			var themePortletList = $(".portlets");
 			
 			var themePortletListCount = themePortletList.length;
 			var themePortlet = [];
-			
+			var portletSizeList = [];
+
+			if (usePortletSize) {
+				portletSizeList = [];
+				for (var i = 0; i < themePortletListCount; i++) {
+					var portlet = themePortletList[i];
+					var portletId = portlet.dataset.portletid;
+					var portletSize = portlet.dataset.size;
+					var btnList = portlet.querySelectorAll("img." + ClassPortlet.AVAILABLE_SIZE + "[data-size]");
+					Array.prototype.forEach.call(btnList, function (btn) {
+						portletSizeList.push({
+							portletId: portletId,
+							portletSize: btn.dataset.size,
+							default: btn.dataset.size===portletSize?1:0
+						});
+					});
+				}
+			}
+
+			var index = 1;
+
 			for (var i = 0; i < themePortletListCount; i++) {
 				var portlet = themePortletList[i];
 				var portletId = portlet.getAttribute("data-portletid");
 				var menuId = portlet.getAttribute("data-menuid");
 				var portletUsed = $("#portlet" + portletId).prop("checked");
-				
-				var isFixed = false;
-				var fixedClassList = document.getElementById("fixedPortlet" + portletId).classList;
-				
-				for (var j = 0; j < fixedClassList.length; j++) {
-					if (fixedClassList[j] === "fixedPortlet") {
-						isFixed = true;
-						break;
-					} else if (fixedClassList[j] === "noneFixedPortlet") {
-						isFixed = false;
-						break;
-					}
+				// 고정 포틀릿은 순서 고정
+				var fixOrder = portlet.getAttribute('data-fix');
+				var currIndex;
+				if (!!fixOrder) {
+					currIndex = fixOrder;
+				} else {
+					currIndex = index++;
 				}
-				
-				themePortlet.push({"portletId" : portletId, "menuId" : menuId, "portletUsed" : portletUsed, "portletOrder" : i + 1, "isFixed" : isFixed});
+				var isFixed = false;
+				var fixPo = document.getElementById("fixedPortlet" + portletId);
+				if (!!fixPo) {
+					var fixedClassList = fixPo.classList;
+
+					for (var j = 0; j < fixedClassList.length; j++) {
+						if (fixedClassList[j] === "fixedPortlet") {
+							isFixed = true;
+							break;
+						} else if (fixedClassList[j] === "noneFixedPortlet") {
+							isFixed = false;
+							break;
+						}
+					}
+				} else {
+					isFixed = true;
+				}
+
+				themePortlet.push({"portletId" : portletId, "menuId" : menuId, "portletUsed" : portletUsed, "portletOrder" : currIndex, "isFixed" : isFixed});
 			}
 			
 			var request = new XMLHttpRequest();
@@ -822,7 +1021,8 @@
 			var data = JSON.stringify({
 				companyId : companyId,
 				themeId : themeId,
-				themePortletList : themePortlet
+				themePortletList : themePortlet,
+				sizeList : portletSizeList
 			});
 			
 			request.send(data);
@@ -835,7 +1035,7 @@
 			
 			var isFixed = false;
 			var fixedClassList = document.getElementById("fixedPortlet" + portletId).classList;
-			
+
 			for (var i = 0; i < fixedClassList.length; i++) {
 				if (fixedClassList[i] === "fixedPortlet") {
 					isFixed = true;
@@ -845,12 +1045,32 @@
 					break;
 				}
 			}
-			
+
 			if (isFixed) {
 				alert("<spring:message code='ezNewPortal.t132' />");
 				$(this).prop("checked", true);
 				return;
 			}
+
+			if (usePortletSize) {
+				var portlet = document.querySelector('[data-portletid="' + portletId + '"]');
+				var item = gridElement.getItem(portlet);
+				if ($(this).is(':checked')) {
+					var itemArr = gridElement.getItems();
+					for (let i = itemArr.length-1; i > -1; i--) {
+						if (!itemArr[i].getElement().classList.contains(ClassPortlet.OFF_PORTLET)) {
+							gridElement.move(item, i+1);
+							break;
+						}
+					}
+					portlet.classList.remove(ClassPortlet.OFF_PORTLET);
+				} else if (!this.getAttribute('data-fix')){
+					portlet.classList.add(ClassPortlet.OFF_PORTLET);
+					gridElement.move(item,-1);
+					changePortletSize(portlet, GridSize.ONE_BY_ONE);
+				}
+			}
+
 		}
 		
 		function checkPortletUsed(portletId) {
@@ -895,6 +1115,42 @@
 			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.themeId + "&companyId=" + companyValue + "&mode=theme";
 			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
 		    	try { OpenWin.focus(); } catch (e) { }
+		}
+
+		function getFrameSize(themeId) {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/getThemeInfo.do', false);
+			request.setRequestHeader('Content-Type', 'application/json');
+			var usingFrame = 1;
+			var sizeArr = [-1, 3, 3, 2, 2, 3, 3, 2, 2];
+
+			request.onload = function() {
+				if (request.status >= 200 && request.status < 400) {
+					var result = JSON.parse(request.responseText);
+					var frameList = result.frameInfos;
+					frameList.forEach(function (item) {
+						if (item.frameDefault) {
+							usingFrame = item.frameId;
+						}
+					});
+				}
+			}
+
+			request.onerror = function() {
+				// There was a connection error of some sort
+			};
+
+			var data = JSON.stringify({
+				companyId : companyValue,
+				themeId : themeId
+			});
+
+			request.send(data);
+
+			return sizeArr[usingFrame];
 		}
 	</script>
 </html>

@@ -26,10 +26,14 @@
         </dl>
         
         <div class="fileListWrapper">
-	        <ul class="webFolder" id = webfolderUl></ul>
+	        <ul class="webFolder portletPagingArea" id ="webfolderUl"></ul>
         </div>
         <iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
-    </div>    
+    </div>
+    <div class="portletPageNav">
+    	<span class="portlet_list_nav prev"></span>
+    	<span class="portlet_list_nav next"></span>
+    </div>
 </article>
 </body>
 </html>

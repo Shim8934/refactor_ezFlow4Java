@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,9 @@ import java.util.StringJoiner;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +39,8 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
+import static egovframework.ezEKP.ezOrgan.vo.OrganAuth.*;
+
 @Service("EzBoardAdminService")
 public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements EzBoardAdminService {	
 	
@@ -43,7 +49,10 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
+
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardAdminServiceImpl.class);
 
 	@Override
@@ -1370,5 +1379,36 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		ezBoardAdminDAO.insertTabBoard(map);
 		
 		logger.debug("updateTabBoard ended");
+	}
+
+	@Override
+	public String getUseFormFlag(String boardID, int tenantID) throws Exception {
+		return ezBoardAdminDAO.getUseFormFlag(boardID, tenantID);
+	}
+
+	/**
+	 * 게시판 내의 관리용 회사 목록을 가져 옴.
+	 * @return OrganDeptVO 객체들의 목록. 에러 발생 시 빈 목록 반환
+	 * 사용자가 ADMIN_MASTER 권한을 가지고 있지 않다면,
+	 * 사용자가 COMPANY_MANAGER 또는 BOARD_MANAGER의 권한을 가지고 있지 않은 회사를 목록에서 제거합니다.
+	 * 에러 발생 시 빈 목록을 반환합니다.
+	 **/
+	@Override
+	public List<OrganDeptVO> getListCompanyInBoard(String userID, String primary, int tenantID) {
+		try {
+			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(primary, tenantID);
+
+			OrganAuth organAuth = commonUtil.makeOrganAuth(userID, tenantID);
+
+			if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER, "")) {
+				list.removeIf(vo
+						-> !organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn())
+						&& !organAuth.isAuth(AdminAuth.BOARD_MANAGER, vo.getCn()));
+			}
+
+			return list;
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
 	}
 }

@@ -39,6 +39,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
@@ -70,6 +71,9 @@ public class EzWebFolderController_m {
 	
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name = "EzNotificationService")
+	private EzNotificationService ezNotificationService;
 
 	@Autowired
 	private Rest rest;
@@ -893,6 +897,8 @@ public class EzWebFolderController_m {
 						InternetAddress[] toArr = new InternetAddress[webfolderAdminListCnt];
 						
 						int nowi = 0;
+						String notiRecipientParam = "";
+			        	String separator = ";;";
 						for (OrganUserVO vo : webfolderAdminList) {
 							String voMail = vo.getMail();
 							String voCn = vo.getCn();
@@ -904,6 +910,15 @@ public class EzWebFolderController_m {
 							
 							toArr[nowi] = addrTemp;
 							nowi++;
+							notiRecipientParam += voCn + separator;
+						}
+						
+						if (notiRecipientParam.length() > 0) {
+							notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+							String notiSubType = "OPEN_APPLY";
+							String linkUrl = "/admin/ezWebFolder/applicationHistoryMain.do";
+							String notiStatus = ezNotificationService.sendNoti(request, user.getId(), user.getDisplayName(), notiRecipientParam, "WEBFOLDER", notiSubType, folderName, "popup", "1300", "1000", linkUrl, "", "notChkSetting");
+							logger.debug("webfolder " +  notiSubType + " noti status : " + notiStatus);
 						}
 						
 						String mailContent = "";
@@ -927,6 +942,7 @@ public class EzWebFolderController_m {
 						
 						mailContent = commonUtil.createNotiMailContent(mailContent, tenantId, locale);
 						ezEmailService.sendMail(loginCookie, from, toArr, null, null, mailSubject, mailContent, false);
+						
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
 						returnStr = "EMAIL_ERROR";

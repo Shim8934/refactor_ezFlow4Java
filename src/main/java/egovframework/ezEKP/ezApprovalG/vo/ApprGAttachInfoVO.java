@@ -22,6 +22,7 @@ public class ApprGAttachInfoVO {
 	private String attachUserDeptName;
 	/** 문서아이디*/
 	private String docID;
+	private String newDocID;
 	/** 첨부리얼이름*/
 	private String realAttachName;
 	/** 첨부순번*/
@@ -69,7 +70,8 @@ public class ApprGAttachInfoVO {
 	private String tblName;
 	/** 첨부파일의 소속회사ID */
 	private String companyID;
-	
+	private int tenantID;
+
 	/** 2023-06-23 한태훈 - 완료 문서 최종 결재 날짜 */
 	private Date enddate;
 	
@@ -127,6 +129,15 @@ public class ApprGAttachInfoVO {
 	public void setDocID(String docID) {
 		this.docID = docID;
 	}
+
+	public String getNewDocID() {
+		return newDocID;
+	}
+
+	public void setNewDocID(String newDocID) {
+		this.newDocID = newDocID;
+	}
+
 	public String getRealAttachName() {
 		return realAttachName;
 	}
@@ -272,5 +283,12 @@ public class ApprGAttachInfoVO {
 	public void setEnddate(Date enddate) {
 		this.enddate = enddate;
 	}
-	
+
+	public int getTenantID() {
+		return tenantID;
+	}
+
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
 }

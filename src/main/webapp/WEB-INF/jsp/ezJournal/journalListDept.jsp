@@ -74,6 +74,7 @@
 						</c:otherwise>
 					</c:choose>
 					<td	onclick="selectedTR(this); goJournalDetailOneClick(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:50%;">
+						<div style="display:flex; align-items:center;">
 						<div style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 95%;'>
 							<jsp:useBean id="toDay" class="java.util.Date" />
 							<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
@@ -86,10 +87,12 @@
 						</div>
 						<c:if test="${journal.replyCount gt 0}">
 <!-- 							<a style="position: absolute;" onclick=""> -->
-							<span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span>
+							<span style="color: #c64200; padding-left:3px;">[<c:out value='${journal.replyCount }'/>]</span>
 <!-- 							</a> -->
 						</c:if>
+						</div>
 					</td>
+
 					<td style="width: 20px;"></td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:17%;">
 						<c:out value='${journal.writerName}'/>

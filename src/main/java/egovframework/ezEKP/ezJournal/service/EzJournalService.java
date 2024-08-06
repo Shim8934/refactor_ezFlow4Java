@@ -442,4 +442,6 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public List<DeptViewVO> getCheifBoss(String userId, String lang, int tenantId) throws Exception; 
+	
+	public JournalEnvVO getUserJournalMailInfo(String userId, int tenantId, String lang) throws Exception;
 }

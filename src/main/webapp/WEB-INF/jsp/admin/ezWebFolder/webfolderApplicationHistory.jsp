@@ -668,16 +668,22 @@
 		function setDim(dim) {
 			var dimPanelDIV = document.getElementById("dimPanel");
 			
-			if (typeof leftFrame.dimBlockLeft == "undefined") {
-				$("<div id=\"dimBlockLeft\" class=\"blockLeft\" style=\"width:100%; height:100%; display: none; z-index: 10;\"></div>").appendTo(leftFrame.document.body);
+			if (!!leftFrame) {
+				if (typeof leftFrame.dimBlockLeft == "undefined") {
+					$("<div id=\"dimBlockLeft\" class=\"blockLeft\" style=\"width:100%; height:100%; display: none; z-index: 10;\"></div>").appendTo(leftFrame.document.body);
+				}
 			}
 			
 			if (dim) {
 				dimPanelDIV.style.display = "block";
-				leftFrame.dimBlockLeft.style.display = "block";
+				if (!!leftFrame) {
+					leftFrame.dimBlockLeft.style.display = "block";
+				}
 			} else {
 				dimPanelDIV.style.display = "none";
-				leftFrame.dimBlockLeft.style.display = "none";
+				if (!!leftFrame) {
+					leftFrame.dimBlockLeft.style.display = "none";
+				}
 			}
 		}
 		

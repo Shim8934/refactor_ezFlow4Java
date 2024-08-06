@@ -22,6 +22,7 @@ import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -723,5 +724,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getCabinetListByExpireYear(Map<String, Object> map) throws Exception {
 		return (List<Map<String, Object>>) list("EzApprovalGAdminDAO.getCabinetListByExpireYear", map);
+	}
+
+	public ArrayList<String> getIronListYear(String companyID, int tenantID) throws Exception {
+		return (ArrayList<String>)list(
+			"EzApprovalGAdminDAO.getIronListYear",
+			new HashMap() {{
+				put("companyID", companyID);
+				put("tenantID", tenantID);
+			}}
+		);
 	}
 }

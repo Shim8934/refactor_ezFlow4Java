@@ -939,6 +939,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("journalText", journalText);
 		
 		if (isTemp != null) {
+			map.put("deptId", jsonParam.get("deptId"));
 			map.put("isTemp", isTemp);
 			map.put("journalStatus", "");
 		}
@@ -1254,6 +1255,21 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 		logger.debug("getCheifBoss ended");
 		return cheifDeptList;
+	}
+
+	@Override
+	public JournalEnvVO getUserJournalMailInfo(String userId, int tenantId, String lang) throws Exception {
+		logger.debug("getUserJournalMailInfo started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId",tenantId);
+		map.put("lang",lang);
+		JournalEnvVO result =ezJournalDAO.selectJournalMailInfo(map);
+		
+		logger.debug("getUserJournalMailInfo ended");
+		
+		return result;
 	}
 	
 }

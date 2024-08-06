@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezApprovalG.vo.*;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -2285,7 +2286,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateTbSeperateAttach(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateTbSeperateAttach", map);
 	}
-	
+
+	public ApprGReceiveDocVO getReceiptProInfo(Map<String, Object> map) throws Exception{
+		return (ApprGReceiveDocVO) select("EzApprovalG.getReceiptProInfo", map);
+	}
+
 	public void jiJungUpdateReceiptProInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.jiJungUpdateReceiptProInfo", map);
 	}
@@ -3895,5 +3900,80 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ApprGOpinionVO> getDocsOpinionInfo(Map<String, Object> map) throws Exception {
 		return (List<ApprGOpinionVO>) list("EzApprovalG.getDocsOpinionInfo", map);
+	}
+
+	// 2024-06-07 전인하 - 기록물대장 > 하위부서 리스트 조회 
+    public List<OrganDeptVO> getUnderDeptList(Map<String, Object> map) {
+		return (List<OrganDeptVO>) list("EzApprovalGDAO.getUnderDeptList", map);
+    }
+
+	public String checkHasAttachFile(HashMap<String, String> map) throws Exception {
+		return (String)select("EzApprovalGDAO.checkHasAttachFile", map);
+	}
+
+	public void insertAttachInfo(ApprGAttachInfoVO info) {
+		insert("EzApprovalGDAO.insertAttachInfo", info);
+	}
+	
+	public ApprGAttachInfoVO getAttachDocInfo(ApprGAttachInfoVO attachInfo) throws Exception {
+		return (ApprGAttachInfoVO)select("EzApprovalGDAO.getAttachDocInfo", attachInfo);
+	}
+
+	public List<ApprGDocAttachInfoVO> getAttachedDocList(HashMap<String, String> map) throws Exception {
+		return (List<ApprGDocAttachInfoVO>)list("EzApprovalGDAO.getAttachedDocList", map);
+	}
+
+	public void insertDocAttachInfo(ApprGDocAttachInfoVO vo) throws Exception {
+		insert("EzApprovalGDAO.insertDocAttachInfo", vo);
+	}
+
+	/* 2024-06-18 양지혜 - 비전자문서의 분리첨부 유무 및 RECORDID 확인 */
+	public String chkNonElecRec(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.chkNonElecRec", map);
+	}
+
+	/* 2024-06-24 양지혜 - 지정반송 > 반송위치에 표출할 결재라인 호출 */
+	public List<ApprGAprLineVO> getReturnUserList(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getReturnUserList", map);
+	}
+
+	/* 2024-06-24 양지혜 - 지정반송 > 결재라인 업데이트 */
+	public void updateReturnByDesignation(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateReturnByDesignation", map);
+	}
+
+    // 2024-04-23 한태훈 > 결재 알림 발송 위한 결재 문서 정보 가져오기
+	public ApprGDocListVO getDocInfoForNoti(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.getDocInfoForNoti", map);
+	}
+
+	// 2024-04-23 한태훈 > 결재 알림 발송 위한 유저 정보 가져오기
+	public OrganUserVO getUserInfoForNoti(Map<String, Object> map) throws Exception {
+		return (OrganUserVO) select("EzApprovalG.getUserInfoForNoti", map);
+	}
+
+	// 2024-04-23 한태훈 > 결재 알림 발송 위한 결재 순서 가져오기
+	public ApprGDocListVO getAprMemberSnForNoti(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.getAprMemberSnForNoti", map);
+	}
+
+	// 2024-04-23 한태훈 > 결재 알림 발송 위한 수신 처리 정보 가져오기
+	public ApprGSusinProcessInfoVO getSusinProcessInfo(Map<String, Object> map) throws Exception {
+		return (ApprGSusinProcessInfoVO) select("EzApprovalG.getSusinProcessInfo", map);
+	}
+
+	// 2024-04-23 한태훈 > 결재 알림 발송 위한 공람 결재선 정보 가져오기
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getGongramAprLineInfo(Map<String, Object> map) {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getGongramAprLineInfo", map);
+	}
+
+    public int isExistDocAttach(Map<String, Object> map)  throws Exception {
+        return (int) select("EzApprovalG.isExistDocAttach", map);
+    }
+
+    /* 2024-06-11 조소정 - 공람할문서 또는 공람완료문서 재사용 시 원문서 ID 가져오기 */
+	public String getOrgDocIDfromGongram(Map<String, Object> map) {
+		return (String) select("EzApprovalG.getOrgDocIDfromGongram", map);
 	}
 }

@@ -68,6 +68,15 @@ function CalendarView(pTagetID,chk_str) {
             oTable.setAttribute("cellspacing", "0");
             oTable.setAttribute("border", "0");
             oTable.setAttribute("width", "100%");
+
+            // 상단표시 (일보기)
+            var otTable = document.createElement("TABLE");
+            var otTBody = document.createElement("TBODY");
+            var otTr = document.createElement("TR");
+            otTable.setAttribute("cellpadding", "0");
+            otTable.setAttribute("cellspacing", "0");
+            otTable.setAttribute("border", "0");
+            otTable.setAttribute("width", "100%");
             //oTh.setAttribute("id", "calTitle");
             //oTh.style.fontSize = "15px";
             //oTh.colSpan = "2";
@@ -87,6 +96,8 @@ function CalendarView(pTagetID,chk_str) {
                 }
 
                 oTable.className = "calendar_day_title";
+                otTable.className = "calendar_day_title";
+
                 if (tempyear > 1800 && tempyear <= 2101) {
                     var isholiday = false;
                     var holidayname = "";;
@@ -168,6 +179,7 @@ function CalendarView(pTagetID,chk_str) {
             	document.getElementById("calTitle").style.color = "black"
             	
                 oTable.className = "calendar_month_navi";
+                otTable.className = "calendar_month_navi";
                 var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2);
             }
             
@@ -279,6 +291,68 @@ function CalendarView(pTagetID,chk_str) {
                 oTd.appendChild(dTable);
                 oTr.appendChild(oTd);
                 oTBody.appendChild(oTr);
+
+                // 상단표시 (일보기)
+                var otTr = document.createElement("TR");
+                otTr.setAttribute("id", "topTR");
+                var otTd = document.createElement("TD");
+                otTd.className = "calendar_time";
+
+                var dtTable = document.createElement("TABLE")
+                var dtTbody = document.createElement("TBODY");
+                dtTable.setAttribute("cellpadding", "0");
+                dtTable.setAttribute("cellspacing", "0");
+                dtTable.setAttribute("border", "0");
+                dtTable.setAttribute("width", "100%");
+                dtTable.className = "calendar_row";
+                var dtTr = document.createElement("TR")
+                var dtTd = document.createElement("TD")
+                dtTd.className = "calendar_t_time";
+                dtTd.innerHTML = "<span class=\"point\">" + strLang131 + "</span>";
+                dtTr.appendChild(dtTd);
+                dtTbody.appendChild(dtTr);
+                var dtTr = document.createElement("TR")
+                var dtTd = document.createElement("TD")
+                dtTr.appendChild(dtTd);
+                dtTbody.appendChild(dtTr);
+                dtTable.appendChild(dtTbody);
+                otTd.appendChild(dtTable);
+                otTr.appendChild(otTd);
+
+                var otTd = document.createElement("TD");
+                otTd.className = "td_list";
+                var dtTable = document.createElement("TABLE")
+                dtTable.setAttribute("cellpadding", "0");
+                dtTable.setAttribute("cellspacing", "0");
+                dtTable.setAttribute("border", "0");
+                dtTable.setAttribute("width", "100%");
+                dtTable.className = "calendar_row";
+                var dtTr = document.createElement("TR")
+                var dtTd = document.createElement("TD")
+                dtTd.className = "calendar_t_time";
+                var dtDiv = document.createElement("DIV")
+                dtDiv.setAttribute("id", dayText.substring(0,10) + "TOP");
+                dtDiv.setAttribute("onclick", "WriteDateSchedule(this)");
+                dtDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                dtDiv.setAttribute("dispDate", dayText.substring(0,10));
+                dtDiv.style.width = "100%"
+                dtDiv.style.height = "100px";
+                dtDiv.style.overflowY = "auto";
+                //2018-06-28 구해안 종일일정 클릭시에도 글 쓸 수 있도록 변경
+                dtDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                dtTd.appendChild(dtDiv);
+                dtTr.appendChild(dtTd);
+                dtTable.appendChild(dtTr);
+                /*var dTr = document.createElement("TR")
+                var dTd = document.createElement("TD")
+                dTd.className = "calendar_t_text";
+                dTd.setAttribute("dispDate", dayText);
+                dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                dTr.appendChild(dTd);
+                dTable.appendChild(dTr);*/
+                otTd.appendChild(dtTable);
+                otTr.appendChild(otTd);
+                otTBody.appendChild(otTr);
             }
 
             oTable.appendChild(oTBody);
@@ -286,6 +360,14 @@ function CalendarView(pTagetID,chk_str) {
             if (typeCal == 2) {
                 var oDiv = document.createElement("DIV");
                 oDiv.setAttribute("id", "CalDiv")
+            }
+
+            //상단표시 (일보기)
+            otTable.appendChild(otTBody);
+            objElm.appendChild(otTable);
+            if (typeCal == 2) {
+                var otDiv = document.createElement("DIV");
+                otDiv.setAttribute("id", "TopDiv")
             }
 
         }
@@ -942,7 +1024,35 @@ function GetWeekTopObj() {
     objTd.appendChild(dTable);
     objTr.appendChild(objTd);
 
+    // 상단표시 (주보기)
+     var objtTr = document.createElement("TR");
+    objtTr.setAttribute("id", "topTR");
+    var objtTd = document.createElement("TD");
+    objtTd.className = "calendar_time";
+
+    var dtTable = document.createElement("TABLE")
+    var dtTbody = document.createElement("TBODY");
+    dtTable.setAttribute("cellpadding", "0");
+    dtTable.setAttribute("cellspacing", "0");
+    dtTable.setAttribute("border", "0");
+    dtTable.setAttribute("width", "100%");
+    dtTable.className = "calendar_row";
+    var dtTr = document.createElement("TR")
+    var dtTd = document.createElement("TD")
+    dtTd.className = "calendar_t_time";
+    dtTd.innerHTML = "<span class=\"point\">" + strLang131 + "</span>";
+    dtTr.appendChild(dtTd);
+    dtTbody.appendChild(dtTr);
+    var dtTr = document.createElement("TR")
+    var dtTd = document.createElement("TD")
+    dtTr.appendChild(dtTd);
+    dtTbody.appendChild(dtTr);
+    dtTable.appendChild(dtTbody);
+    objtTd.appendChild(dtTable);
+    objtTr.appendChild(objtTd);
+
     oTBody.appendChild(objTr);
+    oTBody.appendChild(objtTr);
     oTable.appendChild(oTBody);
 
     return oTable;
@@ -1040,6 +1150,14 @@ function GetWeekBodyObj() {
         var objTd = document.createElement("TD");
         objTd.className = "calendar_td_last"
         calTr.appendChild(objTd);
+    }
+    // 상단표시 (주보기)
+    var topTr = document.getElementById("topTR");
+    topTr.setAttribute("style","border-top: 1px solid #dedede")
+    if (topTr) {
+        var objtTd = document.createElement("TD");
+        objtTd.className = "calendar_td_last"
+        topTr.appendChild(objtTd);
     }
     oTbody.appendChild(oTr);
     oTr = null;
@@ -1195,6 +1313,50 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTable.appendChild(dTr);*/
         tTd.appendChild(dTable);
         calTr.appendChild(tTd);
+    }
+
+    // 상단표시 (주보기)
+    var objtTd = document.createElement("TD");
+    objtTd.className = "td_list";
+
+    var topTr = document.getElementById("topTR");
+    if (topTr) {
+
+        var ttTd = document.createElement("TD");
+        ttTd.className = "td_list";
+
+        var dtTable = document.createElement("TABLE")
+        dtTable.setAttribute("cellpadding", "0");
+        dtTable.setAttribute("cellspacing", "0");
+        dtTable.setAttribute("border", "0");
+        dtTable.setAttribute("width", "100%");
+        dtTable.className = "calendar_row";
+        var dtTr = document.createElement("TR")
+        var dtTd = document.createElement("TD")
+        dtTd.className = "calendar_t_time";
+        var dtDiv = document.createElement("DIV")
+        dtDiv.setAttribute("id", divID + "TOP");
+        dtDiv.setAttribute("onclick", "WriteDateSchedule(this)");
+        dtDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        dtDiv.setAttribute("dispDate", divID);
+        dtDiv.style.height = "100px";
+        dtDiv.style.overflowY = "auto";
+        dtDiv.style.overflowN = "hidden";
+        dtDiv.style.whiteSpace = "noWrap";
+        //2018-06-28 구해안 종일일정 클릭시에도 글 쓸 수 있도록 변경
+        dtDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        dtTd.appendChild(dtDiv);
+        dtTr.appendChild(dtTd);
+        dtTable.appendChild(dtTr);
+/*        var dTr = document.createElement("TR")
+        var dTd = document.createElement("TD")
+        dTd.className = "calendar_t_text";
+        dTd.setAttribute("dispDate", divID);
+        dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        dTr.appendChild(dTd);
+        dTable.appendChild(dTr);*/
+        ttTd.appendChild(dtTable);
+        topTr.appendChild(ttTd);
     }
 
     for (var k = 0; k < 24; k++) {

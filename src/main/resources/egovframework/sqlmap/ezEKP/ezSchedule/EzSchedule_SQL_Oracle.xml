@@ -70,6 +70,7 @@
 		<result property="groupName"		column="GROUPNAME"			columnIndex="29"/>
 		<result property="companyid"		column="COMPANYID"			columnIndex="30"/>
 		<result property="groupColor"		column="GROUPCOLOR"			columnIndex="31"/>
+		<result property="showTop"			column="SHOWTOP"			columnIndex="32"/>
 	</resultMap>
 
 	<resultMap class="AttendantListVO" id="attendantListVO">
@@ -120,7 +121,7 @@
 		<result property="responseDate"		column="RESPONSEDATE"		columnIndex="5"/>
 		<result property="mail"				column="MAIL"				columnIndex="6"/>
 		<result property="department"		column="DEPARTMENT"			columnIndex="7"/>
-		<result property="info"				column="INFO"				columnIndex="8"/>		
+		<result property="info"				column="INFO"				columnIndex="8"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO2">
@@ -160,6 +161,7 @@
 		<result property="startDate"		column="STARTDATE"			columnIndex="10"/>
 		<result property="endDate"			column="ENDDATE"			columnIndex="11"/>
 		<result property="repetition"		column="REPETITION"			columnIndex="12"/>
+		<result property="showtop"			column="SHOWTOP"			columnIndex="13"/>
 	</resultMap>
 
 	<resultMap class="OrganUserVO" id="organUserVO">
@@ -215,7 +217,7 @@
 				'' AS DESCRIPTION,
               	'' AS CREATEDATE,
               	A.GROUPCOLOR AS GROUPCOLOR
-           	FROM 
+           	FROM
         		TBL_SCHEDULEGROUP A LEFT JOIN TBL_SCHEDULEGROUPMEMBER B ON A.GROUPID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
        		WHERE  
        			(CREATORID = #v_USERID# OR ( MEMBERID = #v_USERID# AND STATUS = 1 ))
@@ -261,8 +263,9 @@
 	            CONTENTPATH,
 	            B.GROUPNAME,
 	            A.COMPANYID,
-	            B.GROUPCOLOR      
-			FROM 
+	            B.GROUPCOLOR,
+				SHOWTOP
+			FROM
 				TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
 	       	WHERE  
 	       		A.SCHEDULEID = #v_SCHEDULEID#
@@ -306,7 +309,8 @@
 				CONTENTPATH,
 				B.GROUPNAME,
 				A.COMPANYID,
-				B.GROUPCOLOR
+				B.GROUPCOLOR,
+				SHOWTOP
         	FROM 
         		TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID
        		WHERE  
@@ -317,11 +321,11 @@
 			<![CDATA[
             AND 
             	(            		
-            		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
             		OR
-            		(A.ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(A.ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
             		OR
-            		(A.STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(A.STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
             		OR 
             		(A.DATETYPE='3')
             	)
@@ -348,9 +352,9 @@
 					</iterate>
 			<![CDATA[
        		and
-        		A.companyid = #v_COMPANYID#        	     	
+        		A.companyid = #v_COMPANYID#
         	and 
-        		((A.scheduletype = '2' and A.ownerid in (SELECT 
+        		((A.scheduletype = '2' and A.ownerid in (SELECT
 														deptid
 													FROM 
 														TBL_ADDJOBMASTER 
@@ -379,14 +383,14 @@
 													 ))
 					or
 					(A.scheduletype <> '2'))
-            AND 
-            	(            		
-            		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            AND
+            	(
+            		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
             		OR
-            		(A.ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(A.ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
             		OR
-            		(A.STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
-            		OR 
+            		(A.STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+            		OR
             		(A.DATETYPE='3')
             	)
             AND
@@ -1164,7 +1168,8 @@
              	B.DATETYPE AS DATETYPE,             	
              	(B.STARTDATE + #v_OFFSETMIN#/(24*60)) AS STARTDATE,             	
              	(B.ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE,
-             	b.repetition as repetition
+             	b.repetition as repetition,
+             	showtop
         	FROM
         		TBL_ATTENDANT A JOIN TBL_SCHEDULE B ON A.SCHEDULEID = B.SCHEDULEID AND A.TENANT_ID = B.TENANT_ID
         	WHERE
@@ -1235,12 +1240,12 @@
 			INSERT INTO TBL_SCHEDULE(
 				SCHEDULEID, 					PARENTID, 			OWNERID, 		OWNERNAME, 			OWNERNAME2,		CREATORID, 			CREATORNAME,		CREATORNAME2,		CREATEDATE,		MODIFIERID,		MODIFIERNAME,
 				MODIFIERNAME2,					MODIFYDATE,			SCHEDULETYPE,	IMPORTANCE,			HASATTENDANT,	HASATTACH,			HASCOMMENT,			ISREADONLY,			ISPUBLIC,		DATETYPE,	
-				STARTDATE, 						ENDDATE,	 		REPETITION,		REPETITIONDELETE,	TITLE,			LOCATION,			CONTENTPATH,		TENANT_ID,			companyid
+				STARTDATE, 						ENDDATE,	 		REPETITION,		REPETITIONDELETE,	TITLE,			LOCATION,			CONTENTPATH,		TENANT_ID,			companyid,		showtop
 			) VALUES (
 				SEQ_TBL_SCHEDULE.NEXTVAL,		0,					#v_OWNERID#,	#v_OWNERNAME#,		#v_OWNERNAME2#,	#v_CREATORID#,		#v_CREATORNAME#,	#v_CREATORNAME2#,	SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_CREATORID#,	#v_CREATORNAME#,
 				#v_CREATORNAME2#,				SYS_EXTRACT_UTC(SYSTIMESTAMP),		#v_SCHEDULETYPE#,	#v_IMPORTANCE#,	#v_HASATTENDANT#,	#v_HASATTACH#,		'N',				'N',			#v_ISPUBLIC#,	#v_DATETYPE#,
 				TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),		TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),			NVL(#v_REPETITION#, ' '),				' ',				#v_TITLE#,		NVL(#v_LOCATION#, ' '),				
-				#v_CONTENTPATH#,				#v_TENANTID#,		#v_COMPANYID#	 
+				#v_CONTENTPATH#,				#v_TENANTID#,		#v_COMPANYID#,  #v_SHOWTOP#
 			)
    		]]>
 	</insert>
@@ -1324,7 +1329,7 @@
 	<insert id="EzScheduleDAO.insertScheduleGroup" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULEGROUP(
-				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,			tenant_id,		COMPANYID,		groupcolor			
+				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,			tenant_id,		COMPANYID,		groupcolor
 			) VALUES (
 				#v_GUID#,		#v_GROUPNAME#,		#v_USERID#,		#v_DISPLAYNAME#,	#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_TENANTID#,	#v_COMPANYID#,	#v_GROUPCOLOR#
 			)
@@ -1357,13 +1362,13 @@
 				SCHEDULEID, 				PARENTID, 			OWNERID, 			OWNERNAME, 			OWNERNAME2, 			CREATORID, 			CREATORNAME, 			CREATORNAME2, 
 				CREATEDATE, 				MODIFIERID, 		MODIFIERNAME, 		MODIFIERNAME2, 		MODIFYDATE, 			SCHEDULETYPE, 		IMPORTANCE, 			HASATTENDANT, 
 				HASATTACH, 					HASCOMMENT, 		ISREADONLY, 		ISPUBLIC, 			DATETYPE, 				STARTDATE, 			ENDDATE, 				REPETITION, 
-				REPETITIONDELETE, 			TITLE, 				LOCATION, 			CONTENTPATH,		TENANT_ID,				COMPANYID
+				REPETITIONDELETE, 			TITLE, 				LOCATION, 			CONTENTPATH,		TENANT_ID,				COMPANYID,			showtop
 			) (
 			SELECT
 				SEQ_TBL_SCHEDULE.NEXTVAL,	#v_SCHEDULEID#,		#v_ATTENDANTID#,	#v_ATTENDANTNAME#,	#v_ATTENDANTNAME2#,		CREATORID, 			CREATORNAME, 			CREATORNAME2,
 				CREATEDATE, 				MODIFIERID, 		MODIFIERNAME, 		MODIFIERNAME2, 		MODIFYDATE, 			SCHEDULETYPE, 		IMPORTANCE, 			HASATTENDANT,
 				HASATTACH, 					HASCOMMENT,			'Y',				ISPUBLIC, 			DATETYPE, 				STARTDATE, 			ENDDATE, 				REPETITION, 
-				REPETITIONDELETE, 			TITLE,				LOCATION, 			CONTENTPATH,		TENANT_ID,				COMPANYID
+				REPETITIONDELETE, 			TITLE,				LOCATION, 			CONTENTPATH,		TENANT_ID,				COMPANYID,			#v_SHOWTOP#
 			FROM
 				TBL_SCHEDULE
 			WHERE
@@ -1391,7 +1396,8 @@
 				ENDDATE = TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),
                 REPETITION = NVL(#v_REPETITION#, ' '),
 				TITLE = #v_TITLE#,
-				LOCATION = NVL(#v_LOCATION#, ' ')
+				LOCATION = NVL(#v_LOCATION#, ' '),
+				showtop = #v_SHOWTOP#
 	   		WHERE  
 	   			(SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#)	   		
 	   		AND
@@ -2055,7 +2061,8 @@
 				CONTENTPATH,
 				B.GROUPNAME,
 				A.COMPANYID,
-				B.GROUPCOLOR
+				B.GROUPCOLOR,
+				SHOWTOP
         	FROM
         		TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID
        		WHERE
@@ -2149,6 +2156,6 @@
 		) ) C
 		ORDER BY C.STARTDATE ASC
 	</select>
-	
+
 </sqlMap>
 

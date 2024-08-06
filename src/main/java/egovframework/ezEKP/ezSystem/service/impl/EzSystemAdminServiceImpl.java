@@ -121,6 +121,11 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 				paramValue = Integer.toString(sessionParam);
 			}
 			
+			if (paramName.equals("notiPollingInterval")) {
+				int notiIntervalParam = Integer.parseInt(paramValue) * (1000 * 60);
+				paramValue = Integer.toString(notiIntervalParam);
+			}
+			
 			sysParamVO.setName(paramName);
 			sysParamVO.setValue(paramValue);
 			
@@ -902,7 +907,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			String paramValue = list.get(i).get("value");
 			logger.debug("paramName:" + paramName + ", paramValue:" + paramValue);
 			
-			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail")) {
+			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail") || paramName.equals("LoginLockedDuration")) {
 				int changeInt = Integer.parseInt(paramValue);
 				paramValue = Integer.toString(changeInt);
 			}
@@ -1436,4 +1441,26 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 		return ezSystemAdminDAO.getConnectorListCount(params);
 	}
+
+	@Override
+	public void resetThemeAllUser() throws Exception {
+		logger.debug("resetThemeAllUser started.");
+
+		ezSystemAdminDAO.updateResetThemeAllCompany(); // 모든 회사 테마 리셋
+		ezSystemAdminDAO.deleteThemeAllUser();
+		ezSystemAdminDAO.updateResetThemeAllUser();
+
+		logger.debug("resetThemeAllUser ended.");
+	}
+
+	@Override
+	public void resetPortletAllUser() throws Exception {
+		logger.debug("resetPortletAllUser started.");
+
+		ezSystemAdminDAO.deletePortletAllUser();
+		ezSystemAdminDAO.deletePortletSizeAllUser();
+
+		logger.debug("resetPortletAllUser ended.");
+	}
+
 }

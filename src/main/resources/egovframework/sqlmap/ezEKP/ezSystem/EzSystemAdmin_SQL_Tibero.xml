@@ -1475,4 +1475,46 @@
 		</isEqual>
 		GROUP BY USERID) A
 	</select>
+
+	<delete id="EzSystemAdminDAO.deleteThemeAllUser">
+		<![CDATA[
+		DELETE
+		FROM
+			TBL_PORTAL_THEME_USER
+		WHERE USED_FRAME != 1 AND USED_FRAME != 5 AND USED_FRAME != 8
+		]]>
+	</delete>
+
+	<update id="EzSystemAdminDAO.updateResetThemeAllUser">
+		<![CDATA[
+		UPDATE TBL_PORTAL_THEME_USER
+		SET IS_DEFAULT =
+				CASE WHEN USED_FRAME = 1 THEN 1
+					 ELSE 0
+					END
+		]]>
+	</update>
+
+	<update id="EzSystemAdminDAO.updateResetThemeAllCompany">
+	<![CDATA[
+		UPDATE TBL_PORTAL_FRAME_COMP
+		SET
+			FRAME_USED =
+				CASE WHEN FRAME_ID = 1 OR FRAME_ID = 5 OR FRAME_ID = 8 THEN 1 ELSE 0 END,
+			FRAME_DEFAULT =
+				CASE WHEN FRAME_ID = 1 OR FRAME_ID = 5 OR FRAME_ID = 8 THEN 1 ELSE 0 END
+		]]>
+	</update>
+
+	<delete id="EzSystemAdminDAO.deletePortletAllUser">
+		<![CDATA[
+		DELETE FROM TBL_PORTAL_PORTLET_USER
+		]]>
+	</delete>
+
+	<delete id="EzSystemAdminDAO.deletePortletSizeAllUser">
+		<![CDATA[
+		DELETE FROM TBL_PORTAL_PORTLET_USER_SIZE
+		]]>
+	</delete>
 </sqlMap>

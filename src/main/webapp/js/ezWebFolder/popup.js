@@ -58,12 +58,14 @@ function DivPopUpPosition(popUpW, popUpH) {
 }
 
 function closeAllPopup() {
-	var leftFrame = window.parent.frames["left"].document;
-	var blockLeft = leftFrame.getElementById("bnkBlockLeft");
-	leftFrame.body.style.overflow = "auto";
-	blockLeft.style.height        = "100%";
-	blockLeft.style.display       = "none";
-	DivPopUpHidden();
+	if (!!window.parent.frames["left"]) {
+		var leftFrame = window.parent.frames["left"].document;
+		leftFrame.body.style.overflow = "auto";
+		var blockLeft = leftFrame.getElementById("bnkBlockLeft");
+		blockLeft.style.height        = "100%";
+		blockLeft.style.display       = "none";
+		DivPopUpHidden();
+	}
 }
 
 function showProgress() {

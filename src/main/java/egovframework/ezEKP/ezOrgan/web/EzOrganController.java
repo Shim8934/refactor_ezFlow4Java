@@ -85,7 +85,11 @@ public class EzOrganController {
 	        String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
 	        String orgCompanyID = doc.getElementsByTagName("orgCompanyID").getLength() != 1 ? "" : doc.getElementsByTagName("orgCompanyID").item(0).getTextContent(); // 전자결재 orgCompanyID
 	        String adminChk = doc.getElementsByTagName("ADMINCHK").getLength() != 1 ? "" : doc.getElementsByTagName("ADMINCHK").item(0).getTextContent(); // 전체관리자 = true (ip접속관리 관리자페이지)
-	        
+			String adminOrgan = doc.getElementsByTagName("ADMINORGAN").getLength() != 1 ? "n" : doc.getElementsByTagName("ADMINORGAN").item(0).getTextContent(); // 관리자 조직도 유무
+			String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) != ""? ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) : "NO";
+			// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+			adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
+			
 	        if (adminDist.equals("true") || (adminOrganChk.length > 1 && adminOrganChk[1].equals("other"))) {
 	        	topID = adminOrganChk[0];
 	        } else if (adminOrganChk.length > 1 && adminOrganChk[1].equals("organ")) { // 전체 관리자 관리자페이지 일부에서 조직도 전체 트리 보여줌
@@ -100,7 +104,7 @@ public class EzOrganController {
 	        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList + ",userCompanyID=" + userCompanyID + ",displayTrashDept=" + displayTrashDept);
 	        
 	        // 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
-	        deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), displayTrashDept, tenantID);
+	        deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), displayTrashDept, tenantID, adminOrgan);
 	    } catch (Exception e) {
 	    	logger.error(e.getMessage(), e);
 	    }
@@ -123,9 +127,13 @@ public class EzOrganController {
 				
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();        
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
-                
+		String adminOrgan = doc.getElementsByTagName("ADMINORGAN").getLength() > 0 ? doc.getElementsByTagName("ADMINORGAN").item(0).getTextContent() : "n"; // 관리자 조직도 유무 
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) != ""? ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) : "NO";
+		// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+		adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
+		
         boolean displayTrashDept = doc.getElementsByTagName("DISPLAY_TRASH_DEPT").getLength() > 0;
-        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId(), displayTrashDept);
+        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId(), displayTrashDept, adminOrgan);
 		
         logger.debug("getDeptSubTreeInfo ended");
         
@@ -183,6 +191,12 @@ public class EzOrganController {
 		if (listtype == null) {
 			return "";
 		}
+
+		String adminOrgan = request.getParameter("adminOrgan") != null ? request.getParameter("adminOrgan"): "n";
+		
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) != ""? ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) : "NO";
+		// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+		adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
 		
 		String isPrimary = userInfo.getPrimary();
 		String page = request.getParameter("page");
@@ -199,9 +213,9 @@ public class EzOrganController {
 		}
 		
 		if (page == null) {		
-			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, isPrimary, userInfo.getTenantId(), noAddJob);
+			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, isPrimary, userInfo.getTenantId(), noAddJob, adminOrgan);
 		} else {
-			infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, isPrimary, page, userInfo.getTenantId());
+			infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, isPrimary, page, userInfo.getTenantId(), adminOrgan);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
@@ -267,6 +281,12 @@ public class EzOrganController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String deptID = request.getParameter("deptID");
+
+		String adminOrgan = request.getParameter("adminOrgan") != null ? request.getParameter("adminOrgan"): "n";
+
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) != ""? ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) : "NO";
+		// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+		adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
 		
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
@@ -280,9 +300,9 @@ public class EzOrganController {
 		
 		model.addAttribute("containLow", containLow);
 		
-		totalCount = ezOrganService.getDeptMemberListCount(deptID, false, primary, tenantID);
+		totalCount = ezOrganService.getDeptMemberListCount(deptID, false, primary, tenantID, adminOrgan);
 		if (containLow.equals("YES")) {
-			totalCount2 = ezOrganService.getDeptMemberListCount(deptID, true, primary, tenantID);
+			totalCount2 = ezOrganService.getDeptMemberListCount(deptID, true, primary, tenantID, adminOrgan);
 		}
 		
 		model.addAttribute("totalCount", totalCount);
@@ -316,7 +336,11 @@ public class EzOrganController {
 		String page = request.getParameter("page");
 		String noAddJob = request.getParameter("noAddJob");
 		String infoXML = "";
-		String adminOrgan = request.getParameter("adminOrgan") == null ? "n" : request.getParameter("adminOrgan"); // 관리자페이지 > 조직도 메뉴에서 검색
+		String adminOrgan = request.getParameter("adminOrgan") != null ? request.getParameter("adminOrgan"): "n";
+
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) != ""? ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) : "NO";
+		// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+		adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
 		
 		if (userInfo.getRollInfo().indexOf("c=1") != -1 && adminOrgan.equalsIgnoreCase("y")) { // 전체 관리자 && 관리자 > 조직도 메뉴 => 전체 검색
 			companyId = "";
@@ -668,10 +692,16 @@ public class EzOrganController {
 		String searchType = request.getParameter("searchType");
 		String searchValue = request.getParameter("searchValue");
 		String comID = request.getParameter("comID");
+		String adminOrgan = request.getParameter("adminOrgan") == null ? "n" : request.getParameter("adminOrgan");
+		
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag",userInfo.getTenantId());
+		 // useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+		adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
+		
 		logger.debug("type=" + type + ", jobId=" + jobID + ", pageSize=" + pageSize + ", pageNum=" + pageNum + ", searchType=" + searchType 
 				+ ", searchValue=" + searchValue + ", comID=" + comID + ", celllist=" + celllist + ", proplist=" + proplist);
 		   
-		memInfo = ezOrganService.getJobMasterMemberList(type, jobID, celllist, proplist, pageSize, pageNum, searchType, searchValue, primary, comID, tenantID);
+		memInfo = ezOrganService.getJobMasterMemberList(type, jobID, celllist, proplist, pageSize, pageNum, searchType, searchValue, primary, comID, tenantID,adminOrgan);
         
         logger.debug("getJobMasterMemberList ended");
 		return memInfo;	

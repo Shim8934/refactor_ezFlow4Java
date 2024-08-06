@@ -139,6 +139,7 @@ var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Group Schedule";
 var strLang130_1 = "Group";
+var strLang131 = "Show on top";
 
 var strLang253 = "Do not have the resources selected."
 var strLang254 = "The selected resource can not be deleted."
@@ -214,9 +215,11 @@ var strLang127_2 = "Company";
 var strLang130_2 = "Group";
 var strLang131_2 = "Collabo";
 var strLang141_2 = "Google";
-var strLangHSBScPt1 = "-";
+var strLangHSBScPt1 = ".";
 var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "";
 
 /* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
 var ezSchedule_kyj1 = "Can not post schedules to photo board or anonymous board or url board.";
+/* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
+var ezSchedule_kyj2 = "Please check the repetition pattern once again.";

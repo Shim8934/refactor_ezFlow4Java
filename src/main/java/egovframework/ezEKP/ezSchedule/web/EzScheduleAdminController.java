@@ -4,9 +4,13 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -127,19 +131,15 @@ public class EzScheduleAdminController {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
+
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+
+		// 관리자 권한이 있는 회사가 하나도 없음
+		if (adminCompanyList.isEmpty()) {
+			return "cmm/error/adminDenied";
 		}
-		
-		model.addAttribute("companyList", resultList);
+
+		model.addAttribute("companyList", adminCompanyList);
 		model.addAttribute("userInfo", userInfo);
 		
 		return "/admin/ezSchedule/scheduleAdminShareManage";
@@ -221,11 +221,12 @@ public class EzScheduleAdminController {
 		int checkCnt = ezScheduleAdminService.scheduleShareCheck(userID, deptID, tenantID, companyID);
 		
 		if (checkCnt == 0) {
-			loginVO.setId(userID);
-			loginVO.setDn("NOPASSWORD");
-			loginVO.setTenantId(tenantID);
-			
-			LoginVO user = loginService.selectUser(loginVO);
+			LoginVO tempLoginVO = new LoginVO();
+			tempLoginVO.setId(userID);
+			tempLoginVO.setDn("NOPASSWORD");
+			tempLoginVO.setTenantId(tenantID);
+
+			LoginVO user = loginService.selectUser(tempLoginVO);
 			
 			String userName = user.getDisplayName1();
 			String userName2 = user.getDisplayName2();
@@ -547,21 +548,16 @@ public class EzScheduleAdminController {
 		}
 		
 		String primary = userInfo.getPrimary();
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i =0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
+
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+
+		// 관리자 권한이 있는 회사가 하나도 없음
+		if (adminCompanyList.isEmpty()) {
+			return "cmm/error/adminDenied";
 		}
 		
 		model.addAttribute("primary", primary);
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
 		
 		return "/admin/ezSchedule/scheduleAdminRegi";
@@ -619,26 +615,18 @@ public class EzScheduleAdminController {
 		
 		String primary = userInfo.getPrimary();
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		StringBuffer companyList = new StringBuffer();
-		
-		for (int i =0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-				companyList.append(vo.getCn()+","+vo.getDisplayName()+";");
-			}
-		}
+
+        for (OrganDeptVO vo : adminCompanyList) {
+            companyList.append(vo.getCn()).append(",").append(vo.getDisplayName()).append(";");
+        }
 		
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("primary", primary);
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
-		model.addAttribute("list", resultList);
 		model.addAttribute("companyList", companyList);
 		
 		logger.debug("============ scheduleAdminHolidayTab ended ============");
@@ -782,6 +770,7 @@ public class EzScheduleAdminController {
 	    	String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
 	    	String startDate = request.getParameter("startDate") != null ? request.getParameter("startDate") : "";
 	    	String endDate = request.getParameter("endDate") != null ? request.getParameter("endDate") : "";
+	    	String companyID = request.getParameter("company") != null ? request.getParameter("company") : "";
 	    	loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 	    	
 	    	
@@ -790,7 +779,8 @@ public class EzScheduleAdminController {
 
 			String primaryData = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 
-	    	myList = ezScheduleAdminService.getMyGroupList2(commonUtil.getMinuteUTC(offset), loginSimpleVO.getId(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID(), searchType2, searchValue, startDate, endDate, startRow, maxItemPerPage, primaryData);
+
+	    	myList = ezScheduleAdminService.getMyGroupList2(commonUtil.getMinuteUTC(offset), loginSimpleVO.getId(), loginSimpleVO.getTenantId(),companyID, searchType2, searchValue, startDate, endDate, startRow, maxItemPerPage, primaryData);
 
 
 		

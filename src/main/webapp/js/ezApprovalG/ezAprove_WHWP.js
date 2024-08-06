@@ -1568,3 +1568,36 @@ function setFormAprOption(){
     if(formAprOption.indexOf("_a3_"))  //문서첨부
         setMenuBar("btnAprDocAttach", false);
 }
+
+/* 2024-06-24 양지혜 - 지정반송 > 결재상태 업데이트 및 문서저장 */
+function returnByDesignation (ret, returnUserSN) {
+	pHasOpinionYN = "Y";
+	UpdateLineHistory(); // '변경내역' 업데이트
+
+	$.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/updateReturnByDesignation.do",
+		data : {
+			returnUserSN : returnUserSN,
+			docID : pDocID
+		}
+	});
+
+	signDel(returnUserSN); // WHWP 서명제거
+	GetHTML(before_SaveFile); // 파일 저장
+	process_AfterApprove("2"); // 알림창
+}
+
+/* 2024-06-24 양지혜 - 지정반송 > WHWP 결재 사인 제거 */
+function signDel(returnUserSN) {
+	for (var i = returnUserSN; i < 10; i++) {
+		if (message.FieldExist("sign" + i)) {
+			message.PutFieldText("sign" + i, "");
+		}
+		if (message.FieldExist("seumyungdate" + i)) {
+			message.PutFieldText("seumyungdate" + i, "");
+		}
+	}
+}

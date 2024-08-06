@@ -3371,6 +3371,47 @@ public class EzEmailUtil {
 
 				// 해당 파트의 헤더와 body 데이터를 동일하게 갖는 파트 객체를 생성한다.
 				newBodyPart = new MimeBodyPart(newHeaders, bytes);
+			// Content-Type: "application/octet-stream;	Name="=?utf-8?B?7J287J287LKg6rCV7Iuc7ZmpIDIwMjQwNjI2LnBkZg==?="
+			// Content-Type이 위와 같이 이중따옴표로 시작하여 Name=" 까지인 application/octet-stream;	Name=이 Content-Type으로 인식되어 오류가
+			// 발생하는 경우가 있어 첫 이중따옴표를 제거하는 로직 추가함
+			} else if (contentType.startsWith("\"")) {
+				logger.debug("Content-Type starts with double quotes. Content-Type={}", contentType);
+
+				int secondQuote = contentType.indexOf('"', 1);
+
+				if (secondQuote != -1) {
+					String value = contentType.substring(1, secondQuote);
+
+					logger.debug("Content-Type starts with double quotes. value={}", value);
+
+					if (value.toLowerCase().endsWith("name=")) {
+						InternetHeaders newHeaders = new InternetHeaders();
+
+						@SuppressWarnings("unchecked")
+						Enumeration<Header> enumerator = p.getAllHeaders();
+
+						// 해당 파트의 헤더들을 읽는다.
+						while (enumerator.hasMoreElements()) {
+							Header h = enumerator.nextElement();
+							String hValue = h.getValue();
+
+							if (h.getName().equalsIgnoreCase("Content-Type")) {
+								// 시작 부분의 이중따옴표를 제거함
+								hValue = hValue.substring(1);
+
+								logger.debug("new Content-Type={}", hValue);
+							}
+
+							newHeaders.addHeader(h.getName(), hValue);
+						}
+
+						// 해당 파트의 body 데이터를 읽는다.
+						byte[] bytes = IOUtils.toByteArray(newBodyPart.getRawInputStream());
+
+						// 해당 파트의 헤더와 body 데이터를 동일하게 갖는 파트 객체를 생성한다.
+						newBodyPart = new MimeBodyPart(newHeaders, bytes);
+					}
+				}
 			}
 		}
 

@@ -71,7 +71,11 @@
 		        }
 		        if (nonElecRec != "Y") {
 			        InitRegisterType(); // '분리첨부 정보입력' 부분 설정
-		        } else {
+		        } else if (nonElecRec == "Y" && g_OrgCabinetID != 'nonElecRecTempCabinet') { // 비전자문서 분리첨부 기록물철 미선택 상태 > 기록물철 변경 가능
+					document.getElementById("selRegisterType").selectedIndex = 1;
+					document.getElementById("selRegisterType").disabled = "disabled";
+					selRegisterType_onchange();
+				} else { // 비전자문서
 		        	document.getElementById("CabinetInfoView").style.display = "none";
 		        	document.getElementById("selRegisterType").selectedIndex = 1; // 일반문서 접수로 고정
 		            document.getElementById("selRegisterType").disabled = "disabled"; // 변경불가능
@@ -277,7 +281,7 @@
 		        if (!CheckLen(txtTitle, 100))
 		            return "";
 		
-		        if (!ValidateNumber(txtNumOfPage.value)) {
+		        if (!ValidateNumber(txtNumOfPage.value, 'Y')) {
 		            alert("<spring:message code='ezApprovalG.t1079'/>");
 		            return "";
 		        }
@@ -423,7 +427,7 @@
 		            createNodeAndInsertText(xmlpara, objNode, "AVTYPEDESC", "");
 		        }
 		        
-		        if (nonElecRec == "Y") {
+		        if (nonElecRec == "Y" && !g_CabinetID) {
 			        createNodeAndInsertText(xmlpara, objNode, "CABINETNAME", "");
 		        } else {
 			        createNodeAndInsertText(xmlpara, objNode, "CABINETNAME", tdCabinetName.innerHTML);

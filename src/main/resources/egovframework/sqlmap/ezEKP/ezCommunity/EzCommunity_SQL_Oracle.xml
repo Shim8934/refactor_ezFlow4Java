@@ -3403,7 +3403,8 @@
 		<![CDATA[
 			SELECT
 				c_sysopid,
-				companyid
+				companyid,
+				c_clubname
 			FROM
 				TBL_C_CLUB
 			WHERE
@@ -3417,7 +3418,8 @@
 		<![CDATA[
 			SELECT
 				B.mail email,
-				B.displayname username
+				B.displayname username,
+				B.cn userid
 			FROM
 				TBL_C_CLUBUSER A
 			JOIN

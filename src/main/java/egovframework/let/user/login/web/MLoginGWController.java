@@ -2,6 +2,8 @@ package egovframework.let.user.login.web;
 
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -182,6 +184,7 @@ public class MLoginGWController {
 			// SSO 솔루션없이 기간계와의 모바일 자동 로그인 처리를 위한 SLO(Single Log On) 처리 여부를 나타냄.			
 			String SLOParam = request.getParameter("SLO");
 			boolean isSLOSupport = "yes".equalsIgnoreCase(SLOParam);
+			String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     	
 				// SLO의 경우엔 암호화하지 않은 아이디가 ezMobile로부터 전달됨.
 				// 기간계에서 암호화해서 전달한 아이디를 ezMobile이 복호화한 후 Mobile GW 서버로 전송하는 것임.
@@ -211,12 +214,24 @@ public class MLoginGWController {
     		int numberOfLoginFailPermit = 0;
     		// 로그인 실패 최대 허용 횟수를 구한다.
     		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail");
-    		logger.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
+			String loginLockedDuration = ezCommonService.getCompanyConfig(tenantId, companyId, "LoginLockedDuration");
+			String loginLockedDate = ezCommonService.getUserConfigInfo(tenantId, uid, "LoginLockedDate");
+			
+			Map<String, Object> paramMap  = new HashMap<>();
+			paramMap .put("formatedNow", formatedNow);
+			paramMap .put("loginLockedDuration", loginLockedDuration);
+			paramMap .put("loginLockedDate", loginLockedDate);
+			logger.debug("companyId : {}, maxAllowedCountOfLoginFail : {}, loginLockedDuration : {}, loginLockedDate : {}", companyId, maxAllowedCountOfLoginFail, loginLockedDuration, loginLockedDate);
 			// String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
 					
 			if (!StringUtils.isBlank(maxAllowedCountOfLoginFail)) {
 				try {
 					numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
+					// 암호 오류 최대 횟수를 기존에 사용하고 있는 경우 계정 잠금 기간 config를 추가
+					if (loginLockedDuration.equals("")){
+						ezCommonService.insertCompanyConfig(tenantId, companyId, "LoginLockedDuration", "5");
+						loginLockedDuration = ezCommonService.getCompanyConfig(tenantId, companyId, "LoginLockedDuration");
+					}
 				} catch (NumberFormatException e) {
 					logger.error(e.getMessage(), e);
 				}
@@ -480,6 +495,15 @@ public class MLoginGWController {
     	        	}
     				
     				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
+					boolean check1 = false;
+
+					if (!loginLockedDate.equals("") && !loginLockedDate.equals("0")) {
+						check1 = checkLockedDate(tenantId, uid, loginLockedDuration, loginLockedDate, formatedNow);
+
+						if (check == -3 && check1) {
+							check = 0;
+						}
+					}
                 	
                 	// 해당 사용자의 로그인이 블록되지 않은 경우
                 	if (check != -3) {
@@ -493,8 +517,8 @@ public class MLoginGWController {
 						
 						loginService.insertLog(resultVO);
                 		result.put("status", "error");
-	        			result.put("code", "3");
-    					result.put("data", egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+	        			result.put("code", "3"); // fail.mobile.common.login.block"
+    					result.put("data", getErrorMsg(check, numberOfLoginFailPermit, uid, tenantId, locale, false, paramMap));
     					break loginProcess;
                 	}
     			} else {
@@ -508,9 +532,20 @@ public class MLoginGWController {
     				//Check login state of the user 
     	        	int check = checkState(tenantId, uid, numberOfLoginFailPermit);
 
-    						result.put("status", "error");
-    	        			result.put("code", "3");
-    	        			result.put("data", getErrorMsg(check, numberOfLoginFailPermit, uid, tenantId, locale, false));
+					boolean check1 = false;
+
+					if (!loginLockedDate.equals("") && !loginLockedDate.equals("0")) {
+						check1 = checkLockedDate(tenantId, uid, loginLockedDuration, loginLockedDate, formatedNow);
+
+						if (check == -3 && check1) {
+							check = 0;
+						}
+					}
+					
+					result.put("status", "error");
+					result.put("code", "3");
+					result.put("data", getErrorMsg(check, numberOfLoginFailPermit, uid, tenantId, locale, false, paramMap));
+					
 					break loginProcess;
     			}
 			}
@@ -558,7 +593,7 @@ public class MLoginGWController {
 				// 로그인 실패 처리
 				// Check login state of the user
 				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
-				String errorMsg = getErrorMsg(check, numberOfLoginFailPermit, uid, tenantId, locale, true);
+				String errorMsg = getErrorMsg(check, numberOfLoginFailPermit, uid, tenantId, locale, true, paramMap);
 
 				result.put("status", "error");
 				result.put("code", "fail".equals(errorMsg)? "10" : "3");
@@ -794,16 +829,23 @@ public class MLoginGWController {
 	 * @return errorMsg
 	 * @description 로그인 실패 (ERROR_USER_NOTFOUND, code : 3) 시 에러 메세지 출력
 	 */
-	private String getErrorMsg(int check, int numberOfLoginFailPermit, String uid, int tenantId, Locale locale, boolean isOTP) throws Exception {
+	private String getErrorMsg(int check, int numberOfLoginFailPermit, String uid, int tenantId, Locale locale, boolean isOTP, Map<String, Object> map) throws Exception {
 		logger.debug("login fail. getErrorMsg started. check={}", check);
 		String errorMsg1 = "";
 		String errorMsg2 = "";
 		String errorMsg3 = "";
+		
+		String formatedNow = (String) map.get("formatedNow"); 
+		String loginLockedDuration = (String) map.get("loginLockedDuration"); 
+		String loginLockedDate = (String) map.get("loginLockedDate"); 
 
 		switch (check) {
 			case -3:
 				//Show block message
-				return egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit}, locale);
+				if(loginLockedDate.equals("")) {
+					ezCommonService.insertUserConfigInfo(tenantId, uid, "LoginLockedDate", formatedNow);
+				}
+				return egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit, loginLockedDuration}, locale);
 			case -2:
 				//The first time this user login failed
 				ezCommonService.insertUserConfigInfo(tenantId,  uid, "LoginFailCount", "1");
@@ -813,7 +855,7 @@ public class MLoginGWController {
 				errorMsg1 += egovMessageSource.getMessage("fail.mobile.common.login.warning2", locale);
 				errorMsg2 = egovMessageSource.getMessageExtend("fail.mobile.common.login.warning3", new Object[] {1}, locale);
 				errorMsg3 = egovMessageSource.getMessage("fail.mobile.common.login.warning4", locale);
-				errorMsg3 += "   " + egovMessageSource.getMessageExtend("fail.mobile.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+				errorMsg3 += "   " + egovMessageSource.getMessageExtend("fail.mobile.common.login.warning5", new Object[] {numberOfLoginFailPermit, loginLockedDuration}, locale);
 				return errorMsg1 + errorMsg2 + errorMsg3;
 			case -1:
 				//Show normal login fail message
@@ -824,14 +866,19 @@ public class MLoginGWController {
 
 				if (check >= numberOfLoginFailPermit - 1) {
 					//Show block message
-					return egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit}, locale);
+					if(loginLockedDate.equals("")) {
+						ezCommonService.insertUserConfigInfo(tenantId, uid, "LoginLockedDate", formatedNow);
+					} else {
+						ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginLockedDate", formatedNow);
+					}
+					return egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit, loginLockedDuration}, locale);
 				} else {
 					//Show warning message
 					errorMsg1 = isOTP? "" : egovMessageSource.getMessage("fail.mobile.common.login.warning1", locale);
 					errorMsg1 += egovMessageSource.getMessage("fail.mobile.common.login.warning2", locale);
 					errorMsg2 = egovMessageSource.getMessageExtend("fail.mobile.common.login.warning3", new Object[] {check + 1}, locale);
 					errorMsg3 = egovMessageSource.getMessage("fail.mobile.common.login.warning4", locale);
-					errorMsg3 += "   " + egovMessageSource.getMessageExtend("fail.mobile.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+					errorMsg3 += "   " + egovMessageSource.getMessageExtend("fail.mobile.common.login.warning5", new Object[] {numberOfLoginFailPermit, loginLockedDuration}, locale);
 					return errorMsg1 + errorMsg2 + errorMsg3;
 				}
 		}
@@ -1515,7 +1562,7 @@ public class MLoginGWController {
     	return result;
     }
     
-	@RequestMapping(value="/mobile/ezUser/login/users/{userId}/multilogin", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezUser/login/users/{userId:.+}/multilogin", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject validMultiLogin(@PathVariable String userId, @RequestParam String multiLoginTime, HttpServletRequest request) throws Exception {
 		logger.debug("validMultiLogin started.");
 
@@ -1546,7 +1593,7 @@ public class MLoginGWController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezUser/login/users/{userId}/valid", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezUser/login/users/{userId:.+}/valid", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject valid(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
 		logger.debug("valid started.");
 		JSONObject result = new JSONObject();
@@ -1779,7 +1826,7 @@ public class MLoginGWController {
 	 * 암호 변경 API
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezUser/login/users/{userId}/changePassword", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezUser/login/users/{userId:.+}/changePassword", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject changePassword(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
 		logger.debug("MOBILE G/W LOGIN [PUT /mobile/ezUser/login/users/{}/changePassword] started.", userId);
 
@@ -2015,5 +2062,24 @@ public class MLoginGWController {
 		
 		return returnChangeIp;
     }
+
+	private boolean checkLockedDate(int tenantID, String userId, String loginLockedDuration, String loginLockedDate, String nowDate) throws Exception {
+		String diff = String.valueOf(commonUtil.getTimeDifference(loginLockedDate, nowDate));
+
+		int remainTime = Integer.parseInt(loginLockedDuration) - Integer.parseInt(diff);
+
+		try {
+			if (remainTime <= 0) {
+				// 잠금 잔여 시간이 지난 이후 로그인 실패 카운터 초기화 및 시간 초기화 
+				commonUtil.resetLoginFailAttempts(userId, tenantID);
+				ezCommonService.updateUserConfigInfo(tenantID, userId, "LoginLockedDate", "0");
+				return true;
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		return false;
+	}
     
 }

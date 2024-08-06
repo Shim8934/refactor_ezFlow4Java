@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -35,6 +37,9 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzNotificationService ezNotificationService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -462,7 +467,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public void createCommunityAdmitSendMail(String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList,
+	public void createCommunityAdmitSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList,
 			boolean isAdmit) throws Exception {
 		logger.debug("createCommunityAdmitSendMail started.");
 		//logger.debug("isAdmit=" + isAdmit);
@@ -477,6 +482,11 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
         	from.setAddress(userInfo.getEmail());
 			
 			for (HashMap<String, Object> recipient : recipientList) {
+				String notiRecipientParam = (String) recipient.get("USERID");
+				String notiSubType = "";
+				String notiContent = (String)recipient.get("C_CLUBNAME");
+				String c_clubno = (String)recipient.get("C_CLUBNO");
+				String linkUrl = "";
 				//logger.debug("recipient=" + (String)recipient.get("USERNAME") + ", " + (String)recipient.get("C_CLUBNAME") + ", " + (String)recipient.get("EMAIL"));
 				
 				InternetAddress to = new InternetAddress();
@@ -491,8 +501,11 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 				
 				if (isAdmit == true) {
 					subject.append(egovMessageSource.getMessage("ezCommunity.lhj09", locale));
+					notiSubType = "CREATE_ADMIT";
+					linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + c_clubno;
 				} else {
 					subject.append(egovMessageSource.getMessage("ezCommunity.lhj10", locale));
+					notiSubType = "CREATE_REJECT";
 				}
 				
 				/*String subject = egovMessageSource.getMessage("ezCommunity.t51", locale)
@@ -505,6 +518,10 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 				String content = commonUtil.createNotiMailContent(subject.toString(), userInfo.getTenantId(), userInfo.getLocale());
 				
 				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject.toString(), content, false);
+				
+				String linkUrlMobile = "";
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "COMMUNITY", notiSubType, notiContent, "popup", "1300", "900", linkUrl, linkUrlMobile, "notChkSetting");
+				logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
 			}
 		}
 		

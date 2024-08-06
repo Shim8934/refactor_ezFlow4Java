@@ -74,7 +74,8 @@
 				tenant_id,
 				COMPANYID,
 				MAILFG_POST,
-				MAILFG_MOD
+				MAILFG_MOD,
+				MAILFG_COMMENT
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  

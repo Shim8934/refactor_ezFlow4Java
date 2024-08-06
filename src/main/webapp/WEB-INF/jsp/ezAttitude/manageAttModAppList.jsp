@@ -482,12 +482,12 @@
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
 		    		infoStr += "</span>";
-	    			infoStr += ' / ' + data.startDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
-			    	data.startDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
-			    	data.startDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>~";
-			    	infoStr += data.endDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
-			    	data.endDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
-			    	data.endDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>]</span>";	
+	    			infoStr += ' / ' + data.startDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/> " +
+			    	data.startDate.substring(5,7).replace(/^0/, '') + "<spring:message code='ezAttitude.t67'/> " +
+			    	data.startDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/> ~ ";
+			    	infoStr += data.endDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/> " +
+			    	data.endDate.substring(5,7).replace(/^0/, '') + "<spring:message code='ezAttitude.t67'/> " +
+			    	data.endDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/></span>";
 		    	} else {
 		    		infoStr += "</span>";
 		    	}

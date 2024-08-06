@@ -1208,6 +1208,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String connFormCode = StringUtils.defaultString(request.getParameter("connFormCode"));
 		String docSN = "";
 		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
+		String attachedDocList = request.getParameter("attachedDocList") == null ? "" : request.getParameter("attachedDocList");
 		
 		if (nonElecRec == null) {
 			nonElecRec = "";
@@ -1250,7 +1251,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String beforeUrl = "";
 		String beforeDocID = ObjectUtils.defaultIfNull(request.getParameter("beforeDocID"), "");
 		String isUsed = ObjectUtils.defaultIfNull(request.getParameter("isUsed"), "");
+		String fromGongram = request.getParameter("fromGongram");
+		String orgDocID = request.getParameter("orgDocID");
+		
 		if (!beforeDocID.isEmpty()) {
+			if (fromGongram != null && fromGongram.equals("1") && isUsed.equals("reuse")) {
+				beforeDocID = orgDocID;
+			}
 			beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 		
@@ -1294,6 +1301,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("beforeUrl", beforeUrl);
 		model.addAttribute("beforeDocID", beforeDocID);
 		model.addAttribute("isUsed", isUsed);
+		
 		//결재 세부정보
 		String formId = ezApprovalGService.getFormId(formURL);
 		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), userInfo.getTenantId());
@@ -1324,6 +1332,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		model.addAttribute("attachedDocList", attachedDocList);
+		model.addAttribute("tenantID",userInfo.getTenantId());
 		
 		logger.debug("draftuiWHWP ended. formPath:" + formPath);
 		
@@ -1533,6 +1543,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
+		/* 2024-06-24 양지혜 - 지정반송 사용 여부 */
+		model.addAttribute("useReturnByDesignation", ezCommonService.getTenantConfig("returnByDesignationUsed", userInfo.getTenantId()));
 		
 		logger.debug("approvuiWHWP ended");
 		
@@ -1686,6 +1698,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		/* 이유정 - 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag) */
 		model.addAttribute("isDocAttach", isDocAttach);
+		
+		/* 2024-06-26 조소정 - 웹한글 문서 재사용 시 양식선택창 표출 여부 테넌트 컨피그와 양식 정보 */
+		String resultXML = ezApprovalGService.getFormInfoDetail(formID, userInfo.getCompanyID(), userInfo.getTenantId());
+        Document formInfo = commonUtil.convertStringToDocument(resultXML);
+        String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+        String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
+        
+        model.addAttribute("formUrl", formUrl);
+        model.addAttribute("formDocType", formDocType);
+		model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
 
 		logger.debug("ezViewEnd_WHWP ended");
 		
@@ -1704,6 +1726,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String susinAdmin = "";
 		String docID = request.getParameter("docID");
 		String docHref = request.getParameter("docHref");
+		String formID = request.getParameter("formID");
 		String opinionFlag = request.getParameter("opinionFlag");
 		String docState = request.getParameter("docState");
 		String listSusin = request.getParameter("listSusin");
@@ -1815,6 +1838,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("useBoard", ezCommonService.getTenantConfig("useBoard", userInfo.getTenantId()));
 		
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
@@ -1823,6 +1847,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		
+		/* 2024-06-26 조소정 - 웹한글 문서 재사용 시 양식선택창 표출 여부 테넌트 컨피그와 양식 정보 */
+		String formInfoXML = ezApprovalGService.getFormInfoDetail(formID, userInfo.getCompanyID(), userInfo.getTenantId());
+        Document formInfo = commonUtil.convertStringToDocument(formInfoXML);
+        String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+        String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
+        
+        model.addAttribute("formUrl", formUrl);
+        model.addAttribute("formDocType", formDocType);
+		model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
 		
 		logger.debug("ezviewAprWHWP ended");
 		
@@ -1855,6 +1889,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
+
+		String viewDocFlag = request.getParameter("viewDoc") != null ? request.getParameter("viewDoc") : "";
+		String orgCompanyID = request.getParameter("orgCompanyID");
 
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String pSusinAdmin = "";
@@ -1968,6 +2005,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+
+		model.addAttribute("viewDocFlag", viewDocFlag); // 문서보기 Flag
+		model.addAttribute("orgCompanyID", orgCompanyID);
+
 		
 		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
 

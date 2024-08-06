@@ -119,24 +119,26 @@
 					var val = parseInt($("#selectImg option:selected").val());
 					var divImg = $("#message").contents().find(".divImg");
 					var pages = $(divImg).children().length;
-					if(selectOp==1){
-						for(var i=1; i<=pages; i++){
-							if(i <= pages){
-								$("#selectImg").append("<option value='" + i + "'>" + i +" / "+pages+ " Page</option>");
+					if (pFormID != "2021000000" ) {
+						if (selectOp == 1) {
+							for (var i = 1; i <= pages; i++) {
+								if (i <= pages) {
+									$("#selectImg").append("<option value='" + i + "'>" + i + " / " + pages + " Page</option>");
+								}
 							}
 						}
-					}
-					if(pages > 1){
-						window.resizeTo(1920, 1200);
-						var sw = screen.width;
-			    		var sh = screen.height;
-			    		var cw = document.body.clientWidth;
-			    		var ch = document.body.clientHeight;
-			    		var top  = sh / 2 - ch / 2 - 100;
-			    		var left = sw / 2 - cw / 2;
-						$("#officeBtn").css("display","");
-						var selectNum = $("#message").contents().find(".divImg").find(".imgDiv").index();
-						$("#selectImg option:eq("+ selectNum +")").prop('selected', true);
+						if (pages > 1) {
+							window.resizeTo(1920, 1200);
+							var sw = screen.width;
+							var sh = screen.height;
+							var cw = document.body.clientWidth;
+							var ch = document.body.clientHeight;
+							var top = sh / 2 - ch / 2 - 100;
+							var left = sw / 2 - cw / 2;
+							$("#officeBtn").css("display", "");
+							var selectNum = $("#message").contents().find(".divImg").find(".imgDiv").index();
+							$("#selectImg option:eq(" + selectNum + ")").prop('selected', true);
+						}
 					}
 
 					if(divImg.length > 0){
@@ -457,7 +459,7 @@
 		            var pTop = (pheight - 720) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 		            
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 		                alert(strLang1031);
 		            }
 		            else {
@@ -705,7 +707,7 @@
 		    		dataType : "text",
 		    		data : {
 		    			formID : pFormID,
-		    			companyID : orgCompanyID
+		    			companyID : companyID
 		    		},
 		    		url : "/ezApprovalG/getFormDetail.do",
 		    		success: function(xml){
@@ -768,7 +770,6 @@
 						}
 		    		}        			
 		    	});
-
 		    }
 		    
 		    function openDraftUI(pDraftFlag, pCurSelRow) {

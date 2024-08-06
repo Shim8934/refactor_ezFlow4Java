@@ -39,6 +39,10 @@ function changeYear() {
 	getEmployeeList(selectedYear);
 }
 
+function changeCompany() {
+	changeYear();
+}
+
 function getEmployeeList(year) {
 	selectedYear = year;
 	
@@ -46,7 +50,7 @@ function getEmployeeList(year) {
 		type : "POST",
 		url : "/admin/ezPersonal/getEmployeeOfMonthList.do",
 		dataType : "JSON",
-		data : {year: selectedYear},
+		data : {year: selectedYear, companyID : companySelectID},
 		success : function(result) {
 			renderList(result.list, selectedYear);
 		}
@@ -252,7 +256,7 @@ function btn_add(obj) {
 	selectedTerm = term;
 	
 	selectperson_cross_dialogArguments[1] = btn_add_Complete;
-	var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(860, 535));
+	var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP&companyID=" + companySelectID, "SelectPerson", GetOpenWindowfeature(860, 535));
 	popup = SelectPerson_cross;
 	try { SelectPerson_cross.focus(); } catch (e) { }
 	
@@ -268,7 +272,7 @@ function btn_add_Complete(rtv) {
 		type : "POST",
 		url : "/admin/ezPersonal/setEmployeeMonth.do",
 		async : true,
-		data : {type : "INS", userID : userId, deptID : deptId, term : selectedTerm},
+		data : {type : "INS", userID : userId, deptID : deptId,companyID: companySelectID, term : selectedTerm},
 		dataType : "text",
 		success : function (result) {
 			if (result != "OK") {

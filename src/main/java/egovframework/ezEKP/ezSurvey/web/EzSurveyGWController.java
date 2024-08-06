@@ -182,7 +182,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezsurvey/list-type/userid/{userid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/list-type/userid/{userid:.+}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -489,7 +489,7 @@ public class EzSurveyGWController {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
+			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
 		}
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);

@@ -1047,16 +1047,15 @@
                 var DocList = new ListView();
                 DocList.LoadFromID("DocList");
                 var oArrRows = DocList.GetSelectedRows();
-                
+				var pCurSelRow = oArrRows[0];
+				orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
                 // 2024-02-19 전인하 - 문서보기 버튼 - 선택된 문서가 없을 시 알림 추가
                 if (oArrRows.length == 0) {
                     OpenInformationUI(strLang930 + "<br>" + strLang336);
                     return;
                 }
                 
-		        if (pListTypeValue != "5") {   
-		            var pCurSelRow = oArrRows[0];
-			        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
+		        if (pListTypeValue != "5") {
 		            if (oArrRows.length > 0)
 		                openViewDocInfo();
 		            else {
@@ -1066,29 +1065,37 @@
 		            }
 		        }
 		        else {
-		            var para = new Array();
-		            para[0] = pDocID;
-		            para[1] = pURL;
-		            var openLocation;
-		            var ext = getOriginalFileExtension(pURL);
-		            if (ext == "hwp") {
-		            	if(useWebHWP == "NO") {
-			            	if (isIE()) {
-				            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-			                } else {
-			                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-			                	alert(pAlertContent);
-			                    
-			                    return;
-			                }
-		            	} else {
-		            		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
-		            	}
-		            } else {
-	                    openLocation = "/ezApprovalG/contDocView.do";
-		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" + "&orgCompanyID=" + orgCompanyID;
-		            openwindow(openLocation, "", 880, 570);
+					// 대외수신함 문서보기
+					var pURL = pCurSelRow.getAttribute("DATA3");
+					var pDocID = pCurSelRow.getAttribute("DATA1").trim();
+					var docHref = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
+					var isMht = docHref == "mht" || (docHref != "hwp" && g_RelayG_Type.toUpperCase() == "MHT");
+					if (isMht) {
+						openLocation = "";
+
+						if (pCurSelRow.getAttribute("DATA15") == "001") {
+							openLocation = "/ezApprovalG/recevG.do";
+						} else {
+							openLocation = "/ezApprovalG/recevGSusin.do";
+						}
+
+						openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI("SUSIN");
+						openLocation = openLocation + "&uOrgID=" + encodeURI(pCurSelRow.getAttribute("DATA7")) + "&orgCompanyID=" + orgCompanyID + "&viewDoc=Y";
+					} else {
+						if(useWebHWP == "NO") {
+							if (/chrome/i.test(navigator.userAgent)) {
+								alert(strLang1103);
+								return;
+							} else {
+								if (docHref == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
+									openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape("SUSIN") + "&uOrgID=" + encodeURI(pCurSelRow.getAttribute("DATA7")) + "&orgCompanyID=" + orgCompanyID + "&viewDoc=Y";
+								}
+							}
+						} else {
+							openLocation = "/ezApprovalG/ezRecevGSusinWHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape("SUSIN") + "&uOrgID=" + encodeURI(pCurSelRow.getAttribute("DATA7")) + "&orgCompanyID=" + orgCompanyID + "&viewDoc=Y";
+						}
+					}
+					openwindow(openLocation, "receive", 880, 550)
 		        }
 		    }
 		    
@@ -2062,6 +2069,7 @@
 			        if (SearchCond[1] != "" && SearchCond[1] !== undefined)		// DocTitle
 			        {
 			            TYPE += "DOCTITLE;";
+						SearchCond[1] = SearchCond[1].replace(/\\/g, "\\\\");
 			            DATA += "<DOCTITLE>" + SearchCond[1] + "</DOCTITLE>";
 			        }
 			
@@ -2129,6 +2137,7 @@
 
 				    if (condition[1] != "" && condition[1] !== undefined) {
 				        TYPE += "DOCTITLE;"
+						condition[1] = condition[1].replace(/\\/g, "\\\\");
 				        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
 				    }
 

@@ -117,6 +117,10 @@ function save_schedule(pageFrom)
 	        }
     	}
     }
+	/* 2024-06-25 김유진 - 반복일정인 경우, 반복설정에서 날짜를 체크하고 넘어오기에 timeCheck값 true로 변경 */
+	if (repetition != "") {
+		timeCheck = 'true';
+	}
     //2018.01.30 김기반복설정시 기본 날짜 사용안하고 반복 설정된 날짜 사용
     if(!timeCheck)
     {
@@ -239,7 +243,14 @@ function save_schedule(pageFrom)
 	createNodeAndInsertText(xmlDom, objNode, "CREATORNAME2", username2);
 	createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", changekey);
 	createNodeAndInsertText(xmlDom, objNode, "SCHEDULETYPE", scheduletype);
-	
+    // 반복일정 상단표시
+    var showtop = "N";
+    if (document.getElementById("topcheck").checked == true) {
+        createNodeAndInsertText(xmlDom, objNode, "SHOWTOP", "Y");
+    } else {
+        createNodeAndInsertText(xmlDom, objNode, "SHOWTOP", "N");
+    }
+
 	var patternType = "";
 	if (scheduleid != "") {
 	    if (repetition != "" && pattern == "0")
@@ -339,6 +350,13 @@ function save_schedule(pageFrom)
 			createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + stime);
 			createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + etime);
 		}
+
+		// 상단표시
+		if (document.getElementById("topcheck").checked == true) {
+            createNodeAndInsertText(xmlDom, objNode, "SHOWTOP", "Y");
+        } else {
+            createNodeAndInsertText(xmlDom, objNode, "SHOWTOP", "N");
+        }
 	}
 	else
 	{
@@ -737,6 +755,8 @@ function allday_change()
 {
     if (document.getElementById("alldaycheck").checked == true)
 	{
+        document.getElementById("topcheck").checked = false;
+        document.getElementById("topcheck").disabled = true;
         document.getElementById("Stimepicker").style.display = "none";
         document.getElementById("Etimepicker").style.display = "none";
         if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
@@ -752,6 +772,7 @@ function allday_change()
 	}
 	else
 	{
+        document.getElementById("topcheck").disabled = false;
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
         timeSelect = false;
@@ -1100,9 +1121,14 @@ function show_repetition_info()
 	if (info[1] == "1") {					// 하루종일 일정
 		repeatinfo += strLang39;
 		document.getElementById("alldaycheck").checked = true;
+		// 반복일정 상단표시
+		document.getElementById("topcheck").checked = false;
+        document.getElementById("topcheck").disabled = true;
 	}
 	else
 	{
+        document.getElementById("topcheck").disabled = false;
+
 		var sdate, edate;
 		if (g_sdate == null)
 		{	
@@ -1746,6 +1772,20 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
     createNodeAndInsertText(xmlDoc, objNode, "ownerNM", replaceSingleQuotation(username));
 
     var objNode23;
+    
+    $.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezResource/checkApprovalFlag.do",
+		data : {
+			resID  : resItem		    			
+		},
+		success: function(result) {
+			ApproveFlag = result;
+		}
+    });
+    
     if (ApproveFlag == "1") {
         if (cmd == "add")
             objNode23 = "0";
@@ -1787,9 +1827,13 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
     	
         xmlHttp = null;
         if (cmd == "add" && objNode23 == "0") {
+        	var returnNodes = SelectNodes(resultXML,"RTN_DATA")[0];
+ 	    	var pNum = getNodeText(GetChildNodes(returnNodes)[0]);//objNodes.item(0).text;
+ 	    	createNodeAndInsertText(xmlDoc, objNode, "RSSCHEDULENUM", pNum);
+        	
             xmlHttp = createXMLHttpRequest();
             xmlHttp.open("POST", "/ezResource/sendMail.do", false);
-            xmlHttp.send(xmlDoc.xml);
+            xmlHttp.send(xmlDoc);
             xmlHttp = null;
         }
         
@@ -2145,7 +2189,11 @@ function getFirstDateInfo(startDate, endDate) {
 	    }
 	}
 	else {
-		returnValue = xmlHTTP.responseText;
+		if ("firstScheduleDateNotFound" == xmlHTTP.responseText) {
+			alert(ezSchedule_kyj2);
+		} else {
+			returnValue = xmlHTTP.responseText;
+		}
 	}
 	
 	return returnValue;

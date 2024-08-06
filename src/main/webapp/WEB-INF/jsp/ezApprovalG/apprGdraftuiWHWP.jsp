@@ -183,6 +183,10 @@
 			
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+
+			var attachedDocList = "${ attachedDocList }";
+
+			var pTenantID = "<c:out value='${userInfo.tenantId}'/>";
 	        
 	        window.onload = function () {
 	            try {
@@ -484,8 +488,16 @@
 			                        setClearSusinCellInfo();
 			                    }
 			                    pDocID = createNewDoc();
-			                    
-			                    // 2024-04-19 조소정 - G버전 whwp문서 재사용 시 첨부파일 재사용 및 첨부파일이력 추가
+
+								// 기록물등록대장 첨부기안
+								if (attachedDocList != "") {
+									attachRecordDoc();
+									setAttachInfo(pDocID, "APR", document.getElementById("lstAttachLink"));
+
+									attachedDocList = "";
+								}
+
+								// 2024-04-19 조소정 - G버전 whwp문서 재사용 시 첨부파일 재사용 및 첨부파일이력 추가
 			                    if (isUsed == "reuse") {
 			                    	if (apprReuseConfig != '1') {
 			                    		getDocInfo();

@@ -91,6 +91,7 @@
 		    var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 		    var userTitle = "<c:out value = '${userInfo.title}'/>";
 		    var useDraftAll = "<c:out value = '${useDraftAll}'/>";
+            var attachedDocList;
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -204,6 +205,7 @@
 			                DocManageMain("m02");
 			            }
 			            if (pListTypeValue == "99") {
+			            	window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
 			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
 			                document.getElementById('APPROVAL99').click();
 			            }
@@ -360,6 +362,7 @@
 		                    DocManageMain(pthis.id);
 		                    break;
 		                case "m02":
+						case "m15" :
 		                    DocManageMain(pthis.id);
 		                    break;
 		                case "m03":
@@ -405,6 +408,9 @@
 							pListTypeValue = "23";
 		                    DocManageMain(pthis.id);
 		                    break;
+		                case "readingRecord" : 
+		                	DocManageMain(pthis.id);
+		                	break;
 		                default:
 		                    break;
 		            }
@@ -576,6 +582,7 @@
 		    	var parameter = new Array();
 		        parameter[0] = "sol2";
 		        parameter[1] = "A01000";
+                parameter[2] = attachedDocList;
 
 		        if ("YES" == ("YES")) {
 		            url = "/ezApprovalG/getFormCont.do";
@@ -599,17 +606,24 @@
 		                openDraftUI(formURL, formDocType);
 		            }
 		        }
+
+				attachedDocList = "";
 		    }
 		    
 		    /* 2022-01-11 홍승비 - 전자결재G 일괄기안 기능 추가 (웹한글) */
 		    function btnDraftAll_onclick() {
 		    	var parameter = new Array();
+
+				parameter.push(attachedDocList);
+
 	            getformcont_cross_dialogArguments[0] = parameter; // 일괄기안창으로 전달할 파라미터 있다면 배열에 추가
 	            getformcont_cross_dialogArguments[1] = draftAll_Complete;
 	            
 	            // 양식 선택창 없이 바로 일괄기안창을 호출한다.
 	            var getFormCont_Cross = window.open("/ezApprovalG/draftuiAll_WHWP.do", "/ezApproval/draftuiAll_WHWP.do", GetOpenWindowfeature(1150, 950));
 	            try { getFormCont_Cross.focus(); } catch (e) {}
+
+				attachedDocList = "";
 		    }
 		    
 		    function draftAll_Complete(ret) {}
@@ -617,6 +631,7 @@
 		    function openForm_Complete(ret) {
 		        formURL = ret[0];
 		        formDocType = ret[1];
+                attachedDocList = ret[5];
 		        var officeFlag = "";
 
 		        if(ret[4] !== null) {
@@ -668,7 +683,7 @@
 	            
                 openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
                 openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag) + "&attachedDocList=" + (typeof attachedDocList == "undefined" ? "" : attachedDocList);
                 
 	            openwindow(openLocation, "", 1150, 950);
 	        }
@@ -1085,7 +1100,7 @@
 		
 		    function DocManageMain(sFlag) {
 		        try {
-		            if (PresentOpen != "DOCMANAGE") {
+		            if (PresentOpen != "DOCMANAGE" && sFlag != "readingRecord") {
 		                PresentOpen = "DOCMANAGE";
 		                window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		            }
@@ -1096,6 +1111,7 @@
 		                    	window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m02":
+							case "m15" :
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m03":
@@ -1130,6 +1146,9 @@
 								break;
 							case "m14":
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+								break;
+							case "readingRecord" : 
+								window.parent.frames.right.document.location.href = "/ezApprovalG/readingRecord.do";
 								break;
 		                }
 		            }
@@ -1473,6 +1492,9 @@
 			        </ul>
 		        </c:if>
 		        <c:if test="${approvalFlag eq 'G'}">
+		        	<h2 class="off" id="readingRecordH2">
+		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="readingRecord" onclick="openFolder('readingRecord'), Open_Func(this)">열람문서함</span>
+			        </h2>
 		        	<h2 class="off" id="recordCabinetH2">
 		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('recordCabinet')">기록물대장</span>
 			        </h2>
@@ -1499,7 +1521,12 @@
 					        	<li><span class="list_text" id="admin_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t1754'/></span></li>
 					        	<li><span class="list_text" id="admin_sub03" onclick="Menu_Click(this)">종료연기승인</span></li>
 					        	<li><span class="list_text" id="admin_sub04" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t520'/></span></li>
-					        </c:if>
+								<li>
+									<span class = "list_text" id = "m15" onclick = "Open_Func(this)">
+										<spring:message code = 'ezApprovalG.listOfDeletedIron' />
+									</span>
+								</li>
+							 </c:if>
 				        </ul>
 			        </c:if>
 			        

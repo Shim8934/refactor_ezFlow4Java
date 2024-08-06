@@ -926,7 +926,12 @@
 			function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
 				return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 			}
-			
+
+			function restoreCond(condStr) {
+				return condStr.toString().replace(/\\_/g, "_").replace(/\\'/g, "'").replace(/\\%/g, "%").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&amp;/g, "&");
+			}
+
+
 			var Tab1_SelectID = "";
 		    function Tab1_MouserOver(obj) {
 		        obj.className = "tabover";
@@ -1117,7 +1122,7 @@
 					"&P13=" + encodeURI(SearchCond[13]) + "&P14=" + encodeURI(SearchCond[14]) + "&P15=" + "" + "&P16=" + "" + "&P17=" +
 					 "" + "&P18=" + "" + "&P19=" + "" + "&P20=" + "" + "&P21=" + encodeURI(SearchCond[16]) +
 					"&P23=" + encodeURI(SearchCond[17]) + "&P24=" + "ADMIN" + "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-					"&OO=" + "" + "&allFG=" + AllFG + "&SQ=" + "" + "&orgCompanyID=" + pCompanyID;
+					"&OO=" + "" + "&allFG=" + AllFG + "&SQ=" + encodeURI(restoreCond(SearchCond[18])) + "&orgCompanyID=" + pCompanyID;
 	       		} else {
 	       			url += "?listType=SEARCH&P0=" + encodeURI(SearchCond[0]) + "&P1=" + encodeURI(SearchCond[1]) +
 					"&P2=" + encodeURI(SearchCond[2]) +
@@ -1130,7 +1135,7 @@
 					"&P13=" + "" + "&P14=" + "" + "&P15=" + "" + "&P16=" + "" + "&P17=" + "" + 
 					"&P18=" + "" + "&P19=" + "" + "&P20=" + "" + "&P21=" + "" +
 					"&P23=" + "" + "&P24=" + "ADMIN" + "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-					"&OO=" + "" + "&allFG=" + AllFG + "&SQ=" + "" + "&orgCompanyID=" + pCompanyID;
+					"&OO=" + "" + "&allFG=" + AllFG + "&SQ=" + encodeURI(restoreCond(SearchCond[18])) + "&orgCompanyID=" + pCompanyID;
 	       		}
 	           
 			     window.frames["saveExcel"].location.href = url;

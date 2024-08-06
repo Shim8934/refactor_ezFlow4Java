@@ -1325,7 +1325,7 @@ function convertDate(datestring) {
 }
 
 var reqResend_dialogArgument = new Array();
-function btnReqReSend_onclick() {
+/*function btnReqReSend_onclick() {
 	var url = "/ezApprovalG/ezRetOpinon.do";
     var feature = "width=420, height=270, resizable = no, scrollbars = no";
     
@@ -1340,6 +1340,28 @@ function btnReqReSend_onclick() {
 //    if (retValue == "true") {
 //        window.close();
 //    }
+}*/
+
+function btnReqReSend_onclick() {
+    var url = "/ezApprovalG/ezRetOpinon.do";
+    reqResend_dialogArgument[0] = "";
+    reqResend_dialogArgument[1] = btnReqReSend_onclick_conplete;
+
+    DivPopUpShow(420, 270, url);
+}
+
+function btnReqReSend_onclick_conplete(retValue, reqValue) {
+    if (retValue === "cancel") {
+        DivPopUpHidden();
+    } else {
+        var pRetMsg = retValue;
+        pRetMsg = ReplaceString(pRetMsg, "\n", "<br>");
+        pRetMsg = ReplaceString(pRetMsg, "&", "&amp;");
+        pRetMsg = ReplaceString(pRetMsg, "<", "&lt;");
+        pRetMsg = ReplaceString(pRetMsg, ">", "&gt;");
+
+        SendAckForSend(pRetMsg, "req-resend");
+    }
 }
 
 function getDraftUserInfo() {

@@ -277,4 +277,6 @@ public interface EzApprovalGAdminService {
 	
 	/* 2024-04-05 전인하 - 전자결재G > 기록물관리 > 단위업무 관리 > 총 단위업무 갯수 카운트 호출 */
 	public int getTaskListCount(String deptCode, String companyID, int tenantID, String title, String code, String flag) throws Exception;
+
+	public List<String> getIronListYear(String companyID, int tenantID) throws Exception;
 }

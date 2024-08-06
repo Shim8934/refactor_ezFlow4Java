@@ -5981,5 +5981,21 @@
 				A.TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
-	
+
+	<select id = "EzApprovalGAdminDAO.getIronListYear" parameterClass = "map" resultClass = "String">
+		SELECT
+			DISTINCT(PRODUCTIONYEAR)
+		FROM
+			TBL_CABINETCLASS
+		WHERE
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+		<![CDATA[
+			PRODUCTIONYEAR <= TO_CHAR(SYSDATE, 'YYYY')
+		]]>
+		ORDER BY
+			PRODUCTIONYEAR DESC
+	</select>
 </sqlMap>

@@ -484,6 +484,8 @@
 	                xmlHTTP = null;
 
 	                if (rtnValue == "True") {
+	                	createNodeAndInsertText(xmlDOM, objNode, "STARTDATETIME", sDT);
+	                	createNodeAndInsertText(xmlDOM, objNode, "ENDDATETIME", eDT);
 	                    xmlHTTP = createXMLHttpRequest();
 	                    xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 	                    xmlHTTP.send(xmlDOM);
@@ -499,7 +501,7 @@
 
 	                xmlDOM = null;
 	                
-	                if (window.opener != null) {
+	                if (window.opener.btnRefresh_onclick != null) {
 	                    window.opener.btnRefresh_onclick();
 	                }
 	                window.close();

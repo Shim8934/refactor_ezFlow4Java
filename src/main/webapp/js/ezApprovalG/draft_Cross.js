@@ -2856,12 +2856,8 @@ function openAaprDocAttachUI() {
         if (CrossYN()) {
             aprcabinetattach_cross_dialogArguments[0] = parameter;
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
-            
-            if(approvalFlag == "G") {
-            	DivPopUpShow(1050, 520, url);
-            } else {
-            	DivPopUpShow(1050, 560, url);
-            }
+
+            DivPopUpShow(1050, 560, url);
         } else {
         	var feature;
         	if(approvalFlag == "G") {
@@ -3079,6 +3075,10 @@ function SaveDraftDocInfo_ilban(pState) {
                 
                 createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
     		}
+
+            if (SelectNodes(NonElecXML, "DOCATTACHNAME").length > 0 ) {
+                createNodeAndInsertText(xmlpara, objNode, "DOCATTACHNAME", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DOCATTACHNAME"));
+            }
     	}
     	
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);

@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import java.nio.charset.StandardCharsets;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -84,6 +86,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /** 
  * @Description [Controller] 관리자 - 전자결재G
@@ -194,7 +197,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -205,16 +210,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 		String useWebHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("docType", docType);
@@ -782,17 +778,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1")) {
 			return "cmm/error/adminDenied";
 		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -1084,7 +1071,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -1181,23 +1170,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		//관리자 권한 체크
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
 		String serverName = userInfo.getServerName();
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(j, vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("serverName", serverName);
@@ -1603,7 +1584,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String topID = "";
 		
 		//관리자 권한 체크
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -1805,20 +1788,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -1904,7 +1880,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		    return "";
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2343,20 +2321,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String serverName = userInfo.getServerName();
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		int taskCount = ezApprovalGAdminService.getTaskListCount(userInfo.getCompanyID(), userInfo.getCompanyID(), userInfo.getTenantId(), null, null, "0");
 		
@@ -2416,20 +2387,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
@@ -2630,20 +2594,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String serverName = userInfo.getServerName();
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", serverName);
@@ -2773,20 +2730,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		String encodeInfoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		
@@ -2885,20 +2835,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 
 		String tempYear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("YYYY"), userInfo.getOffset(), false);
 		String tempMonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM"), userInfo.getOffset(), false);
@@ -3128,24 +3071,25 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
-		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("q=1")) {
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER) || organAuth.isAuth(AdminAuth.APR_QUERY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("list", resultList);
+
+        if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
+			// 전체관리자가 아닌경우 회사관리자나 결재조회관리자 권한이 있는 회사만 필터
+            list = list.stream()
+                    .filter(vo -> 
+                            organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn()) || organAuth.isAuth(AdminAuth.APR_QUERY_MANAGER, vo.getCn()))
+                    .collect(Collectors.toList());
+        }
+
+        model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", list);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("type", type);
 		model.addAttribute("useEditApprDoc", useEditApprDoc);
@@ -3168,7 +3112,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		//관리자 권한 체크
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -3337,25 +3283,26 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
-		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("q=1")) {
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER) || organAuth.isAuth(AdminAuth.APR_QUERY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
-		
+
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
+
+		if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
+			// 전체관리자가 아닌경우 회사관리자나 결재조회관리자 권한이 있는 회사만 필터
+			list = list.stream()
+					.filter(vo ->
+							organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn()) || organAuth.isAuth(AdminAuth.APR_QUERY_MANAGER, vo.getCn()))
+					.collect(Collectors.toList());
 		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", list);
 		model.addAttribute("type", type);
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
@@ -3534,20 +3481,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
@@ -3828,22 +3768,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 				
 		String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, userInfo.getCompanyID(), approvalFlag);
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
@@ -3944,7 +3877,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -4017,16 +3952,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		/* 2020-10-21 홍승비 - 회사 선택 기능 추가 */
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("userID", userID);
@@ -4116,7 +4042,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		// String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -4143,7 +4071,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		// String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -4304,20 +4234,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
@@ -4364,20 +4287,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);
-
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
@@ -4580,20 +4496,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		// 전체관리자, 회사관리자만 접근 가능
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			// 전체관리자는 모든 회사 표출, 그 외에는 자신의 소속 회사만 표출
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		int apprAttachLimitMax = 100; // 첨부파일 개수제한 default 최대값은 100개
 		String apprAttachCntLimitMax = ezCommonService.getTenantConfig("ApprAttachCntLimitMax", userInfo.getTenantId());
@@ -4660,12 +4569,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value = "/admin/ezApprovalG/docDirShareManage.do", method = RequestMethod.GET)
-	public String docDirShareManage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+	public String docDirShareManage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("docDirShareManage started");
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -4685,8 +4596,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String ownerId = request.getParameter("ownerId");
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -4708,8 +4621,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String ownerId = request.getParameter("ownerId");
 		String ownerName = request.getParameter("ownerName");
 		String ownerType = request.getParameter("ownerType");
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -4992,14 +4907,40 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "admin/ezApprovalG/cabTransfer.do", method = RequestMethod.GET)
 	public String cabTransfer(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-	              logger.debug("cabTransfer started");
+		logger.debug("cabTransfer started");
 
-	              userInfo = commonUtil.aprUserInfo(loginCookie);
-	              model.addAttribute("userInfo", userInfo);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 
-	              logger.debug("cabTransfer ended");
+		// 2024-06-12 전인하 - 전자결재G > 기록물관리 > 기록물철인계 > 리스트헤더 정보 호출
+		String listHeaderTemp = ezApprovalGService.getListHeader("095", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		Document listXML = commonUtil.convertStringToDocument(listHeaderTemp);
+		StringBuffer listHeaderString = new StringBuffer();
 
-	              return "admin/ezApprovalG/apprGcabTransfer";
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+
+		listHeaderString.append("<LISTVIEWDATA>");
+		listHeaderString.append("<HEADERS>");
+
+		for (int k = 0; k < hlength; k++) {
+			listHeaderString.append("<HEADER>");
+			listHeaderString.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			listHeaderString.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			listHeaderString.append("</HEADER>");
+		}
+		listHeaderString.append("</HEADERS>");
+		listHeaderString.append("<ROWS></ROWS></LISTVIEWDATA>");
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("listHeaderString", listHeaderString);
+
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		model.addAttribute("ironListYear", ezApprovalGAdminService.getIronListYear(companyID, tenantID));
+
+		logger.debug("cabTransfer ended");
+
+		return "admin/ezApprovalG/apprGcabTransfer";
 	}
 
 	//관리자 전자결재 완료문서 삭제 팝업
@@ -5250,20 +5191,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		// 생산연도를 전달하여 회계연도 가져오기 (1월 ~ 12월이 아닌 3월 ~ 익년 2월인 경우 대비)
 		// 올해 1월 1일 ~ 12월 31일까지를 회계연도로 가지는 경우는 현재 날짜에 -0 (변함없음)

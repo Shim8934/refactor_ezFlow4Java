@@ -53,6 +53,13 @@
 		                    	<spring:message code='ezSystem.ksaPwPolicy25' />
 		                </td>
 		            </tr>
+					<tr>
+						<th><spring:message code='ezSystem.x0050' /></th>
+						<td>
+							<input type="int" id="LoginLockedDuration" style="width: 50px;" maxlength="4">
+							<spring:message code='ezSystem.x0051' />
+						</td>
+					</tr>
 		            <tr>
 		                <th><spring:message code='ezSystem.ls01' /></th>
 		                <td>
@@ -176,6 +183,10 @@
     	var maxLoginFailNum_Val = (maxLoginFailCount <= 0) ? "" : maxLoginFailCount;
         document.getElementById("UseMaxLoginFailCount").value = useMaxLoginCount_Val; // 암호 최대 오류 횟수 사용여부
         document.getElementById("MaxLoginFailCount").value = maxLoginFailNum_Val; // 암호 최대 오류 횟수 n번
+
+		var loginLockedDuration = data.LoginLockedDuration; // 계정 잠금 처리 시간
+		var loginLockedDuration_Val = (loginLockedDuration <= 0) ? "" : loginLockedDuration;
+		document.getElementById("LoginLockedDuration").value = loginLockedDuration_Val; // 암호 최대 오류 횟수 n번
         
         var prohUsePrevPwd = data.useChkPrevPwd; // 2021-11-10 이사라 : 가장 최근 암호 사용 금지 여부
         var prohUsePrevPwd_Val = prohUsePrevPwd == "NO" ? "no" : "yes";
@@ -315,8 +326,10 @@
 		
         document.getElementById("MaxLoginFailCount").disabled = disabledChk;
         document.getElementById("MaxLoginFailCount").style.backgroundColor = disabledColor;
+        document.getElementById("LoginLockedDuration").style.backgroundColor = disabledColor;
         if (disabledChk) {
 	        document.getElementById("MaxLoginFailCount").value = "";
+	        document.getElementById("LoginLockedDuration").value = "";
         }
 	}
 
@@ -414,6 +427,7 @@
 		
 		var setUsePeriod = document.getElementById("UseMaxPeriod").value == "use" ? document.getElementById("MaxPeriodNumber").value : "0";
 	    var setLoginFailCnt= document.getElementById("UseMaxLoginFailCount").value == "use" ? document.getElementById("MaxLoginFailCount").value : "0";
+	    var setLoginLockedDuration= document.getElementById("UseMaxLoginFailCount").value == "use" ? document.getElementById("LoginLockedDuration").value : "0";
 	    var setProhUsePrevPwd = document.getElementById("ProhUsePrevPwd").value == "yes" ? "YES" : "NO"; // 2021-11-10 이사라
 		var setUsePatternPolicy = document.getElementById("UsePatternPolicy").value == "use" ? "YES" : "NO";
 		
@@ -422,6 +436,7 @@
 		data.setConfig = [
 		              	{name : "ExpirePassPeriod", value : setUsePeriod},
 		              	{name : "MaxAllowedCountOfLoginFail", value : setLoginFailCnt},
+		              	{name : "LoginLockedDuration", value : setLoginLockedDuration},
 		              	{name : "useChkPrevPwd", value : setProhUsePrevPwd}, // 2021-11-10 이사라
 		              	{name : "UsePasswordPatternPolicy", value : setUsePatternPolicy}
 		               ];
@@ -481,10 +496,14 @@
 		// 암호 오류 최대 횟수 사용으로 했을 경우 횟수 입력 체크
 		if (document.getElementById("UseMaxLoginFailCount").value == "use") {
 			var maxLoginFailCntVal = document.getElementById("MaxLoginFailCount").value;
+			var loginLockedDurationVal = document.getElementById("LoginLockedDuration").value;
 		    if (maxLoginFailCntVal == "" || Number(maxLoginFailCntVal) <= 0) {
 		        alert("<spring:message code='ezSystem.ksaPwPolicy30' />");
 		        return false;
-		    }
+		    } else if (loginLockedDurationVal == "" || Number(loginLockedDurationVal) <= 0) {
+				alert("<spring:message code='ezSystem.khjPwPolicy37' />");
+				return false;
+			}
 		}
 		// 암호 패턴 설정 사용여부
 		if (document.getElementById("UsePatternPolicy").value == "use") {

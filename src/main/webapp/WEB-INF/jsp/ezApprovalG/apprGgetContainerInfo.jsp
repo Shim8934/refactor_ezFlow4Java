@@ -324,7 +324,9 @@
 							pPreviewShow_HOW = "OFF";
 						}
 					}
-					PreviewRayerChange(pPreviewShow_HOW, 'Container');
+					if (previewInfo != "H") {
+						PreviewRayerChange(pPreviewShow_HOW, 'Container');
+					}
 					/* 2022-06-29 홍승비 - 우측 미리보기 영역을 위한 온로드 시 리사이즈 동작 추가 */
 			    	Window_resize();
 	            } else {
@@ -1154,9 +1156,18 @@
 	        			var apprTo = condition[6];
 	        			var draftFrom = condition[3];
 	        			var draftTo = condition[4];*/
+						if (typeof (condition[24]) != "undefined" && condition[24] != "") {
+							if (subCondition) {
+								subCondition += "AND ";
+							}
+							subCondition += "KEYWORD like '%" + condition[24].slice(5) + "%'";
+						}
 	        			var searchStatus = $("#sel_status").val();
 	        			if(searchStatus && searchStatus != "ALL"){
 	        				searchStatus = "PROCESSYN = '" + searchStatus + "'";
+							if (subCondition) {
+								searchStatus = " AND " + searchStatus;
+							}
 	        			} else {
 	        				searchStatus = "";
 	        			}
@@ -1216,7 +1227,7 @@
 		                "&P19=" + encodeURI(condition[19]) + "&P20=" + encodeURI(condition[20]) + "&P21=" + encodeURI(condition[21]) +
 		                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition + searchStatus)+ "&allFG=" + AllFG ;
+		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition + searchStatus)+ "&allFG=" + AllFG + "&KW=" + condition[24];
 		               
 		                // 2023-07-21 한태훈 - 부서공유함에서 회사가 다를 시, 엑셀 내보내기 안되는 오류 수정.
 		                if (orgCompanyID != null && orgCompanyID != "") {

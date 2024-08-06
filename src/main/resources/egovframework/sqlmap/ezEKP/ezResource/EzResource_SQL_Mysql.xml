@@ -2106,7 +2106,8 @@
                BRD_NM BRDNM ,
                BRD_NM2 BRDNM2 ,
                HR.DISPLAYNAME OWNERNM ,
-               HR.MAIL MAILADDRESS  
+               HR.MAIL MAILADDRESS,
+               HR.CN OWNERID
             FROM
                TBL_RS_BRD RES
             JOIN

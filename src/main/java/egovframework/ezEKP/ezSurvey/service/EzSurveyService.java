@@ -44,7 +44,7 @@ public interface EzSurveyService {
 	void getDownloadedFile(String fileName, String filePath, String realPath, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
 	//Save/Delete/Get survery item
-	JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int drafMode, LoginVO userInfo, int mailFlag, int popupFlag) throws Exception;
+	JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int drafMode, LoginVO userInfo, int mailFlag, int popupFlag) throws Exception;
 	JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode) throws Exception;
 	JSONObject getPopupItems(String mode, /*String startDate, String endDate,*/ LoginVO userInfo) throws Exception;
 	void deleteItems(List<Long> itemIdList, LoginVO userInfo) throws Exception;
@@ -62,4 +62,6 @@ public interface EzSurveyService {
 	JSONObject checkRespondent(Long surveyId, LoginVO userInfo);
 	int getSurveyIngCnt(MCommonVO userInfo);
 	String checkTenantConfig(String propertyName, int tenantID) throws Exception;
+	
+	void setPreviewFlag(String prevMode, String userId, String companyId, int tenantId) throws Exception;
 }

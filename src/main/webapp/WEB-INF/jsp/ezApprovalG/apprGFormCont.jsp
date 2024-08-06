@@ -177,7 +177,8 @@
 		                Rtnval[3] = selRow.childNodes[0].innerText;
 		                <%-- 2021-01-21 심기영 오피스 결재 양식 추가 --%>
 		                Rtnval[4] = selRow.getAttribute("DATA-OFFICEFLAG");
-		                
+						Rtnval[5] = RetValue[2];
+
 		                Rtnval["reformflag"] = selRow.getAttribute("reformflag");
 		                
 		                if (ReturnFunction != null) {

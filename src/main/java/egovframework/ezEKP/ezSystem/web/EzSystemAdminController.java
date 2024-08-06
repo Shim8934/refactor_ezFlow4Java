@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -60,6 +62,7 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -104,6 +107,9 @@ public class EzSystemAdminController {
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
+	@Autowired
+	private EzNotificationService ezNotificationService;
+
 	@Resource
 	private EgovMessageSource egovMessageSource;
 	
@@ -229,7 +235,8 @@ public class EzSystemAdminController {
 			useExternalMailServer = "NO";
 		}
 		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
-		
+		Integer notiPollingInterval = Integer.parseInt(ezCommonService.getTenantConfig("notiPollingInterval", userInfo.getTenantId())) / (1000 * 60);
+
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
@@ -243,7 +250,8 @@ public class EzSystemAdminController {
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("systemDomain", systemDomain);
-		
+		model.addAttribute("notiPollingInterval", notiPollingInterval);
+
 		logger.debug("systemMainMenu ended");
 		
 		return "/ezSystem/systemMainMenu";
@@ -353,25 +361,13 @@ public class EzSystemAdminController {
 		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
 		
 		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
 
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(j++, vo);
-			}
-		}
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		String isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER) ? "y" : "";
 		
-		String isMasterAdmin = "";
-		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체관리자
-			isMasterAdmin = "y";
-		}
-		
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 		
@@ -1037,7 +1033,7 @@ public class EzSystemAdminController {
 		
 		return jObj.toString();
 	}
-	
+
 	@RequestMapping(value="/admin/ezSystem/systemIPManager.do", method=RequestMethod.GET)
 	public String systemIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("systemIPManager started");
@@ -1581,17 +1577,10 @@ public class EzSystemAdminController {
 		useMultiLogin = Optional.ofNullable(useMultiLogin).filter(StringUtils::isNotEmpty).orElse("YES");
 		
 		// 회사리스트
-		List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantID);
-		List<OrganDeptVO> resultCompanyList = new ArrayList<OrganDeptVO>();
-		
-		for(OrganDeptVO company : companyList) {
-			if(company.getCn().equals(userInfo.getCompanyID()) || userInfo.getRollInfo().indexOf("c=1") != -1) {
-				resultCompanyList.add(company);
-			}
-		}
-		
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), tenantID, userInfo.getPrimary());
+
 		model.addAttribute("companyID", companyID);
-		model.addAttribute("companyList", resultCompanyList);
+		model.addAttribute("companyList", adminCompanyList);
 		model.addAttribute("useMultiLogin", useMultiLogin);
 		
 		logger.debug("multiLoginManager ended");
@@ -1807,26 +1796,18 @@ public class EzSystemAdminController {
 		String companyID = userInfo.getCompanyID();
 		
 		// 회사리스트
-		List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantID);
-		List<OrganDeptVO> resultCompanyList = new ArrayList<OrganDeptVO>();
-		
-		for(OrganDeptVO company : companyList) {
-			if(company.getCn().equals(userInfo.getCompanyID()) || userInfo.getRollInfo().indexOf("c=1") != -1) {
-				resultCompanyList.add(company);
-			}
-		}
-		
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), tenantID, userInfo.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
 		boolean isDotNetAdmin = false;
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
 		
 		if (dotNetIntegration.equals("YES")) {
-			if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1) {
-				isDotNetAdmin = true;
-			}			
+			isDotNetAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER);
 		}
 		
 		model.addAttribute("companyID", companyID);
-		model.addAttribute("companyList", resultCompanyList);
+		model.addAttribute("companyList", adminCompanyList);
 		model.addAttribute("isDotNetAdmin", isDotNetAdmin);
 		
 		logger.debug("passwordPolicyMain ended.");
@@ -1856,6 +1837,8 @@ public class EzSystemAdminController {
 		expirePassPeriod = expirePassPeriod.equals("") ? "0" : expirePassPeriod;
 		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail"); // 암호 최대 오류 횟수
 		maxAllowedCountOfLoginFail = maxAllowedCountOfLoginFail.equals("") ? "0" : maxAllowedCountOfLoginFail;
+		String loginLockedDuration = ezCommonService.getCompanyConfig(tenantId, companyId, "LoginLockedDuration"); // 계정 잠금 처리 시간
+		loginLockedDuration = loginLockedDuration.equals("") ? "0" : loginLockedDuration;
 		String useChkPrevPwd = ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"); // 2021-11-10 이사라 : 가장 최근 암호 사용 금지 여부
 		useChkPrevPwd = useChkPrevPwd.equals("") ? "NO" : useChkPrevPwd;
 		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy"); // 암호 정책관리 사용여부
@@ -1867,6 +1850,7 @@ public class EzSystemAdminController {
 
 		returnMap.put("expirePassPeriod", expirePassPeriod);
 		returnMap.put("maxAllowedCountOfLoginFail", maxAllowedCountOfLoginFail);
+		returnMap.put("LoginLockedDuration", loginLockedDuration);
 		returnMap.put("useChkPrevPwd", useChkPrevPwd); // 2021-11-10 이사라 : 추가
 		returnMap.put("usePasswordPatternPolicy", usePasswordPatternPolicy);
 		returnMap.put("pwPolicyMap", pwPolicyMap);
@@ -2336,16 +2320,9 @@ public class EzSystemAdminController {
 		 * model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
 		 */
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
-
-		for (OrganDeptVO vo : list) {
-			if (isMasterAdmin || vo.getCn().equals(companyId)) {
-				resultList.add(j++, vo);
-			}
-		}
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), tenantId, user.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
 		// 관리자 구분 셀렉트박스 적용
 		String approvalFlag		= ezCommonService.getTenantConfig("ApprovalFlag" ,tenantId);
@@ -2363,7 +2340,7 @@ public class EzSystemAdminController {
 		model.addAttribute("packageType", packageType);
 		model.addAttribute("useBoard", useBoard);
 		model.addAttribute("useSurvey", useSurvey);
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 
@@ -2665,7 +2642,7 @@ public class EzSystemAdminController {
 				adminType = egovMessageSource.getMessage("ezOrgan.t303", locale);
 			} else if (adminType.contains("e=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.kbm01", locale);
-			} else { 
+			} else {
 				adminType = egovMessageSource.getMessage("ezOrgan.t9904", locale);
 			}
 
@@ -2760,21 +2737,11 @@ public class EzSystemAdminController {
 		}
 
 		String companyId = user.getCompanyID();
-		int tenantId = user.getTenantId();
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
-		for (OrganDeptVO vo : list) {
-			if (isMasterAdmin || vo.getCn().equals(companyId)) {
-				resultList.add(j++, vo);
-			}
-		}
-
-
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 
@@ -3127,14 +3094,11 @@ public class EzSystemAdminController {
 		String companyId = user.getCompanyID();
 		int tenantId = user.getTenantId();
 
-		List<OrganDeptVO> lists = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
-		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
-
-		List<OrganDeptVO> companyList = lists.stream().filter(list -> isMasterAdmin || list.getCn().equals(companyId))
-				.collect(Collectors.toList());
-
-		model.addAttribute("list", companyList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 
@@ -3775,4 +3739,105 @@ public class EzSystemAdminController {
 		;
 		logger.debug("connectorHistExcelExport ended.");
 	}
+
+	@RequestMapping(value = "/admin/ezSystem/notiSetting.do", method = RequestMethod.GET)
+	public String notiSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("notiSetting started.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		//관리자 권한 체크
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String notiStoragePeriod = ezCommonService.getTenantConfig("notiStoragePeriod", user.getTenantId());
+		model.addAttribute("notiStoragePeriod", notiStoragePeriod);
+
+		logger.debug("addSystemConfig ended.");
+
+		return "/ezSystem/storageSetting";
+	}
+
+	// 2024-04-01 한태훈 - 관리자 > 알림 보관기간 수정
+	@ResponseBody
+	@RequestMapping(value = "/admin/ezSystem/updateStoragePeriod.do", method=RequestMethod.POST)
+	public String updateStoragePeriod(@CookieValue String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("updateStoragePeriod started.");
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		try {
+			String storagePeriod = request.getParameter("storagePeriod");
+			ezNotificationService.updateStoragePeriod(storagePeriod, userInfo.getTenantId());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			logger.debug("updateStoragePeriod ended.");
+			return "fail";
+		}
+
+		logger.debug("updateStoragePeriod ended.");
+		return "success";
+	}
+
+	@RequestMapping(value = "/admin/ezSystem/resetUserSettings.do", method = RequestMethod.GET)
+	public String resetUserSettings(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("resetUserSettings started.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		//관리자 권한 체크
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		model.addAttribute("type", request.getParameter("type"));
+
+		logger.debug("resetUserSettings ended.");
+		return "/ezSystem/systemResetUserSettings";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/ezSystem/allUserResetFrame.do", method=RequestMethod.POST)
+	public String allUserResetFrame(@CookieValue String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("allUserResetFrame started.");
+		//관리자 권한체크
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		try {
+			ezSystemAdminService.resetThemeAllUser();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			logger.debug("allUserResetFrame ended.");
+			return "fail";
+		}
+
+		logger.debug("allUserResetFrame ended.");
+		return "success";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/ezSystem/allUserResetPortlet.do", method=RequestMethod.POST)
+	public String allUserResetPortlet(@CookieValue String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("allUserResetPortlet started.");
+		//관리자 권한체크
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		try {
+			ezSystemAdminService.resetPortletAllUser();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			logger.debug("resetPortletAllUser ended.");
+			return "fail";
+		}
+
+		logger.debug("allUserResetPortlet ended.");
+		return "success";
+	}
+
 }

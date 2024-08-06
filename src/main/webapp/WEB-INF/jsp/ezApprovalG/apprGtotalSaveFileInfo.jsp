@@ -191,6 +191,11 @@
 	            var pSourcePath = obj.getAttribute("FILEPATH").split('.')[1];
 	            var pDocID_mht = obj.getAttribute("FILEPATH").substring(obj.getAttribute("FILEPATH").lastIndexOf("/") + 1, obj.getAttribute("FILEPATH").length).split('.')[0];
 	            
+	            if (pSourcePath.toUpperCase() == "MHT") {
+	            	AttachDownFrame.location.href = "/ezApprovalG/downloadMhtDbClick.do?fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&fileName2=" + obj.getAttribute("DATA2") + "&docID=" + pDocID_mht + "&docStatus=END&filePath=" + obj.getAttribute("FILEPATH");
+	            	return;
+	            }
+	            
 	            if (obj.getAttribute("DATA1") == "ATT") {
 	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&fileName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA4") + "&orgCompanyID=" + orgCompanyID;
 				} else if (obj.getAttribute("DATA1") == "ATTDOC") {

@@ -111,6 +111,22 @@ var SurveyItem = function() {
 			default:
 				return;
 		}
+		setPreviewFlag();
+	}
+	
+	function setPreviewFlag() {
+		var prevMode = crrPreMode;
+		
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : true,
+			url : "/ezSurvey/setPreviewFlag.do",
+			data : { prevMode : prevMode },
+			success: function(result){
+			}     			
+		});
+		
 	}
 	/* Preview option end */
 	

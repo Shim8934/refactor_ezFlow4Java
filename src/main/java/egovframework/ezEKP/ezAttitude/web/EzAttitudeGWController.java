@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -83,6 +86,9 @@ public class EzAttitudeGWController {
 	
 	@Resource(name = "EzScheduleService")
 	private EzScheduleService ezScheduleService;
+
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	/**
 	 * G/W 근태관리 [GET] 개인, 부서, 부서+개인 근태조회
@@ -139,7 +145,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [POST] 근태등록
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitudes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/attitudes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject registeAttitude(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/attitudes] started.");
 		
@@ -438,7 +444,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 개인 월별 근태 통계
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject userAttitudeCount(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] started.");
 		
@@ -820,8 +826,9 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			//테넌트별 회사리스트
-			List<AttitudeDeptVO> list = ezAttitudeService.getCompanyList(info.getPrimary(), info.getTenantId(), userId);
-			data.put("list", list);
+//			List<AttitudeDeptVO> list = ezAttitudeService.getCompanyList(info.getPrimary(), info.getTenantId(), userId);
+			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, info.getTenantId(), info.getPrimary());
+			data.put("list", adminCompanyList);
 			//로그인한 관리자의 회사
 			data.put("adminCompany", info.getCompanyId());
 			
@@ -992,7 +999,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 수정신청 리스트
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyattitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/modifyattitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUsersModiyAtt(@PathVariable String userId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
@@ -1085,7 +1092,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 수정신청 개수
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyattitudes/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/modifyattitudes/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUsersModiyAttCount(@PathVariable String userId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
@@ -1198,7 +1205,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [DELETE] 수정신청 삭제
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyattitudes", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/modifyattitudes", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject delUsersModiyAtt(@PathVariable String userId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
@@ -1243,7 +1250,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [PUT] 수정신청 승인,반려
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyattitudes", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/modifyattitudes", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject changeUsersModiyAtt(@PathVariable String userId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
@@ -1727,7 +1734,7 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [GET] 근태권한자 상세 조회(권한있는 부서 체크)
 	 * 
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitude-auth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/attitude-auth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeAuthDeptList(@PathVariable String userId, HttpServletRequest request) throws Exception{
 		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth] started.");
 		JSONObject result = new JSONObject();
@@ -1762,7 +1769,7 @@ public class EzAttitudeGWController {
 	 * listAuthType  (''/null/all):전체, M:관리, R:열람
 	 * comFlag  회사에 포함된 인원 처리(미사용)
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitude-auth/hyo", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/attitude-auth/hyo", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeAuthDeptListhyo(@PathVariable String userId, HttpServletRequest request) throws Exception{
 		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth/hyo] started.");
 		JSONObject result = new JSONObject();
@@ -2184,7 +2191,7 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezattitude/users/{userId}/{userLang}/annual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezattitude/users/{userId:.+}/{userLang}/annual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserAnnual(@PathVariable String userId,@PathVariable String userLang, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annual] started.");
 		
@@ -2219,7 +2226,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [POST] 연차현황 개별 등록/수정
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/changePrsnAnnual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/changePrsnAnnual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject changePrsnAnnual(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/changePrsnAnnual] started.");
 		
@@ -2362,7 +2369,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 연차현황 수정내역확인
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/{userLang}/annualHistoryPop", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/{userLang}/annualHistoryPop", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject annualHistoryPop(@PathVariable String userId,@PathVariable String userLang, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId +"/"+ userLang +"/annualHistoryPop] started.");
 		
@@ -2405,7 +2412,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 개인 월별 근태 통계
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/monthlyannual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/monthlyannual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMonthlyAnnualList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyannual] started.");
 		
@@ -2501,7 +2508,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [DELETE] 연차취소신청 삭제
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/deletecancelannual", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/deletecancelannual", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteCancelAnnual(@PathVariable String userId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
@@ -2538,7 +2545,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 취소신청 개수
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/cancelannual/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/cancelannual/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUsersCancelAnnCount(@PathVariable String userId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
@@ -2620,7 +2627,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 수정신청 리스트
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/cancelannual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/cancelannual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUsersCancelAnn(@PathVariable String userId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
@@ -2747,7 +2754,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [PUT] 수정신청 승인,반려
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/cancelannual", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/cancelannual", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject changeUsersCancelAnn(@PathVariable String userId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
@@ -2819,7 +2826,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [POST] 입사일 등록
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/joindate", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/joindate", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject saveJoinDate(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/saveJoinDate] started.");
 		
@@ -2856,7 +2863,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 개인 연차 수 정보(총연차 수 / 사용연차수)
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/annualcnt", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/annualcnt", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAnnaulCntInfo(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annualcnt] started.");
 		
@@ -2938,7 +2945,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [POST] 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/approvalconn", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject approvalGConn(@PathVariable String userId, HttpServletRequest request) {
 			
 		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/"+userId+"/approvalconn] started.");
@@ -2979,7 +2986,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [PUT] 전자결재 연동 (수신부서 완료시 결재상태 1로 변경)
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/approvalconn", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateApprovalGConnInfo(@PathVariable String userId, HttpServletRequest request) {
 		
 		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/approvalconn] started.");
@@ -3014,7 +3021,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [DELETE] 전자결재 연동 (휴가계 회수/반려시 해당 휴가 근태 삭제)
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/approvalconn", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteApprovalGConnInfo(@PathVariable String userId, HttpServletRequest request) {
 		
 		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/approvalconn] started.");
@@ -3134,7 +3141,7 @@ public class EzAttitudeGWController {
 /**
 	 * G/W 근태관리 [GET] 연차설정정보 조회
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/joindate", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/joindate", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getJoinDate(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/joindate] started.");
 		
@@ -3203,7 +3210,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 전자결재 연동 (미니캘린더 해당 달의 휴일 + 근태가 잇는날 가져옴)
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn/disableddays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/approvalconn/disableddays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getDisabledDays(@PathVariable String userId, HttpServletRequest request) {
 		
 		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/approvalconn/disableddays] started.");
@@ -3236,7 +3243,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 국가,회사,근태 휴무일
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/holidays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId:.+}/holidays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getHoliDays(@PathVariable String userId, HttpServletRequest request) {
 		
 		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/holidays] started.");

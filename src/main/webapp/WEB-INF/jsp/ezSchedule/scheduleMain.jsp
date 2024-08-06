@@ -148,11 +148,11 @@
 			                    var repetition = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYREPEAT")[0].textContent;	                    
 			                    
 			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
-			                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+			                        memorialDays.push(new memorialDay(escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent), escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
 			                    } else {                   	
-			                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+			                        yearmemorialDays.push(new yearmemorialDay(escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent), escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
@@ -603,6 +603,7 @@
 		        }
 
 		        var sdate, edate, datetype;
+                var showtop = "N";
 
 		        // 2018-11-09 김민성 - 일보기/주보기일 때 종일일정 클릭시 시간 종일로 변경
 		        // 일보기, 주보기의 시간대 클릭
@@ -618,11 +619,18 @@
 					edate = sdate.replace(sdate.split(" ")[1], edateSplit[0] + ":" + leadingZeros(edateSplit[1]*1+30, 2) + ":" + edateSplit[2]);
 		        } 
 		        // 월보기 클릭
-		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0) {
+		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0 && GetAttribute(srcEl, "id").indexOf("TOP") == -1 ) {
 		        	datetype = "1";
 		        	// 시간데이터가 없는 경우 임의 시간
 		        	sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
 		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
+		        }
+		        // 상단표시
+		        else if (GetAttribute(srcEl, "id").indexOf("TOP") !== -1) {
+		            showtop = "Y"
+		            datetype = "1";
+                    sdate = GetAttribute(srcEl, "dispdate");
+                    edate = sdate;
 		        }
 		        // 일보기, 주보기의 종일일정 클릭
 		        else {
@@ -658,14 +666,14 @@
 
 		            var feature = GetOpenPosition(790, 760);
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "", "height = 830px, width = 790px,top=" + pTop + ", left=" + pLeft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate) + "&showtop=" + showtop, "", "height = 830px, width = 790px,top=" + pTop + ", left=" + pLeft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                    window.open("schedule_write.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
+		                    window.open("schedule_write.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate) + "&showtop=" + showtop, "",
 						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		                }
 		                else {
-		                    window.open("schedule_write_IE.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
+		                    window.open("schedule_write_IE.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate) + "&showtop=" + showtop, "",
 						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		                }
 		            } */
@@ -675,7 +683,7 @@
 		            var feature = GetOpenPosition(790, 760);
 		            
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&type=" + type + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
+		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&type=" + type + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate) + "&showtop=" + showtop, "",
 						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -1357,6 +1365,18 @@
 			
 			function scrollTopTime() {
 				$("#CalDiv").scrollTop($(".today").eq(0).position().top);
+			}
+
+			function escapeHtml(text) {
+				var map = {
+					'&': '&amp;',
+					'<': '&lt;',
+					'>': '&gt;',
+					'"': '&quot;',
+					"'": '&#039;'
+				};
+
+				return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 			}
 	    </script>
 	</head>

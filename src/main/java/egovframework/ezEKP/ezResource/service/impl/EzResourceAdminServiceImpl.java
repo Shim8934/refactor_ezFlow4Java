@@ -528,7 +528,8 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			return true;
 		}
 		
-		List<ResBrdListVO> brdList = ezResourceService.getBrdList(brdCnt, Integer.parseInt(resID), companyID, "OwnDeptNm", "OwnerNm", "OwnerPosition", "Brd_NM", tenantID);
+		/* 2024-08-06 홍승비 - 다국어 처리된 칼럼을 사용하지 않는 호출이므로, 임의 언어 파라미터를 고정하여 전달 (기존 칼럼 셀렉트 유지) */
+		List<ResBrdListVO> brdList = ezResourceService.getBrdList(brdCnt, Integer.parseInt(resID), companyID, "1", tenantID);
 		
 		for(int j=0; j<brdList.size(); j++) {
 			String[] ownerList = brdList.get(j).getOwnerID().split(",");

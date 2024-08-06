@@ -143,8 +143,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerID);
 		map.put("v_PCOMPANYID", companyID);
-		map.put("v_PSTARTDATE", startDate);
-		map.put("v_PENDDATE", endDate);
+		map.put("v_PSTARTDATE", startDate.replace(".", "-"));
+		map.put("v_PENDDATE", endDate.replace(".", "-"));
 		map.put("v_WRITERNAME", writerName);
 		map.put("v_WRITERDEPT", writerDept);
 		if(!title.equals("")) {
@@ -1337,7 +1337,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pTitle, String pWriterName, String pWriterDept, int tenantID, String offset, String lang) throws Exception {
 		logger.debug("getScheduleList Start");
-
+		
+		sDate = sDate.replace(".", "-");
+		eDate = eDate.replace(".", "-");
+		
 		String startDateLimit = eDate + " 23:59:59";
 		String endDateLimit = sDate + " 00:00:01";
 		

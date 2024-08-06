@@ -142,6 +142,7 @@ var strLang128 = "时";
 var strLang129 = "分钟";
 var strLang130 = "群组日程";
 var strLang130_1 = "群组日程";
+var strLang131 = "在顶部显示";
 
 var strLang253 ="没有选择的资源。"
 var strLang254 ="你不能删除选定的资源。"
@@ -216,9 +217,11 @@ var strLang127_2 = "Company";
 var strLang130_2 = "Group";
 var strLang131_2 = "Collabo";
 var strLang141_2 = "Google";
-var strLangHSBScPt1 = "-";
+var strLangHSBScPt1 = ".";
 var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "";
 
 /* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
 var ezSchedule_kyj1 = "不得在匿名公告栏、照片公告栏或URL链接公告栏上发布日程安排。";
+/* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
+var ezSchedule_kyj2 = "请再确认一下重复周期。";

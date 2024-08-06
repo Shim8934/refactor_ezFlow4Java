@@ -139,6 +139,7 @@ var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Jadwal Grup";
 var strLang130_1 = "Grup";
+var strLang131 = "tampilkan di bagian atas";
 
 var strLang253 = "Sumber daya tidak dipilih."
 var strLang254 = "Sumber daya yang dipilih tidak dapat dihapus."
@@ -214,9 +215,11 @@ var strLang127_2 = "Company";
 var strLang130_2 = "Group";
 var strLang131_2 = "Collabo";
 var strLang141_2 = "Google";
-var strLangHSBScPt1 = "-";
+var strLangHSBScPt1 = ".";
 var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "";
 
 /* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
 var ezSchedule_kyj1 = "Can not post schedules to photo board or anonymous board or url board.";
+/* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
+var ezSchedule_kyj2 = "Please check the repetition pattern once again.";
