@@ -245,7 +245,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 	
 	@Override
-	public List<ScheduleInfoVO> getScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID, String deptID, String useAnnualScheduleYN) throws Exception {						
+	public List<ScheduleInfoVO> getScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String offSetMin, String searchTitle, String searchLocation, String searchAll, int tenantId, String companyID, String userID, String deptID, String useAnnualScheduleYN) throws Exception {						
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_INDILIST", indiList);
@@ -253,13 +253,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_PFILTER", filter);
 		map.put("v_PSTARTDATE", utcStartDate);
 		map.put("v_PENDDATE", utcEndDate);
-		map.put("v_PKEYWORD", keyword);
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_TENANTID", tenantId);
-		/* 2021-10-20 홍승비 - 일정의 제목, 위치 검색조건 나눠지도록 수정 (v_SEARCHTITLE값이 존재하면 항상 제목 조건을 추가하게 됨) */
-		if (filter != null && !filter.equalsIgnoreCase("location")) { // filter 조건 null 처리 추가 (검색조건 없이 모든 리스트 가져오는 경우 대응)
-			map.put("v_SEARCHTITLE", searchTitle);
-		}
+		map.put("v_SEARCHTITLE", searchTitle);
+		map.put("v_SEARCHALL", searchAll);
+		map.put("v_SEARCHLOCATION", searchLocation);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
@@ -732,7 +730,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_PFILTER", filter);
 		map.put("v_PSTARTDATE", utcStartDate);
 		map.put("v_PENDDATE", utcEndDate);
-		map.put("v_PKEYWORD", keyword);
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_SEARCHTITLE", searchTitle);
@@ -2279,7 +2276,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_PFILTER", filter);
 		map.put("v_PSTARTDATE", utcStartDate);
 		map.put("v_PENDDATE", utcEndDate);
-		map.put("v_PKEYWORD", keyword);
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_TENANTID", tenantId);
 		/* 2021-10-20 홍승비 - 일정의 제목, 위치 검색조건 나눠지도록 수정 (v_SEARCHTITLE값이 존재하면 항상 제목 조건을 추가하게 됨) */

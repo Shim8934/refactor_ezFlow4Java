@@ -99,10 +99,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
 			String searchTitle = request.getParameter("searchTitle");
-			
-			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */ 
-			String searchColumn = request.getParameter("searchColumn");
-			String searchData = request.getParameter("searchData");
+			String searchLocation = request.getParameter("searchLocation");
+			String searchAll = request.getParameter("searchAll");
 
 			/* 2023-10-11 기민혁 사용자 일정검색 요소 추가 */
 			String chk_usersearch = request.getParameter("chk_usersearch");
@@ -143,7 +141,6 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 
-			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
 			List<ScheduleInfoVO> sList ;
 
 			if(chk_usersearch !=null && chk_usersearch.equals("userSearch")) {
@@ -151,15 +148,15 @@ public class MScheduleGWController extends EgovFileMngUtil {
 					info.setUserId("");
 					info.setDeptId("");
 					info.setCompanyId("");
-					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle);
 				}else{
 					info.setUserId(SuserId);
 					info.setDeptId(SuserDeptId);
 					info.setCompanyId(SuserCompanyId);
-					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle);
 				}
 			}else {
-				sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+				sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchLocation, searchAll, "");
 
 				String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
 				
@@ -206,10 +203,6 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String endDate = request.getParameter("endDate");
 			String searchTitle = request.getParameter("searchTitle");
 			
-			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
-			String searchColumn = request.getParameter("searchColumn");
-			String searchData = request.getParameter("searchData");
-			
 			if (startDate != null && !startDate.equals("")) {
 				String[] sDate = startDate.split("-");
 				String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
@@ -239,8 +232,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
-			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, "", "", "");
 
 			String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 			if(useGoogleCalendar.equals("YES")) {
@@ -906,7 +898,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				MCommonVO info = mOptionService.commonInfo(serverName, userId);
 				info.setLang(langStr);
 				
-				List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, "", "");
+				List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, "", "", "");
 				
 				String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 				if(useGoogleCalendar.equals("YES")) {
