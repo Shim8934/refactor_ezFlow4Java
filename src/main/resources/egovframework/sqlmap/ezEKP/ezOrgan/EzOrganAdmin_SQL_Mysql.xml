@@ -2597,14 +2597,14 @@
 	    		(#companyID#, #tenantID#, 73, 19, 1, 20, null),
 				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, 23, null),
 				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 1, 24, null),
-				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 1, -2, null),
-				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 1, -1, null),
-				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 1, 1, null),
-				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 1, 2, null),
-				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 1, 3, null),
-				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 1, 4, null),
-				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 1, 5, null),
-				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 1, 6, null)
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 1, 1, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 1, 2, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 1, 3, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 1, 4, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 1, 5, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 1, 6, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 1, 7, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 1, 8, null)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I29" parameterClass="Map">
@@ -2890,14 +2890,14 @@
 	    		(3, #tenantID#, #companyID#, 73, 1, 20, 19, 0),
 				(3, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 1, 23, 4, 0),
 				(3, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 1, 24, 3, 0),
-				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 1, -2, 4, 0),
-				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 1, -1, 4, 0),
-				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 1, 1, 2, 0),
-				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 1, 2, 6, 0),
-				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 1, 3, 3, 0),
-				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 4, 1, 0),
-				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 1, 5, 4, 0),
-				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 1, 6, 4, 0)
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 1, 1, 4, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 1, 2, 4, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 1, 3, 2, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 1, 4, 6, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 1, 5, 3, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 6, 1, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 1, 7, 4, 0),
+				(4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 1, 8, 4, 0)
   		]]>
     </insert>
     
@@ -2940,7 +2940,15 @@
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
                 ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
-                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y'),
+                ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
   		]]>
     </insert>
     

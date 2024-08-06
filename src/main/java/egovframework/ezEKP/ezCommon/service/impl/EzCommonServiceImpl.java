@@ -3992,39 +3992,34 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         int portletId = ezCommonDAO.getNewPortletId();
         map.put("webType", "mobile");
         if ((int)ezCommonDAO.checkPortletCodeString("mFixTop") < 1) { // 모바일 init data 유무 판단
-           ezCommonDAO.insertMobileTheme(); // portal_theme
-           ezCommonDAO.insertMobileFrame(); // portal_frame
-           for (int i = 0;  i < checkMobileCodes.length; i++) {
-               if ((int)ezCommonDAO.checkPortletCodeString(checkMobileCodes[i]) < 1) {
-                   map.put("portletId", portletId);
-                   map.put("menuId", menuId[i]);
-                   map.put("portletUrl", portletUrl[i]);
-                   map.put("connectionUrl", portletUrl[i]);
-                   map.put("portletType", "MG");
-                   map.put("portletUsed", "1");
-                   if (i < 2) {
-                       map.put("defaultOrder", i-2);
-                       map.put("portletOrder", i-2);
-                   } else {
-                       map.put("defaultOrder", i-1);
-                       map.put("portletOrder", i-1);
-                   }
-                   map.put("portletCode", checkMobileCodes[i]);
-                   ezCommonDAO.insertPortletWithCode(map); //portal_portlet
-    
-                   for (int j = 0; j < portletNames[i].length; j++) {
-                       map.put("portletName" + (j + 1), portletNames[i][j]);
-                   }
-                   
-                   // portlet_comp, portlet_name, theme_portlet, portal_portlet_auth
-                   for (int j = 0; j < companyList.size(); j++) {
-                       CompanyInfoVO company = companyList.get(j);
-                       if (company.getCompanyId() != null) {
-                           map.put("companyId", company.getCompanyId());
-                           map.put("tenantId", company.getTenantId());
-                           ezCommonDAO.insertPortletInfoData(map);
-                           ezCommonDAO.insertMobileFrameComp(map);
-                           ezCommonDAO.insertMobileThemeComp(map);
+            ezCommonDAO.insertMobileTheme(); // portal_theme
+            ezCommonDAO.insertMobileFrame(); // portal_frame
+            for (int i = 0;  i < checkMobileCodes.length; i++) {
+                if ((int)ezCommonDAO.checkPortletCodeString(checkMobileCodes[i]) < 1) {
+                    map.put("portletId", portletId);
+                    map.put("menuId", menuId[i]);
+                    map.put("portletUrl", portletUrl[i]);
+                    map.put("connectionUrl", portletUrl[i]);
+                    map.put("portletType", "MG");
+                    map.put("portletUsed", "1");
+                    map.put("defaultOrder", i+1);
+                    map.put("portletOrder", i+1);
+                    map.put("portletCode", checkMobileCodes[i]);
+                    ezCommonDAO.insertPortletWithCode(map); //portal_portlet
+                    
+                    for (int j = 0; j < portletNames[i].length; j++) {
+                        map.put("portletName" + (j + 1), portletNames[i][j]);
+                    }
+                    
+                    // portlet_comp, portlet_name, theme_portlet, portal_portlet_auth
+                    for (int j = 0; j < companyList.size(); j++) {
+                        CompanyInfoVO company = companyList.get(j);
+                        if (company.getCompanyId() != null) {
+                            map.put("companyId", company.getCompanyId());
+                            map.put("tenantId", company.getTenantId());
+                            ezCommonDAO.insertPortletInfoData(map);
+                            ezCommonDAO.insertMobileFrameComp(map);
+                            ezCommonDAO.insertMobileThemeComp(map);
                         }
                     }
                 }
