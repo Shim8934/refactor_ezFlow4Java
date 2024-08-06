@@ -1061,14 +1061,8 @@ CREATE TABLE `jmocha_stat_mail_log` (
   KEY `IDX_RECIPIENT_NAME` (`RECIPIENT_NAME`),
   KEY `IDX_MESSAGESUBJECT` (`MESSAGESUBJECT`(768)),
   KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`(768)),
-  KEY `IDX_MESSAGEID` (`MESSAGEID`),
-  FULLTEXT KEY `SENDER` (`SENDER`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
-  FULLTEXT KEY `SENDER_NAME` (`SENDER_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
-  FULLTEXT KEY `RECIPIENT` (`RECIPIENT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
-  FULLTEXT KEY `RECIPIENT_NAME` (`RECIPIENT_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
-  FULLTEXT KEY `MESSAGESUBJECT` (`MESSAGESUBJECT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
-  FULLTEXT KEY `ATTACHED_FILENAME` (`ATTACHED_FILENAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"'
-) ENGINE=Mroonga AUTO_INCREMENT=6406249 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='engine "InnoDB"';
+  KEY `IDX_MESSAGEID` (`MESSAGEID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
