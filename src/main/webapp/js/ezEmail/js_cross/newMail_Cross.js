@@ -3287,6 +3287,29 @@ function addReceiver(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
     addReceiverOneListView(1, pListViewMsgCC);
     addReceiverOneListView(2, pListViewMsgBCC);
 }
+
+function checkDLexist(groupName) {
+    var result;
+    
+    try {
+        $.ajax({
+            type: "GET",
+            async: false,
+            url : "/ezEmail/CheckDistributionExist.do",
+            dataType : "json",
+            data: {
+                "groupName" : groupName
+                },
+            success: function(data) {
+                result = data.userName;
+            }
+        });
+    }catch(e) {
+            console.log("CheckDistributionExist이 동작 안함");
+    }
+        return result;
+}
+var mail_select_dlmember_cross_dialogArguments = new Array();
 function NameChange_onClick() {
     g_bDirty = true;
     var count;
@@ -3304,25 +3327,41 @@ function NameChange_onClick() {
     if (this != null) {
     	var eventElement = (event.target ? event.target : event.srcElement);
     	var name = eventElement.parentElement.getAttribute("name");
-    	
-        GetMailAddresses(name);
-        rgParams["addrBook"] = m_addrBook;
-        rgParams["g_DisplayName"] = name;
-        rgParams["g_EmailAddress"] = eventElement.getAttribute("email");
-        rgParams["cmd"] = "JustThis";
-        checkname_cross_dialogArguments = new Array();
-        checkname_cross_dialogArguments[0] = rgParams;
-        checkname_cross_dialogArguments[1] = NameChange_onClick_Complete;
-        checkname_cross_dialogArguments[2] = DivPopUpHidden;
-        checkname_cross_dialogArguments[3] = eventElement.parentElement;
+    	var mailAddress = eventElement.parentElement.getAttribute("email");
+        var checkDistributionName = checkDLexist(name); 
         
-        if (!CrossYN()) {
-            EzHTTPTrans.style.display = "none";
-        }    
-        
-        DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
+        if(checkDistributionName != ""){
+            var rtnValue = { "name": new Array(), "email": new Array() };
+
+            mail_select_dlmember_cross_dialogArguments[0] = rtnValue;
+            mail_select_dlmember_cross_dialogArguments[1] = dlmember_click_Complete;
+            mail_select_dlmember_cross_dialogArguments[2] = DivPopUpHidden;
+            DivPopUpShow(601, 470, "/ezEmail/mailSelectDLMember.do?name=" + javaURLEncode(name) + "&cn=" + checkDistributionName + "&mailAddress=" + mailAddress + "&newMailFlag=Y");
+        } else{
+            GetMailAddresses(name);
+            rgParams["addrBook"] = m_addrBook;
+            rgParams["g_DisplayName"] = name;
+            rgParams["g_EmailAddress"] = eventElement.getAttribute("email");
+            rgParams["cmd"] = "JustThis";
+            checkname_cross_dialogArguments = new Array();
+            checkname_cross_dialogArguments[0] = rgParams;
+            checkname_cross_dialogArguments[1] = NameChange_onClick_Complete;
+            checkname_cross_dialogArguments[2] = DivPopUpHidden;
+            checkname_cross_dialogArguments[3] = eventElement.parentElement;
+            
+            if (!CrossYN()) {
+                EzHTTPTrans.style.display = "none";
+            }    
+            
+            DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
+        }
     }
 }
+
+function dlmember_click_Complete() {
+    DivPopUpHidden();
+}
+
 function NameChange_onClick_Complete(rgParams) {
     DivPopUpHidden();
     if (rgParams["recipientTDData"] == "dontprocess") return;

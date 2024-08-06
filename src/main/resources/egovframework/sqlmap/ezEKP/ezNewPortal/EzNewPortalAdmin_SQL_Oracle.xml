@@ -608,14 +608,29 @@
 			]]>
 		<isNotEqual property="type" compareValue="mobile">
 			<![CDATA[
-				(#menuId#, #connectionUrl#, 'A', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('A', 'G')), #portletCode#)
+				((SELECT
+					NVL(MAX(portlet_id), 0) + 1 as portlet_id
+				FROM 
+				TBL_PORTAL_PORTLET), #menuId#, #connectionUrl#, 'A', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('A', 'G')), #portletCode#)
 			]]>
 		</isNotEqual>
 		<isEqual property="type" compareValue="mobile">
 			<![CDATA[
-				(#menuId#, #connectionUrl#, 'MA', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('MA', 'MG')), #portletCode#)
+				((SELECT
+					NVL(MAX(portlet_id), 0) + 1 as portlet_id
+				FROM 
+				TBL_PORTAL_PORTLET), #menuId#, #connectionUrl#, 'MA', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('MA', 'MG')), #portletCode#)
 			 ]]>
 		</isEqual>
+		
+		<selectKey keyProperty="portletId" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(MAX(portlet_id), 0) + 1 as portlet_id
+			FROM 
+				TBL_PORTAL_PORTLET
+		]]>
+		</selectKey>
 	</insert>
 	
 	<insert id="ezNewPortal.insertPortletComp" parameterClass="Map">

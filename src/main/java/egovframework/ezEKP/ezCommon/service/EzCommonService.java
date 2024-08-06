@@ -394,6 +394,8 @@ public interface EzCommonService {
 
     public void alterTblScheduleForShowtop() throws Exception;
 	
+	public void addUserDeptHideFlag() throws Exception;
+	
 	public void insertInitMobileTheme() throws Exception;
 
 	public void alterMenuOpenType() throws Exception;
@@ -403,5 +405,7 @@ public interface EzCommonService {
 	public void createConnectionMenu() throws Exception;
 
 	public void insertStandardSystemConfigData() throws Exception;
+
+	public void createEmergencyNotiTable() throws Exception;
 	
 }

@@ -74,56 +74,30 @@
 					document.querySelector(".logo img").src = "/files/upload_portal/Top/Logo/logo.gif";
 				}
 
-				var plusBtn = mainFrame.document.querySelectorAll(".portletPlus");
-				plusBtn.forEach(function(item){
-					var btnImg = item.querySelector("img");
+				var leftFrame = mainFrame.document.getElementsByName("left")[0].contentWindow;
+				var leftSkinCss = leftFrame.document.getElementById("leftSkinCss");
 
-					if(skinId == "dark"){
-						if(btnImg && btnImg.src.includes("/images/ezNewPortal/portlet_Plus")){
-							btnImg.src = "/images/ezNewPortal/skin/dark/portlet_Plus.png";
-						} else if(btnImg && btnImg.src.includes("/images/ezNewPortal/portlet_setting")){
-							btnImg.src = "/images/ezNewPortal/skin/dark/portlet_setting.png";
-						}
-					} else{
-						if(btnImg && btnImg.src.includes("/images/ezNewPortal/skin/dark/portlet_Plus")){
-							if(themeId.id == "theme1Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_Plus1.png";
-							} else if(themeId.id == "theme2Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_Plus2.png";
-							} else if(themeId.id == "theme3Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_Plus3.png";
-							}
-						} else if(btnImg && btnImg.src.includes("/images/ezNewPortal/skin/dark/portlet_setting")){
-							if(themeId.id == "theme1Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_setting1.png";
-							} else if(themeId.id == "theme2Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_setting2.png";
-							} else if(themeId.id == "theme3Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_setting3.png";
-							}
-						}
-					}
-				})
+				if(leftSkinCss){
+					leftSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					skinLink = document.createElement("link");
+					skinLink.id = "leftSkinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					leftFrame.document.head.appendChild(skinLink);
+				}
 
-				if(themeId.id == "theme2Body"){
-					var theme2Img = mainFrame.document.querySelectorAll("#theme2Body .writebanner .writebannerDL dt");
-					theme2Img.forEach(function(item){
-						var listImg = item.querySelector("img");
-						if(listImg){
-							if(skinId == "dark"){
-								listImg.src = listImg.src.replace("/images/ezNewPortal/theme2Img","/images/ezNewPortal/skin/dark");
-							} else {
-								listImg.src = listImg.src.replace("/images/ezNewPortal/skin/dark","/images/ezNewPortal/theme2Img");
-							}
-						}
-					})
+				var rightFrame = mainFrame.document.getElementsByName("right")[0].contentWindow;
+				var rightSkinCss = rightFrame.document.getElementById("rightSkinCss");
 
-					var theme2Img2 = mainFrame.document.querySelector("#theme2Body .exellentEmployee .portlet_title .portletText img");
-					if(skinId == "dark"){
-						theme2Img2.src = theme2Img2.src.replace("/images/ezNewPortal/theme2Img","/images/ezNewPortal/skin/dark");
-					} else {
-						theme2Img2.src = theme2Img2.src.replace("/images/ezNewPortal/skin/dark","/images/ezNewPortal/theme2Img");
-					}
+				if(rightSkinCss){
+					rightSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					skinLink = document.createElement("link");
+					skinLink.id = "rightSkinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					rightFrame.document.head.appendChild(skinLink);
 				}
 			}
 		</script>
@@ -669,8 +643,23 @@
 
 			removeAllChildernElem(document.getElementById('menuListAll'));
 			
-			var menuCount = 0;
-			menuList.forEach(function (item, index) {
+			var menuCount = 1;
+			for (var i = 0; i < menuList.length; i++) {
+				if (menuCount == 8) {
+					var menuResetBtn = document.createElement('li');
+					var menuResetBtnSpan = document.createElement('span');
+					menuResetBtnSpan.textContent = '<spring:message code="ezNewPortal.topMenu.hth08" />';
+					menuResetBtn.appendChild(menuResetBtnSpan);
+					menuResetBtn.setAttribute("id", "menuResetting");
+					menuResetBtn.classList.add("icon_nav_menuset_leftmenu");
+					menuResetBtn.addEventListener('click', menuReset);
+					document.getElementById('menuListAll').appendChild(menuResetBtn);
+					menuCount++;
+					i--;
+					continue;
+				}
+				
+				var item = menuList[i];
 				if (item.menuId == connectMenuId) {
 					return; //연계메뉴 표출 x
 				}
@@ -687,8 +676,9 @@
 				if (!!item.iconUrl && item.iconUrl.split(" ").length > 0)  menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
 				menuAllList.classList.add('sortable-item');
 				
-				if (menuCount < maxMenuCount) {
+				if (menuCount <= maxMenuCount) {
 					menuAllList.classList.add('on');
+					menuAllList.classList.add('menu-icon');
 				}
 				
 				menuAllList.addEventListener('click', function() {
@@ -703,8 +693,68 @@
 				
 				document.getElementById('menuListAll').appendChild(menuAllList);
 				//str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
+				
 				menuCount++;
+			}
+			
+			//  메뉴 개수가 8개보다 작아서 메뉴정렬 버튼이 표출되지 않는 경우, 마지막에 버튼 추가
+			if (menuList.length <= maxMenuCount) {
+				var menuResetBtn = document.createElement('li');
+				var menuResetBtnSpan = document.createElement('span');
+				menuResetBtnSpan.textContent = '<spring:message code="ezNewPortal.topMenu.hth08" />';
+				menuResetBtn.appendChild(menuResetBtnSpan);
+				menuResetBtn.setAttribute("id", "menuResetting");
+				menuResetBtn.classList.add("icon_nav_menuset_leftmenu");
+				menuResetBtn.addEventListener('click', menuReset);
+				document.getElementById('menuListAll').appendChild(menuResetBtn);
+			}
+		}
+		
+		var menuReset = function () {
+			HTMLCollection.prototype.forEach = Array.prototype.forEach;
+			$(".menu_position").css("display","flex");	// 메인 메뉴 위치 설정
+			$('#menuListAll li').removeClass("on");							
+			$("#menuListAll .sortable-item").draggable({
+			    revert: "invalid",
+			    containment: "parent",
+			    zIndex: 100,
+			    start: function (event, ui) {
+			    	var dragElem = $(this);
+			    	dragElem.css({
+			    		"cursor": "move",
+			    		"opacity": "0.6"
+			    	});
+			    },
+			    snap:'#menuListAll li',
+			    stop : function(event, ui) {
+			    	var dragElem = $(this);
+			    	dragElem.css({
+			    		"cursor": "pointer",
+			    		"opacity": ""
+			    	});
+			    },
+			    helper : "clone"
 			});
+			  
+			$("#menuListAll .sortable-item").droppable({
+			    tolerance: "intersect",
+			    drop: function(event, ui) {
+				var dragElem = ui.draggable;
+				var dropElem = $(this);
+				changePosition(dragElem, dropElem);
+				if(newPortalTopMenu.isInitOrder === true) {
+					newPortalTopMenu.isInitOrder = false;
+				}
+			  }
+			});
+			
+			var sortedMenu = document.getElementById('menuListAll');
+			sortedMenu.className = 'full_menu_toggleUL_edit';
+
+			// 하단 메뉴 변경
+			var editMenuBtn = document.getElementById('editMenuBtn');
+			editMenuBtn.style.display = 'block';
+            $("#menuAllContainer ul").addClass("active");
 		}
 		
 		// 확장메뉴 버튼에서 나오는 메뉴리스트 및 이벤트
@@ -712,64 +762,11 @@
 
 			setExpandMenuList(); // 확장메뉴 리스트
 			
-			// 편집모드로 변경 이벤트
-			var editBtn = document.getElementById('editBtn');
-			var menuResetting = document.querySelector('#menuResetting');
-			menuResetting.addEventListener('click', function () {
-				HTMLCollection.prototype.forEach = Array.prototype.forEach;
-				$(".menu_position").css("display","flex");	// 메인 메뉴 위치 설정
-				$('#menuListAll li').removeClass("on");							
-				$("#menuListAll .sortable-item").draggable({
-				    revert: "invalid",
-				    containment: "parent",
-				    zIndex: 100,
-				    start: function (event, ui) {
-				    	var dragElem = $(this);
-				    	dragElem.css({
-				    		"cursor": "move",
-				    		"opacity": "0.6"
-				    	});
-				    },
-				    snap:'#menuListAll li',
-				    stop : function(event, ui) {
-				    	var dragElem = $(this);
-				    	dragElem.css({
-				    		"cursor": "pointer",
-				    		"opacity": ""
-				    	});
-				    },
-				    helper : "clone"
-				});
-				  
-				$("#menuListAll .sortable-item").droppable({
-				    tolerance: "intersect",
-				    drop: function(event, ui) {
-					var dragElem = ui.draggable;
-					var dropElem = $(this);
-					changePosition(dragElem, dropElem);
-					if(newPortalTopMenu.isInitOrder === true) {
-						newPortalTopMenu.isInitOrder = false;
-					}
-				  }
-				});
-				
-				var sortedMenu = document.getElementById('menuListAll');
-				sortedMenu.className = 'full_menu_toggleUL_edit';
-
-				// 하단 메뉴 변경
-				var editMenuBtn = document.getElementById('editMenuBtn');
-				editBtn.style.display = 'none';
-				editMenuBtn.style.display = 'block';
-	            $("#menuAllContainer ul").addClass("active");
-				
-			});
-			
 			// 취소버튼
 			var editMenuCancel = document.getElementById('editMenuCancel');
 			editMenuCancel.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
 				document.getElementById('editMenuBtn').style.display = 'none';
-				document.getElementById('editBtn').style.display = 'block';
 				$("#menuAllContainer ul").removeClass("active");
 				
 				var sortedMenu = document.getElementById('menuListAll');
@@ -787,17 +784,16 @@
 			editMenuSave.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
 				document.getElementById('editMenuBtn').style = 'none';
-				document.getElementById('editBtn').style = 'block';
-				 $("#menuAllContainer ul").removeClass("active");
+				$("#menuAllContainer ul").removeClass("active");
 				 
-				var sortedMenu = document.getElementById('menuListAll');
-				sortedMenu.className = 'full_menu_toggleUL';
+				var menuListAll = document.getElementById('menuListAll');
+				menuListAll.className = 'full_menu_toggleUL';
 				
 				$('#menuListAll .sortable-item').draggable("disable");
 				$('#menuListAll .sortable-item').droppable("disable");
 				
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
-				var sortedMenu = document.getElementById('menuListAll').getElementsByTagName('li');
+				var sortedMenu = document.getElementById('menuListAll').getElementsByClassName('sortable-item');
 				
 				var userMenuDisplayModeBtn = document.getElementsByName('userMenuDisplayMode');
 				for (var i = 0; i < userMenuDisplayModeBtn.length; i++) {
@@ -857,39 +853,6 @@
 				}
 				
 			});			
-			
-			// 메뉴 순서 초기화 버튼
-			/* var editcompanyOrder = document.getElementById('editcompanyOrder');
-			editcompanyOrder.addEventListener('click', function() {
- 
-				var elements = document.getElementById('toggleMenu').childNodes;
-	 			Array.prototype.forEach.call(elements, function (item, index) { 				
-					newPortalTopMenu.companyOrder[index] = {
-						menuId: item.id,
-						companyOrder: item.dataset.companyorder*1,
-						iconUrl: newPortalTopMenu.menuListObj['menu_'+item.id].iconUrl,
-						menuName: newPortalTopMenu.menuListObj['menu_'+item.id].menuName,
-						menuUrl: newPortalTopMenu.menuListObj['menu_'+item.id].menuUrl,
-					};
-				});
-	 			
-	 			var temp = [];
-	 			for(var i=0; i<newPortalTopMenu.companyOrder.length; i++ ) {
-	 				for(var j=i; j<newPortalTopMenu.companyOrder.length; j++) {
-	 					if(newPortalTopMenu.companyOrder[i].companyOrder > newPortalTopMenu.companyOrder[j].companyOrder ) {
-	 						temp = newPortalTopMenu.companyOrder[i];
-	 						newPortalTopMenu.companyOrder[i] = newPortalTopMenu.companyOrder[j];
-	 						newPortalTopMenu.companyOrder[j] = temp;
-	 					}
-	 				}
-	 			};
-	 			
-				// 확장메뉴 재배치	
-	 			setExpandMenuList(newPortalTopMenu.companyOrder);
-				
-				// 메뉴 순서 초기화 값 true로 변경
-				newPortalTopMenu.isInitOrder = true;
-			});	 */		
 		}
 		
 		function changePosition(dragElem, dropElem) {

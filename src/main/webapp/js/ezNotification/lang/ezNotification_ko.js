@@ -9,6 +9,7 @@ var mainType = {
 	community : "커뮤니티",
 	webfolder : "웹폴더",
 	journal : "업무일지",
+	noti : "공지알림",
 	etc : "기타"
 }
 
@@ -71,6 +72,9 @@ var subType = {
 	journal : {
 		comment : "댓글등록",
 		recv : "수신알림"
+	},
+	noti : {
+		emergency : "긴급공지"
 	}
 }
 

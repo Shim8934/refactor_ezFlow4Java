@@ -1562,7 +1562,7 @@ public class MLoginGWController {
     	return result;
     }
     
-	@RequestMapping(value="/mobile/ezUser/login/users/{userId}/multilogin", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezUser/login/users/{userId:.+}/multilogin", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject validMultiLogin(@PathVariable String userId, @RequestParam String multiLoginTime, HttpServletRequest request) throws Exception {
 		logger.debug("validMultiLogin started.");
 
@@ -1593,7 +1593,7 @@ public class MLoginGWController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezUser/login/users/{userId}/valid", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezUser/login/users/{userId:.+}/valid", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject valid(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
 		logger.debug("valid started.");
 		JSONObject result = new JSONObject();
@@ -1826,7 +1826,7 @@ public class MLoginGWController {
 	 * 암호 변경 API
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezUser/login/users/{userId}/changePassword", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezUser/login/users/{userId:.+}/changePassword", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject changePassword(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
 		logger.debug("MOBILE G/W LOGIN [PUT /mobile/ezUser/login/users/{}/changePassword] started.", userId);
 

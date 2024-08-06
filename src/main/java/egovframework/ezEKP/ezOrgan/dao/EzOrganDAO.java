@@ -256,13 +256,14 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (String) select("EzOrganDAO.getLoginIP", map);
 	}
 	
-	private int deptSubDeptCntForLocal(String deptID, int tenantId, String isOrgan) throws Exception {
+	private int deptSubDeptCntForLocal(String deptID, int tenantId, String isOrgan, String adminOrgan) throws Exception {
         logger.debug("deptSubDeptCntForLocal started. deptID=" + deptID + ",tenantId=" + tenantId);
         
     	Map<String, Object> map = new HashMap<String, Object>();
     	map.put("deptID", deptID);
     	map.put("tenantId", tenantId);
     	map.put("isOrgan", isOrgan);
+		map.put("adminOrgan", adminOrgan);
     	
         int deptSubDeptCnt = (int) select("EzOrganDAO.deptSubDeptCnt", map);
         
@@ -272,8 +273,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
         return deptSubDeptCnt;
     }
 	
-	public int deptSubDeptCnt(String deptID, int tenantId, String isOrgan) throws Exception{
-		return deptSubDeptCntForLocal(deptID, tenantId, isOrgan);       
+	public int deptSubDeptCnt(String deptID, int tenantId, String isOrgan, String adminOrgan) throws Exception{
+		return deptSubDeptCntForLocal(deptID, tenantId, isOrgan, adminOrgan);       
 	}
 	
     private OrganUserVO getUserAddjobInfoForLocal(Map<String, Object> map) throws Exception{

@@ -123,8 +123,8 @@ nav .navUL li.on{color:#388CE5;}
 .lnb ul li.icon_nav_car_leftmenu:hover:before, .lnb ul li.on.icon_nav_car_leftmenu:before{background-image:url(/images/lnb/lnb_car.svg);}
 .lnb ul li.icon_nav_work_leftmenu:hover:before, .lnb ul li.on.icon_nav_work_leftmenu:before{background-image:url(/images/lnb/lnb_work.svg);}
 
-.lnb ul li span{color:#fff;}
-.lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
+header + .lnb ul li span{color:#fff;}
+header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 
 .lnb_menu_setting{background:#3E3F41;}
 .lnb_menu_setting .menu_set span{color:#fff; background-image:url(../../images/ezNewPortal/skin/dark/set_icon.svg);}
@@ -141,11 +141,11 @@ nav .navUL li.on{color:#388CE5;}
 .full_menu_toggleUL_edit > li{background:none;}
 
 .lnb_menu_all{background:#272829;}
-.lnb_menu_all ul li:nth-child(-n+5){border-color:#4F5153;}
+.lnb_menu_all ul li:nth-child(-n+8){border-color:#4F5153;}
 .lnb_menu_all ul.active li{border-color:#5E6062;}
-.lnb_menu_all ul.active li:nth-child(5n-4){border-color:#5E6062;}
-.lnb_menu_all ul.active li:nth-child(-n+5){background:#3E3F41; border-color:#D5D5D5;}
-
+.lnb_menu_all ul.active li:nth-child(4n-3){border-color:#5E6062;}
+.lnb_menu_all ul.active li:nth-child(-n+7){background:#3E3F41; border-color:#D5D5D5;}
+.lnb ul.active li.icon_nav_menuset_leftmenu{background-color:#c8c7c7;}
 
 /* 메인 상단 */
 .mainbg{background-color:#1E1E20;}
@@ -165,8 +165,9 @@ nav .navUL li.on{color:#388CE5;}
 .box_shadow{border-color:#1E1E20; background:#272829}
 .layDIV{background:#272829;}
 .portlet_title .portletText{color:#F3F3F3;}
-.portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/skin/dark/portlet_Plus.png) !important;}
-.portlet_title .portletPlus.setting{background-image:url(../../images/ezNewPortal/skin/dark/portlet_setting.png) !important;}
+.portletPlus.plus{background-image:url(../../images/ezNewPortal/skin/dark/portlet_Plus.png) !important;}
+.portletPlus.setting{background-image:url(../../images/ezNewPortal/skin/dark/portlet_setting.png) !important;}
+#theme1Body .img_slide .fix-portlet .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus1_white.png) !important;}
 .portlet_list li{border-color:#444444;}
 .portlet_list li .txt{color:#F3F3F3;}
 .portlet_list li:hover .txt{color:#fff;}
@@ -452,3 +453,12 @@ nav .navUL li.on{color:#388CE5;}
 #theme3Body .resource_listBoxUL .resource_listBoxDL dd .resource_list_add{background:none;}
 
 #theme3Body .mailGraph .mGraph{background:#343638;}
+
+.mainbg .ui-datepicker{border:1px solid #5D5D5D; background:#272829;}
+.mainbg .ui-datepicker .ui-datepicker-header{background:#343638;}
+.mainbg .ui-datepicker .ui-datepicker-title select{color:#F3F3F3;}
+.mainbg .ui-datepicker th span{color:#fff;}
+.mainbg .ui-state-default, .mainbg .ui-widget-content .ui-state-default, .mainbg .ui-widget-header .ui-state-default{color:#F3F3F3;}
+.mainbg .ui-widget-content .ui-state-hover{color:#333;}
+.mainbg .ui-datepicker-prev span{background-image:url(../../images/ezNewPortal/skin/dark/datepicker_prev.png);}
+.mainbg .ui-datepicker-next span{background-image:url(../../images/ezNewPortal/skin/dark/datepicker_next.png);}

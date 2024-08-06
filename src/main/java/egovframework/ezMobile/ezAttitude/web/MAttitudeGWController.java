@@ -156,7 +156,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 	 * G/W 근태관리 [POST] 근태등록
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezattitude/users/{userId}/attitudes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezattitude/users/{userId:.+}/attitudes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject registeAttitude(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [POST /mobile/ezattitude/users/" + userId + "/attitudes] started.");
 

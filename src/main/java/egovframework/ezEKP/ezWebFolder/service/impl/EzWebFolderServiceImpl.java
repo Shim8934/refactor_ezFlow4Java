@@ -581,25 +581,26 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception {
+	public void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level, String adminOrgan) throws Exception {
 		if (sDept.getHasSub().equals("1")) {
-			List<SimpleDeptVO> listSubSimpleDepts = getAllSimpleSubDepts(sDept.getDeptId(), level, primary, tenantId);
+			List<SimpleDeptVO> listSubSimpleDepts = getAllSimpleSubDepts(sDept.getDeptId(), level, primary, tenantId,adminOrgan);
 			sDept.setSubDepts(listSubSimpleDepts);
 			
 			for (SimpleDeptVO subDept: listSubSimpleDepts) {
 				if (order < path.length && subDept.getDeptId().equals(path[order])) {
-					getAllDepts(subDept, path, primary, tenantId, order + 1, level + 1);
+					getAllDepts(subDept, path, primary, tenantId, order + 1, level + 1, adminOrgan);
 				}
 			}
 		}
 	}
 
-	private List<SimpleDeptVO> getAllSimpleSubDepts(String deptId, int level, String primary, int tenantId) {
+	private List<SimpleDeptVO> getAllSimpleSubDepts(String deptId, int level, String primary, int tenantId, String adminOrgan) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("deptId",     deptId);
 		map.put("primary",    primary);
 		map.put("level",      level);
 		map.put("tenantId",   tenantId);
+		map.put("adminOrgan", adminOrgan);
 		
 		return ezWebFolderDAO.getAllSimpleSubDepts(map);
 	}
@@ -613,11 +614,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int tenantId) throws Exception {
+	public List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int tenantId, String adminOrgan) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("deptId",     deptId);
 		map.put("primary",    primary);
 		map.put("tenantId",   tenantId);
+		map.put("adminOrgan", adminOrgan);
 		
 		return ezWebFolderDAO.getDeptMemberList(map);
 	}

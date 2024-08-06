@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezNotification.web;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -29,6 +32,8 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -62,13 +67,36 @@ public class EzNotificationController {
 	public String notificationMain(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("notificationMain started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		model.addAttribute("deptID", userInfo.getDeptID());
-		model.addAttribute("userID", userInfo.getId());
-		
 		logger.debug("notificationMain ended");
 		
 		return "/ezNotification/notificationMain";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ezNotification/checkEmergencyPermission.do", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public String emergencyNotiPermissionCheck(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("emergencyNotiPermissionCheck started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String url = "/rest/ezNotification/emergency/permission/check";
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("companyId", userInfo.getCompanyID());
+		paramMap.put("userId", userInfo.getId());
+		paramMap.put("roleInfo", userInfo.getRollInfo());
+		paramMap.put("deptId", userInfo.getDeptID());
+		paramMap.put("jobId", userInfo.getJobId());
+		paramMap.put("roleId", userInfo.getRoleId());
+		paramMap.put("deptPath",userInfo.getDeptPathCode());
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "get", null);
+		String status = resultBody.get("status").toString();
+		String adminFlag = "false";
+		if (status.equals("ok")) {
+			adminFlag = (String) resultBody.get("data");
+		}
+		
+		logger.debug("emergencyNotiPermissionCheck ended");
+		return adminFlag;
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 통합알림 전송.
@@ -81,7 +109,7 @@ public class EzNotificationController {
 		String gwServerUrl = config.getProperty("config.notificationGWServerURL");
 		String senderId = notiData.getSenderId();
 		String url = gwServerUrl + "/rest/ezNotification/notiSend/" + senderId;
-		String recipientIdList = notiData.getRecipientIdList();
+		List<Map<String, Object>> recipient = notiData.getRecipient();
 		String senderName = notiData.getSenderName();
 		String notiContent = notiData.getNotiContent();
 		String mainType = notiData.getMainType();
@@ -100,7 +128,7 @@ public class EzNotificationController {
 		
 		JSONObject jsonParam = new JSONObject();
 		jsonParam.put("senderName", senderName);
-		jsonParam.put("recipientIdList", recipientIdList);
+		jsonParam.put("recipient", recipient);
 		jsonParam.put("mainType", mainType);
 		jsonParam.put("subType", subType);
 		jsonParam.put("notiContent", notiContent);
@@ -192,7 +220,7 @@ public class EzNotificationController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 알림 검색.
-	@RequestMapping(value = "/ezNotification/searchNoti.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/ezNotification/searchNoti.do", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject searchNoti(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("searchNoti started");
@@ -238,7 +266,7 @@ public class EzNotificationController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 읽지않은 알림 개수 가져오기.
-	@RequestMapping(value = "/ezNotification/getUnreadNotiCnt.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/ezNotification/getUnreadNotiCnt.do", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public String getUnreadNotiCnt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getUnreadNotiCnt started");
@@ -273,7 +301,7 @@ public class EzNotificationController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 새 알림 개수 가져오기.
-	@RequestMapping(value = "/ezNotification/getNewNotiCnt.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/ezNotification/getNewNotiCnt.do", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getNewNotiCnt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getNewNotiCnt started");
@@ -308,5 +336,197 @@ public class EzNotificationController {
 		
 		return returnData;
 	}
+	
+	@RequestMapping(value = "/ezNotification/emergencyNoti.do", method=RequestMethod.GET)
+	public String emergencyNotiMain(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("emergencyNotiMain started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		String url = "/rest/ezNotification/company/get/emergency/content";
+		String notiCompanyContent = "";
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("companyId", companyId);
+		paramMap.put("userId", userId);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), url, paramMap, request, "get", null);
+		String status = resultBody.get("status").toString();
+		if (status.equals("ok")) {
+			notiCompanyContent = (String) resultBody.get("data");
+		}
+		model.addAttribute("notiCompanyContent", notiCompanyContent);
+		
+		logger.debug("emergencyNotiMain ended");
+		
+		return "/ezNotification/emergencyNotiMain";
+	}
+	
+	@RequestMapping(value = "/ezNotification/notiSelectReceiver.do", method=RequestMethod.GET)
+	public String notiSelectReceiver(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("notiSelectReceiver started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String topID = "";
+        String selCompany = userInfo.getCompanyID();
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		String deptTreeTopId = "";
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		
+		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
+			topID = "Top";
+			deptTreeTopId = topID + "/organ";
+		} else {
+			topID = selCompany;
+			deptTreeTopId = topID;
+		}
+
+		model.addAttribute("topID", topID);
+		model.addAttribute("use_ocs", "");
+		model.addAttribute("userID", userInfo.getId());
+		model.addAttribute("selCompany", selCompany);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("deptTreeTopId", deptTreeTopId);
+		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
+		logger.debug("notiSelectReceiver ended");
+		
+		return "/ezNotification/notiSelectReceiver";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezNotification/sendEmergencyNoti.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String sendEmergencyNoti(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, @RequestBody NotificationVO notiData) throws Exception {
+		logger.debug("sendEmergencyNoti started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String gwServerUrl = config.getProperty("config.notificationGWServerURL");
+		String senderId = userInfo.getId();
+		String senderName = userInfo.getDisplayName();
+		String notiContent = notiData.getNotiContent();
+		String notiBody = notiData.getNotiBody();
+		
+		String result = "ok";
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		headers.set("Content-type", "application/json;charset=UTF-8");
+		
+		String emergencyContentUrl = "/rest/ezNotification/emergency/notiItem/" + senderId;
+		
+		JSONObject jsonEmergencyParam = new JSONObject();
+		jsonEmergencyParam.put("notiBody", notiBody);
+		jsonEmergencyParam.put("companyId", userInfo.getCompanyID());
+		jsonEmergencyParam.put("notiContent", notiContent);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), emergencyContentUrl, null, request, "post", jsonEmergencyParam);
+		long emergencyItemId = 0;
+		String status = resultBody.get("status").toString();
+		if (status.equals("ok")) {
+			emergencyItemId = (long) resultBody.get("data");
+			
+			String notiSendUrl = gwServerUrl + "/rest/ezNotification/notiSend/" + senderId;
+			List<Map<String, Object>> recipient = notiData.getRecipient();
+
+			JSONObject jsonParam = new JSONObject();
+			jsonParam.put("senderName", senderName);
+			jsonParam.put("recipient", recipient);
+			jsonParam.put("mainType", "NOTI");
+			jsonParam.put("subType", "EMERGENCY");
+			jsonParam.put("notiContent", notiContent);
+			jsonParam.put("viewType", "layer");
+			jsonParam.put("viewWidth", "700");
+			jsonParam.put("viewHeight", "400");
+			jsonParam.put("linkUrl", "/ezNotification/emergencyNotiItem.do?emergencyItemId=" + emergencyItemId);
+			jsonParam.put("linkUrlMobile", "/mobile/ezNotification/emergencyNotiItem.do?emergencyItemId=" + emergencyItemId);
+			jsonParam.put("etcData", "notChkSetting");
+			
+			HttpEntity<?> notiEntity = new HttpEntity<>(jsonParam.toJSONString(), headers);
+			RestTemplate notirest = new RestTemplate();
+			
+			ResponseEntity<String> resultNoti = notirest.postForEntity(notiSendUrl, notiEntity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject notiResultBody = (JSONObject) jp.parse(resultNoti.getBody());
+			
+			String notiStatus = notiResultBody.get("status").toString();
+			if (!notiStatus.equals("ok")) {
+				result = "false";
+			}
+		} else {
+			result = "false";
+		}
+		
+		logger.debug("sendEmergencyNoti end");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezNotification/emergencyNotiItem.do", method=RequestMethod.GET)
+	public String emergencyNotiItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("emergencyNotiItem started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String emergencyItemId = request.getParameter("emergencyItemId");
+		
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		String url = "/rest/ezNotification/user/get/emergency/item";
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("companyId", companyId);
+		paramMap.put("userId", userId);
+		paramMap.put("emergencyItemId", emergencyItemId);
+		
+		String adminFlag = "N";
+		LoginVO adminChk = commonUtil.checkAdmin(loginCookie);
+		if (adminChk != null) {
+			adminFlag = "Y";
+		}
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), url, paramMap, request, "get", null);
+		String status = resultBody.get("status").toString();
+		JSONObject resultData = new JSONObject();
+		if (status.equals("ok")) {
+			resultData = (JSONObject) resultBody.get("data");
+			model.addAttribute("emergencyNotiItem", resultData.get("emergencyNotiItem"));
+		} else if (status.equals("empty")) {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", userInfo.getLocale()));
+			logger.debug("emergencyNotiItem ended");
+			return "/common/error";
+		}
+		
+		model.addAttribute("adminFlag", adminFlag);
+		model.addAttribute("userId", userInfo.getId());
+		
+		logger.debug("emergencyNotiItem ended");
+		return "/ezNotification/emergencyNotiItem";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ezNotification/deleteEmergencyNoti.do", method=RequestMethod.POST)
+	public String deleteEmergencyNoti(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("deleteEmergencyNoti started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String emergencyItemId = request.getParameter("notiId");
+		
+		String userId = userInfo.getId();
+		String url = "/rest/ezNotification/user/delete/emergency/item";
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userId", userId);
+		paramMap.put("emergencyItemId", emergencyItemId);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), url, paramMap, request, "delete", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("deleteEmergencyNoti ended");
+		return status;
+	}
+	
 	
 }

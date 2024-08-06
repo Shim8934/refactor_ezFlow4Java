@@ -9,6 +9,7 @@ var mainType = {
 	community : "社区",
 	webfolder : "网络文件夹",
 	journal : "工作日志",
+	noti : "通告",
 	etc : "ETC"
 }
 
@@ -71,6 +72,9 @@ var subType = {
 	journal : {
 		comment : "发表评论",
 		recv : "接收通知"
+	},
+	noti : {
+		emergency : "紧急通知"
 	}
 }
 

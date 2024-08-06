@@ -2097,6 +2097,32 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertApprNonElecRecTypeConfing", map);
 		}
 	}
+	public void addUserDeptHideFlag() {
+		try {
+			select("EzCommonDAO.checkUserHideFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster userHideFlag Columns doesn't exist. creating the column...");
+	
+			update("EzCommonDAO.addUserHideFlag");
+		}
+
+		try {
+			select("EzCommonDAO.checkAddJobHideFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster userHideFlag Columns doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addAddJobHideFlag");
+		}
+	
+		try {
+			select("EzCommonDAO.checkDeptHideFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_deptmaster deptHideFlag Columns doesn't exist. creating the column...");
+	
+			update("EzCommonDAO.addDeptHideFlag");
+		}
+		
+	}
 
     public void insertRecordHeaderClassTitle(Map<String, Object> map) throws Exception {
         String companyId = (String) select("EzCommonDAO.checkRecordHeadereOption", map);
@@ -2431,5 +2457,32 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertStandardSystemConfigData", map);
 		}
 		
+	}
+
+	public void createTblNotiEmergencyCompany() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblNotiEmergencyCompany");
+		} catch (Exception e) {
+			logger.debug("TBL_NOTI_EMERGENCY_COMPANY table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblNotiEmergencyCompany");
+		}	
+	}
+
+	public void createTblNotiEmergencyItem() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblNotiEmergencyItem");
+		} catch (Exception e) {
+			logger.debug("TBL_NOTI_EMERGENCY_ITEM table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblNotiEmergencyItem");
+		}	
+	}
+
+	public void createTblNotiEmergencyPermission() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblNotiEmergencyPermission");
+		} catch (Exception e) {
+			logger.debug("TBL_NOTI_EMERGENCY_PERMISSION table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblNotiEmergencyPermission");
+		}	
 	}
 }

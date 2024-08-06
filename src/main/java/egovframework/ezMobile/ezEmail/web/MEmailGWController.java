@@ -4839,7 +4839,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [PUT] 메일 이동 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}/copy_move", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId:.+}/mails/{messageId:.+}/users/{userId:.+}/copy_move", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public Object mMailMove(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId,
 			@RequestBody JSONObject jsonobject) throws Exception {
 		logger.debug("MOBILE G/W MAIL mMailMove started.");
@@ -5455,6 +5455,144 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
         
 		logger.debug("MOBILE G/W MAIL addAddress ended.");
 		
+		return result;
+	}
+
+	// 모바일 메일 읽기창에서 송신자를 insert
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressSave", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	public Object addressSave(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {
+		logger.debug("MOBILE G/W MAIL addressSave started.");
+		logger.debug("userId=" + userId + ",jsonObject=" + jsonObject);
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+
+			String ownerId = "";
+			String folderType = "";
+			String sName = "";
+			String sCompany = "";
+			String sDept = "";
+			String sTitle = "";
+			String sEmail = "";
+			String sCompanyPhone = "";
+			String sMobile = "";
+			String sMemo = "";
+			String folderId = "";
+			String sFurigana = "";
+
+			if (jsonObject.get("folderType") != null) {
+				folderType = (String)jsonObject.get("folderType");
+			}
+
+			if (jsonObject.get("folderId") != null) {
+				folderId = (String)jsonObject.get("folderId");
+			}
+
+			if (jsonObject.get("sName") != null) {
+				sName = (String)jsonObject.get("sName");
+			}
+
+			if (jsonObject.get("sCompany") != null) {
+				sCompany = (String)jsonObject.get("sCompany");
+			}
+
+			if (jsonObject.get("sDept") != null) {
+				sDept = (String)jsonObject.get("sDept");
+			}
+
+			if (jsonObject.get("sTitle") != null) {
+				sTitle = (String)jsonObject.get("sTitle");
+			}
+
+			if (jsonObject.get("sEmail") != null) {
+				sEmail = (String)jsonObject.get("sEmail");
+			}
+
+			if (jsonObject.get("sCompanyPhone") != null) {
+				sCompanyPhone = (String)jsonObject.get("sCompanyPhone");
+			}
+
+			if (jsonObject.get("sMobile") != null) {
+				sMobile = (String)jsonObject.get("sMobile");
+			}
+
+			if (jsonObject.get("sMemo") != null) {
+				sMemo = (String)jsonObject.get("sMemo");
+			}
+
+			if (jsonObject.get("sFurigana") != null) {
+				sFurigana = (String)jsonObject.get("sFurigana");
+			}
+
+			if (!folderType.isEmpty()) {
+
+				// ownerId가 없으면 디비에서 구하기.
+				if (ownerId.trim().equals("")) {
+					if (folderId.equals("0")) {
+						if (folderType.equals("C")) {
+							ownerId = info.getCompanyId();
+						} else if (folderType.equals("D")) {
+							ownerId = info.getDeptId();
+						} else {
+							ownerId = info.getUserId();
+						}
+					}
+					else {
+						AddressFolderVO folderInfo = ezAddressService.getFolderInfo(folderId);
+						ownerId = folderInfo.getOwnerId();
+					}
+				}
+
+				boolean isDuplicate = ezAddressService.checkDuplicateAddress(info.getTenantId(), ownerId, sEmail.trim());
+				if (isDuplicate) {
+					result.put("status", "error");
+					result.put("code", 3);
+					result.put("data", "duplicate");
+
+					return result;
+				}
+
+				String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", info.getTenantId());
+				logger.debug("useAnyoneEdit="+ useAnyoneEdit);
+
+				// UseAnyoneEdit이 YES가 아닐 경우 관리자인지 체크
+				if (!useAnyoneEdit.equals("YES")) {
+					if (folderType.equals("C")) {
+						if (!(info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1)) {
+							return "NO_AUTHORITY_C";
+						}
+					} else if (folderType.equals("D")) {
+						if (!(info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1 || info.getRollInfo().indexOf("g=1") > -1)) {
+							return "NO_AUTHORITY_D";
+						}
+					}
+				}
+
+				ezAddressService.insertAddress(info.getTenantId(), ownerId, folderId, info.getUserId(),
+						info.getUserName(), info.getUserName2(), sName, sEmail, sCompany, sDept,
+						sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "P", sFurigana);
+
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", "success");
+			} else {
+				result.put("status", "error");
+				result.put("code", 2);
+				result.put("data", "fail");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "fail");
+		}
+
+		logger.debug("MOBILE G/W MAIL addressSave ended.");
+
 		return result;
 	}
 	

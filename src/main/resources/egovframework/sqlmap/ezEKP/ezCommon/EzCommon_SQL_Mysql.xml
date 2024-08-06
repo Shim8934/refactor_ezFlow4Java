@@ -4602,6 +4602,43 @@
 		    COLUMN SHOWTOP VARCHAR(2) DEFAULT 'N'
 		]]>
 	</statement>
+
+	<select id="EzCommonDAO.checkUserHideFlag">
+		SELECT
+			USERTREEFLAG
+		FROM
+			TBL_USERMASTER
+				LIMIT 1
+	</select>
+
+	<select id="EzCommonDAO.checkAddJobHideFlag">
+		SELECT
+			USERTREEFLAG
+		FROM
+			TBL_ADDJOBMASTER
+				LIMIT 1
+	</select>
+
+	<select id="EzCommonDAO.checkDeptHideFlag">
+		SELECT
+			DEPTTREEFLAG
+		FROM
+			TBL_DEPTMASTER
+				LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addUserHideFlag">
+		ALTER TABLE tbl_usermaster  ADD COLUMN USERTREEFLAG char(1) DEFAULT 'Y' COMMENT '조직도사용여부Y:사용 N:숨김'
+	</statement>
+
+	<statement id="EzCommonDAO.addAddJobHideFlag">
+		ALTER TABLE tbl_addjobmaster ADD COLUMN USERTREEFLAG char(1) DEFAULT 'Y' COMMENT '조직도사용여부Y:사용 N:숨김'
+	</statement>
+
+	<statement id="EzCommonDAO.addDeptHideFlag">
+		ALTER TABLE tbl_deptmaster ADD COLUMN DEPTTREEFLAG char(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'Y' NULL COMMENT '조직도사용여부 Y:사용 N:숨김'
+	</statement>
+	
 	
 	<!--2024-07-12 황인경 - 모바일 포탈 개발 -->
 	<select id="EzCommonDAO.checkMobileTheme" resultClass="Integer">
@@ -4796,9 +4833,9 @@
 	<insert id="EzCommonDAO.insertConnectionMenu" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_MENU 
-			(menu_id, menu_url, menu_type, icon_url, default_order)
+			(menu_id, menu_url, menu_type, icon_url, default_order, menucode)
 		VALUES
-			(-1, '/connectionMenu.do', 'G', 'icon_topmenu icon_nav_connection', 999)
+			(-1, '/connectionMenu.do', 'G', 'icon_topmenu icon_nav_connection', 999, 'connectPortlet')
 	]]>
 	</insert>
 	
@@ -4907,5 +4944,68 @@ VALUES
 	'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#), #nowDate#, #tenantId#, #companyId#, 'PORTLET'
 ) ]]>
 	</insert>
+	
+	<select id="EzCommonDAO.chkTblNotiEmergencyCompany" resultClass="String">
+        SELECT
+        	COMPANY_ID
+        FROM
+        	TBL_NOTI_EMERGENCY_COMPANY
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyCompany">
+	 CREATE TABLE `tbl_noti_emergency_company` (
+	  `COMPANY_ID` varchar(200) NOT NULL,
+	  `TENANT_ID` mediumint(5) NOT NULL,
+	  `EMERGENCY_CONTENT` varchar(200) DEFAULT NULL,
+	  `WRITERID` varchar(80) NOT NULL,
+	  `WRITEDATE` datetime DEFAULT NULL,
+	  PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblNotiEmergencyItem" resultClass="String">
+        SELECT
+        	NOTIID
+        FROM
+        	TBL_NOTI_EMERGENCY_ITEM
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyItem">
+	CREATE TABLE `tbl_noti_emergency_item` (
+	  `NOTIID` bigint(20) NOT NULL AUTO_INCREMENT,
+	  `WRITERID` varchar(80) NOT NULL,
+	  `COMPANY_ID` varchar(200) NOT NULL,
+	  `TENANT_ID` mediumint(5) NOT NULL,
+	  `NOTITITLE` varchar(3000) DEFAULT NULL,
+	  `NOTIBODY` varchar(8000) DEFAULT NULL,
+	  `WRITEDATE` datetime DEFAULT NULL,
+	  PRIMARY KEY (`NOTIID`,`TENANT_ID`)
+	) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblNotiEmergencyPermission" resultClass="String">
+        SELECT
+        	PERMISSION_CODE
+        FROM
+        	TBL_NOTI_EMERGENCY_PERMISSION
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyPermission">
+	CREATE TABLE `tbl_noti_emergency_permission` (
+	  `PERMISSION_CODE` bigint(20) NOT NULL AUTO_INCREMENT,
+	  `CN` varchar(80) NOT NULL,
+	  `DEPTID` varchar(80) DEFAULT NULL,
+	  `JOBID` varchar(80) DEFAULT NULL,
+	  `ROLEID` varchar(80) DEFAULT NULL,
+	  `USER_TYPE` varchar(50) DEFAULT NULL,
+	  `COMPANY_ID` varchar(200) NOT NULL,
+	  `TENANT_ID` mediumint(5) NOT NULL,
+	  `REGDATE` datetime DEFAULT NULL,
+	  PRIMARY KEY (`PERMISSION_CODE`)
+	) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
+    </statement>
 	
 </sqlMap>

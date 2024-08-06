@@ -721,10 +721,11 @@
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 			                else
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
-			
-			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
-			                }
+
+							// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+			                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+			                //     dataRows[i].ondragend = function (event) { event_listdragend(event); };
+			                // }
 			            }
 			            
 			            changeCheckBox();
@@ -2067,10 +2068,11 @@
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 		                else
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); };
-		
-		                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                    M_TR.ondragend = function (event) { event_listdragend(event); };
-		                }
+						
+						// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+		                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+		                //     M_TR.ondragend = function (event) { event_listdragend(event); };
+		                // }
 		                if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < row.item(i).childNodes.item(0).childNodes.length; NodeCount++) {
 		                        if (row.item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
@@ -2185,10 +2187,11 @@
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 		                else
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); };
-		
-		                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                    M_TR.ondragend = function (event) { event_listdragend(event); };
-		                }
+
+						// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+						// if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+						//     M_TR.ondragend = function (event) { event_listdragend(event); };
+						// }
 		                
 		                if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < row.item(i).childNodes.item(0).childNodes.length; NodeCount++) {
@@ -2544,10 +2547,11 @@
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 	                else
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
-	
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
-	                }
+
+					// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+	                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+	                //     addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+	                // }
 	            }
 	            addressList = null;
 	            document.getElementById('totalcount').textContent = xmlDom.getElementsByTagName("PAGECOUNT").item(0).firstChild.nodeValue;
@@ -3328,10 +3332,11 @@
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 	                else
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
-	
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
-	                }
+
+					// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+	                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+	                //     addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+	                // }
 	            }
 	            addressList = null;
 	            addrsearh = false;
@@ -3403,21 +3408,21 @@
                 strtext = "<div class=\"pagenavi\">";
                 PagingHTML += strtext;
                 if (totalPage > 1 && pageNum != 1) {
-                    PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
+                    PagingHTML += "<span class=\"btnimg first\" onclick= 'return goToPageByNum(1)'></span>";
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\"></span>";
+                    PagingHTML += "<span class=\"btnimg first disabled\"></span>";
                 }
                 if (totalPage > BlockSize) {
                     if (parseInt(pageNum) > parseInt(BlockSize)) {
-                        PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\"></span>";
+                        PagingHTML += "<span class=\"btnimg prev\" onclick= 'return selbeforeBlock()'></span>";
                     }
                     else {
-                        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+                        PagingHTML += "<span class=\"btnimg prev disabled\" ></span>";
                     }
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+                    PagingHTML += "<span class=\"btnimg prev disabled\" ></span>";
                 }
                 var MaxNum;
                 var i;
@@ -3441,20 +3446,20 @@
                 }
                 if (totalPage > BlockSize) {
                     if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-                        PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
+                        PagingHTML += "<span class=\"btnimg next\" onclick='return selafterBlock()'></span>";
                     }
                     else {
-                        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
+                        PagingHTML += "<span class=\"btnimg next disabled\"></span>";
                     }
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" ></span>";
+                    PagingHTML += "<span class=\"btnimg next disabled\"></span>";
                 }
                 if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-                    PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\" ></span>";
+                    PagingHTML += "<span class=\"btnimg last\" onclick='return goToPageByNum(" + totalPage + ")'></span>";
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\" ></span>";
+                    PagingHTML += "<span class=\"btnimg last disabled\"></span>";
                 }
                 PagingHTML += "</div>";
                 td_Create1(PagingHTML);
@@ -4044,10 +4049,11 @@
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 			                else
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
-			
-			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
-			                }
+
+							// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+				            //     if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+			                //     dataRows[i].ondragend = function (event) { event_listdragend(event); };
+			                // }
 			            }
 			            
 			            changeCheckBox();

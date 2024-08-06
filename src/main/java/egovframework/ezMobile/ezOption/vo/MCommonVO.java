@@ -1,5 +1,7 @@
 package egovframework.ezMobile.ezOption.vo;
 
+import java.util.Locale;
+
 public class MCommonVO {
 	
 	private int tenantId;			/** 서버 tenantId */
@@ -46,6 +48,10 @@ public class MCommonVO {
 	
 	/** 2023-08-28 전인하 - 직위 ID 추가 */
 	private String jobId;
+	
+	private Locale locale;
+	/** 2024-08-05 한태훈 - 직책 ID 추가 */
+	private String roleId;
 	
 	public String getLastLogin() {
 		return lastLogin;
@@ -214,4 +220,21 @@ public class MCommonVO {
 	public void setJobId(String jobId) {
 		this.jobId = jobId;
 	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+	
 }

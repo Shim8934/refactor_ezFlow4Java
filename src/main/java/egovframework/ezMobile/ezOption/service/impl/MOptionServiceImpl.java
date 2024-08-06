@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -91,6 +92,9 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 				info.setOffSet("235|+09:00");
 			}
 
+			if (info.getLastLogin() != null) {
+				info.setLastLogin(commonUtil.getDateStringInUTC(info.getLastLogin(), info.getOffSet(), false));
+			}
 		}
 		
 		logger.debug("commonInfo ended");

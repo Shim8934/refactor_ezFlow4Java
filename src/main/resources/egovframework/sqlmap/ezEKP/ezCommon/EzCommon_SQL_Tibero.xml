@@ -4744,17 +4744,17 @@
 		    USERID VARCHAR2(80) NOT NULL,
 		    MAINTYPE VARCHAR2(20) NOT NULL,
 		    SUBTYPE VARCHAR2(20),
-		    NOTICONTENT VARCHAR2(3000),
+		    NOTICONTENT NVARCHAR2(3000),
 		    SENDERID VARCHAR2(80),
-		    SENDERNAME VARCHAR2(100),
+		    SENDERNAME NVARCHAR2(100),
 		    REGDATE DATE,
 		    ISREAD CHAR(1) DEFAULT 'N',
 		    READDATE DATE,
 		    ETCDATA VARCHAR2(400),
 		    ISDELETE CHAR(1) DEFAULT 'N',
 		    DELETEDATE DATE,
-		    LINKURL VARCHAR2(4000),
-		    LINKURL_MOBILE VARCHAR2(4000),
+		    LINKURL NVARCHAR2(4000),
+		    LINKURL_MOBILE NVARCHAR2(4000),
 		    VIEWTYPE VARCHAR2(10),
 		    VIEWWIDTH NUMBER(11),
 		    VIEWHEIGHT NUMBER(11),
@@ -4812,7 +4812,7 @@
 	<statement id="EzCommonDAO.createTblPortalTopCompany">
 		CREATE TABLE TBL_PORTAL_TOP_COMPANY
 		(
-			COMPANY_ID VARCHAR2(100)       NOT NULL,
+			COMPANY_ID VARCHAR2(20)       NOT NULL,
 			TYPE       NUMBER(5) DEFAULT 0 NOT NULL,
 			TENANT_ID  NUMBER(5) DEFAULT 0 NOT NULL,
 			CONSTRAINT PK_TBL_PORTAL_TOP_COMPANY
@@ -4915,6 +4915,60 @@
 			SHOWTOP VARCHAR2(2) DEFAULT 'N'
 			)
 		]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkUserHideFlag">
+		<![CDATA[
+			SELECT
+				USERTREEFLAG
+			FROM
+				TBL_USERMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkAddJobHideFlag">
+		<![CDATA[
+			SELECT
+				USERTREEFLAG
+			FROM
+				TBL_ADDJOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkDeptHideFlag">
+		<![CDATA[
+			SELECT
+				DEPTTREEFLAG
+			FROM
+				TBL_DEPTMASTER
+			where
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addUserHideFlag">
+		ALTER TABLE 
+			tbl_usermaster 
+		ADD 
+			USERTREEFLAG CHAR(1) DEFAULT 'Y'
+	</statement>
+
+	<statement id="EzCommonDAO.addAddJobHideFlag">
+		ALTER TABLE 
+		    tbl_deptmaster 
+		ADD 
+			DEPTTREEFLAG char(1) DEFAULT 'Y'
+	</statement>
+
+	<statement id="EzCommonDAO.addDeptHideFlag">
+		ALTER TABLE 
+		    tbl_addjobmaster 
+		ADD 
+			USERTREEFLAG char(1) DEFAULT 'Y'
 	</statement>
     
 	<!--2024-07-12 황인경 - 모바일 포탈 개발 -->
@@ -5027,4 +5081,282 @@
 			OPENTYPE	NUMBER(1)	DEFAULT	3	NOT NULL
     </statement>
     
+    <select id="EzCommonDAO.chkTblSystemConfig" resultClass="String">
+    <![CDATA[
+        SELECT
+        	CODE
+        FROM
+        	TBL_SYSTEMCONFIG
+        WHERE
+        	ROWNUM <= 1
+    ]]>
+    </select>
+
+    <statement id="EzCommonDAO.createTblSystemConfig">
+    CREATE TABLE TBL_SYSTEMCONFIG (
+	    CODE VARCHAR2(50) NOT NULL,
+	    CODEVALUE CLOB NOT NULL,
+	    DESCRIPTION VARCHAR2(1000),
+	    WRITERID VARCHAR2(50),
+	    WRITERNAME VARCHAR2(100),
+	    WRITEDATE DATE,
+	    TENANT_ID NUMBER(5) NOT NULL,
+	    COMPANY_ID VARCHAR2(80) NOT NULL,
+	    TYPECODE VARCHAR2(80),
+	    CONSTRAINT PK_TBL_SYSTEMCONFIG PRIMARY KEY (CODE, TENANT_ID, COMPANY_ID)
+	)
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblSystemConfigType" resultClass="String">
+    <![CDATA[
+        SELECT
+        	TYPECODE
+        FROM
+        	TBL_SYSTEMCONFIG_TYPE
+         WHERE
+         	ROWNUM <= 1
+    ]]>
+    </select>
+
+    <statement id="EzCommonDAO.createTblSystemConfigType">
+    CREATE TABLE TBL_SYSTEMCONFIG_TYPE (
+	    TYPECODE VARCHAR2(50) NOT NULL,
+	    TENANT_ID NUMBER(5) NOT NULL,
+	    COMPANY_ID VARCHAR2(80) NOT NULL,
+	    TYPENAME VARCHAR2(1000),
+	    TYPENAME2 VARCHAR2(1000),
+	    DESCRIPTION CLOB,
+	    WRITERID VARCHAR2(50),
+	    WRITERNAME VARCHAR2(100),
+	    WRITERNAME2 VARCHAR2(100),
+	    WRITEDATE DATE,
+	    CONSTRAINT PK_TBL_SYSTEMCONFIG_TYPE PRIMARY KEY (TYPECODE, TENANT_ID, COMPANY_ID)
+	)
+    </statement>
+    
+    <select id="EzCommonDAO.checkConnectionId" resultClass="String">
+	<![CDATA[
+		SELECT
+			CONNECTION_ID
+		FROM
+			TBL_PORTAL_PORTLET_COMP
+		 WHERE
+		 	ROWNUM <= 1
+    ]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createConnectionIdOnTblPortalPortletComp">
+		ALTER TABLE
+			TBL_PORTAL_PORTLET_COMP
+		ADD
+			(connection_id VARCHAR2(200))
+	</statement>
+	
+	<select id="EzCommonDAO.checkConnectionMenu" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			menu_id
+		FROM
+			tbl_portal_menu
+		WHERE
+			menu_url = '/connectionMenu.do'
+		AND
+			menu_type = 'G'
+		AND
+			menu_id = '-1'
+		AND
+			ROWNUM <= 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertConnectionMenu" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU 
+			(menu_id, menu_url, menu_type, icon_url, default_order, menucode)
+		VALUES
+			(-1, '/connectionMenu.do', 'G', 'icon_topmenu icon_nav_connection', 999, 'connectPortlet')
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertConnectionMenuComp" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_COMP 
+			(company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+		VALUES
+			(#companyId#, #tenantId#, -1, 1, 1, 999)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertConnectionMenuAuth" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_AUTH
+			(menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted)
+		VALUES
+			(-1, #companyId#, #tenantId#, #companyId#, 1, 0, 0, 'Y')
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertConnectionMenuName" parameterClass="Map">
+	<![CDATA[
+		INSERT ALL
+			INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+			VALUES (-1, 1, #companyId#, #tenantId#, '연계')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-1, 2, #companyId#, #tenantId#, 'Connection')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-1, 3, #companyId#, #tenantId#, '連携')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-1, 4, #companyId#, #tenantId#, '关联')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-1, 5, #companyId#, #tenantId#, 'Connection')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-1, 6, #companyId#, #tenantId#, 'Connection')
+	    SELECT * FROM DUAL
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.selectSystemConfigTotalCnt" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_SYSTEMCONFIG
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			COMPANY_ID = #companyId#
+	</select>
+	
+	<select id="EzCommonDAO.chkPortletSystemConfigType" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_SYSTEMCONFIG_TYPE
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TYPECODE = 'PORTLET'
+	</select>
+	
+	<insert id="EzCommonDAO.insertPortletSystemConfigType" parameterClass="Map">
+	INSERT INTO
+	TBL_SYSTEMCONFIG_TYPE (TYPECODE, TENANT_ID, COMPANY_ID, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE)
+	SELECT
+	    'PORTLET', #tenantId#, #companyId#, '포틀릿', 'Portlet', '(연계)포틀릿 컨피그', #companyId#,(SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#),(SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = #companyId#), TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	FROM dual
+	</insert>
+	
+	<insert id="EzCommonDAO.insertStandardSystemConfigData" parameterClass="Map">
+	INSERT INTO TBL_SYSTEMCONFIG 
+		(CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
+	VALUES
+		('PORTLET_STANDARD',
+		'{
+		"portletType":"standard",' ||CHR(10)||
+		'"viewType": "list",' ||CHR(10)||
+		'"paging":"",' ||CHR(10)||
+		'"linkUrl": "",' ||CHR(10)||
+		'"mobileLinkUrl": "",' ||CHR(10)||
+		'"connectType": "",' ||CHR(10)||
+		'"restUrl": "",' ||CHR(10)||
+		'"httpMethodType":"",' ||CHR(10)||
+		'"dataParam" : "{    }",' ||CHR(10)||
+		'"dataParamType" : "",' ||CHR(10)||
+		'"dataResultType" : "",' ||CHR(10)||
+		'"dataResultFormat" : {' ||CHR(10)||
+			'"rootPath" : "",' ||CHR(10)||
+			'"totalCnt" : "",' ||CHR(10)||
+			'"dataInfo" : {' ||CHR(10)||
+				'"title" : "",' ||CHR(10)||
+				'"writer" : "",' ||CHR(10)||
+				'"date" : "",' ||CHR(10)||
+				'"linkUrl" : "",' ||CHR(10)||
+				'"moblieLinkUrl" : ""' ||CHR(10)||
+			'}' ||CHR(10)||
+		'},' ||CHR(10)||
+		'"dbType": "",' ||CHR(10)||
+		'"dbIp": "",' ||CHR(10)||
+		'"dbPort": "",' ||CHR(10)||
+		'"dataBase": "",' ||CHR(10)||
+		'"dbUser": "",' ||CHR(10)||
+		'"dbPwd": "",' ||CHR(10)||
+		'"dbQuery": "",' ||CHR(10)||
+		'"driverClassName" : ""' ||CHR(10)||
+	'}',
+		'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#), TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantId#, #companyId#, 'PORTLET'
+	)
+	</insert>
+	
+	<select id="EzCommonDAO.chkTblNotiEmergencyCompany" resultClass="String">
+	<![CDATA[
+        SELECT
+        	COMPANY_ID
+        FROM
+        	TBL_NOTI_EMERGENCY_COMPANY
+		WHERE
+			ROWNUM <= 1
+    ]]>
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyCompany">
+    CREATE TABLE TBL_NOTI_EMERGENCY_COMPANY (
+	    COMPANY_ID VARCHAR2(20) NOT NULL,
+	    TENANT_ID NUMBER(5) NOT NULL,
+	    EMERGENCY_CONTENT VARCHAR2(200),
+	    WRITERID VARCHAR2(100) NOT NULL,
+	    WRITEDATE DATE,
+	    CONSTRAINT PK_TBL_NOTI_EMERGENCY_COMPANY PRIMARY KEY (COMPANY_ID, TENANT_ID)
+	)
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblNotiEmergencyItem" resultClass="String">
+    <![CDATA[
+        SELECT
+        	NOTIID
+        FROM
+        	TBL_NOTI_EMERGENCY_ITEM
+        WHERE
+        	ROWNUM <= 1
+    ]]>
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyItem">
+    CREATE TABLE tbl_noti_emergency_item (
+	    NOTIID NUMBER(20) NOT NULL,
+	    WRITERID VARCHAR2(100) NOT NULL,
+	    COMPANY_ID VARCHAR2(20) NOT NULL,
+	    TENANT_ID NUMBER(5) NOT NULL,
+	    NOTITITLE NVARCHAR2(3000),
+	    NOTIBODY NVARCHAR2(8000),
+	    WRITEDATE DATE,
+	    CONSTRAINT PK_TBL_NOTI_EMERGENCY_ITEM PRIMARY KEY (NOTIID, TENANT_ID)
+	)
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblNotiEmergencyPermission" resultClass="String">
+	<![CDATA[
+		SELECT
+        	PERMISSION_CODE
+        FROM
+        	TBL_NOTI_EMERGENCY_PERMISSION
+ 		WHERE
+ 			ROWNUM <= 1
+    ]]>
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyPermission">
+    CREATE TABLE TBL_NOTI_EMERGENCY_PERMISSION (
+	    PERMISSION_CODE NUMBER(20) NOT NULL,
+	    CN VARCHAR2(100) NOT NULL,
+	    DEPTID VARCHAR2(100),
+	    JOBID VARCHAR2(80),
+	    ROLEID VARCHAR2(80),
+	    USER_TYPE VARCHAR2(50),
+	    COMPANY_ID VARCHAR2(200) NOT NULL,
+	    TENANT_ID NUMBER(5) NOT NULL,
+	    REGDATE DATE,
+	    CONSTRAINT PK_TBL_NOTI_EMERGENCY_PERMISSION PRIMARY KEY (PERMISSION_CODE)
+	)
+    </statement>
 </sqlMap>

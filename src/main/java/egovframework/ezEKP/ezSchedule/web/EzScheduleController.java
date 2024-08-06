@@ -2411,7 +2411,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 
      				String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do";
      				String linkUrlMobile = "";
-     				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), v_attendantId, "schedule", "add", title, "popup", "730", "370", linkUrl, linkUrlMobile, "");
+     				
+     				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+     				Map<String, Object> recipientMap = new HashMap<String, Object>();
+     				recipientMap.put("userType", "PERSON");
+     				recipientMap.put("companyId", loginVO.getCompanyID());
+     				recipientMap.put("cn", v_attendantId);
+     				notiRecipientList.add(recipientMap);
+     				
+     				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "schedule", "add", title, "popup", "730", "370", linkUrl, linkUrlMobile, "");
      			}
         	 }
 	    } else {
@@ -3033,8 +3042,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 			/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 			String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do";
 			String linkUrlMobile = "";
+			
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 
-			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), attendantId, "schedule", "add", vo.getTitle(), "popup", "730", "370", linkUrl, linkUrlMobile, "");
+			Map<String, Object> recipientMap = new HashMap<String, Object>();
+			recipientMap.put("userType", "PERSON");
+			recipientMap.put("companyId", loginVO.getCompanyID());
+			recipientMap.put("cn", attendantId);
+			notiRecipientList.add(recipientMap);
+			
+			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "schedule", "add", vo.getTitle(), "popup", "730", "370", linkUrl, linkUrlMobile, "");
 		}
 	}
 	
@@ -3083,7 +3100,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 			/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 			String linkUrl = "";
 			String linkUrlMobile = "";
-			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), attendantId, "SCHEDULE", "CANCEL", vo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
+			
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+			Map<String, Object> recipientMap = new HashMap<String, Object>();
+			recipientMap.put("userType", "PERSON");
+			recipientMap.put("companyId", loginVO.getCompanyID());
+			recipientMap.put("cn", attendantId);
+			notiRecipientList.add(recipientMap);
+			
+			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "SCHEDULE", "CANCEL", vo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
 		}
 	}
 	
@@ -3160,7 +3186,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 				/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 				String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleIdList[i];
 				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&type=monthList&flag="; // 일정 상세 페이지 구현 커밋 반영 이후 수정 예정
-				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), creatorId, "schedule", "accept", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+				
+				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", loginVO.getCompanyID());
+				recipientMap.put("cn", creatorId);
+				notiRecipientList.add(recipientMap);
+				
+				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "schedule", "accept", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 			else {
 				if (!ezPersonalService.hasNotiDiableItem(creatorId, NotiType.SCHEDULE_REJECT, NotiPlatform.MAIL, loginVO.getTenantId())) {
@@ -3170,7 +3205,15 @@ public class EzScheduleController extends EgovFileMngUtil {
 				/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 				String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleIdList[i];
 				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&type=monthList&flag="; // 일정 상세 페이지 구현 커밋 반영 후 수정 예정
-				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), creatorId, "schedule", "reject", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+
+				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", loginVO.getCompanyID());
+				recipientMap.put("cn", creatorId);
+				notiRecipientList.add(recipientMap);
+				
+				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "schedule", "reject", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 		}	
 	}
@@ -3378,6 +3421,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String[] info = repetition.split("\\|");
 		int maxCount = Integer.parseInt(info[0]);
 		int count = 0;
+		int count2 = 0;
 		boolean isFirst = true;
 
 		if (maxCount == 0) {
@@ -3511,6 +3555,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 				if (maxCount == count) break;
 
+				if (10 == count2) {
+					returnValue = "firstScheduleDateNotFound";
+					break;
+				}
+
 				boolean generated = false;
 
 				Calendar newCal = Calendar.getInstance();
@@ -3562,7 +3611,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 				date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
 				date_cal.add(Calendar.YEAR, 1);
-			}
+
+				count2++;
+			}						
 			break;	
 		}				
 		

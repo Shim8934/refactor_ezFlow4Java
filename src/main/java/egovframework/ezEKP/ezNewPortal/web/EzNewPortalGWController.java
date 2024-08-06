@@ -97,6 +97,8 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
 import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -205,6 +207,9 @@ public class EzNewPortalGWController {
 	
 	@Autowired
 	private EzScheduleGoogleService googleService;
+	
+	@Autowired
+	private EzSystemAdminService ezSystemAdminService;
 
 	// ///사용자///////
 	/**
@@ -4021,11 +4026,11 @@ public class EzNewPortalGWController {
 					totalCnt = ezBoardService.getBrdTotalItemCount(brdVo);
 					// 권한이 true이면 boardList불러오기
 					List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
+					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize, portletId);
 					
 					if (currentPage > 1 && noticeList.size() < 1) {
 						currentPage--;
-						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
+						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize, portletId);
 					}
 					
 					int noticeCount = noticeList.size();
@@ -6188,7 +6193,7 @@ public class EzNewPortalGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezPortal/setMenuDisplayMode/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezPortal/setMenuDisplayMode/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject setUserMenuDisplayMode(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		logger.debug("ezPortal G/W setUserMenuDisplayMode started.");
 
@@ -6245,4 +6250,33 @@ public class EzNewPortalGWController {
 
 		return resultData;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/admin/ezPortal/company/systemconfig", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject setUserMenuDisplayMode(HttpServletRequest request) throws Exception {
+		logger.debug("ezPortal G/W setUserMenuDisplayMode started.");
+
+		JSONObject result = new JSONObject();
+		try {
+			String companyId = request.getParameter("companyId");
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			List<SystemConfigTypeVO> configTypeList = ezSystemAdminService.getSystemConfigTypeListNotXml("", commonUtil.getMinuteUTC(info.getOffSet()), 0, 0, "ALL", companyId, info.getTenantId());
+			
+			result.put("code", 0);
+			result.put("status", "ok");
+			result.put("data", configTypeList);
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		logger.debug("ezPortal G/W setUserMenuDisplayMode ended.");
+		return result;
+	}
+	
 }

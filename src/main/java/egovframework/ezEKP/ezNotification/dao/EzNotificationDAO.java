@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiItemVO;
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO;
+import egovframework.ezEKP.ezNotification.vo.NotiRecipientVO;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -64,4 +67,59 @@ public class EzNotificationDAO extends EgovAbstractDAO {
 	public boolean isJavaApprovalUse(Map<String, Object> map) throws Exception {
 		return (boolean) select("EzNotificationDAO.isJavaApprovalUse", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<EmergencyNotiPermissionVO> getEmergencyPermissionList(Map<String, Object> map) throws Exception {
+		return (List<EmergencyNotiPermissionVO>) list("EzNotificationDAO.getEmergencyPermissionList", map);
+	}
+
+	public void addPermission(Map<String, Object> map) throws Exception {
+		insert("EzNotificationDAO.addPermission", map);
+	}
+
+	public void deletePermission(Map<String, Object> map) throws Exception {
+		delete("EzNotificationDAO.deletePermission", map);
+	}
+
+	public boolean selectPermission(Map<String, Object> map) throws Exception {
+		return (boolean) select("EzNotificationDAO.selectPermission", map);
+	}
+
+	public String getEmergencyContent(Map<String, Object> map) throws Exception {
+		return (String) select("EzNotificationDAO.getEmergencyContent", map);
+	}
+
+	public void addEmergencyCompanyContent(Map<String, Object> map) throws Exception {
+		insert("EzNotificationDAO.addEmergencyCompanyContent", map);
+	}
+
+	public boolean checkEmergencyPermission(Map<String, Object> map) throws Exception {
+		return (boolean) select("EzNotificationDAO.checkEmergencyPermission", map);
+	}
+
+	public boolean checkEmergencyGroupPermission(Map<String, Object> map) throws Exception{
+		return (boolean) select("EzNotificationDAO.checkEmergencyGroupPermission", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<NotiRecipientVO> getNotiRecipientByDeptId(Map<String, Object> map) throws Exception {
+		return (List<NotiRecipientVO>) list("EzNotificationDAO.getNotiRecipientByDeptId", map);
+	}
+
+	public int addEmergencyNotiItem(Map<String, Object> map) throws Exception {
+		return (int) insert("EzNotificationDAO.addEmergencyNotiItem", map);
+	}
+
+	public EmergencyNotiItemVO getEmergencyNotiItem(Map<String, Object> map) throws Exception {
+		return (EmergencyNotiItemVO) select("EzNotificationDAO.getEmergencyNotiItem", map);
+	}
+
+	public void deleteEmergencyNoti(Map<String, Object> map) throws Exception {
+		delete("EzNotificationDAO.deleteEmergencyNoti", map);
+	}
+
+	public String selecetCompanyIdByDeptId(Map<String, Object> map) throws Exception {
+		return (String) select("EzNotificationDAO.selecetCompanyIdByDeptId", map);
+	}
+
 }

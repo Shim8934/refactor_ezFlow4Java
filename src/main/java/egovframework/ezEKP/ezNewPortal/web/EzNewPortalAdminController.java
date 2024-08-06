@@ -822,6 +822,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("boardList", resultBody.get("data"));
 				model.addAttribute("companyId", companyId);
 				model.addAttribute("portletId", request.getParameter("portletId"));
+				model.addAttribute("portletCode", request.getParameter("code"));
 			}
 			
 			logger.debug("openBoardTree ended.");
@@ -1888,8 +1889,19 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			logger.debug("openConfigTree ended.");
 			String companyId = request.getParameter("companyId");
 			String typeCode = request.getParameter("typeCode");
-			List<SystemConfigTypeVO> configTypeList = ezSystemAdminService.getSystemConfigTypeListNotXml("", userInfo.getOffset(), 0, 0, "ALL", userInfo.getPrimary(), companyId, userInfo.getTenantId());
-			model.addAttribute("configTypeList", configTypeList);
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userInfo.getId());
+			param.put("companyId", companyId);
+			param.put("typeCode", typeCode);
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/admin/ezPortal/company/systemconfig", param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			if (status.equals("ok")) {
+				JSONArray configTypeList = (JSONArray) resultBody.get("data");
+				model.addAttribute("configTypeList", configTypeList);
+			}
+			
 			model.addAttribute("companyId", companyId);
 			model.addAttribute("portletId", request.getParameter("portletId"));
 			model.addAttribute("typeCode", typeCode);

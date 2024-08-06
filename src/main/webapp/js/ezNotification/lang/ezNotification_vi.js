@@ -9,6 +9,7 @@ var mainType = {
 	community : "cộng đồng",
 	webfolder : "thư mục web",
 	journal : "Nhật ký công việc",
+	noti : "Thông báo",
 	etc : "vân vân"
 }
 
@@ -71,6 +72,9 @@ var subType = {
 	journal : {
 		comment : "Đăng bình luận",
 		recv : "Thông báo nhận"
+	},
+	noti : {
+		emergency : "Thông báo khẩn cấp"
 	}
 }
 

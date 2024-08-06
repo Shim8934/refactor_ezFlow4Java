@@ -1196,7 +1196,7 @@
 		FROM
 			TBL_SYSTEMCONFIG
 		WHERE
-			NULLIF(CODE, '') IS NOT NULL
+			CODE IS NOT NULL
 		<isNotEqual property="typeCode" compareValue="ALL">
 		AND
 			TYPECODE = #typeCode#
@@ -1223,7 +1223,7 @@
 		FROM
 			TBL_SYSTEMCONFIG
 		WHERE
-			NULLIF(CODE, '') IS NOT NULL
+			CODE IS NOT NULL
 		<isNotEqual property="typeCode" compareValue="ALL">
 		AND
 			TYPECODE = #typeCode#
@@ -1267,7 +1267,7 @@
 			AND
 				A.COMPANY_ID = B.COMPANY_ID
 			WHERE
-				NULLIF(A.CODE, '') IS NOT NULL
+				A.CODE IS NOT NULL
 		]]>
 		<isNotEqual property="typeCode" compareValue="ALL">
 			AND
@@ -1316,7 +1316,7 @@
 			AND
 				A.COMPANY_ID = B.COMPANY_ID 
 			WHERE
-				NULLIF(A.CODE, '') IS NOT NULL
+				A.CODE IS NOT NULL
 		]]>
 		<isNotEqual property="typeCode" compareValue="ALL">
 			AND
@@ -1365,7 +1365,7 @@
 			AND
 				A.COMPANY_ID = B.COMPANY_ID			
 			WHERE
-				NULLIF(A.CODE, '') IS NOT NULL
+				A.CODE IS NOT NULL
 		]]>
 		<isNotEmpty property="CODE">
 			<![CDATA[

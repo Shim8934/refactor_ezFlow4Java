@@ -2289,7 +2289,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateTbSeperateAttach(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateTbSeperateAttach", map);
 	}
-	
+
+	public ApprGReceiveDocVO getReceiptProInfo(Map<String, Object> map) throws Exception{
+		return (ApprGReceiveDocVO) select("EzApprovalG.getReceiptProInfo", map);
+	}
+
 	public void jiJungUpdateReceiptProInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.jiJungUpdateReceiptProInfo", map);
 	}

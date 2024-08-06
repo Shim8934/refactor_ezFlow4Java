@@ -576,7 +576,7 @@ form{display:inline;margin:0}
 	height: 18px;
 }
 .popup {
-	background: url('/images/kr/cm/popup_bg.gif') #ffffff repeat-x left top ;
+	background: url('/images/kr/cm/popup_bg.png') #ffffff repeat-x left top ;
 	padding:0px;
 	margin:5px 10px 10px;
 }
@@ -2470,7 +2470,7 @@ div#txtContent table {margin:auto;}
 #left h2.on .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px;} /* tree h2 화살표 up */
 #left h2 .tree_arrow_down{background-position:0px -182px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px;} /* tree h2 화살표 down */
 .tree_plus{ background-position:0px -104px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;} /* tree 플러스 */
-.tree_minus{ background-position:0px -78px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;} /* tree 마이너스 */
+.tree_minus{ background-position:0px -78px; width:16px; height:16px; display:inline-block; margin: 4px 0px 0px 0px; cursor:pointer;} /* tree 마이너스 */
 .tree_blank{ background-position:20px 20px; margin: 8px 0px 0px 0px; width:16px; height:16px; display:inline-block;} /* tree 빈공간 */
 .tree_tree{ background-position:1px -208px; margin: 8px 0px 0px 0px; width:16px; height:16px; display:inline-block;} /* tree 하위모양 */
 .tree_mail{ background-position:-25px 0px; width:20px; height:20px; display:inline-block; margin:8px 0px 0px 0px;} /* tree 받은메일 */
@@ -2893,8 +2893,8 @@ h2, #menu span {font-size: 12px;}
 .overY {overflow-y: hidden !important;}
 .surveyConfig {margin: 0px 10px;}
 .surveyConfig .surveyBttn {width: 680px; text-align: center;}
-.surveyConfig .surveyBttn a.imgbtn {box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
-.surveyConfig .surveyBttn a.imgbtn span {height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
+.surveyConfig .surveyBttn a.imgbtn {border: 1px solid #c3c3c3; height: 24px;}
+.surveyConfig .surveyBttn a.imgbtn span {height: 24px; line-height: 24px; font-size: 12px;}
 .surveyPrevMode {width: 100px;}
 .surveySelectConf {width: 50px;}
 .content.config {width: 680px; margin-top: 5px;}
@@ -3217,20 +3217,20 @@ h2, #menu span {font-size: 12px;}
 .headpanel .crust.selected{background:url(../images/ezSurvey/survey_progressBG_on.png) top center no-repeat;}
 .headpanel .crust:hover{background:url(../images/ezSurvey/survey_progressBG_on.png) top center no-repeat;}
 
-.headpanel .crust a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01.png) no-repeat;}
-.headpanel .crust a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02.png) no-repeat;}
-.headpanel .crust a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03.png) no-repeat;}
-.headpanel .crust a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04.png) no-repeat;}
+.headpanel .crust a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01.png) no-repeat center;}
+.headpanel .crust a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02.png) no-repeat center;}
+.headpanel .crust a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03.png) no-repeat center;}
+.headpanel .crust a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04.png) no-repeat center;}
 
-.headpanel .crust:hover a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01_on.png) no-repeat;}
-.headpanel .crust:hover a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02_on.png) no-repeat;}
-.headpanel .crust:hover a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03_on.png) no-repeat;}
-.headpanel .crust:hover a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04_on.png) no-repeat;}
+.headpanel .crust:hover a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01_on.png) no-repeat center;}
+.headpanel .crust:hover a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02_on.png) no-repeat center;}
+.headpanel .crust:hover a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03_on.png) no-repeat center;}
+.headpanel .crust:hover a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04_on.png) no-repeat center;}
 
-.headpanel .crust.selected a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01_on.png) no-repeat;}
-.headpanel .crust.selected a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02_on.png) no-repeat;}
-.headpanel .crust.selected a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03_on.png) no-repeat;}
-.headpanel .crust.selected a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04_on.png) no-repeat;}
+.headpanel .crust.selected a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress01_on.png) no-repeat center;}
+.headpanel .crust.selected a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress02_on.png) no-repeat center;}
+.headpanel .crust.selected a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress03_on.png) no-repeat center;}
+.headpanel .crust.selected a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(../images/ezSurvey/survey_progress04_on.png) no-repeat center;}
 /*** survey tab end ***/
 
 /**** survey information table start ****/
@@ -3947,7 +3947,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 
 /* 20231004 자바 서브 추가 */
 #addr{margin: 0px 4px 0px 0px; vertical-align: middle;}
-#TreeView{padding: 6px 8px; box-sizing: border-box;}
+#TreeView, #TreeView2, #TreeView3, #TreeViewCC {padding: 6px 8px; box-sizing: border-box;}
 .file td input{margin: -4px 4px 0px 0px; vertical-align: middle;}
 #txtLimitRange{width: 60% !important;}
 
@@ -4005,3 +4005,5 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 #fixRight {width:calc(40% - 10px); margin:5px}
 
 .resetBtn {line-height: 0px;}
+
+.txt_point{color:#017BEC;}

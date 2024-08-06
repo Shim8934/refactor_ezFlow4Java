@@ -130,13 +130,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	private CommonUtil commonUtil;
 	
 	// public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset, String lang) throws Exception {
-	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize) throws Exception {
+	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize, int portletId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 //		map.put("limit", limit);
-		map.put("portletId", 2); // 공지사항 포틀릿 ID 는 2
+		map.put("portletId", portletId); // 공지사항 포틀릿 ID 는 2
 		map.put("nowDate", nowDate);
 		
 		if (!lang.equals("1")) {

@@ -1,7 +1,13 @@
 package egovframework.ezEKP.ezSurvey.web;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -76,17 +82,24 @@ public class EzSurveyScheduler {
 			ezEmailAsync.sendMail(participantList, survey, Integer.toString(offset));
 			ezSurveyService.updateMailSentFlag(surveyId, 1, companyId, tenantId);
 			
-			String receipientIds = "";
-			String separator = ";;";
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+			
+			Set<String> recipientSet = new HashSet<String> ();
 			for (SurveyParticipantVO surveyParticipant : participantList) {
-				receipientIds += surveyParticipant.getUserId() + separator;
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", surveyParticipant.getCompanyId());
+				recipientMap.put("cn", surveyParticipant.getUserId());
+				if (!recipientSet.contains(surveyParticipant.getUserId())) {
+					notiRecipientList.add(recipientMap);
+					recipientSet.add(surveyParticipant.getUserId());
+				}
 			}
 			
-			if (receipientIds != null && receipientIds.length() > 0) {
-				receipientIds.substring(0, receipientIds.length() - separator.length());
+			if (notiRecipientList != null && notiRecipientList.size() > 0) {
 				String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + surveyId;
 		    	String linkUrlMobile = "";
-		    	ezNotificationService.sendNoti(survey.getCreatorId(), survey.getCreatorName(), receipientIds, "SURVEY", "NEW", survey.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "", tenantId, companyId);
+		    	ezNotificationService.sendNoti(survey.getCreatorId(), survey.getCreatorName(), notiRecipientList, "SURVEY", "NEW", survey.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 		}
 		
