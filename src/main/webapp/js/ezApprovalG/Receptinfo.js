@@ -45,7 +45,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "none";
         document.getElementById("ReceptDoc24").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+        // document.getElementById("btnaddressChange").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "";
         document.getElementById("AprDeptOuterAdd").style.display = "none";
         internalTab = true;
@@ -64,7 +64,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptTemp").style.display = "";
         document.getElementById("ReceptOuter").style.display = "none";
         document.getElementById("ReceptDoc24").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+        // document.getElementById("btnaddressChange").style.display = "none";
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "";
         document.getElementById("AprDeptOuterAdd").style.display = "none";
@@ -80,7 +80,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptTemp").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "none";
         document.getElementById("ReceptDoc24").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+        // document.getElementById("btnaddressChange").style.display = "none";
         document.getElementById("ReceptGroup").style.display = "";
         document.getElementById("AprDeptAdd").style.display = "";
         document.getElementById("AprDeptOuterAdd").style.display = "none";
@@ -92,7 +92,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptTemp").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "";
         document.getElementById("ReceptDoc24").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "";
+        // document.getElementById("btnaddressChange").style.display = "";
         
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "none";
@@ -171,7 +171,7 @@ function initReceptListView() {
 	        document.getElementById("inputSummaryOuterReceiverList").focus();
 	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
 	        document.getElementById("btnaddress").style.display = "none";
-	        document.getElementById("btnaddressChange").style.display = "none";
+	        // document.getElementById("btnaddressChange").style.display = "none";
 	    }
     }
 
@@ -1178,12 +1178,12 @@ function btnSearchDept_onClick_Complete(reParam) {
                 document.getElementById("inputSummaryOuterReceiverList").focus();
                 document.getElementById("trSummaryOuterReceiverList").style.display = "";
                 document.getElementById("btnaddress").style.display = "none";
-                document.getElementById("btnaddressChange").style.display = "none";
+                // document.getElementById("btnaddressChange").style.display = "none";
             } else {
                 document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                 document.getElementById("inputSummaryOuterReceiverList").value = "";
                 document.getElementById("btnaddress").style.display = "";
-                document.getElementById("btnaddressChange").style.display = "";
+                // document.getElementById("btnaddressChange").style.display = "";
             }
         } else {
             var pAlertContent = strLang247 + "<br>  " + strLang248;
@@ -1340,12 +1340,12 @@ function btnSearchDept_onClick_Complete(reParam) {
                     document.getElementById("inputSummaryOuterReceiverList").focus();
                     document.getElementById("trSummaryOuterReceiverList").style.display = "";
                     document.getElementById("btnaddress").style.display = "none";
-                    document.getElementById("btnaddressChange").style.display = "none";
+                    // document.getElementById("btnaddressChange").style.display = "none";
                 } else {
                     document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                     document.getElementById("inputSummaryOuterReceiverList").value = "";
                     document.getElementById("btnaddress").style.display = "";
-                    document.getElementById("btnaddressChange").style.display = "";
+                    // document.getElementById("btnaddressChange").style.display = "";
                 }
 
             } else {
@@ -1707,12 +1707,12 @@ function AprLineAddDeptG_New(outDeptID) {
 			document.getElementById("inputSummaryOuterReceiverList").focus();
 			document.getElementById("trSummaryOuterReceiverList").style.display = "";
 			document.getElementById("btnaddress").style.display = "none";
-			document.getElementById("btnaddressChange").style.display = "none";
+			// document.getElementById("btnaddressChange").style.display = "none";
 		} else {
 			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 			document.getElementById("inputSummaryOuterReceiverList").value = "";
 			document.getElementById("btnaddress").style.display = "";
-			document.getElementById("btnaddressChange").style.display = "";
+			// document.getElementById("btnaddressChange").style.display = "";
 		}
 	}
 }
@@ -1851,12 +1851,12 @@ function AprLineAddDeptG(nodeIdx, tr) {
         document.getElementById("inputSummaryOuterReceiverList").focus();
         document.getElementById("trSummaryOuterReceiverList").style.display = "";
         document.getElementById("btnaddress").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+        // document.getElementById("btnaddressChange").style.display = "none";
     } else {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
-        document.getElementById("btnaddressChange").style.display = "";
+        // document.getElementById("btnaddressChange").style.display = "";
     }
 
 }
@@ -2780,12 +2780,12 @@ function AddOuter(strOuterDeptId, strOuterDeptName) {
             document.getElementById("inputSummaryOuterReceiverList").focus();
             document.getElementById("trSummaryOuterReceiverList").style.display = "";
             document.getElementById("btnaddress").style.display = "none";
-            document.getElementById("btnaddressChange").style.display = "none";
+            // document.getElementById("btnaddressChange").style.display = "none";
         } else {
             document.getElementById("trSummaryOuterReceiverList").style.display = "none";
             document.getElementById("inputSummaryOuterReceiverList").value = "";
             document.getElementById("btnaddress").style.display = "";
-            document.getElementById("btnaddressChange").style.display = "";
+            // document.getElementById("btnaddressChange").style.display = "";
         }
 
     } catch (e) {

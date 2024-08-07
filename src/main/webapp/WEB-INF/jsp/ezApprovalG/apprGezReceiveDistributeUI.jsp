@@ -1470,19 +1470,19 @@
 	    	        document.getElementById("inputSummaryOuterReceiverList").focus();
 	    	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
 	    	        document.getElementById("btnaddress").style.display = "none";
-	    	        document.getElementById("btnaddressChange").style.display = "none";
+	    	        // document.getElementById("btnaddressChange").style.display = "none";
 	    		} else if (cnt <= 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
 	    	        document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	    	        document.getElementById("btnaddress").style.display = "";
-	    	        document.getElementById("btnaddressChange").style.display = "";
+	    	        // document.getElementById("btnaddressChange").style.display = "";
 	    		} else if (checkOuter == "Y" && checkAddress.indexOf("Address") != -1) {
 	    			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	    	        document.getElementById("btnaddress").style.display = "";
-	    	        document.getElementById("btnaddressChange").style.display = "";
+	    	        // document.getElementById("btnaddressChange").style.display = "";
 	    		} else {
 	    			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	    	        document.getElementById("btnaddress").style.display = "";
-	    	        document.getElementById("btnaddressChange").style.display = "none";
+	    	        // document.getElementById("btnaddressChange").style.display = "none";
 	    		}
 	    	}
 	    }
