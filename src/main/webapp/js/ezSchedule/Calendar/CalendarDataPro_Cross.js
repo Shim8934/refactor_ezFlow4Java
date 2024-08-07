@@ -877,6 +877,7 @@ function CalMonthDataBind(oAppointment) {
         // 2020-02-24 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
         if(oAppointment.DateType == 4) {
         	var divID = "\"" + oAppointment.ScheduleID + ":" + oAppointment.ParentID + "\"";
+            oTd.setAttribute("onclick", "ReadAttitude(" + divID + ")");
         	oTd.setAttribute("ondblclick", "ReadAttitude(" + divID + ")");
         }
         else {
@@ -890,10 +891,10 @@ function CalMonthDataBind(oAppointment) {
         		oTd.setAttribute("onclick", "ReadSchedule(" + divID + ")");
         		oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
         	}
-        	oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
-        	oTd.setAttribute("onmouseout", "hideTooltip(this)");
         }
-        
+        oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
+        oTd.setAttribute("onmouseout", "hideTooltip(this)");
+
         // 일정완료 시 취소선 표출하기 위해 span 추가
         var oTextSpan = document.createElement("SPAN");
         var oText = document.createTextNode(pSubject);
@@ -2138,8 +2139,13 @@ function TooltipMouseOver(obj, event) {
     var eDateMD = (eDate.getMonth() + 1) + "." + eDate.getDate();
 
     if (GetAttribute(obj, "datetype") != "2") {
-        if (sDateMD != eDateMD)
+        if (sDateMD != eDateMD) {
             pTime = sDateMD + " " + GetAttribute(obj, "dtstartDisplay") + " - " + eDateMD + " " + GetAttribute(obj, "dtendDisplay");
+        } else {
+            if (pTime == "00:00 - 23:59") {
+                pTime = strLang39;
+            }
+        }
     }
 
     showTooltip_MouseOver(id, event, pTime, subject, scheduletype, scheduleid, location);

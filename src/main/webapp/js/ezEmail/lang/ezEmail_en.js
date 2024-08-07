@@ -341,6 +341,41 @@ var strLangKWCHd01 = "An error occurred while saving security HWP document. Plea
 var strLangNJK01 = "Restricted special characters for an email folder name(";
 var strLangNJK02 = "are included.";
 
+//승인메일
+var strLangAppr01 = "Company mail approval application is not possible because there is no full administrator.";
+var strLangAppr02 = "Approver does not exist";
+var strLangAppr03 = "Approval mail error";
+var strLangAppr04 = "Approval mail cannot be pre-sent."
+var strLangAppr05 = "Mail to the entire company must be approved by the administrator to actually ship it. Do you want to ship it?"
+
+// 스팸신고
+var strLangHSG01 = "Spam report cannot be made as email address is not found.";
+var strLangHSG02 = "Spam report was not processed successfully.";
+
+//new ui
+const strLangFolderManage = "Manage folder";
+const strLangSubscribe = "Subscribe";
+const strLangPlzCheckSearchInput = "Enter search term.";
+const strLangSearchFetchError = "Error occurred while retrieving search results. -";
+const strLangNoSuchDept = "There is no department found.";
+const strLangDistributionFetchError = "Error occurred while retrieving public distribution group list. -";
+const strLangAddJobSimplyMark = "(Concurrent) ";
+const strLangCompany = "Company";
+const strLangDistributionAdd = "Add distribution list";// ezEmail.t60 = 배포목록추가
+const strLangAddressFetchError = "Error occurred while reading address list";// ezEmail.t585 = 주소목록을 읽는중에 오류발생
+const strLangPlzSelectGroupMail = "Select group message.";// ezEmail.t581 = 그룹메일을 선택해주세요.
+const strLangPlzSelectDistribution = "Select public distribution group.";// ezEmail.t580 = 공용배포그룹을 선택해주세요.
+const strLangNotAllowedSpecialChar = "The special character can't be entered.";
+
+const strLangSelectDept = "Select Department";
+const strLangSelectTitle = "Select Title";
+const strLangSelectRole = "Select Role";
+const strLangPlzCheckSearchNameInput = "Enter name to search.";
+const strLangOrgFetchError = "An error occurred while searching organization chart. -";
+const strLangSelectProxyApproverWarning = "Select a person for deputy.";
+
+const strLangTempSaveAttachmentsWarning = "Attached files will be deleted upon saving. Do you want to save?";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

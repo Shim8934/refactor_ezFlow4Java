@@ -416,6 +416,15 @@ function save_schedule(pageFrom)
 		}
 	}
 	
+	/* 2023-09-22 한태훈 수정 시 참석자에게 메일 보내기 용.*/
+	if (modAttendIdList.length > 0) {
+		for (var k = 0; k<modAttendIdList.length; k++) {
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTID", modAttendIdList[k]);
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME1", modAttendName1List[k]);
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME2", modAttendName2List[k]);
+		}
+	}
+	
 	/* 2021-11-25 홍승비 - 일정 수정 시, 일정 완료여부 파라미터 전달 */
 	if (scheduleid != "") {
 		if (document.getElementById("completeFG_one").checked == true || document.getElementById("completeFG_repOne").checked == true) { // 단일 일정, 현재 반복일정

@@ -607,7 +607,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		/* 2019-12-17 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라 조회자정보 유지 */
 		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
-		if (isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("COPY") || isReadCountCopyUsed.equals("ALL"))) {
+		if (StringUtils.isNotBlank(isReadCountCopyUsed) && ("COPY".equals(isReadCountCopyUsed) || "ALL".equals(isReadCountCopyUsed))) {
 			ezBoardDAO.insertBoardItemReadForCopy(map);
 		}
 
@@ -631,7 +631,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		/* 2019-12-17 홍승비 - 게시물 이동 시, 테넌트 컨피그에 따라 기존의 조회자정보를 유지함 */
 		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
-		if (isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("MOVE") || isReadCountCopyUsed.equals("ALL"))) {
+		if (StringUtils.isNotBlank(isReadCountCopyUsed) && ("MOVE".equals(isReadCountCopyUsed) || "ALL".equals(isReadCountCopyUsed))) {
 			ezBoardDAO.updateBoardItemRead(map);
 		} else {
 			ezBoardDAO.deleteBoardItemRead2(map);
@@ -4124,8 +4124,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		/* 2019-12-17 홍승비 - 게시물 복사/이동 시 테넌트 컨피그에 따라 조회수 유지 */
 		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", userInfo.getTenantId());
-		if ((pMode.equals("copy") && isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("COPY") || isReadCountCopyUsed.equals("ALL"))) ||
-				(pMode.equals("move") && isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("MOVE") || isReadCountCopyUsed.equals("ALL")))) {
+		if ((pMode.equals("copy") && StringUtils.isNotBlank(isReadCountCopyUsed) && ("COPY".equals(isReadCountCopyUsed) || "ALL".equals(isReadCountCopyUsed))) ||
+				(pMode.equals("move") && StringUtils.isNotBlank(isReadCountCopyUsed) && ("MOVE".equals(isReadCountCopyUsed) || "ALL".equals(isReadCountCopyUsed)))) {
 			boardListVO.setReadCount(Integer.valueOf(doc.getElementsByTagName("READCOUNT").item(0).getTextContent()));
 		} else { // READCOUNT값은 기본적으로 0으로 삽입된다.
 			boardListVO.setReadCount(0);

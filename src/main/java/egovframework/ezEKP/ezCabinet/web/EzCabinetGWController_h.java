@@ -114,6 +114,7 @@ public class EzCabinetGWController_h {
 		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
 		String searchOpt      = request.getParameter("searchOpt")    != null ? request.getParameter("searchOpt")         : "";
 		String searchValue    = request.getParameter("searchValue")  != null ? request.getParameter("searchValue")       : "";
+		String searchFlag     = request.getParameter("searchFlag")   != null ? request.getParameter("searchFlag")        : ""; // 공유자 검색 Flag
 		
 		JSONObject result = new JSONObject();
 		
@@ -134,11 +135,11 @@ public class EzCabinetGWController_h {
 			switch(searchOpt) {
 				case "displayname": sqlQuery = "display_name"   ; break;
 				case "description": sqlQuery = "department_name"; break;
-				case "cn"         : sqlQuery = "cn"             ; break;
+				case "userId"     : sqlQuery = "cn"             ; break;
 				default: sqlQuery = "display_name";
 			}
 			
-			List<SimpleUserVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId());
+			List<SimpleUserVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId(), searchFlag);
 			
 			result.put("shareList", list);
 			result.put("status", "ok");

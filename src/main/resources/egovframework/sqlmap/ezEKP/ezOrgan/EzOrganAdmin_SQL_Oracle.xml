@@ -2808,6 +2808,26 @@
 			VALUES ('S013', 6, '결재상태', 'Status', '進行段階', '批准状态', 80, 'TBAPRLINEINFO', 'AprState', NULL, NULL, '결재선정보(코딩)', '결재상태', #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
 			VALUES ('S013', 7, '결재일시', 'Date', '処理日時', '批准日', 130, 'TBAPRLINEINFO', 'ProcessDate', NULL, NULL, '결재선정보(코딩)', '결재일시', #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID)
+			VALUES ('S014', 1, '순번', 'No.', '順番', '序号', 35, 'TBAPRLINEINFO', 'AprMemberSN', NULL, NULL, '결재선정보(회람)', '순번', #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID)
+			VALUES ('S014', 2, '성명', 'Name', '氏名', '姓名', 100, 'TBAPRLINEINFO', 'AprMemberName', NULL, NULL, '결재선정보(회람)', '성명', #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID)
+			VALUES ('S014', 3, '직위', 'Title', '役職', '职位', 100, 'TBAPRLINEINFO', 'AprMemberJobTitle', NULL, NULL, '결재선정보(회람)', '직위', #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID)
+			VALUES ('S014', 4, '부서', 'Dept.', '部署', '部门', 300, 'TBAPRLINEINFO', 'AprMemberDeptName', NULL, NULL, '결재선정보(회람)', '부서명', #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID)
+			VALUES ('S014', 5, '회람일시', 'Date', '回覧日時', '批准日(수정해야됨)', 300, 'TBAPRLINEINFO', 'ProcessDate', NULL, NULL, '결재선정보(회람)', '회람일시', #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID)
+			VALUES ('S015', 1, '순번', 'No.', '順番', '序号', 35, 'TBAPRLINEINFO', 'AprMemberSN', NULL, NULL, '결재선정보(회람)', '순번', #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID)
+			VALUES ('S015', 2, '성명', 'Name', '氏名', '姓名', 100, 'TBAPRLINEINFO', 'AprMemberName', NULL, NULL, '결재선정보(회람)', '성명', #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID)
+			VALUES ('S015', 3, '직위', 'Title', '役職', '职位', 100, 'TBAPRLINEINFO', 'AprMemberJobTitle', NULL, NULL, '결재선정보(회람)', '직위', #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID)
+			VALUES ('S015', 4, '부서', 'Dept.', '部署', '部门', 300, 'TBAPRLINEINFO', 'AprMemberDeptName', NULL, NULL, '결재선정보(회람)', '부서명', #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID)
+			VALUES ('S015', 5, '회람일시', 'Date', '回覧日時', '批准日(수정해야됨)', 300, 'TBAPRLINEINFO', 'ProcessDate', NULL, NULL, '결재선정보(회람)', '회람일시', #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
 			VALUES ('S021', 1, '순번', 'No.', '順番', '序号', 35, 'TBRECEIPTPOINTINFO', 'DeptMemberSN', NULL, NULL, '수신처정보(진행)', '순번', #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
@@ -4077,15 +4097,15 @@
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 1, #companyID#, #tenantID#, '메모')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (18, 2, #companyID#, #tenantID#, 'Memo')
+		    VALUES (18, 2, #companyID#, #tenantID#, 'Notes')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 3, #companyID#, #tenantID#, 'メモ帳')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 4, #companyID#, #tenantID#, '记事本')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (18, 5, #companyID#, #tenantID#, 'Memo')
+		    VALUES (18, 5, #companyID#, #tenantID#, 'Notes')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (18, 6, #companyID#, #tenantID#, 'Memo')
+		    VALUES (18, 6, #companyID#, #tenantID#, 'Notes')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 		    VALUES (19, 1, #companyID#, #tenantID#, '전자설문')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
@@ -7951,36 +7971,45 @@
 	<select id="EzOrganAdminDAO.getUserExtension15" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
-				EXTENSIONATTRIBUTE15
-			FROM
-				(SELECT
+				EXTENSIONATTRIBUTE15 + 1 AS EXTENSIONATTRIBUTE15
+			FROM 
+			    (
+				SELECT
 					EXTENSIONATTRIBUTE15
 				FROM
-					TBL_USERMASTER
-				WHERE
-					DEPARTMENT = #v_PARENTCN#
-				AND
-					CN NOT IN  (SELECT
-									CN
-								FROM
-									TBL_USERMASTER_RETIRE
-								WHERE
-									TENANT_ID = #v_TENANT_ID#)
-				AND
-					TENANT_ID = #v_TENANT_ID#
-
-				UNION ALL
-
-				SELECT
-					ORDERBY
-				FROM
-					TBL_ADDJOBMASTER
-				WHERE
-					DEPTID = #v_PARENTCN#
-				AND
-					TENANT_ID = #v_TENANT_ID#) AA
+					(
+					SELECT
+						EXTENSIONATTRIBUTE15
+					FROM
+						TBL_USERMASTER
+					WHERE
+						DEPARTMENT = #v_PARENTCN#
+					AND
+						CN NOT IN  (
+									SELECT
+										CN
+									FROM
+										TBL_USERMASTER_RETIRE
+									WHERE
+										TENANT_ID = #v_TENANT_ID#
+									)
+					AND
+						TENANT_ID = #v_TENANT_ID#
+					
+					UNION ALL
+					
+					SELECT
+						ORDERBY
+					FROM
+						TBL_ADDJOBMASTER
+					WHERE
+						DEPTID = #v_PARENTCN#
+					AND
+						TENANT_ID = #v_TENANT_ID#
+					) AA
 				ORDER BY
-					EXTENSIONATTRIBUTE15 DESC)
+					EXTENSIONATTRIBUTE15 DESC
+				)
 			WHERE
 				ROWNUM = 1
 		]]>

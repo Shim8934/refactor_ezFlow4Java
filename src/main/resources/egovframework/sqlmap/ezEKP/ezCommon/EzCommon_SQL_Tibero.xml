@@ -4442,6 +4442,86 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
 		VALUES (#v_TENANTID#, 'ApprNonElecRecType', '전자결재G 비전자문서등록 양식 확장자', 'HWP', '전자결재 G버전의 비전자문서 등록 시, 양식 확장자를 설정한다. (MHT 또는 HWP) (default : HWP)', TO_DATE('2021-04-07 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재G')
 	</insert>
+	
+	<statement id="EzCommonDAO.createJmochaApprAllowedDomain">
+		CREATE TABLE "JMOCHA_APPR_ALLOWED_DOMAIN" (
+		  "TENANT_ID" NUMBER(5,0) NOT NULL,
+		  "COMPANY_ID" NVARCHAR2(80) NOT NULL,
+		  "DOMAIN_NAME" NVARCHAR2(100) NOT NULL,
+		  CONSTRAINT "JMOCHA_APPR_ALLOWED_DOMAIN_PK" PRIMARY KEY ("COMPANY_ID", "TENANT_ID", "DOMAIN_NAME")
+		)
+	</statement>
+	
+	<statement id="EzCommonDAO.createJmochaApprUser">
+		CREATE TABLE "JMOCHA_APPR_USER" (
+		  "TENANT_ID" NUMBER(5,0) NOT NULL,
+		  "COMPANY_ID" NVARCHAR2(80) NOT NULL,
+		  "USER_ID" NVARCHAR2(100) NOT NULL,
+		  "USER_TYPE" NVARCHAR2(10) NOT NULL,
+		  CONSTRAINT "JMOCHA_APPR_USER_PK" PRIMARY KEY ("TENANT_ID", "COMPANY_ID", "USER_ID", "USER_TYPE")
+		)
+	</statement>
+	
+	<statement id="EzCommonDAO.createJmochaApprHistory">
+		CREATE TABLE "JMOCHA_APPR_HISTORY" (
+		  "TENANT_ID" NUMBER(5,0) NOT NULL,
+		  "COMPANY_ID" NVARCHAR2(80) NOT NULL,
+		  "MAIL_UID" NUMBER NOT NULL,
+		  "SUBJECT" CLOB,
+		  "SENDEREMAIL" NVARCHAR2(100),
+		  "USER_ID" NVARCHAR2(100) NOT NULL,
+		  "USER_NAME" NVARCHAR2(100),
+		  "USER_NAME2" NVARCHAR2(100),
+		  "USER_DEPTID" NVARCHAR2(100),
+		  "USER_DEPTNAME" NVARCHAR2(100),
+		  "USER_DEPTNAME2" NVARCHAR2(100),
+		  "WRITE_DATE" DATE,
+		  "APPROVER_ID" NVARCHAR2(100),
+		  "APPROVER_NAME" NVARCHAR2(100),
+		  "APPROVER_NAME2" NVARCHAR2(100),
+		  "UPDATEDT" DATE,
+		  "STATE" NVARCHAR2(10),
+		  "MEMO" NVARCHAR2(200),
+		  "DEL_FLAG" NVARCHAR2(10) DEFAULT 'N'
+		  CONSTRAINT "JMOCHA_APPR_HISTORY_PK" PRIMARY KEY ("TENANT_ID", "MAIL_UID", "USER_ID")
+		)
+	</statement>
+	
+	<statement id="EzCommonDAO.createJmochaApprCompHistory">
+		CREATE TABLE "JMOCHA_APPR_COMP_HISTORY" (
+		  "TENANT_ID" NUMBER(5,0) NOT NULL,
+		  "COMPANY_ID" NVARCHAR2(80) NOT NULL,
+		  "MAIL_UID" NUMBER NOT NULL,
+		  "SUBJECT" CLOB,
+		  "SENDEREMAIL" NVARCHAR2(100),
+		  "USER_ID" NVARCHAR2(100) NOT NULL,
+		  "USER_NAME" NVARCHAR2(100),
+		  "USER_NAME2" NVARCHAR2(100),
+		  "USER_DEPTID" NVARCHAR2(100), 
+		  "USER_DEPTNAME" NVARCHAR2(100),
+		  "USER_DEPTNAME2" NVARCHAR2(100),
+		  "WRITE_DATE" DATE,
+		  "APPROVER_ID" NVARCHAR2(100),
+		  "APPROVER_NAME" NVARCHAR2(100),
+		  "APPROVER_NAME2" NVARCHAR2(100),
+		  "UPDATEDT" DATE,
+		  "STATE" NVARCHAR2(10),
+		  "MEMO" NVARCHAR2(200),
+		  "DEL_FLAG" NVARCHAR2(10) DEFAULT 'N'
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTable" resultClass="String" parameterClass="Map">
+		SELECT 
+			#v_COLUMN#
+		FROM
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_allowed_domain">jmocha_appr_allowed_domain</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_user">jmocha_appr_user</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_history">jmocha_appr_history</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_comp_history">jmocha_appr_comp_history</isEqual>
+		WHERE
+			ROWNUM = 1
+	</select>
 
     <select id="EzCommonDAO.checkRecordHeadereOption" resultClass="String">
         <![CDATA[
@@ -4526,7 +4606,7 @@
 			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
 			VALUES ('095', 2, '생산연도', 50, 'TBL_CABINETCLASS', 'PRODUCTIONYEAR', null, null, 'Simple기록물철', '생산연도', 'Productionyear', '生産年度', '生产年度', #tenantId#, #companyId#)
 			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
-			VALUES ('095', 3, '단위업무명(분류코드)', 140, 'TBL_CABINETCLASS', 'TASKNAME', null, null, 'Simple기록물철', '단위업무명(분류코드)', 'Taskname', '単位業務名', '单位业务名称', #tenantId#, #companyId#)
+			VALUES ('095', 3, '단위업무명(분류코드)', 160, 'TBL_CABINETCLASS', 'TASKNAME', null, null, 'Simple기록물철', '단위업무명(분류코드)', 'Taskname', '単位業務名', '单位业务名称', #tenantId#, #companyId#)
 			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
 			VALUES ('095', 4, '형태', 100, 'TBL_CABINETCLASS', 'RECTYPECODE', null, null, 'Simple기록물철', '형태', 'FORM', '形態', '表', #tenantId#, #companyId#)
 			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
@@ -4957,19 +5037,146 @@
 			USERTREEFLAG CHAR(1) DEFAULT 'Y'
 	</statement>
 
-	<statement id="EzCommonDAO.addAddJobHideFlag">
+	<statement id="EzCommonDAO.addDeptHideFlag">
 		ALTER TABLE 
 		    tbl_deptmaster 
 		ADD 
 			DEPTTREEFLAG char(1) DEFAULT 'Y'
 	</statement>
 
-	<statement id="EzCommonDAO.addDeptHideFlag">
+	<statement id="EzCommonDAO.addAddJobHideFlag">
 		ALTER TABLE 
 		    tbl_addjobmaster 
 		ADD 
 			USERTREEFLAG char(1) DEFAULT 'Y'
 	</statement>
+	
+	<select id="EzCommonDAO.checkGongRamListOption" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				companyid
+			FROM
+				TBL_LISTOPTION
+			WHERE
+				LISTTYPE = #listOption#
+			AND
+				companyid = #companyId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				ROWNUM = 1
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertGongRamListOption">
+		<![CDATA[
+			INSERT ALL
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,1,'순번',35,'TBL_APRLINEINFO','AprMemberSN',NULL,NULL,'결재선정보(공람)','순번','No.','順番','序号',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,2,'성명',100,'TBL_APRLINEINFO','AprMemberName',NULL,NULL,'결재선정보(공람)','성명','Name','氏名','姓名',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,3,'직위',100,'TBL_APRLINEINFO','AprMemberJobTitle',NULL,NULL,'결재선정보(공람)','직위','Title','役職','职位',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,4,'부서',300,'TBL_APRLINEINFO','AprMemberDeptName',NULL,NULL,'결재선정보(공람)','부서명','Dept.','部署','部门',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,5,'공람일시',300,'TBL_APRLINEINFO','ProcessDate',NULL,NULL,'결재선정보(공람)','공람일시','Date','供覧日時','供览日时',#tenantId#, #companyId#)
+			SELECT
+				*
+			FROM DUAL
+		]]>
+   	</insert>
+	
+	<select id="EzCommonDAO.checkScheduleReminderScheduler">
+		SELECT
+			SCHEDULEID
+		FROM
+			TBL_SCHEDULE_REMINDER_SCHEDULER
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblScheduleReminderScheduler">
+	CREATE TABLE "TBL_SCHEDULE_REMINDER_SCHEDULER" (
+			"SCHEDULEID" NUMBER(10,0) NOT NULL ENABLE,
+			"PARENTID" NUMBER(10,0) DEFAULT 0 NOT NULL ENABLE,
+			"OWNERID" NVARCHAR2(50) NOT NULL ENABLE,
+			"OWNERNAME" NVARCHAR2(80) NOT NULL ENABLE,
+			"OWNERNAME2" NVARCHAR2(50),
+			"CREATORID" NVARCHAR2(50) NOT NULL ENABLE,
+			"CREATORNAME" NVARCHAR2(50) NOT NULL ENABLE,
+			"CREATORNAME2" NVARCHAR2(50),
+			"SCHEDULETYPE" NUMBER(5,0) NOT NULL ENABLE,
+			"DATETYPE" NUMBER(5,0) NOT NULL ENABLE,
+			"STARTDATE" DATE NOT NULL ENABLE,
+			"ENDDATE" DATE NOT NULL ENABLE,
+			"REPETITION" NVARCHAR2(50),
+			"TITLE" NVARCHAR2(250) NOT NULL ENABLE,
+			"TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+			"COMPANYID" VARCHAR2(40),
+			"REMINDERSTATUS" NCHAR(1) DEFAULT '0',
+			"OFFSETINFO" CHAR(10),
+			"LANG" NVARCHAR2(10),
+			"OFFSETMIN" NVARCHAR2(10),
+			
+			CONSTRAINT "TBL_SCHEDULE_REMINDER_SCHEDULER_PK" PRIMARY KEY ("SCHEDULEID")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkReminderTimeColumnAtTblScheduleConfig">
+		SELECT
+			REMINDERTIME
+		FROM
+			TBL_SCHEDULECONFIG
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.addReminderTimeAtTblScheduleConfig">
+		ALTER TABLE
+			TBL_SCHEDULECONFIG
+		ADD
+			REMINDERTIME NVARCHAR2(4) DEFAULT '0' NOT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.getAllDaySTimeTenantConfig" parameterClass="map" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = #property#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<insert id="EzCommonDAO.insertAllDaySTimeForReminderTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantID#, #property#, '09:00', 'HH24:MM 형식으로 미리알림 시 하루종일 일정의 시작 시각 설정가능(MM은 00 또는 30만 가능)', '미리알림 시 하루종일 일정의 시작 시각 세팅', TO_DATE('2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일정관리')
+	</insert>
+	
+
+	<select id="EzCommonDAO.checkSaveFlagForCbShare" resultClass="String">
+	<![CDATA[
+		SELECT
+			SAVEFLAG
+		FROM
+			TBL_CB_SHARE
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSaveFlagForCbShare">
+	<![CDATA[
+		ALTER TABLE
+			TBL_CB_SHARE
+			ADD
+				SAVEFLAG NUMBER(3,0)
+		]]>
+	</statement>	
     
 	<!--2024-07-12 황인경 - 모바일 포탈 개발 -->
 	<select id="EzCommonDAO.checkMobileTheme" resultClass="Integer">

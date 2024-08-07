@@ -88,7 +88,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	}
 	
 	@Override
-	public List<SimpleUserVO> getShareUserList(String cabinetId, String userId, String sqlQuery, String searchValue, String primary, int tenantId) throws Exception {
+	public List<SimpleUserVO> getShareUserList(String cabinetId, String userId, String sqlQuery, String searchValue, String primary, int tenantId, String searchFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("cabinetId",   cabinetId);
 		map.put("userId",      userId);
@@ -96,6 +96,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		map.put("searchValue", searchValue);
 		map.put("primary",     primary);
 		map.put("tenantId",    tenantId);
+		map.put("searchFlag",  searchFlag); // 공유자 검색 Flag
 		
 		return ezCabinetDAO_h.getShareUserList(map);
 	}
@@ -159,7 +160,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		map.put("cabinetId",   cabinetId);
 		map.put("userId",      userId);
 		map.put("tenantId",    tenantId);
-		
+
 		//Delete all current shared users
 		ezCabinetDAO_h.updateShareList(map);
 		
@@ -176,13 +177,14 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		map.put("shareDate", timeUTC);
 		
 		int shareId = ezCabinetDAO_h.getMaximumShareId(map) + 1;
-		
+
 		for (int i = 0; i < listUsers.size(); i++, shareId++) {
 			JSONObject sharedInfo = (JSONObject)listUsers.get(i);
 			String sharedId  = (String)sharedInfo.get("userId");
 			String userType  = (String)sharedInfo.get("userType");
 			String sharePerm = (String)sharedInfo.get("permis");
 			String subPerm   = (String)sharedInfo.get("subPerm");
+			String searchFlag = (String) sharedInfo.get("searchFlag"); // 공유자 검색 Flag
 			
 			switch(userType) {
 				case "user": 
@@ -230,6 +232,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 			map.put("permission",      Integer.parseInt(sharePerm));
 			map.put("childPermission", Integer.parseInt(subPerm));
 			map.put("shareId",         shareId);
+			map.put("searchFlag",      searchFlag);
 			ezCabinetDAO_h.saveShareUserList(map);
 		}
 		

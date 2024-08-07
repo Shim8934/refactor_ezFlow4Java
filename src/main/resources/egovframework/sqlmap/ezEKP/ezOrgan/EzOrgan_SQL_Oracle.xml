@@ -928,7 +928,7 @@
 				AND
 					(INSTR(dept_cd_path, (SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#)) = 1
 				OR
-					extensionattribute1 = #deptCN#))
+					extensionattribute2 = #deptCN#))
 		]]>
 		<isNotEqual property="adminOrgan" compareValue="y">
 			<![CDATA[
@@ -959,10 +959,12 @@
 					TBL_DEPTMASTER
 				WHERE
 					D.tenant_id = #tenantID#
+				AND 
+					DEPT_CD_PATH NOT LIKE 'shared_mailbox_%'
 				AND
 					(INSTR(dept_cd_path, (SELECT CONCAT(dept_cd_path, ',') FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #deptCN#)) = 1)
 				OR
-					extensionattribute1 = #deptCN#)
+					extensionattribute2 = #deptCN#)
 		]]>
 		<isNotEqual property="adminOrgan" compareValue="y">
 			<![CDATA[

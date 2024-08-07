@@ -131,6 +131,8 @@ var Appmore_btnClick = function(portletId) {
     	window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
     } else if (type == 'display') {
     	window.open("/ezApprovalG/apprGMain.do?listType=99", "main");
+    } else if (type == 'reject') {
+        window.open("/ezApprovalG/apprGMain.do?listType=24", "main");
     } else {
     	window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
     }

@@ -412,7 +412,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					//일정관리 조인
 					String tempSDate = nowDate.substring(0, 10) + " 00:00:00";
 					String tempEDate = nowDate.substring(0, 10) + " 23:59:59";
-					List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "");
+					List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "", "");
 					
 					String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 					if(useGoogleCalendar.equals("YES")) {
@@ -1557,7 +1557,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				pidList = idList;
 			}
 
-			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId, deptId, useAnnualScheduleYN);
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, offSetMin, "", "", "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
 
 			// 구글연동 일정 가져오기(포탈 일정포틀릿)
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);

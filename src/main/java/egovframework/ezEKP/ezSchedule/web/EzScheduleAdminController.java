@@ -17,6 +17,8 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -34,6 +36,7 @@ import egovframework.ezEKP.ezSchedule.service.EzScheduleAdminService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
+import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -893,7 +896,43 @@ public class EzScheduleAdminController {
 		return result.toString();
 	}
 	
-	
-	
+    @RequestMapping(value="/admin/ezSchedule/scheduleReminderSetting.do", method = RequestMethod.GET)
+	public String  scheduleReminderSetting(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("============ scheduleReminderSetting started ============");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String primary = userInfo.getPrimary();
+		
+		String allDaySTimeForReminder = ezCommonService.getTenantConfig("allDaySTimeForReminder", loginSimpleVO.getTenantId());
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("primary", primary);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
+		model.addAttribute("allDaySTimeForReminder", allDaySTimeForReminder);
+		
+		logger.debug("============ scheduleReminderSetting ended ============");
+		
+		return "/admin/ezSchedule/scheduleAdminReminderSetting";
+	}
+    
+    @ResponseBody
+    @RequestMapping(value="/admin/ezSchedule/updateAllDaySTimeForReminder.do", method = RequestMethod.POST)
+	public ResponseEntity<String>  updateAllDaySTimeForReminder(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+    	LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+    	try {
+    		String allDaySTimeForReminder = request.getParameter("allDaySTimeForReminder");
+    		ezScheduleService.updateAllDaySTimeForReminder(allDaySTimeForReminder, userInfo.getTenantId());
+    	} catch (Exception e) {
+    		return new ResponseEntity<>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+    	
+    	return new ResponseEntity<>("ok", HttpStatus.OK);
+    }
 	
 }

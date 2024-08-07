@@ -35,6 +35,12 @@
 			    parentwin = RetValue;
 			    
 			    showDateType();
+			    
+			    var checks2 = document.getElementById("receivelist").getElementsByTagName("input");
+				if( checks2.length == 0)	{
+					alert("<spring:message code='ezSchedule.mail.hth34'/>");
+					window.close();
+				}
 			}
 	
 			function accept_schedule(status)
@@ -57,7 +63,7 @@
 					    data.startDate = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'startdate');
 					    data.endDate = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'enddate');
 					    data.showtop = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'showtop');
-
+					    data.repetition = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'repetition');
 					    creatorList.push(data);
 					}
 				}
@@ -110,10 +116,14 @@
 				});
 				var checks2 = document.getElementById("receivelist").getElementsByTagName("input");
 				if( checks2.length==0 )	{
-					ReturnFunction("success");
+					if (ReturnFunction != null) {
+						ReturnFunction("success");
+					}
+					
 					window.close();
 				}
-				if(parent.parent.frames["right"].groupcount == "0") {
+				
+				if(parent.parent.frames["right"].groupcount != null && parent.parent.frames["right"].groupcount == "0") {
 					parent.parent.frames["left"].document.body.removeAttribute('style');
 				}
 			}
@@ -127,7 +137,10 @@
 					
 					ReturnFunction("cancel");
 					window.close();
+				} else {
+					window.close();
 				}
+				
 			}
 			
 // 			window.onbeforeunload = function () {
@@ -378,6 +391,13 @@
 		        window.open("/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleid) + "&isReceive=" + encodeURIComponent(isReceive), "",
 					"height = 670px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
+			
+			function show_personinfo(userid) {
+		        var feature = GetOpenPosition(420, 450);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "",
+				    "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    }
+			
 		</script>
 	</head>
 	
@@ -406,7 +426,14 @@
 	                    <td style="text-align:center">
 	                    	<input type='checkbox' value="1" scheduleid='${item.scheduleId}' creatorId='${item.creatorId}' creatorName='${item.creatorName}' />
 	                    </td>
-	                    <td title="<spring:message code='ezSchedule.t162' />" style="cursor:pointer; text-align:center;" onClick="parentwin.show_personinfo('${item.creatorId}')">
+	                    <c:choose>
+	                    	<c:when test = "${from == 'mail'}">
+	                    	<td title="<spring:message code='ezSchedule.t162' />" style="cursor:pointer; text-align:center;" onClick="show_personinfo('${item.creatorId}')">
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    	<td title="<spring:message code='ezSchedule.t162' />" style="cursor:pointer; text-align:center;" onClick="parentwin.show_personinfo('${item.creatorId}')">
+	                    	</c:otherwise>
+	                    </c:choose>
 	                    	<c:if test="${userInfo.primary == '1'}">${item.creatorName}</c:if>
 	                    	<c:if test="${userInfo.primary != '1'}">${item.creatorName2}</c:if>	                    
 	                    </td> 

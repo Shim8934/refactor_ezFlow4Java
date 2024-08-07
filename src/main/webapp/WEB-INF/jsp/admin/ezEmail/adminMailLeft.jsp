@@ -125,6 +125,12 @@
 					case 36:
 						url = "/admin/ezEmail/companyMultiDomain.do";
 						break;
+					case 37:
+						url = "/admin/ezEmail/appr/allHands/main.do";
+						break;
+					case 38:
+						url = "/admin/ezEmail/appr/main.do";
+						break;
 				}
 				window.open(url,"right");
 				
@@ -173,6 +179,18 @@
 				<h2 class="on">
 					<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
 				</h2>
+				
+				<c:if test="${useApprMail}">
+				<h2>
+					<% // 전체메일승인 %>
+					<span onClick="goPage(37)" style="display:inline-block;width:100%;"><spring:message code="email.appr.menu.allhands" /></span>
+				</h2>
+				<h2>
+					<% // 메일승인관리 %>
+					<span onClick="goPage(38)" style="display:inline-block;width:100%;"><spring:message code="email.appr.menu.normal" /></span>
+				</h2>
+				</c:if>
+				
 				<c:if test="${cChk == '1'}">
 				<h2>
 					<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>

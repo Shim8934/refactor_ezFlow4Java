@@ -1162,17 +1162,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		String listString = "";
 		StringBuffer resultXML = new StringBuffer();
-		
-		if (mode.equals("APR")) {
-			//결재진행중인 문서
-			listString = getListHeader("S014", companyID, lang, tenantID);
-		} else if (mode.equals("END")) {
-			//회람문서, 결재완료문서
-			listString = getListHeader("S015", companyID, lang, tenantID);
-		} else {
-			listString = getListHeader("S015", companyID, lang, tenantID);
-		}
-		
+
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+        if (approvalFlag.equals("S")) { // 회람
+            if (mode.equals("APR")) {
+                //결재진행중인 문서
+                listString = getListHeader("S014", companyID, lang, tenantID);
+            } else if (mode.equals("END")) {
+                //회람문서, 결재완료문서
+                listString = getListHeader("S015", companyID, lang, tenantID);
+            } else {
+                listString = getListHeader("S015", companyID, lang, tenantID);
+            }
+        } else { // 공람
+            if (mode.equals("APR")) {
+                //결재진행중인 문서
+                listString = getListHeader("014", companyID, lang, tenantID);
+            } else if (mode.equals("END")) {
+                //공람문서, 결재완료문서
+                listString = getListHeader("015", companyID, lang, tenantID);
+            } else {
+                listString = getListHeader("015", companyID, lang, tenantID);
+            }
+        }
+
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
@@ -9665,7 +9678,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 
 		if (doc.getElementsByTagName("TITLE").item(0) != null && doc.getElementsByTagName("TITLE").item(0).getTextContent().length() > 0) {
-            recordListVO.setTitle(makeSearchField(doc.getElementsByTagName("TITLE").item(0).getTextContent().replace("\\", "\\\\")));
+            recordListVO.setTitle(makeSearchField(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
 		}
 
 		if (doc.getElementsByTagName("REGTYPE").item(0) != null && doc.getElementsByTagName("REGTYPE").item(0).getTextContent().length() > 0) {
@@ -13225,22 +13238,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String extFileName = getExtendedFileName(fileName);
 		String url = "";
 		
+		// 2023-03-15 임정은 - 배부 기능 비동기화 (물리적인 파일 복사 비활성화, 파일 존재하지 않을 때 원문서 경로를 확인하여 복사하는 기존 로직 존재)
 		if (approvalFlag.equals("G")) {
 			url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator +
 					"1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
-			String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID), "");
-			
-			rtnVal = copyFile(fileURL, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + "1000" +
-					commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + 
-					commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID));
+//			String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID), "");
+//			
+//			rtnVal = copyFile(fileURL, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + "1000" +
+//					commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + 
+//					commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID));
 			
 		} else {
 			String oldYear = getDocHrefYear(docID, companyID, tenantID);
 			url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
 			
-			rtnVal = copyFile(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
-					dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName,
-					dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newID));
+//			rtnVal = copyFile(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
+//					dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName,
+//					dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newID));
 		}
 		
 		
@@ -15603,9 +15617,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				//회람 추가
-				if (approvalFlag.equals("S")) {
-					updateCirculation(docID, dirPath, companyID, userInfo);
-				}
+                updateCirculation(docID, dirPath, companyID, userInfo);
 			}
 			
 			if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
@@ -15683,7 +15695,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} 
+					}
+
+                    updateCirculation(docID, dirPath, companyID, userInfo); // 2023-07-25 임정은 - 공람 추가
 				}
 			}
 			
@@ -27337,7 +27351,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             if (globals.getProperty("Globals.DbType").equals("oracle")) {
                 whereStr = whereStr + " AND DOCTITLE LIKE '%" + docTitle + "%' ESCAPE '\\'";
             } else {
-                whereStr = whereStr + " AND DOCTITLE LIKE '%" + docTitle + "%'";
+                whereStr = whereStr + " AND DOCTITLE LIKE '%" + docTitle.replace("\\", "\\\\") + "%'";
             }
 		}
 		
@@ -35708,7 +35722,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         Map<String, Object> map = new HashMap<String, Object>();
 
         map.put("tenantID", userInfo.getTenantId());
-        map.put("deptID", userInfo.getDeptID());
+        map.put("deptID", "," + userInfo.getDeptID() + ",");
         map.put("primary", userInfo.getPrimary());
 
         return ezApprovalGDAO.getUnderDeptList(map);
@@ -36380,4 +36394,50 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getOrgDocIDfromGongram ended");
 		return orgDocID;
 	}
+
+    /* 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 공람회수  */
+    @Override
+    public String gongRamCancel(String docID, int count, int aprMemberSN, String companyID, int tenantId) throws Exception {
+        logger.debug("gongRamCancel started.");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("v_DocID", docID);
+        map.put("v_gongRamDocID", docID);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantId);
+        map.put("v_AprMemberSN", aprMemberSN);
+
+        try {
+            if (count == aprMemberSN) {
+                if (count == 1) {
+                    ezApprovalGDAO.aprDeleteDocInfo(map);
+                    ezApprovalGDAO.aprDeleteDocInfo2(map);
+                    ezApprovalGDAO.aprDeleteDocInfo5(map);
+                    ezApprovalGDAO.aprDeleteDocInfo6(map);
+                    ezApprovalGDAO.aprDeleteDocInfo7(map);
+                    ezApprovalGDAO.aprDeleteDocInfo8(map);
+                    ezApprovalGDAO.aprDeleteDocInfo9(map);
+                } else {
+                    ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
+                    ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
+                }
+            } else {
+                ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
+                ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
+
+                for (int i = aprMemberSN + 1; i <= count; i++) {
+                    map.put("v_AprMemberSN", i);
+
+                    ezApprovalGDAO.updateOtherGongRamExpAprLine(map);
+                    ezApprovalGDAO.updateOtherGongRamAprLineInfo(map);
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return "FALSE";
+        }
+        logger.debug("gongRamCancel ended.");
+        return "TRUE";
+    }
 }

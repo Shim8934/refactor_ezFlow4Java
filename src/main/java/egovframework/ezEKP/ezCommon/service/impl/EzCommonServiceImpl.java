@@ -1,5 +1,13 @@
 package egovframework.ezEKP.ezCommon.service.impl;
 
+import egovframework.ezMobile.ezOption.dao.MOptionDAO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
@@ -1875,6 +1883,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEEACHMAILDEFAULT"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
 		}});
 		test.add(new HashMap<String, Object>(){{
+			put("confName","useApprMail");
+			put("property_value","NO");
+			put("config_name","승인메일 기능 사용여부");
+			put("regdate","2024-02-26 00:00:00");
+			put("description","승인메일 기능 사용여부(default: NO)");
+			put("config_type","메일");
+		}});
+		test.add(new HashMap<String, Object>(){{
+			put("confName","apprMailKeepLogPeriod");
+			put("property_value","3");
+			put("config_name","승인메일 자동삭제,로그보존 기간");
+			put("regdate","2024-03-14 00:00:00");
+			put("description","승인메일 자동삭제,로그보존 기간(default: 3, 단위: 개월)");
+			put("config_type","메일");
+        }});
+        test.add(new HashMap<String, Object>(){{
 			put("confName","useFormContOnReuseForWHWP");
 			put("property_value","YES");
 			put("config_name","웹한글 문서 재사용 시 양식선택창 표출여부");
@@ -2700,6 +2724,25 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		}
 		
 		logger.debug("setCompanyConfigs ended.");
+	}
+	
+	/**
+	 * 테이블 생성 공통함수
+	 * - tableArr에 추가할 테이블 명 추가 (5개마다 줄바꿈)
+	 */
+	@Override
+	public void createTables() throws Exception {
+		// 생성할 테이블 명
+		String[] tableArr = new String[] 
+				{"jmocha_appr_allowed_domain", "jmocha_appr_user", "jmocha_appr_history", "jmocha_appr_comp_history"};
+		
+		for (String t : tableArr) {
+			try {
+				ezCommonDAO.createTable(t);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
 	}
 	
 	@Override
@@ -3956,6 +3999,53 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addUserDeptHideFlag() throws Exception {
         ezCommonDAO.addUserDeptHideFlag();
     }
+    
+    @Override
+    public void insertGongRamListOption() throws Exception {
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+
+                ezCommonDAO.insertGongRamListOption(map);
+            }
+        }
+    }
+    
+    // 2023-09-08 한태훈 - 일정관리 > 미리알림 시간 설정 컬럼 추가
+ 	@Override
+ 	public void addReminderTimeAtTblScheduleConfig() throws Exception {
+ 		ezCommonDAO.addReminderTimeAtTblScheduleConfig();
+ 	}
+ 	
+ 	// 2023-09-08 한태훈 - 일정관리 > 미리알림 스케줄러 테이블 추가
+ 	@Override
+ 	public void createTblScheduleReminderScheduler() throws Exception {
+ 		ezCommonDAO.createTblScheduleReminderScheduler();
+ 	}
+ 	
+ 	// 2023-09-11 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그 추가, 미리알림 시 하루종일 일정의 시작 시각 설정 컨피그 추가
+ 	@Override
+ 	public void insertReminderTenantConfig() throws Exception {
+ 		
+ 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+ 		
+ 		for (TenantVO tenantVo : tenantIdList) {
+ 			Map<String, Object> map = new HashMap<String, Object>();
+ 			map.put("tenantID", tenantVo.getTenantId());
+ 			ezCommonDAO.insertReminderTenantConfig(map);
+ 		}
+ 		
+ 	}
+
+    // 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+    public void alterSaveFlagForCbShare() throws Exception {
+        ezCommonDAO.alterSaveFlagForCbShare();
+    }
+
     @Override
     public void insertInitMobileTheme() throws Exception {
 

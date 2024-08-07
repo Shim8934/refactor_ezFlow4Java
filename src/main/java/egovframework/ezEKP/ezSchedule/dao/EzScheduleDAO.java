@@ -18,6 +18,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleReminderVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -375,5 +376,69 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public List<ScheduleInfoVO> getUserSearchScheduleList(Map<String, Object> map) throws Exception  {
 		return (List<ScheduleInfoVO>) list("EzScheduleDAO.getUserSearchScheduleList", map);
 	}
+	
+	public String selectAttendanceStatus(Map<String, Object> map) throws Exception {
+		return (String) select("EzScheduleDAO.selectAttendanceStatus", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ScheduleReminderVO> selectNoRepeatRemindScheList(Map<String, Object> map) throws Exception {
+		return (List<ScheduleReminderVO>) list("EzScheduleDAO.selectNoRepeatRemindScheList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ScheduleReminderVO> selectRepeatRemindScheList(Map<String, Object> map) throws Exception {
+		return (List<ScheduleReminderVO>) list("EzScheduleDAO.selectRepeatRemindScheList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ScheduleReminderVO> selectRepeatDelScheList(Map<String, Object> map) throws Exception {
+		return (List<ScheduleReminderVO>) list("EzScheduleDAO.selectRepeatDelScheList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ScheduleReminderVO> selectRepeatCompletScheList(Map<String, Object> map) throws Exception {
+		return (List<ScheduleReminderVO>) list("EzScheduleDAO.selectRepeatCompletScheList", map);
+	}
+	
+	public void updateReminderStatus(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateReminderStatus", map);
+	}
+
+	public void insertReminderSchedule(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertReminderSchedule", map);
+	}
+
+	public void deleteReminderSchedule(Map<String, Object> map) throws Exception {
+		delete("EzScheduleDAO.deleteReminderSchedule", map);
+	}
+	
+	// 일정관리 > 반복일정이 아닌 일정을 드래그로 이동시 완료일정인 경우, 시간 정보를 바꿔줘야한다.
+	public void updateScheduleComplete(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateScheduleComplete", map);
+	}
+
+	public void insertAttendantReminderSchedule(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertAttendantReminderSchedule", map);
+	}
+
+	public void updateReminderSchedule(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateReminderSchedule", map);
+	}
+	
+	public ScheduleGroupListVO selectScheduleGroupInfo(Map<String, Object> map) throws Exception {
+		return (ScheduleGroupListVO) select("EzScheduleDAO.selectScheduleGroupInfo", map);
+	}
+	
+	// 2023-10-27 한태훈 - 일정관리 > 참석 일정에서 제외된 참석자의 경우 미리알림 스케줄러 테이블에서 제외해야한다.
+	public void deleteAttendantReminderSchedule(Map<String, Object> map) throws Exception {
+		delete("EzScheduleDAO.deleteAttendantReminderSchedule", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ScheduleReminderVO> selectExpiredSchedule(Map<String, Object> map) throws Exception {
+		return (List<ScheduleReminderVO>) list("EzScheduleDAO.selectExpiredSchedule", map);
+	}
+	
 }
 

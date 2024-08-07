@@ -2664,14 +2664,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception {
+	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId, String deptId) throws Exception {
 		logger.debug("getFavoriteForms started.");
-		logger.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		
+		logger.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || deptId = " + deptId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("deptId", deptId);
 		
 		List<ApprGFormVO> list = ezNewPortalDAO.getFavoriteForms(map);
 		

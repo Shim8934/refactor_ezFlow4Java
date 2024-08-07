@@ -1184,6 +1184,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		String term = request.getParameter("term");
 		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+		String jobName = request.getParameter("jobName"); // 같은 부서에 겸직이 되어있는경우 오류가 발생하여 직위 조건 추가
 		
 		if (request.getParameter("userID") != null) {
 			userID = request.getParameter("userID");
@@ -1193,7 +1194,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		try {
-			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, companyID, userInfo.getTenantId());
+			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, companyID, userInfo.getTenantId(), jobName);
 			logger.debug("setEmployeeMonth ended");
 			return "OK";
 		} catch (Exception e) {

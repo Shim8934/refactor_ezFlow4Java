@@ -684,6 +684,21 @@
 				}
 			}
 
+		    function Open_ApprMail(t) {
+		    	let url = "";
+		    	switch(t.dataset.type) {
+			    	case "p" : url = "/ezEmail/appr/pendingList.do?startNum=1"; break;
+			    	case "c" : url = "/ezEmail/appr/completeList.do?startNum=1"; break;
+			    	case "r" : url = "/ezEmail/appr/requestList.do?startNum=1"; break;
+		    	}
+		    	
+		    	if($(t).data("id")) {
+		    		url += "&shareId=" + $(t).data("id");
+		    	}
+		    	
+		    	window.open(url, "right");
+		    }
+		    
 	        function Open_ReservationManage() {
 	            var OpenWin = window.open("/ezEmail/mailReservation.do", "mail_reservation_cross", GetOpenWindowfeature(501, 350));
 	            try { OpenWin.focus(); } catch (e) { }
@@ -1660,6 +1675,14 @@
 		            <c:if test="${useSpamOut}">
 		            	<li onclick="oepnSpamOutBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>
+		            <br/>
+		            <c:if test="${useApprMail}"> <% // 승인메일 정책에서 하나라도 사용이면 true %>
+		            	<c:if test="${isApprMailApprover}">
+							<li onclick="Open_ApprMail(this)" data-type="p"><span class="list_text"><spring:message code="email.appr.title.pending" /></span></li> <% // 발송승인대기 %>
+	                        <li onclick="Open_ApprMail(this)" data-type="c"><span class="list_text"><spring:message code="email.appr.title.complete" /></span></li> <% // 발송완료목록 %>
+	                    </c:if>
+                        <li onclick="Open_ApprMail(this)" data-type="r"><span class="list_text"><spring:message code="email.appr.title.request" /></span></li> <% // 발송요청목록 %>
+	            	</c:if>
 		            <%-- 태그 --%>
 		            <c:if test="${useMailTag}">
                         <div class="tag_area">
@@ -1736,7 +1759,11 @@
 			        		</c:if>
 			        		<c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
 				            	<li onclick="shareMailAddress()"><span class="list_text">스팸편지함</span></li>
-				            </c:if>
+				            </c:if>		
+				            <br/>
+				            <c:if test="${useApprMail}"> <% // 승인메일 정책에서 하나라도 사용이면 true %>
+		                        <li onclick="Open_ApprMail(this)" data-id="${shareInfo.shareId}" data-type="r"><span class="list_text"><spring:message code="email.appr.title.request" /></span></li> <% // 발송요청목록 %>
+			            	</c:if>
                             <%-- 태그 --%>
                             <c:if test="${shareInfo.enable eq '1'}">
                                 <div class="tag_area">

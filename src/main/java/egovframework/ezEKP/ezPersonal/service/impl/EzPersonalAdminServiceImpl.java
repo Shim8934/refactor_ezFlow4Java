@@ -560,7 +560,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public void setEmpMonth(String type, String userID, String deptID, String term,  String companyID, int tenantID) throws Exception {
+	public void setEmpMonth(String type, String userID, String deptID, String term,  String companyID, int tenantID, String jobName) throws Exception {
 		logger.debug("setEmpMonth started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -571,6 +571,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pTerm", term);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("jobName", jobName); // 같은 부서에 겸직이 되어있는경우 오류가 발생하여 직위 조건 추가
 		
 		if (type != null && type.equals("INS")) {
 			ezPersonalAdminDAO.setEmployeeMonth_I(map);

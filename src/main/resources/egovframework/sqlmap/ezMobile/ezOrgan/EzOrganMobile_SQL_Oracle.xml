@@ -655,7 +655,7 @@
 					    			SELECT CN 
 					    			FROM TBL_DEPTMASTER B 
 					    			WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN AND DEPTLEVEL != '1'
-									]>
+									]]>
 										<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
 											DEPTTREEFLAG = 'Y'
 										</isEqual>
@@ -667,7 +667,7 @@
 									SELECT CN
 									FROM TBL_DEPTMASTER B 
 									WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
-									]>
+									]]>
 										<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
 											DEPTTREEFLAG = 'Y'
 										</isEqual>
@@ -757,7 +757,7 @@
 								SELECT CN 
 								FROM TBL_DEPTMASTER B 
 								WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN AND DEPTLEVEL != '1'
-								]>
+								]]>
 									<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
 										DEPTTREEFLAG = 'Y'
 									</isEqual>
@@ -769,7 +769,7 @@
 								SELECT CN
 								FROM TBL_DEPTMASTER B 
 								WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
-								]>
+								]]>
 									<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
 										DEPTTREEFLAG = 'Y'
 									</isEqual>
@@ -1008,7 +1008,7 @@
 					    			SELECT CN 
 					    			FROM TBL_DEPTMASTER B 
 					    			WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN AND DEPTLEVEL != '1'
-									]>
+									]]>
 										<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
 											DEPTTREEFLAG = 'Y'
 										</isEqual>
@@ -1020,7 +1020,7 @@
 									SELECT CN
 									FROM TBL_DEPTMASTER B 
 									WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
-									]>
+									]]>
 										<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
 											DEPTTREEFLAG = 'Y'
 										</isEqual>

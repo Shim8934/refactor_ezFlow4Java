@@ -396,6 +396,21 @@
 	            else if (tabBoardID3 == BoardID && $("#chktabBoard3").is(":checked") == false) {
 	            	ptabBoardMod3 = "DELETE"; 
 	            }
+				
+				// 탭게시판 선택 여부 확인
+				var tabBoardCheck1 = "";
+				var tabBoardCheck2 = "";
+				var tabBoardCheck3 = "";
+				
+				if ($("#chktabBoard1").is(":checked") == true) {
+					tabBoardCheck1 = "true";
+				}
+				if ($("#chktabBoard2").is(":checked") == true) {
+					tabBoardCheck2 = "true";
+				}
+				if ($("#chktabBoard3").is(":checked") == true) {
+					tabBoardCheck3 = "true";
+				}
 
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
@@ -414,7 +429,8 @@
 	            		likeFlag:useBoardLike, noticeBoardMod:pNoticeBoardMod,
 						tabBoardMod1:ptabBoardMod1,tabBoardMod2:ptabBoardMod2,tabBoardMod3:ptabBoardMod3,
 						mailFG_Post : mailFG_Post, mailFG_Mod : mailFG_Mod, mailFG_Comment : mailFG_Comment,
-						reactFlag:useBoardReplyReact
+						reactFlag:useBoardReplyReact,
+						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");

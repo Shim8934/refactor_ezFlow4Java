@@ -224,6 +224,7 @@
 							type : typeContent,
 							adminOrgan : "y"
 					},
+					async : false,
 					success : function(xml){
 						result=loadXMLString(xml);
 						var headerData = createXmlDom();
@@ -305,22 +306,37 @@
 					method : "POST",
 					dataType : "json",
 					data : {
-						deptID : tempDeptID
+						deptID : tempDeptID,
+						adminOrgan : "y" 
 					},
 					success : function(result) { // && !pSeach 
 						if (organSelectDeptNM.getAttribute("countinfo") != "1" && !pSeach) {
 							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							var totalCount = 0;
+							
+							// 부서가 회사인지 확인하기 위해
+							var treeView = new TreeView();
+							treeView.LoadFromID("FromTreeView");
+						    var selectNode = treeView.GetSelectNode();
+							var companyID = selectNode.GetNodeData("extensionattribute2");
+							
+// 							if (tempDeptID != 'Top') {
+// 								totalCount = result.totalCount;
+// 							} else {
+// 								totalCount = result.totalCount2;
+// 							}
 
-							if (tempDeptID != 'Top') {
-								totalCount = result.totalCount;
-							} else {
-								totalCount = result.totalCount2;
-							}
+							totalCount = result.totalCount;
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span> / <span class='totalCount'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								//2024.07.17 한슬기 : totalCount표시 조건 변경
+								if(tempDeptID == companyID){ // 회사인 경우
+									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span> / <span class='totalCount'>" + result.totalCount2 + "</span>";
+								} else { // 부서인 경우
+									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span> / <span class='totalCount'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								}
+
 							} else {
 								document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span>";
 							}
@@ -1150,6 +1166,7 @@
 			    parent.document.getElementById("lef").contentWindow.hideProgress();
 			}
 			
+			var OpenWin_add_user = "";
 			function add_user(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -1175,8 +1192,9 @@
 				//if (CrossYN()) {
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = add_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
-			    try { OpenWin.focus(); } catch (e) { }
+			    //var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+			    OpenWin_add_user = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+			    try { OpenWin_add_user.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
 				    rtnValue = window.showModalDialog("UserInfo.aspx", args,
@@ -1191,9 +1209,22 @@
 		    function add_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            displayUserList(rtnValue);
+		        	
+		        	// 2024.07.05 한슬기 : 팝업창이 닫혔는지 확인(safari에서 alert이 팝업창에 가려 안보이는 현상이 있어 추가)
+		            // 추후 필요시 주석을 풀고 메시지를 넣어서 사용하면 됨
+		        	/* var checkChildClosed = setInterval(function() {
+						if (OpenWin_add_user.closed){
+							
+							clearInterval(checkChildClosed);
+							
+							alert("");
+							displayUserList(rtnValue);
+						}
+					
+					}, 100); */
 		        }
 		    }
-		    
+		    var OpenWin_info_user = "";
 			function info_user() {
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -1233,22 +1264,35 @@
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-				var OpenWin = "";
+
 				if (args[5] === 'addJob') {
 					var jobId = listview.GetSelectedRows()[0].getAttribute("DATA5");
-					OpenWin = window.open("/admin/ezOrgan/addJobInfo.do?selectDeptId=" + encodeURIComponent(args[6]) +"&jobId="+encodeURIComponent(jobId), "AddJobInfo", GetOpenWindowfeature(830, 440));
+					OpenWin_info_user = window.open("/admin/ezOrgan/addJobInfo.do?selectDeptId=" + encodeURIComponent(args[6]) +"&jobId="+encodeURIComponent(jobId), "AddJobInfo", GetOpenWindowfeature(830, 440));
 				} else {
-					OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+					OpenWin_info_user = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
 				}
-				try { OpenWin.focus(); } catch (e) { }
+				try { OpenWin_info_user.focus(); } catch (e) { }
+
 			}
 			
 		    function info_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		        	var cn = userinfo_dialogArguments[0][0];
 		        	
-		            alert("<spring:message code='ezOrgan.t11' />");
-		            displayUserList(cn);
+		            //alert("<spring:message code='ezOrgan.t11' />");
+		            //displayUserList(cn);
+		            
+		        	// 2024.07.05 한슬기 : 팝업창이 닫혔는지 확인(safari에서 alert이 팝업창에 가려 안보이는 현상이 있어 추가)
+		        	var checkChildClosed = setInterval(function() {
+						if (OpenWin_info_user.closed){
+							
+							clearInterval(checkChildClosed);
+							
+							alert("<spring:message code='ezOrgan.t11' />");
+							displayUserList(cn);
+						}
+					
+					}, 100);
 
 		            if (trim(document.getElementById("keyword").value) != "") {
 		                search_click();

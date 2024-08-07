@@ -185,6 +185,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (Integer) select("EzApprovalGAdmin.getTaskCategoryNodeExist", map);
 	}
 
+	public Integer getTaskCategoryNodeCnt(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzApprovalGAdmin.getTaskCategoryNodeCnt", map);
+	}
+
 	public Integer getTaskCodeDuplicate(Map<String, Object> map) throws Exception {
 		return (Integer) select("EzApprovalGAdmin.getTaskCodeDuplicate", map);
 	}

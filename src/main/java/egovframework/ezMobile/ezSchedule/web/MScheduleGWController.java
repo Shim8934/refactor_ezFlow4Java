@@ -12,7 +12,9 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -32,12 +34,16 @@ import com.ibm.icu.util.Calendar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
@@ -85,6 +91,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzScheduleGoogleService googleService;
+	
+	@Autowired
+	private EzPersonalService ezPersonalService;
 		
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
@@ -99,10 +108,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
 			String searchTitle = request.getParameter("searchTitle");
-			
-			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */ 
-			String searchColumn = request.getParameter("searchColumn");
-			String searchData = request.getParameter("searchData");
+			String searchLocation = request.getParameter("searchLocation");
+			String searchAll = request.getParameter("searchAll");
 
 			/* 2023-10-11 기민혁 사용자 일정검색 요소 추가 */
 			String chk_usersearch = request.getParameter("chk_usersearch");
@@ -143,7 +150,6 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 
-			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
 			List<ScheduleInfoVO> sList ;
 
 			if(chk_usersearch !=null && chk_usersearch.equals("userSearch")) {
@@ -151,15 +157,15 @@ public class MScheduleGWController extends EgovFileMngUtil {
 					info.setUserId("");
 					info.setDeptId("");
 					info.setCompanyId("");
-					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle);
 				}else{
 					info.setUserId(SuserId);
 					info.setDeptId(SuserDeptId);
 					info.setCompanyId(SuserCompanyId);
-					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle);
 				}
 			}else {
-				sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+				sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchLocation, searchAll, "");
 
 				String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
 				
@@ -206,10 +212,6 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String endDate = request.getParameter("endDate");
 			String searchTitle = request.getParameter("searchTitle");
 			
-			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
-			String searchColumn = request.getParameter("searchColumn");
-			String searchData = request.getParameter("searchData");
-			
 			if (startDate != null && !startDate.equals("")) {
 				String[] sDate = startDate.split("-");
 				String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
@@ -239,8 +241,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
-			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
+			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, "", "", "");
 
 			String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 			if(useGoogleCalendar.equals("YES")) {
@@ -653,7 +654,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        
 			jsonParam.put("content", content);
 	        
-	        int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale); 
+	        int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale, info.getOffSet(), info.getLang()); 
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -740,6 +741,28 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        
 	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId(), realPath, locale);
 	        
+	        String ownerId = (String) jsonParam.get("ownerId");
+	        String ownerName = info.getPrimary().equals(info.getLang()) ? (String) jsonParam.get("ownerName") : (String) jsonParam.get("ownerName2");
+	        String location = (String) jsonParam.get("location");
+	        String title = (String) jsonParam.get("title");
+	        String importance = (String) jsonParam.get("importance");
+	        String ispublic = (String) jsonParam.get("isPublic");
+	        String startdate = (String) jsonParam.get("startDate");
+	        String enddate = (String) jsonParam.get("endDate");
+	        String datetype = (String) jsonParam.get("dateType");
+	        
+	        //참석자 정보
+	        List<AttendantListVO> attendantList = new ArrayList<AttendantListVO>();
+	        if (vo.getHasAttendant().equals("Y")) {
+	        	String parentID = (vo.getParentId().equals("0") ? scheduleId : vo.getParentId());
+	        	attendantList = ezScheduleService.getAttendantList(parentID, commonUtil.getMinuteUTC(info.getOffSet()), info.getTenantId(), info.getCompanyId());
+	        }
+	        
+            // 2023-09-22 한태훈 : 초대 일정 수정 메일 및 알림 발송
+	       	 if (attendantList != null) {
+	       		ezScheduleService.sendInviteModNotiForMoblie(request, scheduleId, ownerId, ownerName, attendantList, location, title, importance, ispublic, startdate, enddate, datetype, vo, info);
+	       	}
+	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");
@@ -775,7 +798,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			}*/
 			
 			//모바일 반복일정삭제 기능변경(단일삭제 -> 전체삭제)2018.02.22
-			mScheduleService.deleteSchedule(scheduleId, info.getTenantId());
+			mScheduleService.deleteSchedule(request, scheduleId, info.getTenantId(), info);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -906,7 +929,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				MCommonVO info = mOptionService.commonInfo(serverName, userId);
 				info.setLang(langStr);
 				
-				List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, "", "");
+				List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, "", "", "");
 				
 				String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 				if(useGoogleCalendar.equals("YES")) {
@@ -1022,7 +1045,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        String realPath = commonUtil.getRealPath(request);
 	        Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
 	        
-	        int resultScheduleID = mScheduleService.insertBoardSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale); 
+	        int resultScheduleID = mScheduleService.insertBoardSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale, info.getOffSet(), info.getLang()); 
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -1155,7 +1178,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			logger.debug("tenantId : " + tenantId + "  displayName : " + displayName + "  status : " + status);
 			
 			for (int i=0; i < scheduleIdList.length; i++) {
-				ezScheduleService.updateAttendant(scheduleIdList[i], userId, displayName, displayName2, status, tenantId, showtop);
+				ezScheduleService.updateAttendant(scheduleIdList[i], userId, displayName, displayName2, status, tenantId, showtop, info.getLang(), info.getOffSet());
 			}
 			
 			result.put("status", "ok");
@@ -1299,6 +1322,133 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	/**
+	 * 일정메인 > 참석자 초대 팝업
+	 */	
+	@RequestMapping(value="/mobile/ezSchedule/scheduleReceiveAttendant/{userId:.+}", method = RequestMethod.GET)	
+	public JSONObject scheduleReceiveAttendant(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezSchedule/scheduleReceiveAttendant/{userId:.+} started.");
+		
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
+			
+			List<ScheduleReceiveListVO> rList = ezScheduleService.getReceiveList(userId, info.getTenantId(), offSetMin, info.getCompanyId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", rList);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezSchedule/scheduleReceiveAttendant/{userId:.+} ended.");
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/mobile/ezSchedule/scheduleAcceptAttendant/{userId:.+}", method = RequestMethod.POST)	
+	public JSONObject scheduleAcceptAttendant(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [POST /mobile/ezSchedule/scheduleAcceptAttendant/{userId:.+} started.");
+		
+		JSONObject result = new JSONObject();
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
+			String status = request.getParameter("status");
+			String displayName = info.getUserName();
+			String displayName2 = info.getUserName2();
+			String creatorList = request.getParameter("creatorList");
+			String attendantId = request.getParameter("attendantId");
+			String scheduleIdStr = request.getParameter("scheduleIdList").substring(0, request.getParameter("scheduleIdList").length() - 1); // 마지막 구분자 제거
+			String[] scheduleIdList = null;
+			if (scheduleIdStr != null && !scheduleIdStr.equals("")) {
+				scheduleIdList = scheduleIdStr.split("\\|"); 
+			}
+			
+			JSONParser parser = new JSONParser();
+			JSONArray jsonArray = (JSONArray)parser.parse(creatorList);
+			
+			for (int i=0; i < scheduleIdList.length; i++) {
+				ezScheduleService.updateAttendant(scheduleIdList[i], attendantId, displayName, displayName2, status, info.getTenantId(), "N", info.getLang(), info.getOffSet());
+				JSONObject obj = (JSONObject) jsonArray.get(i);
+				String scheduleId = scheduleIdList[i];
+				String creatorId = (String) obj.get("creatorId");			
+				String creatorName = (String) obj.get("creatorName");
+				String title = (String) obj.get("title");
+				String dateType = (String) obj.get("dateType");
+				String startDate = (String) obj.get("startDate");
+				String endDate = (String) obj.get("endDate");
+				String repetition = (String) obj.get("repetition");
+				
+				String scheDateContent = ezScheduleService.makeScheDateContent(dateType, repetition, startDate, endDate, locale);
+				String scheTimeContent = ezScheduleService.makeScheTimeContent(startDate, endDate, dateType, repetition, locale);
+				String scheRepeContent = ezScheduleService.makeRepetitionContent(repetition, locale);
+				
+				String periodConetent = "";
+				periodConetent = " &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezSchedule.t318", locale) + " : " + scheDateContent + "<br>";
+				periodConetent += " &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezSchedule.t67", locale) + " : " + scheTimeContent;
+				
+				if (dateType.equals("3")) {
+					periodConetent += "<br>" + " &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezSchedule.t71", locale) + " : " + scheRepeContent;
+				}
+				
+				if (status.equals("1")) {
+					ezScheduleService.sendScheduleNotiForMobile(request, info, creatorId, creatorName, title, periodConetent, "acc", scheduleId, startDate, endDate);
+				}
+				else {
+					ezScheduleService.sendScheduleNotiForMobile(request, info, creatorId, creatorName, title, periodConetent, "rej", scheduleId, startDate, endDate);
+				}
+			}	
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);	
+		}
+		
+		logger.debug("MOBILE G/W SCHEDULE [POST /mobile/ezSchedule/scheduleAcceptAttendant/{userId:.+} ended.");
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/mobile/ezSchedule/receiveCount/{userId:.+}", method = RequestMethod.GET)	
+	public JSONObject getReceiveCount(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [POST /mobile/ezSchedule/receiveCount/{userId:.+} started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			int receiveCount = ezScheduleService.getReceiveCount(userId, info.getTenantId() ,info.getCompanyId());
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", receiveCount > 0 ? "Y" : "N");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);	
+		}
+		
+		logger.debug("MOBILE G/W SCHEDULE [POST /mobile/ezSchedule/receiveCount/{userId:.+} ended.");
+		
+		return result;
+	}
+	
 }
 
 

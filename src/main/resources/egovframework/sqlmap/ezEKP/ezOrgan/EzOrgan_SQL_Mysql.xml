@@ -896,6 +896,8 @@
 										TBL_DEPTMASTER
 									WHERE
 										C.tenant_id = #tenantID#
+									AND 
+										DEPT_CD_PATH NOT LIKE 'shared_mailbox_%'
 									AND
 										(LOCATE((SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#), dept_cd_path)
 									OR
@@ -929,12 +931,12 @@
 								TBL_DEPTMASTER
 							WHERE
 								D.tenant_id = #tenantID#
+							AND 
+								DEPT_CD_PATH NOT LIKE 'shared_mailbox_%'
 							AND
 								(LOCATE((SELECT CONCAT(dept_cd_path, ',') FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #deptCN#), dept_cd_path))
 							OR
-								(extensionattribute2 = #deptCN#
-									AND
-								CN <> #deptCN#))
+								(extensionattribute2 = #deptCN#))
 		]]>
 		<isNotEqual property="adminOrgan" compareValue="y">
 			<![CDATA[

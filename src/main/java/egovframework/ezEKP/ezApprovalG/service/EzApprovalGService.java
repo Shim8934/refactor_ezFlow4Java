@@ -941,4 +941,7 @@ public interface EzApprovalGService {
 
     /* 2024-06-11 조소정 - 공람할문서 또는 공람완료문서 재사용 시 원문서 ID 가져오기 */
 	public String getOrgDocIDfromGongram(String beforeDocID, String companyID, int tenantId) throws Exception;
+
+	/* 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 공람회수  */
+	public String gongRamCancel(String docID, int count, int aprMemberSN, String companyID, int tenantId) throws Exception;
 }

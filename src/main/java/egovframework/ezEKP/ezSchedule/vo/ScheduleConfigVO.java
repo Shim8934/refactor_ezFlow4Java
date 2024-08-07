@@ -13,8 +13,8 @@ public class ScheduleConfigVO {
 	private int isAutoDelete;	
 	/** tenant*/
 	private int tenantID;
-	
-	
+	/** 미리알림시간 */
+	private int reminderTime;
 	
 	public int getDefaultView() {
 		return defaultView;
@@ -52,7 +52,11 @@ public class ScheduleConfigVO {
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
 	}
-
-	
+	public int getReminderTime() {
+		return reminderTime;
+	}
+	public void setReminderTime(int reminderTime) {
+		this.reminderTime = reminderTime;
+	}
 
 }
