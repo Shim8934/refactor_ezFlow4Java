@@ -2506,6 +2506,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("AFTER", "DEFAULT NULL");
 		}});
 
+		// TBL_SCHEDULEGROUPMEMBER
+		test.add(new HashMap<String, Object>(){{ // 일정관리 > 그룹일정 작성 권한 기능 추가
+			put("TABLE","TBL_SCHEDULEGROUPMEMBER");
+			put("COLUMN", "WRITEPERMISSION");
+			put("TYPE_MYSQL", "VARCHAR(10)"); put("TYPE_ORACLE", "VARCHAR2(10)");
+			put("AFTER", "DEFAULT 'Y' NOT NULL");
+		}});
+
 		// TBL_SURVEY
 		test.add(new HashMap<String, Object>(){{ // 2019-10-07 이석화 - 설문 알림 컬럼 추가 commit abc70b2bb1
 			put("TABLE","TBL_SURVEY");

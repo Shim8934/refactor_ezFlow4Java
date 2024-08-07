@@ -27,7 +27,10 @@ public class ScheduleGroupListVO {
 	private String department;
 	/** 그룹색상 정보 */
 	private String groupColor;
-	
+	/** 그룹멤버 작성 권한 */
+	private String writePermission;
+	/** 그룹 생성자 아이디 */
+	private String creatorId;
 	
 	public String getGroupId() {
 		return groupId;
@@ -106,5 +109,17 @@ public class ScheduleGroupListVO {
 	}
 	public void setGroupColor(String groupColor) {
 		this.groupColor = groupColor;
+	}
+	public String getWritePermission() {
+		return writePermission;
+	}
+	public void setWritePermission(String writePermission) {
+		this.writePermission = writePermission;
+	}
+	public String getCreatorId() {
+		return creatorId;
+	}
+	public void setCreatorId(String creatorId) {
+		this.creatorId = creatorId;
 	}
 }
