@@ -143,7 +143,7 @@
 			    var strtext;
 			    var PagingHTML = "";
 			    document.getElementById("tblPageRayer").innerHTML = "";
-			    document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
+			    document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + totalCount + "</span>";
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var pageNum = CurPage;

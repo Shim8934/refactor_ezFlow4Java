@@ -23,10 +23,6 @@
 	    		overflow: hidden;
 	    		display: inline-block;
 	    	}
-	    	.countColor {
-	    		color:#017BEC;
-	    		font-weight: bold; 
-	    	}
 
 	    	.mainlist tr td[style*="display: none"]:first-child.none + td{padding-left:15px;}
 	    </style>
@@ -249,6 +245,7 @@
 							var companyID = "${userInfo.companyID}";
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+<<<<<<< Updated upstream
 								//2024.07.17 한슬기 : totalCount표시 조건 변경
 								if(tempDeptID == companyID){ // 회사인 경우
 									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span> / <span class='totalCount'>" + result.totalCount2 + "</span>";
@@ -256,8 +253,11 @@
 									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span> / <span class='totalCount'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 								}
 							
+=======
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+>>>>>>> Stashed changes
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -351,9 +351,9 @@
 	        	
 	        	/* if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 	        		if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
 	        		} else {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
 	        		}
 	            	
 	            	SelectDeptNM.setAttribute("countinfo","1")
@@ -365,7 +365,7 @@
 	            	document.getElementById("txtlist_table").style.display = "none";
 	            	document.getElementById("Search_txtlist_table").style.display = "none";
 	            	if (pSeach) {
-	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>"  + strLang2 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
+	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>"  + strLang2 + "</span>" + "<span id='countInfo' class='txt_color'>&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
 	                	SelectDeptNM.setAttribute("countinfo", "1")
 	            	}
 	        	} else {
@@ -377,7 +377,7 @@
 	            	} else {
 	                	document.getElementById("Search_txtlist_table").style.display = "";
 	                	document.getElementById("txtlist_table").style.display = "none";
-	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang2 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
+	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang2 + "</span>" + "<span id='countInfo' class='txt_color'>&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
 	                	SelectDeptNM.setAttribute("countinfo", "1");
 						<c:if test="${useShowAllCompanies eq 'YES'}">
 							resizeWindowWidth();
@@ -1229,7 +1229,7 @@
 						document.getElementById("SelectDeptNM").innerHTML 
 							= "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 			            	+ "<span id='spn_deptName' title='" + jobName + "'>" + jobName + "</span>"
-			            	+ "<span id='countInfo'>&nbsp;<span class='countColor'> " + totalCnt + "</span></span>";
+			            	+ "<span id='countInfo'>&nbsp;<span class='txt_color'> " + totalCnt + "</span></span>";
 						
 		                pSeach = false;
 		                DisplayUserImageList();

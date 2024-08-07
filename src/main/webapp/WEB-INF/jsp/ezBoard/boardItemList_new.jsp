@@ -313,9 +313,9 @@
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
 		        if (pButtonHidden == "y")
-		            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
+		            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + pTotalCnt + "</span>";
 		        else
-		            parent.document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
+		            parent.document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + pTotalCnt + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;

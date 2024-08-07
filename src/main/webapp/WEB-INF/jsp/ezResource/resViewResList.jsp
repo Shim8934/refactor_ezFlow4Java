@@ -221,7 +221,7 @@
 	    	    var strtext;
 	        	var PagingHTML = "";
 	        	document.getElementById("tblPageRayer").innerHTML = "";
-	        	document.getElementById("TitleInfo").innerHTML = " - [" + strLang1002 + "<span style='color:#017BEC;font-weight:bold;'> " + TotalCnt + " </span>" + strLang1003 + "]";
+	        	document.getElementById("TitleInfo").innerHTML = " - [" + strLang1002 + "<span class='txt_color' style='font-weight:bold;'> " + TotalCnt + " </span>" + strLang1003 + "]";
 	        	strtext = "<div class='pagenavi'>";
 	        	PagingHTML += strtext;
 	        	var pageNum = pcurpage;

@@ -349,7 +349,7 @@
                 strListInfo = "";
 
                 $("#lstCnt").html("");
-                $("#lstCnt").append("&nbsp;&nbsp;<span style='color:#017BEC;'>" + lstCnt + "</span>");
+                $("#lstCnt").append("&nbsp;&nbsp;<span class='txt_color'>" + lstCnt + "</span>");
             }
 	        
 	
@@ -374,7 +374,7 @@
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
-	            /* document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]"; */
+	            /* document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span class='txt_color'> " + totalCount + " </span>" + strLang42 + "]"; */
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
 	            var pageNum = CurPage;

@@ -18,7 +18,7 @@ function GetTaskFullList(pTitle, pCode, pFlag) {
             }
 
             if (pageAdminFlag == 'admin') {
-                document.getElementById("listcount").innerHTML = "<b>" + deptName + "</b>의 단위업무 : <span style='color:#017BEC;font-weight:bold;'>" + taskCount + "</span> 개";
+                document.getElementById("listcount").innerHTML = "<b>" + deptName + "</b>의 단위업무 : <span class='txt_color' style='font-weight:bold;'>" + taskCount + "</span> 개";
             } else {
                 document.getElementById("listcount").innerHTML = taskCount;
             }

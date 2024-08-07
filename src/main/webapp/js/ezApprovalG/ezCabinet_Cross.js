@@ -1885,9 +1885,9 @@ function makePageSelPage(pTotalCnt) {
         }
 
         if (!isPeriodYear)
-            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>";
         else
-            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
         if (g_sFlag === "UNTREATED") {
             parent.frames["left"].document.getElementById("COUNTUNTREATED").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;

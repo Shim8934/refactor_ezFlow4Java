@@ -248,8 +248,8 @@
 					renderFileListElement(trashCanList);
 					makePageSelPage();
 					
-					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCnt +" </span>"
-					 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span class='txt_color'>" + folderCnt +" </span>"
+					 + " / " + messages.strLang16 + " <span class='txt_color'> " 
 						+ fileCnt +" </span>";
 					hideProgress();
 				},

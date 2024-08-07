@@ -1463,7 +1463,7 @@
 	            	}
 		        }
 		
-		        document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>&nbsp;/ " + period;
+		        document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'> " + NodeListLen + " </span>&nbsp;/ " + period;
 		
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;

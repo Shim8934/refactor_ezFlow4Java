@@ -329,6 +329,8 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .scalendar_mini td{color:#F3F3F3;}
 .scalendar_mini td.gray{color:#8C8C8C;}
 .scalendar_mini td.select:before{background:#3F4244; color:#f3f3f3;}
+.scalendar_mini td.select div{color:#F3F3F3;}
+.scalendar_mini td.select div.dataHave{color:#F3F3F3;}
 .dataHave{color:#FFFFFF;}
 .sschedule_list{background:none;}
 .sscheduleUL .scheduleLi.company{background:#303133; border-color:#303133;}
@@ -385,12 +387,15 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 #theme2Body .section1 .sec1Layout_middle{background:#272829;}
 #theme2Body .section1 .sec1Layout_middle .scalendar_mini td div{border:none;}
 #theme2Body .section1 .sec1Layout_middle .scalendar_mini td.main_today div{background:#3D8FEA; color:#fff;}
-#theme2Body .section1 .sec1Layout_middle .scalendar_mini td.select div{background:#3F4244;}
+#theme2Body .section1 .sec1Layout_middle .scalendar_mini td.main_todaysun div{background:#3D8FEA; color:#fff;}
+#theme2Body .section1 .sec1Layout_middle .scalendar_mini td div{border-radius:50%;}
+#theme2Body .section1 .sec1Layout_middle .scalendar_mini td.select div{background:#3F4244; color:#FFF;}
 #theme2Body .maintab01{background:#343638;}
 #theme2Body .maintab01 .right{color:#B5B5B5;}
 #theme2Body .maintab01 .right_on{background:#494B4D; border-color:#494B4D; color:#F3F3F3;}
 #theme2Body .maintab01 .left{color:#B5B5B5;}
 #theme2Body .maintab01 .left_on{background:#494B4D; border-color:#494B4D; color:#F3F3F3;}
+#theme2Body .scalendar_mini td.select div{color:#fff;}
 
 #theme2Body .event{background:#272829;}
 #theme2Body .section1 .sec1Layout_right .mailGraph .mGraph_text{color:#F3F3F3;}

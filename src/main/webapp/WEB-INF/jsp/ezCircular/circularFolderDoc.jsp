@@ -350,7 +350,7 @@
                 strListInfo = "";
 
                 $("#lstCnt").html("");
-                $("#lstCnt").append("&nbsp;&nbsp;<span style='color:#017BEC;'>" + lstCnt + "</span>");
+                $("#lstCnt").append("&nbsp;&nbsp;<span class='txt_color'>" + lstCnt + "</span>");
 	        }
 
 	        var BlockSize = 10;

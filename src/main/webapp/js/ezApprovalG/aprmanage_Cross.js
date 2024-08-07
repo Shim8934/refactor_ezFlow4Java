@@ -1899,7 +1899,7 @@ function makePageSelPage() {
     	period = getDatePeriod(userLang, document.getElementById("sel_year").value, 1, 1, document.getElementById("sel_year").value, 12, 31);
     }
     //document.getElementById("presentcell").innerHTML = " - " + localValue;
-    document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
+    document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
     try {
     	if (ViewLeftCount == "YES" && ($("#sel_status option:selected").val() == "ALL" || $("#sel_status option:selected").val() == undefined)) {

@@ -20,7 +20,7 @@
 				<li class="important off"><span onclick="setApproval()"><spring:message code='email.appr.approval' /></span></li> <% // 발송승인 %>
 				<li class=""><span onclick="setReject()"><spring:message code='email.appr.reject' /></span></li> <% // 발송거부 %>
 				<div id="right">
-					<span class="totalcountDIV"><span id="totalcount" style="color:#017BEC;"> ${listTotalCount} </span><spring:message code='common.count.unit' /></span>
+					<span class="totalcountDIV"><span id="totalcount" class='txt_color'> ${listTotalCount} </span><spring:message code='common.count.unit' /></span>
 					<span class="icon16 icon16_refresh" onclick="reloadPage()"></span>
 	            </div>
 			</ul>

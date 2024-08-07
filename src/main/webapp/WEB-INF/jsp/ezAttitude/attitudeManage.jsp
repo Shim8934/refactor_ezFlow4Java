@@ -439,7 +439,7 @@
 		    		var month = monthList[$("#Sdatepicker").val().split("-")[1]-1];
 		    		console.log("test" + month);
 		    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
-					+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
+					+ '<span class="txt_color" style="font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
 					+ $("#Sdatepicker").val().split("-")[2] +" "
 					+ month +", "
 					+ $("#Sdatepicker").val().split("-")[0] 								 
@@ -452,7 +452,7 @@
 		    		makePageSelPageAtti();
 		    		}else{
 			    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
-			    		+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
+			    		+ '<span class="txt_color" style="font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
 			    		+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
 		 				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
 		   				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
@@ -536,7 +536,7 @@
 	    		var month = monthList[$("#Sdatepicker").val().split("-")[1]-1];
 	    		console.log("test" + month);
 	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
-				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t77'/> - " 
+				+ '<span class="txt_color" style="font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t77'/> - " 
 				+ $("#Sdatepicker").val().split("-")[2] +" "
 				+ month +", "
 				+ $("#Sdatepicker").val().split("-")[0] 								 
@@ -549,7 +549,7 @@
 	    		makePageSelPageAtti();
 	    		}else{
 		    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
-		    		+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t77'/> - " 
+		    		+ '<span class="txt_color" style="font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t77'/> - " 
 		    		+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
 	 				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
 	   				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
@@ -674,7 +674,7 @@
 		    		var month = monthList[$("#Sdatepicker").val().split("-")[1]-1];
 		    		console.log("test" + month);
 		    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
-					+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
+					+ '<span class="txt_color" style="font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
 					+ $("#Sdatepicker").val().split("-")[2] +" "
 					+ month +", "
 					+ $("#Sdatepicker").val().split("-")[0] 								 
@@ -687,7 +687,7 @@
 		    		makePageSelPageAtti();
 		    		}else{
 			    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
-			    		+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
+			    		+ '<span class="txt_color" style="font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
 			    		+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
 		 				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
 		   				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"

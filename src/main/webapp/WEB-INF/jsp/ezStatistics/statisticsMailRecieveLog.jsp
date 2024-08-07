@@ -144,7 +144,7 @@
         var PagingHTML = "";
         document.getElementById("tblPageRayer").innerHTML = "";
         document.getElementById("listInfo").innerHTML = " &nbsp;["
-			+ strLang7 + "<span style='color:#017BEC;'> "
+			+ strLang7 + "<span class='txt_color'> "
 			+ totalCount + " </span>" + strLang8 + "]";
         strtext = "<div class='pagenavi'>";
         PagingHTML += strtext;

@@ -29,9 +29,6 @@
 				overflow: hidden;
 				display: inline-block;
 			}
-			.countColor {
-				color:#017BEC;
-			}
 
 			.multiple-sortable-selected td{
 				color: #0684f9 !important;
@@ -1790,9 +1787,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -1998,9 +1995,9 @@
 		        var UserListHTML = "";
 		        /* if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 		            if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
 	        		} else {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang300 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang300 + "</span>]";
 	        		}
 		            
 		            SelectDeptNM.setAttribute("countinfo", "1")
@@ -2014,7 +2011,7 @@
 		            
 		            if (typeof pSeach !== "undefined") {
 			            if (pSeach) {
-			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
+			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 			                SelectDeptNM.setAttribute("countinfo", "1")
 			            }
 		            }
@@ -2032,7 +2029,7 @@
 			            else {
 			                document.getElementById("Search_txtlist_table").style.display = "";
 			                document.getElementById("txtlist_table").style.display = "none";
-			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
+			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 			                SelectDeptNM.setAttribute("countinfo", "1")
 							<c:if test="${useShowAllCompanies eq 'YES'}">
 								resizeWindowWidth();
@@ -4252,7 +4249,7 @@
 						document.getElementById("SelectDeptNM").innerHTML 
 							= "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 			            	+ "<span id='spn_deptName' title='" + jobName + "'>" + jobName + "</span>"
-			            	+ "<span id='countInfo'>&nbsp;<span class='countColor'> " + totalCnt + "</span></span>";
+			            	+ "<span id='countInfo'>&nbsp;<span class='txt_color'> " + totalCnt + "</span></span>";
 						
 		                pSeach = false;
 		                DisplayUserImageList();
@@ -4752,13 +4749,13 @@
 	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
 	                                <img src="" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
 	                                <span id="addressFolderName" style="font-weight: normal;"></span>
-	                                &nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
+	                                &nbsp;<span id="addressFolderCnt" class='txt_color'></span>
 	                            </div>
 	                            <div id="AddressListView" class="border_gray" style="height: 399px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
 	                            </div>
 	                            <div id="tblPageRayer" style="left: 446px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; width:auto !important"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 446px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
-	                                <spring:message code='ezEmail.t588' /><span style="color: #017BEC; font-weight: bold;" id="totalcount"></span>
+	                                <spring:message code='ezEmail.t588' /><span class='txt_color' style="font-weight: bold;" id="totalcount"></span>
 	                                <spring:message code='ezEmail.t589' /><span id="td_Previous" onclick="pagemove(-1)"><img src="/images/kr/cm/btn_prev.gif"
 	                                    width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer"></span><spring:message code='ezEmail.t590' /><span
 	                                        id="td_pageCount"></span>

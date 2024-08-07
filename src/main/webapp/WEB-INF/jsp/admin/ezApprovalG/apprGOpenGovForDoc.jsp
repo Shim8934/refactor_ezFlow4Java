@@ -286,7 +286,7 @@
 				var strtext;
 				var PagingHTML = "";
 				document.getElementById("tblPageRayer").innerHTML = "";
-				document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
+				document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + pTotalCnt + "</span>";
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				

@@ -312,7 +312,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalQuestions + "</span>";
+		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span class='txt_color'>" + totalQuestions + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = currentPage;
