@@ -68,6 +68,7 @@
 					document.getElementById("trFormID").style.display = "";
 					document.getElementById("trOrgDocNum").style.display = "";
 					document.getElementById("trDrafterDept").style.display = "";
+					document.getElementById("trDocNum").style.display = "";
 				}
 				
 		        g_Roleinfo = RetValue[5];
@@ -237,6 +238,7 @@
 				createNodeAndInsertText(oXml, oData, "FORMID", document.getElementsByName("formID")[0].id);
 				createNodeAndInsertText(oXml, oData, "ORGDOCNUM", document.getElementsByName("txtOrgDocNum")[0].value);
 				createNodeAndInsertText(oXml, oData, "DRAFTERDEPT", document.getElementsByName("txtDrafterDept")[0].value);
+				createNodeAndInsertText(oXml, oData, "DOCNUM", document.getElementsByName("txtDocNum")[0].value);
 				if (chkTransExp.checked) {
 		            createNodeAndInsertText(oXml, oData, "TRANSEXPIRE", "TRUE");
 		        }
@@ -329,6 +331,11 @@
 				  <input class="text" name="formID" id=""  style=" WIDTH:270px" disabled>
 				  <a  class="imgbtn imgbck" style="height: 23px;margin-bottom: 0px;"><span onClick="return btn_FormSelect_onclick()" id="formNameBox"  style="width:55px;text-align:center;line-height: 22px;"><spring:message code='ezApprovalG.t152'/></span></a>
 			  </td>
+		  </tr>
+		  <tr id = "trDocNum" style="display: none">
+				<th style="WIDTH:80px"><spring:message code='ezApprovalG.F0005'/></th>
+				<td style=" WIDTH:270px">
+					<input class="text" style=" WIDTH: 100%;height: 25px; -moz-box-sizing:border-box;box-sizing:border-box;" name="txtDocNum" id=txtDocNum>    </td>
 		  </tr>
 		  <tr id = "trOrgDocNum" style="display: none">
 				<th style="WIDTH:80px"><spring:message code='ezApprovalG.kmh07'/></th>
