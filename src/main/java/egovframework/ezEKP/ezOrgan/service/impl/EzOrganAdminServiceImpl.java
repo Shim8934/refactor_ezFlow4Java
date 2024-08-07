@@ -1636,9 +1636,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("searchForAll", searchFor[0] && searchFor[1] && searchFor[2]);
 		params.put("isAnd", (searchFor[0] && !searchFor[1] && !searchFor[2]) 
 					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
+		params.put("useUserMaster", searchFor[0] || searchFor[2]);
+		params.put("incumbent", searchFor[0]);
 		params.put("retired", searchFor[1]);
 		params.put("stopped", searchFor[2]);
-		
+		logger.debug("incumbent = {}", searchFor[0] || searchFor[2]);
+		logger.debug("retired = {}", searchFor[1]);
 		String orderByData = "";
 		if(!sortColumn.equals("")){
 			if(sortColumn.equals("persent")){
@@ -1677,6 +1680,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("searchForAll", searchFor[0] && searchFor[1] && searchFor[2]);
 		params.put("isAnd", (searchFor[0] && !searchFor[1] && !searchFor[2]) 
 					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
+		params.put("useUserMaster", searchFor[0] || searchFor[2]);
+		params.put("incumbent", searchFor[0]);
 		params.put("retired", searchFor[1]);
 		params.put("stopped", searchFor[2]);
 		

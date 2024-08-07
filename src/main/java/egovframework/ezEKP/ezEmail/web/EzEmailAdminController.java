@@ -1605,6 +1605,7 @@ public class EzEmailAdminController {
 		for (OrganUserVO organUser : userCnList) {				
 			List<String> quaList = new ArrayList<String>();
 			String userId = organUser.getCn();
+			logger.debug("user = {}", userId);
 			String department = primaryChk ? organUser.getDescription() : organUser.getDescription2();
 			String displayname = primaryChk ? organUser.getDisplayName() : organUser.getDisplayName2();
 			displayname = displayname + "(" + userId + ")";		
@@ -1624,14 +1625,21 @@ public class EzEmailAdminController {
 					mailboxUsage = (long) Double.parseDouble(organUser.getMailboxUsage());
 					logger.debug("get organUserVO, mailboxQuota=" + mailboxQuota + ", mailboxUsage=" + mailboxUsage);
 				} else {
-					ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
-
-					long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-
-					// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-					mailboxUsage = storageUsageAndLimit[0]; // KBs
-					mailboxQuota = storageUsageAndLimit[1]; // KBs
-					logger.debug("get IMAP, mailboxQuota=" + mailboxQuota + ", mailboxUsage=" + mailboxUsage);
+					// 퇴직자는 IMAP에 로그인 할 수 없으므로 db에 저장된 값으로 처리한다.
+					if (organUser.getIsRetire() == 1) {
+						mailboxQuota = (long) Double.parseDouble(organUser.getMailboxQuota());
+						mailboxUsage = (long) Double.parseDouble(organUser.getMailboxUsage());
+						logger.debug("get organUserVO, mailboxQuota=" + mailboxQuota + ", mailboxUsage=" + mailboxUsage);
+					} else {
+						ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
+						
+						long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+						
+						// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
+						mailboxUsage = storageUsageAndLimit[0]; // KBs
+						mailboxQuota = storageUsageAndLimit[1]; // KBs
+						logger.debug("get IMAP, mailboxQuota=" + mailboxQuota + ", mailboxUsage=" + mailboxUsage);
+					}
 				}
 
                 quaList.add(3, String.valueOf(mailboxUsage));

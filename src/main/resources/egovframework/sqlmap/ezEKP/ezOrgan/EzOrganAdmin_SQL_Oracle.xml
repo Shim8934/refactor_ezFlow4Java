@@ -764,7 +764,7 @@
 		<![CDATA[
 			INSERT INTO TBL_USERMASTER_RETIRE
               ( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, DESCRIPTION, DESCRIPTION2, DESCRIPTION3, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, INFO, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE12, EXTENSIONATTRIBUTE13, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, UPDATEDT, MOBILE_ENABLE, MOBILE_NOTUSE, MOBILE_PIN, SIPURI,PASSWORD,
-                       CREATEDT, TENANT_ID )
+                       CREATEDT, TENANT_ID, MAILBOXQUOTA, MAILBOXUSAGE )
               ( SELECT
               		CN ,
                     DisplayName ,
@@ -812,7 +812,9 @@
                     SIPURI ,
                     PASSWORD ,
                     CREATEDT ,
-                    TENANT_ID
+                    TENANT_ID ,
+                    MAILBOXQUOTA ,
+                    MAILBOXUSAGE
                 FROM TBL_USERMASTER 
                 WHERE  CN = #v_CN#
                 AND TENANT_ID = #v_TENANT_ID#
@@ -6226,10 +6228,20 @@
      
  	<select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
  		SELECT
- 			*
+ 			ROW_NUMBER() OVER (order by displayName) as RNUM,
+ 			CN,
+			displayName,
+			department,
+			description,
+			mailboxquota,
+			mailboxusage,
+			displayName2,
+			description2,
+			isRetire
  		FROM
- 			(SELECT
- 				ROW_NUMBER() OVER (order by displayName) as RNUM,
+ 			(
+ 			<isEqual property="useUserMaster" compareValue="true">
+ 			SELECT
  				CN,
  				displayName,
  				department,
@@ -6237,13 +6249,42 @@
 				to_number(mailboxquota) as mailboxquota,
 				to_number(mailboxusage) as mailboxusage,
 				displayName2,
-				description2
+				description2,
+				0 as isRetire
  			FROM
  				TBL_USERMASTER
  			WHERE
  				tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
  				<include refid="EzOrganAdminDAO.searchQuery"/>
- 				<include refid="EzOrganAdminDAO.searchForQuery"/>
+ 				<isEqual property="incumbent" compareValue="false">
+				AND CN IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+				</isEqual>
+				<isEqual property="stopped" compareValue="false">
+					AND CN NOT IN
+					(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+				</isEqual>
+			</isEqual>
+			<isEqual property="retired" compareValue="true">
+			<isEqual property="useUserMaster" compareValue="true">
+				UNION
+			</isEqual>
+			SELECT
+				CN,
+				displayName,
+				department,
+				description,
+				CAST(mailboxquota AS UNSIGNED) as mailboxquota,
+				CAST(mailboxusage AS UNSIGNED) as mailboxusage,
+				displayName2,
+				description2,
+				1 as isRetire
+			FROM 
+		    	TBL_USERMASTER_RETIRE
+	        WHERE 
+	            tenant_id = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+		</isEqual>
  			ORDER BY
  			<isNotEmpty property="sortColumn">
 		    	$orderbyData$,
@@ -6261,13 +6302,28 @@
  	</select>
  	
  	<select id="EzOrganAdminDAO.getUserCount" parameterClass="map" resultClass="int">
-		SELECT 	
-			COUNT(CN) 
-		FROM 
-            TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
-  		<include refid="EzOrganAdminDAO.searchQuery"/>
-  		<include refid="EzOrganAdminDAO.searchForQuery"/>
+		SELECT SUM(COUNT) AS TOTAL_COUNT
+		FROM (
+		<isEqual property="useUserMaster" compareValue="true">
+			SELECT COUNT(CN) AS COUNT 
+			FROM TBL_USERMASTER 
+			WHERE tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId# 
+		<include refid="EzOrganAdminDAO.searchQuery"/>
+			<isEqual property="incumbent" compareValue="false">
+				AND CN IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+			</isEqual>
+			<isEqual property="stopped" compareValue="false">
+				AND CN NOT IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+			</isEqual>
+		</isEqual>
+		<isEqual property="retired" compareValue="true">
+			<isEqual property="useUserMaster" compareValue="true"> UNION </isEqual>
+				SELECT COUNT(CN) AS COUNT FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId# 
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+		</isEqual>
+		) COUNT_TABLE
 	</select>
 	
 	<insert id="EzOrganAdminDAO.insertDelUserDBData_I" parameterClass="Map">
