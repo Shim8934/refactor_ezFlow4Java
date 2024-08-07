@@ -116,12 +116,11 @@
 			</ul>
 			<div class="lnb_menu_all" id="menuAllContainer" style="left:-1080px;">
 	            <div class="lnb_menu_setting" id="menuSettingElem">
-	                <div class="menu_set" id="editBtn">
-	                    <span id="menuResetting"><spring:message code="ezNewPortal.topMenu.hth08" /></span>
-	                    <p><spring:message code="ezNewPortal.topMenu.hth09" /></p>
-	                </div>
 	                <div class="set_btn" id="editMenuBtn">
 	                    <span id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span><span id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>
+	                </div>
+	                <div class="menu_set">
+	                    <span><spring:message code="ezNewPortal.topMenu.hth09" /></span>
 	                </div>
 	            </div>
 
@@ -262,13 +261,7 @@
 						mainFrame.style.position = "relative"; // 이거 빼면 mainFrame 스크롤도 안되고 동작도 안됨.
 					}
 	
-					menuLi.addEventListener('click', function () {
-						offMenuAll();
-						this.classList.add("on");
-						subMenuClickEvent('off', item.menuUrl, item.openType);
-						notice_all_close();
-						closeNoti();
-					});
+					menuLi.addEventListener('click', leftMainMecuClickEvent.bind(menuLi, item.menuUrl, item.openType));
 					
 					mainMenuElem.appendChild(menuLi);
 					menuCount++;
@@ -291,6 +284,14 @@
 				}
 			}
 			
+		}
+		
+		function leftMainMecuClickEvent(menuUrl, openType) {
+			offMenuAll();
+			this.classList.add("on");
+			subMenuClickEvent('off', menuUrl, openType);
+			notice_all_close();
+			closeNoti();
 		}
 		
 		/* //포틀릿 및 프레임 환경설정 열기
@@ -681,15 +682,7 @@
 					menuAllList.classList.add('menu-icon');
 				}
 				
-				menuAllList.addEventListener('click', function() {
-					offMenuAll();
-					var menuId = this.getAttribute("id");
-					if (!!document.getElementById("menu_" + menuId)) {
-						document.getElementById("menu_" + menuId).classList.add("on");
-					}
-					subMenuClickEvent('off', item.menuUrl, item.openType);
-					notice_all_close();
-				});
+				menuAllList.addEventListener('click', expandMenuClickEvent.bind(menuAllList, item.menuUrl, item.openType));
 				
 				document.getElementById('menuListAll').appendChild(menuAllList);
 				//str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
@@ -709,6 +702,17 @@
 				document.getElementById('menuListAll').appendChild(menuResetBtn);
 			}
 		}
+		
+		function expandMenuClickEvent(menuUrl, menuOpenType) {
+			offMenuAll();
+			var menuId = this.getAttribute("id");
+			if (!!document.getElementById("menu_" + menuId)) {
+				document.getElementById("menu_" + menuId).classList.add("on");
+			}
+			subMenuClickEvent('off', menuUrl, menuOpenType);
+			notice_all_close();
+		}
+		
 		
 		var menuReset = function () {
 			HTMLCollection.prototype.forEach = Array.prototype.forEach;
