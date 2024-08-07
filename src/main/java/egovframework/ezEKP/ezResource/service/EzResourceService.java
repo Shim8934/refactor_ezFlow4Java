@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzResourceService {
 	
@@ -95,7 +96,7 @@ public interface EzResourceService {
 	
 	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID, String deptID) throws Exception;
 
-	public List<ResBrdVO> getResourcePortlet(String loginCookie, String date) throws Exception;
+	public List<ResBrdVO> getResourcePortlet(String loginCookie, String date, String type, LoginVO userInfo) throws Exception;
 
 	public String saveResourcePortlet(String loginCookie, String resources) throws Exception;
 	

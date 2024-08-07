@@ -2611,8 +2611,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			JSONObject err = new JSONObject();
 			return err;
 		}
-
-		List<ResBrdVO> list = ezResourceService.getResourcePortlet(loginCookie, date);
+    
+        String type = "";
+		LoginVO userinfo = null;
+		List<ResBrdVO> list = ezResourceService.getResourcePortlet(loginCookie, date, type, userinfo);
 		JSONObject jObject = new JSONObject();
 		jObject.put("status", "ok");
 		jObject.put("list", list);
