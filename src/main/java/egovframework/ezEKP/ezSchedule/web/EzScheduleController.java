@@ -2971,6 +2971,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 			use_cabinet = "NO";
 		}
 
+		String usage = "Y";
+		if (!vo.getOwnerId().equals(loginVO.getId())) {
+			usage = ezScheduleService.checkExecutiveUsage(vo.getOwnerId(), vo.getCompanyid(), tenantId) != null ? ezScheduleService.checkExecutiveUsage(vo.getOwnerId(), vo.getCompanyid(), tenantId) : "Y";
+		}
+		
         model.addAttribute("companyID", companyID);
         model.addAttribute("scheduleInfo", vo);        
         model.addAttribute("_date", _date);
@@ -2989,6 +2994,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("repeatCount", _repeatcount); // 반복일정의 경우 반복횟수
         model.addAttribute("repStartDate", repStartDate); // 반복일정의 경우 해당 반복의 시작날짜 + 시간 (YYYY-MM-DD HH:mm)
         model.addAttribute("showtop", vo.getShowTop()); // 반복일정의 경우 해당 반복의 시작날짜 + 시간 (YYYY-MM-DD HH:mm)
+		model.addAttribute("usage", usage); // 임원일정 사용여부
 
 		return "ezSchedule/scheduleRead";
 	}
