@@ -213,6 +213,12 @@
         }
 
         function priority_save() {
+            var content = document.getElementById("contentlist").textContent;
+            if (content == strLang263) {
+                alert("사용자를 등록해주세요.");
+                return;
+            }
+            
             if(confirm("<spring:message code='ezSchedule.lyj13' />")) {
                 var xmlhttp = createXMLHttpRequest();
                 var xmlpara = createXmlDom();
