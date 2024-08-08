@@ -152,7 +152,7 @@
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	<script type="text/javascript">
-		var connectMenuId = -1;
+		var connectMenuId = -1; // 웹페이지 연계메뉴는 -1로 고정
 		var maxMenuCount = 7;
 		// 상단 메뉴시 화면 작아질시 좌측으로 이동 함수 start(테스트용/UIUX-조기완)
 		/* function calcWidth(obj){
@@ -662,7 +662,7 @@
 				
 				var item = menuList[i];
 				if (item.menuId == connectMenuId) {
-					return; //연계메뉴 표출 x
+					continue; //연계메뉴 표출 x
 				}
 				// 컨텍스트메뉴와 연동하기 위함.
 				if(item.menuUrl.indexOf('ezMemo') > -1 && item.menuUsed) {
