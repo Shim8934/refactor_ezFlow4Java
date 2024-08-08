@@ -1086,13 +1086,8 @@ public class CommonUtil {
 		return value;
 	}
 	
-	public String cleanScriptValue(String htmlCode, String type) {
-        if("clean".equals(type)){
-        	//htmlCode = htmlCode.replaceAll("</?script>", "&lt;sciprt&gt;");
-        	htmlCode = stripScriptTagsAndFunctions(htmlCode);
-        }
-		
-		return htmlCode;
+	public String cleanScriptValue(String htmlCode) {
+		return stripScriptTagsAndFunctions(htmlCode);
 	}
 	
 	// 2016.09.06 by kgs: Property value의 값을 변환

@@ -158,7 +158,7 @@ public class EzCommonController extends EgovFileMngUtil{
 //        }
         // reform - end
 
-        strHTML = commonUtil.cleanScriptValue(strHTML, request.getParameter("type"));
+        strHTML = commonUtil.cleanScriptValue(strHTML);
         
         String mhtData = ezCommonService.startHtml2Mht(strHTML, realPath, userInfo.getLocale());
         
