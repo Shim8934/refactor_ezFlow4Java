@@ -28,6 +28,10 @@ public class MailGeneralVO {
 	
 	private String mailSearchPeriod;
 	
+	private String defaultCursorPosition; // 메일쓰기창 기본 커서 위치/ recipient: 받는사람, content : 내용
+	
+	private String defaultSeparateSend; // 개별발신 기본 사용 여부 Y : 개별발신, N : 사용안함
+
 	public String getMailSearchPeriod() {
 		return mailSearchPeriod;
 	}
@@ -134,11 +138,28 @@ public class MailGeneralVO {
 		this.textOption = textOption;
 	}
 	
+	public String getDefaultCursorPosition() {
+		return defaultCursorPosition;
+	}
+	
+	public void setDefaultCursorPosition(String defaultCursorPosition) {
+		this.defaultCursorPosition = defaultCursorPosition;
+	}
+	
+	public String getDefaultSeparateSend() {
+		return defaultSeparateSend;
+	}
+	
+	public void setDefaultSeparateSend(String defaultSeparateSend) {
+		this.defaultSeparateSend = defaultSeparateSend;
+	}
+	
 	public String toString() {
 		return "listCount=" + listCount + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength
 				+ ",previewMode=" + previewMode + ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
 				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent + ",mailSenderNm=" + mailSenderNm
 				+ ",previewSubtree=" + previewSubTree + ",previewmailImage=" + previewMailImage + ",textOption=" + textOption
-				+ ",mailSearchPeriod=" + mailSearchPeriod;
+				+ ",mailSearchPeriod=" + mailSearchPeriod + ",defaultCursorPosition=" + defaultCursorPosition + ",defaultSeparateSend=" + defaultSeparateSend;
 	}
+
 }

@@ -1355,8 +1355,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		boolean useAdditionalInfo = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId()));
 
 		// 2024-02-01 장혜연 : 개별발신 디폴트 사용여부 값을 가져옴
-        String useEachMailDefault = ezCommonService.getTenantConfig("useEachMailDefault", loginInfo.getTenantId());
-        isEach = useEachMailDefault.equals("YES") ? "true" : isEach;
+        //String useEachMailDefault = ezCommonService.getTenantConfig("useEachMailDefault", loginInfo.getTenantId());
+        //isEach = useEachMailDefault.equals("YES") ? "true" : isEach;
+		
+		// 2024.08.07 한슬기 :  개별발신 기본 사용 여부(Y : 개별발신, N : 사용안함 default:N)
+		String useEachMailDefault = ezCommonService.getTenantConfig("useEachMailDefault", loginInfo.getTenantId()); // 관리자 설정
+		if ("NO".equals(useEachMailDefault)) { // 관리자 > 시스템 > 패러메터 개별발신 사용여부가 "아니요"일경우
+			String defaultSeparateSend = StringUtils.isBlank(mailGeneralVO.getDefaultSeparateSend()) ? "N" : mailGeneralVO.getDefaultSeparateSend(); // 사용자 설정
+			isEach = "Y".equals(defaultSeparateSend) ? "true" : isEach;
+			
+		} else {
+			// 관리자단에서 개별발신 디폴트 사용을 "예"로 해두었을 경우
+			isEach = useEachMailDefault.equals("YES") ? "true" : isEach;
+		}
+
+		// 2024.08.07 한슬기 : 메일쓰기화면 기본 커서 위치 설정. (recipient : 밭는사람, content : 내용, subject : 제목 / default : recipient)
+		String defaultCursorPosition = StringUtils.isBlank(mailGeneralVO.getDefaultCursorPosition()) ? "recipient" : mailGeneralVO.getDefaultCursorPosition();
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
@@ -1440,6 +1454,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useAdditionalInfo", useAdditionalInfo);
 		model.addAttribute("bigSizeAttachLimitCount", bigSizeAttachLimitCount);
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount);
+		model.addAttribute("defaultCursorPosition", defaultCursorPosition);
 		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
