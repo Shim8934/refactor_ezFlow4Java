@@ -231,7 +231,7 @@
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+	            strtext = "<span class='btnimg first disabled'></span>";
 				strtext = "<span class='btnimg first disabled'></span>";
 	            PagingHTML += strtext;
 	        }
