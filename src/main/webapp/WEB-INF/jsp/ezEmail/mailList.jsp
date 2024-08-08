@@ -601,7 +601,10 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWSUBTREE", previewSubTree);
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMAILIMAGE", previewMailImage);
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMAIL", "${mailGeneral.previewMail}");
 	            createNodeAndInsertText(xmlpara, objNode, "MAILSEARCHPERIOD", mailSearchPeriod);
+	            createNodeAndInsertText(xmlpara, objNode, "MAILSENDRESULT", "${mailGeneral.mailSendResult}");
+	            createNodeAndInsertText(xmlpara, objNode, "DELETESENTDRAFT", "${mailGeneral.deleteSentDraft}");
 	            createNodeAndInsertText(xmlpara, objNode, "TEXTOPTION", "${mailGeneral.textOption}");
 	            
 	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", true);
