@@ -2506,7 +2506,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String flag = request.getParameter("flag");
 		String langType = request.getParameter("langType");
 		String selYear = request.getParameter("selYear");
-		
+
+		/* 2024-08-08 양지혜 - 전자결재G > 상위부서문서함 */
+		Map<String, String> upDeptInfo = ezApprovalGService.getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
+		if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+			processDeptCode = upDeptInfo.get("upperDeptCode");
+		}		
 		
 		String result = ezApprovalGService.getSimpleCabinetList(companyID, processDeptCode, productionYear, taskCode, flag, langType, userInfo.getTenantId(), selYear);
 		logger.debug("getCabinetSimpleList ended.");
