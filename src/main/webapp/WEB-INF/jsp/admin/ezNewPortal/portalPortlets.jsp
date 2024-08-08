@@ -439,6 +439,7 @@
 			//var portletMenuId = document.getElementById("portlet" + portletId);
 			var menuId = document.getElementById("portlet" + portletId).getAttribute("data2");
 			var portletCode = document.getElementById("portlet" + portletId).getAttribute("data3");
+			var dataGeneral = document.getElementById("portlet" + portletId).getAttribute("data-general");
 			
 			var favoriteBoardUrl = document.getElementById("portlet" + portletId).dataset.url;
 			if ((menuId == 4 && favoriteBoardUrl != '/ezNewPortal/favoriteBoardPortlet.do') && boardId == null && portletCode != "tabBoard") {
@@ -465,7 +466,7 @@
 				}
 			}
 			
-			if (menuId == 3) {
+			if (menuId == 3 && !dataGeneral) {
 				connectionUrl += ("?cabinetType=" + document.getElementById("portlet" + portletId).querySelector("#cabinetType" + portletId).value);
 			}
 			
