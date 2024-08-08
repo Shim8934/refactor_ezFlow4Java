@@ -1076,7 +1076,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			String rollInfo = info.getRollInfo();
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
 			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
-			int listCntSize = 4;
+			int listCntSize = request.getParameter("listCnt") == null ? 4 * 3 : Integer.parseInt(request.getParameter("listCnt"));
 			String portletLang = info.getLang();
 			int totalCnt = 0;
 

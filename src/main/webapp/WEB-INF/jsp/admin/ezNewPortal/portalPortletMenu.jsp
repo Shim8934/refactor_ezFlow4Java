@@ -51,7 +51,7 @@
 				<dd><span><spring:message code='main.t25' /></span></dd>
 			</dl>
 		</li>
-		<li id="menu-1" class="menuList">
+		<li id="menu-2" class="menuList">
 			<dl class="full_menu_toggleDL">
 				<dt><span class='icon_topmenu icon_nav_board'></span></dt>
 				<dd><span><spring:message code='ezSystem.config.hth28' /></span></dd>
@@ -71,8 +71,7 @@
 
 <script type="text/javascript">
 var webType = "<c:out value='${webType}'/>";
-
-const connectMenuID = -1; //연계 포틀릿의 경우 menuId는  -1로 고정
+const connectMenuID = "<c:out value='${connectMenuID}'/>";
 
 $(function(){
 	$(".menuList").on("click", selectLi);

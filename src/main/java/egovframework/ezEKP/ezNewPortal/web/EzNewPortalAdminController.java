@@ -175,7 +175,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 포탈 메뉴관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalMenus.do", method=RequestMethod.GET)
-	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset, HttpServletResponse response, Model model) throws Exception {
+	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("portalMenus started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -192,13 +192,15 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("useChinese", ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId()));
 			model.addAttribute("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId()));
 			model.addAttribute("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId()));
-			model.addAttribute("type", requset.getParameter("type"));
-
+			model.addAttribute("type", request.getParameter("type"));
+			String type = request.getParameter("type") == null ? "" : request.getParameter("type");
+			String connectMenuId = type.equals("mobile") ? "-2" : "-1";
+			model.addAttribute("connectMenuId", connectMenuId);
+			
 			response.setHeader("Pragma", "no-cache"); //HTTP 1.0
 			response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
 			response.setHeader("Cache-Control", "no-store"); //HTTP 1.1 
 			response.setDateHeader("Expires", 0L); // Do not cache in proxy server
-			
 			return "/admin/ezNewPortal/portalMenus";
 		}
 	}
@@ -678,6 +680,10 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 					List<String> allSize = ezNewPortalService.getAllAvailablePortletSize();
 					model.addAttribute("allSize", allSize);
 				}
+				
+				String type = request.getParameter("type") == null ? "" : request.getParameter("type");
+				String connectMenuId = type.equals("mobile") ? "-2" : "-1";
+				model.addAttribute("connectMenuId", connectMenuId);
 			}
 			
 			logger.debug("portalPortlets ended.");
@@ -954,7 +960,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			//게시판이 top인 목록 가져오기
 			String userId = userInfo.getId();
 			String companyId = request.getParameter("companyId");
-			String webType = request.getParameter("type");
+			String webType = request.getParameter("type") == null ? "" : request.getParameter("type");
 			
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userId);
@@ -969,6 +975,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("companyId", companyId);
 				model.addAttribute("portletId", commonUtil.stripScriptTags(request.getParameter("portletId")));
 				model.addAttribute("webType", webType);
+				String connectMenuID = webType.equals("mobile") ? "-2" : "-1";
+				model.addAttribute("connectMenuID", connectMenuID);
 			}
 			
 			logger.debug("openPortalMenu ended.");
