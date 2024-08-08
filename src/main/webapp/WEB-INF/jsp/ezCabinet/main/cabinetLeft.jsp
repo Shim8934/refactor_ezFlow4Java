@@ -86,7 +86,6 @@
 				function init() {
 					$(".cabinetListBox").mCustomScrollbar({theme : "dark"});
 					resizeWindow();
-					window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=21";
 				}
 				
 				function resizeWindow() {
@@ -107,11 +106,13 @@
 					});
 					
 					cabinetTree.makeTree({cabinetNode : "root"});
-					
+					var targetSpan = "";
 					var checkInterval = setInterval(function() {
-						var targetSpan = document.querySelector("#cabinetTree div span.list_text[role='21']");
+						targetSpan = document.querySelector("#cabinetTree div span.list_text[level='0']");
 						if (targetSpan) {
 							targetSpan.className = "list_text node_selected selectedNode";
+							var cabinetId = targetSpan.getAttribute("role");
+							window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
 							clearInterval(checkInterval);
 						}
 					}, 100);
