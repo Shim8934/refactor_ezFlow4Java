@@ -2484,4 +2484,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.updateInProcessJpCodeName3",map);
 		}
 	}
+
+	public void createTblDistributeinfo() {
+		try {
+			select("EzCommonDAO.checkTblDistributeinfo");
+		} catch (Exception e) {
+			logger.debug("TBL_DISTRIBUTEINFO table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblDistributeinfo");
+		}
+	}
 }

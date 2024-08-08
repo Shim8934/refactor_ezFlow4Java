@@ -3991,4 +3991,31 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateCreateDateOfOpenGovDocInfo(Map<String, Object> param) {
 		update("EzApprovalG.updateCreateDateOfOpenGovDocInfo", param);
 	}
+
+	/* 2024-08-07 김유진 - 전자결재G > 기록물배부대장 > 배부문서 정보 가져오기 */
+	@SuppressWarnings("unchecked")
+	public List<ApprGDeliveryListVO> getDeliveryInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGDeliveryListVO>) list("EzApprovalG.getDeliveryInfo", map);
+	}
+	/* 2024-08-07 김유진 - 전자결재G > 기록물배부대장 > 배부정보 가져오기 */
+	@SuppressWarnings("unchecked")
+	public List<ApprGDeliveryListVO> getDistributeInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGDeliveryListVO>) list("EzApprovalG.getDistributeInfo", map);
+	}
+	/* 2024-08-07 김유진 - 전자결재G > rootDocID 값 가져오기 */
+	public String getRootDocID(Map<String, Object> map) {
+		return (String) select("EzApprovalG.getRootDocID", map);
+	}
+	/* 2024-08-07 김유진 - 전자결재G > 배부정보의 최대 SN 값 가져오기 */
+	public String getDistributeInfoSN(Map<String, Object> map) {
+		return (String) select("EzApprovalG.getDistributeInfoSN", map);
+	}
+	/* 2024-08-07 김유진 - 전자결재G > 배부정보 추가 */
+	public void insertDistributeInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertDistributeInfo", map);
+	}
+	/* 2024-08-07 김유진 - 전자결재G > 배부정보 삭제 */
+	public void deleteDistributeInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteDistributeInfo", map);
+	}
 }

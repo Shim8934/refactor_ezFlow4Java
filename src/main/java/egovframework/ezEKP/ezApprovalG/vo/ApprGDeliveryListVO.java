@@ -21,6 +21,7 @@ public class ApprGDeliveryListVO {
 	private String docTitle;
 	private String organUserName;
 	private String securityApproval;  // 2023-09-05 보안결재 정보를 추가
+	private String rootdocid;
 	public String getOrganUserName() {
 		return organUserName;
 	}
@@ -137,4 +138,10 @@ public class ApprGDeliveryListVO {
 	}
 	public String getSecurityApproval() { return securityApproval; }
 	public void setSecurityApproval(String securityApproval) { this.securityApproval = securityApproval; }
+	public String getRootdocid() {
+		return rootdocid;
+	}
+	public void setRootdocid(String rootdocid) {
+		this.rootdocid = rootdocid;
+	}
 }

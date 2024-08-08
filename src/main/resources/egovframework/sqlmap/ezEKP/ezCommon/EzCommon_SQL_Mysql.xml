@@ -4874,4 +4874,38 @@
 		UPDATE TBL_CODELIST SET NAME3 = #NAME3# WHERE CODE1 = #CODE1#
 	</update>
 	
+
+	<select id="EzCommonDAO.checkTblDistributeinfo" resultClass="String">
+		<![CDATA[
+		SELECT
+			SN
+		FROM
+			TBL_DISTRIBUTEINFO
+		LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblDistributeinfo">
+		CREATE TABLE `TBL_DISTRIBUTEINFO` 
+		(
+			`SN` bigint(10) NOT NULL,
+			`DOCID` varchar(80) NOT NULL,
+			`RECEIPTDATE` datetime DEFAULT NULL,
+			`ORGANID` varchar(400) NOT NULL,
+			`ORGAN` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DOCNUMBER` varchar(200) DEFAULT NULL,
+			`MANAGEDEPTID` varchar(400) DEFAULT NULL,
+			`MANAGEDEPT` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`ORGDOCNUMCODE` varchar(200) DEFAULT NULL,
+			`DOCTITLE` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`MANAGEDEPT2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`ORGAN2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+			`COMPANYID` varchar(20) NOT NULL,
+			`ORGDOCID` varchar(80) NULL,
+			`ROOTDOCID` varchar(80) NOT NULL,
+			`DELIVERYSN` bigint(10) DEFAULT NULL,
+			`TYPE` varchar(100) DEFAULT NULL,
+			 PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SN`,`DOCID`,`ORGANID`(255))
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='배부이력 정보'
+	</statement>
 </sqlMap>

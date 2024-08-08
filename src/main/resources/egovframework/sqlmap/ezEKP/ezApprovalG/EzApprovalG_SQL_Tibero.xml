@@ -36969,4 +36969,293 @@
 		AND		COMPANYID = #COMPANYID#
 	]]>
   </update>
+
+    <select id ="EzApprovalG.getDistributeInfo" parameterClass="Map" resultClass="ApprGDeliveryListVO">
+        <isEmpty property="OrgDocIDList">
+            <![CDATA[
+            SELECT
+                A.ORGANID
+                , A.ORGAN
+                , A.ORGAN2
+                , A.MANAGEDEPTID
+                , A.MANAGEDEPT
+                , A.MANAGEDEPT2
+                , A.RECEIPTDATE
+                , to_char(A.RECEIPTDATE + #offsetMin#/(24*60),'YYYY-MM-DD HH24:MI:SS') as href
+                , NVL(B.CHARGENAME,'') AS chargeName
+                , NVL(B.CHARGENAME2,'') AS chargeName2
+                , A.SN
+                , A.ROOTDOCID
+                , A.DOCID
+            FROM
+                tbl_distributeInfo A
+            LEFT JOIN
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            DOCID, ORGANID, MANAGEDEPTID, CHARGENAME, CHARGENAME2, TENANT_ID, COMPANYID
+                        FROM
+                            tbl_docdelivery
+                        WHERE
+                            DOCID = #v_DOCID#
+                        AND
+                            TENANT_ID = #v_TENANTID#
+                        AND
+                            COMPANYID = #companyID#
+                        ORDER BY
+                            RECEIPTDATE DESC
+                    )
+                WHERE
+                    ROWNUM <= 1
+            ) B
+            ON
+                A.DOCID = B.DOCID
+            AND
+                A.TENANT_ID = B.TENANT_ID
+            AND
+                A.COMPANYID = B.COMPANYID
+            AND
+                A.ORGANID = B.ORGANID
+            AND
+                A.MANAGEDEPTID = B.MANAGEDEPTID
+            WHERE
+                A.DOCID = #v_DOCID#
+            AND
+                A.ORGANID = #v_DEPTID#
+            AND
+                A.DELIVERYSN = #v_DELIVERYSN#
+            AND
+                A.TENANT_ID = #v_TENANTID#
+            AND
+                A.COMPANYID = #companyID#
+            ORDER BY
+                A.receiptDate ASC
+        ]]>
+        </isEmpty>
+        <isNotEmpty property="OrgDocIDList">
+            WITH TD AS (
+            SELECT
+            distinct A.*, B.CHARGENAME, B.CHARGENAME2
+            FROM
+            tbl_distributeInfo A
+            LEFT JOIN
+            tbl_docdelivery B
+            ON
+            A.DOCID = B.DOCID
+            AND
+            A.TENANT_ID = B.TENANT_ID
+            AND
+            A.COMPANYID = B.COMPANYID
+            AND
+            A.ORGANID = B.ORGANID
+            AND
+            A.MANAGEDEPTID = B.MANAGEDEPTID
+            WHERE
+            A.ROOTDOCID = #v_RootDocID#
+            AND
+            A.ORGDOCID in
+            <iterate property="OrgDocIDList" open="(" close=")" conjunction=",">
+                #OrgDocIDList[]#
+            </iterate>
+            AND
+                (A.TYPE != 'add' OR A.TYPE is null)
+            AND
+            A.TENANT_ID = #v_TENANTID#
+            AND
+            A.COMPANYID = #companyID#
+            )
+            SELECT
+            C.ORGANID ,
+            C.ORGAN ,
+            C.ORGAN2 ,
+            C.MANAGEDEPTID ,
+            C.MANAGEDEPT ,
+            C.MANAGEDEPT2 ,
+            C.RECEIPTDATE ,
+            to_char(C.RECEIPTDATE + #offsetMin#/(24*60),'YYYY-MM-DD HH24:MI:SS') as href,
+            NVL(D.CHARGENAME, '') as chargeName ,
+            NVL(D.CHARGENAME2, '') as chargeName2 ,
+            C.SN ,
+            C.ROOTDOCID,
+            C.DOCID
+            FROM
+            TD C
+            LEFT JOIN
+            (
+            SELECT
+            DOCID, ORGANID, MANAGEDEPTID, max(SN) as SN, CHARGENAME, CHARGENAME2, TENANT_ID, COMPANYID
+            FROM
+            TD
+            GROUP BY
+            DOCID, ORGANID, MANAGEDEPTID, CHARGENAME, CHARGENAME2, TENANT_ID, COMPANYID
+            ) D
+            ON
+            C.DOCID = D.DOCID
+            AND
+            C.TENANT_ID = D.TENANT_ID
+            AND
+            C.COMPANYID = D.COMPANYID
+            AND
+            C.ORGANID = D.ORGANID
+            AND
+            C.MANAGEDEPTID = D.MANAGEDEPTID
+            AND
+            C.SN = D.SN
+            WHERE
+            C.SN = #SN#
+            AND
+            C.TENANT_ID = #v_TENANTID#
+            AND
+            C.COMPANYID = #companyID#
+        </isNotEmpty>
+    </select>
+
+    <select id="EzApprovalG.getRootDocID" parameterClass="Map" resultClass="String">
+        <isEmpty property="v_TMPDOCID">
+            SELECT
+            ROOTDOCID
+            FROM
+            TBL_APRRECEIPTPROCESSINFO
+            WHERE
+            DOCID = #v_DOCID#
+            AND
+            COMPANYID = #companyID#
+            AND
+            TENANT_ID = #v_TENANTID#
+        </isEmpty>
+        <isNotEmpty property="v_TMPDOCID">
+            <![CDATA[
+            SELECT
+                *
+            FROM
+                (
+                    SELECT
+                        ROOTDOCID
+                    FROM
+                        tbl_distributeInfo
+                    WHERE
+                        DOCID = #v_TMPDOCID#
+                    AND
+                        COMPANYID = #companyID#
+                    AND
+                        TENANT_ID = #v_TENANTID#
+                )
+            WHERE
+                ROWNUM <= 1
+        ]]>
+        </isNotEmpty>
+    </select>
+
+    <select id="EzApprovalG.getDistributeInfoSN" parameterClass="Map" resultClass="String">
+        <isEmpty property="v_TYPE">
+            SELECT
+            NVL(MAX(SN), 0) AS SN
+            FROM
+            tbl_distributeInfo
+            WHERE
+            RootDocID = #v_RootDocID#
+            AND
+            COMPANYID = #companyID#
+            AND
+            TENANT_ID = #v_TENANTID#
+        </isEmpty>
+        <isNotEmpty property="v_TYPE">
+            <isEqual property="v_TYPE" compareValue="add">
+                SELECT
+                NVL(MAX(SN), 0) AS SN
+                FROM
+                tbl_distributeInfo
+                WHERE
+                DOCID = #v_ORGDOCID#
+                AND
+                DELIVERYSN = (
+                SELECT
+                SN
+                FROM
+                tbl_docdelivery
+                WHERE
+                DOCID = #v_ORGDOCID#
+                AND
+                DEPTID = #v_OrganID#
+                )
+                AND
+                COMPANYID = #companyID#
+                AND
+                TENANT_ID = #v_TENANTID#
+            </isEqual>
+            <isNotEqual property="v_TYPE" compareValue="add">
+                SELECT
+                NVL(MAX(SN), 0) + 1 AS SN
+                FROM
+                tbl_distributeInfo
+                WHERE
+                DOCID = #v_ORGDOCID#
+                AND
+                COMPANYID = #companyID#
+                AND
+                TENANT_ID = #v_TENANTID#
+            </isNotEqual>
+        </isNotEmpty>
+    </select>
+
+    <insert id="EzApprovalG.insertDistributeInfo" parameterClass="Map">
+        <isEqual property="v_DuplicateFlag" compareValue="true">
+            INSERT INTO
+            tbl_distributeinfo
+            (sn, DocID, ReceiptDate, OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, OrgDocNumCode, DocTitle, RootDocID, TENANT_ID, COMPANYID, DELIVERYSN, ORGDOCID, TYPE)
+            (
+            SELECT
+            #v_DistributeInfoSN#, #v_DOCID#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, DocNumber, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, OrgDocNumCode, DocTitle , #v_RootDocID#, #v_TENANTID#, #companyID#, SN, #v_ORGDOCID#, #v_TYPE#
+            FROM
+            TBL_DOCDELIVERY
+            WHERE
+            DocID = #v_DOCID#
+            AND
+            DeptID = #v_DEPTID#
+            AND
+            TENANT_ID = #v_TENANTID#
+            AND
+            COMPANYID = #companyID#
+            )
+        </isEqual>
+        <isNotEqual property="v_DuplicateFlag" compareValue="true">
+            INSERT INTO
+            tbl_distributeinfo
+            (sn, DocID, ReceiptDate, OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, OrgDocNumCode, DocTitle, RootDocID, TENANT_ID, COMPANYID, DELIVERYSN, ORGDOCID, TYPE)
+            (
+            SELECT
+            #v_DistributeInfoSN#, a.DocID, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, b.DocNumCode, a.DocTitle , #v_RootDocID#, #v_TENANTID#, #companyID#, #v_maxSN#, #v_ORGDOCID#, #v_TYPE#
+            FROM
+            TBL_APRDOCINFO a
+            INNER JOIN
+            TBL_EXPAPRDOCINFO b
+            ON
+            a.DocID = b.DocID
+            AND
+            a.TENANT_ID = b.TENANT_ID
+            AND
+            a.COMPANYID = b.COMPANYID
+            WHERE
+            a.DocID = #v_DOCID#
+            AND
+            a.TENANT_ID = #v_TENANTID#
+            AND
+            a.COMPANYID = #companyID#
+            )
+        </isNotEqual>
+    </insert>
+
+    <delete id="EzApprovalG.deleteDistributeInfo" parameterClass="Map">
+        DELETE FROM
+            tbl_distributeinfo
+        WHERE
+            DOCID = #v_DOCID#
+          AND
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #companyID#
+    </delete>
 </sqlMap>
