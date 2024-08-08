@@ -533,8 +533,16 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .scalendar_mini td.select{z-index:0;}
 .scalendar_mini td.select:before{content:""; position:absolute; width:26px; height:26px; border-radius:50%; background:#f0f6ff; top:50%; left:50%; transform:translate(-50%,-50%); z-index:-1;}
 .scalendar_mini td.select div{color:#333;}
+.scalendar_mini td.select div.dataHave{color:#388CE5;}
 .scalendar_mini td.select.sat div{color:#0470E4;}
 .scalendar_mini td.select.sun div{color:#fc4a4a;}
+
+.scalendar_mini td.schedule{z-index:0;}
+.scalendar_mini td.schedule:before{content:""; position:absolute; width:26px; height:26px; border-radius:50%; background:#f0f6ff; top:50%; left:50%; transform:translate(-50%,-50%); z-index:-1;}
+.scalendar_mini td.schedule div{color:#333;}
+.scalendar_mini td.schedule div.dataHave{color:#388CE5;}
+.scalendar_mini td.schedule.sat div{color:#0470E4;}
+.scalendar_mini td.schedule.sun div{color:#fc4a4a;}
 
 .sschedule_list {list-style:none;margin:0 0 0 0px;padding:10px 0px 0px 0px;clear:both;overflow:hidden;height:calc(100% - 63px); background: white}
 .sschedule_list > div{height:100%; padding:0 0 10px; box-sizing:border-box;}
@@ -1187,7 +1195,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .scalendar_mini td.gray{color:#BEBEBE;}
 #theme2Body .scalendar_mini td.sat{color:#2B7BF4;}
 #theme2Body .scalendar_mini td.sun{color:#F83838;}
-#theme2Body .scalendar_mini td.todaysun{ color:red; background:#0470e4; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+#theme2Body .scalendar_mini td.todaysun{border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 #theme2Body .scalendar_mini td.main_today{color:#ffffff; background:#0470e4; border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px;}
 #theme2Body .scalendar_mini td.main_todaysun div{color:#F83838; background:#BBD8F8;}
 #theme2Body #CalendarMini_Top .scalendar_mini td.today{color:#fff; background:#00a0e9; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
@@ -1400,8 +1408,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .voteLay{height: inherit;}
 #theme3Body .pollLay{height: inherit;}
 
-#theme3Body .scalendar_mini td.todaysun{ color:red; background:#fff; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
-#theme3Body .scalendar_mini td.schedule{color:#fff; background: #5cb5b4; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+#theme3Body .scalendar_mini td.todaysun{background:#fff; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+#theme3Body .scalendar_mini td.todaysun .dataHave{color:#fff;}
+#theme3Body .scalendar_mini td.schedule{color:#fff; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 #theme3Body .scalendar_mini_title .btn_prev{padding-right:5px;}
 
 #theme3Body .sCalendarArea .portlet_title span{color:#388CE5;}
@@ -1792,7 +1801,7 @@ div.orbit img{border-radius: 5px;}
 #inAttiBtn, #outAttiBtn{font-size: 13px !important;}
 #addr{height: 12px !important;}
 /* .dataHave{left: 36%;} */
-#theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{display: block; border: none; margin-left:1px; top:2px; left:0; }
+#theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{display: block; border: none; top:2px; left:0; margin-left:1px;}
 .full_menu_toggleUL > li{height: 105px;}
 
 /* 20231030 디자인 css 추가 */
@@ -2146,7 +2155,7 @@ div.orbit img{border-radius: 5px;}
 
 /* 게시판 B type */
 .portlet .board_Btype .portlet_title .portletText{width:calc(100% - 160px);}
-.portlet .board_Btype .noti_portlet_list .notiLI dl{border:1px solid #F2F4F6; padding:12px; background:url(/images/portal/noti_nodata.png) no-repeat 0 0 / 100% 100%;}
+.portlet .board_Btype .noti_portlet_list .notiLI dl{border:1px solid #F2F4F6; padding:12px; background:url(/images/portal/noti_nodata.png) no-repeat 0 0 / 100% 100%; position:relative; z-index:0;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text{height:auto;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text span{text-shadow:-2px 0 #FFF, 0 2px #FFF, 1px 0 #FFF, 0 -1px #FFF;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text .title{display:block; height:20px; line-height:20px; font-weight:bold; color:#333; margin-bottom:8px; font-size:14px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
@@ -2267,7 +2276,6 @@ div.orbit img{border-radius: 5px;}
 .portlet.one_by_two .webFolder .webFolderLi.pageOne {margin-top: 0}
 
 
-/* 임시 1*2 포틑릿 사이즈 수정 */
 .portlet.two_by_one .noti_portlet_list .notiLI{margin:0 0 7px 7px; width:calc((99.999% - 7px) / 2);}
 .portlet.two_by_one .noti_portlet_list .notiLI:nth-child(2n+1){margin-left:0;}
 .portlet.two_by_one .noti_portlet_list .notiLI:nth-child(-n+2){margin-top:0;}

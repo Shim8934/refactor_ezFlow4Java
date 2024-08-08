@@ -181,7 +181,7 @@
                 if(!pSeach) {
                     document.getElementById("organSelectDeptNM").innerHTML =
                             "<span>[</span><span id='spn_deptName' title='" + MakeXMLString(selnode.GetNodeData("VALUE")) + "'>" + MakeXMLString(selnode.GetNodeData("VALUE")) + "&nbsp;&nbsp;</span>"
-                            + "<span id='countInfo' style='color:#017BEC;'></span><span>]</span>";
+                            + "<span id='countInfo' class='txt_color'></span><span>]</span>";
                     organSelectDeptNM.setAttribute("countinfo"," ")
                 }
                 
@@ -1966,7 +1966,7 @@
 				var strtext;
 				var PagingHTML = "";
 				document.getElementById("tblPageRayer").innerHTML = "";
-				/* document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + TotalCount + "</span>";  */
+				/* document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + TotalCount + "</span>";  */
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 

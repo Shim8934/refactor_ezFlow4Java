@@ -24,9 +24,6 @@
 	   		overflow: hidden;
 	   		display: inline-block;
 	   	}
-	   	.countColor {
-	   		color:#017BEC;
-	   	}
 	   	.pt-10
 	   	{
 	   		padding-top:10px

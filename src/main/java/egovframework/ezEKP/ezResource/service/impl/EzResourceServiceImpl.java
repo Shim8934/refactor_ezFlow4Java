@@ -1095,6 +1095,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					timeDisplay = "";
 				}
 				returnStr.append("<busystatus>"+timeDisplay+"</busystatus>");
+				returnStr.append("<title>"+ title +"</title>");
 				returnStr.append("</appointment>");
 			} else {
 				returnStr.append("<appointment>");
@@ -1158,6 +1159,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<owner_nm><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm").item(i).getTextContent() + "]]></owner_nm>");
 				returnStr.append("<dept_name><![CDATA[" + scheRSDom.getElementsByTagName("dept_name").item(i).getTextContent() + "]]></dept_name>");
 				returnStr.append("<writeDay>"+ writeDay +"</writeDay>");
+				returnStr.append("<title>"+ title +"</title>");
 					
 				/*if (pType == null || pType.equals("")) {
 					returnStr.append("<owner_nm2><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm2").item(i).getTextContent() + "]]></owner_nm2>");
@@ -4301,10 +4303,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResBrdVO> getResourcePortlet(@CookieValue("loginCookie") String loginCookie, String date) throws Exception {
+	public List<ResBrdVO> getResourcePortlet(@CookieValue("loginCookie") String loginCookie, String date, String type, LoginVO userInfo) throws Exception {
 		logger.debug("Service getResourePortlet started");
+
+		if (type == null || !type.equals("mobile")) {
+			userInfo  = commonUtil.userInfo(loginCookie);
+		}
 		
-		LoginVO userInfo  = commonUtil.userInfo(loginCookie);
 		String  id        = userInfo.getId();
 		String  companyID = userInfo.getCompanyID();
 		String  offset    = userInfo.getOffset();
@@ -4333,6 +4338,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					StringBuilder number   = new StringBuilder();	// 자원1의번호;자원2의번호;....
 					StringBuilder ownName  = new StringBuilder();	// 소유자1의이름;소유자2의이름;...
 					StringBuilder deptName = new StringBuilder();	// 소유자1부서;소유자2의부서
+					StringBuilder titleName = new StringBuilder();	// 자원예약1의제목;자원예약2의제목
+					StringBuilder startAllTime = new StringBuilder();	// 예약1의시작날짜시간;예약1의시작날짜시간
+					StringBuilder endAllTime = new StringBuilder();	// 예약1의종료날짜시간;예약1의종료날짜시간
 					String retVal = getScheduleXML(date, resources.get(i).getBrdID(), companyID, "", "P", "", "",  "", "", tenantID, offset, lang);
 					Document xmlDom2 = commonUtil.convertStringToDocument(retVal);
 					for (int j=0; j<xmlDom2.getDocumentElement().getChildNodes().getLength(); j++) {
@@ -4343,15 +4351,24 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						String num   = xmlDom2.getElementsByTagName("number").item(j).getTextContent();
 						String own   = xmlDom2.getElementsByTagName("owner_nm").item(j).getTextContent();
 						String dept  = xmlDom2.getElementsByTagName("dept_name").item(j).getTextContent();
+						String title  = xmlDom2.getElementsByTagName("title").item(j).getTextContent();
+						String startDateAll = xmlDom2.getElementsByTagName("dtstart").item(j).getTextContent();
+						String endDateAll  = xmlDom2.getElementsByTagName("dtend").item(j).getTextContent();
 						sb.append(sDate + "~" + eDate + ";");
 						number.append(num + ";" );
 						ownName.append(own + ";");
 						deptName.append(dept + ";");
+						titleName.append(title + ";");
+						startAllTime.append(startDateAll + ";");
+						endAllTime.append(endDateAll + ";");
 					}
 					resources.get(i).setRsPortletTime(sb.toString());
 					resources.get(i).setRsPortletNum(number.toString());
 					resources.get(i).setRsPortletOwnName(ownName.toString());
 					resources.get(i).setRsPortletDeptName(deptName.toString());
+					resources.get(i).setRsPortletTitle(titleName.toString());
+					resources.get(i).setRsPortletStratAllTime(startAllTime.toString());
+					resources.get(i).setRsPortletEndAllTime(endAllTime.toString());
 				}
 			}
 		}

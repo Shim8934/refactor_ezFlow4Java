@@ -58,7 +58,7 @@
 		<h1>
 			<spring:message code="ezWebFolder.ksa02"/>
 			
-			<span id="mailBoxInfo"><span style="color:#017BEC;">0</span></span>
+			<span id="mailBoxInfo"><span class='txt_color'>0</span></span>
 		</h1>
 		
 		<div id="companySelect" style="margin-left: 5px;">
@@ -554,10 +554,10 @@
 			var pageNaviRayerDIV = $("#tblPageRayer");
 			var pageNaviDiv = $("<div class='pagenavi'></div>");
 				
-			var pPrevSpan = $("<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>");
-			var prevSpan = $("<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>");
-			var nextSpan = $("<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>");
-			var nNextSpan = $("<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>");
+			var pPrevSpan = $("<span class='btnimg first disabled'></span>");
+			var prevSpan = $("<span class='btnimg prev disabled'></span>");
+			var nextSpan = $("<span class='btnimg next disabled'></span>");
+			var nNextSpan = $("<span class='btnimg last disabled'></span>");
 
 			$(pPrevSpan).click(function() {setPage(1) });
 			$(nNextSpan).click(function() { setPage(pageBtnTotalSize) });

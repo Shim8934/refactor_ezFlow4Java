@@ -221,5 +221,9 @@ var strLangHSBScPt3 = "";
 
 /* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
 var ezSchedule_kyj1 = "Can not post schedules to photo board or anonymous board or url board.";
+
 /* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
 var ezSchedule_kyj2 = "Please check the repetition pattern once again.";
+
+/* 2024-07-18 조소정 - 일정관리 > 그룹일정 관리 > 작성 권한 기능 추가 */
+var ezSchedule_csj1 = "Dapat ditulis";

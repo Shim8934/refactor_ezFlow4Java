@@ -1101,9 +1101,15 @@
 			resultStr += "<option value='" + CabinetType.DOING + "' " + (cabinetType === CabinetType.DOING ||  !cabinetType ? "selected" : "") + "><spring:message code='main.t00003' /></option>";
 			resultStr += "<option value='" + CabinetType.REJECT + "' " + (cabinetType === CabinetType.REJECT ? "selected" : "") + "><spring:message code='main.t00004' /></option>";
 			resultStr += "<option value='" + CabinetType.DRAFT + "' " + (cabinetType === CabinetType.DRAFT ? "selected" : "") + "><spring:message code='main.t00005' /></option>";
-			resultStr += "<option value='" + CabinetType.DISPLAY + "' " + (cabinetType === CabinetType.DISPLAY ? "selected" : "") + ">";
-			resultStr += approvalFlag === "G" ? "<spring:message code='ezApprovalG.t10011' />" : "<spring:message code='ezCircular.t7' />";
-			resultStr += "</option>";
+			
+			if (webType != 'mobile') {
+				resultStr += "<option value='" + CabinetType.DISPLAY + "' " + (cabinetType === CabinetType.DISPLAY ? "selected" : "") + ">";
+				resultStr += approvalFlag === "G" ? "<spring:message code='ezApprovalG.t10011' />" : "<spring:message code='ezCircular.t7' />";
+				resultStr += "</option>";
+			} else if (webType == 'mobile' && approvalFlag === "G") {
+				resultStr += "<option value='" + CabinetType.DISPLAY + "' " + (cabinetType === CabinetType.DISPLAY ? "selected" : "") + "><spring:message code='ezApprovalG.t10011' /></option>";
+			}
+			
 			resultStr += "</select></tr>";
 
 			return resultStr;

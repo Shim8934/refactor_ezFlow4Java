@@ -96,7 +96,7 @@
 					},
 					success : function(result) {
 						getAbsentedList_after(result.list);
-						$("#mailBoxInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + result.totalCount + "</span>");
+						$("#mailBoxInfo").html("&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>");
 					}
 				});
 	    	}

@@ -577,7 +577,7 @@ function makePageSelPage() {
 	var strtext;
 	var PagingHTML = "";
 	$("#tblpageRayer").html("");
-	$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
+	$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span class='txt_color'> "
 			+ totalCount + " </span><spring:message code='ezSystem.kyj2'/>]")
 	strtext = "<div class='pagenavi'>";
 	PagingHTML += strtext;

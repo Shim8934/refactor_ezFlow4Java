@@ -440,5 +440,8 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 		return (List<ScheduleReminderVO>) list("EzScheduleDAO.selectExpiredSchedule", map);
 	}
 	
+	public void updateWritePermission(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateWritePermission", map);
+	}
 }
 

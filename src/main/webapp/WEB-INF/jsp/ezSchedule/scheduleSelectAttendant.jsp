@@ -26,7 +26,15 @@
 			}
 			.countColor {
 				color:#017BEC;
-			}	    	
+			}
+			input[type="checkbox"] {
+			    width: 13px;
+			    height: 13px;
+			    margin: 0px 5px 0px 18px;
+			    padding: 0px;
+			    overflow: hidden;
+			    vertical-align: middle;
+			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	    
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -50,6 +58,13 @@
 	        var RetValue;
 	        var ReturnFunction;	        
 	        var lang = "<c:out value='${lang}' />";
+	        var mList = [];
+	        <c:forEach var="member" items="${mList}">
+	            mList.push({
+	                memberId: "${member.memberId}",
+	                writePermission: "${member.writePermission}"
+	            });
+	        </c:forEach>
 	        
 	        /* 2023-07-19 홍승비 - 일정그룹관리로 접근한 경우, 해당 일정그룹의 관리자(그룹장) userID 추가 (그룹관리가 아니라면 공백) */
 	        var groupOwnerID = "<c:out value='${groupOwnerID}'/>";
@@ -405,9 +420,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + result.totalCount2 + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + result.totalCount2 + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -616,6 +631,7 @@
 	                    var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 	                    var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 	                    var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+	                    var writePermission = "Y"; // 기본값을 'Y'로 설정
 
 	                    var listid = "MsgToList";
 	                    var getlistview = new ListView();
@@ -648,6 +664,7 @@
 	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+	                        pparsingXML = pparsingXML + "<DATA9>" + writePermission + "</DATA9>";
 	                        if(lang == "1") {
 	                        	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                        }
@@ -676,16 +693,19 @@
 	                            MaxCntNum = MaxCntNum + 1;
 	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
-	
+	                        
+	                        var inputs = objTr.getElementsByTagName("input");
+	                        for (var i = 0; i < inputs.length; i++) {
+	                            inputs[i].checked = true;
+	                        }
+	                        
 	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 	                        for (var y = 0; y < _tdlength; y++) {
 	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                        }
-	
 	                    }
 	                }
-	
 	            }
 	            else {
 	                if (p_ListOrderObject == "") {
@@ -701,6 +721,7 @@
 	                    var strDeptNM2 = p_ListOrderObject.getAttribute("_data13");
 	                    var jickwe = p_ListOrderObject.getAttribute("_data14");
 	                    var phone = p_ListOrderObject.getAttribute("_data8");
+	                    var writePermission = "Y"; // 기본값을 'Y'로 설정
 	
 	                    var listid = "MsgToList";
 	                
@@ -723,6 +744,7 @@
 	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+	                        pparsingXML = pparsingXML + "<DATA9>" + writePermission + "</DATA9>";
 	                        if(lang == "1") {
 	                       		 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                        }
@@ -804,9 +826,9 @@
 		        var UserListHTML = "";
 		        /* if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") != null && SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") != "") {
 		            if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang256 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang256 + "</span>]";
 	        		} else {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang256 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang256 + "</span>]";
 	        		}
 		            
 		            SelectDeptNM.setAttribute("countinfo", "1")
@@ -819,8 +841,8 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang257 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span></span>";
+		                //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang257 + "</span>" + "<span id='countInfo' class='txt_color'>&nbsp;&nbsp;<span class='txt_color'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span></span>";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -833,8 +855,8 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang257 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span></span>";
+	                    //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang257 + "</span>" + "<span id='countInfo' class='txt_color'>&nbsp;&nbsp;<span class='txt_color'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span></span>";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1125,7 +1147,7 @@
 			}
 		    var rtn;
 		    function btnok_onclick() {
-		        rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+		        rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array(), "writepermission": new Array() };
 		
 		        var listid = "MsgToList";
 		        var selList = new ListView();
@@ -1150,6 +1172,15 @@
 		            rtn["deptname2"][i] = GetAttribute(totalRows[i], "DATA5");
 		            rtn["jikwe"][i] = GetAttribute(totalRows[i], "DATA7");
 		            rtn["phone"][i] = GetAttribute(totalRows[i], "DATA8");
+
+		            // writepermission 체크박스의 상태를 가져옴
+		            var curID = GetAttribute(totalRows[i], "DATA1");
+		            var checkbox = document.getElementById("cb_" + curID);
+		            if (checkbox) {
+		                rtn["writepermission"][i] = checkbox.checked ? "Y" : "N";
+		            } else {
+		                rtn["writepermission"][i] = "Y"; // 기본값 설정
+		            }
 		        }
 		        
 		        if (!CrossYN()) {

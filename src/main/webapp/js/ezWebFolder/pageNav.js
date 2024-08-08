@@ -58,7 +58,7 @@ var pagination = (function() {
 		startButtonPage = 1 + buttonOverCount * pageButtonSize;
 		endButtonPage = Math.min(totalPage, startButtonPage + pageButtonSize - 1);
 		
-		document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span id='countSpan' style='color:#017BEC;'>" + itemAmount + "</span>";
+		document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span id='countSpan' class='txt_color'>" + itemAmount + "</span>";
 		
 		if (currentPage == 1) {
 			pagingHTML += "<span class='btnimg first disabled'></span>";
@@ -147,7 +147,7 @@ function makePageSelPage(){
 	var pageNum = currentPage == 0 ? 1 : currentPage;
 	
 	document.getElementById("tblPageRayer").innerHTML = "";
-	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span id='countSpan' style='color:#017BEC;'>" + totalRows + "</span>";
+	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span id='countSpan' class='txt_color'>" + totalRows + "</span>";
 	
 	if (totalPages > 1 && pageNum != 1) {
 		pagingHTML += "<span class='btnimg first' onClick= 'return goToPageByNum(1)'></span>";

@@ -210,7 +210,7 @@
 	        var strtext;
 	        var PagingHTML = "";
 	        document.getElementById("tblPageRayer").innerHTML = "";
-	        //document.getElementById("mailBoxInfo").innerHTML = " [" + "총"  + "<span style='color:#017BEC;'> " + totalAtt + " </span>" + "개]";
+	        //document.getElementById("mailBoxInfo").innerHTML = " [" + "총"  + "<span class='txt_color'> " + totalAtt + " </span>" + "개]";
 	        strtext = "<div class='pagenavi'>";
 	        PagingHTML += strtext;
 	        var pageNum = currentPage;
@@ -453,7 +453,7 @@
 		    	totalPages = data.totalPages;
 		    	makePageSelPage();
 		    	
-		    	infoStr += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + data.totalAtt;
+		    	infoStr += "&nbsp;&nbsp;<span class='txt_color'>" + data.totalAtt;
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
 		    		infoStr += "</span>";

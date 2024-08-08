@@ -116,11 +116,12 @@
 			</ul>
 			<div class="lnb_menu_all" id="menuAllContainer" style="left:-1080px;">
 	            <div class="lnb_menu_setting" id="menuSettingElem">
+	                <div class="menu_set" id="editBtn">
+	                    <p><spring:message code="ezNewPortal.topMenu.hth09" /></p>
+	                </div>
+
 	                <div class="set_btn" id="editMenuBtn">
 	                    <span id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span><span id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>
-	                </div>
-	                <div class="menu_set">
-	                    <span><spring:message code="ezNewPortal.topMenu.hth09" /></span>
 	                </div>
 	            </div>
 
@@ -757,6 +758,7 @@
 
 			// 하단 메뉴 변경
 			var editMenuBtn = document.getElementById('editMenuBtn');
+			document.getElementById("editBtn").style.display = "none";
 			editMenuBtn.style.display = 'block';
             $("#menuAllContainer ul").addClass("active");
 		}
@@ -770,6 +772,7 @@
 			var editMenuCancel = document.getElementById('editMenuCancel');
 			editMenuCancel.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
+				document.getElementById("editBtn").style.display = "block";
 				document.getElementById('editMenuBtn').style.display = 'none';
 				$("#menuAllContainer ul").removeClass("active");
 				
@@ -787,6 +790,7 @@
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
+				document.getElementById("editBtn").style.display = "block";
 				document.getElementById('editMenuBtn').style = 'none';
 				$("#menuAllContainer ul").removeClass("active");
 				 
@@ -939,8 +943,8 @@
 			bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 			
 			if (menuDisplayMode == "1") {
-				document.querySelector('#mainMenuListLeft').style.backgroundColor = 'rgba(0, 0, 0, 0)';
-				document.querySelector('#mainMenuListLeft').style.border = "none";
+				// document.querySelector('#mainMenuListLeft').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+				// document.querySelector('#mainMenuListLeft').style.border = "none";
 				parent.document.getElementById('mainFrame').style.position = 'static';
 				$('#mainMenuListLeft li').addClass("layer");
 			}

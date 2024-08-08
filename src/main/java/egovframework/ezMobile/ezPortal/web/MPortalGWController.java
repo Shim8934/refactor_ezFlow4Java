@@ -38,6 +38,8 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
@@ -165,6 +167,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 
 	@Resource(name = "EzScheduleService")
 	private EzScheduleService ezScheduleService;
+
+	@Resource(name="EzResourceService")
+	private EzResourceService ezResourceService;
 	
 	/**
 	 * 모바일 G/W 포탈 [GET] 메인 리스트 (일반/폴더/포탈/타임라인)
@@ -1671,6 +1676,45 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		logger.debug("MOBILE G/W getCustomBoardPortlet ended.");
+
+		return result;
+	}
+	
+	@RequestMapping(value = "/mobile/ezPortal/portlets/resourcePortlet", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getResourcePortlet(HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W getResourcePortlet started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String loginCookie = request.getParameter("loginCookie");
+			String userId = request.getParameter("userId");
+			String date = request.getParameter("date");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+
+			if(date == null) {
+				JSONObject err = new JSONObject();
+				return err;
+			}
+			
+			String type = "mobile";
+			
+			List<ResBrdVO> list = ezResourceService.getResourcePortlet(loginCookie, date, type, info);
+			JSONObject jObject = new JSONObject();
+			jObject.put("status", "ok");
+			jObject.put("list", list);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", jObject);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		logger.debug("MOBILE G/W getResourcePortlet ended.");
 
 		return result;
 	}

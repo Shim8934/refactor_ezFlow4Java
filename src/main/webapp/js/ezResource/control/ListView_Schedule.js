@@ -1,10 +1,14 @@
-﻿var PressCtrlKey = false;
+//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
+var PressCtrlKey = false;
 var PressShiftKey = false;
-var m_strColorSelect =  "#f1f8ff";
+//모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
+//따라서 List의 SetMulSelectable 속성의 값이 true인 경우에만
+//document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
+var m_strColorSelect = "#f1f8ff";
 var m_strColorDefault =  "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
-var HeaerCnt = 0;
+var listEventCheckbox = false;
 
 function add_key_event() {
     remove_key_event();
@@ -17,6 +21,7 @@ function add_key_event() {
         document.addEventListener("keydown", keydown_handler, false);
         document.addEventListener("keyup", keyup_handler, false);
     }
+    //disable_browser_selection();
 }
 
 function keydown_handler(evt) {
@@ -44,6 +49,8 @@ function remove_key_event() {
     }
 }
 
+// 컨트롤, 쉬프트 키를 이용하여 다중 선택을 하는 경우
+// 브라우저 기본 셀렉트 이벤트를 막기위한 방편
 function disable_browser_selection() {
     if (typeof (document.body.onselectstart) != "undefined") //IE route
         document.body.onselectstart = function() { return false; }
@@ -55,7 +62,10 @@ function disable_browser_selection() {
     document.body.style.cursor = "default";
 }
 
+//###########################################################################################
+// ListView 클래스 시작
 function ListView() {
+    /* Public Member 선언 시작 */
     this.DataSource = DataSource;
     this.DataBind = DataBind;
     this.SetID = SetID;
@@ -64,19 +74,16 @@ function ListView() {
     this.GetRowCount = GetRowCount;
     this.GetDataRows = GetDataRows;
     this.LoadFromID = LoadFromID;
-    this.AddRow = AddRow;
-    this.NewAddRow = NewAddRow;
+    this.AddRow = AddRow;   
     this.DeleteRow = DeleteRow;
     this.GetSelectedRows = GetSelectedRows;
     this.GetSelectedIndexes = GetSelectedIndexes;
-    this.GetUnSelectedIndexes = GetUnSelectedIndexes;
-    this.SetSelectedID = SetSelectedID;
+    this.GetUnSelectedIndexes = GetUnSelectedIndexes;    
     this.SetSelectedIndex = SetSelectedIndex;
     this.GetSelectedRowID = GetSelectedRowID;
     this.CreateTabelCell = CreateTabelCell;
     this.ExistRow = ExistRow;
     this.RowDataBind = RowDataBind;
-    this.RowDataBind2 = RowDataBind2;
     this.SetUseOCS = SetUseOCS;
     this.SetTitle = SetTitle;
     this.RowMoveUp = RowMoveUp;
@@ -92,14 +99,20 @@ function ListView() {
     this.GetTableWidth = GetTableWidth;
     this.SetTableWidth = SetTableWidth;
     this.SetListType = SetListType;
+    
+    //사용자 정의 이벤트 지정
     this.SetHeaderOnClick = SetHeaderOnClick;
     this.SetHeaderOnDblClick = SetHeaderOnDblClick;
     this.SetRowOnClick = SetRowOnClick;
     this.SetRowOnDblClick = SetRowOnDblClick;
     this.SetContextHandler = SetContextHandler;
+
     this.SetDebugMode = SetDebugMode;
     this.toString = ListView_ToString;
     this.SetHeightFree = SetHeightFree;
+    /* Public Member 선언 끝 */
+
+    /* Private Member 선언 시작 */
     var _dataSource = null;
     var _thisID = "";
     var _isMultiSelectable = false;
@@ -125,7 +138,9 @@ function ListView() {
     var _Align = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     var _ListType = 0;
     var _SetHeightFree = false;
+    /* Private Member 선언 끝 */
 
+    //ID 지정
     function SetID(pObjID) {
         if (pObjID != "")
             _thisID = pObjID;
@@ -331,8 +346,8 @@ function ListView() {
             oTable.appendChild(oTHeader);
             oTable.appendChild(oTBody);
 
-            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-            if (CrossYN()) {	
+            if (CrossYN()) {
+
                 /*if (_WidthFlag && _TableWidth > 835 && _titleIdx == null)
                     oTable.setAttribute("width", _TableWidth);
                 else*/
@@ -385,38 +400,6 @@ function ListView() {
         }
     }
 
-    function RowDataBind2()
-    {
-        if (_thisID == "")
-        {
-            alert("리스트의 ID가 지정되지 않았습니다.");
-            return;
-        }
-
-        if (_dataSource == null)
-        {
-            alert("데이터가 지정되지 않았습니다.");
-            return;
-        }
-        var oList = document.getElementById(_thisID);
-        if (!oList)
-            return;
-
-        //RemoveDataBody();
-
-        var newTBody = GetTableBodyObj2();
-
-
-        // if (!new RegExp(/MSIE/).test(navigator.userAgent) && !_SetHeightFree)
-        //    newTBody.style.height = oList.parentNode.style.height;
-
-        oList.appendChild(newTBody);
-
-        oldTbody = null;
-        newTBody = null;
-        oList = null;
-    }
-
     //헤더없이 Row만 존재하는 DataSource를 위한 메소드
     function RowDataBind() {
         if (_thisID == "") {
@@ -462,7 +445,7 @@ function ListView() {
                 var strName = SelectSingleNodeValue(oHeaders[i], "NAME");
                 
                 var strStyle = SelectSingleNodeValue(oHeaders[i], "STYLE");
-                var strClass = "h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");	
+                var strClass = "";//"h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");
                 
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
                 if(strColName == "DocTitle")
@@ -483,7 +466,6 @@ function ListView() {
                         strStyle += "cursor:pointer;";
                     }
 
-                    /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
                     if (!CrossYN()) {
                         objTd.style.setAttribute("cssText", strStyle);
                     }
@@ -493,10 +475,10 @@ function ListView() {
                     }
                 }
 
+                //타이틀에만 적용 차후 가변으로 수정
                 if (strClass != "") {
                     if (i == 0) {       //// 현재는 header에 class가 없으므로 고정함.
-                        objTd.className = "h4_center";
-                        objTd.setAttribute("bgcolor", "#CCCCCC");
+                        objTd.className = "";
                     }
                     else
                         objTd.className = strClass;
@@ -509,8 +491,7 @@ function ListView() {
                             objTd.width = strWidth + "px";
                         }
                         else {
-                            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-                        	if (CrossYN()) {
+                            if (CrossYN()) {
                                 objTd.setAttribute("width", strWidth + "px");
                             }
                             else {
@@ -520,8 +501,7 @@ function ListView() {
                     }
                     else {
                         if (_WidthFlag) {
-                            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-                        	if (CrossYN()) {
+                            if (CrossYN()) {
                                objTd.setAttribute("width", "80%");// objTd.setAttribute("width", strWidth + "px");
                             }
                             else {
@@ -533,12 +513,29 @@ function ListView() {
                     }
                     _TableWidth = _TableWidth + parseInt(strWidth);
                 }
-                //objTd.setAttribute("height", "30px");
+                
+                try{
+                if (OrderCell.lastIndexOf(strName) > -1) {
+                    if (OrderOption.lastIndexOf("DESC") > -1)
+                        strName += "<img src='/images/view-sortdown.gif'>";
+                    else
+                        strName += "<img src='/images/view-sortup.gif'>";
+                }
+                } catch (e) { }
 
-                var oText = document.createTextNode(strName);
-                objTd.appendChild(oText);
+                if (strName == "CHECK") {
+                    var oInput = document.createElement("INPUT");
+                    oInput.id = "HeaderAllCheckBox";
+                    oInput.type = "checkbox";
+                    oInput.onclick = function () { event_HeaderCheckBoxClick(this); };
+                    objTd.appendChild(oInput);
+                }
+                else {
+                    var oText = document.createTextNode(strName);
+                    objTd.innerHTML = strName;
+                    
+                }
                 objTr.appendChild(objTd);
-
                 objTd = null;
                 oText = null;
                 oNames = null;
@@ -548,192 +545,11 @@ function ListView() {
 
         var objTheader = document.createElement("THEAD");
         objTheader.id = _thisID + "_THEAD";
-
         objTheader.appendChild(objTr);
-
         objTr = null;
 
         return objTheader;
     }
-
-
-    function GetTableBodyObj2() {
-
-        var oTbody = document.createElement("TBODY");
-        oTbody.style.backgroundColor = m_strColorDefault;
-
-        var oRows = _dataSource.getElementsByTagName("ROW");
-        _rowCount = oRows.length;
-
-        var oHeaders = _dataSource.getElementsByTagName("HEADER");
-        var colCount = oHeaders.length;
-
-        /* if(_rowCount == 0)
-        {
-        var objTr = document.createElement("TR");
-        objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
-        oTbody.appendChild(objTr);
-        var oText = document.createTextNode(strLang535);
-        var objTd = document.createElement("TD");
-        objTd.align = "center";
-        objTd.colSpan = colCount;
-        objTd.appendChild(oText);
-        objTr.appendChild(objTd);
-
-             return oTbody;
-        }*/
-
-        for (var i = 0; i < oRows.length; i++) {
-            //TR값 중복방지 증가
-            susinTo++;
-            ////////////////////
-            var objTr = document.createElement("TR");
-            objTr.setAttribute("id", _thisID + "_TR_" + susinTo);
-            objTr.style.cursor = "pointer";
-
-            objTr.onmouseover = new Function("tr_mouseover(this)");
-            objTr.onmouseout = new Function("tr_mouseout(this)");
-
-            if (_rowonclick != null)
-                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
-            else
-                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
-
-            if (_rowondblclick != null)
-                objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
-
-            if (_contextHandler != null)
-                objTr.oncontextmenu = new Function(_contextHandler + "(this.id);");
-
-            var oCells = GetElementsByTagName(oRows[i], "CELL");
-
-            if (_SelectFlag && i == 0) {   //첫번째 row 선택지정 or 특정 row 선택
-                objTr.setAttribute("selected", "true");
-                objTr.style.backgroundColor = m_strColorSelect;
-
-                _firstRowID = _thisID + "_TR_" + i;
-            }
-            else {
-                objTr.setAttribute("selected", "false");
-                objTr.className = "";
-                objTr.style.backgroundColor = m_strColorDefault;
-            }
-
-            //DATA1, DATA2, DATA3... 등의 값 세팅
-            var oDatas = GetDataElements(oCells[0]);
-            for (var j = 0; j < oDatas.length; j++) {
-                var strData = oDatas[j].tagName;
-                var strValue = "";
-                if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
-                    strValue = oDatas[j].firstChild.nodeValue;
-
-                objTr.setAttribute(strData, strValue);
-            }
-
-            oTbody.appendChild(objTr);
-
-            var colcnt = oCells.length;
-            if (HeaerCnt < colcnt)
-                colcnt = HeaerCnt;
-
-            //for (var j = 0; j < oCells.length; j++) {
-            for (var j = 0; j < colcnt; j++) {
-
-                var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
-                var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
-                var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
-
-                var oText = document.createTextNode(strValue);
-                var objTd = document.createElement("TD");
-
-                if (strStyle != "") {
-                    /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-                	if (!CrossYN()) {
-                        objTd.style.setAttribute("cssText", strStyle);
-                    }
-                    else {
-                        strStyle = strStyle.replace(/center/, "-moz-center");
-                        objTd.setAttribute("style", strStyle);
-                    }
-                }
-                if (strClass != "") {
-                    objTd.className = strClass;
-                }
-                else {
-
-                    // 2011.12.07
-                    objTd.className = "l_txt";
-                    objTd.style.overflow = "hidden";
-
-                    if (!_SetHeightFree)
-                        objTd.height = "24";
-
-                    if (_titleIdx == null) { //하단정보탭일경우                       
-                        if (_Align[j] == 0)
-                            objTd.align = "left"; //objTd.className = "kt_li_pop_left";
-                        else
-                            objTd.align = "center"; //objTd.className = "kt_li_pop_center";
-                    }
-                    else {  //상단 리스트일경우
-
-                        //  if (_titleIdx == j) {
-                        objTd.title = strValue;
-                        objTd.style.overflow = "hidden";
-                        objTd.style.textOverflow = "ellipsis";
-                        objTd.style.whiteSpace = "nowrap";
-
-                        if (_titleIdx == j) {
-                            if (_UrgentFlag && oDatas[13].textContent == "Y") {   //DATA14값
-                                objTd.style.color = m_UrgentColor;
-                            }
-                            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-                            if (CrossYN()) {
-                                objTd.setAttribute("width", "80%"); // objTd.setAttribute("width", strWidth + "px");
-                            }
-                            else {
-                                objTd.width = "80%"; // objTd.width = strWidth + "px";
-                            }
-
-                        }
-
-                        if (_Align[j] == 0)
-                            objTd.align = "left"; //objTd.className = "kt_li_left";
-                        else
-                            objTd.align = "center"; //objTd.className = "kt_li_center";
-                    }
-
-                }
-
-                if (_rowCount < 100) {
-                    if (_SecIdx != j) {
-                        if (_UrgentFlag && _titleIdx == j) {       //2010.05.04 제목 긴급일 경우 붉은색 처리로 추가함.
-                            objTd.onmouseover = new Function("td_mouseover(this, " + _titleIdx + ")");
-                            objTd.onmouseout = new Function("td_mouseout(this, " + _titleIdx + ")");
-                        }
-                        else {
-                            objTd.onmouseover = new Function("td_mouseover(this)");
-                            objTd.onmouseout = new Function("td_mouseout(this)");
-                        }
-                    }
-                }
-
-                objTd.appendChild(oText);
-                objTr.appendChild(objTd);
-
-                objTd = null;
-                oText = null;
-            }
-
-            objTr = null;
-            oCells = null;
-            oDatas = null;
-        }
-        oRows = null;
-
-        return oTbody;
-    }
-    
-    
 
     //리스트뷰 바디 생성
     function GetTableBodyObj() {
@@ -742,24 +558,34 @@ function ListView() {
 
         var oRows = _dataSource.getElementsByTagName("ROW");
         _rowCount = oRows.length;
-        
-        var oHeaders = _dataSource.getElementsByTagName("HEADER");
-        var colCount = oHeaders.length;
 
-       /* if(_rowCount == 0)
-        {
+        var oHeaders;
+        var colCount;
+        if (CrossYN()) {
+            oHeaders = _dataSource.getElementsByTagName("HEADER");
+            colCount = oHeaders.length;
+        }
+        else {
+            oHeaders = _dataSource.selectNodes("LISTVIEWDATA/HEADERS/HEADER");
+            colCount = oHeaders.length;
+            if (colCount == 0) {
+                oHeaders = _dataSource.getElementsByTagName("HEADER");
+                colCount = oHeaders.length;
+            }
+        }
+        if (_rowCount == 0) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
             oTbody.appendChild(objTr);
-            var oText = document.createTextNode(strLang535);
+            var oText = document.createTextNode(strLang500);
             var objTd = document.createElement("TD");
             objTd.align = "center";
             objTd.colSpan = colCount;
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
 
-             return oTbody;
-        }*/
+            return oTbody;
+        }
         for (var i = 0; i < oRows.length; i++) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + i);
@@ -784,94 +610,148 @@ function ListView() {
             if (_SelectFlag && i == 0) {   //첫번째 row 선택지정 or 특정 row 선택
                 objTr.setAttribute("selected", "true");
                 objTr.style.backgroundColor = m_strColorSelect;
-
-                _firstRowID = _thisID + "_TR_" + i;      
+                _firstRowID = _thisID + "_TR_" + i;
             }
             else {
                 objTr.setAttribute("selected", "false");
                 objTr.className = "";
                 objTr.style.backgroundColor = m_strColorDefault;
             }
-
             //DATA1, DATA2, DATA3... 등의 값 세팅
             var oDatas = GetDataElements(oCells[0]);
             for (var j = 0; j < oDatas.length; j++) {
-                var strData = oDatas[j].tagName;
-                var strValue = "";
-                if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
-                    strValue = oDatas[j].firstChild.nodeValue;
-
-                objTr.setAttribute(strData, strValue);
+        		var strData = oDatas[j].tagName;
+        		var strValue = "";
+        		if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
+        			strValue = oDatas[j].firstChild.nodeValue;
+        		
+        		objTr.setAttribute(strData, strValue);
             }
 
             oTbody.appendChild(objTr);
 
-            for (var j = 0; j < oCells.length; j++) {
+            for (var j = 1; j < oCells.length; j++) {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
                 var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
                 var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
+                var schApproveFlag;
 
-                var oText = document.createTextNode(strValue);
+                var oText;
+
+                if (j == 1) {
+                	schApproveFlag = strValue;
+                    oText = document.createElement("span");
+                    if (strValue == 1) {
+                        oText.className = "sub_iconLNB tree_resource_ok";
+                        oText.style.marginTop = "0px";
+                        oText.style.marginLeft = "5px";
+                    }
+                    else if (strValue == 0) {
+                    	oText.className = "sub_iconLNB tree_resource_no";
+                    	oText.style.marginTop = "0px";
+                    	oText.style.marginLeft = "5px";
+                    }
+                    else {
+                    	oText.className = "sub_iconLNB tree_resource_refuse";
+                    	oText.style.marginTop = "0px";
+                    	oText.style.marginLeft = "5px";
+                    }
+                }
+                else if (j == 7) {
+                    oText = document.createElement("IMG");
+                    if (strValue == 1) {
+                        oText.src = "/images/checkblue.png";
+                        oText.style.width = "16px";
+                        oText.style.paddingLeft = "17px";
+                    }
+                    else {
+                        oText.src = "";
+                        oText.style.display = "none";
+                    }
+                }
+                else if (j == 8) {
+                	var returnStatus;
+                	if(schApproveFlag == 1) {
+	                	if(returnFlagarr[i] == 1) {
+		                	if(strValue == 0) {
+		                		returnStatus = strLang325;
+		                	}
+		                	else {
+		                		returnStatus = strLang326;
+		                	}
+	                	}
+	                	else {
+	                		returnStatus = strLang323;
+	                	}
+                	}
+                	else if(schApproveFlag == 0) {
+                		returnStatus = strLang321;
+                	}
+                	else {
+                		returnStatus = strLang322;
+                	}
+                	oText = document.createTextNode(returnStatus);
+                }
+                else
+                    oText = document.createTextNode(strValue);
+
                 var objTd = document.createElement("TD");
 
-                objTd.style.overflow = "hidden";
-                objTd.style.textOverflow = "ellipsis";
-                objTd.style.whiteSpace = "nowrap";
-
                 if (strStyle != "") {
-                    /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-                	if (!CrossYN()) {
+                    if (!CrossYN()) {
                         objTd.style.setAttribute("cssText", strStyle);
                     }
                     else {
                         strStyle = strStyle.replace(/center/, "-moz-center");
                         objTd.setAttribute("style", strStyle);
                     }
-                }               
+                }
                 if (strClass != "") {
                     objTd.className = strClass;
                 }
                 else {
-                    
-                    if(!_SetHeightFree)
-                        objTd.height = "24";                    
-                        
-                    if (_titleIdx == null) { //하단정보탭일경우                       
-                        if (_Align[j] == 0)
-                            objTd.align = "left";//objTd.className = "kt_li_pop_left";
-                        else
-                            objTd.align = "center";//objTd.className = "kt_li_pop_center";
-                    }
-                    else {  //상단 리스트일경우
-                      
-                      //  if (_titleIdx == j) {
+
+                    if (!_SetHeightFree)
+                        //objTd.height = "24";                    
+
+                        if (_titleIdx == null) { //하단정보탭일경우                       
+                            if (_Align[j] == 0)
+                                objTd.align = "left";//objTd.className = "kt_li_pop_left";
+                            else
+                                objTd.align = "center";//objTd.className = "kt_li_pop_center";
+                        }
+                        else {  //상단 리스트일경우
                             objTd.title = strValue;
                             objTd.style.overflow = "hidden";
                             objTd.style.textOverflow = "ellipsis";
-                            objTd.style.whiteSpace = "nowrap";                           
+                            objTd.style.whiteSpace = "nowrap";
 
-                        if (_titleIdx == j) {
-                            if (_UrgentFlag && oDatas[13].textContent == "Y") {   //DATA14값
-                                objTd.style.color = m_UrgentColor;
-                            }
-                            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-                            if (CrossYN()) {
-                                objTd.setAttribute("width", "80%");// objTd.setAttribute("width", strWidth + "px");
-                            }
-                            else {
-                                objTd.width = "80%";// objTd.width = strWidth + "px";
+                            if (_titleIdx == j) {
+                                if (CrossYN()) {
+                                    if (_UrgentFlag && oDatas[13].textContent == "Y") {   //DATA14값
+                                        objTd.style.color = m_UrgentColor;
+                                    }
+                                }
+                                else {
+                                    if (_UrgentFlag && oDatas[13].text == "Y") {   //DATA14값
+                                        objTd.style.color = m_UrgentColor;
+                                    }
+                                }
+                                if (CrossYN()) {
+                                    objTd.setAttribute("width", "80%");// objTd.setAttribute("width", strWidth + "px");
+                                }
+                                else {
+                                    objTd.width = "80%";// objTd.width = strWidth + "px";
+                                }
+                                objTd.className = "title";
                             }
 
+                            if (_Align[j] == 0)
+                                objTd.align = "left";//objTd.className = "kt_li_left";
+                            else
+                                objTd.align = "center";//objTd.className = "kt_li_center";
                         }
-                    
-                        if (_Align[j] == 0)
-                            objTd.align = "left";//objTd.className = "kt_li_left";
-                        else
-                            objTd.align = "center";//objTd.className = "kt_li_center";
-                    }
-
                 }
-
                 if (_rowCount < 100) {
                     if (_SecIdx != j) {
                         if (_UrgentFlag && _titleIdx == j) {       //2010.05.04 제목 긴급일 경우 붉은색 처리로 추가함.
@@ -885,13 +765,24 @@ function ListView() {
                     }
                 }
 
-                objTd.appendChild(oText);
-                objTr.appendChild(objTd);
+                if (strValue == "CHECK") {
+                    var oInput = document.createElement("INPUT");
+                    if (CrossYN())
+                        oInput.id = oDatas[0].textContent + ";";
+                    else
+                        oInput.id = oDatas[0].text + ";";
 
+                    oInput.type = "checkbox";
+                    oInput.onclick = new Function("chk_onselect(this)");                   
+                    objTd.appendChild(oInput);
+                }
+                else {
+                    objTd.appendChild(oText);
+                }
+                objTr.appendChild(objTd);
                 objTd = null;
                 oText = null;
             }
-
             objTr = null;
             oCells = null;
             oDatas = null;
@@ -935,8 +826,7 @@ function ListView() {
             var objTd = document.createElement("TD");
 
             if (strStyle != "") {
-                /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-            	if (!CrossYN()) {
+                if (!CrossYN()) {
                     objTd.style.setAttribute("cssText", strStyle);
 
                 }
@@ -949,21 +839,6 @@ function ListView() {
             if (strClass != "") {
                 objTd.className = strClass;
             }
-            else {
-                /*
-                if (_titleIdx == j || (_titleIdx == null && j == oCells.length - 1)) {
-                    //objTd.className = "kt_li_left";
-                    objTd.title = strValue;
-                }
-                
-                else
-                    objTd.className = "kt_li_center";
-
-                objTd.style.overflow = "hidden";
-                objTd.style.textOverflow = "ellipsis";
-                objTd.style.whiteSpace = "nowrap";
-                */
-            }
             
             if (_Align[j] == 0)
                 objTd.align = "left";
@@ -974,37 +849,9 @@ function ListView() {
                 objTd.onmouseover = new Function("td_mouseover(this)");
                 objTd.onmouseout = new Function("td_mouseout(this)");
             }
-
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
 
-			/* 2024-07-18 조소정 - 일정관리 > 그룹일정 작성 권한 기능 추가 */
-            if (type == "group") {
-			    var extTd = document.createElement("TD");
-			    var cb = document.createElement("INPUT");
-			    var curID = getNodeText(GetElementsByTagName(addXml, "DATA1")[0]);
-			    cb.id = "cb_" + curID;
-			    cb.type = "checkbox";
-			    cb.setAttribute("destID", curID);
-			    
-			    if (typeof mList !== 'undefined' && Array.isArray(mList)) {
-			    	var member = mList.find(function(m) {
-			        	return m.memberId === curID;
-			    	});
-			
-			    	if (member && member.writePermission === "Y") {
-			    		cb.setAttribute("checked", "checked");
-			    	}
-			    }
-			    else {
-			    	cb.setAttribute("checked", "checked");
-			    }
-			    
-			    extTd.appendChild(cb);
-			    extTd.innerHTML += ezSchedule_csj1;
-			    objTr.appendChild(extTd);
-            }
-            
             objTd = null;
             oText = null;
         }
@@ -1119,7 +966,6 @@ function ListView() {
             pIdx = 0;
 
         var objTr = null;
-        /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
         if (!CrossYN()) {
             //테이블 객체의 인덱스는 헤더를 포함하기 때문에 1을 더해서 인서트 한다.
             objTr = oList.insertRow((pIdx + 1));
@@ -1165,7 +1011,6 @@ function ListView() {
             pIdx = 0;
 
         var objTr = null;
-        /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
         if (!CrossYN()) {
             //테이블 객체의 인덱스는 헤더를 포함하기 때문에 1을 더해서 인서트 한다.
             objTr = oList.insertRow((pIdx + 1));
@@ -1378,8 +1223,7 @@ function ListView() {
     //사용자 브라우저 확인
     //IE가 아닌경우 OCS Presence 무조건 사용안함
     function SetUserBrower() {
-        /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-    	if (CrossYN()) {
+        if (CrossYN()) {
             _IE = false;
             _useOcs = false;
         }
@@ -1395,58 +1239,66 @@ function ListView() {
 
 //ROW 선택 함수
 function tr_select(pRowID, pTableID, callbackFunc) {
+    if (!listEventCheckbox) {
+        var oList = document.getElementById(pTableID);
+        if (!oList)
+            return;
 
-    var oList = document.getElementById(pTableID);
-    if (!oList)
-        return;
+        var oSourceTr = document.getElementById(pRowID);
+        if (!oSourceTr)
+            return;
 
-    var oSourceTr = document.getElementById(pRowID);
-    if (!oSourceTr)
-        return;
+        var bMultiSelectable = false;
+        var strAttribute = GetAttribute(oList, "multiselectable");
+        if (strAttribute == "true") {
+            bMultiSelectable = true;
+        }
 
-    var bMultiSelectable = false;
-    var strAttribute = GetAttribute(oList, "multiselectable");
-    if (strAttribute == "true") {
-        bMultiSelectable = true;
+        //멀티선택이 가능한 리스트이고 쉬프트키가 눌려져 있으면
+        //구간을 모두 선택한다.
+        if (bMultiSelectable && PressShiftKey) {
+            tr_selectBlock(pRowID, pTableID);
+            return;
+        }
+
+        //멀티선택이 불가능한 리스트이거나 컨트롤키가 눌려있지 않으면 
+        //모든 선택된 Row를 Unselect 한다.
+        if (bMultiSelectable == false || PressCtrlKey == false)
+            tr_unselectedAll(pTableID);
+
+        //현재 클릭한 Row를 Select 한다.
+        //strAttribute = GetAttribute(oSourceTr, "selected");
+
+        if (oSourceTr.childNodes[0].childNodes[0].checked) {
+            oSourceTr.setAttribute("selected", "false");
+            oSourceTr.childNodes[0].childNodes[0].checked = false;
+            oSourceTr.style.backgroundColor = m_strColorDefault;
+        }
+        else {
+            oSourceTr.setAttribute("selected", "true");
+            oSourceTr.childNodes[0].childNodes[0].checked = true;
+            oSourceTr.style.backgroundColor = m_strColorSelect;
+        }
+
+        //각 리스트마다 마지막으로 선택한 ID를 보관한다.
+        oList.setAttribute("lastSelectedRowID", pRowID);
+        oList = null;
+        oSourceTr = null;
+
+        //리스트에 onclick 이벤트를 지정한 경우 해당 함수를 호출한다.
+        if (PressCtrlKey == false && PressShiftKey == false) {
+            if (callbackFunc && typeof (callbackFunc) == "function")
+                callbackFunc(pRowID);
+        }
+
+        //리스트에 onclick 이벤트를 지정한 경우 해당 함수를 호출한다.
+        if (PressCtrlKey == true || PressShiftKey == true) {
+            if (callbackFunc && typeof (callbackFunc) == "function")
+                callbackFunc(pRowID);
+        }
     }
-
-    //멀티선택이 가능한 리스트이고 쉬프트키가 눌려져 있으면
-    //구간을 모두 선택한다.
-    if (bMultiSelectable && PressShiftKey) {
-        tr_selectBlock(pRowID, pTableID);
-        return;
-    }
-
-    //멀티선택이 불가능한 리스트이거나 컨트롤키가 눌려있지 않으면 
-    //모든 선택된 Row를 Unselect 한다.
-    if (bMultiSelectable == false || PressCtrlKey == false)
-        tr_unselectedAll(pTableID);       
-
-    //현재 클릭한 Row를 Select 한다.
-    strAttribute = GetAttribute(oSourceTr, "selected");
-
-    if (strAttribute == "true") {
-        oSourceTr.setAttribute("selected", "false");
-        //oSourceTr.className = "";
-        oSourceTr.style.backgroundColor = m_strColorDefault;
-    }
-    else {
-        oSourceTr.setAttribute("selected", "true");
-        //oSourceTr.className = "kt_li_tr";
-        oSourceTr.style.backgroundColor =  m_strColorSelect;
-    }
-
-    //각 리스트마다 마지막으로 선택한 ID를 보관한다.
-    oList.setAttribute("lastSelectedRowID", pRowID);
-
-    oList = null;
-    oSourceTr = null;
-
-    //리스트에 onclick 이벤트를 지정한 경우 해당 함수를 호출한다.
-    if (PressCtrlKey == false && PressShiftKey == false) {
-        if (callbackFunc && typeof (callbackFunc) == "function")
-            callbackFunc(pRowID);
-    }
+    else
+        listEventCheckbox = false;
 }
 
 //모든 ROW를 선택 해제하는 함수
@@ -1455,26 +1307,16 @@ function tr_unselectedAll(pTableID) {
     if (!oList)
         return;
 
-    for (var i = 0; i < oList.rows.length; i++) {
-        //헤더를 제거하기 위해 ID를 검사한다.
-        /*if (oList.rows[i].id.indexOf("TR") >= 0)
-        {
-        oList.rows[i].setAttribute("selected", false);
-        oList.rows[i].className = "";
-        }*/
-        //var strID = pTableID + "_TR_" + i;
-        var strID ;
-       if(oList.rows[i].id.indexOf(pTableID)>-1)
-        strID = oList.rows[i].id;
-        var objTr = document.getElementById(strID);
+    var SelList = new ListView();
+    SelList.LoadFromID("resourceListView");
 
-        if (objTr) {
-            objTr.setAttribute("selected", false);
-            objTr.className = "";
-            objTr.style.backgroundColor =  m_strColorDefault;
-        }
-        objTr = null;
+    for (var i = 0; i < SelList.GetRowCount() ; i++) {
+        SetAttribute(SelList.GetDataRows()[i], "selected", "false");
+        SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+        SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+        strListInfo = "";
     }
+    
 }
 
 //컨트롤 혹은 쉬프트 키를 이용한 멀티 선택 함수
@@ -1510,7 +1352,8 @@ function tr_selectBlock(pRowID, pTableID) {
         var objTr = document.getElementById(strID);
 
         if (objTr) {
-            objTr.setAttribute("selected", true);
+        	objTr.firstChild.firstChild.checked = true;
+            objTr.setAttribute("selected", "true");
             objTr.style.backgroundColor = m_strColorSelect;
         }
 
@@ -1520,9 +1363,10 @@ function tr_selectBlock(pRowID, pTableID) {
 
 //마우스 오버
 function tr_mouseover(pRow) {
+
     var strAttribute = GetAttribute(pRow, "selected");
-    if (strAttribute != "true") {
-        pRow.style.backgroundColor=m_strColorOver;      
+    if (pRow.childNodes[0].childNodes[0].checked != true && strAttribute != "true") {
+        pRow.style.backgroundColor = m_strColorOver;
 
     }
 
@@ -1532,10 +1376,10 @@ function tr_mouseover(pRow) {
 //마우스 아웃
 function tr_mouseout(pRow) {
     var strAttribute = GetAttribute(pRow, "selected");
-    if (strAttribute != "true")
-        pRow.style.backgroundColor=m_strColorDefault;
+    if (pRow.childNodes[0].childNodes[0].checked != true && strAttribute != "true")
+        pRow.style.backgroundColor = m_strColorDefault;
     else
-        pRow.style.backgroundColor=m_strColorSelect;
+        pRow.style.backgroundColor = m_strColorSelect;
 
     pRow = null;
 }
@@ -1640,7 +1484,7 @@ function getOriginXML(pTagetID)
        
         alert(objBodyData[i].cells.length);
         xmlBody += "<ROW><CELL>";
-        xmlBody += "<VALUE><![CDATA[" + objBodyData[i].innerText + "]]></VALUE>";
+        xmlBody += "<VALUE>" + objBodyData[i].innerText + "</VALUE>";
         for(var x=0; x<1; x++)
         {
             //debugger;
@@ -1649,4 +1493,51 @@ function getOriginXML(pTagetID)
         xmlBody += "</CELL></ROW>";
     } 
     //alert(xmlHeader + "\r\n" + xmlBody);
+}
+
+function event_HeaderCheckBoxClick(obj) {
+
+    var SelList = new ListView();
+    SelList.LoadFromID("resourceListView");
+    
+    if (obj.checked) {
+        strListInfo = "";
+        for (var i = 0; i < SelList.GetRowCount() ; i++) {
+            if (i == 0)
+                SelList.GetDataRows()[0].onclick();
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+            SelList.GetDataRows()[i].setAttribute("selected", "true")
+            SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
+        }
+    }
+    else {
+        for (var i = 0; i < SelList.GetRowCount() ; i++) {
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].setAttribute("selected", "false")
+            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+            strListInfo = "";
+        }
+    }
+}
+
+function chk_onselect(obj) {
+
+    if (obj.checked) {
+        strListInfo += obj.id;
+    } else {
+        strListInfo = ReplaceText(strListInfo, obj.id, "");
+    }
+    listEventCheckbox = true;
+
+    if (obj.checked) {
+        obj.checked = true;
+        obj.parentElement.parentElement.setAttribute("selected", "true");
+        obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
+    }
+    else {
+        obj.checked = false;
+        obj.parentElement.parentElement.setAttribute("selected", "false");
+        obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
+    }
+
 }
