@@ -927,20 +927,56 @@
                 sDuration = event.duration;
             }
 			
-			
+			var schedule_print_dialogArguments = PrintModeSelect;
+            var schedule_print_data = new Array();
             function PrintSchedule() {
-                var year = sStartDate.split("-")[0];
-                var month = sStartDate.split("-")[1];
-                var day = sStartDate.split("-")[2];
-                var view = typeCal;
-                var date = year + "-" + month + "-" + day;
-                if (idlist == "")
-                    idlist = idtype;
-                var feature = GetOpenPosition(837, 660);
-                if (idlist == "G")
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
-                else
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                parent.frames["left"].document.body.style.overflow = "hidden";
+                
+                var leftFrameDocument = parent.frames["left"].document;
+                var newDiv = leftFrameDocument.createElement("div");
+                newDiv.id = "blockLeft";
+                newDiv.className = "blockLeft";
+                newDiv.style.position = "fixed";
+                newDiv.style.width = "100%";
+                newDiv.style.height = "100%";
+                newDiv.style.overflow = "hidden";
+                newDiv.onclick = function() {
+                    parent.frames["right"].BoardSearchOptionHidden();
+                };
+            
+                var leftDiv = leftFrameDocument.getElementById("left");
+                if (leftDiv) {
+                    leftDiv.insertAdjacentElement('afterend', newDiv);
+                }
+                
+                DivPopUpShow(350, 350, "/ezSchedule/schedulePrintMode.do");
+                
+            }
+            
+            function PrintModeSelect(rtn) {
+                DivPopUpHidden();
+                var curURL = "";
+                if (rtn == "list") {
+                
+                    var year = sStartDate.split("-")[0];
+                    var month = sStartDate.split("-")[1];
+                    var day = sStartDate.split("-")[2];
+                    var view = typeCal;
+                    var date = year + "-" + month + "-" + day;
+                    var feature = GetOpenPosition(837, 660);
+                    
+                    if (idlist == "")
+                        idlist = idtype;
+                    if (idlist == "G")
+                        curURL = "/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&groupid=" + groupid;
+                    else
+                        curURL = "/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view;
+                    
+                    window.open(curURL, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                } else {
+                    curURL = "/ezSchedule/schedulePrintCalendar.do?typeCal=" + typeCal + "&startDate=" + sStartDate + "&endDate=" + sEndDate;
+                    GetOpenWindow(curURL, "PrintSchedule", 1280, 1024, "YES");
+                }
             }
 			
             var schedule_repetition_del_dialogArugment = new Array();
