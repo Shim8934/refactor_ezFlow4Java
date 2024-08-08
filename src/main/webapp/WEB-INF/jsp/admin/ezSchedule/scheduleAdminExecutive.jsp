@@ -17,6 +17,7 @@
         var xmlhttp = createXMLHttpRequest();
         var isToggle = false;
         var selectedCompanyID = "";
+        var selectedCompanyName = "";
         
         document.onselectstart = function () {
             if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -42,13 +43,17 @@
 
         function schedule_get_executiveList() {
             selectedCompanyID = $("#ListCompany").val();
+            selectedCompanyName = $('#ListCompany option:selected').text();
+            
             $.ajax({
                 url : "/admin/ezSchedule/scheduleGetExecutiveList.do",
                 type : "GET",
                 dataType : "xml",
                 async : true,
                 cache : false,
-                data : {companyID : selectedCompanyID},
+                data : {companyID : selectedCompanyID,
+                    companyName : selectedCompanyName
+                },
                 success : function(text){
                     MakeSliderList(text);
                 }
@@ -324,6 +329,7 @@
             }
             
             selectedCompanyID = $("#ListCompany").val();
+            selectedCompanyName = $('#ListCompany option:selected').text();
             $.ajax({
                 url : "/admin/ezSchedule/scheduleGetExecutiveList.do",
                 type : "GET",
@@ -332,7 +338,8 @@
                 cache : false,
                 data : {
                     keyword : keyword.value,
-                    companyID : selectedCompanyID
+                    companyID : selectedCompanyID,
+                    companyName : selectedCompanyName
                 },
                 success : function(text){
                     MakeSliderList(text);

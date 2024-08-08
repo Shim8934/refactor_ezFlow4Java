@@ -37,7 +37,7 @@ public interface EzScheduleAdminService {
 	
 	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId ,String companyID) throws Exception;
 	
-	public String scheduleGetExecutiveList(String cn, String companyID, int tenantId, String offset, String keyword, String lang) throws Exception;
+	public String scheduleGetExecutiveList(String cn, String companyID, int tenantId, String offset, String keyword, String lang, String companyName) throws Exception;
 	
 	public void scheduleSaveExecutive(String userID, int priority, String usage, String createUser, String companyID, int tenantID) throws Exception;
 	

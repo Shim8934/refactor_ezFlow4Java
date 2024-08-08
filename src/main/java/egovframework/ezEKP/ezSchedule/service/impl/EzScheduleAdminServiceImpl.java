@@ -240,13 +240,14 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 	}
 
 	@Override
-	public String scheduleGetExecutiveList(String cn, String companyID, int tenantID, String offset, String keyword, String lang) throws Exception {
+	public String scheduleGetExecutiveList(String cn, String companyID, int tenantID, String offset, String keyword, String lang, String companyName) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("cn", cn);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_KEYWORD", keyword);
 		map.put("v_LANG", lang);
+		map.put("v_COMPANYNAME", companyName);
 
 		List<ScheduleExecutiveVO> list = ezScheduleAdminDAO.scheduleGetExecutiveList(map);
 

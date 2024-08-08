@@ -975,6 +975,7 @@ public class EzScheduleAdminController {
 		loginVO = commonUtil.userInfo(loginCookie);
 
 		String companyID = request.getParameter("companyID");
+		String companyName = request.getParameter("companyName");
 		String cn = request.getParameter("userID");
 		int tenantID = loginVO.getTenantId();
 		String keyword = request.getParameter("keyword");
@@ -984,7 +985,7 @@ public class EzScheduleAdminController {
 			companyID = loginVO.getCompanyID();
 		}
 		
-		String result = ezScheduleAdminService.scheduleGetExecutiveList(cn, companyID, tenantID, loginVO.getOffset(), keyword, lang);
+		String result = ezScheduleAdminService.scheduleGetExecutiveList(cn, companyID, tenantID, loginVO.getOffset(), keyword, lang, companyName);
 		
 		logger.debug("============ scheduleGetExecutiveList ended ============");
 		return result;
@@ -1051,6 +1052,10 @@ public class EzScheduleAdminController {
 		String flag = request.getParameter("flag");
 		int priority = Integer.parseInt(request.getParameter("priority"));
 		String createUser = loginVO.getId();
+		
+		if (!loginVO.getCompanyID().equals(companyID)) {
+			companyID = loginVO.getCompanyID();
+		}
 		
 		LoginVO tempLoginVO = new LoginVO();
 		tempLoginVO.setId(userID);

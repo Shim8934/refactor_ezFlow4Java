@@ -473,7 +473,7 @@
 	</delete>
 
 	<select id="EzScheduleAdminDAO.scheduleGetExecutiveList" parameterClass="map" resultMap="ScheduleExecutiveVO">
-		select
+		select distinct 
 			a.PRIORITY,
 			a.cn,
 			case #v_LANG#
@@ -505,6 +505,16 @@
 		where
 			a.COMPANYID = #v_COMPANYID#
 			and a.tenant_id = #v_TENANTID#
+		<isNotEmpty property="v_COMPANYNAME">
+			<isEqual property="v_LANG" compareValue="1">
+				and b.company = #v_COMPANYNAME#
+				and c.company = #v_COMPANYNAME#
+			</isEqual>
+			<isNotEqual property="v_LANG" compareValue="1">
+				and b.company2 = #v_COMPANYNAME#
+				and c.company2 = #v_COMPANYNAME#
+			</isNotEqual>
+		</isNotEmpty>
 		<isNotEmpty property="cn">
 			and a.cn = #cn#
 		</isNotEmpty>
