@@ -116,12 +116,11 @@
 			</ul>
 			<div class="lnb_menu_all" id="menuAllContainer" style="left:-1080px;">
 	            <div class="lnb_menu_setting" id="menuSettingElem">
-	                <div class="menu_set" id="editBtn">
-	                    <p><spring:message code="ezNewPortal.topMenu.hth09" /></p>
-	                </div>
-
 	                <div class="set_btn" id="editMenuBtn">
 	                    <span id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span><span id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>
+	                </div>
+	                <div class="menu_set">
+	                    <span><spring:message code="ezNewPortal.topMenu.hth09" /></span>
 	                </div>
 	            </div>
 
@@ -153,7 +152,7 @@
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	<script type="text/javascript">
-		var connectMenuId = -1;
+		var connectMenuId = -1; // 웹페이지 연계메뉴는 -1로 고정
 		var maxMenuCount = 7;
 		// 상단 메뉴시 화면 작아질시 좌측으로 이동 함수 start(테스트용/UIUX-조기완)
 		/* function calcWidth(obj){
@@ -663,7 +662,7 @@
 				
 				var item = menuList[i];
 				if (item.menuId == connectMenuId) {
-					return; //연계메뉴 표출 x
+					continue; //연계메뉴 표출 x
 				}
 				// 컨텍스트메뉴와 연동하기 위함.
 				if(item.menuUrl.indexOf('ezMemo') > -1 && item.menuUsed) {
@@ -758,7 +757,6 @@
 
 			// 하단 메뉴 변경
 			var editMenuBtn = document.getElementById('editMenuBtn');
-			document.getElementById("editBtn").style.display = "none";
 			editMenuBtn.style.display = 'block';
             $("#menuAllContainer ul").addClass("active");
 		}
@@ -772,7 +770,6 @@
 			var editMenuCancel = document.getElementById('editMenuCancel');
 			editMenuCancel.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
-				document.getElementById("editBtn").style.display = "block";
 				document.getElementById('editMenuBtn').style.display = 'none';
 				$("#menuAllContainer ul").removeClass("active");
 				
@@ -790,7 +787,6 @@
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
-				document.getElementById("editBtn").style.display = "block";
 				document.getElementById('editMenuBtn').style = 'none';
 				$("#menuAllContainer ul").removeClass("active");
 				 

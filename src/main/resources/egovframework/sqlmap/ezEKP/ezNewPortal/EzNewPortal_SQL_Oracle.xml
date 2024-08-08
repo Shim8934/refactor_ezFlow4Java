@@ -2416,7 +2416,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
             	THEME.is_fixed as isFixed,
             	A.portletcode,
             	MENU.menucode,
-            	CS.CLASS_SIZE_RESULT AS classSize
+            	CS.CLASS_SIZE_RESULT AS classSize,
+            	COMP.connection_id as portletConnectionId
 		]]>
 		
 		<isEmpty property="deptId" prepend=",">

@@ -146,7 +146,7 @@
 		var useVietnamese = "${useVietnamese}";
 		var useIndonesian = "${useIndonesian}";
 		var webType = "${type}";
-		const connectMenuId = -1; //연계메뉴 아이디는 -1 로 고정
+		const connectMenuId = "${connectMenuId}"; 
 
 		// 일반 게시판 포틀릿의 표출 타입 enum.
 		var BoardViewType = Object.freeze({

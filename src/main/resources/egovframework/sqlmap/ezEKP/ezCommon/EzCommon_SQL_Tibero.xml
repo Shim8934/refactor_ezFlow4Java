@@ -5378,28 +5378,34 @@
 	
 	<insert id="EzCommonDAO.insertConnectionMenu" parameterClass="Map">
 	<![CDATA[
-		INSERT INTO TBL_PORTAL_MENU 
-			(menu_id, menu_url, menu_type, icon_url, default_order, menucode)
-		VALUES
-			(-1, '/connectionMenu.do', 'G', 'icon_topmenu icon_nav_connection', 999, 'connectPortlet')
+		INSERT ALL
+			INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) 
+			VALUES (-1, '/connectionMenu.do', 'G', 'icon_topmenu icon_nav_connection', -1, 'connectPortlet')
+			INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) 
+			VALUES (-2, '/connectionMenu.do', 'MG', 'icon_topmenu icon_nav_connection', -2, 'connectPortlet')
+		SELECT * FROM dual
 	]]>
 	</insert>
 	
 	<insert id="EzCommonDAO.insertConnectionMenuComp" parameterClass="Map">
 	<![CDATA[
-		INSERT INTO TBL_PORTAL_MENU_COMP 
-			(company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
-		VALUES
-			(#companyId#, #tenantId#, -1, 1, 1, 999)
+		INSERT ALL
+			INTO TBL_PORTAL_MENU_COMP (company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+			VALUES (#companyId#, #tenantId#, -1, 1, 1, -1)
+			INTO TBL_PORTAL_MENU_COMP (company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+			VALUES (#companyId#, #tenantId#, -2, 1, 1, -2)
+		SELECT * FROM dual
 	]]>
 	</insert>
 	
 	<insert id="EzCommonDAO.insertConnectionMenuAuth" parameterClass="Map">
 	<![CDATA[
-		INSERT INTO TBL_PORTAL_MENU_AUTH
-			(menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted)
-		VALUES
-			(-1, #companyId#, #tenantId#, #companyId#, 1, 0, 0, 'Y')
+		INSERT ALL
+			INTO TBL_PORTAL_MENU_AUTH (menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted)
+			VALUES (-1, #companyId#, #tenantId#, #companyId#, 1, 0, 0, 'Y')
+			INTO TBL_PORTAL_MENU_AUTH (menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted)
+			VALUES (-2, #companyId#, #tenantId#, #companyId#, 1, 0, 0, 'Y')
+		SELECT * FROM dual
 	]]>
 	</insert>
 	
@@ -5418,6 +5424,18 @@
 		    VALUES (-1, 5, #companyId#, #tenantId#, 'Connection')
 		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
 		    VALUES (-1, 6, #companyId#, #tenantId#, 'Connection')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+			VALUES (-2, 1, #companyId#, #tenantId#, '연계')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-2, 2, #companyId#, #tenantId#, 'Connection')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-2, 3, #companyId#, #tenantId#, '連携')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-2, 4, #companyId#, #tenantId#, '关联')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-2, 5, #companyId#, #tenantId#, 'Connection')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-2, 6, #companyId#, #tenantId#, 'Connection')
 	    SELECT * FROM DUAL
 	]]>
 	</insert>

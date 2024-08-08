@@ -110,7 +110,7 @@
 		var useVietnamese = "${useVietnamese}";
 		var useIndonesian = "${useIndonesian}";
 		var type = "${type}";
-		var connectMenuId = -1; // 연계메뉴 id는 -1
+		var connectMenuId = '<c:out value="${connectMenuId}"/>';
 		
 		$(function(){
 			getCompanies();
