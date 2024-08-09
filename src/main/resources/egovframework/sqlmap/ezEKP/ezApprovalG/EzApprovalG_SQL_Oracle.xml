@@ -329,7 +329,7 @@
 									AND DOCNO LIKE '%' || #DOCNO# || '%'
 								</isEqual>
 								<isEqual property="doctitleSearch" compareValue="1">
-								    AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+								    AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
 								</isEqual>
 								<isEqual property="writerNameSearch" compareValue="1">
 								    AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'
@@ -463,7 +463,7 @@
                                         AND DOCNO LIKE '%' || #DOCNO# || '%'
                                     </isEqual>
                                     <isEqual property="doctitleSearch" compareValue="1">
-                                        AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+                                        AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
                                     </isEqual>
                                     <isEqual property="writerNameSearch" compareValue="1">
                                         AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'
@@ -568,7 +568,7 @@
                                                 AND DOCNO LIKE '%' || #DOCNO# || '%'
                                             </isEqual>
                                             <isEqual property="doctitleSearch" compareValue="1">
-                                                AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+                                                AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
                                             </isEqual>
                                             <isEqual property="writerNameSearch" compareValue="1">
                                                 AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'
@@ -828,7 +828,7 @@
                                     AND DOCNO LIKE '%' || #DOCNO# || '%'
                                 </isEqual>
                                 <isEqual property="doctitleSearch" compareValue="1">
-                                    AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+                                    AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
                                 </isEqual>
                                 <isEqual property="writerNameSearch" compareValue="1">
                                     AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'
@@ -1137,7 +1137,7 @@
                                     AND DOCNO LIKE '%' || #DOCNO# || '%'
                                 </isEqual>
                                 <isEqual property="doctitleSearch" compareValue="1">
-                                    AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+                                    AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
                                 </isEqual>
                                 <isEqual property="writerNameSearch" compareValue="1">
                                     AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'
@@ -1356,7 +1356,7 @@
                                     AND DOCNO LIKE '%' || #DOCNO# || '%'
                                 </isEqual>
                                 <isEqual property="doctitleSearch" compareValue="1">
-                                    AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+                                    AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
                                 </isEqual>
                                 <isEqual property="writerNameSearch" compareValue="1">
                                     AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'
@@ -1640,7 +1640,7 @@
                                 AND DOCNO LIKE '%' || #DOCNO# || '%'
                             </isEqual>
                             <isEqual property="doctitleSearch" compareValue="1">
-                                AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+                                AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
                             </isEqual>
                             <isEqual property="writerNameSearch" compareValue="1">
                                 AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'
@@ -1883,7 +1883,7 @@
                                  AND DOCNO LIKE '%' || #DOCNO# || '%'
                              </isEqual>
                              <isEqual property="doctitleSearch" compareValue="1">
-                                 AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+                                 AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
                              </isEqual>
                              <isEqual property="writerNameSearch" compareValue="1">
                                  AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'
@@ -2101,7 +2101,7 @@
                                                                 AND DOCNO LIKE '%' || #DOCNO# || '%'
                                                             </isEqual>
                                                             <isEqual property="doctitleSearch" compareValue="1">
-                                                                AND DocTitle LIKE '%' || #DOCTITLE# || '%'
+                                                                AND DocTitle LIKE '%' || #DOCTITLE# || '%' ESCAPE '\'
                                                             </isEqual>
                                                             <isEqual property="writerNameSearch" compareValue="1">
                                                                 AND WRITERNAME2 LIKE '%' || #WRITERNAME# || '%'

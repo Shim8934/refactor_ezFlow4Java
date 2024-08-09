@@ -335,7 +335,6 @@
 						location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')), '%')
 				)
 			</isNotEmpty>
-            <![CDATA[
         	)
         	or  
        			(a.ownerid IN
