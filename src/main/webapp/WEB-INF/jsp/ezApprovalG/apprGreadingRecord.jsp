@@ -138,7 +138,8 @@
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {
-		            var toDay = new Date();
+		        	window.parent.frames.left.PresentOpen = "DOCMANAGE";
+		        	var toDay = new Date();
 		            var toDayYear = parseInt(toDay.getFullYear());
 		            var minusYear = parseInt(toDay.getFullYear()) - parseInt(pOpenYaer);
 		            for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
