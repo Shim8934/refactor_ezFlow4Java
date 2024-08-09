@@ -51,7 +51,6 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
-import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.let.user.login.service.LoginService;
@@ -90,9 +89,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	
 	@Resource(name = "EzPersonalService")
 	private EzPersonalService ezPersonalService;
-	
-	@Resource(name = "EzQuestionService")
-	private EzQuestionService ezQuestionService;
 	
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;

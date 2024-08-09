@@ -89,7 +89,7 @@
 		        
 		        if (Func == "1") {
 		            //WebPartToggle(level1El.item(level1El.length - 2));
-		            Open_Func(1);
+		            //Open_Func(1);
 		        }
 		        else if (Func == "3") {
 		        	//WebPartToggle(level1El.item(level1El.length - 1));
@@ -755,37 +755,10 @@
 		            treeView.DataBind('TreeCtrl_MyBoardTree');
 		        }
 		    }
-		    function Open_Func(idx) {
-		    	$("h2.on").attr("class", "off");
-		    	$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
-	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
-				
-				if (typeof window.parent.frames["right"] == "undefined") {
-					if (idx == 1) {
-						rightFrame.src = "/ezQuestion/qstList.do?brdID=5";
-					}
-					else {
-						rightFrame.src = "/ezQuestion/qstStep1.do?brdID=5";
-					}
-				}
-				else {
-			        if (CrossYN()) {
-			            if (idx == 1) {
-			                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
-			            }
-			            else {
-			                window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
-			            }
-			        } else {
-			            if (idx == 1)
-			                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
-			            else
-							window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
-			            SetTreeviewUnSelect("");
-			        }
-				}
-		    }
-
+		    
+		    /* 2024-08-09 홍승비 - 구버전 전자설문(설문조사) 모듈은 더이상 사용하지 않는 것으로 확인, 관련 함수 Open_Func() 및 URL 호출 제거 */
+		    // 신규 전자설문 모듈은 게시판 모듈과 분리되었음
+		    
 			function Poll_Open(idx) {
 				$("h2.on").attr("class", "off");
 				$("#TopBoardsList .lnbUL").attr("class","lnbUL off");

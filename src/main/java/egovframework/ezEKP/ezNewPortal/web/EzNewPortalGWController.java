@@ -86,7 +86,6 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
-import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
@@ -170,9 +169,6 @@ public class EzNewPortalGWController {
 
 	@Resource(name = "EzCircularService")
 	private EzCircularService ezCircularSerivce;
-
-	@Resource(name = "EzQuestionService")
-	private EzQuestionService ezQuestionService;
 
 	@Resource(name = "EzScheduleService")
 	private EzScheduleService ezScheduleService;
@@ -1859,15 +1855,6 @@ public class EzNewPortalGWController {
 			JSONObject data = new JSONObject();
 
 			logger.debug("useSurvey : " + useSurvey + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
-
-			// 전자 설문 개수 불러오기
-//			if (useQuestion.equals("YES")) {
-//				
-//				int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
-//				
-//				data.put("pollCount", pollCount);
-//				
-//			}
 			
 			if ("YES".equals(useSurvey)) {
 				int surveyCnt = ezSurveyService.getSurveyIngCnt(info);
@@ -4806,15 +4793,6 @@ public class EzNewPortalGWController {
 			JSONObject data = new JSONObject();
 
 			logger.debug("useSurvey : " + useSurvey + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
-
-			// 전자 설문 개수 불러오기
-			/*
-			if (useQuestion.equals("YES")) {
-				int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
-				
-				data.put("pollCount", pollCount);
-			}
-			*/
 			
 			if (useSurvey.equals("YES")) {
 				int surveyCnt = ezSurveyService.getSurveyIngCnt(info);
