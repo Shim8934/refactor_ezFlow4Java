@@ -797,7 +797,8 @@
             <td colspan="2" style="height:20px">
                 <div style="text-align:left; line-height:20px;">
 		      		<img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px;">
-		      		<span style="color:#3a76c3;height:18px;display:inline-block;"><spring:message code='ezSystem.HSBAppr02'/>${apprTotalAttachLimit}<spring:message code='ezSystem.HSBAppr03'/></span>
+                    <span style="color:#3a76c3;height:18px;display:inline-block;">${pAttachWarning0}</span><br>
+                    <span style="color:#3a76c3;height:18px;display:${spanDisplayStyle}; margin-left:29px;">${pAttachWarning1}</span>
 		      	</div>
             </td>
         </tr>
