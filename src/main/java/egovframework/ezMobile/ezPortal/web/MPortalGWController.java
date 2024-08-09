@@ -1165,7 +1165,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			int tenantId = info.getTenantId();
 			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의  포틀릿 아이디
 			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
-			int photoCount = 4;
+			int photoCount = Integer.parseInt(request.getParameter("listCnt"));
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone,top,Top," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
@@ -1573,12 +1573,21 @@ public class MPortalGWController extends EgovFileMngUtil {
 			}
 
 			Collections.sort(sList, new EzScheduleCompareUtil());
-
+			/* 페이징 처리
+			int listCnt = Integer.parseInt(request.getParameter("listCnt"));
+			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+			int totalCnt = sList.size();
+			int startRow = (currentPage - 1) * listCnt;
+			int endRow = Math.min(totalCnt, startRow + listCnt);
+			List<ScheduleInfoVO> resultList = null;
+			resultList = sList.subList(startRow, endRow);
+			*/
 			logger.debug("sList : " + sList.toString());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", sList);
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1680,7 +1689,39 @@ public class MPortalGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	@RequestMapping(value = "/mobile/ezPortal/portlets/resourcePortlet", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	// 자원관리 포틀릿 > 유저설정 자원 목록 가져오기
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezPortal/portlets/user/resource/list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getUserResourceList(HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W getUserResourceList started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			
+			List<ResBrdVO> resources = ezResourceService.getUserResourceList(userId, companyId, info.getDeptID(), info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", resources);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		logger.debug("MOBILE G/W getUserResourceList ended.");
+
+		return result;
+	}
+	
+	// 자원관리 포틀릿 > 자원별 예약 자원 목록 가져오기
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezPortal/portlets/resource/schedule/list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getResourcePortlet(HttpServletRequest request) throws Exception {
 		logger.debug("MOBILE G/W getResourcePortlet started.");
 
@@ -1688,9 +1729,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			String loginCookie = request.getParameter("loginCookie");
 			String userId = request.getParameter("userId");
 			String date = request.getParameter("date");
+			String brdId = request.getParameter("brdId");
+			String companyId = request.getParameter("companyId");
+			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+			int listCnt = Integer.parseInt(request.getParameter("listCnt"));
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
 			if(date == null) {
@@ -1698,16 +1742,11 @@ public class MPortalGWController extends EgovFileMngUtil {
 				return err;
 			}
 			
-			String type = "mobile";
-			
-			List<ResBrdVO> list = ezResourceService.getResourcePortlet(loginCookie, date, type, info);
-			JSONObject jObject = new JSONObject();
-			jObject.put("status", "ok");
-			jObject.put("list", list);
+			List<ResBrdVO> resScheList = ezResourceService.getResourceScheduleList(brdId, date, currentPage, listCnt, info.getTenantId(), companyId, info.getOffset(), info.getLang());
 
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", jObject);
+			result.put("data", resScheList);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result.put("status", "error");
