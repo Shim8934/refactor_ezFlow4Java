@@ -344,71 +344,71 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				
 				dataObject.put("scheduleInfo", vo);
 			} else {
-			//일정 정보
-			vo = mScheduleService.scheduleInfo(scheduleId, offSetMin, tenantId);
-			dataObject.put("scheduleInfo", vo);
-		
-			String itemID = vo.getContentPath();
-			logger.debug("itemID: " + itemID);
-			String type = "SCHEDULECONTENT";
-			String realPath = commonUtil.getRealPath(request);
-	        String scheme = "http://";
+				//일정 정보
+				vo = mScheduleService.scheduleInfo(scheduleId, offSetMin, tenantId);
+				dataObject.put("scheduleInfo", vo);
 			
-	    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
-	    		scheme = "https://";
-	    	}
-	
-			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale, scheme);
-			logger.debug("mhtToHtml: " + mhtToHtml);			
-	        Document doc = Jsoup.parse(mhtToHtml);	        
-	        Elements elems = doc.select("[src]");
-			
-			if (elems.size() > 0) {
-				for (Element element : elems) {
-					element.attr("src", "/mobile/ezCommon/mFileDown.do?filePath=" + element.attr("src") + "&fileName=*.INLINE.*");
+				String itemID = vo.getContentPath();
+				logger.debug("itemID: " + itemID);
+				String type = "SCHEDULECONTENT";
+				String realPath = commonUtil.getRealPath(request);
+				String scheme = "http://";
+				
+				if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+					scheme = "https://";
 				}
-			}
-	        String bodyHTML = doc.getElementsByTag("BODY").html();
-			vo.setContent(bodyHTML);
-			
-			
-			//자원예약 정보
-	        int resourceCnt = ezScheduleService.getResourceCount(scheduleId, tenantId);
-	        
-	        if (resourceCnt != 0) {
-	        	dataObject.put("resourceCnt", resourceCnt + "");
-	        } 
-	        
-	        //참석자 정보
-	        if (vo.getHasAttendant().equals("Y")) {
-	        	String parentID = (vo.getParentId().equals("0") ? scheduleId : vo.getParentId());
-	        	List<AttendantListVO> aList = ezScheduleService.getAttendantList(parentID, offSetMin, tenantId, info.getCompanyId());
-	        	
-	        	dataObject.put("attendantList", aList);	        	
-	        }
-
-	        //참부파일 정보
-	        if (vo.getHasAttach().equals("Y")) {        
-	        	String parentID = (vo.getParentId().equals("0") ? scheduleId : vo.getParentId());
-	        	List<AttachListVO> aList = ezScheduleService.getAttachList(parentID, tenantId);
-	        	
-	        	for (AttachListVO avo : aList) {        		
-	        		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
-	        		avo.setFileType(fileType);        		
-	        		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
-	        		
-	        		String filePath = commonUtil.getUploadPath("upload_schedule.ROOT", info.getTenantId()) + avo.getFilePath();
-	        		avo.setFilePath(URLEncoder.encode(filePath, "UTF-8"));
-	        		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
-	        		avo.setFileTranSize(fileSize);
-	        	}
-	        	
-	        	dataObject.put("attachList", aList);
-	        	
-	        	// 20180824 조진호 - 모바일 viewerflag 값 추가
-	        	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
-		        dataObject.put("useMobileViewer", useMobileViewer);
-	        }
+		
+				String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale, scheme);
+				logger.debug("mhtToHtml: " + mhtToHtml);			
+				Document doc = Jsoup.parse(mhtToHtml);	        
+				Elements elems = doc.select("[src]");
+				
+				if (elems.size() > 0) {
+					for (Element element : elems) {
+						element.attr("src", "/mobile/ezCommon/mFileDown.do?filePath=" + element.attr("src") + "&fileName=*.INLINE.*");
+					}
+				}
+				String bodyHTML = doc.getElementsByTag("BODY").html();
+				vo.setContent(bodyHTML);
+				
+				
+				//자원예약 정보
+				int resourceCnt = ezScheduleService.getResourceCount(scheduleId, tenantId);
+				
+				if (resourceCnt != 0) {
+					dataObject.put("resourceCnt", resourceCnt + "");
+				} 
+				
+				//참석자 정보
+				if (vo.getHasAttendant().equals("Y")) {
+					String parentID = (vo.getParentId().equals("0") ? scheduleId : vo.getParentId());
+					List<AttendantListVO> aList = ezScheduleService.getAttendantList(parentID, offSetMin, tenantId, info.getCompanyId());
+					
+					dataObject.put("attendantList", aList);	        	
+				}
+	
+				//참부파일 정보
+				if (vo.getHasAttach().equals("Y")) {        
+					String parentID = (vo.getParentId().equals("0") ? scheduleId : vo.getParentId());
+					List<AttachListVO> aList = ezScheduleService.getAttachList(parentID, tenantId);
+					
+					for (AttachListVO avo : aList) {        		
+						String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
+						avo.setFileType(fileType);        		
+						avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
+						
+						String filePath = commonUtil.getUploadPath("upload_schedule.ROOT", info.getTenantId()) + avo.getFilePath();
+						avo.setFilePath(URLEncoder.encode(filePath, "UTF-8"));
+						String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
+						avo.setFileTranSize(fileSize);
+					}
+					
+					dataObject.put("attachList", aList);
+					
+					// 20180824 조진호 - 모바일 viewerflag 값 추가
+					String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
+					dataObject.put("useMobileViewer", useMobileViewer);
+				}
 			}
 	        
 
@@ -496,9 +496,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 	        	pCompanyAdmin = "Y";
 	        	pDeptAdmin = "Y";
-	        } else if (info.getRollInfo().contains("g=1")) {
+	        }
+			if (info.getRollInfo().contains("g=1")) {
 	        	pDeptAdmin = "Y";
 	        }
+			if (info.getRollInfo().contains("v=1")) {
+				pCompanyAdmin = "Y";
+			}
 
 			/* 2021-09-01 홍승비 - 비서인 경우 대상자 정보 추가 (쿼리 내부에서 다국어 처리하여 가져옴) */
 			List<ScheduleSecretaryVO> sList = ezScheduleService.getPublicScheduleSec(userId, primary, info.getTenantId(), info.getCompanyId());
@@ -512,7 +516,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 					sb.append("<option value='1;;" + vo.getSecId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t372", locale) + " " + commonUtil.cleanValue(vo.getSecName()) + "</option>");
             	}
 				
-				if (pCompanyAdmin.equals("Y") || pDeptAdmin.equals("Y")) {
+				if (pDeptAdmin.equals("Y")) {
 					//부서일정				
 					sb.append("<option value='2;;" + info.getDeptId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t373", locale) + " " + info.getDeptName() + "</option>");
 				}
@@ -530,7 +534,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 					sb.append("<option value='1;;" + vo.getSecId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t372", locale) + " " + commonUtil.cleanValue(vo.getSecName()) + "</option>");
             	}
 				
-				if (pCompanyAdmin.equals("Y") || pDeptAdmin.equals("Y")) {
+				if (pDeptAdmin.equals("Y")) {
 					//부서일정
 					sb.append("<option value='2;;" + info.getDeptId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t373", locale) + " " + info.getDeptName2() + "</option>");
 				}

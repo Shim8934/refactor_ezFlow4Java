@@ -198,6 +198,19 @@
 					PROPERTY_NAME = #property_name#
 		]]>	
 	</update>
+
+	<delete id="EzCommonDAO.deleteUserConfigInfo" parameterClass="Map">
+		<![CDATA[
+		DELETE
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenant_id#
+		  AND
+			USER_ID = #user_id#
+		  AND
+			PROPERTY_NAME = #property_name#
+		]]>
+	</delete>
 	
 	<delete id="EzCommonDAO.deleteUserLLocalInfo" parameterClass="Map">
 		<![CDATA[
@@ -5584,4 +5597,11 @@
 	    CONSTRAINT PK_TBL_NOTI_EMERGENCY_PERMISSION PRIMARY KEY (PERMISSION_CODE)
 	)
     </statement>
+
+	<statement id="EzCommonDAO.alterBoardExtentionAttrByteSize" parameterClass="Map">
+		ALTER TABLE
+			$table$
+		MODIFY
+			($column$ $dataTypeOracle$)
+	</statement>
 </sqlMap>

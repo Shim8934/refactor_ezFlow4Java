@@ -24,9 +24,6 @@
 				overflow: hidden;
 				display: inline-block;
 			}
-			.countColor {
-				color:#017BEC;
-			}
 			input[type="checkbox"] {
 			    width: 13px;
 			    height: 13px;

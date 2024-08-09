@@ -63,12 +63,22 @@
 		            <tr>
 		                <th><spring:message code='ezSystem.ls01' /></th>
 		                <td>
-		                    <select id="ProhUsePrevPwd" >
+		                    <select id="ProhUsePrevPwd">
 		                        <option value="yes"><spring:message code='ezSystem.hsb01' /></option>
 		                        <option value="no" checked><spring:message code='ezSystem.hsb02' /></option>
 		                    </select>
 		                </td>
 		            </tr>
+					<tr id="rememberPWCount" style="display: none">
+						<th><spring:message code="ezSystem.kdh08"/> </th>
+						<td>
+							<select id="PrevPwdCount" >
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+						</td>
+					</tr>
 		        </tbody>
 		    </table>
 		</div>
@@ -148,6 +158,13 @@
 
 	window.onload = function () {
 		company_change();
+		
+		document.getElementById('ProhUsePrevPwd').addEventListener('change', function() {
+			var selectedValue = this.value;
+			var value = document.getElementById('rememberPWCount');
+			
+			value.style.display = selectedValue === 'yes' ? '' : 'none';
+		});
     };
     
     function company_change() {
@@ -195,6 +212,18 @@
         var usePwPatternPolicy = data.usePasswordPatternPolicy; // 암호 패턴 사용 여부
        	var usePwPatternPolicy_Val = usePwPatternPolicy == "NO" ? "notuse" : "use"; 
        	document.getElementById("UsePatternPolicy").value = usePwPatternPolicy_Val;
+		   
+		var rememberPWCount = data.rememberPWCount;
+		var element = document.getElementById('PrevPwdCount');  //select box
+		for (var i=0; i<element.length; i++){
+			//select box의 option value가 입력 받은 value의 값과 일치할 경우 selected
+			if(element.options[i].value == rememberPWCount){
+				element.options[i].selected = true;
+			}
+		}
+
+		var value = document.getElementById('rememberPWCount');
+		value.style.display = prohUsePrevPwd_Val === 'yes' ? '' : 'none';
 		
         
         var pwPolicyMap = data.pwPolicyMap;
@@ -429,6 +458,7 @@
 	    var setLoginFailCnt= document.getElementById("UseMaxLoginFailCount").value == "use" ? document.getElementById("MaxLoginFailCount").value : "0";
 	    var setLoginLockedDuration= document.getElementById("UseMaxLoginFailCount").value == "use" ? document.getElementById("LoginLockedDuration").value : "0";
 	    var setProhUsePrevPwd = document.getElementById("ProhUsePrevPwd").value == "yes" ? "YES" : "NO"; // 2021-11-10 이사라
+	    var setRememberPWCount = document.getElementById("PrevPwdCount").value; // 2024-07-16 김대현
 		var setUsePatternPolicy = document.getElementById("UsePatternPolicy").value == "use" ? "YES" : "NO";
 		
 		var data = new Object();
@@ -438,6 +468,7 @@
 		              	{name : "MaxAllowedCountOfLoginFail", value : setLoginFailCnt},
 		              	{name : "LoginLockedDuration", value : setLoginLockedDuration},
 		              	{name : "useChkPrevPwd", value : setProhUsePrevPwd}, // 2021-11-10 이사라
+		              	{name : "RememberPWCount", value :setRememberPWCount}, // 2024-07-16 김대현
 		              	{name : "UsePasswordPatternPolicy", value : setUsePatternPolicy}
 		               ];
 		data.patternType = {"useEngType" : document.getElementById("UseEngType").value == "use" ? "Y" : "N",
