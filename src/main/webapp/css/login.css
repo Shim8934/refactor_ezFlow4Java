@@ -4,7 +4,7 @@
 * { position:relative;}
 html { height:100%; }
 body {height:100%; margin:0;}
-input,button { margin:0; outline:none; color:#4f5964; font-family:Malgun Gothic,"맑은 고딕", Arial, sans-serif  !important; }
+input,button { margin:0; outline:none; color:#4f5964; font-family:'Noto Sans KR', 'malgun gothic', 'arial', 'verdana', sans-serif; }
 img { border:0 none; vertical-align:top; }
 hr,caption,legend  { display:none; }
 address { font-style:normal; }
@@ -60,12 +60,12 @@ footer p{margin:18px 0px 0px 0px; padding:0px; text-align:center;}
 
 /* 20200319 default_kr.css에 있는 코드 옮김 */
 p, strong, h3, div {
-	font-family: 'malgun gothic', 'arial', 'verdana';
+	font-family: 'Noto Sans KR', 'malgun gothic', 'arial', 'verdana', sans-serif;
 }
 
 input {
     box-sizing:border-box;
-    -moz-box-sizing:border-box;	
+    -moz-box-sizing:border-box;
 	border:1px solid #dedede;
 	font-size:12px;
 	color: #393939;
@@ -81,7 +81,7 @@ input[type=text] {
 
 
 label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
-	font-family: 'malgun gothic', 'arial', 'verdana';
+	font-family: 'Noto Sans KR', 'malgun gothic', 'arial', 'verdana', sans-serif;
 	font-size:12px;
 	color: #393939;
 	text-decoration: none;
@@ -90,14 +90,14 @@ label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, 
 
 span {
 	font-size:12px;
-	font-family: 'malgun gothic', 'arial', 'verdana';
+	font-family: 'Noto Sans KR', 'malgun gothic', 'arial', 'verdana', sans-serif;
 	text-decoration: none;}
-	
+
 #close {
 	position: absolute;
     right: 10px;
     top: 8px;
-    height: 35px; 
+    height: 35px;
     z-index:1000;
 }
 #close ul {margin: 0; padding: 0;}
@@ -120,8 +120,8 @@ span {
 	vertical-align:middle
 }
 
-a{	
-	font-family: 'malgun gothic', 'arial', 'verdana';
+a{
+	font-family: 'Noto Sans KR', 'malgun gothic', 'arial', 'verdana', sans-serif;
 	color: #393939;
 	text-decoration: none;
 	ime-mode:active;
@@ -133,7 +133,7 @@ a{
 	margin: -9px;
 	margin-top:0px;
 	padding:7px;
-	border-top: 1px solid #eee;	
+	border-top: 1px solid #eee;
 	background-color: #fcfcfc;
 }
 .btnpositionLayer a.imgbtn {
@@ -148,7 +148,7 @@ a{
     color: #000;
 }
 
-.imgbtn{ 
+.imgbtn{
 	white-space:nowrap;
 	display:inline-block;
 	/* background:url('/images/kr/cm/btn_middle_left.gif') top left; */
@@ -160,20 +160,20 @@ a{
 	cursor:pointer;
 	margin-bottom:2px;
 	border:1px solid #ccc;
-	background-color: white;	
+	background-color: white;
 }
 .imgbtn span{
 	display:inline-block;
 	/* background:url('/images/kr/cm/btn_middle_right.gif') top right; */
 	background-repeat:no-repeat;
 	height:20px;
-	padding-right:12px;	
-	font:12px malgun gothic;
+	padding-right:12px;
+	font:12px;
 	letter-spacing:-1;
 	vertical-align:top;
 	line-height:18px;
 }
-.mainlist{table-layout:fixed; border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist{table-layout:fixed; border:0 none !important;font-family:'Noto Sans KR', 'malgun gothic', 'arial', 'verdana', sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr{height:34px}
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:5px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; background-color: #f1f3f5; height:21px}
 .mainlist tr th.title{width:100%; text-align:left;}
@@ -190,15 +190,15 @@ a{
 .login_form{width: 100%;height: 100%;}
 .login_layout{width: 490px; height: 470px; position: absolute;left: 50%; top: 50%; margin-top: -235px; margin-left: -225px;}
 .logo{ margin:0px auto 56px; text-align:center;}
-.id{width: 100%; height: 55px; margin: 0px; border-radius: 5px; border: 1px solid #E4E4E4;}
-.pw{width: 100%; height: 55px; margin: 0px; border-radius: 5px; border: 1px solid #E4E4E4;}
+.id{width: 100%; height: 55px; margin: 0px; border-radius: 5px;}
+.pw{width: 100%; height: 55px; margin: 0px; border-radius: 5px;}
 .id_txt, .pw_txt{font-size: 16px; margin-bottom: 10px;}
 
 .input_text.focus,
 .input_text.focusnot { border: 1px solid #181818 !important; }
 
-#uid { width: 100%; height: 55px; font-size: 18px; border: 0px solid #fff; border-radius: 0px; -webkit-border-radius: 5px; -moz-border-radius: 5px; padding-left: 15px; }
-#upw { width: 100%; height: 55px; font-size: 18px; border: 0px solid #fff; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; padding-left: 15px;}
+#uid { width: 100%; height: 57px; font-size: 18px; border:1px solid #E4E4E4; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; padding-left: 15px; }
+#upw { width: 100%; height: 57px; font-size: 18px; border:1px solid #E4E4E4; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; padding-left: 15px;}
 .btn_login  { margin:0px; padding:0px; }
 .login_form .btn_login { display: block; width: 100%; height: 60px; line-height: 60px; margin: 24px auto 0px auto; padding: 0px 0px 0px 0px; background: #002462; text-align: center; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; box-sizing: border-box; cursor: pointer; color: #fff; font-weight: bold;}
 .login_form .btn_login:hover { background: #0e2e74; }
@@ -217,7 +217,6 @@ a{
 .copy{position: absolute; bottom: 0px; width: 100%; height: 60px; line-height: 60px; background: #F6F6F6; text-align: center;}
 .copy p{font-size: 13px; color: #BABABA; margin: 0px;}
 
-.id{position: relative;}
 .id .btnClear{position: absolute; top: 0; right: 0; width: 37px; height: inherit; background: url(/images/kr/login/input_icon.svg) center right 17px no-repeat; background-size: 50%; border: none; outline: none; cursor: pointer; }
 .pw .btnClear{position: absolute; top: 0; right: 0; width: 37px; height: inherit; background: url(/images/kr/login/input_icon.svg) center right 17px no-repeat; background-size: 50%; border: none; outline: none; cursor: pointer; }
 
@@ -254,7 +253,13 @@ a{
 .imgbtn span{padding-right: 0px;}
 .imgbtn{padding-left: 0px;}
 .btnpositionLayer a.imgbtn{height: 25px; padding: 7px 20px; border-radius: 3px;}
-.btnpositionLayer a.imgbtn span{font-weight: normal; font-size: 14px;}
+.btnpositionLayer a.imgbtn span{font-weight:500; font-size:14px;}
+.btnpositionLayer a.imgbtn.ok{border-color:#002462; background:#002462;}
+.btnpositionLayer a.imgbtn.ok span{color:#fff;}
+.btnpositionLayer a.imgbtn:hover{border-color:#002462;}
+.btnpositionLayer a.imgbtn:hover span{color:#002462;}
+.btnpositionLayer a.imgbtn.ok:hover{background:#0e2e74; border-color:#0e2e74;}
+.btnpositionLayer a.imgbtn.ok:hover span{color:#fff;}
 
 /* 20230906 자바업그레이드 로그인 CSS */
 
@@ -276,3 +281,62 @@ a{
 .logo{margin: 0px auto 34px;}
 }
 /* //20231120 로그인 OTP영역 추가 */
+
+
+/* 비밀번호 변경 */
+.password_change{ margin:0 auto; padding:0px; width:470px;}
+.password_change .passwordTitle{ margin:0px; padding:0px; display:flex; justify-content:center; align-items:center;}
+.password_change .passwordTitle .password_lock{display:inline-block; width:38px; height:50px; background:url(../images/kr/login/login_lock.svg) no-repeat center / 35px 50px; margin-right:20px;}
+.password_change .passwordTitle .tit_01{margin:0; padding:0; font-size:15px; color:#333; letter-spacing:-0.5px; border:none;}
+.password_change .passwordTitle .tit_02{margin:0; padding:0; font-size:21px; color:#333; letter-spacing:-0.5px; border:none;}
+.password_change .passwordTitle .tit_02 span{font-size:21px; font-weight:bold; color:#3A8DE9;}
+.password_change .passwordForm{ margin:15px 0px 0px; padding:8px 5px; list-style:none;}
+.password_change .passwordForm li{ margin:0px 0px 14px 0px; padding:0px 15px 0px; font-size:13px; clear:both; overflow:hidden;}
+.password_change .passwordForm li .formText{ display:inline-block; line-height:35px; font-size:14px; font-weight: bold;}
+.password_change .passwordForm li .formID{ display:inline-block; font-weight:bold;font-size:13px; float:right; width:240px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px; text-align:center; box-sizing:border-box;}
+.password_change .passwordForm li .formInput{ display:inline-block; float:right; font-size:13px;}
+.password_change .passwordForm li .formInput input{font-size:13px; width:240px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px; padding:0px 0px 0px 5px;}
+.password_change .passwordForm li .formInput input:focus{border:1px solid #181818;}
+.password_change .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
+.password_change p{font-weight: bold;}
+.password_change p span{font-size:13px;line-height: 18px;display: inline-block; font-weight:500;}
+.password_change p span:nth-child(2){margin-top: 5px;}
+#exDiv3 dl{margin-top: 20px;}
+.warning_wrap .layerTitle{margin-bottom: 20px;}
+.modal{max-width: 600px !important;}
+
+
+/* 비밀번호 초기화 */
+.password_reset .login_wrapper{overflow:hidden; min-height:100%; height:auto;}
+.password_reset .login_wrapper .login_backImg{position:absolute; top:0; bottom:0; left:0; }
+.password_reset .right_wrap{padding:70px 0; box-sizing:border-box; min-height:100vh; height:auto; display:flex; flex-direction:column; justify-content:center;}
+.password_reset .right_wrap .login_layout{position:static; margin:0 auto; height:auto;}
+.password_reset .right_wrap .login_layout .logo{font-size:30px; font-weight:500; margin-bottom:35px;}
+.password_reset .right_wrap .login_layout .input_wrap{margin:0; margin-top:15px;}
+.password_reset .right_wrap .login_layout .input_wrap input{border:none; width:100%; height:57px; line-height:57px; font-size:18px; padding:0 40px 0 15px; border-radius:5px; border:1px solid #E4E4E4;}
+.password_reset .right_wrap .login_layout .input_wrap input:focus{border:1px solid #181818;}
+.password_reset .right_wrap .login_layout .input_wrap input::placeholder{color: #B8B8B8; font-size: 16px;}
+.password_reset .right_wrap .login_layout .input_wrap .btnClear{width:24px; height:24px; background:url(../images/kr/login/input_icon.svg) no-repeat center; background-size:20px 20px; position:absolute; top:16px; right:10px; cursor:pointer; display:none;}
+.password_reset .right_wrap .login_layout .input_wrap input.focus + .btnClear{display:block;}
+.error_mes{color:#ff8384; font-size:12px; margin-top:7px;}
+.password_reset .right_wrap .login_layout .newBtn{list-style:none; overflow:hidden; padding:0; margin:15px 0 0;}
+.password_reset .right_wrap .login_layout .newBtn li{width:calc(50% - 10px); height:60px; line-height:58px; border:1px solid #e4e4e4; border-radius:5px; margin:0; padding:0; text-align:center; font-size:20px; font-weight:500; float:left; margin-left:20px; box-sizing:border-box; cursor:pointer;}
+.password_reset .right_wrap .login_layout .newBtn li.ok{margin:0; border-color:#002462; background:#002462; color:#fff;}
+.password_reset .right_wrap .login_layout .newBtn li:hover{border-color:#002462; color:#002462;}
+.password_reset .right_wrap .login_layout .newBtn li.ok:hover{border-color:#0e2e74; background:#0e2e74; color:#fff;}
+
+
+.password_reset .right_wrap .login_img{width:490px; margin:0 auto; padding:0 20px; box-sizing:border-box;}
+.password_reset .right_wrap .login_img .img_title{font-size:20px; font-weight:500; margin-bottom:10px;}
+.password_reset .right_wrap .login_img ol{margin:0; padding:0 0 0 18px;}
+.password_reset .right_wrap .login_img ol li{font-size:16px; line-height:30px; letter-spacing:-0.5px;}
+.password_reset .right_wrap .login_img .img_title2{font-size:20px; font-weight:500; margin:30px 0 10px;}
+.password_reset .right_wrap .login_img dl{margin:0;}
+.password_reset .right_wrap .login_img dl dt{font-size:18px; font-weight:500; line-height:34px;}
+.password_reset .right_wrap .login_img dl dd{margin:0; padding:0; font-size:16px; line-height:30px;}
+
+.confirmBox{margin-top:15px;}
+.confirmBox:after{content:""; display:block; clear:both;}
+.confirmBox .input_wrap{float:left; margin:0 !important; width:calc(100% - 100px);}
+.confirmBox .btn{float:right; margin:0; width:80px; height:57px; line-height:57px; border-radius:5px; background:#002462; text-align:center; color:#fff; font-size:18px; cursor:pointer;}
+.confirmBox .btn:hover{background:#0e2e74;}

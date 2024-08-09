@@ -51,7 +51,10 @@
 				        break;   
 				    case 6: 
 				        url = "/admin/ezSchedule/scheduleAdminGroupTab.do";
-				        break;  
+				        break; 
+				    case 7:
+				    	url = "/admin/ezSchedule/scheduleReminderSetting.do";
+				    	break;
 				}			
 				window.open(url,"right");
 				
@@ -90,6 +93,7 @@
 	  			</c:if>
 	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='ezSchedule.t9990007' /></span></h2>
 	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezSchedule.shb12' /></span></h2>
+	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='ezSchedule.admin.hth10' /></span></h2>
   			</div>
 		</div>
 	</body>

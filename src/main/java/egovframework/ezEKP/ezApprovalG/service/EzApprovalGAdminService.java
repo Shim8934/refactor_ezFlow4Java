@@ -66,6 +66,8 @@ public interface EzApprovalGAdminService {
 
 	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception;
 
+	public String getTaskCategoryNodeCnt(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception;
+
 	public String removeTaskCategory(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception;
 
 	public String getTaskCodeDuplicate(String taskCode, String companyID, int tenantID) throws Exception;

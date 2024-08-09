@@ -26,7 +26,15 @@
 			}
 			.countColor {
 				color:#017BEC;
-			}		    	
+			}
+			input[type="checkbox"] {
+			    width: 13px;
+			    height: 13px;
+			    margin: 0px 5px 0px 18px;
+			    padding: 0px;
+			    overflow: hidden;
+			    vertical-align: middle;
+			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/schedule_write_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	    
@@ -47,6 +55,7 @@
 		    var CurPage = "1";
 		    var lang = "<c:out value='${userInfo.primary}'/>";
 		    var groupid = "<c:out value='${groupID}' />";
+		    var type = "<c:out value='${type}' />";
 		  	
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -774,6 +783,13 @@
                     data.memberID = GetAttribute(totalRows[i], "DATA1");
                     data.memberName1 = GetAttribute(totalRows[i], "DATA2");
                     data.memberName2 = GetAttribute(totalRows[i], "DATA3");
+
+                    var checkbox = document.getElementById("cb_" + data.memberID);
+                    if (checkbox && checkbox.checked) {
+                        data.writePermission = "Y";
+                    } else {
+                        data.writePermission = "N";
+                    }
                     memberList.push(data);		            
 		        }
 		        		        
@@ -935,6 +951,7 @@
 		                var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
 		                var department = document.getElementById(listContentArry[i]).getAttribute("_data10");
+		                var writePermission = "Y"; // 기본값을 'Y'로 설정
 
 		                var listid = "MsgToList";
 		                var getlistview = new ListView();
@@ -958,7 +975,7 @@
 		                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 		                    pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-
+		                    pparsingXML = pparsingXML + "<DATA9>" + writePermission + "</DATA9>";
 		                    
 /* 		                    if("<c:out value='${userInfo.lang}' />" == "1")
                                 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " (" + strDeptNM + ") " + "]]></VALUE></CELL></ROW>";
@@ -1019,6 +1036,7 @@
 		                var jickwe = p_ListOrderObject.getAttribute("_data14");
 		                var phone = p_ListOrderObject.getAttribute("_data8");
 		                var department = p_ListOrderObject.getAttribute("_data10");
+		                var writePermission = "Y"; // 기본값을 'Y'로 설정
 		                
 		                var listid = "MsgToList";
 
@@ -1041,6 +1059,7 @@
 		                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 		                    pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+		                    pparsingXML = pparsingXML + "<DATA9>" + writePermission + "</DATA9>";
 		                    pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                    Resultxml = loadXMLString(pparsingXML2);
@@ -1377,7 +1396,6 @@
 		    /* 2023-09-06 조소정 - 참석자 일정조회 기능 활성화 */
 	        var schedule_add_user_cross_dialogArguments = new Array();
 	        function Add_UserInfo_onclick() {
-	        	console.log('Add_UserInfo_onclick들어옴');
 	            var listView = new ListView();
 	            listView.LoadFromID("MsgToList");
 	

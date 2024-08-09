@@ -19,6 +19,16 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <style>
+            .peopleSelectBtn {
+                border-radius: 3px;
+                line-height: 23px;
+                border: 1px solid #ccc;
+                cursor: pointer;
+                padding: 2px 5px;
+                margin-right: 10px;
+            }
+	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/datepicker.htc.js')}"></script>
@@ -135,6 +145,7 @@
 			var HwpSecurityNum = "<c:out value='${HwpSecurityNum}'/>";
 			var isHwpCtrlOpen = false;
 		    var startCheck = false;
+		    var authList = [];
 		    
 			/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
@@ -241,6 +252,35 @@
 										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
 									} else if (colType[i] == "select") {
 										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
+									} else if (colType[i] == "textArea") {
+									    document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]).replace(/<br\s*\/?>/gi, '\n');
+									} else if (colType[i] == "people") {
+									    // 2024-07-31 전인하 - 게시판 > 확장컬럼 > 게시물 수정 시 peoplePicker 타입 출력값 가공
+									    var authListObjTemp = {};
+									    var tempData = [];
+									    var displayUserListText = "";
+                                        var tempAuthListArr = getExtensionValue(tableCol[i]).split(";");
+                                        for (let i = 0 ; i < tempAuthListArr.length; i++) {
+                                            if (tempAuthListArr[i] == "") {
+                                                break;
+                                            }
+                                            var authInfoJson = {};
+                                            var tempAuthObj = tempAuthListArr[i].split("/");
+                                            authInfoJson.userId = tempAuthObj[0];
+                                            authInfoJson.userName = "${userInfo.lang}" == "1" ? tempAuthObj[1] : tempAuthObj[2];
+                                            authInfoJson.userName1 = tempAuthObj[1];
+                                            authInfoJson.userName2 = tempAuthObj[2];
+                                            authInfoJson.userType = tempAuthObj[3];
+                                            if (i != 0) {
+                                                displayUserListText += ", "
+                                            }
+                                            displayUserListText += "${userInfo.lang}" == "1" ? tempAuthObj[1] : tempAuthObj[2];
+                                            tempData.push(authInfoJson);
+                                        }
+                                        authListObjTemp.columnName = tableCol[i];
+                                        authListObjTemp.data = tempData;
+                                        authList.push(authListObjTemp);
+                                        document.getElementById(tableCol[i]).innerText = displayUserListText;
 									}
 			    				}
 			            	}
@@ -998,6 +1038,28 @@
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
 					} else if(colType[i] == "select") {
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
+					} else if (colType[i] == "people") {
+					    // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 저장 시 문자열 형태로 입력값 가공
+					    // 각 유저는 구분자 ; 를 통해 구별함. 
+					    // 유저 상세정보는 /를 구분자로 사용하며 값의 의미는 순서대로 id값/이름1/이름2/타입(부서 직위 직책 등).
+					    var peoplePickerString = "";
+					    var authListColumn = authList.filter((e) => e.columnName == tableCol[i]);
+                        if (authListColumn.length > 0) {
+                            var authListData = authListColumn[0].data;
+                            for (var j = 0; j < authListData.length; j++) {
+                                var userId = authListData[j].userId;
+                                var userName1 = authListData[j].userName1;
+                                var userName2 = authListData[j].userName2;
+                                var userType = authListData[j].userType;
+                                peoplePickerString += userId + "/";
+                                peoplePickerString += userName1 + "/";
+                                peoplePickerString += userName2 + "/";
+                                peoplePickerString += userType + ";";
+                            }   
+                        }
+					    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(escapeForJson(peoplePickerString)));
+					} else if (colType[i] == "textArea") {
+					    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value).replace(/(?:\r\n|\r|\n)/g, '<br/>'));
 					}
 				}
 
@@ -2558,6 +2620,19 @@
 				}
 				attachxml = strRet;
 			}
+			function openPopupAuth(e) {
+			    var columnName = e.target.getAttribute("columnName");
+                var OpenWin = window.open("/ezBoard/boardSelectUser.do?companyId=" + SSCompanyID + "&columnName=" + columnName, "", GetOpenWindowfeature(970, 670));
+                OpenWin.focus();
+            }
+            
+            function characterCheck(obj) {
+                var regExp = /[\\'\"<>]/gi;
+                if (regExp.test(obj.value)) {
+                    alert("<spring:message code='ezBoard.extensionAttr.JIH04' />");
+                    obj.value = obj.value.replace(regExp, '');
+                }
+            }
 	        
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
@@ -2748,6 +2823,18 @@
 											</select>
 										</td>
 									</c:when>
+									<c:when test="${boardAttributeVO.colType == 'people'}">
+                                        <td colspan="3">
+                                            <span id="peopleSelectBtn" class="peopleSelectBtn" columnName='${boardAttributeVO.tableCol}' style="" onclick ='openPopupAuth(event)'><spring:message code='ezWebFolder.t516' /></span>
+                                            <span id ='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' type="people" class='authList_div peoplePickerData ${boardAttributeVO.tableCol}'></div>
+                                        </td>
+                                    </c:when>
+                                    <c:when test="${boardAttributeVO.colType == 'textArea'}">
+                                        <td colspan="3">
+                                            <span id='icon_textArea'></span>
+                                            <textarea maxlength="450" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' type="textArea" onkeyup="characterCheck(this)" onkeydown="characterCheck(this)" style="width: 100%; height: 150px; box-sizing: border-box; "></textarea>
+                                        </td>
+                                    </c:when>
              					</c:choose>
              				</tr>
              			</c:forEach>
@@ -3003,18 +3090,6 @@
 		</div>
 		<div id="hwpctrl"/>
 	</body>
-	<script type="text/javascript">
-	//사용안되는듯 2017-01-11 파악
-// 	    function SelectBoard2() {
-// 	        var url = "BoardSelect2.aspx";
-// 	        var feature = "status:no;dialogWidth:352px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
-// 	        feature = feature + GetShowModalPosition(352, 700);
-// 	        var ret = window.showModalDialog(url, "", feature);
-	
-// 	        if (typeof (ret) == "undefined") return "";
-// 	        return ret;
-// 	    }
-	</script>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");
 	</script>

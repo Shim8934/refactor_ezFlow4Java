@@ -872,7 +872,7 @@
 		                <p id="Permission_sub11"><span divname="f" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
 		                </c:if>
 		                <p id="Permission_sub12" <c:if test="${use_attitude != 'YES'}">style="display:none;"</c:if>><span divname="e" id="1tab12"><spring:message code='ezOrgan.kbm01' /></span></p>
-		                
+		                <p id="Permission_sub13"><span divname="v" id="1tab13"><spring:message code='ezOrgan.lhr01' /></span></p>
 		                <%--2023-02-10 홍승비 - 표준모듈 기준으로 일상감사, 준법지원인 기능 사용하지 않음 --%>
 		                <%-- <p id="Permission_sub13" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="s" id="1tab13"><spring:message code='ezOrgan.t9904' /></span></p> --%>
 	                </c:if>

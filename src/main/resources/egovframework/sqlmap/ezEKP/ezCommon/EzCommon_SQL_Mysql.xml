@@ -212,6 +212,19 @@
 			)
 		]]>
 	</insert>
+
+	<delete id="EzCommonDAO.deleteUserConfigInfo" parameterClass="Map">
+		<![CDATA[
+		DELETE FROM
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenant_id#
+		  AND
+			USER_ID = #user_id#
+		  AND
+			PROPERTY_NAME = #property_name#
+		]]>
+	</delete>
 	
 	<update id="EzCommonDAO.updateUserConfigInfo" parameterClass="Map">
 		<![CDATA[
@@ -4739,4 +4752,99 @@
 			(#listOption#,4,'부서',300,'TBL_APRLINEINFO','AprMemberDeptName',NULL,NULL,'결재선정보(공람)','부서명','Dept.','部署','部门',#tenantId#, #companyId#),
 			(#listOption#,5,'공람일시',300,'TBL_APRLINEINFO','ProcessDate',NULL,NULL,'결재선정보(공람)','공람일시','Date','供覧日時','供览日时',#tenantId#, #companyId#)
 	</insert>
+	    
+	<select id="EzCommonDAO.checkScheduleReminderScheduler">
+		SELECT
+			SCHEDULEID
+		FROM
+			TBL_SCHEDULE_REMINDER_SCHEDULER
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblScheduleReminderScheduler">
+	CREATE TABLE `TBL_SCHEDULE_REMINDER_SCHEDULER` (
+		  `SCHEDULEID` bigint(10) NOT NULL,
+		  `PARENTID` bigint(10) NOT NULL DEFAULT 0,
+		  `OWNERID` varchar(100) NOT NULL,
+		  `OWNERNAME` varchar(100) NOT NULL,
+		  `OWNERNAME2` varchar(100) DEFAULT NULL,
+		  `CREATORID` varchar(100) NOT NULL,
+		  `CREATORNAME` varchar(100) NOT NULL,
+		  `CREATORNAME2` varchar(100) DEFAULT NULL,
+		  `SCHEDULETYPE` mediumint(5) NOT NULL,
+		  `DATETYPE` mediumint(5) NOT NULL,
+		  `STARTDATE` datetime NOT NULL,
+		  `ENDDATE` datetime NOT NULL,
+		  `REPETITION` varchar(100) DEFAULT NULL,
+		  `TITLE` varchar(500) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(40) DEFAULT NULL,
+		  `REMINDERSTATUS` varchar(2) DEFAULT '0' COMMENT '0: 미완료, 1:완료',
+		  `OFFSETINFO` varchar(40) DEFAULT '',
+		  `LANG` varchar(10) DEFAULT NULL,
+		  `OFFSETMIN` varchar(10) DEFAULT NULL,
+		  PRIMARY KEY (`SCHEDULEID`),
+		  KEY `IDX_OWNERID` (`OWNERID`) USING BTREE
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<select id="EzCommonDAO.checkReminderTimeColumnAtTblScheduleConfig">
+		SELECT
+			REMINDERTIME
+		FROM
+			TBL_SCHEDULECONFIG
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addReminderTimeAtTblScheduleConfig">
+		ALTER TABLE
+			TBL_SCHEDULECONFIG
+		ADD
+			REMINDERTIME VARCHAR(8) NOT NULL DEFAULT '0'
+	</statement>
+	
+	<select id="EzCommonDAO.getAllDaySTimeTenantConfig" parameterClass="map" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = #property#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<insert id="EzCommonDAO.insertAllDaySTimeForReminderTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantID#, #property#, '09:00', 'HH24:MM 형식으로 미리알림 시 하루종일 일정의 시작 시각 설정가능(MM은 00 또는 30만 가능)', '미리알림 시 하루종일 일정의 시작 시각 세팅', '2023-09-15 00:00:00.000', '일정관리')
+	</insert>
+	
+
+	<select id="EzCommonDAO.checkSaveFlagForCbShare" resultClass="String">
+	<![CDATA[
+		SELECT
+			SAVEFLAG
+		FROM
+			TBL_CB_SHARE
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSaveFlagForCbShare">
+	<![CDATA[
+		ALTER TABLE
+			TBL_CB_SHARE
+			ADD
+				SAVEFLAG tinyint(4)
+		]]>
+    </statement>
+
+	<statement id="EzCommonDAO.alterBoardExtentionAttrByteSize" parameterClass="Map">
+		ALTER TABLE
+			$table$
+		MODIFY
+			$column$ $dataTypeMysql$
+	</statement>
 </sqlMap>

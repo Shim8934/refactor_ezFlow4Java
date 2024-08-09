@@ -167,8 +167,8 @@
 					return;
 				}
 				
-				 if (DeptName.value.indexOf("\"") > -1 ) {
-					OpenAlertUI("<spring:message code='ezOrgan.t214'/> [\"] <spring:message code='ezOrgan.t260' />");
+				 if (DeptName.value.indexOf("\"") > -1 || DeptName.value.indexOf("\\") > -1) {
+					OpenAlertUI("<spring:message code='ezOrgan.t214'/> [\"], [\\] <spring:message code='ezOrgan.t260' />");
 					return;
 				}
 				

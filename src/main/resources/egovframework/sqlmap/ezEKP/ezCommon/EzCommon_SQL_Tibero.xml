@@ -198,6 +198,19 @@
 					PROPERTY_NAME = #property_name#
 		]]>	
 	</update>
+
+	<delete id="EzCommonDAO.deleteUserConfigInfo" parameterClass="Map">
+		<![CDATA[
+		DELETE
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenant_id#
+		  AND
+			USER_ID = #user_id#
+		  AND
+			PROPERTY_NAME = #property_name#
+		]]>
+	</delete>
 	
 	<delete id="EzCommonDAO.deleteUserLLocalInfo" parameterClass="Map">
 		<![CDATA[
@@ -5078,4 +5091,102 @@
 			FROM DUAL
 		]]>
    	</insert>
+	
+	<select id="EzCommonDAO.checkScheduleReminderScheduler">
+		SELECT
+			SCHEDULEID
+		FROM
+			TBL_SCHEDULE_REMINDER_SCHEDULER
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblScheduleReminderScheduler">
+	CREATE TABLE "TBL_SCHEDULE_REMINDER_SCHEDULER" (
+			"SCHEDULEID" NUMBER(10,0) NOT NULL ENABLE,
+			"PARENTID" NUMBER(10,0) DEFAULT 0 NOT NULL ENABLE,
+			"OWNERID" NVARCHAR2(50) NOT NULL ENABLE,
+			"OWNERNAME" NVARCHAR2(80) NOT NULL ENABLE,
+			"OWNERNAME2" NVARCHAR2(50),
+			"CREATORID" NVARCHAR2(50) NOT NULL ENABLE,
+			"CREATORNAME" NVARCHAR2(50) NOT NULL ENABLE,
+			"CREATORNAME2" NVARCHAR2(50),
+			"SCHEDULETYPE" NUMBER(5,0) NOT NULL ENABLE,
+			"DATETYPE" NUMBER(5,0) NOT NULL ENABLE,
+			"STARTDATE" DATE NOT NULL ENABLE,
+			"ENDDATE" DATE NOT NULL ENABLE,
+			"REPETITION" NVARCHAR2(50),
+			"TITLE" NVARCHAR2(250) NOT NULL ENABLE,
+			"TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+			"COMPANYID" VARCHAR2(40),
+			"REMINDERSTATUS" NCHAR(1) DEFAULT '0',
+			"OFFSETINFO" CHAR(10),
+			"LANG" NVARCHAR2(10),
+			"OFFSETMIN" NVARCHAR2(10),
+			
+			CONSTRAINT "TBL_SCHEDULE_REMINDER_SCHEDULER_PK" PRIMARY KEY ("SCHEDULEID")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkReminderTimeColumnAtTblScheduleConfig">
+		SELECT
+			REMINDERTIME
+		FROM
+			TBL_SCHEDULECONFIG
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.addReminderTimeAtTblScheduleConfig">
+		ALTER TABLE
+			TBL_SCHEDULECONFIG
+		ADD
+			REMINDERTIME NVARCHAR2(4) DEFAULT '0' NOT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.getAllDaySTimeTenantConfig" parameterClass="map" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = #property#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<insert id="EzCommonDAO.insertAllDaySTimeForReminderTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantID#, #property#, '09:00', 'HH24:MM 형식으로 미리알림 시 하루종일 일정의 시작 시각 설정가능(MM은 00 또는 30만 가능)', '미리알림 시 하루종일 일정의 시작 시각 세팅', TO_DATE('2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일정관리')
+	</insert>
+	
+
+	<select id="EzCommonDAO.checkSaveFlagForCbShare" resultClass="String">
+	<![CDATA[
+		SELECT
+			SAVEFLAG
+		FROM
+			TBL_CB_SHARE
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSaveFlagForCbShare">
+	<![CDATA[
+		ALTER TABLE
+			TBL_CB_SHARE
+			ADD
+				SAVEFLAG NUMBER(3,0)
+		]]>
+    </statement>
+
+	<statement id="EzCommonDAO.alterBoardExtentionAttrByteSize" parameterClass="Map">
+		ALTER TABLE
+			$table$
+		MODIFY
+			($column$ $dataTypeOracle$)
+	</statement>
 </sqlMap>

@@ -238,7 +238,9 @@
 								<td style="width: 75%;">
 									<table class="organinfo">
 										<tr>
-											<td class="name" style="text-align: left;"><c:out value='${user.userName }'/></td>
+											<td class="name" style="text-align: left;">
+												<c:out value='${user.userName }'/><c:if test="${not empty user.jikwi}">[<c:out value="${user.jikwi}"/>]</c:if>
+											</td>
 										</tr>
 										<tr>
 											<td style="text-align: left;"><c:out value='${user.deptName }'/></td>

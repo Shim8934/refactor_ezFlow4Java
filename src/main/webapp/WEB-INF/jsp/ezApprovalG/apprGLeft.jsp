@@ -214,6 +214,7 @@
 			                document.getElementById('APPROVAL21').click();
 			            }
 						if (pListTypeValue == '24') {
+							window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
 							setPresentValue("<spring:message code='ezApprovalG.t1756'/>");
 							document.getElementById('APPROVAL24').click();
 						}

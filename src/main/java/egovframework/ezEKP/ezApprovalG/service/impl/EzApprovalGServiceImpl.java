@@ -9680,7 +9680,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 
 		if (doc.getElementsByTagName("TITLE").item(0) != null && doc.getElementsByTagName("TITLE").item(0).getTextContent().length() > 0) {
-            recordListVO.setTitle(makeSearchField(doc.getElementsByTagName("TITLE").item(0).getTextContent().replace("\\", "\\\\")));
+            recordListVO.setTitle(makeSearchField(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
 		}
 
 		if (doc.getElementsByTagName("REGTYPE").item(0) != null && doc.getElementsByTagName("REGTYPE").item(0).getTextContent().length() > 0) {
@@ -35050,8 +35050,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     
     // 2023-09-25 전인하 - 전자결재G > 배부대장 미리보기 > 진행문서 열람권한 조회
     @Override
-    public String getAccessYNGforAPR(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
+    public String getAccessYNGforAPR(String docID, String mode, String approvalFlag, LoginVO userInfo) throws Exception {
         logger.debug("getAccessYNGforAPR started.");
+        
+        String userID = userInfo.getId();
+        int tenantID = userInfo.getTenantId();
+        String companyID = userInfo.getCompanyID();
+        String lang = userInfo.getLang();
+        String deptID = userInfo.getDeptID();
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("v_DOCID", docID);
@@ -35184,6 +35190,35 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             if (Integer.parseInt(allUserRight) > 0) {
                 rtnVal = true;
             }
+        }
+
+        // 2024-07-01 전인하 - 진행문서 권한 체크 시 도착, 배부, 지정, 회송인 경우 권한 체크 로직 추가
+        ApprGDocListVO docInfo = getDocInfoForNoti(companyID, docID, tenantID, "ING");
+        if (docInfo != null) {
+            if (docInfo.getFunctionType().equals("011") || docInfo.getFunctionType().equals("012") || docInfo.getFunctionType().equals("014")) { // 도착/지정/배부 상태일 때
+                
+                boolean isAdmin = commonUtil.isAdmin(userID, tenantID, userInfo.getRollInfo(), "c;k;a");
+                Map<String, Object> receiveDocMap = new HashMap<String, Object>();
+                receiveDocMap.put("companyID", companyID);
+                receiveDocMap.put("v_DOCID", docID);
+                receiveDocMap.put("v_TENANTID", tenantID);
+                List<ApprGReceiveDocVO> receivePointList = ezApprovalGDAO.getReceivedDocInfo(receiveDocMap);
+                
+                for (int i = 0 ; i < receivePointList.size(); i++) {
+                    ApprGReceiveDocVO receivePoint = receivePointList.get(i);
+                    String processerID = receivePoint.getProcessorID() == null ? "" : receivePoint.getProcessorID();
+                    String receivedDeptID = receivePoint.getReceivedDeptID();
+                    // 본인을 지정하여 도착/배부/지정된 수발신문 혹은 수발신문 접근권한이 있으면서 본인 부서에 도착/배부/지정된 수발신문은 열람할 수 있다.
+                    if (processerID.equals(userID) || (processerID.equals("") && receivedDeptID.equals(deptID) && isAdmin)) {
+                        rtnVal = true;
+                        break;
+                    }
+                }
+            } else if (docInfo.getFunctionType().equals("015")) { // 회송 상태일 때
+              if (userID.equals(docInfo.getWriterID())) { // 본인이 기안한 문서는 열람할 수 있다.
+                  rtnVal = true;
+              }
+            }           
         }
         
         logger.debug("getAccessYNGforAPR ended.");
@@ -35645,7 +35680,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         Map<String, Object> map = new HashMap<String, Object>();
 
         map.put("tenantID", userInfo.getTenantId());
-        map.put("deptID", userInfo.getDeptID());
+        map.put("deptID", "," + userInfo.getDeptID() + ",");
         map.put("primary", userInfo.getPrimary());
 
         return ezApprovalGDAO.getUnderDeptList(map);

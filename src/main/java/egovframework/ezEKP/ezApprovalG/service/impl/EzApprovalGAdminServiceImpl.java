@@ -792,10 +792,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		for (ApprGTaskVO vo : list) {
 			switch (vo.getCategoryType()) {
 				case "1":
-					isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getCategoryCode(), companyID, tenantID, approvalFlag);
+					isLeaf = getTaskCategoryNodeCnt(vo.getCategoryType(), vo.getCategoryCode(), companyID, tenantID, approvalFlag);
 					break;
 				case "2":
-					isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getMcategoryCode(), companyID, tenantID, approvalFlag);
+					isLeaf = getTaskCategoryNodeCnt(vo.getCategoryType(), vo.getMcategoryCode(), companyID, tenantID, approvalFlag);
 					break;
 				case "3":
 //						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getSubCategoryCode(), companyID, tenantID, approvalFlag);
@@ -961,7 +961,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		int count = ezApprovalGAdminDAO.getTaskCategoryNodeExist(map);
+		int count = ezApprovalGAdminDAO.getTaskCategoryNodeExist(map); // 분류코드 및 하위노드가 존재하는지 조회
 		
 		if (count > 0) {
 			result = "TRUE";
@@ -969,6 +969,32 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		logger.debug("getTaskCategoryNodeExist ended. result=" + result);
 		
+		return result;
+	}
+
+	@Override
+	public String getTaskCategoryNodeCnt(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception {
+		logger.debug("getTaskCategoryNodeCnt started.");
+		logger.debug("categoryType=" + categoryType);
+		logger.debug("categoryCode=" + categoryCode);
+
+		String result = "FALSE";
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CATETYPE", categoryType);
+		map.put("v_CATECODE", categoryCode);
+		map.put("approvalFlag", approvalFlag);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		int count = ezApprovalGAdminDAO.getTaskCategoryNodeCnt(map); // 하위 노드가 존재하는지 조회
+
+		if (count > 0) {
+			result = "TRUE";
+		}
+
+		logger.debug("getTaskCategoryNodeCnt ended. result=" + result);
+
 		return result;
 	}
 

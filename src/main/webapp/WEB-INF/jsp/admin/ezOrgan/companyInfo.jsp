@@ -108,8 +108,8 @@
 					return;
 				}
 				
-				if (CompanyName.value.indexOf("\"") > -1 || CompanyName.value.indexOf("'") > -1) {
-					OpenAlertUI("<spring:message code='ezOrgan.t215'/> [\"], ['] <spring:message code='ezOrgan.t260' />");
+				if (CompanyName.value.indexOf("\"") > -1 || CompanyName.value.indexOf("'") > -1 || CompanyName.value.indexOf("\\") > -1) {
+					OpenAlertUI("<spring:message code='ezOrgan.t215'/> [\"], ['] , [\\] <spring:message code='ezOrgan.t260' />");
 					return;
 				}
 				

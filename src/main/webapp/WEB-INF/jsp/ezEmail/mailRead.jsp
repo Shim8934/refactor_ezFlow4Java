@@ -243,7 +243,17 @@
 				<c:if test="${useMailTag}">
 				resizeHeight -= document.getElementById("tag_td").clientHeight;
 				</c:if>
-				document.getElementById("message").style.height = resizeHeight + "px";
+
+				if(sentItems.toUpperCase() == "TRUE") {
+					document.getElementById("message").style.height = resizeHeight + "px";
+					var messeageValue = document.getElementById("message");
+					var messeageHeight = messeageValue.style.height
+					messeageHeight = parseFloat(messeageHeight) - parseFloat("14");
+					messeageValue.style.setProperty('height', messeageHeight + 'px', 'important');
+				} else {
+					document.getElementById("message").style.height = resizeHeight + parseFloat("14") + "px";
+				}
+				
 		        mailPrevSentDateChk();
 		    }	
 			

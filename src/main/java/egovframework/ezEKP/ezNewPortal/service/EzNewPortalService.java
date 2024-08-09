@@ -109,7 +109,7 @@ public interface EzNewPortalService {
 	 * 이효진
 	 */
 	
-	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception;
+	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId, String deptId) throws Exception;
 	/**
 	 * 테마목록조회
 	 * @param admin true(admin) false(user)

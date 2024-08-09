@@ -37,8 +37,12 @@ var subType = {
 	},
 	schedule : {
 		add : "安排邀请",
+		cancel : "取消邀请",
 		accept : "邀请已获批准",
-		reject : "拒绝邀请"
+		reject : "拒绝邀请",
+		mod : "修改日程",
+		reminder : "提醒"
+			
 	},
 	resource : {
 		reserve : "资源预留",
@@ -78,7 +82,7 @@ subType["approval"]["return"] = "恢复付款文件";
 subType["approval"]["default"] = "赞同警报";
 subType["board"]["new"] = "新帖子";
 subType["board"]["return"] = "拒绝批准";
-subType["schedule"]["delete"] = "取消邀请";
+subType["schedule"]["delete"] = "删除事件";
 subType["survey"]["new"] = "新注册";
 subType["poll"]["new"] = "新注册";
 subType["community"]["new"] = "新注册";

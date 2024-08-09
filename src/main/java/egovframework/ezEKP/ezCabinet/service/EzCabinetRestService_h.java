@@ -12,7 +12,7 @@ public interface EzCabinetRestService_h {
 	JSONObject saveUserListType(HttpServletRequest request, String id, String listType) throws Exception;
 	
 	//Cabinet share functions
-	JSONObject getShareUserList(HttpServletRequest request, String userId, String cabinetId, String searchOpt, String searchValue) throws Exception;
+	JSONObject getShareUserList(HttpServletRequest request, String userId, String cabinetId, String searchOpt, String searchValue, String searchFlag) throws Exception;
 	JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception;
 	JSONObject saveShareUserList(HttpServletRequest request, String userId, String cabinetId, String userList) throws Exception;
 	JSONObject getAncestorShareUserList(HttpServletRequest request, String userId, String cabinetId) throws Exception;

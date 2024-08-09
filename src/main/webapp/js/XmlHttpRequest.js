@@ -700,7 +700,12 @@ function ConvertMHTtoHTML(pURL) {
 			rtnVal = result;
 		}        			
 	});
-    return rtnVal;
+    /* 2024-05-08 양지혜 - 공개문서에서 파라미터 조작으로 접근 취약점 보완. 권한 없을 시 권한없음 페이지 노출 */
+    if (rtnVal == "NoAccess") {
+        window.parent.location.replace('/ezApprovalG/accessWarning.do');
+    } else {
+        return rtnVal;
+    }
 }
 
 function ConvertHTMLtoMHT(pContent) {
@@ -2178,4 +2183,42 @@ function mkPageSelPage() {
     // append
     pageRayer.innerHTML = "";
     pageRayer.appendChild(pagenaviDIV);
+}
+
+function escapeForJson(inputString) {
+    return inputString.replace(/[\b\f\n\r\t\"\\]/g, function (char) {
+        switch (char) {
+            case '\b':
+                return '\\b';
+            case '\f':
+                return '\\f';
+            case '\n':
+                return '\\n';
+            case '\r':
+                return '\\r';
+            case '\t':
+                return '\\t';
+            default:
+                return char;
+        }
+    });
+}
+
+function unescapeForJson(inputString) {
+    return inputString.replace(/\\[bfnrt\"\\]/g, function (char) {
+        switch (char) {
+            case '\\b':
+                return '\b';
+            case '\\f':
+                return '\f';
+            case '\\n':
+                return '\n';
+            case '\\r':
+                return '\r';
+            case '\\t':
+                return '\t';
+            default:
+                return char;
+        }
+    });
 }

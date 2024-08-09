@@ -2298,7 +2298,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 						AND
 							DOCINFO.docstate <> '017'
 						AND
-							DOCINFO.functiontype IS NOT NULL
+							DOCINFO.functiontype <> '004'
 						AND
 							DOCINFO.startdate >= ADD_MONTHS(SYSDATE,-12)
                         AND
@@ -2415,12 +2415,45 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 						TBL_FORMINFO.companyid = TBL_FORMUSERINFO.companyid
 					AND
 						TBL_FORMINFO.formid = TBL_FORMUSERINFO.formid
+					LEFT JOIN
+						TBL_FORM_OFFICE O
+					ON
+						TBL_FORMINFO.FORMID = O.FORMID
+					AND
+						TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+					AND
+						TBL_FORMINFO.COMPANYID = O.COMPANYID
 					WHERE
-						TBL_FORMUSERINFO.tenant_id = #tenantId#
+						TBL_FORMUSERINFO.USERID = #userId#
 					AND
-						TBL_FORMUSERINFO.companyid = #companyId#
+						TBL_FORMINFO.FORMCONTID IN
+						(
+							SELECT
+								 TO_CHAR(FORMCONTID)
+							FROM
+								 TBL_FORMCONTUSERGROUP
+							WHERE
+								 TENANT_ID = TBL_FORMINFO.TENANT_ID
+							AND
+								 COMPANYID = TBL_FORMINFO.COMPANYID
+							AND
+								 FORMCONTUSERDEPID = #deptId#
+							UNION ALL
+							SELECT
+								 TO_CHAR(FORMCONTID)
+							FROM
+								 TBL_FORMCONTAINER
+							WHERE
+								 TENANT_ID = TBL_FORMINFO.TENANT_ID
+							AND
+								 TO_CHAR(COMPANYID) = TO_CHAR(TBL_FORMINFO.COMPANYID)
+							AND
+								 (FORMCONTOWNDEPID = 'ALL' or FORMCONTOWNDEPID = #deptId#)
+						)
 					AND
-						TBL_FORMUSERINFO.userid = #userId#
+						TBL_FORMINFO.TENANT_ID = #tenantId#
+					AND
+						TBL_FORMINFO.COMPANYID = #companyId#
 					ORDER BY
 						FORMORDER
 				) INFO
@@ -2433,11 +2466,11 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	<select id="ezNewPortal.getApprovalStatistics" parameterClass="Map" resultClass="egovframework.ezEKP.ezNewPortal.vo.LowerKeyMap">
 		<![CDATA[
 			SELECT
-                COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - INTERVAL '6' HOUR), 'YY/MM/DD')) THEN 1 END ) AS HOUR,
-                COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - 1), 'YY/MM/DD') AND TO_DATE((sysdate - INTERVAL '6' HOUR), 'YY/MM/DD') > DOCINFO.startdate) THEN 1 END ) AS DAY,
-	            COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - 7), 'YY/MM/DD') AND TO_DATE((sysdate - 1), 'YY/MM/DD') > DOCINFO.STARTDATE) THEN 1 END) AS WEEK,
-	            COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE(ADD_MONTHS(sysdate, -1), 'YY/MM/DD') AND TO_DATE((sysdate - 7), 'YY/MM/DD') > DOCINFO.STARTDATE) THEN 1 END) AS MONTH,
-	            COUNT(CASE WHEN (TO_DATE(ADD_MONTHS(sysdate, -1), 'YY/MM/DD') > DOCINFO.startdate) THEN 1 END) AS OTHER
+                COUNT(CASE WHEN (DOCINFO.startdate >= (sys_extract_utc(systimestamp) - INTERVAL '6' HOUR)) THEN 1 END ) AS HOUR,
+                COUNT(CASE WHEN (DOCINFO.startdate >= (sys_extract_utc(systimestamp) - 1) AND (sys_extract_utc(systimestamp) - INTERVAL '6' HOUR) > DOCINFO.startdate) THEN 1 END ) AS DAY,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= (sys_extract_utc(systimestamp) - 7) AND (sys_extract_utc(systimestamp) - 1) > DOCINFO.STARTDATE) THEN 1 END) AS WEEK,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= ADD_MONTHS(sys_extract_utc(systimestamp), -1) AND (sys_extract_utc(systimestamp) - 7) > DOCINFO.STARTDATE) THEN 1 END) AS MONTH,
+	            COUNT(CASE WHEN (ADD_MONTHS(sys_extract_utc(systimestamp), -1) > DOCINFO.startdate) THEN 1 END) AS OTHER
 			FROM 
 				TBL_APRDOCINFO DOCINFO
 			JOIN 
