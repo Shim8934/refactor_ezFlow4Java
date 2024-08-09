@@ -1366,7 +1366,7 @@ try {
 	);
 }
 catch (e)
-{ }
+{console.log(e);}
 String.prototype.trim = function() {
     var str = this.replace(/(\s+$)/g, "");
     return str.replace(/(^\s*)/g, "");

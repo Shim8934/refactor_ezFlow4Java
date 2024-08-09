@@ -168,6 +168,7 @@
 			try {
 				OpenWin.focus();
 			} catch (e) {
+			    console.log(e);
 			}
 		} else {
 			var rtnValue = window.showModalDialog("/admin/ezOrgan/addGroup.do",
@@ -189,6 +190,7 @@
 			try {
 				OpenWin.focus();
 			} catch (e) {
+			    console.log(e);
 			}
 		} else {
 			var rtnValue = window.showModalDialog("/admin/ezOrgan/addGroupForReference.do",
@@ -239,6 +241,7 @@
 			try {
 				OpenWin.focus();
 			} catch (e) {
+			    console.log(e);
 			}
 		} else {
 			var rtnValue = window.showModalDialog("/admin/ezOrgan/addGroup.do",

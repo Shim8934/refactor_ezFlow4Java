@@ -516,7 +516,7 @@
 					document.getElementById("mailPanel").style.backgroundColor = "";
 		            document.getElementById("iFramePanel").style.display = "none";
 		            document.getElementById("iFrameLayer").src = "/blank.htm";
-		        } catch (e) {}
+		        } catch (e) {console.log(e);}
 		    }
 		    
 		    var inputNameDlg_cross_dialogArguments = new Array();

@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.logic;
 
 import java.io.InputStream;
+import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -75,6 +76,8 @@ public class SMTPAccess {
 					}
 				});
 			}
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

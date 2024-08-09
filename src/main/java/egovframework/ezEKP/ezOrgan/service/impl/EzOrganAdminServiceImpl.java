@@ -8,6 +8,15 @@ import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TimeZone;
+import java.util.UUID;
+import java.util.regex.PatternSyntaxException;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
@@ -391,7 +400,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_CLASS", pClass);
-		map.put("v_PROPNAME", column);
+		map.put("v_PROPNAME", column.toUpperCase());
 		map.put("v_PROPVALUE", number);
 		
         // 사원의 경우
@@ -417,7 +426,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_CLASS", pClass);
-		map.put("v_PROPNAME", column);
+		map.put("v_PROPNAME", column.toUpperCase());
 		map.put("v_PROPVALUE", number);
 		map.put("V_DEPTID", deptID);
 		
@@ -1640,7 +1649,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String orderByData = "";
 		if(!sortColumn.equals("")){
 			if(sortColumn.equals("persent")){
-				orderByData = " (MAILBOXUSAGE/MAILBOXQUOTA)*100 " + sortType;
+				orderByData = "(MAILBOXUSAGE/MAILBOXQUOTA)*100 " + sortType;
 			}else if (sortColumn.equals("mailboxusage")){
 				orderByData = sortColumn +"/1024 " + sortType;
 			}				
@@ -1857,6 +1866,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
 			
 			rtnVal = "TRUE";
+		} catch (PatternSyntaxException e) {
+			logger.error(e.getMessage(), e);
+			rtnVal = "FALSE";
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";

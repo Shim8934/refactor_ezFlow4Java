@@ -19,7 +19,7 @@
 		        } catch (e) {
 		            try {
 		                CancelFunction = opener.mail_select_groupmember_cross_dialogArguments[0];
-		            } catch (e) { }
+		            } catch (e) {console.log(e);}
 		        }
 		    }
 		    function Window_Close() {

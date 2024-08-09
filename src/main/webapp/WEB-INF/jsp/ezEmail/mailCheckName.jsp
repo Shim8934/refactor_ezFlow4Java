@@ -36,7 +36,7 @@
 		                Arguments = opener.checkname_cross_dialogArguments[0];
 		                ReturnFunction = opener.checkname_cross_dialogArguments[1];
 		                CancelFunction = opener.checkname_cross_dialogArguments[2];
-		            } catch (e) { }
+		            } catch (e) {console.log(e);}
 		        }
 		        var emailaddress = "";
 		        var listview = new ListView();

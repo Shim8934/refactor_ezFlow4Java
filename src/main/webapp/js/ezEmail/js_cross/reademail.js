@@ -112,14 +112,14 @@ function encoding_mail() {
             try {
                 window.opener.MailListRefresh();
             }
-            catch (e) { }
+            catch (e) {console.log(e);}
 
             if (strRetUrl.substr(0, 5) != "ERROR") {
                 document.location.href = "/myoffice/ezEmail/mail_read.aspx?URL=" + encodeURIComponent(strRetUrl);
             }
         }
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 
 function reply_onClick() {
@@ -277,7 +277,7 @@ function delete_mail() {
 
     }
     catch (e) {
-
+        console.log(e);
     }
 
 
@@ -334,7 +334,7 @@ function event_deletemail_end() {
             window.close();
             try {
                 window.opener.MailListRefresh();
-            } catch (e) { }
+            } catch (e) {console.log(e);}
         }
 
     }
@@ -402,7 +402,7 @@ function event_CopyOrMoveMail() {
                 window.close();
                 try {
                     window.opener.MailListRefresh();
-                } catch (e) { }
+                } catch (e) {console.log(e);}
             }
             else {
                 if (g_copyItemHttp.responseText == "FULL") {
@@ -695,7 +695,7 @@ function func_reject_Complete(retVal) {
         xmlHTTP = null;
 
         completeListener();
-    } catch (e) {}
+    } catch (e) {console.log(e);}
     
     return result;
 }
@@ -731,7 +731,7 @@ function receiveCheck_onClick() {
 	}
 	
     var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(620, 500));
-    try { OpenWin.focus(); } catch (e) { }
+    try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function view_original() {
 	var url = "/ezEmail/mailReadOriginal.do?url=" + encodeURIComponent(g_paramURL);
@@ -784,7 +784,7 @@ function toggle_flag() {
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 function event_toggle_flag_end() {
     if (flagXmlHttp != null && flagXmlHttp.readyState == 4) {
@@ -1299,7 +1299,7 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
         else
             window.open("", wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
 
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 
 function mail_link(){

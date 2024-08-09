@@ -181,7 +181,7 @@
 	            mail_newreceiverchoose_dialogArguments[1] = addReceiver;
 	            
 	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "", "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 700));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	
 	        function addReceiver(strEmail) {

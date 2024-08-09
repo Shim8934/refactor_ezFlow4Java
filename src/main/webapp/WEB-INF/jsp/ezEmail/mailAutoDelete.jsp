@@ -95,7 +95,7 @@
 		        var OpenWin = window.open(requestUrl, "mail_selectfolder_Cross", GetOpenWindowfeature(465, 355));
 		        
 		        
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    function getFolder_Complete(mailBoxInfo) {
 		        if (typeof (mailBoxInfo) == "undefined")
@@ -105,6 +105,7 @@
 	        		try {
 	        			parent.parent.frames["left"].mailbox_treeview_reload();
 	        		} catch (e) {
+	        		    console.log(e);
 	        		}
 	        	}
 		        

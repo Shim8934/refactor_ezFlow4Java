@@ -519,7 +519,7 @@
 			            mail_movecopy_cross_dialogArguments[2] = "CLOSE";
 			            
 			            var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
-			            try { OpenWin.focus(); } catch (e) { }
+			            try { OpenWin.focus(); } catch (e) {console.log(e);}
 			        }
 			        else {
 			            var feature = "dialogHeight:375px; dialogWidth:320px; status:no; help:no; edge:sunken";

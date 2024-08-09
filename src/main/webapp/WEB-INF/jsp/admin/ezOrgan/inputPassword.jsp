@@ -26,7 +26,7 @@
 					var pwPolicyExplainH = $("#pwPolicyExplain").height();
 					window.resizeTo(windowW, windowH + pwPolicyExplainH);
 					
-				} catch (e) {}     
+				} catch (e) {console.log(e);}
 			});		
 
 			function OK_Click(){

@@ -2,9 +2,11 @@ package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -910,31 +912,33 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String prm = egovFileScrty.getPrm();
 		String pre = egovFileScrty.getPre();
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
-		
-		Document doc = commonUtil.convertStringToDocument(pRet);
-		NodeList rows = doc.getElementsByTagName("ROW");
-		
-		for (int i=0; i<rows.getLength(); i++) {
-			NodeList children = rows.item(i).getChildNodes();
-			String server = children.item(0).getTextContent();
-			String port = children.item(1).getTextContent();
-			String id = children.item(2).getTextContent();
-			String deleteYN = children.item(3).getTextContent();
-			String pw = children.item(4).getTextContent();
-			String saveTo = children.item(5).getTextContent();
-			String saveToFolder = children.item(6).getTextContent();
-			String useSsl = children.item(7).getTextContent().equals("true") ? "1" : "0";
-		
-			for (MailPOP3VO vo : pop3List) {
-				if (vo.getPop3Server().toLowerCase().equals(server.toLowerCase())
-						&& EgovFileScrty.decryptRsa(pk, vo.getPop3UserId()).equals(EgovFileScrty.decryptRsa(pk, id))) {
-					id = vo.getPop3UserId();
-					break;
+
+		if (pRet != null){
+			Document doc = commonUtil.convertStringToDocument(pRet);
+			NodeList rows = doc.getElementsByTagName("ROW");
+
+			for (int i=0; i<rows.getLength(); i++) {
+				NodeList children = rows.item(i).getChildNodes();
+				String server = children.item(0).getTextContent();
+				String port = children.item(1).getTextContent();
+				String id = children.item(2).getTextContent();
+				String deleteYN = children.item(3).getTextContent();
+				String pw = children.item(4).getTextContent();
+				String saveTo = children.item(5).getTextContent();
+				String saveToFolder = children.item(6).getTextContent();
+				String useSsl = children.item(7).getTextContent().equals("true") ? "1" : "0";
+
+				for (MailPOP3VO vo : pop3List) {
+					if (vo.getPop3Server().toLowerCase().equals(server.toLowerCase())
+							&& EgovFileScrty.decryptRsa(pk, vo.getPop3UserId()).equals(EgovFileScrty.decryptRsa(pk, id))) {
+						id = vo.getPop3UserId();
+						break;
+					}
 				}
+
+				inputParams += "&pop3Server=" + server + "&pop3Port=" + port + "&pop3UserId=" + id + "&pop3Password=" + pw
+						+ "&saveFolderPath=" + saveTo + "&saveFolderName=" + saveToFolder + "&deleteYN=" + deleteYN + "&sslYN=" + useSsl;
 			}
-			
-			inputParams += "&pop3Server=" + server + "&pop3Port=" + port + "&pop3UserId=" + id + "&pop3Password=" + pw 
-					+ "&saveFolderPath=" + saveTo + "&saveFolderName=" + saveToFolder + "&deleteYN=" + deleteYN + "&sslYN=" + useSsl;
 		}
 		
 		logger.debug("inputParams=" + inputParams);
@@ -1214,6 +1218,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 						ezCommonService.updateUserConfigInfo(tenantId, userId, "userFriendlyEmailAddress", updateAlias);
 					}
 					returnValue = "OK";
+				} catch (IndexOutOfBoundsException ex) {
+					logger.error(ex.getMessage(), ex);
 				} catch (Exception ex) {
 					logger.debug("set primary error!");
 					logger.error(ex.getMessage(), ex);
@@ -1732,9 +1738,9 @@ public class EzEmailServiceImpl implements EzEmailService {
             	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userAccount, password, egovMessageSource, userInfo.getLocale(), ezEmailUtil);
             	
-            	Folder folder = ia.getFolder(mailbox);
-            	
-            	if (folder.exists()) {
+            	Folder folder = ia.getFolder(mailbox != null ? mailbox : "");
+
+            	if (folder != null && folder.exists()) {
             		folder.open(Folder.READ_ONLY);
         			Message message = ((IMAPFolder)folder).getMessageByUID(Long.parseLong(uidStr));
         			
@@ -1760,7 +1766,9 @@ public class EzEmailServiceImpl implements EzEmailService {
         			
         			folder.close(false);
             	}
-            } catch (Exception e) {
+            } catch (MessagingException e) {
+            	logger.error(e.getMessage(), e);
+			} catch (Exception e) {
             	logger.error(e.getMessage(), e);
             } finally {
             	if (ia != null) {
@@ -1768,6 +1776,8 @@ public class EzEmailServiceImpl implements EzEmailService {
             	}
 			}
             
+		} catch (IndexOutOfBoundsException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -1804,6 +1814,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 				returnValue = false;
 			}
 		
+		} catch (NullPointerException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			logger.error(e.getMessage(), e);
@@ -1942,7 +1954,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        	
 	        	list.add(map);
 	        }
-	        
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -2188,6 +2201,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 					returnValue = true;
 				}
 			}
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -3640,6 +3655,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
 	        	result = (JSONObject)object.get("result");
 	        }
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -3726,6 +3743,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			if (requestMailboxList != null) {
 				for (int i = 0; i < requestMailboxList.size(); i++) {
 					String mailboxName = (String) requestMailboxList.get(i);
+					mailboxName = mailboxName != null ? mailboxName : "";
 					unreadCountMap.put(mailboxName, ia.getUnreadCount(mailboxName));
 				}
 			}
@@ -3756,6 +3774,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 			resultObject.put("unreadCountMap", unreadCountMap);
 			resultObject.put("totalUnreadCount", totalUnreadCount);
 			resultObject.put("totalUnreadCountInAllAccounts", totalUnreadCountInAllAccounts);
+		} catch (NullPointerException ex) {
+			logger.error(ex.getMessage(), ex);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
@@ -4579,6 +4599,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
 	        	throw new Exception("JGwServer ERROR");
 	        }
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.debug("[JGW-SERVER ERROR] deleteMailDeleteForUser.");
 		}
@@ -4696,6 +4718,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 					resultObj = (JSONObject) responseObj.get("result");
 				}
 			}				
+		}else{
+			resultObj = new JSONObject();
 		}
 
 		logger.debug("getMailOutOfOfficeTemplate ended.");
@@ -4863,6 +4887,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 						FileUtils.copyFile(srcFile, destFile);
 						
 						img.attr("src", mailTemplatePath + "/" + fileName);
+					} catch (IndexOutOfBoundsException e) {
+						logger.error(e.getMessage(), e);
 					} catch (Exception e) {
 						logger.debug("userMailTemplateContent Error.");
 						logger.error(e.getMessage(), e);
@@ -4953,6 +4979,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 				try {
 					File testFile = new File(realPath + mailTemplatePath);
 					FileUtils.deleteDirectory(testFile);
+				} catch (RuntimeException e) {
+					logger.error(e.getMessage(), e);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}

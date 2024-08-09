@@ -132,7 +132,7 @@
 	        
 	        if (CrossYN()) {
 	            var OpenWin = window.open(popUrl + param, "", GetOpenWindowfeature(popSizeW, popSizeH));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        else {
 	            var rtnValue = window.showModalDialog(popUrl + param, companyId, feature);

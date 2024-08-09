@@ -171,7 +171,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		
 		String returnValue = "ERROR";
 		
-		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
+		Document xmlDoc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 		Element root = xmlDoc.getDocumentElement();
 		
 		String url = "";
@@ -240,8 +240,9 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            case "NEW": 
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
-	            	if (!name.equals("") && !url.equals("")) {
+	            	if (!name.equals("") && !url.equals("") && ia != null) {
 	            		String folderPath = ia.getFolder(url).getFolder(name).getFullName();
+						folderPath = (folderPath != null) ? folderPath : "";
 	            		int result = ia.createFolder(folderPath);
 	            		
 	            		if (result == 0) {
@@ -256,9 +257,10 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
-	            	if (!name.equals("") && !url.equals("")) {
+	            	if (!name.equals("") && !url.equals("") && ia != null) {
 	            		String oldFolderPath = url;
 	            		String parentPath = ia.getFolder(oldFolderPath).getParent().getFullName();
+						parentPath = (parentPath != null) ? parentPath : "";
 	            		String newFolderPath = ia.getFolder(parentPath).getFolder(name).getFullName();
 	            		
 	            		int result = ia.moveFolder(oldFolderPath, newFolderPath);
@@ -275,9 +277,10 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
-	            	if (!destination.equals("") && !url.equals("")) {
+	            	if (!destination.equals("") && !url.equals("") && ia != null) {
 	            		String oldFolderPath = url;
 	            		String oldFolderName = ia.getFolder(oldFolderPath).getName();
+						oldFolderName = (oldFolderName != null) ? oldFolderName : "";
 	            		String newFolderPath = ia.getFolder(destination).getFolder(oldFolderName).getFullName();
 	            		
 	            		int result = ia.moveFolder(oldFolderPath, newFolderPath);
@@ -296,25 +299,27 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 	            			userAccount, password, egovMessageSource, locale, 600000, 20000, ezEmailUtil);
 	            	
-	            	if (!destination.equals("") && !url.equals("")) {
+	            	if (ia != null && url != null && !destination.equals("") && !url.equals("")) {
 	            		Folder oldFolder = ia.getFolder(url);
-	            		String folderName = oldFolder.getName();
-	            		String folderPath = ia.getFolder(destination).getFolder(folderName).getFullName();
-	            		
-	            		int result = ia.createFolder(folderPath);
-	            		
-	            		if (result == 0) {
-	            			Folder copiedFolder = ia.getFolder(folderPath);
-	            			
-	            			oldFolder.open(Folder.READ_WRITE);
-	            			oldFolder.copyMessages(oldFolder.getMessages(), copiedFolder);
-	            			oldFolder.close(true);
-        					logger.debug(url + " folder is copied to " + destination + ".");
-	            			
-	            			returnValue = "OK";
-	            		} else if (result == 2) {
-	            			returnValue = "ALREADY_EXISTS";
-	            		}
+						if (oldFolder != null){
+							String folderName = oldFolder.getName();
+							String folderPath = ia.getFolder(destination).getFolder(folderName).getFullName();
+
+							int result = ia.createFolder(folderPath);
+
+							if (result == 0) {
+								Folder copiedFolder = ia.getFolder(folderPath);
+
+								oldFolder.open(Folder.READ_WRITE);
+								oldFolder.copyMessages(oldFolder.getMessages(), copiedFolder);
+								oldFolder.close(true);
+								logger.debug(url + " folder is copied to " + destination + ".");
+
+								returnValue = "OK";
+							} else if (result == 2) {
+								returnValue = "ALREADY_EXISTS";
+							}
+						}
 	            	}
 	            	
 	                break;
@@ -322,7 +327,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
-	            	if (!url.equals("")) {
+	            	if (url != null && !url.equals("") && ia != null) {
 	            		int result = ia.deleteFolder(url);
 	            		
 	            		if (result == 0) {
@@ -335,9 +340,9 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
-	            	if (!url.equals("")) {
+	            	if (url != null && !url.equals("") && ia != null) {
 	            		Folder folder = ia.getFolder(url);
-	            		if (folder.exists()) {
+	            		if (folder != null && folder.exists()) {
 	            			folder.open(Folder.READ_WRITE);
 	            			Message[] messages = folder.getMessages();
 	        				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
@@ -354,47 +359,49 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 	            			userAccount, password, egovMessageSource, locale, 600000, 20000, ezEmailUtil);
 	            	
-	            	if (!url.equals("")) {
+	            	if (!url.equals("") && ia != null) {
 	            		String trashFolderName = ezEmailUtil.getTrashFolderId(locale);
-            			Folder trashFolder = ia.getFolder(trashFolderName);
-            			IMAPFolder folder = (IMAPFolder)ia.getFolder(url);
-            			
-	            		if (folder.exists() && trashFolder.exists()) {
-            				folder.open(Folder.READ_WRITE);
-            				Message[] messages = folder.getMessages();
-            				logger.debug("messageCount:" + messages.length );
-            				if (messages.length == 0){
-            					returnValue = "MAIL_NOT_EXISTS";
-            					break;
-            				}
-            				
-            				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
-            				
-            				if (useImapMoveCommand.equals("YES")) {            				
-	            				folder.moveMessages(messages, trashFolder);
-            				} else {            				
-                				// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
-                				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userAccount, domainName, ia);
-                				
-                				if (adjustQuotaData[0] != null) {
-                					isNewUserQuotaNeeded = true;
-                					
-                					userQuota = adjustQuotaData[0];
-                					userWarn = adjustQuotaData[1];
-                				}
+            			Folder trashFolder = ia.getFolder(trashFolderName != null ? trashFolderName : "");
+						if (trashFolder != null){
+							IMAPFolder folder = (IMAPFolder)ia.getFolder(url);
 
-                				if (adjustQuotaData[2] != null) {
-                					isThereUserLevelQuota = true;
-                				}
-                				            					
-	            				folder.copyMessages(messages, trashFolder);
-	            				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
-            				}
-            				
-            				folder.close(true);
-            				logger.debug(url + " folder's message is moved to " + trashFolderName + ".");
-            				returnValue = "OK";
-	            		}
+							if (folder.exists() && trashFolder.exists()) {
+								folder.open(Folder.READ_WRITE);
+								Message[] messages = folder.getMessages();
+								logger.debug("messageCount:" + messages.length );
+								if (messages.length == 0){
+									returnValue = "MAIL_NOT_EXISTS";
+									break;
+								}
+
+								String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+
+								if (useImapMoveCommand.equals("YES")) {
+									folder.moveMessages(messages, trashFolder);
+								} else {
+									// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+									Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userAccount, domainName, ia);
+
+									if (adjustQuotaData[0] != null) {
+										isNewUserQuotaNeeded = true;
+
+										userQuota = adjustQuotaData[0];
+										userWarn = adjustQuotaData[1];
+									}
+
+									if (adjustQuotaData[2] != null) {
+										isThereUserLevelQuota = true;
+									}
+
+									folder.copyMessages(messages, trashFolder);
+									folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+								}
+
+								folder.close(true);
+								logger.debug(url + " folder's message is moved to " + trashFolderName + ".");
+								returnValue = "OK";
+							}
+						}
 	            	}
 	            	
 	                break;
@@ -441,7 +448,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		String returnValue = "ERROR";
 		
 		boolean subscribe = false;
-		if (subscribeStr.equals("1")) {
+		if ("1".equalsIgnoreCase(subscribeStr)) {
 			subscribe = true;
 		}
 		
@@ -476,11 +483,12 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
         			userAccount, password, egovMessageSource, locale, ezEmailUtil);
-			
-			Folder f = ia.getFolder(folderId);
-			
-			f.setSubscribed(subscribe);
-			
+			if (ia != null){
+				Folder f = ia.getFolder(folderId);
+				if (f != null){
+					f.setSubscribed(subscribe);
+				}
+			}
 			returnValue = "OK";
 		} catch (MessagingException e) {
 			returnValue = "ERROR";

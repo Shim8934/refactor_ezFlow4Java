@@ -143,7 +143,7 @@
 				{
 					try {
 						window.opener.document.Script.refreshUnreadCount()
-					} catch (e) {}
+					} catch (e) {console.log(e);}
 				}
 			    if (pSecurity == "Security")
 			    {
@@ -341,7 +341,7 @@
 			    var xmpMailSign = "";
 			    try{
 			        xmpMailSign = message.EditorElementHTML("MailSign","2");
-			    }catch(e){}
+			    }catch(e){console.log(e);}
 			    message.SetEditorContentURL_Format(fullPath);
 			    message.SetEditorContent(message.GetHtmlValue()  + xmpMailSign);
 			}
@@ -383,7 +383,7 @@
 		                                         tempSignDiv.document.getElementById('MailSign').outerHTML + Orgcontentdiv);
 		            
 			        }
-			    }catch(e){}
+			    }catch(e){console.log(e);}
 			    tempDiv.innerHTML = message.GetHtmlValue();
 			    switch(SelMailSign.value)
 			    {
@@ -439,7 +439,7 @@
 		        mail_newreceiverchoose_dialogArguments[1] = new_Address_Complete;
 			    if (CrossYN()) {
 				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=1120,height=720,status=no');
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 			    } else {
 				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:720px;dialogWidth:1120px; status:no; help:no; edge:sunken");
                 }
@@ -594,7 +594,7 @@
 		        try {
 		            window.opener.window.close();
 		        } catch (e) {
-		    
+		            console.log(e);
 		        }
 		    }
 		    function DownloadAttach(DownloadUrl) {

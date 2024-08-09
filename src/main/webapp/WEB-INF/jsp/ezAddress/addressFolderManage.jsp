@@ -39,7 +39,7 @@
 	                try {
 	                    ReturnFunction = parent.address_foldermanage_dialogArguments[1];
 	                    DivPopup = true;
-	                } catch (e) { }
+	                } catch (e) {console.log(e);}
 	            }
 	        }
 	        window.onunload = function () {

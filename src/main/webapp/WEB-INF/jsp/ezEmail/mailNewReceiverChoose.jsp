@@ -163,7 +163,7 @@
 	                try {
 	                    RetValue = opener.mail_newreceiverchoose_dialogArguments[0];
 	                    ReturnFunction = opener.mail_newreceiverchoose_dialogArguments[1];
-	                } catch (e) { }
+	                } catch (e) {console.log(e);}
 	            }
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -293,8 +293,8 @@
 	                // 2024.07.25 한슬기 : 새로고침시 화면 사이즈가 계속 늘어나는 문제가 있어 변경
 	                window.resizeTo(window.outerWidth, window.outerHeight);
 	                //window.resizeTo(window.outerWidth, window.outerHeight+18);
-	                
-	                SelectReceiverWindow(eval('<c:out value="${defaultWin}"/>' + "Title"), eval("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
+
+	                SelectReceiverWindow(document.getElementById('<c:out value="${defaultWin}"/>' + "Title"), document.getElementById("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
 	            }
 	            
 	            // (수신자 설정 시 drag, drop으로 순서 조정)
@@ -383,7 +383,7 @@
 		                            opener.opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
 		                        else
 		                            window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
-		                    } catch (e) { }
+		                    } catch (e) {console.log(e);}
 		                }
 		
 		                var treeXML = loadXMLFile("/xml/common/organtree_config2.xml");
@@ -969,7 +969,7 @@
 	                    inputAddress();
 	                    return;
 	                }
-	            } catch (e) { }
+	            } catch (e) {console.log(e);}
 				var al_Include = 0;
 	            
 	            if (m_selectedTree == AddressListView) {
@@ -1060,7 +1060,7 @@
 	                            var objTr = listview.AddRow(InitTr.length);
 	                            if (MaxCntNum != 0)
 	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
@@ -1152,7 +1152,7 @@
 	                            var objTr = listview.AddRow(InitTr.length);
 	                            if (MaxCntNum != 0)
 	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
@@ -1242,7 +1242,7 @@
 	                            var objTr = listview.AddRow(InitTr.length);
 	                            if (MaxCntNum != 0)
 	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
@@ -1334,7 +1334,7 @@
 	                        var objTr = listview.AddRow(InitTr.length);
 	                        if (MaxCntNum != 0)
 	                            MaxCntNum = MaxCntNum + 1;
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
@@ -1412,7 +1412,7 @@
 	                                Resultxml = loadXMLString(pparsingXML2);
 	
 	                                var objTr = listview.AddRow(trSize);
-	                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                                listview.AddDataRow(objTr, Resultxml);
 	
 	                                document.getElementById(listid).className = "receiver_list";
@@ -1491,7 +1491,7 @@
 	                            var objTr = listview.AddRow(InitTr.length);
 	                            if (MaxCntNum != 0)
 	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
@@ -2792,7 +2792,7 @@
                                 var objTr = listview.AddRow(InitTr.length);
                                 if (MaxCntNum != 0)
                                     MaxCntNum = MaxCntNum + 1;
-                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
                                 listview.AddDataRow(objTr, Resultxml);
 
                                 document.getElementById("MsgToList").className = "receiver_list";
@@ -2850,7 +2850,7 @@
                                 var objTr = listview.AddRow(InitTr.length);
                                 if (MaxCntNum != 0)
                                     MaxCntNum = MaxCntNum + 1;
-                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
                                 listview.AddDataRow(objTr, Resultxml);
 
                                 document.getElementById("MsgCCList").className = "receiver_list";
@@ -2908,7 +2908,7 @@
                                 var objTr = listview.AddRow(InitTr.length);
                                 if (MaxCntNum != 0)
                                     MaxCntNum = MaxCntNum + 1;
-                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
                                 listview.AddDataRow(objTr, Resultxml);
 
                                 document.getElementById("MsgBCCList").className = "receiver_list";
@@ -3031,7 +3031,7 @@
 	                                MaxID = curnum;
 	                        }
 	                        var objTr = listview.AddRow(InitTr.length);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
@@ -3100,7 +3100,7 @@
 	                                MaxID = curnum;
 	                        }
 	                        var objTr = listview.AddRow(InitTr.length);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
@@ -3197,7 +3197,7 @@
 	                    }
 	
 	                    var objTr = listview.AddRow(InitTr.length);
-	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1));
 	                    listview.AddDataRow(objTr, Resultxml);
 	
 	                    document.getElementById(listid).className = "receiver_list";
@@ -3638,7 +3638,7 @@
                         MaxID = curnum;
                 }
                 var objTr = listview.AddRow(InitTr.length);
-                SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1));
                 listview.AddDataRow(objTr, Resultxml);
 
                 document.getElementById(listid).className = "receiver_list";

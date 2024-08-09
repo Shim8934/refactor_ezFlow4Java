@@ -4599,10 +4599,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			extensionAttribute1 = new String[1];
 			extensionAttribute1[0] = "";
 		} else { // 2022-01-25 이사라 - ApprovalFlag G 사용 시 추가권한은 ";"없이 입력되어 오류 발생으로 ";" 추가 함
-			for (int i = 0; i < extensionAttribute1.length; i++) {
-				String lastChk = extensionAttribute1[i];
-				String fullChk = lastChk.substring(lastChk.length() - 1).equals(";") ? lastChk : (lastChk + ";");
-				extensionAttribute1[i] = fullChk;
+			if (extensionAttribute1 != null){
+				for (int i = 0; i < extensionAttribute1.length; i++) {
+					String lastChk = extensionAttribute1[i];
+					String fullChk = lastChk.substring(lastChk.length() - 1).equals(";") ? lastChk : (lastChk + ";");
+					extensionAttribute1[i] = fullChk;
+				}
 			}
 		}
 
@@ -5729,8 +5731,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public void downloadExcelReport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadExcelReport start");
 		String fileName     = request.getParameter("fileName") != null ? request.getParameter("fileName") : "";
+		fileName = fileName.replaceAll("[\\r\\n]", "");
 		String serverName   = request.getServerName()     	   != null ? request.getServerName()     	  : "";
 		String userAgent    = request.getHeader("User-Agent")  != null ? request.getHeader("User-Agent")  : "";
+		userAgent = userAgent.replaceAll("[\\r\\n]", "");
 		
 		logger.debug("serverName: " + serverName + " || File Name: " + fileName + " || UserAgent: " + userAgent);
 		

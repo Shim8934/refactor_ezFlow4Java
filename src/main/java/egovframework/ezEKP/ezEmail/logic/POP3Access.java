@@ -101,18 +101,12 @@ public class POP3Access {
 	public boolean checkConnect() {
 		boolean returnValue = false;
 		
-		try {
-			if (getStore() != null) {
-				returnValue = true;
-			} else {
-				returnValue = false;
-			}
-			
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+		if (getStore() != null) {
+			returnValue = true;
+		} else {
 			returnValue = false;
 		}
-		
+			
 		return returnValue;
 	}
 	

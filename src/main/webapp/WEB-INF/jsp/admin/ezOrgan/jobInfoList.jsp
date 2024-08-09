@@ -289,7 +289,7 @@
 			    titleInfo_dialogArguments[1] = titleInfo_complete;
 			    
 			    var OpenWin = window.open(url, "jobPopupUI", GetOpenWindowfeature(460, 290));
-				try { OpenWin.focus(); } catch (e) { }
+				try { OpenWin.focus(); } catch (e) {console.log(e);}
 				
 			} else if (mode == "Del") {
 				var length = jobIDList.length;
@@ -373,7 +373,7 @@
 			    userinfo_dialogArguments[1] = info_user_complete;
 			    
 			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
-			    try { OpenWin.focus(); } catch (e) { }
+			    try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 		}
 		
