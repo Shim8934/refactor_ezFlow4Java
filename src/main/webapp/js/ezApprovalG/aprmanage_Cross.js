@@ -2488,7 +2488,7 @@ function setbuttonenable() {
     }
 
     /* 2024-06-28 양지혜 - 부서수신함 > 지정목록에서 사용하는 버튼 */
-    if (assignChk == "Y") {
+    if (assignChk == "Y" && pListTypeValue == "4") {
         document.getElementById("tbtnReceiptAll").style.display = "none";
         document.getElementById("tbtnRJunkyulAll").style.display = "none";
         document.getElementById("tbtnAssignList").style.display = "none";
@@ -2497,6 +2497,8 @@ function setbuttonenable() {
         document.getElementById("tbtnDraft").style.display = "none";
         document.getElementById("tbtnRedraft").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
+    } else if (assignChk == "Y" && (pListTypeValue == "2" || pListTypeValue == "3")) {
+        document.getElementById("tbtnDraft").style.display = "";
     }
     
     document.getElementById("tSearchCondi").style.display = ""; 
