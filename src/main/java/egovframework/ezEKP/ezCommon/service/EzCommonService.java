@@ -424,4 +424,7 @@ public interface EzCommonService {
 
 	public void createEmergencyNotiTable() throws Exception;
 	
+	// 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
+	public void insertMobileToggleMenus() throws Exception;
+	
 }

@@ -4190,5 +4190,32 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("createEmergencyNotiTable ended");
 	}
+	
+	// 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
+	public void insertMobileToggleMenus() throws Exception {
+		logger.debug("insertMobileToggleMenus started.");
+		
+		// menu_type이 'MG'인 데이터가 있는지 확인 (연계인 -1 제외)
+		if (!ezCommonDAO.hasMobileMenus()) {
+			
+			int menuId = ezCommonDAO.getNewMenuId();
+			ezCommonDAO.insertMoibileMenus(menuId);
+			
+			List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+			
+			for (CompanyInfoVO compVo : companyList) {
+				Map<String, Object> param = new HashMap<>();
+				param.put("companyId", compVo.getCompanyId());
+				param.put("tenantId", compVo.getTenantId());
+				param.put("menuId", menuId);
+				
+				ezCommonDAO.insertCompanyMobileMenus(param);
+				ezCommonDAO.insertCompanyMobileMenuNames(param);
+				ezCommonDAO.insertMobileMenusAuth(param);
+			}
+		}
+		
+		logger.debug("insertMobileToggleMenus ended.");
+	}
 
 }

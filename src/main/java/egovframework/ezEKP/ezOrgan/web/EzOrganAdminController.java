@@ -314,6 +314,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             ezCommonService.createConnectionMenu(); // 2024-07-22 한태훈 - 연계메뉴 및 연계 포틀릿 기본 시스템 컨피그 추가
             ezCommonService.insertStandardSystemConfigData(); // 2024-07-22 한태훈 - 시스템 컨피그 기본 데이터 추가
             ezCommonService.createEmergencyNotiTable();
+            ezCommonService.insertMobileToggleMenus(); // 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
         } catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
