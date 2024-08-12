@@ -5229,5 +5229,148 @@ VALUES
 	  PRIMARY KEY (`PERMISSION_CODE`)
 	) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
     </statement>
-
+	
+	<select id="EzCommonDAO.chkMobileMenus" resultClass="int">
+		SELECT
+            COUNT(*)
+        FROM
+            TBL_PORTAL_MENU
+		WHERE
+			MENU_TYPE = 'MG'
+		<![CDATA[
+		AND
+			MENU_ID > 0
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.getNewMenuId" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			NVL(MAX(menu_id), 0) + 1 as menuId
+		FROM
+			TBL_PORTAL_MENU
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertMoibileMenus"  parameterClass="Integer">
+		<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode)
+		SELECT
+			#menuId#, '/mobile/ezEmail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', (SELECT MAX(A.default_order) + 1 FROM TBL_PORTAL_MENU A), 'mMail'
+		UNION ALL
+		SELECT
+			(#menuId# + 1), '/mobile/ezOrgan/personList.do', 'MG', 'iconCommon icon_employee', (SELECT MAX(A.default_order) + 2 FROM TBL_PORTAL_MENU A), 'mAddress'
+		UNION ALL
+		SELECT
+			(#menuId# + 2), '/mobile/ezApprovalG/mApproveList.do?pType=DO', 'MG', 'iconCommon icon_approval', (SELECT MAX(A.default_order) + 3 FROM TBL_PORTAL_MENU A), 'mApproval'
+		UNION ALL
+		SELECT
+			(#menuId# + 3), '/mobile/ezResource/searchTodayList.do', 'MG', 'iconCommon icon_resource', (SELECT MAX(A.default_order) + 4 FROM TBL_PORTAL_MENU A), 'mResource'
+		UNION ALL
+		SELECT
+			(#menuId# + 4), '/mobile/ezBoard/boardItemList.do?boardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', 'MG', 'iconCommon icon_notice', (SELECT MAX(A.default_order) + 5 FROM TBL_PORTAL_MENU A), 'mBoard'
+		UNION ALL
+		SELECT
+			(#menuId# + 5), '/mobile/ezAddress/addressList.do?pSearchTarget=personal&pFolderName=개인주소록', 'MG', 'iconCommon icon_address', (SELECT MAX(A.default_order) + 6 FROM TBL_PORTAL_MENU A), 'mAddress'
+		UNION ALL
+		SELECT
+			(#menuId# + 6), '/mobile/ezSchedule/mScheduleList.do', 'MG', 'iconCommon icon_schedule', (SELECT MAX(A.default_order) + 7 FROM TBL_PORTAL_MENU A), 'mSchedule'
+		]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertCompanyMobileMenus"  parameterClass="Map">
+		INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER)
+		SELECT
+			#companyId#, #tenantId#, #menuId#, 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 1 FROM TBL_PORTAL_MENU_COMP A)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 1), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 2 FROM TBL_PORTAL_MENU_COMP A)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 2), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 3 FROM TBL_PORTAL_MENU_COMP A)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 3), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 4 FROM TBL_PORTAL_MENU_COMP A)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 4), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 5 FROM TBL_PORTAL_MENU_COMP A)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 5), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 6 FROM TBL_PORTAL_MENU_COMP A)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 6), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 7 FROM TBL_PORTAL_MENU_COMP A)
+	</insert>
+	
+	<insert id="EzCommonDAO.insertCompanyMobileMenuNames"  parameterClass="Map">
+		INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
+		VALUES
+			(#menuId#, 1, #companyId#, #tenantId#, '받은메일'),
+			(#menuId#, 2, #companyId#, #tenantId#, 'Received Mail'),
+			(#menuId#, 3, #companyId#, #tenantId#, '受信メール'),
+			(#menuId#, 4, #companyId#, #tenantId#, '收件箱'),
+			(#menuId#, 5, #companyId#, #tenantId#, 'Hộp Thư Đến'),
+			(#menuId#, 6, #companyId#, #tenantId#, 'Surat Masuk'),
+			((#menuId# + 1), 1, #companyId#, #tenantId#, '직원목록'),
+			((#menuId# + 1), 2, #companyId#, #tenantId#, 'Employee List'),
+			((#menuId# + 1), 3, #companyId#, #tenantId#, '従業員リスト'),
+			((#menuId# + 1), 4, #companyId#, #tenantId#, '员工名单'),
+			((#menuId# + 1), 5, #companyId#, #tenantId#, 'Danh Sách Nhân Viên'),
+			((#menuId# + 1), 6, #companyId#, #tenantId#, 'Daftar Karyawan'),
+			((#menuId# + 2), 1, #companyId#, #tenantId#, '전자결재'),
+			((#menuId# + 2), 2, #companyId#, #tenantId#, 'Approval'),
+			((#menuId# + 2), 3, #companyId#, #tenantId#, '承認'),
+			((#menuId# + 2), 4, #companyId#, #tenantId#, '审批'),
+			((#menuId# + 2), 5, #companyId#, #tenantId#, 'Phê Duyệt'),
+			((#menuId# + 2), 6, #companyId#, #tenantId#, 'Persetujuan'),
+			((#menuId# + 3), 1, #companyId#, #tenantId#, '자원관리'),
+			((#menuId# + 3), 2, #companyId#, #tenantId#, 'Resource Management'),
+			((#menuId# + 3), 3, #companyId#, #tenantId#, '資源管理'),
+			((#menuId# + 3), 4, #companyId#, #tenantId#, '资源管理'),
+			((#menuId# + 3), 5, #companyId#, #tenantId#, 'Quản Lý Tài Nguyên'),
+			((#menuId# + 3), 6, #companyId#, #tenantId#, 'Manajemen Sumber Daya'),
+			((#menuId# + 4), 1, #companyId#, #tenantId#, '게시판'),
+			((#menuId# + 4), 2, #companyId#, #tenantId#, 'Board'),
+			((#menuId# + 4), 3, #companyId#, #tenantId#, '掲示板'),
+			((#menuId# + 4), 4, #companyId#, #tenantId#, '公告板'),
+			((#menuId# + 4), 5, #companyId#, #tenantId#, 'Bảng Tin'),
+			((#menuId# + 4), 6, #companyId#, #tenantId#, 'Papan Pengumuman'),
+			((#menuId# + 5), 1, #companyId#, #tenantId#, '개인주소록'),
+			((#menuId# + 5), 2, #companyId#, #tenantId#, 'Personal Address Book'),
+			((#menuId# + 5), 3, #companyId#, #tenantId#, '個人住所録'),
+			((#menuId# + 5), 4, #companyId#, #tenantId#, '个人通讯录'),
+			((#menuId# + 5), 5, #companyId#, #tenantId#, 'Danh Bạ Cá Nhân'),
+			((#menuId# + 5), 6, #companyId#, #tenantId#, 'Buku Alamat Pribadi'),
+			((#menuId# + 6), 1, #companyId#, #tenantId#, '오늘일정'),
+			((#menuId# + 6), 2, #companyId#, #tenantId#, 'Today\'s Schedule'),
+			((#menuId# + 6), 3, #companyId#, #tenantId#, '今日のスケジュール'),
+			((#menuId# + 6), 4, #companyId#, #tenantId#, '今天的日程'),
+			((#menuId# + 6), 5, #companyId#, #tenantId#, 'Lịch Trình Hôm Nay'),
+			((#menuId# + 6), 6, #companyId#, #tenantId#, 'Jadwal Hari Ini')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertMobileMenusAuth"  parameterClass="Map">
+		INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn)
+		SELECT
+			#menuId#, #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 1), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 2), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 3), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 4), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 5), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 6), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+	</insert>
+	
 </sqlMap>

@@ -2389,4 +2389,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		insert("EzOrganAdminDAO.insertSystemConfigTypeForCompany", map);
 		insert("EzOrganAdminDAO.insertDefaultSystemConfigForCompany", map);
 	}
+
+	public void insertMobileMenuForNewCompany(Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.insertMobileMenuForNewComp", map);
+		insert("EzOrganAdminDAO.insertMobileMenuAuthForNewComp", map);
+		insert("EzOrganAdminDAO.insertMobileMenuNameForNewComp", map);
+	}
 }

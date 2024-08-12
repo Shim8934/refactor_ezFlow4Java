@@ -2611,4 +2611,37 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblNotiEmergencyPermission");
 		}	
 	}
+
+	public boolean hasMobileMenus() throws Exception {
+		try {
+			
+			if ((int) select("EzCommonDAO.chkMobileMenus") > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public int getNewMenuId() throws Exception {
+		return (int) select("EzCommonDAO.getNewMenuId");
+	}
+
+	public void insertMoibileMenus(int menuId) throws Exception {
+		insert("EzCommonDAO.insertMoibileMenus", menuId);
+	}
+
+	public void insertCompanyMobileMenus(Map<String, Object> param) {
+		insert("EzCommonDAO.insertCompanyMobileMenus", param);
+	}
+
+	public void insertCompanyMobileMenuNames(Map<String, Object> param) {
+		insert("EzCommonDAO.insertCompanyMobileMenuNames", param);
+	}
+
+	public void insertMobileMenusAuth(Map<String, Object> param) {
+		insert("EzCommonDAO.insertMobileMenusAuth", param);
+	}
 }

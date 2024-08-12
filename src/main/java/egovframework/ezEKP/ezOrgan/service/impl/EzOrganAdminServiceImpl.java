@@ -880,6 +880,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				portalTopVO.setType(0);
 				ezNewPortalDAO.insertTopMenuDisplayModeForCompany(portalTopVO); // 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
 				ezOrganAdminDao.insertConnectMenuForNewCompany(map1);
+				ezOrganAdminDao.insertMobileMenuForNewCompany(map1);	// 2024-08-12 조수빈 - 모바일 기본 메뉴 생성
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
