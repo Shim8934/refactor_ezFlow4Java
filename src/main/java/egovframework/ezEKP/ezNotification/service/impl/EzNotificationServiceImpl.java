@@ -618,8 +618,17 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 		map.put("offSet", offSet);
 		
 		logger.debug("getEmergencyNotiItem ended");
+		EmergencyNotiItemVO emergencyItem = ezNotificationDAO.getEmergencyNotiItem(map);
+		if (emergencyItem != null) {
+			String imgUrl = emergencyItem.getWriterPhoto();
+			String userPhoto = "";
+			if (imgUrl != null && !imgUrl.equals("")) {
+				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + imgUrl;
+			}
+			emergencyItem.setWriterPhoto(userPhoto);
+		}
 		
-		return ezNotificationDAO.getEmergencyNotiItem(map);
+		return emergencyItem;
 		
 	}
 

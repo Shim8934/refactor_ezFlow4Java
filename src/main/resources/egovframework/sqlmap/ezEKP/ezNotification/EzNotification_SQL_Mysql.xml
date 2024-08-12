@@ -861,7 +861,8 @@
 			B.DISPLAYNAME as writerName,
 			B.DISPLAYNAME2 as writerName2,
 			C.DISPLAYNAME as writerDeptName,
-			C.DISPLAYNAME2 as writerDeptName2
+			C.DISPLAYNAME2 as writerDeptName2,
+			B.EXTENSIONATTRIBUTE2 as writerPhoto
 		FROM
 			TBL_NOTI_EMERGENCY_ITEM A
 		INNER JOIN
