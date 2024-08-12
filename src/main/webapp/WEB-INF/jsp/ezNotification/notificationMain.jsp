@@ -158,7 +158,7 @@
 			} else {
 				for (var i = 0; i < notiList.length; i++) {
 					var noti = notiList[i];
-					var linkUrl = noti.linkUrl ? noti.linkUrl : "";
+					var linkUrl = noti.linkUrl ? noti.linkUrl : '';
 					str += noti.isRead == "Y" ? '<li class = \"read\" ' : '<li class = \"\" ';
 					str += 'onclick=\"updateNoti(\'read\'); openLink();\" ';
 					str += 'notiseq=\"' + noti.notiSeq +'\" viewtype=\"' + noti.viewType + '\" viewwidth=\"' + noti.viewWidth + '\" viewheight=\"' + noti.viewHeight + '\" ';

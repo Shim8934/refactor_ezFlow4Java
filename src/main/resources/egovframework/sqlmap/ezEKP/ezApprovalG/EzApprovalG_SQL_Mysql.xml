@@ -6595,7 +6595,7 @@
 						TBL_RECORD.ProcessDeptCode = #recDeptCode#
 				</isNotEmpty>						
 				<isNotEmpty property="title" prepend="AND">
-						TBL_SEPERATEATTACH.Title Like CONCAT(CONCAT('%', #title#), '%')
+						TBL_SEPERATEATTACH.Title Like CONCAT(CONCAT('%', REPLACE(#title#, '\\', '\\\\')), '%') ESCAPE '\\'
 				</isNotEmpty>
 				<isNotEmpty property="regType" prepend="AND">
 						TBL_SEPERATEATTACH.RegisterType = #regType#
@@ -8882,6 +8882,19 @@
 					             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 					        AND
 					             TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTID  ,
+					      (
+	                        SELECT 
+	                        	 TBL_APRRECEIPTPROCESSINFO.PROCESSORID
+					        FROM 
+					        	 TBL_APRRECEIPTPROCESSINFO 
+					     	WHERE  
+					     		 TBL_APRRECEIPTPROCESSINFO.DOCID = #v_DOCID#
+					        AND 
+					        	 TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+					        AND
+					             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+					        AND
+					             TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) PROCESSORID  ,
 						  (
 	                        SELECT 
 	                        	 TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME 
@@ -9843,7 +9856,7 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_DOCTITLE">
 							   	 	AND 
-							   	 		 DOCTITLE LIKE '%$v_DOCTITLE$%'
+							   	 		 DOCTITLE LIKE REPLACE('%$v_DOCTITLE$%', '\\', '\\\\')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_DRAFTER">
 							   	 	 AND 
@@ -14467,7 +14480,7 @@
 			TBL_RECORD.ProcessDeptCode = #recDeptCode#
 	</isNotEmpty>						
 	<isNotEmpty property="title" prepend="AND">
-			TBL_SEPERATEATTACH.Title Like CONCAT(CONCAT('%', #title#), '%')
+			TBL_SEPERATEATTACH.Title Like CONCAT(CONCAT('%', REPLACE(#title#, '\\', '\\\\')), '%') ESCAPE '\\'
 	</isNotEmpty>
 	<isNotEmpty property="regType" prepend="AND">
 			TBL_SEPERATEATTACH.RegisterType = #regType#
@@ -15680,7 +15693,7 @@
    		</isNotEmpty>
    		<isNotEmpty property="v_DOCTITLE"> 
    		 AND 
-   		 	DOCTITLE LIKE '%$v_DOCTITLE$%'
+   		 	DOCTITLE LIKE REPLACE('%$v_DOCTITLE$%', '\\', '\\\\')
    		</isNotEmpty>
    		<isNotEmpty property="v_DRAFTER"> 
    		AND 
@@ -21812,7 +21825,7 @@
 	   	</isNotEmpty>
 	   	<isNotEmpty property="v_DOCTITLE">
 	   	 AND 
-	   	 	DOCTITLE LIKE '%$v_DOCTITLE$%'
+	   	 	DOCTITLE LIKE CONCAT(CONCAT('%', REPLACE(#v_DOCTITLE#, '\\', '\\\\')), '%') ESCAPE '\\'
 	   	</isNotEmpty>
 	   	<isNotEmpty property="v_CHARGENAME">
 	   	AND 
@@ -21883,7 +21896,7 @@
 				   		</isNotEmpty>
 				   		<isNotEmpty property="v_DOCTITLE" >
 				   		 	AND 
-				   		 		B.DOCTITLE LIKE '%$v_DOCTITLE$%'
+				   		 		B.DOCTITLE LIKE CONCAT(CONCAT('%', REPLACE(#v_DOCTITLE#, '\\', '\\\\')), '%') ESCAPE '\\'
 				   		</isNotEmpty>
 				   		<isNotEmpty property="v_CHARGENAME" >
 				   		 	AND 
@@ -27510,6 +27523,10 @@
    			TENANT_ID = #v_TENANTID#
    		AND
    			COMPANYID = #companyID#
+		<isNotEmpty property="v_AprMemberSN">
+			AND
+				APRMEMBERSN = #v_AprMemberSN#
+		</isNotEmpty>
    	</delete>
    	
    	<delete id="EzApprovalG.deleteGongRamSaveExpAprLine" parameterClass="Map"> 
@@ -27521,6 +27538,10 @@
    			TENANT_ID = #v_TENANTID#
    		AND
    			COMPANYID = #companyID#
+		<isNotEmpty property="v_AprMemberSN">
+			AND
+				APRMEMBERSN = #v_AprMemberSN#
+		</isNotEmpty>
    	</delete>
    	
    	<insert id="EzApprovalG.insertGongRamSaveAprLineInfo" parameterClass="Map">
@@ -36497,4 +36518,39 @@
 		AND 
 			TENANT_ID = #v_TENANTID#
 	</select>
+
+	<!-- 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 중간순번 공람회수 시 delete -->
+	<update id="EzApprovalG.updateOtherGongRamExpAprLine" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_EXPAPRLINE
+			SET
+				APRMEMBERSN = APRMEMBERSN - 1
+			WHERE
+				DOCID = #v_DocID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				APRMEMBERSN = #v_AprMemberSN#
+		]]>
+   </update>
+
+   <update id="EzApprovalG.updateOtherGongRamAprLineInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APRLINEINFO
+			SET
+				APRMEMBERSN = APRMEMBERSN - 1
+			WHERE
+				DOCID = #v_DocID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				APRMEMBERSN = #v_AprMemberSN#
+		]]>
+   </update>
 </sqlMap>

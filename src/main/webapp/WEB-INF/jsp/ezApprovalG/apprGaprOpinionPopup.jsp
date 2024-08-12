@@ -120,7 +120,7 @@
 
 		function getNowDate() {
 			var now = new Date();
-			var month = now.getMonth().toString().length == 1 ? "0" + now.getMonth() : now.getMonth();
+			var month = now.getMonth().toString().length == 1 ? "0" + (now.getMonth() + 1) : now.getMonth() + 1;
 			var date = now.getDate().toString().length == 1 ? "0" + now.getDate() : now.getDate();
 			return now.getFullYear() + "-" + month + "-" + date;
 		}

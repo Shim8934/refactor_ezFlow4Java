@@ -1385,6 +1385,7 @@
 	        	var titleTxt_f = "<spring:message code='ezOrgan.t303' />";
 	        	var titleTxt_e = "<spring:message code='ezOrgan.kbm01' />";
 	        	var titleTxt_s = "<spring:message code='ezOrgan.t9904' />";	// 준법지원인
+	        	var titleTxt_v = "<spring:message code='ezOrgan.lhr01' />";
 	        	
 	        	var titleTxt = eval("titleTxt_" + delType);
 	        	document.getElementById("subtitle").innerText = titleTxt;

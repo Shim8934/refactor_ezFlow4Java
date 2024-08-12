@@ -37,8 +37,11 @@ var subType = {
 	},
 	schedule : {
 		add : "Schedule invitation",
+		cancel : "Cancel invitation",
 		accept : "Invitation approved",
-		reject : "Refusal of invitation"
+		reject : "Refusal of invitation",
+		mod : "Modify schedule",
+		reminder : "Reminder"
 	},
 	resource : {
 		reserve : "Resource reservation",
@@ -78,7 +81,7 @@ subType["approval"]["return"] = "Document withdraw";
 subType["approval"]["default"] = "Approval Noti";
 subType["board"]["new"] = "New posting";
 subType["board"]["return"] = "Reject approval";
-subType["schedule"]["delete"] = "cancel invitation";
+subType["schedule"]["delete"] = "Delete Schedule";
 subType["survey"]["new"] = "New registration";
 subType["poll"]["new"] = "New registration";
 subType["community"]["new"] = "New registration";

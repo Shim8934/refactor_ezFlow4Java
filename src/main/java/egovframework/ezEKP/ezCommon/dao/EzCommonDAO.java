@@ -253,6 +253,10 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public void insertUserConfigInfo(Map<String, Object> map) throws Exception {
 		insert("EzCommonDAO.insertUserConfigInfo", map);
 	}
+
+	public void deleteUserConfigInfo(Map<String, Object> map) throws Exception {
+		delete("EzCommonDAO.deleteUserConfigInfo", map);
+	}
 	
 	public void deleteMultiLoginUser(Map<String, Object> map) throws Exception {
 		update("EzCommonDAO.deleteMultiLoginUser", map);
@@ -2365,4 +2369,98 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterTblScheduleForShowtop");
 		}
 	}
+
+	public void insertGongRamListOption(Map<String, Object> map) throws Exception {
+		map.put("listOption", "014"); // APR
+		String companyId = checkGongRamListOption(map);
+
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertGongRamListOption", map);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		map.put("listOption", "015"); // END
+		companyId = checkGongRamListOption(map);
+
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertGongRamListOption", map);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private String checkGongRamListOption(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkGongRamListOption", map);
+	}
+	
+	/** 2023-09-01 한태훈 - 일정관리 > 미리알림 > tbl_schedule_reminder_scheduler 테이블 생성  */
+	public void createTblScheduleReminderScheduler() throws Exception {
+		try {
+			select("EzCommonDAO.checkScheduleReminderScheduler");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULE_REMINDER_SCHEDULER doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblScheduleReminderScheduler");
+		}
+	}
+	
+	/** 2023-09-07 한태훈 - 일정관리 > 설정 > 미리알림 시간 설정 컬럼 추가 */
+	public void addReminderTimeAtTblScheduleConfig() throws Exception {
+		try {
+			select("EzCommonDAO.checkReminderTimeColumnAtTblScheduleConfig");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULECONFIG REMINDERTIME column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addReminderTimeAtTblScheduleConfig");
+		}
+	}
+	
+	/** 2023-09-11 한태훈 - 일정관리 > 미리알림 > 하루종일 일정의 시작 시각 설정 테넌트 컨피그 추가 */
+	public void insertReminderTenantConfig(Map<String, Object> map) throws Exception{
+		map.put("property", "allDaySTimeForReminder");
+		String allDaySTimeForReminder = (String) select("EzCommonDAO.getAllDaySTimeTenantConfig", map);
+
+		if (allDaySTimeForReminder == null) {
+			logger.debug("allDaySTimeForReminder tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertAllDaySTimeForReminderTenantConfig", map);
+		}
+	}
+	
+
+	// 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+	public void alterSaveFlagForCbShare() {
+		try {
+			select(("EzCommonDAO.checkSaveFlagForCbShare"));
+		} catch (Exception e) {
+			logger.debug("TBL_CB_SHARE SAVEFLAG column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterSaveFlagForCbShare");
+		}
+	}
+
+    public void alterBoardExtentionAttrByteSize() {
+		String[] tables = {"TBL_BOARD_ITEM", "TBL_BOARD_ITEM_TEMP"};
+		String[] columns = {"EXTENSIONATTRIBUTE6", "EXTENSIONATTRIBUTE7", "EXTENSIONATTRIBUTE8", "EXTENSIONATTRIBUTE9", "EXTENSIONATTRIBUTE10"};
+		String oracleDataType = "NVARCHAR2(500)";
+		String mysqlDataType = "VARCHAR(500)";
+		
+		for (String tbl : tables) {
+			for (String column : columns) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("table", tbl);
+				map.put("column", column);
+				map.put("dataTypeOracle", oracleDataType);
+				map.put("dataTypeMysql", mysqlDataType);
+				logger.debug("alter tbl " + tbl + " column " + column + " ...");
+				update("EzCommonDAO.alterBoardExtentionAttrByteSize", map);
+			}
+		}
+    }
 }

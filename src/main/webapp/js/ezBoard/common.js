@@ -449,3 +449,26 @@ function showUserReplyReact(pItemID) {
 		}
 	});
 }
+
+
+// 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 출력값 가공
+function peoplePickerDisplay(attr, userLang) {
+    attr = attr.trim();
+    if (attr == null || typeof attr == "undefined" || attr == "") {
+        return "";
+    }
+    var rtnString = "";
+    var tempAuthListArr = attr.split(";");
+    for (let i = 0 ; i < tempAuthListArr.length; i++) {
+        var tempAuthObj = tempAuthListArr[i].split("/");
+        if (tempAuthListArr[i] == "") {
+            break;
+        }
+        if (i != 0) {
+            rtnString += ", "
+        }
+        
+        rtnString += userLang == "1" ? tempAuthObj[1] : tempAuthObj[2];
+    }
+    return rtnString;
+}

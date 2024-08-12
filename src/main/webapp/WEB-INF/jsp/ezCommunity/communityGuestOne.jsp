@@ -54,7 +54,7 @@
 					/* 2019-10-25 홍승비 - 커뮤니티 방명록에서 초단위 삭제 (타 모듈과 통일) */
 					var writeDate = SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "WRITEDAY");
 					html += writeDate.substring(0, writeDate.length - 3);
-					html += "<spring:message code='ezCommunity.t588' /></th>";
+					html += " <spring:message code='ezCommunity.t588' /></th>";
 					html += "</tr>";
 					html += "<tr style=\"border-left:1px solid #dfdfdf;border-right:1px solid #dfdfdf;\">";
 					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border:1px solid #dfdfdf;\">";

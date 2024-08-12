@@ -17,7 +17,9 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezMobile.ezOption.dao.MOptionDAO;
@@ -81,6 +83,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -113,7 +116,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	@Resource(name = "EzOrganAdminService")
 	private EzOrganAdminService ezOrganAdminService;
-	
+    
+    @Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
+
+    @Resource(name = "EzOrganService")
+    private EzOrganService ezOrganService;
+    
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonServiceImpl.class);
 
 	@Override
@@ -1187,7 +1196,31 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		boolean hasUserConfigProperty  = checkHasUserConfigProperty(tenantID, userID, "prevPwd");
 		
 		if (hasUserConfigProperty) {
-			return updateUserConfigInfo(tenantID, userID, "prevPwd", propertyValue);
+     
+            String prevPwd = getPrevPwd(tenantID, userID);
+            String[] prevPwdList = prevPwd.split(":");
+
+            OrganUserVO user = ezOrganService.getUserInfo(userID,"1",tenantID);
+            // 저장 할 값
+            String prevPwdValue = "";
+            StringJoiner joiner = new StringJoiner(":");
+            String rememberPWCount = ezCommonService.getCompanyConfig(tenantID, user.getPhysicalDeliveryOfficeName(), "RememberPWCount");
+            if (prevPwdList.length < Integer.parseInt(rememberPWCount)) {
+                // 저장된 비밀번호가 rememberPWCount개 미만일 경우
+                prevPwdValue = joiner.add(prevPwd)
+                        .add(propertyValue)
+                        .toString();
+            } else {
+                // 저장된 비밀번호가 rememberPWCount 이상일 경우 맨 처음 저장된 값 을 뺴고 합친다.
+                int startIdx = Math.max(0, prevPwdList.length - Integer.parseInt(rememberPWCount) + 1);
+                for (int i = startIdx; i < prevPwdList.length; i++) {
+                    joiner.add(prevPwdList[i]);
+                }
+                // 새로운 비밀번호 추가
+                prevPwdValue = joiner.add(propertyValue).toString();
+            }
+            
+            return updateUserConfigInfo(tenantID, userID, "prevPwd", prevPwdValue);
 		} else {
 			insertUserConfigInfo(tenantID, userID, "prevPwd", propertyValue);
 			return 0;
@@ -1251,6 +1284,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.insertUserConfigInfo(map);
 	}
 
+    @Override
+    public void deleteUserConfigInfo(int tenantID, String userID, String propertyName) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("tenant_id", tenantID);
+        map.put("user_id", userID);
+        map.put("property_name", propertyName);
+
+        ezCommonDAO.deleteUserConfigInfo(map);
+    }
+    
 	@Override
 	public void createTblCompanyConfig() throws Exception {
 		ezCommonDAO.createTblCompanyConfig();
@@ -2504,6 +2547,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("COLUMN", "GROUPCOLOR");
 			put("TYPE_MYSQL", "VARCHAR(10)"); put("TYPE_ORACLE", "VARCHAR2(10)");
 			put("AFTER", "DEFAULT NULL");
+		}});
+
+		// TBL_SCHEDULEGROUPMEMBER
+		test.add(new HashMap<String, Object>(){{ // 일정관리 > 그룹일정 작성 권한 기능 추가
+			put("TABLE","TBL_SCHEDULEGROUPMEMBER");
+			put("COLUMN", "WRITEPERMISSION");
+			put("TYPE_MYSQL", "VARCHAR(10)"); put("TYPE_ORACLE", "VARCHAR2(10)");
+			put("AFTER", "DEFAULT 'Y' NOT NULL");
 		}});
 
 		// TBL_SURVEY
@@ -3998,5 +4049,56 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     @Override
     public void addUserDeptHideFlag() throws Exception {
         ezCommonDAO.addUserDeptHideFlag();
+    }
+
+    @Override
+    public void insertGongRamListOption() throws Exception {
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+
+                ezCommonDAO.insertGongRamListOption(map);
+            }
+        }
+    }
+    
+    // 2023-09-08 한태훈 - 일정관리 > 미리알림 시간 설정 컬럼 추가
+ 	@Override
+ 	public void addReminderTimeAtTblScheduleConfig() throws Exception {
+ 		ezCommonDAO.addReminderTimeAtTblScheduleConfig();
+ 	}
+ 	
+ 	// 2023-09-08 한태훈 - 일정관리 > 미리알림 스케줄러 테이블 추가
+ 	@Override
+ 	public void createTblScheduleReminderScheduler() throws Exception {
+ 		ezCommonDAO.createTblScheduleReminderScheduler();
+ 	}
+ 	
+ 	// 2023-09-11 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그 추가, 미리알림 시 하루종일 일정의 시작 시각 설정 컨피그 추가
+ 	@Override
+ 	public void insertReminderTenantConfig() throws Exception {
+ 		
+ 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+ 		
+ 		for (TenantVO tenantVo : tenantIdList) {
+ 			Map<String, Object> map = new HashMap<String, Object>();
+ 			map.put("tenantID", tenantVo.getTenantId());
+ 			ezCommonDAO.insertReminderTenantConfig(map);
+ 		}
+ 		
+ 	}
+
+    // 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+    public void alterSaveFlagForCbShare() throws Exception {
+        ezCommonDAO.alterSaveFlagForCbShare();
+    }
+    
+    @Override
+    public void alterBoardExtentionAttrByteSize() throws Exception {
+        ezCommonDAO.alterBoardExtentionAttrByteSize();
     }
 }

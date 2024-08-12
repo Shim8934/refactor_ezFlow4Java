@@ -185,6 +185,7 @@
 				<h2><span onClick="brdlistsInit();NavigateBrdAdmin_Res('STEP')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t25" /></span></h2>
 				<h2><span onClick="NavigateBrdAdmin_Res('MOV')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t26" /></span></h2>
 				<h2><span onClick="NavigateBrdAdmin_Res('DEL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t27" /></span></h2>
+				<h2><span onClick="NavigateBrdAdmin_Res('STATUS')" style="display:inline-block;width:100%;"><spring:message code="ezResource.kwc01" /></span></h2>
 				<div class="point" style="margin-top:10px; margin-left:5px" >
 					<%-- <spring:message code="ezResource.t28" /> --%>
 					<select id="SCompID" name="SCompID" onChange="changeTree()" style="width: 145px; display: none;"></select>

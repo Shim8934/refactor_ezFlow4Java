@@ -1847,6 +1847,8 @@ public class EzSystemAdminController {
 		loginLockedDuration = loginLockedDuration.equals("") ? "0" : loginLockedDuration;
 		String useChkPrevPwd = ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"); // 2021-11-10 이사라 : 가장 최근 암호 사용 금지 여부
 		useChkPrevPwd = useChkPrevPwd.equals("") ? "NO" : useChkPrevPwd;
+		String rememberPWCount = ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount"); // 2024-07-16 김대현 : 기억할 암호 수
+		rememberPWCount = rememberPWCount.equals("") ? "1" : rememberPWCount;
 		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy"); // 암호 정책관리 사용여부
 		usePasswordPatternPolicy = usePasswordPatternPolicy.equals("") ? "NO" : usePasswordPatternPolicy;
 		logger.debug("expirePassPeriod=" + expirePassPeriod + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail 
@@ -1858,6 +1860,7 @@ public class EzSystemAdminController {
 		returnMap.put("maxAllowedCountOfLoginFail", maxAllowedCountOfLoginFail);
 		returnMap.put("LoginLockedDuration", loginLockedDuration);
 		returnMap.put("useChkPrevPwd", useChkPrevPwd); // 2021-11-10 이사라 : 추가
+		returnMap.put("rememberPWCount", rememberPWCount);
 		returnMap.put("usePasswordPatternPolicy", usePasswordPatternPolicy);
 		returnMap.put("pwPolicyMap", pwPolicyMap);
 		logger.debug("return :: " + returnMap.toString());

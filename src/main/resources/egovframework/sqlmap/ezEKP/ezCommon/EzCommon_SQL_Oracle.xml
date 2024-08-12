@@ -183,6 +183,19 @@
 			)
 		]]>
 	</insert>
+
+	<delete id="EzCommonDAO.deleteUserConfigInfo" parameterClass="Map">
+		<![CDATA[
+		DELETE FROM
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenant_id#
+		  AND
+			USER_ID = #user_id#
+		  AND
+			PROPERTY_NAME = #property_name#
+		]]>
+	</delete>
 	
 	<update id="EzCommonDAO.updateUserConfigInfo" parameterClass="Map">
 		<![CDATA[
@@ -5035,5 +5048,138 @@
 		    tbl_addjobmaster 
 		ADD 
 		    USERTREEFLAG char(1) DEFAULT 'Y'
+	</statement>
+
+	<select id="EzCommonDAO.checkGongRamListOption" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				companyid
+			FROM
+				TBL_LISTOPTION
+			WHERE
+				LISTTYPE = #listOption#
+			AND
+				companyid = #companyId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				ROWNUM = 1
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertGongRamListOption">
+		<![CDATA[
+			INSERT ALL
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,1,'순번',35,'TBL_APRLINEINFO','AprMemberSN',NULL,NULL,'결재선정보(공람)','순번','No.','順番','序号',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,2,'성명',100,'TBL_APRLINEINFO','AprMemberName',NULL,NULL,'결재선정보(공람)','성명','Name','氏名','姓名',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,3,'직위',100,'TBL_APRLINEINFO','AprMemberJobTitle',NULL,NULL,'결재선정보(공람)','직위','Title','役職','职位',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,4,'부서',300,'TBL_APRLINEINFO','AprMemberDeptName',NULL,NULL,'결재선정보(공람)','부서명','Dept.','部署','部门',#tenantId#, #companyId#)
+				INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+				VALUES (#listOption#,5,'공람일시',300,'TBL_APRLINEINFO','ProcessDate',NULL,NULL,'결재선정보(공람)','공람일시','Date','供覧日時','供览日时',#tenantId#, #companyId#)
+			SELECT
+				*
+			FROM DUAL
+		]]>
+   	</insert>
+
+	<select id="EzCommonDAO.checkScheduleReminderScheduler">
+		SELECT
+			SCHEDULEID
+		FROM
+			TBL_SCHEDULE_REMINDER_SCHEDULER
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblScheduleReminderScheduler">
+	CREATE TABLE "TBL_SCHEDULE_REMINDER_SCHEDULER" (
+			"SCHEDULEID" NUMBER(10,0) NOT NULL ENABLE,
+			"PARENTID" NUMBER(10,0) DEFAULT 0 NOT NULL ENABLE,
+			"OWNERID" NVARCHAR2(50) NOT NULL ENABLE,
+			"OWNERNAME" NVARCHAR2(80) NOT NULL ENABLE,
+			"OWNERNAME2" NVARCHAR2(50),
+			"CREATORID" NVARCHAR2(50) NOT NULL ENABLE,
+			"CREATORNAME" NVARCHAR2(50) NOT NULL ENABLE,
+			"CREATORNAME2" NVARCHAR2(50),
+			"SCHEDULETYPE" NUMBER(5,0) NOT NULL ENABLE,
+			"DATETYPE" NUMBER(5,0) NOT NULL ENABLE,
+			"STARTDATE" DATE NOT NULL ENABLE,
+			"ENDDATE" DATE NOT NULL ENABLE,
+			"REPETITION" NVARCHAR2(50),
+			"TITLE" NVARCHAR2(250) NOT NULL ENABLE,
+			"TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+			"COMPANYID" VARCHAR2(40),
+			"REMINDERSTATUS" NCHAR(1) DEFAULT '0',
+			"OFFSETINFO" CHAR(10),
+			"LANG" NVARCHAR2(10),
+			"OFFSETMIN" NVARCHAR2(10),
+			
+			CONSTRAINT "TBL_SCHEDULE_REMINDER_SCHEDULER_PK" PRIMARY KEY ("SCHEDULEID")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkReminderTimeColumnAtTblScheduleConfig">
+		SELECT
+			REMINDERTIME
+		FROM
+			TBL_SCHEDULECONFIG
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.addReminderTimeAtTblScheduleConfig">
+		ALTER TABLE
+			TBL_SCHEDULECONFIG
+		ADD
+			REMINDERTIME NVARCHAR2(4) DEFAULT '0' NOT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.getAllDaySTimeTenantConfig" parameterClass="map" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = #property#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<insert id="EzCommonDAO.insertAllDaySTimeForReminderTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantID#, #property#, '09:00', 'HH24:MM 형식으로 미리알림 시 하루종일 일정의 시작 시각 설정가능(MM은 00 또는 30만 가능)', '미리알림 시 하루종일 일정의 시작 시각 세팅', TO_DATE('2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일정관리')
+	</insert>
+	
+	<select id="EzCommonDAO.checkSaveFlagForCbShare" resultClass="String">
+	<![CDATA[
+		SELECT
+			SAVEFLAG
+		FROM
+			TBL_CB_SHARE
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSaveFlagForCbShare">
+	<![CDATA[
+		ALTER TABLE
+			TBL_CB_SHARE
+			ADD
+				SAVEFLAG NUMBER(3,0)
+		]]>
+    </statement>
+	
+	<statement id="EzCommonDAO.alterBoardExtentionAttrByteSize" parameterClass="Map">
+		ALTER TABLE 
+			$table$ 
+		MODIFY 
+			($column$ $dataTypeOracle$)
 	</statement>
 </sqlMap>

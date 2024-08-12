@@ -853,6 +853,12 @@
            				CN = #v_pUserID#
                     AND
                     	DEPARTMENT = #v_pDeptID#
+        ]]>
+		<isNotEmpty property="jobName">
+					AND
+						TITLE = #jobName#
+		</isNotEmpty>
+		<![CDATA[
                     AND
                     	TENANT_ID = #tenantID#
                     AND
@@ -891,6 +897,12 @@
            				B.CN = #v_pUserID#
                     AND
                     	A.DEPTID = #v_pDeptID#
+        ]]>
+		<isNotEmpty property="jobName">
+					AND
+						A.TITLE = #jobName#
+		</isNotEmpty>
+		<![CDATA[
                     AND
                     	A.TENANT_ID = #tenantID#
                     AND

@@ -47,6 +47,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.codec.binary.Base64;
@@ -379,8 +380,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardItemList_favorite started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useRunTime", useRunTime);
 
 		logger.debug("boardItemList_favorite ended");
     	return "ezBoard/boardItemList_favorite";
@@ -1010,11 +1013,24 @@ public class EzBoardController extends EgovFileMngUtil{
 			isMyBoard = "YES";
 		}
 		
+		//확장컬럼 데이터
+		List<BoardAttributeVO> boardAttr = new ArrayList<BoardAttributeVO>();
+		int boardAttrCount = 0;
+
+		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
+			boardAttr = ezBoardAdminService.getBoardAttribute(pBoardID, userInfo.getTenantId());
+			boardAttrCount = boardAttr.size();
+		}
+		
+		Gson gson = new Gson();
+		String boardAttrJson = gson.toJson(boardAttr);
+		
 		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
 
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName).replace("\\", "&#92;"));
 		model.addAttribute("boardID", commonUtil.stripScriptTags(pBoardID));
+		model.addAttribute("boardAttrJson", boardAttrJson);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("use_ocs", use_ocs);
@@ -3896,11 +3912,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			useBoardFilePrvw = "0";
 		}
+		
+		Gson gson = new Gson();
+		String boardAttrJson = gson.toJson(boardAttr);
+		String boardItemJson = gson.toJson(boardItem);
 		 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
+		model.addAttribute("boardItemJson", boardItemJson);
 		model.addAttribute("boardAttr", boardAttr);
+		model.addAttribute("boardAttrJson", boardAttrJson);
 		model.addAttribute("boardAttrCount", boardAttrCount);
 		model.addAttribute("adjacentItem", adjacentItem);
 		model.addAttribute("boardPropertyVO", boardPropertyVO);
@@ -11014,5 +11036,34 @@ public class EzBoardController extends EgovFileMngUtil{
                          .replaceAll("\\%7E", "~");
 
 	    return result;
+	}
+	
+	// 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 > 유저 선택 팝업 호출
+	@RequestMapping(value = "/ezBoard/boardSelectUser.do", method = RequestMethod.GET)
+	public String personalPopupUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("personalPopupUser started");
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String deptID = auth.getDeptID();
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request.getParameter("name");
+		String companyId = request.getParameter("companyId");
+		String lang = auth.getLang();
+		String columnName = request.getParameter("columnName") == null ? "" : request.getParameter("columnName");
+
+		model.addAttribute("columnName", columnName);
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName", textName);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("dept", auth.getDeptID());
+		model.addAttribute("lang", lang);
+
+		logger.debug("personalPopupUser ended");
+		return "/ezBoard/boardSelectUser";
 	}
 }
