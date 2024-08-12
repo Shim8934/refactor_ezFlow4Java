@@ -198,6 +198,19 @@
 					PROPERTY_NAME = #property_name#
 		]]>	
 	</update>
+
+	<delete id="EzCommonDAO.deleteUserConfigInfo" parameterClass="Map">
+		<![CDATA[
+		DELETE
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenant_id#
+		  AND
+			USER_ID = #user_id#
+		  AND
+			PROPERTY_NAME = #property_name#
+		]]>
+	</delete>
 	
 	<delete id="EzCommonDAO.deleteUserLLocalInfo" parameterClass="Map">
 		<![CDATA[
@@ -5811,4 +5824,10 @@
 			(#menuId# + 6), #companyId#, #tenantId#, #companyId#, 1, 0, 1 FROM DUAL
 	</insert>
 	
+	<statement id="EzCommonDAO.alterBoardExtentionAttrByteSize" parameterClass="Map">
+		ALTER TABLE
+			$table$
+		MODIFY
+			($column$ $dataTypeOracle$)
+	</statement>
 </sqlMap>

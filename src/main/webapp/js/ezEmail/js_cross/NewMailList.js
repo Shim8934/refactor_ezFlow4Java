@@ -692,8 +692,9 @@ function makeReceiverList(parentId) {
             var TD6_Span = document.createElement("SPAN");
             TD6_Span.innerHTML = reSendMsg;
             TD6_Span.setAttribute("EMAIL", readerEmail);
+            TD6_Span.setAttribute("READERNAME", readerName);
             TD6_Span.onclick = function () {
-                ReSend(msgHref, this.getAttribute("EMAIL"));
+                ReSend(msgHref, this.getAttribute("EMAIL"), this.getAttribute("READERNAME"));
             };
             TD6_ATag.appendChild(TD6_Span);
             

@@ -2184,3 +2184,41 @@ function mkPageSelPage() {
     pageRayer.innerHTML = "";
     pageRayer.appendChild(pagenaviDIV);
 }
+
+function escapeForJson(inputString) {
+    return inputString.replace(/[\b\f\n\r\t\"\\]/g, function (char) {
+        switch (char) {
+            case '\b':
+                return '\\b';
+            case '\f':
+                return '\\f';
+            case '\n':
+                return '\\n';
+            case '\r':
+                return '\\r';
+            case '\t':
+                return '\\t';
+            default:
+                return char;
+        }
+    });
+}
+
+function unescapeForJson(inputString) {
+    return inputString.replace(/\\[bfnrt\"\\]/g, function (char) {
+        switch (char) {
+            case '\\b':
+                return '\b';
+            case '\\f':
+                return '\f';
+            case '\\n':
+                return '\n';
+            case '\\r':
+                return '\r';
+            case '\\t':
+                return '\t';
+            default:
+                return char;
+        }
+    });
+}

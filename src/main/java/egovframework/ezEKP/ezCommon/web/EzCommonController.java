@@ -233,7 +233,7 @@ public class EzCommonController extends EgovFileMngUtil{
 				String docID = tmpStr[tmpStr.length - 1].substring(0, 20);
 				String aprPass = "";
 				String endPass = "";
-				aprPass = ezApprovalGService.getAccessYNGforAPR(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+				aprPass = ezApprovalGService.getAccessYNGforAPR(docID, accessInfo, approvalFlag, userInfo);
 				endPass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 				if (aprPass.contains("FALSE") || endPass.contains("FALSE")) {
 					return "NoAccess";

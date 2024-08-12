@@ -507,6 +507,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			frameId = "5";
 		} else if (themeId.equals("3")) {
 			frameId = "8";
+		} else if (themeId.equals("4")) {
+			frameId = "9";
 		}
 		
 		map.put("userId", userId);
@@ -515,7 +517,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("frameId", frameId);
 		map.put("themeId", themeId);
 		map.put("usePaging", param.get("usePaging") == null ? 1 : param.get("usePaging"));
-		map.put("isDefault", 1);
+		
+		if (!themeId.equals("4")){
+			map.put("isDefault", 1);
+		} else {
+			map.put("isDefault", 0);
+		}
+		
 		map.put("usedTheme", themeId);
 		
 		logger.debug("map.toString() : " + map.toString());
@@ -932,7 +940,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("tenantId", tenantId);
 				map.put("portletLang", portletLang);
 				map.put("themeId", themeId);
-				map.put("portletUsed", 1);
+				if (themeId != 4) {
+					map.put("portletUsed", 1);	
+				}
+				
 				ezNewPortalDAO.updatePortletOrderUser(map);
 
 				/*int portletId = Integer.parseInt(portlet.get("portletId").toString());
@@ -944,7 +955,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		boolean usePortletSize = "Y".equals(ezCommonService.getTenantConfig("usePortletSize", tenantId));
 
-		if (usePortletSize) {
+		if (usePortletSize && themeId != 4) {
 			ezNewPortalDAO.clearPortletSizeUser(map);
 			ezNewPortalDAO.insertPortletSizeUser(sizeList);
 		}

@@ -2420,7 +2420,7 @@
 			AND
 				B.BRD_COMPANY = #brd_company#
 			AND
-				A.BRD_COMPANY = B.BRD_COMPANY;
+				A.BRD_COMPANY = B.BRD_COMPANY
 		]]>
 	</select>
 

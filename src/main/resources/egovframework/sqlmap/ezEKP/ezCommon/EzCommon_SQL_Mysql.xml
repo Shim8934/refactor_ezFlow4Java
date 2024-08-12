@@ -212,6 +212,19 @@
 			)
 		]]>
 	</insert>
+
+	<delete id="EzCommonDAO.deleteUserConfigInfo" parameterClass="Map">
+		<![CDATA[
+		DELETE FROM
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenant_id#
+		  AND
+			USER_ID = #user_id#
+		  AND
+			PROPERTY_NAME = #property_name#
+		]]>
+	</delete>
 	
 	<update id="EzCommonDAO.updateUserConfigInfo" parameterClass="Map">
 		<![CDATA[
@@ -4832,6 +4845,13 @@
 				SAVEFLAG tinyint(4)
 		]]>
     </statement>
+
+	<statement id="EzCommonDAO.alterBoardExtentionAttrByteSize" parameterClass="Map">
+		ALTER TABLE
+			$table$
+		MODIFY
+			$column$ $dataTypeMysql$
+	</statement>
 	
 	<!--2024-07-12 황인경 - 모바일 포탈 개발 -->
 	<select id="EzCommonDAO.checkMobileTheme" resultClass="Integer">

@@ -2432,7 +2432,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<DATA1>" + jobList.get(i).getJobID() + "</DATA1>");
 				rtnVal.append("<DATA2>" + jobList.get(i).getType()  + "</DATA2>");
 				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4>");
-				rtnVal.append("<DATA5><![CDATA[" + getCompanyName(jobList.get(i).getCompanyID(), tenantID, lang) + "]]></DATA5></CELL>");
+				rtnVal.append("<DATA5><![CDATA[" + getCompanyName(jobList.get(i).getCompanyID(), tenantID, lang) + "]]></DATA5>");
+				rtnVal.append("<DATA6><![CDATA[" + jobList.get(i).getDisplayName() + "]]></DATA6>");
+				rtnVal.append("<DATA7><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></DATA7></CELL>");
 				rtnVal.append("</ROW>");
 			}
 		}
