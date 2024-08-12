@@ -151,6 +151,47 @@
 	        $( window ).resize(function() {
 	        	leftResize();
 	    	});
+            
+            function btnChangeSDept_onclick() {
+            	SelectDept("OPEN", btnChangeSDept_onclick_Complete);
+            }
+            
+            var selectdept_cross_dialogArguments = new Array();
+            function SelectDept(opentype, CompleteFunction) {
+            	var rtn;
+            	var para = new Array();
+            	var url = "/ezApprovalG/selectDept.do";
+            
+            	selectdept_cross_dialogArguments[0] = para;
+            
+            	if (opentype == undefined && CompleteFunction == undefined) {
+            		selectdept_cross_dialogArguments[1] = SelectDept_Complete;
+            		DivPopUpShow(350, 360, url);
+            	} else if (opentype == undefined && CompleteFunction != undefined) {
+            		selectdept_cross_dialogArguments[1] = CompleteFunction;
+            		DivPopUpShow(350, 360, url);
+            	} else if (opentype != undefined && CompleteFunction == undefined) {
+            		selectdept_cross_dialogArguments[1] = SelectDept_Complete;
+            		var OpenWin = window.open(url, "SelectDept_Cross", GetOpenWindowfeature(350, 360));
+            		try { OpenWin.focus(); } catch (e) { }
+            	} else {
+            		selectdept_cross_dialogArguments[1] = CompleteFunction;
+            		var OpenWin = window.open(url, "SelectDept_Cross", GetOpenWindowfeature(350, 360));
+            		try { OpenWin.focus(); } catch (e) { }
+            	}
+            selectdept_cross_dialogArguments[2] = true;
+            }
+            
+            function btnChangeSDept_onclick_Complete(rtn) {
+                console.log(rtn);
+                console.log(rtn[1]);
+                
+                url = "/admin/ezApprovalG/apprGDocListAdminIndex.do?listType=1&selectDeptID=" + rtn[1];                
+                var OpenWin = window.open(url, "Cabinet");
+                
+                try { OpenWin.focus(); } catch (e) { }
+            }
+            
 		</script>
 	</head>
 	<body class="newLeft">
@@ -204,6 +245,7 @@
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span></h2>	
 				<c:if test="${approvalFlag == 'G'}">
+				    <h2><span style="display:inline-block;width:100%;" onClick="btnChangeSDept_onclick()"><spring:message code='ezApprovalG.lhr001'/></span></h2>
 					<h2><span style="display:inline-block;width:100%;" onClick="goPage(17)"><spring:message code='ezApprovalG.t560'/></span></h2>
 				</c:if>
 				<h2 style="display:none;"><span style="display:inline-block;width:100%;" onClick="goPage('sendout')">발송현황</span></h2>	
