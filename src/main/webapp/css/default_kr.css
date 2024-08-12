@@ -2618,6 +2618,14 @@ div#txtContent table {margin:auto;}
 .icon16:hover{background-color:#f7fbff !important}
 .icon16{ background:url(../images/ImgIcon/icon16.png) no-repeat !important; background-color: transparent !important; vertical-align: top !important; overflow: hidden; } /* icon16 통합아이콘 */
 .icon16_delete{background-position:0px 0px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 삭제아이콘 */
+.icon16_unreadMail_del {
+    background-position: -106px -103px !important;
+    width: 20px;
+    height: 22px;
+    display: inline-block;
+    margin: 5px 0px 0px 0px;
+    cursor: pointer;
+}/* icon16 안읽은메일삭제 아이콘 */
 .icon16_print{background-position:-78px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 인쇄아이콘 */
 .icon16_refresh{background-position:-26px 0px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 새로고침아이콘 */
 .icon16_clickmore{background-position:-52px 0px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 메뉴버튼 더보기아이콘 */

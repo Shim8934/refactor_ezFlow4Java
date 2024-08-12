@@ -122,6 +122,7 @@
 		    var useMailConfirm = "${useMailConfirm}";
 		    var mailsearchDetail = "N";
 		    var mailSearchDetailCheck = "N";// 메일 검색을 위해 height를 200을 줄였는지 체크하는 config
+		    var pDeleteBoxID = "${pDeleteBoxID}";
 		    var offsetMin = "${offsetMin}";
 		    var searchCArray = new Array();
 			var searchKArray = new Array();
@@ -276,6 +277,13 @@
 		    		$('#liReSend').css('display', 'block');
 		    	}
 		    	
+		    	// 2024-08-13 안읽은 메일 일괄삭제 기능은 태그 지원 안함
+		    	// 태그는 기본적으로 읽은 메일이며, 중요도 높은 메일로 본 기능과 연관성이 매우 낮음
+		    	// 하지만 스팩 변경의 경우를 대비하여 function과 backend에는 코드 남겨둠
+		    	if (g_foldertype === "tag") {
+		    	    document.getElementById("trashUnreadBtn").style.display = "none";
+		    	}
+		    	
 		    	if (g_moveUrl == 'receiveChk') {
 		    		document.getElementById("reply").style.display = "none";
 		    		document.getElementById("replyMenu").style.display = "none";
@@ -284,6 +292,7 @@
 		    		document.getElementById("unread_stat").style.display = "none";
 		    		document.getElementById("deleteone").style.display = "none";
 		    		document.getElementById("trashBtn").style.display = "none";
+		    		document.getElementById("trashUnreadBtn").style.display = "none";
 		    		$('#liReSend').css('display', 'block');
 		    		document.getElementById("MailHeader").style.minWidth = "600px";
 		    		document.getElementById("contentlist").style.minWidth = "600px";
@@ -360,6 +369,7 @@
 		        	importBtn.style.display = 'none';
 		        	moveBtn.style.display = 'none';
 		        	trashBtn.style.display = 'none';
+		        	trashUnreadBtn.style.display = 'none';
 		        	deleteone.style.display = 'none';
 		        	deleteall.style.display = 'none';
 		        	moveMenu.style.display = 'none';
@@ -1863,6 +1873,7 @@
 			  </c:if>
 	          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="icon16 icon16_star"></span></li>
 	          <li id="trashBtn"><span class="icon16 icon16_delete" onClick="deleteWork(false)"></span></li>
+              <li id="trashUnreadBtn" title="<spring:message code="ezEmail.unread.delete" />"><span class="icon16 icon16_unreadMail_del" onClick="deleteUnreadWork()"></span></li>
 	          <li onClick="MailListRefresh()"><span class="icon16 icon16_refresh"></span></li>
 	          <c:if test="${useHackingMailReport == 'YES'}">
 			  <li id="hackingMail" title="<spring:message code="ezEmail.zno002" />"><span class="icon16 icon16_spam" onClick="moveHackingMail()"></span></li>		
