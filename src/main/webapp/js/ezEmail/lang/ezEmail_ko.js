@@ -383,6 +383,10 @@ const strLangTempSaveAttachmentsWarning = "저장 시 첨부된 파일은 삭제
 
 var strNoSubject = "제목란이 비었습니다."; 
 var strSendOK = "메일이 정상적으로 발송 되었습니다.";
+var strUreadDelChk = "해당 편지함의 안 읽은 메일을 모두 삭제 하시겠습니까?"
+var strUreadDelSearch = "검색된 메일 중에서 안 읽은 메일을 모두 삭제 하시겠습니까?"
+var strUreadDelPermenant = "삭제 시 메일은 복구할 수 없습니다.\n편지함에 있는 안 읽은 메일을 모두 영구 삭제하시겠습니까?";
+var strUreadDelSearchPermenant = "삭제 시 메일은 복구할 수 없습니다.\n검색된 메일 중에서 안 읽은 메일을 모두 영구 삭제하시겠습니까?";
 
 function GetLocalTime(Offset , pDateTime)
 {

@@ -383,6 +383,10 @@ const strLangTempSaveAttachmentsWarning = "Attached files will be deleted upon s
 
 var strNoSubject = "Enter title.";
 var strSendOK = "The email has been sent successfully.";
+var strUreadDelChk = "Do you want to delete all unread emails in this mailbox?";
+var strUreadDelSearch = "Do you want to delete all unread emails among the search results?";
+var strUreadDelPermenant = "Once deleted, the emails cannot be recovered.\nDo you want to permanently delete all unread emails in the mailbox?";
+var strUreadDelSearchPermenant = "Once deleted, the emails cannot be recovered.\nDo you want to permanently delete all unread emails among the search results?";
 
 function GetLocalTime(Offset , pDateTime)
 {
