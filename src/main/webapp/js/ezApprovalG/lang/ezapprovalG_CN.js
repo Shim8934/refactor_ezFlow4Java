@@ -1165,3 +1165,13 @@ var strLang975 = "格式版本不同，不能重复使用.";
 var strLangJIH01 = "无法预览安全文档。";
 var strLangJIH02 = "/blank_cn.htm";
 var strLangJIH03 = "对外收信箱可以首次阅览文件后进行预览。"
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "批受理已完成。";
+var strLangLGEAR02 = "批量受理中发生错误。<br>";
+var strLangLGEAR03 = "批受理者已结算完毕。";
+var strLangLGEAR04 = "批量受理者裁决中发生错误。<br>";
+
+// 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "您是否要继续进行批量提交？<br>状态为退回文件的，执行文本和协议文本，以及存在分离附件的文件除外。";
+var strLangJSBAP03 = "您是否要继续进行批量提交和最终审批？<br>状态为退回文件的，执行文本和协议文本，以及存在分离附件的文件除外。";

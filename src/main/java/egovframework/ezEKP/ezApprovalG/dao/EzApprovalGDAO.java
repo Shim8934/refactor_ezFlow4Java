@@ -3987,4 +3987,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateOtherGongRamAprLineInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateOtherGongRamAprLineInfo", map);
 	}
+	
+	public void updateCreateDateOfOpenGovDocInfo(Map<String, Object> param) {
+		update("EzApprovalG.updateCreateDateOfOpenGovDocInfo", param);
+	}
 }

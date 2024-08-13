@@ -17,16 +17,16 @@ $(function() {
 	var type = "<c:out value='${type}'/>";
 	var fileName = "<c:out value='${fileName}'/>";
 	initBoardPortletInfo(boardPortlet, type, fileName);
+	var portletName = "<c:out value='${portletName }'/>";
+	ellipsisTitle(portletName, boardPortlet);
 });
 </script>
 </head>
 <body>
-	<article class="customBoard box_shadow">
+<article class="customBoard box_shadow">
 		<div class="layDIV">
 			<dl class="portlet_title sortablePortlet">
-				<dt class="portletText">
-					<c:out value="${portletName }"/>
-				</dt>
+				<dt class="portletText"></dt>
 				<dd id="<c:out value='portletPlus${portletId}'/>" class="portletPlus plus" data1="<c:out value='${boardId }'/>"></dd>
 				<!-- 
 				<dd class="portletPlus nextBtn" onclick="<c:out value='nextPageBoardPortlet(${portletId})'/>">
