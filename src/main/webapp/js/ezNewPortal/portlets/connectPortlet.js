@@ -13,12 +13,13 @@ function initConnectionPortlet(connectPortletId) {
 		return getConnectPagePerCount(connectPortletId);
 	}
 	newObj.portletCode = "connectPortlet";
+	newObj.portletId = connectPortletId;
 	newObj.getPortletList = function () {
-		if (document.getElementById(connectPortletId + "Portlet").querySelector('.portletPagingArea')) {
-			var currentPage = newObj.page.getPage();
-			getConnectList(currentPage, connectPortletId);
-		} else if (document.getElementById(connectPortletId + "Portlet").querySelector('.portletLimitPagingArea')) {
-			getConnectList(1, connectPortletId);
+		if (this.page.paging == "noLimit") {
+			var currentPage = this.page.getPage();
+			getConnectList(currentPage, this.portletId);
+		} else {
+			getConnectList(1, this.portletId);
 		}
 	}
 	portletInfoMap["portlet" + connectPortletId] = newObj;
@@ -58,7 +59,7 @@ function getConnectList(currentPage, portletId) {
 			}
 		},
 		error : function(error) {
-			makeMessageContent(messages.strLang2, document.getElementById(portletId + "Portlet").querySelector('.portletLimitPagingArea'));
+			makeMessageContent(messages.strLang2, document.getElementById(portletId + "Portlet").querySelector('.portletPagingArea'));
 		}
 	});
 }
@@ -75,6 +76,8 @@ function makeStandardConnectPortlet(data, portletId) {
 	var resultStr = "";
 	var usedTheme =  document.getElementById("usedTheme" + portletId).value;
 	var dataList = null;
+	var paging = data.paging;
+	connectPortletPaging.paging = paging;
 	makePlusBtn(portletId, usedTheme, data.linkUrl, 750, 600);
 	
 	while(connectListDiv.firstChild) {
@@ -88,9 +91,9 @@ function makeStandardConnectPortlet(data, portletId) {
 			resultStr += replaceTemplateLiterals(connectPortletTemplate[data.viewType], dataInfo, dataList[i], dataResultType);
 		}
 		
-		if (data.paging == "noLimit") {
+		if (paging == "noLimit") {
 			totalCnt = dataObj[dataResultFormat.totalCnt];
-		} else if (data.paging == "limit") {
+		} else if (paging == "limit") {
 			totalCnt = dataList.length;
 		}
 		
@@ -100,11 +103,11 @@ function makeStandardConnectPortlet(data, portletId) {
 			resultStr += replaceTemplateLiterals(connectPortletTemplate[data.viewType], dataInfo, dataList[j], dataResultType);
 		}
 		
-		if (data.paging == "noLimit") {
+		if (paging == "noLimit") {
 			var parser = new DOMParser();
 			var xmlDoc = parser.parseFromString(data.portletDataStr, 'text/xml');
 			totalCnt = xmlDoc.getElementsByTagName(dataResultFormat.totalCnt)[0].textContent;
-		} else if (data.paging == "limit") {
+		} else if (paging == "limit") {
 			totalCnt = dataList.length;
 		}
 		
@@ -121,8 +124,8 @@ function makeStandardConnectPortlet(data, portletId) {
 		connectListDiv.insertAdjacentHTML('beforeend', resultStr);
 	}
 	
-	if (data.paging == "limit") {
-		var portletArea = document.getElementById(portletId + "Portlet").querySelector('.portletLimitPagingArea');
+	if (paging == "limit") {
+		var portletArea = document.getElementById(portletId + "Portlet").querySelector('.portletPagingArea');
 		var listElems = portletArea.children;
 		var startRow = connectPortletPaging.getStart();
 		var endRow = startRow + connectPortletPaging.getPagePerCount();

@@ -5494,6 +5494,7 @@
 		"portletType":"standard",' ||CHR(10)||
 		'"viewType": "list",' ||CHR(10)||
 		'"paging":"",' ||CHR(10)||
+		'"listCnt":"",' ||CHR(10)||
 		'"linkUrl": "",' ||CHR(10)||
 		'"mobileLinkUrl": "",' ||CHR(10)||
 		'"connectType": "",' ||CHR(10)||
@@ -5519,7 +5520,8 @@
 		'"dataBase": "",' ||CHR(10)||
 		'"dbUser": "",' ||CHR(10)||
 		'"dbPwd": "",' ||CHR(10)||
-		'"dbQuery": "",' ||CHR(10)||
+		'"dbDataQuery": "",' ||CHR(10)||
+		'"totalCntQuery": "",' ||CHR(10)||
 		'"driverClassName" : ""' ||CHR(10)||
 	'}',
 		'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#), TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantId#, #companyId#, 'PORTLET'
