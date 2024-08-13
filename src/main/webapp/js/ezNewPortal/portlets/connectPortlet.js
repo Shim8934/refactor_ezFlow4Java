@@ -6,22 +6,27 @@ var connectPortletTemplate = {
 }
 
 function initConnectionPortlet(connectPortletId) {
-	var newObj = {};
-	var perCount = getConnectPagePerCount(connectPortletId);
-	newObj.page = new Paging().setPageStart(1).init(perCount);
-	newObj.page.getPagePerCount = function () {
-		return getConnectPagePerCount(connectPortletId);
-	}
-	newObj.portletCode = "connectPortlet";
-	newObj.portletId = connectPortletId;
-	newObj.getPortletList = function () {
-		if (this.page.paging == "noLimit") {
-			var currentPage = this.page.getPage();
-			getConnectList(currentPage, this.portletId);
-		} else {
-			getConnectList(1, this.portletId);
+	var newObj = (function() {
+		var portletId = connectPortletId;
+		var perCount = getConnectPagePerCount(portletId); 
+		var obj = {};
+		obj.page = new Paging().setPageStart(1).init(perCount);
+		obj.page.getPagePerCount = function () {
+			return getConnectPagePerCount(portletId);
 		}
-	}
+		obj.portletCode = "connectPortlet";
+		obj.getPortletList = function () {
+			if (obj.page.paging == "noLimit") {
+				var currentPage = obj.page.getPage();
+				getConnectList(currentPage, portletId);
+			} else {
+				getConnectList(1, portletId);
+			}
+		}
+		
+		return obj;
+	})();
+	
 	portletInfoMap["portlet" + connectPortletId] = newObj;
 	
 	getConnectList(1, connectPortletId);
