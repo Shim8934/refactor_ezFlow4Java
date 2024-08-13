@@ -11,13 +11,6 @@
 <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 </head>
 <body>
-	<script type="text/javascript">
-		$(function() {
-			var portletId = "<c:out value="${portletId}"/>";
-			var portletName = "<c:out value="${portletName}"/>";
-			ellipsisTitle (portletName, portletId);
-		})
-	</script>
 	<article class="customBoard box_shadow">
 		<div class="layDIV">
 			<dl class="portlet_title sortablePortlet">
