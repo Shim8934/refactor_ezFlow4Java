@@ -773,3 +773,15 @@ function makePortlets(portletOrder) {
         }
     }
 }
+
+// 2024-08-13 황인경 - 포틀릿 제목 ... 처리시 title 표출
+function ellipsisTitle(portletName, portletId) {
+    var portlet = portletId + "Portlet";
+    var portletTitleId = document.getElementById(portlet);
+    var portletTitle = portletTitleId.querySelector(".portletText");
+    portletTitle.textContent = portletName;
+    
+    if (portletTitle.scrollWidth > portletTitle.clientWidth) {
+        portletTitle.setAttribute("title", portletName);
+    }
+}
