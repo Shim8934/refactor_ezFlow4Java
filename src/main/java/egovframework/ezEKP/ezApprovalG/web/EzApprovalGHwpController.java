@@ -1704,14 +1704,20 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("isDocAttach", isDocAttach);
 		
 		/* 2024-06-26 조소정 - 웹한글 문서 재사용 시 양식선택창 표출 여부 테넌트 컨피그와 양식 정보 */
-		String resultXML = ezApprovalGService.getFormInfoDetail(formID, userInfo.getCompanyID(), userInfo.getTenantId());
-        Document formInfo = commonUtil.convertStringToDocument(resultXML);
-        String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
-        String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
-        
-        model.addAttribute("formUrl", formUrl);
-        model.addAttribute("formDocType", formDocType);
-		model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
+		if (formID != null && !formID.isEmpty()) {
+			if (formID.equals("2003000007")) { // 합의문서의 경우 해당 양식을 재사용 불가능하기 때문에 양식선택창을 무조건 표출해야함.
+				model.addAttribute("useFormContOnReuseForWHWP", "YES");
+			} else {
+				String resultXML = ezApprovalGService.getFormInfoDetail(formID, userInfo.getCompanyID(), userInfo.getTenantId());
+				Document formInfo = commonUtil.convertStringToDocument(resultXML);
+				String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+				String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
+				
+				model.addAttribute("formUrl", formUrl);
+				model.addAttribute("formDocType", formDocType);
+				model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
+			}
+		}
 
 		logger.debug("ezViewEnd_WHWP ended");
 
@@ -1858,14 +1864,18 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		/* 2024-06-26 조소정 - 웹한글 문서 재사용 시 양식선택창 표출 여부 테넌트 컨피그와 양식 정보 */
-		String formInfoXML = ezApprovalGService.getFormInfoDetail(formID, userInfo.getCompanyID(), userInfo.getTenantId());
-        Document formInfo = commonUtil.convertStringToDocument(formInfoXML);
-        String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
-        String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
-        
-        model.addAttribute("formUrl", formUrl);
-        model.addAttribute("formDocType", formDocType);
-		model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
+		if (formID.equals("2003000007")) { // 합의문서의 경우 해당 양식을 재사용 불가능하기 때문에 양식선택창을 무조건 표출해야함.
+			model.addAttribute("useFormContOnReuseForWHWP", "YES");
+		} else {
+			String formInfoXML = ezApprovalGService.getFormInfoDetail(formID, userInfo.getCompanyID(), userInfo.getTenantId());
+			Document formInfo = commonUtil.convertStringToDocument(formInfoXML);
+			String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+			String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
+
+			model.addAttribute("formUrl", formUrl);
+			model.addAttribute("formDocType", formDocType);
+			model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
+		}
 		
 		logger.debug("ezviewAprWHWP ended");
 		
