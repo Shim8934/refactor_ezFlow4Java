@@ -6,21 +6,27 @@ var connectPortletTemplate = {
 }
 
 function initConnectionPortlet(connectPortletId) {
-	var newObj = {};
-	var perCount = getConnectPagePerCount(connectPortletId);
-	newObj.page = new Paging().setPageStart(1).init(perCount);
-	newObj.page.getPagePerCount = function () {
-		return getConnectPagePerCount(connectPortletId);
-	}
-	newObj.portletCode = "connectPortlet";
-	newObj.getPortletList = function () {
-		if (document.getElementById(connectPortletId + "Portlet").querySelector('.portletPagingArea')) {
-			var currentPage = newObj.page.getPage();
-			getConnectList(currentPage, connectPortletId);
-		} else if (document.getElementById(connectPortletId + "Portlet").querySelector('.portletLimitPagingArea')) {
-			getConnectList(1, connectPortletId);
+	var newObj = (function() {
+		var portletId = connectPortletId;
+		var perCount = getConnectPagePerCount(portletId); 
+		var obj = {};
+		obj.page = new Paging().setPageStart(1).init(perCount);
+		obj.page.getPagePerCount = function () {
+			return getConnectPagePerCount(portletId);
 		}
-	}
+		obj.portletCode = "connectPortlet";
+		obj.getPortletList = function () {
+			if (obj.page.paging == "noLimit") {
+				var currentPage = obj.page.getPage();
+				getConnectList(currentPage, portletId);
+			} else {
+				getConnectList(1, portletId);
+			}
+		}
+		
+		return obj;
+	})();
+	
 	portletInfoMap["portlet" + connectPortletId] = newObj;
 	
 	getConnectList(1, connectPortletId);
@@ -58,7 +64,7 @@ function getConnectList(currentPage, portletId) {
 			}
 		},
 		error : function(error) {
-			makeMessageContent(messages.strLang2, document.getElementById(portletId + "Portlet").querySelector('.portletLimitPagingArea'));
+			makeMessageContent(messages.strLang2, document.getElementById(portletId + "Portlet").querySelector('.portletPagingArea'));
 		}
 	});
 }
@@ -75,6 +81,8 @@ function makeStandardConnectPortlet(data, portletId) {
 	var resultStr = "";
 	var usedTheme =  document.getElementById("usedTheme" + portletId).value;
 	var dataList = null;
+	var paging = data.paging;
+	connectPortletPaging.paging = paging;
 	makePlusBtn(portletId, usedTheme, data.linkUrl, 750, 600);
 	
 	while(connectListDiv.firstChild) {
@@ -88,9 +96,9 @@ function makeStandardConnectPortlet(data, portletId) {
 			resultStr += replaceTemplateLiterals(connectPortletTemplate[data.viewType], dataInfo, dataList[i], dataResultType);
 		}
 		
-		if (data.paging == "noLimit") {
+		if (paging == "noLimit") {
 			totalCnt = dataObj[dataResultFormat.totalCnt];
-		} else if (data.paging == "limit") {
+		} else if (paging == "limit") {
 			totalCnt = dataList.length;
 		}
 		
@@ -100,11 +108,11 @@ function makeStandardConnectPortlet(data, portletId) {
 			resultStr += replaceTemplateLiterals(connectPortletTemplate[data.viewType], dataInfo, dataList[j], dataResultType);
 		}
 		
-		if (data.paging == "noLimit") {
+		if (paging == "noLimit") {
 			var parser = new DOMParser();
 			var xmlDoc = parser.parseFromString(data.portletDataStr, 'text/xml');
 			totalCnt = xmlDoc.getElementsByTagName(dataResultFormat.totalCnt)[0].textContent;
-		} else if (data.paging == "limit") {
+		} else if (paging == "limit") {
 			totalCnt = dataList.length;
 		}
 		
@@ -121,8 +129,8 @@ function makeStandardConnectPortlet(data, portletId) {
 		connectListDiv.insertAdjacentHTML('beforeend', resultStr);
 	}
 	
-	if (data.paging == "limit") {
-		var portletArea = document.getElementById(portletId + "Portlet").querySelector('.portletLimitPagingArea');
+	if (paging == "limit") {
+		var portletArea = document.getElementById(portletId + "Portlet").querySelector('.portletPagingArea');
 		var listElems = portletArea.children;
 		var startRow = connectPortletPaging.getStart();
 		var endRow = startRow + connectPortletPaging.getPagePerCount();

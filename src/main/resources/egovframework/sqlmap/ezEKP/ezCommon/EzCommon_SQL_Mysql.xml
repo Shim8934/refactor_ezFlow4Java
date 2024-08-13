@@ -5135,6 +5135,7 @@ VALUES
 		"portletType":"standard",\n
 		"viewType": "list",\n
 		"paging":"",\n
+		"listCnt":"",\n
 		"linkUrl": "",\n
 		"mobileLinkUrl": "",\n
 		"connectType": "",\n
@@ -5160,7 +5161,8 @@ VALUES
 		"dataBase": "",\n
 		"dbUser": "",\n
 		"dbPwd": "",\n
-		"dbQuery": "",\n
+		"dbDataQuery": "",\n
+		"totalCntQuery": "",\n
 		"driverClassName" : ""\n
 	}',
 	'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#), #nowDate#, #tenantId#, #companyId#, 'PORTLET'

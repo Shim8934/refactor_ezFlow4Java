@@ -25,7 +25,7 @@
 					<c:out value="${portletName}"/>
 				</dt>
 			</dl>
-			<ul id="connectionPortlet<c:out value='${portletId }'/>" class="portlet_list two_line portletLimitPagingArea">
+			<ul id="connectionPortlet<c:out value='${portletId }'/>" class="portlet_list two_line portletPagingArea">
 			</ul>
 		</div>
 		<div class="portletPageNav">

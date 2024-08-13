@@ -78,6 +78,19 @@ var getTabBoard = function (portletId) {
                 			
     		        tabNode.firstChild.innerHTML = boardName;
     		        tabNode.style.display = "";
+                    var portletSize = document.getElementById(portletId + "Portlet").getAttribute('data-size');
+                    var isKorean = /[가-힣]/.test(boardName.toString());
+                    var maxLength;
+                    
+                    if (portletSize === "one_by_one" || portletSize === "two_by_one") {
+                        maxLength = isKorean ? 5 : 6;
+                    } else {
+                        maxLength = isKorean ? 11 : 18;
+                    }
+                    
+                    if (boardName.length > maxLength) {
+                        tabNode.firstChild.setAttribute("title", boardName);
+                    }
                 }
                 
                 var tabNode = document.getElementById("tabBoardList" + tabList[0]["TABID"] + 'Tab');

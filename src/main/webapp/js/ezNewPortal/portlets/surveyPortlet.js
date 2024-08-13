@@ -3,17 +3,23 @@
 var surveyPortletObj = {};
 
 function initSurveyPortletInfo(surveyPortletId) {
-	var newObj = {};
-	var perCount = getSurveyPagePerCount(surveyPortletId);
-	newObj.page = new Paging().setPageStart(1).init(perCount);
-	newObj.page.getPagePerCount = function () {
-		return getSurveyPagePerCount(surveyPortletId);
-	}
-	newObj.portletCode = "survey";
-	newObj.getPortletList = function () {
-		var currentPage = newObj.page.getPage();
-		getPotletSurveyList(currentPage);
-	}
+	var newObj = (function() {
+		var portletId = surveyPortletId;
+		var perCount = getSurveyPagePerCount(portletId); 
+		var obj = {};
+		obj.page = new Paging().setPageStart(1).init(perCount);
+		obj.page.getPagePerCount = function () {
+			return getSurveyPagePerCount(portletId);
+		}
+		obj.portletCode = "survey";
+		obj.getPortletList = function () {
+			var currentPage = obj.page.getPage();
+			getPotletSurveyList(currentPage);
+		}
+		
+		return obj;
+	})();
+	
 	portletInfoMap["portlet" + surveyPortletId] = newObj;
 	surveyPortletObj.portletId = surveyPortletId;
 	
