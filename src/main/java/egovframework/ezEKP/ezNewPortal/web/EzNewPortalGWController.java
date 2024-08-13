@@ -6234,7 +6234,10 @@ public class EzNewPortalGWController {
 		MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 		int tenantId = info.getTenantId();
 		int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
-
+		if (deptId == null || deptId.equals("")) {
+			deptId = info.getDeptId();
+		}
+		
 		SystemConfigVO systemConfig = ezNewPortalService.getSystemConfig(portletId, companyId, tenantId);
 		ConnectPortletDTO connectPortletDTO = new ConnectPortletDTO();
 		connectPortletDTO.setUserId(userId);

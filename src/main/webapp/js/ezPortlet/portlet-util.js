@@ -161,8 +161,7 @@ function changePortletSize(pot, size) {
     userPortletUpdateWithSize(usedTheme);
 
     var portletPagingArea = pot.querySelector('.portletPagingArea');
-    var portletLimitPagingArea = pot.querySelector('.portletLimitPagingArea');
-    if (portletPagingArea || portletLimitPagingArea) { // 포틀릿 페이지네이션 처리
+    if (portletPagingArea) { // 포틀릿 페이지네이션 처리
         changePortletViewCount(pot.id.replace('Portlet', ''));
     }
     

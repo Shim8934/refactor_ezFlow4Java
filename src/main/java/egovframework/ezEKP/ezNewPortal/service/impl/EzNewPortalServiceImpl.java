@@ -3733,7 +3733,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				if (connectionData.get("paging") != null) {
 					paging = connectionData.get("paging").toString();
 					if (paging.equals("limit")) {
-						changeDataMap.put("listCnt", 10); // 무한 페이징 처리가 안될 땐 리스트 10개 가져오기.
+						changeDataMap.put("listCnt", Integer.parseInt(connectionData.get("listCnt").toString()));
+						data.put("listCnt", connectionData.get("listCnt").toString());
 					}
 				}
 				
@@ -3764,40 +3765,67 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					String dataBase = connectionData.get("dataBase").toString();
 					String dbUser = connectionData.get("dbUser").toString();
 					String dbPwd = connectionData.get("dbPwd").toString();
-					String dbQuery = connectionData.get("dbQuery").toString();
-					String preparedQuery = dbQuery.replaceAll("#(.*?)#", "?");
-					String driverClassName = connectionData.get("driverClassName").toString();
+					String dbDataQuery = connectionData.get("dbDataQuery").toString();
+					String totalCntQuery = connectionData.get("totalCntQuery").toString();
+					String preparedDataQuery = dbDataQuery.replaceAll("#(.*?)#", "?");
 					
-					ResultSet rs = null;
+					String driverClassName = connectionData.get("driverClassName").toString();
+					JSONObject dataObj = new JSONObject();
+					ResultSet rsData = null;
 					try (Connection connection = connDatabase(dbType, dbIp, dbPort, dataBase, driverClassName, dbUser, dbPwd);
-						PreparedStatement pstmt = connection.prepareStatement(preparedQuery)) {
+						PreparedStatement pstmtData = connection.prepareStatement(preparedDataQuery);) {
 						// 데이터 추출
-						setDbParamData(changeDataMap, dbQuery, pstmt);
-						rs = pstmt.executeQuery();
+						setDbParamData(changeDataMap, dbDataQuery, pstmtData);
+						rsData = pstmtData.executeQuery();
 						
-						ResultSetMetaData metaData = rs.getMetaData();
+						ResultSetMetaData metaData = rsData.getMetaData();
 						int sizeOfColumn = metaData.getColumnCount();
 						
 						Map<String, Object> map;
 						String column;
 						JSONArray dataList = new JSONArray();
 						
-						while (rs.next()) {
+						while (rsData.next()) {
 							map = new HashMap<String, Object>();
 							for (int indexOfcolumn = 0; indexOfcolumn < sizeOfColumn; indexOfcolumn++) {
 								column = metaData.getColumnLabel(indexOfcolumn + 1);
-								map.put(column, commonUtil.htmlUnescape(rs.getString(column)));
+								map.put(column, commonUtil.htmlUnescape(rsData.getString(column)));
 							}
 							dataList.add(map);
 						}
 						
-						result = dataList.toString();
+						dataObj.put("data", dataList);
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
 					} finally {
-						rs.close();
-					} 
+						if (rsData != null) {
+							rsData.close();
+						}
+					}
 					
+					if (paging.equals("noLimit")) {
+						String preparedCntQuery = totalCntQuery.replaceAll("#(.*?)#", "?");
+						ResultSet rsCnt = null;
+						try (Connection connection = connDatabase(dbType, dbIp, dbPort, dataBase, driverClassName, dbUser, dbPwd);
+							PreparedStatement pstmtCnt = connection.prepareStatement(preparedCntQuery);) {
+							// 데이터 추출
+							int totalCnt = 0;
+							setDbParamData(changeDataMap, totalCntQuery, pstmtCnt);
+							rsCnt = pstmtCnt.executeQuery();
+							if (rsCnt.next()) {
+								totalCnt = rsCnt.getInt(1);
+								dataObj.put("totalCnt", totalCnt);
+							}
+						} catch (Exception e) {
+							logger.error(e.getMessage(), e);
+						} finally {
+							if (rsCnt != null) {
+								rsCnt.close();
+							}
+						}
+					}
+					
+					result = dataObj.toString();
 				}
 				
 				data.put("portletDataStr", result);

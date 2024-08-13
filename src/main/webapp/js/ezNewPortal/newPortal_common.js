@@ -88,10 +88,9 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 	
 	var portletDiv = document.getElementById(portletId + "Portlet");
 	var portletPagingArea = portletDiv.querySelector('.portletPagingArea');
-	var portletLimitPagingArea = portletDiv.querySelector('.portletLimitPagingArea');
 	var prevBtn = portletDiv.querySelector('.portlet_list_nav.prev');
 	var nextBtn = portletDiv.querySelector('.portlet_list_nav.next');
-	if (portletPagingArea || portletLimitPagingArea) {
+	if (portletPagingArea) {
 		prevBtn.addEventListener('click', function(event) {
 			portletMovePage(portletId, 'prev');
 		});
