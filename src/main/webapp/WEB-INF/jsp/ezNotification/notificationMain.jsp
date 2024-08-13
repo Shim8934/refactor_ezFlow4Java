@@ -544,11 +544,18 @@
 	    	return;
 	    }
 	    
-	    var newWindow = window.open(linkUrl, windowName, feature, "");
-	    
-	    if (/MSIE|Trident/.test(window.navigator.userAgent)) {
-	        newWindow.moveTo(pLeft, pTop);
+	    if (viewType == "layer") {
+	    	var noticeLayer = parent.document.getElementById('noticeLayer');
+	    	noticeLayer.style.display = "block";
+	    	noticeLayer.querySelector('#noticeLayerFrame').setAttribute('src', linkUrl); 
+	    } else {
+			var newWindow = window.open(linkUrl, windowName, feature, "");
+		    
+		    if (/MSIE|Trident/.test(window.navigator.userAgent)) {
+		        newWindow.moveTo(pLeft, pTop);
+		    }
 	    }
+	    
 	}
 	
 	function extractParam(linkUrl) {

@@ -496,7 +496,7 @@ public class EzNotificationController {
 		} else if (status.equals("empty")) {
 			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", userInfo.getLocale()));
 			logger.debug("emergencyNotiItem ended");
-			return "/common/error";
+			return "/ezNotification/emergencyError";
 		}
 		
 		model.addAttribute("adminFlag", adminFlag);

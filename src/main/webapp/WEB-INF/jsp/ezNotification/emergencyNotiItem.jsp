@@ -7,15 +7,33 @@
 	<head>
 		<title><spring:message code='ezNotification.hth57' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezNotification.e2', 'msg')}" type="text/css"> 
+		<link rel="stylesheet" href="${util.addVer('ezNotification.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" /> 
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}" ></script>
 	</head>
-	<body class="popup">
+	<body>
 		<input type="hidden" id="notiId" value="<c:out value='${emergencyNotiItem.notiId}'/>">
-	
+		<div class="emergency_popup">
+	        <h2><spring:message code='ezNotification.hth57' />
+	        	<span class="close_btn" onclick="btnClose_onclick()"></span>
+	        	<c:if test="${adminFlag == 'Y' or emergencyNotiItem.writerId eq userId}">
+		        	<span id="btn_Delete" onclick="delEmergencyNoti()" class="icon16 popup_icon16_delete" style="width:30px; height:30px; position:absolute; right:40px;"></span>
+		        </c:if>
+	        </h2>
+	        <div class="emergency_title"><span><spring:message code='ezNotification.hth89'/></span><p><c:out value='${emergencyNotiItem.notiTitle}'/></p></div>
+	        <ul class="emergency_info">
+	            <li class="info_img"><img src='<c:out value='${emergencyNotiItem.writerPhoto}'/>'></li>
+	            <li class="info_name"><c:out value='${emergencyNotiItem.writerName}'/><span>(<c:out value='${emergencyNotiItem.writerDeptName}'/>)</span></li>
+	            <li class="info_date"><c:out value='${fn:substring(emergencyNotiItem.writeDate, 0, 16)}'/></li>
+	        </ul>
+	        <div class="emergency_detail">
+	            <c:out value='${emergencyNotiItem.notiBody}'/>
+	        </div>
+    	</div>
+		<%-- 팝업 디자인
 		<table class="layout" style=width:100%;">
 	  		<tbody>
 	  			<tr>
@@ -55,11 +73,13 @@
 				</table>
 			</tbody>
 		</table>
+		 --%>
 	</body>
 	
 	<script>
 	function btnClose_onclick() {
-		window.close();
+		parent.document.getElementById('noticeLayer').style.display = "none";
+		parent.document.getElementById('noticeLayer').querySelector('#noticeLayerFrame').setAttribute('src', '');
 	}
 	
 	function delEmergencyNoti() {
@@ -77,7 +97,7 @@
 			},
 			success: function(result) {
 				alert("<spring:message code='ezMain.delete.hth01'/>");
-				window.close();
+				btnClose_onclick();
 			},
 			error: function (xhr, status, e) {
 				alert("<spring:message code='ezNotification.hth34'/>");

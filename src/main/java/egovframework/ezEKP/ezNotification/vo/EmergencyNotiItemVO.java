@@ -7,6 +7,7 @@ public class EmergencyNotiItemVO {
 	private String writerDeptName;
 	private String writerDeptName2;
 	private String writerId;
+	private String writerPhoto;
 	private String notiTitle;
 	private String notiBody;
 	private String writeDate;
@@ -70,5 +71,11 @@ public class EmergencyNotiItemVO {
 	}
 	public void setWriterDeptName2(String writerDeptName2) {
 		this.writerDeptName2 = writerDeptName2;
+	}
+	public String getWriterPhoto() {
+		return writerPhoto;
+	}
+	public void setWriterPhoto(String writerPhoto) {
+		this.writerPhoto = writerPhoto;
 	}
 }
