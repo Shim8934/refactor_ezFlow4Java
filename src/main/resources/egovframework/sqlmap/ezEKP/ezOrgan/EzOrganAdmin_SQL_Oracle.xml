@@ -5466,7 +5466,9 @@
 	                    SIPURI,
 	                    PASSWORD,
 	                    CREATEDT,
-	                    TENANT_ID
+	                    TENANT_ID,
+	                    MAILBOXQUOTA ,
+	                    MAILBOXUSAGE
               			FROM
               				TBL_USERMASTER_RETIRE 
               			WHERE

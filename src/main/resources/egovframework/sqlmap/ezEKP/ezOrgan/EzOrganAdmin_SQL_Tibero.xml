@@ -5409,7 +5409,7 @@
 		<![CDATA[
 			 INSERT INTO
 			 	TBL_USERMASTER
- 				( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, CREATEDT, TENANT_ID )
+ 				( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, CREATEDT, TENANT_ID, MAILBOXQUOTA, MAILBOXUSAGE )
            		( 	SELECT
            				CN ,
                     	DISPLAYNAME ,
@@ -5466,7 +5466,9 @@
 	                    SIPURI,
 	                    PASSWORD,
 	                    CREATEDT,
-	                    TENANT_ID
+	                    TENANT_ID,
+	                    MAILBOXQUOTA ,
+	                    MAILBOXUSAGE
               			FROM
               				TBL_USERMASTER_RETIRE 
               			WHERE

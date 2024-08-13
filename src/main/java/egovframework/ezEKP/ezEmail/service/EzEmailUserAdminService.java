@@ -150,4 +150,6 @@ public interface EzEmailUserAdminService {
 
 	public int removeUserMailSetting(String userEmailAddress) throws Exception;
 
+	public int checkUserPrimaryMail(String userEmailAddress, int tenantId) throws Exception;
+
 }
