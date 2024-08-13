@@ -4647,6 +4647,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
 					if(arrRecipientsTo != null){
 						boolean toListme = false;
+						boolean eachMail ="true".equalsIgnoreCase(message.getHeader("X-JMocha-Each-Mail")[0]);
 						
 						for(int i=0; i<arrRecipientsTo.length; i++){
 							if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userAccount)){
@@ -4677,6 +4678,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							}
 							
 							logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
+							
+							//개별발신일때는 reader만 to에 보이게 설정
+							if (eachMail && reader.equalsIgnoreCase(((InternetAddress) arrRecipientsTo[i]).getAddress())) {
+								toStr = getReceiverHTML(name, ((InternetAddress) arrRecipientsTo[i]).getAddress(), true);
+								break;
+							}
 							
 							if(toListme){
 								if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userAccount)){
