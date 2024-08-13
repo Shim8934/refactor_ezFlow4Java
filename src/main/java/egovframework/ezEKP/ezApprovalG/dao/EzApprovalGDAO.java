@@ -4002,9 +4002,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGDeliveryListVO> getDistributeInfo(Map<String, Object> map) throws Exception {
 		return (List<ApprGDeliveryListVO>) list("EzApprovalG.getDistributeInfo", map);
 	}
-	/* 2024-08-07 김유진 - 전자결재G > rootDocID 값 가져오기 */
-	public String getRootDocID(Map<String, Object> map) {
-		return (String) select("EzApprovalG.getRootDocID", map);
+	/* 2024-08-07 김유진 - 전자결재G > tbl_distributeInfo 테이블의 parentDocID 값 가져오기 */
+	public String getDistributeParentDocID(Map<String, Object> map) {
+		return (String) select("EzApprovalG.getDistributeParentDocID", map);
 	}
 	/* 2024-08-07 김유진 - 전자결재G > 배부정보의 최대 SN 값 가져오기 */
 	public String getDistributeInfoSN(Map<String, Object> map) {

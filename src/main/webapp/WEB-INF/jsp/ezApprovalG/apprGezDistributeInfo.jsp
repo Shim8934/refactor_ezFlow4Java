@@ -62,14 +62,17 @@
 									organ = result[i].organ;
 									manageDept = result[i].manageDept;
 									chargeName = result[i].chargeName;
+									organUserName = result[i].organUserName;
 								} else {
 									organ = result[i].organ2;
 									manageDept = result[i].manageDept2;
 									chargeName = result[i].chargeName2;
+									organUserName = result[i].organUserName2;
 								}
 								if (chargeName == null || chargeName == "") {
 									chargeName = "";
 								}
+								organUserName = "(" + organUserName + ")";
 								
 								if (resultsn < result[i].sn) {
 									if (i == 0) {
@@ -81,7 +84,7 @@
 								}
 								resultsn = result[i].sn;
 								divStr += '<table class="content"><tbody>';
-								divStr += '<tr><th style="width: 120px;"><spring:message code='ezApprovalG.t99993'/></th><td>' + organ+ '</td>';
+								divStr += '<tr><th style="width: 120px;"><spring:message code='ezApprovalG.t99993'/></th><td>' + organ + organUserName + '</td>';
 								divStr += '<th style="width: 120px;"><spring:message code='ezApprovalG.t1775'/></th><td>' + result[i].href + '</td></tr>';
 								divStr += '<tr><th><spring:message code='ezApprovalG.t1105'/></th><td>' + manageDept + '</td>';
 								divStr += '<th><spring:message code='ezApprovalG.t999931'/></th><td>' + chargeName + '</td></tr>';

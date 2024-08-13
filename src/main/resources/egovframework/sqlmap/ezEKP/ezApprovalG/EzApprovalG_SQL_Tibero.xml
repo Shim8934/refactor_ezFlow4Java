@@ -36971,7 +36971,7 @@
   </update>
 
     <select id ="EzApprovalG.getDistributeInfo" parameterClass="Map" resultClass="ApprGDeliveryListVO">
-        <isEmpty property="OrgDocIDList">
+        <isEmpty property="V_PARENTDOCIDLIST">
             <![CDATA[
             SELECT
                 A.ORGANID
@@ -36985,8 +36985,10 @@
                 , NVL(B.CHARGENAME,'') AS chargeName
                 , NVL(B.CHARGENAME2,'') AS chargeName2
                 , A.SN
-                , A.ROOTDOCID
+                , A.ORGDOCID
                 , A.DOCID
+                , A.ORGANUSERNAME 
+                , A.ORGANUSERNAME2 
             FROM
                 tbl_distributeInfo A
             LEFT JOIN
@@ -37035,7 +37037,7 @@
                 A.receiptDate ASC
         ]]>
         </isEmpty>
-        <isNotEmpty property="OrgDocIDList">
+        <isNotEmpty property="V_PARENTDOCIDLIST">
             WITH TD AS (
             SELECT
             distinct A.*, B.CHARGENAME, B.CHARGENAME2
@@ -37054,14 +37056,12 @@
             AND
             A.MANAGEDEPTID = B.MANAGEDEPTID
             WHERE
-            A.ROOTDOCID = #v_RootDocID#
+            A.ORGDOCID = #v_ORGDOCID#
             AND
-            A.ORGDOCID in
-            <iterate property="OrgDocIDList" open="(" close=")" conjunction=",">
-                #OrgDocIDList[]#
+            A.PARENTDOCID in
+            <iterate property="V_PARENTDOCIDLIST" open="(" close=")" conjunction=",">
+                #V_PARENTDOCIDLIST[]#
             </iterate>
-            AND
-                (A.TYPE != 'add' OR A.TYPE is null)
             AND
             A.TENANT_ID = #v_TENANTID#
             AND
@@ -37079,8 +37079,10 @@
             NVL(D.CHARGENAME, '') as chargeName ,
             NVL(D.CHARGENAME2, '') as chargeName2 ,
             C.SN ,
-            C.ROOTDOCID,
-            C.DOCID
+            C.ORGDOCID,
+            C.DOCID,
+            C.ORGANUSERNAME,
+            C.ORGANUSERNAME2
             FROM
             TD C
             LEFT JOIN
@@ -37105,7 +37107,7 @@
             AND
             C.SN = D.SN
             WHERE
-            C.SN = #SN#
+            C.SN = #V_SN#
             AND
             C.TENANT_ID = #v_TENANTID#
             AND
@@ -37113,40 +37115,30 @@
         </isNotEmpty>
     </select>
 
-    <select id="EzApprovalG.getRootDocID" parameterClass="Map" resultClass="String">
-        <isEmpty property="v_TMPDOCID">
-            SELECT
-            ROOTDOCID
-            FROM
-            TBL_APRRECEIPTPROCESSINFO
-            WHERE
-            DOCID = #v_DOCID#
-            AND
-            COMPANYID = #companyID#
-            AND
-            TENANT_ID = #v_TENANTID#
-        </isEmpty>
-        <isNotEmpty property="v_TMPDOCID">
+    <select id="EzApprovalG.getDistributeParentDocID" parameterClass="Map" resultClass="String">
             <![CDATA[
             SELECT
                 *
             FROM
                 (
                     SELECT
-                        ROOTDOCID
+                        PARENTDOCID
                     FROM
                         tbl_distributeInfo
                     WHERE
-                        DOCID = #v_TMPDOCID#
+                        DOCID = #v_PARENTDOCID#
                     AND
                         COMPANYID = #companyID#
                     AND
                         TENANT_ID = #v_TENANTID#
+                    AND
+                        ORGDOCID = #v_ORGDOCID#
+                    AND
+                        SN = #v_DistributeInfoSN#
                 )
             WHERE
                 ROWNUM <= 1
         ]]>
-        </isNotEmpty>
     </select>
 
     <select id="EzApprovalG.getDistributeInfoSN" parameterClass="Map" resultClass="String">
@@ -37156,7 +37148,7 @@
             FROM
             tbl_distributeInfo
             WHERE
-            RootDocID = #v_RootDocID#
+            ORGDOCID = #v_ORGDOCID#
             AND
             COMPANYID = #companyID#
             AND
@@ -37169,7 +37161,7 @@
                 FROM
                 tbl_distributeInfo
                 WHERE
-                DOCID = #v_ORGDOCID#
+                DOCID = #v_PARENTDOCID#
                 AND
                 DELIVERYSN = (
                 SELECT
@@ -37177,7 +37169,7 @@
                 FROM
                 tbl_docdelivery
                 WHERE
-                DOCID = #v_ORGDOCID#
+                DOCID = #v_PARENTDOCID#
                 AND
                 DEPTID = #v_OrganID#
                 )
@@ -37192,7 +37184,7 @@
                 FROM
                 tbl_distributeInfo
                 WHERE
-                DOCID = #v_ORGDOCID#
+                DOCID = #v_PARENTDOCID#
                 AND
                 COMPANYID = #companyID#
                 AND
@@ -37205,10 +37197,10 @@
         <isEqual property="v_DuplicateFlag" compareValue="true">
             INSERT INTO
             tbl_distributeinfo
-            (sn, DocID, ReceiptDate, OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, OrgDocNumCode, DocTitle, RootDocID, TENANT_ID, COMPANYID, DELIVERYSN, ORGDOCID, TYPE)
+            (sn, DocID, ReceiptDate, OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, OrgDocNumCode, DocTitle, ParentDocID, TENANT_ID, COMPANYID, DELIVERYSN, ORGDOCID, TYPE, ORGANUSERNAME, ORGANUSERNAME2)
             (
             SELECT
-            #v_DistributeInfoSN#, #v_DOCID#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, DocNumber, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, OrgDocNumCode, DocTitle , #v_RootDocID#, #v_TENANTID#, #companyID#, SN, #v_ORGDOCID#, #v_TYPE#
+            #v_DistributeInfoSN#, #v_DOCID#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, DocNumber, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, OrgDocNumCode, DocTitle , #v_PARENTDOCID#, #v_TENANTID#, #companyID#, SN, #v_ORGDOCID#, #v_TYPE#, #v_ORGANUSERNAME1#, #v_ORGANUSERNAME2#
             FROM
             TBL_DOCDELIVERY
             WHERE
@@ -37224,10 +37216,10 @@
         <isNotEqual property="v_DuplicateFlag" compareValue="true">
             INSERT INTO
             tbl_distributeinfo
-            (sn, DocID, ReceiptDate, OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, OrgDocNumCode, DocTitle, RootDocID, TENANT_ID, COMPANYID, DELIVERYSN, ORGDOCID, TYPE)
+            (sn, DocID, ReceiptDate, OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, OrgDocNumCode, DocTitle, ParentDocID, TENANT_ID, COMPANYID, DELIVERYSN, ORGDOCID, TYPE, ORGANUSERNAME, ORGANUSERNAME2)
             (
             SELECT
-            #v_DistributeInfoSN#, a.DocID, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, b.DocNumCode, a.DocTitle , #v_RootDocID#, #v_TENANTID#, #companyID#, #v_maxSN#, #v_ORGDOCID#, #v_TYPE#
+            #v_DistributeInfoSN#, a.DocID, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, b.DocNumCode, a.DocTitle , #v_PARENTDOCID#, #v_TENANTID#, #companyID#, #v_maxSN#, #v_ORGDOCID#, #v_TYPE#, #v_ORGANUSERNAME1#, #v_ORGANUSERNAME2#
             FROM
             TBL_APRDOCINFO a
             INNER JOIN
