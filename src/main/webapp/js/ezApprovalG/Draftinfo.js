@@ -209,7 +209,6 @@ function MakeDocInfo() {
             break;
         }
     }
-//    pkeyword = document.getElementById("keyword").value;
 
     var objNode;
     createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -270,8 +269,8 @@ function getdocinfolist(i) {
     //요약을 넣어야됨
     document.getElementById("taSummery").value = vSummery;
 //    GetExtraDocInfo();
-    
-    document.querySelector("input[name=keyword]").value = pkeyword;
+    // 2023-08-24 조수빈 - 문서옵션의 키워드에 기존 값이 없을 경우 undifined로 출력되는 문제 처리를 위해 변경.
+    document.querySelector("input[name=keyword]").value = pkeyword ? pkeyword : "";
 }
 
 function Draftinfo_reload() {
