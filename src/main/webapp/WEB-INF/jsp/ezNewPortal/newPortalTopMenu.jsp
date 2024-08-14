@@ -617,16 +617,14 @@
 				toggleDivMenu(document.querySelector('#profileContainer') ,type);
 				closeNoti(); // 통합알림 팝업창 닫기
 
-				if (menuUrl && menuUrl.toString().indexOf("http") != -1) {
-					if (openType == 1) {
-						window.open(menuUrl, '_blank');
-					} else if (openType == 2) {
-						window.open(menuUrl, '_blank', 'width=1000,height=900');
-					}
-				} else if (menuUrl != null) {
+				if (openType == 1) {
+					window.open(menuUrl, '_blank');
+				} else if (openType == 2) {
+					window.open(menuUrl, '_blank', 'width=1000,height=900');
+				} else if (openType == 3) {
 					window.open(menuUrl, 'main', '');
 				}
-				
+
 				// 취소버튼과 같은 역할
 				var editMenuCancel = document.getElementById('editMenuCancel');
 				editMenuCancel.click();	
