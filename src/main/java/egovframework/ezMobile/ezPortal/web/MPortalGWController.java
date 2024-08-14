@@ -1844,4 +1844,59 @@ public class MPortalGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	@RequestMapping(value = "/mobile/ezPortal/logos/companies/{companyId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getCompanyLogo(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+		logger.debug("MOBILE G/W getCompanyLogo Start");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = new LoginVO();
+			int tenantId = 0;
+
+			if (userId == null) {
+				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
+			} else {
+				userInfo = commonUtil.getUserForGw(userId, serverName);
+				tenantId = userInfo.getTenantId();
+				result.put("userCompany", userInfo.getCompanyID());
+				result.put("lang", userInfo.getLang());
+			}
+
+			String portalLogoUrl = "";
+			boolean portalLogoUrlDefault = true;
+
+			//로그인 가져오기
+			if (companyId != null) {
+				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
+			}
+
+			if (portalLogoUrl == null || portalLogoUrl.equals("")) {
+				portalLogoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+				portalLogoUrlDefault = true;
+			} else {
+				portalLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + portalLogoUrl;
+				portalLogoUrlDefault = false;
+			}
+
+			String returnUrl = null;
+			
+			if (portalLogoUrlDefault == false) {
+				returnUrl = portalLogoUrl;
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", returnUrl);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		logger.debug("MOBILE G/W getCompanyLogo ended.");
+		return result;
+	}
 }
