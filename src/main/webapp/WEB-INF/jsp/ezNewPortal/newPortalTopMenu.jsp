@@ -452,7 +452,7 @@
 				} else if (id == 'util_logout') {
 			        subMenuClickEvent('off');
 			        self.top.location.href = url;
-			    } else if (id != 'util_employee_search' && id != 'util_admin') {
+			    } else if (id != 'util_employee_search' && id != 'util_admin' && id != 'util_set') {
 			    	offMenuAll();
 					subMenuClickEvent('off', url);
 				} else {
