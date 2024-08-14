@@ -27,12 +27,7 @@
 				line-height:36px;
 		    }
 		    .popup_notice .notice_btnClose {right:8px;top:8px;}
-		    /*.empty_btn {height:44px;}*/
-			.popup_notice {
-				box-sizing: unset;
-				border-radius: unset;
-				box-shadow: none;
-			}
+		    .empty_btn {height:44px;}
 		</style>
 		
 		<script type="text/javascript">
@@ -51,12 +46,12 @@
 			
 			$(document).ready(function() {
 				var popupContent = document.getElementsByClassName("popup_noticeList")[0];
-				popupContent.style.setProperty('height', (document.documentElement.clientHeight - 70) + 'px', 'important');
+				popupContent.style.height = document.documentElement.clientHeight - 186 + "px";
 			});
 			
 			window.onresize = function(event) {
 				var popupContent = document.getElementsByClassName("popup_noticeList")[0];
-				popupContent.style.setProperty('height', (document.documentElement.clientHeight - 70) + 'px', 'important');
+				popupContent.style.height = document.documentElement.clientHeight - 186 + "px";
 			};
 	
 			function setCookie(name, value, expiredays) {
@@ -118,8 +113,8 @@
 				<dd class="name_type${skinValue }"><c:out value='${title }'/></dd>
 			</dl>
 			<div class='popup_noticeList'>${content }</div>
-<%--			<div class="empty_btn">--%>
-<%--			</div>--%>
+			<div class="empty_btn">
+			</div>
 		</div>
 		</form>
 		<!--  //popup -->
