@@ -1204,15 +1204,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             // 저장 할 값
             String prevPwdValue = "";
             StringJoiner joiner = new StringJoiner(":");
-            String rememberPWCount = ezCommonService.getCompanyConfig(tenantID, user.getPhysicalDeliveryOfficeName(), "RememberPWCount");
-            if (prevPwdList.length < Integer.parseInt(rememberPWCount)) {
+            String rememberPWCountConfig = ezCommonService.getCompanyConfig(tenantID, user.getPhysicalDeliveryOfficeName(), "RememberPWCount");
+            int rememberPWCount = rememberPWCountConfig == null || "".equalsIgnoreCase(rememberPWCountConfig) ? 0 : Integer.parseInt(rememberPWCountConfig);
+            
+            if (prevPwdList.length < rememberPWCount) {
                 // 저장된 비밀번호가 rememberPWCount개 미만일 경우
                 prevPwdValue = joiner.add(prevPwd)
                         .add(propertyValue)
                         .toString();
             } else {
                 // 저장된 비밀번호가 rememberPWCount 이상일 경우 맨 처음 저장된 값 을 뺴고 합친다.
-                int startIdx = Math.max(0, prevPwdList.length - Integer.parseInt(rememberPWCount) + 1);
+                int startIdx = Math.max(0, prevPwdList.length - rememberPWCount + 1);
                 for (int i = startIdx; i < prevPwdList.length; i++) {
                     joiner.add(prevPwdList[i]);
                 }

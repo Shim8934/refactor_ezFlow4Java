@@ -1609,7 +1609,8 @@ public class LoginController {
 		chkPwPolicy = result.succeeded() ? "OK" : result.getMessage();
 
 		if ("PREVERROR". equals(chkPwPolicy)) {
-			int rememberPWCount = Integer.parseInt(ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount"));
+			String rememberPWCountConfig = ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount");
+			int rememberPWCount = rememberPWCountConfig == null || "".equalsIgnoreCase(rememberPWCountConfig) ? 0 : Integer.parseInt(rememberPWCountConfig);
 			chkPwPolicy += "|"+rememberPWCount;
 		}
  		
