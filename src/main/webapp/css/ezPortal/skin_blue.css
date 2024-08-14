@@ -54,6 +54,7 @@ nav .navUL li.on{color:#003497;}
 .noti_list li i.icon_attendance{background-image:url(/images/ezNewPortal/skin/blue/lnb_attendance.svg);}
 .noti_list li i.icon_webfolder{background-image:url(/images/ezNewPortal/skin/blue/lnb_webfolder.svg);}
 .noti_list li i.icon_address{background-image:url(/images/ezNewPortal/skin/blue/lnb_addressbook.svg);}
+.noti_list li i.icon_noti{background-image:url(/images/ezNewPortal/skin/blue/lnb_notice.svg);}
 
 
 .lnb_list{background:#003497; border-color:#003497;}
@@ -107,6 +108,7 @@ nav .navUL li.on{color:#003497;}
 .my_info_wrap .portal_setting{background-image:url(../../images/ezNewPortal/skin/blue/info_setting.svg);}
 .my_info_wrap .news_setting input + label span{border-color:#003497;}
 .my_info_wrap .news_setting input + label span:before{background:#003497;}
+.my_info_wrap .news_setting input:checked + label span{background:#003497;}
 
 .top_info_area ul li .noti{background-image:url(../../images/ezNewPortal/skin/blue/info_board.svg);}
 .top_info_area ul li > span.mail{background-image:url(../../images/ezNewPortal/skin/blue/info_mail.svg);}

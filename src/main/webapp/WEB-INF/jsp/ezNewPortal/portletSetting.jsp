@@ -23,18 +23,10 @@
 		<style type="text/css">
 			html { height: 100%; }
 			#set-body { background-color: white;}
-			h3 { padding-left: 20px; margin-top: 25px; margin-bottom: 10px; font-size:14px; }
 			.set-head { background-color: rgb(228, 238, 254); height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
 			.set-head h1 { font-size: 16px; margin-left: 20px; color:black;}
 			.set-portlet{ margin-top: 20px;display: flex;flex-direction: column; align-items: center;}
 			.set-action { height: 9%; display: flex; justify-content: center; align-items: center;} 
-			.ui-portlet { position:relative;  width: 220px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
-			.ui-portlet-on { background-color: #f0f0f0; }
-			.ui-portlet-off { background-color: #f0f0f0; }
-			.ui-portlet-off .ui-portlet-span{ color:#999;}
-			.ui-portlet-content { font-weight: bold; display: inline-block;}
-			.ui-portlet-list { padding-left: 25px; width: 97%; box-sizing: border-box;}
-			.ui-portlet-span { display: inline-block; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-bottom:-3px; width: 130px;}
 			.flipsterLi { width:95px; height: 64px; margin-top:20px; margin-left:20px; padding:20px; background:#fff;}
 			.frameList { height: 151px; /* background-color: #e0e3e4; */ margin-left: 20px; margin-right: 20px;}
 			
@@ -45,7 +37,6 @@
 			.flipster__container {margin-left:-20px;}
 			.mCSB_container {margin-right:10px !important; padding:0;}
 			.flipster__button {height:65px;}
-			.fixed_span {width:72%; display:inline-block; margin-top: 12px;}
 			.fixed_span img { vertical-align: top; margin: 3px 5px 0px 0px;}
 			/* Tooltip text */
 			.fixed_span .tooltiptext {
@@ -81,7 +72,7 @@
 			#fixBoardList .mCSB_scrollTools_vertical{display:none !important;}
 		</style>
 	</head>
-	<body id="set-body">
+	<body id="set-body" class="set-body">
 		<section class="set-head">
 			<h1><spring:message code='ezNewPortal.HSBPT01' /></h1>
 		</section>
@@ -354,11 +345,11 @@
 							//event setting
 							$(".switch").find("input").on("change", checkIsFixed);
 							
-							$(".ui-portlet-list").mCustomScrollbar({
-								theme : "dark",
-								mouseWheelPixels: 70, 
-								//scrollInertia: 60,
-							});						
+							// $(".ui-portlet-list").mCustomScrollbar({
+							// 	theme : "dark",
+							// 	mouseWheelPixels: 70,
+							// 	//scrollInertia: 60,
+							// });
 						} else {
 							console.error(xhr.responseText);	
 						}
