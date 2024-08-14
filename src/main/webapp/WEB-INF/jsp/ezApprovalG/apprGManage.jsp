@@ -144,6 +144,32 @@
 
 			var selectYearVal = "ALL";
         	
+        	/* 2023-04-20 이가은 - 일괄접수 기능을 위한 변수 추가 */
+        	var isReceiptAll = "";
+        	var pCurSelRowSend = [];
+        	var minSignCountInfo = [];
+        	var minSignCount = 0;
+        	var receiptFlag = "";
+        	var retValue = [];
+        	var OpenPopupWin;
+        	
+        	// 2023-08-24 조수빈 - 누락된 변수 추가
+        	var tempSecurity = "";
+		    var tempKeep = "";
+		    var tempPublic = "Y";
+		    var tempUrgent = "N";
+		    var tempKeyword = "";
+		    var tempItemCode = "";
+		    var tempItemName = "";
+		    var tempItemName2 = "";
+		    var pSpecialRecordCode = "";
+		    var pPublicityCode = "";
+		    var pPublicityYN = "";
+		    var pLimitRange = "";
+		    var pPageNum = "";
+		    var cabinetID = "";
+		    var TaskCode = "";
+
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -3456,6 +3482,8 @@
 				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
 				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
+				<li id="tbtnReceiptAll" style="DISPLAY:none"><span id="btnReceiptAll" onclick="return btnReceiptAll_onclick()" ><spring:message code='ezApprovalG.lgeAR01'/></span></li>
+				<li id="tbtnRJunkyulAll" style="DISPLAY:none"><span id="btnRJunkyulAll" onclick="return btnRJunkyulAll_onclick()" ><spring:message code='ezApprovalG.lgeAR02'/></span></li>
 				<li id="tbtnRegList" class="approvalG"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
 				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
@@ -3568,6 +3596,11 @@
 	        </div>
 	    </div>
 	    
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+		
 	    <script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			//selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
