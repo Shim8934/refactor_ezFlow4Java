@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import org.json.simple.JSONObject;
+import org.jsoup.nodes.Element;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -950,4 +952,25 @@ public interface EzApprovalGService {
 
 	/* 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 공람회수  */
 	public String gongRamCancel(String docID, int count, int aprMemberSN, String companyID, int tenantId) throws Exception;
+    
+    // 2024-04-24 조수빈 - hwp 문서 접수 처리 
+    public String receiptAll_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN, Document strXML, String orgDocID, String loginCookie) throws Exception;
+
+    // 2024-04-24 조수빈 - mht 문서 접수 처리 
+    public String receiptAll_MHT(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN, Document strXML, String orgDocID, String loginCookie) throws Exception;
+    
+    // 2024-04-24 조수빈 - hwp 서명란 세는 메소드
+    public int getHwpSignCount(String href, String key, HttpServletRequest request, LoginVO userInfo) throws Exception;
+
+    // 2024-04-24 조수빈 - 일괄 수신 처리 중 에러 발생할 경우 수신 상태를 원래대로 돌려놓는 메소드
+	public void resetSusinDoc(String orgDocID, String docID, String deptID, String userID, String companyID, int tenantID) throws Exception;
+	
+	// 2024-04-23 조수빈 - 요소의 스타일 속성을 map으로 반환
+	public Map<String, String> getElemStyleMap(Element elem) throws Exception;
+	
+	// 2024-04-23 조수빈 - map을 html style 문자열로 반환
+	public String convStyleMap2String(Map<String, String> styleMap) throws Exception;
+	
+	// 2024-06-10 조수빈 - config.useOpenGov = YES일 때 일괄 접수 처리에서는 createDate만 업데이트하기 위한 메소드
+	public void updateCreateDateOfOpenGovDocInfo(String docID, int tenant_id, String companyID);
 }

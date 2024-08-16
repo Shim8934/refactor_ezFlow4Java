@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -48,6 +49,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.codec.binary.Base64;
@@ -1020,8 +1026,19 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardAttr = ezBoardAdminService.getBoardAttribute(pBoardID, userInfo.getTenantId());
 			boardAttrCount = boardAttr.size();
 		}
+
+		// 2024-08-14 전인하 - 게시판 > json data 이용 시 문제가 되는 특정 특수문자 이스케이프 추가 
+		JsonSerializer<String> stringSerializer = new JsonSerializer<String>() {
+			@Override
+			public JsonElement serialize(String src, Type typeOfSrc, JsonSerializationContext context) {
+				String escapedString = src.replace("\\", "\\\\")
+											.replace("\"", "\\\"")
+											.replace("/", "\\/");
+				return new JsonPrimitive(escapedString);
+			}
+		};
 		
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().registerTypeAdapter(String.class, stringSerializer).create();
 		String boardAttrJson = gson.toJson(boardAttr);
 		
 		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
@@ -3949,7 +3966,19 @@ public class EzBoardController extends EgovFileMngUtil{
 			useBoardFilePrvw = "0";
 		}
 		
-		Gson gson = new Gson();
+		// 2024-08-14 전인하 - 게시판 > json data 이용 시 문제가 되는 특정 특수문자 이스케이프 추가 
+		JsonSerializer<String> stringSerializer = new JsonSerializer<String>() {
+			@Override
+			public JsonElement serialize(String src, Type typeOfSrc, JsonSerializationContext context) {
+				String escapedString = src.replace("\\", "\\\\")
+											.replace("\"", "\\\"")
+											.replace("/", "\\/");
+						
+				return new JsonPrimitive(escapedString);
+			}
+		};
+
+		Gson gson = new GsonBuilder().registerTypeAdapter(String.class, stringSerializer).create();
 		String boardAttrJson = gson.toJson(boardAttr);
 		String boardItemJson = gson.toJson(boardItem);
 		 		

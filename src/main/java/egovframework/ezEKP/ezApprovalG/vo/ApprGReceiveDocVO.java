@@ -59,6 +59,13 @@ public class ApprGReceiveDocVO {
 	private String writerName;
 	/** 기안자(다국어)*/
 	private String writerName2;
+	/** 양식이름*/
+	private String formID;
+	/* 분리첨부 */
+	private String seperateAttachXml;
+	/* 기안자ID */
+	private String writerId;
+
 	
 	public String getCompanyID() {
 		return companyID;
@@ -234,5 +241,24 @@ public class ApprGReceiveDocVO {
 	public void setWriterName2(String writerName2) {
 		this.writerName2 = writerName2;
 	}
+	public String getFormID() {
+		return formID;
+	}
+	public void setFormID(String formID) {
+		this.formID = formID;
+	}
+	public String getSeperateAttachXml() {
+		return seperateAttachXml;
+	}
+	public void setSeperateAttachXml(String seperateAttachXml) {
+		this.seperateAttachXml = seperateAttachXml;
+	}
+	public String getWriterId() {
+		return writerId;
+	}
+	public void setWriterId(String writerId) {
+		this.writerId = writerId;
+	}
+	
 	
 }

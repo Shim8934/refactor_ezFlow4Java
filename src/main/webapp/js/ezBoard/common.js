@@ -453,10 +453,14 @@ function showUserReplyReact(pItemID) {
 
 // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 출력값 가공
 function peoplePickerDisplay(attr, userLang) {
-    attr = attr.trim();
-    if (attr == null || typeof attr == "undefined" || attr == "") {
+    if (attr == null || typeof attr == "undefined") {
         return "";
     }
+    attr = attr.trim();
+    if (attr == "") {
+        return attr;
+    }
+    
     var rtnString = "";
     var tempAuthListArr = attr.split(";");
     for (let i = 0 ; i < tempAuthListArr.length; i++) {

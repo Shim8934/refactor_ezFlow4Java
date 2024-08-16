@@ -44,6 +44,10 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import kr.dogfoot.hwplib.object.HWPFile;
 import kr.dogfoot.hwplib.reader.HWPReader;
@@ -13228,4 +13232,137 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		return result;
 	}
+	
+	/**
+	 * 전자결재G 일괄접수 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/receiptAllG.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String receiptAllG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("receiptAllG started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String rtnVal = "OK/0/0/0"; // OK or ERR/ totalCount / trueCount / falseCount
+		int totCnt = 0, trueCnt = 0, falseCnt = 0, exclCnt = 0;
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String userID = xmlDom.getElementsByTagName("USERID").getLength() > 0 
+						? xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim() : "";
+		String langType = xmlDom.getElementsByTagName("LANGTYPE").getLength() > 0  
+						? xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim() : "";
+		String orgUID = "";
+		String realPath = commonUtil.getRealPath(request);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		userInfo.setRealPath(realPath);
+		String useOpenGov = config.getProperty("config.useOpenGov");
+		
+		if (xmlDom.getElementsByTagName("DOCID").getLength() > 0) {
+			totCnt = xmlDom.getElementsByTagName("DOCID").getLength(); // 결재 체크된 문서 갯수 확인
+			String mode = xmlDom.getElementsByTagName("MODE").getLength() > 0
+						? xmlDom.getElementsByTagName("MODE").item(0).getTextContent().trim() : "";
+			
+			NodeList docListElements = xmlDom.getDocumentElement().getElementsByTagName("DOC");
+			for (int k = xmlDom.getElementsByTagName("DOC").getLength() - 1; k > -1; k--) {
+				String res = "";
+				
+				// k번째에 해당하는 값을 가지고올 때 k번째가 존재하는지, k번째의 값이 있는지 여부를 판단해야하는데, 전자의 경우에는 삼항연산자를 사용할 수 없기 때문에
+				// 과정에서 예외(NullPointerException, IndexOutOfBoundsException가 발생하는 경우 필요 값이 제대로 전달되지 않은 상황이므로  실패로 카운트
+				try {
+					orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent(); // 원결재자
+					mode = xmlDom.getElementsByTagName("MODE").item(k).getTextContent();
+					
+					String orgCompanyID = xmlDom.getElementsByTagName("orgCompanyID").item(k).getTextContent().trim();
+					String aprMemberSN = xmlDom.getElementsByTagName("APRMEMBERSN").item(k).getTextContent().trim();
+					String formID = xmlDom.getElementsByTagName("FORMID").item(k).getTextContent().trim();
+					String docID = xmlDom.getElementsByTagName("DOCID").item(k).getTextContent().trim();
+					String aprState = xmlDom.getElementsByTagName("APRSTATE").item(k).getTextContent().trim();
+					String orgDocID = xmlDom.getElementsByTagName("ORGDOCID").item(k).getTextContent().trim();
+					String seperateAttachXmlFlag = xmlDom.getElementsByTagName("SEPERATEATTACHXMLFLAG").item(k).getTextContent().trim();
+					
+					// 2023-10-18 조수빈 - 해당하는 내용(k번째)의 xml 부분만 추출하는 과정.
+					Element docElement = (Element) docListElements.item(k);
+					Document newDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+					Element newDocElement = (Element) newDoc.importNode(docElement, true);
+					newDoc.appendChild(newDocElement);
+					
+					String docType = newDoc.getElementsByTagName("DOCTYPE").item(0).getTextContent().trim();
+					String docState = newDoc.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim(); 
+					
+					if (xmlDom.getElementsByTagName("TYPE").getLength() > 0) {
+						//접수된 문서인지 확인
+						int checkRecvDoc = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+						
+						if (checkRecvDoc != 0) {
+							res = "ERROR";
+						} else if (aprState.equals("015") || seperateAttachXmlFlag.equals("Y") || docState.equals("012")
+									|| (approvalFlag.equals("S") && docType.equals("004"))
+									|| (approvalFlag.equals("G") && docType.equals("001"))) {
+							// 2024-04-05 조수빈 - 문서 상태가 회송이거나 분리첨부가 존재하는 경우, 합의문, 시행문 제외
+							res = "EXCL";
+						} else if (xmlDom.getElementsByTagName("TYPE").item(k).getTextContent().equals("MHT")) {
+							logger.debug("type = MHT");
+							res = ezApprovalGService.receiptAll_MHT(userID, "A", formID, "", docID, orgUID, langType, orgCompanyID, request, userInfo, mode, aprMemberSN, newDoc, orgDocID, loginCookie);
+							
+							// 2024-06-10 조수빈 - 원문공개가 사용일 때 수신 시에는 tbl_opengovdocinfo 테이블의 createDate만 update 되는 부분 구현.
+							if (res.contains("TRUE") && useOpenGov == "YES") {
+								ezApprovalGService.updateCreateDateOfOpenGovDocInfo(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+							}
+						} else if (xmlDom.getElementsByTagName("TYPE").item(k).getTextContent().equals("HWP")) {
+							logger.debug("type = HWP");
+							res = ezApprovalGService.receiptAll_HWP(userID, "A", formID, "", docID, orgUID, langType, orgCompanyID, request, userInfo, mode, aprMemberSN, newDoc, orgDocID, loginCookie);
+
+							// 2024-06-10 조수빈 - 원문공개가 사용일 때 수신 시에는 tbl_opengovdocinfo 테이블의 createDate만 update 되는 부분 구현.
+							if (res.contains("TRUE") && useOpenGov == "YES") {
+								ezApprovalGService.updateCreateDateOfOpenGovDocInfo(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+							}
+						}
+						
+					} 
+				} catch (IndexOutOfBoundsException e) {
+					logger.error("Error occured in receiptAllG. Index number that generated the error is {}. message: {}", k, e.getMessage());
+					res = "<RESULT>FALSE</RESULT>";
+				} catch (NullPointerException e) {
+					logger.error("Error occured in receiptAllG. Please check if there is a null value. Index number that generated the error is {}. message: {}", k, e.getMessage());
+					res = "<RESULT>FALSE</RESULT>";
+				}
+				
+				if (res.contains("TRUE")) {
+					trueCnt++;
+				} else if (res.contains("EXCL")) {
+					exclCnt++;
+				} else {
+					falseCnt++;
+				}
+			}
+			
+			// 2024-04-09 조수빈 - 성공한 건이 0, 예외도 0, 실패가 0 이상일 때에만 실패로 반환. 
+			if (trueCnt == 0 && exclCnt == 0) {
+				rtnVal = "ERR/" + totCnt + "/" + trueCnt + "/" + falseCnt + "/" + exclCnt;
+			} else {
+				rtnVal = "OK/" + totCnt + "/" + trueCnt + "/" + falseCnt + "/" + exclCnt;
+			}
+		}
+		
+		logger.debug("receiptAllG ended. result: {}", rtnVal);
+		
+		return rtnVal;
+	}
+	
+	// 한글파일 sign 칸 수 세기
+	@RequestMapping(value = "/ezApprovalG/getHwpSignCount.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getHwpSignCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getHwpSignCount started");
+		String href = request.getParameter("href");
+		// 문서에서 찾을 필드명
+		String key = request.getParameter("key");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		int rtn = ezApprovalGService.getHwpSignCount(href, key, request, userInfo);
+		
+		logger.debug("getHwpSignCount ended");
+		return Integer.toString(rtn);
+	}
+	
 }

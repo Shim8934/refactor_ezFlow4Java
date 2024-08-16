@@ -2237,7 +2237,8 @@ public class CommonUtil {
 				String encryptedNewPassword = EgovFileScrty.encryptPassword(pwStr, userId);
 				String[] prevPasswords = ezCommonService.getPrevPwd(tenantId, userId).split(":");
 
-				int rememberPWCount = Integer.parseInt(ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount"));
+				String rememberPWCountConfig = ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount");
+				int rememberPWCount = rememberPWCountConfig == null || "".equalsIgnoreCase(rememberPWCountConfig) ? 0 : Integer.parseInt(rememberPWCountConfig);
 				int startIdx = Math.max(0, prevPasswords.length - rememberPWCount);
 
 				for (int i = prevPasswords.length - 1; i >= startIdx; i--) {
