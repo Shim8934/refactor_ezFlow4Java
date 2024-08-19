@@ -182,7 +182,9 @@
 					str += '<div class=\"list_info\">'
 					str += '<span class=\"read_point\"></span>'
 					str += '<p class=\"title ellipsis2\" title=\"' + ConvertCharToEntityReference(noti.notiContent) +'">'
-					if (noti.mainType.toLowerCase() != "etc") {
+					if (noti.mainType.toLowerCase() == "noti" && noti.subType.toLowerCase() == "emergency") {
+						str += '<span class="emergency">' + '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] +'] </span>';
+					} else if (noti.mainType.toLowerCase() != "etc") {
 					 	str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : '';
 					}
 					str += ConvertCharToEntityReference(noti.notiContent) + '</p>';

@@ -1934,6 +1934,7 @@ div.orbit img{border-radius:5px;}
 .noti_list li .list_info{position:relative; display:flex; width:100%; height:54px; align-items:center; margin:7px 0 0; padding:0 40px 0 17px; border-radius:12px; box-shadow:0 0 8px rgba(216,219,228,0.72); box-sizing:border-box;}
 .noti_list li .list_info .read_point{position:absolute; top:9px; left:9px;  width:6px; height:6px; border-radius:50%; background:#F15D13;}
 .noti_list li .list_info .title{color:#333; font-size:14px; font-weight:500; white-space:nowrap; text-overflow:ellipsis; margin:0; padding:0; overflow:hidden; word-break:break-all;}
+.noti_list li .list_info .title .emergency{color:#FF0000;}
 .noti_list li .list_info .desc{margin:4px 0 0;}
 .noti_list li .list_info .desc span{color:#999; font-size:14px; font-weight:500;}
 
