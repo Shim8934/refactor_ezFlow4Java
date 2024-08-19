@@ -56,6 +56,8 @@
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
         <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
     </div>
+
+    <div class="title_tooltip"></div>
 <%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
@@ -546,6 +548,29 @@
         setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
         makeSwiperByTopMenu();
         // callAllUserTab();
+
+
+        // 툴팁 동작 예시(uiux팀 - 조기완)
+        $(".portletText").on({
+            "mouseenter" : function(){
+                $(".title_tooltip").text($(this).text());
+                $(".portletText").mousemove(function(){
+                    var mouseX = event.clientX;
+                    var mouseY = event.clientY;
+                    var scrollLeft = $("html").scrollLeft();
+                    var scrollTop = $("html").scrollTop();
+                    $(".title_tooltip").css({
+                        left : mouseX + scrollLeft - 15,
+                        top : mouseY + scrollTop + 25
+                    })
+                })
+                $(".title_tooltip").show();
+            },
+
+            "mouseleave" : function(){
+                $(".title_tooltip").hide();
+            }
+        })
     }
 
     function setPortalCount(){
