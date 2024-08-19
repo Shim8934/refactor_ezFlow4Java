@@ -483,6 +483,11 @@ function AprDeptAdd_onclick(Type) {
             var pCurSelRow = listview.GetSelectedRows();
             
             if (pCurSelRow.length != 0) {
+                if (isExistDept(true)) {
+                    var pAlertContent = strLang244 + "</br>" + strLang245;
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
             	/* 2023-03-09 홍승비 - 전자결재G > 결재문서를 수신하지 않는 부서의 소속 사원은 수신자로 지정 불가능하도록 수정 */
             	var userDeptID = pCurSelRow[0].getAttribute("DATA3");
             	
