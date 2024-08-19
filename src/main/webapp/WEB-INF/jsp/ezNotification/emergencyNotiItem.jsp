@@ -25,7 +25,14 @@
 	        </h2>
 	        <div class="emergency_title"><span><spring:message code='ezNotification.hth89'/></span><p><c:out value='${emergencyNotiItem.notiTitle}'/></p></div>
 	        <ul class="emergency_info">
-	            <li class="info_img"><img src='<c:out value='${emergencyNotiItem.writerPhoto}'/>'></li>
+	        	<c:choose>
+	        		<c:when test="${not empty emergencyNotiItem.writerPhoto}">
+	            		<li class="info_img"><img src='<c:out value='${emergencyNotiItem.writerPhoto}'/>'></li>
+	            	</c:when>
+	        		<c:otherwise>
+	            		<li class="info_img"><img src='/images/ezNewPortal/info_pic_none.png'></li>
+	        		</c:otherwise>
+	        	</c:choose>
 	            <li class="info_name"><c:out value='${emergencyNotiItem.writerName}'/><span>(<c:out value='${emergencyNotiItem.writerDeptName}'/>)</span></li>
 	            <li class="info_date"><c:out value='${fn:substring(emergencyNotiItem.writeDate, 0, 16)}'/></li>
 	        </ul>
