@@ -3705,7 +3705,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				changeDataMap.put("tenantId", connectPortletDto.getTenantId());
 				String viewType = null;
 				String linkUrl = null;
-				String mLinkUrl = null;
+				String mobileLinkUrl = null;
 				String dataResultType = null;
 				String connectType = null;
 				String dataResultFormat = null;
@@ -3718,8 +3718,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					linkUrl= changeDataValueForUrl(changeDataMap, connectionData.get("linkUrl").toString());
 				}
 				
-				if (connectionData.get("mLinkUrl") != null) {
-					mLinkUrl= changeDataValueForUrl(changeDataMap, connectionData.get("mLinkUrl").toString());
+				if (connectionData.get("mobileLinkUrl") != null) {
+					mobileLinkUrl= changeDataValueForUrl(changeDataMap, connectionData.get("mobileLinkUrl").toString());
 				}
 				
 				if (connectionData.get("dataResultType") != null) {
@@ -3740,7 +3740,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				
 				data.put("viewType", viewType);
 				data.put("linkUrl", linkUrl);
-				data.put("mLinkUrl", mLinkUrl);
+				data.put("mobileLinkUrl", mobileLinkUrl);
 				data.put("dataResultType", dataResultType);
 				data.put("dataResultFormat", dataResultFormat);
 				data.put("paging", paging);
