@@ -1922,6 +1922,7 @@
                     		<option VALUE="SECUREMAIL"><spring:message code="ezEmail.yja001" /></option>
                    		</c:if>
                     		<option VALUE="IMPORTANT"><spring:message code="ezEmail.kes047" /></option>
+                    		<option VALUE="ATTACH"><spring:message code="ezEmail.t557"/> </option>
                     	</select>
 	                </td>
                   </tr>

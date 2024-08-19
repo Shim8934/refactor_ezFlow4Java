@@ -1000,6 +1000,7 @@ public class EzEmailMailListController {
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
 		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String useAttachFileFilter = doc.getElementsByTagName("ATTACHFILEFILTER").item(0).getTextContent();
 		
 		if (startDate == null) {
 			return "";
@@ -1051,10 +1052,8 @@ public class EzEmailMailListController {
 			}
 		}
 		
-		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
-		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
-					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex + ",useCountryIP=" + useCountryIP
-					+ ",useSecureMailFilter=" + useSecureMailFilter);
+		logger.debug("userId={},userEmail={},tenantId={},serverName={},folderId={},sortType={},start={},end={},search={},viewSelectIndex={},useCountryIP={},useSecureMailFilter={},useAttachFileFilter={}"
+					,userInfo.getId(),userEmail,userInfo.getTenantId(),userInfo.getServerName(),folderId,sortType,start,end,search,viewSelectIndex,useCountryIP,useSecureMailFilter,useAttachFileFilter);
 		
 		String returnData = "";
 				
@@ -1146,6 +1145,7 @@ public class EzEmailMailListController {
 			extraMap.put("andorStatus", andorStatus);
 			extraMap.put("attachStatus", attachStatus);
 			extraMap.put("useSecureMailFilter", useSecureMailFilter.equals("1"));
+			extraMap.put("useAttachFileFilter",useAttachFileFilter.equals("1"));
 
 			//2020-07-16 김은실 - (사조그룹)내부·외부필터 내부기준 도메인
 			if (sortType.indexOf("INTERNAL") >= 0 || sortType.indexOf("EXTERNAL") >= 0) {
