@@ -589,13 +589,7 @@
 	
 	        function OK_Click() {
 	            var memberList = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children;
-	            var memberListLength = memberList.length;
-	            
-	            if (memberListLength <= 0) {
-	            	alert("<spring:message code='ezSchedule.t197' />");
-	            	return;
-	            }
-	            
+	            var memberListLength = memberList.length; 
 	            var popupUserList = [];
 	            var userListText = "";
 	            var userListDataLength = 0; // 저장 가능한 글자수 체크 변수
