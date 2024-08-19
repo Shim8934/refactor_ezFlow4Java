@@ -5500,6 +5500,7 @@
 		'"connectType": "",' ||CHR(10)||
 		'"restUrl": "",' ||CHR(10)||
 		'"httpMethodType":"",' ||CHR(10)||
+		'"headerParam" : "{    }",' ||CHR(10)||
 		'"dataParam" : "{    }",' ||CHR(10)||
 		'"dataParamType" : "",' ||CHR(10)||
 		'"dataResultType" : "",' ||CHR(10)||

@@ -5141,6 +5141,7 @@ VALUES
 		"connectType": "",\n
 		"restUrl": "",\n
 		"httpMethodType":"",\n
+		"headerParam" : {  	},\n
 		"dataParam" : "{    }",\n
 		"dataParamType" : "",\n
 		"dataResultType" : "",\n
