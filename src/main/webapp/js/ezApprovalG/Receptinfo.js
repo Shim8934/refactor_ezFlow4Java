@@ -1715,7 +1715,7 @@ function AprLineAddDeptG_New(outDeptID) {
 		}
 		
 		/* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */ //이건 복붙
-		if (listView.GetDataRows().length > 8) {
+		if (listView.GetDataRows().length > 9) {
 			document.getElementById("inputSummaryOuterReceiverList").focus();
 			document.getElementById("trSummaryOuterReceiverList").style.display = "";
 			document.getElementById("btnaddress").style.display = "none";
@@ -2010,7 +2010,7 @@ function AprDeptDel_onclick() {
     }
 
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (listview.GetDataRows().length < 9) {
+    if (listview.GetDataRows().length < 10) {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
