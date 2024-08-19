@@ -2414,3 +2414,6 @@ div.orbit img{border-radius:5px;}
 .set-body .btnpositionLayer a.imgbtn{padding:0; height:29px; line-height:27px; border:1px solid #CECECE; border-radius:3px; margin:0 3px; background:#fff; box-sizing:border-box;}
 .set-body .btnpositionLayer a.imgbtn span{padding:0 12px; height:100%; line-height:27px; color:#393939;}
 .fixed_portlet{position:absolute; width:9px; height:9px; background:url(../../images/ezNewPortal/fixed_star.png) no-repeat center; left:4px; top:4px;}
+
+.title_tooltip{position:absolute; padding:6px 10px; border-radius:7px; background:#6A6A6A; font-size:13px; color:#fff; top:50px; left:50px; display:none; z-index:1000; box-shadow:0 1px 4px rgba(0,0,0,0.16);}
+.title_tooltip:before{content:""; position:absolute; width:0; height:0; border:8px solid transparent; border-bottom:8px solid #6A6A6A; top:-16px; left:10px;}
