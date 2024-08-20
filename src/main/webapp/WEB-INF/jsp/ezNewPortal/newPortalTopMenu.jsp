@@ -267,7 +267,6 @@
 					mainMenuElem.appendChild(menuLi);
 					menuCount++;
 				}
-				
 				// 메뉴리스트 객체 생성
 				newPortalTopMenu.menuListObj['menu_'+ item.menuId] = {
 					menuId: item.menuId,
@@ -789,7 +788,7 @@
 			editMenuSave.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
 				document.getElementById("editBtn").style.display = "block";
-				document.getElementById('editMenuBtn').style = 'none';
+				document.getElementById('editMenuBtn').style.display = 'none';
 				$("#menuAllContainer ul").removeClass("active");
 				 
 				var menuListAll = document.getElementById('menuListAll');
