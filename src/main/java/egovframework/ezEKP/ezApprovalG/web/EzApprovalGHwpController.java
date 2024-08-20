@@ -1615,20 +1615,19 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 		
 		if (pass.equals("<RESULT>TRUE</RESULT>")) {
+			String strXML = ezApprovalGService.getDocInfo(docID, docAprEnd, "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+			Document xmlDom = commonUtil.convertStringToDocument(strXML);
+			
+			if (xmlDom.getElementsByTagName("FORMID").getLength() > 0) {
+				formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
+			}
+			
            if (docHref.trim().equals("") || docHref.indexOf("/1000/") >= 0) {
-                String strXML = ezApprovalGService.getDocInfo(docID, docAprEnd, "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
-
-        		Document xmlDom = commonUtil.convertStringToDocument(strXML);
-
                 if (xmlDom.getElementsByTagName("HREF").getLength() > 0) {
                 	if (!xmlDom.getElementsByTagName("HREF").item(0).getTextContent().trim().equals("")) {
                 		docHref = xmlDom.getElementsByTagName("HREF").item(0).getTextContent().trim();
                 	}
                 }
-
-			   if (xmlDom.getElementsByTagName("FORMID").getLength() > 0) {
-				   formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
-			   }
             }
 
             String readRecXML = "<PARAMETER><DOCID>" + makeXMLString(docID) +
