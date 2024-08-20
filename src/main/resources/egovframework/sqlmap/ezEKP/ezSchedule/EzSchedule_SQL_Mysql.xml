@@ -2187,7 +2187,9 @@
 		DATETYPE = #v_DATETYPE#,
 		</isNotEmpty>
 		REPETITION = IFNULL(#v_REPETITION#, ''),
+		<isNotEmpty property="v_TITLE">
 		TITLE = #v_TITLE#,
+		</isNotEmpty>
 		REMINDERSTATUS = #v_REMINDERSTATUS#
 	WHERE
 		SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#
