@@ -782,6 +782,48 @@ function ellipsisTitle(portletName, portletId) {
     portletTitle.textContent = portletName;
     
     if (portletTitle.scrollWidth > portletTitle.clientWidth) {
-        portletTitle.setAttribute("title", portletName);
+        $(portletTitle).on({
+            "mouseenter" : function(){
+                $(".title_tooltip").text($(this).text());
+                $(portletTitle).mousemove(function(){
+                    var mouseX = event.clientX;
+                    var mouseY = event.clientY;
+                    var scrollLeft = $("html").scrollLeft();
+                    var scrollTop = $("html").scrollTop();
+                    $(".title_tooltip").css({
+                        left : mouseX + scrollLeft - 15,
+                        top : mouseY + scrollTop + 25
+                    })
+                })
+                $(".title_tooltip").show();
+            },
+    
+            "mouseleave" : function(){
+                $(".title_tooltip").hide();
+            }
+        })
     }
 }
+
+// 툴팁 추가 - 즐겨찾기게시판, 탭게시판 포틀릿
+$(document).on('mouseenter', '.longTitle', function() {
+    var tooltipText = $(this).text();
+    $(".title_tooltip").text(tooltipText);
+    $(".title_tooltip").show();
+});
+
+$(document).on('mousemove', '.longTitle', function(event) {
+    var mouseX = event.clientX;
+    var mouseY = event.clientY;
+    var scrollLeft = $(window).scrollLeft();
+    var scrollTop = $(window).scrollTop();
+    
+    $(".title_tooltip").css({
+        left: mouseX + scrollLeft - 15,
+        top: mouseY + scrollTop + 25
+    });
+});
+
+$(document).on('mouseleave', '.longTitle', function() {
+    $(".title_tooltip").hide();
+});

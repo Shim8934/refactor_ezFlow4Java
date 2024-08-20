@@ -89,7 +89,7 @@ var getTabBoard = function (portletId) {
                     }
                     
                     if (boardName.length > maxLength) {
-                        tabNode.firstChild.setAttribute("title", boardName);
+                        tabNode.firstChild.classList.add("longTitle");
                     }
                 }
                 
