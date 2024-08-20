@@ -1559,7 +1559,7 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 #theme3Body #fixBoardArea #fixRight{width:100%; margin:0; height:250px;}
 
 
-#theme3Body .portlet_area{width:auto; overflow:hidden;}
+#theme3Body .portlet_area, #dummyArea{width:auto; overflow:hidden;}
 
 
 .quick_ul{list-style:none; margin:0; padding:10px; width:calc(100% - 20px); overflow:hidden; cursor:pointer;}
