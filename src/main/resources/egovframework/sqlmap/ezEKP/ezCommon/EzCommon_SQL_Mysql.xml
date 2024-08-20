@@ -5122,7 +5122,7 @@
 			(TYPECODE, TENANT_ID, COMPANY_ID, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE)
 		VALUES
 	    	('PORTLET', #tenantId#, #companyId#, '포틀릿', 'Portlet', '(연계)포틀릿 컨피그', #companyId#,
-	    	(SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#), (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = #companyId#), #nowDate#)
+	    	(SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId# AND TENANT_ID = #tenantId#), (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = #companyId# and TENANT_ID = #tenantId#), #nowDate#)
 	</insert>
 	
 	<insert id="EzCommonDAO.insertStandardSystemConfigData" parameterClass="Map">
@@ -5166,7 +5166,7 @@ VALUES
 		"totalCntQuery": "",\n
 		"driverClassName" : ""\n
 	}',
-	'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#), #nowDate#, #tenantId#, #companyId#, 'PORTLET'
+	'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId# AND TENANT_ID = #tenantId#), #nowDate#, #tenantId#, #companyId#, 'PORTLET'
 ) ]]>
 	</insert>
 	
