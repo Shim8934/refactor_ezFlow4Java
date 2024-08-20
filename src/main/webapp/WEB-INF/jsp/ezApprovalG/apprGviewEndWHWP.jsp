@@ -674,7 +674,7 @@
 	                        <c:if test="${useBoard == 'YES' }">
 	                        <li id="btnBoard"><span onclick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 	                        </c:if>
-	                        <c:if test="${formID != '2018000000'}">
+	                        <c:if test="${formID != '2018000000' && docAprEnd != 'APR'}"> <%-- 2024-08-19 조소정 - 배부대장의 경우 apr(진행중) 문서인 경우 버튼 숨김처리 --%>
 	                        <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 	                        </c:if>
 	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
