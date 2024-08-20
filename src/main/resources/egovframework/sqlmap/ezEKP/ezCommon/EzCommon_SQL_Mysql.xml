@@ -5141,6 +5141,7 @@ VALUES
 		"connectType": "",\n
 		"restUrl": "",\n
 		"httpMethodType":"",\n
+		"headerParam" : {  	},\n
 		"dataParam" : "{    }",\n
 		"dataParamType" : "",\n
 		"dataResultType" : "",\n
@@ -5152,7 +5153,7 @@ VALUES
 				"writer" : "",\n
 				"date" : "",\n
 				"linkUrl" : "",\n
-				"moblieLinkUrl" : ""\n
+				"mobileLinkUrl" : ""\n
 			}\n
 		},\n
 		"dbType": "",\n

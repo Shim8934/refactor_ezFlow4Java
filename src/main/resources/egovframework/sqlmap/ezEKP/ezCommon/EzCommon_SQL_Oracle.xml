@@ -5500,6 +5500,7 @@
 		'"connectType": "",' ||CHR(10)||
 		'"restUrl": "",' ||CHR(10)||
 		'"httpMethodType":"",' ||CHR(10)||
+		'"headerParam" : "{    }",' ||CHR(10)||
 		'"dataParam" : "{    }",' ||CHR(10)||
 		'"dataParamType" : "",' ||CHR(10)||
 		'"dataResultType" : "",' ||CHR(10)||
@@ -5511,7 +5512,7 @@
 				'"writer" : "",' ||CHR(10)||
 				'"date" : "",' ||CHR(10)||
 				'"linkUrl" : "",' ||CHR(10)||
-				'"moblieLinkUrl" : ""' ||CHR(10)||
+				'"mobileLinkUrl" : ""' ||CHR(10)||
 			'}' ||CHR(10)||
 		'},' ||CHR(10)||
 		'"dbType": "",' ||CHR(10)||

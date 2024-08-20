@@ -3705,11 +3705,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				changeDataMap.put("tenantId", connectPortletDto.getTenantId());
 				String viewType = null;
 				String linkUrl = null;
-				String mLinkUrl = null;
+				String mobileLinkUrl = null;
 				String dataResultType = null;
 				String connectType = null;
 				String dataResultFormat = null;
 				String paging = null;
+				JSONObject headerParam = null;
 				if (connectionData.get("viewType") != null) {
 					viewType= connectionData.get("viewType").toString();
 				}
@@ -3718,8 +3719,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					linkUrl= changeDataValueForUrl(changeDataMap, connectionData.get("linkUrl").toString());
 				}
 				
-				if (connectionData.get("mLinkUrl") != null) {
-					mLinkUrl= changeDataValueForUrl(changeDataMap, connectionData.get("mLinkUrl").toString());
+				if (connectionData.get("mobileLinkUrl") != null) {
+					mobileLinkUrl= changeDataValueForUrl(changeDataMap, connectionData.get("mobileLinkUrl").toString());
 				}
 				
 				if (connectionData.get("dataResultType") != null) {
@@ -3728,6 +3729,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				
 				if (connectionData.get("dataResultFormat") != null) {
 					dataResultFormat = connectionData.get("dataResultFormat").toString();
+				}
+				
+				if (connectionData.get("headerParam") != null) {
+					headerParam = (JSONObject) connectionData.get("headerParam");
 				}
 				
 				if (connectionData.get("paging") != null) {
@@ -3740,7 +3745,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				
 				data.put("viewType", viewType);
 				data.put("linkUrl", linkUrl);
-				data.put("mLinkUrl", mLinkUrl);
+				data.put("mobileLinkUrl", mobileLinkUrl);
 				data.put("dataResultType", dataResultType);
 				data.put("dataResultFormat", dataResultFormat);
 				data.put("paging", paging);
@@ -3755,7 +3760,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					String dataParam = changeDataValue(changeDataMap, connectionData.get("dataParam").toString());
 					String dataParamType = connectionData.get("dataParamType").toString();
 					
-					result = getDataFromRestApi(restUrl, dataParam, dataParamType, connectPortletDto.getRequest(), httpMethodType);
+					result = getDataFromRestApi(restUrl, dataParam, dataParamType, connectPortletDto.getRequest(), httpMethodType, headerParam);
 					data.put("portletDataStr", result);
 					
 				} else if (connectType.equalsIgnoreCase("db")) {
@@ -3913,11 +3918,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return result;
 	}
 	
-	public String getDataFromRestApi(String restUrl, String paramString, String paramType, HttpServletRequest request, String methodType) throws Exception {
-		return getDataFromRestApi(restUrl, paramString, paramType, request, methodType, -1, -1);
+	public String getDataFromRestApi(String restUrl, String paramString, String paramType, HttpServletRequest request, String methodType, JSONObject headerParam) throws Exception {
+		return getDataFromRestApi(restUrl, paramString, paramType, request, methodType, headerParam, -1, -1);
 	}
 	
-	public String getDataFromRestApi(String restUrl, String paramString, String paramType, HttpServletRequest request, String methodType, int connectionTimeout, int readTimeout) throws Exception {
+	public String getDataFromRestApi(String restUrl, String paramString, String paramType, HttpServletRequest request, String methodType, JSONObject headerParam, int connectionTimeout, int readTimeout) throws Exception {
 		logger.debug("getJsonFromRestApi started.");
 		String url = restUrl;
 		
@@ -3927,6 +3932,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 		} else if (paramType.equalsIgnoreCase("xml")) {
 			headers.setContentType(MediaType.APPLICATION_XML);
+		}
+		
+		if (headerParam != null) {
+			for (Object key : headerParam.keySet()) {
+	            String value = (String) headerParam.get(key);
+	            headers.set(key.toString(), value);
+	        }
 		}
 		
 		headers.set("x-user-host", request.getServerName());
