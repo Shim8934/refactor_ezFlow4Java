@@ -97,7 +97,8 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-	</div>		
+	</div>
+	<div class="title_tooltip"></div>
 <%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>

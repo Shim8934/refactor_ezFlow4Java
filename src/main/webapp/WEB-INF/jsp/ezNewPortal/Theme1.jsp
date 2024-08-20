@@ -550,27 +550,6 @@
         // callAllUserTab();
 
 
-        // 툴팁 동작 예시(uiux팀 - 조기완)
-        $(".portletText").on({
-            "mouseenter" : function(){
-                $(".title_tooltip").text($(this).text());
-                $(".portletText").mousemove(function(){
-                    var mouseX = event.clientX;
-                    var mouseY = event.clientY;
-                    var scrollLeft = $("html").scrollLeft();
-                    var scrollTop = $("html").scrollTop();
-                    $(".title_tooltip").css({
-                        left : mouseX + scrollLeft - 15,
-                        top : mouseY + scrollTop + 25
-                    })
-                })
-                $(".title_tooltip").show();
-            },
-
-            "mouseleave" : function(){
-                $(".title_tooltip").hide();
-            }
-        })
     }
 
     function setPortalCount(){

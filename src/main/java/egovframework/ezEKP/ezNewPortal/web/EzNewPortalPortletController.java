@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -1500,5 +1501,93 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		logger.debug("getConnectList End");
 		return data;
+	}
+	
+
+	@ResponseBody
+	@RequestMapping(value = "/rest/testConnectPortletJSON.do", method=RequestMethod.POST)
+	public JSONObject testConnectPortletJSON(HttpServletRequest req, @RequestBody Map<String, Object> jsonData) throws Exception {
+		logger.debug("testConnectPortletJSON Start");
+		
+		JSONObject json = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		
+		int listCnt = Integer.parseInt(jsonData.get("listCnt").toString());
+		int startRow = Integer.parseInt(jsonData.get("startRow").toString());
+		
+		for (int i = startRow; i < startRow + listCnt && i < 30; i++) {
+			JSONObject jsonVO = new JSONObject();
+			jsonVO.put("title", i + "번째 글");
+			jsonVO.put("writeDate", "2024-08-19 01:12:00");
+			jsonVO.put("writeName", i + "번째 사람");
+			jsonVO.put("linkUrl", "http://localhost:8080/test" + i);
+			jsonVO.put("mobileLinkUrl", "http://localhost:8001/test" + i);
+			
+			jsonArray.add(jsonVO);
+		}
+		
+		json.put("data", jsonArray);
+		json.put("totalCnt", 30);
+		
+		logger.debug("testConnectPortletJSON End");
+		return json;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/rest/testConnectPortletJSONtoXML.do", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public String testConnectPortletJSONtoXML(HttpServletRequest req, @RequestBody Map<String, Object> jsonData) throws Exception {
+		logger.debug("testConnectPortletJSON Start");
+		
+		String xml = "";
+		
+		int listCnt = Integer.parseInt(jsonData.get("listCnt").toString());
+		int startRow = Integer.parseInt(jsonData.get("startRow").toString());
+		xml += "<DATA>";
+		xml += "<ROWS>";
+		for (int i = startRow; i < startRow + listCnt && i < 30; i++) {
+			xml += "<ROW>";
+			xml += "<TITLE>" + i + "번째 글" + "</TITLE>";
+			xml += "<WRITEDATE>" + "2024-08-19 01:12:00" + "</WRITEDATE>";
+			xml += "<WRITENAME>" + i + "번째 사람" + "</WRITENAME>";
+			xml += "<LINKURL>" + "http://localhost:8080/test" + i + "</LINKURL>";
+			xml += "<MOBILELINKURL>" + "http://localhost:8001/test" + i + "</MOBILELINKURL>";
+			xml += "</ROW>";
+		}
+		xml += "</ROWS>";
+		xml += "<TOTALCNT>30</TOTALCNT>";
+		xml += "</DATA>";
+		
+		logger.debug("testConnectPortletJSON End");
+		return xml;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/rest/testConnectPortletXMLtoXML.do", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public String testConnectPortletXMLtoXML(HttpServletRequest req, @RequestBody String xmlData) throws Exception {
+		logger.debug("testConnectPortletJSON Start");
+		
+		String xml = "";
+		
+		Document doc = commonUtil.convertStringToDocument(xmlData);
+		int listCnt = Integer.parseInt(doc.getElementsByTagName("listCnt").item(0).getTextContent());
+		int startRow = Integer.parseInt(doc.getElementsByTagName("startRow").item(0).getTextContent());
+		
+		xml += "<DATA>";
+		xml += "<ROWS>";
+		for (int i = startRow; i < startRow + listCnt && i < 30; i++) {
+			xml += "<ROW>";
+			xml += "<TITLE>" + i + "번째 글" + "</TITLE>";
+			xml += "<WRITEDATE>" + "2024-08-19 01:12:00" + "</WRITEDATE>";
+			xml += "<WRITENAME>" + i + "번째 사람" + "</WRITENAME>";
+			xml += "<LINKURL>" + "http://localhost:8080/test" + i + "</LINKURL>";
+			xml += "<MOBILELINKURL>" + "http://localhost:8001/test" + i + "</MOBILELINKURL>";
+			xml += "</ROW>";
+		}
+		xml += "</ROWS>";
+		xml += "<TOTALCNT>30</TOTALCNT>";
+		xml += "</DATA>";
+		
+		logger.debug("testConnectPortletJSON End");
+		return xml;
 	}
 }
