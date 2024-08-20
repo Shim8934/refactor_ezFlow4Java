@@ -6,12 +6,17 @@
 <html>
 <head>
 </head>
+<script type="text/javascript">
+	$(function() {
+		var portletName = "<c:out value='${portletName }'/>";
+		ellipsisTitle(portletName, 5);
+	});
+</script>
 <body>
 	<article class="box_shadow">
 		<div class="layDIV pollLay" style="height: 100%;">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
-					<c:out value='${portletName }'/>
 				</dt>
 				<dd class="portletPlus plus" id="pollPlus"></dd>
 			</dl>

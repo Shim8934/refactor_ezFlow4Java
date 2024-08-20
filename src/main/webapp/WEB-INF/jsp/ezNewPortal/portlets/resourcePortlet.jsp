@@ -6,11 +6,17 @@
 <html>
 <head>
 </head>
+<script type="text/javascript">
+    $(function() {
+        var portletName = "<c:out value='${portletName }'/>";
+        ellipsisTitle(portletName, 51);
+    });
+</script>
 <body>
 <article class="resources_portlet box_shadow">
     <div class="layDIV">
         <dl class="portlet_title sortablePortlet">
-            <dt class="portletText"><c:out value='${portletName }'/></dt>
+            <dt class="portletText"></dt>
             <dd class="portletPlus plus" id="resourcePlus"></dd>
             <dd class="portletPlus setting" id="resourceSetting"></dd>
             <dd class="resources_calendal">
