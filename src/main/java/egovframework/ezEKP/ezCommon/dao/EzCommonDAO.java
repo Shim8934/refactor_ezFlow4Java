@@ -2463,15 +2463,4 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
     }
-    // 2024-08-21 유길상 닷넷 통합알림 컨피그
-	public void insertDotNetTotalNotificationConfig(Map<String, Object> map) {
-		map.put("property", "dotNetTotalNotification");
-		String allDaySTimeForReminder = (String) select("EzCommonDAO.getDotNetTotalNotificationConfig", map);
-
-		if (allDaySTimeForReminder == null) {
-			logger.debug("dotNetTotalNotification tenant config doesn't exist. insert data...");
-			insert("EzCommonDAO.insertDotNetTotalNotificationConfig", map);
-		}
-		
-	}
 }
