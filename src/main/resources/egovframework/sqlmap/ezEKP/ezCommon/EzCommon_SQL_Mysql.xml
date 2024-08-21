@@ -5127,47 +5127,47 @@
 	
 	<insert id="EzCommonDAO.insertStandardSystemConfigData" parameterClass="Map">
 	<![CDATA[
-INSERT INTO TBL_SYSTEMCONFIG 
-	(CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
-VALUES
-	('PORTLET_STANDARD',
-	'{
-		"portletType":"standard",\n
-		"viewType": "list",\n
-		"paging":"",\n
-		"listCnt":"",\n
-		"linkUrl": "",\n
-		"mobileLinkUrl": "",\n
-		"connectType": "",\n
-		"restUrl": "",\n
-		"httpMethodType":"",\n
-		"headerParam" : {  	},\n
-		"dataParam" : "{    }",\n
-		"dataParamType" : "",\n
-		"dataResultType" : "",\n
-		"dataResultFormat" : {\n
-			"rootPath" : "",\n 
-			"totalCnt" : "",\n
-			"dataInfo" : {\n
-				"title" : "",\n
-				"writer" : "",\n
-				"date" : "",\n
-				"linkUrl" : "",\n
-				"mobileLinkUrl" : ""\n
-			}\n
-		},\n
-		"dbType": "",\n
-		"dbIp": "",\n
-		"dbPort": "",\n
-		"dataBase": "",\n
-		"dbUser": "",\n
-		"dbPwd": "",\n
-		"dbDataQuery": "",\n
-		"totalCntQuery": "",\n
-		"driverClassName" : ""\n
-	}',
-	'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId# AND TENANT_ID = #tenantId#), #nowDate#, #tenantId#, #companyId#, 'PORTLET'
-) ]]>
+	INSERT INTO TBL_SYSTEMCONFIG 
+		(CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
+	VALUES
+		('PORTLET_STANDARD',
+		'{
+			"portletType":"standard",\n
+			"viewType": "list",\n
+			"paging":"",\n
+			"listCnt":"",\n
+			"linkUrl": "",\n
+			"mobileLinkUrl": "",\n
+			"connectType": "",\n
+			"restUrl": "",\n
+			"httpMethodType":"",\n
+			"headerParam" : {  	},\n
+			"dataParam" : "{    }",\n
+			"dataParamType" : "",\n
+			"dataResultType" : "",\n
+			"dataResultFormat" : {\n
+				"rootPath" : "",\n 
+				"totalCnt" : "",\n
+				"dataInfo" : {\n
+					"title" : "",\n
+					"writer" : "",\n
+					"date" : "",\n
+					"linkUrl" : "",\n
+					"mobileLinkUrl" : ""\n
+				}\n
+			},\n
+			"dbType": "",\n
+			"dbIp": "",\n
+			"dbPort": "",\n
+			"dataBase": "",\n
+			"dbUser": "",\n
+			"dbPwd": "",\n
+			"dbDataQuery": "",\n
+			"totalCntQuery": "",\n
+			"driverClassName" : ""\n
+		}',
+		'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId# AND TENANT_ID = #tenantId#), #nowDate#, #tenantId#, #companyId#, 'PORTLET'
+	) ]]>
 	</insert>
 	
 	<select id="EzCommonDAO.chkTblNotiEmergencyCompany" resultClass="String">

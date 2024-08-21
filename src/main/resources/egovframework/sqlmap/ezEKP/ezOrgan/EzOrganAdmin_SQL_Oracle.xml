@@ -8061,33 +8061,54 @@
 	
 	<insert id="EzOrganAdminDAO.insertConnectMenuForCompany" parameterClass="Map">
 	<![CDATA[
-		INSERT INTO TBL_PORTAL_MENU_COMP 
-			(company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
-		VALUES
-			(#companyID#, #tenantID#, -1, 1, 1, 999)
+		INSERT ALL
+			INTO TBL_PORTAL_MENU_COMP (company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+			VALUES (#companyID#, #tenantID#, -1, 1, 1, -1)
+			INTO TBL_PORTAL_MENU_COMP (company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+			VALUES (#companyID#, #tenantID#, -2, 1, 1, -2)
+		SELECT * FROM dual
 	]]>
 	</insert>
 	
 	<insert id="EzOrganAdminDAO.insertConnectMenuAuthForCompany" parameterClass="Map">
 	<![CDATA[
-		INSERT INTO TBL_PORTAL_MENU_AUTH
-			(menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted)
-		VALUES
-			(-1, #companyID#, #tenantID#, #companyID#, 1, 0, 0, 'Y')
+		INSERT ALL
+			INTO TBL_PORTAL_MENU_AUTH (menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted)
+			VALUES (-1, #companyID#, #tenantID#, #companyID#, 1, 0, 0, 'Y')
+			INTO TBL_PORTAL_MENU_AUTH (menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted)
+			VALUES (-2, #companyID#, #tenantID#, #companyID#, 1, 0, 0, 'Y')
+		SELECT * FROM dual
 	]]>
 	</insert>
 	
 	<insert id="EzOrganAdminDAO.insertConnectionMenuNameForCompany" parameterClass="Map">
 	<![CDATA[
-		INSERT INTO TBL_PORTAL_MENU_NAME 
-			(menu_id, menu_lang, company_id, tenant_id, menu_name)
-		VALUES
-	    	(-1, 1, #companyID#, #tenantID#, '연계'),
-	    	(-1, 2, #companyID#, #tenantID#, 'Connection'),
-	    	(-1, 3, #companyID#, #tenantID#, '連携'),
-	    	(-1, 4, #companyID#, #tenantID#, '关联'),
-	    	(-1, 5, #companyID#, #tenantID#, 'Connection'),
-	    	(-1, 6, #companyID#, #tenantID#, 'Connection')
+		INSERT ALL
+			INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+			VALUES (-1, 1, #companyID#, #tenantID#, '연계')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-1, 2, #companyID#, #tenantID#, 'Connection')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-1, 3, #companyID#, #tenantID#, '連携')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-1, 4, #companyID#, #tenantID#, '关联')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-1, 5, #companyID#, #tenantID#, 'Connection')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-1, 6, #companyID#, #tenantID#, 'Connection')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+			VALUES (-2, 1, #companyID#, #tenantID#, '연계')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-2, 2, #companyID#, #tenantID#, 'Connection')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-2, 3, #companyID#, #tenantID#, '連携')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-2, 4, #companyID#, #tenantID#, '关联')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-2, 5, #companyID#, #tenantID#, 'Connection')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
+		    VALUES (-2, 6, #companyID#, #tenantID#, 'Connection')
+	    SELECT * FROM DUAL
 	]]>
 	</insert>
 	<insert id="EzOrganAdminDAO.insertSystemConfigTypeForCompany" parameterClass="Map">
@@ -8103,41 +8124,44 @@
 	<insert id="EzOrganAdminDAO.insertDefaultSystemConfigForCompany" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_SYSTEMCONFIG 
-			(CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
+		(CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
 		VALUES
 			('PORTLET_STANDARD',
 			'{
-				"portletType":"standard",
-				"viewType": "list",
-				"paging":"",
-				"linkUrl": "",
-				"mobileLinkUrl": "",
-				"connectType": "",
-				"restUrl": "",
-				"httpMethodType":"",
-				"dataParam" : "{    }",
-				"dataParamType" : "",
-				"dataResultType" : "",
-				"dataResultFormat" : {
-					"rootPath" : "", 
-					"totalCnt" : "",
-					"dataInfo" : {
-						"title" : "",
-						"writer" : "",
-						"date" : "",
-						"linkUrl" : "",
-						"moblieLinkUrl" : ""
-					}
-				},
-				"dbType": "",
-				"dbIp": "",
-				"dbPort": "",
-				"dataBase": "",
-				"dbUser": "",
-				"dbPwd": "",
-				"dbQuery": "",
-				"driverClassName" : ""
-			}',
+			"portletType":"standard",' ||CHR(10)||
+			'"viewType": "list",' ||CHR(10)||
+			'"paging":"",' ||CHR(10)||
+			'"listCnt":"",' ||CHR(10)||
+			'"linkUrl": "",' ||CHR(10)||
+			'"mobileLinkUrl": "",' ||CHR(10)||
+			'"connectType": "",' ||CHR(10)||
+			'"restUrl": "",' ||CHR(10)||
+			'"httpMethodType":"",' ||CHR(10)||
+			'"headerParam" : "{    }",' ||CHR(10)||
+			'"dataParam" : "{    }",' ||CHR(10)||
+			'"dataParamType" : "",' ||CHR(10)||
+			'"dataResultType" : "",' ||CHR(10)||
+			'"dataResultFormat" : {' ||CHR(10)||
+				'"rootPath" : "",' ||CHR(10)||
+				'"totalCnt" : "",' ||CHR(10)||
+				'"dataInfo" : {' ||CHR(10)||
+					'"title" : "",' ||CHR(10)||
+					'"writer" : "",' ||CHR(10)||
+					'"date" : "",' ||CHR(10)||
+					'"linkUrl" : "",' ||CHR(10)||
+					'"mobileLinkUrl" : ""' ||CHR(10)||
+				'}' ||CHR(10)||
+			'},' ||CHR(10)||
+			'"dbType": "",' ||CHR(10)||
+			'"dbIp": "",' ||CHR(10)||
+			'"dbPort": "",' ||CHR(10)||
+			'"dataBase": "",' ||CHR(10)||
+			'"dbUser": "",' ||CHR(10)||
+			'"dbPwd": "",' ||CHR(10)||
+			'"dbDataQuery": "",' ||CHR(10)||
+			'"totalCntQuery": "",' ||CHR(10)||
+			'"driverClassName" : ""' ||CHR(10)||
+		'}',
 			'연계 포틀릿 기본 설정', #companyID#, #companyName#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantID#, #companyID#, 'PORTLET'
 		) ]]>
 	</insert>
