@@ -1799,10 +1799,10 @@ div.orbit img{border-radius: 5px;}
 #theme3Body .main_time .timeCheckIn.commute_on{border-color: #6F90BC;}
 
 
-.main_main_time .main_timeCheckOut .main_out{color: #333;}
-#ptlTimeFlow{margin: 22px 0px; padding: 0px; text-align: center; background: url(/images/kr/main/present_time_icon.png) no-repeat 0px 5px; padding-left: 31px;}
-.presentTime .timeTxt{background: none;}
-.portlet .set_portlet{display: none;opacity:0;}
+.main_main_time .main_timeCheckOut .main_out{color:#333;}
+#ptlTimeFlow{margin:0px; padding:0px; text-align:center; background:url(/images/kr/main/present_time_icon.png) no-repeat 0px 18px; padding-left:31px; display:inline-block; height:55px; line-height:55px;}
+.presentTime .timeTxt{background:none;}
+.portlet .set_portlet{display:none;opacity:0;}
 .portlet:hover .set_portlet{display:block; opacity:1;}
 .two_by_one .layDIV{height:100%;}
 
