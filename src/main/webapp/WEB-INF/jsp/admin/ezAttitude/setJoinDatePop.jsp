@@ -64,10 +64,14 @@
    			});
 	    	
 	    	function setDatePicker() {
+	    		var todayDate = new Date();
+	    		var rangeEndYear = todayDate.getFullYear() + 1;
+	    		var yearRange = rangeEndYear - 50  + ":" + rangeEndYear;
 				$("#datepicker").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
 		            autoSize: true,
+		            yearRange : yearRange
 		        });
 		        var uploadJoinDate = date;
 		        
