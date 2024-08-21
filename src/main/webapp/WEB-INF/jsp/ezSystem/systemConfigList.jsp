@@ -522,6 +522,7 @@
 		    
 		    function changeCompany(companyID) {
 		    	document.querySelector('#searchValue').value = "";
+		    	makeConfigTypeList();
 		    	SystemConfig_List();
 		    }
 		    
