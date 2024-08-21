@@ -794,8 +794,8 @@
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
-				document.getElementById('editBtn').style = 'block';
-				document.getElementById('editMenuBtn').style = 'none';
+				document.getElementById('editBtn').style.display = 'block';
+				document.getElementById('editMenuBtn').style.display = 'none';
 				 $("#menuAllContainer ul").removeClass("active");
 				 
 				var sortedMenu = document.getElementById('menuListAll');
