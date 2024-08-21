@@ -56,8 +56,6 @@ function getConnectList(currentPage, portletId) {
 			listCnt : listCnt
 		},
 		dataType: "JSON",
-		async: false,
-		cache: false,
 		success : function(data) {
 			if (data.portletType == "standard") {
 				makeStandardConnectPortlet(data, portletId);
