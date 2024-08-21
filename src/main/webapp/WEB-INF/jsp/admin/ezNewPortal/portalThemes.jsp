@@ -678,7 +678,7 @@
 			
 			if (webType == "mobile"){
 				themeId = 4;
-				themeName = "테마4";
+				themeName = "<spring:message code='ezNewportal.mPortletSort01' />";
 			} else {
 				themeId = event.data.themeId;
 				themeName = event.data.themeName;
