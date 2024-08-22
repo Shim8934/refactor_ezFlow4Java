@@ -285,4 +285,10 @@ public interface EzNewPortalService {
 	
 	public JSONObject getConnectPortletData(ConnectPortletDTO connectPortletDto) throws Exception;
 	
+	// 2024-08-21 조수빈 - 유저 사용 색상(모드) 조회
+	public int getUserColor(String userId, String companyId, int tenantId) throws Exception;
+
+	// 2024-08-21 조수빈 - 유저 사용 색상(모드) 저장
+	public void setUserColorMode(String userId, int tenantId, String companyId, int useColor);
+	
 }

@@ -297,6 +297,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useTotalSearch", data.get("useTotalSearch"));
 			model.addAttribute("switchUserCompany", switchUserCompany);
 			model.addAttribute("menuDisplayMode", data.get("menuDisplayMode"));
+			model.addAttribute("useColor", data.get("useColor"));
 			
 			// 유저이미지
 			String imgUrl = ezOrganService.getPropertyValue(userId, "extensionAttribute2", userInfo.getTenantId());
@@ -1304,33 +1305,44 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
 	}
 	
+	// 2024-08-21 조수빈 - 사용자 테마/모드 설정 화면 저장
 	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezNewPortal/updateUserThemeAndMode.do", method=RequestMethod.POST)
 	@ResponseBody
-	@RequestMapping(value = "/ezNewPortal/setUserMenuDisplayMode.do")
-	public JSONObject setUserMenuDisplayMode(@CookieValue String loginCookie, HttpServletRequest request) {
-		logger.debug("setUserMenuDisplayMode started");
-
-		JSONObject result = new JSONObject();
-
-		try {
-			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			String userID = userInfo.getId();
-			String companyID = userInfo.getCompanyID();
-			String menuDisplayMode = request.getParameter("menuDisplayMode");
-			
-			String url = "/rest/ezPortal/setMenuDisplayMode/users/" + userID + "?companyId=" + companyID + "&menuDisplayMode=" + menuDisplayMode;;
-			result = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, request, "post", null);
-			
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("message", "unread mail count failed");
+	public String updateUserThemeAndMode(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("updateUserThemeAndMode Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		String result = "success";
+		Map<String, Object> jsonMap = (Map<String, Object>) jObj.get("param");
+		int themeId = (int) jsonMap.get("themeId");
+		int menuDisplayMode = (int) jsonMap.get("menuDisplayMode");
+		int useColor = (int) jsonMap.get("useColor");
+		
+		// 테마 저장
+		String themeUrl = "/rest/ezPortal/themes/" + themeId + "/users/" + userId + "?companyId=" + companyId;
+		JSONObject themeResultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), themeUrl, null, req, "patch", jObj);
+		String themeStatus = themeResultBody.get("status").toString();
+		
+		// 모드(색상) 저장
+		String modeUrl = "/rest/ezPortal/colorMode/" + useColor + "/users/" + userId + "?companyId=" + companyId;
+		JSONObject modeResultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), modeUrl, null, req, "post", jObj);
+		String modeStatus = modeResultBody.get("status").toString();
+		
+		// 메뉴 위치 저장
+		String menuUrl = "/rest/ezPortal/setMenuDisplayMode/users/" + userId + "?companyId=" + companyId + "&menuDisplayMode=" + menuDisplayMode;
+		JSONObject menuResultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), menuUrl, null, req, "post", jObj);
+		String menuStatus = menuResultBody.get("status").toString();
+		
+		
+		logger.debug("themeStatus" + themeStatus + ", modeStatus" + modeStatus + ", menuStatus" + menuStatus);
+		
+		if(themeStatus.equals("error") || modeStatus.equals("error") || menuStatus.equals("error")) {
+			result = "failure";
 		}
 		
-		logger.debug("setUserMenuDisplayMode ended");
-		
+		logger.debug("updateUserThemeAndMode End");
 		return result;
-	}
+	}	
 }

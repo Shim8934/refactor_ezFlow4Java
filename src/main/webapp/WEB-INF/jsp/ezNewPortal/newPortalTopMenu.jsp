@@ -124,21 +124,6 @@
 	                    <span id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span><span id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>
 	                </div>
 	            </div>
-
-				<%-- 메인메뉴 위치 html --%>
-				<div class="menu_position">
-					<span class="tit"><spring:message code="ezNewPortal.topMenu.hth10" /></span>
-					<div class="input_radio">
-						<input type="radio" id="menuDispalyTop" name="userMenuDisplayMode" value="0">
-						<label for="menuDispalyTop"><spring:message code="ezNewPortal.topMenu.hth11" /></label>
-					</div>
-					<div class="input_radio">
-						<input type="radio" id="menuDispalyLeft" name="userMenuDisplayMode" value="1">
-						<label for="menuDispalyLeft"><spring:message code="ezNewPortal.topMenu.hth12" /></label>
-					</div>
-				</div>
-				<%-- 메인메뉴 위치 html --%>
-
 	            <ul id="menuListAll" class="menu_list_all">
 	         	</ul>
 	         </div>
@@ -189,6 +174,7 @@
 		var userLang = '<c:out value="${lang}"/>';
 		var userPrimary = '<c:out value="${primary}"/>';
 		var userPhotoSrc = '<c:out value="${userPhoto}"/>';
+		var useColor = '<c:out value="${useColor}"/>';
 		
 		var newPortalTopMenu = {
 			menuListArr: [],           // 메뉴 리스트 배열에 저장
@@ -276,14 +262,6 @@
 					menuName: item.menuName,
 				};
 			});
-			
-			var userMenuDisplayModeBtn = document.getElementsByName('userMenuDisplayMode');
-			for (var i = 0; i < userMenuDisplayModeBtn.length; i++) {
-				if (menuDisplayMode == userMenuDisplayModeBtn[i].value) {
-					userMenuDisplayModeBtn[i].checked = true;
-				}
-			}
-			
 		}
 		
 		function leftMainMecuClickEvent(menuUrl, openType) {
@@ -714,7 +692,6 @@
 		
 		var menuReset = function () {
 			HTMLCollection.prototype.forEach = Array.prototype.forEach;
-			$(".menu_position").css("display","flex");	// 메인 메뉴 위치 설정
 			$('#menuListAll li').removeClass("on");							
 			$("#menuListAll .sortable-item").draggable({
 			    revert: "invalid",
@@ -768,7 +745,6 @@
 			// 취소버튼
 			var editMenuCancel = document.getElementById('editMenuCancel');
 			editMenuCancel.addEventListener('click', function() {
-				$(".menu_position").hide();	// 메인 메뉴 위치 설정
 				document.getElementById("editBtn").style.display = "block";
 				document.getElementById('editMenuBtn').style.display = 'none';
 				$("#menuAllContainer ul").removeClass("active");
@@ -786,10 +762,9 @@
 			// 저장버튼
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
-				$(".menu_position").hide();	// 메인 메뉴 위치 설정
-				document.getElementById('editBtn').style.display = 'block';
-				document.getElementById('editMenuBtn').style.display = 'none';
-				 $("#menuAllContainer ul").removeClass("active");
+				document.getElementById("editBtn").style.display = "block";
+				document.getElementById('editMenuBtn').style = 'none';
+				$("#menuAllContainer ul").removeClass("active");
 				 
 				var menuListAll = document.getElementById('menuListAll');
 				menuListAll.className = 'full_menu_toggleUL';
@@ -799,28 +774,6 @@
 				
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
 				var sortedMenu = document.getElementById('menuListAll').getElementsByClassName('sortable-item');
-				
-				var userMenuDisplayModeBtn = document.getElementsByName('userMenuDisplayMode');
-				for (var i = 0; i < userMenuDisplayModeBtn.length; i++) {
-					if (userMenuDisplayModeBtn[i].checked) {
-						menuDisplayMode = userMenuDisplayModeBtn[i].value;
-						break;
-					}
-				}
-				
-				$.ajax({
-					type: "POST",
-					url: "/ezNewPortal/setUserMenuDisplayMode.do",
-					data:{
-						menuDisplayMode : menuDisplayMode
-					},
-					success: function(result) {
-						
-					},
-					error: function (xhr, status, e){
-						
-					}
-				});
 				
 				var orderObj = [];
 				sortedMenu.forEach(function (item, index) {
@@ -1866,6 +1819,8 @@
  		// 시작지점
 		newPortalTopMenuFunc();	
 		
+		setColorMode();
+		
 		window.onload = function() {
 			//callAllUserTab();
 			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
@@ -2039,6 +1994,23 @@
 		function offMenuAll() {
 			$(".lnb_list li").removeClass("on");
 			$(".navUL li").removeClass("on");
+		}
+		
+		function setColorMode() {
+			if (useColor) {
+				var link = document.createElement('link');
+				link.rel = 'stylesheet';
+				
+				if (useColor == 1) {
+					link.href = '/css/ezPortal/skin_blue.css';
+				} else if (useColor == 2) {
+					link.href = '/css/ezPortal/skin_red.css';
+				} else if (useColor == 3) {
+					link.href = '/css/ezPortal/skin_dark.css';
+				}
+				
+				document.head.appendChild(link);
+			}
 		}
 		
 		</script>

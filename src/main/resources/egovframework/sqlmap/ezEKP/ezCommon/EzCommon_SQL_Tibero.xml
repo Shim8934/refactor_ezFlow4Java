@@ -5860,4 +5860,20 @@
 		MODIFY
 			($column$ $dataTypeOracle$)
 	</statement>
+	    
+    <select id="EzCommonDAO.checkUseColor">
+		<![CDATA[
+		SELECT	USECOLOR
+		FROM	TBL_PORTAL_TOP_USER
+		WHERE	ROWNUM <= 1
+		]]>
+    </select>
+
+    <statement id="EzCommonDAO.alterUseColor">
+		ALTER TABLE
+			TBL_PORTAL_TOP_USER
+		ADD
+			USECOLOR	NUMBER(1)	DEFAULT	0	NOT NULL
+    </statement>
+	
 </sqlMap>

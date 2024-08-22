@@ -1133,6 +1133,12 @@ public class EzNewPortalGWController {
 			Optional<TopFrameType> topFrameInfo = ezNewPortalService.getPortalTopFrameInfo(userId, companyId, tenantId);
 			
 			data.put("menuDisplayMode", topFrameInfo.orElse(TopFrameType.TOP).getCode());
+			
+			/**
+			 * 6) 사용자별 선택 색상(모드) 조회
+			 */
+			data.put("useColor", ezNewPortalService.getUserColor(userId, companyId, tenantId));
+			
 			//end
 
 			//logger.debug("TopMenu Data : " + data.toJSONString()); // 로그정리 : EzNewPortalController 에서 중복으로 로깅
@@ -1783,7 +1789,16 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
-			int frameDefault = Integer.parseInt(request.getParameter("frameDefault"));
+			int frameDefault = 0;
+			
+			if (themeId == 1) {
+				frameDefault = 1;
+			} else if (themeId == 2) {
+				frameDefault = 5;
+			} else if (themeId == 3) {
+				frameDefault = 8;
+			}
+			
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			logger.debug("usedTheme : " + themeId + "usedFrame : " + frameDefault);
 			
@@ -6214,6 +6229,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			ezNewPortalService.insertPortalTopFrameInfo(userId, companyId, tenantId, TopFrameType.fromCode(menuDisplayMode));
 			
+			result.put("code", 0);
+			result.put("status", "ok");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result.put("code", 1);
@@ -6286,6 +6303,33 @@ public class EzNewPortalGWController {
 		}
 		
 		logger.debug("ezPortal G/W setUserMenuDisplayMode ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezPortal/colorMode/{useColor}/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	public JSONObject setUserColorMode(HttpServletRequest request,@PathVariable int useColor, @PathVariable String userId) throws Exception {
+		logger.debug("ezPortal G/W setUserColorMode started.");
+
+		JSONObject result = new JSONObject();
+		try {
+			String companyId = request.getParameter("companyId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezNewPortalService.setUserColorMode(userId, tenantId, companyId, useColor);
+			
+			result.put("code", 0);
+			result.put("status", "ok");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		logger.debug("ezPortal G/W setUserColorMode ended.");
 		return result;
 	}
 	

@@ -3840,5 +3840,19 @@ ORDER BY
 	AND
 		A.COMPANY_ID = #companyId#
 	</select>
-		
+	
+	<select id="ezNewPortal.getUserColor" parameterClass="PortalTopVO" resultClass="Integer">
+		SELECT
+			USECOLOR
+		FROM TBL_PORTAL_TOP_USER
+		WHERE tenant_id = #tenantID#
+		  AND company_id = #companyID#
+		  AND user_id = #userID#
+	</select>
+	
+	<insert id="ezNewPortal.setUserColorMode" parameterClass="Map">
+		INSERT INTO tbl_portal_top_user (user_id, tenant_id, company_id, USECOLOR)
+		VALUES (#userId#, #tenantId#, #companyId#, #useColor#)
+		ON DUPLICATE KEY UPDATE user_id = #userId#, tenant_id = #tenantId#, company_id = #companyId#, USECOLOR = #useColor#
+	</insert>
 </sqlMap>

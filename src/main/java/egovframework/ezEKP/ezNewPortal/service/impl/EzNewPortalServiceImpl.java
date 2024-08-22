@@ -3999,4 +3999,25 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 	    return result;
 	}
+	
+	// 2024-08-21 조수빈 - 유저 사용 색상(모드) 조회
+	@Override
+	public int getUserColor(String userId, String companyId, int tenantId) throws Exception {
+		PortalTopVO vo = new PortalTopVO();
+		vo.setTenantID(tenantId);
+		vo.setCompanyID(companyId);
+		vo.setUserID(userId);
+		
+		return ezNewPortalDAO.getUserColor(vo);
+	}
+	@Override
+	public void setUserColorMode(String userId, int tenantId, String companyId, int useColor) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("useColor", useColor);
+		
+		ezNewPortalDAO.setUserColorMode(map);
+	}
 }

@@ -4268,4 +4268,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("insertMobileToggleMenus ended.");
 	}
 
+	@Override
+	public void alterUseColor() throws Exception {
+		ezCommonDAO.alterUseColor();
+	}
+
 }

@@ -5390,5 +5390,18 @@
 		SELECT
 			(#menuId# + 7), #companyId#, #tenantId#, #companyId#, 1, 0, 1
 	</insert>
+	    
+    <select id="EzCommonDAO.checkUseColor">
+		SELECT	USECOLOR
+		FROM	TBL_PORTAL_TOP_USER
+		LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.alterUseColor">
+		ALTER TABLE
+			TBL_PORTAL_TOP_USER
+		ADD
+			USECOLOR	TINYINT	DEFAULT	0	NOT NULL	COMMENT '사용 모드(색상)'
+    </statement>
 	
 </sqlMap>
