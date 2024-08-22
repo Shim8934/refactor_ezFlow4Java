@@ -3970,3 +3970,6 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 }
 
 .resetBtn {line-height: 0px;}
+
+.IDcontainer > input[type="checkbox"]{display:none;}
+.IDcontainer .list_text{padding-left:25px}
