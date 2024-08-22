@@ -44,7 +44,7 @@
 			.themePortlet img {cursor:pointer;background-color:#b9b9b9;}
 			.themePortlet {float:left; margin-top:3px; margin-left:13px;}
 			
-			.ui-portlet { position:relative;  width: 244px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
+			.ui-portlet { position:relative;  width: 290px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
 			.ui-portlet-off { background-color: #f0f0f0; }
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
@@ -55,7 +55,7 @@
 			.portlet_switch {margin: 1px 0px 10px 14px;}
 			.portlet_switch .slider {z-index:10;}
 			.admin_theme_portlet {width : 1151px;}
-			.admin_theme_portlet.mobilePortlet {width : 275px;}
+			.admin_theme_portlet.mobilePortlet {width : 315px;}
 			.bottomBtn {clear:both;}
 			#themePortletList {display:inline-block;}
 			
@@ -957,7 +957,7 @@
 						listHTML += "<div class='admin_thema admin_theme_portlet mobilePortlet'>";
 						listHTML += "<dl class='admin_menuDL'>";
 						listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
-						listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'>필수 사용</span></dd>";
+						listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'><spring:message code='ezNewPortal.t134' /></span></dd>";
 						listHTML += "</dl>";
 						listHTML += "<div class='admin_menu_content'>";
 						listHTML += "<div id='themePortletList'>";
