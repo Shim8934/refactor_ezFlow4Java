@@ -128,15 +128,10 @@
 			<div class="lnb_menu_all" id="menuAllContainer" style="left:-1080px;">
 	            <div class="lnb_menu_setting" id="menuSettingElem">
 	                <div class="menu_set" id="editBtn">
-	                    <span id="menuResetting"><spring:message code="ezNewPortal.topMenu.hth08" /></span>
 	                    <p><spring:message code="ezNewPortal.topMenu.hth09" /></p>
 	                </div>
 	                <div class="set_btn" id="editMenuBtn">
 	                    <span id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span><span id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>
-
-						<div class="skin">	<!-- 스킨 임시 버튼 -->
-							<span onclick="skin('')">white</span><span onclick="skin('dark')">dark</span>
-						</div>
 	                </div>
 	            </div>
 
@@ -168,6 +163,8 @@
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	<script type="text/javascript">
+		var connectMenuId = -1; // 웹페이지 연계메뉴는 -1로 고정
+		var maxMenuCount = 7;
 		// 상단 메뉴시 화면 작아질시 좌측으로 이동 함수 start(테스트용/UIUX-조기완)
 		/* function calcWidth(obj){
 			var totalWidth = 0;
@@ -246,41 +243,40 @@
 				mainMenuElem = document.getElementById('mainMenuListLeft');
 				document.getElementById('mainMenuListLeft').classList.add("lnb_list");
 			}
+			
+			var menuCount = 0;
 			menuList.some(function (item, index) {
-				if (index > 4) { // 최대5개 표출
-					return true;
+				if (item.menuId == connectMenuId) {
+					return; //연계메뉴 표출 x
 				}
 				
-				var menuLi = document.createElement('li');
-				var mainFrame = window.parent.document.getElementById("mainFrame");
-				if (menuDisplayMode == "0") { // 메뉴 top에 생성
-					menuLi.setAttribute('id', 'menu_' + item.menuId);
-					menuLi.textContent = item.menuName;
-					mainFrame.style.width = "100%";
-					mainFrame.style.float = "none";
-					mainFrame.style.position = "static";
+				if (menuCount < maxMenuCount) { // 최대 7개 표출
+					var menuLi = document.createElement('li');
+					var mainFrame = window.parent.document.getElementById("mainFrame");
+					if (menuDisplayMode == "0") { // 메뉴 top에 생성
+						menuLi.setAttribute('id', 'menu_' + item.menuId);
+						menuLi.textContent = item.menuName;
+						mainFrame.style.width = "100%";
+						mainFrame.style.float = "none";
+						mainFrame.style.position = "static";
+						
+					} else if (menuDisplayMode == "1") {// 메뉴 left에 생성
+						if (!!item.iconUrl && item.iconUrl.split(" ").length > 0) menuLi.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu"); // 탑메뉴 아이콘과 구분하기 위해서 _leftmenu 추가
+						menuLi.classList.add('sortable-item');
+						menuLi.setAttribute('id', 'menu_' + item.menuId);
+						var liSpan = document.createElement('span');
+						liSpan.textContent = item.menuName;
+						menuLi.appendChild(liSpan);
+						mainFrame.style.width = "calc(100% - 81px)";
+						mainFrame.style.float = "right";
+						mainFrame.style.position = "relative"; // 이거 빼면 mainFrame 스크롤도 안되고 동작도 안됨.
+					}
+	
+					menuLi.addEventListener('click', leftMainMecuClickEvent.bind(menuLi, item.menuUrl, item.openType));
 					
-				} else if (menuDisplayMode == "1") {// 메뉴 left에 생성
-					menuLi.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu"); // 탑메뉴 아이콘과 구분하기 위해서 _leftmenu 추가
-					menuLi.classList.add('sortable-item');
-					menuLi.setAttribute('id', 'menu_' + item.menuId);
-					var liSpan = document.createElement('span');
-					liSpan.textContent = item.menuName;
-					menuLi.appendChild(liSpan);
-					mainFrame.style.width = "calc(100% - 81px)";
-					mainFrame.style.float = "right";
-					mainFrame.style.position = "relative"; // 이거 빼면 mainFrame 스크롤도 안되고 동작도 안됨.
+					mainMenuElem.appendChild(menuLi);
+					menuCount++;
 				}
-
-				menuLi.addEventListener('click', function () {
-					offMenuAll();
-					this.classList.add("on");
-					subMenuClickEvent('off', item.menuUrl);
-					notice_all_close();
-					closeNoti();
-				});
-				
-				mainMenuElem.appendChild(menuLi);
 				// 메뉴리스트 객체 생성
 				newPortalTopMenu.menuListObj['menu_'+ item.menuId] = {
 					menuId: item.menuId,
@@ -298,6 +294,14 @@
 				}
 			}
 			
+		}
+		
+		function leftMainMecuClickEvent(menuUrl, openType) {
+			offMenuAll();
+			this.classList.add("on");
+			subMenuClickEvent('off', menuUrl, openType);
+			notice_all_close();
+			closeNoti();
 		}
 		
 		/* //포틀릿 및 프레임 환경설정 열기
@@ -645,7 +649,26 @@
 
 			removeAllChildernElem(document.getElementById('menuListAll'));
 			
-			menuList.forEach(function (item, index) {
+			var menuCount = 1;
+			for (var i = 0; i < menuList.length; i++) {
+				if (menuCount == 8) {
+					var menuResetBtn = document.createElement('li');
+					var menuResetBtnSpan = document.createElement('span');
+					menuResetBtnSpan.textContent = '<spring:message code="ezNewPortal.topMenu.hth08" />';
+					menuResetBtn.appendChild(menuResetBtnSpan);
+					menuResetBtn.setAttribute("id", "menuResetting");
+					menuResetBtn.classList.add("icon_nav_menuset_leftmenu");
+					menuResetBtn.addEventListener('click', menuReset);
+					document.getElementById('menuListAll').appendChild(menuResetBtn);
+					menuCount++;
+					i--;
+					continue;
+				}
+				
+				var item = menuList[i];
+				if (item.menuId == connectMenuId) {
+					continue; //연계메뉴 표출 x
+				}
 				// 컨텍스트메뉴와 연동하기 위함.
 				if(item.menuUrl.indexOf('ezMemo') > -1 && item.menuUsed) {
 					parent.useMemoContextMenu = true;
@@ -656,84 +679,98 @@
 				menuAllListSpan.textContent = item.menuName;
 				menuAllList.appendChild(menuAllListSpan);
 				menuAllList.setAttribute("id", item.menuId);
-				menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
+				if (!!item.iconUrl && item.iconUrl.split(" ").length > 0)  menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
 				menuAllList.classList.add('sortable-item');
 				
-				if (index < 5) {
+				if (menuCount <= maxMenuCount) {
 					menuAllList.classList.add('on');
+					menuAllList.classList.add('menu-icon');
 				}
 				
-				menuAllList.addEventListener('click', function() {
-					offMenuAll();
-					var menuId = this.getAttribute("id");
-					if (!!document.getElementById("menu_" + menuId)) {
-						document.getElementById("menu_" + menuId).classList.add("on");
-					}
-					subMenuClickEvent('off', item.menuUrl);
-					notice_all_close();
-				});
+				menuAllList.addEventListener('click', expandMenuClickEvent.bind(menuAllList, item.menuUrl, item.openType));
 				
 				document.getElementById('menuListAll').appendChild(menuAllList);
 				//str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
+				
+				menuCount++;
+			}
+			
+			//  메뉴 개수가 8개보다 작아서 메뉴정렬 버튼이 표출되지 않는 경우, 마지막에 버튼 추가
+			if (menuList.length <= maxMenuCount) {
+				var menuResetBtn = document.createElement('li');
+				var menuResetBtnSpan = document.createElement('span');
+				menuResetBtnSpan.textContent = '<spring:message code="ezNewPortal.topMenu.hth08" />';
+				menuResetBtn.appendChild(menuResetBtnSpan);
+				menuResetBtn.setAttribute("id", "menuResetting");
+				menuResetBtn.classList.add("icon_nav_menuset_leftmenu");
+				menuResetBtn.addEventListener('click', menuReset);
+				document.getElementById('menuListAll').appendChild(menuResetBtn);
+			}
+		}
+		
+		function expandMenuClickEvent(menuUrl, menuOpenType) {
+			offMenuAll();
+			var menuId = this.getAttribute("id");
+			if (!!document.getElementById("menu_" + menuId)) {
+				document.getElementById("menu_" + menuId).classList.add("on");
+			}
+			subMenuClickEvent('off', menuUrl, menuOpenType);
+			notice_all_close();
+		}
+		
+		
+		var menuReset = function () {
+			HTMLCollection.prototype.forEach = Array.prototype.forEach;
+			$(".menu_position").css("display","flex");	// 메인 메뉴 위치 설정
+			$('#menuListAll li').removeClass("on");							
+			$("#menuListAll .sortable-item").draggable({
+			    revert: "invalid",
+			    containment: "parent",
+			    zIndex: 100,
+			    start: function (event, ui) {
+			    	var dragElem = $(this);
+			    	dragElem.css({
+			    		"cursor": "move",
+			    		"opacity": "0.6"
+			    	});
+			    },
+			    snap:'#menuListAll li',
+			    stop : function(event, ui) {
+			    	var dragElem = $(this);
+			    	dragElem.css({
+			    		"cursor": "pointer",
+			    		"opacity": ""
+			    	});
+			    },
+			    helper : "clone"
 			});
+			  
+			$("#menuListAll .sortable-item").droppable({
+			    tolerance: "intersect",
+			    drop: function(event, ui) {
+				var dragElem = ui.draggable;
+				var dropElem = $(this);
+				changePosition(dragElem, dropElem);
+				if(newPortalTopMenu.isInitOrder === true) {
+					newPortalTopMenu.isInitOrder = false;
+				}
+			  }
+			});
+			
+			var sortedMenu = document.getElementById('menuListAll');
+			sortedMenu.className = 'full_menu_toggleUL_edit';
+
+			// 하단 메뉴 변경
+			var editMenuBtn = document.getElementById('editMenuBtn');
+			document.getElementById("editBtn").style.display = "none";
+			editMenuBtn.style.display = 'block';
+            $("#menuAllContainer ul").addClass("active");
 		}
 		
 		// 확장메뉴 버튼에서 나오는 메뉴리스트 및 이벤트
 		var setExpandMenuListEvent = function () {
 
 			setExpandMenuList(); // 확장메뉴 리스트
-			
-			// 편집모드로 변경 이벤트
-			var editBtn = document.getElementById('editBtn');
-			var menuResetting = document.querySelector('#menuResetting');
-			menuResetting.addEventListener('click', function () {
-				HTMLCollection.prototype.forEach = Array.prototype.forEach;
-				$(".menu_position").css("display","flex");	// 메인 메뉴 위치 설정
-				$('#menuListAll li').removeClass("on");							
-				$("#menuListAll .sortable-item").draggable({
-				    revert: "invalid",
-				    containment: "parent",
-				    zIndex: 100,
-				    start: function (event, ui) {
-				    	var dragElem = $(this);
-				    	dragElem.css({
-				    		"cursor": "move",
-				    		"opacity": "0.6"
-				    	});
-				    },
-				    snap:'#menuListAll li',
-				    stop : function(event, ui) {
-				    	var dragElem = $(this);
-				    	dragElem.css({
-				    		"cursor": "pointer",
-				    		"opacity": ""
-				    	});
-				    },
-				    helper : "clone"
-				});
-				  
-				$("#menuListAll .sortable-item").droppable({
-				    tolerance: "intersect",
-				    drop: function(event, ui) {
-					var dragElem = ui.draggable;
-					var dropElem = $(this);
-					changePosition(dragElem, dropElem);
-					if(newPortalTopMenu.isInitOrder === true) {
-						newPortalTopMenu.isInitOrder = false;
-					}
-				  }
-				});
-				
-				var sortedMenu = document.getElementById('menuListAll');
-				sortedMenu.className = 'full_menu_toggleUL_edit';
-
-				// 하단 메뉴 변경
-				var editMenuBtn = document.getElementById('editMenuBtn');
-				editBtn.style.display = 'none';
-				editMenuBtn.style.display = 'block';
-	            $("#menuAllContainer ul").addClass("active");
-				
-			});
 			
 			// 취소버튼
 			var editMenuCancel = document.getElementById('editMenuCancel');
@@ -757,8 +794,8 @@
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
 				$(".menu_position").hide();	// 메인 메뉴 위치 설정
-				document.getElementById('editMenuBtn').style = 'none';
-				document.getElementById('editBtn').style = 'block';
+				document.getElementById('editBtn').style.display = 'block';
+				document.getElementById('editMenuBtn').style.display = 'none';
 				 $("#menuAllContainer ul").removeClass("active");
 				 
 				var sortedMenu = document.getElementById('menuListAll');
@@ -768,7 +805,7 @@
 				$('#menuListAll .sortable-item').droppable("disable");
 				
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
-				var sortedMenu = document.getElementById('menuListAll').getElementsByTagName('li');
+				var sortedMenu = document.getElementById('menuListAll').getElementsByClassName('sortable-item');
 				
 				var userMenuDisplayModeBtn = document.getElementsByName('userMenuDisplayMode');
 				for (var i = 0; i < userMenuDisplayModeBtn.length; i++) {

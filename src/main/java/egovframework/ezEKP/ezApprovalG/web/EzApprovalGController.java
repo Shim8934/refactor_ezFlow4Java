@@ -7032,7 +7032,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String pageType = request.getParameter("pageType");
 		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
-		String formID = request.getParameter("formID");
+		String formID = "";
 		
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
 		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
@@ -7174,7 +7174,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formDocType = "";
 		String formVersion = "";
 		String docAprEnd = "";
-		String reUseInfo = ezApprovalGService.getDocInfoS(orgDocID, docAprEnd, "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE, TBL_EXPENDAPRDOCINFO.FORMVERSION", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+		String reUseInfo = ezApprovalGService.getDocInfoS(orgDocID, docAprEnd, "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE, TBL_FORMINFO.FORMVERSION, TBL_FORMINFO.FORMID", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 		Document resultXML2 = commonUtil.convertStringToDocument(reUseInfo);
 		
 		if (resultXML2.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
@@ -7187,6 +7187,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (resultXML2.getElementsByTagName("FORMVERSION").getLength() > 0) {
 			formVersion = resultXML2.getElementsByTagName("FORMVERSION").item(0).getTextContent().trim(); 
+		}
+
+		if (resultXML2.getElementsByTagName("FORMID").getLength() > 0) {
+			formID = resultXML2.getElementsByTagName("FORMID").item(0).getTextContent().trim();
 		}
 
 		model.addAttribute("docID", docID);
