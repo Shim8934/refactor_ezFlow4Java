@@ -4117,7 +4117,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
     
     @Override
-    public void updateInProcessJpCodeName3() {
+    public void updateInProcessJpCodeName3() throws Exception{
     	ezCommonDAO.updateInProcessJpCodeName3();
     }
 }
