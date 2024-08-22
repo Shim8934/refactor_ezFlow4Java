@@ -1164,3 +1164,5 @@ var strLang975 = "양식 버전이 달라 재사용 할 수 없습니다.";
 var strLangJIH01 = "보안 문서는 미리보기 열람이 불가합니다.";
 var strLangJIH02 = "/blank_kr.htm";
 var strLangJIH03 = "대외수신함에서 미리보기 열람은 문서 최초 열람 후 가능합니다.";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."

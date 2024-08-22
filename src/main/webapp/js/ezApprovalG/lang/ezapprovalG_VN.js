@@ -1164,3 +1164,4 @@ var strLang975 = "The form version is different and cannot be reused.";
 var strLangJIH01 = "You cannot preview a security document.";
 var strLangJIH02 = "/blank_vi.htm"
 var strLangJIH03 = "Preview is possible after the first reading of the document."
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."

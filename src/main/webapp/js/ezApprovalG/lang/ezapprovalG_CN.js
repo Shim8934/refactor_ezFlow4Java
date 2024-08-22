@@ -1165,3 +1165,4 @@ var strLang975 = "格式版本不同，不能重复使用.";
 var strLangJIH01 = "无法预览安全文档。";
 var strLangJIH02 = "/blank_cn.htm";
 var strLangJIH03 = "对外收信箱可以首次阅览文件后进行预览。"
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."
