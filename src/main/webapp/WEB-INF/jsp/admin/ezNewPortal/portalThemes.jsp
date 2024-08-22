@@ -711,7 +711,6 @@
 						listHTML += "<div class='admin_thema admin_theme_portlet'>";
 						listHTML += "<dl class='admin_menuDL'>";
 						listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'><spring:message code='ezNewPortal.t134' /></span></dd>";
-						listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
 						if (usePortletSize) {
 							var dd = document.createElement("dd");
 							dd.className = "admin_menuX";
@@ -725,6 +724,7 @@
 							dd2.childNodes[0].id = "addAllSize";
 							listHTML += dd.outerHTML + dd2.outerHTML;
 						}
+						listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
 						listHTML += "</dl>";
 						if (fixList != null) {
 							listHTML += "<div class='admin_menu_content'>";
@@ -956,8 +956,8 @@
 						var listHTML = "<div id='themePortletList" + themeId + "' class='portletList' data-themeid='" + themeId + "'>";
 						listHTML += "<div class='admin_thema admin_theme_portlet mobilePortlet'>";
 						listHTML += "<dl class='admin_menuDL'>";
-						listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
 						listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'><spring:message code='ezNewPortal.t134' /></span></dd>";
+						listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
 						listHTML += "</dl>";
 						listHTML += "<div class='admin_menu_content'>";
 						listHTML += "<div id='themePortletList'>";
