@@ -1164,5 +1164,3 @@ var strLang974 = "Please select a receiving group.";
 
 /* 2023-08-11 민지수 - 전자결재 > 양식버전 다를 시 오류 메세지 추가 */
 var strLang975 = "The form version is different and cannot be reused.";
-
-var strJangJIH04 = "Please specify a start date faster than the end date."

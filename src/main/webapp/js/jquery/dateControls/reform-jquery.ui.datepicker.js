@@ -1585,7 +1585,7 @@ $.extend(Datepicker.prototype, {
 					if(parent.document.getElementById('attitude_annual_conn')) {//근태관리 연동양식
 						var returnVal = startEndTimeCheck(id, +this.getAttribute("data-year"), +this.getAttribute("data-month"),$("a", this).html());
 						if (!returnVal) {
-							parent.parent.OpenAlertUI(parent.parent.strJangJIH04);
+							parent.parent.OpenAlertUI("<spring:message code='ezAttitude.t55'/>");
 							return false;
 						} else {							
 							$.datepicker._selectDay(id, +this.getAttribute("data-month"), +this.getAttribute("data-year"), this);
