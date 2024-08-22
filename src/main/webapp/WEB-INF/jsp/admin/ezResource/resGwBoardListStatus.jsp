@@ -7,10 +7,8 @@
 	<title><spring:message code="ezResource.kwc01"/></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
-		<%-- <link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" /> --%>
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
-		<!-- <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css"> -->
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/organtreeview.htc.js')}"></script> 
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/ListView_Schedule.js')}"></script>
@@ -18,8 +16,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/admin/gwAdmin.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
-		<%-- <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"> </script> --%>
-		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
@@ -319,6 +315,7 @@
 		    	if (selNode != null) {
 		    		var brdGB = TreeView.getvalue(selNode, "DATA7");
 		    		if (brdGB == "2") {
+		    			CurPage = 1;
 		    			getResourceList();
 		    		} else {
 		    			document.getElementById("TreeView_node_" + selNode).classList.remove("node_selected");
@@ -407,6 +404,7 @@
 	        	selectedTabType = obj.getAttribute("DATA1");
 	        	selectedTabId = obj.id;
 	        	
+	        	CurPage = 1;
 	        	getResourceList();	
 	        }
 	
@@ -465,6 +463,7 @@
 	        }
 	        
 	        function getResourceList() {
+	        	ShowMailProgress();
 	        	xmlhttp = createXMLHttpRequest();
 	        	var xmlpara = createXmlDom();
 	        	var objNode;
@@ -481,103 +480,112 @@
 	        	if (xmlhttp == null || xmlhttp.readyState != 4)
 	            	return;
 	        	if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-	        		var listxml = xmlhttp.responseXML;
-	            	var list = "<ROWS>";
+	        		try {
+	        			var listxml = xmlhttp.responseXML;
+		            	var list = "<ROWS>";
 
-	            	totalPage = Math.ceil(new Number(getNodeText(SelectNodes(listxml, "root/totalcount")[0]) / 20));
-					
-	            	if(totalPage == 0){
-	                	if (document.getElementById("listviewheader") == null) {
+		            	totalPage = Math.ceil(new Number(getNodeText(SelectNodes(listxml, "root/totalcount")[0]) / 20));
+						
+		            	if(totalPage == 0){
+		                	if (document.getElementById("listviewheader") == null) {
+		                		createListviewHeader();
+		                	}
+		                	var listheader = document.getElementById("listviewheader");
+							document.getElementById("resourceList").innerHTML = ""
+							var rows = listheader.getElementsByTagName('ROWS');
+							Array.prototype.forEach.call(rows, function (row) {
+								row.parentNode.removeChild(row);
+							});
+		                	var xmldom = xmlhttp.responseXML;
+		                	var listview = new ListView();
+		                	listview.SetID("resourceListView");
+		                	listview.SetSelectFlag(false);
+		                	listview.SetMulSelectable(false);
+		                	listview.SetRowOnDblClick("show_Resource");
+		                	listview.DataSource(listheader);
+		                	listview.DataBind("resourceList");
+		                	makePageSelPage();
+		                	HiddenMailProgress();
+		                	return;
+		            	}
+
+		            	if (CurPage > totalPage) {
+			                CurPage--;
+			                getResourceList();
+			                HiddenMailProgress();
+		                	return;
+		            	}
+		            	makePageSelPage();
+		        		
+		            	for (var i = 0; i < SelectNodes(listxml, "root/appointment").length; i++) {
+			                list += "<ROW><CELL>";
+		                	list += "<DATA1>" + getNodeText(SelectNodes(listxml, "num")[i]) + "</DATA1>";
+		                	list += "<DATA2>" + getNodeText(SelectNodes(listxml, "pnum")[i]) + "</DATA2>";
+		                	list += "<DATA3>" + getNodeText(SelectNodes(listxml, "ownerID")[i]) + "</DATA3>";
+		                	list += "<DATA4>" + getNodeText(SelectNodes(listxml, "title")[i]) + "</DATA4>";
+		                	list += "<DATA5>" + getNodeText(SelectNodes(listxml, "location")[i]) + "</DATA5>";
+		                	list += "<DATA6>" + getNodeText(SelectNodes(listxml, "timeDisplay")[i]) + "</DATA6>";
+		                	list += "<DATA7>" + getNodeText(SelectNodes(listxml, "startDate")[i]).substring(0, 10) + "</DATA7>";
+		                	list += "<DATA8>" + getNodeText(SelectNodes(listxml, "endDate")[i]).substring(0, 10) + "</DATA8>";
+		                	list += "<DATA9>" + getNodeText(SelectNodes(listxml, "alertTime")[i]) + "</DATA9>";
+		                	list += "<DATA10>" + getNodeText(SelectNodes(listxml, "reFlag")[i]) + "</DATA10>";
+		                	list += "<DATA11>" + getNodeText(SelectNodes(listxml, "gresFlag")[i]) + "</DATA11>";
+		                	list += "<DATA12>" + getNodeText(SelectNodes(listxml, "writerID")[i]) + "</DATA12>";
+		                	list += "<DATA13>" + getNodeText(SelectNodes(listxml, "importance")[i]) + "</DATA13>";
+		                	list += "<DATA14>" + getNodeText(SelectNodes(listxml, "entryList")[i]) + "</DATA14>";
+		                	list += "<DATA15>" + getNodeText(SelectNodes(listxml, "allDay")[i]) + "</DATA15>";
+		                	list += "<DATA16>" + getNodeText(SelectNodes(listxml, "writeDay")[i]) + "</DATA16>";
+		                	list += "<DATA17>" + getNodeText(SelectNodes(listxml, "attachFlag")[i]) + "</DATA17>";
+		                	list += "<DATA18>" + getNodeText(SelectNodes(listxml, "characterID")[i]) + "</DATA18>";
+		                	list += "<DATA19>" + getNodeText(SelectNodes(listxml, "approveFlag")[i]) + "</DATA19>";
+		                	list += "<DATA20>" + getNodeText(SelectNodes(listxml, "returnFlag")[i]) + "</DATA20>";
+		                	list += "<DATA21>" + getNodeText(SelectNodes(listxml, "useApprove")[i]) + "</DATA21>";
+		                	list += "<DATA22>" + getNodeText(SelectNodes(listxml, "useReturn")[i]) + "</DATA22>";
+		                	list += "<DATA23>" + getNodeText(SelectNodes(listxml, "nowDate")[i]) + "</DATA23>";
+		                	list += "<DATA24>" + getNodeText(SelectNodes(listxml, "startDate")[i]) + "</DATA24>";
+		                	list += "<DATA25>" + getNodeText(SelectNodes(listxml, "endDate")[i]) + "</DATA25>";
+		                	list += "<DATA26>" + getNodeText(SelectNodes(listxml, "count")[i]) + "</DATA26></CELL>";
+		                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "approveFlag")[i]) + "</VALUE></CELL>";
+		                	list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "title")[i]) + "]]></VALUE></CELL>";
+		                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "startDate")[i]).substring(0, 16) + "</VALUE></CELL>";
+		                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "endDate")[i]).substring(0, 16) + "</VALUE></CELL>";
+		                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "deptNM")[i]) + "</VALUE></CELL>";
+		                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "ownerNM")[i]) + "</VALUE></CELL>";
+		                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "reFlag")[i]) + "</VALUE></CELL>";
+		                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "returnFlag")[i]) + "</VALUE></CELL>";
+		                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "writeDay")[i]).substring(0, 10) + "</VALUE></CELL></ROW>";
+		                	returnFlagarr[i] = getNodeText(SelectNodes(listxml, "returnFlag")[i]);
+		            	}
+		            	list += "</ROWS>";
+
+			            list = loadXMLString(list);
+			            if (document.getElementById("listviewheader") == null) {
 	                		createListviewHeader();
 	                	}
-	                	var listheader = document.getElementById("listviewheader");
-						document.getElementById("resourceList").innerHTML = ""
+						var listheader = document.getElementById("listviewheader");
 						var rows = listheader.getElementsByTagName('ROWS');
 						Array.prototype.forEach.call(rows, function (row) {
 							row.parentNode.removeChild(row);
 						});
-	                	var xmldom = xmlhttp.responseXML;
-	                	var listview = new ListView();
-	                	listview.SetID("resourceListView");
-	                	listview.SetSelectFlag(false);
-	                	listview.SetMulSelectable(false);
-	                	listview.SetRowOnDblClick("show_Resource");
-	                	listview.DataSource(listheader);
-	                	listview.DataBind("resourceList");
-	                	makePageSelPage();
-	                	return;
-	            	}
+		            	SelectSingleNode(listheader, "LISTVIEWDATA").appendChild(list.documentElement)
 
-	            	if (CurPage > totalPage) {
-		                CurPage--;
-		                getResourceList();
-	                	return;
-	            	}
-	            	makePageSelPage();
-	        		
-	            	for (var i = 0; i < SelectNodes(listxml, "root/appointment").length; i++) {
-		                list += "<ROW><CELL>";
-	                	list += "<DATA1>" + getNodeText(SelectNodes(listxml, "num")[i]) + "</DATA1>";
-	                	list += "<DATA2>" + getNodeText(SelectNodes(listxml, "pnum")[i]) + "</DATA2>";
-	                	list += "<DATA3>" + getNodeText(SelectNodes(listxml, "ownerID")[i]) + "</DATA3>";
-	                	list += "<DATA4>" + getNodeText(SelectNodes(listxml, "title")[i]) + "</DATA4>";
-	                	list += "<DATA5>" + getNodeText(SelectNodes(listxml, "location")[i]) + "</DATA5>";
-	                	list += "<DATA6>" + getNodeText(SelectNodes(listxml, "timeDisplay")[i]) + "</DATA6>";
-	                	list += "<DATA7>" + getNodeText(SelectNodes(listxml, "startDate")[i]).substring(0, 10) + "</DATA7>";
-	                	list += "<DATA8>" + getNodeText(SelectNodes(listxml, "endDate")[i]).substring(0, 10) + "</DATA8>";
-	                	list += "<DATA9>" + getNodeText(SelectNodes(listxml, "alertTime")[i]) + "</DATA9>";
-	                	list += "<DATA10>" + getNodeText(SelectNodes(listxml, "reFlag")[i]) + "</DATA10>";
-	                	list += "<DATA11>" + getNodeText(SelectNodes(listxml, "gresFlag")[i]) + "</DATA11>";
-	                	list += "<DATA12>" + getNodeText(SelectNodes(listxml, "writerID")[i]) + "</DATA12>";
-	                	list += "<DATA13>" + getNodeText(SelectNodes(listxml, "importance")[i]) + "</DATA13>";
-	                	list += "<DATA14>" + getNodeText(SelectNodes(listxml, "entryList")[i]) + "</DATA14>";
-	                	list += "<DATA15>" + getNodeText(SelectNodes(listxml, "allDay")[i]) + "</DATA15>";
-	                	list += "<DATA16>" + getNodeText(SelectNodes(listxml, "writeDay")[i]) + "</DATA16>";
-	                	list += "<DATA17>" + getNodeText(SelectNodes(listxml, "attachFlag")[i]) + "</DATA17>";
-	                	list += "<DATA18>" + getNodeText(SelectNodes(listxml, "characterID")[i]) + "</DATA18>";
-	                	list += "<DATA19>" + getNodeText(SelectNodes(listxml, "approveFlag")[i]) + "</DATA19>";
-	                	list += "<DATA20>" + getNodeText(SelectNodes(listxml, "returnFlag")[i]) + "</DATA20>";
-	                	list += "<DATA21>" + getNodeText(SelectNodes(listxml, "useApprove")[i]) + "</DATA21>";
-	                	list += "<DATA22>" + getNodeText(SelectNodes(listxml, "useReturn")[i]) + "</DATA22>";
-	                	list += "<DATA23>" + getNodeText(SelectNodes(listxml, "nowDate")[i]) + "</DATA23>";
-	                	list += "<DATA24>" + getNodeText(SelectNodes(listxml, "startDate")[i]) + "</DATA24>";
-	                	list += "<DATA25>" + getNodeText(SelectNodes(listxml, "endDate")[i]) + "</DATA25>";
-	                	list += "<DATA26>" + getNodeText(SelectNodes(listxml, "count")[i]) + "</DATA26></CELL>";
-	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "approveFlag")[i]) + "</VALUE></CELL>";
-	                	list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "title")[i]) + "]]></VALUE></CELL>";
-	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "startDate")[i]).substring(0, 16) + "</VALUE></CELL>";
-	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "endDate")[i]).substring(0, 16) + "</VALUE></CELL>";
-	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "deptNM")[i]) + "</VALUE></CELL>";
-	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "ownerNM")[i]) + "</VALUE></CELL>";
-	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "reFlag")[i]) + "</VALUE></CELL>";
-	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "returnFlag")[i]) + "</VALUE></CELL>";
-	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "writeDay")[i]).substring(0, 10) + "</VALUE></CELL></ROW>";
-	                	returnFlagarr[i] = getNodeText(SelectNodes(listxml, "returnFlag")[i]);
-	            	}
-	            	list += "</ROWS>";
+			            document.getElementById("resourceList").innerHTML = ""
+		            	var xmldom = xmlhttp.responseXML;
+		            	var listview = new ListView();
+		            	listview.SetID("resourceListView");
+		            	listview.SetSelectFlag(false);
+		            	listview.SetMulSelectable(false);
+		            	listview.SetRowOnDblClick("show_Resource");
+		            	listview.DataSource(listheader);
+		            	listview.DataBind("resourceList");
+		            	HiddenMailProgress();
 
-		            list = loadXMLString(list);
-		            if (document.getElementById("listviewheader") == null) {
-                		createListviewHeader();
-                	}
-					var listheader = document.getElementById("listviewheader");
-					var rows = listheader.getElementsByTagName('ROWS');
-					Array.prototype.forEach.call(rows, function (row) {
-						row.parentNode.removeChild(row);
-					});
-	            	SelectSingleNode(listheader, "LISTVIEWDATA").appendChild(list.documentElement)
-
-		            document.getElementById("resourceList").innerHTML = ""
-	            	var xmldom = xmlhttp.responseXML;
-	            	var listview = new ListView();
-	            	listview.SetID("resourceListView");
-	            	listview.SetSelectFlag(false);
-	            	listview.SetMulSelectable(false);
-	            	listview.SetRowOnDblClick("show_Resource");
-	            	listview.DataSource(listheader);
-	            	listview.DataBind("resourceList");
-
-		            xmldom = null;
+			            xmldom = null;
+	        			
+	        		} catch (e) {
+	        			HiddenMailProgress();
+	        			alert(e.message);
+	        		}
 	        	}
 	        }
 	        
@@ -767,8 +775,25 @@
 	    	}
 	    	
 	    	function search() {
+	    		CurPage = 1;
 	    		getResourceList();
 	    	}
+	    	
+	    	function ShowMailProgress() {
+	    		var CurrenWidth = document.documentElement.clientWidth;
+	    		
+	            document.getElementById("mailPanel").style.display = "";
+	            document.getElementById("loadingProgress").style.top = "600px";
+	            document.getElementById("loadingProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+	            document.getElementById("loadingProgress").style.display = "";
+	            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames[0].document.body);
+		    }
+	    	
+		    function HiddenMailProgress() {
+		    	document.getElementById("mailPanel").style.display = "none";
+	        	document.getElementById("loadingProgress").style.display = "none";
+	        	$(parent.frames[0].document.getElementById("blockLeft")).remove();
+		    }
 		</script>
 	</head>
 	<body>
@@ -856,5 +881,14 @@
 				</table>
 			</div>
 		</div>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+		<%-- 로딩 이미지 표출 영역 --%>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingProgress">
+        	<img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+    	</div>
 	</body>
 </html>
