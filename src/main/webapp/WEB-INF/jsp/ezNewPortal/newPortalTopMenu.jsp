@@ -253,7 +253,6 @@
 					mainMenuElem.appendChild(menuLi);
 					menuCount++;
 				}
-				
 				// 메뉴리스트 객체 생성
 				newPortalTopMenu.menuListObj['menu_'+ item.menuId] = {
 					menuId: item.menuId,

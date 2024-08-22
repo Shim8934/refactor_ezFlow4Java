@@ -94,7 +94,7 @@ function getTabList(portletId) {
                        }
                        
                        if (BoardName.trim().length > maxLength) {
-                           listHTML += "<span title='" + BoardName + "'> " + BoardName + " </span></dt>";
+                           listHTML += "<span class='longTitle'>" + BoardName + " </span></dt>";
                        } else {
                            listHTML += "<span>" + BoardName + " </span></dt>";
                        }

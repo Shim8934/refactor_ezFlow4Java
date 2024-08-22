@@ -5122,52 +5122,52 @@
 			(TYPECODE, TENANT_ID, COMPANY_ID, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE)
 		VALUES
 	    	('PORTLET', #tenantId#, #companyId#, '포틀릿', 'Portlet', '(연계)포틀릿 컨피그', #companyId#,
-	    	(SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#), (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = #companyId#), #nowDate#)
+	    	(SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId# AND TENANT_ID = #tenantId#), (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = #companyId# and TENANT_ID = #tenantId#), #nowDate#)
 	</insert>
 	
 	<insert id="EzCommonDAO.insertStandardSystemConfigData" parameterClass="Map">
 	<![CDATA[
-INSERT INTO TBL_SYSTEMCONFIG 
-	(CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
-VALUES
-	('PORTLET_STANDARD',
-	'{
-		"portletType":"standard",\n
-		"viewType": "list",\n
-		"paging":"",\n
-		"listCnt":"",\n
-		"linkUrl": "",\n
-		"mobileLinkUrl": "",\n
-		"connectType": "",\n
-		"restUrl": "",\n
-		"httpMethodType":"",\n
-		"headerParam" : {  	},\n
-		"dataParam" : "{    }",\n
-		"dataParamType" : "",\n
-		"dataResultType" : "",\n
-		"dataResultFormat" : {\n
-			"rootPath" : "",\n 
-			"totalCnt" : "",\n
-			"dataInfo" : {\n
-				"title" : "",\n
-				"writer" : "",\n
-				"date" : "",\n
-				"linkUrl" : "",\n
-				"mobileLinkUrl" : ""\n
-			}\n
-		},\n
-		"dbType": "",\n
-		"dbIp": "",\n
-		"dbPort": "",\n
-		"dataBase": "",\n
-		"dbUser": "",\n
-		"dbPwd": "",\n
-		"dbDataQuery": "",\n
-		"totalCntQuery": "",\n
-		"driverClassName" : ""\n
-	}',
-	'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId#), #nowDate#, #tenantId#, #companyId#, 'PORTLET'
-) ]]>
+	INSERT INTO TBL_SYSTEMCONFIG 
+		(CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
+	VALUES
+		('PORTLET_STANDARD',
+		'{
+			"portletType":"standard",\n
+			"viewType": "list",\n
+			"paging":"",\n
+			"listCnt":"",\n
+			"linkUrl": "",\n
+			"mobileLinkUrl": "",\n
+			"connectType": "",\n
+			"restUrl": "",\n
+			"httpMethodType":"",\n
+			"headerParam" : {  	},\n
+			"dataParam" : "{    }",\n
+			"dataParamType" : "",\n
+			"dataResultType" : "",\n
+			"dataResultFormat" : {\n
+				"rootPath" : "",\n 
+				"totalCnt" : "",\n
+				"dataInfo" : {\n
+					"title" : "",\n
+					"writer" : "",\n
+					"date" : "",\n
+					"linkUrl" : "",\n
+					"mobileLinkUrl" : ""\n
+				}\n
+			},\n
+			"dbType": "",\n
+			"dbIp": "",\n
+			"dbPort": "",\n
+			"dataBase": "",\n
+			"dbUser": "",\n
+			"dbPwd": "",\n
+			"dbDataQuery": "",\n
+			"totalCntQuery": "",\n
+			"driverClassName" : ""\n
+		}',
+		'연계 포틀릿 기본 설정', #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId# AND TENANT_ID = #tenantId#), #nowDate#, #tenantId#, #companyId#, 'PORTLET'
+	) ]]>
 	</insert>
 	
 	<select id="EzCommonDAO.chkTblNotiEmergencyCompany" resultClass="String">
@@ -5278,6 +5278,9 @@ VALUES
 		UNION ALL
 		SELECT
 			(#menuId# + 6), '/mobile/ezSchedule/mScheduleList.do', 'MG', 'iconCommon icon_schedule', (SELECT MAX(A.default_order) + 7 FROM TBL_PORTAL_MENU A), 'mSchedule'
+		UNION ALL
+		SELECT
+			(#menuId# + 7), '/mobile/ezSurvey/surveyList.do?mode=processing', 'MG', 'iconCommon icon_survey', (SELECT MAX(A.default_order) + 8 FROM TBL_PORTAL_MENU A), 'mSurvey'
 		]]>
 	</insert>
 	
@@ -5303,6 +5306,9 @@ VALUES
 		UNION ALL
 		SELECT
 			#companyId#, #tenantId#, (#menuId# + 6), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 7 FROM TBL_PORTAL_MENU_COMP A)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 7), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 8 FROM TBL_PORTAL_MENU_COMP A)
 	</insert>
 	
 	<insert id="EzCommonDAO.insertCompanyMobileMenuNames"  parameterClass="Map">
@@ -5349,7 +5355,13 @@ VALUES
 			((#menuId# + 6), 3, #companyId#, #tenantId#, '今日のスケジュール'),
 			((#menuId# + 6), 4, #companyId#, #tenantId#, '今天的日程'),
 			((#menuId# + 6), 5, #companyId#, #tenantId#, 'Lịch Trình Hôm Nay'),
-			((#menuId# + 6), 6, #companyId#, #tenantId#, 'Jadwal Hari Ini')
+			((#menuId# + 6), 6, #companyId#, #tenantId#, 'Jadwal Hari Ini'),
+			((#menuId# + 7), 1, #companyId#, #tenantId#, '전자설문'),
+			((#menuId# + 7), 2, #companyId#, #tenantId#, 'Survey'),
+			((#menuId# + 7), 3, #companyId#, #tenantId#, '電子アンケート'),
+			((#menuId# + 7), 4, #companyId#, #tenantId#, '电子问卷'),
+			((#menuId# + 7), 5, #companyId#, #tenantId#, 'Khảo sát điện tử'),
+			((#menuId# + 7), 6, #companyId#, #tenantId#, 'Survei')
 	</insert>
 	
 	<insert id="EzCommonDAO.insertMobileMenusAuth"  parameterClass="Map">
@@ -5374,6 +5386,9 @@ VALUES
 		UNION ALL
 		SELECT
 			(#menuId# + 6), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 7), #companyId#, #tenantId#, #companyId#, 1, 0, 1
 	</insert>
 	    
     <select id="EzCommonDAO.checkUseColor">

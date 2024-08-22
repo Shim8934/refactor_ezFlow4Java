@@ -8,13 +8,24 @@
 <html>
 <head>
 </head>
+<script type="text/javascript">
+	$(function() {
+		var portletName = "<c:out value='${portletName }'/>";
+		ellipsisTitle(portletName, 4);
+		var portletText = $("#4Portlet .portletText");
+		portletText.append(' (');
+		var spanElement = $('<span>').attr('id', 'voteCount');
+		var voteCnt = "<c:out value='${voteCount }'/>";
+		spanElement.append(voteCnt);
+		portletText.append(spanElement);
+		portletText.append(')');
+	});
+</script>
 <body>
 	<article class="vote box_shadow">
 		<div id="voteDiv" class="layDiv voteLay">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
-					<c:out value="${portletName }" />
-					(<span id="voteCount"><c:out value='${voteCount }' /></span>)
 				</dt>
 				<dd class="portletPlus plus" id="votePlus"></dd>
 			</dl>

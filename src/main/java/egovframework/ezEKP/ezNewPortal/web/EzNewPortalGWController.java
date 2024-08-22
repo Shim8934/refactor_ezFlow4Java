@@ -4101,6 +4101,13 @@ public class EzNewPortalGWController {
 			PersonalLightPollVO pollInfo = new PersonalLightPollVO();
 			pollInfo = ezNewPortalService.getPollPortlet(companyId, tenantId, request.getParameter("userId"), offset);
 			
+			if (pollInfo == null) {
+				result.put("status", "empty");
+				result.put("code", 0);
+				result.put("data", "");
+				return result;
+			}
+			
 			// 2023-07-28 황인경 - 포탈 > 빠른 설문 포틑릿 > 설문제목 다국어 지원 추가 
 			if (!lang.equals("")) {
 				pollInfo.setPollTitle(pollInfo.getPollTitle2());

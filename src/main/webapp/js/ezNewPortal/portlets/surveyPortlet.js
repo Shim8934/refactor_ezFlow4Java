@@ -72,8 +72,6 @@ function getPotletSurveyList(currentPage) {
 		url: "/ezSurvey/getSurveyItems.do",
 		data: searchObj,
 		dataType: "JSON",
-		async: false,
-		cache: false,
 		success : function(data) {
 			setListByDataList(data.itemList);
 			var totalCnt = data.totalRows;

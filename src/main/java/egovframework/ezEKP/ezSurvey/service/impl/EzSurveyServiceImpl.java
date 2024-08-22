@@ -946,8 +946,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		List<AttachVO> surveyAttach         = ezSurveyDAO.getSurveyAttachList(map);
 		
 		//Clone attach files
+		/* 2023-08-04 한태훈 : 첨부파일 다운로드 시 보안문제로 원본 파일 복사 후 복사된 파일을 다운로드 받을 수 있게 하는 코드이지만, 전자설문 페이지  
+		 열 때마다 파일이 복사되는 문제가 있음.
 		cloneAttachFiles(surveyAttach, realPath, getSurveyDirPath(tenantId));
-		
+		*/
 		survey.setAttachList(surveyAttach);
 		survey.setUserList(listUsers);
 		result.put("survey", survey);
@@ -1033,7 +1035,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			List<AttachVO> attachs     = ezSurveyDAO.getAllAttachForQsAndOpt(map);
 			
 			//Clone list of attach
+			/* 2023-08-04 한태훈 : 첨부파일 다운로드 시 보안문제로 원본 파일 복사 후 복사된 파일을 다운로드 받을 수 있게 하는 코드이지만, 전자설문 페이지  
+			 열 때마다 파일이 복사되는 문제가 있음.
 			cloneAttachFiles(attachs, realPath, getSurveyDirPath(tenantId));
+			*/
 			
 			//long startTime = System.nanoTime();
 			
@@ -1243,6 +1248,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return setQuestionIds;
 	}
 	
+	/* 2023-08-04 한태훈 - 첨부파일 다운로드 시 원본 파일의 접근을 막기 위해 원본 파일을 복사하는 작업을 하는 코드인듯 하나,, 
+	 첨부파일이 첨부된 전자설문페이지를 열때마다 파일 복사가 일어나 용량이 커지는 문제 생김.
+	
 	private void cloneAttachFiles(List<AttachVO> attachs, String realPath, String dirPath) throws Exception {
 		for (AttachVO attach : attachs) {
 			if (attach.getFurl() != null) {
@@ -1266,6 +1274,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			}
 		}
 	}
+	*/
 	
 	@SuppressWarnings("unchecked")
 	@Override

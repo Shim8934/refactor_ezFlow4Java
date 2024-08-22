@@ -708,7 +708,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			String menuCodeStr = "approval,mail,schedule,board,resource,workspace,address,webfolder";
+			String menuCodeStr = "approval,mail,schedule,board,resource,workspace,address,webfolder,survey";
 			String[] menuCodeArr = menuCodeStr.split(",");
 			ArrayList<String> menuCodeList =  new ArrayList<>(Arrays.asList(menuCodeArr));
 			int tenantId = info.getTenantId();
@@ -743,10 +743,11 @@ public class MPortalGWController extends EgovFileMngUtil {
 					dataObject.put(menuCode, access);
 					dataObject.put(menuCode + "Access", access);
 					break;
-				case "workspace" : 
-					footerAccessCount = access? footerAccessCount + 1 : footerAccessCount;
-					
-					if(access) {
+				case "survey":
+				case "workspace":
+					footerAccessCount = access ? footerAccessCount + 1 : footerAccessCount;
+
+					if (access) {
 						accessMenuCode.add(menuCode);
 					}
 					

@@ -124,6 +124,8 @@
 
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			
 			window.onresize = function () {
 				document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 170 + "px";
@@ -380,7 +382,7 @@
 		    function CheckAprLine(Ans) {
 		        DivPopUpHidden();
 		        if (Ans) {
-		        	btnApprovalInfo("14");
+		        	btnApprovalInfo("15");
 		            return;
 		        }
 		        else {
@@ -849,7 +851,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			    
-		       	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		       	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 		       	try { OpenWin.focus(); } catch (e) { }
 
             }
@@ -1017,7 +1019,7 @@
 	                <div id="menu">
 						<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
 				        <ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
-	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo('14')"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo('15')"><spring:message code='ezApprovalG.t1742'/></span></li>
 	                        <li id="btnSetAprLine" style="display: none"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
 	                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 	                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>

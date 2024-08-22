@@ -8,6 +8,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>WebFolder Portlet</title>
 </head>
+<script type="text/javascript">
+    $(function() {
+        var portletId = "<c:out value='${portletId }'/>";
+        var portletName = "<c:out value='${portletName }'/>";
+        ellipsisTitle(portletName, portletId);
+    });
+</script>
 <body>
 <article class="webFolder_portlet box_shadow">
     <div class="layDIV">

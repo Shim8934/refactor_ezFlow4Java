@@ -522,6 +522,7 @@
 		    
 		    function changeCompany(companyID) {
 		    	document.querySelector('#searchValue').value = "";
+		    	makeConfigTypeList();
 		    	SystemConfig_List();
 		    }
 		    
@@ -545,7 +546,7 @@
 						var xmlRows = xmldom.documentElement.getElementsByTagName("ROWS")[0].getElementsByTagName("ROW");
 				    	var allOption = document.createElement("option");
 				    	allOption.value = "ALL";
-				    	allOption.text = "전체";
+				    	allOption.text = "<spring:message code = 'ezSystem.ls06' />";
 				    	configSelect.appendChild(allOption);
 						for (var i = 0; i < xmlRows.length; i++) {
 							var typeCode = xmlRows[i].getElementsByTagName("CELL")[0].getElementsByTagName("VALUE")[0].textContent;

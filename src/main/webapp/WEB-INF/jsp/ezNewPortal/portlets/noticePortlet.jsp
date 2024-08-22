@@ -6,12 +6,18 @@
 <html>
 <head>
 </head>
+<script type="text/javascript">
+	$(function() {
+		var portletName = "<c:out value='${portletName }'/>";
+		ellipsisTitle(portletName, 2);
+	});
+</script>
 <body>
 	<input id="noticePortlet_usedTheme" type="hidden" value="<c:out value='${usedTheme}'/>">
 	<article class="notice box_shadow">
 	<div class="layDIV">
 		<dl class="portlet_title sortablePortlet">
-			<dt class="portletText"><c:out value='${portletName }'/></dt>
+			<dt class="portletText"></dt>
 			<dd class="portletPlus plus" id="noticePlus"></dd>
 		</dl>
 		<div>
