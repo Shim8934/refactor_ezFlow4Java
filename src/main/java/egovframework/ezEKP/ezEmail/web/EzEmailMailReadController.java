@@ -2326,7 +2326,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			//String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
 			
-			if (shareId != null) {
+			if (StringUtils.isNotBlank(shareId)) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("downloadAttach ended.");
@@ -5819,7 +5819,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			//String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
 			
-			if (shareId != null) {
+			if (StringUtils.isNotBlank(shareId)) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("downloadAttach ended.");
