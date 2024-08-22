@@ -1899,6 +1899,7 @@ div.orbit img{border-radius: 5px;}
 .noti_paging > span:not(.page_num){width:28px; height:28px; border:1px solid #CCCCCC; border-radius:4px; background-color:#fff; box-sizing:border-box; background-repeat:no-repeat; background-position:center; cursor:pointer; background-size:7px 12px;}
 .noti_paging .prev{background-image:url(/images/ezNewPortal/prev_icon.svg);}
 .noti_paging .next{background-image:url(/images/ezNewPortal/next_icon.svg);}
+.noti_paging .page_num{height:24px; line-height:22px; font-size:15px}
 .noti_paging .page_num input{width:45px; height:23px; border:1px solid #CCCCCC; border-radius:4px; background:#fff; text-align:center; color:#333; font-size:15px; font-weight:500; vertical-align:top; margin-top:1px;}
 
 .filter_pop{position:absolute; border:1px solid #4c4c4e; border-radius:4px; background:#fff; z-index:10; width:338px; margin-top:3px;}

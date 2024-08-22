@@ -1,7 +1,7 @@
 ﻿@charset "utf-8";
 
 html,input,button,select,textarea{font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-.notiPage{font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
+.noti_paging .page_num{line-height:24px;}
 .lnb_menu_setting .set_btn span{width:65px;}
 .my_info_wrap .my_info{width:calc(99.999% - 280px);}
 .webFolder_portlet .portlet_title .portletText{width:110px;}
