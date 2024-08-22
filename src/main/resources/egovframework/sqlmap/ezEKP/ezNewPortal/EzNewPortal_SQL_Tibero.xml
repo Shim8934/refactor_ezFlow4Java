@@ -4339,4 +4339,24 @@ ORDER BY
 		A.COMPANY_ID = #companyId#
 	</select>     
 	
+	<select id="ezNewPortal.getUserColor" parameterClass="PortalTopVO" resultClass="Integer">
+		SELECT
+			USECOLOR
+		FROM TBL_PORTAL_TOP_USER
+		WHERE tenant_id = #tenantID#
+		  AND company_id = #companyID#
+		  AND user_id = #userID#
+	</select>
+	
+	<insert id="ezNewPortal.setUserColorMode" parameterClass="Map">
+		MERGE INTO TBL_PORTAL_TOP_USER
+		USING DUAL
+		ON (USER_ID = #userId# AND TENANT_ID = #tenantId# AND COMPANY_ID = #companyId#)
+		WHEN MATCHED THEN
+			UPDATE
+			SET USECOLOR = #useColor#
+		WHEN NOT MATCHED THEN
+			INSERT (USER_ID, TENANT_ID, COMPANY_ID, USECOLOR)
+			VALUES (#userId#, #tenantId#, #companyId#, #useColor#)
+	</insert>
 </sqlMap>

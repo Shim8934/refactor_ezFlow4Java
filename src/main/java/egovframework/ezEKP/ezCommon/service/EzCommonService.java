@@ -430,5 +430,8 @@ public interface EzCommonService {
 	
 	// 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
 	public void insertMobileToggleMenus() throws Exception;
+
+	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
+	public void alterUseColor() throws Exception;
 	
 }

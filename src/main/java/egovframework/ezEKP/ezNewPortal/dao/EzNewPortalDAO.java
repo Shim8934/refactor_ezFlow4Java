@@ -816,4 +816,14 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (SystemConfigVO) select("ezNewPortal.getSystemConfig", map);
 	}
 	
+	// 2024-08-21 조수빈 - 유저 사용 색상(모드) 조회
+	public int getUserColor(PortalTopVO potalTopVO) throws Exception {
+		return (int) select("ezNewPortal.getUserColor", potalTopVO);
+	}
+
+	// 2024-08-21 조수빈 - 유저 사용 색상(모드) 조회
+	public void setUserColorMode(Map<String, Object> map) {
+		update("ezNewPortal.setUserColorMode", map);
+	}
+	
 }

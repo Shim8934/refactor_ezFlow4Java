@@ -2644,4 +2644,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public void insertMobileMenusAuth(Map<String, Object> param) {
 		insert("EzCommonDAO.insertMobileMenusAuth", param);
 	}
+
+	public void alterUseColor() {
+		try {
+			select("EzCommonDAO.checkUseColor");
+		} catch (Exception e) {
+			logger.debug("In TBL_PORTAL_TOP_USER doesn't exist useColor column. creating the column...");
+
+			update("EzCommonDAO.alterUseColor");
+		}
+	}
 }

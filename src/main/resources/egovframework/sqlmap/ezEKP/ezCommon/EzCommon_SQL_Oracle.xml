@@ -5826,5 +5826,20 @@
 		SELECT
 			(#menuId# + 6), #companyId#, #tenantId#, #companyId#, 1, 0, 1 FROM DUAL
 	</insert>
+	    
+    <select id="EzCommonDAO.checkUseColor">
+		<![CDATA[
+		SELECT	USECOLOR
+		FROM	TBL_PORTAL_TOP_USER
+		WHERE	ROWNUM <= 1
+		]]>
+    </select>
+
+    <statement id="EzCommonDAO.alterUseColor">
+		ALTER TABLE
+			TBL_PORTAL_TOP_USER
+		ADD
+			USECOLOR	NUMBER(1)	DEFAULT	0	NOT NULL
+    </statement>
 	
 </sqlMap>
