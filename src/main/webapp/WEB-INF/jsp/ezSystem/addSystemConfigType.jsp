@@ -128,6 +128,12 @@
  					return;
  				}
  				
+ 				if (description == "") {
+ 					alert("<spring:message code = 'ezSystem.config.hth31' />");
+ 					document.querySelector('#description').focus();
+ 					return;
+ 				}
+ 				
  				$.ajax({
   					type: "POST",
   					url: "/admin/ezSystem/saveSystemConfigTypeCode.do",

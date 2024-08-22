@@ -5655,28 +5655,28 @@
 	<insert id="EzCommonDAO.insertCompanyMobileMenus"  parameterClass="Map">
 		INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER)
 		SELECT
-			#companyId#, #tenantId#, #menuId#, 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 1 FROM TBL_PORTAL_MENU_COMP A) FROM DUAL
+			#companyId#, #tenantId#, #menuId#, 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 1 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#) FROM DUAL
 		UNION ALL
 		SELECT
-			#companyId#, #tenantId#, (#menuId# + 1), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 2 FROM TBL_PORTAL_MENU_COMP A) FROM DUAL
+			#companyId#, #tenantId#, (#menuId# + 1), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 2 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#) FROM DUAL
 		UNION ALL
 		SELECT
-			#companyId#, #tenantId#, (#menuId# + 2), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 3 FROM TBL_PORTAL_MENU_COMP A) FROM DUAL
+			#companyId#, #tenantId#, (#menuId# + 2), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 3 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#) FROM DUAL
 		UNION ALL
 		SELECT
-			#companyId#, #tenantId#, (#menuId# + 3), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 4 FROM TBL_PORTAL_MENU_COMP A) FROM DUAL
+			#companyId#, #tenantId#, (#menuId# + 3), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 4 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#) FROM DUAL
 		UNION ALL
 		SELECT
-			#companyId#, #tenantId#, (#menuId# + 4), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 5 FROM TBL_PORTAL_MENU_COMP A) FROM DUAL
+			#companyId#, #tenantId#, (#menuId# + 4), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 5 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#) FROM DUAL
 		UNION ALL
 		SELECT
-			#companyId#, #tenantId#, (#menuId# + 5), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 6 FROM TBL_PORTAL_MENU_COMP A) FROM DUAL
+			#companyId#, #tenantId#, (#menuId# + 5), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 6 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#) FROM DUAL
 		UNION ALL
 		SELECT
-			#companyId#, #tenantId#, (#menuId# + 6), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 7 FROM TBL_PORTAL_MENU_COMP A) FROM DUAL
+			#companyId#, #tenantId#, (#menuId# + 6), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 7 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#) FROM DUAL
 		UNION ALL
 		SELECT
-			#companyId#, #tenantId#, (#menuId# + 7), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 8 FROM TBL_PORTAL_MENU_COMP A) FROM DUAL
+			#companyId#, #tenantId#, (#menuId# + 7), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 8 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#) FROM DUAL
 	</insert>
 	
 	<insert id="EzCommonDAO.insertCompanyMobileMenuNames"  parameterClass="Map">

@@ -404,10 +404,10 @@
 		        if (CrossYN()) {
 		        	add_systemconfig_dialogArguments[0] = Params;
 		        	add_systemconfig_dialogArguments[1] = addSystemconfigComplete;
-		            var OpenWin = window.open("/admin/ezSystem/addSystemConfig.do?companyID=" + companySelectID, "Add_SystemConfig", GetOpenWindowfeature(700, 520));
+		            var OpenWin = window.open("/admin/ezSystem/addSystemConfig.do?companyID=" + companySelectID, "Add_SystemConfig", GetOpenWindowfeature(700, 800));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            window.showModalDialog("/admin/ezSystem/addSystemConfig.do?companyID=" + companySelectID, Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 620));
+		            window.showModalDialog("/admin/ezSystem/addSystemConfig.do?companyID=" + companySelectID, Params, "dialogHeight:800px; dialogWidth:700px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(700, 800));
 		        }
 		    }
 		    
@@ -511,10 +511,10 @@
 		            	if (CrossYN()) {
 		            		add_systemconfig_dialogArguments[0] = Params;
 		            		add_systemconfig_dialogArguments[1] = addSystemconfigComplete;
-				            var OpenWin = window.open("/admin/ezSystem/addSystemConfig.do?CODE=" + pCode + "&companyID=" + companySelectID, "Add_SystemConfig", GetOpenWindowfeature(700, 520));
+				            var OpenWin = window.open("/admin/ezSystem/addSystemConfig.do?CODE=" + pCode + "&companyID=" + companySelectID, "Add_SystemConfig", GetOpenWindowfeature(700, 800));
 				            try { OpenWin.focus(); } catch (e) { }
 				        } else {
-				            window.showModalDialog("/admin/ezSystem/addSystemConfig.do?CODE=" + pCode + "&companyID=" + companySelectID, Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 620));
+				            window.showModalDialog("/admin/ezSystem/addSystemConfig.do?CODE=" + pCode + "&companyID=" + companySelectID, Params, "dialogHeight:800px; dialogWidth:700px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(700, 800));
 				        }
 		            }
 		        }
