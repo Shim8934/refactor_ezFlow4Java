@@ -461,12 +461,12 @@
 	                <th style="cursor: pointer;text-align:center; margin:0px; width: 20px;">
 	                </th>
 	                <th style="padding-left:0px; padding-right:0px; text-align:center;width:40px;"><img src="/images/i_individual.gif" border="0"></th>
-	                <th id="CompanyName" style="padding: 0px; width: 20%; white-space: nowrap; color: rgb(57, 57, 57);" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="1" _ordername="S_NAME">이름</span></th>
-	                <th id="PhoneNumber" style="width: 20%; white-space: nowrap; padding:0px;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="0" _ordername="S_COMPANY">회사<span id="S_COMPANY"></span></th>
-	                <th id="width1" style="width: 15%; white-space: nowrap; padding: 0px; color: rgb(57, 57, 57);" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="0" _ordername="S_COMPANY_PHONE">전화번호<span id="S_COMPANY_PHONE"></span></th>
-	                <th id="width2" style="width: 15%; white-space: nowrap; padding: 0px;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="0" _ordername="S_MOBILE">휴대폰<span id="S_MOBILE"></span></th>
-	                <th style="width: 20%; white-space: nowrap; padding:0px;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="0" _ordername="S_EMAIL">이메일<span id="S_EMAIL"></span></th>
-	                <th id="FolderType" style="width:10%;white-space:nowrap;padding:0px;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="0" _ordername="S_TYPE">주소록<span id="S_TYPE"></span></th>
+	                <th id="CompanyName" style="padding: 0px; width: 20%; white-space: nowrap; color: rgb(57, 57, 57);" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="1" _ordername="S_NAME"><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
+	                <th id="PhoneNumber" style="width: 20%; white-space: nowrap; padding:0px;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="0" _ordername="S_COMPANY"><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
+	                <th id="width1" style="width: 15%; white-space: nowrap; padding: 0px; color: rgb(57, 57, 57);" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="0" _ordername="S_COMPANY_PHONE"><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
+	                <th id="width2" style="width: 15%; white-space: nowrap; padding: 0px;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="0" _ordername="S_MOBILE"><spring:message code='ezAddress.t189' /><span id="S_MOBILE"></span></th>
+	                <th style="width: 20%; white-space: nowrap; padding:0px;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="0" _ordername="S_EMAIL"><spring:message code='ezAddress.t264' /><span id="S_EMAIL"></span></th>
+	                <th id="FolderType" style="width:10%;white-space:nowrap;padding:0px;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _orderoption="0" _ordername="S_TYPE"><spring:message code='ezAddress.t231' /><span id="S_TYPE"></span></th>
 	            	</tr>
 	            	<tr>
 	            	<td colspan="8" style="text-align : center;"><spring:message code='ezAddress.hth01' /></td>
