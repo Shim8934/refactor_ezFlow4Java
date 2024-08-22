@@ -315,6 +315,7 @@
 		    	if (selNode != null) {
 		    		var brdGB = TreeView.getvalue(selNode, "DATA7");
 		    		if (brdGB == "2") {
+		    			CurPage = 1;
 		    			getResourceList();
 		    		} else {
 		    			document.getElementById("TreeView_node_" + selNode).classList.remove("node_selected");
@@ -403,6 +404,7 @@
 	        	selectedTabType = obj.getAttribute("DATA1");
 	        	selectedTabId = obj.id;
 	        	
+	        	CurPage = 1;
 	        	getResourceList();	
 	        }
 	
@@ -773,6 +775,7 @@
 	    	}
 	    	
 	    	function search() {
+	    		CurPage = 1;
 	    		getResourceList();
 	    	}
 	    	
