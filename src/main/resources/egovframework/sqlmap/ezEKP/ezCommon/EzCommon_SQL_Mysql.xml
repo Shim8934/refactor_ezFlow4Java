@@ -4873,4 +4873,5 @@
 	<update id="EzCommonDAO.updateInProcessJpCodeName3" parameterClass="Map">
 		UPDATE TBL_CODELIST SET NAME3 = #NAME3# WHERE CODE1 = #CODE1#
 	</update>
+	
 </sqlMap>
