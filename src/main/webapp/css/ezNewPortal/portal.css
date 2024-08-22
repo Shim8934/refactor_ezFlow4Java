@@ -2421,3 +2421,7 @@ div.orbit img{border-radius:5px;}
 
 .admin_menu_set:after{content:""; display:block; clear:both;}
 .admin_menu_set li{display:flex; align-items:center; float:left;}
+
+.skin{position:absolute; right:34px; top:0; display:none;}
+.skin span{border:1px solid #cecece !important; color:#000 !important;}
+.skin span:hover{border-color:#388ce5 !important; color:#388ce5 !important;}
