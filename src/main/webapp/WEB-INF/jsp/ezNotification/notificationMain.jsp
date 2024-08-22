@@ -82,7 +82,7 @@
 
         <div class="noti_paging">
             <span class="prev" onclick="moveNotiPage('down')"></span>
-            <span class="page_num">
+            <span class="page_num notiPage">
                 <input type="text" id="notiCurrentPage" autocomplete="off" value="1" onkeypress="return moveInputPage()">&nbsp;/&nbsp;<span  id="notiTotalPage"></span>
             </span>
             <span class="next" onclick="moveNotiPage('up')"></span>
