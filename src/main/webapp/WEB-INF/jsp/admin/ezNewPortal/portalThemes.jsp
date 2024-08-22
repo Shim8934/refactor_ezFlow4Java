@@ -956,18 +956,8 @@
 						var listHTML = "<div id='themePortletList" + themeId + "' class='portletList' data-themeid='" + themeId + "'>";
 						listHTML += "<div class='admin_thema admin_theme_portlet mobilePortlet'>";
 						listHTML += "<dl class='admin_menuDL'>";
-<<<<<<< Updated upstream
 						listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
 						listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'><spring:message code='ezNewPortal.t134' /></span></dd>";
-=======
-<<<<<<< HEAD
-						listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'>필수 사용</span></dd>";
-						listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
-=======
-						listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
-						listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'><spring:message code='ezNewPortal.t134' /></span></dd>";
->>>>>>> 3d679c2ee4c0733fa6d23f97bdcdc10295c43295
->>>>>>> Stashed changes
 						listHTML += "</dl>";
 						listHTML += "<div class='admin_menu_content'>";
 						listHTML += "<div id='themePortletList'>";
