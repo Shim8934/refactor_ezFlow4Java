@@ -115,15 +115,29 @@
 		            alert("<spring:message code = 'ezSystem.w014'/>");
 		            return;
 		        }
-
+				
+		        var codeValue = document.getElementById("codevalue").value.trim();
+		        
+		        if (codeValue == "") {
+		        	alert("<spring:message code = 'ezSystem.config.hth30'/>");
+		        	return;
+		        }
+		        
+		        var description = document.getElementById("description").value.trim();
+		        
+		        if (description == "") {
+		        	alert("<spring:message code = 'ezSystem.config.hth31'/>");
+		        	return;
+		        }
+		        
 				var objRoot, objNode;
 				var xmlDom = createXmlDom();
 				var xmlHTTP = createXMLHttpRequest();
 				createNodeInsert(xmlDom, objRoot, "DATA"); 
 				createNodeAndInsertText(xmlDom, objNode, "FLAG", flag);
 				createNodeAndInsertText(xmlDom, objNode, "CODE", code);
-				createNodeAndInsertCDataText(xmlDom, objNode, "CODEVALUE", document.getElementById("codevalue").value);
-				createNodeAndInsertCDataText(xmlDom, objNode, "DESCRIPTION", document.getElementById("description").value);
+				createNodeAndInsertCDataText(xmlDom, objNode, "CODEVALUE", codeValue);
+				createNodeAndInsertCDataText(xmlDom, objNode, "DESCRIPTION", description);
 				createNodeAndInsertCDataText(xmlDom, objNode, "COMPANYID", companyID);
 				createNodeAndInsertCDataText(xmlDom, objNode, "TYPECODE", typeCode);
 
@@ -254,7 +268,7 @@
 		  	</tr>
 		  	<tr> 
 		    	<th>VALUE</th>
-		  		<td><textarea <c:if test="${flag eq 'view'}">disabled = "disabled"</c:if> style="height:280px;WIDTH:98%;margin:10 10 10 10;" id="codevalue"><c:out value = '${configVO.codeValue}' /></textarea></td>
+		  		<td><textarea <c:if test="${flag eq 'view'}">disabled = "disabled"</c:if> style="min-height:560px;WIDTH:98%;margin:10 10 10 10;" id="codevalue"><c:out value = '${configVO.codeValue}' /></textarea></td>
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code = 'ezSystem.w011' /></th> 
