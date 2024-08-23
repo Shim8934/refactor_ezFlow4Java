@@ -276,7 +276,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			String companyId = request.getParameter("companyId");
 			String deptId = info.getDeptId();
