@@ -93,7 +93,7 @@
 				
 	            recevieListview("MsgToList", "ListViewMsgTo");
 	            
-	            applyCurrentData(); // 기존 권한을 선택하고 추가버튼 눌렀을때 해당 권한 리스트에 맵핑
+	            //applyCurrentData(); // 기존 권한을 선택하고 추가버튼 눌렀을때 해당 권한 리스트에 맵핑
 
 	            var xmlpara = createXmlDom();
                 var xmlTree = createXmlDom();
@@ -1124,7 +1124,7 @@
     		                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
     		                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
     		                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
-    		                    pparsingXML = pparsingXML + "<DATA9>" + topId + "</DATA9>";
+    		                    pparsingXML = pparsingXML + "<DATA9>" + topid + "</DATA9>";
         	                    
 								if (primary == "1") { // 직위이름 다국어 처리
 									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + MakeXMLString(arrRows[i].getAttribute("DISPLAYNAME")) + "</VALUE>";
@@ -1202,7 +1202,7 @@
     		                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
     		                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
     		                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
-    		                    pparsingXML = pparsingXML + "<DATA9>" + topId + "</DATA9>";
+    		                    pparsingXML = pparsingXML + "<DATA9>" + topid + "</DATA9>";
 								if (primary == "1") { // 직책이름 다국어 처리
 									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + MakeXMLString(arrRows[i].getAttribute("DISPLAYNAME")) + "</VALUE>";
 								} else {
@@ -1277,7 +1277,7 @@
 			                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
 			                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
 			                    pparsingXML = pparsingXML + "<DATA8>" + groupID + "</DATA8>";
-			                    pparsingXML = pparsingXML + "<DATA9>" + topId + "</DATA9>";
+			                    pparsingXML = pparsingXML + "<DATA9>" + topid + "</DATA9>";
 			                    
 	                            pparsingXML = pparsingXML + "<VALUE>권한그룹 : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -2255,7 +2255,7 @@
 									<tr>
 										<td id="groupMember">
 											<a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="groupmember_click()">
-												<spring:message code='ezEmail.t598' /></span>
+												<spring:message code='ezNotification.hth90' /></span>
 											</a>
 										</td>
 									</tr>
