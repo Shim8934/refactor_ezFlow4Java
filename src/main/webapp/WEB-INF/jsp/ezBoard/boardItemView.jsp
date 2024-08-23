@@ -100,6 +100,7 @@
 			var strUpperItemIDTree = "<c:out value='${boardItem.upperItemIDTree}'/>";
 			var strParentWriteDate = "<c:out value='${boardItem.parentWriteDate}'/>"; // 답변게시물 판별용 부모게시물 NO(PARENTWRITEDATE)
 			var strDocNo = "<c:out value='${boardItem.docNo}'/>"; // 답변게시물 판별용 현재게시물 NO(DOCNO)
+			var useKeyword = "<c:out value='${boardInfo.useKeyword}'/>"; // 키워드 기능 사용 여부 (Y/N)
 		    
 			var isDisLikeChecked = "<c:out value='${isDisLikeChecked}'/>";
 			var disLikeFlag = "<c:out value='${boardInfo.disLikeFlag}'/>";
@@ -1976,6 +1977,20 @@
 			             </td>
 			        </tr>
 			        <!-- 제목 end -->
+			        <c:if test='${boardInfo.useKeyword eq "Y"}'>
+                         <tr>
+                             <th><spring:message code="ezApprovalG.t1200" /></th>
+                             <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+                                <div style="WIDTH: 100%; vertical-align: middle">
+                                    <c:if test='${not empty keywordList}'>
+                                        <c:forEach var="keyword" items="${keywordList}">
+                                            <span class="keywordSpan" id="${keyword.keywordName}" onclick="onclickKeyword(event)">#${keyword.keywordName}</span>
+                                        </c:forEach>
+                                    </c:if>
+                                </div>
+                             </td>
+                         </tr>
+                     </c:if>
 			      </table>
 			    </td>
 		  </tr>

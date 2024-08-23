@@ -340,6 +340,21 @@
 	                  <th><spring:message code='ezBoard.t291'/></th>
 	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6"><c:out value="${boardItem.title}"/></td>
 		            </tr>
+		            <%-- 키워드 --%>
+                     <c:if test='${boardInfo.useKeyword eq "Y"}'>
+                         <tr>
+                             <th><spring:message code="ezApprovalG.t1200" /></th>
+                             <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+                                <div style="WIDTH: 100%; vertical-align: middle">
+                                    <c:if test='${not empty keywordList}'>
+                                        <c:forEach var="keyword" items="${keywordList}">
+                                            <span class="keywordSpanView" id="${keyword.keywordName}">#${keyword.keywordName}</span>
+                                        </c:forEach>
+                                    </c:if>
+                                </div>
+                             </td>
+                         </tr>
+                     </c:if>
 		      </table>
 <!-- 		<table class="layout">  -->
 <!-- 		  <tr>  -->

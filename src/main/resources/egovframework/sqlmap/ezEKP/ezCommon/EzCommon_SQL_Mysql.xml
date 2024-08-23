@@ -5678,4 +5678,47 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 	</statement>
     
+	<select id="EzCommonDAO.checkBoardKeywordTable">
+		<![CDATA[
+			SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_KEYWORD
+			LIMIT 1
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkBoardItemKeywordTable">
+		<![CDATA[
+			SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_BOARDITEM_KEYWORD
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createBoardKeywordTable">
+		<![CDATA[
+		CREATE TABLE TBL_BOARD_KEYWORD (
+			KEYWORDID bigint(20) NOT NULL AUTO_INCREMENT,
+			KEYWORDNAME varchar(100) NOT NULL UNIQUE,
+			TENANT_ID mediumint(5) NOT NULL,
+			PRIMARY KEY (KEYWORDID, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+		]]>
+	</statement>
+
+	<statement id="EzCommonDAO.createBoardItemKeywordTable">
+		<![CDATA[
+		CREATE TABLE TBL_BOARD_BOARDITEM_KEYWORD (
+			KEYWORDID bigint(20) NOT NULL,
+			BOARDID varchar(40) NOT NULL,
+			ITEMID varchar(40) NOT NULL,
+			TENANT_ID mediumint(5) NOT NULL,
+			SN tinyint(3) NOT NULL,
+			PRIMARY KEY (KEYWORDID, ITEMID, SN, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+		]]>
+	</statement>
 </sqlMap>

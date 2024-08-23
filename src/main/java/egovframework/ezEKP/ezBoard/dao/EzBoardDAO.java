@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
@@ -933,5 +934,25 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<BoardItemVO> getItemInfoList(Map<String, String> map) throws Exception {
 		return (List<BoardItemVO>) list("EzBoardDAO.getItemInfoList",map);
+	}
+
+	public void insertKeyword(HashMap<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertKeyword", map);
+	}
+
+	public void deleteBoardItemKeyword(HashMap<String, Object> map) throws Exception {
+		insert("EzBoardDAO.deleteBoardItemKeyword", map);
+	}
+
+	public void insertBoardItemKeyword(List<BoardKeywordVO> list) throws Exception {
+		insert("EzBoardDAO.insertBoardItemKeyword", list);
+	}
+	
+	public List<BoardKeywordVO> selectBoardKeywordByKeywordName(HashMap<String, Object> map) throws Exception {
+		return (List<BoardKeywordVO>) list("EzBoardDAO.selectBoardKeywordByKeywordName", map);
+	}
+
+	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(HashMap<String, Object> map) throws Exception {
+		return (List<BoardKeywordVO>) list("EzBoardDAO.selectBoardKeywordByBoardItem", map);
 	}
 }

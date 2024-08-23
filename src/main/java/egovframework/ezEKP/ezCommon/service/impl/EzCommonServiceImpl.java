@@ -2706,6 +2706,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("TYPE_MYSQL", "INT(11)"); put("TYPE_ORACLE", "NUMBER(11, 0)");
 			put("AFTER", "DEFAULT '0'");
 		}});
+        test.add(new HashMap<String, Object>(){{ // 2024-08-01 전인하 - 게시판 > 키워드 기능
+            put("TABLE","TBL_BOARD_BOARDINFO");
+            put("COLUMN", "USEKEYWORD"); // 게시판 키워드 기능 사용여부(Y/N)
+            put("TYPE_MYSQL", "VARCHAR(11)"); put("TYPE_ORACLE", "NVARCHAR2(2)");
+        }});
 
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
@@ -4114,7 +4119,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
  			map.put("tenantID", tenantVo.getTenantId());
  			ezCommonDAO.insertDotNetTotalNotificationConfig(map);
  		}
-    	
+    }
+    
+    @Override
+    public void createBoardKeywordTable() throws Exception {
+        ezCommonDAO.createBoardKeywordTable();
     }
     
     @Override

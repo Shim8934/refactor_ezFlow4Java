@@ -86,3 +86,10 @@ var strLangLGE04 = "취소";
 var strLangLGE05 = "게시암호";
 var strLangLGE06 = "익명";
 var strLangLGE07 = "작성자에 의해 삭제된 댓글입니다.";
+
+/* 2024-08-26 전인하 - 게시판 > 키워드 > 특문입력제한 */
+var strLangKeywordJIH01 = "역슬래시, 작은따옴표, 큰따옴표, 부등호기호, 해시기호(#)를 입력할 수 없습니다."
+var strLangKeywordJIH02 = "오류가 발생하였습니다."
+var strLangKeywordJIH03 = "해당 게시물을 그룹웨어에서 접근하지 않았거나, 해당 게시물을 접근한 그룹웨어 페이지에 변경사항이 발생하여 키워드를 검색할 수 없습니다."
+var strLangKeywordJIH04 = "보고 있는 게시물 팝업을 닫겠습니까?"
+var strLangKeywordJIH05 = "게시물 혹은 메일 보기 팝업을 통하여 열람한 게시글, 관리자 화면을 통하여 열람한 게시글에서는 키워드를 검색할 수 없습니다.";

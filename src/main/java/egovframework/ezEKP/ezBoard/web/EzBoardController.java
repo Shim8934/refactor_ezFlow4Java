@@ -54,6 +54,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.codec.binary.Base64;
@@ -1063,6 +1064,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
 		model.addAttribute("isMyBoard", isMyBoard);
 		model.addAttribute("endDateOption", endDateOption);
+		model.addAttribute("useKeyword", boardProperty.getUseKeyword());
 
 		logger.debug("boardItemList ended");
 		//logger.debug("requestURL : " + requestURL);
@@ -1288,6 +1290,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setDisLikeFlag(strProp.getDisLikeFlag());
 			boardInfo.setOneLineReply(strProp.getOneLineReply()); // 댓글옵션정보 추가
 			boardInfo.setReactFlag(strProp.getReactFlag()); // 댓글 좋아요/싫어요 사용여부 플래그 추가
+			boardInfo.setUseKeyword(strProp.getUseKeyword()); // useKeywordFlag 플래그 추가
 
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();
@@ -2465,12 +2468,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
 			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
-			returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' ";
+			returnQuery += " AND A.TITLE like '%" + boardVO.getTitle() + "%' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("CONTENT;") != -1) {
 				boardVO.setContent(searchQueryDoc.getElementsByTagName("CONTENT").item(0).getTextContent());
-				returnQuery += " AND CONTENT like '%" + boardVO.getContent() + "%' ";
+				returnQuery += " AND A.CONTENT like '%" + boardVO.getContent() + "%' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("WRITERNAME;") != -1) {
@@ -2493,6 +2496,26 @@ public class EzBoardController extends EgovFileMngUtil{
 			returnQuery += " AND ABSTRACT like '%" + boardVO.getABSTRACT() + "%' ";
 		}
 		
+		String keywordClick = "";
+		// 2024-08-26 전인하 - 게시판 > 검색 > 키워드 값 세팅
+		if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+			boardVO.setUseKeyword("Y");
+			if (boardVO.getSearchQuery().indexOf("KEYWORD;") != -1) {
+				String keyword = commonUtil.cleanValueUnescape(searchQueryDoc.getElementsByTagName("KEYWORD").item(0).getTextContent());
+				boardVO.setKeyword(keyword);
+			}
+		} else if (boardVO.getBoardType().equals("M") || boardVO.getBoardType().equals("A") 
+				|| boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) {
+			if (boardVO.getSearchQuery().indexOf("KEYWORD;") != -1) {
+				String keyword = commonUtil.cleanValueUnescape(searchQueryDoc.getElementsByTagName("KEYWORD").item(0).getTextContent());
+				boardVO.setKeyword(keyword);
+			}
+			if (boardVO.getSearchQuery().indexOf("KEYWORDCLICK;") != -1) {
+				keywordClick = commonUtil.cleanValueUnescape(searchQueryDoc.getElementsByTagName("KEYWORDCLICK").item(0).getTextContent());
+				boardVO.setKeyword(keywordClick);
+			}
+		}
+		
 		if (boardVO.getBoardType().equals("5") && boardInfo.getBoardAdmin_FG().equals("false")) {
 			returnQuery += " AND TOPWRITERID = '" + userInfo.getId() + "' ";
 		}
@@ -2500,16 +2523,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardVO.setSearchQuery(returnQuery);
 		String boardXML = "";
 		
-		if (boardVO.getBoardType().equals("4") || boardVO.getBoardType().equals("7")) {
+		if (boardVO.getBoardType().equals("4") || boardVO.getBoardType().equals("7")) { // 썸네일 게시판, 동영상 게시판
 			boardXML = getSearchThumbListXML(userInfo, boardVO);
-		} else if (boardVO.getBoardType().equals("M")) {
+		} else if (boardVO.getBoardType().equals("M")) { // 나의 게시물, 임시보관함
 			boardXML = getSearchMyBoardListItemXML(userInfo, boardVO, mode);
-		} else if (boardVO.getBoardType().equals("A")) {
+		} else if (boardVO.getBoardType().equals("A")) { // 승인게시판
 			boardXML = getSearchApprListItemXML(userInfo, boardVO);
 		} else {
-			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) {
-				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO);
-			} else {
+			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) { // 전체검색, 하위게시판포함 검색
+				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO, keywordClick);
+			} else { // 일반게시판, 익명게시판, 포토게시판, QnA게시판, 새 게시판
 				boardXML = getSearchBoardListItemXML(userInfo, boardVO);
 			}
 		}
@@ -2584,6 +2607,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (boardVO.getWriterName() == null) {
 			boardVO.setWriterName("");
+		}
+		
+		if (boardVO.getKeyword() == null) {
+			boardVO.setKeyword("");
 		}
 		
 		List<HashMap<String, Object>> boardSearchList = null;
@@ -2755,6 +2782,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardVO.setWriterName("");
 		}
 		
+		if (boardVO.getKeyword() == null) {
+			boardVO.setKeyword("");
+		}
+		
 		List<HashMap<String, Object>> boardThumbnailList = ezBoardService.getSearchThumbnailList(boardListVO, boardVO);
 		
 		int dlength = boardThumbnailList.size();
@@ -2914,6 +2945,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (boardVO.getWriterName() == null) {
 			boardVO.setWriterName("");
+		}
+
+		if (boardVO.getKeyword() == null) {
+			boardVO.setKeyword("");
 		}
 		
 		List<HashMap<String, Object>> boardSearchList = ezBoardService.getSearchBoardItemList(boardListVO, boardVO);
@@ -3959,6 +3994,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2023-03-20 기민혁 - 해당 게시물에 대해 사용자가 싫어요를 표시했는지 체크 */
 		String isDisLikeChecked = ezBoardService.disLikeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		
+		List<BoardKeywordVO> keywordList = new ArrayList<>();
+		if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+			keywordList = ezBoardService.selectBoardKeywordByBoardItem(boardItem.getItemID(), boardItem.getBoardID(), userInfo.getTenantId());
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
@@ -3987,6 +4027,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("useBoardFilePrvw", useBoardFilePrvw);
 		model.addAttribute("isDisLikeChecked", isDisLikeChecked);
+		model.addAttribute("keywordList", keywordList);
 		
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -4307,6 +4348,12 @@ public class EzBoardController extends EgovFileMngUtil{
 			HwpSecurityNum = ezCommonService.getTenantConfig("HwpSecurityNum", userInfo.getTenantId());
 		}
 		
+		String useKeyword = boardInfo.getUseKeyword();
+		List<BoardKeywordVO> keywordListForModify = new ArrayList<>();
+		if ((mode.equals("modify") || mode.equals("temp")) && useKeyword != null && useKeyword.equals("Y")) {
+			keywordListForModify = ezBoardService.selectBoardKeywordByBoardItem(itemID, boardID, userInfo.getTenantId());
+		}
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -4345,6 +4392,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
 		model.addAttribute("scheduleId", scheduleId);
 		model.addAttribute("boardName", boardName);
+		model.addAttribute("useKeyword", useKeyword);
+		model.addAttribute("keywordListForModify", keywordListForModify);
 
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -5850,6 +5899,11 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardItem.setWriterName(commonUtil.htmlUnescape(boardItem.getWriterName()).replace("\\", "&#92;"));
 		}
 		
+		List<BoardKeywordVO> keywordList = new ArrayList<>();
+		if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+			keywordList = ezBoardService.selectBoardKeywordByBoardItem(boardItem.getItemID(), boardItem.getBoardID(), userInfo.getTenantId());
+		}
+		
 		model.addAttribute("boardItem", boardItem);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
@@ -5863,6 +5917,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("extenLang", extenLang);
 		model.addAttribute("boardAttr", boardAttr);
 		model.addAttribute("boardAttrCount", boardAttrCount);
+		model.addAttribute("keywordList", keywordList);
 
 		logger.debug("boardItemViewPrint ended");
 		return "ezBoard/boardItemViewPrint";
@@ -6051,7 +6106,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (use_cabinet.equals("YES")) {
 			use_cabinet = cabinetAdminService.checkModuleActive("board", userInfo);
 		}
-		
+
+		List<BoardKeywordVO> keywordList = new ArrayList<>();
+		if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+			keywordList = ezBoardService.selectBoardKeywordByBoardItem(boardItem.getItemID(), boardItem.getBoardID(), userInfo.getTenantId());
+		}
+
+
 		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);
@@ -6069,6 +6130,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("useCabinet", use_cabinet);
 		model.addAttribute("isDisLikeChecked", isDisLikeChecked);
+		model.addAttribute("keywordList", keywordList);
 		logger.debug("boardItemViewPhoto ended");
 		return "ezBoard/boardItemViewPhoto";
 	}
@@ -6249,6 +6311,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardViewForm", boardViewForm);
 		model.addAttribute("isMyBoard", isMyBoard);
 		model.addAttribute("endDateOption", endDateOption);
+		model.addAttribute("useKeyword", boardInfo.getUseKeyword());
 
 		logger.debug("boardItemListThumbnail ended");
 		return "ezBoard/boardItemListThumbnail";
@@ -6312,6 +6375,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("boardName", boardName);
+		model.addAttribute("useKeyword", boardInfo.getUseKeyword());
 
 		logger.debug("newBoardItemPhoto ended");
 		return "ezBoard/boardNewItemPhoto";
@@ -6922,6 +6986,17 @@ public class EzBoardController extends EgovFileMngUtil{
 			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
 			
 			ezBoardService.photoListAlbumEdit(boardID, itemID, title, content, userInfo.getTenantId());
+
+			// 키워드 저장
+			List<String> keywords = new ArrayList<>();
+			NodeList keywordNodeList = doc.getElementsByTagName("KEYWORD");
+			if (keywordNodeList != null && keywordNodeList.getLength() > 0) {
+				for (int i = 0; i < keywordNodeList.getLength(); i++) {
+					keywords.add(keywordNodeList.item(i).getTextContent());
+				}
+
+				ezBoardService.saveKeyword(keywords, boardID, itemID, userInfo.getTenantId());
+			}
 			
 			return "OK";
 		} else if (mod.equals("temp")) {
@@ -8957,7 +9032,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 2018-04-27 김혜정 게시판 검색
 	 */
 	@RequestMapping(value="/ezBoard/boardSearchView.do", method = RequestMethod.GET)
-	public String boardSearchView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO boardVO, Model model) throws Exception {
+	public String boardSearchView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO boardVO, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("boardSearchView started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -8998,8 +9073,13 @@ public class EzBoardController extends EgovFileMngUtil{
         resultXML.append("</LISTVIEWDATA>");
         resultXML.append("</DOCLIST>");
 		
+		String type = request.getParameter("type") != null ? request.getParameter("type") : "";
+		String data = request.getParameter("data") != null ? request.getParameter("data") : "";
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("listHeader", resultXML);
+		model.addAttribute("keyType", type);
+		model.addAttribute("keyData", data);
 		
 		logger.debug("boardSearchView ended");
 		return "/ezBoard/boardSearchView";
@@ -9112,7 +9192,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 검색 리스트 Method
 	 */
-	public String getSearchAllBoardListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public String getSearchAllBoardListItemXML(LoginVO userInfo, BoardVO boardVO, String keywordClick) throws Exception {
 		logger.debug("getSearchAllBoardListItemXML started");
 
 		String orderOption1 = "";
@@ -9167,7 +9247,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (pMode == 1 && listviewTrueList.size() == 0 && qnaItemList.size() == 0) {
 			boardCount = 0;
 		} else {
-			boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, listviewTrueList, qnaItemList, pMode);
+			boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, listviewTrueList, qnaItemList, pMode, keywordClick);
 		}
 		
 		BoardListVO boardListVO = new BoardListVO();
@@ -9196,6 +9276,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardVO.setWriterName("");
 		}
 		
+		if (boardVO.getKeyword() == null) {
+			boardVO.setKeyword("");
+		}
+		
 		List<HashMap<String, Object>> boardSearchList;
 		int dlength;
 		
@@ -9203,7 +9287,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardSearchList = null;
 			dlength = 0;
 		} else {
-			boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, listviewTrueList, qnaItemList, pMode);
+			boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, listviewTrueList, qnaItemList, pMode, keywordClick);
 			dlength = boardSearchList.size();
 		}
 		
@@ -9373,6 +9457,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (boardVO.getWriterName() == null) {
 			boardVO.setWriterName("");
+		}
+
+		if (boardVO.getKeyword() == null) {
+			boardVO.setKeyword("");
 		}
 		
 		// 승인게시물 검색 결과 리스트에 companyID 조건 추가
@@ -9652,6 +9740,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isMyBoard", isMyBoard);
 		model.addAttribute("endDateOption", endDateOption);
+		model.addAttribute("useKeyword", boardInfo.getUseKeyword());
 
 		logger.debug("boardItemListMovie ended");
 		return "ezBoard/boardItemListMovie";
@@ -9712,6 +9801,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardName", boardName);
+		model.addAttribute("useKeyword", boardInfo.getUseKeyword());
 
 		logger.debug("newBoardItemMovie ended");
 		return "ezBoard/boardNewItemMovie";
@@ -10025,6 +10115,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		/* 2023-04-06 기민혁 - 해당 게시물에 대해 사용자가 싫어요를 표시했는지 체크 */
 		String isDisLikeChecked = ezBoardService.disLikeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+
+		List<BoardKeywordVO> keywordList = new ArrayList<>();
+		if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+			keywordList = ezBoardService.selectBoardKeywordByBoardItem(boardItem.getItemID(), boardItem.getBoardID(), userInfo.getTenantId());
+		}
+
 		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);
@@ -10041,6 +10137,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("isDisLikeChecked", isDisLikeChecked);
+		model.addAttribute("keywordList", keywordList);
 		
 		logger.debug("boardItemViewMovie ended");
 		return "ezBoard/boardItemViewMovie";

@@ -85,3 +85,10 @@ var strLangLGE04 = "Cancel";
 var strLangLGE05 = "Password";
 var strLangLGE06 = "Anonymous";
 var strLangLGE07 = "This comment has been deleted by its writer.";
+
+/* 2024-08-26 전인하 - 게시판 > 키워드 > 특문입력제한 */
+var strLangKeywordJIH01 = "You cannot enter reverse slashes, lower quotes, double quotes, inequalities, and hash sign."
+var strLangKeywordJIH02 = "An error occurred."
+var strLangKeywordJIH03 = "You cannot search for keyword because this post was either not accessed from the groupware or changes have been made to the groupware page from which it was accessed.";
+var strLangKeywordJIH04 = "Do you want to close the post you are currently viewing?";
+var strLangKeywordJIH05 = "You cannot search for keywords in posts viewed through the post or email view popup, or in posts viewed through the admin screen.";

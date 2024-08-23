@@ -713,6 +713,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_MAILFG_COMMENT", boardPropertyVO.getMailFG_Comment());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		map.put("v_REACTFLAG", boardPropertyVO.getReactFlag());
+		map.put("v_USEKEYWORD", boardPropertyVO.getUseKeyword());
 		
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 		if (boardPropertyVO.getParentBoardID().equals("top")) {

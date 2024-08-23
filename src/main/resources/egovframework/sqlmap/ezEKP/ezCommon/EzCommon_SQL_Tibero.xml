@@ -6102,4 +6102,63 @@
 		)
 	</statement>
 
+
+	<select id="EzCommonDAO.checkBoardKeywordTable">
+		<![CDATA[
+			SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_KEYWORD
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkBoardItemKeywordTable">
+		<![CDATA[
+			SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_BOARDITEM_KEYWORD
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createBoardKeywordTable">
+		<![CDATA[
+		CREATE TABLE "TBL_BOARD_KEYWORD" (
+			"KEYWORDID" NUMBER(5) NOT NULL,
+			"KEYWORDNAME" NVARCHAR2(100) NOT NULL UNIQUE,
+			"TENANT_ID" NUMBER(5) NOT NULL,
+			CONSTRAINT "PK_TBL_BOARD_KEYWORD" PRIMARY KEY ("KEYWORDID", "TENANT_ID")
+		) 
+		]]>
+	</statement>
+
+	<statement id="EzCommonDAO.createBoardItemKeywordTable">
+		<![CDATA[
+		CREATE TABLE "TBL_BOARD_BOARDITEM_KEYWORD" (
+			"KEYWORDID" NUMBER(5) NOT NULL,
+			"BOARDID" NVARCHAR2(40) NOT NULL,
+			"ITEMID" NVARCHAR2(40) NOT NULL,
+			"TENANT_ID" NUMBER(5) NOT NULL,
+			"SN" NUMBER(3) NOT NULL,
+			CONSTRAINT "PK_TBL_BOARD_BOARDITEM_KEYWORD" PRIMARY KEY ("KEYWORDID", "ITEMID", "SN", "TENANT_ID")
+		) 
+		]]>
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardKeywordSequence" resultClass="int">
+		SELECT
+			COUNT(SEQUENCE_NAME)
+		FROM
+			USER_SEQUENCES
+		WHERE
+			SEQUENCE_NAME = 'TBL_BOARD_KEYWORD_SEQ'
+	</select>
+
+	<statement id="EzCommonDAO.createBoardKeywordSequence">
+		CREATE SEQUENCE "TBL_BOARD_KEYWORD_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER NOCYCLE
+	</statement>
 </sqlMap>

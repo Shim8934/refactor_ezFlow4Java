@@ -463,4 +463,6 @@ public interface EzCommonService {
 	
 	public void addBoardDisLikeFlag() throws Exception;
 	
+
+	public void createBoardKeywordTable() throws Exception;
 }

@@ -20,6 +20,7 @@
 	<typeAlias  alias="BoardLikeListVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardLikeListVO"/>
 	<typeAlias  alias="BoardDisLikeListVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO"/>
 	<typeAlias  alias="BoardItemVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardItemVO"/>
+	<typeAlias  alias="BoardKeywordVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardKeywordVO"/>
 	
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
@@ -2390,6 +2391,33 @@
 		   			  	STARTDATE <= #nowDate#  
 		   			  AND 
 		   			  	ENDDATE > #nowDate#
+		]]>
+		<isEqual property="v_useKeywordFlag" compareValue="Y">
+			<isNotEmpty property="v_KEYWORD">
+				<![CDATA[
+					AND
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							AND
+								BK.BOARDID = #v_PBOARDID#
+							AND
+								BK.TENANT_ID = #v_TENANTID#
+						)
+				]]>
+			</isNotEmpty>
+		</isEqual>
+		<![CDATA[
 		   			  $v_TEMP$   
 		   		      $v_PSUBQUERY$ ) T1
 		   		WHERE
@@ -2590,6 +2618,33 @@
 								OR 
 							A.APPRFLAG IS NULL
 						  )
+		]]>
+		<isEqual property="v_useKeywordFlag" compareValue="Y">
+			<isNotEmpty property="v_KEYWORD">
+				<![CDATA[
+					AND
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							AND
+								BK.BOARDID = #v_PBOARDID#
+							AND
+								BK.TENANT_ID = #v_TENANTID#
+						)
+					]]>
+			</isNotEmpty>
+		</isEqual>
+		<![CDATA[
 	   				  $v_PSUBQUERY$ ) T1 
 	   			  WHERE
 	   				  ROWNUM_ <= #v_PENDROW# ) T2 
@@ -2684,6 +2739,33 @@
 								OR 
 							A.APPRFLAG IS NULL
 						  )
+			]]>
+			<isNotEmpty property="v_KEYWORD">
+				<![CDATA[
+					AND
+					(
+						I.USEKEYWORD = 'Y'
+					 AND
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							AND
+								BK.TENANT_ID = #v_TENANTID#
+						)
+					)
+					]]>
+			</isNotEmpty>
+			<![CDATA[
 	   				  $v_PSUBQUERY$ ) T1 
 	   			WHERE 
 	   				RNUM <= #v_PENDROW# ) T2
@@ -2767,6 +2849,33 @@
   						(A.WritercompanyID = #v_COMPANYID# OR TRIM(I.COMPANYID) = '' OR I.COMPANYID IS NULL)
 	   				 AND 
 	   					A.WRITERID = #v_PUSERID# 
+			]]>
+			<isNotEmpty property="v_KEYWORD">
+				<![CDATA[
+					AND 
+					(
+						I.USEKEYWORD = 'Y'
+					AND
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							AND
+								BK.TENANT_ID = #v_TENANTID#
+						)
+					)
+					]]>
+			</isNotEmpty>
+			<![CDATA[
 	   				 $v_PSUBQUERY$ ) T1 
 	   			  WHERE 
 	   				  ROWNUM_ <= #v_PENDROW# ) T2
@@ -2860,6 +2969,33 @@
 		   			   		A.APPRFLAG = 'N' 
 		   			   AND 
 		   			   		APPR.APPRUSERID = #v_PUSERID#
+				]]>
+				<isNotEmpty property="v_KEYWORD">
+					<![CDATA[
+						AND
+						(
+							B.USEKEYWORD = 'Y'
+						AND
+							A.ITEMID in (
+								SELECT DISTINCT
+									ITEMID
+								FROM
+									tbl_board_boarditem_keyword BK
+								INNER JOIN
+									TBL_BOARD_KEYWORD K
+								ON
+									BK.KEYWORDID = K.KEYWORDID
+								AND
+									BK.TENANT_ID = K.TENANT_ID
+								WHERE
+									K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+								AND
+									BK.TENANT_ID = #v_TENANTID#
+							)
+						)
+					]]>
+				</isNotEmpty>
+				<![CDATA[
 		   			   		$v_PSUBQUERY$ ) T1
 		   		  WHERE 
 		   			  RNUM <= #v_PENDROW# ) T2  
@@ -3711,13 +3847,13 @@
 	<select id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(ITEMID)
+				COUNT(A.ITEMID)
    			FROM 
    				TBL_BOARD_ITEM A 
    			WHERE    				
    				$v_PWHEREBOARD$ 
    			AND
-   				TENANT_ID = #v_TENANTID#
+   				A.TENANT_ID = #v_TENANTID#
    			AND (
 				(A.APPRFLAG <> 'C'  
 					AND 
@@ -3728,7 +3864,34 @@
    			AND 
    				STARTDATE < #nowDate# 
    			AND 
-   				ENDDATE > #nowDate# 
+   				ENDDATE > #nowDate#
+   		]]>
+		<isEqual property="v_useKeywordFlag" compareValue="Y">
+			<isNotEmpty property="v_KEYWORD">
+				<![CDATA[
+			AND
+				A.ITEMID in (
+					SELECT DISTINCT
+						ITEMID
+					FROM
+						tbl_board_boarditem_keyword BK
+					INNER JOIN
+						TBL_BOARD_KEYWORD K
+					ON
+						BK.KEYWORDID = K.KEYWORDID
+					AND
+						BK.TENANT_ID = K.TENANT_ID
+					WHERE
+						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+					AND
+						BK.BOARDID = #v_pBoardID#
+					AND
+						BK.TENANT_ID = #v_TENANTID#
+				)
+			]]>
+			</isNotEmpty>
+		</isEqual>
+		<![CDATA[
    			$v_PSUBQUERY$
 		]]>
 	</select>
@@ -3793,6 +3956,32 @@
    				STARTDATE < #nowDate# 
    			AND 
    				ENDDATE > #nowDate# 
+   		]]>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+			AND (
+				B.USEKEYWORD = 'Y'
+			AND
+				A.ITEMID in (
+					SELECT DISTINCT
+						ITEMID
+					FROM
+						tbl_board_boarditem_keyword BK
+					INNER JOIN
+						TBL_BOARD_KEYWORD K
+					ON
+						BK.KEYWORDID = K.KEYWORDID
+					AND
+						BK.TENANT_ID = K.TENANT_ID
+					WHERE
+						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+					AND
+						BK.TENANT_ID = #v_TENANTID#
+				)
+			)
+		]]>
+		</isNotEmpty>
+		<![CDATA[	 
    			$v_PSUBQUERY$
 		]]>
 	</select>
@@ -3810,11 +3999,37 @@
 			AND
 				A.BoardID = B.BoardID
    			WHERE
-   				A.TENANT_ID = #v_TENANTID#
-   			AND
 				(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
    			AND
    				WRITERID = #v_PUSERID#  
+   		]]>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+			AND (
+				B.USEKEYWORD = 'Y'
+			AND
+				A.ITEMID in (
+					SELECT DISTINCT
+						ITEMID
+					FROM
+						tbl_board_boarditem_keyword BK
+					INNER JOIN
+						TBL_BOARD_KEYWORD K
+					ON
+						BK.KEYWORDID = K.KEYWORDID
+					AND
+						BK.TENANT_ID = K.TENANT_ID
+					WHERE
+						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+					AND
+						BK.TENANT_ID = #v_TENANTID#
+				)
+			)
+		]]>
+		</isNotEmpty>
+		<![CDATA[
+			AND
+				A.TENANT_ID = #v_TENANTID#
    			$v_PSUBQUERY$
 		]]>
 	</select>
@@ -4499,6 +4714,33 @@
 	        	A.startdate <= #nowDate#
 	        AND	
    				A.enddate > #nowDate#
+   		]]>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+					AND
+					(
+						C.USEKEYWORD = 'Y'
+					 AND
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							AND
+								BK.TENANT_ID = #v_TENANTID#
+						)
+					)
+				]]>
+		</isNotEmpty>
+		<![CDATA[
    				$v_PSUBQUERY$
 		]]>
 	</select>
@@ -5862,6 +6104,37 @@
 							OR 
 						A.APPRFLAG IS NULL
 					)
+		]]>
+	  <isNotEmpty property="v_KEYWORD">
+		  <![CDATA[
+				AND (
+					I.USEKEYWORD = 'Y'
+				AND
+					A.ITEMID in (
+						SELECT DISTINCT
+							ITEMID
+						FROM
+							tbl_board_boarditem_keyword BK
+						INNER JOIN
+							TBL_BOARD_KEYWORD K
+						ON
+							BK.KEYWORDID = K.KEYWORDID
+						AND
+							BK.TENANT_ID = K.TENANT_ID
+						WHERE
+					]]>
+					  <isNotEmpty property="v_KEYWORDCLICK">
+						  K.KEYWORDNAME = #v_KEYWORDCLICK#
+					  </isNotEmpty>
+					  <isEmpty property="v_KEYWORDCLICK">
+						  K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+					  </isEmpty>
+						AND
+							BK.TENANT_ID = #v_TENANTID#
+					)
+				)
+	  </isNotEmpty>
+	  <![CDATA[		
 					$v_PSUBQUERY$ ) T1 
 				WHERE
 					ROWNUM_ <= #v_PENDROW# ) T2
@@ -5932,6 +6205,37 @@
 							OR
 						A.APPRFLAG IS NULL
 					)
+		]]>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+				AND (
+					I.USEKEYWORD = 'Y'
+				AND
+					A.ITEMID in (
+						SELECT DISTINCT
+							ITEMID
+						FROM
+							tbl_board_boarditem_keyword BK
+						INNER JOIN
+							TBL_BOARD_KEYWORD K
+						ON
+							BK.KEYWORDID = K.KEYWORDID
+						AND
+							BK.TENANT_ID = K.TENANT_ID
+						WHERE
+						]]>
+						<isNotEmpty property="v_KEYWORDCLICK">
+							K.KEYWORDNAME = #v_KEYWORDCLICK#
+						</isNotEmpty>
+						<isEmpty property="v_KEYWORDCLICK">
+							K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						</isEmpty>
+						AND
+							BK.TENANT_ID = #v_TENANTID#
+					)
+				)
+		</isNotEmpty>
+		<![CDATA[
 				$v_PSUBQUERY$
 			]]>
 	</select>
@@ -7058,4 +7362,85 @@
 				TENANT_ID = #v_TENANTID#
 		]]>
 	</update>
+	<insert id="EzBoardDAO.insertKeyword" parameterClass="Map">
+		INSERT INTO TBL_BOARD_KEYWORD (
+			KEYWORDID, KEYWORDNAME, TENANT_ID
+		)
+		SELECT
+			TBL_BOARD_KEYWORD_SEQ.NEXTVAL, #v_keyword#, #v_tenantID#
+		FROM DUAL
+		WHERE NOT EXISTS
+			(SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_KEYWORD
+			WHERE
+				KEYWORDNAME = #v_keyword#
+			AND
+				TENANT_ID = #v_tenantID# )
+	</insert>
+
+	<insert id="EzBoardDAO.insertBoardItemKeyword" parameterClass="list">
+		INSERT INTO TBL_BOARD_BOARDITEM_KEYWORD (
+			KEYWORDID, BOARDID, ITEMID, TENANT_ID, SN
+		)
+		<iterate conjunction=" UNION ALL ">
+			SELECT
+				#[].keywordId#, #[].boardId#, #[].itemId#, #[].tenant_id#, #[].sn#
+			FROM DUAL
+		</iterate>
+	</insert>
+
+	<delete id="EzBoardDAO.deleteBoardItemKeyword" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				FROM TBL_BOARD_BOARDITEM_KEYWORD
+            WHERE
+            	BOARDID = #v_boardID#
+            AND  
+            	ITEMID = #v_itemID#
+		]]>
+	</delete>
+
+	<select id="EzBoardDAO.selectBoardKeywordByKeywordName" parameterClass="Map" resultClass="BoardKeywordVO">
+		SELECT
+			KEYWORDID,
+			KEYWORDNAME,
+			#v_boardID# as BOARDID,
+			#v_itemID# as ITEMID,
+			TENANT_ID
+		FROM
+			TBL_BOARD_KEYWORD
+		WHERE
+			KEYWORDNAME IN (<iterate property="v_keywords" conjunction=","> #v_keywords[]# </iterate>)
+		AND
+			TENANT_ID = #v_tenantID#
+	</select>
+
+	<select id="EzBoardDAO.selectBoardKeywordByBoardItem" parameterClass="Map" resultClass="BoardKeywordVO">
+		SELECT
+			K.*
+		FROM
+			TBL_BOARD_KEYWORD K
+		INNER JOIN
+			TBL_BOARD_BOARDITEM_KEYWORD BK
+		ON
+			K.KEYWORDID = BK.KEYWORDID
+		AND
+			K.TENANT_ID = BK.TENANT_ID
+		WHERE
+		1 = 1
+		<isNotEmpty property="v_itemID">
+			AND
+				BK.ITEMID = #v_itemID#
+		</isNotEmpty>
+		<isNotEmpty property="v_boardID">
+			AND
+				BK.BOARDID = #v_boardID#
+		</isNotEmpty>
+		AND
+			K.TENANT_ID = #v_tenantID#
+		ORDER BY
+			SN
+	</select>
 </sqlMap>

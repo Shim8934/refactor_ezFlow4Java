@@ -114,7 +114,10 @@
 				var delReplyLevel = "";
 				var parentReplyID = "";
 				var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
-
+				
+				var useKeyword = "<c:out value='${boardInfo.useKeyword}'/>"; // 키워드 기능 사용 여부 (Y/N)
+                var keywordArr = []; // 키워드 배열
+                
 				/* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
 				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
 				
@@ -584,6 +587,8 @@
 		            params[2] = document.getElementById("title").textContent;
 		            params[3] = document.getElementById("Div2").textContent;
 		            params[5] = isAllGroupBoard;
+		            params[6] = useKeyword;
+		            params[7] = getKeywordListByView();
 	                photoalbumedit_dialogArguments[0] = params;
 	                photoalbumedit_dialogArguments[1] = btn_albumEdit_Complete;
 	                DivPopUpShow(400, 200, "/ezBoard/movieAlbumEdit.do");          
@@ -976,6 +981,21 @@
 		              <th style="width:10%"><spring:message code='ezBoard.t224'/></th>
 		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_WriteDate">${boardItem.writeDate} </td>
 		            </tr>
+		            <%-- 키워드 --%>           
+                    <c:if test='${boardInfo.useKeyword eq "Y"}'>
+                         <tr>
+                             <th><spring:message code="ezApprovalG.t1200" /></th>
+                             <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+                                <div style="WIDTH: 100%; vertical-align: middle">
+                                    <c:if test='${not empty keywordList}'>
+                                        <c:forEach var="keyword" items="${keywordList}">
+                                            <span class="keywordSpan" id="${keyword.keywordName}" onclick="onclickKeyword(event)">#${keyword.keywordName}</span>
+                                        </c:forEach>
+                                    </c:if>
+                                </div>
+                             </td>
+                         </tr>
+                     </c:if>
 		            <tr>
 		              <th><spring:message code='ezBoard.t291'/></th>
 		              <td id="cTitle" colspan="3">

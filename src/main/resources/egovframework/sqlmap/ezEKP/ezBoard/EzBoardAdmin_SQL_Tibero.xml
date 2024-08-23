@@ -2446,7 +2446,8 @@
 					MAILFG_POST = #v_MAILFG_POST#,
 		          	MAILFG_MOD = #v_MAILFG_MOD#,
 		          	MAILFG_COMMENT = #v_MAILFG_COMMENT#,
-		          	REACTFLAG = #v_REACTFLAG#
+		          	REACTFLAG = #v_REACTFLAG#,
+	      			USEKEYWORD = #v_USEKEYWORD#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  

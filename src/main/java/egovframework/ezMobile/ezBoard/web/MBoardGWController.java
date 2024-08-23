@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -373,7 +375,12 @@ public class MBoardGWController {
 			
 			// 20180824 조진호 - 모바일 viewerflag 값 추가
         	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
-        	
+			
+			List<String> keywords = new ArrayList<>();
+			if (boardInfo.getUseKeyword()!= null && boardInfo.getUseKeyword().equals("Y")) {
+				List<BoardKeywordVO> keywordsObj = ezBoardService.selectBoardKeywordByBoardItem(contentId, boardId, info.getTenantId());
+				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
+			}
         	logger.debug("realPath = " + realPath + " | domain = " + domain + " | scheme = " + scheme + " | useMobileViewer = " + useMobileViewer);
         	
         	data.put("useMobileViewer", useMobileViewer);
@@ -382,6 +389,7 @@ public class MBoardGWController {
 			data.put("boardInfo", boardInfo);
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
 			data.put("commentCount", commentCount);
+			data.put("keywords", keywords);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -462,6 +470,11 @@ public class MBoardGWController {
 			
 			List<MBoardAttachVO> photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
 			
+			List<String> keywords = new ArrayList<>();
+			if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+				List<BoardKeywordVO> keywordsObj = ezBoardService.selectBoardKeywordByBoardItem(contentId, boardId, info.getTenantId());
+				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
+			}
 			for (MBoardAttachVO photo : photoList) {
 				photo.setFilePath(photo.getFilePath());
 			}
@@ -474,6 +487,7 @@ public class MBoardGWController {
 			data.put("boardInfo", boardInfo);
 			data.put("photoList", photoList);
 			data.put("commentCount", commentCount);
+			data.put("keywords", keywords);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1012,7 +1026,6 @@ public class MBoardGWController {
 	/**
      * 첨부파일을 서버에 저장한다.
      *
-     * @param file
      * @param newName
      * @param stordFilePath
      * @throws Exception
@@ -1287,6 +1300,12 @@ public class MBoardGWController {
 			}
 			
 			List<MBoardAttachVO> movieAttachVO = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
+
+			List<String> keywords = new ArrayList<>();
+			if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+				List<BoardKeywordVO> keywordsObj = ezBoardService.selectBoardKeywordByBoardItem(contentId, boardId, info.getTenantId());
+				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
+			}
 			
 			logger.debug("movieAttachVO : " + movieAttachVO.get(0));
 			
@@ -1296,6 +1315,7 @@ public class MBoardGWController {
 			data.put("boardInfo", boardInfo);
 			data.put("movieAttachVO", movieAttachVO.get(0));
 			data.put("commentCount", commentCount);
+			data.put("keywords", keywords);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

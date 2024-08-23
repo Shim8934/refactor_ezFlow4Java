@@ -389,6 +389,9 @@ public class MBoardServiceImpl implements MBoardService {
 		} else {
 			mBoardInfoVO.setIsAllGroupBoard("N");
 		}
+		if (orgBoardProp.getUseKeyword() != null) {
+			mBoardInfoVO.setUseKeyword(orgBoardProp.getUseKeyword());
+		}
 		
 	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 	    	mBoardInfoVO.setAccess_("1");
@@ -500,6 +503,11 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
 		
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
+		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
 		if (apprFlag != null && apprFlag.equals("Y")) {
@@ -580,6 +588,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("tenantID", tenantID);
+
+
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
@@ -1795,6 +1809,11 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		map.put("v_PADMINTYPE", mBoardInfoVO.getBoardAdmin_FG());
 		
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
+		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
 		if (apprFlag != null && apprFlag.equals("Y")) {
@@ -1825,6 +1844,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
 		map.put("v_PADMINTYPE", mBoardInfoVO.getBoardAdmin_FG());
+
+
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		

@@ -56,6 +56,10 @@ public class BoardVO {
 	private String likeFlag;
 	/** 2023-04-06 기민혁 - 게시판 싫어요 기능 플래그 추가 */
 	private String disLikeFlag;
+	/** 키워드 */
+	private String keyword;
+	/** 키워드 사용여부 */
+	private String useKeyword;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -220,4 +224,16 @@ public class BoardVO {
 		this.disLikeFlag = disLikeFlag;
 	}
 	
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+	public String getUseKeyword() {
+		return useKeyword;
+	}
+	public void setUseKeyword(String useKeyword) {
+		this.useKeyword = useKeyword;
+	}
 }

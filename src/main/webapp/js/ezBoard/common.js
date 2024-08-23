@@ -1158,3 +1158,111 @@ function peoplePickerDisplay(attr, userLang) {
     }
     return rtnString;
 }
+
+// 2024-08-23 전인하 - 게시판 > 게시물 작성 > 키워드 삭제
+function removeKeyword(event) {
+    var keywordObj = event.target.parentElement;
+    keywordObj.remove();
+    keywordArr = [];
+    var keywordObjList = document.querySelectorAll(".keywordSpanView");
+    if (keywordObjList.length > 0) {
+        for (let i = 0 ; i < keywordObjList.length ; i++) {
+            var keyObj = keywordObjList[i];
+            keywordArr.push(keyObj.id);
+        }
+    }
+    
+    if (keywordArr.length < 10) {
+        document.querySelector('#txtKeyword').style.display = '';
+    }
+}
+
+// 2024-08-23 전인하 - 게시판 > 게시물 작성 > 키워드 textInput 키보드 동작
+function keyword_onkeyUp(e) {
+    var keyCode = event.key;
+    var inputDom = event.target;
+    var inputText = inputDom.value;
+    
+    if (!characterCheckForKeyword(inputDom)) {
+        return;
+    }
+    
+    inputText = inputText.trim();
+    if (keyCode == "Enter" || keyCode == " ") {
+        if (inputText == "") {
+            return;
+        }
+                        
+        // 키워드 배열에 추가
+        keywordArr.push(inputText);
+        
+        // 키워드 span 추가
+        var keywordObj = makeKeywordSpanObj(inputText, "edit");
+        inputDom.before(keywordObj);
+        inputDom.value = "";		 
+        
+        // 키워드 10개 넘어가면 입력 불가 처리
+        if (keywordArr.length >= 10) {
+            inputDom.style.display = 'none';
+        }
+    } else if (keyCode == "Delete") {
+        inputDom.value = "";
+    }
+}
+
+// 2024-08-23 전인하 - 게시판 > 게시물 작성 > 키워드 span 삽입
+// key : 키워드 이름 / mode: edit/view (edit는 삭제 버튼 존재)
+function makeKeywordSpanObj(key, mode) {
+   var keyObj = document.createElement("span");
+   keyObj.innerText = "#" + key;
+   keyObj.id = key;
+   keyObj.className = 'keywordSpanView';
+
+   // 키워드 삭제 img 삽입
+   if (mode == "edit") {
+       var deleteX = document.createElement("img");
+       deleteX.src = "/images/icon/oneline_delete.gif";
+       deleteX.className = "keywordDeleteBtn";
+       deleteX.addEventListener('click', removeKeyword);
+       keyObj.appendChild(deleteX);
+   } else if (mode == "view") {
+       keyObj.className = 'keywordSpan';
+       keyObj.addEventListener('click', onclickKeyword);
+   } else if (mode == "print") {
+       // 동작없음
+   }
+   
+   return keyObj;
+} 
+
+// 2024-08-23 전인하 - 게시판 > 포토, 썸네일, 동영상 게시물 작성 > 키워드 리스트 배열로 반환 
+function getKeywordListByView() {
+    var keywordArr = [];
+    var keywordObjList = document.querySelectorAll(".keywordSpan");
+    if (keywordObjList.length > 0) {
+        for (let i = 0 ; i < keywordObjList.length ; i++) {
+            var keyObj = keywordObjList[i];
+            keywordArr.push(keyObj.id);
+        }
+    }
+    return keywordArr;
+}
+
+// 2024-08-26 전인하 - 삽입되면 안되는 특문을 입력제한처리
+function characterCheckForKeyword(obj) {
+    var regExp = /[\\'\"<>#]/gi;
+
+    if (regExp.test(obj.value)) {
+        alert(strLangKeywordJIH01);
+        obj.value = obj.value.replace(regExp, '');
+        return false;
+    }
+    return true;
+}
+
+// 2024-08-27 전인하 - 게시판 > 키워드 클릭 > 키워드 서치 동작
+function onclickKeyword(event) {
+    var key = event.target.id;
+    var url =  "/ezBoard/boardSearchView.do?type=KEYWORDCLICK&data=" + encodeURIComponent(key);
+    GetOpenWindow(url, "_blank", 1000, 550, "yes");
+}

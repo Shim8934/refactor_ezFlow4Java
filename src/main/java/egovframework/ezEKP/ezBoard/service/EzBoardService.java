@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
@@ -300,10 +301,10 @@ public interface EzBoardService {
 	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
 
 	//2018-06-07 김혜정
-	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, String keywordClick) throws Exception;
 
 	//2018-06-08 김혜정
-	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, String keywordClick) throws Exception;
 	
 	//2018-06-11 홍승비
 	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception;
@@ -442,4 +443,10 @@ public interface EzBoardService {
 
 	/* 2023-04-06 기민혁 - 좋아요/싫어요 명단 호출 메서드 */
 	public String boardLikeAndDisLikeList(LoginVO userInfo, String pBoardID, String[] itemIDs) throws Exception;
+ 
+	/* 2024-08-23 전인하 - 게시판 > 게시글 작성 > 키워드 저장 메소드 */
+	public void saveKeyword(List<String> keywords, String boardID, String itemID, int tenantID) throws Exception;
+
+	/* 2024-08-23 전인하 - 게시판 > 게시물ID로 해당 게시물에 속한 키워드 반환 메소드 */
+	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(String itemID, String boardID, int tenantId) throws Exception;
 }

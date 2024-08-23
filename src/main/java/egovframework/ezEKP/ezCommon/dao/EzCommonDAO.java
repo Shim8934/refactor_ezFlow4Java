@@ -2780,4 +2780,28 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardDisLikeFlag");
 		}
 	}
+
+	public void createBoardKeywordTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkBoardKeywordTable");
+		} catch (Exception e) {
+			logger.debug("tbl_board_keyword doesn't exist. creating the table...");
+			update("EzCommonDAO.createBoardKeywordTable");
+		}
+		
+		try {
+			select("EzCommonDAO.checkBoardItemKeywordTable");
+		} catch (Exception e) {
+			logger.debug("tbl_board_boardItem_keyword doesn't exist. creating the table...");
+			update("EzCommonDAO.createBoardItemKeywordTable");
+		}
+		
+		if (dbType.equalsIgnoreCase("oracle") || dbType.equalsIgnoreCase("tibero")) {
+			int cnt = (int) select("EzCommonDAO.checkBoardKeywordSequence");
+			if (cnt < 1) {
+				logger.debug("tbl_board_keyword Sequence doesn't exist. creating the Sequence...");
+				update("EzCommonDAO.createBoardKeywordSequence");
+			}
+		}
+	}
 }

@@ -75,7 +75,8 @@
 				COMPANYID,
 				MAILFG_POST,
 				MAILFG_MOD,
-				MAILFG_COMMENT
+				MAILFG_COMMENT,
+				USEKEYWORD
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  
