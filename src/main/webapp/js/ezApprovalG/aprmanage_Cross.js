@@ -1109,7 +1109,6 @@ function openViewDocInfo(type) {
     var formURL = GetAttribute(tr, "DATA3");
     var DocID = GetAttribute(tr, "DATA1");
     var orgCompanyID = GetAttribute(tr, "orgCompanyID");
-    var formID = GetAttribute(tr, "DATA17");
 
     pArgument[0] = DocID;
     pArgument[1] = formURL;
@@ -1134,7 +1133,6 @@ function openViewDocInfo(type) {
         }
         
         pArgument[7] = pListTypeValue;
-        pArgument[8] = formID;
     }
 
     var openLocation;
@@ -1193,7 +1191,6 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
         openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
         openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
-        openLocation = openLocation + "&formID=" + encodeURI(pArgument[8]);
         if (shareUser = "shareUser") {
         	openLocation += "&pageType=admin";
         }

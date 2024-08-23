@@ -368,8 +368,8 @@
 	                    pparsingXML = "";
 	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
-						pparsingXML = pparsingXML + "<DATA2></DATA2>";
-						pparsingXML = pparsingXML + "<DATA3></DATA3>";
+						pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + "</DATA2>";
+						pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME2")) + "</DATA3>";
 	                    pparsingXML = pparsingXML + "<DATA4>DEPT</DATA4>";
 	                    pparsingXML = pparsingXML + "<DATA5>N</DATA5>";
 	                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
@@ -558,8 +558,41 @@
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
+		        
+				var dataCnt = SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length;
+	            
+	            if (dataCnt == 0) {
+	            	var M_TR = document.createElement("TR");
+	            	var M_TR_TD = document.createElement("TD");
+	            	M_TR_TD.textContent ='<spring:message code="main.t00026" />';
+	            	M_TR_TD.style.textAlign = "center";
+					if (pListType == "IMG") {
+						var MainTable = document.createElement("TABLE");
+	                    MainTable.setAttribute("cellspacing", "0");
+	                    MainTable.setAttribute("cellpadding", "0");
+	                    MainTable.style.border = "0 none";
+	                    MainTable.style.marginLeft = "auto";
+	                    MainTable.style.marginRight = "auto";
+	                    MainTable.style.width = "100%";
+	                    M_TR_TD.style.border = "0px";
+	                    M_TR_TD.style.borderBottom = "1px solid #eaeaea";
+	                    M_TR.appendChild(M_TR_TD);
+	                    MainTable.appendChild(M_TR);
+	                    document.getElementById("DeptUserImgList").appendChild(MainTable);
+	            	} else if (pSeach) {
+		            	M_TR_TD.setAttribute('colspan', '4');
+						M_TR.appendChild(M_TR_TD);
+						document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
+	            	} else {
+		            	M_TR_TD.setAttribute('colspan', '3');
+						M_TR.appendChild(M_TR_TD);
+						document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
+	            	}
+					
+	            	return;
+	            }
 
-	            for (var i = 0; i < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+	            for (var i = 0; i < dataCnt; i++) {
 	                if (pListType == "IMG") {
 	                    var MainTable = document.createElement("TABLE");
 	                    MainTable.setAttribute("class", pListType == "IMG" ? "organwrap" : "organwrap_list");

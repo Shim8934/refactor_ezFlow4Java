@@ -483,6 +483,11 @@ function AprDeptAdd_onclick(Type) {
             var pCurSelRow = listview.GetSelectedRows();
             
             if (pCurSelRow.length != 0) {
+                if (isExistDept(true)) {
+                    var pAlertContent = strLang244 + "</br>" + strLang245;
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
             	/* 2023-03-09 홍승비 - 전자결재G > 결재문서를 수신하지 않는 부서의 소속 사원은 수신자로 지정 불가능하도록 수정 */
             	var userDeptID = pCurSelRow[0].getAttribute("DATA3");
             	
@@ -1710,7 +1715,7 @@ function AprLineAddDeptG_New(outDeptID) {
 		}
 		
 		/* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */ //이건 복붙
-		if (listView.GetDataRows().length > 8) {
+		if (listView.GetDataRows().length > 9) {
 			document.getElementById("inputSummaryOuterReceiverList").focus();
 			document.getElementById("trSummaryOuterReceiverList").style.display = "";
 			document.getElementById("btnaddress").style.display = "none";
@@ -2005,7 +2010,7 @@ function AprDeptDel_onclick() {
     }
 
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (listview.GetDataRows().length < 9) {
+    if (listview.GetDataRows().length < 10) {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";

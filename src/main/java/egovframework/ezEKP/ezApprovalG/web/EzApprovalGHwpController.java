@@ -1563,7 +1563,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String docHref = request.getParameter("docHref");
 		String listSusin = request.getParameter("listSusin");
 		String orgDocID = request.getParameter("orgDocID");
-		String formID = request.getParameter("formID");
+		String formID = "";
 		String sendType = request.getParameter("sendType");
 		String endDir = "";
 		String docTitle = request.getParameter("title");
@@ -1615,11 +1615,14 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 		
 		if (pass.equals("<RESULT>TRUE</RESULT>")) {
+			String strXML = ezApprovalGService.getDocInfo(docID, docAprEnd, "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+			Document xmlDom = commonUtil.convertStringToDocument(strXML);
+			
+			if (xmlDom.getElementsByTagName("FORMID").getLength() > 0) {
+				formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
+			}
+			
            if (docHref.trim().equals("") || docHref.indexOf("/1000/") >= 0) {
-                String strXML = ezApprovalGService.getDocInfo(docID, docAprEnd, "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
-
-        		Document xmlDom = commonUtil.convertStringToDocument(strXML);
-
                 if (xmlDom.getElementsByTagName("HREF").getLength() > 0) {
                 	if (!xmlDom.getElementsByTagName("HREF").item(0).getTextContent().trim().equals("")) {
                 		docHref = xmlDom.getElementsByTagName("HREF").item(0).getTextContent().trim();
@@ -1735,7 +1738,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String susinAdmin = "";
 		String docID = request.getParameter("docID");
 		String docHref = request.getParameter("docHref");
-		String formID = request.getParameter("formID");
+		String formID = "";
 		String opinionFlag = request.getParameter("opinionFlag");
 		String docState = request.getParameter("docState");
 		String listSusin = request.getParameter("listSusin");
@@ -1759,13 +1762,19 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			susinAdmin = "NO";
 		}
 
-		String strXML = ezApprovalGService.getDocInfo(docID, "APR", "HasOpinionYN", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+		String strXML = ezApprovalGService.getDocInfo(docID, "APR", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
 		
 		Document resultXML = commonUtil.convertStringToDocument(strXML);
 		
 		if (resultXML.getElementsByTagName("HASOPINIONYN").getLength() > 0) {
 			if (resultXML.getElementsByTagName("HASOPINIONYN").item(0) != null && !resultXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim().equals("")) {
 				hasOpinionYN = resultXML.getDocumentElement().getTextContent();
+			}
+		}
+
+		if (resultXML.getElementsByTagName("FORMID").getLength() > 0) {
+			if (resultXML.getElementsByTagName("FORMID").item(0) != null && !resultXML.getElementsByTagName("FORMID").item(0).getTextContent().trim().equals("")) {
+				formID = resultXML.getDocumentElement().getTextContent();
 			}
 		}
 		
@@ -1860,8 +1869,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		/* 2024-06-26 조소정 - 웹한글 문서 재사용 시 양식선택창 표출 여부 테넌트 컨피그와 양식 정보 */
 		String formInfoXML = ezApprovalGService.getFormInfoDetail(formID, userInfo.getCompanyID(), userInfo.getTenantId());
         Document formInfo = commonUtil.convertStringToDocument(formInfoXML);
-        String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
-        String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
+		String formUrl = "";
+		String formDocType	= "";
+
+		if (formInfo.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
+			formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+		}
+		
+		if (formInfo.getElementsByTagName("FORMDOCTYPE").getLength() > 0) {
+			formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
+		}
         
         model.addAttribute("formUrl", formUrl);
         model.addAttribute("formDocType", formDocType);
