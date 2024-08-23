@@ -484,7 +484,7 @@
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = add_dept_Complete;
 				    
-				    var OpenWin = window.open(deptInfoURL , "DeptInfo", GetOpenWindowfeature(435, 350));
+				    var OpenWin = window.open(deptInfoURL , "DeptInfo", GetOpenWindowfeature(443, 350));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else{
