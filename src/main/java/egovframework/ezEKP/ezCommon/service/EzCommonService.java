@@ -415,22 +415,27 @@ public interface EzCommonService {
 	public void alterSaveFlagForCbShare() throws Exception;
 	
 	public void alterBoardExtentionAttrByteSize() throws Exception;
+
+	// 2024-08-21 유길상 닷넷 통합알림 컨피그
+	public void insertDotNetTotalNotificationConfig() throws Exception;
+	
+	public void updateInProcessJpCodeName3() throws Exception;
 	
 	public void insertInitMobileTheme() throws Exception;
-
+	
 	public void alterMenuOpenType() throws Exception;
 	
 	public void createSystemConfig() throws Exception;
-
+	
 	public void createConnectionMenu() throws Exception;
-
+	
 	public void insertStandardSystemConfigData() throws Exception;
-
+	
 	public void createEmergencyNotiTable() throws Exception;
 	
 	// 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
 	public void insertMobileToggleMenus() throws Exception;
-
+	
 	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
 	public void alterUseColor() throws Exception;
 	
