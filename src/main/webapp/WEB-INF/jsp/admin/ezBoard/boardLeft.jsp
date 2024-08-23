@@ -458,7 +458,7 @@
 	</head>
 	<body class="newLeft">
 	    <div id="left" class="lnb" style="overflow: auto">
-            <select id="ListCompany" class="companySelect" onchange="changeCompany()">
+            <select id="ListCompany" class="companySelect adminBoardLeft" onchange="changeCompany()">
                 <c:forEach var="item" items="${listCompany}">
                     <option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
                 </c:forEach>
