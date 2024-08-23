@@ -953,20 +953,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardInfo = getBoardInfo(pBoardID, userInfo);
 		
 		// 2023-11-29 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
-		String userLang = userInfo.getLang();		
-		String pBoardName;
+		String userLang = userInfo.getLang();
+		String pBoardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
 
-		if (userLang.equals("1")) {
-			pBoardName = boardInfo.getBoardName();
-		} else if (userLang.equals("2")) {
-			pBoardName = boardInfo.getBoardName2();
-		} else {
-			pBoardName = boardInfo.getBoardName();
-		    if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().equals("")) {
-		    	pBoardName = boardPropertyVO.getBoardName3();
-		    } else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().equals("")) {
-		    	pBoardName = boardInfo.getBoardName4();
-		    }
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+		    pBoardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+		    pBoardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+		    pBoardName = boardInfo.getBoardName4();
 		}
 		
 		if (boardPropertyVO.getAdminType() == null) {
@@ -4280,16 +4275,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		checkForm = ezBoardService.checkForm(boardID, "Y", userInfo.getTenantId());
 		useBackGround = ezBoardService.checkBackGroundImage(boardID, userInfo.getTenantId());
 		
-		if (boardInfo.getBoardName() != null && !boardInfo.getBoardName().equals("")) {
-			boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
-		}
-		
-		if (boardInfo.getBoardName1() != null && !boardInfo.getBoardName1().equals("")) {
-			boardInfo.setBoardName1(commonUtil.cleanValue(boardInfo.getBoardName1()));
-		}
-		
-		if (boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")) {
-			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+		// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();		
+		String boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+			boardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+			boardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+			boardName = boardInfo.getBoardName4();
 		}
 		
 		if (boardListVO.getTitle() != null && !boardListVO.getTitle().equals("")) {
@@ -4366,6 +4361,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
 		model.addAttribute("scheduleId", scheduleId);
+		model.addAttribute("boardName", boardName);
 
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -6216,7 +6212,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
 		if (boardInfo.getListView_FG().equals("true")) {
-			boardName = boardInfo.getBoardName();
+			// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+			String userLang = userInfo.getLang();
+			boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+			if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+				boardName = boardInfo.getBoardName2();
+			} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+				boardName = boardInfo.getBoardName3();
+			} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+				boardName = boardInfo.getBoardName4();
+			}
 			
 			if (request.getParameter("sortBy") != null) {
 				sortBy = request.getParameter("sortBy");
@@ -6295,6 +6301,18 @@ public class EzBoardController extends EgovFileMngUtil{
 			userID = userInfo.getDisplayName2();
 		}
 		
+		// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();		
+		String boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+			boardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+			boardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+			boardName = boardInfo.getBoardName4();
+		}
+
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("boardID", boardID);
@@ -6305,6 +6323,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("boardName", boardName);
 
 		logger.debug("newBoardItemPhoto ended");
 		return "ezBoard/boardNewItemPhoto";
@@ -9557,7 +9576,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
 		if (boardInfo.getListView_FG().equals("true")) {
-			boardName = boardInfo.getBoardName();
+			// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+			String userLang = userInfo.getLang();
+			boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+			if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+				boardName = boardInfo.getBoardName2();
+			} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+				boardName = boardInfo.getBoardName3();
+			} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+				boardName = boardInfo.getBoardName4();
+			}
 			
 			if (request.getParameter("sortBy") != null) {
 				sortBy = request.getParameter("sortBy");
@@ -9634,6 +9663,18 @@ public class EzBoardController extends EgovFileMngUtil{
 			userID = userInfo.getDisplayName2();
 		}
 		
+		// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();		
+		String boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+			boardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+			boardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+			boardName = boardInfo.getBoardName4();
+		}
+
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("boardID", boardID);
@@ -9643,6 +9684,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("strNow", strNow);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("boardName", boardName);
 
 		logger.debug("newBoardItemMovie ended");
 		return "ezBoard/boardNewItemMovie";

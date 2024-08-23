@@ -924,8 +924,8 @@ function CalMonthDataBind(oAppointment) {
                         containment: $("#dayDiv"),
                         revert: "invalid",
                         helper: function (event) {
-                            return $(event.target).clone().css({
-                                width: $(event.target).width()
+                            return $(event.currentTarget).clone().css({
+                                width: $(event.currentTarget).width()
                             });
                         },
                         scroll: false

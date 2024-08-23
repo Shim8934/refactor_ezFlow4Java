@@ -3189,7 +3189,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			String parentBoardId = request.getParameter("parentBoardId");
-			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			String lang = commonUtil.getLangData(info.getLang());
 			
 			List<PortalBoardTreeVO> boardTree = ezNewPortalService.getBoardTree(parentBoardId, companyId, tenantId);
 			
@@ -3198,12 +3198,18 @@ public class EzNewPortalGWController {
 			for (int i = 0; i < boardTreeCount; i++) {
 				PortalBoardTreeVO boardInfo= boardTree.get(i);
 				
+				String boardName;
+
 				if (lang.equals("")) {
-					boardInfo.setText(boardInfo.getBoardName1().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("</", "&lt;/"));
+				    boardName = boardInfo.getBoardName1();
+				} else if (lang.equals("3")) {
+				    boardName = boardInfo.getBoardName3();
 				} else {
-					boardInfo.setText(boardInfo.getBoardName2().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("</", "&lt;/"));
+				    boardName = boardInfo.getBoardName2();
 				}
-				
+
+				boardInfo.setText(boardName.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("</", "&lt;/"));
+
 				if (!boardInfo.getParent().equals("top")) {
 					if (boardInfo.getTopParent().equals("top")) {
 						boardInfo.setParent("#");

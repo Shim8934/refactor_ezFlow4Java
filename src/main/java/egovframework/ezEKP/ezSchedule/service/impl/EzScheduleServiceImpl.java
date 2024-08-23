@@ -1932,7 +1932,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void updateDragSchedule(String scheduleid, String userId, String displayName1, String displayName2, String utcStartTime, String utcEndTime,int tenantId, String companyID, String datetype, String repetition) throws Exception {
+	public void updateDragSchedule(String scheduleid, String userId, String displayName1, String displayName2, String utcStartTime, String utcEndTime,int tenantId, String companyID, String datetype, String repetition, String title) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_SCHEDULEID", scheduleid);
@@ -1943,6 +1943,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_ENDDATE", utcEndTime);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_COMPANYID", companyID);
+		map.put("v_TITLE", title);
 
 		ezScheduleDAO.updateDragSchedule(map);
 		

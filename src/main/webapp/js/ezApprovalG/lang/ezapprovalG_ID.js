@@ -1174,3 +1174,5 @@ var strLangLGEAR04 = "Terjadi kesalahan selama penentuan penerima paket.<br>";
 // 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
 var strLangJSBAP02 = "Apakah Anda ingin melanjutkan pengiriman secara berkelompok? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian, dan dokumen dengan lampiran pemisahan dikecualikan dari target.";
 var strLangJSBAP03 = "Apakah Anda ingin melanjutkan pengiriman secara berkelompok dan persetujuan akhir? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian, dan dokumen dengan lampiran pemisahan dikecualikan dari target.";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."

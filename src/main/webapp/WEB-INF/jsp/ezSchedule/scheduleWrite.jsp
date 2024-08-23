@@ -676,7 +676,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3" id="LabelOwner">
                                                 ${strLabelOwner}
-                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck">상단표시</label>
+                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
                                             </td>
                                         </tr>
                                         </c:if>
@@ -684,7 +684,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3">
                                             	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;">${strOwnerID}</select>
-                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck">상단표시</label>
+                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
                                             </td>
                                         </tr>
 	                                    <tr>

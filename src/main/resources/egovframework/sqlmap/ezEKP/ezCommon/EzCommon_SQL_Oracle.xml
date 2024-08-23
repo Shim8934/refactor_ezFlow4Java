@@ -5182,4 +5182,31 @@
 		MODIFY 
 			($column$ $dataTypeOracle$)
 	</statement>
+	
+	<select id="EzCommonDAO.getDotNetTotalNotificationConfig" parameterClass="map" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = #property#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<insert id="EzCommonDAO.insertDotNetTotalNotificationConfig">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantID#, #property#, 'NO', 'YES:사용함 NO:사용안함 (default: NO)', '닷넷 모듈의 통합알림 사용 여부',  TO_DATE('2019-01-08 00:00:00.000'), '연동')
+	</insert>
+
+	<select id="EzCommonDAO.selectInProcessJpCodeName3" resultClass="String">
+		SELECT CODE1 FROM TBL_CODELIST WHERE NAME = '진행' AND NAME3 != '進行中'
+	</select>
+	
+	<update id="EzCommonDAO.updateInProcessJpCodeName3" parameterClass="Map">
+		UPDATE TBL_CODELIST SET NAME3 = #NAME3# WHERE CODE1 = #CODE1#
+	</update>
+	
 </sqlMap>

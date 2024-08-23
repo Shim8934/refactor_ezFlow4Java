@@ -371,6 +371,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		if (lang.equals("1")) {
 			lang = "";
+		}else {
+			lang = "2";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();

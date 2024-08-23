@@ -4106,4 +4106,21 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterBoardExtentionAttrByteSize() throws Exception {
         ezCommonDAO.alterBoardExtentionAttrByteSize();
     }
+    // 2024-08-21 유길상 닷넷 통합알림 컨피그
+    @Override
+    public void insertDotNetTotalNotificationConfig() throws Exception{
+    	List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+ 		
+ 		for (TenantVO tenantVo : tenantIdList) {
+ 			Map<String, Object> map = new HashMap<String, Object>();
+ 			map.put("tenantID", tenantVo.getTenantId());
+ 			ezCommonDAO.insertDotNetTotalNotificationConfig(map);
+ 		}
+    	
+    }
+    
+    @Override
+    public void updateInProcessJpCodeName3() throws Exception{
+    	ezCommonDAO.updateInProcessJpCodeName3();
+    }
 }
