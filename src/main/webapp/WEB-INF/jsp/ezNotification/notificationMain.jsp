@@ -80,6 +80,13 @@
             </ul>
         </div>
 
+        <div class="noti_paging">
+            <span class="prev" onclick="moveNotiPage('down')"></span>
+            <span class="page_num notiPage">
+                <input type="text" id="notiCurrentPage" autocomplete="off" value="1" onkeypress="return moveInputPage()">&nbsp;/&nbsp;<span  id="notiTotalPage"></span>
+            </span>
+            <span class="next" onclick="moveNotiPage('up')"></span>
+        </div>
         <div id="notiListProgress" style="position: relative; width: 100%; height: 639px; top: -640px; left: 0px; background-color: rgb(210, 210, 210); opacity: 0.4; z-index: 100; display: none;">
                <div style="top: 300px; left: 80px" id="MailProgress"></div>
 		</div>   

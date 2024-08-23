@@ -239,7 +239,7 @@
 					if (userLang == "") {
 						pparsingXML = pparsingXML + MakeXMLString(ACCESSNAME) + "</VALUE>";
 					} else {
-						pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(ACCESSNAME2) + "</VALUE>";
+						pparsingXML = pparsingXML + MakeXMLString(ACCESSNAME2) + "</VALUE>";
 					}
 
 					pparsingXML = pparsingXML + "</CELL>";

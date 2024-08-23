@@ -2469,6 +2469,27 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
     }
+    
+    // 2024-08-21 유길상 닷넷 통합알림 컨피그
+	public void insertDotNetTotalNotificationConfig(Map<String, Object> map) {
+		map.put("property", "dotNetTotalNotification");
+		String allDaySTimeForReminder = (String) select("EzCommonDAO.getDotNetTotalNotificationConfig", map);
+
+		if (allDaySTimeForReminder == null) {
+			logger.debug("dotNetTotalNotification tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertDotNetTotalNotificationConfig", map);
+		}
+	}
+
+	public void updateInProcessJpCodeName3() {
+		List<String> codeList= (List<String>) list("EzCommonDAO.selectInProcessJpCodeName3");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("NAME3","進行中");
+		for (String code : codeList) {
+			map.put("CODE1",code);
+			update("EzCommonDAO.updateInProcessJpCodeName3",map);
+		}
+	}
 	
 	public void insertMobileTheme() throws Exception {
 		if ((int)select("EzCommonDAO.checkMobileTheme") < 1) {
@@ -2493,7 +2514,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("insertMobileFrameComp failed.");
 		}
 	}
-
+	
 	public void insertMobileThemeComp(Map<String, Object> map) throws Exception {
 		if ((int)select("EzCommonDAO.checkMobileThemeInitComp", map) < 1) {
 			logger.debug("insertMobileThemeComp mobile ThemeCompany doesn't exist. insert data...");
@@ -2510,13 +2531,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("resetMobileUser failed.");
 		}
 	}
-
+	
 	public void alterMenuOpenType() throws Exception {
 		try {
 			select("EzCommonDAO.checkMenuOpenType");
 		} catch (Exception e) {
 			logger.debug("In TBL_PORTAL_MENU_COMP doesn't exist openType column. creating the column...");
-
+			
 			update("EzCommonDAO.alterMenuOpenType");
 		}
 	}
@@ -2526,11 +2547,11 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			select("EzCommonDAO.chkTblSystemConfig");
 		} catch (Exception e) {
 			logger.debug("TBL_SYSTEMCONFIG table doesn't exist. creating the table...");
-
+			
 			update("EzCommonDAO.createTblSystemConfig");
 		}		
 	}
-
+	
 	public void createTblSystemConfigType() throws Exception {
 		try {
 			select("EzCommonDAO.chkTblSystemConfigType");
@@ -2539,7 +2560,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblSystemConfigType");
 		}		
 	}
-
+	
 	public void addConnectionIDtoTblPortalPortletComp() throws Exception {
 		try {
 			select("EzCommonDAO.checkConnectionId");
@@ -2548,11 +2569,11 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createConnectionIdOnTblPortalPortletComp");
 		}
 	}
-
+	
 	public String checkConnectionMenu() throws Exception {
 		return (String) select("EzCommonDAO.checkConnectionMenu");
 	}
-
+	
 	public void insertConnectionMenu() throws Exception {
 		try {
 			insert("EzCommonDAO.insertConnectionMenu");
@@ -2560,7 +2581,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.error(e.getMessage(), e);
 		}		
 	}
-
+	
 	public void insertConnectMenuInfo(Map<String, Object> map) throws Exception {
 		try {
 			insert("EzCommonDAO.insertConnectionMenuComp", map);
@@ -2570,7 +2591,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.error(e.getMessage(), e);
 		}
 	}
-
+	
 	public void insertStandardSystemConfigData(Map<String, Object> map) {
 		int totalConfigCnt = (Integer) select("EzCommonDAO.selectSystemConfigTotalCnt", map);
 		if (totalConfigCnt <= 0) {
@@ -2584,7 +2605,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 		
 	}
-
+	
 	public void createTblNotiEmergencyCompany() throws Exception {
 		try {
 			select("EzCommonDAO.chkTblNotiEmergencyCompany");
@@ -2593,7 +2614,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblNotiEmergencyCompany");
 		}	
 	}
-
+	
 	public void createTblNotiEmergencyItem() throws Exception {
 		try {
 			select("EzCommonDAO.chkTblNotiEmergencyItem");
@@ -2602,7 +2623,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblNotiEmergencyItem");
 		}	
 	}
-
+	
 	public void createTblNotiEmergencyPermission() throws Exception {
 		try {
 			select("EzCommonDAO.chkTblNotiEmergencyPermission");
@@ -2611,7 +2632,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblNotiEmergencyPermission");
 		}	
 	}
-
+	
 	public boolean hasMobileMenus() throws Exception {
 		try {
 			
@@ -2628,29 +2649,29 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public int getNewMenuId() throws Exception {
 		return (int) select("EzCommonDAO.getNewMenuId");
 	}
-
+	
 	public void insertMoibileMenus(int menuId) throws Exception {
 		insert("EzCommonDAO.insertMoibileMenus", menuId);
 	}
-
+	
 	public void insertCompanyMobileMenus(Map<String, Object> param) {
 		insert("EzCommonDAO.insertCompanyMobileMenus", param);
 	}
-
+	
 	public void insertCompanyMobileMenuNames(Map<String, Object> param) {
 		insert("EzCommonDAO.insertCompanyMobileMenuNames", param);
 	}
-
+	
 	public void insertMobileMenusAuth(Map<String, Object> param) {
 		insert("EzCommonDAO.insertMobileMenusAuth", param);
 	}
-
+	
 	public void alterUseColor() {
 		try {
 			select("EzCommonDAO.checkUseColor");
 		} catch (Exception e) {
 			logger.debug("In TBL_PORTAL_TOP_USER doesn't exist useColor column. creating the column...");
-
+			
 			update("EzCommonDAO.alterUseColor");
 		}
 	}

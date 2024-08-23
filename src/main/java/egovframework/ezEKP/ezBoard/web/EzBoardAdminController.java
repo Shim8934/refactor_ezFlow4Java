@@ -287,9 +287,11 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		if (lang.equals("2") && !boardPropertyVO.getBoardName2().equals("")) {
 			parentBoardName = boardPropertyVO.getBoardName2();
+		} else if(lang.equals("3")) { // 2024-08-22 유길상 - 관리자 > 게시판 > 게시판등록 > 일본어 추가
+			parentBoardName = boardPropertyVO.getBoardName3();
 		} else {
 			parentBoardName = boardPropertyVO.getBoardName();
-		}
+		}	
 		
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);

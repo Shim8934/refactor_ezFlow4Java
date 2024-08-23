@@ -466,7 +466,7 @@
 				}
 			}
 			
-			if (menuId == 3 && !dataGeneral) {
+			if (menuId == 3 && !(dataGeneral == 'true')) {
 				connectionUrl += ("?cabinetType=" + document.getElementById("portlet" + portletId).querySelector("#cabinetType" + portletId).value);
 			}
 			
@@ -520,7 +520,6 @@
 					var portletCnt = result.length;
 					// 2020-12-07 박기범 - portletCode 조회 추가 
 					var portletCode ="";
-					
 					for (var i = 0; i < portletCnt; i++) {
 						portletId = result[i].portletId;
 						defaultOrder = result[i].defaultOrder;
