@@ -466,7 +466,7 @@
 				}
 			}
 			
-			if (menuId == 3 && !dataGeneral) {
+			if (menuId == 3 && !(dataGeneral == 'true')) {
 				connectionUrl += ("?cabinetType=" + document.getElementById("portlet" + portletId).querySelector("#cabinetType" + portletId).value);
 			}
 			
