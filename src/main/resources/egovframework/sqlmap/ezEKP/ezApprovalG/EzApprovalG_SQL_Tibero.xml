@@ -14985,7 +14985,7 @@
 	   		<isEmpty property="v_CONTID" prepend="AND"> 
 	      		TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#    
 	   		</isEmpty>
-	   		<isEqual property="v_CONTID" compareValue="ADMIN" prepend="AND">
+	   		<isEqual property="v_CONTID" compareValue="ADMIN">
 	   		<![CDATA[
 	      	 AND 
 	      	 	CONTAINERID IS NOT NULL
@@ -20836,6 +20836,7 @@
 			                <isEqual property="orderField" compareValue="TRANSFERFLAG">TRANSFERFLAG</isEqual>
 			                <isEqual property="orderField" compareValue="DELAYFLAG">DELAYFLAG</isEqual>
 			                <isEqual property="orderField" compareValue="DELAYENDYFLAG">DELAYENDYFLAG</isEqual>
+			                <isEqual property="orderField" compareValue="TERMINATEFLAG">TERMINATEFLAG</isEqual>
 			                <isEqual property="orderSort" compareValue="DESC">DESC</isEqual>
 			                <isNotEqual property="orderSort" compareValue="DESC">ASC</isNotEqual>
 			            </isNotEmpty>

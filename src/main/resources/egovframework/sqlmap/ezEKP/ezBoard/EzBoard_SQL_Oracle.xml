@@ -4602,7 +4602,7 @@
 			<isNotEqual property="lang" compareValue="2">
 				A.USERNAME,
 			</isNotEqual>
-				A.USERID, A.CONTENT, WRITEDATE, DEPTID
+				A.USERID, A.CONTENT, A.WRITEDATE, DEPTID
 			ORDER BY
 				writedate ASC
 		</isNotEqual>

@@ -2040,14 +2040,21 @@
 	</select>
 
 	<select id="ezAttitudeAdminDAO.getAnnualCnt" parameterClass="Map" resultClass="AttitudeAnnualVO">
-		<![CDATA[
 			SELECT 
 					A.CN AS userId,
-			    	CASE #primary# WHEN '2' THEN A.DISPLAYNAME2 ELSE A.DISPLAYNAME END AS userName,
-					CASE #primary# WHEN '2' THEN A.TITLE2 ELSE A.TITLE END AS userTitle,
-					CASE #primary# WHEN '2' THEN A.DESCRIPTION2 ELSE A.DESCRIPTION END AS userDeptName,
+		    	<isEqual property="primary" compareValue="2">
+					A.DISPLAYNAME2 AS userName,
+					A.TITLE2 AS userTitle,
+					A.DESCRIPTION2 AS userDeptName,
+				</isEqual>
+				<isNotEqual property="primary" compareValue="2">
+					A.DISPLAYNAME AS userName,
+					A.TITLE AS userTitle,
+					A.DESCRIPTION AS userDeptName,
+				</isNotEqual>
 			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
 			    	(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)) AS totalAnnualCnt,
+ 		<![CDATA[
 					NVL((SUM(
 				       TRUNC(
 				        TO_DATE( 

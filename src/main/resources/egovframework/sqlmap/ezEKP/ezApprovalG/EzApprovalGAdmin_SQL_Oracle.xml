@@ -5075,7 +5075,7 @@
 				<isEqual property="v_ORDERCOL" compareValue="filename">FILENAME</isEqual>
 				<isEqual property="v_ORDERCOL" compareValue="foldername">FOLDERNAME</isEqual>
 				<isEqual property="v_ORDERCOL" compareValue="sendstate">SENDSTATE</isEqual>
-				<isEqual property="v_ORDERCOL" compareValue="filestae">FILESTATE</isEqual>
+				<isEqual property="v_ORDERCOL" compareValue="filestate">FILESTATE</isEqual>
 				<isEqual property="v_ORDERSORT" compareValue="desc">
 					DESC
 				</isEqual>
@@ -5102,7 +5102,7 @@
 				<isEqual property="v_ORDERCOL" compareValue="filename">FILENAME</isEqual>
 				<isEqual property="v_ORDERCOL" compareValue="foldername">FOLDERNAME</isEqual>
 				<isEqual property="v_ORDERCOL" compareValue="sendstate">SENDSTATE</isEqual>
-				<isEqual property="v_ORDERCOL" compareValue="filestae">FILESTATE</isEqual>
+				<isEqual property="v_ORDERCOL" compareValue="filestate">FILESTATE</isEqual>
 				<isEqual property="v_ORDERSORT" compareValue="asc">
 					DESC
 				</isEqual>
@@ -5418,7 +5418,7 @@
 				<isEqual property="v_ORDERCOL" compareValue="filename">FILENAME</isEqual>
 				<isEqual property="v_ORDERCOL" compareValue="foldername">FOLDERNAME</isEqual>
 				<isEqual property="v_ORDERCOL" compareValue="sendstate">SENDSTATE</isEqual>
-				<isEqual property="v_ORDERCOL" compareValue="filestae">FILESTATE</isEqual>
+				<isEqual property="v_ORDERCOL" compareValue="filestate">FILESTATE</isEqual>
 				<isEqual property="v_ORDERSORT" compareValue="desc">
 					DESC
 				</isEqual>
@@ -5442,7 +5442,7 @@
 			<isEqual property="v_ORDERCOL" compareValue="filename">FILENAME</isEqual>
 			<isEqual property="v_ORDERCOL" compareValue="foldername">FOLDERNAME</isEqual>
 			<isEqual property="v_ORDERCOL" compareValue="sendstate">SENDSTATE</isEqual>
-			<isEqual property="v_ORDERCOL" compareValue="filestae">FILESTATE</isEqual>
+			<isEqual property="v_ORDERCOL" compareValue="filestate">FILESTATE</isEqual>
 			<isEqual property="v_ORDERSORT" compareValue="asc">
 				DESC
 			</isEqual>
@@ -5673,7 +5673,6 @@
 									<![CDATA[ITEMCODE = #v_ITEMCODE#]]>
 								</isNotEmpty>
 								<isNotEmpty property="v_APPROVUSER" prepend="AND">
-								AND 
 									TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%' || #v_APPROVUSER# || '%'
 							    GROUP BY 
 							      	TBL_ENDAPRDOCINFO.DOCID,
@@ -5706,7 +5705,8 @@
 									TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,
 									TBL_ENDAPRDOCINFO.COMPANYID,
 									TBL_DEPTMASTER.EXTENSIONATTRIBUTE3,
-									TBL_DEPTMASTER.COMPNM2
+									TBL_DEPTMASTER.COMPNM2,
+									TBL_EXPENDAPRDOCINFO.DELFLAG
 							   	</isNotEmpty>
 							   	<!-- 2024-03-20 기준, 해당 쿼리의 호출 시 orderCell과 orderOption은 반드시 공백으로 고정되어 전달되므로 분기처리 제거 -->
 						   		ORDER BY 
