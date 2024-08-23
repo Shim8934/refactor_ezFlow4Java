@@ -1533,9 +1533,8 @@
 		}
  		
  		var showProgress = function(position) {
- 			
  			if (position == "notice") {
- 				document.getElementById("progressPanel").style.height = "60px"; 
+				document.getElementById("progressPanel").style.height = "100%";
  				parent.document.getElementById("popupArea").style.display = "block";
  			} else {
  				document.getElementById("progressPanel").style.height = "100%";
