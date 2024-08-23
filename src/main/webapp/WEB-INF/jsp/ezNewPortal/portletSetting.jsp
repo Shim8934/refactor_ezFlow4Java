@@ -296,7 +296,6 @@
 				}
 			
 				// getUserFrameList();
-// 				getUserPortletList();
 				bodyFrameSetting('on');
 				
 				var saveBtn = document.getElementById('saveBtn');
@@ -579,8 +578,6 @@
 								if (confirm("<spring:message code='ezPortal.saveSettings' />")) {
 									updatePortalSettings();
 									return;
-								} else {
-									return;
 								}
 							}
 							
@@ -596,7 +593,6 @@
 							} else {
 								document.querySelector(".set-frame").style.display = "none";
 								document.querySelector(".set-portlet").style.display = "block";
-								getUserPortletList();
 							}
 						});
 					})(tabs[i]);
@@ -671,6 +667,7 @@
 				document.getElementById('menuSet').getElementsByTagName('li')[beforeDisplayMenu].click();
 				document.getElementById('modeSet').getElementsByTagName('li')[beforeUseColor].click();
 				document.getElementById('t2').click();
+				getUserPortletList();
 	        }
 			
 			function checkChangeSettings() {
