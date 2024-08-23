@@ -6201,7 +6201,7 @@ public class EzEmailUtil {
 				sb.append("</table>");
 				// 본문
 				sb.append("<div class='gw_ical_desc'>");
-					sb.append(descBody);
+					sb.append(descBody.replaceAll("\n", "<br />"));
 				sb.append("</div>");
 			sb.append("</div>"); // gw_ical_contents div END.
 		sb.append("</div>");
