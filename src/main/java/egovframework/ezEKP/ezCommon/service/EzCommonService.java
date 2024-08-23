@@ -415,4 +415,9 @@ public interface EzCommonService {
 	public void alterSaveFlagForCbShare() throws Exception;
 	
 	public void alterBoardExtentionAttrByteSize() throws Exception;
+
+	// 2024-08-21 유길상 닷넷 통합알림 컨피그
+	public void insertDotNetTotalNotificationConfig() throws Exception;
+	
+	public void updateInProcessJpCodeName3() throws Exception;
 }

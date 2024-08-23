@@ -2603,7 +2603,7 @@ div#txtContent table {margin:auto;}
 /*.confirmation {line-height:normal !important;} style 제거 */
 .node_div .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;}
 .admin_left_title { position:relative; height:52px; background:#fff; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';line-height:52px; font-size:20px; font-weight:bold; color:#333; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
-.companySelect {margin-left:10px; height:26px; /* float:right; */ border:1px solid #bbb;}
+.companySelect {margin-left: 20px; margin-top: 15px; height:26px; width: 186px; white-space: nowrap; text-overflow: ellipsis; border:1px solid #bbb;}
 
 /* icon16 */
 .icon16:hover{background-color:#f7fbff !important}
@@ -2706,7 +2706,7 @@ div#txtContent table {margin:auto;}
 /* admin menu */
 .admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:287px; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .admin_menuDL{ margin:0px; padding:0px; height:44px; line-height:42px; background:#edf7ff; border:1px solid #2196f3; box-sizing:border-box;}
-.admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; float:left;}
+.admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .admin_menuDL .admin_menuX{ margin:0px; padding:0px;}
 .admin_menu_content{ margin:0px; padding:15px 10px; box-sizing:border-box; overflow:hidden; border-left:1px solid #cfd0d2; border-right:1px solid #cfd0d2; border-bottom:1px solid #cfd0d2;}
 .adminMenu_icon{ margin:0px 10px 0px 0px; padding:0px; float:left;}

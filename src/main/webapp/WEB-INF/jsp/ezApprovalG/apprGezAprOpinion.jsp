@@ -89,7 +89,7 @@
 	   <!--  popup -->
 	    <div class="popup_noti">
 		    <div class="popup_noti_title" style="height:10px;"><span class="tl"> </span>  <span class="tr"> </span></div>
-	 	<div class="popup_noti_content">
+	 	<div class="popup_noti_content" style="height: 100%;">
 	        <div  style="padding:10px;">
 	          <table>
 	            <tr>

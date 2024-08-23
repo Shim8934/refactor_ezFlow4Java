@@ -652,7 +652,9 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("usePortletSize", usePortletSize);
 				model.addAttribute("companyList", resultBody.get("data"));
 				model.addAttribute("userCompany", resultBody.get("userCompany"));
-				model.addAttribute("lang", resultBody.get("lang"));
+				// 2024-08-22 유길상 - 관리자 > 포탈 > 포틀릿 관리 > 포틀릿 저장 시 포틀릿 명 언어 처리 오류로 수정
+//				model.addAttribute("lang", resultBody.get("lang"));
+				model.addAttribute("lang", userInfo.getLang());
 				model.addAttribute("useJapanese", useJapanese);
 				model.addAttribute("useChinese", useChinese);
 				model.addAttribute("useVietnamese", useVietnamese);
