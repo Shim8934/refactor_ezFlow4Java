@@ -2311,61 +2311,12 @@
 
 		            return false;
 		        }
-				if (txtRegY.value.trim() == "" || txtRegD.value.trim() == "" || txtRegM.value.trim() == "") {
+		        
+		        if (regDate.value.trim() == "" || regTime.value.trim() == "") {
 		            alert("<spring:message code='ezApprovalG.t1045'/>");
-					viewDocInfoAndFocusNode(txtRegY);
-
 		            return false;
-		        } else {
-		        	if (!ValidateYearValue(txtRegY.value)) {
-			            alert("<spring:message code='ezApprovalG.t1046'/>");
-						viewDocInfoAndFocusNode(txtRegY);
-
-			            return false;
-			        }
-			        if (!ValidateNumber(txtRegM.value, 'Y')) {
-			            alert("<spring:message code='ezApprovalG.t1047'/>");
-						viewDocInfoAndFocusNode(txtRegM);
-
-			            return false;
-			        }
-			        if (!ValidateNumber(txtRegD.value, 'Y')) {
-			            alert("<spring:message code='ezApprovalG.t1048'/>");
-						viewDocInfoAndFocusNode(txtRegD);
-
-			            return false;
-			        }
-			        if (!ValidateNumber(txtRegH.value, 'N')) {
-			            alert("<spring:message code='ezApprovalG.t1049'/>");
-						viewDocInfoAndFocusNode(txtRegH);
-
-			            return false;
-			        }
-			        if (!ValidateNumber(txtRegMi.value, 'N')) {
-			            alert("<spring:message code='ezApprovalG.t1050'/>");
-						viewDocInfoAndFocusNode(txtRegMi);
-
-			            return false;
-			        }
-			        if (!ValidateYearValue(txtExeY.value)) {
-			            alert("<spring:message code='ezApprovalG.t1051'/>");
-						viewDocInfoAndFocusNode(txtExeY);
-
-			            return false;
-			        }
-			        if (!ValidateNumber(txtExeM.value, 'Y')) {
-			            alert("<spring:message code='ezApprovalG.t1052'/>");
-						viewDocInfoAndFocusNode(txtExeM);
-
-			            return false;
-			        }
-			        if (!ValidateNumber(txtExeD.value, 'Y')) {
-			            alert("<spring:message code='ezApprovalG.t1053'/>");
-						viewDocInfoAndFocusNode(txtExeD);
-
-			            return false;
-			        }
 		        }
+		             
 				if (txtDrafter.value.trim() == "") {
 		            alert("<spring:message code='ezApprovalG.t1055'/>");
 					viewDocInfoAndFocusNode(txtDrafter);
@@ -4147,16 +4098,7 @@
 								<tr>
 	        						<th><spring:message code='ezApprovalG.t831'/></th><!-- 등록일자 -->
 									<td>
-								        <input type="text" class="text" style="height:24px;padding:0px;margin:0px;" value="${regY}" name="txtRegY" id="txtRegY" maxlength = "4" size="4">
-							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-							            <input type="text" class="text" style="Width:25px;height:24px;padding:0px;margin:0px;" value="${regM}" name="txtRegM"  id="txtRegM" maxlength = "2" size="2">
-							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-							            <input type="text" class="text" style="Width:25px;height:24px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
-							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
-							            <input type="text" class="text" style="height:24px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
-							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t977'/></span>
-							            <input type="text" class="text" style="height:24px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
-							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t1068'/></span>
+								        <input type="date" class="text" name="regDate" id="regDate" /><input type="time" name="regTime" id="regTime" />
 							        </td>
 								</tr>
 								<tr style="display: none;">
@@ -4199,12 +4141,7 @@
 								<tr>
             						<th>문서시행일자</th><!-- 시행일자 -->
   	    							<td>
-										<input type="text" class="text" style="Width:40px;height:24px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength = "4">
-										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-										<input type="text" class="text" style="Width:25px;height:24px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength = "2">
-										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-										<input type="text" class="text" style="Width:25px;height:24px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength = "2">
-										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
+										<input type="date" class="text" name="exeDate" id="exeDate" />
             						</td>
 	        					</tr>
 								<c:if test="${guBun ne '1'}">

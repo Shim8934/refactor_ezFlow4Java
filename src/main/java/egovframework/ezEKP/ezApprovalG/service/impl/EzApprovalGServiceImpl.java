@@ -13442,24 +13442,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return getNDigitNum(strVolNO, 3);
 	}
 	
-	private String formatDateForTrans(String pDate, int iFlag) {
-		logger.debug("formatDateForTrans started");
-
-		String rtnVal="";
-		if(pDate.length()>0){
-			rtnVal=getNDigitNum(pDate.substring(0,4),4) + getNDigitNum(pDate.substring(5,7),2) + getNDigitNum(pDate.substring(8,10), 2);
-			if(iFlag==1){
-				rtnVal += getNDigitNum(pDate,2) + getNDigitNum(pDate, 2);
-			}
-			
-			logger.debug("formatDateForTrans ended");
-			return rtnVal;
-		} else {
-			logger.debug("formatDateForTrans ended");
-			return "";
-		}
-	}
-	
 	private String getAVTypeString(String pCode, String companyID, String LangType, int tenantID) throws Exception {
 		logger.debug("getAVTypeString started");
 
@@ -20077,7 +20059,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String formatDateForView(String pDate, int iFlag) throws Exception{
-		if (pDate.length() > 0) {
+		if (pDate.length() > 0 && !pDate.equals("0000-00-00 00:00:00")) {
 			if (iFlag == 0) {
 				return pDate.substring(0, 16);
 			} else {
@@ -23133,7 +23115,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</BASICINFO>");
 		
 		resultXML.append("<EXTRAINFO>");
-		resultXML.append("<EXECUTEDATE>" + makeListField(docXML.getElementsByTagName("EXECUTEDATE").item(0).getTextContent()) + "</EXECUTEDATE>");
+		resultXML.append("<EXECUTEDATE>" + formatDateForView(makeListField(docXML.getElementsByTagName("EXECUTEDATE").item(0).getTextContent()), 1) + "</EXECUTEDATE>");
 		resultXML.append("<RECEIPTMEMBER><![CDATA[" + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(0).getTextContent()) + "]]></RECEIPTMEMBER>");
 		resultXML.append("<DELIVERYNO><![CDATA[" + makeListField(docXML.getElementsByTagName("DELIVERYNO").item(0).getTextContent()) + "]]></DELIVERYNO>");
 		resultXML.append("<PRODUCEDEPTSN><![CDATA[" + makeListField(docXML.getElementsByTagName("PRODUCEDEPTREGNO").item(0).getTextContent()) + "]]></PRODUCEDEPTSN>");
@@ -23917,7 +23899,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<REGISTERDATERAW>" + formatDateForView(makeListField(docXML.getElementsByTagName("REGISTERDATE").item(0).getTextContent()),0) + "</REGISTERDATERAW>");
 		resultXML.append("<APRMEMBER><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent()) + "]]></APRMEMBER>");
 		resultXML.append("<DRAFTER><![CDATA[" + makeListField(docXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent()) + "]]></DRAFTER>");
-		resultXML.append("<EXECUTEDATE>" + formatDateForTrans(makeListField(docXML.getElementsByTagName("EXECUTEDATE").item(0).getTextContent()),0) + "</EXECUTEDATE>");
+		resultXML.append("<EXECUTEDATE>" + formatDateForView(makeListField(docXML.getElementsByTagName("EXECUTEDATE").item(0).getTextContent()), 1) + "</EXECUTEDATE>");
 		resultXML.append("<RECEIPTMEMBER><![CDATA[" + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(0).getTextContent()) + "]]></RECEIPTMEMBER>");
 		resultXML.append("<ELECTRONICRECFLAG>" + makeListField(docXML.getElementsByTagName("ELECTRONICRECFLAG").item(0).getTextContent()) + "</ELECTRONICRECFLAG>");
 		resultXML.append("<SPECIALRECCODE>" + makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()) + "</SPECIALRECCODE>");
