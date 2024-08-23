@@ -143,6 +143,7 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 .icon_nav_car{background-position:-121px -154px; width:26px; height:21px; background:url(/images/lnb/lnb_car.svg) no-repeat center / 20px 18px;}/* 차량관리 */
 .icon_alarm_46px{position:relative; width:46px; height:46px; padding:0px; background:url(/images/ezNewPortal/icon_alarm_46px.png) no-repeat; cursor:pointer;}
 .icon_alarm_46px > span{position:absolute; right:13px; top:-13px; height:20px; line-height:20px; color:#fff; padding:0px 6px; background-color:#FF8484; border-radius:10px} /* 통합알림 */
+.icon_nav_connection {width: 22px; height: 21px; background: url(../../images/lnb/lnb_connect.svg) no-repeat center / 28px 18px;}
 
 /* 모바일 아이콘*/
 .icon_mail{background:url(/images/mobile/cont/t_mail.svg) no-repeat center; background-size:contain;}
