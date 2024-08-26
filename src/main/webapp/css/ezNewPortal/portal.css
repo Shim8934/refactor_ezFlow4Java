@@ -3,66 +3,66 @@
 /* CSS Document */
 
 /* 노토산스 font */
-@font-face{
-	font-family:'Noto Sans KR';
-	font-style:normal;
-	font-weight:100;
-	src:url(../fonts/NotoSansKr/woff/NotoSansKR-Thin.woff) format('woff'),
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 100;
+	src: url(../fonts/NotoSansKr/woff/NotoSansKR-Thin.woff) format('woff'),
 	  url(../fonts/NotoSansKr/otf/NotoSansKR-Thin.otf) format('opentype');
- }
-  @font-face{
-	font-family:'Noto Sans KR';
-	font-style:normal;
-	font-weight:300;
-	src:url(../fonts/NotoSansKr/woff/NotoSansKR-Light.woff) format('woff'),
+  }
+  @font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 300;
+	src: url(../fonts/NotoSansKr/woff/NotoSansKR-Light.woff) format('woff'),
 	  url(../fonts/NotoSansKr/otf/NotoSansKR-Light.otf) format('opentype');
- }
-  @font-face{
-	 font-family:'Noto Sans KR';
-	 font-style:normal;
-	 font-weight:400;
-	 src:url(../fonts/NotoSansKr/woff/NotoSansKR-Regular.woff) format('woff'),
+  }
+  @font-face {
+	 font-family: 'Noto Sans KR';
+	 font-style: normal;
+	 font-weight: 400;
+	 src: url(../fonts/NotoSansKr/woff/NotoSansKR-Regular.woff) format('woff'),
 	  url(../fonts/NotoSansKr/otf/NotoSansKR-Regular.otf) format('opentype');
-  }
-  @font-face{
-	 font-family:'Noto Sans KR';
-	 font-style:normal;
-	 font-weight:500;
-	 src:url(../fonts/NotoSansKr/woff/NotoSansKR-Medium.woff) format('woff'),
+   }
+  @font-face {
+	 font-family: 'Noto Sans KR';
+	 font-style: normal;
+	 font-weight: 500;
+	 src: url(../fonts/NotoSansKr/woff/NotoSansKR-Medium.woff) format('woff'),
 	  url(../fonts/NotoSansKr/otf/NotoSansKR-Medium.otf) format('opentype');
-  }
-  @font-face{
-	 font-family:'Noto Sans KR';
-	 font-style:normal;
-	 font-weight:700;
-	 src:url(../fonts/NotoSansKr/woff/NotoSansKR-Bold.woff) format('woff'),
+   }
+  @font-face {
+	 font-family: 'Noto Sans KR';
+	 font-style: normal;
+	 font-weight: 700;
+	 src: url(../fonts/NotoSansKr/woff/NotoSansKR-Bold.woff) format('woff'),
 	  url(../fonts/NotoSansKr/otf/NotoSansKR-Bold.otf) format('opentype');
-  }
-  @font-face{
-	 font-family:'Noto Sans KR';
-	 font-style:normal;
-	 font-weight:900;
-	 src:url(../fonts/NotoSansKr/woff/NotoSansKR-Black.woff) format('woff'),
+   }
+  @font-face {
+	 font-family: 'Noto Sans KR';
+	 font-style: normal;
+	 font-weight: 900;
+	 src: url(../fonts/NotoSansKr/woff/NotoSansKR-Black.woff) format('woff'),
 	  url(../fonts/NotoSansKr/otf/NotoSansKR-Black.otf) format('opentype');
-  }
+   }
 
 /* base */
-html{height:100%; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
-body{height:100%; margin:0;}
-input,button{margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1em; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
-select{font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
-textarea{margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1.25em; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
-img{border:0 none; vertical-align:top;}
-hr,caption{display:none;}
-strong{font-weight:bold;}
-em{font-style:normal;}
-a{text-decoration:none; color:#0066cc;}
-a:hover{text-decoration:underline;}
-cite{font-style:normal;}
-address{font-style:normal;}
-article{}
-article:after{clear:both; display:block; content:'';}
-article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,section,summary{
+html { height:100%; font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana'; }
+body { height:100%; margin:0;}
+input,button { margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1em; font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
+select{font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
+textarea { margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1.25em; font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
+img { border:0 none; vertical-align:top; }
+hr,caption { display:none; }
+strong { font-weight:bold; }
+em { font-style:normal; }
+a { text-decoration:none; color:#0066cc; }
+a:hover { text-decoration:underline; }
+cite { font-style:normal; }
+address { font-style:normal; }
+article {  }
+article:after { clear:both; display:block; content:''; }
+article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,section,summary {
     display:block;
 }
 #mainFrame{background-color:white}
