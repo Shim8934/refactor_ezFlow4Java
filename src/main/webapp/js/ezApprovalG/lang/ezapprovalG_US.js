@@ -1174,3 +1174,5 @@ var strLangLGEAR04 = "An error occurred during the batch recipient's pre-decisio
 //2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
 var strLangJSBAP02 = "Would you like to proceed with batch submission? <br>Documents with forwarding status, implementation statements and agreements, and documents with separate attachments are excluded.";
 var strLangJSBAP03 = "Would you like to proceed with batch submission and final approval? <br>Documents with forwarding status, implementation statements and agreements, and documents with separate attachments are excluded.";
+
+var strJangJIH04 = "Please specify a start date faster than the end date."

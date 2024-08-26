@@ -1215,7 +1215,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
-		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("lang", commonUtil.getLangData(userInfo.getLang()));
 		map.put("v_TYPE", type);
 		map.put("v_START", start);
 		map.put("v_END", end);
@@ -1248,7 +1248,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("lang", commonUtil.getLangData(userInfo.getLang()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -1282,7 +1282,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("lang", commonUtil.getLangData(userInfo.getLang()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -1315,7 +1315,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("lang", commonUtil.getLangData(userInfo.getLang()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);

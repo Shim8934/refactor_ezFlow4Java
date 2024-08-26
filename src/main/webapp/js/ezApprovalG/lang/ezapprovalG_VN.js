@@ -1174,3 +1174,5 @@ var strLangLGEAR04 = "Đã phát sinh lỗi trong lúc chuyển giao người ti
 // 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
 var strLangJSBAP02 = "Bạn có muốn tiếp tục nộp đơn hàng loạt không? <br>Các tài liệu có trạng thái gửi, văn bản thực hiện và thỏa thuận, đính kèm riêng biệt sẽ bị loại trừ khỏi đối tượng.";
 var strLangJSBAP03 = "Bạn có muốn tiếp tục nộp đơn hàng loạt và phê duyệt cuối cùng không? <br>Các tài liệu có trạng thái gửi, văn bản thực hiện và thỏa thuận, đính kèm riêng biệt sẽ bị loại trừ khỏi đối tượng.";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."

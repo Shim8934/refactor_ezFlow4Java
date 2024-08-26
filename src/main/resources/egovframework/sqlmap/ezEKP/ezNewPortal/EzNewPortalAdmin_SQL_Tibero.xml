@@ -549,6 +549,11 @@
 					THEN A.Boardname
 					ELSE A.Boardname2
 				END as boardname2,
+				CASE
+					WHEN (A.Boardname3 = '' OR A.Boardname3 IS NULL)
+					THEN A.Boardname
+					ELSE A.Boardname3
+				END as boardname3,
 				A.treevieworder as sort,
 				B.parentboardid as topParent,
 				A.boardcolor,

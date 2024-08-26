@@ -129,7 +129,7 @@ public interface EzScheduleService {
 
 	public void deleteScheduleRepe(String scheduleId, int tenantId) throws Exception;
 
-	public void updateDragSchedule(String scheduleid, String userId, String displayName1, String displayName2, String utcStartTime, String utcEndTime, int tenantId, String companyID, String datetype, String repetition) throws Exception;
+	public void updateDragSchedule(String scheduleid, String userId, String displayName1, String displayName2, String utcStartTime, String utcEndTime, int tenantId, String companyID, String datetype, String repetition, String title) throws Exception;
 
 	public void copySchedule(String dragDay, String startDate, String endDate, String defaultPath, String offSetMin, int tenantId, String companyId, String lang, String offSet, String completeFG) throws Exception;
 
