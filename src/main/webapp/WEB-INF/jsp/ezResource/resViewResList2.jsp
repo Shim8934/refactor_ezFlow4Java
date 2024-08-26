@@ -480,16 +480,32 @@
 	            feature = feature + GetOpenPosition(420, 450);
 	            window.open("/ezCommon/showPersonInfo.do?id=" + userID + "&dept=" + deptID, "", feature);
 	        }
+	    	
+			function btnOccupancy_list() {
+				parent.frames["left"].document.body.style.overflow = "hidden";
+	    		var url = "/ezResource/resourceOccupancy.do";
+	    		DivPopUpShow(800, 540, url);
+	    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);
+			}
+			function resClose_onclick() {
+				DivPopUpHidden();
+				$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow-y:hidden; ovverflow-x: scroll; min-width: 600px; padding-right: 6px;">
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none; overflow-y: hidden;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 		<div id="mainmenu" onload = "makePageSelPage()">
             <ul class="on">
             	<c:if test="${adminFg eq 'Y'}">
             		<li class="important"><span onClick="btnAdd_Click();"><spring:message code="ezResource.t363" /></span></li>	
     				<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
+    				<li id="occupancylist"><span onClick="btnOccupancy_list();"><spring:message code='ezResource.kwc03'/></span></li>
               	</c:if>
               	<!-- <span id = "noResListSpan"> -->
               		<%-- <li style="background:none;float:right;cursor:default;border:0px;color:#393939">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>

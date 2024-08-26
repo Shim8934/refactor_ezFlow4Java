@@ -605,6 +605,17 @@
 
 			return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 		}
+		
+		function btnOccupancy_list() {
+			parent.frames["left"].document.body.style.overflow = "hidden";
+    		var url = "/ezResource/resourceOccupancy.do";
+    		DivPopUpShow(800, 540, url);
+    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);
+		}
+		function resClose_onclick() {
+			DivPopUpHidden();
+			$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+		}
     </script>
 	
 	</head>
@@ -613,7 +624,7 @@
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px;padding-right: 6px; ovverflow-x: scroll; min-width: 950px;" id="BodyTop">
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="${brdNm}"><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none; overflow: hidden;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
@@ -629,6 +640,9 @@
     			</c:if>
     			<c:if test="${approveFlag ne 2 }">
     				<li id="myApprovlist"><span onClick="btnMyApprov_list();"><spring:message code='ezResource.kmsr34'/></span></li>
+    			</c:if>
+    			<c:if test="${adminFg eq 'Y'}" >
+    				<li id="occupancylist"><span onClick="btnOccupancy_list();"><spring:message code='ezResource.kwc03'/></span></li>
     			</c:if>
             </ul>
 		</div>

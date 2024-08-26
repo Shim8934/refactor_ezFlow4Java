@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
+import egovframework.ezEKP.ezResource.vo.ResOccuVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -4394,8 +4395,142 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantId);
 		
-		logger.debug("getAttachList start");
+		logger.debug("getAttachList end");
 		return ezResourceDAO.getAttachList(map);
 		
+	}
+	
+	@Override
+	public List<ResOccuVO> getResOccuList(String companyID, int tenantID, String startTime, String endTime, String offset) throws Exception {
+		logger.debug("getResOccuList started");
+		
+		startTime = startTime.replace(".", "-");
+		endTime = endTime.replace(".", "-");
+		
+		String startDateLimit = startTime + " 00:00:01";
+		String endDateLimit = endTime + " 23:59:59";
+		
+		String startDate = commonUtil.getDateStringInUTC(startDateLimit, offset, true);
+		String endDate = commonUtil.getDateStringInUTC(endDateLimit, offset, true); 
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PSTARTDATE", startDate.replace(".", "-"));
+		map.put("v_PENDDATE", endDate.replace(".", "-"));
+		map.put("v_PCOMPANYID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ResOccuVO> getResOccuList = ezResourceDAO.getResOccuList(map);
+		List<ResOccuVO> getScheduleListRept = ezResourceDAO.getScheduleListRepetiti2(map);
+		List<ResOccuVO> getResRepOccuList = new ArrayList<ResOccuVO>();
+		
+		if (getScheduleListRept.size() > 0) {
+			
+			SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+			for (int i = 0; i < getScheduleListRept.size(); i++) {
+				String reCompanyID = getScheduleListRept.get(i).getCompanyID();
+				int reNum = getScheduleListRept.get(i).getNum();
+				String reOwnerID = getScheduleListRept.get(i).getOwnerId();
+				int count = 0;
+				long timeDiff = 0;
+				
+				// tbl_schedulerepetition에서 정보 가져옴
+				ResGetScheduleRepetitionVO vo = getRepDateTimes(reOwnerID, reCompanyID, reNum, tenantID);
+				if (vo != null) {
+					vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
+					vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
+					
+					// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
+					ResScheduleRepetitionVO rvo = resStruct(vo);
+					
+					// 반복예약의 반복되는 날짜리스트 뽑아옴
+					List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, startTime, endTime, offset);
+					
+					// 반복예약 중에 삭제된 예약 가져옴
+					List<String> deletedDateStrList = getDeletedRepScheduleDate(reNum, reCompanyID, reOwnerID, tenantID);
+					logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+					
+					for (int j = 0; j < deletedDateStrList.size(); j++) {
+						deletedDateStrList.set(j, (commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false)).substring(0,10));
+					}
+					
+					for (Date[] dateArr : returnRepDateTimes) {
+						// 삭제된 예약이면 넘어감
+						if (deletedDateStrList.contains(format2.format(dateArr[0]))) {		// 날짜만 비교하도록 수정
+							continue;
+						}
+						
+						count++;
+						timeDiff = timeDiff + ((dateArr[1].getTime() - dateArr[0].getTime()) / 60000);
+					}
+				}
+				
+				if (count != 0) {
+					ResOccuVO temp = new ResOccuVO();
+					
+					temp.setOwnerId(getScheduleListRept.get(i).getOwnerId());
+					temp.setBrdNm(getScheduleListRept.get(i).getBrdNm());
+					temp.setCompanyID(getScheduleListRept.get(i).getCompanyID());
+					temp.setCount(count);
+					temp.setUsageTime(timeDiff);
+					getResRepOccuList.add(temp);
+				}
+			}
+		}
+		
+		int size = getResRepOccuList.size();
+		boolean addResRepOccuList = false;
+		if (size > 0) {
+			for (int i = 0; i < size; i++) {
+				boolean isExist = false;
+				if (getResOccuList.size() > 0) {
+					for (int j = 0; j < getResOccuList.size(); j++) {
+						if (getResRepOccuList.get(i).getOwnerId().equals(getResOccuList.get(j).getOwnerId())) {
+							int count = getResOccuList.get(j).getCount() + getResRepOccuList.get(i).getCount();
+							long usageTime = getResOccuList.get(j).getUsageTime() + getResRepOccuList.get(i).getUsageTime();
+							getResOccuList.get(j).setCount(count);
+							getResOccuList.get(j).setUsageTime(usageTime);
+							isExist = true;
+							addResRepOccuList = true;
+							break;
+						} else if (!isExist && j == (getResOccuList.size() - 1)) {
+							ResOccuVO temp2 = new ResOccuVO();
+							temp2.setOwnerId(getResRepOccuList.get(i).getOwnerId());
+							temp2.setBrdNm(getResRepOccuList.get(i).getBrdNm());
+							temp2.setCompanyID(getResRepOccuList.get(i).getCompanyID());
+							temp2.setCount(getResRepOccuList.get(i).getCount());
+							temp2.setUsageTime(getResRepOccuList.get(i).getUsageTime());
+							getResOccuList.add(temp2);
+							addResRepOccuList = true;
+							break;
+						}
+					}
+				} else {
+					ResOccuVO temp2 = new ResOccuVO();
+					temp2.setOwnerId(getResRepOccuList.get(i).getOwnerId());
+					temp2.setBrdNm(getResRepOccuList.get(i).getBrdNm());
+					temp2.setCompanyID(getResRepOccuList.get(i).getCompanyID());
+					temp2.setCount(getResRepOccuList.get(i).getCount());
+					temp2.setUsageTime(getResRepOccuList.get(i).getUsageTime());
+					getResOccuList.add(temp2);
+					addResRepOccuList = true;
+				}
+			}
+		}
+		
+		if (addResRepOccuList && getResOccuList.size() > 0) {
+			Collections.sort(getResOccuList, new Comparator<ResOccuVO>() {
+			    public int compare(ResOccuVO v1, ResOccuVO v2) {
+			    	if (Integer.parseInt(v1.getOwnerId()) > Integer.parseInt(v2.getOwnerId())) {
+			    		return 1;
+			    	} else if (Integer.parseInt(v1.getOwnerId()) < Integer.parseInt(v2.getOwnerId())) {
+			    		return -1;
+			    	} 
+			    	return 0;
+			    }
+			});
+		}
+		
+		logger.debug("getResOccuList end");
+		return getResOccuList;
 	}
 }
