@@ -480,7 +480,9 @@ function ListView() {
         // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
         // 부서공유함 (g_sFlag) == 'docShare' 조건 추가
         // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
-        if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined")  || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
+        if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") 
+            || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")
+            || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
         	if (showOpinionImg) {
                 var objTd = document.createElement("TH");
                 objTd.id = _thisID + "_TH_OP";
@@ -786,7 +788,9 @@ function ListView() {
                 // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
                 // 부서공유함 (g_sFlag) == 'docShare' 조건 추가
                 // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
-                if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
+                if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") 
+                    || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")
+                    || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
                 	if (showOpinionImg) {
                 		if (strData == "HASOPINIONYN" && strValue == "Y") {
                 			hasOpinionFlag = true;
@@ -827,7 +831,9 @@ function ListView() {
             // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
             // 부서공유함 (g_sFlag) == 'docShare' 조건 추가
             // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
-            if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
+            if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") 
+                || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")
+                || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
             	if (showOpinionImg) {
                     var objTd = document.createElement("TD");
                     objTd.className = "OpIcon"
@@ -839,7 +845,7 @@ function ListView() {
                         oI.className = "fa fa-comments-o";
                         oI.style.fontSize = "17px";
                         /* 2023-06-26 민지수 - 완료문서 추가의견 존재 여부로 아이콘 파란색 style 부여 */
-                        if (oDatas.length > 17 && oDatas[17].tagName == "ADDOPINION" && oDatas[17].textContent == "TRUE") { //기록물등록대장
+                        if (oDatas.length > 18 && oDatas[18].tagName == "ADDOPINION" && oDatas[18].textContent == "TRUE") { //기록물등록대장
                             oI.style.color = "blue";
                         } else if (oDatas.length > 14 && oDatas[14].tagName == "ADDOPINION" && oDatas[14].textContent == "TRUE") { // 완료문서
                             oI.style.color = "blue";
