@@ -11,7 +11,8 @@ public class ConnectPortletDTO {
 	private int currentPage;
 	private int listCnt;
 	private int tenantId;
-	
+	private String companyId;
+	private int portletId;
 	private HttpServletRequest request;
 	
 	public ConnectPortletDTO() {}
@@ -65,11 +66,29 @@ public class ConnectPortletDTO {
 	public int getEndRow() {
 		return (this.currentPage * this.listCnt - 1);
 	}
+	
 	public int getTenantId() {
 		return tenantId;
 	}
+	
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
+	public int getPortletId() {
+		return portletId;
+	}
+
+	public void setPortletId(int portletId) {
+		this.portletId = portletId;
 	}
 	
 }

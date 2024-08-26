@@ -893,8 +893,8 @@
 			bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 			
 			if (menuDisplayMode == "1") {
-				// document.querySelector('#mainMenuListLeft').style.backgroundColor = 'rgba(0, 0, 0, 0)';
-				// document.querySelector('#mainMenuListLeft').style.border = "none";
+				document.querySelector('#mainMenuListLeft').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+				document.querySelector('#mainMenuListLeft').style.border = "none";
 				parent.document.getElementById('mainFrame').style.position = 'static';
 				$('#mainMenuListLeft li').addClass("layer");
 			}
@@ -1438,12 +1438,6 @@
 				var topFrame = parent.document.getElementById('topFrame');
 				document.getElementsByTagName("body")[0].style.backgroundColor = "";
 				topFrame.style.position = "";
-				if (menuDisplayMode == "1") {
-					// document.querySelector('#mainMenuListLeft').style.backgroundColor = '#fff';
-					// document.querySelector('#mainMenuListLeft').style.borderRight = '1px solid #ddd';
-					parent.document.getElementById('mainFrame').style.position = 'relative';
-					$('#mainMenuListLeft li').removeClass("layer");
-				}
 			}
 		}
 		
@@ -1456,6 +1450,13 @@
 				var popup = parent.document.getElementById(popupId);
 				
 				popup.parentNode.removeChild(popup);
+			}
+			
+			if (menuDisplayMode == "1") {
+				document.querySelector('#mainMenuListLeft').style.backgroundColor = '#fff';
+				document.querySelector('#mainMenuListLeft').style.borderRight = '1px solid #ddd';
+				parent.document.getElementById('mainFrame').style.position = 'relative';
+				$('#mainMenuListLeft li').removeClass("layer");
 			}
 		}
 		
@@ -1552,6 +1553,13 @@
         	if (area === "notice") {
         		parent.document.getElementById("popupArea").style.display = "none";
         	}
+        	
+        	if (menuDisplayMode == "1") {
+				document.querySelector('#mainMenuListLeft').style.backgroundColor = '#fff';
+				document.querySelector('#mainMenuListLeft').style.borderRight = '1px solid #ddd';
+				parent.document.getElementById('mainFrame').style.position = 'relative';
+				$('#mainMenuListLeft li').removeClass("layer");
+			}
         }
         
         /* 2022-10-14 홍승비 - 상단 메뉴 확장버튼 클릭하여 body 전체에 회색 영역 표출 시, 상단 메뉴가 아닌 회색 영역을 클릭하는 경우 확장메뉴 숨김처리 */

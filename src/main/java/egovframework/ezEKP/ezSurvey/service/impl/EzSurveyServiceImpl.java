@@ -682,7 +682,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			
 			if (mode == "NEW") {
 				String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId;
-		    	String linkUrlMobile = "";
+		    	String linkUrlMobile = "/mobile/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId + "&mode=all";
 		    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "SURVEY", mode, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 			
