@@ -5493,11 +5493,13 @@
 		'{
 		"portletType":"standard",' ||CHR(10)||
 		'"viewType": "list",' ||CHR(10)||
+		'"connectType": "",' ||CHR(10)||
 		'"paging":"",' ||CHR(10)||
 		'"listCnt":"",' ||CHR(10)||
+		'"width":"",' ||CHR(10)||
+		'"height":"",' ||CHR(10)||
 		'"linkUrl": "",' ||CHR(10)||
 		'"mobileLinkUrl": "",' ||CHR(10)||
-		'"connectType": "",' ||CHR(10)||
 		'"restUrl": "",' ||CHR(10)||
 		'"httpMethodType":"",' ||CHR(10)||
 		'"headerParam" : "{    }",' ||CHR(10)||
@@ -5512,7 +5514,9 @@
 				'"writer" : "",' ||CHR(10)||
 				'"date" : "",' ||CHR(10)||
 				'"linkUrl" : "",' ||CHR(10)||
-				'"mobileLinkUrl" : ""' ||CHR(10)||
+				'"mobileLinkUrl" : "",' ||CHR(10)||
+				'"width" : "",' ||CHR(10)||
+				'"height" : ""' ||CHR(10)||
 			'}' ||CHR(10)||
 		'},' ||CHR(10)||
 		'"dbType": "",' ||CHR(10)||

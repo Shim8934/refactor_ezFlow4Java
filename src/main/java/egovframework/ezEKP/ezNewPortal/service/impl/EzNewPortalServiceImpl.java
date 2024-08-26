@@ -3699,8 +3699,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				Map<String, Object> changeDataMap = new HashMap<String, Object>();
 				changeDataMap.put("userId", connectPortletDto.getUserId());
 				changeDataMap.put("deptId", connectPortletDto.getDeptId());
+				changeDataMap.put("companyId", connectPortletDto.getCompanyId());
 				changeDataMap.put("startRow", connectPortletDto.getStartRow());
 				changeDataMap.put("listCnt", connectPortletDto.getListCnt());
+				changeDataMap.put("currentPage", connectPortletDto.getCurrentPage());
+				changeDataMap.put("portletId", connectPortletDto.getPortletId());
 				changeDataMap.put("endRow", connectPortletDto.getEndRow());
 				changeDataMap.put("tenantId", connectPortletDto.getTenantId());
 				String viewType = null;
@@ -3710,6 +3713,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				String connectType = null;
 				String dataResultFormat = null;
 				String paging = null;
+				String width = null;
+				String height = null;
 				JSONObject headerParam = null;
 				if (connectionData.get("viewType") != null) {
 					viewType= connectionData.get("viewType").toString();
@@ -3743,12 +3748,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					}
 				}
 				
+				if (connectionData.get("width") != null) {
+					width = connectionData.get("width").toString();
+				}
+				
+				if (connectionData.get("height") != null) {
+					height = connectionData.get("height").toString();
+				}
+				
 				data.put("viewType", viewType);
 				data.put("linkUrl", linkUrl);
 				data.put("mobileLinkUrl", mobileLinkUrl);
 				data.put("dataResultType", dataResultType);
 				data.put("dataResultFormat", dataResultFormat);
 				data.put("paging", paging);
+				data.put("width", width);
+				data.put("height", height);
 				
 				if (connectionData.get("connectType") != null) {
 					connectType = connectionData.get("connectType").toString();

@@ -6272,11 +6272,13 @@ public class EzNewPortalGWController {
 		ConnectPortletDTO connectPortletDTO = new ConnectPortletDTO();
 		connectPortletDTO.setUserId(userId);
 		connectPortletDTO.setDeptId(deptId);
+		connectPortletDTO.setCompanyId(companyId);
 		connectPortletDTO.setSystemConfig(systemConfig);
 		connectPortletDTO.setRequest(request);
 		connectPortletDTO.setCurrentPage(currentPage);
 		connectPortletDTO.setListCnt(listCnt);
 		connectPortletDTO.setTenantId(tenantId);
+		connectPortletDTO.setPortletId(portletId);
 		JSONObject resultData = ezNewPortalService.getConnectPortletData(connectPortletDTO);
 		
 		logger.debug("ezNewPortal G/W getConnectPortlet ended.");
