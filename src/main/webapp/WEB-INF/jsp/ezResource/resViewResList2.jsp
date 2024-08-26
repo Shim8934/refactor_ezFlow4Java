@@ -505,6 +505,8 @@
             	<c:if test="${adminFg eq 'Y'}">
             		<li class="important"><span onClick="btnAdd_Click();"><spring:message code="ezResource.t363" /></span></li>	
     				<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
+              	</c:if>
+              	<c:if test="${adminCKFlag eq 'Y'}">
     				<li id="occupancylist"><span onClick="btnOccupancy_list();"><spring:message code='ezResource.kwc03'/></span></li>
               	</c:if>
               	<!-- <span id = "noResListSpan"> -->

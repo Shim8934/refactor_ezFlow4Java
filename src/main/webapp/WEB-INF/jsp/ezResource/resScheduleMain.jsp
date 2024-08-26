@@ -641,7 +641,7 @@
     			<c:if test="${approveFlag ne 2 }">
     				<li id="myApprovlist"><span onClick="btnMyApprov_list();"><spring:message code='ezResource.kmsr34'/></span></li>
     			</c:if>
-    			<c:if test="${adminFg eq 'Y'}" >
+    			<c:if test="${adminCKFlag eq 'Y'}" >
     				<li id="occupancylist"><span onClick="btnOccupancy_list();"><spring:message code='ezResource.kwc03'/></span></li>
     			</c:if>
             </ul>

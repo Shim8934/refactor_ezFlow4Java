@@ -619,6 +619,11 @@ public class EzResourceController extends EgovFileMngUtil {
 		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID()); 
 		logger.debug("adminFg="+adminFg);
 		
+		String adminCKFlag = "";
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k")) {
+			adminCKFlag = "Y";
+		}
+		
 		//brdNm = brdNm.replace("chr(38)", "&");
 		StringBuilder childBrdBld = new StringBuilder();
 		childBrdBld.append(ezResourceService.getItemList(loginCookie,brdID));
@@ -652,6 +657,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("startDay", startDay);
 		model.addAttribute("lang", lang);
 		model.addAttribute("lunarUse", lunarUse);
+		model.addAttribute("adminCKFlag", adminCKFlag);
 		
 		logger.debug("viewResList2 End");
 		return "/ezResource/resViewResList2";
@@ -1287,6 +1293,11 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 		
+		String adminCKFlag = "";
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k")) {
+			adminCKFlag = "Y";
+		}
+		
 		/*if (req.getParameter("cuid") != null) {
 			cUserIDStr = req.getParameter("cuid");
 		}*/
@@ -1333,6 +1344,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("brdExplain", strBrdExplain);
 		model.addAttribute("timeZoneStr", timeZoneStr);
 		model.addAttribute("startDay", startDay);
+		model.addAttribute("adminCKFlag", adminCKFlag);
 		
 		return "/ezResource/resScheduleMain";
 	}
