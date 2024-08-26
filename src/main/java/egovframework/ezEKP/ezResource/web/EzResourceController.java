@@ -1068,6 +1068,8 @@ public class EzResourceController extends EgovFileMngUtil {
 
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
 		
+		String lang = userInfo.getLang();
+		
 		if (attachFileNameMaxLength.equals("")) {
 			attachFileNameMaxLength = "100";
 		}
@@ -1077,9 +1079,17 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("userName", userInfo.getName());
-		model.addAttribute("deptName", userInfo.getDeptName1());
-		model.addAttribute("title", userInfo.getTitle1());
-		model.addAttribute("displayName", userInfo.getDisplayName1());
+		
+		if (lang.equals("1")) {
+			model.addAttribute("displayName", userInfo.getDisplayName1());
+			model.addAttribute("deptName", userInfo.getDeptName1());
+			model.addAttribute("title", userInfo.getTitle1());
+		} else {
+			model.addAttribute("displayName", userInfo.getDisplayName2());
+			model.addAttribute("deptName", userInfo.getDeptName2());
+			model.addAttribute("title", userInfo.getTitle2());
+		}
+		
 		model.addAttribute("ownerCall", userInfo.getPhone());
 		model.addAttribute("makeDate", EgovDateUtil.getTodayTime().substring(0, 10));
 		model.addAttribute("langPrimary", ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId()));
