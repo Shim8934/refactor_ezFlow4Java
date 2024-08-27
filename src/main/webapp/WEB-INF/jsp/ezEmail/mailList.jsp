@@ -1906,7 +1906,7 @@
 	                    </select>
 	                </td>
                   </tr>
-                  <tr>
+                  <tr id="selectViewList">
                     <th><spring:message code="ezEmail.t99000035" /></th>
                     <td>
                     	<select name="select" id="select" onChange="on_changeViewList(this.value)" style="height:20px;width:120px;">       

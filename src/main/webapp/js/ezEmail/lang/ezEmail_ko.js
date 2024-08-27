@@ -352,6 +352,8 @@ var strLangAppr05 = "회사 전체에게 보내는 메일은 관리자의 승인
 var strLangHSG01 = "이메일 주소를 찾지 못해 스팸신고를 할 수 없습니다.";
 var strLangHSG02 = "스팸신고가 정상적으로 처리되지 않았습니다.";
 
+var strLangKDH01 = "수신확인";
+
 // new ui
 const strLangFolderManage = "편지함관리";
 const strLangSubscribe = "구독";

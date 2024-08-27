@@ -346,6 +346,8 @@ var strLangNJK02 = "are included.";
 var strLangHSG01 = "Laporan spam tidak dapat dilakukan karena alamat email tidak ditemukan.";
 var strLangHSG02 = "Laporan spam tidak diproses dengan berhasil.";
 
+var strLangKDH01 = "Baca info";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";

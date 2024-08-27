@@ -345,6 +345,8 @@ var strLangNJK02 = "are included.";
 var strLangHSG01 = "Không thể báo cáo rác vì không tìm thấy địa chỉ email.";
 var strLangHSG02 = "Báo cáo rác không được xử lý thành công.";
 
+var strLangKDH01 = "Đọc thông tin";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";

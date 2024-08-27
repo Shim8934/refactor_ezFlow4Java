@@ -352,6 +352,8 @@ var strLangAppr05 = "Mail to the entire company must be approved by the administ
 var strLangHSG01 = "Spam report cannot be made as email address is not found.";
 var strLangHSG02 = "Spam report was not processed successfully.";
 
+var strLangKDH01 = "Read info";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";
