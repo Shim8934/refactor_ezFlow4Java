@@ -3971,5 +3971,17 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 
 .resetBtn {line-height: 0px;}
 
+/* 20240517 메일보기 상단바 디자인수정 */
+.popup #menu ul li span.view_more{ display: inline-block; height: 29px; border-radius: 20px; padding: 0px 6px;}
+.popup #menu ul li span.view_more:hover{background: #F8F9FB;}
+.popup #menu ul li span.view_more.on{ display: inline-block; height: 29px; border-radius: 20px; padding: 0px 6px; background: #F8F9FB;}
+
+.popup #menu ul.layer_select{border: 1px solid #D3D3D3; border-radius: 3px; background: #fff; padding: 5px 0px; z-index: 10; position: relative;}
+.popup #menu ul.layer_select li{float: none; margin: 0px;}
+.popup #menu ul.layer_select li:hover span{background: #F8F9FB; color: #0470E4;}
+.popup #menu ul.layer_select li span{border: none; display: block;}
+.popup #menu ul.layer_select{margin-left: -33px; top: 6px;}
+
+
 .IDcontainer > input[type="checkbox"]{display:none;}
 .IDcontainer .list_text{padding-left:25px}
