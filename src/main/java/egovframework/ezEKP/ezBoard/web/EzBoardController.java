@@ -8345,7 +8345,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 
 		if (notiRecipientList != null && notiRecipientList.size() > 0) {
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "board", "reply", notiContent, "popup", "800", "1000", linkUrl, linkUrlMobile, "");
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "board", "reply", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
 			logger.debug("board " +  "reply" + "noti status : " + notiStatus);
         }
 

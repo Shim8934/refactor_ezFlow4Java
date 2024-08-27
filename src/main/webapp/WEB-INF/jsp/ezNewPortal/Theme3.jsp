@@ -65,7 +65,7 @@
 					</div>
 
 					<div class="portal_setting" onclick="viewPortletEnv()"><spring:message code = 'ezNewPortal.HSBPT01' /></div>
-					<div class="config_setting" onclick="infoSetClick()">환경설정</div>
+					<div class="config_setting" onclick="infoSetClick()"><spring:message code = 'ezNewPortal.t006' /></div>
 
 					<div class="news_setting" style="display:none;">
 						<input type="checkbox" id="portal_set" onchange="displayFixPortlet()">
@@ -79,7 +79,7 @@
                         <span class="board" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezBoard.t480' /></span><em id="newBoardCnt"></em></span>
 					</li>
 					<li>
-						<h3>새 게시글</h3>
+						<h3><spring:message code = 'ezPortal.newPost' /></h3>
 						<div class="noti" id="noti"></div>
 					</li>
 				</ul>
