@@ -3757,3 +3757,5 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .searchForm .text{border-right:0 !important;}
 
 .resetBtn {line-height: 0px;}
+
+.textUser{width: 22%}
