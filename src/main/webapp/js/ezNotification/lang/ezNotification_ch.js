@@ -51,6 +51,7 @@ var subType = {
 		cancel : "取消批准",
 		reject : "批准被拒绝"
 	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "创建审批",

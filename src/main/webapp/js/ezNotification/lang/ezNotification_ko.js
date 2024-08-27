@@ -50,6 +50,7 @@ var subType = {
 		cancel : "승인취소",
 		reject : "승인거부"
 	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "생성승인",

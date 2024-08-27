@@ -50,6 +50,7 @@ var subType = {
 		cancel : "Hủy phê duyệt",
 		reject : "Phê duyệt bị từ chối"
 	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "Phê duyệt sáng tạo",

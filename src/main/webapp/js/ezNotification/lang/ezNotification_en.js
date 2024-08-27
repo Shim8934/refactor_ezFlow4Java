@@ -50,6 +50,7 @@ var subType = {
 		cancel : "Cancel approval",
 		reject : "Approval denied"
 	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "Creation approval",
