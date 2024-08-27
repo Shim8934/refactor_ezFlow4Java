@@ -2697,7 +2697,9 @@
 			AND
 				A.TENANT_ID = #tenantID#
 			AND
-				REFLAG = '1'				
+				REFLAG = '1'
+			AND
+				A.APPROVEFLAG = '1'				
 			AND
 				( to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME )
 			ORDER BY

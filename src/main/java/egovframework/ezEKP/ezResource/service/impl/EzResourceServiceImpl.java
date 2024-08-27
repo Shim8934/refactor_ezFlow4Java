@@ -4407,7 +4407,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		startTime = startTime.replace(".", "-");
 		endTime = endTime.replace(".", "-");
 		
-		String startDateLimit = startTime + " 00:00:01";
+		String startDateLimit = startTime + " 00:00:00";
 		String endDateLimit = endTime + " 23:59:59";
 		
 		String startDate = commonUtil.getDateStringInUTC(startDateLimit, offset, true);
