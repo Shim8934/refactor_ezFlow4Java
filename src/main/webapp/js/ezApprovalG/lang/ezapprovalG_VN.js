@@ -684,7 +684,7 @@ var strLang1027 = "Nhận xét cố định";
 var strLang1028 = "Năm";
 var strLang1029 = "Tháng";
 var strLang1030 = "Ngày";
-var strLang1031 = "Không thể gửi E-mail / phê duyệt-tài liệu lên bảng ảnh hoặc bảng ẩn danh hoặc URL-link-board.";
+var strLang1031 = "Chỉ đăng bài trên các diễn đàn chung và diễn đàn hỏi đáp.";
 var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "Người dùng được chọn không có office.</br> Bạn có muốn thêm nó không?";
 
@@ -1164,3 +1164,15 @@ var strLang975 = "The form version is different and cannot be reused.";
 var strLangJIH01 = "You cannot preview a security document.";
 var strLangJIH02 = "/blank_vi.htm"
 var strLangJIH03 = "Preview is possible after the first reading of the document."
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "Đã hoàn thành việc tiếp nhận trọn gói.";
+var strLangLGEAR02 = "Đã phát sinh lỗi trong khi tiếp nhận trọn gói.<br>";
+var strLangLGEAR03 = "Người tiếp nhận trọn gói đã hoàn thành.";
+var strLangLGEAR04 = "Đã phát sinh lỗi trong lúc chuyển giao người tiếp nhận trọn gói.<br>";
+
+// 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "Bạn có muốn tiếp tục nộp đơn hàng loạt không? <br>Các tài liệu có trạng thái gửi, văn bản thực hiện và thỏa thuận, đính kèm riêng biệt sẽ bị loại trừ khỏi đối tượng.";
+var strLangJSBAP03 = "Bạn có muốn tiếp tục nộp đơn hàng loạt và phê duyệt cuối cùng không? <br>Các tài liệu có trạng thái gửi, văn bản thực hiện và thỏa thuận, đính kèm riêng biệt sẽ bị loại trừ khỏi đối tượng.";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."

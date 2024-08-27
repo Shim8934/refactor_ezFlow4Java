@@ -287,9 +287,11 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		if (lang.equals("2") && !boardPropertyVO.getBoardName2().equals("")) {
 			parentBoardName = boardPropertyVO.getBoardName2();
+		} else if(lang.equals("3")) { // 2024-08-22 유길상 - 관리자 > 게시판 > 게시판등록 > 일본어 추가
+			parentBoardName = boardPropertyVO.getBoardName3();
 		} else {
 			parentBoardName = boardPropertyVO.getBoardName();
-		}
+		}	
 		
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
@@ -994,6 +996,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		boardPropertyVO.setTenantID(userInfo.getTenantId());
 		
+		BoardPropertyVO beforeBoardProperty = ezBoardService.getBoardProperty(boardPropertyVO.getBoardID(), userInfo.getTenantId()); // 게시판 이름 변경 전 정보
 		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
 		
 		if (!noticeBoardMod.equals("")) { // 공지사항 게시판 설정이 변경되었다면 추가 동작 진행
@@ -1007,17 +1010,25 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		/* 2020-12-04 박기범 - 탭 게시판 설정 기능 추가*/
 		BoardPropertyVO boardpro = ezBoardService.getBoardProperty(boardPropertyVO.getBoardID(), userInfo.getTenantId());
 		int tabNum = 3; //탭 개수
-		
 		for (int i = 1; i <= tabNum; i++) {
 			String tabBoardMod = request.getParameter("tabBoardMod" + i);
+			String tabBoardCheck = request.getParameter("tabBoardCheck" + i);
+			String tempCompanyId = boardpro.getCompanyID() != null ? boardpro.getCompanyID() : " " ;
+			
 			if (!tabBoardMod.equals("")) {
-				String tempCompanyId = boardpro.getCompanyID() != null ? boardpro.getCompanyID() : " " ;
 				if(tabBoardMod.equals("UPDATE")) {
 					ezBoardAdminService.updateTabBoard(i, boardPropertyVO.getBoardID(), userInfo.getTenantId(), tempCompanyId, boardPropertyVO.getBoardName(), boardPropertyVO.getBoardName2());
 				} else { // DELETE
 					ezBoardAdminService.deleteTabBoard(i, boardpro.getTenantID(), tempCompanyId);
 				}
+			} else {
+				if (tabBoardCheck.equals("true")) { 
+					if (!beforeBoardProperty.getBoardName().equals(boardpro.getBoardName()) || !beforeBoardProperty.getBoardName2().equals(boardpro.getBoardName2())) { // 게시판 이름 수정했을 경우
+						ezBoardAdminService.updateTabBoard(i, boardPropertyVO.getBoardID(), userInfo.getTenantId(), tempCompanyId, boardPropertyVO.getBoardName(), boardPropertyVO.getBoardName2());
+					}
+				}
 			}
+			
 		}
 		
 		logger.debug("saveBoardProperty ended");

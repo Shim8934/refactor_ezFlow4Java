@@ -67,6 +67,8 @@ public interface EzCommonService {
 	public int updateUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
 	
 	public void insertUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
+
+	public void deleteUserConfigInfo(int tenantID, String userID, String propertyName) throws Exception;
 	
 	public void createTblCompanyConfig() throws Exception;
 	
@@ -347,6 +349,8 @@ public interface EzCommonService {
 	public void alterSubPermittedForQuicklinkAcl() throws Exception;
 
 	public void insertApprNonElecRecTypeConfing() throws Exception;
+	
+	public void createTables() throws Exception;
 
     public void insertRecordHeaderClassTitle() throws Exception;
 
@@ -393,4 +397,27 @@ public interface EzCommonService {
 	public void alterCompanyMenuIconUrl() throws Exception;
 
     public void alterTblScheduleForShowtop() throws Exception;
+	
+	public void addUserDeptHideFlag() throws Exception;
+
+	public void insertGongRamListOption() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테이블 추가 */
+	public void createTblScheduleReminderScheduler() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 시간 컬럼 추가 */
+	public void addReminderTimeAtTblScheduleConfig() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테넌트 컨피그 추가 */
+	public void insertReminderTenantConfig() throws Exception;
+
+	// 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+	public void alterSaveFlagForCbShare() throws Exception;
+	
+	public void alterBoardExtentionAttrByteSize() throws Exception;
+
+	// 2024-08-21 유길상 닷넷 통합알림 컨피그
+	public void insertDotNetTotalNotificationConfig() throws Exception;
+	
+	public void updateInProcessJpCodeName3() throws Exception;
 }

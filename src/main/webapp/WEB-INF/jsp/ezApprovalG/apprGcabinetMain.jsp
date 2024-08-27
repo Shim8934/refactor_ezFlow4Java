@@ -378,39 +378,7 @@
 		                    GetDocDeliveryList(g_DeliverySearchParamXml);
 		                }
 		            }
-		            
-		            // 2024-06-03 전인하 - 기록물대장 > 하위부서문서함 선택시 메뉴 숨김 처리
-		            if (g_sFlag == "m01" || g_sFlag == "m05" || g_sFlag == "m06") {
-                        if (underDeptFlag == "TRUE" && GetSelectVal("rec_underDept") != "default") {
-                            document.getElementById("trRecSubMenu").style.display = 'none';
-                            document.getElementById("recordRight").classList.remove('selectUnderDept');
-                        } else {
-                            document.getElementById("trRecSubMenu").style.display = '';
-                            document.getElementById("recordRight").classList.add('selectUnderDept');
-                        }
-		            } else if (g_sFlag == "m02") {
-                        if (underDeptFlag === "TRUE" && GetSelectVal("rec_underDept2") != "default") {
-                            document.getElementById("tdRegCabinet").style.display = 'none';
-                            document.getElementById("tdNewVol").style.display = 'none';
-                            document.getElementById("tdViewCabInfo").style.display = 'none';
-                            document.getElementById("tdViewCabHist").style.display = 'none';
-                            document.getElementById("tdModifyCab").style.display = 'none';
-                            document.getElementById("tdDocListPrint").style.display = 'none';
-                            document.getElementById("tdSetCharger").style.display = 'none';
-                            document.getElementById("tdSearchCab").style.display = 'none';
-                            document.getElementById("tdBtnCabDel").style.display = 'none';
-                        } else {
-                            document.getElementById("tdRegCabinet").style.display = '';
-                            document.getElementById("tdViewCabInfo").style.display = '';
-                            document.getElementById("tdViewCabHist").style.display = '';
-                            document.getElementById("tdModifyCab").style.display = '';
-                            document.getElementById("tdDocListPrint").style.display = '';
-                            document.getElementById("tdSetCharger").style.display = '';
-                            document.getElementById("tdSearchCab").style.display = '';
-                            document.getElementById("tdBtnCabDel").style.display = '';
-                        }
-		            }
-		            
+		            changeMenuBar(g_sFlag, underDeptFlag);
 		            //listLoading(false);	// 20201211 조진호 로딩바 display:none
 		        }
 		
@@ -2163,11 +2131,12 @@
 		            alert("<spring:message code='ezApprovalG.t1160'/>");
 		            return;
 		        }
-		
-		        if (document.getElementById("trRecSubMenu").style.display == "") {
+
+				var tempDeptID = DeptID;
+				// 하위부서 선택시 서브메뉴가 사라지기 때문에 하위부서를 선택했을 경우에도 분기를 탈 수 있도록 조건 추가해줌.
+		        if (document.getElementById("trRecSubMenu").style.display == "" || (underDeptFlag === "TRUE" && document.getElementById("recordRight").style.display == "")) {
 		            var radiosearch = document.getElementById('selectType');
 
-					var tempDeptID = DeptID;
 					if (checkRecordAll()) {
 						tempDeptID = "ALL";
 					}
@@ -2207,7 +2176,7 @@
 		                    GetRecordListXml();
 		            }
 		        }
-		        else if (document.getElementById("trCabSubMenu").style.display == "") {
+		        else if (document.getElementById("trCabSubMenu").style.display == "" || (underDeptFlag === "TRUE" && document.getElementById("rec_underDept2"))) {
 		            var radiosearch = document.getElementById('selectType');
 		            
 		            if (underDeptFlag === "TRUE" && g_sFlag === 'm02' && GetSelectVal("rec_underDept2") != "default" ) {
@@ -2266,7 +2235,8 @@
 		
 		            GetDocDeliveryList(g_DeliverySearchParamXml);
 		        }
-		
+		        
+		        changeMenuBar(g_sFlag, underDeptFlag);
 		
 		        $('#sel_year').val(selectYear);
 		        /* $('#sel_year').selectmenu('refresh'); */
@@ -2517,7 +2487,7 @@
 					parent.left.attachedDocList = attachedDocList;
 				}
 
-				if (useDraftAll) {
+				if (useDraftAll === "YES") {
 					let draftInfo = [
 						{
 							"msg" : "단건기안",
@@ -2571,6 +2541,40 @@
 				parent.left.btnDraftAll_onclick();
 
 				DivPopUpHidden();
+			}
+			
+			function changeMenuBar(g_sFlag, underDeptFlag) {
+                // 2024-06-03 전인하 - 기록물대장 > 하위부서문서함 선택시 메뉴 숨김 처리
+                if (g_sFlag == "m01" || g_sFlag == "m05" || g_sFlag == "m06") {
+                    if (underDeptFlag == "TRUE" && GetSelectVal("rec_underDept") != "default") {
+                        document.getElementById("trRecSubMenu").style.display = 'none';
+                        document.getElementById("recordRight").classList.remove('selectUnderDept');
+                    } else {
+                        document.getElementById("trRecSubMenu").style.display = '';
+                        document.getElementById("recordRight").classList.add('selectUnderDept');
+                    }
+                } else if (g_sFlag == "m02") {
+                    if (underDeptFlag === "TRUE" && GetSelectVal("rec_underDept2") != "default") {
+                        document.getElementById("tdRegCabinet").style.display = 'none';
+                        document.getElementById("tdNewVol").style.display = 'none';
+                        document.getElementById("tdViewCabInfo").style.display = 'none';
+                        document.getElementById("tdViewCabHist").style.display = 'none';
+                        document.getElementById("tdModifyCab").style.display = 'none';
+                        document.getElementById("tdDocListPrint").style.display = 'none';
+                        document.getElementById("tdSetCharger").style.display = 'none';
+                        document.getElementById("tdSearchCab").style.display = 'none';
+                        document.getElementById("tdBtnCabDel").style.display = 'none';
+                    } else {
+                        document.getElementById("tdRegCabinet").style.display = '';
+                        document.getElementById("tdViewCabInfo").style.display = '';
+                        document.getElementById("tdViewCabHist").style.display = '';
+                        document.getElementById("tdModifyCab").style.display = '';
+                        document.getElementById("tdDocListPrint").style.display = '';
+                        document.getElementById("tdSetCharger").style.display = '';
+                        document.getElementById("tdSearchCab").style.display = '';
+                        document.getElementById("tdBtnCabDel").style.display = '';
+                    }
+                }
 			}
 		</script>
 	</head>

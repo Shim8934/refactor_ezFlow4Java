@@ -114,6 +114,7 @@ public class EzCabinetGWController_h {
 		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
 		String searchOpt      = request.getParameter("searchOpt")    != null ? request.getParameter("searchOpt")         : "";
 		String searchValue    = request.getParameter("searchValue")  != null ? request.getParameter("searchValue")       : "";
+		String searchFlag     = request.getParameter("searchFlag")   != null ? request.getParameter("searchFlag")        : ""; // 공유자 검색 Flag
 		
 		JSONObject result = new JSONObject();
 		
@@ -134,11 +135,11 @@ public class EzCabinetGWController_h {
 			switch(searchOpt) {
 				case "displayname": sqlQuery = "display_name"   ; break;
 				case "description": sqlQuery = "department_name"; break;
-				case "cn"         : sqlQuery = "cn"             ; break;
+				case "userId"     : sqlQuery = "cn"             ; break;
 				default: sqlQuery = "display_name";
 			}
 			
-			List<SimpleUserVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId());
+			List<SimpleUserVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId(), searchFlag);
 			
 			result.put("shareList", list);
 			result.put("status", "ok");
@@ -188,7 +189,7 @@ public class EzCabinetGWController_h {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezCabinet/list-type/userid/{userid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezCabinet/list-type/userid/{userid:.+}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -219,7 +220,7 @@ public class EzCabinetGWController_h {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezCabinet/list-type/userid/{userid}/save", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezCabinet/list-type/userid/{userid:.+}/save", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
 		String listType   = request.getParameter("listType") != null ? request.getParameter("listType") : "";

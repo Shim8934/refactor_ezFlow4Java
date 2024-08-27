@@ -1,12 +1,30 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
-import egovframework.ezEKP.ezApprovalG.vo.*;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachOptionVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
-
 import org.json.simple.JSONObject;
+import org.jsoup.nodes.Element;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 
@@ -14,13 +32,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.time.ZonedDateTime;
-import java.util.*;
 import java.util.zip.ZipOutputStream;
+import java.util.Optional;
 
 public interface EzApprovalGService {
 
@@ -865,7 +884,7 @@ public interface EzApprovalGService {
     public String checkSecurityApprovalDate(String docID, String companyID, int tenantID, String linemode) throws Exception;
 
     // 2023-09-25 전인하 - 전자결재G > 배부대장 미리보기 > 진행문서 열람권한 조회
-    public String getAccessYNGforAPR(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
+    public String getAccessYNGforAPR(String docID, String mode, String approvalFlag, LoginVO userInfo) throws Exception;
 
 	/* 2023-03-20 한태훈 - 전자결재 > 기록물등록대장, 완료문서조회 > 다중 선택 문서 통합PC저장 메서드 */
 	public String totalSaveDownloadAll(String[] docIDArr, LoginVO userInfo, String type, String approvalFlag, String accessInfo, String realPath, String opinionTxtFileName, String opinionWriterMark, String opinionContentMark, String attMark) throws Exception;
@@ -917,5 +936,35 @@ public interface EzApprovalGService {
 	public List<ApprGAprLineVO> getGongramAprLineInfo(String docID, String companyID, int tenantId) throws Exception;
 	
 	// 2024-04-23 한태훈 > 결재 알림 발송
-	public String sendNoti(String docID, String senderId, String senderName, String recipientId, String recipientName, String recipientDeptId, String mode, String companyID, String lang, int tenantID) throws Exception; 
+	public String sendNoti(String docID, String senderId, String senderName, String recipientId, String recipientName, String recipientDeptId, String mode, String companyID, String lang, int tenantID) throws Exception;
+
+    // 문서가 parentDocID 의 문서첨부가 맞는지 확인
+    public boolean isAttachDoc(String docID, String parentDocID, String userID, String companyID, int tenantID) throws Exception;
+
+    /* 2024-06-11 조소정 - 공람할문서 또는 공람완료문서 재사용 시 원문서 ID 가져오기 */
+	public String getOrgDocIDfromGongram(String beforeDocID, String companyID, int tenantId) throws Exception;
+
+	/* 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 공람회수  */
+	public String gongRamCancel(String docID, int count, int aprMemberSN, String companyID, int tenantId) throws Exception;
+    
+    // 2024-04-24 조수빈 - hwp 문서 접수 처리 
+    public String receiptAll_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN, Document strXML, String orgDocID, String loginCookie) throws Exception;
+
+    // 2024-04-24 조수빈 - mht 문서 접수 처리 
+    public String receiptAll_MHT(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN, Document strXML, String orgDocID, String loginCookie) throws Exception;
+    
+    // 2024-04-24 조수빈 - hwp 서명란 세는 메소드
+    public int getHwpSignCount(String href, String key, HttpServletRequest request, LoginVO userInfo) throws Exception;
+
+    // 2024-04-24 조수빈 - 일괄 수신 처리 중 에러 발생할 경우 수신 상태를 원래대로 돌려놓는 메소드
+	public void resetSusinDoc(String orgDocID, String docID, String deptID, String userID, String companyID, int tenantID) throws Exception;
+	
+	// 2024-04-23 조수빈 - 요소의 스타일 속성을 map으로 반환
+	public Map<String, String> getElemStyleMap(Element elem) throws Exception;
+	
+	// 2024-04-23 조수빈 - map을 html style 문자열로 반환
+	public String convStyleMap2String(Map<String, String> styleMap) throws Exception;
+	
+	// 2024-06-10 조수빈 - config.useOpenGov = YES일 때 일괄 접수 처리에서는 createDate만 업데이트하기 위한 메소드
+	public void updateCreateDateOfOpenGovDocInfo(String docID, int tenant_id, String companyID);
 }

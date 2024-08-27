@@ -17,6 +17,7 @@
 	    		white-space: nowrap;
 	    		overflow: hidden;
 	    		display: inline-block;
+	    		margin-right : 5px;
 	    	}
 	    	#countInfo {
 	    		overflow: hidden;
@@ -24,6 +25,7 @@
 	    	}
 	    	.countColor {
 	    		color:#017BEC;
+	    		font-weight: bold; 
 	    	}
 
 	    	.mainlist tr td[style*="display: none"]:first-child.none + td{padding-left:15px;}
@@ -64,7 +66,7 @@
 	        	}
 
 	        	if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
-		            window.resizeTo(770, 595);
+		            window.resizeTo(770, 720);
 	        	}
 	        	ListTypeChangeIcon();
 	        	
@@ -127,6 +129,7 @@
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");	            	
 	                createNodeAndInsertText(xmlpara, objNode, "TOPID", topData);
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+					createNodeAndInsertText(xmlpara, objNode, "adminOrgan", "n");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
 	            	xmlTree = loadXMLString(xmlHTTP.responseText);
@@ -161,6 +164,7 @@
 	        	createNodeInsert(xmlpara, objNode, "DATA");
 	        	createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 	        	createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
+				createNodeAndInsertText(xmlpara, objNode, "adminOrgan", "n");
 	        	xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 	        	xmlHTTP.send(xmlpara);
 	        	xmlRtn = loadXMLString(xmlHTTP.responseText);
@@ -211,7 +215,8 @@
 	  					cell : "company;description;displayName;title;telephoneNumber",
 						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType;jobId",
 	  					page : CurPage ,
-	  					type : "user"
+	  					type : "user",
+						adminOrgan : "n"
 	  				} ,
 	      			success : function(xml) {
 						event_displayUserList(loadXMLString(xml));
@@ -233,15 +238,24 @@
 					method : "POST",
 					dataType : "json",
 					data : {
-						deptID : tempDeptID
+						deptID : tempDeptID,
+						adminOrgan : "n"
 					},
 					success : function(result) {
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
 							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
+							var companyID = "${userInfo.companyID}";
+							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								//2024.07.17 한슬기 : totalCount표시 조건 변경
+								if(tempDeptID == companyID){ // 회사인 경우
+									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span> / <span class='totalCount'>" + result.totalCount2 + "</span>";
+								} else { // 부서인 경우
+									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span> / <span class='totalCount'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								}
+							
 							} else {
 								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
@@ -660,7 +674,8 @@
 		                <c:if test="${useShowAllCompanies eq 'YES'}">
 	        			company : "",
 		                </c:if>		        			
-						type : "user"
+						type : "user",
+						adminOrgan : "n"
 					} ,
 					success : function(xml) {
 						event_displayUserList2(loadXMLString(xml));
@@ -748,14 +763,14 @@
 	            	if (CrossYN()) {
 		                <c:choose>
 		                <c:when test="${useShowAllCompanies eq 'YES'}">
-		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top/organ</TOPID><PROP></PROP></DATA>";
+		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top/organ</TOPID><PROP></PROP><ORGANADMIN>n</ORGANADMIN></DATA>";
 		                </c:when>
 		                <c:otherwise>
-		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><ORGANADMIN>n</ORGANADMIN></DATA>";
 		                </c:otherwise>
 		                </c:choose>	                    	                    	            	    
 	            	} else {
-	                	strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	                	strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><ORGANADMIN>n</ORGANADMIN></DATA>";
 	            	}
 
 	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -778,7 +793,7 @@
 	                	if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 	                    	g_xmlHTTP = createXMLHttpRequest();
-	                    	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                    	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><ADMINORGAN>n</ADMINORGAN></DATA>";
 	                    	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                    	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                    	g_xmlHTTP.send(strQuery);
@@ -794,10 +809,10 @@
 	            	
 	                <c:choose>
 	                <c:when test="${useShowAllCompanies eq 'YES'}">
-	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP></DATA>";
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP><ADMINORGAN>n</ADMINORGAN></DATA>";
 	                </c:when>
 	                <c:otherwise>
-	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><ADMINORGAN>n</ADMINORGAN></DATA>";
 	                </c:otherwise>
 	                </c:choose>
 	            	

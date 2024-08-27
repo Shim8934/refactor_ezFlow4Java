@@ -187,10 +187,10 @@ tr[data-target='.approval'], tr.approval { display: none; }
 		<%-- 2023-08-03 조수빈 - 일정관리 알림 설정 --%>
 		<tr class="collapsible" data-target=".schedule">
 	        <th><spring:message code='ezSchedule.t1010'/></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 1, 4)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 1, 6)%></th>
 	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 3, 4)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 4, 4)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 3, 6)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 4, 6)%></th>
 		</tr>
 		<tr class="collapse schedule">
 	        <td><spring:message code='ezSchedule.kmss09'/></td>
@@ -219,6 +219,20 @@ tr[data-target='.approval'], tr.approval { display: none; }
 	        <td></td>
 	        <td><%=makeCheckbox(disableItemFinder, 4, 4, 3)%></td>
 	        <td><%=makeCheckbox(disableItemFinder, 4, 4, 4)%></td>
+		</tr>
+		<tr class="collapse schedule">
+	        <td><spring:message code='ezSchedule.cofig.hth01'/></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 5, 1)%></td>
+	        <td></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 5, 3)%></td>
+   	        <td><%=makeCheckbox(disableItemFinder, 4, 5, 4)%></td>
+		</tr>
+		<tr class="collapse schedule">
+	        <td><spring:message code='ezSchedule.cofig.hth02'/></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 6, 1)%></td>
+	        <td></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 6, 3)%></td>
+   	        <td><%=makeCheckbox(disableItemFinder, 4, 6, 4)%></td>
 		</tr>
 		
 		<%-- 2024-04-30 한태훈 - 자원관리 알림 설정 --%>

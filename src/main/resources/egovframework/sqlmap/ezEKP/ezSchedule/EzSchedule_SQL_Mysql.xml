@@ -17,6 +17,7 @@
 	<typeAlias  alias="ScheduleGroupVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO"/>
 	<typeAlias  alias="ScheduleMailConfigVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO"/>
 	<typeAlias  alias="ScheduleTokenInfoVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO"/>
+	<typeAlias  alias="ScheduleReminderVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleReminderVO"/>
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
 		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
@@ -36,6 +37,7 @@
 		<result property="startTime"		column="STARTTIME"			columnIndex="3"/>
 		<result property="endTime"			column="ENDTIME"			columnIndex="4"/>
 		<result property="isAutoDelete"		column="AUTODELETE"			columnIndex="5"/>
+		<result property="reminderTime"		column="REMINDERTIME"		columnIndex="5"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleInfoVO" id="scheduleListVO">
@@ -111,6 +113,7 @@
 		<result property="description"		column="DESCRIPTION"		columnIndex="3"/>
 		<result property="createDate"		column="CREATEDATE"			columnIndex="4"/>
 		<result property="groupColor"		column="GROUPCOLOR"			columnIndex="5"/>
+		<result property="creatorId"		column="CREATORID"			columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO">
@@ -164,9 +167,10 @@
 	
 	<resultMap class="ScheduleMailConfigVO" id="getScheduleMailConfigVO">
 		<result property="invitationMail"		column="INVITATIONMAIL"		columnIndex="1"/>
-		<result property="cancellationMail"			column="CANCELLATIONMAIL"			columnIndex="2"/>
-		<result property="attendanceMail"		column="ATTENDANCEMAIL"			columnIndex="3"/>
-		<result property="rejectedMail"			column="REJECTEDMAIL"			columnIndex="4"/>
+		<result property="inviteScheModMail"	column="INVITESCHEMODMAIL"	columnIndex="2"/>
+		<result property="cancellationMail"		column="CANCELLATIONMAIL"	columnIndex="3"/>
+		<result property="attendanceMail"		column="ATTENDANCEMAIL"		columnIndex="4"/>
+		<result property="rejectedMail"			column="REJECTEDMAIL"		columnIndex="5"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleTokenInfoVO"         id="scheduleTokenInfoVO">
@@ -187,7 +191,8 @@
             	startday,
              	starttime,
              	endtime,
-             	autodelete 
+             	autodelete,
+             	remindertime 
         	from 
         		tbl_scheduleconfig 
        		where  
@@ -204,7 +209,8 @@
 				groupname,
 				'' as description,
               	'' as createdate,
-              	a.groupcolor as groupcolor
+              	a.groupcolor as groupcolor,
+              	creatorid
         	from
         		tbl_schedulegroup a left join tbl_schedulegroupmember b on a.groupid = b.groupid and a.tenant_id = b.tenant_id
        		where
@@ -315,16 +321,22 @@
             and
             	a.tenant_id = #v_TENANTID#
             ]]>
-            <isNotEmpty property="v_SEARCHTITLE">
-            <![CDATA[
-            and 
-            	a.title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
-            ]]>
-            </isNotEmpty>
-            <isNotEmpty property="v_PKEYWORD">
-            and 
-            	$v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')
-            </isNotEmpty>
+			<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 전체검색, 지역검색 추가 -->
+			<isNotEmpty property="v_SEARCHTITLE">
+				AND
+					a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHTITLE#,'\\','\\\\'),'%','\%'),'_','\_')), '%')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCHLOCATION">
+				AND
+					location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHLOCATION#,'\\','\\\\'),'%','\%'),'_','\_')), '%')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCHALL">
+				AND (
+						a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')), '%')
+					OR
+						location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')), '%')
+				)
+			</isNotEmpty>
             <![CDATA[
         	)
         	or  
@@ -374,14 +386,23 @@
             and
             	a.tenant_id = #v_TENANTID#
             ]]>
-            <isNotEmpty property="v_SEARCHTITLE">
-            <![CDATA[
-            and 
-            	a.title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
-            ]]>
-            </isNotEmpty>
-            <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>
-        		)
+			<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 전체검색, 지역검색 추가 -->
+			<isNotEmpty property="v_SEARCHTITLE">
+				AND
+					a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHTITLE#,'\\','\\\\'),'%','\%'),'_','\_')), '%')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCHLOCATION">
+				AND
+					location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHLOCATION#,'\\','\\\\'),'%','\%'),'_','\_')), '%')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCHALL">
+				AND (
+						a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')), '%')
+					OR
+						location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')), '%')
+				)
+			</isNotEmpty>
+			)
           order by a.startdate asc
 	</select>
 	<!-- checked -->
@@ -587,7 +608,8 @@
 			 	date_add(a.responsedate, interval +#v_OFFSETMIN# minute) as responsedate,
              	'' as mail,
              	'' as department,
-             	'' as info  
+             	'' as info,
+             	A.writepermission
              from ( select              		
                   	groupid,
                   	memberid,
@@ -595,7 +617,8 @@
                   	membername2,
                   	status,
                   	responsedate,
-                  	tenant_id
+                  	tenant_id,
+                  	writepermission
                      from 
                      	tbl_schedulegroupmember 
                      where  
@@ -1217,7 +1240,7 @@
 	<select id="EzScheduleDAO.getScheduleMailNotiConfig" parameterClass="Map" resultMap="getScheduleMailConfigVO">
 		<![CDATA[
 			 SELECT
-			 	INVITATIONMAIL, CANCELLATIONMAIL, ATTENDANCEMAIL, REJECTEDMAIL
+			 	INVITATIONMAIL, INVITESCHEMODMAIL, CANCELLATIONMAIL, ATTENDANCEMAIL, REJECTEDMAIL
 	         FROM
 	         	TBL_SCHEDULECONFIG
 	         WHERE
@@ -1311,9 +1334,9 @@
 	<insert id="EzScheduleDAO.insertScheduleGroupMember" parameterClass="map">
 		<![CDATA[
 			insert into tbl_schedulegroupmember(
-				groupid, 			memberid, 				membername, 			membername2, 			status, 			responsedate,		tenant_id
+				groupid, 			memberid, 				membername, 			membername2, 			status, 			responsedate,		tenant_id,		writepermission
 			) values (
-				#v_GROUPID#,		#v_MEMBERID#,			#v_MEMBERNAME#,			#v_MEMBERNAME2#,		0,					utc_timestamp(),	#v_TENANTID#
+				#v_GROUPID#,		#v_MEMBERID#,			#v_MEMBERNAME#,			#v_MEMBERNAME2#,		0,					utc_timestamp(),	#v_TENANTID#,	#v_WRITEPERMISSION#
 			)
    		]]>
 	</insert>
@@ -1331,9 +1354,9 @@
 	<insert id="EzScheduleDAO.insertScheduleConfig" parameterClass="map">
 		<![CDATA[
 			insert into tbl_scheduleconfig(
-				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			InvitationMail, CancellationMail, AttendanceMail, RejectedMail, autodelete,			tenant_id		
+				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			autodelete,			tenant_id, remindertime		
 			) values (
-				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		#v_INVITATIONMAIL#, #v_CANCELLATIONMAIL#, #v_ATTENDANCEMAIL#, #v_REJECTEDMAIL#, #v_AUTODELETE#,		#v_TENANTID#
+				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		 #v_AUTODELETE#,		#v_TENANTID#, #v_REMINDERTIME#
 			)
    		]]>
 	</insert>
@@ -1451,7 +1474,8 @@
 				startday = #v_STARTDAY#,
 				starttime = #v_STARTTIME#,
 				endtime = #v_ENDTIME#,
-				autodelete = #v_AUTODELETE#
+				autodelete = #v_AUTODELETE#,
+				remindertime = #v_REMINDERTIME#
 	   		where  
 	   			userid = #v_USERID#
 	   		and	
@@ -1465,9 +1489,11 @@
 				tbl_scheduleconfig
 			set
 				InvitationMail = #v_INVITATIONMAIL#,
+				INVITESCHEMODMAIL = #v_INVITESCHEMODMAIL#,
 				CancellationMail = #v_CANCELLATIONMAIL#,
 				AttendanceMail = #v_ATTENDANCEMAIL#,
 				RejectedMail = #v_REJECTEDMAIL#
+				
 	   		where  
 	   			userid = #v_USERID#
 	   		and	
@@ -2115,6 +2141,431 @@
 		)
 		order by a.startdate asc
 	</select>
+	
+	<select id="EzScheduleDAO.selectAttendanceStatus" resultClass="String">
+	SELECT
+		STATUS
+	FROM
+		TBL_ATTENDANT
+	WHERE
+		SCHEDULEID = 
+		(SELECT
+			CASE
+				WHEN PARENTID = '0' THEN SCHEDULEID
+				ELSE PARENTID
+			END AS SCHEDULEID
+		FROM ( 
+			SELECT SCHEDULEID, PARENTID
+			FROM TBL_SCHEDULE
+			WHERE SCHEDULEID = #v_SCHEDULEID#
+			) A
+		)
+	AND
+		ATTENDANTID = #v_ATTENDANTID#
+	AND
+		TENANT_ID = #v_TENANTID# 
+	</select>
 
+	<insert id="EzScheduleDAO.insertReminderSchedule">
+	<![CDATA[
+		insert into tbl_schedule_reminder_scheduler(
+			scheduleid, 		parentid, 			ownerid, 			ownername, 			ownername2,			creatorid, 			creatorname,		creatorname2,		scheduletype,   datetype,	
+			startdate,			enddate,	 		repetition,			title,				tenant_id,			companyid,          reminderstatus,     offsetinfo,      	    lang,    		OFFSETMIN
+		) values (
+			#v_SCHEDULEID#,		0,					#v_OWNERID#,		#v_OWNERNAME#,		#v_OWNERNAME2#,		#v_CREATORID#,		#v_CREATORNAME#,	#v_CREATORNAME2#,	#v_SCHEDULETYPE#,    #v_DATETYPE#,
+			#v_STARTDATE#,		#v_ENDDATE#,		ifnull(#v_REPETITION#, ''),	#v_TITLE#,	#v_TENANTID#,       #v_COMPANYID#,      #v_REMINDERSTATUS#, #v_OFFSET#,    		#v_LANG#, 		#v_OFFSETMIN#)
+  		]]>
+	</insert>
+	
+	<update id="EzScheduleDAO.updateReminderSchedule" parameterClass="map">
+	UPDATE
+		TBL_SCHEDULE_REMINDER_SCHEDULER
+	SET
+		STARTDATE = #v_STARTDATE#,				
+		ENDDATE = #v_ENDDATE#,
+		<isNotEmpty property="v_DATETYPE">
+		DATETYPE = #v_DATETYPE#,
+		</isNotEmpty>
+		REPETITION = IFNULL(#v_REPETITION#, ''),
+		TITLE = #v_TITLE#,
+		REMINDERSTATUS = #v_REMINDERSTATUS#
+	WHERE
+		SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#
+	AND
+		TENANT_ID = #v_TENANTID#
+	</update>
+	
+	<select id="EzScheduleDAO.selectNoRepeatRemindScheList" parameterClass="map" resultClass="ScheduleReminderVO">
+		<![CDATA[
+		SELECT
+			TSRS.SCHEDULEID AS SCHEDULEID,
+			TSRS.OWNERID AS OWNERID,
+			TSRS.OWNERNAME AS OWNERNAME,
+			TSRS.OWNERNAME2 AS OWNERNAME2,
+			TSRS.CREATORID AS CREATORID,
+			TSRS.CREATORNAME AS CREATORNAME,
+			TSRS.CREATORNAME2 AS CREATORNAME2,
+			(CASE
+				WHEN
+					TSRS.DATETYPE = '2' THEN ADDTIME(DATE_ADD(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), INTERVAL TSRS.OFFSETMIN MINUTE), #allDaySTime#) 
+				ELSE
+					DATE_ADD(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), INTERVAL TSRS.OFFSETMIN MINUTE) 
+			END) AS REMINDSTARTDATE,
+			DATE_ADD(TSRS.STARTDATE, INTERVAL TSRS.OFFSETMIN MINUTE) AS STARTDATE,
+		    DATE_ADD(TSRS.ENDDATE, INTERVAL TSRS.OFFSETMIN MINUTE) AS ENDDATE,
+			TSRS.TITLE AS TITLE,
+			TSRS.DATETYPE AS DATETYPE,
+			TSRS.TENANT_ID AS TENANTID,
+			TSRS.OFFSETMIN AS OFFSETMIN,
+			TSRS.OFFSETINFO AS OFFSETINFO,
+			TSRS.LANG AS LANG,
+			0 AS REPEATCOUNT,
+			TSRS.SCHEDULETYPE AS SCHEDULETYPE,
+			DATE_FORMAT(DATE_ADD(TSRS.STARTDATE, INTERVAL TSRS.OFFSETMIN MINUTE), '%Y-%m-%d') AS TODAYDATE,
+			TSRS.COMPANYID AS COMPANYID
+		FROM
+		   TBL_SCHEDULE_REMINDER_SCHEDULER TSRS
+		LEFT JOIN
+			TBL_SCHEDULE_COMPLETE TSC 
+		ON
+			TSRS.SCHEDULEID = TSC.SCHEDULEID AND TSRS.TENANT_ID = TSC.TENANT_ID AND TSRS.COMPANYID = TSC.COMPANYID
+		INNER JOIN
+			TBL_SCHEDULECONFIG TSCF
+		ON
+			TSRS.OWNERID = TSCF.USERID AND TSRS.TENANT_ID = TSCF.TENANT_ID
+		WHERE
+			TSCF.REMINDERTIME != 0
+		AND
+			TSRS.DATETYPE != '3'
+		AND
+			TSRS.SCHEDULETYPE = '1'
+		AND
+			TSC.SCHEDULEID IS NULL
+		AND
+			TSRS.REMINDERSTATUS = '0'
+		AND
+			TSRS.TENANT_ID = #tenantId#	
+		AND
+		(CASE
+		    WHEN
+		    	TSRS.DATETYPE = '2' THEN ADDTIME(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+		    ELSE
+		    	DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE)
+		END) >= #nowTime#
+		AND
+		(CASE
+		    WHEN
+		    	TSRS.DATETYPE = '2' THEN ADDTIME(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+		    ELSE
+		    	DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE)
+		END) < DATE_ADD(#nowTime#, INTERVAL #cronMinute# MINUTE)
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.selectRepeatRemindScheList" parameterClass="map" resultClass="ScheduleReminderVO">
+	<![CDATA[
+		SELECT
+			TSRS.SCHEDULEID AS SCHEDULEID,
+		    TSRS.OWNERID AS OWNERID,
+		    TSRS.OWNERNAME AS OWNERNAME,
+		    TSRS.OWNERNAME2 AS OWNERNAME2,
+		    TSRS.CREATORID AS CREATORID,
+			TSRS.CREATORNAME AS CREATORNAME,
+			TSRS.CREATORNAME2 AS CREATORNAME2,
+		    DATE_ADD(TSRS.STARTDATE, INTERVAL TSRS.OFFSETMIN MINUTE) AS STARTDATE,
+		    DATE_ADD(TSRS.ENDDATE, INTERVAL TSRS.OFFSETMIN MINUTE) AS ENDDATE,
+		    (CASE
+		    	WHEN
+		    		SUBSTRING(TSRS.REPETITION, INSTR(TSRS.REPETITION, '|') + 1, 1) = '1' THEN ADDTIME(DATE_ADD(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), INTERVAL TSRS.OFFSETMIN MINUTE), #allDaySTime#)
+		    	ELSE
+		    		DATE_ADD(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), INTERVAL TSRS.OFFSETMIN MINUTE)
+		    END) AS REMINDSTARTDATE,
+		    TSRS.REPETITION AS REPETITION,
+		    TSRS.TITLE AS TITLE,
+		    TSRS.DATETYPE AS DATETYPE,
+		    TSRS.TENANT_ID AS TENANTID,
+		    TSRS.OFFSETMIN AS OFFSETMIN,
+		    TSRS.OFFSETINFO AS OFFSETINFO,
+			TSRS.LANG AS LANG,
+			TSRS.SCHEDULETYPE AS SCHEDULETYPE,
+			TSRS.COMPANYID AS COMPANYID
+		FROM
+			TBL_SCHEDULE_REMINDER_SCHEDULER TSRS
+		LEFT JOIN
+			TBL_SCHEDULE_COMPLETE TSC    
+		ON
+			TSRS.SCHEDULEID = TSC.SCHEDULEID AND TSRS.TENANT_ID = TSC.TENANT_ID AND TSRS.COMPANYID = TSC.COMPANYID
+		INNER JOIN
+			TBL_SCHEDULECONFIG TSCF
+		ON
+			TSRS.OWNERID = TSCF.USERID AND TSRS.TENANT_ID = TSCF.TENANT_ID  
+		WHERE
+			TSCF.REMINDERTIME != 0
+		AND
+			TSRS.DATETYPE = '3'
+		AND
+			TSRS.SCHEDULETYPE ='1'
+		AND
+			TSRS.REMINDERSTATUS = '0'
+		AND
+			(TSC.SCHEDULEID IS NULL	OR TSC.ISALLREP != 'Y')
+		AND
+			TSRS.TENANT_ID = #tenantId#
+		AND
+		(CASE
+			WHEN
+				SUBSTRING(TSRS.REPETITION, INSTR(TSRS.REPETITION, '|') + 1, 1) = '1' THEN ADDTIME(SUBSTRING(DATE_ADD(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), INTERVAL TSRS.OFFSETMIN MINUTE), 12, 5), #allDaySTime#)
+			ELSE
+				SUBSTRING(DATE_ADD(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), INTERVAL TSRS.OFFSETMIN MINUTE), 12, 5)
+		END
+		)	 
+			>= SUBSTRING(DATE_ADD(#nowTime#, INTERVAL TSRS.OFFSETMIN MINUTE), 12, 5)
+		AND
+		(CASE
+			WHEN
+				SUBSTRING(TSRS.REPETITION, INSTR(TSRS.REPETITION, '|') + 1, 1) = '1' THEN ADDTIME(SUBSTRING(DATE_ADD(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), INTERVAL TSRS.OFFSETMIN MINUTE), 12, 5), #allDaySTime#)
+			ELSE
+				SUBSTRING(DATE_ADD(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), INTERVAL TSRS.OFFSETMIN MINUTE), 12, 5)
+		END
+		)		 
+			 < SUBSTRING(DATE_ADD(DATE_ADD(#nowTime#, INTERVAL #cronMinute# MINUTE), INTERVAL TSRS.OFFSETMIN MINUTE), 12, 5) 
+		AND
+		    (CASE
+	    		WHEN
+	    			SUBSTRING_INDEX(TSRS.REPETITION, '|', 1) != '0'
+	    				AND
+	    			(CASE
+	    				WHEN
+			    			SUBSTRING(TSRS.REPETITION, INSTR(TSRS.REPETITION, '|') + 1, 1) = '1' THEN ADDTIME(DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+	    				ELSE
+	    					DATE_SUB(TSRS.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE)
+	    			END)
+	    			 < DATE_ADD(#nowTime#, INTERVAL #cronMinute# MINUTE) THEN 1
+	    		WHEN
+	    			SUBSTRING_INDEX(TSRS.REPETITION, '|', 1) = '0' AND DATE_SUB(TSRS.ENDDATE, INTERVAL TSCF.REMINDERTIME MINUTE) > #nowTime# THEN 1
+	    		ELSE 0
+    		END) = 1
+    ]]>
+	</select>
+	
+	<select id="EzScheduleDAO.selectRepeatDelScheList" parameterClass="map" resultClass="ScheduleReminderVO">
+	<![CDATA[
+	SELECT
+		TSD.SCHEDULEID AS SCHEDULEID,
+		(CASE
+			WHEN
+				TSRS.DATETYPE = '2' THEN ADDTIME(DATE_ADD(TSD.STARTDATE, INTERVAL TSRS.OFFSETMIN MINUTE), #allDaySTime#)
+			WHEN
+				TSRS.DATETYPE = '3' AND SUBSTRING(REPETITION, INSTR(REPETITION, '|') + 1, 1) = '1' THEN ADDTIME(DATE_ADD(TSD.STARTDATE, INTERVAL TSRS.OFFSETMIN MINUTE), #allDaySTime#)
+			ELSE
+				DATE_ADD(TSD.STARTDATE, INTERVAL TSRS.OFFSETMIN MINUTE)
+		END) AS STARTDATE,
+		DATE_ADD(TSD.ENDDATE, INTERVAL TSRS.OFFSETMIN MINUTE) AS ENDDATE
+	FROM
+		TBL_SCHEDULEREPETITION_DEL TSD
+	INNER JOIN
+		TBL_SCHEDULE_REMINDER_SCHEDULER TSRS
+	ON
+		TSRS.SCHEDULEID = TSD.SCHEDULEID
+	INNER JOIN
+		TBL_SCHEDULECONFIG TSCF
+	ON
+		TSRS.OWNERID = TSCF.USERID AND TSRS.TENANT_ID = TSCF.TENANT_ID
+	WHERE
+		TSCF.REMINDERTIME != '0'
+	AND
+		TSD.TENANT_ID = #tenantId#
+	AND	
+	(CASE
+		WHEN
+			TSRS.DATETYPE = '2' THEN ADDTIME(DATE_SUB(TSD.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+		WHEN
+			TSRS.DATETYPE = '3' AND SUBSTRING(REPETITION, INSTR(REPETITION, '|') + 1, 1) = '1' THEN ADDTIME(DATE_SUB(TSD.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+		ELSE
+			DATE_SUB(TSD.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE) 
+	END
+	) >= #nowTime#
+	AND
+	(CASE
+		WHEN
+			TSRS.DATETYPE = '2' THEN ADDTIME(DATE_SUB(TSD.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+		WHEN
+			TSRS.DATETYPE = '3' AND SUBSTRING(REPETITION, INSTR(REPETITION, '|') + 1, 1) = '1' THEN ADDTIME(DATE_SUB(TSD.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+		ELSE
+			DATE_SUB(TSD.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE)
+	END
+	) < DATE_ADD(#nowTime#, INTERVAL #cronMinute# MINUTE)
+	]]>
+	</select>
+	
+	<select id="EzScheduleDAO.selectRepeatCompletScheList" parameterClass="map" resultClass="ScheduleReminderVO">
+	<![CDATA[
+	SELECT
+		TSC.SCHEDULEID AS SCHEDULEID,
+		CASE
+			WHEN
+				TSRS.DATETYPE = '2' THEN ADDTIME(DATE_ADD(TSC.STARTDATE, INTERVAL TSRS.OFFSETMIN MINUTE), #allDaySTime#)
+			WHEN
+				TSRS.DATETYPE = '3' AND SUBSTRING(REPETITION, INSTR(REPETITION, '|') + 1, 1) = '1' THEN ADDTIME(DATE_ADD(TSC.STARTDATE, INTERVAL TSRS.OFFSETMIN MINUTE), #allDaySTime#)
+			ELSE
+				DATE_ADD(TSC.STARTDATE, INTERVAL TSRS.OFFSETMIN MINUTE)
+		END AS STARTDATE
+	FROM
+		TBL_SCHEDULE_COMPLETE TSC
+	INNER JOIN
+		TBL_SCHEDULE_REMINDER_SCHEDULER TSRS
+	ON
+		TSRS.SCHEDULEID = TSC.SCHEDULEID
+	INNER JOIN
+		TBL_SCHEDULECONFIG TSCF
+	ON
+		TSRS.OWNERID = TSCF.USERID AND TSRS.TENANT_ID = TSCF.TENANT_ID
+	WHERE
+		TSCF.REMINDERTIME != '0'
+	AND
+		TSC.TENANT_ID = #tenantId#
+	AND
+	(CASE
+		WHEN
+			TSRS.DATETYPE = '2' THEN ADDTIME(DATE_SUB(TSC.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+		WHEN
+			TSRS.DATETYPE = '3' AND SUBSTRING(REPETITION, INSTR(REPETITION, '|') + 1, 1) = '1' THEN ADDTIME(DATE_SUB(TSC.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+		ELSE
+			DATE_SUB(TSC.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE)
+	END
+	) >= #nowTime#
+	AND
+	(CASE
+		WHEN
+			TSRS.DATETYPE = '2' THEN ADDTIME(DATE_SUB(TSC.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+		WHEN
+			TSRS.DATETYPE = '3' AND SUBSTRING(REPETITION, INSTR(REPETITION, '|') + 1, 1) = '1' THEN ADDTIME(DATE_SUB(TSC.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE), #allDaySTime#)
+		ELSE
+			DATE_SUB(TSC.STARTDATE, INTERVAL TSCF.REMINDERTIME MINUTE)
+	END
+	) < DATE_ADD(#nowTime#, INTERVAL #cronMinute# MINUTE)
+	]]>
+	</select>
+	
+	<update id="EzScheduleDAO.updateReminderStatus" parameterClass="Map">
+	UPDATE
+		TBL_SCHEDULE_REMINDER_SCHEDULER
+	SET
+		REMINDERSTATUS = #v_REMINDERSTATUS#
+	WHERE
+		SCHEDULEID = #v_SCHEDULEID#
+	AND
+		TENANT_ID = #v_TENANTID#
+	</update>
+	
+	<delete id="EzScheduleDAO.deleteReminderSchedule" parameterClass="Map">
+	DELETE FROM
+		TBL_SCHEDULE_REMINDER_SCHEDULER
+	WHERE
+		SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#
+	AND
+		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<update id="EzScheduleDAO.updateScheduleComplete" parameterClass="Map">
+	UPDATE
+		TBL_SCHEDULE_COMPLETE
+	SET
+		STARTDATE = #v_STARTDATE#
+	WHERE
+		SCHEDULEID = #v_SCHEDULEID#
+	AND
+		TENANT_ID = #v_TENANTID#
+	</update>
+	
+	<insert id="EzScheduleDAO.insertAttendantReminderSchedule" parameterClass="Map">
+	<![CDATA[
+			INSERT INTO
+			TBL_SCHEDULE_REMINDER_SCHEDULER(
+				SCHEDULEID, OWNERID, OWNERNAME,	OWNERNAME2, CREATORID, CREATORNAME, CREATORNAME2, SCHEDULETYPE,	DATETYPE, STARTDATE, ENDDATE, REPETITION, TITLE,
+				TENANT_ID, COMPANYID, REMINDERSTATUS, OFFSETINFO, LANG,	OFFSETMIN, PARENTID	
+			)
+			VALUES (
+				#scheInfo.scheduleId#,	#v_ATTENDANTID#, #v_ATTENDANTNAME#,	#v_ATTENDANTNAME2#,	#scheInfo.creatorId#, #scheInfo.creatorName#,	#scheInfo.creatorName2#, #scheInfo.scheduleType#, #scheInfo.dateType#,
+				#v_STARTDATE#, #v_ENDDATE#, #scheInfo.repetition#, #scheInfo.title#,	#v_TENANTID#, #scheInfo.companyid#, #v_REMINDERSTATUS#, #v_OFFSET#, #v_LANG#, #v_OFFSETMIN#, #scheInfo.parentId#
+			)	
+   		]]>
+	
+	</insert>
+	
+	<select id="EzScheduleDAO.selectScheduleGroupInfo" parameterClass="Map" resultClass="ScheduleGroupListVO">
+	SELECT
+		GROUPNAME, DESCRIPTION, CREATEDATE, TENANT_ID, COMPANYID
+	FROM
+		TBL_SCHEDULEGROUP
+	WHERE
+		GROUPID = #v_GROUPID#
+	AND
+		TENANT_ID = #v_TENANTID#
+	</select>
+	
+	<delete id="EzScheduleDAO.deleteAttendantReminderSchedule" parameterClass="map">
+		<![CDATA[
+			delete from
+				tbl_schedule_reminder_scheduler
+			where
+				parentid = #v_SCHEDULEID#
+			and
+				ownerid	 = #v_ATTENDANTID#
+			and
+				tenant_id = #v_TENANTID#
+	   	]]>
+	</delete>
+	
+	<select id="EzScheduleDAO.selectExpiredSchedule" parameterClass="map" resultClass="ScheduleReminderVO">
+	<![CDATA[
+	SELECT
+		TSRS.SCHEDULEID AS SCHEDULEID,
+		TSRS.OWNERID AS OWNERID,
+		TSRS.TENANT_ID AS TENANTID
+	FROM
+		TBL_SCHEDULE_REMINDER_SCHEDULER TSRS
+	LEFT JOIN
+		TBL_SCHEDULE_COMPLETE TSC    
+	ON
+		TSRS.SCHEDULEID = TSC.SCHEDULEID AND TSRS.TENANT_ID = TSC.TENANT_ID AND TSRS.COMPANYID = TSC.COMPANYID
+	INNER JOIN
+		TBL_SCHEDULECONFIG TSCF
+	ON
+		TSRS.OWNERID = TSCF.USERID AND TSRS.TENANT_ID = TSCF.TENANT_ID  
+	WHERE
+		TSCF.REMINDERTIME != 0
+	AND
+		TSRS.DATETYPE = '3'
+	AND
+		TSRS.SCHEDULETYPE ='1'
+	AND
+		TSRS.REMINDERSTATUS = '0'
+	AND
+		(TSC.SCHEDULEID IS NULL	OR TSC.ISALLREP != 'Y')
+	AND
+		TSRS.TENANT_ID = #tenantId#
+	AND
+	    (
+	    (SUBSTRING_INDEX(TSRS.REPETITION, '|', 1) = '0' AND DATE_SUB(TSRS.ENDDATE, INTERVAL TSCF.REMINDERTIME MINUTE) < #nowTime#)
+    OR
+    	(SUBSTRING_INDEX(TSRS.REPETITION, '|', 1) = '0' AND DATE_SUB(TSRS.ENDDATE, INTERVAL TSCF.REMINDERTIME MINUTE) = #nowTime#)
+    	)
+    ]]>
+	</select>
+	
+	<update id="EzScheduleDAO.updateWritePermission" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_SCHEDULEGROUPMEMBER
+			SET
+				WRITEPERMISSION = #v_WRITEPERMISSION#
+			WHERE
+				GROUPID = #v_GROUPID#
+			AND
+				MEMBERID = #v_MEMBERID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
 </sqlMap>
-

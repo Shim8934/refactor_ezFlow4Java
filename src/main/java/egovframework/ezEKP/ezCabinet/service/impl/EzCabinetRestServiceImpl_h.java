@@ -39,12 +39,13 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h {
 	}
 	
 	@Override
-	public JSONObject getShareUserList(HttpServletRequest request, String userId, String cabinetId, String searchOpt, String searchValue) throws Exception {
+	public JSONObject getShareUserList(HttpServletRequest request, String userId, String cabinetId, String searchOpt, String searchValue, String searchFlag) throws Exception {
 		String url                = "/rest/ezCabinet/shared-member/cabinetid/" + cabinetId + "/get";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId",      userId);
 		param.put("searchOpt",   searchOpt);
 		param.put("searchValue", searchValue);
+		param.put("searchFlag",  searchFlag); // 공유자 검색 Flag
 		
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;

@@ -37,8 +37,11 @@ var subType = {
 	},
 	schedule : {
 		add : "Lên lịch mời",
+		cancel : "hủy lời mời",
 		accept : "Lời mời đã được phê duyệt",
-		reject : "Từ chối lời mời"
+		reject : "Từ chối lời mời",
+		mod : "Sửa đổi lịch trình",
+		reminder : "Nhắc nhở"
 	},
 	resource : {
 		reserve : "Dự trữ tài nguyên",
@@ -78,7 +81,7 @@ subType["approval"]["return"] = "Thu hồi chứng từ thanh toán";
 subType["approval"]["default"] = "Thông báo thanh toán";
 subType["board"]["new"] = "bài đăng mới";
 subType["board"]["return"] = "Từ chối phê duyệt";
-subType["schedule"]["delete"] = "hủy lời mời";
+subType["schedule"]["delete"] = "Xóa sự kiện";
 subType["survey"]["new"] = "Đăng kí mới";
 subType["poll"]["new"] = "Đăng kí mới";
 subType["community"]["new"] = "Đăng kí mới";

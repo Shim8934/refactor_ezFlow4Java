@@ -1055,14 +1055,32 @@ CREATE TABLE `jmocha_stat_mail_log` (
   KEY `IDX_TENANT_ID` (`TENANT_ID`),
   KEY `IDX_LOG_DATE` (`LOG_DATE`),
   KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`),
-  KEY `IDX_SENDER_NAME` (`SENDER_NAME`),
-  KEY `IDX_SENDER` (`SENDER`),
-  KEY `IDX_RECIPIENT` (`RECIPIENT`),
-  KEY `IDX_RECIPIENT_NAME` (`RECIPIENT_NAME`),
-  KEY `IDX_MESSAGESUBJECT` (`MESSAGESUBJECT`(768)),
-  KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`(768)),
   KEY `IDX_MESSAGEID` (`MESSAGEID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--CREATE TABLE `jmocha_stat_mail_log` (
+--  `IDX` int(10) unsigned NOT NULL AUTO_INCREMENT,
+--  `TENANT_ID` int(11) NOT NULL,
+--  `LOG_DATE` datetime DEFAULT NULL,
+--  `EVENT_TYPE` varchar(20) DEFAULT NULL,
+--  `SENDER` varchar(200) DEFAULT NULL,
+--  `RECIPIENT` varchar(200) DEFAULT NULL,
+--  `TOTALBYTES` int(11) DEFAULT NULL,
+--  `MESSAGEID` varchar(500) DEFAULT NULL,
+--  `MESSAGESUBJECT` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `SENDER_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `RECIPIENT_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `ATTACHED_FILENAME` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  PRIMARY KEY (`IDX`),
+--  KEY `IDX_TENANT_ID` (`TENANT_ID`),
+--  KEY `IDX_LOG_DATE` (`LOG_DATE`),
+--  KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`),
+--  FULLTEXT KEY `SENDER` (`SENDER`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `SENDER_NAME` (`SENDER_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `RECIPIENT` (`RECIPIENT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `RECIPIENT_NAME` (`RECIPIENT_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `MESSAGESUBJECT` (`MESSAGESUBJECT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `ATTACHED_FILENAME` (`ATTACHED_FILENAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"'
+--) ENGINE=Mroonga DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='engine "InnoDB"';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3764,11 +3782,11 @@ CREATE TABLE `tbl_board_item` (
   `NOTINO` decimal(19,0) DEFAULT NULL,
   `TOPWRITERID` varchar(40) DEFAULT NULL,
   `APPRFLAG` varchar(4) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE6` varchar(200) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE7` varchar(200) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE8` varchar(200) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE9` varchar(200) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE10` varchar(200) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE6` varchar(500) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE7` varchar(500) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE8` varchar(500) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE9` varchar(500) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE10` varchar(500) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `CONTENT` longtext DEFAULT NULL,
   `PARENTWRITEDATE2` varchar(40) DEFAULT NULL,
@@ -3966,11 +3984,11 @@ CREATE TABLE `tbl_board_item_temp` (
   `DOCNO` decimal(19,0) DEFAULT NULL,
   `DOCPASSWORD` varchar(100) DEFAULT NULL,
   `MAINCONTENT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE6` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE7` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE8` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE9` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE10` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE6` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE7` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE8` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE9` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE10` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4976,6 +4994,7 @@ CREATE TABLE `tbl_cb_share` (
   `share_date` datetime NOT NULL,
   `child_permission` tinyint(4) NOT NULL COMMENT '1: 권한있음, 0: 권한없음',
   `use_status` tinyint(4) NOT NULL COMMENT '1: 사용, 0: 삭제',
+  `saveflag` tinyint(4) NOT NULL COMMENT '1: 최종 저장, 0: 검색시 저장',
   `company_id` varchar(50) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   PRIMARY KEY (`share_id`,`tenant_id`)
@@ -6105,6 +6124,7 @@ CREATE TABLE `tbl_deptmaster` (
   `CREATEDT` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `MANUAL_FLAG` varchar(10) DEFAULT NULL,
+  `DEPTTREEFLAG` char(1) DEFAULT 'Y',
   PRIMARY KEY (`TENANT_ID`,`CN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -11234,6 +11254,7 @@ CREATE TABLE `tbl_scheduleconfig` (
   `RejectedMail` varchar(4) DEFAULT 'Y',
   `AUTODELETE` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `REMINDERTIME` VARCHAR(8) NOT NULL DEFAULT '0',
   PRIMARY KEY (`USERID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -12976,6 +12997,7 @@ CREATE TABLE `tbl_usermaster` (
   `MAILBOXUSAGE` varchar(50) DEFAULT NULL,
   `PASSWORD2` varchar(100) DEFAULT NULL,
   `PHOTO_UPDATEDT` datetime DEFAULT NULL,
+  `USERTREEFLAG` char(1) DEFAULT 'Y',
   PRIMARY KEY (`CN`,`TENANT_ID`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -13866,6 +13888,83 @@ CREATE TABLE `jmocha_mailbox_progress` (
   PRIMARY KEY (`USER_KEY`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 
+-- Table structure for table `jmocha_appr_allowed_domain`
+--
+DROP TABLE IF EXISTS `jmocha_appr_allowed_domain`;
+CREATE TABLE `jmocha_appr_allowed_domain` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`,`DOMAIN_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_user`
+--
+DROP TABLE IF EXISTS `jmocha_appr_user`;
+CREATE TABLE `jmocha_appr_user` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_TYPE` varchar(10) NOT null,
+  PRIMARY KEY (`TENANT_ID`, `COMPANY_ID`, `USER_ID`,`USER_TYPE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_history`
+--
+DROP TABLE IF EXISTS `jmocha_appr_history`;
+CREATE TABLE `jmocha_appr_history` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `MAIL_UID` bigint(20) NOT NULL,
+  `SUBJECT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDEREMAIL` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) DEFAULT NULL,
+  `USER_NAME2` varchar(100) DEFAULT NULL,
+  `USER_DEPTID` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME2` varchar(100) DEFAULT NULL,
+  `WRITE_DATE` datetime DEFAULT NULL,
+  `APPROVER_ID` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME2` varchar(100) DEFAULT NULL,
+  `updatedt` datetime DEFAULT NULL,
+  `STATE` varchar(10) DEFAULT NULL,
+  `MEMO` varchar(200) DEFAULT NULL,
+  `DEL_FLAG` varchar(10) DEFAULT 'N',
+  PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_comp_history`
+--
+DROP TABLE IF EXISTS `jmocha_appr_comp_history`;
+CREATE TABLE `jmocha_appr_comp_history` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `MAIL_UID` bigint(20) NOT NULL,
+  `SUBJECT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDEREMAIL` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) DEFAULT NULL,
+  `USER_NAME2` varchar(100) DEFAULT NULL,
+  `USER_DEPTID` varchar(100) DEFAULT NULL, 
+  `USER_DEPTNAME` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME2` varchar(100) DEFAULT NULL,
+  `WRITE_DATE` datetime DEFAULT NULL,
+  `APPROVER_ID` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME2` varchar(100) DEFAULT NULL,
+  `updatedt` datetime DEFAULT NULL,
+  `STATE` varchar(10) DEFAULT NULL,
+  `MEMO` varchar(200) DEFAULT NULL,
+  `DEL_FLAG` varchar(10) DEFAULT 'N',
+  PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Temporary view structure for view `vaprdoingdoclist`
 --
@@ -14462,6 +14561,40 @@ CREATE TABLE `TBL_SUSINSCHEDULE` (
   PRIMARY KEY (`DOCID`,`COMPANYID`,`TENANTID`),
   UNIQUE KEY `IDX_TBL_SUSINSCHEDULE` (`DOCID`,`TENANTID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--
+-- Table structure for table `TBL_SCHEDULE_REMINDER_SCHEDULER`
+--
+
+DROP TABLE IF EXISTS `TBL_SCHEDULE_REMINDER_SCHEDULER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_SCHEDULE_REMINDER_SCHEDULER` (
+		  `SCHEDULEID` bigint(10) NOT NULL,
+		  `PARENTID` bigint(10) NOT NULL DEFAULT 0,
+		  `OWNERID` varchar(100) NOT NULL,
+		  `OWNERNAME` varchar(100) NOT NULL,
+		  `OWNERNAME2` varchar(100) DEFAULT NULL,
+		  `CREATORID` varchar(100) NOT NULL,
+		  `CREATORNAME` varchar(100) NOT NULL,
+		  `CREATORNAME2` varchar(100) DEFAULT NULL,
+		  `SCHEDULETYPE` mediumint(5) NOT NULL,
+		  `DATETYPE` mediumint(5) NOT NULL,
+		  `STARTDATE` datetime NOT NULL,
+		  `ENDDATE` datetime NOT NULL,
+		  `REPETITION` varchar(100) DEFAULT NULL,
+		  `TITLE` varchar(500) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(40) DEFAULT NULL,
+		  `REMINDERSTATUS` varchar(2) DEFAULT '0' COMMENT '0: 미완료, 1:완료',
+		  `OFFSETINFO` varchar(40) DEFAULT '',
+		  `LANG` varchar(10) DEFAULT NULL,
+		  `OFFSETMIN` varchar(10) DEFAULT NULL,
+		  PRIMARY KEY (`SCHEDULEID`),
+		  KEY `IDX_OWNERID` (`OWNERID`) USING BTREE
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 CREATE OR REPLACE VIEW VIEW_EZWEBFOLDER AS
 SELECT

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -47,6 +48,12 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.codec.binary.Base64;
@@ -379,8 +386,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardItemList_favorite started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useRunTime", useRunTime);
 
 		logger.debug("boardItemList_favorite ended");
     	return "ezBoard/boardItemList_favorite";
@@ -945,20 +954,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardInfo = getBoardInfo(pBoardID, userInfo);
 		
 		// 2023-11-29 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
-		String userLang = userInfo.getLang();		
-		String pBoardName;
+		String userLang = userInfo.getLang();
+		String pBoardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
 
-		if (userLang.equals("1")) {
-			pBoardName = boardInfo.getBoardName();
-		} else if (userLang.equals("2")) {
-			pBoardName = boardInfo.getBoardName2();
-		} else {
-			pBoardName = boardInfo.getBoardName();
-		    if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().equals("")) {
-		    	pBoardName = boardPropertyVO.getBoardName3();
-		    } else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().equals("")) {
-		    	pBoardName = boardInfo.getBoardName4();
-		    }
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+		    pBoardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+		    pBoardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+		    pBoardName = boardInfo.getBoardName4();
 		}
 		
 		if (boardPropertyVO.getAdminType() == null) {
@@ -1010,11 +1014,35 @@ public class EzBoardController extends EgovFileMngUtil{
 			isMyBoard = "YES";
 		}
 		
+		//확장컬럼 데이터
+		List<BoardAttributeVO> boardAttr = new ArrayList<BoardAttributeVO>();
+		int boardAttrCount = 0;
+
+		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
+			boardAttr = ezBoardAdminService.getBoardAttribute(pBoardID, userInfo.getTenantId());
+			boardAttrCount = boardAttr.size();
+		}
+
+		// 2024-08-14 전인하 - 게시판 > json data 이용 시 문제가 되는 특정 특수문자 이스케이프 추가 
+		JsonSerializer<String> stringSerializer = new JsonSerializer<String>() {
+			@Override
+			public JsonElement serialize(String src, Type typeOfSrc, JsonSerializationContext context) {
+				String escapedString = src.replace("\\", "\\\\")
+											.replace("\"", "\\\"")
+											.replace("/", "\\/");
+				return new JsonPrimitive(escapedString);
+			}
+		};
+		
+		Gson gson = new GsonBuilder().registerTypeAdapter(String.class, stringSerializer).create();
+		String boardAttrJson = gson.toJson(boardAttr);
+		
 		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
 
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName).replace("\\", "&#92;"));
 		model.addAttribute("boardID", commonUtil.stripScriptTags(pBoardID));
+		model.addAttribute("boardAttrJson", boardAttrJson);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("use_ocs", use_ocs);
@@ -3896,11 +3924,29 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			useBoardFilePrvw = "0";
 		}
+		
+		// 2024-08-14 전인하 - 게시판 > json data 이용 시 문제가 되는 특정 특수문자 이스케이프 추가 
+		JsonSerializer<String> stringSerializer = new JsonSerializer<String>() {
+			@Override
+			public JsonElement serialize(String src, Type typeOfSrc, JsonSerializationContext context) {
+				String escapedString = src.replace("\\", "\\\\")
+											.replace("\"", "\\\"")
+											.replace("/", "\\/");
+						
+				return new JsonPrimitive(escapedString);
+			}
+		};
+
+		Gson gson = new GsonBuilder().registerTypeAdapter(String.class, stringSerializer).create();
+		String boardAttrJson = gson.toJson(boardAttr);
+		String boardItemJson = gson.toJson(boardItem);
 		 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
+		model.addAttribute("boardItemJson", boardItemJson);
 		model.addAttribute("boardAttr", boardAttr);
+		model.addAttribute("boardAttrJson", boardAttrJson);
 		model.addAttribute("boardAttrCount", boardAttrCount);
 		model.addAttribute("adjacentItem", adjacentItem);
 		model.addAttribute("boardPropertyVO", boardPropertyVO);
@@ -4193,16 +4239,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		checkForm = ezBoardService.checkForm(boardID, "Y", userInfo.getTenantId());
 		useBackGround = ezBoardService.checkBackGroundImage(boardID, userInfo.getTenantId());
 		
-		if (boardInfo.getBoardName() != null && !boardInfo.getBoardName().equals("")) {
-			boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
-		}
-		
-		if (boardInfo.getBoardName1() != null && !boardInfo.getBoardName1().equals("")) {
-			boardInfo.setBoardName1(commonUtil.cleanValue(boardInfo.getBoardName1()));
-		}
-		
-		if (boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")) {
-			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+		// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();		
+		String boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+			boardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+			boardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+			boardName = boardInfo.getBoardName4();
 		}
 		
 		if (boardListVO.getTitle() != null && !boardListVO.getTitle().equals("")) {
@@ -4279,6 +4325,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
 		model.addAttribute("scheduleId", scheduleId);
+		model.addAttribute("boardName", boardName);
 
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -6129,7 +6176,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
 		if (boardInfo.getListView_FG().equals("true")) {
-			boardName = boardInfo.getBoardName();
+			// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+			String userLang = userInfo.getLang();
+			boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+			if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+				boardName = boardInfo.getBoardName2();
+			} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+				boardName = boardInfo.getBoardName3();
+			} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+				boardName = boardInfo.getBoardName4();
+			}
 			
 			if (request.getParameter("sortBy") != null) {
 				sortBy = request.getParameter("sortBy");
@@ -6208,6 +6265,18 @@ public class EzBoardController extends EgovFileMngUtil{
 			userID = userInfo.getDisplayName2();
 		}
 		
+		// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();		
+		String boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+			boardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+			boardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+			boardName = boardInfo.getBoardName4();
+		}
+
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("boardID", boardID);
@@ -6218,6 +6287,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("boardName", boardName);
 
 		logger.debug("newBoardItemPhoto ended");
 		return "ezBoard/boardNewItemPhoto";
@@ -9465,7 +9535,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
 		if (boardInfo.getListView_FG().equals("true")) {
-			boardName = boardInfo.getBoardName();
+			// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+			String userLang = userInfo.getLang();
+			boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+			if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+				boardName = boardInfo.getBoardName2();
+			} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+				boardName = boardInfo.getBoardName3();
+			} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+				boardName = boardInfo.getBoardName4();
+			}
 			
 			if (request.getParameter("sortBy") != null) {
 				sortBy = request.getParameter("sortBy");
@@ -9542,6 +9622,18 @@ public class EzBoardController extends EgovFileMngUtil{
 			userID = userInfo.getDisplayName2();
 		}
 		
+		// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();		
+		String boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+			boardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+			boardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+			boardName = boardInfo.getBoardName4();
+		}
+
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("boardID", boardID);
@@ -9551,6 +9643,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("strNow", strNow);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("boardName", boardName);
 
 		logger.debug("newBoardItemMovie ended");
 		return "ezBoard/boardNewItemMovie";
@@ -11014,5 +11107,34 @@ public class EzBoardController extends EgovFileMngUtil{
                          .replaceAll("\\%7E", "~");
 
 	    return result;
+	}
+	
+	// 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 > 유저 선택 팝업 호출
+	@RequestMapping(value = "/ezBoard/boardSelectUser.do", method = RequestMethod.GET)
+	public String personalPopupUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("personalPopupUser started");
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String deptID = auth.getDeptID();
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request.getParameter("name");
+		String companyId = request.getParameter("companyId");
+		String lang = auth.getLang();
+		String columnName = request.getParameter("columnName") == null ? "" : request.getParameter("columnName");
+
+		model.addAttribute("columnName", columnName);
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName", textName);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("dept", auth.getDeptID());
+		model.addAttribute("lang", lang);
+
+		logger.debug("personalPopupUser ended");
+		return "/ezBoard/boardSelectUser";
 	}
 }

@@ -243,7 +243,17 @@
 				<c:if test="${useMailTag}">
 				resizeHeight -= document.getElementById("tag_td").clientHeight;
 				</c:if>
-				document.getElementById("message").style.height = resizeHeight + "px";
+
+				if(sentItems.toUpperCase() == "TRUE") {
+					document.getElementById("message").style.height = resizeHeight + "px";
+					var messeageValue = document.getElementById("message");
+					var messeageHeight = messeageValue.style.height
+					messeageHeight = parseFloat(messeageHeight) - parseFloat("14");
+					messeageValue.style.setProperty('height', messeageHeight + 'px', 'important');
+				} else {
+					document.getElementById("message").style.height = resizeHeight + parseFloat("14") + "px";
+				}
+				
 		        mailPrevSentDateChk();
 		    }	
 			
@@ -467,7 +477,7 @@
 		                    return;
 		                }
 		
-		                if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[3] != "") {
+		                if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 		                    alert(strLang337);
 		                }
 		                else {
@@ -504,7 +514,7 @@
 		            var pTop = (pheight - boardWidth) / 2;
 		            var pLeft = (pwidth - boardHeight) / 2;
 		
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7") {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8") {
 		                alert(strLang337);
 		            }
 		            else {

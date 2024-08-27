@@ -117,6 +117,10 @@ function save_schedule(pageFrom)
 	        }
     	}
     }
+	/* 2024-06-25 김유진 - 반복일정인 경우, 반복설정에서 날짜를 체크하고 넘어오기에 timeCheck값 true로 변경 */
+	if (repetition != "") {
+		timeCheck = 'true';
+	}
     //2018.01.30 김기반복설정시 기본 날짜 사용안하고 반복 설정된 날짜 사용
     if(!timeCheck)
     {
@@ -409,6 +413,15 @@ function save_schedule(pageFrom)
 			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME2", g_attendant["name2"][i]);
 			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTDEPTNAME", g_attendant["deptname"][i]);
 			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTDEPTNAME2", g_attendant["deptname2"][i]);
+		}
+	}
+	
+	/* 2023-09-22 한태훈 수정 시 참석자에게 메일 보내기 용.*/
+	if (modAttendIdList.length > 0) {
+		for (var k = 0; k<modAttendIdList.length; k++) {
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTID", modAttendIdList[k]);
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME1", modAttendName1List[k]);
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME2", modAttendName2List[k]);
 		}
 	}
 	
@@ -2185,7 +2198,11 @@ function getFirstDateInfo(startDate, endDate) {
 	    }
 	}
 	else {
-		returnValue = xmlHTTP.responseText;
+		if ("firstScheduleDateNotFound" == xmlHTTP.responseText) {
+			alert(ezSchedule_kyj2);
+		} else {
+			returnValue = xmlHTTP.responseText;
+		}
 	}
 	
 	return returnValue;

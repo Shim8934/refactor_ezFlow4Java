@@ -230,7 +230,7 @@
 		    		data : {
 		    			search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value.trim(),
 		    			cell   : "company;description;displayname;title;telephonenumber;extensionAttribute5",
-		    			prop   : "department",
+		    			prop   : "department;userType",
 		    			type   : "user"
 		    		},
 		    		success: function(xml){

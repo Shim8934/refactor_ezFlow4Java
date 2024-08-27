@@ -112,6 +112,7 @@ var selectMenu = function() {
 		if (beforeMenu == 4) {
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "none";
 		}
 		
 		if (beforeMenu == 3) {

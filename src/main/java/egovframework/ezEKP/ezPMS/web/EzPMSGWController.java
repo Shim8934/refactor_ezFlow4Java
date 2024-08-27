@@ -364,7 +364,7 @@ public class EzPMSGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/users/{userId}/setting", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/users/{userId:.+}/setting", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMainSetting(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/setting] started.");
 
@@ -408,7 +408,7 @@ public class EzPMSGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/users/{userId}/setting", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/users/{userId:.+}/setting", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateMainSetting(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezPMS G/W [PUT /rest/ezPMS/users/" + userId + "/setting] started.");
 
@@ -792,7 +792,7 @@ public class EzPMSGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/userId/{userId}/order", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId:.+}/userId/{userId:.+}/order", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject changeKanbanOrder(@PathVariable Long projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "/order] started.");
 
@@ -835,7 +835,7 @@ public class EzPMSGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/userId/{userId}/favorites/{projectId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/userId/{userId:.+}/favorites/{projectId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addFavoriteProject(@PathVariable String userId, @PathVariable String projectId, HttpServletRequest request) throws Exception {
 		logger.debug("ezPMS G/W [POST /rest/ezPMS/userId/" + userId + "/favorites/" + projectId + "] started.");
 
@@ -883,7 +883,7 @@ public class EzPMSGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/userId/{userId}/favorites/{projectId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/userId/{userId:.+}/favorites/{projectId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteFavoriteProject(@PathVariable String userId, @PathVariable String projectId, HttpServletRequest request) throws Exception {
 		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/userId/" + userId + "/favorites/" + projectId + "] started.");
 
@@ -1062,7 +1062,7 @@ public class EzPMSGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/projects/userId/{userId}/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/projects/userId/{userId:.+}/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getProjectListCount(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/userId/" + userId + "/count] started.");
 
@@ -1316,7 +1316,7 @@ public class EzPMSGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/users/{userId}/groups/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/users/{userId:.+}/groups/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getGroupCount(@PathVariable String userId,
 			HttpServletRequest request) throws Exception {
 		logger.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/groups/count] started.");
@@ -1711,7 +1711,7 @@ public class EzPMSGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/users/{userId}/role", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId:.+}/users/{userId:.+}/role", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserProjectRole(@PathVariable Long projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
@@ -2067,7 +2067,7 @@ public class EzPMSGWController {
 	 * 프로젝트관리 업무 리스트(나의 업무일 때)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/task-list/{projectId}/users/{userId}/myTask", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/task-list/{projectId:.+}/users/{userId:.+}/myTask", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getTaskList(@PathVariable Long projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
@@ -3418,7 +3418,7 @@ public class EzPMSGWController {
 	 * 프로젝트관리 프로젝트 세부 정보 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/users/{userId}/gantt", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/users/{userId:.+}/gantt", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getProjectDetailsforGantt(@PathVariable Long projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
@@ -3481,7 +3481,7 @@ public class EzPMSGWController {
 	 * 프로젝트관리 업무 상태 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/users/{userId}/status", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/users/{userId:.+}/status", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateTaskStatus(@PathVariable long taskId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
@@ -3705,7 +3705,7 @@ public class EzPMSGWController {
 	 * 프로젝트관리 그룹 리스트(간트차트 용)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/groups/users/{userId}/gantt", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/groups/users/{userId:.+}/gantt", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getGroupListForGantt(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {

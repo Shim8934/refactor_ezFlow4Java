@@ -684,7 +684,7 @@ var strLang1027 = "Fixed comments";
 var strLang1028 = "Year";
 var strLang1029 = "Month";
 var strLang1030 = "Day";
-var strLang1031 = "Can not post email / approval-document to photo board or anonymous board or url board.";
+var strLang1031 = "Posts are only allowed on general and Q&A boards.";
 var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "Selected user is out of office.</br>Would you like to add it?";
 
@@ -1164,3 +1164,15 @@ var strLang975 = "The form version is different and cannot be reused.";
 var strLangJIH01 = "You cannot preview a security document.";
 var strLangJIH02 = "/blank_id.htm"
 var strLangJIH03 = "Preview is possible after the first reading of the document."
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "Pendaftaran telah selesai.";
+var strLangLGEAR02 = "Terjadi kesalahan saat menerima paket.<br>";
+var strLangLGEAR03 = "Pendaftaran telah selesai.";
+var strLangLGEAR04 = "Terjadi kesalahan selama penentuan penerima paket.<br>";
+
+// 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "Apakah Anda ingin melanjutkan pengiriman secara berkelompok? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian, dan dokumen dengan lampiran pemisahan dikecualikan dari target.";
+var strLangJSBAP03 = "Apakah Anda ingin melanjutkan pengiriman secara berkelompok dan persetujuan akhir? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian, dan dokumen dengan lampiran pemisahan dikecualikan dari target.";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."

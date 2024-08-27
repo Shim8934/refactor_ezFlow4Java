@@ -1955,7 +1955,7 @@ public class EzNewPortalGWController {
 				}
 
 				pidList += pidListSub;
-				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, offsetMin, "", "", "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
 				
 				// 구글연동 일정 가져오기(포탈 카운트)
 				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
@@ -3202,7 +3202,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			String parentBoardId = request.getParameter("parentBoardId");
-			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			String lang = commonUtil.getLangData(info.getLang());
 			
 			List<PortalBoardTreeVO> boardTree = ezNewPortalService.getBoardTree(parentBoardId, companyId, tenantId);
 			
@@ -3211,12 +3211,18 @@ public class EzNewPortalGWController {
 			for (int i = 0; i < boardTreeCount; i++) {
 				PortalBoardTreeVO boardInfo= boardTree.get(i);
 				
+				String boardName;
+
 				if (lang.equals("")) {
-					boardInfo.setText(boardInfo.getBoardName1().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("</", "&lt;/"));
+				    boardName = boardInfo.getBoardName1();
+				} else if (lang.equals("3")) {
+				    boardName = boardInfo.getBoardName3();
 				} else {
-					boardInfo.setText(boardInfo.getBoardName2().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("</", "&lt;/"));
+				    boardName = boardInfo.getBoardName2();
 				}
-				
+
+				boardInfo.setText(boardName.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("</", "&lt;/"));
+
 				if (!boardInfo.getParent().equals("top")) {
 					if (boardInfo.getTopParent().equals("top")) {
 						boardInfo.setParent("#");
@@ -4185,7 +4191,7 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
-			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId());
+			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId(), info.getDeptID());
 			
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int listCount = list.size();
@@ -4376,6 +4382,10 @@ public class EzNewPortalGWController {
 					pidListSub = pidListSub.substring(0, pidListSub.length()-1);
 				}
 				
+				if (pidList != null && pidListSub != null && pidListSub.substring(0,1) != ",") {
+					pidList += ",\'\'";
+				}
+				
 				pidList += pidListSub;
 				
 			} else if(idList.equals("chkAllFalse")) {
@@ -4388,7 +4398,7 @@ public class EzNewPortalGWController {
 				pidList = idList;
 			}		
 			
-			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId, deptId, useAnnualScheduleYN);		
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, offSetMin, "", "", "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);		
 			
 			// 구글연동 일정 가져오기(포탈 일정포틀릿)
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
@@ -4902,7 +4912,7 @@ public class EzNewPortalGWController {
 				}
 
 				pidList += pidListSub;
-				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, offsetMin, "", "", "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
 
 				// 구글연동 일정 가져오기(포탈 카운트 포틀릿)
 				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);

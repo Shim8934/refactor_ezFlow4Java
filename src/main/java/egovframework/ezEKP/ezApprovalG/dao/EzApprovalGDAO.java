@@ -2289,7 +2289,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateTbSeperateAttach(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateTbSeperateAttach", map);
 	}
-	
+
+	public ApprGReceiveDocVO getReceiptProInfo(Map<String, Object> map) throws Exception{
+		return (ApprGReceiveDocVO) select("EzApprovalG.getReceiptProInfo", map);
+	}
+
 	public void jiJungUpdateReceiptProInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.jiJungUpdateReceiptProInfo", map);
 	}
@@ -3966,4 +3970,25 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<ApprGAprLineVO>) list("EzApprovalG.getGongramAprLineInfo", map);
 	}
 
+    public int isExistDocAttach(Map<String, Object> map)  throws Exception {
+        return (int) select("EzApprovalG.isExistDocAttach", map);
+    }
+
+    /* 2024-06-11 조소정 - 공람할문서 또는 공람완료문서 재사용 시 원문서 ID 가져오기 */
+	public String getOrgDocIDfromGongram(Map<String, Object> map) {
+		return (String) select("EzApprovalG.getOrgDocIDfromGongram", map);
+	}
+
+	/* 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 중간순번 공람회수 시 delete */
+	public void updateOtherGongRamExpAprLine(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOtherGongRamExpAprLine", map);
+	}
+
+	public void updateOtherGongRamAprLineInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOtherGongRamAprLineInfo", map);
+	}
+	
+	public void updateCreateDateOfOpenGovDocInfo(Map<String, Object> param) {
+		update("EzApprovalG.updateCreateDateOfOpenGovDocInfo", param);
+	}
 }

@@ -264,3 +264,8 @@ var strLangHTH01 = "날짜는 1~31의 정수로 입력해주세요.";
 var strLangHTH02 = "반복 주기일수를 정확히 입력해주세요.";
 var strLangHTH03 = "반복 주기를 정확히 입력해주세요.";
 var strLangHTH04 = "월 간격은 0보다 큰 정수로 입력해주세요.";
+
+// 2024-07-03 김우철 - 관리자 > 현황조회
+var strLangKWC01 = "승인자원 현황";
+var strLangKWC02 = "승인대기자원 현황";
+var strLangKWC03 = "종료자원 현황";

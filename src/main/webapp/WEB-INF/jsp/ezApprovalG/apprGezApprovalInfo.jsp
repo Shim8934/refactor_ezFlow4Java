@@ -159,7 +159,7 @@
 	        var pPublicFlag;
 	        var psecuritylevel;
 	        var pkeeperiod;
-	        var pkeyword;
+	        var pkeyword = "";
 	        var ret = new Array();
 	        var CurAprLine;
 	        var pReDraftAprLineChangeFlag = false;
@@ -338,6 +338,11 @@
             
 	            if(approvalFlag == "G") {
 		            CheckGubunInit();
+		            
+		         	// 2023-06-12 임정은 - 공람 추가
+		         	if ((approvalType != "DRAFT" && approvalType != "RECV" && approvalType != "SUSIN") || nonElecRec == "Y") {
+	            		document.getElementById("showHRAprLine").style.display = "none";
+	            	}
 					
 		            if (pReDraftFlag == "DRAFT" || pReDraftFlag == "REDRAFT") {
 		                document.getElementById("btnaddress").style.display = "";
@@ -643,6 +648,21 @@
              	 if (draftAllFlag == "Y") {
  	                document.getElementById("deptaddbtn").style.display = "none";
  	            }
+             	
+             	if (receiptFlag == "R") {
+	             	// 2024-05-13 조수빈 - 일괄접수 시 문서정보 탭이 나타나지 않도록 처리
+             		document.getElementById("showDocinfo").style.display = "none";
+	             	// 2024-05-21 조수빈 - 일괄접수 시 문서 정보가 유지됨을 안내하는 문구 추가
+             		var h1_header = document.getElementById("h1_header");
+             		h1_header.parentNode.style.display = 'flex';
+	             	var newH2 = document.createElement('h1');
+	             	var h2Text = document.createTextNode("<spring:message code='ezApprovalG.jsb01'/>");
+	             	newH2.appendChild(h2Text);
+	             	newH2.style.marginLeft = '10px';
+	             	newH2.style.color = 'red';
+	             	
+	             	h1_header.parentNode.insertBefore(newH2, h1_header.nextSibling);
+             	}
 	        };
 	        
 	        function KeEventControl(obj) {
@@ -915,6 +935,14 @@
 	                document.getElementById("1tab3").onclick();
 	                ChangeTab(document.getElementById("1tab3"));
 	            }
+				else if (pIniGubun == "14") { //공람
+					document.getElementById("showAprLine").style.display = "none";
+					document.getElementById("showCabinetinfo").style.display = "none";
+					document.getElementById("showDocinfo").style.display = "none";
+					document.getElementById("1tab5").onclick();
+					ChangeTab(document.getElementById("1tab5"));
+				}
+
 	            if (pHapYuiCount == 0) {
 	                document.getElementById("deptaddbtn").style.display = "none";
 	            }
@@ -978,13 +1006,10 @@
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
+	                    document.getElementById("Circulation").style.display = "none";
 
 	                    if (approvalFlag == "G") {
 	                    	document.getElementById("NonElecRecInfo").style.display = "none";
-	                    }
-	                    
-	                    if (approvalFlag == "S") {
-		                    document.getElementById("Circulation").style.display = "none";
 	                    }
 	                    
 	                    if (!bool) {
@@ -996,13 +1021,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
+	                    document.getElementById("Circulation").style.display = "none";
 
 	                    if (approvalFlag == "G") {
 		                    document.getElementById("NonElecRecInfo").style.display = "none";
-	                    }
-	                    
-	                    if (approvalFlag == "S") {
-		                    document.getElementById("Circulation").style.display = "none";
 	                    }
 	                    
 	                    if (!bool2) {
@@ -1014,13 +1036,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
+	                    document.getElementById("Circulation").style.display = "none";
 	                    
 	                    if (approvalFlag == "G") {
 		                    document.getElementById("NonElecRecInfo").style.display = "none";
-	                    }
-	                    
-	                    if (approvalFlag == "S") {
-		                    document.getElementById("Circulation").style.display = "none";
 	                    }
 	                    
 	                    if (!bool3) {
@@ -1041,13 +1060,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
+	                    document.getElementById("Circulation").style.display = "none";
 	                    
 	                    if (approvalFlag == "G") {
 		                    document.getElementById("NonElecRecInfo").style.display = "none";
-	                    }
-	                    
-	                    if (approvalFlag == "S") {
-		                    document.getElementById("Circulation").style.display = "none";
 	                    }
 	                    
 	                    if (approvalFlag == "G") {
@@ -1402,7 +1418,7 @@
 			                }
 			                
 			                if (useOpenGov == 'YES' && document.getElementById("openListFlag").checked == false) {
-			                	if ($("#txt_Basis").val() == "") {
+			                	if (receiptFlag != "R" && $("#txt_Basis").val() == "") {
 			                		OpenAlertUI("목록비공개사유를 입력해주세요");
 			                		return;
 			                	}
@@ -1410,6 +1426,17 @@
 			                
 			                ret[0] = "OK";
 			                ret[1] = SaveAprLineList(); //결재선 저장 XML
+			                
+			              	// 2023-05-23 임정은 - 공람 추가
+		                    var lineUserCC = CheckAprlineCC();
+			                
+		                    if (lineUserCC == 1 || lineUserCC == 2) {
+		                    	ret[22] = APRLINEXMLParsingCC();
+		                    } else if (lineUserCC == -1) {
+		                    	ret[22] = "noItem";
+		                    } else if (lineUserCC == 0) {
+		                    	ret[22] = "sameItem";
+		                    }
 		                } else {
 		                	var checkAprCheckFN;
 		                	try {
@@ -1645,8 +1672,64 @@
 		                else {
 		                    window.returnValue = ret;
 		                }
-		                
-		                window.close();
+						
+		                // 일괄접수, 일괄접수자전결일 경우에는 결재정보창 유지
+		                if (receiptFlag == '' || typeof receiptFlag == 'undefined') {
+			                window.close();
+		                } else if (receiptFlag == 'R') {
+		                	var pAlertContent = "";
+		                	showLoadingProgress();
+		                	setTimeout(function() {
+			                	var RtnVal;
+		                		RtnVal = opener.receiptAll_btnSendDraft();
+	     		        		hideLoadingProgress();
+								var arrRtnVal = RtnVal.split("/");
+			    		        
+			     		        if (arrRtnVal[0] == "OK") {
+			     		        	pAlertContent = strLang933 + (Number(arrRtnVal[1])) + strLang934_1 + "<br/>";
+
+			     		            if (arrRtnVal[2] != 0) {
+				     		            pAlertContent += strLang935 + arrRtnVal[2] + strLang934_1;
+									}
+			     		            
+			     		            if (arrRtnVal[3] != 0) {
+			     		            	
+			     		            	if (arrRtnVal[2] != 0) {
+			     		            		pAlertContent += " / ";
+			     		            	}
+			     		                
+			     		            	pAlertContent += strLang936 + arrRtnVal[3] + strLang934_1;
+			     		            }
+
+			     		            if (arrRtnVal[4] != 0) {
+			     		            	
+			     		            	if (arrRtnVal[2] != 0 || arrRtnVal[3] != 0) {
+			     		            		pAlertContent += " / ";
+			     		            	}
+			     		                
+			     		            	pAlertContent += strLang938 + arrRtnVal[4] + strLang934_1;
+			     		            }
+			     		            
+			     		            if (receiptFlag == "R") {
+			     			            pAlertContent += "<br/>" + strLangLGEAR01;
+			     		            } else {
+			     			            pAlertContent += "<br/>" + strLangLGEAR03;
+			     		            }
+			     		        } else {
+			     		        	
+			     		        	if (receiptFlag == "R") {
+			     			            pAlertContent = strLangLGEAR02;
+			     		        	} else {
+			     			            pAlertContent = strLangLGEAR04;
+			     		        	}
+			     		        }
+		     		            
+	     		        		// 2023-08-22 조수빈 - 작업을 완료한 후에는 부서수신함을 리로딩
+				                window.opener.parent.frames[0].convMain('4', '');
+		     		            OpenAlertUI(pAlertContent, window.close);
+		     		            
+		                	}, 0);
+		                }
 		            }
 		            else {
 		            	if (approvalFlag == "S") {
@@ -1981,8 +2064,7 @@
 
 		        rtnVal[5] = document.getElementById("txtLimitRange").value;
 		        rtnVal[6] = document.getElementById("txtPageNum").value;
-		        
-		        document.querySelector("input[name=keyword]").value = pkeyword;
+		        document.querySelector("input[name=keyword]").value = pkeyword ? pkeyword : '';
 		        
 		        if (document.getElementById("AprSecurity").checked)
 		            rtnVal[7] = vAprSecurity;
@@ -2196,9 +2278,15 @@
 		            if (divName == "Organ") {
 		                document.getElementById("Organ").style.display = "";
 		                document.getElementById("ReceptTempCC").style.display = "none";
+						if (approvalFlag == "G") {
+							document.getElementById("ArrBtnCC").style.visibility = "";
+						}
 		            } else if (divName == "Save") {
 		                document.getElementById("Organ").style.display = "none";
 		                document.getElementById("ReceptTempCC").style.display = "";
+						if (approvalFlag == "G") {
+							document.getElementById("ArrBtnCC").style.visibility = "hidden";
+						}
 		                GetReceptTempletListCC();
 		            }
 		        } catch (e) {
@@ -2919,6 +3007,9 @@
 	            </c:if></span></p>
 	            <c:if test="${approvalFlag eq 'S' }">
 		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.hyj06'/></span></p>
+	            </c:if>
+	            <c:if test="${approvalFlag eq 'G' and draftAllFlag ne 'Y'}">
+		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.LJEAppr06'/></span></p>
 	            </c:if>
 				<c:if test="${approvalFlag eq 'G'}">
 					<p id="showNonElecRecInfo" style="display: none;"><span divname="NonElecRecInfo" id="1tab6">기록물정보</span></p>
@@ -3898,6 +3989,113 @@
 			    </table>
 		    </div>
 	    </c:if>
+	    <!-- 공람 -->
+	    <c:if test="${approvalFlag eq 'G'}">
+	    	<div id="Circulation" style="width: 1110px; height: 597px; display: none;">
+        		<table>
+			        <tr>
+			            <td style="vertical-align: top">
+			                <div class="portlet_tabpart01" style="margin-top: 3px;">
+			                    <div class="portlet_tabpart01_top" id="tab5">
+			                        <p><span id="5tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+			                        <p><span id="5tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+			                    </div>
+			                </div>
+			                <!-- 조직도 -->
+			                <div id="Organ" style="width:440px">
+			                	<table style="width:99.5%;table-layout: fixed">
+			                		<tr>
+	                                    <td style="vertical-align: top;">                                    	
+	                                        <div id="TreeViewCC" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 437px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                        </div>
+	                                    </td>
+                               	 	</tr>
+                                	<tr>
+	                                    <td style="border: 1px solid #ddd;">
+                                        <div class="border_gray" style="border: 0px;">
+                                            <div id="UserListCC" style="border: 0px; margin: 0px 1px 1px 1px; Width: 436px; Height: 223px; overflow: auto;">
+                                            </div>
+                                        </div>
+                                    </td>
+                                	</tr>
+			                    	<tr>
+	                                    <td style="background-color: transparent; height: 28px; padding-top:10px; vertical-align: top">
+	                                        <input id="textUserCC" style="width: 150px;height:22px" name="textUserCC" onkeypress="return textUserCC_onkeypress(event)"  maxlength="50">
+	                                        <a class="imgbtn imgbck2"><span name="btn_searchUserCC" id="btn_searchUserCC" onkeypress="return btn_searchUserCC_onclick()" onclick="return btn_searchUserCC_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+											<!-- 부서추가 -->
+											<a class="imgbtn imgbck2"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.psb02'/></span></a>
+	                                    </td>
+	                                </tr>
+			                    </table>
+			                </div>
+			                <!-- 즐겨찾기 -->
+			                <div id="ReceptTempCC" style="display: none">
+			                    <table style="padding-left: 5px;">
+			                        <tr>
+			                            <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+			                                <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezApprovalG.G0003'/></h2>
+			                                <div class="border_gray">
+			                                    <div id="RecSaveListCC" style="border: 0px; Width: 436px; Height: 237px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
+			                                    </div>
+			                                </div>
+			                            </td>
+			                        </tr>
+			                        <tr>
+			                            <td style="background-color: transparent; text-align: center; height: 30px;">
+			                                <table class="content" style="margin-bottom: 5px; width: 100%; ">
+			                                    <tr>
+			                                        <td style="text-align: center;">
+			                                            <a class="imgbtn imgbck2"><span id="Span3" onclick="return btn_AprDeptTempletDelCC_onclick()"><spring:message code='ezApprovalG.hsbFv01'/></span></a>
+			                                            <a class="imgbtn imgbck2"><span id="Span4" onclick="return btn_AprDeptTempletSaveCC_onclick('MODIFY')"><spring:message code='ezApprovalG.hsbFv02'/></span></a>
+			                                            <a class="imgbtn imgbck2"><span onclick="return btn_AprDeptTempletAddCC_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
+			                                        </td>
+			                                    </tr>
+			                                </table>
+			                            </td>
+			                        </tr>
+			                        <tr>
+			                            <td style="vertical-align: top;">
+			                                <div class="border_gray">
+			                                    <div id="RecSaveDetailCC" style="Width: 436px; Height: 208px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+			                                    </div>
+			                                </div>
+			                        	</td>
+			                    	</tr>
+			                	</table>
+		                    	<table style="width: 100%;">
+		                        	<tr>
+		                            	<td style="text-align: left; height: 30px;">
+		                        	</tr>
+		                    	</table>
+			                </div>
+			            </td>
+						<td style="width: 16px; text-align: center; padding-left: 4px;" >
+							<div style="display: inline-block; margin:auto;" id="ArrBtnCC">
+								<img src="/images/kr/cm/arr_rright.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsertAll" onclick="btn_addDepartment()">
+								<br>
+								<img src="/images/kr/cm/arr_lleft.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgDeleteAll" onclick="list3_deleteAll()">
+								<br>
+								<img src="/images/kr/cm/arr_right.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsert" onclick="list3_onSel_DBclick()">
+								<br>
+								<img src="/images/kr/cm/arr_left.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgDelete" onclick="AprlineDel_onclickCC()">
+								<br>
+							</div>
+						</td>
+			            <td>
+			                <h2 class="h2_dot"><spring:message code='ezApprovalG.LJEAppr07'/>
+			                </h2>
+			                <div class="border_gray" style="margin-top:7px; margin-left:4px;">
+                                <div id="APRLINECC" style="Width: 700px; Height: 518px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+                              	</div>
+                            </div>
+			                <div style="text-align: right;">
+			                    <a class="imgbtn imgbck2" style="padding-right: 5px; margin-top: 10px;"><span id="Span5" onclick="return btn_AprDeptTempletSaveCC_onclick('NEW')"><spring:message code='ezApprovalG.LJEAppr08'/></span></a>
+			                </div>
+			            </td>
+			        </tr>
+			    </table>
+		    </div>
+	    </c:if>
 	    <c:if test="${approvalFlag eq 'G' }">
 			<!-- 비전자문서 정보 -->
 			<div id="NonElecRecInfo" style="width: 100%; height: 597px; display: none;">
@@ -4180,6 +4378,9 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+	    </div>
 	    <!-- 사용자 정보 해더 xml -->
 		<input id="file" type="file" onchange="filechange(event)" accept=".doc, .docx, .ppt, .pptx, .xls, .xlsx, .pdf, .jpg, .jpeg, .png, .gif, .bmp, .txt, .text, .html, .htm, .hwp" style="display:none;width:0px;height:0px;" />
 	</body>
@@ -4187,9 +4388,7 @@
 	    Tab1_NewTabIni("tab1");
 	    Tab2_NewTabIni("tab2");
 	    Tab3_NewTabIni("tab3");
-	    if (approvalFlag == "S") {
-		    Tab5_NewTabIni("tab5");
-	    }
+	    Tab5_NewTabIni("tab5");
 	</script>
 	<span id="loading" style="top: 300px; left: 550px; width: 100px; display: none; position: absolute;">
 			<img src="/images/loading/loading_new.gif" style="width: 100px;">

@@ -82,7 +82,7 @@
 
         <div class="noti_paging">
             <span class="prev" onclick="moveNotiPage('down')"></span>
-            <span class="page_num">
+            <span class="page_num notiPage">
                 <input type="text" id="notiCurrentPage" autocomplete="off" value="1" onkeypress="return moveInputPage()">&nbsp;/&nbsp;<span  id="notiTotalPage"></span>
             </span>
             <span class="next" onclick="moveNotiPage('up')"></span>
@@ -158,7 +158,7 @@
 			} else {
 				for (var i = 0; i < notiList.length; i++) {
 					var noti = notiList[i];
-					var linkUrl = noti.linkUrl ? noti.linkUrl : "";
+					var linkUrl = noti.linkUrl ? noti.linkUrl : '';
 					str += noti.isRead == "Y" ? '<li class = \"read\" ' : '<li class = \"\" ';
 					str += 'onclick=\"updateNoti(\'read\'); openLink();\" ';
 					str += 'notiseq=\"' + noti.notiSeq +'\" viewtype=\"' + noti.viewType + '\" viewwidth=\"' + noti.viewWidth + '\" viewheight=\"' + noti.viewHeight + '\" ';

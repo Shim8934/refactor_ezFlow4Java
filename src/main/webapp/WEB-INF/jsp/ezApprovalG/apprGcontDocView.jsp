@@ -459,7 +459,7 @@
 		            var pTop = (pheight - 720) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 		            
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 		                alert(strLang1031);
 		            }
 		            else {
@@ -707,7 +707,7 @@
 		    		dataType : "text",
 		    		data : {
 		    			formID : pFormID,
-		    			companyID : orgCompanyID
+		    			companyID : companyID
 		    		},
 		    		url : "/ezApprovalG/getFormDetail.do",
 		    		success: function(xml){
@@ -770,7 +770,6 @@
 						}
 		    		}        			
 		    	});
-
 		    }
 		    
 		    function openDraftUI(pDraftFlag, pCurSelRow) {
@@ -1060,7 +1059,7 @@
 		          <c:if test="${useBoard == 'YES' }">
 				  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 				  </c:if>
-				  <c:if test="${approvalFlag != 'G' and orgCompanyID eq userInfo.companyID and formID != '2018000000'}">
+				  <c:if test="${approvalFlag != 'G' and orgCompanyID eq userInfo.companyID and formID != '2018000000' and docAprEnd != 'APR'}">
 		          	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 				  <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>

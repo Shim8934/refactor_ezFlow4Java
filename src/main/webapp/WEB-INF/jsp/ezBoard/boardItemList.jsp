@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/PreviewItem.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<!-- data picker-->
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
@@ -401,6 +402,51 @@
 		            var pagenode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 		            var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 
+                    if (listNode.getElementsByTagName("ROW").length > 0) {
+                        // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 출력값 가공
+                        var userLang = "${userInfo.lang}";
+                        var domHeaders = xml.getElementsByTagName("HEADER"); 
+                        var boardAttrListTemp = "<c:out value='${boardAttrJson}'/>";
+                        var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+                        var resultRows = listNode.getElementsByTagName("ROW");
+                        var peopleTableColList = boardAttrListJson
+                                                    .filter((e) => e.colType == "people")
+                                                    .map((e) => e.tableCol);
+                        for (let i = 0 ; i < resultRows.length; i++) {      
+                            peopleTableColList.forEach(colName => {
+                                for (let j = 0 ; j < domHeaders.length; j++) {
+                                    var header = domHeaders.item(j);
+                                    var colNameNode = header.getElementsByTagName("COLNAME")[0];
+                                    if (colNameNode && colNameNode.textContent === colName) {
+                                        var PPValueNode = listNode.getElementsByTagName("ROW")[i].getElementsByTagName("CELL")[j].getElementsByTagName("VALUE")[0];
+                                        if (PPValueNode) {
+                                            PPValueNode.textContent = peoplePickerDisplay(PPValueNode.textContent, userLang);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        
+                        // 2024-07-31 전인하 - 게시판 > 확장컬럼 > textArea 타입 출력값 가공
+                        var textAreaTableColList = boardAttrListJson
+                                                    .filter((e) => e.colType == "textArea")
+                                                    .map((e) => e.tableCol);
+                        for (let i = 0 ; i < resultRows.length; i++) {
+                            textAreaTableColList.forEach(colName => {
+                                for (let j = 0 ; j < domHeaders.length; j++) {
+                                    var header = domHeaders.item(j);
+                                    var colNameNode = header.getElementsByTagName("COLNAME")[0];
+                                    if (colNameNode && colNameNode.textContent === colName) {
+                                        var PPValueNode = listNode.getElementsByTagName("ROW")[i].getElementsByTagName("CELL")[j].getElementsByTagName("VALUE")[0];
+                                        if (PPValueNode) {
+                                            PPValueNode.textContent = PPValueNode.textContent.replace(/<br\s*\/?>/gi, '');
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    
 		            pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
 		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
 		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
@@ -519,10 +565,11 @@
 		            MailOptionHidden();
 		        }
 		        catch (e) {
+		            console.log(e);
 		            alert("getBoardList_after : " + e.description);
 		        }
 		    }
-		    function MakeSubCondition() {
+		    function MakeSubCondition(type) {
 		        var TYPE = "";
 		        var DATA = "";
 		        //하위 게시판 검색할 건지에 대한 조건
@@ -530,7 +577,7 @@
 		        {
 		            TYPE += "SEARCHSUBBOARD;";
 		        }
-		        if (document.getElementById("txt_keyword").value != "") {
+		        if (type == "quick") {
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
@@ -1255,7 +1302,7 @@
 		        }
 		        CurPage = "1";
 		        BoardSearchOptionHidden();
-		        MakeSubCondition();
+		        MakeSubCondition(type);
 		        getBoardList();
 		    }
 		    function check_presence() {

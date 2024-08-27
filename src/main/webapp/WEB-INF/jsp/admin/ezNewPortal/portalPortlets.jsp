@@ -403,6 +403,8 @@
 			//var portletMenuId = document.getElementById("portlet" + portletId);
 			var menuId = document.getElementById("portlet" + portletId).getAttribute("data2");
 			var portletCode = document.getElementById("portlet" + portletId).getAttribute("data3");
+			var dataGeneral = document.getElementById("portlet" + portletId).getAttribute("data-general");
+			
 			var favoriteBoardUrl = document.getElementById("portlet" + portletId).dataset.url;
 			if ((menuId == 4 && favoriteBoardUrl != '/ezNewPortal/favoriteBoardPortlet.do') && boardId == null && portletCode != "tabBoard") {
 				alert("<spring:message code='ezNewPortal.t050' />");
@@ -424,7 +426,7 @@
 				}
 			}
 			
-			if (menuId == 3) {
+			if (menuId == 3 && !dataGeneral) {
 				connectionUrl += ("?cabinetType=" + document.getElementById("portlet" + portletId).querySelector("#cabinetType" + portletId).value);
 			}
 			
@@ -476,7 +478,6 @@
 					var portletCnt = result.length;
 					// 2020-12-07 박기범 - portletCode 조회 추가 
 					var portletCode ="";
-					
 					for (var i = 0; i < portletCnt; i++) {
 						portletId = result[i].portletId;
 						defaultOrder = result[i].defaultOrder;
@@ -612,11 +613,8 @@
 						}
 
 						if (!result[i].general) {
-							if (menuId == '3') {
-								listHTML += getCabinetTypeRowStr(portletURL, portletId);
-							} else {
-								listHTML += getBoardViewTypeRowStr(portletURL, portletId);
-							}
+							listHTML += getCabinetTypeRowStr(portletURL, portletId);
+							listHTML += getBoardViewTypeRowStr(portletURL, portletId);
 						} else if (isFixBoardPortlet(portletCode)) {
 							listHTML += getFixBoardKeyRowStr(portletURL, portletId);
 						}

@@ -91,7 +91,8 @@
 		<script type="text/javascript">
 			var lastLoginAttempt = 0;
 			var loginCooldown = 1000; // 1초 (1000 밀리초)
-
+			var pwPolicyExplain = "${pwPolicyExplain}";
+		
 			function actionLogin() {
 				var currentTime = new Date().getTime();
 
@@ -298,6 +299,9 @@
 			        document.all['txtNewPasswordConfirm'].focus();
 			        return;
 			    }
+				
+				var resetPasswordFlag = "${resetPassword}";
+				resetPasswordFlag = resetPasswordFlag ==="" ? 'N' : resetPasswordFlag;
 		        
 		        var frm = document.loginForm;
 		        var rsa = new RSAKey();
@@ -311,7 +315,8 @@
 		    			USERID : rsa.encrypt(document.getElementById("chooseId").getAttribute("data-userId")),
 		    			OLDPASSWORD : rsa.encrypt(document.getElementById('txtOldPassword').value),
 		    			NEWPASSWORD : rsa.encrypt(document.getElementById('txtNewPassword').value),
-		    			NEWPASSWORDCONFIRM : rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value)
+		    			NEWPASSWORDCONFIRM : rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value),
+						RESETPASSWORDFLAG : resetPasswordFlag
 		    		},
 		    		url : "/user/login/changePassword.do",
 		    		success: function(text){
@@ -501,6 +506,10 @@
 	                clearObj.focus();
 	            })
 	        }
+			
+			function resetPassword () {
+				window.location.href = "/user/login/resetPw/resetPwInfo.do";
+			}
 	
     	</script>
 	</head>	
@@ -554,7 +563,7 @@
 			                        </p>
 	  		                        <c:if test="${usePasswordReset == 'YES'}"> 
 				                        <p class="find_pw">
-			                                <a id="findPwd" onclick="openFindPwd();" ><spring:message code="login.zno025"/></a>
+			                                <a id="findPwd" onclick="resetPassword();" ><spring:message code="login.zno025"/></a>
 			                            </p>
 	 	                            </c:if>
 	                        	</div>
@@ -574,75 +583,63 @@
 			</span>
 			<p><span>[<strong class="yellow_txt">Caps Lock</strong>]?pCapsLockMsg?></span></p>
 		</div>
-		<div id="exDiv" style="display:none;margin-bottom:100px;padding:67px 20px 32px">
+		<div id="exDiv" style="display: none; margin-bottom: 100px;padding: 67px 20px 32px;" class="modal">
 			<div id="close">
-	            <ul>
-	                <li><a rel="modal:close"><span></span></a></li>
-	            </ul>
-	        </div>			
-			<div class="password_reset">
-				<p class="passwordTitle" style="margin: 0 auto; text-align: center; ">
-					<c:if test="${isFirstLogin == 'Y'}">
-						<img src="/images/kr/login/firstLogin_txt.svg" style="height: 52px;">
-					</c:if>
-					<c:if test="${isFirstLogin != 'Y'}">
-						<img src="/images/kr/login/expireDate_txt.svg" style="height: 52px;">
-					</c:if>
-				</p>
+				<ul>
+					<li><a rel="modal:close"><span></span></a></li>
+				</ul>
+			</div>
+			<div class="password_change">
+				<div class="passwordTitle">
+					<span class="password_lock"></span>
+					<div class="password_tit">
+						<p class="tit_01">
+							<c:choose>
+								<c:when test="${isFirstLogin == 'Y' && resetPassword != 'Y'}">
+									<spring:message code='login.kdh029'/>
+								</c:when>
+								<c:when test="${isFirstLogin != 'Y' && resetPassword != 'Y'}">
+									<spring:message code='login.kdh030'/>
+								</c:when>
+								<c:otherwise>
+									<spring:message code='login.kdh032'/>
+								</c:otherwise>
+							</c:choose>
+						</p>
+						<p class="tit_02">
+<%--							<span><spring:message code='main.login.design03'/></span>--%>
+							<spring:message code='login.kdh031' htmlEscape="false"/>
+						</p>
+					</div>
+				</div>
 				<ul class="passwordForm">
+					<li>
+						<div>${pwPolicyExplain}</div>
+					</li>
 					<li style="padding-top:10px;">
 						<span class="formText"><spring:message code='main.jjh09'/></span>
 						<span class="formID" id="chooseId" data-userId="${userId}">${loginId}</span>
 					</li>
-					<li><span class="formText"><spring:message code='ezPersonal.t949'/></span><span class="formInput"><input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
-					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
-					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
-					<%-- <li style="padding-bottom:10px;padding-top:3px" class="grayText">▒ <spring:message code='main.jjh04'/></li> --%>
-					<li style="padding-bottom:10px;padding-top:3px" class="grayText">${pwPolicyExplain}</li>
+					<li>
+						<span class="formText">
+							<c:if test="${resetPassword == 'Y'}"><spring:message code='login.kdh001'/></c:if>
+							<c:if test="${resetPassword != 'Y'}"><spring:message code='ezPersonal.t949'/> </c:if>
+						</span><span class="formInput"><input type="password" id="txtOldPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+
+					<li style="padding-bottom:10px;padding-top:3px" class="grayText"></li>
 				</ul>
 			</div>
 			<div class="btnpositionLayer" style="background-color: white;border:0px">
-			    <a class="imgbtn" onClick="javascript:PassWordChange()" style="background: #3F8EE8; border: 1px solid #3F8EE8;"><span style="color: #fff;"><spring:message code='ezSchedule.t4' /></span></a>
-			    <c:if test="${isFirstLogin != 'Y'}">
-		    		<a class="imgbtn" onClick="passwordUpdateNextTime()" ><span><spring:message code='main.hdp01'/></span></a>
-			    </c:if>
-			</div>			
-			<%-- <div style="float:left">
-				<c:if test="${isFirstLogin == 'Y'}"><img src="/images/hello.png" width="52" height="52"/></c:if>
-				<c:if test="${isFirstLogin != 'Y'}"><img src="/images/warning.png" width="52" height="52"/></c:if>
-			</div>
-			<div style="float:right;color:rgb(0, 72, 149);width:360px">
-				<c:if test="${isFirstLogin == 'Y'}">
-					<div style="font-size:11px">▒ <spring:message code='main.jjh07'/></div>
+				<a class="imgbtn ok" onclick="javascript:PassWordChange()"><span><spring:message code='ezSchedule.t4' /></span></a>
+				<c:if test="${isFirstLogin != 'Y' && resetPassword != 'Y'}">
+					<a class="imgbtn" onClick="passwordUpdateNextTime()" ><span><spring:message code='main.hdp01'/></span></a>
 				</c:if>
-				<c:if test="${isFirstLogin != 'Y'}">
-					<div style="font-size:11px">▒ <spring:message code='fail.user.passwordExpired'/></div>
-				</c:if>				
-				<div style="font-size:11px;margin-top:3px">▒ <spring:message code='main.jjh03'/></div>
-				<div style="font-size:11px;margin-top:3px">▒ <spring:message code='main.jjh04'/></div>
 			</div>
-			<div style="clear:both"></div>
-			<p style="border-top:1px solid rgb(0, 72, 149);margin-top:13px">
-				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh09'/> : </label>
-				<span id="chooseId">${userId}</span>
-			</p>
-			<p>
-				<label style="color:rgb(0, 72, 149);"><spring:message code='ezPersonal.t949'/> : </label>
-				<input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
-			</p>
-			<p>
-				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh05'/> : </label>
-				<input type="password" id="txtNewPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
-			</p>
-			<p style="border-bottom:1px solid rgb(0, 72, 149)">
-				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh06'/> : </label>
-				<input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
-			</p>
-			<div class="btnpositionLayer" style="background-color: white;border:0px">
-			    <a class="imgbtn" onClick="javascript:PassWordChange()" ><span><spring:message code='ezSchedule.t4' /></span></a>
-			</div> --%>			
-		</div>
-		
+
+			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a></div>
+
 		<%-- 2018-05-24 홍승비 - 비밀번호 오류 시 레이어팝업 출력 --%>
 		<div id="exDiv2" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
 			<div id="close">

@@ -148,7 +148,7 @@ var strLang254 = "输入的字段内容 "
 var strLang255 = "只能输入到. (韩字 "
 var strLang256 = "人)"
 // ezAPRDOCATTACH
-var strLang257 = 请从文档列表中选择要添加的文档。"
+var strLang257 = "请从文档列表中选择要添加的文档。"
 var strLang258 = "该文件已被登录"
 // ezAPRDOCATTACH\aprDocAttach.js
 // ezAPRDOCATTACH\getDocAttach.js
@@ -685,7 +685,7 @@ var strLang1027 = "意见已修改。";
 var strLang1028 = "年";
 var strLang1029 = "月";
 var strLang1030 = "日";
-var strLang1031 = "不得在匿名公告栏、照片公告栏或URL链接公告栏上发布邮件/审批文件。。";
+var strLang1031 = "您只能在普通公告栏和问答公告栏上发帖。";
 var strLang1038 = "外部发送文档正文中不能包含图像和链接。";
 var strLang1039 = "所选择的用户不在。</br>确定要添加吗?";
 
@@ -1165,3 +1165,15 @@ var strLang975 = "格式版本不同，不能重复使用.";
 var strLangJIH01 = "无法预览安全文档。";
 var strLangJIH02 = "/blank_cn.htm";
 var strLangJIH03 = "对外收信箱可以首次阅览文件后进行预览。"
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "批受理已完成。";
+var strLangLGEAR02 = "批量受理中发生错误。<br>";
+var strLangLGEAR03 = "批受理者已结算完毕。";
+var strLangLGEAR04 = "批量受理者裁决中发生错误。<br>";
+
+// 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "您是否要继续进行批量提交？<br>状态为退回文件的，执行文本和协议文本，以及存在分离附件的文件除外。";
+var strLangJSBAP03 = "您是否要继续进行批量提交和最终审批？<br>状态为退回文件的，执行文本和协议文本，以及存在分离附件的文件除外。";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."

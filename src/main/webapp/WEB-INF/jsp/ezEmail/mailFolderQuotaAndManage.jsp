@@ -312,7 +312,8 @@
 		            //편지함의 메일 지운편지함으로 이동
 					else {
 						if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
-							if (xmlHTTP2.responseText == "OK") {
+							if (xmlHTTP2.responseText == "OK" || xmlHTTP2.responseText === "MAIL_NOT_EXISTS") {
+								// 이미 비워져있는 상태도 성공 처리
 								alert("<spring:message code='ezEmail.t478' />");
 		            		} else if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
 		            			alert(strLang241);

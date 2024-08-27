@@ -312,7 +312,7 @@
 
 	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 			
-	<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 	</div>	
 <%-- script line --%>
@@ -1007,9 +1007,6 @@
 
 	$(function() {
 		makePortletsShell(portletOrder)
-		if (!!fixedPortletList) {
-			makeFixPortlet(fixedPortletList);
-		}
 		makePortlets(portletOrder);
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";

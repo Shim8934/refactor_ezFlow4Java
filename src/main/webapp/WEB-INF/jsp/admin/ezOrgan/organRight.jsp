@@ -46,6 +46,7 @@
 		    };
 		    
 		    $(document).ready(function(){
+				useOrganHideFlag = "${useOrganHideFlag}";
 		    	getDeptFullTree(topid);
 				
 				if (topid != "Top"){
@@ -101,7 +102,7 @@
 		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
-				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 
 				g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -151,6 +152,7 @@
 			    createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 			    createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");
 			    createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
+			    createNodeAndInsertText(xmlpara, objNode, "ADMINORGAN", "y");
 			    
 			    xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 			    xmlHTTP.send(xmlpara);
@@ -202,7 +204,7 @@
 				}
 				
 				if (listOpt1.checked == true){
-					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10";
+					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10;userTreeFlag";
 					typeContent = "userWithMasterAdmin";
 					document.getElementsByClassName('searchForm')[0].style.display = "";
 				}else{
@@ -218,9 +220,11 @@
 					data : {
 							deptID : DeptID,
 							cell : cellContent,
-							prop : "userType",
-							type : typeContent
+							prop : "department;userType;extensionAttribute7",
+							type : typeContent,
+							adminOrgan : "y"
 					},
+					async : false,
 					success : function(xml){
 						result=loadXMLString(xml);
 						var headerData = createXmlDom();
@@ -259,10 +263,14 @@
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 							totalUserCount = xmlRtn.getElementsByTagName('ROW').length;
 				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
-				            	if($(this).find("DATA3").text() == "addJob"){
+				            	if($(this).find("DATA4").text() == "addJob"){
 				            		var orgPosition = $(this).find("CELL").eq(4).find("VALUE").text();
 				            		$(this).find("CELL").eq(4).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
 				            	}
+								if ("YES" === useOrganHideFlag && $(this).find("CELL").eq(6).find("VALUE").text() === 'N') {
+									var userName = $(this).find("CELL").eq(1).find("VALUE").text();
+									$(this).find("CELL").eq(1).find("VALUE").text(userName+"(X)");
+								}
 				            });
 				            var Node = headerData.importNode(xmlRtn, true);
 				            headerData.documentElement.appendChild(Node);
@@ -298,22 +306,37 @@
 					method : "POST",
 					dataType : "json",
 					data : {
-						deptID : tempDeptID
+						deptID : tempDeptID,
+						adminOrgan : "y" 
 					},
 					success : function(result) { // && !pSeach 
 						if (organSelectDeptNM.getAttribute("countinfo") != "1" && !pSeach) {
 							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							var totalCount = 0;
+							
+							// 부서가 회사인지 확인하기 위해
+							var treeView = new TreeView();
+							treeView.LoadFromID("FromTreeView");
+						    var selectNode = treeView.GetSelectNode();
+							var companyID = selectNode.GetNodeData("extensionattribute2");
+							
+// 							if (tempDeptID != 'Top') {
+// 								totalCount = result.totalCount;
+// 							} else {
+// 								totalCount = result.totalCount2;
+// 							}
 
-							if (tempDeptID != 'Top') {
-								totalCount = result.totalCount;
-							} else {
-								totalCount = result.totalCount2;
-							}
+							totalCount = result.totalCount;
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span> / <span class='totalCount'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								//2024.07.17 한슬기 : totalCount표시 조건 변경
+								if(tempDeptID == companyID){ // 회사인 경우
+									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span> / <span class='totalCount'>" + result.totalCount2 + "</span>";
+								} else { // 부서인 경우
+									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span> / <span class='totalCount'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								}
+
 							} else {
 								document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + totalCount + "</span>";
 							}
@@ -552,11 +575,11 @@
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = info_dept_Complete;
 				    
-				    var OpenWin = window.open(deptInfoURL, "DeptInfo", GetOpenWindowfeature(435, 350));
+				    var OpenWin = window.open(deptInfoURL, "DeptInfo", GetOpenWindowfeature(435, 400));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else {
-				    var rtnValue = window.showModalDialog(deptInfoURL, args, "dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 350));
+				    var rtnValue = window.showModalDialog(deptInfoURL, args, "dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 400));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.t7' />");
@@ -794,7 +817,7 @@
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";		            
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -822,7 +845,7 @@
 						data : {
 							search : search_type.value + "::" + encodeURIComponent(keyword.value),
 							cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
-							prop : "department;usertype",
+							prop : "department;usertype;extensionAttribute7",
 							type : "user",
 							page : pageNum,
 							adminOrgan : "y"
@@ -928,7 +951,7 @@
 						return;
 					} else if (adCount == 1){
 						g_xmlHTTP = createXMLHttpRequest();
-						var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+						var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 						g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 						g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 						g_xmlHTTP.send(strQuery);
@@ -948,7 +971,7 @@
 							if (rgParams["deptid"] != "") {
 								g_xmlHTTP = createXMLHttpRequest();
 								// 20110412 사용자 추가시 필요 정보 추가처리.
-								var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+							var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 								g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 								g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 								g_xmlHTTP.send(strQuery);
@@ -1095,7 +1118,7 @@
 
 				for (var i = 0 ; i < listview.GetDataRows().length ; i++){
 					objNode += listview.GetDataRows()[i].getAttribute("DATA2");
-					userType += listview.GetDataRows()[i].getAttribute("DATA3");
+					userType += listview.GetDataRows()[i].getAttribute("DATA4");
 					
 					if(i != listview.GetDataRows().length){
 						objNode += ",";
@@ -1143,6 +1166,7 @@
 			    parent.document.getElementById("lef").contentWindow.hideProgress();
 			}
 			
+			var OpenWin_add_user = "";
 			function add_user(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -1162,13 +1186,15 @@
 				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
 				args[4] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
 				args[5] = "";
+				args[6] = (args[0] == 'Top' || treeNode.GetNodeData("EXTENSIONATTRIBUTE1") == 'Top') ? args[1] : treeNode.GetNodeData("EXTENSIONATTRIBUTE3");
 				
 				//2016-04-19 장진혁과장 -- Cross 버전 사용으로 주석 처리
 				//if (CrossYN()) {
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = add_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
-			    try { OpenWin.focus(); } catch (e) { }
+			    //var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+			    OpenWin_add_user = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+			    try { OpenWin_add_user.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
 				    rtnValue = window.showModalDialog("UserInfo.aspx", args,
@@ -1183,9 +1209,22 @@
 		    function add_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            displayUserList(rtnValue);
+		        	
+		        	// 2024.07.05 한슬기 : 팝업창이 닫혔는지 확인(safari에서 alert이 팝업창에 가려 안보이는 현상이 있어 추가)
+		            // 추후 필요시 주석을 풀고 메시지를 넣어서 사용하면 됨
+		        	/* var checkChildClosed = setInterval(function() {
+						if (OpenWin_add_user.closed){
+							
+							clearInterval(checkChildClosed);
+							
+							alert("");
+							displayUserList(rtnValue);
+						}
+					
+					}, 100); */
 		        }
 		    }
-		    
+		    var OpenWin_info_user = "";
 			function info_user() {
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -1216,23 +1255,44 @@
 				args[2] = listview.GetSelectedRows()[0].getAttribute("DATA2");
 				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
 				args[4] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
-				args[5] = listview.GetSelectedRows()[0].getAttribute("DATA3");
+				args[5] = listview.GetSelectedRows()[0].getAttribute("DATA4");
+				args[6] = listview.GetSelectedRows()[0].getAttribute("DATA3");
+				args[7] = (args[0] == 'Top' || treeNode.GetNodeData("EXTENSIONATTRIBUTE1") == 'Top') ? args[1] : treeNode.GetNodeData("EXTENSIONATTRIBUTE3");
 				
 				//2016-04-18 장진혁과장 -- Cross 버전 사용으로 인한 주석처리
 				//if (CrossYN()) {
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(900, 460));
-			    try { OpenWin.focus(); } catch (e) { }
+
+				if (args[5] === 'addJob') {
+					var jobId = listview.GetSelectedRows()[0].getAttribute("DATA5");
+					OpenWin_info_user = window.open("/admin/ezOrgan/addJobInfo.do?selectDeptId=" + encodeURIComponent(args[6]) +"&jobId="+encodeURIComponent(jobId), "AddJobInfo", GetOpenWindowfeature(830, 440));
+				} else {
+					OpenWin_info_user = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+				}
+				try { OpenWin_info_user.focus(); } catch (e) { }
+
 			}
 			
 		    function info_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		        	var cn = userinfo_dialogArguments[0][0];
 		        	
-		            alert("<spring:message code='ezOrgan.t11' />");
-		            displayUserList(cn);
+		            //alert("<spring:message code='ezOrgan.t11' />");
+		            //displayUserList(cn);
+		            
+		        	// 2024.07.05 한슬기 : 팝업창이 닫혔는지 확인(safari에서 alert이 팝업창에 가려 안보이는 현상이 있어 추가)
+		        	var checkChildClosed = setInterval(function() {
+						if (OpenWin_info_user.closed){
+							
+							clearInterval(checkChildClosed);
+							
+							alert("<spring:message code='ezOrgan.t11' />");
+							displayUserList(cn);
+						}
+					
+					}, 100);
 
 		            if (trim(document.getElementById("keyword").value) != "") {
 		                search_click();
@@ -1253,7 +1313,7 @@
 		        } else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t44' />");
 		            return;
-		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA4") == 'addJob'){
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
 			    }
@@ -1280,7 +1340,7 @@
 				} else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t46' />");
 		            return;
-		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA4") == 'addJob'){
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
 			    }
@@ -1320,7 +1380,7 @@
 	                    alert(strLang13);
 	                    return;
 				    } else {
-				    	if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+				    	if (listview.GetSelectedRows()[0].getAttribute("DATA4") == 'addJob'){
 				    		alert("<spring:message code='ezOrgan.psb02' />");
 							return;
 				    	}
@@ -1620,7 +1680,7 @@
 				for (i; i < cnt; i++) {
 					var tempLV = doc.getElementById('lvUserList_TR_' + i);
 					var userID = tempLV.getAttribute('DATA2');
-					var gyumInfo = tempLV.getAttribute('DATA3');
+					var gyumInfo = tempLV.getAttribute('DATA4');
 					// 3 암호관리 4 사원이동 5 퇴직
 					if(tempLV.children[0].innerHTML != "") {
 						tempLV.children[0].innerHTML = "<span><img id='pwd" + userID +"' class='deptMaster' src='/images/admin/deptmaster.png'></span>";
@@ -1794,7 +1854,7 @@
 
 				// 겸직자가 한명이라도 있으면 return
 				for (i = 0; i < len; i++) {
-					isAddJob = listview.GetSelectedRows()[i].getAttribute("DATA3") == 'addJob' ? true : false;
+					isAddJob = listview.GetSelectedRows()[i].getAttribute("DATA4") == 'addJob' ? true : false;
 					if (isAddJob) {
 						alert("<spring:message code='ezOrgan.psb02' />");
 						return;

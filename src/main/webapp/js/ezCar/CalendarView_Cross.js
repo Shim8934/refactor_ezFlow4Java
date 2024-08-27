@@ -476,6 +476,7 @@ function CalendarView(pTagetID,chk_str) {
     		var dragDay = ui.draggable.children().attr("id");
     		var dragType = ui.draggable.children().attr("datetype");
     		var dropDay = $(this).attr("day");
+    		var completeFG = ui.draggable.children().attr("completefg");
     		
     		if (dragDay.substring(4, 14) == dropDay) {
     			return;
@@ -485,7 +486,7 @@ function CalendarView(pTagetID,chk_str) {
     			dragDay += "ALL";
     		}
     		
-    		if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
+    		if (updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG)) {
     			RefreshView();
     		}
     	}
@@ -505,6 +506,7 @@ function CalendarView(pTagetID,chk_str) {
     			var dragId  = ui.draggable.attr("scheduleid");
     			var dropDay = $(this).attr("id");
     			var dragDay = ui.draggable.attr("id");
+    			var completeFG = ui.draggable.attr("completefg");
     			
     			if (dragDay.substring(4, 14) == dropDay.substring(0, 10)) {
     				return;
@@ -513,7 +515,7 @@ function CalendarView(pTagetID,chk_str) {
     			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));	
     			dragDay = changeDateFormat(dragDay);
     			
-    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
+    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG)) {
     				RefreshView();
     			}
     		}
@@ -534,6 +536,7 @@ function CalendarView(pTagetID,chk_str) {
     			var dropId  = $(this).attr("Id");
     			var dropDay = dropId.substring(3, dropId.indexOf("_Value"));
     			var dragDay = ui.draggable.attr("id");
+    			var completeFG = ui.draggable.attr("completefg");
     			
     			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
     			
@@ -544,7 +547,7 @@ function CalendarView(pTagetID,chk_str) {
     			dragDay = changeDateFormat(dragDay);
     			dropDay = changeDateFormat(dropDay);
     			
-    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
+    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG)) {
     				RefreshView();
     			}
     		}
@@ -2302,7 +2305,7 @@ function myDate(year, month, day, leapMonth) {
     this.day = day;
     this.leapMonth = leapMonth;
 }
-function updateDragSchedule(typeCal, dragId, dragDay, dropDay) {
+function updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG) {
 	var rtv = true;
 	
 	$.ajax({
@@ -2314,7 +2317,8 @@ function updateDragSchedule(typeCal, dragId, dragDay, dropDay) {
 			typeCal: typeCal,
 			dragId : dragId,
 			dragDay: dragDay,
-			dropDay: dropDay
+			dropDay: dropDay,
+			completeFG: completeFG
 		},
 		success: function(text){
 			if (text == "1") { //권한 없음

@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezNotification.web;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -19,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
 import egovframework.ezEKP.ezPersonal.type.NotiType;
@@ -68,6 +71,9 @@ public class EzNotificationGWController {
 	
 	@Resource(name = "loginService")
     private LoginService loginService;
+	
+	@Autowired
+	private EgovMessageSource egovMessageSource;
 	
 	@Autowired
 	private Properties config;
@@ -144,43 +150,54 @@ public class EzNotificationGWController {
 				subTypeForMobilePush = subType != "" ? notiType.subType() + "" : "0";
 			}
 			
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(primaryLang));
+			
 			String mainTypeForMobilePush = "";
 			String pushNotiContent = StringEscapeUtils.unescapeHtml4(notiContent);
 			switch (mainType) {
 			case "APPROVAL":
-				pushNotiContent = "[" + "결재" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth01", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "2";
 				break;
 			case "BOARD":
-				pushNotiContent = "[" + "게시판" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth02", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "51";
 				break;
 			case "SCHEDULE":
-				pushNotiContent = "[" + "일정" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "A";
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth03", locale) + "] " + pushNotiContent;
+				mainTypeForMobilePush = "6011";
 				break;
 			case "RESOURCE":
-				pushNotiContent = "[" + "자원관리" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "B";
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth04", locale) + "] " + pushNotiContent;
+				mainTypeForMobilePush = "6021";
 				break;
 			case "SURVEY":
-				pushNotiContent = "[" + "전자설문" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "C";
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth05", locale) + "] " + pushNotiContent;
+				mainTypeForMobilePush = "6031";
 				break;
 			case "POLL":
-				pushNotiContent = "[" + "투표" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "D";
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth06", locale) + "] " + pushNotiContent;
+				mainTypeForMobilePush = "6041";
 				break;
 			case "COMMUNITY":
-				pushNotiContent = "[" + "커뮤니티" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "E";
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth07", locale) + "] " + pushNotiContent;
+				mainTypeForMobilePush = "6051";
 				break;
 			case "WEBFOLDER":
-				pushNotiContent = "[" + "웹폴더" + "] " + pushNotiContent;
-				mainTypeForMobilePush = "F";
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth08", locale) + "] " + pushNotiContent;
+				mainTypeForMobilePush = "6061";
+				break;
+			case "JOURNAL":
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth09", locale) + "] " + pushNotiContent;
+				mainTypeForMobilePush = "6071";
+				break;
+			case "NOTI":
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth10", locale) + "] " + pushNotiContent;
+				mainTypeForMobilePush = "6001";
 				break;
 			default:
-				mainTypeForMobilePush = "Z";
+				mainTypeForMobilePush = "6001";
 				break;
 			}
 			

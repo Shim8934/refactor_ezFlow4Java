@@ -684,7 +684,7 @@ var strLang1027 = "Fixed comments";
 var strLang1028 = "Year";
 var strLang1029 = "Month";
 var strLang1030 = "Day";
-var strLang1031 = "Can not post email / approval-document to photo board or anonymous board or url board.";
+var strLang1031 = "Posts are only allowed on general and Q&A boards.";
 var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "Selected user is out of office.</br>Would you like to add it?";
 
@@ -1164,3 +1164,15 @@ var strLang974 = "Please select a receiving group.";
 
 /* 2023-08-11 민지수 - 전자결재 > 양식버전 다를 시 오류 메세지 추가 */
 var strLang975 = "The form version is different and cannot be reused.";
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "The batch has been accepted.";
+var strLangLGEAR02 = "An error occurred during batch reception.<br>";
+var strLangLGEAR03 = "The batch recipient has been transferred.";
+var strLangLGEAR04 = "An error occurred during the batch recipient's pre-decision.<br>";
+
+//2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "Would you like to proceed with batch submission? <br>Documents with forwarding status, implementation statements and agreements, and documents with separate attachments are excluded.";
+var strLangJSBAP03 = "Would you like to proceed with batch submission and final approval? <br>Documents with forwarding status, implementation statements and agreements, and documents with separate attachments are excluded.";
+
+var strJangJIH04 = "Please specify a start date faster than the end date."

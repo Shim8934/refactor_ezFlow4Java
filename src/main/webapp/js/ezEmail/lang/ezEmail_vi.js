@@ -247,7 +247,7 @@ var strLang332 = "Bạn không thể xóa thư mục cấp cao nhất.";
 var strLang333 = "Bạn có chắc chắn muốn xóa vĩnh viễn tất cả các tệp trong Thư mục không?";
 var strLang334 = "Chọn thư mục.";
 var strLang336 = "Không tìm thấy đường dẫn.";
-var strLang337 = "Không thể gửi e-mail / phê duyệt-tài liệu lên bảng ảnh hoặc bảng ẩn danh hoặc URL-link-board.";
+var strLang337 = "Chỉ đăng bài trên các diễn đàn chung và diễn đàn hỏi đáp.";
 var strLang338 = "Vui lòng đăng ký bao gồm các từ của chủ đề hoặc cơ thể. Ví dụ) \"quảng cáo\"";
 var strLang339 = "Trong chủ đề hoặc nội dung thư ";
 var strLang340 = "Áp dụng cho tất cả các thư";
@@ -340,6 +340,34 @@ var strLangKWCHd01 = "An error occurred while saving security HWP document. Plea
 
 var strLangNJK01 = "Restricted special characters for an email folder name(";
 var strLangNJK02 = "are included.";
+
+// 스팸신고
+var strLangHSG01 = "Không thể báo cáo rác vì không tìm thấy địa chỉ email.";
+var strLangHSG02 = "Báo cáo rác không được xử lý thành công.";
+
+//new ui
+const strLangFolderManage = "Manage folder";
+const strLangSubscribe = "Subscribe";
+const strLangPlzCheckSearchInput = "Enter search term.";
+const strLangSearchFetchError = "Error occurred while retrieving search results. -";
+const strLangNoSuchDept = "There is no department found.";
+const strLangDistributionFetchError = "Error occurred while retrieving public distribution group list. -";
+const strLangAddJobSimplyMark = "(Concurrent) ";
+const strLangCompany = "Company";
+const strLangDistributionAdd = "Add distribution list";// ezEmail.t60 = 배포목록추가
+const strLangAddressFetchError = "Error occurred while reading address list";// ezEmail.t585 = 주소목록을 읽는중에 오류발생
+const strLangPlzSelectGroupMail = "Select group message.";// ezEmail.t581 = 그룹메일을 선택해주세요.
+const strLangPlzSelectDistribution = "Select public distribution group.";// ezEmail.t580 = 공용배포그룹을 선택해주세요.
+const strLangNotAllowedSpecialChar = "The special character can't be entered.";
+
+const strLangSelectDept = "Chọn Bộ phận";
+const strLangSelectTitle = "Select Title";
+const strLangSelectRole = "Select Role";
+const strLangPlzCheckSearchNameInput = "Nhập tên để tìm kiếm.";
+const strLangOrgFetchError = "Lỗi xảy ra trong khi tìm kiếm sơ đồ tổ chức. -";
+const strLangSelectProxyApproverWarning = "Chọn một người cho cấp phó.";
+
+const strLangTempSaveAttachmentsWarning = "Các tệp đính kèm sẽ bị xóa khi lưu. Bạn có muốn lưu không?";
 
 function GetLocalTime(Offset , pDateTime)
 {

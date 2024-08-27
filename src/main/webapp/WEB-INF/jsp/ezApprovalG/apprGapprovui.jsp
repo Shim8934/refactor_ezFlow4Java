@@ -707,7 +707,9 @@
 			        }
 		        } else {
 			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
-			            setMenuBar("btntotaldocinfo", false);
+			            if (pAprLineType != strAprType8 && pAprLineType != strAprType9) {
+							setMenuBar("btntotaldocinfo", false);
+						}
 			            setMenuBar("btnJunKyul", false);
 			            setMenuBar("btnModAprLine", false);
 			            setMenuBar("btnEdit", false);
@@ -775,6 +777,11 @@
 		        if (pDraftFlag == "HABYUI") {
 		            setMenuBar("btntotaldocinfo", false);
 		        }
+
+				// 2024-06-27 임정은 - 협조자도 공람자 지정할 수 있도록 변경
+				if (approvalFlag == "G" && pGubun == "6" && (pAprLineType == strAprType8 || pAprLineType == strAprType9)) {
+					pGubun = "14";
+				}
 
 		    }
 		    function btnApprove_onclick()
@@ -1786,7 +1793,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1942,6 +1949,14 @@
                                 reason = ret[30];
                                 limitDate = ret[31];
                             }
+				            
+				         	// 2023-05-23 임정은 - 공람 추가
+				            if (ret[22] == "noItem") {
+				            	delAprLineInfoCC();
+				            } else if (ret[22] == "sameItem") {
+				            } else {
+				            	SaveAprLineInfoCC(ret[22]);
+				            }
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

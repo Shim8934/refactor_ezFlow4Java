@@ -33,6 +33,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.BooleanUtils;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.lang3.StringUtils;
@@ -157,6 +158,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	logger.debug("init started.");
     	try {
 			// create table
+    		ezCommonService.createTables(); // 2024-07-01 김수아 - 테이블 생성 공통함수 추가
 	    	ezCommonService.createMailTemplateSequence();
     		ezCommonService.createJmochaMailboxProgress();
 	    	ezCommonService.createTblSession(); // 2023-11-07 이사라 - DB 기반 세션 테이블 생성
@@ -236,6 +238,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.alterDocAttachNameCol(); // 2024-06-24 민지수 > 전자결재 > 비전자 기록물 > 본문첨부 파일명 컬럼 추가
 			ezCommonService.alterUserThemePagination();
 			ezCommonService.alterTblScheduleForShowtop(); /* 2024-06-17 이주원 - 일정관리 > 상단표시 컬럼 추가 */
+			ezCommonService.addUserDeptHideFlag(); //2024-07-25 김대현 - 사용자 숨김, 부서 숨김 Flag 컬럼 추가
+			ezCommonService.alterSaveFlagForCbShare(); // 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
 
 			// tenant config
 	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
@@ -300,7 +304,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             ezCommonService.addQuickLinkCompanyID(); // 2023-12-15 박차웅 - 퀵링크 tbl_ps_quicklink 테이블 COMPANYID 필드 추가
             ezCommonService.alterThemeInformation(); // 2024-06-20 한태훈 - 테마 설명 내용 수정.
             ezCommonService.alterCompanyMenuIconUrl(); // 2024-07-08 황인경 - 회사별 메뉴 아이콘 추가
-        } catch (Exception e) {
+			ezCommonService.insertGongRamListOption(); // 2024-06-17 임정은 - 공람 listoption 추가
+			ezCommonService.addReminderTimeAtTblScheduleConfig(); //2023-09-04 한태훈 - 일정관리 > 설정 > 미리알림 시간 컬럼 추가
+	    	ezCommonService.createTblScheduleReminderScheduler(); // 2023-09-04 한태훈 - 일정관리 > 미리알림 스케줄러 테이블 추가
+	    	ezCommonService.insertReminderTenantConfig(); // 2023-09-11 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그, 미리알림 시 하루종일 일정의 시작 시각 설정 테넌트 컨피그 추가
+			ezCommonService.alterBoardExtentionAttrByteSize(); // 2024-07-31 전인하 - 게시판 > 확장컬럼 > 저장할 수 있는 데이터 크기 변경 (mysql, oracle 일괄 500자)
+			ezCommonService.insertDotNetTotalNotificationConfig(); // 2024-08-21 유길상 닷넷 통합알림 컨피그
+			ezCommonService.updateInProcessJpCodeName3(); // 2024-08-22 유길상 - CODELIST > a04(진행) 일본어 변경 
+		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
     	logger.debug("init ended.");
@@ -402,6 +413,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
 		String useOTP = ezCommonService.getTenantConfig("useOTP", user.getTenantId());
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", user.getTenantId());
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", user.getTenantId());
 		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
 			useExternalMailServer = "NO";
 		}
@@ -436,6 +448,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useOTP", useOTP);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("useOrganHideFlag", useOrganHideFlag);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
@@ -811,6 +824,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         companyMailDomain = pageType.equals("modify") ? deptMail.split("@")[1] : companyMailDomain; // 수정이면 수정할 부서의 도메인
 		String companyDomainList = ezCommonService.getCompanyConfig(tenantID, deptCompanyID, "MailInnerDomain");
 		String[] domainList = companyDomainList.split(";");
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId());
        
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
@@ -820,6 +834,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("domainList", domainList);
         model.addAttribute("deptMail", deptMail);
         model.addAttribute("pageType", pageType);
+        model.addAttribute("useOrganHideFlag", useOrganHideFlag);
         
         logger.debug("deptInfo ended");
         
@@ -1258,6 +1273,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
 		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId());
 		
 		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
 			useZipCodeSearch = "YES";
@@ -1277,6 +1293,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("locale", userInfo.getLocale());
 		model.addAttribute("userPrimary", userInfo.getPrimary());
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("useOrganHideFlag", useOrganHideFlag);
 				
 		logger.debug("userInfo ended");
 		
@@ -1935,6 +1952,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		// masteradmin 사용자를 제외하기 위해 1을 뺀다.
 		userCount--;
+		// 승인메일 공유사서함이 있으면 해당 계정은 라이센스에서 제외
+		Boolean apprSharedExist = BooleanUtils.toBoolean(ezOrganAdminService.userCheck("__approved_mail", tenantID));
+		if (apprSharedExist) {
+			userCount--;
+		}
 		
 		logger.debug("licensedUserCount=" + licensedUserCount + ",userCount=" + userCount);
 				
@@ -5848,6 +5870,116 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 		logger.debug("getUserJobCheck ended. result = " + result);
 
+		return result;
+	}
+
+	/**
+	 * 조직도관리 겸직정보 팝업 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/addJobInfo.do", method = RequestMethod.GET)
+	public String addJobInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("addJobInfo started");
+
+		userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+
+		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
+		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId());
+
+		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
+			useZipCodeSearch = "YES";
+		}
+		
+		boolean useOnlyInnerMail = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
+		String deptId = request.getParameter("selectDeptId");
+		String jobId = request.getParameter("jobId");
+		
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("lang", lang);
+		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
+		model.addAttribute("birthDay", "");
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("locale", userInfo.getLocale());
+		model.addAttribute("userPrimary", userInfo.getPrimary());
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("deptId", deptId);
+		model.addAttribute("jobId", jobId);
+		model.addAttribute("useOrganHideFlag", useOrganHideFlag);
+
+		logger.debug("addJobInfo ended");
+
+		return "admin/ezOrgan/addJobInfo";
+	}
+
+	@RequestMapping(value = "/admin/ezOrgan/getEntryAddJobInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getEntryAddJobInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+									 HttpServletResponse response) throws Exception {
+		logger.debug("getEntryAddJobInfo started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String language = userInfo.getLang();
+
+		int tenantID = userInfo.getTenantId();
+		logger.debug("tenantID={}", tenantID);
+
+		String cn = request.getParameter("cn");
+		String deptId = request.getParameter("deptId");
+		String jobId = request.getParameter("jobId");
+		//String deptId = ezOrganAdminService.getUserInfo(cn, userInfo.getPrimary(), tenantID).getDepartment();
+		String prop = request.getParameter("prop");
+
+		String entryAddJobInfo = ezOrganAdminService.getEntryAddJobInfo(cn, deptId, language, jobId, tenantID, prop);
+
+		logger.debug("getEntryAddJobInfo ended");
+		return entryAddJobInfo;
+	}
+
+	@RequestMapping(value = "/admin/ezOrgan/updateAddJobInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveAddJobInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+									 HttpServletResponse response) throws Exception {
+		logger.debug("updateAddJobInfo started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "OK";
+		// loginCookie 체크
+		if (userInfo == null) {
+			return "EMAIL_ERROR";
+		}
+
+		int tenantID = userInfo.getTenantId();
+		logger.debug("tenantID={}", tenantID);
+
+		String cn = request.getParameter("cn");
+		String deptId = request.getParameter("deptId");
+		String jobId = request.getParameter("jobId");
+		String userTreeFlag = request.getParameter("userTreeFlag");
+		String orderBy = request.getParameter("orderBy");
+		
+		try {
+			ezOrganAdminService.updateAddJobInfo(cn, deptId, jobId, tenantID, orderBy, userTreeFlag);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result = "ERROR";
+		}
+		
+		logger.debug("updateAddJobInfo ended");
 		return result;
 	}
 

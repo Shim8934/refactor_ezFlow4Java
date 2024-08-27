@@ -39,6 +39,13 @@
 		    var tempDocID;
 		    var tempGDocID;
 		    var OrderCell = "";
+		    var ezapralert_cross_dialogArguments = new Array();
+		    var ezapropinion_cross_dialogArguments = new Array();
+		    
+		    //2023-05-16 임정은 - 공람 회수
+		    var count;
+		    var aprMemberSN;
+		    
 		    window.onload = function () {
 		        try {
 		            var xmlpara = createXmlDom();
@@ -73,12 +80,51 @@
 		            alert("window_onload : " + e.description);
 		        }
 		    };
-		    function OpenAlertUI(pAlertContent) {
+		    function OpenAlertUI(pAlertContent, CompleteFunction) {
 		        var parameter = pAlertContent;
 		        var url = "/ezApprovalG/ezAprAlert.do";
-		        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-		        feature = feature + GetShowModalPosition(330, 205);
-		        var RtnVal = window.showModalDialog(url, parameter, feature);
+
+		        if (CrossYN()) {
+		            ezapralert_cross_dialogArguments[0] = parameter;
+		            ezapralert_cross_dialogArguments[2] = true;
+		            if (CompleteFunction != undefined)
+		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
+		            else
+		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		            DivPopUpShow(330, 205, url);
+		        }
+		        else {
+		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(330, 205);
+		            var RtnVal = window.showModalDialog(url, parameter, feature);
+		        }
+		    }
+		    function OpenAlertUI_Complete() {
+		        DivPopUpHidden();
+		    }
+		    function OpenInformationUI(pInformationContent, CompleteFunction) {
+		        var parameter = pInformationContent;
+		        var url = "/ezApprovalG/ezAprOpinion.do";
+		        if (CrossYN()) {
+		            ezapropinion_cross_dialogArguments[0] = parameter;
+		            ezapropinion_cross_dialogArguments[2] = true;
+		            if (CompleteFunction != undefined) {
+		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+		            } else {
+		                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+		            }
+		            DivPopUpShow(330, 205, url);
+		        } else {
+		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(330, 205);
+		            var RtnVal = window.showModalDialog(url, parameter, feature);
+		            if (RtnVal)
+		                CompleteFunction(RtnVal);
+		        }
+		        return RtnVal;
+		    }
+		    function OpenInformationUI_Complete() {
+		        DivPopUpHidden();
 		    }
 		    function getAprLine(tempDocID) {
 		        $.ajax({
@@ -317,6 +363,45 @@
             		tab3.className = "tabon";
             	}
             }
+		    
+			// 2023-05-16 임정은 - 공람 회수 버튼 온클릭 이벤트
+		    function btnWithdraw_onclick() {
+		 		var pAlertContent = "";
+		    	var listview = new ListView();
+		        listview.LoadFromID("AprLine");
+		        var tr = listview.GetSelectedRows();
+		        
+				if (tr.length != 0) {
+					if (tr[0].getAttribute("data12") != "002") {
+						pAlertContent = "<spring:message code='ezApprovalG.LJEAppr04'/>";
+						OpenAlertUI(pAlertContent);
+					} else {
+						count = listview.GetDataRows().length;
+						aprMemberSN = tr[0].firstChild.innerText;
+						pAlertContent = "<spring:message code='ezApprovalG.LJEAppr05'/>";
+						OpenInformationUI(pAlertContent, btnWithdraw_onclick_Complete);
+					}
+				}
+		    }
+		 	function btnWithdraw_onclick_Complete(ret) {
+		 		DivPopUpHidden();
+		 		if (ret) {
+		 			$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/gongRamCancel.do",
+			    		data : {
+			    				docID : tempDocID,
+			    				count : count,
+			    				aprMemberSN : aprMemberSN
+			    				},
+			    		success: function(xml){
+			    			window.location.reload();
+			    		}
+			    	});
+		 		}
+		 	}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -367,9 +452,15 @@
        			<c:if test="${approvalFlag == 'G'}">
 	       			<p id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()"><spring:message code='ezApprovalG.t946'/></span></p>
        			</c:if>
+       			<input type="button" id="btnWithdraw" name="btnWithdraw" value="<spring:message code='ezApprovalG.LJEAppr03'/>" style="float:right; width:80px; padding:2px; cursor:pointer;" onclick="btnWithdraw_onclick()">
        		</div>
        	</div>
        	
 		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:360px;WIDTH:100%;"></div></div>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

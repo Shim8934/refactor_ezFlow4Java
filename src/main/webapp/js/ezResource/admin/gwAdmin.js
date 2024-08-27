@@ -6,7 +6,8 @@
 			"DEL" : "gwBoardPostBoardDel.do",
 			"ITEMMOV" : "gwboardGetItemMoveSearch.do" ,
 			"ITEMUPDATE" : "gwboardGetItemMoveSearch.do",
-			"GONGJI" : "gwBoardPostRegGongjiBoard.do" };
+			"GONGJI" : "gwBoardPostRegGongjiBoard.do",
+			"STATUS" : "gwBoardListStatus.do" };
 
 
 function NavigateBrdAdmin_Res(pFlag) {

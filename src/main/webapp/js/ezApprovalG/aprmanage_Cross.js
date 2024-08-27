@@ -151,7 +151,7 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     
     /* 2023-06-19 조소정 - 공람할문서 메뉴(99) 복수 체크박스 추가 */
-    if(pListTypeValue == "1" || pListTypeValue == "99" || pListTypeValue == "24") { // 2020-04-29 : 결재할문서 복수체크박스 추가
+    if(pListTypeValue == "1" || pListTypeValue == "4" || pListTypeValue == "99" || pListTypeValue == "24") { // 2020-04-29 : 결재할문서 복수체크박스 추가
     	DocList.SetCheckBoxFlag(true);
     }
 
@@ -349,7 +349,13 @@ function getReceivedDocList_after(xml) {
                 getSimsaDocList();
             return;
         }
-
+        
+        // 리스트를 닫기 전에 미리 선택한 row가 있을 때를 확인
+        var preDocList = new ListView();
+        var docListID = "DocList";
+        preDocList.LoadFromID(docListID);
+       	var preSelectedRow = preDocList.GetSelectedRows();
+        
         makePageSelPage();
 
         var xmlDoc;
@@ -368,15 +374,33 @@ function getReceivedDocList_after(xml) {
 
         if (document.getElementById("lvDocList").innerHTML != "") document.getElementById("lvDocList").innerHTML = "";
         var DocList = new ListView();
-        DocList.SetID("DocList");
+        DocList.SetID(docListID);
         DocList.SetMulSelectable(false);
         DocList.SetHeaderOnClick("lvDocList_HeaderClick");
         DocList.SetRowOnClick("lvDocList_SelChange");
         DocList.SetRowOnDblClick("lvDocList_DBSelChange");
         DocList.SetTitleIdx(0);
         DocList.SetUrgentFlag(false);
+        if (pListTypeValue == "4")  //2023-04-12 이가은 - 부서수신함 복수체크박스 추가
+            DocList.SetCheckBoxFlag(true);
         DocList.DataSource(xmlDoc);
         DocList.DataBind("lvDocList");
+        
+        // 2024-05-29 조수빈 - 부서수신함에서 이전 선택한 row를 유지하는 부분이 누락되어 추가
+        // 리스트를 닫기 전에 미리 선택한 row로 재선택
+        if (selRowChangeFlag && preSelectedRow.length > 0) {
+        	// 탭 이동 시에도 전 탭에서 선택된 row를 선택되는 오류 개선
+        	selRowChangeFlag = false;
+        	var docListLength = DocList.GetRowCount() - 1;
+        	// 마지막 row의 결재가 완료된 후 리스트로 돌아오면 로우가 선택되어 있지 않는 오류 개선
+            var beforeSelectedId = preSelectedRow[0].getAttribute('id');
+            if (docListLength < beforeSelectedId.split("_")[2]) {
+        		DocList.SetSelectedIndex(docListLength);
+        	} else {
+                tr_select(beforeSelectedId, docListID, true);
+        	}
+        }  
+        
         DocList = null;
 
         HiddenMailProgress();
@@ -1167,7 +1191,7 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
         openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
         openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
-        if (shareUser == "shareUser") {
+        if (shareUser = "shareUser") {
         	openLocation += "&pageType=admin";
         }
     }
@@ -1196,7 +1220,6 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                 openLocation = "";
                 
                 if (GetAttribute(pCurSelRow,"DATA15") == "001") {
-                	//언제타는지 궁금하구나
                 	openLocation = "/ezApprovalG/recevG.do";
                 } else {
                 	openLocation = "/ezApprovalG/recevGSusin.do";
@@ -2066,6 +2089,12 @@ function setbuttonenable() {
     
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
+        document.getElementById("tbtnReceiptAll").style.display = "none";
+        document.getElementById("tbtnRJunkyulAll").style.display = "none";
+    } else if (pListTypeValue == "4") {
+    	document.getElementById("tbtnApproveALL").style.display = "none";
+    	document.getElementById("tbtnReceiptAll").style.display = "";
+    	document.getElementById("tbtnRJunkyulAll").style.display = "";
     }
     else {
     	// apprGManage.jsp에서 공람버튼의 기본 스타일을 display = "none"으로 수정 (공람할문서 메뉴에서만 표출)
@@ -2073,6 +2102,8 @@ function setbuttonenable() {
 
         document.getElementById("tbtnApprove2").style.display = "none";
         document.getElementById("tbtnApproveALL").style.display = "none";
+        document.getElementById("tbtnReceiptAll").style.display = "none";
+        document.getElementById("tbtnRJunkyulAll").style.display = "none";
     }
 
     /*if (pListTypeValue == "8")
@@ -2363,8 +2394,10 @@ function setbuttonenable() {
 
     if (approvalFlag == "S") {
 	    if (pListTypeValue == "4") {
-	        document.getElementById("tbtnViewDoc").style.display = "none";
+//	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
+	        document.getElementById("tbtnReceiptAll").style.display = "";
+	        document.getElementById("tbtnRJunkyulAll").style.display = "";
 	        
 	        if (pFunctionType == "015") {
 	            // 회송된 문서일 경우 접수버튼 display none 처리
@@ -3176,6 +3209,15 @@ function OpenAlertUI_Close() {
         DivPopUpHidden();
         parent.frames["left"].getAprCount();
         getDocList();
+    }catch(e){}
+}
+
+function OpenAlertUI_Close_Complete() {
+    try{
+        DivPopUpHidden();
+        parent.frames["left"].getAprCount();
+        getDocList();
+        OpenPopupWin.close();
     }catch(e){}
 }
 

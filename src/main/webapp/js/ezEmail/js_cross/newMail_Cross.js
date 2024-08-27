@@ -868,11 +868,26 @@ function Save_onClick(savemode) {
 		alert(strLang86);
 		return;
 	}
+	
+	if (savemode == "sendsave" && typeof (g_apprMail) != "undefined" && !g_apprMail) {
+	    apprPolicy(savemode).then((value) => {
+	    	if (!value) {
+		        if (!g_apprMail) {
+	                return;
+	            }
+	    	}
 
-    //Save_onClick을 탈 때(발송, 저장, 미리보기) 할 때, 첨부파일 순서를 저장하도록 수정. 2020-03-19 홍대표.
-    callMoveAttachFileOrder();
-    
-    checkMailStatusAndSave(savemode);
+            //Save_onClick을 탈 때(발송, 저장, 미리보기) 할 때, 첨부파일 순서를 저장하도록 수정. 2020-03-19 홍대표.
+            callMoveAttachFileOrder();
+
+            checkMailStatusAndSave(savemode);
+	    })
+	} else {
+        //Save_onClick을 탈 때(발송, 저장, 미리보기) 할 때, 첨부파일 순서를 저장하도록 수정. 2020-03-19 홍대표.
+        callMoveAttachFileOrder();
+
+        checkMailStatusAndSave(savemode);
+    }
 }
 
 function Save_onClick_Complete(ReturnValue) {
@@ -900,6 +915,11 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "TO", GetAddrFormatForSend(MsgToGot));
             createNodeAndInsertText(xmlDoc, rootNode, "CC", GetAddrFormatForSend(MsgCCGot));
             createNodeAndInsertText(xmlDoc, rootNode, "BCC", GetAddrFormatForSend(MsgBCCGot));
+            if (typeof (g_apprMail) != "undefined"){
+            	createNodeAndInsertText(xmlDoc, rootNode, "APPRMAIL", g_apprMail);
+            	createNodeAndInsertText(xmlDoc, rootNode, "APPRMAIL_TYPE", g_apprMailType);
+            	createNodeAndInsertText(xmlDoc, rootNode, "APPRMAIL_APPROVER", g_apprMailApprover);
+        	}
             if (document.getElementById("bodyType") != null && document.getElementById("bodyType").value == "1")
                 createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
             else
@@ -1114,6 +1134,15 @@ function event_SaveonClick() {
                 else if (pRtnMessage.indexOf("parse error") > -1) {
                     alert(strLang105 + " error=-2");
                 }
+                else if (pRtnMessage.indexOf("APPR_ERROR") > -1) {
+                	if (pRtnMessage == "APPR_ERROR_ALLHANDS_NOT_EXIST") {
+                		alert(strLangAppr01);
+                	} else if (pRtnMessage == "APPR_ERROR_NORMAL_NOT_EXIST") {
+                		alert(strLangAppr02);
+                	} else {
+                		alert(strLangAppr03);
+                	}
+                }
                 // 그 외
                 else {
             		alert(pRtnMessage);
@@ -1122,6 +1151,8 @@ function event_SaveonClick() {
                 MailSend_Hidden_Progress();
                 g_saveHttp = null;
                 MailStatus = "NO";
+            	g_apprMail = false;
+            	g_apprMailApprover = "";
         	}
         	// 정상적으로 처리된 경우
         	else {
@@ -1148,6 +1179,8 @@ function event_SaveonClick() {
                 
                 g_saveHttp = null;
                 MailStatus = "NO";
+            	g_apprMail = false;
+            	g_apprMailApprover = "";
                 
                 try {
 //                	window.opener.MailListRefreshByTimeout();
@@ -3212,7 +3245,7 @@ function SelectReceiver_Complete(ReturnValue) {
     receiverData["window"] = this;
     mail_newreceiverchoose_dialogArguments[0] = receiverData;
     mail_newreceiverchoose_dialogArguments[1] = SelectReceiver_onClick_Complete;
-    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=" + SelectReceiver_Complete.szDefaultWind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 655));
+    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=" + SelectReceiver_Complete.szDefaultWind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 700));
     try { OpenWin.focus(); } catch (e) { }
 }
 function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
@@ -3287,6 +3320,29 @@ function addReceiver(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
     addReceiverOneListView(1, pListViewMsgCC);
     addReceiverOneListView(2, pListViewMsgBCC);
 }
+
+function checkDLexist(groupName) {
+    var result;
+    
+    try {
+        $.ajax({
+            type: "GET",
+            async: false,
+            url : "/ezEmail/CheckDistributionExist.do",
+            dataType : "json",
+            data: {
+                "groupName" : groupName
+                },
+            success: function(data) {
+                result = data.userName;
+            }
+        });
+    }catch(e) {
+            console.log("CheckDistributionExist이 동작 안함");
+    }
+        return result;
+}
+var mail_select_dlmember_cross_dialogArguments = new Array();
 function NameChange_onClick() {
     g_bDirty = true;
     var count;
@@ -3304,25 +3360,41 @@ function NameChange_onClick() {
     if (this != null) {
     	var eventElement = (event.target ? event.target : event.srcElement);
     	var name = eventElement.parentElement.getAttribute("name");
-    	
-        GetMailAddresses(name);
-        rgParams["addrBook"] = m_addrBook;
-        rgParams["g_DisplayName"] = name;
-        rgParams["g_EmailAddress"] = eventElement.getAttribute("email");
-        rgParams["cmd"] = "JustThis";
-        checkname_cross_dialogArguments = new Array();
-        checkname_cross_dialogArguments[0] = rgParams;
-        checkname_cross_dialogArguments[1] = NameChange_onClick_Complete;
-        checkname_cross_dialogArguments[2] = DivPopUpHidden;
-        checkname_cross_dialogArguments[3] = eventElement.parentElement;
+    	var mailAddress = eventElement.parentElement.getAttribute("email");
+        var checkDistributionName = checkDLexist(name); 
         
-        if (!CrossYN()) {
-            EzHTTPTrans.style.display = "none";
-        }    
-        
-        DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
+        if(checkDistributionName != ""){
+            var rtnValue = { "name": new Array(), "email": new Array() };
+
+            mail_select_dlmember_cross_dialogArguments[0] = rtnValue;
+            mail_select_dlmember_cross_dialogArguments[1] = dlmember_click_Complete;
+            mail_select_dlmember_cross_dialogArguments[2] = DivPopUpHidden;
+            DivPopUpShow(601, 470, "/ezEmail/mailSelectDLMember.do?name=" + javaURLEncode(name) + "&cn=" + checkDistributionName + "&mailAddress=" + mailAddress + "&newMailFlag=Y");
+        } else{
+            GetMailAddresses(name);
+            rgParams["addrBook"] = m_addrBook;
+            rgParams["g_DisplayName"] = name;
+            rgParams["g_EmailAddress"] = eventElement.getAttribute("email");
+            rgParams["cmd"] = "JustThis";
+            checkname_cross_dialogArguments = new Array();
+            checkname_cross_dialogArguments[0] = rgParams;
+            checkname_cross_dialogArguments[1] = NameChange_onClick_Complete;
+            checkname_cross_dialogArguments[2] = DivPopUpHidden;
+            checkname_cross_dialogArguments[3] = eventElement.parentElement;
+            
+            if (!CrossYN()) {
+                EzHTTPTrans.style.display = "none";
+            }    
+            
+            DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
+        }
     }
 }
+
+function dlmember_click_Complete() {
+    DivPopUpHidden();
+}
+
 function NameChange_onClick_Complete(rgParams) {
     DivPopUpHidden();
     if (rgParams["recipientTDData"] == "dontprocess") return;
@@ -4448,4 +4520,70 @@ function hwp_url(p_num, arrayLength) {
 			return hwp_url(p_num, arrayLength);
 		}
 	}
+}
+
+//승인메일 정책 체크 로직
+var appr_approverSetting_arg = new Object();
+async function apprPolicy(savemode) {
+	const chkPolicy = await checkApprPolicy(); 	
+	
+	if ("OK" != chkPolicy) {
+		// 예약발송은 승인메일을 할 수 없음
+		if (m_rgParams4PostOption["delaySendDate"] !== "") {
+			alert(strLangAppr04); return;
+		}
+		
+		if ("ALL_HANDS" == chkPolicy) {
+			g_apprMailType = "ALL_HANDS";
+			
+			g_apprMail = (confirm(strLangAppr05));
+		} else if ("ERROR" == chkPolicy) {
+			alert(strLangAppr03); return;
+		} else {
+			g_apprMailType = "NORMAL";
+			
+			var param = "?shareId=" + shareId;
+			
+			appr_approverSetting_arg.savemode = savemode;
+			appr_approverSetting_arg.complete = apprComplete;
+			DivPopUpShow(600, 600, "/ezEmail/appr/approverSettingPopUp.do" + param);
+		}
+	} else {
+		return 1;
+	}
+}
+
+//승인자or대결자 지정 했을 때 
+function apprComplete(savemode, approver) {
+	g_apprMail = true;
+	g_apprMailApprover = approver;
+	Save_onClick(savemode);
+}
+
+function checkApprPolicy() {
+	return new Promise((resolve, reject) => {
+		// 첨부파일 유무 체크
+		var hasBigAttachInBody = (message.GetEditorBody().querySelectorAll("#_BigAttachListHtml #BigSizeFileLink").length > 0); // 메일 본문에 대용량첨부파일이 있는지 확인
+		var hasAttachInUpload = (dadiframe.document.querySelectorAll("#filelist tr[newfile]").length > 0); // 첨부파일 업로드 위치에 첨부파일이 있는지 확인
+		
+		let hasAttach = (hasBigAttachInBody || hasAttachInUpload); 
+		
+		$.ajax({
+			type: "POST",
+			url: "/ezEmail/appr/checkApprPolicy.do",
+			data : {
+				"hasAttach" : hasAttach,
+				"msgTo" : GetAddrFormatForSend(MsgToGot),
+				"msgCC" : GetAddrFormatForSend(MsgCCGot),
+				"msgBCC" : GetAddrFormatForSend(MsgBCCGot),
+				"shareId" : ((typeof(shareId) != "undefined" && shareId != "") ? shareId : "")
+			},
+			success: function(e) {
+				resolve(e);
+			},
+			error: function(e) {
+				resolve("ERROR");
+			}
+		});
+	});
 }

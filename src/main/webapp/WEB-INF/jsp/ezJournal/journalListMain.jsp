@@ -1110,7 +1110,7 @@
 			</c:if>
 			<li onClick="deleteJournal()"><span class="icon16 icon16_delete"></span></li>
 			<c:if test="${listType eq 'department'}">
-				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:29px; display: none;">
+				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:29px;">
 					<c:forEach items="${deptList}" var="dept">
 						<option value="${dept.deptId}"
 							<c:if test="${dept.deptId eq userDept}">selected</c:if>>${dept.deptName }

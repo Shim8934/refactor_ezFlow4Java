@@ -2603,7 +2603,7 @@ div#txtContent table {margin:auto;}
 /*.confirmation {line-height:normal !important;} style 제거 */
 .node_div .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;}
 .admin_left_title { position:relative; height:52px; background:#fff; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';line-height:52px; font-size:20px; font-weight:bold; color:#333; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
-.companySelect {margin-left:10px; height:26px; /* float:right; */ border:1px solid #bbb;}
+.companySelect {margin-left: 20px; margin-top: 15px; height:26px; width: 186px; white-space: nowrap; text-overflow: ellipsis; border:1px solid #bbb;}
 
 /* icon16 */
 .icon16:hover{background-color:#f7fbff !important}
@@ -2706,7 +2706,7 @@ div#txtContent table {margin:auto;}
 /* admin menu */
 .admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:287px; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .admin_menuDL{ margin:0px; padding:0px; height:44px; line-height:42px; background:#edf7ff; border:1px solid #2196f3; box-sizing:border-box;}
-.admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; float:left;}
+.admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .admin_menuDL .admin_menuX{ margin:0px; padding:0px;}
 .admin_menu_content{ margin:0px; padding:15px 10px; box-sizing:border-box; overflow:hidden; border-left:1px solid #cfd0d2; border-right:1px solid #cfd0d2; border-bottom:1px solid #cfd0d2;}
 .adminMenu_icon{ margin:0px 10px 0px 0px; padding:0px; float:left;}
@@ -3939,7 +3939,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 
 /* 20231004 자바 서브 추가 */
 #addr{margin: 0px 4px 0px 0px; vertical-align: middle;}
-#TreeView{padding: 6px 8px; box-sizing: border-box;}
+#TreeView, #TreeView2, #TreeView3, #TreeViewCC {padding: 6px 8px; box-sizing: border-box;}
 .file td input{margin: -4px 4px 0px 0px; vertical-align: middle;}
 #txtLimitRange{width: 60% !important;}
 
@@ -3992,6 +3992,26 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .popup #menu ul.layer_select li span{border: none; display: block;}
 .popup #menu ul.layer_select{margin-left: -33px; top: 6px;}
 /* //20240517 메일보기 상단바 디자인수정 */
+
+.mt0{margin-top:0px !important;}
+.mt5{margin-top:5px !important;}
+.mt10{margin-top:10px !important;}
+.mt15{margin-top:15px !important;}
+.mt30{margin-top:30px !important;}
+.mr0{margin-right:0px !important;}
+.mr5{margin-right:5px !important;}
+.mr10{margin-right:10px !important;}
+.mr15{margin-right:15px !important;}
+.ml5{margin-left:5px !important;}
+.ml10{margin-left:10px !important;}
+.mb0{margin-bottom:0 !important;}
+.mb5{margin-bottom:5px !important;}
+.mb10{margin-bottom:10px !important;}
+.pd0{padding:0 !important;}
+.pd15{padding:15px !important;}
+.pd30{padding:30px !important;}
+.plr20{padding:0 20px;}
+.c_blue{color:#017BEC !important;}
 
 #fixLeft {width:calc(60% - 10px); margin:5px}
 #fixRight {width:calc(40% - 10px); margin:5px}

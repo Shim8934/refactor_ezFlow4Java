@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.BooleanUtils;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.lang3.StringUtils;
@@ -206,6 +207,11 @@ public class EzSystemAdminController {
 		
 		// masteradmin 사용자를 제외하기 위해 1을 뺀다.
 		userCount--;
+		// 승인메일 공유사서함이 있으면 해당 계정은 라이센스에서 제외
+		Boolean apprSharedExist = BooleanUtils.toBoolean(ezOrganAdminService.userCheck("__approved_mail", userInfo.getTenantId()));
+		if (apprSharedExist) {
+			userCount--;
+		}
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
 		boolean isDotNetAdmin = false;
@@ -1841,6 +1847,8 @@ public class EzSystemAdminController {
 		loginLockedDuration = loginLockedDuration.equals("") ? "0" : loginLockedDuration;
 		String useChkPrevPwd = ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"); // 2021-11-10 이사라 : 가장 최근 암호 사용 금지 여부
 		useChkPrevPwd = useChkPrevPwd.equals("") ? "NO" : useChkPrevPwd;
+		String rememberPWCount = ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount"); // 2024-07-16 김대현 : 기억할 암호 수
+		rememberPWCount = rememberPWCount.equals("") ? "1" : rememberPWCount;
 		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy"); // 암호 정책관리 사용여부
 		usePasswordPatternPolicy = usePasswordPatternPolicy.equals("") ? "NO" : usePasswordPatternPolicy;
 		logger.debug("expirePassPeriod=" + expirePassPeriod + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail 
@@ -1852,6 +1860,7 @@ public class EzSystemAdminController {
 		returnMap.put("maxAllowedCountOfLoginFail", maxAllowedCountOfLoginFail);
 		returnMap.put("LoginLockedDuration", loginLockedDuration);
 		returnMap.put("useChkPrevPwd", useChkPrevPwd); // 2021-11-10 이사라 : 추가
+		returnMap.put("rememberPWCount", rememberPWCount);
 		returnMap.put("usePasswordPatternPolicy", usePasswordPatternPolicy);
 		returnMap.put("pwPolicyMap", pwPolicyMap);
 		logger.debug("return :: " + returnMap.toString());
