@@ -345,6 +345,9 @@ var strLangNJK02 = "are included.";
 var strLangHSG01 = "Không thể báo cáo rác vì không tìm thấy địa chỉ email.";
 var strLangHSG02 = "Báo cáo rác không được xử lý thành công.";
 
+// 2024.04.29 한슬기 : 메일 관련 메시지
+var strLangHSG03 = "Trường chủ đề trống.";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";
