@@ -133,7 +133,7 @@ public class EzNotificationGWController {
 			}
 			*/
 			
-			// 자바 결재 모듈을 사용할 땨 true, 아닐 때 false (결재 모바일 푸시 알림은 따로 보내고 있기 때문에 자바 모듈로 결재 알림 발송 시에 모바일 알림은 제외함.) 
+			// 자바 결재 모듈을 사용할 때 true, 아닐 때 false (결재 모바일 푸시 알림은 따로 보내고 있기 때문에 자바 모듈로 결재 알림 발송 시에 모바일 알림은 제외함.) 
 			boolean useJavaApproval = ezNotificationService.isJavaApprovalUse(info.getCompanyId(), info.getTenantId());
 			
 			String notiName = "";
