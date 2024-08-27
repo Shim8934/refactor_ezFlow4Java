@@ -2,7 +2,7 @@
 
 // 연계포틀릿 템플릿
 var connectPortletTemplate = {
-	'list' : '<li onclick="openWindow(\'${linkUrl}\', \'700\', \'800\')"><span class="txt">${title}</span><span class="date">${date}</span><span class="name">${writer}</span></li>'
+	'list' : '<li onclick="openWindow(\'${linkUrl}\', \'${width}\', \'${height}\')"><span class="txt">${title}</span><span class="date">${date}</span><span class="name">${writer}</span></li>'
 }
 
 function initConnectionPortlet(connectPortletId) {
@@ -80,8 +80,10 @@ function makeStandardConnectPortlet(data, portletId) {
 	var usedTheme =  document.getElementById("usedTheme" + portletId).value;
 	var dataList = null;
 	var paging = data.paging;
+	var width = data.width;
+	var height = data.height;
 	connectPortletPaging.paging = paging;
-	makePlusBtn(portletId, usedTheme, data.linkUrl, 750, 600);
+	makePlusBtn(portletId, usedTheme, data.linkUrl, width, height);
 	
 	while(connectListDiv.firstChild) {
 		connectListDiv.removeChild(connectListDiv.firstChild);
@@ -95,7 +97,7 @@ function makeStandardConnectPortlet(data, portletId) {
 		}
 		
 		if (paging == "noLimit") {
-			totalCnt = dataObj[dataResultFormat.totalCnt];
+			totalCnt = getJsonDataByPath(dataObj, dataResultFormat.totalCnt);
 		} else if (paging == "limit") {
 			totalCnt = dataList.length;
 		}
@@ -107,9 +109,7 @@ function makeStandardConnectPortlet(data, portletId) {
 		}
 		
 		if (paging == "noLimit") {
-			var parser = new DOMParser();
-			var xmlDoc = parser.parseFromString(data.portletDataStr, 'text/xml');
-			totalCnt = xmlDoc.getElementsByTagName(dataResultFormat.totalCnt)[0].textContent;
+			totalCnt = getXMLDataByPath(data.portletDataStr, dataResultFormat.totalCnt)[0].textContent;
 		} else if (paging == "limit") {
 			totalCnt = dataList.length;
 		}
@@ -203,6 +203,11 @@ function replaceTemplateLiterals(template, dataInfo, dataObj, type) {
     var replacedString = template.replace(regex, function(match, group) {
         var key = group.trim();
         var result = "";
+        
+        if (key == "width" || key == "height") {
+        	result = dataInfo[key];
+        	return result;
+        } 
         
         if (type == "json") {
         	result = dataObj[dataInfo[key]];

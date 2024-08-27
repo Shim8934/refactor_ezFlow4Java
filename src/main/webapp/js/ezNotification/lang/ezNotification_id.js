@@ -50,9 +50,7 @@ var subType = {
 		cancel : "Batalkan persetujuan",
 		reject : "Persetujuan ditolak"
 	},
-	survey : {
-		modify : "Pemberitahuan modifikasi"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "Persetujuan penciptaan",

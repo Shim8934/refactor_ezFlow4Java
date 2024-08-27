@@ -6072,11 +6072,13 @@
 			'{
 				"portletType":"standard",\n
 				"viewType": "list",\n
+				"connectType": "",\n
 				"paging":"",\n
 				"listCnt":"",\n
+				"width":"",\n
+				"height":"",\n
 				"linkUrl": "",\n
 				"mobileLinkUrl": "",\n
-				"connectType": "",\n
 				"restUrl": "",\n
 				"httpMethodType":"",\n
 				"headerParam" : {  	},\n
@@ -6091,7 +6093,9 @@
 						"writer" : "",\n
 						"date" : "",\n
 						"linkUrl" : "",\n
-						"mobileLinkUrl" : ""\n
+						"mobileLinkUrl" : "",\n
+						"width" : "",\n
+						"height" : ""\n
 					}\n
 				},\n
 				"dbType": "",\n

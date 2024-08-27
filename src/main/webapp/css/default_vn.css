@@ -3732,3 +3732,5 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .lnbUL li .list_text2 {padding-left: 23px;text-overflow: ellipsis;overflow: hidden; white-space:pre}
 
 .resetBtn {line-height: 0px;}
+
+.textUser{width: 22%}

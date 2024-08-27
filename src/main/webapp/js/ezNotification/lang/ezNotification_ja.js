@@ -50,9 +50,7 @@ var subType = {
 		cancel : "承認キャンセル",
 		reject : "承認拒否"
 	},
-	survey : {
-		modify : "修正通知"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "生成承認",

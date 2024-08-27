@@ -6030,8 +6030,8 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"ACCESSNAME2" NVARCHAR2(50), 
 	"VIEW_FLAG" CHAR(1 CHAR), 
 	"TENANT_ID" NUMBER(5,0),
-	`USER_TYPE` NVARCHAR2(50) NOT NULL,
-    `SUBDEPT_PERMITTED` CHAR(1 CHAR) DEFAULT 'N'
+	"USER_TYPE" NVARCHAR2(50) NOT NULL,
+    "SUBDEPT_PERMITTED" CHAR(1 CHAR) DEFAULT 'N'
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_SHAREAPPROVAL
@@ -12157,12 +12157,6 @@ CREATE INDEX "TBL_SEPERATEATTACH_DELFLAG_IDX" ON "TBL_SEPERATEATTACH" ("DELFLAG"
   CREATE UNIQUE INDEX "TBL_TASK_INDEX" ON "TBL_TASK" ("TASKID") 
   ;
 --------------------------------------------------------
---  DDL for Index TBL_THEME_GENERAL_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "TBL_THEME_GENERAL_PK" ON "TBL_THEME_GENERAL" ("TENANT_ID", "COMPANAYID", "UID_") 
-  ;
---------------------------------------------------------
 --  DDL for Index TBL_TMPAPRDOCATTACHINFO_PK
 --------------------------------------------------------
 
@@ -17403,15 +17397,6 @@ END;
   ALTER TABLE "TBL_TENANT_SERVERNAME" ADD CONSTRAINT "PK_TBL_TENANT_SERVERNAME" PRIMARY KEY ("SERVER_NAME")
   USING INDEX;
 --------------------------------------------------------
---  Constraints for Table TBL_THEME_GENERAL
---------------------------------------------------------
-
-  ALTER TABLE "TBL_THEME_GENERAL" ADD CONSTRAINT "TBL_THEME_GENERAL_PK" PRIMARY KEY ("TENANT_ID", "COMPANAYID", "UID_")
-  USING INDEX;
-  ALTER TABLE "TBL_THEME_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_THEME_GENERAL" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_THEME_GENERAL" MODIFY ("COMPANAYID" NOT NULL ENABLE);
---------------------------------------------------------
 --  Constraints for Table TBL_TMPAPRDOCATTACHINFO
 --------------------------------------------------------
 
@@ -18544,9 +18529,8 @@ CREATE TABLE "TBL_SCHEDULE_REMINDER_SCHEDULER" (
 	"REMINDERSTATUS" NCHAR(1) DEFAULT '0',
 	"OFFSETINFO" CHAR(10),
 	"LANG" NVARCHAR2(10),
-	"OFFSETMIN" NVARCHAR2(10),
-	
-	CONSTRAINT "TBL_SCHEDULE_REMINDER_SCHEDULER_PK" PRIMARY KEY ("SCHEDULEID")
+	"OFFSETMIN" NVARCHAR2(10),	
+	CONSTRAINT TBL_SCHEDULE_REMINDER_SCHEDULER_PK PRIMARY KEY ("SCHEDULEID")
 );
 
 --------------------------------------------------------

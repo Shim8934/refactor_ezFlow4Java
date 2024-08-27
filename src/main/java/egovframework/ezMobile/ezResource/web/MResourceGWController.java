@@ -1006,7 +1006,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	if (endDate.length() == 16) {
 	    		endDate += ":00";
 	    	}
-	    	MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, info.getCompanyId(), info.getTenantId());
+	    	MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, info.getCompanyId(), info.getTenantId(), info.getLang());
 	    	String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + ownerId + "&type=Master&startDate=" + startDate.substring(0,10) + "&endDate=" + endDate.substring(0,10);
 	    	String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + ownerId + "&num=" + num + "&startDate=" + startDate.substring(0,19) + "&endDate=" + endDate.substring(0,19) + "&type=" + "res";
 	    	
@@ -1023,15 +1023,13 @@ public class MResourceGWController extends EgovFileMngUtil {
 				break;
 			}
 	    	
-	    	String[] managerList = resVO.getManagerIds().split(",");
 	    	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
-	    	for (String manager : managerList) {
-				Map<String, Object> recipientMap = new HashMap<String, Object>();
-				recipientMap.put("userType", "PERSON");
-				recipientMap.put("companyId", info.getCompanyId());
-				recipientMap.put("cn", manager);
-				notiRecipientList.add(recipientMap);
-	    	}
+			Map<String, Object> recipientMap = new HashMap<String, Object>();
+			recipientMap.put("userType", "PERSON");
+			recipientMap.put("companyId", info.getCompanyId());
+			recipientMap.put("cn", resVO.getWriterId());
+			notiRecipientList.add(recipientMap);
+			
 	    	ezNotificationService.sendNoti(request, userId, info.getUserName(), notiRecipientList, "RESOURCE", notiSubType, resVO.getBrdNm() + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "");	    	
 			
 			result.put("status", "ok");
