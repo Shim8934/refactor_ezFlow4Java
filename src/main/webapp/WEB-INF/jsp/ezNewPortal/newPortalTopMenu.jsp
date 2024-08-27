@@ -893,8 +893,7 @@
 			bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 			
 			if (menuDisplayMode == "1") {
-				document.querySelector('#mainMenuListLeft').style.backgroundColor = 'rgba(0, 0, 0, 0)';
-				document.querySelector('#mainMenuListLeft').style.border = "none";
+				document.querySelector('#mainMenuListLeft').classList.add('layer');
 				parent.document.getElementById('mainFrame').style.position = 'static';
 				$('#mainMenuListLeft li').addClass("layer");
 			}
@@ -1453,8 +1452,7 @@
 			}
 			
 			if (menuDisplayMode == "1") {
-				document.querySelector('#mainMenuListLeft').style.backgroundColor = '#fff';
-				document.querySelector('#mainMenuListLeft').style.borderRight = '1px solid #ddd';
+				document.querySelector('#mainMenuListLeft').classList.remove('layer');
 				parent.document.getElementById('mainFrame').style.position = 'relative';
 				$('#mainMenuListLeft li').removeClass("layer");
 			}
@@ -1554,8 +1552,7 @@
         	}
         	
         	if (menuDisplayMode == "1") {
-				document.querySelector('#mainMenuListLeft').style.backgroundColor = '#fff';
-				document.querySelector('#mainMenuListLeft').style.borderRight = '1px solid #ddd';
+				document.querySelector('#mainMenuListLeft').classList.remove('layer');
 				parent.document.getElementById('mainFrame').style.position = 'relative';
 				$('#mainMenuListLeft li').removeClass("layer");
 			}
