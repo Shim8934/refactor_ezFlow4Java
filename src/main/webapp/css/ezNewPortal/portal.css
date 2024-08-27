@@ -2428,3 +2428,5 @@ div.orbit img{border-radius:5px;}
 .skin{position:absolute; right:34px; top:0; display:none;}
 .skin span{border:1px solid #cecece !important; color:#000 !important;}
 .skin span:hover{border-color:#388ce5 !important; color:#388ce5 !important;}
+
+#mainMenuListLeft.layer{background-color : rgba(0, 0, 0, 0) !important; border : none !important;}
