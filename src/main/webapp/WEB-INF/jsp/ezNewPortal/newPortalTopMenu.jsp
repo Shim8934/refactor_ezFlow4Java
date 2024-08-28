@@ -27,6 +27,7 @@
 			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:12px 10px 0px 0px; padding:0px; width:245px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
 		</style>
 		<script>
+			var useColor = '<c:out value="${useColor}"/>';
 			// UI 스킨 작업용
 			function skin(skinId){
 				var skinLink = "";
@@ -73,33 +74,59 @@
 				} else{
 					document.querySelector(".logo img").src = "/files/upload_portal/Top/Logo/logo.gif";
 				}
-
-				var leftFrame = mainFrame.document.getElementsByName("left")[0].contentWindow;
-				var leftSkinCss = leftFrame.document.getElementById("leftSkinCss");
-
-				if(leftSkinCss){
-					leftSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
-				} else {
-					skinLink = document.createElement("link");
-					skinLink.id = "leftSkinCss";
-					skinLink.rel = "stylesheet";
-					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
-					leftFrame.document.head.appendChild(skinLink);
+				
+				if (mainFrame.document.getElementsByName("left")[0]) {
+					var leftFrame = mainFrame.document.getElementsByName("left")[0].contentWindow;
+					var leftSkinCss = leftFrame.document.getElementById("leftSkinCss");
+	
+					if(leftSkinCss){
+						leftSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					} else {
+						skinLink = document.createElement("link");
+						skinLink.id = "leftSkinCss";
+						skinLink.rel = "stylesheet";
+						skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+						leftFrame.document.head.appendChild(skinLink);
+					}
 				}
-
-				var rightFrame = mainFrame.document.getElementsByName("right")[0].contentWindow;
-				var rightSkinCss = rightFrame.document.getElementById("rightSkinCss");
-
-				if(rightSkinCss){
-					rightSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
-				} else {
-					skinLink = document.createElement("link");
-					skinLink.id = "rightSkinCss";
-					skinLink.rel = "stylesheet";
-					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
-					rightFrame.document.head.appendChild(skinLink);
+				
+				if (mainFrame.document.getElementsByName("right")[0]) {
+					var rightFrame = mainFrame.document.getElementsByName("right")[0].contentWindow;
+					var rightSkinCss = rightFrame.document.getElementById("rightSkinCss");
+	
+					if(rightSkinCss){
+						rightSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					} else {
+						skinLink = document.createElement("link");
+						skinLink.id = "rightSkinCss";
+						skinLink.rel = "stylesheet";
+						skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+						rightFrame.document.head.appendChild(skinLink);
+					}
 				}
 			}
+			
+			
+			function setColorMode() {
+				if (useColor) {
+					
+					if (useColor == 1) {
+						skin('blue');
+					} else if (useColor == 2) {
+						skin('red');
+					} else if (useColor == 3) {
+						skin('dark');
+					} else {
+						skin();
+					}
+				}
+			}
+			
+			window.onload = function() {
+				setColorMode();
+			}
+			
+			
 		</script>
 	</head>
 	<body>
@@ -174,7 +201,6 @@
 		var userLang = '<c:out value="${lang}"/>';
 		var userPrimary = '<c:out value="${primary}"/>';
 		var userPhotoSrc = '<c:out value="${userPhoto}"/>';
-		var useColor = '<c:out value="${useColor}"/>';
 		
 		var newPortalTopMenu = {
 			menuListArr: [],           // 메뉴 리스트 배열에 저장
@@ -1998,23 +2024,6 @@
 		function offMenuAll() {
 			$(".lnb_list li").removeClass("on");
 			$(".navUL li").removeClass("on");
-		}
-		
-		function setColorMode() {
-			if (useColor) {
-				var link = document.createElement('link');
-				link.rel = 'stylesheet';
-				
-				if (useColor == 1) {
-					link.href = '/css/ezPortal/skin_blue.css';
-				} else if (useColor == 2) {
-					link.href = '/css/ezPortal/skin_red.css';
-				} else if (useColor == 3) {
-					link.href = '/css/ezPortal/skin_dark.css';
-				}
-				
-				document.head.appendChild(link);
-			}
 		}
 		
 		</script>
