@@ -885,10 +885,20 @@ public class EzNewPortalGWController {
 			/**
 			 * 1) 로고
 			 */
+			int themeColor = ezNewPortalService.getUserColor(userId, companyId, tenantId);
+			
+			if (themeColor == 3) { // 다크모드
+				logoType = "D";
+			}
+			
 			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
 			
 			if (logoUrl == null || logoUrl.equals("")) {
-				logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+				if (themeColor == 3) {
+					logoUrl = "/images/ezNewPortal/skin/dark/logo_white.png";
+				} else {
+					logoUrl = "/files/upload_portal/Top/Logo/logo.gif";	
+				}
 			} else {
 				logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + logoUrl;
 			}
@@ -3263,13 +3273,16 @@ public class EzNewPortalGWController {
 
 			String loginLogoUrl = "";
 			String portalLogoUrl = "";
+			String darkLogoUrl = "";
 			boolean loginLogoUrlDefault = true;
 			boolean portalLogoUrlDefault = true;
+			boolean darkLogoUrlDefault = true;
 			
 			//로그인 가져오기
 			if (companyId != null) {
 				loginLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "L");
 				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
+				darkLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "D");
 			}
 			
 			if (loginLogoUrl == null || loginLogoUrl.equals("")) {
@@ -3288,6 +3301,14 @@ public class EzNewPortalGWController {
 				portalLogoUrlDefault = false;
 			}
 			
+			if (darkLogoUrl == null || darkLogoUrl.equals("")) {
+				darkLogoUrl = "/images/ezNewPortal/skin/dark/logo_white.png";
+				darkLogoUrlDefault = true;
+			} else {
+				darkLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + darkLogoUrl;
+				darkLogoUrlDefault = false;
+			}
+			
 			List<PortalLogoVO> logoList = new ArrayList<PortalLogoVO>();
 			
 			PortalLogoVO loginLogo = new PortalLogoVO();
@@ -3303,6 +3324,13 @@ public class EzNewPortalGWController {
 			portalLogo.setLogoDefault(portalLogoUrlDefault);
 			
 			logoList.add(portalLogo);
+
+			PortalLogoVO darkLogo = new PortalLogoVO();
+			darkLogo.setLogoType("D");
+			darkLogo.setLogoUrl(darkLogoUrl);
+			darkLogo.setLogoDefault(darkLogoUrlDefault);
+
+			logoList.add(darkLogo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

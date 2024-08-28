@@ -753,6 +753,16 @@
 				logo_url = #logoUrl#
 		]]>
 		</isEqual>
+		<isEqual property="logoType" compareValue="D">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_LOGO
+				(company_id, tenant_id, logo_type, logo_url)
+			VALUES
+				(#companyId#, #tenantId#, #logoType#, #logoUrl#)
+			ON DUPLICATE KEY UPDATE
+				logo_url = #logoUrl#
+		]]>
+		</isEqual>
 	</update>
 	
 	<select id="ezNewPortal.getCompanyLogoList" parameterClass="Map" resultClass="PortalLogoVO">

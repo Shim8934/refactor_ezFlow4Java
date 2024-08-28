@@ -68,13 +68,6 @@
 					notiFrame.document.head.appendChild(skinLink);
 				}
 
-
-				if(skinId == "dark"){
-					document.querySelector(".logo img").src = "/images/ezNewPortal/skin/dark/logo_white.png";
-				} else{
-					document.querySelector(".logo img").src = "/files/upload_portal/Top/Logo/logo.gif";
-				}
-				
 				if (mainFrame.document.getElementsByName("left")[0]) {
 					var leftFrame = mainFrame.document.getElementsByName("left")[0].contentWindow;
 					var leftSkinCss = leftFrame.document.getElementById("leftSkinCss");
