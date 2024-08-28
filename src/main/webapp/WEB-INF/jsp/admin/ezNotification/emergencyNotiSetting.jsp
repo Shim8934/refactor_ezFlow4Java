@@ -238,6 +238,7 @@
     }
 	
 	function changeCompany() {
+		getNotiEmergencyContent();
 		getEmergencyNotiPermissions();
 	}
 	</script>
