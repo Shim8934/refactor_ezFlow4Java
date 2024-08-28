@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezResource.web;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Properties;
@@ -12,10 +13,18 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -831,7 +840,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("selectNo", selectNo);
 		model.addAttribute("deptPathCode", userInfo.getDeptPathCode());
-		model.addAttribute("selectedCompany", Optional.ofNullable(req.getParameter("selCompany")).orElse(userInfo.getCompanyID()));
+		model.addAttribute("selectedCompany", Optional.ofNullable(req.getParameter("selCompanyID")).orElse(userInfo.getCompanyID()));
 		return "admin/ezResource/resGwBoardListStatus";
 	}
 	

@@ -49,6 +49,10 @@
 		            TreeView.update();
 					changeCompany(pCompanyID);
 		        }
+		        
+		        if (document.getElementsByClassName("title_bar")[0] !== "undefined") {
+		            document.getElementsByClassName("title_bar")[0].style="display: none;"
+		        }
 		    }
 
 			function changeTree() {
@@ -168,10 +172,11 @@
 	</head>
 	<body class="newLeft">	
 		<div id="left" class="lnb" style="overflow: auto">
+            <jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp">
+                <jsp:param name="companySelectID" value="${selectedCompany}" />
+            </jsp:include>
   			<div class="admin_left_title"><spring:message code="ezResource.t17" />
-				<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp">
-					<jsp:param name="companySelectID" value="${selectedCompany}" />
-				</jsp:include>
+				
 			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<div><h1 id="ToTitle" class="receiver_tltype01" style="background: #f8f9fb; padding: 10px 0px 10px 23px; font-size: 16px;"><spring:message code="ezResource.t71" /></h1></div>
