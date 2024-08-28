@@ -3135,12 +3135,9 @@ public class EzResourceController extends EgovFileMngUtil {
 		    Row row;
 		    Cell cell;
 		    
-		    String pFileName = "";
-		    String strDate = EgovDateUtil.getToday("-");
-		    pFileName = strDate+"_resList";
+		    String pFileName = searchStartTime.replace("-", ".") + "~" + searchEndTime.replace("-", ".") + "_resList";
 			
 			sheet = workbook.createSheet("resList");
-			
 			row = sheet.createRow(0);
 			
 			for (int i = 0; i < 6; i++) {
