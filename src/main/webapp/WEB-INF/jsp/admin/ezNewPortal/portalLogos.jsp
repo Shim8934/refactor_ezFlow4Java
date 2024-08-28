@@ -19,7 +19,7 @@
 	         .logoContent ul li {font-size: 12px;display:block;padding: 2px 0px;}
 	         .deleteLogoBtn {display : none;}
 	         .loginLogo .logoIcon img {width:229px; height:81px;}
-	         .portalLogo .logoIcon img {width:106px; height:42px;}
+	         .portalLogo .logoIcon img, .darkLogo .logoIcon img {width:106px; height:42px;}
 		</style>
 	</head>
 	<body class="mainbody">
@@ -62,6 +62,24 @@
 						<ul>
 							<li class="logoTitle"><spring:message code='ezNewPortal.t064' /></li>
 							<li><spring:message code='ezNewPortal.t065' /></li>
+<%--							<li><spring:message code='ezNewPortal.t066' /></li>--%>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="darkLogo">
+			<div class="logoInfo">
+				<div class="logoInfo">
+					<div class='logoIconInfo'>
+					<div class='logoIcon' style="background-color: black"><img></div>
+					</div>
+					
+					<div class="logoContent">
+						<div id="imgDark" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span><spring:message code='ezNewPortal.t058' /></span></a> <a class='imgbtn deleteLogoBtn'><span><spring:message code='ezNewPortal.t059' /></span></a></div>
+						<ul>
+							<li class="logoTitle"><spring:message code='ezNewPortal.darkLogo01' /></li>
+							<li><spring:message code='ezNewPortal.darkLogo02' /></li>
 <%--							<li><spring:message code='ezNewPortal.t066' /></li>--%>
 						</ul>
 					</div>
@@ -164,6 +182,16 @@
 								document.getElementById("imgTop").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
 								document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
 							}
+						} else if (logoType == "D") {
+							document.getElementsByClassName("darkLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = logoUrl;
+							
+							if (!logoDefault) {
+								document.getElementById("imgDark").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+								document.getElementById("imgDark").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+							} else {
+								document.getElementById("imgDark").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
+								document.getElementById("imgDark").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
+							}
 						}
 					}
 		
@@ -203,7 +231,9 @@
     				logoType = "L";
     			} else if (logoType == "imgTop") {
     				logoType = "P";
-    			}
+    			} else if (logoType == "imgDark") {
+					logoType = "D";
+				}
     
     			fd.append("file", _file);
     			fd.append("companyId", companyValue);
@@ -241,7 +271,12 @@
 	    					
 							document.getElementById("imgTop").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
 							document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
-	    				}
+	    				} else if (logoType == "D") {
+							document.getElementsByClassName("darkLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = result;
+
+							document.getElementById("imgDark").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+							document.getElementById("imgDark").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+						}
 	    				//초기화(동일한 파일 업로드가 안되는 버그때문)
 	    				document.getElementById("imgFile").value = "";
 	    			}
@@ -263,6 +298,8 @@
 						logoType = "L";
 					} else if (logoType == "imgTop") {
 						logoType = "P";
+					} else if (logoType == "imgDark") {
+						logoType = "D";
 					}
 					
 					var request = new XMLHttpRequest();
@@ -283,7 +320,12 @@
 							document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
 	    					logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
 	    					document.getElementsByClassName("portalLogo")[0].querySelector(".logoIcon").querySelector("img").src = logoUrl;
-	    				}
+	    				} else if (logoType == "D") {
+							document.getElementById("imgDark").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
+							document.getElementById("imgDark").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
+							logoUrl = "/images/ezNewPortal/skin/dark/logo_white.png";
+							document.getElementsByClassName("darkLogo")[0].querySelector(".logoIcon").querySelector("img").src = logoUrl;
+						}
 						//초기화(동일한 파일 업로드가 안되는 버그때문)
 						document.getElementById("imgFile").value = "";
 	    			}
