@@ -2368,7 +2368,7 @@ div#txtContent table {margin:auto;}
     line-height: 25px;
     border-radius: 2px;}
 /* .lnb h2 span.tree_manage:hover .Personal_Documentation_tooltip{display: block;} */
-.mCSB_container{overflow: visible !important;}
+.mCSB_container{overflow: visible !important; padding-bottom: 20px;}
 
 
 .lnb h2 .h2Title {float:none; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
@@ -3935,9 +3935,9 @@ select{min-height: 24px !important;}
 #usePer { font-size: 12px;}
 .mail_spaceText { font-size: 12px !important;}
 
-#left .adminListBox h2{white-space:normal; word-break:keep-all; height:auto !important; line-height:1.5 !important;}
-#left .adminListBox h2 span{font-size:15px !important; white-space:normal;}
-#left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}
+/* #left .adminListBox h2{white-space:normal; word-break:keep-all; height:auto !important; line-height:1.5 !important;} */
+/* #left .adminListBox h2 span{font-size:15px !important; white-space:normal;} */
+/* #left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;} */
 
 .inf-spanTxt input{margin-top:-3px;}
 
