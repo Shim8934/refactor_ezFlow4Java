@@ -104,11 +104,39 @@
 	var isNotiLoading = false; 
 	var notiDateEndPoint = "";
 	window.onload = function () {
+		checkSkin();
 		checkEmergencyPermission();
 		notiListFlag = true;
 		document.getElementById('notiwrap').addEventListener("scroll", notiScroll);
 		makeMainTypeList();
 		searchNoti('first');
+	}
+	
+	function checkSkin() {
+		var skinColor = window.parent.document.getElementById("topFrame").contentWindow.useColor;
+		var skinId = ''
+		if (skinColor) {
+			
+			if (skinColor == 1) {
+				skinId = 'blue';
+			} else if (skinColor == 2) {
+				skinId = 'red';
+			} else if (skinColor == 3) {
+				skinId = 'dark';
+			}
+		}
+		
+		var notiSkinCss = document.getElementById("notiSkinCss");
+		
+		if (notiSkinCss) {
+			notiSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+		} else {
+			skinLink = document.createElement("link");
+			skinLink.id = "notiSkinCss";
+			skinLink.rel = "stylesheet";
+			skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+			document.head.appendChild(skinLink);
+		}
 	}
 	
 	function notiScroll() {
