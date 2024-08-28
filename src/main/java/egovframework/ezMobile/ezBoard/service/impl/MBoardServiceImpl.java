@@ -1866,7 +1866,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 호출 */
 	@Override
-	public List<MBoardNewListVO> getScrapBoardList(String userID, String deptID, String companyID, int tenantID, String offset,String pSearchText) throws Exception {
+	public List<MBoardNewListVO> getScrapBoardList(String userID, String deptID, String companyID, int tenantID, String offset,String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception {
 		logger.debug("getScrapBoardList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1879,6 +1879,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
 
 		List<MBoardNewListVO> mScrapBoardList = mBoardDAO.getScrapBoardList(map);
 
@@ -1898,7 +1899,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 count */
 	@Override
-	public Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText) throws Exception {
+	public Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception {
 		logger.debug("getScrapBoardListCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1908,7 +1909,8 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
-
+		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
+		
 		logger.debug("getScrapBoardListCount ended");
 		return mBoardDAO.getScrapBoardListCount(map);
 	}

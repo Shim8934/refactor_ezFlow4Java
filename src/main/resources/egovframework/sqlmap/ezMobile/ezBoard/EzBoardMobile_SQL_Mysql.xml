@@ -2481,6 +2481,13 @@
 			AND
 				A.ENDDATE > #nowDate#
 		]]>
+        <isNotEmpty property="scrapBoardListView_FG">
+            AND E.BOARDID IN
+            <iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+        </isNotEmpty>
+        <isEmpty property="scrapBoardListView_FG">
+            AND 1 = 0
+        </isEmpty>
 		<isNotEmpty property="pSearchText">
 			<![CDATA[
 			AND
@@ -2525,6 +2532,13 @@
 		  	AND
 				A.ENDDATE > #nowDate#
 		]]>
+        <isNotEmpty property="scrapBoardListView_FG">
+            AND B.BOARDID IN
+            <iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+        </isNotEmpty>
+        <isEmpty property="scrapBoardListView_FG">
+            AND 1 = 0
+        </isEmpty>
 		<isNotEmpty property="pSearchText">
 			<![CDATA[
 			AND

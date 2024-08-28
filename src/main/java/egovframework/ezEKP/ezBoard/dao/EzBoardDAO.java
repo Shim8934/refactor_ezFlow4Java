@@ -1038,4 +1038,14 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public int isScrapContItemCount(BoardUserScrapContListVO scrapList) throws Exception{
 		return (int) select("EzBoardDAO.isScrapContItemCount",scrapList);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getUserScrapBoardList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getUserScrapBoardList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getUserScrapContBoardList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getUserScrapContBoardList", map);
+	}
 }

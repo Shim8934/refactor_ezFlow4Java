@@ -526,6 +526,11 @@
 		        }
 		
 		        function ItemRead_onclick(obj) {
+					if(obj.getAttribute("DATA13") == "N"){
+						alert("<spring:message code='ezBoard.t501'/>");
+						return;
+					}
+					
 			        var pheight = window.screen.availHeight;
 			        var pwidth = window.screen.availWidth;
 			        var pTop = (pheight - 720) / 2;

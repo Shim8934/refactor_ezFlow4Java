@@ -6537,7 +6537,12 @@
    					ITEMID = A.ItemID) ONELINECNT,
    				A.UPPERITEMIDTREE,
    				A.DOCNO,
-   				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+   				CASE WHEN (
+						(CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END) = '' OR
+						(CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END) IS NULL
+					) THEN B.BOARDNAME
+					ELSE (CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END)
+				END BOARDNAME,
    				B.GUBUN  AS GUBUN,
    			    '' AS NOTICE,
    				A.APPRFLAG AS APPRFLAG
@@ -6589,6 +6594,15 @@
 					 OR
 					 A.APPRFLAG IS NULL
 				)
+		]]>
+			<isNotEmpty property="scrapBoardListView_FG">
+				AND E.BOARDID IN
+				<iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+			</isNotEmpty>
+			<isEmpty property="scrapBoardListView_FG">
+				AND 1 = 0 
+			</isEmpty>
+		<![CDATA[
    			ORDER BY
    				$iv_PORDERBYSUB$
    			LIMIT
@@ -6624,6 +6638,13 @@
 					 A.APPRFLAG IS NULL
 				)
 		]]>
+		<isNotEmpty property="scrapBoardListView_FG">
+			AND B.BOARDID IN
+			<iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+		</isNotEmpty>
+		<isEmpty property="scrapBoardListView_FG">
+			AND 1 = 0
+		</isEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getSearchMyBoardItemCountScrap" parameterClass="Map" resultClass="Integer">
@@ -6655,6 +6676,13 @@
 				)
    			$v_PSUBQUERY$
 		]]>
+			<isNotEmpty property="scrapBoardListView_FG">
+				AND B.BOARDID IN
+			<iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+			</isNotEmpty>
+			<isEmpty property="scrapBoardListView_FG">
+			  	AND 1 = 0
+			</isEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getSearchMyBoardItemListScrap" parameterClass="Map" resultClass="HashMap">
@@ -6689,10 +6717,15 @@
    					TENANT_ID = A.TENANT_ID
    				AND
    					ITEMID = A.ItemID) ONELINECNT,
-  					A.UPPERITEMIDTREE,
-  					A.DOCNO,
-  			    	'' AS NOTICE,
-  			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
+				A.UPPERITEMIDTREE,
+				A.DOCNO,
+				'' AS NOTICE,
+				CASE WHEN (
+						(CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) = '' OR
+						(CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) IS NULL
+					) THEN I.BOARDNAME
+					ELSE (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END)
+				END BOARDNAME,
   					I.GUBUN AS GUBUN,
 					A.APPRFLAG AS APPRFLAG
   		     	FROM 
@@ -6742,12 +6775,21 @@
 						 OR
 						 A.APPRFLAG IS NULL
 					)
-  				$v_PSUBQUERY$ 
+			]]>
+			<isNotEmpty property="scrapBoardListView_FG">
+				AND S.BOARDID IN
+				<iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+			</isNotEmpty>
+			<isEmpty property="scrapBoardListView_FG">
+				AND 1 = 0
+			</isEmpty>
+			<![CDATA[
+  				$v_PSUBQUERY$
   				ORDER BY 
   				 	$iv_PORDERBYSUB$
   				LIMIT
   				  	#limit#, #rowCount# 	 
-		]]>
+			]]>
 	</select>
 	
 	<delete id="EzBoardDAO.deleteBoardScrapItem" parameterClass="BoardScrapListVO">
@@ -6999,6 +7041,13 @@
 					 A.APPRFLAG IS NULL
 				)
 		]]>
+			<isNotEmpty property="scrapContBoardListView_FG">
+				AND B.BOARDID IN
+				<iterate property="scrapContBoardListView_FG" open="(" close=")" conjunction=","> #scrapContBoardListView_FG[]# </iterate>
+			</isNotEmpty>
+			<isEmpty property="scrapContBoardListView_FG">
+				AND 1 = 0
+			</isEmpty>
 	</select>
 
 	<select id="EzBoardDAO.getScrapContItemList" parameterClass="Map" resultClass="HashMap">
@@ -7035,7 +7084,12 @@
 					ITEMID = A.ItemID) ONELINECNT  ,
 				A.UPPERITEMIDTREE,
 				A.DOCNO,
-				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+				CASE WHEN (
+							(CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END) = '' OR
+							(CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END) IS NULL
+					) THEN B.BOARDNAME
+					 ELSE (CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END)
+					END BOARDNAME,
 				B.GUBUN  AS GUBUN,
 				'' AS NOTICE,
 				A.APPRFLAG AS APPRFLAG
@@ -7089,7 +7143,16 @@
 					 OR
 					 A.APPRFLAG IS NULL
 				 )
-   			ORDER BY
+  			]]>
+			<isNotEmpty property="scrapContBoardListView_FG">
+				AND E.BOARDID IN
+				<iterate property="scrapContBoardListView_FG" open="(" close=")" conjunction=","> #scrapContBoardListView_FG[]# </iterate>
+			</isNotEmpty>
+			<isEmpty property="scrapContBoardListView_FG">
+				AND 1 = 0
+			</isEmpty>
+		<![CDATA[
+			ORDER BY
    				$iv_PORDERBYSUB$
    			LIMIT
    				#limit#, #rowCount#
@@ -7127,6 +7190,13 @@
 				)
    			$v_PSUBQUERY$
 		]]>
+		<isNotEmpty property="scrapContBoardListView_FG">
+			AND B.BOARDID IN
+			<iterate property="scrapContBoardListView_FG" open="(" close=")" conjunction=","> #scrapContBoardListView_FG[]# </iterate>
+		</isNotEmpty>
+		<isEmpty property="scrapContBoardListView_FG">
+			AND 1 = 0
+		</isEmpty>
 	</select>
 
 	<select id="EzBoardDAO.getSearchScrapContItemList" parameterClass="Map" resultClass="HashMap">
@@ -7164,7 +7234,12 @@
 				A.UPPERITEMIDTREE,
 				A.DOCNO,
 				'' AS NOTICE,
-				CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
+				CASE WHEN (
+							(CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) = '' OR
+							(CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) IS NULL
+					) THEN I.BOARDNAME
+					 ELSE (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END)
+				END BOARDNAME,
 				I.GUBUN AS GUBUN,
 				A.APPRFLAG AS APPRFLAG
   		    FROM
@@ -7216,6 +7291,15 @@
 					 OR
 					 A.APPRFLAG IS NULL
 				)
+			]]>
+			<isNotEmpty property="scrapContBoardListView_FG">
+				AND S.BOARDID IN
+				<iterate property="scrapContBoardListView_FG" open="(" close=")" conjunction=","> #scrapContBoardListView_FG[]# </iterate>
+			</isNotEmpty>
+			<isEmpty property="scrapContBoardListView_FG">
+				AND 1 = 0
+			</isEmpty>
+		<![CDATA[
 			$v_PSUBQUERY$
 			ORDER BY
 				$iv_PORDERBYSUB$
@@ -7248,4 +7332,27 @@
 		]]>
 	</select>
 
+	<select id="EzBoardDAO.getUserScrapBoardList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			DISTINCT BOARDID
+		FROM    
+			TBL_BOARDITEM_SCRAP
+		WHERE   	
+			TENANT_ID = #v_TENANTID#
+		AND
+			USERID = #v_PUSERID#
+	</select>
+
+	<select id="EzBoardDAO.getUserScrapContBoardList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			DISTINCT BOARDID
+		FROM
+			TBL_USERSCRAPCONTLIST
+		WHERE
+			TENANT_ID = #v_TENANTID#
+	  	AND
+			USERID = #v_PUSERID#
+		AND
+			USERSCRAPCONTID = #v_CONTID#
+	</select>
 </sqlMap>

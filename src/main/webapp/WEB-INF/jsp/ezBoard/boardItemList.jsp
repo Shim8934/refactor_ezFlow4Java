@@ -1476,7 +1476,7 @@
 				}
 
 				if(arrList.length == "1"){
-					alert("<spring:message code='ezBoard.kmh01'/>");
+					alert("<spring:message code='ezBoard.kmh15'/>");
 					return;
 				}
 

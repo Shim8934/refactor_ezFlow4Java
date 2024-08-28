@@ -1737,6 +1737,48 @@ public class EzBoardController extends EgovFileMngUtil{
     		}
     	}
     	
+		BoardPropertyVO scrapBoardInfo;
+		ArrayList<String> scrapBoardListView_FG = new ArrayList<String>();
+		ArrayList<String> scrapBoardListRead_FG = new ArrayList<String>();
+		if("scrap".equals(mode) && boardVO.getScrapContID() == null){
+			List<HashMap<String, Object>> userScrapBoardList = ezBoardService.getUserScrapBoardList(userInfo.getId(), userInfo.getTenantId());
+			if (userScrapBoardList != null && userScrapBoardList.size() > 0) {
+				for (HashMap<String, Object> userScrapBoard : userScrapBoardList) {
+					String boardID = (String) userScrapBoard.get("BOARDID");
+					scrapBoardInfo =  getBoardInfo(boardID, userInfo);
+					if (scrapBoardInfo.getListView_FG().equals("true")) {
+						scrapBoardListView_FG.add(boardID);
+					}
+
+					if(scrapBoardInfo.getRead_FG().equals("true")){
+						scrapBoardListRead_FG.add(boardID);
+					}
+					scrapBoardInfo = null;
+				}
+			}
+		}
+
+		BoardPropertyVO scrapContBoardInfo;
+		ArrayList<String> scrapContBoardListView_FG = new ArrayList<String>();
+		ArrayList<String> scrapContBoardListRead_FG = new ArrayList<String>();
+		if("scrap".equals(mode) && boardVO.getScrapContID() != null){
+			List<HashMap<String, Object>> userScrapContBoardList = ezBoardService.getUserScrapContBoardList(userInfo, boardVO.getScrapContID());
+			if (userScrapContBoardList != null && userScrapContBoardList.size() > 0) {
+				for (HashMap<String, Object> userScrapContBoard : userScrapContBoardList) {
+					String boardID = (String) userScrapContBoard.get("BOARDID");
+					scrapContBoardInfo =  getBoardInfo(boardID, userInfo);
+					if (scrapContBoardInfo.getListView_FG().equals("true")) {
+						scrapContBoardListView_FG.add(boardID);
+					}
+
+					if(scrapContBoardInfo.getRead_FG().equals("true")){
+						scrapContBoardListRead_FG.add(boardID);
+					}
+					scrapContBoardInfo = null;
+				}
+			}
+		}
+		
     	int noticeCount = 0;
     	int boardCount = 0;
     	
@@ -1745,9 +1787,9 @@ public class EzBoardController extends EgovFileMngUtil{
     	} else if(mode.equals("temp")) { // 임시보관함 카운트 -> companyID 조건 추가
     		boardCount = ezBoardService.getMyBoardTotalItemCountTemp(userInfo);
     	} else if(mode.equals("scrap") && boardVO.getScrapContID() != null) {
-    		boardCount = ezBoardService.getUserScrapContlistCount(userInfo,boardVO.getScrapContID());//나의 스크랩함 item totalcount
+    		boardCount = ezBoardService.getUserScrapContlistCount(userInfo, boardVO.getScrapContID(), scrapContBoardListView_FG);//나의 스크랩함 item totalcount
     	} else if(mode.equals("scrap")) {
-    		boardCount = ezBoardService.getMyBoardTotalItemCountScrap(userInfo);//나의 스크랩 item totalcount
+    		boardCount = ezBoardService.getMyBoardTotalItemCountScrap(userInfo, scrapBoardListView_FG);//나의 스크랩 item totalcount
     	}
     	
     	int startRow = 1;
@@ -1976,9 +2018,9 @@ public class EzBoardController extends EgovFileMngUtil{
     	} else if(mode.equals("temp")) { // 임시저장 게시물 표출 시 companyID 조건 추가
     		boardListItem = ezBoardService.getMyBoardListItemTemp(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2);
     	} else if(mode.equals("scrap") && boardVO.getScrapContID() != null){
-			boardListItem = ezBoardService.getScrapContItemList(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, boardVO.getScrapContID());
+			boardListItem = ezBoardService.getScrapContItemList(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, boardVO.getScrapContID(), scrapContBoardListView_FG);
     	} else if(mode.equals("scrap")){
-			boardListItem = ezBoardService.getMyBoardListItemScrap(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2);
+			boardListItem = ezBoardService.getMyBoardListItemScrap(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, scrapBoardListView_FG);
     	}
     	
     	int dlength = boardListItem.size();
@@ -2023,6 +2065,23 @@ public class EzBoardController extends EgovFileMngUtil{
     				resultXML.append("<DATA10>" + boardListItem.get(j).get("GUBUN") + "</DATA10>");
     				resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
     				resultXML.append("<DATA12>" + boardListItem.get(j).get("ATTRIBUTEYN") + "</DATA12>");
+
+					if("scrap".equals(mode) && boardVO.getScrapContID() == null) {
+						if (scrapBoardListRead_FG.contains(boardListItem.get(j).get("BOARDID"))) {
+							resultXML.append("<DATA13>" + "Y" + "</DATA13>");
+						} else {
+							resultXML.append("<DATA13>" + "N" + "</DATA13>");
+						}
+					}
+					
+					if("scrap".equals(mode) && boardVO.getScrapContID() != null){
+						if (scrapContBoardListRead_FG.contains(boardListItem.get(j).get("BOARDID"))) {
+							resultXML.append("<DATA13>" + "Y" + "</DATA13>");
+						} else {
+							resultXML.append("<DATA13>" + "N" + "</DATA13>");
+						}
+					}
+						
     			}
     			
     			resultXML.append("</CELL>");
@@ -2598,6 +2657,48 @@ public class EzBoardController extends EgovFileMngUtil{
 				}
 			}
 		}
+
+		BoardPropertyVO scrapBoardInfo;
+		ArrayList<String> scrapBoardListView_FG = new ArrayList<String>();
+		ArrayList<String> scrapBoardListRead_FG = new ArrayList<String>();
+		if("scrap".equals(mode) && boardVO.getScrapContID() == null){
+			List<HashMap<String, Object>> userScrapBoardList = ezBoardService.getUserScrapBoardList(userInfo.getId(), userInfo.getTenantId());
+			if (userScrapBoardList != null && userScrapBoardList.size() > 0) {
+				for (HashMap<String, Object> userScrapBoard : userScrapBoardList) {
+					String boardID = (String) userScrapBoard.get("BOARDID");
+					scrapBoardInfo =  getBoardInfo(boardID, userInfo);
+					if (scrapBoardInfo.getListView_FG().equals("true")) {
+						scrapBoardListView_FG.add(boardID);
+					}
+
+					if(scrapBoardInfo.getRead_FG().equals("true")){
+						scrapBoardListRead_FG.add(boardID);
+					}
+					scrapBoardInfo = null;
+				}
+			}
+		}
+
+		BoardPropertyVO scrapContBoardInfo;
+		ArrayList<String> scrapContBoardListView_FG = new ArrayList<String>();
+		ArrayList<String> scrapContBoardListRead_FG = new ArrayList<String>();
+		if("scrap".equals(mode) && boardVO.getScrapContID() != null){
+			List<HashMap<String, Object>> userScrapContBoardList = ezBoardService.getUserScrapContBoardList(userInfo, boardVO.getScrapContID());
+			if (userScrapContBoardList != null && userScrapContBoardList.size() > 0) {
+				for (HashMap<String, Object> userScrapContBoard : userScrapContBoardList) {
+					String boardID = (String) userScrapContBoard.get("BOARDID");
+					scrapContBoardInfo =  getBoardInfo(boardID, userInfo);
+					if (scrapContBoardInfo.getListView_FG().equals("true")) {
+						scrapContBoardListView_FG.add(boardID);
+					}
+
+					if(scrapContBoardInfo.getRead_FG().equals("true")){
+						scrapContBoardListRead_FG.add(boardID);
+					}
+					scrapContBoardInfo = null;
+				}
+			}
+		}
 		
 		int boardCount = 0;
 		
@@ -2606,9 +2707,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else if(mode.equals("temp")) {
 			boardCount = ezBoardService.getSearchMyBoardItemCountTemp(userInfo, boardVO);
 		} else if(mode.equals("scrap") && boardVO.getScrapContID() != null) {
-			boardCount = ezBoardService.getSearchScrapContItemListCount(userInfo, boardVO);
+			boardCount = ezBoardService.getSearchScrapContItemListCount(userInfo, boardVO, scrapContBoardListView_FG);
 		} else if(mode.equals("scrap")) {
-			boardCount = ezBoardService.getSearchMyBoardItemCountScrap(userInfo, boardVO);
+			boardCount = ezBoardService.getSearchMyBoardItemCountScrap(userInfo, boardVO, scrapBoardListView_FG);
 		}
 		
 		/* 2018-10-18 홍승비 - 나의게시물 검색을 위해 companyID 추가 */
@@ -2647,9 +2748,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else if(mode.equals("temp")){
 			boardSearchList = ezBoardService.getSearchMyBoardItemListTemp(boardListVO, boardVO);
 		} else if(mode.equals("scrap") && boardVO.getScrapContID() != null) {
-			boardSearchList = ezBoardService.getSearchScrapContItemList(boardListVO, boardVO);
+			boardSearchList = ezBoardService.getSearchScrapContItemList(boardListVO, boardVO, scrapContBoardListView_FG);
 		} else if(mode.equals("scrap")){
-    		boardSearchList = ezBoardService.getSearchMyBoardItemListScrap(boardListVO, boardVO);
+    		boardSearchList = ezBoardService.getSearchMyBoardItemListScrap(boardListVO, boardVO, scrapBoardListView_FG);
 		}
 		
 		int dlength = boardSearchList.size();
@@ -2722,6 +2823,21 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardSearchList.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10>" + boardSearchList.get(j).get("GUBUN") + "</DATA10>");
 					resultXML.append("<DATA11>" + boardSearchList.get(j).get("ONELINECNT") + "</DATA11>");
+
+					if("scrap".equals(mode) && boardVO.getScrapContID() == null) {
+                        if (scrapBoardListRead_FG.contains(boardSearchList.get(j).get("BOARDID"))) {
+                            resultXML.append("<DATA13>" + "Y" + "</DATA13>");
+                        } else {
+                            resultXML.append("<DATA13>" + "N" + "</DATA13>");
+                        }
+                    }
+					if("scrap".equals(mode) && boardVO.getScrapContID() != null){
+						if (scrapContBoardListRead_FG.contains(boardSearchList.get(j).get("BOARDID"))) {
+							resultXML.append("<DATA13>" + "Y" + "</DATA13>");
+						} else {
+							resultXML.append("<DATA13>" + "N" + "</DATA13>");
+						}
+					}
 				}
 				
 				resultXML.append("</CELL>");

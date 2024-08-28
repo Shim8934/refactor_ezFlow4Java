@@ -5482,10 +5482,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2023-05-03 기민혁 - 나의 스크랩 등록 item 리스트 호출 */
 	@Override
-	public List<HashMap<String, Object>> getMyBoardListItemScrap(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
+	public List<HashMap<String, Object>> getMyBoardListItemScrap(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, ArrayList<String> scrapBoardListView_FG) throws Exception {
 		logger.debug("getMyBoardListItemScrap started");
 
-		
+
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
@@ -5503,13 +5503,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("lang", userInfo.getLang());
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
+		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
 
 		logger.debug("getMyBoardListItemScrap ended");
 		return ezBoardDAO.getMyBoardListItemScrap(map);
@@ -5517,7 +5518,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2023-05-03 기민혁 - 나의 스크랩 item totalcount */
 	@Override
-	public int getMyBoardTotalItemCountScrap(LoginVO userInfo) throws Exception {
+	public int getMyBoardTotalItemCountScrap(LoginVO userInfo, ArrayList<String> scrapBoardListView_FG) throws Exception {
 		logger.debug("getMyBoardTotalItemCountScrap started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5526,6 +5527,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_companyID", userInfo.getCompanyID());
 		map.put("v_tenantID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
 
 		logger.debug("getMyBoardTotalItemCountScrap ended");
 		return ezBoardDAO.getMyBoardTotalItemCountScrap(map);
@@ -5533,7 +5535,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item totalcount */
 	@Override
-	public int getSearchMyBoardItemCountScrap(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public int getSearchMyBoardItemCountScrap(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG) throws Exception {
 		logger.debug("getSearchMyBoardItemCountScrap started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -5548,14 +5550,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-
+		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
+		
+		
 		logger.debug("getSearchMyBoardItemCountScrap ended");
 		return ezBoardDAO.getSearchMyBoardItemCountScrap(map);
 	}
 	
 	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item 리스트 호출 */
 	@Override
-	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG) throws Exception {
 		logger.debug("getSearchMyBoardItemListScrap started");
 
 		if (boardListVO.getOrderBySub().length() > 0) {
@@ -5572,7 +5576,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
+		map.put("lang", boardVO.getLang());
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
@@ -5586,7 +5590,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-
+		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
+		
 		logger.debug("getSearchMyBoardItemListScrap ended");
 		return ezBoardDAO.getSearchMyBoardItemListScrap(map);
 	}
@@ -5852,7 +5857,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2023-05-22 기민혁 - 스크랩함 스크랩 item totalcount */
 	@Override
-	public int getUserScrapContlistCount(LoginVO userInfo, String scrapContID) throws Exception {
+	public int getUserScrapContlistCount(LoginVO userInfo, String scrapContID, ArrayList<String> scrapContBoardListView_FG) throws Exception {
 		logger.debug("getUserScrapContlistCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5862,14 +5867,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_tenantID", userInfo.getTenantId());
 		map.put("v_scrapContID", scrapContID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-
+		map.put("scrapContBoardListView_FG", scrapContBoardListView_FG);
+		
 		logger.debug("getUserScrapContlistCount ended");
 		return ezBoardDAO.getUserScrapContlistCount(map);
 	}
 	
 	/* 2023-05-22 기민혁 - 스크랩함 리스트 표출 */
 	@Override
-	public List<HashMap<String, Object>> getScrapContItemList(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String scrapContID) throws Exception {
+	public List<HashMap<String, Object>> getScrapContItemList(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String scrapContID, ArrayList<String> scrapContBoardListView_FG) throws Exception {
 		logger.debug("getScrapContItemList started");
 
 		if (orderOption1.length() > 0) {
@@ -5889,7 +5895,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("lang", userInfo.getLang());
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -5897,13 +5903,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
 		map.put("scrapContID", scrapContID);
+		map.put("scrapContBoardListView_FG", scrapContBoardListView_FG);
 
 		logger.debug("getScrapContItemList ended");
 		return ezBoardDAO.getScrapContItemList(map);
 	}
 	
 	/* 2023-05-22 기민혁 - 스크랩함 검색결과 스크랩 item totalcount */
-	public int getSearchScrapContItemListCount(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	@Override
+	public int getSearchScrapContItemListCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG) throws Exception {
 		logger.debug("getSearchScrapContItemListCount started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -5918,6 +5926,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_scrapContID", boardVO.getScrapContID());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("scrapContBoardListView_FG", scrapContBoardListView_FG);
 
 		logger.debug("getSearchScrapContItemListCount ended");
 		return ezBoardDAO.getSearchScrapContItemListCount(map);
@@ -5925,7 +5934,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2023-05-22 기민혁 - 나의 스크랩함 검색리스트 표출 */
 	@Override
-	public List<HashMap<String, Object>> getSearchScrapContItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+	public List<HashMap<String, Object>> getSearchScrapContItemList(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG) throws Exception {
 		logger.debug("getSearchScrapContItemList started");
 
 		if (boardListVO.getOrderBySub().length() > 0) {
@@ -5942,7 +5951,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
+		map.put("lang", boardVO.getLang());
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
@@ -5958,6 +5967,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("limit", boardListVO.getStartRow() - 1);
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_SCRAPCONTID", boardVO.getScrapContID());
+		map.put("scrapContBoardListView_FG", scrapContBoardListView_FG);
 
 		logger.debug("getSearchScrapContItemList ended");
 		return ezBoardDAO.getSearchScrapContItemList(map);
@@ -6046,5 +6056,30 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 
 		logger.debug("deleteBoardScrapContItem ended");
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getUserScrapBoardList(String userID, int tenantID) throws Exception {
+		logger.debug("getUserScrapBoardList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getUserScrapBoardList ended");
+		return ezBoardDAO.getUserScrapBoardList(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getUserScrapContBoardList(LoginVO userInfo, String scrapContID) throws Exception {
+		logger.debug("getUserScrapContBoardList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("v_CONTID", scrapContID);
+
+		logger.debug("getUserScrapContBoardList ended");
+		return ezBoardDAO.getUserScrapContBoardList(map);
 	}
 }

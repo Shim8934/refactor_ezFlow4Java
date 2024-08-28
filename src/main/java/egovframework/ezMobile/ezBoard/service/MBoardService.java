@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezBoard.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -102,9 +103,9 @@ public interface MBoardService {
 	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content) throws Exception;
 
 	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 호출 */
-	List<MBoardNewListVO> getScrapBoardList(String userID, String deptID, String companyID, int tenantID, String offset, String pSearchText) throws Exception;
+	List<MBoardNewListVO> getScrapBoardList(String userID, String deptID, String companyID, int tenantID, String offset, String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception;
 
 	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 count */
-	Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText) throws Exception;
+	Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception;
 
 }
