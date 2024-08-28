@@ -1494,7 +1494,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
 		
-		JSONObject data = new JSONObject();
+		JSONObject data = null;
 		if (status.equals("ok")) {
 			data = (JSONObject) resultBody.get("data");
 		}
