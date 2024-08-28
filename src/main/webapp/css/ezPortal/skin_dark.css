@@ -480,3 +480,12 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .mainbg .ui-widget-content .ui-state-hover{color:#333;}
 .mainbg .ui-datepicker-prev span{background-image:url(../../images/ezNewPortal/skin/dark/datepicker_prev.png);}
 .mainbg .ui-datepicker-next span{background-image:url(../../images/ezNewPortal/skin/dark/datepicker_next.png);}
+
+
+/* 긴급공지 */
+.urgent_cont h3{color:#fff;}
+.urgent_cont input[type="text"]{border-color:#D9D9D9; color:#8F8F8F; background:#272829;}
+.urgent_cont textarea{border-color:#D9D9D9; color:#8F8F8F; background:#272829;}
+.urgent_cont ul li p{color:#fff;}
+.noti_bot_btn span{background:#454647; color:#fff;}
+.noti_company_content{color:#eb0909;}
