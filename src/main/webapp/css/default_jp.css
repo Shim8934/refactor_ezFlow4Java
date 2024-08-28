@@ -2359,7 +2359,7 @@ div#txtContent table {margin:auto;}
     border-radius: 2px;
 }
 /* .lnb h2 span.tree_manage:hover .Personal_Documentation_tooltip{display: block;} */
-.mCSB_container{overflow: visible !important;}
+.mCSB_container{overflow: visible !important; padding-bottom: 20px;}
 
 
 .lnb h2 .h2Title {float:none; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
@@ -3913,9 +3913,9 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .content input{margin-top: 0px;}
 .file .pos2 .imgbtn {width: 75px !important;}
 
-#left .adminListBox h2{white-space:normal; word-break:break-all; height:auto !important; line-height:1.5 !important;}
-#left .adminListBox h2 span{font-size:15px !important; white-space:normal;}
-#left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}
+/* #left .adminListBox h2{white-space:normal; word-break:break-all; height:auto !important; line-height:1.5 !important;} */
+/* #left .adminListBox h2 span{font-size:15px !important; white-space:normal;} */
+/* #left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;} */
 
 .portlet_tabnew01_top p span {line-height: 26px !important;}
 .content input{margin-top: 0px;}
