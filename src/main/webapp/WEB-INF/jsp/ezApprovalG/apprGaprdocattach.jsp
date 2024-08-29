@@ -55,6 +55,10 @@
 
 			var orgResultxml;
 
+            // 일괄기안 관련 변수 추가
+            var draftAllFlag = "<c:out value ='${draftAllFlag}'/>";
+            var anNo = "<c:out value ='${anNo}'/>";
+	        
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 	            window.onblur = function () {
 	                window.focus();
@@ -215,6 +219,12 @@
 	                }
 	
 	                var AprDocAttachxml = DocMoveParser();
+
+                    if (draftAllFlag == "Y") {
+                        parent.pHasDocAttachYN = "Y";
+                        parent.pHasDocAttachYNAry[anNo] = "Y";
+                    }
+
 	                if (CrossYN()) {
 	                    ReturnFunction(AprDocAttachxml);
 	                }
@@ -226,6 +236,12 @@
 	            else {
 	                delAttachDoc();
 	                var AprDocAttachxml = DocMoveParser();
+
+                    if (draftAllFlag == "Y") {
+                        parent.pHasDocAttachYN = "N";
+                        parent.pHasDocAttachYNAry[anNo] = "N";
+                    }
+
 	                if (CrossYN()) {
 	                    ReturnFunction(AprDocAttachxml);
 	                }

@@ -98,10 +98,10 @@
 	    		}
 	    		
 	    		if (publicityYN != "") {
-	    			if (publicityYN == "Y") {
-	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.t47'/>");
-	    			} else {
+	    			if (publicityYN == "N") {
 	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.t46'/>");
+	    			} else {
+	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.t47'/>");
 	    			}
 	    		}
 	    		

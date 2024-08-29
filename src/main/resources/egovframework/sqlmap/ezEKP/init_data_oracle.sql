@@ -6,7 +6,7 @@ INSERT INTO jmocha_default_quota (DOMAIN_NAME,MAX_STORAGE,WARN_STORAGE) VALUES (
 INSERT INTO tbl_tenant (TENANT_ID,TENANT_NAME,TENANT_NAME2) VALUES (0,'조직도','OrganizationChart');
 INSERT INTO tbl_tenant_servername (TENANT_ID, SERVER_NAME) VALUES (0, 'jtest.kaoni.com');
 
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'dbSessionStoragePeriod', 'DB세션 보관 기간', '1', 'DB 세션 사용 시 tbl_session 테이블에 세션 보관 기간 day기준(default:1)', TO_DATE('2023-12-14 00:00:00','yyyy-mm-dd hh24:mi:ss'), '로그인');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'dbSessionStoragePeriod', 'DB세션 보관 기간', '5', 'DB 세션 사용 시 tbl_session 테이블에 세션 보관 기간 day기준(default:5)', TO_DATE('2023-12-14 00:00:00','yyyy-mm-dd hh24:mi:ss'), '로그인');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'checkPasswordNumber', '3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지', 'YES', '패스워드 설정 시 3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지 사용여부 (default:YES)', TO_DATE('2023-06-09 00:00:00','yyyy-mm-dd hh24:mi:ss'), '로그인');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useOTP', 'OTP 사용여부', 'NO', 'TFA 2중인증 OTP 사용여부 (default:NO)', TO_DATE('2023-03-30 00:00:00','yyyy-mm-dd hh24:mi:ss'), '포탈');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'MaxMessageSize', '메일최대크기', '65536', '메일최대크기 (default:65536)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
@@ -2764,7 +2764,7 @@ INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_ord
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (6, '/ezResource/resMain.do', 'G', 'icon_topmenu icon_nav_resource', 6, 'resource');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (7, '/ezCircular/circularIndex.do', 'G', 'icon_topmenu icon_nav_circular_edition', 7, 'circular');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (8, '/ezJournal/journalMain.do', 'G', 'icon_topmenu icon_nav_workdiary', 8, 'journal');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (9, '/ezAttitude/attitudeMain.do', 'G', 'icon_topmenu icon_nav_absenteeism', 9, 'attendance');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (9, '/ezAttitude/attitudeMain.do', 'G', 'icon_topmenu icon_nav_absenteeism', 9, 'attitude');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (10, '/ezWebFolder/webfolderMain.do', 'G', 'icon_topmenu icon_nav_webfolder', 10, 'webfolder');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (11, '/ezCabinet/cabinetMain.do', 'G', 'icon_topmenu icon_nav_cabinet', 11, 'cabinet');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (12, '/ezPMS/pmsMain.do', 'G', 'icon_topmenu icon_nav_project', 12, 'pms');
@@ -3403,26 +3403,26 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 VALUES (0, 'BigSizeApprAttachDelDay', '전자결재 대용량 첨부파일 보존기간', '14', '일 단위로 보존기간을 지정한다. 지정한 기간이 지나면 대용량 첨부파일을 삭제한다. (default: 14)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'LangTertiary1', '멀티언어1', '일본어', '시스템 언어에 따른 멀티언어 셋팅(일본어)', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangTertiary1', '멀티언어1', '일본어', '시스템 언어에 따른 멀티언어 셋팅(일본어)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'LangTertiary2', '멀티언어2', 'Japanese', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangTertiary2', '멀티언어2', 'Japanese', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'LangTertiary3', '멀티언어3', '日本語', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangTertiary3', '멀티언어3', '日本語', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'LangTertiary4', '멀티언어4', '日语', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangTertiary4', '멀티언어4', '日语', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'LangTertiary5', '멀티언어5', '', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangTertiary5', '멀티언어5', '', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'LangQuaternary1', '멀티언어1', '중문', '시스템 언어에 따른 멀티언어 셋팅(중국어)', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangQuaternary1', '멀티언어1', '중문', '시스템 언어에 따른 멀티언어 셋팅(중국어)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'LangQuaternary2', '멀티언어2', 'Chinese', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangQuaternary2', '멀티언어2', 'Chinese', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'LangQuaternary3', '멀티언어3', '中文', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangQuaternary3', '멀티언어3', '中文', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'LangQuaternary4', '멀티언어4', '中文', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangQuaternary4', '멀티언어4', '中文', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'LangQuaternary5', '멀티언어5', '', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반');
+VALUES (0, 'LangQuaternary5', '멀티언어5', '', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(0, 'useOrganHideFlag', 'NO', '조직도 사용자,부서 숨김 기능의 사용 여부 YES: 사용 NO: 사용안함 (default)', '조직도 사용자,부서 숨김 기능', TO_DATE('2024-06-05 11:30:00','yyyy-mm-dd hh24:mi:ss'), '조직도');
 

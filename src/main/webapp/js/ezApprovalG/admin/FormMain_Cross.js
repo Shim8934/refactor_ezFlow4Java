@@ -572,7 +572,7 @@ function MakeFormInfoXML_Detail() {
     }
     
     /* 2022-01-07 홍승비 - 전자결재G 일괄결재 옵션 추가 */
-    if (approvalFlag == "G" && document.getElementById("setDraftAllFlag").checked) {
+    if (document.getElementById("setDraftAllFlag").checked) {
     	createNodeAndInsertText(xmlpara, objNode, "draftAllFlag", "Y");
     } else {
     	createNodeAndInsertText(xmlpara, objNode, "draftAllFlag", "N");

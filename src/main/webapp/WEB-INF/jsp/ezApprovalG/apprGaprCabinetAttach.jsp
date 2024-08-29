@@ -176,6 +176,10 @@
 			            	OpenAlertUI("<spring:message code='ezApprovalG.garm04'/>");
 			            	return;
 			            }
+						if (GetAttribute(pCurSel[count1], "DATA16") == "B") {
+							OpenAlertUI("<spring:message code='ezApprovalG.kmh06'/>");
+							return;
+						}
 			            //2018-10-12 김보미 - 문서첨부시 보안문서일 경우 보안날짜가 지나기 전엔 첨부할 수 없도록 변경
 			            if (GetAttribute(pCurSel[count1], "DATA14") != null && GetAttribute(pCurSel[count1], "DATA14") != "") {
 			            	date = GetAttribute(pCurSel[count1], "DATA14");

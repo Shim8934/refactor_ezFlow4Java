@@ -512,13 +512,12 @@
     
     function GetPublicCode2() {
     	var publicCode2 = "";
-    	if (document.getElementsByName("rdoSecType2")[0].checked) {
-    		publicCode2 = "Y";
-    	} else {
-    		publicCode2 = "N";
-    	}
-    	
-    	return publicCode2;
+        var rdoSecType2SelectBox = document.getElementById("rdoSecType2");
+        if (rdoSecType2SelectBox){
+            publicCode2 = rdoSecType2SelectBox.value;
+        }
+
+        return publicCode2;
     }
     
     /* 2020-09-11 홍승비 - 숫자 이외의 값 입력 방지 함수 */
@@ -738,12 +737,18 @@
               </tr>
                <tr>
                 <th style="border-left: 0px;"><spring:message code='ezApprovalG.t109'/></th>
-                <td><input type="radio" name="rdoSecType2" value="Y" checked onClick="return rdoSecType2_onclick(this.value)" checked  style="height:13px;width:13px;padding:0px;margin:0px;">
+                <td>
+                    <select id="rdoSecType2" name="rdoSecType2" style="WIDTH: 85px">
+                        <option value="Y"><spring:message code='ezApprovalG.kmh03'/></option>
+                        <option value="B"><spring:message code='ezApprovalG.kmh04'/></option>
+                        <option value="N"><spring:message code='ezApprovalG.kmh05'/></option>
+                    </select>
+                  <%--<input type="radio" name="rdoSecType2" value="Y" checked onClick="return rdoSecType2_onclick(this.value)" checked  style="height:13px;width:13px;padding:0px;margin:0px;">
                   <span><spring:message code='ezApprovalG.t47'/></span>
                   <input type="radio" name="rdoSecType2" value="N" onClick="return rdoSecType2_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;">
                   <span><spring:message code='ezApprovalG.t1072'/></span>
                   <select id="selSecLevel" style="width:60px;display:none" name="select2">
-                  </select>
+                  </select>--%>
                 </td>
               </tr>
               <tr>

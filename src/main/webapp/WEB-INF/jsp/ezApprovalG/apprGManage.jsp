@@ -2637,7 +2637,7 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 				}else{
-					OpenInformationUI("<spring:message code='ezApprovalG.t900002'/>" + "<br><spring:message code='ezApprovalG.kbh03'/>", btnApproveALL_onclick_Complete);
+					OpenInformationUI("<spring:message code='ezApprovalG.t900002'/>" + "<spring:message code='ezApprovalG.kbh03'/>", btnApproveALL_onclick_Complete);
 				}
 			}
 

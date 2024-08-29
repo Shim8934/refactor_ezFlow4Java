@@ -2592,7 +2592,8 @@ div#txtContent table {margin:auto;}
 /*.confirmation {line-height:normal !important;} style 제거 */
 .node_div .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;}
 .admin_left_title { position:relative; height:52px; background:#fff; line-height:52px; font-size:18px; font-weight:bold; color:#000; padding: 0px 0px 0px 20px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;} /* 타이틀 텍스트 공통영역 20230712 */
-.companySelect {margin-left: 20px; margin-top: 15px; height:26px; width: 186px; white-space: nowrap; text-overflow: ellipsis; border:1px solid #bbb;}
+.companySelect {margin-left:10px; height:31px; /* float:right; */ border:1px solid #bbb;}
+.companySelect.adminBoardLeft {margin-left: 20px; margin-top: 15px; height:26px; width: 186px; white-space: nowrap; text-overflow: ellipsis; border:1px solid #bbb;}
 
 /* icon16 */
 .icon16{ background:url(../images/ImgIcon/icon16.png) no-repeat !important; background-color: transparent !important; vertical-align: top !important; overflow: hidden; } /* icon16 통합아이콘 */

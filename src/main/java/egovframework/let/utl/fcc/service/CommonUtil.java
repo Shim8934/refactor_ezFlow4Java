@@ -495,9 +495,7 @@ public class CommonUtil {
 		String decData = "";
 
 		try {
-			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
-
-			if (useDbSession) {
+			if (loginCookie.length() == 36) {
 				String ezSessionId = loginCookie;
 				SessionVO resultVO = loginService.getSession(ezSessionId);
 
