@@ -2114,41 +2114,39 @@ function mkPageSelPage() {
     const nextImg_disable = "/images/kr/cm/btn_next01.gif";
     
     // 사용 요소
-    var imgSPAN_IMG = document.createElement("img");
     var imgSPAN = document.createElement("span");
     	imgSPAN.classList.add("btnimg");
-    	imgSPAN.appendChild(imgSPAN_IMG);
     	
     var pprevEle = imgSPAN.cloneNode(true);
     if (totalPage > 1 && pageNum != 1) {
     	pprevEle.setAttribute("onClick", "goToPageByNum(1)");
-    	pprevEle.querySelector("img").src = pprevImg_able;
+    	pprevEle.classList.add("first");
     } else {
-    	pprevEle.querySelector("img").src = pprevImg_disable;
+    	pprevEle.classList.add("first", "disabled");
     }
     	
     var prevEle = imgSPAN.cloneNode(true);
     if (totalPage > BlockSize && pageNum > BlockSize) {
     	prevEle.setAttribute("onClick", "selbeforeBlock()");
-    	prevEle.querySelector("img").src = prevImg_able;
+    	prevEle.classList.add("prev");
     } else {
-    	prevEle.querySelector("img").src = prevImg_disable;
+    	prevEle.classList.add("prev", "disabled");
     }
 
     var nnextEle = imgSPAN.cloneNode(true);
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
     	nnextEle.setAttribute("onClick", "goToPageByNum("+totalPage+")");
-    	nnextEle.querySelector("img").src = nnextImg_able;
+    	nnextEle.classList.add("last");
     } else {
-    	nnextEle.querySelector("img").src = nnextImg_disable;
+    	nnextEle.classList.add("last", "disabled");
     }
 
     var nextEle = imgSPAN.cloneNode(true);
     if (totalPage > BlockSize && totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
     	nextEle.setAttribute("onClick", "selafterBlock()");
-    	nextEle.querySelector("img").src = nextImg_able;
+    	nextEle.classList.add("next");
     } else {
-    	nextEle.querySelector("img").src = nextImg_disable;
+    	nextEle.classList.add("next", "disabled");
     }
     
     // pagenavi
