@@ -249,7 +249,8 @@ public class EzNotificationGWController {
 					}
 					
 					if (useMobilePushCompany && useMobilePushUser) {
-						boolean mobilePushSuccess = ezEmailService.addEzTalkNotification(recipientId, senderName, pushNotiContent, mainTypeForMobilePush, subTypeForMobilePush, linkUrlMobile);
+						//boolean mobilePushSuccess = ezEmailService.addEzTalkNotification(recipientId, senderName, pushNotiContent, mainTypeForMobilePush, subTypeForMobilePush, linkUrlMobile);
+						boolean mobilePushSuccess = ezNotificationService.addMobilePushForTestServer(recipientId, senderName, pushNotiContent, mainTypeForMobilePush, subTypeForMobilePush, linkUrlMobile);
 						
 						if (mobilePushSuccess) {
 							resultStr += "mobile:ok};";

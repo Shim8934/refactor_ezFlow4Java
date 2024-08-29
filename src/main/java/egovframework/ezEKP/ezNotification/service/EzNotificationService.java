@@ -69,5 +69,7 @@ public interface EzNotificationService {
 	public EmergencyNotiItemVO getEmergencyNotiItem(String emergencyItemId, String offSet, int tenantId) throws Exception;
 
 	public void deleteEmergencyNoti(String notiId, int tenantId) throws Exception;
+	
+	public boolean addMobilePushForTestServer(String recipientId, String senderName, String pushNotiContent, String mainTypeForMobilePush, String subTypeForMobilePush, String linkUrlMobile) throws Exception;
 
 }
