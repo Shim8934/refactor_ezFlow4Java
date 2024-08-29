@@ -1984,7 +1984,7 @@ div.orbit img{border-radius:5px;}
 .noti_bot_btn span{display:inline-block; width:135px; height:40px; line-height:38px; text-align:center; border-radius:6px; background:#EFEFEF; color:#737373; font-size:14px; margin-right:10px; cursor:pointer;}
 .noti_bot_btn span.close{margin-right:0; background:#388CE5; color:#fff;}
 
-.urgent_noti{position:absolute; top:0; left:0; width:100%; height:100%; background:#fff; z-index:1; border-radius:12px;}
+.urgent_noti {}
 .urgent_noti .noti_bot_btn{margin-top:35px;}
 .urgent_cont{margin-bottom:20px; padding:0 20px;}
 .urgent_cont h3{margin:0 0 5px 0; padding:0; font-size:14px; color:#000; line-height:27px;}
@@ -1995,7 +1995,7 @@ div.orbit img{border-radius:5px;}
 .urgent_cont ul li{margin:0; padding:0; height:26px; line-height:26px; font-size:13px; color:#000;}
 .urgent_cont ul li p{max-width:calc(100% - 30px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden; margin:0; display:inline-block; vertical-align:top;}
 .urgent_cont ul li .del_btn{float:right; width:12px; height:12px; margin:7px 5px 0 0; cursor:pointer; background:url(../../images/ezNewPortal/del_icon.png) no-repeat center;}
-.noti_company_content{margin-bottom:10px; padding:0 20px;color:#ff0014;font-size:14px;}
+.noti_company_content{margin-bottom:10px; padding:0 20px;color:#ff0014; font-size:14px; font-weight:500;}
 
 
 /* 프로필 */

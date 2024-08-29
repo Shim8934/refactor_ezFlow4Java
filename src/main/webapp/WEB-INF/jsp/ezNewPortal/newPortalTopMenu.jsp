@@ -115,11 +115,6 @@
 				}
 			}
 			
-			window.onload = function() {
-				setColorMode();
-			}
-			
-			
 		</script>
 	</head>
 	<body>
