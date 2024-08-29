@@ -938,6 +938,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("jobId", userInfo.getJobId());
+		param.put("lang", userInfo.getLang());
+		
 		
 		String url = "/rest/ezportal/portlets/userinfomations";
 		
