@@ -2222,3 +2222,40 @@ function unescapeForJson(inputString) {
         }
     });
 }
+
+function getCookie(name) {
+    const cookies = document.cookie.split('; ');
+    
+    for (const cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.split('=');
+        if (cookieName === name) {
+            return decodeURIComponent(cookieValue);
+        }
+    }
+    
+    return null;
+}
+
+function setColorMode() {
+	var useColor = getCookie('useColor');
+	
+	if (useColor) {
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.id = "skinCss";
+
+		if (useColor == 1) {
+			link.href = '/css/ezPortal/skin_blue.css';
+		} else if (useColor == 2) {
+			link.href = '/css/ezPortal/skin_red.css';
+		} else if (useColor == 3) {
+			link.href = '/css/ezPortal/skin_dark.css';
+		}
+
+		document.head.appendChild(link);
+	}
+}
+
+$(function() {
+	setColorMode();
+});

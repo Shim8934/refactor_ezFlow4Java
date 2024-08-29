@@ -306,3 +306,6 @@ nav .navUL li.on{color:#003497;}
 .voteIcon_ul .img_description div{background:#042F81;}
 
 .gameType_wrap ul li:hover{border-color:#7E9AD1 !important; background-color:#EEF4FE !important;}
+
+.employee_search span:hover:before{border-color:#003497;}
+.employee_search span:hover:after{background:#003497;}

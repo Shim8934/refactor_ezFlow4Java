@@ -1160,7 +1160,7 @@
 		        if (!message.FieldExist("publication")) return;
 		        var PublicType = pPublicityYN.substring(0, 1);
 
-		        if (PublicType == "Y")
+		        if (PublicType == "Y" || PublicType == "B")
 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
 		        else if (PublicType == "N")
 		            PublicText = "<spring:message code='ezApprovalG.t46'/>";
@@ -1473,7 +1473,9 @@
 	                	tempPublic = "N";
 	                } else if (ret[21].substring(0,1) == "Y") {
 	                	tempPublic = "Y";
-	                }
+	                } else if (ret[21].substring(0,1) == "B") {
+                        tempPublic = "B";
+                    }
 		            setPublicFlag();
 		            SummaryFlag = true;
 		            

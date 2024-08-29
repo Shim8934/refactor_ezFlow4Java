@@ -4623,8 +4623,14 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
+			String jobId = request.getParameter("jobId");
+			String lang = request.getParameter("lang");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			OrganUserVO userInfo = ezOrganService.getUserInfo(info.getTenantId(), userId, companyId, deptId, jobId, lang).orElseThrow(NoSuchFieldException::new);
+			
 			
 			String userName = "";
 			String userTitle = "";
@@ -4632,16 +4638,9 @@ public class EzNewPortalGWController {
 			String userPhoto = "";
 			String userEmail = "";
 
-			// 회원정보 불러오기
-			if (info.getPrimary().equals("1")) {
-				userName = info.getUserName();
-				userTitle = info.getTitle();
-				deptName = info.getDeptName();
-			} else {
-				userName = info.getUserName2();
-				userTitle = info.getTitle2();
-				deptName = info.getDeptName2();
-			}
+			userName = userInfo.getDisplayName();
+			userTitle = userInfo.getTitle();
+			deptName = userInfo.getDescription();
 			userEmail = info.getEmail();
 			
 			// 유저이미지

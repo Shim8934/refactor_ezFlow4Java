@@ -2606,6 +2606,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
 		}
+		String formDraftAllFlag = doc.getElementsByTagName("draftAllFlag").item(0).getTextContent();
 		formAprOption = doc.getElementsByTagName("APPROPTION").item(0).getTextContent();
 		
 		passAprLineFlag = doc.getElementsByTagName("passAprLineFlag").item(0).getTextContent();
@@ -2669,6 +2670,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		// 양식 상세옵션
 		map.put("v_formAprOption", formAprOption);
 		map.put("v_FORMSIHANGTYPE", formSihangType);
+		map.put("v_PFORMDRAFTALLFLAG", formDraftAllFlag);
 
 		if (formID.equals("")) {
 			formID = generateNextFormId(companyID, userInfo.getTenantId());
