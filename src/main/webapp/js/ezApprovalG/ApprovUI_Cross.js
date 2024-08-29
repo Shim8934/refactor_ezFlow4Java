@@ -3594,7 +3594,7 @@ function setPublicFlag2() {
 	var PublicText = "";
 	
 	
-	if (PublicType == "Y")
+	if (PublicType == "Y" || PublicType == "B")
 		PublicText = strLang82;
 	else if (PublicType == "N")
 		PublicText = strLang84

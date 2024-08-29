@@ -333,13 +333,13 @@
 									document.getElementById("setOpenGovFlag").checked = true;	
 								}
 								
-								/* 2022-01-07 홍승비 - 전자결재G 일괄기안 옵션 추가 */
-								if (result.vo.formDraftAllFlag == "Y") {
-		        					document.getElementById("setDraftAllFlag").checked = true;
-		        					$("input:checkbox[id='setConnFlag']").attr("disabled", true);
-		        					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
-		        				}
 							}
+                            /* 2022-01-07 홍승비 - 전자결재G 일괄기안 옵션 추가 2024-07-04 S 버전도 사용 */
+                            if (result.vo.formDraftAllFlag == "Y") {
+                                document.getElementById("setDraftAllFlag").checked = true;
+                                $("input:checkbox[id='setConnFlag']").attr("disabled", true);
+                                $("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+                            }
 
 							var formXslt = result.vo.formXslt;
 							if(formXslt) {
@@ -1118,14 +1118,14 @@
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
 			    	
- 			    	if (approvalFlag === "G" && useDraftAll == "YES") {
+ 			    	if (useDraftAll == "YES") {
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
 			    	}
 		    	} else {
 		    		$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
 		    		
- 		    		if (approvalFlag === "G" && useDraftAll == "YES") {
+ 		    		if (useDraftAll == "YES") {
 		    			$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
 		    		}
 		    	}
@@ -1146,14 +1146,14 @@
 		    function changePassAprLineFlag() {
 		    	if ($("input:checkbox[id='setPassAprLineFlag']").is(":checked")) {
  		    		
-		    		if (approvalFlag === "G" && useDraftAll == "YES") {
+		    		if (useDraftAll == "YES") {
 			    		$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
 		    		}
 			    	$("input:checkbox[id='setConnFlag']").attr("checked", false);
 			    	$("input:checkbox[id='setConnFlag']").attr("disabled", true);
 		    	} else {
- 		    		if (approvalFlag === "G" && useDraftAll == "YES") {
+ 		    		if (useDraftAll == "YES") {
 			    		$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
 		    		}
 		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
@@ -1387,7 +1387,7 @@
 						</c:if>
                         <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
                         <%-- 2022-01-07 홍승비 - 전자결재G 웹한글 일괄기안 기능 표준모듈 반영 --%>
-                         <span style="<c:if test="${useEditor != 'WebHWP' || useDraftAll != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span> 
+                         <span style="<c:if test="${useDraftAll != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span>
 						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
 					</td>
 				</tr>

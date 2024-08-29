@@ -1168,8 +1168,8 @@ public class MApprovalGGWController {
 				userInfo.setCompanyId(companyID);
 			}
 			
-			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-				pass = ezApprovalGService.getAccessYNG(docId, userID, accessInfo, companyID, lang, userInfo.getTenantId(), approvalFlag);
+			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
+				pass = ezApprovalGService.getAccessYNG(docId, userID, accessInfo, companyID, lang, userInfo.getTenantId(), approvalFlag, userInfo.getDeptId());
 			} else {
 				pass = "<RESULT>TRUE</RESULT>";
 			}

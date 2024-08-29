@@ -1023,7 +1023,8 @@
 						WHEN O.FORMID IS NULL THEN 'N'
 						WHEN O.FORMID IS NOT NULL THEN 'Y'
                     END AS officeFlag,
-                    formxslt
+                    formxslt,
+                    FORMDRAFTALLFLAG
 				FROM
 					TBL_FORMINFO
 				JOIN 

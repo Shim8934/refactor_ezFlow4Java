@@ -9588,11 +9588,13 @@
 							   	<isNotEmpty property="v_CONTID">
 							   	<isNotEqual property="v_APRFLAG" compareValue="INMYAPPRSEARCH">
 							   	<isNotEqual property="v_CONTID" compareValue="ADMIN">
+                                <isNotEqual property="approvalFlag" compareValue="G">
 							   	<![CDATA[
 							   	AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)
 					      		OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
 					      		]]>
 							   	</isNotEqual>
+                                </isNotEqual>
 							   	</isNotEqual>
 							   	</isNotEmpty>
 							   	</isEqual>
@@ -9812,9 +9814,9 @@
         </isNotEqual>
         <isEqual property="v_PUBFLAG" compareValue="Y">
             <isNotEmpty property="v_CONTID">
-                <![CDATA[
+               <!-- <![CDATA[
 										AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
-								      	]]>
+								      	]]> -->
             </isNotEmpty>
         </isEqual>
         <!--									<isNotEmpty property="v_SUBQUERY">
@@ -10880,26 +10882,18 @@
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="003">
 			<![CDATA[
-			 	SELECT 
-			 		DISTINCT SUBSTR(TBL_SEPERATEATTACH.CabinetID, 1, 7) AprMemberDeptID  
-	            FROM 
-	            	TBL_RECORD 
-	            JOIN 
-	            	TBL_SEPERATEATTACH    
-	           	ON 
-	           		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID
-	           	AND 
-	           		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
-	           	AND
-	           		TBL_RECORD.COMPANYID = TBL_SEPERATEATTACH.COMPANYID	           		
+			 	SELECT CONTAINEROWNDEPID 
+				FROM TBL_ENDAPRDOCINFO 
+				JOIN TBL_CONTAINER 
+				ON TBL_ENDAPRDOCINFO.CONTAINERID = TBL_CONTAINER.CONTAINERID
+				AND TBL_ENDAPRDOCINFO.TENANT_ID = TBL_CONTAINER.TENANT_ID
+				AND TBL_ENDAPRDOCINFO.COMPANYID = TBL_CONTAINER.COMPANYID
 	            WHERE  
-	            	TBL_RECORD.DocID = #v_DOCID#
+	            	TBL_ENDAPRDOCINFO.DocID = #v_DOCID#
 	            AND
-					TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
-	            AND
-					TBL_RECORD.TENANT_ID = #v_TENANTID#	
+					TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 				AND
-	      			TBL_RECORD.COMPANYID = #companyID#						
+	      			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 			]]>	
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="004">
@@ -15298,6 +15292,7 @@
 	   		<isNotEmpty property="v_CONTID" > 
 	   		<isNotEqual property="v_APRFLAG" compareValue="INMYAPPRSEARCH">
 	   		<isNotEqual property="v_CONTID" compareValue="ADMIN">
+            <isNotEqual property="approvalFlag" compareValue="G">
 	   		<![CDATA[
 	    		 AND   
 	     		 ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)  
@@ -15305,6 +15300,7 @@
 	       		(TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))  
 	       	]]>  
 	      	</isNotEqual>
+            </isNotEqual>
 	      	</isNotEqual>
 	   		</isNotEmpty>
 	   		</isEqual>
@@ -15391,9 +15387,9 @@
 		</isNotEqual>
 		<isEqual property="v_PUBFLAG" compareValue="Y">
 		<isNotEmpty property="v_CONTID">
-		<![CDATA[
+		<!--<![CDATA[
 		AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
-      	]]>
+      	]]>-->
 		</isNotEmpty>
 		</isEqual>
 		<isNotEmpty property="v_SUBQUERY">
@@ -32102,11 +32098,13 @@
 							   	<isNotEmpty property="v_CONTID">
 							   	<isNotEqual property="v_APRFLAG" compareValue="INMYAPPRSEARCH">
 							   	<isNotEqual property="v_CONTID" compareValue="ADMIN">
-							   	<![CDATA[
+                                <isNotEqual property="approvalFlag" compareValue="G">
+                                <![CDATA[
 							   	AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)
 					      		OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
 					      		]]>
 							   	</isNotEqual>
+                                </isNotEqual>
 							   	</isNotEqual>
 							   	</isNotEmpty>
 							   	</isEqual>
@@ -32431,6 +32429,7 @@
    		<isNotEmpty property="v_CONTID" > 
    		<isNotEqual property="v_APRFLAG" compareValue="INMYAPPRSEARCH">
    		<isNotEqual property="v_CONTID" compareValue="ADMIN">
+        <isNotEqual property="approvalFlag" compareValue="G">    
    		<![CDATA[
     		 AND   
      		 ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)  
@@ -32438,6 +32437,7 @@
        		(TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))  
        	]]>  
       	</isNotEqual>
+        </isNotEqual>
       	</isNotEqual>
    		</isNotEmpty>
    		</isEqual>
@@ -35828,23 +35828,17 @@
         <isEqual property="v_FLAG" compareValue="003">
             <![CDATA[
 			 	SELECT 
-			 		DISTINCT SUBSTR(TBL_SEPERATEATTACH.CabinetID, 1, 7) AprMemberDeptID  
-	            FROM 
-	            	TBL_RECORD 
-	            JOIN 
-	            	TBL_SEPERATEATTACH    
-	           	ON 
-	           		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID
-	           	AND 
-	           		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
-	           	AND
-	           		TBL_RECORD.COMPANYID = TBL_SEPERATEATTACH.COMPANYID
-	            WHERE  
-	            	TBL_RECORD.DocID = #v_DOCID#
-	            AND
-					TBL_RECORD.TENANT_ID = #v_TENANTID#
-				AND
-	      			TBL_RECORD.COMPANYID = #companyID#	
+                    APRMEMBERDEPTID
+                FROM
+                    TBL_APRLINEINFO
+                WHERE
+                    DOCID = #v_DOCID#
+                AND 
+                    ( APRMEMBERSN = '1' )
+                AND
+                    TENANT_ID = #v_TENANTID#	
+                AND
+                    COMPANYID = #companyID#	
 			]]>
         </isEqual>
         <isEqual property="v_FLAG" compareValue="004">

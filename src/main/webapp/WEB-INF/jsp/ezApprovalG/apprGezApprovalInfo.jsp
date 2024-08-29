@@ -3006,7 +3006,7 @@
 	            	<spring:message code='ezApprovalG.jjh03'/>
 	            </c:if></span></p>
 	            <c:if test="${approvalFlag eq 'S' }">
-		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.hyj06'/></span></p>
+		            <p id="showHRAprLine"<c:if test="${draftAllFlag eq 'Y'}"> style="display:none"</c:if>><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.hyj06'/></span></p>
 	            </c:if>
 	            <c:if test="${approvalFlag eq 'G' and draftAllFlag ne 'Y'}">
 		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.LJEAppr06'/></span></p>
@@ -3679,17 +3679,22 @@
 		            </tr>
 		            <tr>
 		                <th><spring:message code='ezApprovalG.t944'/></th>
-		                <td>
-		                    <div style="padding-left: 3px; padding-bottom: 5px;">
-		                    	<div style="padding-left: 3px; padding-top: 5px;">
-<%-- 			                        <input id="rdoSecType2Y" type="radio" name="rdoSecType2" value="Y" checked onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding-top: 5px; padding-bottom: 5px; margin: 0px 2px 0 0;"><label for="rdoSecType2Y"><span><spring:message code='ezApprovalG.t47'/> (<spring:message code='ezApproval.t2000'/>)</span></label> --%>
-			                        <input id="rdoSecType2Y" type="radio" name="rdoSecType2" value="Y" checked style="height: 13px; width: 13px; padding-top: 5px; padding-bottom: 5px; margin: 0px 3px 0 0"><label for="rdoSecType2Y"><span><spring:message code='ezApprovalG.t47'/> (<spring:message code='ezApproval.t2000'/>)</span></label>
-		                    	</div>
-		                    	<div style="padding-left: 3px; padding-top: 5px;">
-<%-- 			                        <input id="rdoSecType2N" type="radio" name="rdoSecType2" value="N" onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="rdoSecType2N"><span><spring:message code='ezApprovalG.t46'/> (<spring:message code='ezApproval.t2001'/>)</span></label> --%>
-			                        <input id="rdoSecType2N" type="radio" name="rdoSecType2" value="N" style="height: 13px; width: 13px; padding: 0px; margin: 0px 2px 0 0;"><label for="rdoSecType2N"><span><spring:message code='ezApprovalG.t46'/> (<spring:message code='ezApproval.t2001'/>)</span></label>
-		                    	</div>
-		                    </div>
+		                <td style="padding-left: 5px; padding-right: 5px;">
+							<select id="rdoSecType2" name="rdoSecType2" style="WIDTH: 85px">
+								<option value="Y"><spring:message code='ezApprovalG.kmh03'/></option>
+								<option value="B"><spring:message code='ezApprovalG.kmh04'/></option>
+								<option value="N"><spring:message code='ezApprovalG.kmh05'/></option>
+							</select>
+							<%--<div style="padding-left: 3px; padding-bottom: 5px;">
+								<div style="padding-left: 3px; padding-top: 5px;">
+										&lt;%&ndash; 			                        <input id="rdoSecType2Y" type="radio" name="rdoSecType2" value="Y" checked onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding-top: 5px; padding-bottom: 5px; margin: 0px 2px 0 0;"><label for="rdoSecType2Y"><span><spring:message code='ezApprovalG.t47'/> (<spring:message code='ezApproval.t2000'/>)</span></label> &ndash;%&gt;
+									<input id="rdoSecType2Y" type="radio" name="rdoSecType2" value="Y" checked style="height: 13px; width: 13px; padding-top: 5px; padding-bottom: 5px; margin: 0px 3px 0 0"><label for="rdoSecType2Y"><span><spring:message code='ezApprovalG.t47'/> (<spring:message code='ezApproval.t2000'/>)</span></label>
+								</div>
+								<div style="padding-left: 3px; padding-top: 5px;">
+										&lt;%&ndash; 			                        <input id="rdoSecType2N" type="radio" name="rdoSecType2" value="N" onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="rdoSecType2N"><span><spring:message code='ezApprovalG.t46'/> (<spring:message code='ezApproval.t2001'/>)</span></label> &ndash;%&gt;
+									<input id="rdoSecType2N" type="radio" name="rdoSecType2" value="N" style="height: 13px; width: 13px; padding: 0px; margin: 0px 2px 0 0;"><label for="rdoSecType2N"><span><spring:message code='ezApprovalG.t46'/> (<spring:message code='ezApproval.t2001'/>)</span></label>
+								</div>
+							</div>--%>
 		                </td>
 		           	</tr>
 					<tr>
