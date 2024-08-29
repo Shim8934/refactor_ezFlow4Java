@@ -99,27 +99,6 @@
 				}
 			}
 			
-			
-			function setColorMode() {
-				if (useColor) {
-					
-					if (useColor == 1) {
-						skin('blue');
-					} else if (useColor == 2) {
-						skin('red');
-					} else if (useColor == 3) {
-						skin('dark');
-					} else {
-						skin();
-					}
-				}
-			}
-			
-			window.onload = function() {
-				setColorMode();
-			}
-			
-			
 		</script>
 	</head>
 	<body>
@@ -1841,8 +1820,6 @@
  		
  		// 시작지점
 		newPortalTopMenuFunc();	
-		
-		setColorMode();
 		
 		window.onload = function() {
 			//callAllUserTab();

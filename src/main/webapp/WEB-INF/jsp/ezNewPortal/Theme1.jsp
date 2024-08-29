@@ -279,6 +279,10 @@
         }
 		makePortlets(portletOrder);
 		setPortalRefresh();
+		
+		setPortalCount();		// 포탈 카운트 세팅
+		setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+		makeSwiperByTopMenu();
 	});
 	
 	var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
@@ -543,14 +547,12 @@
 		}
 	}
     
-    window.onload = function() {
-        setPortalCount();		// 포탈 카운트 세팅
-        setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
-        makeSwiperByTopMenu();
-        // callAllUserTab();
-
-
-    }
+//     window.onload = function() {
+//         setPortalCount();		// 포탈 카운트 세팅
+//         setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+//         makeSwiperByTopMenu();
+//         // callAllUserTab();
+//     }
 
     function setPortalCount(){
         var reqURL = "/ezNewPortal/allCount.do";
