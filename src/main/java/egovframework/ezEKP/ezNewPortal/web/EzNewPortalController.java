@@ -1309,7 +1309,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/updateUserThemeAndMode.do", method=RequestMethod.POST)
 	@ResponseBody
-	public String updateUserThemeAndMode(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+	public String updateUserThemeAndMode(HttpServletRequest req, HttpServletResponse res, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserThemeAndMode Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -1341,6 +1341,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		if(themeStatus.equals("error") || modeStatus.equals("error") || menuStatus.equals("error")) {
 			result = "failure";
 		}
+		
+		// 2024-08-28 조수빈 - 유저 색상 테마 정보
+		Cookie useColorCk = new Cookie("useColor", Integer.toString(useColor));
+		useColorCk.setPath("/");
+		res.addCookie(useColorCk);
 		
 		logger.debug("updateUserThemeAndMode End");
 		return result;
