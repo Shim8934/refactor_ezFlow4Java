@@ -1627,8 +1627,8 @@ public class EzEmailAdminController {
 				} else {
 					// 퇴직자는 IMAP에 로그인 할 수 없으므로 db에 저장된 값으로 처리한다.
 					if (organUser.getIsRetire() == 1) {
-						mailboxQuota = (long) Double.parseDouble(organUser.getMailboxQuota());
-						mailboxUsage = (long) Double.parseDouble(organUser.getMailboxUsage());
+						mailboxQuota = organUser.getMailboxQuota() == null ? 0 : (long) Double.parseDouble(organUser.getMailboxQuota());
+						mailboxUsage = organUser.getMailboxUsage() == null ? 0 : (long) Double.parseDouble(organUser.getMailboxUsage());
 						logger.debug("get organUserVO, mailboxQuota=" + mailboxQuota + ", mailboxUsage=" + mailboxUsage);
 					} else {
 						ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
