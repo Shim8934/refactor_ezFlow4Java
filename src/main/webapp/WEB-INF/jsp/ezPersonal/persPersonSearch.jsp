@@ -245,7 +245,6 @@
 							var companyID = "${userInfo.companyID}";
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-<<<<<<< Updated upstream
 								//2024.07.17 한슬기 : totalCount표시 조건 변경
 								if(tempDeptID == companyID){ // 회사인 경우
 									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span> / <span class='totalCount'>" + result.totalCount2 + "</span>";
@@ -253,9 +252,6 @@
 									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span> / <span class='totalCount'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 								}
 							
-=======
-			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
->>>>>>> Stashed changes
 							} else {
 								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
