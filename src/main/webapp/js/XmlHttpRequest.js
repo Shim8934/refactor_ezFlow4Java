@@ -2254,6 +2254,6 @@ function setColorMode() {
 	}
 }
 
-$(function() {
-	setColorMode();
+document.addEventListener('DOMContentLoaded', function() {
+    setColorMode();
 });
