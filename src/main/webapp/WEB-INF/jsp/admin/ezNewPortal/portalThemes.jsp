@@ -208,21 +208,17 @@
 							themesHTML += "<li>";
 							themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
 							
-							var themeImgFolder = "kr";
+							var themeImgUrl = "";
 							
-							if (userLang == "2") {
-								themeImgFolder = "us";
-							} else if (userLang == "3") {
-								themeImgFolder = "jp";
-							} else if (userLang == "4") {
-								themeImgFolder = "cn";
-							} else if (userLang == "5") {
-								themeImgFolder = "vn";
-							} else if (userLang == "6") {
-								themeImgFolder = "id";
+							if (item.themeId == 1) {
+								themeImgUrl = "/images/ezNewPortal/theme_default.png";
+							} else if (item.themeId == 2) {
+								themeImgUrl = "/images/ezNewPortal/theme_shortcut.png";
+							} else if (item.themeId == 3) {
+								themeImgUrl = "/images/ezNewPortal/theme_separation.png";
 							}
 							
-							themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/themeImg/" + themeImgFolder + "/Theme" + item.themeId + ".png' class='themeThumbnails' alt='img02'/>";
+							themesHTML += "<div class='themeImg'><img src='" + themeImgUrl + "' class='themeThumbnails' alt='img02'/>";
 							themesHTML += "</div><div>";
 							themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
 							themesHTML += "<span class='themePortlet' id='themePortlet" + item.themeId + "'><img src='/images/admin/frameSetting3.png'></span>";
