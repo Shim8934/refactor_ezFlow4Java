@@ -5062,8 +5062,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", tenantID);
 
 		if (useImapMoveCommand.equals("YES")) {
-			IMAPFolder deletedFolder = (IMAPFolder) ia.getFolder(ezEmailUtil.getTrashFolderId(locale));
-			sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+			if (cmd.equalsIgnoreCase("BMOVE")) {
+				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));
+				sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+			} else {
+				sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+			}
 		} else {
 			if (cmd.equalsIgnoreCase("BMOVE")) {
 				// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
