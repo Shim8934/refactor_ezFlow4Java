@@ -32,7 +32,7 @@
 			.menuDetails hr {display:block; width:99%;}
 			.menuIconInfo {display:inline-block; margin:43px 23px 23px 23px;}
 			.menuIcon {width:100px;height:100px;border:1px solid black;margin-bottom:10px;text-align:center;vertical-align:middle;}
-			.menuIcon span, .menuIcon img {margin:23px 26px;}
+			.menuIcon span, .menuIcon img {margin:18px 21px;}
 			.menuInfo {display:inline-block; vertical-align:top; margin-top:23px;}
 			.menuInfo ul {padding:0px;}
 			.menuInfo ul li {font-size:15px; font-weight:bold; display:block;margin-bottom:12px;}
