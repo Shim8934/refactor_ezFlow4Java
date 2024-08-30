@@ -103,4 +103,5 @@ public interface EzSystemAdminService {
 	public String checkDuplicateTypeCode(String typeCode, int tenantId, String companyID) throws Exception;
 	public void insertSystemConfigType(String typeCode, String typeName, String typeName2, String description, String writerId, String writerName, String writerName2, int tenantId, String companyId) throws Exception;
 	public void updateSystemConfigType(String typeCode, String typeName, String typeName2, String description, String writerId, String writerName, String writerName2, int tenantId, String companyId) throws Exception;
+	public void disableDeleteSystemConfig(String sCode, String companyID, int tenantId) throws Exception;
 }

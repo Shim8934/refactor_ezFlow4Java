@@ -1255,7 +1255,8 @@
 				DATE_ADD(DATE_FORMAT(A.WRITEDATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) AS WRITEDATE,
 				A.TYPECODE,
 				B.TYPENAME,
-				B.TYPENAME2
+				B.TYPENAME2,
+				A.ISDELETEBLOCK AS isDeleteBlock
 			FROM
 				TBL_SYSTEMCONFIG A
 			INNER JOIN
@@ -1389,6 +1390,8 @@
             	TENANT_ID = #v_TENANT_ID#
             AND
 				COMPANY_ID = #companyID#
+			AND
+				ISDELETEBLOCK <> 'Y'
 		]]>
 	</delete>
 	
@@ -1577,6 +1580,21 @@
 				WRITEDATE = #writeDate#
 			WHERE 
 				TYPECODE = #typeCode#
+			AND
+            	TENANT_ID = #tenantId#
+            AND
+				COMPANY_ID = #companyId#
+		]]>
+	</update>
+	
+	<update id="EzSystemAdminDAO.disableDeleteSystemConfig" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_SYSTEMCONFIG
+			SET
+				 ISDELETEBLOCK = 'Y'
+			WHERE 
+				CODE = #code#
 			AND
             	TENANT_ID = #tenantId#
             AND
