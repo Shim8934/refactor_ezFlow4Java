@@ -65,8 +65,8 @@
 
         <div class="noti_info">
             <div class="noti_view">
-                <span class="on"><spring:message code="ezNotification.hth08"/><em id="notiTotalCount"></em></span>
-                <span><spring:message code="ezNotification.hth06"/><em id="notiUnreadCount"></em></span>
+                <span id="allFilter" class="easyFilter on" onclick="showNoti('ALL')"><spring:message code="ezNotification.hth08"/><em id="notiTotalCount"></em></span>
+                <span id="notReadFilter" class="easyFilter" onclick="showNoti('NOTREAD')"><spring:message code="ezNotification.hth06"/><em id="notiUnreadCount"></em></span>
             </div>
             <div class="noti_btn">
                 <span onclick="updateNotiAll('read')"><spring:message code="ezNotification.hth10"/></span>
@@ -487,6 +487,17 @@
 			event.target.checked = true;
 			document.getElementById("loadingLayer").style.display = "none";
 			return;
+		}
+		
+		var easyFilterBtn = document.querySelectorAll('.easyFilter');
+		for (var i = 0; i < easyFilterBtn.length; i++) {
+			easyFilterBtn[i].classList.remove('on');
+		}
+		
+		if (isRead == 'N') {
+			document.querySelector('#notReadFilter').classList.add('on');
+		} else {
+			document.querySelector('#allFilter').classList.add('on');
 		}
 		
 		var notiFilterElems = document.querySelectorAll('[name="notitypefilter"]');
@@ -1166,6 +1177,18 @@
 	function moveToEmergencyNoti() {
 		var notiFrame = window.parent.frames["iframeNoti"];
 		notiFrame.setAttribute("src", "/ezNotification/emergencyNoti.do");
+	}
+	
+	function showNoti(mode) {
+		if (mode == 'ALL') {
+			document.querySelector('#filter_read').checked = true;
+			document.querySelector('#filter_unread').checked = true;
+		} else {
+			document.querySelector('#filter_read').checked = false;
+			document.querySelector('#filter_unread').checked = true;
+		}
+		
+		searchNoti('first');
 	}
 	
 </script>
