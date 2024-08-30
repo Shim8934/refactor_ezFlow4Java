@@ -1059,8 +1059,11 @@
 		          <c:if test="${useBoard == 'YES' }">
 				  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 				  </c:if>
-				  <c:if test="${approvalFlag != 'G' and orgCompanyID eq userInfo.companyID and formID != '2018000000' and docAprEnd != 'APR'}">
+				  <c:if test="${approvalFlag eq 'S' and orgCompanyID eq userInfo.companyID and formID != '2018000000' and docAprEnd != 'APR'}">
 		          	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+				  </c:if>
+				  <c:if test="${approvalFlag eq 'G' and formID != '2018000000'}">
+				  	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 				  <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>
 				  <c:if test="${useExternalMailServer == 'NO'}">
