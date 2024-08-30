@@ -225,7 +225,7 @@
 				// 기본 : 선택한 사용자의 부서정보
 				var receivedDeptID = trim_Cross(pCurSelRow[0].getAttribute("DATA3"));
 				var receivedDeptName = trim_Cross(pCurSelRow[0].getAttribute("DATA12"));
-				if (parent.upperDeptCode !== "") { // 현재부서가 상위부서문서함 사용 : 상위부서정보로 진행
+				if (parent.upperDeptCode !== "" && parent.upperDeptCode !== undefined) { // 현재부서가 상위부서문서함 사용 : 상위부서정보로 진행
 					receivedDeptID = parent.upperDeptCode;
 					receivedDeptName = parent.upperDeptName;
 				} else if (parent.upperDeptCode === "" && parent.allowDeptIDs !== "") { // 현재부서를 상위부서문서함으로 사용 : 현재부서(상위부서) 정보로 진행
