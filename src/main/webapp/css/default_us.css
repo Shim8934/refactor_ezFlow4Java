@@ -1393,7 +1393,7 @@ form{display:inline;margin:0}
 } */
 
 .pagenavi span:hover, .pagenavi span.on, .pageGo .pageGoBtn:hover
-{border: 1px solid #388CE5; color: #388CE5 !important;}
+{border: 1px solid #388CE5; color: #388CE5;}
 /* point-background */
 .pagenavi span:hover, .pagenavi span.on, .pageGo .pageGoBtn:hover
 {background:#fff;}
