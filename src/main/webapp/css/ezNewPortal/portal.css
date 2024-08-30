@@ -1906,7 +1906,7 @@ div.orbit img{border-radius:5px;}
 
 .noti_info{display:flex; justify-content:space-between; padding:0 20px;}
 .noti_view{overflow:hidden;}
-.noti_view span{float:left; height:34px; line-height:32px; padding:0 12px; color:#808080; font-size:14px; background:#EFF0F4; border-radius:17px; margin-right:8px; box-sizing:border-box;}
+.noti_view span{float:left; height:34px; line-height:32px; padding:0 12px; color:#808080; font-size:14px; background:#EFF0F4; border-radius:17px; margin-right:8px; box-sizing:border-box; cursor:pointer;}
 .noti_view span:last-child{margin-right:0;}
 .noti_view span em{color:#808080; margin-left:3px;}
 .noti_view span.on{background:#388CE5; color:#fff;}
