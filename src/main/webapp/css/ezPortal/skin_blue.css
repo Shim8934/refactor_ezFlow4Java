@@ -228,8 +228,8 @@ nav .navUL li.on{color:#003497;}
 .btn_writeBox_work .btn_write01:hover{background-color:#EEF4FE; border-color:#3A67BE; color:#003497;}
 .btn_writeBox_work .btn_write02:hover{background-color:#EEF4FE; border-color:#3A67BE; color:#003497;}
 
-.pagenavi span:hover{background-color:#EEF4FE; border-color:#003497; color:#003497;}
-.pagenavi span.on{border-color:#003497; color:#003497;}
+.pagenavi span:hover{background-color:#EEF4FE !important; border-color:#003497 !important; color:#003497 !important;}
+.pagenavi span.on{border-color:#003497 !important; color:#003497 !important;}
 .pagenavi span.btnimg.first{background-image:url(../../images/ezNewPortal/skin/blue/btn_p_prev.svg);}
 .pagenavi span.btnimg.prev{background-image:url(../../images/ezNewPortal/skin/blue/btn_prev.svg);}
 .pagenavi span.btnimg.next{background-image:url(../../images/ezNewPortal/skin/blue/btn_next.svg);}
