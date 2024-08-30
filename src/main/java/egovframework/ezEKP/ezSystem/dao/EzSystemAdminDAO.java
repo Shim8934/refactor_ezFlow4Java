@@ -354,4 +354,8 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public void updateSystemConfigType(Map<String, Object> map) {
 		update("EzSystemAdminDAO.updateSystemConfigType", map);
 	}
+
+	public void disableDeleteSystemConfig(Map<String, Object> map) {
+		update("EzSystemAdminDAO.disableDeleteSystemConfig", map);
+	}
 }

@@ -388,10 +388,12 @@
 				var add  = doc.getElementById("add");
 				var del  = doc.getElementById("del");
 				var typeEdit = doc.getElementById("typeEdit");
+				var deleteBlock = doc.getElementById("deleteBlock");
 				
 				add.addEventListener("click", addSystemConfig);
 				del.addEventListener("click", delSystemConfig);
 				typeEdit.addEventListener("click", editConfigType);
+				deleteBlock.addEventListener("click", disableDelete);
 			}
 			
 			var add_systemconfig_dialogArguments = new Array();
@@ -442,14 +444,29 @@
 		    	}
 		    	
 		    	var dataList = new Array();
-
+				
+		    	var deleteBlockList = [];
 				$("input[name='checks']:checked").each(function(){
-					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+					var isDeleteBlock = this.parentElement.parentElement.getAttribute("DATA9");
+					if (isDeleteBlock.toUpperCase() == "N") {
+						dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+					} else {
+						deleteBlockList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+					}
 				});
 				
-				if (dataList.length == 0) {
+				if (dataList.length == 0 && deleteBlockList.length == 0) {
 					alert(strLang13);
 					return;
+				}
+				
+				if (dataList.length == 0 && deleteBlockList.length > 0) {
+					alert("<spring:message code = 'ezSystem.config.hth35' />");
+					return;
+				}
+				
+				if (deleteBlockList.length > 0) {
+					alert("<spring:message code = 'ezSystem.config.hth36' />");
 				}
 				
 				jQuery.ajaxSettings.traditional = true;
@@ -588,6 +605,51 @@
 		    	SystemConfig_List();
 		    }
 		    
+		    function disableDelete() {
+				var delConfirm = confirm("<spring:message code = 'ezSystem.config.hth33' />");
+		    	
+		    	if (!delConfirm) {
+		    		return;
+		    	}
+		    	
+		    	var dataList = new Array();
+
+				$("input[name='checks']:checked").each(function(){
+					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+				});
+				
+				if (dataList.length == 0) {
+					alert(strLang13);
+					return;
+				}
+				
+				jQuery.ajaxSettings.traditional = true;
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezSystem/disableDeleteSystemConfig.do",
+					async : false,
+					data : {
+						CODE : dataList,
+						companyID : companySelectID
+					},
+					success : function(result) {
+						if (result != "OK") {
+							alert(strLang16);
+							return;
+						}
+						alert("<spring:message code = 'ezSystem.config.hth34' />");
+						checkFlag = false;
+						clearSearchVal();
+						SystemConfig_List();
+					},
+					error : function(){
+						alert(strLang16);
+					}
+				});
+				
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -604,7 +666,7 @@
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
-						<NAME>분류</NAME>
+						<NAME><spring:message code='ezSystem.config.hth07' /></NAME>
 						<WIDTH>15%</WIDTH>
 						<STYLE>border-top:0px;</STYLE>
 					</HEADER>
@@ -625,7 +687,12 @@
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezSystem.config.hth26' /></NAME>
-		        		<WIDTH>15%</WIDTH>
+		        		<WIDTH>10%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
+		      		</HEADER>
+		      		<HEADER>
+		        		<NAME><spring:message code = 'ezSystem.config.hth32' /></NAME>
+		        		<WIDTH>5%</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		    	</HEADERS>
@@ -650,6 +717,7 @@
 		            <li class="important"><span id="add"><spring:message code='ezOrgan.mse3' /></span></li>
 		            <li><span class="" id="del"><spring:message code='ezSystem.jhy05'/></span></li>
 		            <li><span id="typeEdit"><spring:message code='ezSystem.config.hth10'/></span>
+		            <li><span id="deleteBlock"><spring:message code='ezSystem.config.hth32'/></span>
 		        </ul>
 		    </div>
 			<div id="contentlist" style="width:100%; overflow: auto;">

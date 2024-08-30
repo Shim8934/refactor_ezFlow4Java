@@ -24,6 +24,8 @@ public class SystemConfigVO {
 	
 	private String companyId;
 	
+	private String isDeleteBlock;
+	
 	public String getCode() {
 		return code;
 	}
@@ -114,5 +116,12 @@ public class SystemConfigVO {
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}
-	
+
+	public String getIsDeleteBlock() {
+		return isDeleteBlock;
+	}
+
+	public void setIsDeleteBlock(String isDeleteBlock) {
+		this.isDeleteBlock = isDeleteBlock;
+	}
 }

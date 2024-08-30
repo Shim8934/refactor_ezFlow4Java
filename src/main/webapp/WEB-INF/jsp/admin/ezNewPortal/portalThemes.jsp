@@ -66,8 +66,8 @@
 	        .admin_menuX span img {margin-right:5px; vertical-align:text-bottom;}
 	        /*2019.06.18 테마별권한 디자인 추가 */
 	        .admin_thema .frameList {float:left;border-right:none;}
-	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:359px;} 
-	        .admin_thema .authList th {width:90px; border-left:none;} 
+	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:100%;} 
+	        .admin_thema .authList th {width:90px; /*border-left:none;*/} 
 	        .admin_thema .menuIconTD {padding:0px;}
 	        .admin_thema .menuIconTD div {height:82px; overflow:auto; padding:5px;}
 		</style>
@@ -208,21 +208,17 @@
 							themesHTML += "<li>";
 							themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
 							
-							var themeImgFolder = "kr";
+							var themeImgUrl = "";
 							
-							if (userLang == "2") {
-								themeImgFolder = "us";
-							} else if (userLang == "3") {
-								themeImgFolder = "jp";
-							} else if (userLang == "4") {
-								themeImgFolder = "cn";
-							} else if (userLang == "5") {
-								themeImgFolder = "vn";
-							} else if (userLang == "6") {
-								themeImgFolder = "id";
+							if (item.themeId == 1) {
+								themeImgUrl = "/images/ezNewPortal/theme_default.png";
+							} else if (item.themeId == 2) {
+								themeImgUrl = "/images/ezNewPortal/theme_shortcut.png";
+							} else if (item.themeId == 3) {
+								themeImgUrl = "/images/ezNewPortal/theme_separation.png";
 							}
 							
-							themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/themeImg/" + themeImgFolder + "/Theme" + item.themeId + ".png' class='themeThumbnails' alt='img02'/>";
+							themesHTML += "<div class='themeImg'><img src='" + themeImgUrl + "' class='themeThumbnails' alt='img02'/>";
 							themesHTML += "</div><div>";
 							themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
 							themesHTML += "<span class='themePortlet' id='themePortlet" + item.themeId + "'><img src='/images/admin/frameSetting3.png'></span>";
@@ -334,7 +330,7 @@
 					
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t112' /></th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent' readOnly></td></tr>";						
 					themesHTML += "</table>";
-					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
+					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='display:none; margin:20px 0px 0px 0px;'></table>";
 					themesHTML += "<table class='themaTable iconTable02 authList' border='0' cellpadding='0' cellspacing='0'>";
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
 					

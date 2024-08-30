@@ -65,8 +65,8 @@
 
         <div class="noti_info">
             <div class="noti_view">
-                <span class="on"><spring:message code="ezNotification.hth08"/><em id="notiTotalCount"></em></span>
-                <span><spring:message code="ezNotification.hth06"/><em id="notiUnreadCount"></em></span>
+                <span id="allFilter" class="easyFilter on" onclick="showNoti('ALL')"><spring:message code="ezNotification.hth08"/><em id="notiTotalCount"></em></span>
+                <span id="notReadFilter" class="easyFilter" onclick="showNoti('NOTREAD')"><spring:message code="ezNotification.hth06"/><em id="notiUnreadCount"></em></span>
             </div>
             <div class="noti_btn">
                 <span onclick="updateNotiAll('read')"><spring:message code="ezNotification.hth10"/></span>
@@ -169,7 +169,14 @@
 		notiTypeElem.insertAdjacentHTML('beforeend', str);
 	}
 	
-	function makeNotiList(result) {
+	function makeNotiList(result, mode) {
+		if (mode == "first") {
+			var notiListElement = document.getElementById('notiList'); 
+			while (notiListElement.firstChild) {
+				notiListElement.removeChild(notiListElement.firstChild);
+			}
+		}
+		
 		var notiListElement = document.getElementById('notiList');
 		try {
 			document.getElementById('notiTotalCount').textContent = result.totalListCnt;
@@ -463,16 +470,6 @@
 		document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) - (document.getElementById("loadingLayer").offsetHeight / 2) + "px";
 		document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - (document.getElementById("loadingLayer").offsetWidth / 2) + "px";
 		
-		if (mode == "first") {
-			var notiListElement = document.getElementById('notiList'); 
-			while (notiListElement.firstChild) {
-				notiListElement.removeChild(notiListElement.firstChild);
-			}
-			lastNotiSeq = "";
-			notiListFlag = true;
-			notiDateEndPoint = "";
-		}
-		
 		var readFlag = document.getElementById("filter_read").checked;
 		var unReadFlag = document.getElementById("filter_unread").checked;
 		var isRead = "";
@@ -486,7 +483,25 @@
 			alert('<spring:message code="ezNotification.hth20"/>');
 			event.target.checked = true;
 			document.getElementById("loadingLayer").style.display = "none";
+			isNotiLoading = false;
 			return;
+		}
+		
+		if (mode == "first") {
+			lastNotiSeq = "";
+			notiListFlag = true;
+			notiDateEndPoint = "";
+		}
+		
+		var easyFilterBtn = document.querySelectorAll('.easyFilter');
+		for (var i = 0; i < easyFilterBtn.length; i++) {
+			easyFilterBtn[i].classList.remove('on');
+		}
+		
+		if (isRead == 'N') {
+			document.querySelector('#notReadFilter').classList.add('on');
+		} else {
+			document.querySelector('#allFilter').classList.add('on');
 		}
 		
 		var notiFilterElems = document.querySelectorAll('[name="notitypefilter"]');
@@ -518,7 +533,7 @@
 			},
 			async: true,
 			success: function(result) {
-				makeNotiList(result);
+				makeNotiList(result, mode);
 			},
 			error: function (xhr, status, e){
 				notiListFlag = false;
@@ -1166,6 +1181,18 @@
 	function moveToEmergencyNoti() {
 		var notiFrame = window.parent.frames["iframeNoti"];
 		notiFrame.setAttribute("src", "/ezNotification/emergencyNoti.do");
+	}
+	
+	function showNoti(mode) {
+		if (mode == 'ALL') {
+			document.querySelector('#filter_read').checked = true;
+			document.querySelector('#filter_unread').checked = true;
+		} else {
+			document.querySelector('#filter_read').checked = false;
+			document.querySelector('#filter_unread').checked = true;
+		}
+		
+		searchNoti('first');
 	}
 	
 </script>

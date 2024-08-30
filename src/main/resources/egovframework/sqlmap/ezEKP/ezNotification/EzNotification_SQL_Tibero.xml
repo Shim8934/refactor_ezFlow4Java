@@ -112,10 +112,6 @@
 	   	AND
      		MAINTYPE IN ('')
 	   	</isEmpty>
-	   	<isNotEqual property="isRead" compareValue="ALL">
-	   	AND
-	   		ISREAD = #isRead#
-	   	</isNotEqual>
      	) A
      	<isEqual property="mode" compareValue="NOTREAD">
      	WHERE
