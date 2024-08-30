@@ -691,7 +691,7 @@ form{display:inline;margin:0}
 	
 }
 .content input {vertical-align:middle; border:1px solid #dedede; height:24px; border-radius: 3px;}
-.content input[type=checkbox] {height:20px !important; vertical-align: -8px !important;}
+.content input[type=checkbox] {height:20px;}
 
 .content td, .file td, .file2 td{
 	width: 100%;

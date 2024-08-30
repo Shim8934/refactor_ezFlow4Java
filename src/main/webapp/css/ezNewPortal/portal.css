@@ -153,7 +153,7 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 .icon_notice{background:url(/images/mobile/cont/t_notice.svg) no-repeat center; background-size:contain;}
 .icon_address{background:url(/images/mobile/cont/t_address.svg) no-repeat center; background-size:contain;}
 .icon_schedule{background:url(/images/mobile/cont/t_schedule.svg) no-repeat center; background-size:contain;}
-.iconCommon{display:inline-block; vertical-align:middle; width:30px; height:30px; margin-top:16px;}
+.iconCommon{display:inline-block; vertical-align:middle; width:30px; height:30px; margin:0;}
 
 /* 차후 프레임 걷어냈을경우를 대비해 id값으로 style 제어를 하지않는다. */
 header{height:60px; background-color:#ffffff; box-sizing:border-box; position:relative; z-index:10; border-bottom:1px solid #ddd;}
