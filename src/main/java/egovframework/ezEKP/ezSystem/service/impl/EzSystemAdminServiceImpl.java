@@ -1816,4 +1816,15 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("updateSystemConfigType ended");
 	}
 
+	@Override
+	public void disableDeleteSystemConfig(String sCode, String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("code", sCode);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyID);
+		
+		ezSystemAdminDAO.disableDeleteSystemConfig(map);
+	}
+
 }

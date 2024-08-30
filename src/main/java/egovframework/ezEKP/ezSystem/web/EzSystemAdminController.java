@@ -3889,6 +3889,7 @@ public class EzSystemAdminController {
             result.append("<DATA6>" + commonUtil.cleanValue(vo.getWriterid()) + "</DATA6>");
             result.append("<DATA7>" + commonUtil.cleanValue(vo.getWritername()) + "</DATA7>");
             result.append("<DATA8>" + commonUtil.cleanValue(vo.getWritedate()) + "</DATA8>");
+            result.append("<DATA9>" + commonUtil.cleanValue(vo.getIsDeleteBlock()) + "</DATA9>");
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE>" + commonUtil.cleanValue(vo.getCode()) + "</VALUE>");
@@ -3911,6 +3912,9 @@ public class EzSystemAdminController {
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE>" + commonUtil.cleanValue(vo.getWritedate().substring(0, 10)) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getIsDeleteBlock().toUpperCase().equals("Y") ? "O" : "X") + "</VALUE>");
             result.append("</CELL>");
             result.append("</ROW>");
         }
@@ -4063,16 +4067,20 @@ public class EzSystemAdminController {
 		String result = "";
 		String companyID = request.getParameter("companyID");
 		
-		for(int i=0; i<CODE.length; i++) {
-			String sCode = CODE[i];
-			try {
-				ezSystemAdminService.deletesyStemConfig(sCode, companyID, userInfo.getTenantId());
-				
-				result = "OK";
-			} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-				logger.error(e.getMessage(), e);
-				result = "ERROR";
+		if (CODE != null) {
+			for (int i = 0; i < CODE.length; i++) {
+				String sCode = CODE[i];
+				try {
+					ezSystemAdminService.deletesyStemConfig(sCode, companyID, userInfo.getTenantId());
+					
+					result = "OK";
+				} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+					logger.error(e.getMessage(), e);
+					result = "ERROR";
+				}
 			}
+		} else {
+			result = "OK";
 		}
 		
 		logger.debug("deleteSystemConfig ended");
@@ -4262,6 +4270,38 @@ public class EzSystemAdminController {
 		
 		result = "OK";
 		logger.debug("saveSystemConfigTypeCode ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/ezSystem/disableDeleteSystemConfig.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String disableDeleteSystemConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String[] CODE) throws Exception {
+		logger.debug("disableDeleteSystemConfig started");
+		logger.debug("CODE=" + CODE);
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		// 관리자 권한 체크
+		if (userInfo == null) {
+			return "ERROR";
+		}
+		
+		String result = "";
+		String companyID = request.getParameter("companyID");
+		
+		for(int i=0; i < CODE.length; i++) {
+			String sCode = CODE[i];
+			try {
+				ezSystemAdminService.disableDeleteSystemConfig(sCode, companyID, userInfo.getTenantId());
+				
+				result = "OK";
+			} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+				logger.error(e.getMessage(), e);
+				result = "ERROR";
+			}
+		}
+		
+		logger.debug("disableDeleteSystemConfig ended");
 		
 		return result;
 	}
