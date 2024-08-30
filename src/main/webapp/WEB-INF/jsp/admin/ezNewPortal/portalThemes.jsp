@@ -66,8 +66,8 @@
 	        .admin_menuX span img {margin-right:5px; vertical-align:text-bottom;}
 	        /*2019.06.18 테마별권한 디자인 추가 */
 	        .admin_thema .frameList {float:left;border-right:none;}
-	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:359px;} 
-	        .admin_thema .authList th {width:90px; border-left:none;} 
+	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:100%;} 
+	        .admin_thema .authList th {width:90px; /*border-left:none;*/} 
 	        .admin_thema .menuIconTD {padding:0px;}
 	        .admin_thema .menuIconTD div {height:82px; overflow:auto; padding:5px;}
 		</style>
@@ -330,7 +330,7 @@
 					
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t112' /></th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent' readOnly></td></tr>";						
 					themesHTML += "</table>";
-					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
+					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='display:none; margin:20px 0px 0px 0px;'></table>";
 					themesHTML += "<table class='themaTable iconTable02 authList' border='0' cellpadding='0' cellspacing='0'>";
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
 					
