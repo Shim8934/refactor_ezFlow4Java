@@ -1062,7 +1062,7 @@
 	    
 	    function getHistory(t) {
 		    attModId = $(t).parent().parent().find('td input').attr("value");
-		    window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId, "history", GetOpenWindowfeature(600, 300));
+		    window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId, "history", GetOpenWindowfeature(800, 300));
 	    }
 	    
 	    function layerHidden() {
