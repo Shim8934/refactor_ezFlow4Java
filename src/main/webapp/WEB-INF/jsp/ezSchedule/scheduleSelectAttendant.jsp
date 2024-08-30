@@ -639,7 +639,7 @@
 	                    var IsInsert = CheckMailReceiver(strId, "3");
 	                    
 	                    // 그룹관리가 아닌 경우 -> 비서관리, 일정의 참석자 초대이므로 추가하려는 구성원이 현재 사용자(작성자)인지 체크
-	                    if (type != "group" && strId == "<c:out value='${userID}'/>") {
+	                    if (type != "group" && type != "executive" && strId == "<c:out value='${userID}'/>") {
 	                        alert("<spring:message code='ezSchedule.t352' />"); // 작성자는 선택할 수 없습니다.
 	                        continue;
 	                    }
