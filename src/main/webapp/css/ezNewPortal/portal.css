@@ -153,7 +153,7 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 .icon_notice{background:url(/images/mobile/cont/t_notice.svg) no-repeat center; background-size:contain;}
 .icon_address{background:url(/images/mobile/cont/t_address.svg) no-repeat center; background-size:contain;}
 .icon_schedule{background:url(/images/mobile/cont/t_schedule.svg) no-repeat center; background-size:contain;}
-.iconCommon{display:inline-block; vertical-align:middle; width:30px; height:30px; margin:0;}
+.iconCommon{display:inline-block; vertical-align:middle; width:30px; height:30px; margin-top:16px;}
 
 /* 차후 프레임 걷어냈을경우를 대비해 id값으로 style 제어를 하지않는다. */
 header{height:60px; background-color:#ffffff; box-sizing:border-box; position:relative; z-index:10; border-bottom:1px solid #ddd;}
@@ -1538,7 +1538,7 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 #theme3Body .top_info_area ul{background:none; border:none; float:none; display:block; margin:15px auto 0; width:470px; border-radius:0;}
 #theme3Body .top_info_area ul li{width:100%; display:flex;}
 #theme3Body .top_info_area ul li:after{display:none;}
-#theme3Body .top_info_area ul li > span{display:flex; flex-direction:column; justify-content:space-between; width:calc((99.999% - 16px) / 3); height:104px; margin:0; padding:13px 17px 15px 13px; border:1px solid rgba(234,228,228,0.3); background:rgba(255,255,255,0.3); border-radius:12px; box-sizing:border-box; margin-left:8px; box-shadow:0 3px 21px rgb(0,0,0,0.039);}
+#theme3Body .top_info_area ul li > span{display:flex; flex-direction:column; justify-content:space-between; width:calc((99.999% - 16px) / 3); height:95px; margin:0; padding:13px 17px 15px 13px; border:1px solid rgba(234,228,228,0.3); background:rgba(255,255,255,0.3); border-radius:12px; box-sizing:border-box; margin-left:8px; box-shadow:0 3px 21px rgb(0,0,0,0.039);}
 #theme3Body .top_info_area ul li > span:first-child{margin-left:0;}
 #theme3Body .top_info_area ul li > span > span{display:block; padding:0 0 0 39px; height:33px; line-height:31px; text-align:right; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; background-repeat:no-repeat; background-position:0 0; background-size:33px 33px; font-size:14px;}
 #theme3Body .top_info_area ul li > span.mail > span{background-image:url(../../images/ezNewPortal/theme3Img/info_mail.svg);}
@@ -1546,7 +1546,7 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 #theme3Body .top_info_area ul li > span.board > span{background-image:url(../../images/ezNewPortal/theme3Img/info_board.svg);}
 #theme3Body .top_info_area ul li > span em{color:#474747; font-size:24px; font-weight:bold; text-align:right; margin:0;}
 
-#theme3Body .top_info_area ul li:last-child{margin-top:15px; background:rgba(255,255,255,0.3); border:1px solid rgba(234,228,228,0.3); box-shadow:0 3px 21px rgba(0,0,0,0.039); border-radius:12px; padding:14px 19px 26px; display:block;}
+#theme3Body .top_info_area ul li:last-child{margin-top:15px; background:rgba(255,255,255,0.3); border:1px solid rgba(234,228,228,0.3); box-shadow:0 3px 21px rgba(0,0,0,0.039); border-radius:12px; padding:14px 19px 16px; display:block;}
 #theme3Body .top_info_area ul li:last-child h3{color:rgb(51,51,51); font-size:14px; font-weight:bold; margin:0 0 16px;}
 #theme3Body .top_info_area ul li:last-child .noti{padding:0; background:none;}
 #theme3Body .top_info_area ul li:last-child .noti .swiper_txt{font-size:15px;}
