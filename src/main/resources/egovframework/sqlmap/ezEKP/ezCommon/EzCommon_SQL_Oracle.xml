@@ -5824,7 +5824,7 @@
 			(#menuId# + 6), 1, #companyId#, #tenantId#, '오늘일정' FROM DUAL
 		UNION ALL
 		SELECT
-			(#menuId# + 6), 2, #companyId#, #tenantId#, 'Today\'s Schedule' FROM DUAL
+			(#menuId# + 6), 2, #companyId#, #tenantId#, 'Today Schedule' FROM DUAL
 		UNION ALL
 		SELECT
 			(#menuId# + 6), 3, #companyId#, #tenantId#, '今日のスケジュール' FROM DUAL

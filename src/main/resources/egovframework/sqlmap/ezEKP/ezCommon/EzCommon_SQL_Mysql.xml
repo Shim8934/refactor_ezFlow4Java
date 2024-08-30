@@ -5381,7 +5381,7 @@
 			((#menuId# + 5), 5, #companyId#, #tenantId#, 'Danh Bạ Cá Nhân'),
 			((#menuId# + 5), 6, #companyId#, #tenantId#, 'Buku Alamat Pribadi'),
 			((#menuId# + 6), 1, #companyId#, #tenantId#, '오늘일정'),
-			((#menuId# + 6), 2, #companyId#, #tenantId#, 'Today\'s Schedule'),
+			((#menuId# + 6), 2, #companyId#, #tenantId#, 'Today Schedule'),
 			((#menuId# + 6), 3, #companyId#, #tenantId#, '今日のスケジュール'),
 			((#menuId# + 6), 4, #companyId#, #tenantId#, '今天的日程'),
 			((#menuId# + 6), 5, #companyId#, #tenantId#, 'Lịch Trình Hôm Nay'),
