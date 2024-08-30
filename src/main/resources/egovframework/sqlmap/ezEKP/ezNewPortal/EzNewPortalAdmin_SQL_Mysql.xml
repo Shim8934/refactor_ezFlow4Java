@@ -363,6 +363,11 @@
 					icon_url = #iconUrl#
 				]]>
 			</isEqual>
+			<isEqual property="menuType" compareValue="MG" prepend=",">
+				<![CDATA[
+					icon_url = #iconUrl#
+				]]>
+			</isEqual>
 		<![CDATA[
 			WHERE
 				tenant_id = #tenantId#
