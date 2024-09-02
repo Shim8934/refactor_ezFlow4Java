@@ -647,7 +647,12 @@
 		        ContextMenuHidden();
 		    	searchMode = true;
 		        var inputkeyword = document.getElementsByName('keyword').item(0);
-		        
+
+		        if(inputkeyword.value.length == 1) {
+		            alert("<spring:message code='ezSystem.yja01' />");
+		            return;
+		        }
+
 		        if (inputkeyword.value.indexOf("%") != -1) {
 		            alert("'%'" + strLang148);
 		            return;
@@ -665,7 +670,7 @@
 		        var searchField = document.getElementById("searchCheck");
 		        SearchKeyword = searchField.value + "=" + inputkeyword.value;
 		        
-		        if (inputkeyword.value != null){
+		        if (inputkeyword.value){
 		      		searchCArray.push(TrimText(searchField.value));
 		  			searchKArray.push(TrimText(inputkeyword.value));
 	    		}
@@ -2206,7 +2211,12 @@
 		} else {
 			this.usepostDate = true;
 		}
-    	
+
+    	if (TrimText(prekeywordDetail1.value).length == 1 || TrimText(prekeywordDetail2.value).length == 1 || TrimText(prekeywordDetail3.value).length == 1) {
+    	    alert("<spring:message code='ezSystem.yja01' />");
+    	    return;
+    	}
+
    		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) && !this.usepostDate ) {
     		alert(strLang254);
             return;
