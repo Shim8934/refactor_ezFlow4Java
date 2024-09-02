@@ -2675,4 +2675,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterUseColor");
 		}
 	}
+
+	public void updateThemeData() {
+		try {
+			if ((int) select("EzCommonDAO.chkThemeName") > 1) {
+				update("EzCommonDAO.updateTheme1");
+				update("EzCommonDAO.updateTheme2");
+				update("EzCommonDAO.updateTheme3");
+			}
+		} catch (Exception e) {
+			logger.debug("An error occurred while updating the theme data.");
+		}
+	}
 }

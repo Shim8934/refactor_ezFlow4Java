@@ -319,6 +319,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             ezCommonService.insertStandardSystemConfigData(); // 2024-07-22 한태훈 - 시스템 컨피그 기본 데이터 추가
             ezCommonService.createEmergencyNotiTable();
             ezCommonService.insertMobileToggleMenus(); // 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
+            ezCommonService.updateThemeData(); // 2024-09-02 조수빈 - 테마 변경에 따른 테마 데이터 update
         } catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
