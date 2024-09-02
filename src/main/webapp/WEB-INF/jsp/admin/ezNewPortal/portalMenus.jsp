@@ -446,7 +446,7 @@
 					menusHTML += "</table>";
 					menusHTML += "<div class='bottomBtn'><a class='btnA updateMenu'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
 					
-					if (menuInfo.menuType == "A") {
+					if (menuInfo.menuType == "A" || menuInfo.menuType == "MA") {
 						menusHTML += "<a class='btnA deleteMenu'><spring:message code='ezNewPortal.t124' /></a>";
 					}
 					menusHTML += "</div></div></div></li>"
