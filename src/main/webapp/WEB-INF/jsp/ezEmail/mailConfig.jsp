@@ -667,9 +667,6 @@
 				showDim();
 	        	ShowMailProgressNew();
 	        	
-	        	// 취소버튼을 눌러도 파일가져오기 중단되지 않아, 일단 안보이게 처리. 추후 수정 필요
-	        	document.getElementById("cancleProgressBtn").style.display = "none";
-	        	
 	            if (path != "") {
 	            	ShowPercent(dec);
 	            } else {
