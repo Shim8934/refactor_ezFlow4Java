@@ -23,6 +23,7 @@ nav .navUL li.on{color:#A20000;}
 .util li span.util_alarm:hover{background-image:url(../../images/ezNewPortal/skin/red/util_alarm.svg);}
 .util li span.util_alarm span{background:#FF0000;}
 .util li span.util_quick_menu:hover{background-image:url(../../images/ezNewPortal/skin/red/util_quick_menu.svg);}
+.util li span.util_help:hover{background-image:url(../../images/ezNewPortal/skin/red/util_help_hover.svg);}
 
 
 .profile_div .btn_tab span{border-color:#D8A6A6; color:#A20000;}
