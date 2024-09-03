@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Spliterator;
 import java.util.TimeZone;
@@ -266,6 +267,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		String sentDateMsg = ""; // 전달, 회신 시 보낸 시간
 		boolean mailWritePreview = false; // 메일 작성 > 미리보기 
+		String mailBox = "";
 		
 		// 읽기 화면에서 리스트 출력 위한 데이터
 		String countryName = "";
@@ -535,6 +537,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				} else {
 					tags = tagsStr.split("\\|");
 				}
+
+				mailBox = Optional.ofNullable(mailInfo.get("MAIL_ID"))
+						.map(id -> id.split("/")[0])
+						.orElse("");
+				
 			} else {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -928,6 +935,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							message.setFlag(Flag.SEEN, true);
 							logger.debug("Message's seen flag changed to true.");
 						}
+						
+						mailBox = message.getFolder().getFullName();
 					}
 					
 					if (contentClass.equals("")) {
@@ -1046,6 +1055,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("useShowSystemCountry", useShowSystemCountry); 
 		model.addAttribute("useMailToCommunity", useMailToCommunity); 
 		model.addAttribute("tags", tags);
+		model.addAttribute("mailBox", mailBox);
 
 		// 메일 태그를 사용중인지 확인 (미리보기 모드라면 무조건 false)
 		boolean useMailTag = !mailWritePreview && "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", loginInfo.getTenantId()));
