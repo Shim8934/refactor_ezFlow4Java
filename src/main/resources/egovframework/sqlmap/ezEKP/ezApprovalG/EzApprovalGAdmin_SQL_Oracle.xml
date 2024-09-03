@@ -945,8 +945,8 @@
 					formdescription,
 					formfilelocation,
 					formconnflag,
+					keepPeriod,
 					passaprlineflag,
-					TBL_AUTODOCNUM_ITEM.keepPeriod,
 					TBL_AUTODOCNUM_ITEM.securityLevel,
 					TBL_AUTODOCNUM_ITEM.isPublic,
 					TBL_AUTODOCNUM_ITEM.itemCode,
@@ -956,7 +956,12 @@
 					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
 					aproption,
 					SIHANGTYPE,
-					formxslt
+					CASE
+						WHEN O.FORMID IS NULL THEN 'N'
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+                    END AS officeFlag,
+                    formxslt,
+                    FORMDRAFTALLFLAG
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -967,6 +972,14 @@
 	            	TBL_FORMINFO.companyid = TBL_AUTODOCNUM_ITEM.companyid
 	            AND
 	            	TBL_FORMINFO.formid = TBL_AUTODOCNUM_ITEM.formid
+            	LEFT JOIN
+					TBL_FORM_OFFICE O
+				ON 
+	            	TBL_FORMINFO.tenant_id = O.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = O.companyid
+	            AND
+	            	TBL_FORMINFO.formid = O.formid
 				WHERE
 					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
@@ -979,7 +992,7 @@
 			<![CDATA[
 				SELECT
 					formcontid,
-					formid,
+					TBL_FORMINFO.formid,
 					formname,
 					formname2,
 					formdoctype,
@@ -987,17 +1000,31 @@
 					formfilelocation,
 					formconnflag,
 					FORMDRAFTALLFLAG,
+					opengovflag,
 					aproption ,
 					passaprlineflag,
-					SIHANGTYPE
+					SIHANGTYPE,
+					CASE
+						WHEN O.FORMID IS NULL THEN 'N'
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+                    END AS officeFlag,
+                    formxslt
 				FROM
 					TBL_FORMINFO
+				LEFT JOIN
+					TBL_FORM_OFFICE O
+				ON 
+	            	TBL_FORMINFO.tenant_id = O.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = O.companyid
+	            AND
+	            	TBL_FORMINFO.formid = O.formid
 				WHERE
-					tenant_id = #tenantID#
+					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
-					companyid = #companyID#
+					TBL_FORMINFO.companyid = #companyID#
 				AND
-					formid = #v_PFORMID#
+					TBL_FORMINFO.formid = #v_PFORMID#
 			]]>
 		</isEqual>
 	</select>
@@ -1743,10 +1770,11 @@
 				FORMDRAFTALLFLAG,
 				reformflag,
 				passaprlineflag,
-				aprOption,
-				tenant_id,
 				companyid,
-                SIHANGTYPE,
+				tenant_id,
+				opengovflag,
+				aprOption,
+				SIHANGTYPE,
 				formxslt)
 			VALUES
 				(#v_PFORMCONTAINERID#,
@@ -1760,10 +1788,11 @@
 				#v_PFORMDRAFTALLFLAG#,
 				#v_PREFORMFLAG#,
 				#v_PPASSAPRLINEFLAG#,
-				#v_formAprOption#,
-				#tenantID#,
 				#companyID#,
-                #v_FORMSIHANGTYPE#,
+				#tenantID#,
+				#v_POPENGOVFLAG#,
+				#v_formAprOption#,
+				#v_FORMSIHANGTYPE#,
 				#v_FORMXSLT#)
 		]]>
 	</insert>
@@ -1783,6 +1812,7 @@
 				FORMDRAFTALLFLAG = #v_PFORMDRAFTALLFLAG#,
 				reformflag = #v_PREFORMFLAG#,
 				formversion = formversion + 1,
+				opengovflag = #v_POPENGOVFLAG#,
 				aprOption = #v_formAprOption#,
 				passaprlineflag = #v_PPASSAPRLINEFLAG#,
                 SIHANGTYPE = #v_FORMSIHANGTYPE#,
@@ -3416,7 +3446,19 @@
 				formid = #v_FORMID#
 		]]>
 	</delete>
-
+	
+	<delete id="EzApprovalGAdmin.deleteForm3" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORM_OFFICE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_FORMID#
+		]]>
+	</delete>
 	<!-- <procedure id="EzApprovalGAdmin.setContainerIDForDoc2" -->
 	<!-- parameterClass="Map"> -->
 	<!-- <![CDATA[ -->

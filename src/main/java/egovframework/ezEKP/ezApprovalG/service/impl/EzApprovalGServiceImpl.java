@@ -968,7 +968,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
+	public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag, String deptID) throws Exception {
 		logger.debug("getAccessYNG started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -999,7 +999,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (approvalFlag.equals("G")) {
 				if (publicityCode.length() <= 0 || publicityCode.equals(" ") || publicityCode.equals("Y")) {
 					publicityCode = "1";
-				} else {
+				} else if(publicityCode.equals("B")){
+                    publicityCode = "2";
+                } else {
 					publicityCode = "3";
 				}
 			} else {
@@ -1034,14 +1036,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 					String drafterDeptID = makeListField(ezApprovalGDAO.getAccessYNG(map));
 					logger.debug("getAccessYNG Value : drafterDeptID =" + drafterDeptID);
-
-					String result = ezOrganService.getPropertyList(userID, "extensionAttribute4;department", commonUtil.getPrimaryData(lang, tenantID), tenantID);
-					
-					if (result.toLowerCase().lastIndexOf(drafterDeptID.toLowerCase()) >= 0 && drafterDeptID.trim().length() > 0) {
-						rtnVal = true;
-					} else {
-						rtnVal = false;
-					}
+                    
+                    map.put("v_TENANT_ID", tenantID);
+                    boolean useUpperDeptBox = false;
+                    do{
+                        map.put("v_FIELD", "USEUPPERDEPTBOX");
+                        map.put("v_CN",deptID);
+                        useUpperDeptBox = "Y".equals(ezOrganDAO.getPropertyValue_S5(map));
+                        if(useUpperDeptBox){
+                            map.put("v_FIELD", "EXTENSIONATTRIBUTE1");
+                            deptID = ezOrganDAO.getPropertyValue_S5(map);
+                        }
+                    }while(useUpperDeptBox);
+                    
+                    if(drafterDeptID != null && drafterDeptID.equals(deptID)){
+                        rtnVal = true;
+                    }else{
+                        rtnVal = false;
+                    } 
 				}
 				break;
 				
@@ -1079,7 +1091,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		//보안등급으로 권한 체크(사용자정보에 있는 등급으로 권한 체크함)
-		if (publicityFlag.equals("ALL") && mode.substring(1, 2).equals("Y")) {
+		if ((publicityFlag.equals("ALL") || (publicityFlag.equals("DEPT") && rtnVal)) && mode.substring(1, 2).equals("Y")) {
 			String userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6", tenantID);
 			
 			if (userSecurityCode == null || userSecurityCode.trim().equals("")) {
@@ -34712,11 +34724,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getHWPDocNumFormatByFormID started");
 		
 		String result = "";
-		String formPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + orgCompanyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".hwp";
-		HWPFile hwpFile = HWPReader.fromFile(realPath + formPath);
-		
-		result = getHwpText("docnumber", hwpFile);
-		
+        Map<String, Object> map = new HashMap<>();
+        map.put("tenantId", tenantID);
+        map.put("companyId", orgCompanyID);
+        map.put("formId", formID);
+        ApprGFormVO formPathVO = ezApprovalGDAO.getFormPath(map);
+        String formPath = formPathVO.getFormFileLocation();
+        if(formPath.endsWith("hwp")){
+            HWPFile hwpFile = HWPReader.fromFile(realPath + formPath);
+
+            result = getHwpText("docnumber", hwpFile);
+        }else{
+            String loadMht = ezCommonService.loadMHTFile(realPath + formPath); // 결재문서 가져오기
+            String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, null, null, null);
+            org.jsoup.nodes.Document doc = Jsoup.parse(content);
+
+            result = doc.getElementById("docnumber").text();
+        }
+
 		logger.debug("getHWPDocNumFormatByFormID ended");
 		return result;
 	}
@@ -35118,7 +35143,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             logger.debug("getAccessYNGforAPR Value : publicityCode =" + publicityCode);
 
             if (approvalFlag.equals("G")) {
-                publicityCode = publicityCode.length() <= 0 || publicityCode.equals(" ") || publicityCode.equals("Y") ? "1" : "3";
+                if (publicityCode.length() <= 0 || publicityCode.equals(" ") || publicityCode.equals("Y")) {
+                    publicityCode = "1";
+                } else if(publicityCode.equals("B")){
+                    publicityCode = "2";
+                } else {
+                    publicityCode = "3";
+                }
             } else {
                 publicityCode = publicityCode.equals("Y") || publicityCode.length() <= 0 ? "1" : "3";
             }
@@ -35146,9 +35177,34 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         String drafterDeptID = makeListField(ezApprovalGDAO.getAccessYNGforAPR(map));
                         logger.debug("getAccessYNGforAPR Value : drafterDeptID =" + drafterDeptID);
 
-                        String result = ezOrganService.getPropertyList(userID, "extensionAttribute4;department", commonUtil.getPrimaryData(lang, tenantID), tenantID);
+                        map.put("v_TENANT_ID", tenantID);
+                        boolean useUpperDeptBox = false;
+                        do{
+                            map.put("v_FIELD", "USEUPPERDEPTBOX");
+                            map.put("v_CN",deptID);
+                            useUpperDeptBox = "Y".equals(ezOrganDAO.getPropertyValue_S5(map));
+                            if(useUpperDeptBox){
+                                map.put("v_FIELD", "EXTENSIONATTRIBUTE1");
+                                deptID = ezOrganDAO.getPropertyValue_S5(map);
+                            }
+                        }while(useUpperDeptBox);
 
-                        rtnVal = result.toLowerCase().lastIndexOf(drafterDeptID.toLowerCase()) >= 0 && drafterDeptID.trim().length() > 0 ? true : false;
+                        useUpperDeptBox = false;
+                        do{
+                            map.put("v_FIELD", "USEUPPERDEPTBOX");
+                            map.put("v_CN",drafterDeptID);
+                            useUpperDeptBox = "Y".equals(ezOrganDAO.getPropertyValue_S5(map));
+                            if(useUpperDeptBox){
+                                map.put("v_FIELD", "EXTENSIONATTRIBUTE1");
+                                drafterDeptID = ezOrganDAO.getPropertyValue_S5(map);
+                            }
+                        }while(useUpperDeptBox);
+                        
+                        if(drafterDeptID != null && drafterDeptID.equals(deptID)){
+                            rtnVal = true;
+                        }else{
+                            rtnVal = false;
+                        }                    
                     }
                     break;
 
@@ -35178,7 +35234,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         }
 
         //보안등급으로 권한 체크(사용자정보에 있는 등급으로 권한 체크함)
-        if (publicityFlag.equals("ALL") && mode.substring(1, 2).equals("Y")) {
+        if ((publicityFlag.equals("ALL") || (publicityFlag.equals("DEPT") && rtnVal)) && mode.substring(1, 2).equals("Y")) {
             String userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6", tenantID);
 
             if (userSecurityCode == null || userSecurityCode.trim().equals("")) {

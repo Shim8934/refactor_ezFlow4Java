@@ -631,7 +631,14 @@
 		                    openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=&pageType=admin";
 		                }
 	                } else {
-                        var openLocation = "/ezApprovalG/aprDocView.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL);
+                        var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), ""); // 현재 소속한 회사의 문서가 보이므로, companyID 전달 없어도 됨
+                        var openLocation = "";
+
+                        if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+                            openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
+                        } else {
+                            var openLocation = "/ezApprovalG/aprDocView.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL);
+                        }
                         openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=&pageType=admin";
 	                }
 	                openwindow(openLocation, "", 880, 550);

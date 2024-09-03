@@ -867,7 +867,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		/* 2024-05-08 양지혜 - 공개문서에서 파라미터 조작으로 접근 취약점 보완. 매번 권한체크를 하도록 함 */
         //2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
         if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
-        	pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), tenantID, approvalFlag);
+        	pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), tenantID, approvalFlag, userInfo.getDeptID());
         	
 			if (!pass.equals("<RESULT>TRUE</RESULT>")) {
 				return "NOTPERMISSION";
@@ -973,7 +973,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					}
 				}
 			} else if (mode.toUpperCase().equals("END")) {
-				pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+				pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 				
 				//회람일때 권한 노체크
 				if (flag != null && !flag.equals("Y")) {
@@ -1450,12 +1450,32 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (request.getParameter("draftFlag") != null) {
 			mode = request.getParameter("draftFlag");
 		}
+		String frameNum = request.getParameter("frameNum") != null ? request.getParameter("frameNum") : "";
+		String docID = request.getParameter("docID") != null ? request.getParameter("docID") : "";
+		String docHref = request.getParameter("docHref") != null ? request.getParameter("docHref") : "";
+		String formID = request.getParameter("formID") != null ? request.getParameter("formID") : "";
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+		String draftJunGyulFlag = ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId());
+		String optisSplit = "";
+
+		if (ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId()).equals("S")) {
+			optisSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
+		} else {
+			optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mode", mode);
 		model.addAttribute("editor", editor);
 		model.addAttribute("isUsed", isUsed);
 		model.addAttribute("officeFlag", officeFlag);
+		model.addAttribute("formID", formID); // 사실상 iframe 내부에서 GetAprDocFormID()를 호출하여 가져오므로, 필요없는 파라미터임
+		model.addAttribute("frameNum", frameNum);
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("draftJunGyulFlag", draftJunGyulFlag);
+		model.addAttribute("isSplit", optisSplit);
 		logger.debug("draftContent ended.");
 		
 		return "ezApprovalG/apprGDraftContent";
@@ -3346,7 +3366,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			} else if (docStatus != null && docStatus.toUpperCase().equals("END")) {
 				String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
-				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 				
 				if (!pass.equals("<RESULT>TRUE</RESULT>")) {
 					result = "NOTPERMISSION";
@@ -4068,19 +4088,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
         String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
-        if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
+        if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("q=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
 			// 2023-11-06 박기범 - 문서첨부에서 문서를 열 경우 첨부문서의 권한이 아니라 문서의 권한으로 체크
 			if (isDocAttach && ezApprovalGService.isAttachDoc(docID, docAttachParent, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId())) {
 				if (docAprEnd.equals("APR")) {
 					pass = ezApprovalGService.getAccessYNGforAPR(docAttachParent, accessInfo, approvalFlag, userInfo);
 				} else {
-					pass = ezApprovalGService.getAccessYNG(docAttachParent, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+					pass = ezApprovalGService.getAccessYNG(docAttachParent, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 				}
 			} else {
 				if (docAprEnd.equals("APR")) {
 					pass = ezApprovalGService.getAccessYNGforAPR(docID, accessInfo, approvalFlag, userInfo);
 				} else {
-					pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+					pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 				}
 			}
 			// 2024-06-11 양지혜 - 취약점보완 : 보안결재 체크
@@ -5511,6 +5531,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useAllowTextSelection = ezCommonService.getTenantConfig("useAllowTextSelection", userInfo.getTenantId());
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+		String draftJunGyulFlag = ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId());
 		boolean isReform = false;
 		String reformFunctionUrl = "";
 		
@@ -5534,6 +5556,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
         model.addAttribute("isReform", isReform);
         model.addAttribute("reformFunctionUrl", reformFunctionUrl);
 		model.addAttribute("lang",userInfo.getLang());
+
+		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("draftJunGyulFlag", draftJunGyulFlag);
 		
 		logger.debug("approvUIcontent ended");
 		
@@ -5913,8 +5938,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			hasOpinion="N";
 		}
 
-		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
+			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
 		}
@@ -9696,7 +9721,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String recordID = request.getParameter("recordID") != null ? request.getParameter("recordID") : ""; // 시행문의 반송을 위한 recordID 추가
 
-		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 		
 		/* 2020-11-13 홍승비 - 대용량첨부 관련 파라미터 추가 */
 		String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("ApprBigSizeAttachDownloadLimitCount", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 다운로드 횟수제한
@@ -12653,6 +12678,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 	/**
 	 * 2022-03-08 홍승비 - 양식ID로 양식을 찾아 문서번호의 포맷을 문자열로 리턴하는 메서드 (.hwp 파일 전용)
+	 * 2024-07-02 정주환 - .mht 추가
 	 */
 	@RequestMapping(value = "/ezApprovalG/getDocNumFormatByFormID.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
@@ -12890,7 +12916,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
 
 			for (int i = 0; i < docIDarr.length; i++) {
-				String tempPassResult = ezApprovalGService.getAccessYNG(docIDarr[i], userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+				String tempPassResult = ezApprovalGService.getAccessYNG(docIDarr[i], userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 
 				if (tempPassResult.equals("<RESULT>FALSE</RESULT>")) {
 					failDocIDstr += docIDarr[i] + "|||";

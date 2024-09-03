@@ -228,7 +228,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 /* #Center {min-height:600px; margin:0px;  background:#e0e3e4; min-width:1260px;} */
 #Center {min-height:600px; margin:0px;  background:#e0e3e4; float:left;}
 .section_left{  margin:0px; padding:0px; float:left; overflow:hidden; border-right:1px solid #cdcdcd; width:320px; box-sizing:border-box; background:#fff;}
-.section_main{ overflow:auto; padding:20px 60px 0px 40px; float:none; min-width:880px; box-sizing:border-box;}
+.section_main{ padding:20px 60px 0px 40px; float:none; min-width:880px; box-sizing:border-box;}
 .section_main .mainLayout_left{ overflow:hidden; float:left; padding:0px 0px 0px 18px; box-sizing:border-box; }
 .section_main .mainLayout_middle{ overflow:hidden;  padding:0px 0px 0px 16px; float:left; box-sizing:border-box; }
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }

@@ -694,7 +694,7 @@ function attach_click(para) {
 
 function Send_onClick() {
     if (eSubject.value.trim() == "") {
-        alert(strLang92);
+        alert(strLangHSG03); // 2024.04.29 한슬기 : 제목란이 비어있습니다.
         eSubject.focus();
         return;
     }

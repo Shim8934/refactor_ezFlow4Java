@@ -146,6 +146,30 @@ CREATE TABLE `james_mail_search` (
   KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`(191)),
   KEY `IDX_SUBJECT` (`SUBJECT`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- mroonga 적용 테이블
+-- CREATE TABLE `james_mail_search` (
+--  `MAIL_SEARCH_ID` bigint(20) NOT NULL AUTO_INCREMENT,
+--  `ATTACHED_FILENAME` longtext DEFAULT NULL,
+--  `CONTENT` longtext DEFAULT NULL,
+--  `RECIPIENT` longtext DEFAULT NULL,
+--  `SENDER` mediumtext DEFAULT NULL,
+--  `SUBJECT` longtext DEFAULT NULL,
+--  `MAILBOX_ID` bigint(20) DEFAULT NULL,
+--  `MAIL_UID` bigint(20) DEFAULT NULL,
+--  `IMPORTANCE` int(1) DEFAULT NULL,
+--  `MESSAGE_ID` varchar(500) DEFAULT NULL,
+--  `MAIL_IP` varchar(200) DEFAULT NULL,
+--  `COUNTRY_CODE` varchar(200) DEFAULT NULL,
+--  `SECURE_FLAG` int(1) DEFAULT 0,
+--  PRIMARY KEY (`MAIL_SEARCH_ID`),
+--  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
+--  KEY `MESSAGE_ID` (`MESSAGE_ID`(191)),
+--  FULLTEXT KEY `SENDER` (`SENDER`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `CONTENT` (`CONTENT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `RECIPIENT` (`RECIPIENT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `ATTACHED_FILENAME` (`ATTACHED_FILENAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `SUBJECT` (`SUBJECT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"'
+-- ) ENGINE=Mroonga AUTO_INCREMENT=937619 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='engine "InnoDB"';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1051,13 +1075,20 @@ CREATE TABLE `jmocha_stat_mail_log` (
   `SENDER_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `RECIPIENT_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHED_FILENAME` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPT_NAME` VARCHAR(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPT_NAME2` VARCHAR(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDER_NAME2` VARCHAR(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `RECIPIENT_NAME2` VARCHAR(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPT_ID` varchar(80) DEFAULT NULL,
+  `COMPANY_ID` varchar(160) DEFAULT NULL,
   PRIMARY KEY (`IDX`),
   KEY `IDX_TENANT_ID` (`TENANT_ID`),
   KEY `IDX_LOG_DATE` (`LOG_DATE`),
   KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`),
   KEY `IDX_MESSAGEID` (`MESSAGEID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
---CREATE TABLE `jmocha_stat_mail_log` (
+--  mroonga 적용 테이블
+--  CREATE TABLE `jmocha_stat_mail_log` (
 --  `IDX` int(10) unsigned NOT NULL AUTO_INCREMENT,
 --  `TENANT_ID` int(11) NOT NULL,
 --  `LOG_DATE` datetime DEFAULT NULL,
@@ -1070,17 +1101,28 @@ CREATE TABLE `jmocha_stat_mail_log` (
 --  `SENDER_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
 --  `RECIPIENT_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
 --  `ATTACHED_FILENAME` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `DEPT_NAME` VARCHAR(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `DEPT_NAME2` VARCHAR(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `SENDER_NAME2` VARCHAR(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `RECIPIENT_NAME2` VARCHAR(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `DEPT_ID` VARCHAR(80) DEFAULT NULL,
+--  `COMPANY_ID` VARCHAR(160) DEFAULT NULL,
 --  PRIMARY KEY (`IDX`),
 --  KEY `IDX_TENANT_ID` (`TENANT_ID`),
 --  KEY `IDX_LOG_DATE` (`LOG_DATE`),
 --  KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`),
+-- KEY `IDX_MESSAGEID` (`MESSAGEID`),
 --  FULLTEXT KEY `SENDER` (`SENDER`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
 --  FULLTEXT KEY `SENDER_NAME` (`SENDER_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
 --  FULLTEXT KEY `RECIPIENT` (`RECIPIENT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
 --  FULLTEXT KEY `RECIPIENT_NAME` (`RECIPIENT_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
 --  FULLTEXT KEY `MESSAGESUBJECT` (`MESSAGESUBJECT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
---  FULLTEXT KEY `ATTACHED_FILENAME` (`ATTACHED_FILENAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"'
---) ENGINE=Mroonga DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='engine "InnoDB"';
+--  FULLTEXT KEY `ATTACHED_FILENAME` (`ATTACHED_FILENAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `DEPT_NAME` (`DEPT_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `DEPT_NAME2` (`DEPT_NAME2`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `SENDER_NAME2` (`SENDER_NAME2`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `RECIPIENT_NAME2` (`RECIPIENT_NAME2`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"'
+--  ) ENGINE=Mroonga DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='engine "InnoDB"';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

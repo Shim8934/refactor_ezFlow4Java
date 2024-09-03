@@ -756,9 +756,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1") && !userInfo.getRollInfo().contains("m=1")) {
-			pass = ezApprovalGService.getAccessYNGforAPR(docID, accessInfo, approvalFlag, userInfo);
-
-			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+			if (docAprEnd.equals("APR")) {
+				pass = ezApprovalGService.getAccessYNGforAPR(docID, accessInfo, approvalFlag, userInfo);
+			} else {
+				pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
+			}
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
 		}
@@ -1599,7 +1601,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			if (docAprEnd.equals("APR")) {
 				pass = ezApprovalGService.getAccessYNGforAPR(docID, accessInfo, approvalFlag, userInfo);
 			} else {
-				pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+				pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 			}
 			// 2024-06-11 양지혜 - 취약점보완 : 보안결재 체크
 			String securityDate = ezApprovalGService.checkSecurityApprovalDate(docID, userInfo.getCompanyID(), userInfo.getTenantId(), docAprEnd);
@@ -2498,7 +2500,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String docHref = request.getParameter("docHref") != null ? request.getParameter("docHref") : "";
 		String formID = request.getParameter("formID") != null ? request.getParameter("formID") : "";
 		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
-		
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 보존기간
+		String draftJunGyulFlag = ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 보존기간
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String optisSplit = ezApprovalGService.getOptionInfo(approvalFlag.equals("S") ? "SA33" : "A33", "001", userInfo, "CODE");
+
 		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
 		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
 		// 2023-10-26 조수빈 - 문서변환 솔루션 사용 여부
@@ -2517,7 +2523,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("webHWPUrl", webHWPUrl);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
-		
+		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("draftJunGyulFlag", draftJunGyulFlag);
+		model.addAttribute("optisSplit", optisSplit);
+
 		logger.debug("draftContentAll_WHWP ended.");
 		return "ezApprovalG/apprGdraftuiAllContent_WHWP";
 	}
