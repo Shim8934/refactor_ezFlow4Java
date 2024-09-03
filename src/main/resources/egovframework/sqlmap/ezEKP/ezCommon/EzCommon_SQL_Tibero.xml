@@ -5945,5 +5945,21 @@
 			WHERE
 				THEME_ID = 3
 	</update>
-	
+
+	<select id="EzCommonDAO.checkRsScheduleDeptIdColumn" resultClass="String">
+		<![CDATA[
+		SELECT
+			DEPTID
+		FROM
+			TBL_RS_SCHEDULE
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createRsScheduleDeptIdColumn">
+		ALTER TABLE
+			TBL_RS_SCHEDULE
+			ADD DEPTID NVARCHAR2(80) DEFAULT NULL
+	</statement>
 </sqlMap>

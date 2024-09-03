@@ -5473,5 +5473,18 @@
 			WHERE
 				THEME_ID = 3
 	</update>
-	
+
+	<select id="EzCommonDAO.checkRsScheduleDeptIdColumn" resultClass="String">
+		SELECT
+			DEPTID
+		FROM
+			TBL_RS_SCHEDULE
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createRsScheduleDeptIdColumn">
+		ALTER TABLE
+			TBL_RS_SCHEDULE
+			ADD DEPTID varchar(80) DEFAULT NULL
+	</statement>
 </sqlMap>
