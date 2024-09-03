@@ -695,6 +695,12 @@
 				<isEqual property="v_FIELD"  compareValue="USEUPPERDEPTBOX">
 					USEUPPERDEPTBOX
 				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPTTREEFLAG">
+					DEPTTREEFLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="USEUPPERDEPTBOX">
+					USEUPPERDEPTBOX
+				</isEqual>
 		<![CDATA[
 			FROM
 				TBL_DEPTMASTER
