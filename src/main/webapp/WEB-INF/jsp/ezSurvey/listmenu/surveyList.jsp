@@ -198,6 +198,16 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyItem.js')     }"></script>
 		<script type="text/javascript">
 			SurveyItem.start("<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>", "<c:out value='${mode}'/>", "<c:out value='${user}'/>");
+			window.onload = function () {
+				<%-- 2024-07-23 김유진 - 설문작성/수정 중 목록으로 돌아올 시 설문작성/수정을 취소함 --%>
+				if (window.parent.frames["left"].surveyId != -1 || window.parent.frames["left"].isInCreateSurvey == true) {
+					if (window.parent.frames["left"].document.querySelector('.node_selected')) {
+						document.getElementById("mainContentIframeW").src = "";
+						document.getElementById("mainContentIframeH").src = "";
+						window.parent.frames["left"].SurveyLeft.cancelSurvey(window.parent.frames["left"].document.querySelector('.node_selected').closest('li').id);
+					}
+				}
+			}
 			</script>
 	</body>
 </html>

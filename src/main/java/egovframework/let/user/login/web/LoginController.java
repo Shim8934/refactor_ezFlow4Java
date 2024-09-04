@@ -1373,7 +1373,7 @@ public class LoginController {
 			// 오류가 발생한 경우 otpKey 비워 줌
 			ezCommonService.updateUserConfigInfo(tenantId, userId, "otpKey", "");
 
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "fail";
 		}
 

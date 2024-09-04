@@ -860,15 +860,15 @@ public class EzOrganServiceImpl implements EzOrganService {
                 if (i == 0) {
                 	if (checkSearchField(searchInfo[0])) {
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParam[0].toString().equals("/")) {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "')";
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "')";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
                             		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -879,11 +879,11 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 } else {
                     if (checkSearchField(searchInfo[0])) {
-                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
+                        strSQL = strSQL + " AND ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
                         		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -897,9 +897,14 @@ public class EzOrganServiceImpl implements EzOrganService {
         }        
         
         if (pClass.equals("user") || pClass.equals("all")){
-            strSQL = strSQL.replace("cn", "a.cn");
-            strSQL = strSQL.replace("title", "a.title");
-                        
+            //strSQL = strSQL.replace("cn", "a.cn");
+            //strSQL = strSQL.replace("title", "a.title");
+        	
+        	// 2024.06.27 한슬기 : 검색하려는 단어에 cn, userLoginId, title이 포함되어있으면 검색이 되지 않아 앞뒤로 공백추가
+    		strSQL = strSQL.replace(" cn ", " a.cn ");
+    		strSQL = strSQL.replace(" title ", " a.title ");
+    		strSQL = strSQL.replace(" title2 ", " a.title2 ");
+    		
             type = "U";
         }else{
         	type = "G";
@@ -1153,14 +1158,14 @@ public class EzOrganServiceImpl implements EzOrganService {
         			if (i == 0) {
         				if (checkSearchField(searchInfo[0])) {
         					if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParm[0].toString().equals(":")) {
-        						strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + "=UPPER('" + searchParm[i] + "') OR " + searchInfo[0].toLowerCase() + "2 = UPPER('" + searchParm[i] + "'))";
+        						strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " =UPPER('" + searchParm[i] + "') OR " + searchInfo[0].toLowerCase() + "2 = UPPER('" + searchParm[i] + "'))";
         						searchParm[0] = searchParm[0].substring(0, searchParm[0].length() - 1);
         					} else {
-        						strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
+        						strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
         					}
         				} else {
         					if (searchInfo[0].indexOf("EXACT_") == 0) {
-        						strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "=UPPER('" + searchParm[i] + "') ";
+        						strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + " =UPPER('" + searchParm[i] + "') ";
         					} else if (searchInfo[0].indexOf("LEFT_") == 0) {
         						strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
         					} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -1171,10 +1176,10 @@ public class EzOrganServiceImpl implements EzOrganService {
         				}
         			} else {
         				if (checkSearchField(searchInfo[0])) {
-        					strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString +")";
+        					strSQL = strSQL + " AND ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString +")";
         				} else {
         					if (searchInfo[0].indexOf("EXACT_") == 0) {
-        						strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "=UPPER('" + searchParm[i] + "') ";
+        						strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + " =UPPER('" + searchParm[i] + "') ";
         					} else if (searchInfo[0].indexOf("LEFT_") == 0) {
         						strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
         					} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -1188,8 +1193,13 @@ public class EzOrganServiceImpl implements EzOrganService {
         	}
 
         	if (pClass.equals("user") || pClass.equals("all")) {
-        		strSQL = strSQL.replace("cn", "a.cn");
-        		strSQL = strSQL.replace("title", "a.title");
+           		//strSQL = strSQL.replace("cn", "a.cn");
+        		//strSQL = strSQL.replace("title", "a.title");
+        		
+        		// 2024.06.27 한슬기 : 검색하려는 단어에 cn, userLoginId, title이 포함되어있으면 검색이 되지 않아 앞뒤로 공백추가 
+        		strSQL = strSQL.replace(" cn ", " a.cn ");
+        		strSQL = strSQL.replace(" title ", " a.title ");
+        		strSQL = strSQL.replace(" title2 ", " a.title2 ");
 
         		type = "U";
         	} else {
@@ -2266,14 +2276,14 @@ public class EzOrganServiceImpl implements EzOrganService {
                 if (i == 0) {
                     if (checkSearchField(searchInfo[0])) {
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParam[0].toString().equals("/")) {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i]+ "')";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i]+ "')";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + " )";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + " )";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -2284,10 +2294,10 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 } else {
                     if (checkSearchField(searchInfo[0])) {
-                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
+                        strSQL = strSQL + " AND ( " + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -2301,8 +2311,13 @@ public class EzOrganServiceImpl implements EzOrganService {
         }        
         
         if (pClass.equals("user") || pClass.equals("all")){
-            strSQL = strSQL.replace("cn", "a.cn");
-            strSQL = strSQL.replace("title", "a.title");
+            //strSQL = strSQL.replace("cn", "a.cn");
+            //strSQL = strSQL.replace("title", "a.title");
+        	
+        	// 2024.06.27 한슬기 : 검색하려는 단어에 cn, userLoginId, title이 포함되어있으면 검색이 되지 않아 앞뒤로 공백추가
+    		strSQL = strSQL.replace(" cn ", " a.cn ");
+    		strSQL = strSQL.replace(" title ", " a.title ");
+    		strSQL = strSQL.replace(" title2 ", " a.title2 ");
                         
             type = "U";
         }else{

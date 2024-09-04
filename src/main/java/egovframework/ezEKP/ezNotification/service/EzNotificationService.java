@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezNotification.service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,11 +51,11 @@ public interface EzNotificationService {
 
 	public boolean isJavaApprovalUse(String companyId, int tenantId) throws Exception;
 
-	public String getEmergencyPermissionList(String useLang, String companyId, int tenantId) throws Exception;
+	public String getEmergencyPermissionList(String useLang, Locale locale, String companyId, int tenantId) throws Exception;
 
-	public void addPermission(List<EmergencyNotiPermissionVO> permissionList, int tenantId) throws Exception;
+	public void addEmergencyPermission(List<EmergencyNotiPermissionVO> permissionList, int tenantId) throws Exception;
 
-	public void deletePermission(List<EmergencyNotiPermissionVO> permissionList, String companyId, int tenantId) throws Exception;
+	public void deleteEmergencyPermission(List<EmergencyNotiPermissionVO> permissionList, String companyId, int tenantId) throws Exception;
 
 	public String getEmergencyContent(String companyId, int tenantId) throws Exception;
 

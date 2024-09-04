@@ -174,9 +174,9 @@ public class EzNotificationAdminController {
 	
 	@SuppressWarnings("unchecked")
 	@ResponseBody
-	@RequestMapping(value = "/admin/ezNotification/addPermission.do", method = RequestMethod.POST)
-	public String addPermission(@CookieValue("loginCookie") String loginCookie, @RequestBody List<EmergencyNotiPermissionVO> dataList, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		logger.debug("addPermission started");
+	@RequestMapping(value = "/admin/ezNotification/addEmergencyPermission.do", method = RequestMethod.POST)
+	public String addEmergencyPermission(@CookieValue("loginCookie") String loginCookie, @RequestBody List<EmergencyNotiPermissionVO> dataList, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("addEmergencyPermission started");
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String userId = user.getId();
@@ -193,6 +193,7 @@ public class EzNotificationAdminController {
 		    itemObject.put("jobId", item.getJobId());
 		    itemObject.put("roleId", item.getRoleId());
 		    itemObject.put("companyId", item.getCompanyId());
+		    itemObject.put("subDeptYn", item.getSubDeptYn());
 		    jsonArray.add(itemObject);
 		}
 		
@@ -216,15 +217,15 @@ public class EzNotificationAdminController {
 		
 		String status = resultBody.get("status").toString();
 
-		logger.debug("addPermission ended");
+		logger.debug("addEmergencyPermission ended");
 		return status;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@ResponseBody
-	@RequestMapping(value = "/admin/ezNotification/deletePermission.do", method = RequestMethod.POST)
-	public String deletePermission(@CookieValue("loginCookie") String loginCookie, @RequestBody List<EmergencyNotiPermissionVO> dataList, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		logger.debug("deletePermission started");
+	@RequestMapping(value = "/admin/ezNotification/deleteEmergencyPermission.do", method = RequestMethod.POST)
+	public String deleteEmergencyPermission(@CookieValue("loginCookie") String loginCookie, @RequestBody List<EmergencyNotiPermissionVO> dataList, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("deleteEmergencyPermission started");
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String userId = user.getId();
@@ -259,7 +260,7 @@ public class EzNotificationAdminController {
 		
 		String status = resultBody.get("status").toString();
 
-		logger.debug("deletePermission ended");
+		logger.debug("deleteEmergencyPermission ended");
 		return status;
 	}
 	
