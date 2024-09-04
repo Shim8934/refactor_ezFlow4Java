@@ -139,9 +139,10 @@ public class EzNotificationGWController {
 			String notiName = "";
 			
 			if (subType != null && mainType.equals("APPROVAL") && useJavaApproval &&
-				(subType.equals("ARRIVE") || subType.equals("BORYU") || subType.equals("BALSONG")
-				|| subType.equals("SUSIN") || subType.equals("JIJUNG") || subType.equals("BEBU")
-				|| subType.equals("REJIJUNG") || subType.equals("REBEBU") || subType.equals("DEFAULT"))) {
+				(subType.equals("ARRIVE") || subType.equals("GONGRAM") || subType.equals("CIRCULATION")
+				|| subType.equals("BORYU") || subType.equals("BALSONG") || subType.equals("SUSIN")
+				|| subType.equals("JIJUNG") || subType.equals("BEBU") || subType.equals("REJIJUNG")
+				|| subType.equals("REBEBU")	|| subType.equals("DEFAULT"))) {
 				notiName = mainType + "_" + "ARRIVE";
 			} else if (subType != null && !subType.equals("")) {
 				notiName = mainType + "_" + subType;
