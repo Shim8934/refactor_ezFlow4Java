@@ -2,7 +2,7 @@
 <label for="ListCompany" style="display: none;"></label>
 <select class="companySelect" id="ListCompany"></select>
 <script>
-    // 선택된 회사값 :selectedCompany
+    // 선택된 회사값 :companySelectID
     // 변경시 함수 : changeCompany(회사id) 함수로 선언하면 select 변경시 실행
     var companySelectID = '' ;
     (function () {

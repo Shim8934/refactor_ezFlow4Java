@@ -1,5 +1,5 @@
 ﻿// 회사 변경 method
-function company_change() {
+function changeCompany() {
 	makelist();
 	showPreview(2, 0);
 }
