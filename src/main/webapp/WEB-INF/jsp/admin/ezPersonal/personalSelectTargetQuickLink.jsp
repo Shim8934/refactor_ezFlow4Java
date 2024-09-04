@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<script type="text/javascript">
 			var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
@@ -217,8 +218,8 @@
 					pparsingXML2 = "";
 					pparsingXML = "";
 					pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-					pparsingXML = pparsingXML + "<ROW><CELL><DATA>" + ACCESSNAME + "</DATA>";
-					pparsingXML = pparsingXML + "<DATA1>" + MakeXMLString(ACCESSNAME2) + "</DATA1>";
+					pparsingXML = pparsingXML + "<ROW><CELL><DATA>" + escapeHtml(ACCESSNAME) + "</DATA>";
+					pparsingXML = pparsingXML + "<DATA1>" + escapeHtml(ACCESSNAME2) + "</DATA1>";
 					pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(ACCESSID) + "</DATA2>";
 					pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(ACCESSYN) + "</DATA3>";
 					pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(USERTYPE) + "</DATA4>";
@@ -237,9 +238,9 @@
 					}
 
 					if (userLang == "") {
-						pparsingXML = pparsingXML + MakeXMLString(ACCESSNAME) + "</VALUE>";
+						pparsingXML = pparsingXML + escapeHtml(ACCESSNAME) + "</VALUE>";
 					} else {
-						pparsingXML = pparsingXML + MakeXMLString(ACCESSNAME2) + "</VALUE>";
+						pparsingXML = pparsingXML + escapeHtml(ACCESSNAME2) + "</VALUE>";
 					}
 
 					pparsingXML = pparsingXML + "</CELL>";
@@ -404,8 +405,8 @@
 				quickLinkAuths.forEach(function(item, index) {
 		            selectTargetListXML += "<NODE>";
 		            selectTargetListXML += "<ACCESSID>" + item.userId + "</ACCESSID>";
-		            selectTargetListXML += "<ACCESSNAME>" + item.userName + "</ACCESSNAME>";
-		            selectTargetListXML += "<ACCESSNAME2>" + item.userName2 + "</ACCESSNAME2>";
+		            selectTargetListXML += "<ACCESSNAME>" + escapeHtml(item.userName) + "</ACCESSNAME>";
+		            selectTargetListXML += "<ACCESSNAME2>" + escapeHtml(item.userName2) + "</ACCESSNAME2>";
 		            selectTargetListXML += "<USERTYPE>" + item.userType + "</USERTYPE>";
 		            selectTargetListXML += "<PERMISSIONS>" + item.accessYN + "</PERMISSIONS>";
 		            selectTargetListXML += "<SUBDEPTPERMITTED>" + item.subdeptPermitted + "</SUBDEPTPERMITTED>";

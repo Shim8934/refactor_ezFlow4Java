@@ -122,7 +122,7 @@
 	<sql id="organSearchTrashDept_user">
 		<isNotEqual property="adminOrgan" compareValue="y">
 			<![CDATA[
-				AND DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' ESCAPE '\' ) 
+				AND DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' ESCAPE '\' AND TENANT_ID = #v_TENANT_ID#) 
 			]]>
 		</isNotEqual>
 	</sql>
