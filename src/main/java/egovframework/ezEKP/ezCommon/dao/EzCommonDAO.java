@@ -2675,4 +2675,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterUseColor");
 		}
 	}
+
+	public void updateThemeData() {
+		try {
+			if ((int) select("EzCommonDAO.chkThemeName") > 1) {
+				update("EzCommonDAO.updateTheme1");
+				update("EzCommonDAO.updateTheme2");
+				update("EzCommonDAO.updateTheme3");
+			}
+		} catch (Exception e) {
+			logger.debug("An error occurred while updating the theme data.");
+		}
+	}
+
+	public void createRsScheduleDeptIdColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkRsScheduleDeptIdColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_RS_SCHEDULE DEPTID column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.createRsScheduleDeptIdColumn");
+		}
+	}
 }

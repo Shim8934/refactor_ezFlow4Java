@@ -1535,7 +1535,7 @@
 		    
 		</script>
 	</head>
-	<body id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
+	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">
 		<table class="layout" style="height:100%">
 		  <tr>
 		    <td style="vertical-align: top; height: 10px;">

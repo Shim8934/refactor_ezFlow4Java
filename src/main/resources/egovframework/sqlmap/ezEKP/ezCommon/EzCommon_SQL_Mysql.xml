@@ -5434,5 +5434,57 @@
 		ADD
 			USECOLOR	TINYINT	DEFAULT	0	NOT NULL	COMMENT '사용 모드(색상)'
     </statement>
-	
+		    
+    <select id="EzCommonDAO.chkThemeName" resultClass="Integer">
+		SELECT	COUNT(*)
+		FROM	TBL_PORTAL_THEME
+		WHERE	THEME_NAME LIKE '테마%'
+    </select>
+    
+	<update id="EzCommonDAO.updateTheme1">
+			UPDATE
+				TBL_PORTAL_THEME
+			SET
+				THEME_NAME = '기본형',
+				THEME_NAME2 = 'Default Type',
+				THEME_NAME3 = 'きほんがた'
+			WHERE
+				THEME_ID = 1
+	</update>
+    
+	<update id="EzCommonDAO.updateTheme2">
+			UPDATE
+				TBL_PORTAL_THEME
+			SET
+				THEME_NAME = '바로가기형',
+				THEME_NAME2 = 'Shortcut Type',
+				THEME_NAME3 = 'ショートカットがた'
+			WHERE
+				THEME_ID = 2
+	</update>
+    
+	<update id="EzCommonDAO.updateTheme3">
+			UPDATE
+				TBL_PORTAL_THEME
+			SET
+				THEME_NAME = '정보분리형',
+				THEME_NAME2 = 'Information Separation Type',
+				THEME_NAME3 = 'じょうほうぶんりがた'
+			WHERE
+				THEME_ID = 3
+	</update>
+
+	<select id="EzCommonDAO.checkRsScheduleDeptIdColumn" resultClass="String">
+		SELECT
+			DEPTID
+		FROM
+			TBL_RS_SCHEDULE
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createRsScheduleDeptIdColumn">
+		ALTER TABLE
+			TBL_RS_SCHEDULE
+			ADD DEPTID varchar(80) DEFAULT NULL
+	</statement>
 </sqlMap>
