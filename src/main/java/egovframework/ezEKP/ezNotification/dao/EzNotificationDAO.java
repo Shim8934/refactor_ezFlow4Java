@@ -73,16 +73,20 @@ public class EzNotificationDAO extends EgovAbstractDAO {
 		return (List<EmergencyNotiPermissionVO>) list("EzNotificationDAO.getEmergencyPermissionList", map);
 	}
 
-	public void addPermission(Map<String, Object> map) throws Exception {
-		insert("EzNotificationDAO.addPermission", map);
+	public void addEmergencyPermission(Map<String, Object> map) throws Exception {
+		insert("EzNotificationDAO.addEmergencyPermission", map);
+	}
+	
+	public void updateEmergencyPermission(Map<String, Object> map) throws Exception {
+		update("EzNotificationDAO.updateEmergencyPermission", map);
 	}
 
-	public void deletePermission(Map<String, Object> map) throws Exception {
-		delete("EzNotificationDAO.deletePermission", map);
+	public void deleteEmergencyPermission(Map<String, Object> map) throws Exception {
+		delete("EzNotificationDAO.deleteEmergencyPermission", map);
 	}
 
-	public boolean selectPermission(Map<String, Object> map) throws Exception {
-		return (boolean) select("EzNotificationDAO.selectPermission", map);
+	public String selectEmergencyPermission(Map<String, Object> map) throws Exception {
+		return (String) select("EzNotificationDAO.selectEmergencyPermission", map);
 	}
 
 	public String getEmergencyContent(Map<String, Object> map) throws Exception {

@@ -139,9 +139,10 @@ public class EzNotificationGWController {
 			String notiName = "";
 			
 			if (subType != null && mainType.equals("APPROVAL") && useJavaApproval &&
-				(subType.equals("ARRIVE") || subType.equals("BORYU") || subType.equals("BALSONG")
-				|| subType.equals("SUSIN") || subType.equals("JIJUNG") || subType.equals("BEBU")
-				|| subType.equals("REJIJUNG") || subType.equals("REBEBU") || subType.equals("DEFAULT"))) {
+				(subType.equals("ARRIVE") || subType.equals("GONGRAM") || subType.equals("CIRCULATION")
+				|| subType.equals("BORYU") || subType.equals("BALSONG") || subType.equals("SUSIN")
+				|| subType.equals("JIJUNG") || subType.equals("BEBU") || subType.equals("REJIJUNG")
+				|| subType.equals("REBEBU")	|| subType.equals("DEFAULT"))) {
 				notiName = mainType + "_" + "ARRIVE";
 			} else if (subType != null && !subType.equals("")) {
 				notiName = mainType + "_" + subType;
@@ -571,8 +572,9 @@ public class EzNotificationGWController {
 			String companyId = request.getParameter("companyId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
+			Locale locale = info.getLocale(); 
 			
-			String permissionListXml = ezNotificationService.getEmergencyPermissionList(commonUtil.getPrimaryData(info.getLang(), tenantId), companyId, tenantId);
+			String permissionListXml = ezNotificationService.getEmergencyPermissionList(commonUtil.getPrimaryData(info.getLang(), tenantId), locale, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -590,7 +592,7 @@ public class EzNotificationGWController {
 	}
 	
 	@RequestMapping(value = "/rest/ezNotification/emergency/add/permissions/{userId:.+}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject addPermission(HttpServletRequest request, @PathVariable String userId, @RequestBody List<EmergencyNotiPermissionVO> permissionList) throws Exception {
+	public JSONObject addEmergencyPermission(HttpServletRequest request, @PathVariable String userId, @RequestBody List<EmergencyNotiPermissionVO> permissionList) throws Exception {
 		logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/add/permissions/{userId}] started.");
 		JSONObject result = new JSONObject();
 		
@@ -599,7 +601,7 @@ public class EzNotificationGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			ezNotificationService.addPermission(permissionList, tenantId);
+			ezNotificationService.addEmergencyPermission(permissionList, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -615,7 +617,7 @@ public class EzNotificationGWController {
 	}
 	
 	@RequestMapping(value = "/rest/ezNotification/emergency/delete/permissions/{userId:.+}", method=RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject deletePermission(HttpServletRequest request, @PathVariable String userId, @RequestBody List<EmergencyNotiPermissionVO> permissionList) throws Exception {
+	public JSONObject deleteEmergencyPermission(HttpServletRequest request, @PathVariable String userId, @RequestBody List<EmergencyNotiPermissionVO> permissionList) throws Exception {
 		logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/delete/permissions/{userId}] started.");
 		JSONObject result = new JSONObject();
 		
@@ -625,7 +627,7 @@ public class EzNotificationGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			ezNotificationService.deletePermission(permissionList, companyId, tenantId);
+			ezNotificationService.deleteEmergencyPermission(permissionList, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

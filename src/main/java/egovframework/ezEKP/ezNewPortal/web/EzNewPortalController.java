@@ -389,6 +389,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
+		param.put("deptId", userInfo.getDeptID());
 		param.put("page", req.getParameter("page"));
 
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "GET", null);
