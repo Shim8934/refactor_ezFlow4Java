@@ -4215,9 +4215,11 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
-			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId(), info.getDeptID());
+			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, companyId, info.getTenantId(), deptId);
 			
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int listCount = list.size();
