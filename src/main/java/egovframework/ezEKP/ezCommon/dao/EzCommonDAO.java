@@ -2687,4 +2687,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("An error occurred while updating the theme data.");
 		}
 	}
+
+	public void createRsScheduleDeptIdColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkRsScheduleDeptIdColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_RS_SCHEDULE DEPTID column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.createRsScheduleDeptIdColumn");
+		}
+	}
 }

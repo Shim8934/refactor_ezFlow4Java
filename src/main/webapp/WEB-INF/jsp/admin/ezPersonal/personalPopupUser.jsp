@@ -94,12 +94,8 @@
                 var objNode;
                 
                 createNodeInsert(xmlpara, objNode, "DATA");
-                createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptId);
-                if (companyId == "Top") {
-                	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
-	            } else {
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
-	            }
+                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "");
+				createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId + "/organ");
                 
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 /*                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");

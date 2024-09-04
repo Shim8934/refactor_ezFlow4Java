@@ -4296,4 +4296,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.updateThemeData();
 	}
 
+    @Override
+    public void createRsScheduleDeptIdColumn() throws Exception {
+        ezCommonDAO.createRsScheduleDeptIdColumn();
+    } 
 }

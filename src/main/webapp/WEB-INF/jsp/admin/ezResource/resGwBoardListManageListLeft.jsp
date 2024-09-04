@@ -56,13 +56,13 @@
 			}
 
 			function changeCompany(selCompany) {
-				pCompanyID = selCompany;
+				pCompanyID = selCompany || document.getElementById('ListCompany').value;
 				if (pAdminYN == "YES")
 					cAdmin = "ADMIN"
 				else
 					cAdmin = "BOARDADMIN"
 
-				initTreeInfo(pUserID, selCompany);
+				initTreeInfo(pUserID, pCompanyID);
 			}
 
 		    function searchValue() {
