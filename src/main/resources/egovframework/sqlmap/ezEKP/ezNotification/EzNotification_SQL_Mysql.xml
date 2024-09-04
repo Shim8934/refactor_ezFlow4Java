@@ -342,7 +342,8 @@
 			T1.JOBID as jobId,
 			T1.ROLEID as roleId,
 			T2.ROLENAME as roleName,
-			T2.ROLENAME2 as roleName2
+			T2.ROLENAME2 as roleName2,
+			T1.SUBDEPTYN as subDeptYn
 		FROM
 			TBL_NOTI_EMERGENCY_PERMISSION T1
 		INNER JOIN
@@ -441,7 +442,8 @@
 			T1.JOBID as jobId,
 			T1.ROLEID as roleId,
 			NULL as ROLENAME,
-			NULL as ROLENAME2
+			NULL as ROLENAME2,
+			T1.SUBDEPTYN as subDeptYn
 		FROM
 			TBL_NOTI_EMERGENCY_PERMISSION T1
 		JOIN 
@@ -474,7 +476,8 @@
 			T1.JOBID as jobId,
 			T1.ROLEID as roleId,
 			NULL as ROLENAME,
-			NULL as ROLENAME2
+			NULL as ROLENAME2,
+			T1.SUBDEPTYN as subDeptYn
        	FROM
        		TBL_NOTI_EMERGENCY_PERMISSION T1
        	JOIN
@@ -509,7 +512,8 @@
 			T1.JOBID as jobId,
 			T1.ROLEID as roleId,
 			NULL as ROLENAME,
-			NULL as ROLENAME2
+			NULL as ROLENAME2,
+			T1.SUBDEPTYN as subDeptYn
        	FROM
        		TBL_NOTI_EMERGENCY_PERMISSION T1
        	JOIN
@@ -526,13 +530,13 @@
        		(T1.USER_TYPE = 'JIKWI' OR T1.USER_TYPE = 'JIKCHEK')
        	)
        	
-       	ORDER BY REGDATE
+       	ORDER BY REGDATE DESC
 		]]>
 	</select>
 	
-	<select id="EzNotificationDAO.selectPermission" parameterClass="Map" resultClass="boolean">
+	<select id="EzNotificationDAO.selectEmergencyPermission" parameterClass="Map" resultClass="string">
 		SELECT
-			COUNT(*)
+			PERMISSION_CODE
 		FROM
 			TBL_NOTI_EMERGENCY_PERMISSION
 		WHERE
@@ -555,14 +559,28 @@
 		</isNotEqual>
 	</select>
 	
-	<insert id="EzNotificationDAO.addPermission" parameterClass="Map">
+	<insert id="EzNotificationDAO.addEmergencyPermission" parameterClass="Map">
 	INSERT INTO
-		TBL_NOTI_EMERGENCY_PERMISSION (CN, DEPTID, JOBID, ROLEID, USER_TYPE, COMPANY_ID, TENANT_ID, REGDATE)
+		TBL_NOTI_EMERGENCY_PERMISSION (CN, DEPTID, JOBID, ROLEID, USER_TYPE, COMPANY_ID, TENANT_ID, REGDATE, SUBDEPTYN)
 	VALUES
-			(#cn#, #deptId#, #jobId#, #roleId#, #userType#, #companyId#, #tenantId#, #nowDate#)
+			(#cn#, #deptId#, #jobId#, #roleId#, #userType#, #companyId#, #tenantId#, #nowDate#, #subDeptYn#)
 	</insert>
 	
-	<delete id="EzNotificationDAO.deletePermission" parameterClass="Map">
+	<update id="EzNotificationDAO.updateEmergencyPermission" parameterClass="Map">
+		UPDATE
+    		TBL_NOTI_EMERGENCY_PERMISSION
+    	SET
+    		REGDATE = #nowDate#,
+    		SUBDEPTYN = #subDeptYn#
+    	WHERE
+    		PERMISSION_CODE = #permissionCode#
+    	AND
+    		COMPANY_ID = #companyId# 
+    	AND
+    		TENANT_ID = #tenantId# 
+	</update>
+	
+	<delete id="EzNotificationDAO.deleteEmergencyPermission" parameterClass="Map">
 	DELETE FROM
 		TBL_NOTI_EMERGENCY_PERMISSION
 	WHERE
@@ -694,13 +712,25 @@
 		<isEqual  property="userType" compareValue="DEPT">
 			TBL_NOTI_EMERGENCY_PERMISSION
 		WHERE
-			CN = #deptId#
+			USER_TYPE = #userType#
 		AND
 			COMPANY_ID = #companyId#
 		AND
 			TENANT_ID = #tenantId#
 		AND
-			USER_TYPE = #userType#
+		(
+			 (CN = #deptId#
+				AND
+			  SUBDEPTYN = 'N')
+	     OR
+			(<iterate prepend="CN IN " property="deptPathList" open="(" conjunction="," close=")">
+					<![CDATA[
+						#deptPathList[]#
+					]]>
+				</iterate>
+			AND
+				SUBDEPTYN = 'Y') 
+		)
 		</isEqual>
 		
 		<isEqual  property="userType" compareValue="JIKWI">

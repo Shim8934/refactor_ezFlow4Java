@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -359,7 +360,7 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 	}
 
 	@Override
-	public String getEmergencyPermissionList(String useLang, String companyId, int tenantId) throws Exception {
+	public String getEmergencyPermissionList(String useLang, Locale locale, String companyId, int tenantId) throws Exception {
 		logger.debug("getEmergencyPermissionList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -377,19 +378,23 @@ public class EzNotificationServiceImpl implements EzNotificationService {
         	String gubun = "";
     		switch (vo.getUserType()) {
 			case "PERSON":
-				gubun = useLang.equals("1") ? "사원" : "Employee"; 
+				gubun = egovMessageSource.getMessage("ezNotification.hth91", locale);
 				break;
 			case "DEPT":
-				gubun = useLang.equals("1") ? "부서" : "Department";
+				if (vo.getSubDeptYn().equals("Y")) {
+					gubun = egovMessageSource.getMessage("ezNotification.hth92", locale);
+				} else {
+					gubun = egovMessageSource.getMessage("ezNotification.hth93", locale);
+				}
 				break;
 			case "JIKWI":
-				gubun = useLang.equals("1") ? "직위" : "Title";
+				gubun = egovMessageSource.getMessage("ezNotification.hth94", locale);
 				break;
 			case "JIKCHEK":
-				gubun = useLang.equals("1") ? "직책" : "Role";
+				gubun = egovMessageSource.getMessage("ezNotification.hth95", locale);
 				break;
 			case "GROUP":
-				gubun = useLang.equals("1") ? "권한그룹" : "Permission Group";
+				gubun = egovMessageSource.getMessage("ezNotification.hth96", locale);
 				break;
 			}
         	result.append("<VALUE>" + gubun + "</VALUE>");
@@ -399,6 +404,7 @@ public class EzNotificationServiceImpl implements EzNotificationService {
            	result.append("<DATA4>" + commonUtil.cleanValue(vo.getDeptId()) + "</DATA4>");
             result.append("<DATA5>" + commonUtil.cleanValue(vo.getJobId()) + "</DATA5>");
             result.append("<DATA6>" + commonUtil.cleanValue(vo.getRoleId()) + "</DATA6>");
+            result.append("<DATA7>" + commonUtil.cleanValue(vo.getSubDeptYn()) + "</DATA7>");
         	result.append("</CELL>");
         	result.append("<CELL>");
         	if (useLang.equals("1")) {
@@ -439,8 +445,8 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 	}
 
 	@Override
-	public void addPermission(List<EmergencyNotiPermissionVO> permissionList, int tenantId) throws Exception {
-		logger.debug("addPermission started");
+	public void addEmergencyPermission(List<EmergencyNotiPermissionVO> permissionList, int tenantId) throws Exception {
+		logger.debug("addEmergencyPermission started");
 		
 		for (int i = 0; i < permissionList.size(); i ++) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -450,6 +456,7 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 			map.put("deptId", permissionList.get(i).getDeptId());
 			map.put("jobId", permissionList.get(i).getJobId());
 			map.put("roleId", permissionList.get(i).getRoleId());
+			map.put("subDeptYn", permissionList.get(i).getSubDeptYn());
 			String companyId = permissionList.get(i).getCompanyId();
 			if (permissionList.get(i).getUserType().equals("DEPT")) {
 				companyId = ezNotificationDAO.selecetCompanyIdByDeptId(map);
@@ -457,17 +464,20 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 			
 			map.put("companyId", companyId);
 			map.put("nowDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
-			boolean isExist = ezNotificationDAO.selectPermission(map);
-			if (!isExist) {
-				ezNotificationDAO.addPermission(map);
+			String permissionCode = ezNotificationDAO.selectEmergencyPermission(map);
+			if (permissionCode == null) {
+				ezNotificationDAO.addEmergencyPermission(map);
+			} else {
+				map.put("permissionCode", permissionCode);
+				ezNotificationDAO.updateEmergencyPermission(map);
 			}
 		}
 		
-		logger.debug("addPermission ended");
+		logger.debug("addEmergencyPermission ended");
 	}
 
 	@Override
-	public void deletePermission(List<EmergencyNotiPermissionVO> permissionList, String companyId, int tenantId) throws Exception {
+	public void deleteEmergencyPermission(List<EmergencyNotiPermissionVO> permissionList, String companyId, int tenantId) throws Exception {
 		logger.debug("deletePermission started");
 		
 		for (int i = 0; i < permissionList.size(); i ++) {
@@ -475,7 +485,7 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 			map.put("companyId", companyId);
 			map.put("tenantId", tenantId);
 			map.put("permissionCode", permissionList.get(i).getPermissionCode());
-			ezNotificationDAO.deletePermission(map);
+			ezNotificationDAO.deleteEmergencyPermission(map);
 		}
 		
 		logger.debug("deletePermission ended");

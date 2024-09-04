@@ -133,10 +133,6 @@
 	            orgTabButton_onClick(); // 디폴트로 조직도 표출
 	            ChangeListView_onClick(getOrganListType());
 	            
-	            document.getElementById("admin_OK").disabled = true;
-	            document.getElementById("admin_NO").disabled = true;
-		        document.getElementById("admin_OK").checked = false;
-		        document.getElementById("admin_NO").checked = true;
 	        }
 	
 	        function MakeXMLString(pStr) {
@@ -893,11 +889,12 @@
 		                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
 		                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
 		                    pparsingXML = pparsingXML + "<DATA9></DATA9>";
+		                    pparsingXML = pparsingXML + "<DATA10>N</DATA10>";
 		                    
 							if (primary == "1") { // 부서이름 다국어 처리
-								pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + "</VALUE>";
+								pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + " <spring:message code='ezNotification.hth69' /></VALUE>";
 							} else {
-								pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME2")) + "</VALUE>";
+								pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME2")) + " <spring:message code='ezNotification.hth69' /></VALUE>";
 							}
 							pparsingXML = pparsingXML + "</CELL></ROW>";
 							
@@ -971,7 +968,8 @@
 				                    pparsingXML = pparsingXML + "<DATA7><![CDATA["+ strRoleID.trim() + "]]></DATA7>";
 				                    pparsingXML = pparsingXML + "<DATA8>" + strId + strDeptID.trim() + strJobID.trim() + strRoleID.trim() + "</DATA8>";
 				                    pparsingXML = pparsingXML + "<DATA9>" + companyId + "</DATA9>";
-		                            
+				                    pparsingXML = pparsingXML + "<DATA10>N</DATA10>";
+				                    
 				                    var deptJobRoleContent = "";
 									if (primary == "1") {
 										deptJobRoleContent += strDeptNM.trim();
@@ -1047,11 +1045,12 @@
 			                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
 			                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
 			                    pparsingXML = pparsingXML + "<DATA9></DATA9>";
+			                    pparsingXML = pparsingXML + "<DATA10>N</DATA10>";
 			                    
 								if (primary == "1") { // 부서이름 다국어 처리
-									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + "</VALUE>";
+									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + " <spring:message code='ezNotification.hth69' />" + "</VALUE>";
 								} else {
-									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME2")) + "</VALUE>";
+									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME2")) + " <spring:message code='ezNotification.hth69' />" + "</VALUE>";
 								}
 								pparsingXML = pparsingXML + "</CELL></ROW>";
 								
@@ -1125,7 +1124,8 @@
     		                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
     		                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
     		                    pparsingXML = pparsingXML + "<DATA9>" + topid + "</DATA9>";
-        	                    
+    		                    pparsingXML = pparsingXML + "<DATA10>N</DATA10>";
+    		                    
 								if (primary == "1") { // 직위이름 다국어 처리
 									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + MakeXMLString(arrRows[i].getAttribute("DISPLAYNAME")) + "</VALUE>";
 								} else {
@@ -1203,6 +1203,8 @@
     		                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
     		                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
     		                    pparsingXML = pparsingXML + "<DATA9>" + topid + "</DATA9>";
+    		                    pparsingXML = pparsingXML + "<DATA10>N</DATA10>";
+    		                    
 								if (primary == "1") { // 직책이름 다국어 처리
 									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + MakeXMLString(arrRows[i].getAttribute("DISPLAYNAME")) + "</VALUE>";
 								} else {
@@ -1278,8 +1280,9 @@
 			                    pparsingXML = pparsingXML + "<DATA7></DATA7>";
 			                    pparsingXML = pparsingXML + "<DATA8>" + groupID + "</DATA8>";
 			                    pparsingXML = pparsingXML + "<DATA9>" + topid + "</DATA9>";
+			                    pparsingXML = pparsingXML + "<DATA10>N</DATA10>";
 			                    
-	                            pparsingXML = pparsingXML + "<VALUE>권한그룹 : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE><spring:message code='ezOrgan.zNo001' /> : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 	
@@ -1596,8 +1599,16 @@
                     pparsingXML = pparsingXML + "<DATA5></DATA5>";
                     pparsingXML = pparsingXML + "<DATA6></DATA6>";
                     pparsingXML = pparsingXML + "<DATA7></DATA7>";
-                    pparsingXML = pparsingXML + "<DATA8></DATA8>";
-                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+                    pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(strId) + "</DATA8>";
+                    pparsingXML = pparsingXML + "<DATA9></DATA9>";
+                    pparsingXML = pparsingXML + "<DATA10>N</DATA10>";
+                    
+                    if (primary == "1") { // 부서이름 다국어 처리
+						pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + " <spring:message code='ezNotification.hth69' />" + "</VALUE>";
+					} else {
+						pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME2")) + " <spring:message code='ezNotification.hth69' />" + "</VALUE>";
+					}
+                    
                     pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
                     Resultxml = loadXMLString(pparsingXML2);
 
@@ -1895,10 +1906,26 @@
 				if (arrRows == "") {
 					return;
 				} else {
-					document.getElementById("admin_OK").disabled = true;
-					document.getElementById("admin_OK").checked = false;
-					document.getElementById("admin_NO").disabled = true;
-					document.getElementById("admin_NO").checked = true;
+					if (arrRows[0].getAttribute("DATA4") == "DEPT") { // 부서, 회사권한
+						document.getElementById("admin_OK").disabled = false;
+						document.getElementById("admin_NO").disabled = false;
+						var subDeptYn = arrRows[0].getAttribute("DATA10");
+
+						if (subDeptYn == "Y") { // _data10값은 하위부서 허용, 불가 여부 세팅값
+							document.getElementById("admin_OK").checked = true;
+							document.getElementById("admin_NO").checked = false;
+						} else {
+							document.getElementById("admin_OK").checked = false;
+							document.getElementById("admin_NO").checked = true;
+							arrRows[0].setAttribute("DATA10", "N");
+						}
+					} else {
+						document.getElementById("admin_OK").disabled = true;
+						document.getElementById("admin_OK").checked = false;
+						document.getElementById("admin_NO").disabled = true;
+						document.getElementById("admin_NO").checked = true;
+					}
+
 				}
 			}
 	        
@@ -1929,13 +1956,15 @@
 				if (arrRows == "") {
 					return;
 				} else {
-					/*
 					for (var i = 0; i < arrRows.length; i++) {
 						if (arrRows[i].getAttribute("DATA4") == "DEPT") {
-							arrRows[i].setAttribute("DATA5", checkFlag);
+							arrRows[i].setAttribute("DATA10", checkFlag);
+							var deptContent = "<spring:message code='ezEmail.t15' /> "
+							deptContent += primary == "1" ? arrRows[i].getAttribute("DATA2") : arrRows[i].getAttribute("DATA3");
+							deptContent += checkFlag == "Y" ? " " + '<spring:message code="ezNotification.hth68"/>' : " " + '<spring:message code="ezNotification.hth69"/>'; 
+							arrRows[i].querySelector('td').textContent = deptContent;
 						}
 					}
-					*/
 				}
 			}
 	        
@@ -1963,6 +1992,7 @@
 					var jobId = listviewSelected[i].getAttribute("data6");
 					var roleId = listviewSelected[i].getAttribute("data7");
 					var paramCompanyId = listviewSelected[i].getAttribute("data9");
+					var subDeptYn = listviewSelected[i].getAttribute("data10");
 					
 					dataObj.cn = cn;
 					dataObj.displayName = name;
@@ -1972,12 +2002,13 @@
 					dataObj.jobId = jobId;
 					dataObj.roleId = roleId;
 					dataObj.companyId = paramCompanyId;
+					dataObj.subDeptYn = subDeptYn;
 					data.push(dataObj); 
 				}
 	
 				$.ajax({
 					type : "POST",
-		        	url : "/admin/ezNotification/addPermission.do",
+		        	url : "/admin/ezNotification/addEmergencyPermission.do",
 		        	async : true,
 		        	data : JSON.stringify(data),
 		        	contentType:"application/json; charset=utf-8",
