@@ -1515,8 +1515,8 @@ public class EzNewPortalGWController {
 			int limit = 6; // 한 페이지에 뿌려지는 리스트 개수 // 다르게 처리할 수 있는 방법 찾아보기
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
-			String deptId = info.getDeptId();
 			String userId = request.getParameter("userId");
+			String deptId = request.getParameter("deptId");
 
 			// 2024-05-17 김유진 - 퀵링크 list, cnt 가져오기
 			Map<String, Object> map = ezNewPortalService.getQuickLinkList(companyId, tenantId, page, limit, userId, deptId);
@@ -4215,9 +4215,11 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
-			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId(), info.getDeptID());
+			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, companyId, info.getTenantId(), deptId);
 			
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int listCount = list.size();

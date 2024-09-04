@@ -520,22 +520,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 
-		String companyId = userInfo.getCompanyID();
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
-		
-		model.addAttribute("list", resultList);
-		model.addAttribute("companyId", companyId);
-
 		logger.debug("managePoll ended");
 		return "admin/ezPersonal/personalManagePoll";
 	}
@@ -822,20 +806,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		String noneActiveX = config.getProperty("NONEACTIVEX");
 		String useEditor = config.getProperty("EDITOR");
-		String companyId = userInfo.getCompanyID();
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
-		
-		model.addAttribute("companyId", companyId);
-		model.addAttribute("list", resultList);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useEditor", useEditor);
 

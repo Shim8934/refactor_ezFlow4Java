@@ -35,6 +35,7 @@ import javax.mail.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -120,6 +121,8 @@ import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.util.MapTimeZoneCache;
+
+import static egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 
 /** 
  * @Description [Controller] 스케쥴
@@ -1932,16 +1935,19 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", loginVO.getTenantId());
 		
 		loginVO = commonUtil.userInfo(loginCookie);
-
-        if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "c;k")) {
-        	pCompanyAdmin = "Y";
-        	pDeptAdmin = "Y";
-        }
-		if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "g")) {
-        	pDeptAdmin = "Y";
-        }
-		if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "v")) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(loginVO.getId(), loginVO.getTenantId());
+		
+		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER, companyID)) {
 			pCompanyAdmin = "Y";
+			pDeptAdmin = "Y";
+		} else {
+			if (organAuth.isAuth(AdminAuth.DEPT_MANAGER, loginVO.getDeptID())) {
+				pDeptAdmin = "Y";
+			}
+
+			if (organAuth.isAuth(AdminAuth.SCHEDULE_MANAGER, companyID)) {
+				pCompanyAdmin = "Y";
+			}
 		}
 
         String _defaultid = request.getParameter("defaultid");
@@ -2087,10 +2093,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 					
 					//겸직일정
 					for (ScheduleCumulerVO vo : cList) {
-						if (loginVO.getDeptID().equals(vo.getDeptId())) {
+						String deptId = vo.getDeptId();
+						if (loginVO.getDeptID().equals(deptId)) {
 							continue;
-						} else {
-							strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
+						} else if ("Y".equals(pCompanyAdmin) || organAuth.isAuth(AdminAuth.DEPT_MANAGER, deptId)){
+							strOwnerID.append("<option value='2;;" + deptId + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
 							count++;
 						}
 	            	}
