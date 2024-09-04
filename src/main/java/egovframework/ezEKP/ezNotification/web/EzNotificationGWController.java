@@ -572,7 +572,7 @@ public class EzNotificationGWController {
 			String companyId = request.getParameter("companyId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
-			Locale locale = info.getLocale(); 
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
 			
 			String permissionListXml = ezNotificationService.getEmergencyPermissionList(commonUtil.getPrimaryData(info.getLang(), tenantId), locale, companyId, tenantId);
 			
