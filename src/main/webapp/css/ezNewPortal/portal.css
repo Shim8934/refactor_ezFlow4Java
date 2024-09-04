@@ -180,6 +180,7 @@ header{height:60px; background-color:#ffffff; box-sizing:border-box; position:re
 .util li span.util_logout{background-image:url(../../images/ezNewPortal/util_logout.svg);}
 .util li span.util_quick_menu{background-image:url(../../images/ezNewPortal/util_quick_menu.svg); background-size:18px 18px;}
 .util li span.util_admin{background-image:url(../../images/ezNewPortal/util_admin.svg); background-size:20px 22px;}
+.util li span.util_messenger {background-image: url(../../images/ezNewPortal/util_messenger.svg); background-size: 20px 21px; background-position: center !important;}
 
 .util li span.util_profile{display:inline-block; width:28px; height:28px; margin:16px 30px 0 20px; position:relative;}
 .util li span.util_profile:before{content:""; position:absolute; width:1px; height:16px; background:#DDDDDD; left:-20px; top:6px; border-radius:1px;}
@@ -198,6 +199,7 @@ header{height:60px; background-color:#ffffff; box-sizing:border-box; position:re
 .util li span.util_employee_search:hover{background-image:url(../../images/ezNewPortal/util_employee_search_hover.svg);}
 .util li span.util_alarm:hover{background-image:url(../../images/ezNewPortal/util_alarm_hover.svg);}
 .util li span.util_quick_menu:hover{background-image:url(../../images/ezNewPortal/util_quick_menu_hover.svg);}
+.util li span.util_messenger:hover{background-image:url(../../images/ezNewPortal/util_messenger_hover.svg);}
 .employee_search span:hover:before{border-color:#5FA5EE;}
 .employee_search span:hover:after{background:#5FA5EE;}
 
@@ -859,7 +861,7 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 .info_btn .info_logout:hover{background:#A8B6C7;}
 
 /* time_check */
-.time_check{height:55px; margin:0px 20px; padding:0px; background:#F4F4F4; border-radius:5px; box-sizing:border-box;}
+.time_check{height:55px; margin:0px 20px; padding:0px; background:#F4F4F4 !important; border-radius:5px; box-sizing:border-box;}
 .presentTime{float:left; width:calc(100% - 160px); height:55px; margin:0px; padding:0px;}
 .presentTime .timeTxt{margin:0px; padding:0px; text-align:center; height:55px; line-height:55px;}
 .presentTime .timeTxt span{color:#333333; font-size:20px; font-weight:500; padding-left:20px;}
@@ -1413,7 +1415,6 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 /*#theme3Body .noti_portlet_list .notiLI .noti_text{margin-top:5px; margin-bottom:35px;}*/
 
 #theme3Body .noti_portlet_list .notiLI dl{position:relative;}
-#theme3Body .noti_portlet_list .notiLI .noti_nodata{background-color:#f0f0f0 !important;}
 
 #theme3Body .bookmark > li{background-color:rgba(255,255,255,0.7);}
 
@@ -2430,3 +2431,5 @@ div.orbit img{border-radius:5px;}
 .skin span:hover{border-color:#388ce5 !important; color:#388ce5 !important;}
 
 #mainMenuListLeft.layer{background-color : rgba(0, 0, 0, 0) !important; border : none !important;}
+.set-body .btnpositionLayer a.imgbtn span:hover {color: #388ce5;}
+

@@ -204,7 +204,7 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 
 
 /* 근태 */
-.time_check{border:1px solid #444444; background:#272829;}
+.time_check{border:1px solid #444444; background:#272829 !important;}
 .presentTime{height:53px;}
 .presentTime .timeTxt{height:53px; line-height:53px;}
 .presentTime .timeTxt span{color:#fff;}
@@ -214,7 +214,13 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .main_time .timeCheckIn.commute_on{box-shadow:none;}
 .main_time .timeCheckOut{line-height:30px; border:1px solid #3C3C3C; background:#343638; box-shadow:none; color:#fff;}
 .main_time .timeCheckOut.commute_on{box-shadow:none;}
-
+#theme3Body .my_info_wrap .portal_setting:hover, #theme3Body .my_info_wrap .config_setting:hover {background: #404040;}
+.info_div > span:hover{background: #414346;}
+.info_btn .info_logout:hover {background: #414346;}
+.main_time .timeCheckIn.commute_on{background: #1e1e20; border: 1px solid #6e6e6e;}
+.main_time .timeCheckIn.lateIn{color: #fff;}
+.main_time .timeCheckOut.commute_on{background: #1e1e20; border: 1px solid #6e6e6e;}
+.main_time .timeCheckOut.in{color: #fff;}
 
 /* 카운트포틀릿 */
 .writebannerTop li:hover{box-shadow:none;}
@@ -226,6 +232,7 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .writebannerTop li:hover{border-color:#4D4D4D; background-color:#343434;}
 .writebannerTop li:hover .count{color:#fff;}
 .writebannerTop li:hover .writebannerIcon .iconText:before{display:none;}
+#theme3Body .writebanner_rightContents{background: #1e1e20}
 
 
 /* 메일 */
@@ -253,7 +260,6 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .noti_portlet_list .notiLI .name{color:#B5B5B5;}
 .noti_portlet_list .notiLI .date{color:#B5B5B5;}
 .noti_portlet_list .notiLI .noti_nodata{background:url(../../images/ezNewPortal/noti_nodata.svg) no-repeat center / 34px 34px !important; background-color:transparent !important; border-color:#444444;}
-
 
 /* 게시판A타입 */
 .portlet .board_Atype .portlet_list li dl dd .title{color:#F3F3F3;}
@@ -332,7 +338,7 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 
 
 /* 그룹웨어 */
-.bannerText dt.bText span{background:#000000; color:#F3F3F3;}
+.bannerText dt.bText span{background:#1e1e1e; color:#F3F3F3;}
 .bannerText dt.sText{color:#F3F3F3;}
 .bannerText dd.bannerBtn{color:#F3F3F3; border-color:#3C3C3C; background-color:#343638; background-image:url(../../images/ezNewPortal/skin/dark/bannerBtn_arrow.png);}
 
@@ -492,3 +498,25 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .urgent_cont ul li p{color:#fff;}
 .noti_bot_btn span{background:#454647; color:#fff;}
 .noti_company_content{color:#eb0909;}
+
+
+#set-body{background-color: #272829;}
+.set-head h1{color: #fff;}
+.set-tab ul li.on{background: #373737; color: #2196f3; border: 1px solid #2196f3; box-sizing: border-box;}
+.set-tab ul li{background: #353638; color: #ffffff;}
+.ui-portlet-span{color: #fff;}
+.set-body h3{color: #fff;}
+.set-body .btnpositionLayer{background: #37383a; border-top: 1px solid #424242}
+.form_set.default li .form_name{color: #fff;}
+.form_set.theme li span.form_name{color: #fff; border-top: 1px solid #565656;}
+.ui-portlet{background: #353638; border: none;}
+.set-body h3 .cont_slide_check label{color: #fff;}
+.set-body .btnpositionLayer a.imgbtn span{color: #ffffff; background: #37383a;border-radius: 4px;}
+.set-body .btnpositionLayer a.imgbtn{border-radius: 5px;}
+.set-head{background:#363839}
+.urgent_cont input[type="text"], .urgent_cont textarea{border: none; background: #3d3f40;}
+
+.util li span.util_messenger{background-image:url(../../images/ezNewPortal/skin/dark/util_messenger.svg)}
+.util li span.util_messenger:hover{background-image:url(../../images/ezNewPortal/skin/dark/util_messenger_hover.svg);}
+.form_set.theme li{border: 1px solid #565656; background: #393a3b;}
+.form_set.default li .form_image{border: 1px solid #797979;}
