@@ -343,7 +343,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getParameter("companyId") != null) {
 			companyId = request.getParameter("companyId");
 		} else {
-			companyId = auth.getCompanyID();
+			companyId = "";
 		}
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(auth.getPrimary(), auth.getTenantId());

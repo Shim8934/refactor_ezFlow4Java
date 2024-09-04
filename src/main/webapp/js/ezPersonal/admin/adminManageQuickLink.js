@@ -1,9 +1,10 @@
 function makeList(com) {
+	var companyID = com || document.getElementById('ListCompany').value;
 	$.ajax({
 		url : "/admin/ezPersonal/getQuickLinkList.do",
 		async : false,
 		data:{
-			companyID : com
+			companyID : companyID
 		},
 		dataType : "JSON",
 		success : function(result) {
