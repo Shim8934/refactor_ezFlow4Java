@@ -181,11 +181,8 @@ header{height:60px; background-color:#ffffff; box-sizing:border-box; position:re
 .util li span.util_logout{background-image:url(../../images/ezNewPortal/util_logout.svg);}
 .util li span.util_quick_menu{background-image:url(../../images/ezNewPortal/util_quick_menu.svg); background-size:18px 18px;}
 .util li span.util_admin{background-image:url(../../images/ezNewPortal/util_admin.svg); background-size:20px 22px;}
-<<<<<<< HEAD
 .util li span.util_messenger {background-image: url(../../images/ezNewPortal/util_messenger.svg); background-size: 20px 21px; background-position: center !important;}
-=======
 .util li span.util_help{background-image:url(../../images/ezNewPortal/util_help.svg); background-size:12px 20px;}
->>>>>>> 87fb9c9d9ba53b4fef10771c083043b5036ca7f2
 
 .util li span.util_profile{display:inline-block; width:28px; height:28px; margin:16px 30px 0 20px; position:relative;}
 .util li span.util_profile:before{content:""; position:absolute; width:1px; height:16px; background:#DDDDDD; left:-20px; top:6px; border-radius:1px;}
@@ -205,11 +202,8 @@ header{height:60px; background-color:#ffffff; box-sizing:border-box; position:re
 .util li span.util_employee_search:hover{background-image:url(../../images/ezNewPortal/util_employee_search_hover.svg);}
 .util li span.util_alarm:hover{background-image:url(../../images/ezNewPortal/util_alarm_hover.svg);}
 .util li span.util_quick_menu:hover{background-image:url(../../images/ezNewPortal/util_quick_menu_hover.svg);}
-<<<<<<< HEAD
 .util li span.util_messenger:hover{background-image:url(../../images/ezNewPortal/util_messenger_hover.svg);}
-=======
 .util li span.util_help:hover{background-image:url(../../images/ezNewPortal/util_help_hover.svg);}
->>>>>>> 87fb9c9d9ba53b4fef10771c083043b5036ca7f2
 .employee_search span:hover:before{border-color:#5FA5EE;}
 .employee_search span:hover:after{background:#5FA5EE;}
 
@@ -2441,10 +2435,6 @@ div.orbit img{border-radius:5px;}
 .skin span:hover{border-color:#388ce5 !important; color:#388ce5 !important;}
 
 #mainMenuListLeft.layer{background-color : rgba(0, 0, 0, 0) !important; border : none !important;}
-<<<<<<< HEAD
 .set-body .btnpositionLayer a.imgbtn span:hover {color: #388ce5;}
 
-=======
-
 .sscheduleUL .Tcollaborate {background-color: rgba(63, 81, 181, 0.62); border: 1px solid rgba(20, 81, 181, 0.16);}
->>>>>>> 87fb9c9d9ba53b4fef10771c083043b5036ca7f2
