@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="${util.addVer('/css/jquery.ui.all.css')}"/>
     <link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}"/>
     <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
-    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">	
+    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('/css/organ_tree.css')}" type="text/css">
     <style>
     	.mainlist #MsgToList_THEAD #MsgToList_TH {
     		height: 0px;
