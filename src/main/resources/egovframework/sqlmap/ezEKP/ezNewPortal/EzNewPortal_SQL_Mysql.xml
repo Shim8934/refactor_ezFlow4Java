@@ -1987,7 +1987,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	<select id="ezNewPortal.getApprovalDoingListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(DOCINFO.docid)
+				COUNT(DISTINCT DOCINFO.docid)
 			FROM
 				TBL_APRDOCINFO AS DOCINFO
 			JOIN
@@ -2024,9 +2024,9 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		</isNotEmpty>
 			  )
 			AND
-				DOCINFO.functiontype in ('002', '005')
+				DOCINFO.functiontype in ('002', '005', '006', '015')
 			AND
-				LINEINFO.aprstate in ('002', '005')
+				LINEINFO.aprstate in ('002', '005', '006', '015')
 			AND
 				DOCINFO.docstate not in ('015')   
 			AND
