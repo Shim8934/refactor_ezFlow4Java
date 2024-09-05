@@ -2200,6 +2200,12 @@ function MailOptionView(obj) {
         document.getElementById("layer_popup").style.left = document.documentElement.clientWidth - 260 + "px";
         document.getElementById("layer_popup").style.top = "100px";
         document.getElementById("layer_popup").style.display = "";
+        
+        if (g_szRootFolderName === strLangKDH01) {
+            //20240827 김대현 수신확인 메뉴를 클릭시 필터링은 숨김
+            document.getElementById("selectViewList").style.display="none"; 
+        }
+        
         //obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
         obj.setAttribute("class", "icon16 btn_onarrow_down");
         obj.setAttribute("mode", "on");

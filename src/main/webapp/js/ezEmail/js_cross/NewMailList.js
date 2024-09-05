@@ -202,7 +202,7 @@ function drag(ev) {
 var xmlhttp_MailReceiverList = null;
 function MakeListInfoHTML(ConentObject) {
     if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST"
-    	 || p_ListorderValue == "INTERNAL" || p_ListorderValue == "EXTERNAL" || p_ListorderValue == "SECUREMAIL" || p_ListorderValue == "IMPORTANT") {
+    	 || p_ListorderValue == "INTERNAL" || p_ListorderValue == "EXTERNAL" || p_ListorderValue == "SECUREMAIL" || p_ListorderValue == "IMPORTANT" || p_ListorderValue == "ATTACH") {
     	try {
             var XmlList = GetList_HTTP.responseXML;
             
@@ -972,7 +972,9 @@ function GetListInfo(HeaderObject, ContentObject) {
     var secureMailFilter = document.getElementById("select").value == "SECUREMAIL" ? 1 : 0;
     createNodeAndInsertText(xmlpara, objNode, "SECUREMAILFILTER", secureMailFilter);
     createNodeAndInsertText(xmlpara, objNode, "TAGNAME", window.tagName ? tagName : "");
-
+    var attachFileFilter = document.getElementById("select").value === "ATTACH" ? 1 : 0;
+    createNodeAndInsertText(xmlpara,objNode, "ATTACHFILEFILTER", attachFileFilter);
+    
     var _url = "/ezEmail/mailGetList.do";
 
     if (typeof (shareId) != "undefined" && shareId != "") {
@@ -1230,6 +1232,11 @@ function on_changeView(listtypeValue) {
         	p_ListorderValue = "IMPORTANT";
         	searchMode = true;
         	break;
+        case "ATTACH":
+            p_ListorderType = "ATTACH";
+            p_ListorderValue = "ATTACH";
+            searchMode = true;
+            break;
     }
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && p_ListorderValue != "RECEIV") {
         if (pPreviewShow_HOW == "H") {
