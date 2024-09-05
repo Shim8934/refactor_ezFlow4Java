@@ -23,7 +23,11 @@ nav .navUL li.on{color:#A20000;}
 .util li span.util_alarm:hover{background-image:url(../../images/ezNewPortal/skin/red/util_alarm.svg);}
 .util li span.util_alarm span{background:#FF0000;}
 .util li span.util_quick_menu:hover{background-image:url(../../images/ezNewPortal/skin/red/util_quick_menu.svg);}
+<<<<<<< HEAD
+.util li span.util_messenger:hover{background-image:url(../../images/ezNewPortal/skin/red/util_messenger_hover.svg);}
+=======
 .util li span.util_help:hover{background-image:url(../../images/ezNewPortal/skin/red/util_help_hover.svg);}
+>>>>>>> 87fb9c9d9ba53b4fef10771c083043b5036ca7f2
 
 
 .profile_div .btn_tab span{border-color:#D8A6A6; color:#A20000;}
@@ -115,8 +119,8 @@ nav .navUL li.on{color:#A20000;}
 .top_info_area ul li > span.mail{background-image:url(../../images/ezNewPortal/skin/red/info_mail.svg);}
 .top_info_area ul li > span.appr{background-image:url(../../images/ezNewPortal/skin/red/info_appr.svg);}
 .top_info_area ul li > span.board{background-image:url(../../images/ezNewPortal/skin/red/info_board.svg);}
-.top_info_area ul li > span em{color:#FF0000;}
-
+.top_info_area ul li > span em{color:#cd3838;}
+.weather_title .weatherPer li > span.text > span{color:#cd3838;}
 
 .info_div{background:#CD3838;}
 .info_div > span:hover{background:#A20000;}
@@ -203,7 +207,7 @@ nav .navUL li.on{color:#A20000;}
 
 
 #theme3Body .top_info_area_wrap{background:#fff;}
-#theme3Body .my_info_wrap{background:none; border:none; border-bottom:1px solid rgba(112,112,112,0.2); border-radius:0; box-shadow:none; padding-left:10px;}
+#theme3Body .my_info_wrap{background:none; border:none; border-radius: 12px; box-shadow:none; padding-left:10px; background: #f6f6f6}
 #theme3Body .my_info_wrap .portal_setting{border-color:#D8A6A6; color:#CD3838;}
 #theme3Body .my_info_wrap .config_setting{border-color:#D8A6A6; color:#CD3838;}
 #theme3Body .my_info_wrap .portal_setting:hover{border-color:#A20000; background:#FBF6F6;}
@@ -310,3 +314,12 @@ nav .navUL li.on{color:#A20000;}
 
 .employee_search span:hover:before{border-color:#A20000;}
 .employee_search span:hover:after{background:#A20000;}
+
+#theme3Body .top_info_area_wrap .top_info_toggle_btn{background: #fff url(../../images/ezNewPortal/theme3Img/info_toggle_btn.svg) no-repeat center; box-shadow: 4px 1px 8px rgb(0 0 0 / 6%)}
+
+.set-head{background:#F5F5F5}
+.set-tab ul li.on{background: #A20000;}
+.ui-portlet .switch input:checked + .slider{background: #A20000;}
+.set-body .btnpositionLayer a.imgbtn span:hover{color:#A20000 !important}
+.form_set.theme li.select:before, .form_set.default li.select .form_image:before{border: 1px solid #A20000;}
+.form_set.theme li.select:before, .form_set.default li.select .form_image:before{background: url(../../images/ezNewPortal/form_select_red.png) no-repeat center rgba(0,0,0,0.2);}

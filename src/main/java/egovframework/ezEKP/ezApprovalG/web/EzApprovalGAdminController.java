@@ -1177,12 +1177,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		String serverName = userInfo.getServerName();
-
-		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
-		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("serverName", serverName);
-		model.addAttribute("list", resultList);
 		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("apprGMCont ended.");
