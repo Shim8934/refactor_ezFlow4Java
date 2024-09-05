@@ -2024,9 +2024,9 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		</isNotEmpty>
 			  )
 			AND
-				DOCINFO.functiontype = '002'
+				DOCINFO.functiontype in ('002', '005')
 			AND
-				LINEINFO.aprstate = '002'
+				LINEINFO.aprstate in ('002', '005')
 			AND
 				DOCINFO.docstate not in ('015')   
 			AND
