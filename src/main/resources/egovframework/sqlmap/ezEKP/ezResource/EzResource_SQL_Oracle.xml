@@ -15,6 +15,7 @@
     <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
 	<typeAlias  alias="OrganUserVO"         						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
+	<typeAlias  alias="ResOccuVO" 								type="egovframework.ezEKP.ezResource.vo.ResOccuVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -284,6 +285,24 @@
 		<result property="memberNam"				column="MEMBER_NAM"			    columnIndex="3" nullValue=""/>
 		<result property="memberID"				    column="MEMBER_ID"				columnIndex="4" nullValue=""/>
 		<result property="accessLvl"				column="ACCESS_LVL"			    columnIndex="5" nullValue=""/>
+	</resultMap>
+	
+	<resultMap class="ResOccuVO"    	   id="resOccuVO">
+		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
+		<result property="count"				column="COUNT"					columnIndex="3"/>
+		<result property="usageTime"			column="USAGE_TIME"				columnIndex="4"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="5"/>
+	</resultMap>
+	
+	<resultMap class="ResOccuVO"    	   id="resOccuVO2">
+		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="3"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="4"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="5"/>
+		<result property="num"					column="NUM"					columnIndex="6"/>
+		<result property="pNum"					column="PNUM"					columnIndex="7" 		nullValue="0"/>
 	</resultMap>
 	
 	<!-- <procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
@@ -2594,5 +2613,97 @@
 				 and 
 				 	( a.member_id = #userID# or a.member_id = 'everyone' or a.member_id = #deptID#) )
 			 ]]>
+	</select>
+	
+	<select id="EzResourceDAO.getResOccuList" parameterClass="map" resultMap="resOccuVO">
+		<![CDATA[
+			SELECT
+				DISTINCT b.OWNERID,
+				b.BRD_NM,
+				b.COUNT,
+				b.USAGE_TIME,
+				a.COMPANYID
+			FROM
+				TBL_RS_SCHEDULE a
+			INNER JOIN
+				(SELECT 
+					e.OWNERID ,
+					brd_nm,
+					count(e.OWNERID) COUNT ,
+					SUM(ROUND((ENDDATE - STARTDATE)*24*60)) USAGE_TIME
+					FROM
+						TBL_RS_SCHEDULE e
+					JOIN
+						TBL_RS_BRD f
+					ON
+						e.OWNERID = f.BRD_ID
+					AND
+						e.TENANT_ID = f.TENANT_ID
+					WHERE
+						e.TENANT_ID = #tenantID#
+					AND
+						e.COMPANYID = #v_PCOMPANYID#
+					AND
+						e.APPROVEFLAG = '1'
+					AND
+						STARTDATE >= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						ENDDATE <= to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+					AND (e.NUM, e.OWNERID) NOT IN ( SELECT
+														c.NUM, c.OWNERID 
+													FROM
+														TBL_RS_SCHEDULEREPETITION c
+													WHERE
+														c.TENANT_ID = #tenantID#
+													AND
+														c.COMPANYID = #v_PCOMPANYID#
+													)
+					GROUP BY e.OWNERID , f.BRD_NM) b
+			ON
+				a.OWNERID = b.OWNERID
+			ORDER BY 
+				TO_NUMBER(b.OWNERID) ASC
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleListRepetiti2" parameterClass="Map" resultMap="resOccuVO2">
+		<![CDATA[
+			SELECT 
+				A.NUM ,
+            	PNUM ,
+            	A.OWNERID ,
+            	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+            	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+            	A.COMPANYID ,
+            	C.BRD_NM
+			FROM
+				TBL_RS_SCHEDULE A
+			JOIN
+				TBL_RS_SCHEDULERepetition B 
+			ON 
+				A.NUM = B.NUM
+			AND
+				A.TENANT_ID = B.TENANT_ID	
+			AND
+				A.OWNERID = B.OWNERID
+			LEFT JOIN
+				TBL_RS_BRD C
+			ON
+				A.OWNERID = C.BRD_ID			
+			WHERE
+				STARTDATE <= to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			AND
+				A.COMPANYID = #v_PCOMPANYID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND
+				REFLAG = '1'
+			AND
+				A.APPROVEFLAG = '1'				
+			AND
+				( to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME )
+			ORDER BY
+				TO_NUMBER(A.OWNERID), TO_NUMBER(A.NUM) ASC
+		]]>
 	</select>
 </sqlMap>

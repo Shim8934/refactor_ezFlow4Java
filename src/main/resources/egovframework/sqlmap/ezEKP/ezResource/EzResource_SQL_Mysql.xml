@@ -15,6 +15,7 @@
     <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
     <typeAlias  alias="OrganUserVO"         						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
+	<typeAlias  alias="ResOccuVO" 								type="egovframework.ezEKP.ezResource.vo.ResOccuVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO"       id="resGetAdmSubClsTreeVO">
 		<result property="brdID"				column="BRD_ID"					columnIndex="1"/>
@@ -284,6 +285,24 @@
 		<result property="memberNam"				column="MEMBER_NAM"			    columnIndex="3" nullValue=""/>
 		<result property="memberID"				    column="MEMBER_ID"				columnIndex="4" nullValue=""/>
 		<result property="accessLvl"				column="ACCESS_LVL"			    columnIndex="5" nullValue=""/>
+	</resultMap>
+	
+	<resultMap class="ResOccuVO"    	   id="resOccuVO">
+		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
+		<result property="count"				column="COUNT"					columnIndex="3"/>
+		<result property="usageTime"			column="USAGE_TIME"				columnIndex="4"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="5"/>
+	</resultMap>
+	
+	<resultMap class="ResOccuVO"    	   id="resOccuVO2">
+		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="3"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="4"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="5"/>
+		<result property="num"					column="NUM"					columnIndex="6"/>
+		<result property="pNum"					column="PNUM"					columnIndex="7" 		nullValue="0"/>
 	</resultMap>
 	
 	<!-- <parameterMap class="map" id="deptAccessLvlParam">
@@ -2476,5 +2495,93 @@
 					 ( a.member_id = #userID# or a.member_id = 'everyone' or a.member_id = #deptID# )
 				 )
 			 ]]>
+	</select>
+	
+	<select id="EzResourceDAO.getResOccuList" parameterClass="map" resultMap="resOccuVO">
+		<![CDATA[
+			SELECT
+				a.OWNERID,
+				b.BRD_NM,
+				COUNT(a.OWNERID) COUNT,
+				SUM(TIMESTAMPDIFF(minute, STARTDATE, ENDDATE)) USAGE_TIME,
+				a.COMPANYID
+			FROM
+				TBL_RS_SCHEDULE a
+			JOIN
+				TBL_RS_BRD b
+			ON
+				a.OWNERID = b.BRD_ID
+			AND
+				a.TENANT_ID = b.TENANT_ID
+			WHERE
+				a.TENANT_ID = #tenantID#
+			AND
+				a.COMPANYID = #v_PCOMPANYID#
+			AND
+				a.APPROVEFLAG = '1'
+			AND
+				b.BRD_GB = '2'
+			AND
+				(a.NUM, a.OWNERID) NOT IN ( SELECT
+												c.NUM, c.OWNERID
+											FROM
+												TBL_RS_SCHEDULEREPETITION c
+											WHERE
+												c.TENANT_ID = #tenantID#
+											AND
+												c.COMPANYID = #v_PCOMPANYID#
+											)
+			AND
+				STARTDATE >= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+			AND
+				ENDDATE <= STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T')
+			GROUP BY
+				a.OWNERID
+			ORDER BY
+				CAST(a.OWNERID AS UNSIGNED) ASC
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleListRepetiti2" parameterClass="Map" resultMap="resOccuVO2">
+		<![CDATA[
+			SELECT 
+				A.NUM ,
+            	PNUM ,
+            	A.OWNERID ,
+            	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+            	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+            	A.COMPANYID ,
+            	C.BRD_NM
+			FROM
+				TBL_RS_SCHEDULE A
+			JOIN
+				TBL_RS_SCHEDULERepetition B 
+			ON 
+				A.NUM = B.NUM
+			AND
+				A.TENANT_ID = B.TENANT_ID	
+			AND
+				A.OWNERID = B.OWNERID
+			LEFT JOIN
+				TBL_RS_BRD C
+			ON
+				A.OWNERID = C.BRD_ID			
+			WHERE
+				STARTDATE <= STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T')
+			AND
+				A.COMPANYID = #v_PCOMPANYID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND
+				REFLAG = '1'	
+			AND
+				A.APPROVEFLAG = '1'		
+			AND
+				( STR_TO_DATE(#v_PSTARTDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PSTARTDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
+			GROUP BY
+				A.NUM
+			ORDER BY
+				CAST(A.OWNERID AS UNSIGNED) ASC				
+		]]>
 	</select>
 </sqlMap>

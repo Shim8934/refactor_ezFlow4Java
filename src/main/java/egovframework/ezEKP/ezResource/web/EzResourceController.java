@@ -23,17 +23,28 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -64,6 +75,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
+import egovframework.ezEKP.ezResource.vo.ResOccuVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
@@ -607,6 +619,11 @@ public class EzResourceController extends EgovFileMngUtil {
 		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID()); 
 		logger.debug("adminFg="+adminFg);
 		
+		String adminCKFlag = "";
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k")) {
+			adminCKFlag = "Y";
+		}
+		
 		//brdNm = brdNm.replace("chr(38)", "&");
 		StringBuilder childBrdBld = new StringBuilder();
 		childBrdBld.append(ezResourceService.getItemList(loginCookie,brdID));
@@ -640,6 +657,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("startDay", startDay);
 		model.addAttribute("lang", lang);
 		model.addAttribute("lunarUse", lunarUse);
+		model.addAttribute("adminCKFlag", adminCKFlag);
 		
 		logger.debug("viewResList2 End");
 		return "/ezResource/resViewResList2";
@@ -1275,6 +1293,11 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 		
+		String adminCKFlag = "";
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k")) {
+			adminCKFlag = "Y";
+		}
+		
 		/*if (req.getParameter("cuid") != null) {
 			cUserIDStr = req.getParameter("cuid");
 		}*/
@@ -1321,6 +1344,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("brdExplain", strBrdExplain);
 		model.addAttribute("timeZoneStr", timeZoneStr);
 		model.addAttribute("startDay", startDay);
+		model.addAttribute("adminCKFlag", adminCKFlag);
 		
 		return "/ezResource/resScheduleMain";
 	}
@@ -3016,5 +3040,145 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		logger.debug("checkApprovalFlag end");
 		return brdApproveFlag;
+	}
+	
+	@RequestMapping(value = "/ezResource/resourceOccupancy.do", method = RequestMethod.GET)
+	public String resourceOccupancy(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("resourceOccupancy Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("tenantId", tenantId);
+		
+		logger.debug("resourceOccupancy End");
+		return "ezResource/resOccupancy";
+	}
+	
+	@RequestMapping(value = "/ezResource/getResOccuList.do", method = RequestMethod.GET)
+	public String getResOccuList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		
+		String searchStartTime = request.getParameter("searchStartTime").substring(0, 10);
+		String searchEndTime = request.getParameter("searchEndTime").substring(0, 10);
+		int tenantID = commonUtil.userInfo(loginCookie).getTenantId();
+		String companyID = request.getParameter("pCompanyID");
+		String companyName = request.getParameter("pCompanyName");
+		String offset = commonUtil.userInfo(loginCookie).getOffset();
+		
+		List<ResOccuVO> getResOccuList = ezResourceService.getResOccuList(companyID, tenantID, searchStartTime, searchEndTime, offset);
+		long totalTime = 0;
+		if (getResOccuList.size() > 0) {
+			for (int i = 0; i < getResOccuList.size(); i++) {
+				totalTime += getResOccuList.get(i).getUsageTime();
+			}
+			
+			for (int i = 0; i < getResOccuList.size(); i++) {
+				double occu = (getResOccuList.get(i).getUsageTime() / (double)totalTime) * 100;
+				String occupancy = String.format("%.2f", occu) + "%";
+				getResOccuList.get(i).setOccupancy(occupancy);
+				getResOccuList.get(i).setCompanyName(companyName);
+			}
+		}
+		
+		model.addAttribute("getResOccuList", getResOccuList);
+		model.addAttribute("totalTime", totalTime);
+		return "json";
+	}
+	
+	@RequestMapping(value = "/ezResource/excelExportOut.do", method = {RequestMethod.POST, RequestMethod.GET})
+	@ResponseBody
+	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("excelExportOut started");
+		
+		String searchStartTime = request.getParameter("searchStartTime").substring(0, 10);
+		String searchEndTime = request.getParameter("searchEndTime").substring(0, 10);
+		int tenantID = commonUtil.userInfo(loginCookie).getTenantId();
+		String companyID = request.getParameter("pCompanyID");
+		String companyName = request.getParameter("pCompanyName");
+		String offset = commonUtil.userInfo(loginCookie).getOffset();
+		
+		List<ResOccuVO> getResOccuList = ezResourceService.getResOccuList(companyID, tenantID, searchStartTime, searchEndTime, offset);
+		long totalTime = 0;
+		if (getResOccuList.size() > 0) {
+			for (int i = 0; i < getResOccuList.size(); i++) {
+				totalTime += getResOccuList.get(i).getUsageTime();
+			}
+			
+			for (int i = 0; i < getResOccuList.size(); i++) {
+				double occu = (getResOccuList.get(i).getUsageTime() / (double)totalTime) * 100;
+				String occupancy = String.format("%.2f", occu) + "%";
+				getResOccuList.get(i).setOccupancy(occupancy);
+				getResOccuList.get(i).setCompanyName(companyName);
+			}
+		}
+		
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			HSSFSheet sheet;
+			HSSFCellStyle headerStyle= workbook.createCellStyle();
+		    headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		    headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		    headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		      
+		    HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		    bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		    bodyStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		    
+		    Row row;
+		    Cell cell;
+		    
+		    String pFileName = searchStartTime.replace("-", ".") + "~" + searchEndTime.replace("-", ".") + "_resList";
+			
+			sheet = workbook.createSheet("resList");
+			row = sheet.createRow(0);
+			
+			for (int i = 0; i < 6; i++) {
+				cell = row.createCell(i);
+				cell.setCellStyle(headerStyle);
+				cell.setCellValue(egovMessageSource.getMessage("ezResource.header.kwc" + (i + 1), locale));
+				sheet.autoSizeColumn(i);
+				sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 4096);
+			}
+			
+			for (int i = 0; i < getResOccuList.size(); i++) {
+				row = sheet.createRow(i + 1);
+				cell = row.createCell(0);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(getResOccuList.get(i).getCompanyName());
+				cell = row.createCell(1);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(getResOccuList.get(i).getBrdNm());
+				cell = row.createCell(2);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(getResOccuList.get(i).getCount());
+				cell = row.createCell(3);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(getResOccuList.get(i).getUsageTime());
+				cell = row.createCell(4);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(totalTime);
+				cell = row.createCell(5);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(getResOccuList.get(i).getOccupancy());
+				if (i == (getResOccuList.size() - 1) && getResOccuList.size() > 1) {
+					sheet.addMergedRegion(new CellRangeAddress(1, getResOccuList.size(), 4, 4));
+				}
+			}
+			
+			response.setContentType("application/ms-excel");
+			response.setCharacterEncoding("utf-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		    workbook.write(response.getOutputStream());
+		}
+		
+		logger.debug("excelExportOut ended");
 	}
 }
