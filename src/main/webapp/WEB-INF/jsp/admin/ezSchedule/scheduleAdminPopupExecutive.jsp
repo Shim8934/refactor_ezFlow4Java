@@ -90,6 +90,24 @@
 					document.getElementById("txtuser").value = retVal.split(":")[1];
 					userdeptid = retVal.split(":")[2];
 				}
+
+				if (userid != "") {
+					var xmlhttp = createXMLHttpRequest();
+					xmlhttp.open("POST", "/admin/ezSchedule/getSecretary.do?cn=" + userid + "&companyId=" + companyID, false);
+					xmlhttp.send();
+					var XmlNode = loadXMLString(xmlhttp.responseText);
+					var count = SelectNodes(XmlNode, "DATA/ROW").length;
+					if (count > 0) {
+						document.getElementById("ListSecretary").innerHTML = "";
+						for (var i = 0; i < count; i++) {
+							var newoption = new Option(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "SECRETARYNAME")[0]),
+									getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "SECRETARYID")[0]));
+							document.getElementById("ListSecretary").options[i] = newoption;
+						}
+					} else {
+						document.getElementById("ListSecretary").innerHTML = "";
+					}
+				}
 			}
 
 			function save_settings(flag) {
@@ -111,15 +129,15 @@
 					},
 					success : function(text){
 						if (flag == 1 && text.indexOf("CN") != -1) {
-							message = "이미 등록된 사용자입니다."
+							message = "<spring:message code='ezSchedule.lyj15' />";
 						}
 
 						if (flag != 1 && text.indexOf("CN") == -1) {
-							message = "등록되지 않은 사용자입니다."
+							message = "<spring:message code='ezSchedule.lyj16' />";
 						}
 					},
 					error : function(err){
-						alert("임원 리스트를 불러올때 오류발생");
+						alert("<spring:message code='ezSchedule.lyj17' />");
 					}
 				});
 				
@@ -156,7 +174,7 @@
 					},
 					success : function(text){
 						if (text == "success") {
-							alert("임원을 저장했습니다.");
+							alert("<spring:message code='ezSchedule.t4012' />");
 
 							if (ReturnFunction != null) {
 								ReturnFunction("OK");
@@ -167,7 +185,7 @@
 						}
 					},
 					error : function(err){
-						alert("임원을 저장하는 도중 오류발생");
+						alert("<spring:message code='ezSchedule.lyj18' />");
 					}
 				});
 			}

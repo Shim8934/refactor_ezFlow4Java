@@ -170,6 +170,7 @@
 
         function popup_executive_complete() {
             schedule_get_executiveList();
+            _RowObject = null;
         }
 
         function del_executive() {
@@ -220,7 +221,7 @@
         function priority_save() {
             var content = document.getElementById("contentlist").textContent;
             if (content == strLang263) {
-                alert("사용자를 등록해주세요.");
+                alert("<spring:message code='ezSchedule.lyj21' />");
                 return;
             }
             
@@ -245,10 +246,11 @@
                 xmlhttp.send(xmlpara);
 
                 if (xmlhttp.status == 200) {
-                    alert("저장되었습니다.");
+                    alert("<spring:message code='ezSchedule.t4012' />");
                     COMPANY_CHANGE();
+                    _RowObject = null;
                 } else {
-                    alert("순서를 저장하는 도중 오류발생");
+                    alert("<spring:message code='ezSchedule.lyj18' />");
                     return;
                 }
             }
@@ -256,6 +258,7 @@
 
         function priority_cancel() {
             COMPANY_CHANGE();
+            _RowObject = null;
         }
 
         function priority_up() {
@@ -324,7 +327,7 @@
         function start_search() {
             var keyword = document.getElementById("keyword");
             if (keyword.value.trim() == null || keyword.value.trim() == "") {
-                alert("검색어를 입력해주세요.");
+                alert("<spring:message code='ezSchedule.t8' />");
                 return;
             }
             
@@ -376,11 +379,11 @@
             <table style="width: 100%; background-color: #f8f8f8; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8;">
                 <tbody>
                     <tr>
-                        <th style="background-color: #f1f3f5; height: 26px; width:72px; border: 1px solid #e2e3e6;">사용자검색</th>
+                        <th style="background-color: #f1f3f5; height: 26px; width:72px; border: 1px solid #e2e3e6;"><spring:message code='ezSchedule.lyj19' /></th>
                         <td style=" border: 1px solid #e2e3e6;">
                             <input name="text" type="text" style="WIDTH:190px; height: 25px; margin-left:5px;" id="keyword" onkeypress="onkeydown_start_search(event)">
-                            <a class="imgbtn imgbck" style=" margin-bottom:0px;"><span onclick="start_search()">검색</span></a>
-                            <a class="imgbtn"><span onclick="javascript:reset();">재입력</span></a>
+                            <a class="imgbtn imgbck" style=" margin-bottom:0px;"><span onclick="start_search()"><spring:message code='ezSchedule.t24' /></span></a>
+                            <a class="imgbtn"><span onclick="javascript:reset();"><spring:message code='ezSchedule.lyj20' /></span></a>
                         </td>
                     </tr>
                 </tbody>

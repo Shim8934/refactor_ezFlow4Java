@@ -1104,6 +1104,7 @@ public class EzScheduleAdminController {
 		int tenantId = loginVO.getTenantId();
 
 		ezScheduleAdminService.scheduleDelExecutive(userId, companyId, tenantId);
+		ezScheduleService.deleteSecretary(userId, tenantId, companyId);
 	}
 
 	/**
@@ -1128,5 +1129,33 @@ public class EzScheduleAdminController {
 		}
 		
 		return "success";
+	}
+
+	/**
+	 * 관리자 일정관리 임원일정관리 비서리스트
+	 */
+	@RequestMapping(value = "/admin/ezSchedule/getSecretary.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String getSecretary(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		logger.debug("============ getSecretary started ============");
+
+		loginVO = commonUtil.userInfo(loginCookie);
+
+		String cn = request.getParameter("cn") != null ? request.getParameter("cn") : "" ;
+		String companyID = request.getParameter("companyId") != null ? request.getParameter("companyId") : "" ;
+
+		List<ScheduleSecretaryVO> sList = ezScheduleService.getSecretaryList(cn, loginVO.getTenantId(), companyID);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		for (ScheduleSecretaryVO secretary : sList) {
+			sb.append("<ROW>");
+			sb.append("<SECRETARYNAME>"+ secretary.getSecName() + "</SECRETARYNAME>");
+			sb.append("<SECRETARYID>" + secretary.getSecId() + "</SECRETARYID>");
+			sb.append("</ROW>");
+		}
+		sb.append("</DATA>");
+
+		return sb.toString();
 	}
 }
