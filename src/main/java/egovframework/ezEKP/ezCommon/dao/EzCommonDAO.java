@@ -1925,7 +1925,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.getPortletNameCompanyList", map);
 	}
 
-    /* 2023-11-22 조소정 - 포탈 > ㅣ기본 포틀릿명 중국어 버전 추가 */
+    /* 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 */
 	public void insertPortletNameChinese(Map<String, Object> map2) {
 		try {
 			String checkNameChinese = (String) select("EzCommonDAO.checkPortletNameChinese", map2);
