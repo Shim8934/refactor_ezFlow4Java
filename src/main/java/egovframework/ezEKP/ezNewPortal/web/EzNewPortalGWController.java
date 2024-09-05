@@ -1096,7 +1096,9 @@ public class EzNewPortalGWController {
 			
 			// 전체관리자, 회사관리자, 웹폴더관리자면 관리자 버튼이 나타나도록 추가 -> 관리자 안에서 웹폴더관리자는 웹폴더 관리만 나타나도록 수정
 			OrganAuth organAuth = commonUtil.makeOrganAuth(userId, tenantId);
-			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER) || organAuth.isAuth(AdminAuth.WEB_FOLDER_MANAGER)) {
+			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) 
+					|| organAuth.isAuth(AdminAuth.COMPANY_MANAGER, companyId) 
+					|| organAuth.isAuth(AdminAuth.WEB_FOLDER_MANAGER, companyId)) {
 				roleInfo = "admin";
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
 				data.put("utilAdminUrl", "/admin/main.do");
