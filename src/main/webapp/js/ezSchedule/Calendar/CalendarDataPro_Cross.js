@@ -786,8 +786,10 @@ function CalMonthDataBind(oAppointment) {
         else if (oAppointment.ScheduleType == 4) {
             oTd.className = "collaboration";
             oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oTd.className = "executive";
+            oSpan.className = "executive";
+        } else {
             oTd.className = "department";
             oSpan.className = "department";
         }
@@ -993,8 +995,10 @@ function CalWeekDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 4) {
         	oDiv.className = "calendar_data_collaboration";
         	oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
@@ -1157,8 +1161,10 @@ function CalWeekAllDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 4) {
             oDiv.className = "calendar_data_collaboration";
             oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
@@ -1293,8 +1299,10 @@ function CalWeekTopDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 4) {
             oDiv.className = "calendar_data_collaboration";
             oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
@@ -1449,8 +1457,10 @@ function CalDayDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 4) {
             oDiv.className = "calendar_data_collaboration";
             oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
@@ -1616,8 +1626,10 @@ function CalDayAllDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 4) {
             oDiv.className = "calendar_data_collaboration";
             oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
@@ -1750,8 +1762,10 @@ function CalDayTopDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 4) {
             oDiv.className = "calendar_data_collaboration";
             oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
@@ -1903,8 +1917,10 @@ function showTooltip(thisID, e, pTime, pSubject, pScheduleType, pScheduleID) {
     else if (pScheduleType == "7") {
         sSpan.className = "Group";
         sTd.className = "Group";
-    }
-    else {
+    } else if (pScheduleType == "10") { // 임원일정
+        sSpan.className = "executive";
+        sTd.className = "executive";
+    } else {
         sSpan.className = "department";
         sTd.className = "department";
     }

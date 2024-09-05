@@ -422,4 +422,6 @@ public interface EzCommonService {
 	public void updateInProcessJpCodeName3() throws Exception;
 
 	public void createTblDistributeinfo() throws Exception;
+	
+	public void createExecutiveTable() throws Exception;
 }

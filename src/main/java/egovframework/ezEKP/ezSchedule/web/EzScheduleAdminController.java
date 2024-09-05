@@ -11,7 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -21,10 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -41,6 +41,9 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /** 
  * @Description [Controller] 스케쥴
@@ -935,4 +938,224 @@ public class EzScheduleAdminController {
     	return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 	
+
+	/**
+	 * 관리자 일정관리 임원일정관리 페이지
+	 */
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminExecutiveManage.do", method = RequestMethod.GET)
+	public String scheduleExecutiveManage(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		logger.debug("============ scheduleExecutiveManage started ============");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+
+		// 관리자 권한이 있는 회사가 하나도 없음
+		if (adminCompanyList.isEmpty()) {
+			return "cmm/error/adminDenied";
+		}
+
+		model.addAttribute("companyList", adminCompanyList);
+		model.addAttribute("userInfo", userInfo);
+		logger.debug("============ scheduleExecutiveManage ended ============");
+		return "/admin/ezSchedule/scheduleAdminExecutive";
+	}
+
+	/**
+	 * 관리자 일정관리 임원일정관리 리스트 데이터
+	 */
+	@RequestMapping(value="/admin/ezSchedule/scheduleGetExecutiveList.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleGetExecutiveList(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest request) throws Exception {
+		logger.debug("============ scheduleGetExecutiveList started ============");
+
+		loginVO = commonUtil.userInfo(loginCookie);
+
+		String companyID = request.getParameter("companyID");
+		String companyName = request.getParameter("companyName");
+		String cn = request.getParameter("userID");
+		int tenantID = loginVO.getTenantId();
+		String keyword = request.getParameter("keyword");
+		String lang = loginVO.getLang();
+		
+		if (companyID == null || companyID.equals("")) {
+			companyID = loginVO.getCompanyID();
+		}
+		
+		String result = ezScheduleAdminService.scheduleGetExecutiveList(cn, companyID, tenantID, loginVO.getOffset(), keyword, lang, companyName);
+		
+		logger.debug("============ scheduleGetExecutiveList ended ============");
+		return result;
+	}
+
+	/**
+	 * 관리자 일정관리 임원일정관리 등록/수정 팝업
+	 */
+	@RequestMapping(value="/admin/ezSchedule/SchedulePopupExecutive.do", method = RequestMethod.GET)
+	public String SchedulePopupExecutive(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, OrganUserVO organUserVO) throws Exception {
+		logger.debug("============ SchedulePopupExecutive started ============");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String cn = request.getParameter("cn") != null ? request.getParameter("cn") : "" ;
+		String companyID = request.getParameter("companyId") != null ? request.getParameter("companyId") : "" ;
+		String usage = request.getParameter("usage") != null ? request.getParameter("usage") : "" ;
+		String priority = request.getParameter("priority") != null ? request.getParameter("priority") : "" ;
+		String lang = userInfo.getLang();
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		List<ScheduleSecretaryVO> sList = ezScheduleService.getSecretaryList(cn, userInfo.getTenantId(), companyID);
+		List<OrganUserVO> oList = new ArrayList<OrganUserVO>();
+
+		for (int i=0; i < sList.size(); i++) {
+			ScheduleSecretaryVO vo = sList.get(i);
+
+			organUserVO = ezOrganAdminService.getUserInfo(vo.getSecId(), "1", userInfo.getTenantId());
+
+			organUserVO.setCn(vo.getSecId());
+			organUserVO.setDisplayName(vo.getSecName());
+
+			oList.add(i,organUserVO);
+		}
+
+		model.addAttribute("selectList", oList);
+		model.addAttribute("cn", cn);
+		model.addAttribute("usage", usage);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("priority", priority);
+		model.addAttribute("lang", lang);
+		
+		logger.debug("============ SchedulePopupExecutive ended ============");
+		return "/admin/ezSchedule/scheduleAdminPopupExecutive";
+	}
+
+	/**
+	 * 관리자 일정관리 임원일정관리 등록/수정
+	 */
+	@RequestMapping(value="/admin/ezSchedule/scheduleSaveExecutive.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String scheduleSaveExecutive(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest request) throws Exception {
+		logger.debug("============ scheduleSaveExecutive started ============");
+
+		loginVO = commonUtil.userInfo(loginCookie);
+
+		int tenantID = loginVO.getTenantId();
+		String userID = request.getParameter("userID");
+		String companyID = request.getParameter("companyID");
+		String usage = request.getParameter("usage");
+		String listSecretary = request.getParameter("LISTSECRETARY");
+		String flag = request.getParameter("flag");
+		int priority = Integer.parseInt(request.getParameter("priority"));
+		String createUser = loginVO.getId();
+		
+		if (!loginVO.getCompanyID().equals(companyID)) {
+			companyID = loginVO.getCompanyID();
+		}
+		
+		LoginVO tempLoginVO = new LoginVO();
+		tempLoginVO.setId(userID);
+		tempLoginVO.setDn("NOPASSWORD");
+		tempLoginVO.setTenantId(tenantID);
+
+		LoginVO user = loginService.selectUser(tempLoginVO);
+
+		String displayName = user.getDisplayName1();
+		String displayName2 = user.getDisplayName2();
+		
+		JSONParser parser = new JSONParser();
+		JSONArray jsonArray = (JSONArray)parser.parse(listSecretary);
+		
+		ezScheduleService.deleteSecretary(userID, tenantID, companyID);
+
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = (JSONObject) jsonArray.get(i);
+
+			String secretaryID = (String) obj.get("secretaryID");
+			String secretaryName = (String) obj.get("secretaryName");
+
+			ezScheduleService.insertSecretary(userID, displayName, displayName2, secretaryID, secretaryName, tenantID, companyID);
+		}
+		
+		if (flag.equals("1")) {
+			ezScheduleAdminService.scheduleSaveExecutive(userID, priority, usage, createUser, companyID, tenantID);
+		} else if (flag.equals("2")) {
+			ezScheduleAdminService.scheduleUpdateExecutive(userID, priority, usage, createUser, companyID, tenantID);
+		}
+		
+		return "success";
+	}
+
+	/**
+	 * 관리자 일정관리 임원일정관리 삭제
+	 */
+	@RequestMapping(value="/admin/ezSchedule/scheduleDelExecutive.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void scheduleDelExecutive(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest request) throws Exception {
+		logger.debug("============ scheduleDelExecutive started ============");
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String userId = request.getParameter("cn");
+		String companyId = request.getParameter("companyId");
+		int tenantId = loginVO.getTenantId();
+
+		ezScheduleAdminService.scheduleDelExecutive(userId, companyId, tenantId);
+		ezScheduleService.deleteSecretary(userId, tenantId, companyId);
+	}
+
+	/**
+	 * 관리자 일정관리 임원일정관리 순서저장
+	 */
+	@RequestMapping(value = "/admin/ezSchedule/scheduleNumUpdateExecutive.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String callModClsItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, LoginVO loginVO, @RequestBody String xmlStr) throws Exception {
+		loginVO = commonUtil.userInfo(loginCookie);
+
+		String companyID = req.getParameter("companyID");
+		int tenantID = loginVO.getTenantId();
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+
+		NodeList rowNodes = xmlDom.getElementsByTagName("ROW");
+		for (int i = 0; i < rowNodes.getLength(); i++) {
+			String userID = rowNodes.item(i).getChildNodes().item(0).getTextContent();
+			int priority = Integer.parseInt(rowNodes.item(i).getChildNodes().item(1).getTextContent());
+			
+			ezScheduleAdminService.scheduleNumUpdateExecutive(userID, priority, companyID, tenantID);
+		}
+		
+		return "success";
+	}
+
+	/**
+	 * 관리자 일정관리 임원일정관리 비서리스트
+	 */
+	@RequestMapping(value = "/admin/ezSchedule/getSecretary.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String getSecretary(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		logger.debug("============ getSecretary started ============");
+
+		loginVO = commonUtil.userInfo(loginCookie);
+
+		String cn = request.getParameter("cn") != null ? request.getParameter("cn") : "" ;
+		String companyID = request.getParameter("companyId") != null ? request.getParameter("companyId") : "" ;
+
+		List<ScheduleSecretaryVO> sList = ezScheduleService.getSecretaryList(cn, loginVO.getTenantId(), companyID);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		for (ScheduleSecretaryVO secretary : sList) {
+			sb.append("<ROW>");
+			sb.append("<SECRETARYNAME>"+ secretary.getSecName() + "</SECRETARYNAME>");
+			sb.append("<SECRETARYID>" + secretary.getSecId() + "</SECRETARYID>");
+			sb.append("</ROW>");
+		}
+		sb.append("</DATA>");
+
+		return sb.toString();
+	}
 }
