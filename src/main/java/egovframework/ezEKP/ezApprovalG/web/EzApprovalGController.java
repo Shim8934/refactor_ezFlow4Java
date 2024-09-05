@@ -31,6 +31,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 
 import java.io.BufferedInputStream;
 import java.net.URL;
@@ -13436,4 +13437,44 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return Integer.toString(rtn);
 	}
 	
+
+	/**
+	 * 2024-07-09 임정은 - 전자결재G > 기록물배부대장 > 배부정보 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezDistributeInfo.do", method = RequestMethod.GET)
+	public String ezDistributeInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("ezDistributeInfo started.");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docId = request.getParameter("docId");
+		String sn = request.getParameter("sn");
+		ApprGDeliveryListVO docInfo = ezApprovalGService.getDistributeInfo(docId, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("docId", docId);
+		model.addAttribute("docInfo", docInfo);
+		model.addAttribute("sn", sn);
+
+		logger.debug("ezDistributeInfo ended.");
+
+		return "ezApprovalG/apprGezDistributeInfo";
+	}
+
+	/**
+	 * 2024-07-09 임정은 - 전자결재G > 기록물배부대장 > 배부정보 불러오기
+	 */
+	@RequestMapping(value = "/ezApprovalG/getDistributeInfo.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<ApprGDeliveryListVO> getDistributeInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getDistributeInfo started.");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docId = request.getParameter("docId");
+		String deliverySN = request.getParameter("sn");
+		List<ApprGDeliveryListVO> docList = ezApprovalGService.getDistributeInfo2(docId, deliverySN, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
+
+		logger.debug("getDistributeInfo ended.");
+
+		return docList;
+	}
 }

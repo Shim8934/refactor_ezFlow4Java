@@ -1709,6 +1709,7 @@
 				var selRow = selRows[0];
 				
 				var DocID = GetAttribute(selRow, "DATA1");
+				var sn = GetAttribute(selRow, "DATA3");
 		        if (DocID == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t99991'/>";
 		            OpenAlertUI(pAlertContent);
@@ -2576,6 +2577,34 @@
                     }
                 }
 			}
+
+			/* 2024-07-05 임정은 - 기록물배부대장 > 배부정보 */
+			function btnBaeBuInfo_onclick() {
+				var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+
+				var selRows = DocList.GetSelectedRows();
+				if (selRows.length === 0) {
+					var pAlertContent = "spring:message code='ezApprovalG.t99991'/>";
+					alert(pAlertContent);
+					return;
+				}
+
+				var DocID = GetAttribute(selRows[0], "DATA1");
+				var SN = GetAttribute(selRows[0], "DATA3");
+				if (DocID == "") {
+					var pAlertContent = "<spring:message code='ezApprovalG.t99991'/>";
+					OpenAlertUI(pAlertContent);
+					return;
+				}
+
+				var url = "/ezApprovalG/ezDistributeInfo.do?docId=" + DocID + "&sn=" + SN;
+				var OpenWin = window.open(url, "ezDistributeInfo_Cross", GetOpenWindowfeature(800, 400));
+				try {
+					OpenWin.focus();
+				} catch (e) {
+				}
+			}
 		</script>
 	</head>
 	<%-- 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 프리뷰 리사이징바 영역 동작 추가 --%>
@@ -2691,6 +2720,7 @@
 	        <ul id="trDeliveryMenu" style="display: none">
 	        	<li class="important" id="tbnBaeBu"><span id="Span2" onclick="return btnBaeBu_onclick()"><spring:message code='ezApprovalG.t100000'/></span></li>
 	            <li id="Li1"><span id="Span1" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
+				<li id="btnBaeBuInfo"><span id="Span3" onclick="return btnBaeBuInfo_onclick()"><spring:message code='ezApprovalG.LJEAppr09'/></span></li>
 	            <li id="tbSearchDelivery"><span class="icon16 icon16_search" id="SearchDelivery" onclick="return btnSearchDelivery_onclick()"></span></li>
 
 	            <%-- 2023-06-07 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 영역 상단 아이콘 삽입 (배부 대장) --%>

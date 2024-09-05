@@ -420,4 +420,6 @@ public interface EzCommonService {
 	public void insertDotNetTotalNotificationConfig() throws Exception;
 	
 	public void updateInProcessJpCodeName3() throws Exception;
+
+	public void createTblDistributeinfo() throws Exception;
 }
