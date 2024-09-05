@@ -375,9 +375,9 @@
 	                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
 	                    
 						if (primary == "1") { // 부서이름 다국어 처리
-							pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + " (하위부서 미포함)" + "</VALUE>";
+							pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + " <spring:message code='ezNotification.hth69' />" + "</VALUE>";
 						} else {
-							pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME2")) + " (하위부서 미포함)" + "</VALUE>";
+							pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME2")) + " <spring:message code='ezNotification.hth69' />" + "</VALUE>";
 						}
 						pparsingXML = pparsingXML + "</CELL></ROW>";
 						

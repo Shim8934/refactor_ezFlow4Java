@@ -112,21 +112,13 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String selectNo = "";
-		String adminYN = "";
-		
-		if (req.getParameter("flag") != null) {
-			selectNo = req.getParameter("selectNo");
-		}
-		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-			adminYN = "YES";
-		}
+		String selectNo = req.getParameter("flag") != null ? req.getParameter("selectNo") : "";
+		String adminYN = "YES";
 		
 		model.addAttribute("adminYN", adminYN);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("selectNo", selectNo);
-		model.addAttribute("selectedCompany", Optional.ofNullable(req.getParameter("selCompany")).orElse(userInfo.getCompanyID()));
+		model.addAttribute("selectedCompany", Optional.ofNullable(req.getParameter("selCompany")).orElse(""));
 		return "admin/ezResource/resGwBoardListManageListLeft";
 	}
 	

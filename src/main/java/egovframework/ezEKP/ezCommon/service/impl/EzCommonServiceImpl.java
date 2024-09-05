@@ -4291,4 +4291,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.alterUseColor();
 	}
 
+	@Override
+	public void updateThemeData() throws Exception {
+		ezCommonDAO.updateThemeData();
+	}
+
+    @Override
+    public void createRsScheduleDeptIdColumn() throws Exception {
+        ezCommonDAO.createRsScheduleDeptIdColumn();
+    } 
 }

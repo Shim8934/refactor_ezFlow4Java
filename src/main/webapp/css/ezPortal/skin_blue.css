@@ -23,7 +23,11 @@ nav .navUL li.on{color:#003497;}
 .util li span.util_alarm:hover{background-image:url(../../images/ezNewPortal/skin/blue/util_alarm.svg);}
 .util li span.util_alarm span{background:#F15D13;}
 .util li span.util_quick_menu:hover{background-image:url(../../images/ezNewPortal/skin/blue/util_quick_menu.svg);}
+<<<<<<< HEAD
 .util li span.util_messenger:hover{background-image:url(../../images/ezNewPortal/skin/blue/util_messenger_hover.svg);}
+=======
+.util li span.util_help:hover{background-image:url(../../images/ezNewPortal/skin/blue/util_help_hover.svg);}
+>>>>>>> 87fb9c9d9ba53b4fef10771c083043b5036ca7f2
 
 
 .profile_div .btn_tab span{border-color:#7E9AD1; color:#003497;}

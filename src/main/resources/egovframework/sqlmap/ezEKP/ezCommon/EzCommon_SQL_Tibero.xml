@@ -5602,6 +5602,7 @@
 	    COMPANY_ID VARCHAR2(200) NOT NULL,
 	    TENANT_ID NUMBER(5) NOT NULL,
 	    REGDATE DATE,
+	    SUBDEPTYN CHAR(1),
 	    CONSTRAINT PK_TBL_NOTI_EMERGENCY_PERMISSION PRIMARY KEY (PERMISSION_CODE, TENANT_ID)
 	)
     </statement>
@@ -5906,5 +5907,60 @@
 		ADD
 			USECOLOR	NUMBER(1)	DEFAULT	0	NOT NULL
     </statement>
-	
+		    
+    <select id="EzCommonDAO.chkThemeName" resultClass="Integer">
+		SELECT	COUNT(*)
+		FROM	TBL_PORTAL_THEME
+		WHERE	THEME_NAME LIKE '테마%'
+    </select>
+    
+	<update id="EzCommonDAO.updateTheme1">
+			UPDATE
+				TBL_PORTAL_THEME
+			SET
+				THEME_NAME = '기본형',
+				THEME_NAME2 = 'Default Type',
+				THEME_NAME3 = 'きほんがた'
+			WHERE
+				THEME_ID = 1
+	</update>
+    
+	<update id="EzCommonDAO.updateTheme2">
+			UPDATE
+				TBL_PORTAL_THEME
+			SET
+				THEME_NAME = '바로가기형',
+				THEME_NAME2 = 'Shortcut Type',
+				THEME_NAME3 = 'ショートカットがた'
+			WHERE
+				THEME_ID = 2
+	</update>
+    
+	<update id="EzCommonDAO.updateTheme3">
+			UPDATE
+				TBL_PORTAL_THEME
+			SET
+				THEME_NAME = '정보분리형',
+				THEME_NAME2 = 'Information Separation Type',
+				THEME_NAME3 = 'じょうほうぶんりがた'
+			WHERE
+				THEME_ID = 3
+	</update>
+
+	<select id="EzCommonDAO.checkRsScheduleDeptIdColumn" resultClass="String">
+		<![CDATA[
+		SELECT
+			DEPTID
+		FROM
+			TBL_RS_SCHEDULE
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createRsScheduleDeptIdColumn">
+		ALTER TABLE
+			TBL_RS_SCHEDULE
+			ADD DEPTID NVARCHAR2(80) DEFAULT NULL
+	</statement>
 </sqlMap>

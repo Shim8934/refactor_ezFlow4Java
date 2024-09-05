@@ -146,7 +146,7 @@
 		
 		$.ajax({
 			type : "POST",
-        	url : "/admin/ezNotification/deletePermission.do?companyId=" + companySelectID,
+        	url : "/admin/ezNotification/deleteEmergencyPermission.do?companyId=" + companySelectID,
         	data : JSON.stringify(paramObj),
         	contentType:"application/json; charset=utf-8",
         	success : function(result) {

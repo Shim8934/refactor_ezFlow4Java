@@ -478,6 +478,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezportal/portlets/favoriteforms";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);

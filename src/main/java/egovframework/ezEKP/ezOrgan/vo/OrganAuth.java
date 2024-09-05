@@ -150,7 +150,11 @@ public class OrganAuth {
         /**
          * 근태관리자 "e", COMPANY
          */
-        ATTENDANCE_MANAGER("e", COMPANY)
+        ATTENDANCE_MANAGER("e", COMPANY),
+        /**
+         * 일정관리자 "v", COMPANY
+         */
+        SCHEDULE_MANAGER("v", COMPANY)
         ;
 
         private final String code;

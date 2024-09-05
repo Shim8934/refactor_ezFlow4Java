@@ -79,9 +79,11 @@ nav .navUL li.on{color:#388CE5;}
 .util li span.util_alarm{background-image:url(../../images/ezNewPortal/skin/dark/util_alarm_white.svg);}
 .util li span.util_alarm span{background:#388CE5; border-color:#272829;}
 .util li span.util_quick_menu{background-image:url(../../images/ezNewPortal/skin/dark/util_quick_menu_white.svg);}
+.util li span.util_help{background-image:url(../../images/ezNewPortal/skin/dark/util_help_white.svg);}
 .util li span.util_profile:before{background:rgba(253,253,253,0.1);}
 .util li span.util_employee_search:hover{background-image:url(../../images/ezNewPortal/skin/dark/util_employee_search_white_hover.svg);}
 .util li span.util_quick_menu:hover{background-image:url(../../images/ezNewPortal/skin/dark/util_quick_menu_hover.svg);}
+.util li span.util_help:hover{background-image:url(../../images/ezNewPortal/skin/dark/util_help_white_hover.svg);}
 .util li span.util_alarm:hover{background-image:url(../../images/ezNewPortal/skin/dark/util_alarm_hover.svg);}
 .employee_search span:hover:before{border-color:#808080;}
 .employee_search span:hover:after{background:#808080;}

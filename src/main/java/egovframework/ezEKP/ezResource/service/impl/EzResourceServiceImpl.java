@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -953,7 +954,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	public int addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay,
 			String startDate, String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag,
-			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception {
+			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset, String deptId) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
@@ -988,6 +989,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_Num", "");
 		map.put("v_WriteDay", "");
 		map.put("tenantID", tenantID);
+		map.put("deptId", deptId);
 		map.put("nowDate", nowDate);
 
 		String approveFlag = ezResourceDAO.addRessch_S1(map);
@@ -2963,6 +2965,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		if (nodeList.getLength() > 23) {
 			scheduleID = nodeList.item(23).getTextContent().trim();
 		}
+
+		Node nodeDept = xmlRes.getElementsByTagName("DEPTID").item(0);
+		String deptId = nodeDept != null ? nodeDept.getTextContent() : "";
 		
 		if (attachFiles != null && !attachFiles.equals("")) {
 			attachFlag = "1";
@@ -2972,7 +2977,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		timeDisplay = "1";
 		int num = addResSch(ownerID, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance, reFlag, gresFlag, 
-				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID, offset);
+				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID, offset,  deptId);
 		String returnStr = "";
 		returnStr += "<RTN_DATA>";
         returnStr += "<NUM>" + num + "</NUM>";

@@ -363,6 +363,7 @@
 					<th><spring:message code="ezSystem.reset02" /></th>
 					<td>
 						<a class="imgbtn resetBtn" id="portletReset" onclick="personalReset('portlet')"><span><spring:message code='ezSystem.reset04'/></span></a>
+						<spring:message code='ezSystem.reset13'/>
 					</td>
 				</tr>
 				</c:if>

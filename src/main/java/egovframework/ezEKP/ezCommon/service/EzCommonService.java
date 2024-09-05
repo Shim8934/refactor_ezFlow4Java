@@ -438,5 +438,9 @@ public interface EzCommonService {
 	
 	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
 	public void alterUseColor() throws Exception;
+
+	// 2024-09-02 조수빈 - 테마 변경에 따른 테마 데이터 update
+	public void updateThemeData() throws Exception;
 	
+	void createRsScheduleDeptIdColumn() throws Exception;
 }

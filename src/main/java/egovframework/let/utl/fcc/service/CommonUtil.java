@@ -828,6 +828,11 @@ public class CommonUtil {
 			String ip = ClientUtil.getClientIP(request);
 			String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());
 
+			// 2024-09-02 - db 세션 사용 시에는 ip check 생략 함
+			if ("YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"))) {
+				return checkDeptId(decryptedLoginCookie);
+			}
+
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
 			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
 		} catch (Exception e) {

@@ -221,6 +221,10 @@
 					this.usepostDate = true;
 				}
 		    	if (!TrimText(ALL.value)) {
+                    if (TrimText(prekeywordDetail1.value).length == 1 || TrimText(prekeywordDetail2.value).length == 1 || TrimText(prekeywordDetail3.value).length == 1) {
+                        alert("<spring:message code='ezSystem.yja01' />");
+                        return;
+                    }
 		    		if( $("#moreSearch").css("display") != "none"){
 			    		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) 
 			    				&& !this.usepostDate) {
@@ -234,6 +238,10 @@
 		    			}
 		    		}
 		        } else {
+		            if (TrimText(ALL.value).length == 1) {
+                        alert("<spring:message code='ezSystem.yja01' />");
+                        return;
+                    }
 	        		searchCArray.push("ALL");
 	    			searchKArray.push(TrimText(ALL.value));
 		        	document.getElementById("resultTD").setAttribute("curPage", 1);

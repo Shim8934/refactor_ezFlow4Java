@@ -85,6 +85,10 @@ function getScheduleList_after(resultList, mode, date) {
 				if (DATETYPE == "4") {
 					listHTML += "<li class='scheduleLi " + classNameForTheme + "' onClick=\"open_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
 					listHTML += "<p class='scheduleType'>";
+				} else if (SCHEDULETYPE == 4) {
+					// 2024-09-04 조수빈 - 협업은 onclick 연결되는 부분 다르게 연결해야해서 제거함
+					listHTML += "<li class='scheduleLi Tcollaborate'>";
+					listHTML += "<p class='scheduleType'>";
 				} else if (SCHEDULETYPE == "9") {
 					listHTML += "<li class='scheduleLi " + classNameForTheme + "' onClick=\"open_google_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + ENDDATE + "')\">";
 					listHTML += "<p class='scheduleType'>";

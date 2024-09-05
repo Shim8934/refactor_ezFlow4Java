@@ -2193,6 +2193,10 @@ public class EzResourceController extends EgovFileMngUtil {
 				endDate = dateFormat.format(cal.getTime());
 				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 			}
+			
+			Element elementDept = dom.createElement("DEPTID");
+			elementDept.setTextContent(userInfo.getDeptID());
+			dom.getDocumentElement().appendChild(elementDept);
 
 			ret = ezResourceService.addResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 		} else if (cmd.equals("mod")) {

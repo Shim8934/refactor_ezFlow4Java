@@ -452,7 +452,9 @@
        			<c:if test="${approvalFlag == 'G'}">
 	       			<p id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()"><spring:message code='ezApprovalG.t946'/></span></p>
        			</c:if>
+				<c:if test="${docState == '015'}">
        			<input type="button" id="btnWithdraw" name="btnWithdraw" value="<spring:message code='ezApprovalG.LJEAppr03'/>" style="float:right; width:80px; padding:2px; cursor:pointer;" onclick="btnWithdraw_onclick()">
+				</c:if>
        		</div>
        	</div>
        	

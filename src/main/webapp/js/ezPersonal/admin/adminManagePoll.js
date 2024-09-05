@@ -1,5 +1,5 @@
 ﻿// 회사 변경 method
-function company_change() {
+function changeCompany() {
 	makelist();
 	showPreview(2, 0);
 }
@@ -281,7 +281,7 @@ var add_poll = function() {
 		rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do?flag=add", document.getElementById("ListCompany").value, "dialogHeight:550px;dialogwidth:450px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 550));
 
 		if (typeof (rtnValue) != "undefined") {
-			company_change();
+			changeCompany();
 		}
 	}
 }
@@ -289,7 +289,7 @@ var add_poll = function() {
 // 등록 완료 method
 function add_poll_Complete(rtv) {
 	if (typeof (rtv) != "undefined") {
-		company_change();
+		changeCompany();
 	}
 }
 
@@ -327,7 +327,7 @@ var mod_poll = function() {
 		rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do?flag=mod&itemSeq=" + pollList, document.getElementById("ListCompany").value, "dialogHeight:550px;dialogwidth:450px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 550));
 
 		if (typeof (rtnValue) != "undefined") {
-			company_change();
+			changeCompany();
 		}
 	}
 	pollList = "";

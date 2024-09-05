@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezNotification.vo;
 public class EmergencyNotiPermissionVO {
 	private String cn;
 	private String userType;
-	private String subdeptPermitted;
 	private String companyId;
 	private int tenantId;
 	private String displayName;
@@ -19,6 +18,7 @@ public class EmergencyNotiPermissionVO {
 	private String permissionCode;
 	private String roleName;
 	private String roleName2;
+	private String subDeptYn;
 	
 	public String getCn() {
 		return cn;
@@ -31,12 +31,6 @@ public class EmergencyNotiPermissionVO {
 	}
 	public void setUserType(String userType) {
 		this.userType = userType;
-	}
-	public String getSubdeptPermitted() {
-		return subdeptPermitted;
-	}
-	public void setSubdeptPermitted(String subdeptPermitted) {
-		this.subdeptPermitted = subdeptPermitted;
 	}
 	public String getCompanyId() {
 		return companyId;
@@ -128,4 +122,11 @@ public class EmergencyNotiPermissionVO {
 	public void setRoleName2(String roleName2) {
 		this.roleName2 = roleName2;
 	}
+	public String getSubDeptYn() {
+		return subDeptYn;
+	}
+	public void setSubDeptYn(String subDeptYn) {
+		this.subDeptYn = subDeptYn;
+	}
+	
 }

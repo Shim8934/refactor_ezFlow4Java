@@ -446,7 +446,7 @@
 					menusHTML += "</table>";
 					menusHTML += "<div class='bottomBtn'><a class='btnA updateMenu'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
 					
-					if (menuInfo.menuType == "A") {
+					if (menuInfo.menuType == "A" || menuInfo.menuType == "MA") {
 						menusHTML += "<a class='btnA deleteMenu'><spring:message code='ezNewPortal.t124' /></a>";
 					}
 					menusHTML += "</div></div></div></li>"
@@ -559,6 +559,11 @@
 			//연결 urlz
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			menuUrl = $.trim(menuUrl);
+			
+			if (type == 'mobile' && menuUrl.indexOf('/mobile/') != 0) {
+				alert("<spring:message code='ezNewPortal.mobileUrl' />");
+				return;
+			}
 			
 			if (menuUrl == "" || menuUrl == null) {
 				alert("<spring:message code='ezNewPortal.t083' />");

@@ -995,14 +995,15 @@
 		function getBoardViewTypeRowStr(portletURL, portletId) {
 			var portletUrl = URLParamsUtils(portletURL);
 			var viewType = portletUrl.get('type');
+			var mobileType = portletURL.indexOf("/mobile/ezNewPortal/boardPortlet.do?type=b");
 
 			var resultStr = "<tr id='rowViewType" + portletId + "' class='cardTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.board.pgb04' /> :</th><td class='portletInfoTD typeTD'>";
-			resultStr += "<select id='portletViewType" + portletId + "' name='portletViewType" + portletId + "' style='font-size:12px;' onchange='updateViewTypeOfBoard(this.value,\"" + portletId + "\");'>";
+			resultStr += "<select id='portletViewType" + portletId + "' name='portletViewType" + portletId + "' style='font-size:12px;' onchange='updateViewTypeOfBoard(this.value,\"" + portletId + "\", \"" + portletURL + "\");'>";
 			resultStr += "<option value='" + BoardViewType.DEFAULT + "' " + (viewType === BoardViewType.DEFAULT ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb01' /></option>";
 			resultStr += "<option value='" + BoardViewType.CARD_A + "' " + (viewType === BoardViewType.CARD_A ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb02' /></option>";
 			resultStr += "<option value='" + BoardViewType.CARD_B + "' " + (viewType === BoardViewType.CARD_B ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb03' /></option>";
 			resultStr += "</select>   ";
-			resultStr += "<a class='imgbtn wordSelect " + (isWordSelectDisplay(viewType) ? "" : CLASS_DISPLAY_NONE) + "' id='wordSelect" + portletId + "' onclick='selectWord(\"" + portletId + "\");'>";
+			resultStr += "<a class='imgbtn wordSelect " + (isWordSelectDisplay(viewType, portletURL) && mobileType == -1 ? "" : CLASS_DISPLAY_NONE) + "' id='wordSelect" + portletId + "' onclick='selectWord(\"" + portletId + "\");'>";
 			resultStr += "<span style='font-size:11px;'><spring:message code='ezNewPortal.board.pgb05' /></span></a>";
 
 			return resultStr;
@@ -1066,9 +1067,9 @@
 
 		}
 
-		function updateViewTypeOfBoard(type, portletId) {
+		function updateViewTypeOfBoard(type, portletId, mobileUrl) {
 			var anchor = document.getElementById('wordSelect' + portletId);
-			if (isWordSelectDisplay(type)) {
+			if (isWordSelectDisplay(type, mobileUrl)) {
 				anchor.classList.remove(CLASS_DISPLAY_NONE);
 			} else {
 				anchor.classList.add(CLASS_DISPLAY_NONE);
@@ -1086,8 +1087,19 @@
 		}
 
 		// 단어설정 버튼 표출 조건
-		function isWordSelectDisplay(viewType) {
-			return viewType === BoardViewType.CARD_A || viewType === BoardViewType.CARD_B;
+		function isWordSelectDisplay(viewType, portletURL) {
+			var mobilePortlet = -1;
+			var mobileUrl = portletURL.indexOf("/mobile/");
+			
+			if (mobileUrl > -1) {
+				if (viewType == "b") {
+					mobilePortlet = 1;
+				}
+			} 
+			
+			if (mobilePortlet == -1) {
+				return viewType === BoardViewType.CARD_A || viewType === BoardViewType.CARD_B;
+			}
 		}
 		
 		// 2024-06-26 조수빈 - 관련 메뉴가 전자결재일 경우 포틀릿에 보여질 문서함을 선택하는 ui 생성 메소드
