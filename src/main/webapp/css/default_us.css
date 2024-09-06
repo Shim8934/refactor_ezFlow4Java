@@ -4007,3 +4007,23 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .popup #menu ul.layer_select li span{border: none; display: block;}
 .popup #menu ul.layer_select{margin-left: -33px; top: 6px;}
 /* //20240517 메일보기 상단바 디자인수정 */
+
+.mt0{margin-top:0px !important;}
+.mt5{margin-top:5px !important;}
+.mt10{margin-top:10px !important;}
+.mt15{margin-top:15px !important;}
+.mt30{margin-top:30px !important;}
+.mr0{margin-right:0px !important;}
+.mr5{margin-right:5px !important;}
+.mr10{margin-right:10px !important;}
+.mr15{margin-right:15px !important;}
+.ml5{margin-left:5px !important;}
+.ml10{margin-left:10px !important;}
+.mb0{margin-bottom:0 !important;}
+.mb5{margin-bottom:5px !important;}
+.mb10{margin-bottom:10px !important;}
+.pd0{padding:0 !important;}
+.pd15{padding:15px !important;}
+.pd30{padding:30px !important;}
+.plr20{padding:0 20px;}
+.c_blue{color:#017BEC !important;}
