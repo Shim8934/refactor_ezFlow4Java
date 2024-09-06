@@ -16,6 +16,9 @@
                 var userCompany = '${param.companySelectID}' || result.userCompany;
                 var companyList = result.list;
                 var select = document.getElementById("ListCompany");
+                if (!result.isMaster) {
+                    select.style.display = "none";
+                }
 
                 companyList.forEach(function (item) {
                     var optionElement = document.createElement("option");
@@ -28,6 +31,10 @@
                     select.appendChild(optionElement);
                 });
 
+                if (!companySelectID) {
+                    companySelectID = select.value;
+                }
+                
                 select.onchange = function () {
                     companySelectID = select.options[select.selectedIndex].value;
 

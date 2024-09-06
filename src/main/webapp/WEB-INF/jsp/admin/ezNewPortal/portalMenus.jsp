@@ -560,6 +560,11 @@
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			menuUrl = $.trim(menuUrl);
 			
+			if (type == 'mobile' && menuUrl.indexOf('/mobile/') != 0) {
+				alert("<spring:message code='ezNewPortal.mobileUrl' />");
+				return;
+			}
+			
 			if (menuUrl == "" || menuUrl == null) {
 				alert("<spring:message code='ezNewPortal.t083' />");
 				return;

@@ -5655,6 +5655,9 @@
 		UNION ALL
 		SELECT
 			(#menuId# + 7), '/mobile/ezSurvey/surveyList.do?mode=processing', 'MG', 'iconCommon icon_survey', (SELECT MAX(A.default_order) + 8 FROM TBL_PORTAL_MENU A), 'mSurvey' FROM DUAL
+		UNION ALL
+		SELECT
+			(#menuId# + 8), '/mobile/ezWebfolder/main.do', 'MG', 'iconCommon icon_webfolder', (SELECT MAX(A.default_order) + 9 FROM TBL_PORTAL_MENU A), 'mWebfolder' FROM DUAL
 		]]>
 	</insert>
 	
@@ -5683,6 +5686,9 @@
 		UNION ALL
 		SELECT
 			#companyId#, #tenantId#, (#menuId# + 7), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 8 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#) FROM DUAL
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 8), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 9 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#) FROM DUAL
 	</insert>
 	
 	<insert id="EzCommonDAO.insertCompanyMobileMenuNames"  parameterClass="Map">
@@ -5831,6 +5837,24 @@
 		UNION ALL
 		SELECT
 			(#menuId# + 7), 6, #companyId#, #tenantId#, 'Survei' FROM DUAL
+		UNION ALL
+		SELECT
+			(#menuId# + 8), 1, #companyId#, #tenantId#, '웹폴더' FROM DUAL
+		UNION ALL
+		SELECT
+			(#menuId# + 8), 2, #companyId#, #tenantId#, 'WebFolder' FROM DUAL
+		UNION ALL
+		SELECT
+			(#menuId# + 8), 3, #companyId#, #tenantId#, 'Webフォルダ' FROM DUAL
+		UNION ALL
+		SELECT
+			(#menuId# + 8), 4, #companyId#, #tenantId#, '网络文件夹' FROM DUAL
+		UNION ALL
+		SELECT
+			(#menuId# + 8), 5, #companyId#, #tenantId#, 'WebFolder' FROM DUAL
+		UNION ALL
+		SELECT
+			(#menuId# + 8), 6, #companyId#, #tenantId#, 'WebFolder' FROM DUAL
 	</insert>
 	
 	<insert id="EzCommonDAO.insertMobileMenusAuth"  parameterClass="Map">
@@ -5858,6 +5882,9 @@
 		UNION ALL
 		SELECT
 			(#menuId# + 7), #companyId#, #tenantId#, #companyId#, 1, 0, 1 FROM DUAL
+		UNION ALL
+		SELECT
+			(#menuId# + 8), #companyId#, #tenantId#, #companyId#, 1, 0, 1 FROM DUAL
 	</insert>
 	
 	<statement id="EzCommonDAO.alterBoardExtentionAttrByteSize" parameterClass="Map">

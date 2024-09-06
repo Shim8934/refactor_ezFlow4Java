@@ -13,9 +13,9 @@
 			<div class="layDIV approval">
 				<div class="sortablePortlet">
 					<dl class="portlet_tab sortablePortlet">
-						<dt id="doingTab" class="on" onclick="apprChangeTab(this, '${portletId}')"><span><spring:message code='main.t00003' /></span></dt>
-						<dt id="rejectTab" onclick="apprChangeTab(this, '${portletId}')"><span><spring:message code='main.t00004' /></span></dt>
-						<dt id="draftTab" onclick="apprChangeTab(this, '${portletId}')"><span><spring:message code='main.t00005' /></span></dt>
+						<dt id="doingTab" class="on" onclick="apprChangeTab(this, '${portletId}')"><span class="longTitle"><spring:message code='main.t00003' /></span></dt>
+						<dt id="rejectTab" onclick="apprChangeTab(this, '${portletId}')"><span class="longTitle"><spring:message code='main.t00004' /></span></dt>
+						<dt id="draftTab" onclick="apprChangeTab(this, '${portletId}')"><span class="longTitle"><spring:message code='main.t00005' /></span></dt>
 						<%-- 2023-06-22 황인경 - 디자인 개선 > 전자결재 포틀릿 > '+' 더보기 태그 위치 변경 --%>
 	<%--                <dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>                	 --%>
 					</dl>

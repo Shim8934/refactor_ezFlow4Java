@@ -596,7 +596,7 @@ public class CommonUtil {
 	public LoginVO checkAdmin(String loginCookie){
 		try{
 			LoginVO user = userInfo(loginCookie);
-			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId());
+			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
 	
 			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 				return user;
@@ -3393,19 +3393,18 @@ public class CommonUtil {
 	public boolean checkTenantConfigBool(int tenantId, String propertyName, String defaultValue) throws Exception {
 		return BooleanUtils.toBoolean(StringUtils.defaultIfBlank(ezCommonService.getTenantConfig(propertyName, tenantId), defaultValue));
 	}
-	public OrganAuth makeOrganAuth(String userId, int tenantId) throws Exception {
+	public OrganAuth makeOrganAuth(String userId, int tenantId, String deptId, String jobId) throws Exception {
 		List<OrganUserVO> allUserinfo = ezOrganService.getAllUserinfo(userId, tenantId);
 		OrganAuth organAuth = new OrganAuth();
-		boolean permissionBasisDeptYN = "Y".equalsIgnoreCase(ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantId));
-
-		if (permissionBasisDeptYN) {
-			for (OrganUserVO user : allUserinfo) {
+		
+		// 현재 권한만 체크하도록 변경
+		for (OrganUserVO user : allUserinfo) {
+			if (user.getDepartment().equalsIgnoreCase(deptId) && user.getJobID().equalsIgnoreCase(jobId)) {
 				organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
+				break;
 			}
-		} else {
-            OrganUserVO user = allUserinfo.get(0);
-            organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
-        }
+		}
+		
         return organAuth;
 	}
 }

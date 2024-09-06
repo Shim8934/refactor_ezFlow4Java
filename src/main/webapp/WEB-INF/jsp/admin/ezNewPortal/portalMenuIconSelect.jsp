@@ -49,6 +49,8 @@
 		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_notice"></span></div><input type="radio" name="selIcon"></div>
 		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_address"></span></div><input type="radio" name="selIcon"></div>
 		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_schedule"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_survey"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_webfolder"></span></div><input type="radio" name="selIcon"></div>
 	</div>
 	<div id="addIcon" class="btnposition btnpositionNew">
 		<a class="imgbtn"><span><spring:message code='main.sp09' /></span></a>

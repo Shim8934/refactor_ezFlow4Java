@@ -590,9 +590,16 @@
 							if (tab.id == "t1") {
 								document.querySelector(".set-frame").style.display = "block";
 								document.querySelector(".set-portlet").style.display = "none";
+								
+								document.querySelectorAll('#themeSet li')[beforeTheme].click();
+								document.querySelectorAll('#modeSet li')[beforeDisplayMenu].click();
+								document.querySelectorAll('#menuSet li')[beforeUseColor].click();
+								
 							} else {
 								document.querySelector(".set-frame").style.display = "none";
 								document.querySelector(".set-portlet").style.display = "block";
+								
+								getUserPortletList();
 							}
 						});
 					})(tabs[i]);

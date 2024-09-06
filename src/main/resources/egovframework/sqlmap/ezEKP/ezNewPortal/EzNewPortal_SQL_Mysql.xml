@@ -1987,7 +1987,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	<select id="ezNewPortal.getApprovalDoingListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(DOCINFO.docid)
+				COUNT(DISTINCT DOCINFO.docid)
 			FROM
 				TBL_APRDOCINFO AS DOCINFO
 			JOIN
@@ -2024,9 +2024,9 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		</isNotEmpty>
 			  )
 			AND
-				DOCINFO.functiontype = '002'
+				DOCINFO.functiontype in ('002', '005', '006', '015')
 			AND
-				LINEINFO.aprstate = '002'
+				LINEINFO.aprstate in ('002', '005', '006', '015')
 			AND
 				DOCINFO.docstate not in ('015')   
 			AND
@@ -3785,7 +3785,16 @@ ORDER BY
 
 	<select id="ezNewPortal.getApprovalDisplayList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
-		SELECT	*
+		SELECT	docid,
+				docstate,
+				functiontype,
+			    doctitle,
+			    DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
+			    writerid,
+			    writername,
+			    writername2,
+			    href,
+			    companyid
 		FROM	vgongramaprdoingdoclist
 		WHERE	APRMEMBERID = #userId#
 		AND		APRTYPE = '015'
