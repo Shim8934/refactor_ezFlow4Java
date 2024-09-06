@@ -4204,7 +4204,16 @@ ORDER BY
 		SELECT	INFO.*, ROWNUM AS RNUM
 		FROM
 			(
-				SELECT	*
+				SELECT	docid,
+						docstate,
+						functiontype,
+					    doctitle,
+						(startdate + (#offset#/(60*24))) AS startdate,
+						writerid,
+					    writername,
+					    writername2,
+					    href,
+					    companyid
 				FROM	vgongramaprdoingdoclist
 				WHERE	APRMEMBERID = #userId#
 				AND		APRTYPE = '015'

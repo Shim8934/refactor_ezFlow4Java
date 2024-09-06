@@ -1935,7 +1935,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", loginVO.getTenantId());
 		
 		loginVO = commonUtil.userInfo(loginCookie);
-		OrganAuth organAuth = commonUtil.makeOrganAuth(loginVO.getId(), loginVO.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(loginVO.getId(), loginVO.getTenantId(), loginVO.getDeptID(), loginVO.getJobId());
 		
 		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER, companyID)) {
 			pCompanyAdmin = "Y";

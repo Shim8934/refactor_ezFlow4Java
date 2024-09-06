@@ -62,7 +62,7 @@ public class EzMainAdminController {
 		loginVO.setTenantId(tenantId);
 		loginVO.setDn("NOPASSWORD");
 
-		OrganAuth organAuth = commonUtil.makeOrganAuth(uid, tenantId);
+		OrganAuth organAuth = commonUtil.makeOrganAuth(uid, tenantId, user.getDeptID(), user.getJobId());
 		if (organAuth.isAuth(OrganAuth.AdminAuth.ADMIN_MASTER) || organAuth.isAuth(OrganAuth.AdminAuth.COMPANY_MANAGER) || organAuth.isAuth(OrganAuth.AdminAuth.WEB_FOLDER_MANAGER)) {
 			adminVO.setUserid(uid);
 			adminVO.setTenant_id(tenantId);
@@ -150,7 +150,7 @@ public class EzMainAdminController {
 			model.addAttribute("use_community", "YES");
 		}
 
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 		if (organAuth.isAuth(OrganAuth.AdminAuth.ADMIN_MASTER) || organAuth.isAuth(OrganAuth.AdminAuth.COMPANY_MANAGER) || organAuth.isAuth(OrganAuth.AdminAuth.WEB_FOLDER_MANAGER)) {
 			model.addAttribute("admin", "admin");
 		} 

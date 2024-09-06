@@ -275,11 +275,13 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/getCompanies.do", method=RequestMethod.GET)
 	public String getCompanys(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getCompanys started.");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("jobId", userInfo.getJobId());
 		
 		String url = "/rest/admin/ezportal/companies";
 		
@@ -650,6 +652,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			
 			HashMap<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userInfo.getId());
+			param.put("deptId", userInfo.getDeptID());
+			param.put("jobId", userInfo.getJobId());
 			
 			String url = "/rest/admin/ezportal/companies";
 			

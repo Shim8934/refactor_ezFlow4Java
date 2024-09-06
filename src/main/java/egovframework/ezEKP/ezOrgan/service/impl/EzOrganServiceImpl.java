@@ -8,6 +8,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import net.minidev.json.JSONArray;
@@ -58,7 +59,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
     @Autowired
     private Properties config;
-    
+
+	@Autowired
+	private LoginService loginService;
+	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
 
@@ -2863,15 +2867,26 @@ public class EzOrganServiceImpl implements EzOrganService {
     @Override
 	public String changeCookie(String loginCookie, String deptId, String companyId, int tenantId, String jobId) throws Exception {
 		logger.debug("changeCookie => deptId = " + deptId + ", companyId = " + companyId + ", tenantId = " + tenantId + ", jobId = " + jobId);
-        String decData = egovFileScrty.decryptAES(loginCookie);
+
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+		String ezSessionId = loginCookie; // useDbSession가 true인 경우에만 사용
+		
+        String decData = commonUtil.getDecryptedLoginCookie(loginCookie);
 		String[] decDataArray = decData.split("///", -1);
 		decDataArray[8] = String.valueOf(tenantId);
 		decDataArray[9] = deptId;
 		decDataArray[10] = companyId;
 		decDataArray[11] = jobId;
         String newCookieStr = String.join("///", decDataArray);
+		loginCookie = egovFileScrty.encryptAES(newCookieStr);
 
-        return egovFileScrty.encryptAES(newCookieStr);
+		if (useDbSession) {
+			loginService.updateSession(ezSessionId, loginCookie);
+
+			loginCookie = ezSessionId;
+		}
+
+        return loginCookie;
     }
 
 	@Override
