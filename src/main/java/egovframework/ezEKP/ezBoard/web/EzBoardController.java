@@ -3465,7 +3465,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pExcludeBoardID = " ";
 		String isAdminLeft = "";
 		String companyID = Optional.ofNullable(req.getParameter("companyID")).orElse(userInfo.getCompanyID());
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 		boolean isCompanyAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER,"");
 
 		if (req.getParameter("rootBoardID") != null && !req.getParameter("rootBoardID").equals("")) {

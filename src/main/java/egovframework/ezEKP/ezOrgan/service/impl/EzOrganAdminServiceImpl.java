@@ -3548,10 +3548,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	 * @return 전체관리자 - 모든 회사 리스트 / 회사관리자 - 권한이 있는 회사리스트
 	 * @throws Exception if an error occurs while retrieving the company list
 	 */
-	public List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary) throws Exception {
+	public List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary, String deptId, String jobId) throws Exception {
 		List<OrganDeptVO> list = getCompanyList(primary, tenantID);
 
-		OrganAuth organAuth = commonUtil.makeOrganAuth(id, tenantID);
+		OrganAuth organAuth = commonUtil.makeOrganAuth(id, tenantID, deptId, jobId);
 
         if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER, "")) {
             list.removeIf(vo -> !organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn()));

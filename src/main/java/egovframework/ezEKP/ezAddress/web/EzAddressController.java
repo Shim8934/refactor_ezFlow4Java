@@ -246,7 +246,7 @@ public class EzAddressController{
 		String pFolderId = request.getParameter("folderid") == null ? "normal" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		if (organAuth.isAuth(AdminAuth.DEPT_MANAGER, userInfo.getDeptID())) {
 			deptAdmin = "Y";
@@ -412,7 +412,7 @@ public class EzAddressController{
 		String compAdmin = "";
 		String deptAdmin = "";
 
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (organAuth.isAuth(AdminAuth.DEPT_MANAGER, userInfo.getDeptID())) {
 			deptAdmin = "Y";
