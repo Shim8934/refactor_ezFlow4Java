@@ -1,6 +1,9 @@
 package egovframework.ezMobile.ezSurvey.web;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -195,31 +198,49 @@ public class MSurveyGWController {
 	/**
 	 * 2023-08-07 - 한태훈 > 모바일 G/W 전자설문 [GET] 전자설문 첨부파일 다운로드
 	 */
-	@RequestMapping(value = "/mobile/ezSurvey/attachfile/file-download", method=RequestMethod.GET, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	@RequestMapping(value = "/mobile/ezSurvey/attachfile/file-download", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	@ResponseBody
-	public void getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("MOBILE G/W Survey [GET /mobile/ezSurvey/attachfile/file-download] started");
 		
 		String filePath = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
 		String fileName = request.getParameter("fileName") != null ? request.getParameter("fileName") : "";
 		String userId = request.getParameter("userId") != null ? request.getParameter("userId") : "";
-		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
 		String userAgent = request.getParameter("userAgent") != null ? request.getParameter("userAgent") : "";
-		
+		JSONObject result = new JSONObject ();
 		logger.debug("serverName: " + serverName + " ||  filePath: " + filePath + " || UserId: " + userId + " || File Name: " + fileName);
 		
 		if (filePath.equals("") || fileName.equals("") || serverName.equals("") || userId.equals("")) {
 			logger.debug("Invalid arguments!!!!!!");
-			return;
+			return result;
 		}
 		
 		//Get absolute path of the application
 		String realPath = request.getServletContext().getRealPath("");
 		realPath = commonUtil.detectPathTraversal(realPath);
-		mSurveyService.getDownloadedFile(fileName, filePath, realPath, userAgent, request, response);
+		
+		File file = new File(realPath + commonUtil.detectPathTraversal(filePath));
+		
+		if (!file.exists()) {
+			throw new FileNotFoundException(fileName);
+		}
+		
+		if (!file.isFile()) {
+			throw new FileNotFoundException(fileName);
+		}
+		
+		String _fileName = fileName;
+		_fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
+		byte[] fileBytes = Files.readAllBytes(file.toPath());
+		
+		JSONObject data = new JSONObject();
+		data.put("bytes", fileBytes);
+		data.put("fileName", _fileName);
+		result.put("data", data);
 		
 		logger.debug("MOBILE G/W Survey [GET /mobile/ezSurvey/attachfile/file-download] ended");
-		return;
+		return result;
 	}
 	
 	/**

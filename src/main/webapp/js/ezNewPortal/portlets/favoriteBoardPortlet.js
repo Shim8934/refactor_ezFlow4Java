@@ -78,26 +78,11 @@ function getTabList(portletId) {
     		        }
     		        
     	            if (i == 0) {
-    	                listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "'" + classon + " data2='" + guBun + "'><span> " + BoardName + " </span></dt>";
+    	                listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "'" + classon + " data2='" + guBun + "'><span class='longTitle'> " + BoardName + " </span></dt>";
     	                boardType = guBun;
     	                favoritePortletObj.activeTabId = boardId;
     	            } else {
-    		            listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "' data2='" + guBun + "'>";
-                        var portletSize = document.getElementById(portletId + "Portlet").getAttribute('data-size');
-                        var isKorean = /[가-힣]/.test(BoardName.toString());
-                        var maxLength;
-                        
-                       if (portletSize === "one_by_one" || portletSize === "two_by_one") {
-                           maxLength = isKorean ? 5 : 6;
-                       } else {
-                           maxLength = isKorean ? 11 : 18;
-                       }
-                       
-                       if (BoardName.trim().length > maxLength) {
-                           listHTML += "<span class='longTitle'>" + BoardName + " </span></dt>";
-                       } else {
-                           listHTML += "<span>" + BoardName + " </span></dt>";
-                       }
+                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "' data2='" + guBun + "'><span class='longTitle'> " + BoardName + " </span></dt>";
     		        }
     	            
     	            favoritePortletObj.tabIdList.push(boardId);
