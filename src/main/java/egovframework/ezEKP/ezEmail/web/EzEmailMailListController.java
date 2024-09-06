@@ -354,6 +354,7 @@ public class EzEmailMailListController {
 		// 2020-08-20 (사조그룹) 보안메일 필터링
 		String useSecureMailFilter = doc.getElementsByTagName("SECUREMAILFILTER").item(0).getTextContent();
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
+		String useAttachFileFilter = doc.getElementsByTagName("ATTACHFILEFILTER").item(0).getTextContent();
 		
 		NodeList  nListCategory = doc.getElementsByTagName("CATEGORY");
 		NodeList  nListKeyword = doc.getElementsByTagName("KEYWORD");
@@ -377,7 +378,7 @@ public class EzEmailMailListController {
 		logger.debug("userId=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
 					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex 
-					+ ",startDate=" + startDate + ",endDate=" + endDate + ",useSecureMailFilter=" + useSecureMailFilter);
+					+ ",startDate=" + startDate + ",endDate=" + endDate + ",useSecureMailFilter=" + useSecureMailFilter +",useAttachFileFilter=" + useAttachFileFilter);
 		
 		String returnData = "";
 		
@@ -451,6 +452,7 @@ public class EzEmailMailListController {
 			extraMap.put("andorStatus", andorStatus);
 			extraMap.put("attachStatus", attachStatus);
 			extraMap.put("useSecureMailFilter", useSecureMailFilter.equals("1"));
+			extraMap.put("useAttachFileFilter",useAttachFileFilter.equals("1"));
 
 			if (useRDBOnlyMailList.equals("YES")) {
 				int mailboxMailCount = 0;
@@ -1000,6 +1002,7 @@ public class EzEmailMailListController {
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
 		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String useAttachFileFilter = doc.getElementsByTagName("ATTACHFILEFILTER").item(0).getTextContent();
 		
 		if (startDate == null) {
 			return "";
@@ -1051,10 +1054,8 @@ public class EzEmailMailListController {
 			}
 		}
 		
-		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
-		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
-					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex + ",useCountryIP=" + useCountryIP
-					+ ",useSecureMailFilter=" + useSecureMailFilter);
+		logger.debug("userId={},userEmail={},tenantId={},serverName={},folderId={},sortType={},start={},end={},search={},viewSelectIndex={},useCountryIP={},useSecureMailFilter={},useAttachFileFilter={}"
+					,userInfo.getId(),userEmail,userInfo.getTenantId(),userInfo.getServerName(),folderId,sortType,start,end,search,viewSelectIndex,useCountryIP,useSecureMailFilter,useAttachFileFilter);
 		
 		String returnData = "";
 				
@@ -1146,6 +1147,7 @@ public class EzEmailMailListController {
 			extraMap.put("andorStatus", andorStatus);
 			extraMap.put("attachStatus", attachStatus);
 			extraMap.put("useSecureMailFilter", useSecureMailFilter.equals("1"));
+			extraMap.put("useAttachFileFilter",useAttachFileFilter.equals("1"));
 
 			//2020-07-16 김은실 - (사조그룹)내부·외부필터 내부기준 도메인
 			if (sortType.indexOf("INTERNAL") >= 0 || sortType.indexOf("EXTERNAL") >= 0) {
@@ -1665,67 +1667,13 @@ public class EzEmailMailListController {
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-					
-			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
-			sourceFolder.open(Folder.READ_WRITE);		
-					
-			Message[] deleteMsgs = null;
+			
 			if (cmd.equalsIgnoreCase("ALL")) {
-				deleteMsgs = sourceFolder.getMessages();
-			}
-			else {
-				deleteMsgs = sourceFolder.getMessagesByUID(uids);
-				
-				// 2018-10-09 메일 영구 삭제 시 메일 제목, 받은 날짜 로그 추가
-				if (!cmd.equalsIgnoreCase("BMOVE")) {
-					String subject = null;
-					String from = null;
-					String receivedDate = null;
-					
-					for (Message message : deleteMsgs) {
-						subject = ezEmailUtil.getSubject(message);
-						subject = (subject != null) ? subject : "";
-						from = ezEmailUtil.getFullFromAddressOfMessage(message);
-						receivedDate = (message.getReceivedDate() != null) ? message.getReceivedDate().toString() : "";
-						
-						logger.debug("subject=" + subject + ",from=" + from + ",receivedDate=" + receivedDate);
-					}
-				}
-			}
-			
-			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
-			
-			if (useImapMoveCommand.equals("YES")) {
-				if (cmd.equalsIgnoreCase("BMOVE")) {
-					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));			
-					sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
-				} else {			
-					sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
-				}
+				ezEmailService.actionTrashMailAllDelete(ia,folderId);
 			} else {
-				if (cmd.equalsIgnoreCase("BMOVE")) {
-					// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
-					Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(deleteMsgs, userEmail, domainName, ia);
-					
-					if (adjustQuotaData[0] != null) {
-						isNewUserQuotaNeeded = true;
-						
-						userQuota = adjustQuotaData[0];
-						userWarn = adjustQuotaData[1];
-					}
-
-					if (adjustQuotaData[2] != null) {
-						isThereUserLevelQuota = true;
-					}
-									
-					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));			
-					sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
-				}
-				
-				sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);				
+				ezEmailService.actionMailMoveTrash(ia, folderId, cmd, uids, locale, userInfo.getTenantId(), userEmail, domainName);
 			}
-					
-			sourceFolder.close(true);		
+			
 		} catch (Exception e) {
 			returnData = "ERROR : " + e.getMessage();
 			logger.error(e.getMessage(), e);
@@ -1734,15 +1682,6 @@ public class EzEmailMailListController {
 				ia.close();		
 			}
 			
-			// 사용자 Quota를 변경시켰다면 원래 값으로 복원시킨다.			
-			if (isNewUserQuotaNeeded) {
-				if (isThereUserLevelQuota) {
-					ezEmailUtil.setUserQuota(userEmail, String.valueOf(userQuota), String.valueOf(userWarn));
-				// 사용자 레벨 Quota 설정값이 없었던 경유에는 해당 설정값을 삭제한다.
-				} else {
-					ezEmailUtil.deleteUserQuota(userEmail);
-				}
-			}
 		}
 		
 		logger.debug("returnData=" + returnData);

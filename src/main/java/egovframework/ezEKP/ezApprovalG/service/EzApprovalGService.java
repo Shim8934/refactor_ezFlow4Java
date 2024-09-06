@@ -27,6 +27,7 @@ import org.json.simple.JSONObject;
 import org.jsoup.nodes.Element;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -967,4 +968,10 @@ public interface EzApprovalGService {
 	
 	// 2024-06-10 조수빈 - config.useOpenGov = YES일 때 일괄 접수 처리에서는 createDate만 업데이트하기 위한 메소드
 	public void updateCreateDateOfOpenGovDocInfo(String docID, int tenant_id, String companyID);
+
+    /* 2024-07-08 임정은 - 전자결재G > 기록물배부대장 > 배부정보  > 문서 기본정보 가져오기 */
+    public ApprGDeliveryListVO getDistributeInfo(String docId, String companyId, int tenantId) throws Exception;
+
+    /* 2024-07-09 임정은 - 전자결재G > 기록물배부대장 > 배부정보 > 문서 배부정보 가져오기 */
+    public List<ApprGDeliveryListVO> getDistributeInfo2(String docId, String deliverySN, String deptId, String companyID, int tenantId, String offset) throws Exception;
 }

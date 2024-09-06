@@ -491,7 +491,6 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			String pCompanyAdmin = "";
 			String pDeptAdmin = "";
-			String isPublic = "";
 			
 			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 	        	pCompanyAdmin = "Y";
@@ -568,14 +567,10 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			String chkSchedulePublic = ezCommonService.getTenantConfig("chkSchedulePublic", info.getTenantId());
 			
-			if(chkSchedulePublic.equals("ON")) {
-				// isPublic =
-			}
-			result.put("isPublic", isPublic);
-			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", sb);
+			result.put("chkPublic", chkSchedulePublic); // 개인일정 작성시 공개/비공개값 설정가능 여부
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

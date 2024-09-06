@@ -355,6 +355,8 @@ var strLangHSG02 = "スパム報告が正常に処理されませんでした。
 // 2024.04.29 한슬기 : 메일 관련 메시지
 var strLangHSG03 = "件名が空白です。";
 
+var strLangKDH01 = "受信確認";
+
 //new ui
 const strLangFolderManage = "メールフォルダの管理";
 const strLangSubscribe = "購読";

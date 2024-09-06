@@ -99,10 +99,12 @@
 	    		
 	    		if (publicityYN != "") {
 	    			if (publicityYN == "N") {
-	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.t46'/>");
+	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.kmh05'/>");
+	    			} else if (publicityYN == "B"){
+	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.kmh04'/>");
 	    			} else {
-	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.t47'/>");
-	    			}
+						$("#publicityCode_span").text("<spring:message code='ezApprovalG.kmh03'/>");
+					}
 	    		}
 	    		
 	    		if (publicityCode != "") {

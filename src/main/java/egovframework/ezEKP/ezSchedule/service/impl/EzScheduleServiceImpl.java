@@ -4190,5 +4190,35 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 		logger.debug("updateScheduleWritePermission ended");
 	}
+	
+	@Override
+	public String checkExecutiveType(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("checkExecutiveType started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		String userType = ezScheduleDAO.checkExecutiveType(map);
+
+		logger.debug("checkExecutiveType ended. result = " + userType);
+		return userType;
+	}
+
+	@Override
+	public String checkExecutiveUsage(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("checkExecutiveUsage started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		String usage = ezScheduleDAO.checkExecutiveUsage(map);
+
+		logger.debug("checkExecutiveUsage ended. result = " + usage);
+		return usage;
+	}
 }
 

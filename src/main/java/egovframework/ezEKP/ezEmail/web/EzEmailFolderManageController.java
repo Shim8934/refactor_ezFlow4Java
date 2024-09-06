@@ -336,15 +336,9 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
 	            	if (!url.equals("")) {
-	            		Folder folder = ia.getFolder(url);
-	            		if (folder.exists()) {
-	            			folder.open(Folder.READ_WRITE);
-	            			Message[] messages = folder.getMessages();
-	        				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
-	            			folder.close(true);
-	            			logger.debug(url + " folder is clean.");
-	            			returnValue = "OK";
-	            		}
+						ezEmailService.actionTrashMailAllDelete(ia, url);
+						logger.debug(url + " folder is clean.");
+						returnValue = "OK";
 	            	}
 	            	
 	                break;

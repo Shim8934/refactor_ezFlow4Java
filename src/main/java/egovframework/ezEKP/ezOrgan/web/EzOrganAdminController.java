@@ -213,6 +213,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createTblSerialNoRollback(); // 2022-09-21 홍승비 - 전자결재G > 문서 기록물 레코드 중복삽입 시 에러 롤백방지 기록 테이블 추가
 	    	ezCommonService.createTblBoardReplyReact();	// 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가
 			ezCommonService.createTblDbLog(); // 2023-12-11 박기범 - DB 로그 테이블 추가
+			ezCommonService.createTblDistributeinfo(); // 2024-08-07 김유진 - 배부이력정보 테이블 추가
+			ezCommonService.createExecutiveTable(); // 2024-08-06 이유정 - 임원일정 테이블 추가
 
 			// alter table
 	    	ezCommonService.alterTableAddColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
@@ -242,6 +244,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertInitMobileTheme(); // 2024-07-12 황인경 > 모바일 포탈 > 포틀릿, 테마, 권한 추가
 			ezCommonService.alterMenuOpenType();	// 2024-07-23 조수빈 - 관리자 > 메뉴 관리 > url 외부 / 내부 모듈 및 새 탭 열기, 새 창 열기 구분
 			ezCommonService.alterSaveFlagForCbShare(); // 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+			ezCommonService.addTblFormContainerSN(); /* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
 			ezCommonService.alterUseColor();	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
 
 			// tenant config
@@ -314,6 +317,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.alterBoardExtentionAttrByteSize(); // 2024-07-31 전인하 - 게시판 > 확장컬럼 > 저장할 수 있는 데이터 크기 변경 (mysql, oracle 일괄 500자)
 			ezCommonService.insertDotNetTotalNotificationConfig(); // 2024-08-21 유길상 닷넷 통합알림 컨피그
 			ezCommonService.updateInProcessJpCodeName3(); // 2024-08-22 유길상 - CODELIST > a04(진행) 일본어 변경 
+			ezCommonService.createServeyResultviewPermTbl(); // 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 테이블 추가
             ezCommonService.createSystemConfig(); // 2024-07-22 한태훈 - tbl_systemconfig, tbl_systemconfig_type 
             ezCommonService.createConnectionMenu(); // 2024-07-22 한태훈 - 연계메뉴 및 연계 포틀릿 기본 시스템 컨피그 추가
             ezCommonService.insertStandardSystemConfigData(); // 2024-07-22 한태훈 - 시스템 컨피그 기본 데이터 추가

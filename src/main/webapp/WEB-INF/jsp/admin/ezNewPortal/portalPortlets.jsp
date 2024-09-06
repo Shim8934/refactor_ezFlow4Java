@@ -635,7 +635,7 @@
 							var boardName = "";
 							
 							if (result[i].boardName1 == null || result[i].boardName1 == "null") {
-								boardName = "<spring:message code='ezNewPortal.t089' />";
+								boardName = "<spring:message code='ezNewportal.boardNameNone01' />";
 							} else {
 								boardName = ReplaceText(ReplaceText(result[i].boardName1, '\"', "&#39;"), "\'", "&#34;");
 							}

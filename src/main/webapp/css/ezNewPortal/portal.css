@@ -578,6 +578,7 @@ nav > .countBox .hidden_nav_count_off{position:absolute; right:0px; top:6px; dis
 .sscheduleUL .scheduleLi .Tdept{background-color:#6AAF1B;}
 .sscheduleUL .scheduleLi .Tcompany{background-color:#FF1C71;}
 .sscheduleUL .scheduleLi .Tcollaborate{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#3f51b5; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
+.sscheduleUL .scheduleLi .Texecutive{background-color:#ffae00;}
 .sscheduleUL .scheduleLi .timeText{margin:0px; padding:0px 0px 0px 5px; font-size:13px; color:#333;}
 .sscheduleUL .scheduleLi_nodata{background:#fff; cursor:default; border-color:#EFECEC; display:flex; align-items:center; justify-content:space-between;}
 .sscheduleUL .scheduleLi_nodata .sNodataText{margin:0px; padding:0px 0px 0px 0px; float:left; font-size:13px; color:#b2b2b2;}
@@ -608,6 +609,7 @@ nav > .countBox .hidden_nav_count_off{position:absolute; right:0px; top:6px; dis
 .sscheduleUL .scheduleLi.company{background:rgba(255,233,241,0.62); border-color:rgba(255,28,113,0.16);}
 .sscheduleUL .scheduleLi.individual{background:rgba(221,242,253,0.62); border-color:rgba(1,139,250,0.16);}
 .sscheduleUL .scheduleLi.dept{background:rgba(233,243,222,0.62); border-color:rgba(106,175,27,0.16);}
+.sscheduleUL .scheduleLi.executive{background:rgba(255,174,0,0.08); border-color:rgba(255,174,0,0.3);}
 
 /* approval */
 

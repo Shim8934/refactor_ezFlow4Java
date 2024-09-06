@@ -151,7 +151,9 @@
 	            	var htmlContent = "<tr><td style='text-align:center'>" + msg +"</td></tr>";
 	            	$("#lvBoardList").html(htmlContent);
 	            	
-	            	$("#lvBoardList").css("height", "335px");
+	            	$("#lvBoardList").css("height", "353px");
+	            	$("#divList").css("height", "353px");
+					$("#tblPageRayer").css("display", "none");
 	            }
 	        }
 	        catch (e) {

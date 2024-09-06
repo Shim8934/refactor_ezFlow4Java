@@ -686,6 +686,12 @@
                             </label>
                     </c:forEach>
             </c:if>
+            <%--임원 일정--%>
+            <label class="IDcontainer" onchange="chk_DisplayChange()">
+                <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="10" value="${resultUserID }" class="checkSelect" style="vertical-align:-5px;">
+                <span class="checkmark" style="background:rgb(255, 174, 0);"></span>
+                <span class="list_text"><spring:message code='ezSchedule.lyj14'/></span>
+            </label>
         </td>
     </tr>
 </table>

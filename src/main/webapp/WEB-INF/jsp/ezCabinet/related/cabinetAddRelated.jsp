@@ -889,9 +889,9 @@
 				
 				function getUserIdFromInline(elmtObj, divide) {
 					var clickStr    = elmtObj.getAttribute("onclick");
-					var start       = clickStr.indexOf(divide);
-					var end         = clickStr.lastIndexOf(divide);
-					return clickStr.substring(start + 1, end);
+					var start       = clickStr ? clickStr.indexOf(divide) : null;
+					var end         = clickStr ? clickStr.lastIndexOf(divide) : null;
+					return clickStr ? clickStr.substring(start + 1, end) : null;
 				}
 				
 				function getScheduleTypeName(schType) {

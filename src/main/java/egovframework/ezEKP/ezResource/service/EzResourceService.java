@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
+import egovframework.ezEKP.ezResource.vo.ResOccuVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -113,5 +114,7 @@ public interface EzResourceService {
 	public List<ResBrdVO> getUserResourceList(String userId, String companyId, String deptId, int tenantId) throws Exception;
 
 	public List<ResBrdVO> getResourceScheduleList(String brdId, String date, int currentPage, int listCnt, int tenantId, String companyId, String offset, String lang) throws Exception;
+	
+	public List<ResOccuVO> getResOccuList(String companyID, int tenantID, String startTime, String endTime, String offset) throws Exception;
 	
 }

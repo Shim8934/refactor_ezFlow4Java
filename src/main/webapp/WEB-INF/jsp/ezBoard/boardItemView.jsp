@@ -730,10 +730,10 @@
 		        var pwidth = window.screen.availWidth;
 		        pheigth = parseInt(pheigth) / 2;
 		        pwidth = parseInt(pwidth) / 2;
-		        pheigth = pheigth - 200;
+		        pheigth = pheigth + 1000;
 		        pwidth = pwidth - 127;
 		        var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
-		        feature = feature + GetOpenPosition(355,600);
+		        feature = feature + GetOpenPosition(pheigth,pwidth);
 		        copyboarditem_cross_dialogArguments[1] = CopyItem_onclick_Complete
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(pItemID) + ";" + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", feature, "");
 		    }

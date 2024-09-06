@@ -321,6 +321,10 @@
                                     <td colspan="5" id="${boardAttributeVO.tableCol}">
                                     </td>
                                 </c:when>
+								<c:when test="${boardAttributeVO.colType == 'cal'}">
+									<td colspan="5" id="${boardAttributeVO.tableCol}">
+									</td>
+								</c:when>
 	       					</c:choose>
 	       				</tr>
 	       			</c:forEach>
