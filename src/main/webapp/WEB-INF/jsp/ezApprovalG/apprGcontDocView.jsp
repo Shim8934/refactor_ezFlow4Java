@@ -1062,7 +1062,7 @@
 				  <c:if test="${approvalFlag eq 'S' and orgCompanyID eq userInfo.companyID and formID != '2018000000' and docAprEnd != 'APR'}">
 		          	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
-				  <c:if test="${approvalFlag eq 'G' and formID != '2018000000'}">
+				  <c:if test="${approvalFlag eq 'G' and formID != '2018000000' and docAprEnd ne 'APR'}">
 				  	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 				  <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>
