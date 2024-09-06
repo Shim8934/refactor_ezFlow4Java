@@ -269,3 +269,24 @@ var strLangHTH04 = "월 간격은 0보다 큰 정수로 입력해주세요.";
 var strLangKWC01 = "승인자원 현황";
 var strLangKWC02 = "승인대기자원 현황";
 var strLangKWC03 = "종료자원 현황";
+
+//2024-08-06 유길상 - 자원 즐겨찾기 메세지 표출
+var strLangFvYGS01 = "이동";
+var strLangFvYGS02 = "삭제할 자원을 선택해 주세요.";
+var strLangFvYGS03 = "이미 추가된 자원입니다.";
+var strLangFvYGS04 = "추가 되었습니다.";
+var strLangFvYGS05 = "분류명을 입력하세요.";
+var strLangFvYGS06 = "분류를 선택해 주세요.";
+var strLangFvYGS07 = "하위 트리로 이동할 수 없습니다.";
+var strLangFvYGS08 = "같은 트리로 이동할 수 없습니다.";
+var strLangFvYGS09 = "현재 위치 입니다.";
+var strLangFvYGS10 = "선택한 자원을 삭제하시겠습니까?";
+var strLangFvYGS11 = "즐겨찾기에 추가하시겠습니까?";
+var strLangFvYGS12 = "선택한 분류를 삭제하시겠습니까?";
+var strLangFvYGS13 = "삭제할 대상을 선택해 주세요.";
+var strLangFvYGS14 = "이동할 대상을 선택해 주세요.";
+var strLangFvYGS15 = "수정되었습니다.";
+var strLangFvYGS16 = "삭제되었습니다.";
+var strLangFvYGS17 = "즐겨찾기 그룹이 없습니다.";
+var strLangFvYGS18 = "자원에는 하위를 추가할 수 없습니다.";
+var strLangFvYGS19 = "분류 삭제 시 하위의 모든 자원 및 분류가 삭제됩니다.\n정말 삭제하시겠습니까?";

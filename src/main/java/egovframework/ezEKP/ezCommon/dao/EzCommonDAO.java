@@ -2815,4 +2815,27 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 	}
+	
+    // 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 테이블 추가
+    public void createTblRsFavCat() {
+		try {
+			select("EzCommonDAO.checkTblRsFavCat");
+		} catch (Exception e) {
+			logger.debug("tbl_rs_fav_cat doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblRsFavCat");
+		}
+	}
+    
+    // 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 자원 정보 테이블
+	public void createTblRsCatBrd() {
+		try {
+			select("EzCommonDAO.checkTblRsCatBrd");
+		} catch (Exception e) {
+			
+			logger.debug("tbl_rs_cat_brd doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblRsCatBrd");
+		}
+	}
+
 }

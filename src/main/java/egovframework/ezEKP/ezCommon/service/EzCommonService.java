@@ -468,4 +468,7 @@ public interface EzCommonService {
 	
 
 	public void createBoardKeywordTable() throws Exception;
+	
+	// 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 테이블 추가
+	public void createResourceFavoriteTables() throws Exception;
 }

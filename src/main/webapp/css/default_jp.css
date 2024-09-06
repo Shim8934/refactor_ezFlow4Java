@@ -4073,3 +4073,8 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .keywordSpanView { color: #388CE5; padding: 0px 7px 0px 0px; font-size : 15px;}
 .keywordSpan:hover {text-decoration: underline; cursor: pointer;}
 .keywordDeleteBtn { padding-left: 2px; cursor: pointer;}
+
+#TreeCtrl_MyFavTree_ul > .lnbUL {
+	padding-top: 0px;
+	padding-left: 20px;
+}
