@@ -291,6 +291,7 @@
         			}
         		}
         	});
+			window.parent.opener.location.reload();
 		}
 
 		function cancel() {
@@ -683,7 +684,7 @@
 			</tr>
 			<tr style="${_style}">
 			<%-- 2021-11-12 홍승비 - 메일알림 옵션 분리, 게시/수정/댓글알림 추가 --%>
-				<th><spring:message code = 'ezBoard.HSBMail00' /></th>
+				<th><spring:message code = 'ezNotification.hth38' /></th>
 				<td>
 					<c:choose>
 						<c:when test="${boardProp.mailFG_Post == 'Y' }">

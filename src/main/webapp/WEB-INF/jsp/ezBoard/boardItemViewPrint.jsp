@@ -106,6 +106,17 @@
 		        myVar = setInterval(function () { DocumentComplate(); }, 2000);
 		        
 		        document.getElementById("WriteUserNM").innerText = " " + strWriterName;
+		        
+		        // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 출력값 가공
+		        var userLang = "${userInfo.lang}";        
+		        for (i = 1 ; i < 6; i++) {
+		            var extentionAttrId = "extensionAttribute" + (5 + i);
+		            var extentionAttrDiv = document.getElementById(extentionAttrId);
+		            if (extentionAttrDiv != null && typeof extentionAttrDiv != "undefined")
+		            if (extentionAttrDiv.getAttribute("type") == "people") {
+		                extentionAttrDiv.innerText = peoplePickerDisplay(extentionAttrDiv.innerText, userLang);
+		            }
+		        }
 		    };
 		
 		    function DocumentComplate() {
@@ -252,7 +263,7 @@
 			        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
 							<td id="WriteUserNM" style="width:40%; white-space:nowrap"></td>
 							<th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
-							<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td>
+							<td id="User_DeptNM" style="width:40%; white-space:nowrap">${boardItem.writerDeptName}</td>
 						</c:when>
 						<c:otherwise>
 							<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
@@ -264,23 +275,23 @@
 		        	<c:if test="${boardInfo.guBun != '2'}">
 		        	<tr>
 		        		<th><spring:message code='ezBoard.t290'/></th>
-						<td id="User_JobTitle" style="width:40%; white-space:nowrap;">&nbsp;${boardItem.extensionAttribute3}<div></div></td>
+						<td id="User_JobTitle" style="width:40%; white-space:nowrap;">${boardItem.extensionAttribute3}<div></div></td>
 						<th><spring:message code='ezPersonal.t177'/></th>
-						<td id="Telephone" style="width:40%; white-space:nowrap">&nbsp;${boardItem.extensionAttribute4}</td>
+						<td id="Telephone" style="width:40%; white-space:nowrap">${boardItem.extensionAttribute4}</td>
 		        	</tr>
 		        	</c:if>
 		        	<!-- 게시일&게시종료일 -->
 		        	<tr>
 						<th><spring:message code='ezBoard.t224'/></th>
-		        		<td id="PostDate" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writeDate.substring(0, 16)}</td>
+		        		<td id="PostDate" style="width:40%; white-space:nowrap">${boardItem.writeDate.substring(0, 16)}</td>
 						<th><spring:message code='ezBoard.t288'/></th>
 						<c:set var="t287" value="<spring:message code='ezBoard.t287'/>"/>
 						<c:choose>
 							<c:when test="${boardItem.endDate == t287}">
-								<td id="EndDate" style="padding-right:15px; width:40%;">&nbsp;<spring:message code='ezBoard.t287'/></td>
+								<td id="EndDate" style="padding-right:15px; width:40%;"><spring:message code='ezBoard.t287'/></td>
 							</c:when>
 							<c:otherwise>
-								<td id="EndDate" style="padding-right:15px; width:40%;">&nbsp;${boardItem.endDate.split(' ')[0]}</td>
+								<td id="EndDate" style="padding-right:15px; width:40%;">${boardItem.endDate.split(' ')[0]}</td>
 							</c:otherwise>
 						</c:choose>
 		        	</tr>
@@ -296,22 +307,22 @@
 							                <th>${boardAttr.colName2}</th>
 										</c:otherwise>
 									</c:choose>
-					                <td colspan="5">
+					                <td colspan="5" id="${boardAttr.tableCol}" type="${boardAttr.colType}">
 					                	<c:choose>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
-					                			&nbsp;${boardItem.extensionAttribute6}
+					                			${boardItem.extensionAttribute6}
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute7'}">
-					                			&nbsp;${boardItem.extensionAttribute7}
+					                			${boardItem.extensionAttribute7}
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute8'}">
-					                			&nbsp;${boardItem.extensionAttribute8}
+					                			${boardItem.extensionAttribute8}
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute9'}">
-					                			&nbsp;${boardItem.extensionAttribute9}
+					                			${boardItem.extensionAttribute9}
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute10'}">
-					                			&nbsp;${boardItem.extensionAttribute10}
+					                			${boardItem.extensionAttribute10}
 					                		</c:when>
 					                		<c:otherwise></c:otherwise>
 					                	</c:choose>
@@ -322,7 +333,7 @@
 					<!-- 제목 -->
 		            <tr>
 	                  <th><spring:message code='ezBoard.t291'/></th>
-	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;<c:out value="${boardItem.title}"/></td>
+	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6"><c:out value="${boardItem.title}"/></td>
 		            </tr>
 		      </table>
 <!-- 		<table class="layout">  -->

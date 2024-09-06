@@ -114,11 +114,11 @@ var gwboard_post_regboardright_dialogArguments = new Array();
 function cmdAdd_onclick() {
     if (CrossYN()) {
         gwboard_post_regboardright_dialogArguments[1] = cmdAdd_onclick_Complete;
-        var OpenWin = window.open("/admin/ezResource/popup/gwBoardPostRegBoardRight.do", "gwBoardPostRegBoardRight", GetOpenWindowfeature(970, 665));
+        var OpenWin = window.open("/admin/ezResource/popup/gwBoardPostRegBoardRight.do?company=" + encodeURI(pCompanyID), "gwBoardPostRegBoardRight", GetOpenWindowfeature(970, 680));
         
         try { OpenWin.focus(); } catch (e) { }
     } else {
-        var Url = "/admin/ezResource/popup/gwBoardPostRegBoardRight.do";
+        var Url = "/admin/ezResource/popup/gwBoardPostRegBoardRight.do?company=" + encodeURI(pCompanyID);
         var config = "dialogHeight:665px; dialogWidth:970px; status:no; scroll:no; help:no; edge:sunken";
         var rv = window.showModalDialog(Url, '', config);
 

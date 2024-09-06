@@ -85,7 +85,7 @@
 			        chk_DisplayChange2();
 			    }
 			    liSelected();
-			}   
+			}
 			function FindByAttributeValue(attribute, value, element_type)    {
 				element_type = element_type || "*";
 			   	var All = document.getElementsByTagName(element_type);
@@ -108,52 +108,88 @@
 						$("input[name=chk_schedule]").each(function(index){
 							var chk_eachVal1 = $(this).val();
 							var chk_type=$(this).data("schedule-type")
-							
-							$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
-								$(value).addClass('chk_noneDisplay');
-							});
+
+							if (chk_type == "10" || chk_type == "1") {
+								$('.td_list td[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							} else {
+								$('.td_list td[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							}
 						});
 						$("input[name=chk_schedule]:checked").each(function(index) {
 							var test = $(this).val();
 							var chk_type = $(this).data("schedule-type");
 							
-							$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).removeClass('chk_noneDisplay');
-							});
+							if (chk_type == "10" || chk_type == "1") {
+								$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+									$(value).removeClass('chk_noneDisplay');
+								});
+							} else {
+								$('.td_list td[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).removeClass('chk_noneDisplay');
+								});
+							}
 						});					
 					} else if (typeCal == 1) {
 						$("input[name=chk_schedule]").each(function(index){
 							var chk_eachVal1 = $(this).val();
 							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).addClass('chk_noneDisplay');
-							});
+
+							if (chk_type == "10" || chk_type == "1") {
+								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							} else {
+								$('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							}
 						});
 						$("input[name=chk_schedule]:checked").each(function(index) {
 							var test = $(this).val();
 							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).removeClass('chk_noneDisplay');
-							});
+
+							if (chk_type == "10" || chk_type == "1") {
+								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).removeClass('chk_noneDisplay');
+								});
+							} else {
+								$('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).removeClass('chk_noneDisplay');
+								});
+							}
 						});	
 					} else {
 						$("input[name=chk_schedule]").each(function(index){
 							var chk_eachVal1 = $(this).val();
 							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).addClass('chk_noneDisplay');
-							});
+
+							if (chk_type == "10" || chk_type == "1") {
+								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							} else {
+								$('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							}
 						});
 						$("input[name=chk_schedule]:checked").each(function(index) {
 							var test = $(this).val();
 							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).removeClass('chk_noneDisplay');
-							});						
+
+							if (chk_type == "10" || chk_type == "1") {
+								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).removeClass('chk_noneDisplay');
+								});
+							} else {
+								$('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).removeClass('chk_noneDisplay');
+								});
+							}
 						});	
 					}
 					
@@ -421,7 +457,16 @@
 		            	$('#select-all').prop('checked',false);
 		                window.open("/ezSchedule/scheduleConfigMain.do?flag=schedule", "right");
 		                break;
-		        }
+					case 12:		// Search User Calendar
+						$('.checkSelect').each(function() {
+							$(this).prop('checked',false);
+						});
+						isCalendarView = false;
+						$('#select-all').prop('checked',false);
+						liSelected();
+						window.open("/ezSchedule/scheduleUserCalendarSearch.do", "right");
+						break;
+				}
 		    }
 	        
 	        function WriteSchedule() {
@@ -499,20 +544,20 @@
 					chk_str += $('#select-all').val();
 				}
 	        }
-	        
+
 	        // 2023-06-30 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 일정검색, 공개일정검색 선택 항목 클래스 제어
 	        function liSelected() {
 	        	$(".list_text.node_selected").removeClass("node_selected");
 
 	        	var liSelected = $(event.target);
-	        	
+
 	            if (liSelected.prop("tagName") == "LI") {
 	            	liSelected.children().addClass("node_selected");
 	            } else {
 	            	liSelected .addClass("node_selected");
 	            }
 	        }
-	        
+
 		</script>
 	</head>
 
@@ -551,7 +596,7 @@
 					  		<span class="list_text"><spring:message code='ezSchedule.t221'/></span>
 						</label>
 					</li>	
-					<c:if test='${!empty scheSec}'>
+					<%--<c:if test='${!empty scheSec}'>
 						<c:forEach var="sec" items="${scheSec}">
 							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
@@ -561,7 +606,7 @@
 								</label>
 							</li>	
 						</c:forEach>
-					</c:if>
+					</c:if>--%>
 					<c:if test="${isGoogleSync == 'Y'}">
 						<li>
 							<label class="IDcontainer" onchange="chk_DisplayChange()">
@@ -629,10 +674,18 @@
 							</li>	
 						</c:forEach>
 					</c:if>
+					<li>
+						<label class="IDcontainer" onchange="chk_DisplayChange()">
+							<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="10" value="${loginVO.id}" class="checkSelect">
+							<span class="checkmark mr5" style="background:rgb(255, 174, 0); margin-top: 7px;"></span>
+							<span class="list_text"><spring:message code='ezSchedule.lyj14'/></span>
+						</label>
+					</li>
 					<%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > LNB 이미지, 구조 수정 --%>
                   	<li class="ul_2Box"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
                   	<li><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
-		        </ul>
+					<li><span class="list_text" onClick="Function_Flag(12)"><spring:message code='ezSchedule.kmh01'/></span></li>
+				</ul>
 <%-- 		    <ul class="lnbUL">
 	            	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
     	        	<li><span class="sub_iconLNB tree_pims_search_open"></span><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>

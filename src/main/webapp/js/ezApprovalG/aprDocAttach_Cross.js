@@ -57,6 +57,8 @@ function getDocList() {
     createNodeAndInsertText(xmlpara, objNode, "NODE", selSContName.value);
     createNodeAndInsertText(xmlpara, objNode, "BlockNum", curpage);
     createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
+    createNodeAndInsertText(xmlpara, objNode, "SortHeader", SortHeader == null ? "" : SortHeader);
+    createNodeAndInsertText(xmlpara, objNode, "sortType", sortType);
 
     xmlhttp.open("POST", "/ezApprovalG/aprDocAttachList.do?orgCompanyID="+orgCompanyID, false);
     xmlhttp.send(xmlpara);
@@ -88,9 +90,63 @@ function getDocList() {
         listview.DataBind("lvSDoc");
 
         pagingCount(curpage, nowblock);
+        setDatarowSerialNumber();
+        setHeaderEventHandler();
     }
 
     pChackYN = "FALSE"
+}
+
+function setHeaderEventHandler() {
+    let headRow = document.getElementById("lvSDocList").querySelector("thead");
+
+    setHeaderCursorPointer(headRow);
+
+    headRow.addEventListener("click", (e) => {
+        pChackYN = "TRUE";
+
+        sortList(e);
+    });
+}
+
+function setHeaderCursorPointer(headRow) {
+    headRow.style.cursor = "pointer";
+}
+
+function sortList(e) {
+    let targetID = e.target.id;
+
+    if (SortHeader !== document.getElementById(targetID).getAttribute("colname")) {
+        SortHeader = document.getElementById(targetID).getAttribute("colname");
+        sortType = "asc";
+    } else {
+        sortType = sortType === "asc" ? "desc" : "asc";
+    }
+
+    if (SortHeader === "SN") {
+        return;
+    }
+
+    getDocList();
+}
+
+function setDatarowSerialNumber() {
+    let cnt = 0;
+    let sn = 1;
+    let documetBuffer;
+    let tdBuffer;
+
+    while ((documetBuffer = document.getElementById("lvSDocList_TR_" + cnt++)) != null) {
+        let tdCnt = 0;
+
+        while ((tdBuffer = documetBuffer.children[tdCnt++]) != null) {
+            if (tdBuffer.getAttribute("headername") === "SN") {
+                tdBuffer.innerText = sn++;
+
+                break;
+            }
+        }
+    }
 }
 
 function DocMove() {
@@ -126,7 +182,7 @@ function DocMove() {
                 SDocID = GetAttribute(selRow, "DATA1");
                 objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
                 objNode = createNodeAndAppandNode(xmlpara, objRoot, objNode, "CELL");
-                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "VALUE", "【" + GetAttribute(selRow, "DATA99") + "】" + getNodeText(selRow.cells[1]));
+                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "VALUE", "【" + GetAttribute(selRow, "DATA99") + "】" + getNodeText(selRow.cells[2]));
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA1", GetAttribute(selRow, "DATA2"));
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA2", "");
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA3", pDocID);
@@ -136,7 +192,7 @@ function DocMove() {
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA7", arr_userinfo[15]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA8", arr_userinfo[11]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA9", "N");
-                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA10", "【" + GetAttribute(selRow, "DATA99") + "】" + getNodeText(selRow.cells[1]));
+                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA10", "【" + GetAttribute(selRow, "DATA99") + "】" + getNodeText(selRow.cells[2]));
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA11", arr_userinfo[12]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA12", arr_userinfo[14]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA13", arr_userinfo[16]);
@@ -173,6 +229,27 @@ function AttachList() {
     listview.SetTableWidth(350 - 14);
     listview.DataSource(loadXMLString(result));
     listview.DataBind("lvTDoc");
+}
+function orgAttachList(orgDocId) {
+	var result = "";
+	var returnXml = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getAttachInfo.do",
+		data : {
+			docID : orgDocId,
+			mode : "END"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+	returnXml = loadXMLString(result);
+	return returnXml;
 }
 
 function delAttachDoc() {
@@ -410,4 +487,69 @@ function DuplicateCheck(AttachDocID) {
     }
     listview = null;
     return RtnVal;
+}
+
+// START
+var ezapralert_cross_dialogArguments = new Array();
+function OpenAlertUI(pAlertContent, CompleteFunction) {
+    var parameter = pAlertContent;
+    var url = "/ezApprovalG/ezAprAlert.do";
+
+    if (CrossYN()) {
+        ezapralert_cross_dialogArguments[0] = parameter;
+        if (CompleteFunction != undefined)
+            ezapralert_cross_dialogArguments[1] = CompleteFunction;
+        else
+            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+        DivPopUpShow(330, 205, url);
+    }
+    else {
+        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+        feature = feature + GetShowModalPosition(330, 205);
+        var RtnVal = window.showModalDialog(url, parameter, feature);
+    }
+}
+
+function OpenAlertUI_Complete() {
+    DivPopUpHidden();
+}
+// END
+
+function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
+    try {
+        var heigth = window.screen.availHeight;
+        var width = window.screen.availWidth;
+
+        var left = 0;
+        var top = 0;
+
+        if (window.screen.width > 800) {
+            var pleftpos;
+
+            pleftpos = parseInt(width) - 967;
+            heigth = parseInt(heigth) - 30;
+            if (CrossYN())
+                heigth = parseInt(heigth) - 25;
+
+            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+                heigth = parseInt(heigth) - 40;
+            width = parseInt(width) - pleftpos;
+            left = pleftpos / 2;
+        }
+        else {
+            heigth = parseInt(heigth) - 30;
+            if (CrossYN())
+                heigth = parseInt(heigth) - 25;
+
+            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+                heigth = parseInt(heigth) - 40;
+            width = parseInt(width) - 10;
+        }
+
+        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+
+    }
+    catch (e) {
+        alert("openwindow :: " + e.description);
+    }
 }

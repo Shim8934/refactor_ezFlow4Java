@@ -7,6 +7,10 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +18,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +49,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -60,8 +68,10 @@ import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.CommonUtil.PasswordCheckPolicyResult;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 /**
@@ -139,7 +149,7 @@ public class LoginController {
     	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
     	String userOs = ClientUtil.getClientInfo(request, "os");
     	
-    	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+    	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
     		logger.debug("mobileRedirection : " + mobileRedirection);
     		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
     			response.sendRedirect(mobileRedirection);
@@ -235,7 +245,8 @@ public class LoginController {
     	String chkADpass = "";
     	String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
-    	
+		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
@@ -466,12 +477,19 @@ public class LoginController {
 		
 		// 로그인 실패 최대 허용 횟수를 구한다.
 		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail");
-		logger.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
+		String loginLockedDuration = ezCommonService.getCompanyConfig(tenantId, companyId, "LoginLockedDuration");
+		String loginLockedDate = ezCommonService.getUserConfigInfo(tenantId, _uid, "LoginLockedDate");
+		logger.debug("companyId : {}, maxAllowedCountOfLoginFail : {}, loginLockedDuration : {}, loginLockedDate : {}", companyId, maxAllowedCountOfLoginFail, loginLockedDuration, loginLockedDate);
 		// String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
 				
 		if (!maxAllowedCountOfLoginFail.equals("")) {
 			try {
 				numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
+				// 암호 오류 최대 횟수를 기존에 사용하고 있는 경우 계정 잠금 처리 config를 추가
+				if (loginLockedDuration.equals("")){
+					ezCommonService.insertCompanyConfig(tenantId, companyId, "LoginLockedDuration", "5");
+					loginLockedDuration = ezCommonService.getCompanyConfig(tenantId, companyId, "LoginLockedDuration");
+				}
 			} catch (NumberFormatException e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -502,10 +520,12 @@ public class LoginController {
 
         	// masteradmin의 암호로 로그인 가능하여 masteradmin 암호가 맞는 경우
         	// usermaster 테이블의 ip정보/loginCount는 업데이트하지 않고 접속 로그정보만 저장한다.
-        	if (masteradminLogin) {
-        		// 2021-12-23 이사라 : 세션ID를 세션코드로 입력 
-	        	String sessionCode =  request.getSession().getId();
-	        	logger.debug("Login sessionCode = " + sessionCode);
+			if (masteradminLogin) {
+				// 로그인 쿠기 생성 & ezSessionId (uuid) 값을 리턴 받아 로그정보로 사용
+				String ezSessionId = createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
+
+				String sessionCode = getSessionId(request, ezSessionId);
+				logger.debug("Login sessionCode : {} masteradminLogin = ", _uid, sessionCode);
 	        	
         		//접속 로그정보 저장
         		resultVO.setIp(ClientUtil.getClientIP(request));
@@ -522,8 +542,8 @@ public class LoginController {
 				
 				loginService.insertLog(resultVO);
         		
-				//로그인 쿠기 생성
-				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
+				/*//로그인 쿠기 생성
+				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);*/
 				
 				/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
@@ -536,6 +556,15 @@ public class LoginController {
         	} else {
         		//Check login state of the user
             	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
+				boolean check1 = false;
+
+				if (!loginLockedDate.equals("") && !loginLockedDate.equals("0")) {
+					check1 = checkLockedDate(tenantId, _uid, loginLockedDuration, loginLockedDate, formatedNow);
+
+					if (check == -3 && check1) {
+						check = 0;
+					}
+				}
             	
             	// 해당 사용자의 로그인이 블록되지 않은 경우
             	if (check != -3) {
@@ -621,6 +650,23 @@ public class LoginController {
     	        			return "forward:/user/login/login.do";
     	        		}
     	        	}
+
+					// 비밀번호 초기화한 사용자 분기 처리
+					String resetPassword = ezCommonService.getUserConfigInfo(tenantId,resultVO.getId(),"resetPassword");
+					if ( resetPassword != null && "Y".equals(resetPassword)) {
+						String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+
+						model.addAttribute("isExpireDate", "Y");
+						model.addAttribute("userId", _uid);
+						model.addAttribute("encryptID", loginVO.getEncryptID());
+						model.addAttribute("encryptPass", loginVO.getEncryptPass());
+						model.addAttribute("loginId", loginId);
+						model.addAttribute("companyId", companyId);
+						model.addAttribute("pwPolicyExplain", pwPolicyExplain);
+						model.addAttribute("resetPassword", resetPassword);
+
+						return "forward:/user/login/login.do";
+					}
     	        	
     				//0보다 작아지면 패스워드 변경기한 Expired
     	        	//패스워드 다음에 변경 기능 추가. 2019-09-17 홍대표
@@ -658,9 +704,11 @@ public class LoginController {
     					//IP Address,  마지막 login시간 저장
     					loginService.updateUser(loginVO);
     					
-    					// 2021-12-23 이사라 : 세션ID를 세션코드로 입력 
-    		        	String sessionCode =  request.getSession().getId();
-    		        	logger.debug("Login sessionCode = " + sessionCode);
+						// 로그인 쿠기 생성 & ezSessionId (uuid) 값을 리턴 받아 로그정보로 사용
+						String ezSessionId = createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
+
+						String sessionCode = getSessionId(request, ezSessionId);
+						logger.debug("Login sessionCode : {} user = ", _uid, sessionCode);
     		        	
     					//접속 로그정보 저장
     					resultVO.setIp(ip);
@@ -677,7 +725,7 @@ public class LoginController {
     					
     					loginService.insertLog(resultVO);
     	
-    					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
+    					//createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
     		        	
 						/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
     		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
@@ -687,9 +735,11 @@ public class LoginController {
     		        	
     		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
     		        	//session = request.getSession();
+
+						boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
     		        	
     		        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-    		        	if (!useSession.equals("")) {
+						if (!useSession.equals("") && !useDbSession) { // DB 세션을 사용하면 세션 유지 시간 설정이 불필요 함
     		        		int sessionTime = Integer.parseInt(useSession);
     		        		
 	    		        	if (sessionTime != 0) {
@@ -708,9 +758,9 @@ public class LoginController {
         			//Show block message
 					// model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
 
-					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
-					model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
-					model.addAttribute("threeLineMSG", "Y");
+					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
+					model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+					model.addAttribute("message", "loginBlock");
                 	
                 	// 2021-12-21 이사라 : 접속 로그정보 저장 (실패)
                 	resultVO.setIp(ClientUtil.getClientIP(request));
@@ -755,6 +805,16 @@ public class LoginController {
         	
         	//Check login state of the user 
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
+			boolean check1 = false;
+
+			if(!loginLockedDate.equals("") && !loginLockedDate.equals("0")) {
+				check1 = checkLockedDate(tenantId, _uid, loginLockedDuration, loginLockedDate, formatedNow);
+				
+				if (check == -3 && check1) {
+					check = 0;
+				}
+			}
+			
         	String errorMsg1 = "";
         	String errorMsg2 = "";
         	String errorMsg3 = "";
@@ -766,10 +826,13 @@ public class LoginController {
 				case -3: 
 	    			//Show block message
 	            	//model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
-
-					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
-					model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
-					model.addAttribute("threeLineMSG", "Y");
+					if(loginLockedDate.equals("")) {
+						ezCommonService.insertUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
+					}
+					
+					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
+					model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+					model.addAttribute("message", "loginBlock");
 
 	            	return "forward:/user/login/login.do";
     			case -2:
@@ -781,7 +844,7 @@ public class LoginController {
 	        		errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
 	        		errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {1}, locale);
 	        		errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
-	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit, loginLockedDuration}, locale);
 	        		
 	        		model.addAttribute("message1", errorMsg1);
 	            	model.addAttribute("message2", errorMsg2);
@@ -803,10 +866,16 @@ public class LoginController {
         			if (check >= numberOfLoginFailPermit - 1) {
         				//Show block message
 						// model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+						
+						if(loginLockedDate.equals("")) {
+							ezCommonService.insertUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
+						} else {
+							ezCommonService.updateUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
+						}
 
-						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
-						model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
-						model.addAttribute("threeLineMSG", "Y");
+						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
+						model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+						model.addAttribute("message", "loginBlock");
 
                     	return "forward:/user/login/login.do";
         			} else {
@@ -815,7 +884,7 @@ public class LoginController {
     	        		errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
     	        		errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {check + 1}, locale);
     	        		errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
-    	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+    	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit, loginLockedDuration}, locale);
     	        		
     	        		model.addAttribute("message1", errorMsg1);
     	            	model.addAttribute("message2", errorMsg2);
@@ -921,6 +990,26 @@ public class LoginController {
 		}
     }
     
+	private String getSessionId(HttpServletRequest request, String ezSessionId) {
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+		String sessionCode = "";
+
+		try {
+			if (useDbSession && StringUtils.isNotBlank(ezSessionId)) { // 로그인
+				sessionCode = ezSessionId;
+			} else if (useDbSession && StringUtils.isBlank(ezSessionId)) { // 로그아웃
+				sessionCode = loginCookie.getValue();
+			} else {
+				sessionCode = request.getSession().getId();
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		return sessionCode;
+	}
+
     public boolean ipAccessCheck(LoginVO loginVO) throws Exception {
     	logger.debug("ipAccessCheck start");
     	logger.debug("userIP=" + loginVO.getIp());
@@ -1080,7 +1169,7 @@ public class LoginController {
 	    }
 	}
 
-    public void createLoginCookie(
+    public String createLoginCookie(
     				String userId, String userPw, String encryptedUserPw, int tenantId, 
     				HttpServletRequest request, HttpServletResponse response, String deptID, String companyID
     				) throws Exception {
@@ -1100,11 +1189,7 @@ public class LoginController {
 			
 	        //UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
 	        if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
-		        if (primaryLang.equals("1")) {
-		        	acceptLanguage = "ko";
-		        } else if (primaryLang.equals("3")) {
-		        	acceptLanguage = "ja";
-		        }
+				acceptLanguage = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 	        }
 	        
 		    if (acceptLanguage != null) {
@@ -1116,7 +1201,7 @@ public class LoginController {
 			
 		    lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang);
 		    
-		    //브라우저 언어가 한국어/영어/일본어가 아닐 경우 시스템 언어로 설정(중국어 추후 지원)
+		    //브라우저 언어가 한국어/영어/일본어/인도네시아어가 아닐 경우 시스템 언어로 설정
 		    if (lang.equals("")) {						
 				lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 
@@ -1151,10 +1236,31 @@ public class LoginController {
 		}
 		
 		// Cookie 생성
-		//2019-09-16 김보미 - 사용하지 않으므로 패스워드 부분 주석 : userPw 값이 '/'로 끝나면 나중에 "///"으로 split할때 locale앞에 '/'가 붙어 문제 발생 
-		String cInfo = serverName + "///" + userId + "///" + "encryptedUserPw" + "///" + ipAddress + "///" + "userPw" + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID;
+		//2019-09-16 김보미 - 사용하지 않으므로 패스워드 부분 주석 : userPw 값이 '/'로 끝나면 나중에 "///"으로 split할때 locale앞에 '/'가 붙어 문제 발생
+		String jobId = ezOrganAdminService.getJobIdForFirstUser(userId, tenantId).orElse("");
+		String cInfo = serverName + "///" + userId + "///" + "encryptedUserPw" + "///" + ipAddress + "///" + "userPw" + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID + "///" + jobId;
 		String loginCookie = egovFileScrty.encryptAES(cInfo);
 		
+		// DB 기반 세션 방식 적용하는 경우
+		// 2023-10-31 이사라 - ezSessionId를 생성하여 loginCookie에 담는다. 실제 로그인쿠키는 DB에 저장
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+		String ezSessionId = "";
+
+		if (useDbSession) {
+			ezSessionId = UUID.randomUUID().toString();
+
+			SessionVO vo = new SessionVO();
+			vo.setEzSessionId(ezSessionId);
+			vo.setLoginCookie(loginCookie);
+			vo.setTenantId(tenantId);
+			vo.setType("useSession");
+
+			loginService.insertSession(vo);
+
+			// 생성한 SessionId를 로그인쿠키에 담아 사용하여 기존의 loginCookie를 param으로 사용하는 controller 코드를 그대로 이용
+			loginCookie = ezSessionId;
+		}
+
     	Cookie cookieID = new Cookie("loginCookie", loginCookie);
     	cookieID.setPath("/");
     	response.addCookie(cookieID);
@@ -1190,7 +1296,7 @@ public class LoginController {
 
 		String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
 		
-    	if (!useSession.isEmpty()) {
+    	if (!useSession.isEmpty() && !useDbSession) {
     		int sessionTime = 0;
     		
     		try {
@@ -1204,6 +1310,8 @@ public class LoginController {
 	        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
         	}
     	}    	
+
+    	return ezSessionId;
     }
     
 	// 2023-03-22 이사라 : [TFA] 2-factor 설정화면
@@ -1256,7 +1364,7 @@ public class LoginController {
 			// 오류가 발생한 경우 otpKey 비워 줌
 			ezCommonService.updateUserConfigInfo(tenantId, userId, "otpKey", "");
 
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "fail";
 		}
 
@@ -1276,6 +1384,7 @@ public class LoginController {
 		LoginVO loginVO = new LoginVO();
         
     	Cookie[] cookies = request.getCookies();
+    	boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
@@ -1285,6 +1394,10 @@ public class LoginController {
     				cookie.setDomain(ssoDomain);
     			}
     			
+				if (useDbSession && cookie.getName().equalsIgnoreCase("loginCookie")) {
+					loginService.deleteSession(cookie.getValue());
+				}
+
     			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")) {
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
@@ -1313,7 +1426,7 @@ public class LoginController {
         }
         
         // 2021-12-23 이사라 : 세션ID를 세션코드로 입력
-        String sessionCode =  request.getSession().getId();
+        String sessionCode = getSessionId(request, "");
     	logger.debug("Logout sessionCode = " + sessionCode);
     	
         // 2018.10.22 이석화 추가 - 세션 제거 
@@ -1346,9 +1459,15 @@ public class LoginController {
         logger.debug("Login sessionCode = " + sessionCode);
 		
     	Cookie[] cookies = request.getCookies();
+    	boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
+
+				if (useDbSession || cookie.getName().equalsIgnoreCase("loginCookie")) {
+					loginService.deleteSession(cookie.getValue());
+				}
+
     			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*") && !cookie.getName().equals("multiLoginCookie")) {
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
@@ -1392,74 +1511,70 @@ public class LoginController {
     	}
     }
         
-    @RequestMapping(value = "/user/login/changeExPassword.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
+    @RequestMapping(value = "/user/login/changePassword.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
 	@ResponseBody
     public String changeExPassword(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
     	logger.debug("=========================================== changePassword ============================================");
     	
+		// 1. 주 수행 변수 oldPw, newPw
     	String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
-    	String encUserId = request.getParameter("USERID");
-    	String encPass = request.getParameter("OLDPASSWORD");
-    	String encNewPass = request.getParameter("NEWPASSWORD");
-    	
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 
+		String encUserId = request.getParameter("USERID");
 		String _uid = EgovFileScrty.decryptRsa(pk, encUserId);
 		
-		if (_uid == null || _uid.equals("")) {
+		if (StringUtils.isBlank(_uid)) {
 		    logger.debug("invalid _uid=" + _uid);
 		    
 		    return "DECRYPTERROR";
 		}
-		
-        String serverName = request.getServerName();        
-        int tenantId = loginService.getTenantId(serverName);
+
+		String encPass = request.getParameter("OLDPASSWORD");
+		String encNewPass = request.getParameter("NEWPASSWORD");
+		String resetPasswordFlag = request.getParameter("RESETPASSWORDFLAG");
 		
 		String rpwd = EgovFileScrty.decryptRsa(pk, encPass);
+		String epwd = EgovFileScrty.decryptRsa(pk, encNewPass);
+
+		// 2. 사용자 정보 : 로그인 정보 확인
+        String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 		
 		loginVO.setId(_uid);
 		loginVO.setPassword(_pwd);
 		loginVO.setTenantId(tenantId);
-		
-    	//로그인 정보 확인
         LoginVO resultVO = loginService.selectUser(loginVO);
         
-        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
+        if (resultVO == null || StringUtils.isBlank(resultVO.getId())) {
+			return "LOGINERROR";
+        }
+
+		String companyID = resultVO.getCompanyID();
+		logger.debug("loginVO : _uid={}, tenantId={}, companyID={}", _uid, tenantId, companyID);
+
 			// 2023-03-27 이사라 : [TFA] 2-factor 인증 사용 여부 체크하여, otp설정 레이어팝업 표출 여부 결정
 			boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId));
 			model.addAttribute("useOTP", useOTP);
-       	
-        	String epwd = EgovFileScrty.decryptRsa(pk, encNewPass);
 
-        	//e-mail 연동
-			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-			String mailAddr = _uid + "@" + domain;
-			//이메일 계정의 암호를 새 암호로 설정한다.
-			int rc = ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, rpwd, epwd);
-			//checkAndUpdateUserPassword 성공
-			if (rc == 0) {                                                  
-			    try {
-			        //로컬 시스템에서 해당 User의 암호를 변경한다.
-			        ezOrganAdminService.setPassword(_uid, epwd, tenantId);
-			        
-			        String ip = ClientUtil.getClientIP(request);		
-					loginVO.setIp(ip);
-			        //IP Address,  마지막 login시간 저장
-					loginService.updateUser(loginVO);
-			        return "OK";
-			    } catch (Exception e) {
-			    	//Exception이 발생하면 취소 처리를 한다.
-			        ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, epwd, rpwd);			        
-			        return "UPDATEERROR";
-			    }                                       
-			} else {
-				return "MAILERROR";
-			}        	
-        } else {
-        	return "LOGINERROR";
-        }    	
+		// 3. 비밀번호 변경 수행
+		String result = ezOrganAdminService.changePasswordWithEmailSystem(_uid, tenantId, rpwd, epwd);
+
+		if (!"OK".equalsIgnoreCase(result)) {
+			return result;
+		}
+
+		// 4. IP Address,  마지막 login시간 저장
+		String ip = ClientUtil.getClientIP(request);
+		loginVO.setIp(ip);
+		loginService.updateUser(loginVO);
+		if ("Y".equals(resetPasswordFlag)) {
+			ezCommonService.deleteUserConfigInfo(tenantId,_uid,"resetPassword");
+		}
+
+		logger.debug("=========================================== changePassword ended ============================================");
+		return "OK";
     }
     
 	@RequestMapping(value = "/user/login/email.do", produces = "text/html; charset=utf-8", method = RequestMethod.GET)
@@ -1487,10 +1602,17 @@ public class LoginController {
  		String chkPwPolicy = "";
  		
  		String pwStr = request.getParameter("pw");
- 		String chkCompanyId = request.getParameter("chkCompanyId");
- 		
- 		Boolean test = commonUtil.checkPwPolicy(pwStr, chkCompanyId, tenantId);
- 		chkPwPolicy = test ? "OK" : chkPwPolicy;
+ 		String companyId = request.getParameter("chkCompanyId");
+		String userId = request.getParameter("userId");
+
+		PasswordCheckPolicyResult result = commonUtil.checkPwPolicy(pwStr, companyId, tenantId, userId);
+		chkPwPolicy = result.succeeded() ? "OK" : result.getMessage();
+
+		if ("PREVERROR". equals(chkPwPolicy)) {
+			String rememberPWCountConfig = ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount");
+			int rememberPWCount = rememberPWCountConfig == null || "".equalsIgnoreCase(rememberPWCountConfig) ? 0 : Integer.parseInt(rememberPWCountConfig);
+			chkPwPolicy += "|"+rememberPWCount;
+		}
  		
  		logger.debug("checkPasswordPolicy ended. chkPwPolicy=" + chkPwPolicy);
  		return chkPwPolicy;
@@ -1690,17 +1812,18 @@ public class LoginController {
     		result = "fail|비밀번호를 입력해주십시오";
     	} else{
     		String companyId = resultVO.getCompanyID();
-    		String usePwPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
-    		boolean chkPw = usePwPatternPolicy.equalsIgnoreCase("yes") ? commonUtil.checkPwPolicy(pwd, companyId, tenantId) : true;
-    		 if(chkPw) {
+			String userId = resultVO.getId();
+
+			int chkPwCode = commonUtil.checkPwPolicy(pwd, companyId, tenantId, userId, false, null).getCode();
+    		 if(chkPwCode > -1) {
     			 if(!pwd.equals(pwdRe)){
     				 result = "fail|변경할 비밀번호/비밀번호 확인이 일치하지 않습니다.";
     			 } else {
     				 result = loginService.setPasswordByCertification(resultVO.getSabun(), certificationNum, pwd, resultVO);
     			 }
     		 } else {
-    			 String errMsg = egovMessageSource.getMessage("ezSystem.ksaPwPolicy35", locale);
-    			 result = "fail|" + errMsg;
+    			 String errMsg = (chkPwCode == -8 || chkPwCode == -9)? "ezOrgan.ls008" : "ezSystem.ksaPwPolicy35";
+    			 result = "fail|" + egovMessageSource.getMessage(errMsg, locale);
     		 }
     	}
     	
@@ -1715,4 +1838,144 @@ public class LoginController {
 
     	return matcher.matches();
     }
+	
+	//2024-07-01 김대현 비밀번호 초기화 기능
+	@RequestMapping(value="/user/login/resetPw/resetPwInfo.do", method = RequestMethod.GET)
+	public String resetPassword (HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("resetPassword");
+
+		return "/user/login/resetPwInfo";
+	}
+
+
+	@ResponseBody
+	@RequestMapping(value = "/user/login/resetPw/checkUserInfo.do", method = RequestMethod.POST)
+	public String checkUserInfo (HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("checkUserInfo started");
+		String result = "NOEXIST";
+
+		String cn = request.getParameter("cn");
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
+
+		LoginVO loginVO = new LoginVO();
+		loginVO.setId(cn);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+
+		LoginVO resultVO = loginService.selectUser(loginVO);
+
+		if (resultVO != null && resultVO.getId()!= null && !"".equals(resultVO.getId())) {
+			// 사용자가 존재할때
+			String userName = request.getParameter("userName");
+
+			result = userName != null && userName.equals(resultVO.getDisplayName()) ? "OK" : "DIFFNAME";
+		}
+
+		logger.debug("checkUserInfo ended");
+		return result;
+	}
+
+	@RequestMapping(value = "/user/login/resetPw/authNumberPage.do", method = RequestMethod.GET)
+	public String authNumberPage (HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		logger.debug("authNumberPage started");
+		String cn = request.getParameter("cn");
+		String userName = request.getParameter("userName");
+
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
+
+		LoginVO loginVO = new LoginVO();
+		loginVO.setId(cn);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+
+		LoginVO resultVO = loginService.selectUser(loginVO);
+
+		String mobileNo = resultVO.getMobile();
+
+		boolean useShowAuthCode = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAuthCode", tenantId));
+		model.addAttribute("useShowAuthCode", useShowAuthCode);
+
+		model.addAttribute("mobileNo", mobileNo);
+		model.addAttribute("cn", cn);
+		model.addAttribute("userName", userName);
+
+		logger.debug("authNumberPage ended");
+		return "/user/login/authNumberPage";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/user/login/resetPw/sendAuthCodeBySMS.do")
+	public String sendAuthCodeBySMS (HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
+		logger.debug("sendAuthCodeBySMS started");
+		String result = "ERROR";
+
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
+		String cn = request.getParameter("cn");
+
+		String type = request.getParameter("type");
+		String mobileNo = request.getParameter("mobileNo");
+		mobileNo = mobileNo.replaceAll("-", "");
+
+		Random random = new Random();
+		String randomValue = "";
+		// 화면에 인증코드와 임시비밀번호를 표시해주는 Flag값
+		boolean useShowAuthCode = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAuthCode", tenantId));
+
+		if ("authCode".equals(type)) {
+			// 인증코드
+			randomValue = Integer.toString(random.nextInt(888888) + 111111);
+			result = commonUtil.sendSMS(mobileNo,randomValue,type) ? randomValue : "FAIL";
+			result = useShowAuthCode? randomValue : result;
+		} else {
+			// 임시비밀번호
+			String tempPassword = commonUtil.getTempPassword(8);
+
+			try {
+				String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+				logger.debug("domain=" + domain);
+				
+				ezOrganAdminService.setPasswordWithEmailSystem(cn, domain, tempPassword, tenantId);
+				// 비밀번호 초기화 컨피그
+				String getPropertyValue = ezCommonService.getUserConfigInfo(tenantId, cn, "resetPassword");
+
+				if (!getPropertyValue.equals("")) {
+					ezCommonService.updateUserConfigInfo(tenantId, cn, "resetPassword", "Y");
+				} else {
+					ezCommonService.insertUserConfigInfo(tenantId, cn, "resetPassword", "Y");
+				}
+
+				result = commonUtil.sendSMS(mobileNo,tempPassword,type) ? tempPassword : "FAILSMS";
+				result = useShowAuthCode? tempPassword : result;
+
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+
+		}
+
+		logger.debug("sendAuthCodeBySMS ended={}",result);
+		return result;
+	}
+	
+	private boolean checkLockedDate(int tenantID, String userId, String loginLockedDuration, String lockedDate, String nowDate) throws Exception {
+		String diff = String.valueOf(commonUtil.getTimeDifference(lockedDate, nowDate));
+
+		int remainTime = Integer.parseInt(loginLockedDuration) - Integer.parseInt(diff);
+		
+		try {
+			if (remainTime <= 0) {
+				// 잠금 잔여 시간이 지난 이후 로그인 실패 카운터 초기화 및 시간 초기화 
+				commonUtil.resetLoginFailAttempts(userId, tenantID);
+				ezCommonService.updateUserConfigInfo(tenantID, userId, "LoginLockedDate", "0");
+				return true;
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		return false;
+	}
 }

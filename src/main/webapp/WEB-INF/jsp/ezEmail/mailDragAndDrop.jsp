@@ -60,7 +60,7 @@
 		    var shareId = '<c:out value="${shareId}"/>';
 		    
 		    function onDrop(evt) {
-		       
+
 		    	if (evt != undefined) {
 		            evt.stopPropagation();
 		            evt.preventDefault();
@@ -113,6 +113,13 @@
 		        
 		        for (var i = 0; i < filelist.length; i++) {
 		            
+			    	// 2024.05.02 한슬기 : 파일명 글지수 체크 위치 변경
+			    	if (filelist[i].name.length > attachFileNameMaxLength) {
+		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+		        		isfileup = false;
+		        		return;
+		        	}
+		        
 		        	if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize || isbigyn == "Y") {
 		        		filelist[i].isBig = "Y";
 
@@ -151,7 +158,7 @@
 		        }
 		        
 		       // if (bigFileCheck && alertCnt < 2 && isbigyn == "N") {
-		        if (bigFileCheck && isbigyn == "N") {
+		        if (bigFileCheck && isbigyn == "N" && file.length == 1) {
 		    		// 2018-10-05 재은수정: 일반첨부에서 대용량첨부로 전환될 때 취소 버튼 추가
 		        	var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
 		        	
@@ -160,10 +167,8 @@
 		        	}
 		        	
 		            //alertCnt++;
-		        }
-		        
-		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize && isbigyn == "N") {
-		           
+		        } else if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize && isbigyn == "N") {
+
 		        	/* 일반첨부파일용량 초과인경우 맨 마지막 파일을 대용량 첨부로 전환시킨다. 기존에는 return으로 종료했었음.
 		        	if (window.parent.FtotBigSizeAttachSize == 0) {
 		            	
@@ -181,9 +186,22 @@
 		            
 		        	file.splice(file.length - filelist.length, filelist.length);
 		            */
-		            
+                    var bigFileAttachChk = confirm(strLang75 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
+
+                    if (!bigFileAttachChk) {
+                        return;
+                    }
+
 		            status = 1;
-		            return status;
+	            	//return status;
+		            
+		            // 2024.05.02 한슬기 : Drag&Drop으로 파일 첨부시 파일 첨부가 안되는 현상이 있어 수정
+		            if (evt != undefined){
+			            onDrop(evt);
+			            return;
+		            } else {
+		            	return status;
+		            }
 		        }
 
 		        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
@@ -215,8 +233,7 @@
 		            document.getElementById("file").type = "text";
 		            document.getElementById("file").type = "file";
 		        }
-		        
-		        isbigyn = "N";
+		        isbigyn = "N"; 
 		    }
 		    
 		    function checkMailStatusAndFileUpload() {
@@ -594,12 +611,16 @@
 		        for (var i = 0; i < filelist.length; i++) {
 					var fnl = filelist[i].name.length;
 					var fbig = filelist[i].isBig;
-		        	
-		        	if (fnl > attachFileNameMaxLength) {
-		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
-		        		isfileup = false;
-		        		return;
-		        	} else if (bodyTypeIsPlain && fbig == "Y") {
+		        	// 2024.05.03 한슬기 : 글자수 제한으로 업로드에 실패해도 실패한 파일의 용량은 계산되는 문제로 인해 글자수 체크 위치 변경(onDrop() 내부로 위치 변경) 
+// 		        	if (fnl > attachFileNameMaxLength) {	
+// 		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+// 		        		isfileup = false;
+// 		        		return;
+// 		        	} else if (bodyTypeIsPlain && fbig == "Y") {
+// 		        		plainText_BigAttChk = true;
+// 		        		continue;
+// 		        	} else {
+		        	if (bodyTypeIsPlain && fbig == "Y") {	
 		        		plainText_BigAttChk = true;
 		        		continue;
 		        	} else {
@@ -713,7 +734,6 @@
 		        		} else {
 			                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
 		        		}
-
 		        		return false;
 		        	} else {
 		                bigFileCheck = true;
@@ -735,8 +755,8 @@
 		        	if(!bigFileAttachCountCheck(newBigAttachCount)) {
 		        		return;
 		        	}
-		            var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
-		            
+		        	var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
+		        	
 		            if (!bigFileAttachChk) {
 		                return false;
 		            }

@@ -158,8 +158,10 @@
 		                    for (var j = 0; j < paremtElement.length; j++) {
 		                        if ((paremtElement[j].type == "radio" || paremtElement[j].type == "checkbox") && paremtElement[j].checked) { // 라디오버튼 또는 체크박스
 		                            WriterValue += paremtElement[j].value + ",";
-		                        } else if (paremtElement[j].type == "text") { // 텍스트
+		                        } else if (paremtElement[j].type == "text" || paremtElement[j].getAttribute('type') == "textArea") { // 텍스트
 		                        	WriterValue = paremtElement[j].value;
+		                        } else if (paremtElement[j].getAttribute('type') == "people") {
+		                            WriterValue = paremtElement[j].innerText;
 		                        }
 		                    }
 			                
@@ -311,6 +313,18 @@
 					                <td colspan="5" id="${boardAttributeVO.tableCol}">
 					                </td>
 	       						</c:when>
+	       						<c:when test="${boardAttributeVO.colType == 'people'}">
+                                    <td colspan="5" id="${boardAttributeVO.tableCol}">
+                                    </td>
+                                </c:when>
+                                <c:when test="${boardAttributeVO.colType == 'textArea'}">
+                                    <td colspan="5" id="${boardAttributeVO.tableCol}">
+                                    </td>
+                                </c:when>
+								<c:when test="${boardAttributeVO.colType == 'cal'}">
+									<td colspan="5" id="${boardAttributeVO.tableCol}">
+									</td>
+								</c:when>
 	       					</c:choose>
 	       				</tr>
 	       			</c:forEach>

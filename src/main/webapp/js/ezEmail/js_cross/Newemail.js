@@ -210,14 +210,16 @@ function new_mail_onclick(fromE) {
 		pUrl += "&shareId=" + encodeURIComponent(shareId);
 	}
 	
-	var pheight = window.screen.availHeight;
+	var pheight = window.outerHeight;
     var conHeight = Math.max(pheight * 0.8, 840);
-    var pwidth = window.screen.availWidth;
+    var pwidth = window.outerWidth;
     var conWidth = pwidth * 0.8;
     if (conWidth > minimumWidth)
         conWidth = minimumWidth;
-    var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - minimumWidth) / 2;
+    // var pTop = (pheight - conHeight) / 2;
+    // var pLeft = (pwidth - minimumWidth) / 2;
+    var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+    var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var newwin = window.open(pUrl, "", feature);
@@ -264,6 +266,25 @@ function ReSend(pURL, pEmail) {
     }*/
 }
 
+// 2024.05.24 한슬기 : 수신인 이름을 사용하기위해 오버로딩
+function ReSend(pURL, pEmail, pReader) {
+    var pheight = window.screen.availHeight;
+    var conHeight = pheight * 0.8;
+    var pwidth = window.screen.availWidth;
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+    
+    var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail) + "&reciverName=" + encodeURIComponent(pReader);
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+    
+    window.open(requestUrl, "", feature);
+    
+}
+
 function reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
@@ -282,14 +303,14 @@ function reply_mail_onclick() {
         } else {
         	pSelectItem = currentFixingId;
         }
-        var pheight = window.screen.availHeight;
+        var pheight = window.outerHeight;
         var conHeight = Math.max(pheight * 0.8, 840);
-        var pwidth = window.screen.availWidth;
+        var pwidth = window.outerWidth;
         var conWidth = pwidth * 0.8;
         if (conWidth > minimumWidth)
             conWidth = minimumWidth;
-        var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - minimumWidth) / 2;
+        var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+        var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
         
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
@@ -326,14 +347,14 @@ function all_reply_mail_onclick() {
         } else {
         	pSelectItem = currentFixingId;
         }
-        var pheight = window.screen.availHeight;
+        var pheight = window.outerHeight;
         var conHeight = Math.max(pheight * 0.8, 840);
-        var pwidth = window.screen.availWidth;
+        var pwidth = window.outerWidth;
         var conWidth = pwidth * 0.8;
         if (conWidth > minimumWidth)
             conWidth = minimumWidth;
-        var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - minimumWidth) / 2;
+        var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+        var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
         if (typeof(shareId) != "undefined" && shareId != "") {
@@ -394,14 +415,16 @@ function transmission_mail_onclick() {
         } else {
         	pSelectItem = currentFixingId;
         }
-        var pheight = window.screen.availHeight;
+        var pheight = window.outerHeight;
         var conHeight = Math.max(pheight * 0.8, 840);
-        var pwidth = window.screen.availWidth;
+        var pwidth = window.outerWidth;
         var conWidth = pwidth * 0.8;
         if (conWidth > minimumWidth)
             conWidth = minimumWidth;
-        var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - minimumWidth) / 2;
+        
+        var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+        var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
+        
         var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
         if (typeof(shareId) != "undefined" && shareId != "") {
@@ -1575,14 +1598,16 @@ function callMsgDlg(szContentClass, Href) {
                 feature);
         return;
     }
-    var pheight = window.screen.availHeight;
+    // var pheight = window.outerHeight;
     var conHeight = 720;
-    var pwidth = window.screen.availWidth;
+    var pwidth = window.outerWidth;
     var conWidth = pwidth * 0.8;
     if (conWidth > minimumWidth)
         conWidth = minimumWidth;
-    var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - minimumWidth) / 2;
+    // var pTop = (pheight - conHeight) / 2;
+    // var pLeft = (pwidth - minimumWidth) / 2;
+    var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+    var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1";
     if (!g_bdraft) {
         var pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);
@@ -1619,6 +1644,26 @@ function callMsgDlg(szContentClass, Href) {
             	ReadMailOpenNewWin.focus();
             }
     	}
+    }
+}
+
+function callMsgDlgAppr(href) {
+    var pheight = window.screen.availHeight;
+    var conHeight = 720;
+    var pwidth = window.screen.availWidth;
+    var conWidth = pwidth * 0.8;
+    if (conWidth > 1200)
+        conWidth = 1200;
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - 1200) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1";
+
+    var pURI = "/ezEmail/mailApprRead.do?URL=" + encodeURIComponent(href);
+
+    ReadMailOpenNewWin = window.open(pURI, "", feature);
+
+    if (ReadMailOpenNewWin != null) {
+        ReadMailOpenNewWin.focus();
     }
 }
 
@@ -2155,6 +2200,12 @@ function MailOptionView(obj) {
         document.getElementById("layer_popup").style.left = document.documentElement.clientWidth - 260 + "px";
         document.getElementById("layer_popup").style.top = "100px";
         document.getElementById("layer_popup").style.display = "";
+        
+        if (g_szRootFolderName === strLangKDH01) {
+            //20240827 김대현 수신확인 메뉴를 클릭시 필터링은 숨김
+            document.getElementById("selectViewList").style.display="none"; 
+        }
+        
         //obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
         obj.setAttribute("class", "icon16 btn_onarrow_down");
         obj.setAttribute("mode", "on");
@@ -2303,7 +2354,7 @@ function onEnterPreviewTagInput() {
 		async: false,
 		method: 'post',
 		url: "/ezEmail/addMailTag.do",
-		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
+		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName, shareId: shareId },
 		success: function(result) {
 			if (result.status == "error") {
 				alert(strLang321);

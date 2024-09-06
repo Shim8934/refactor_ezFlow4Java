@@ -202,6 +202,11 @@
 	        
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+
+			var attachedDocList = "${ attachedDocList }";
+			
+			// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 			
 		    window.onload = function ()
 		    {
@@ -238,9 +243,9 @@
 		        
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
-		    };
-		    
-		    function dragNdrapNo()
+			};
+
+			function dragNdrapNo()
 		    {
 		        try{
 		            var div = document.getElementById('lstAttachLink');
@@ -296,13 +301,14 @@
 		            */
 		            if (pDraftFlag == "REDRAFT") {
 		            	if (ListType == "21") {
-		            		//임시보관함일경우 사인 초기화??
 		            		setFirstDrafter(isUsed, "");
-		            	} else {
+		            	}
+						// 재기안시 고정수신처 여부와 상관없이 직전 수신처를 불러오도록 함
+						/*else {
 		            		if(approvalFlag == "G") {
 		            			getFormRecv();	
-		            		}       		
-		            	}
+		            		}
+		            	}*/
 		            	
 		                //getFormRecv();
 		                message.SetEditable(true);
@@ -350,6 +356,7 @@
 	     	            }
 			        }
 	                
+	                checkHeaderAction();
 		        }
 		    }
 		    
@@ -542,7 +549,15 @@
 		                            setClearSusinCellInfo();
 		                        }
 		                        pDocID = createNewDoc();
-		                        
+
+								// 기록물등록대장 첨부기안
+								if (attachedDocList != "") {
+									attachRecordDoc();
+									setAttachInfo(pDocID, "APR", document.getElementById("lstAttachLink"));
+
+									attachedDocList = "";
+								}
+
 		                     	if (isUsed == "reuse") {
 									 // 재사용이고 문서의 모든정보를 재사용 할시
 									ClearDocCellInfo();
@@ -958,7 +973,7 @@
 		            chk_Passwd();
 		        }
 		        else {
-		            if (IsSkipDrafter == "FALSE") {
+		            if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
 		                var ret;
 		                var parameter = new Array();
 		
@@ -984,7 +999,7 @@
 		            return;
 		        }
 		
-		        if (IsSkipDrafter == "FALSE") {
+		        if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
 		            var ret;
 		            var parameter = new Array();
 		
@@ -1336,7 +1351,8 @@
 		    }
 		    var PrtBodyContent;
 		    function btnPrint_onclick() {
-		        PrintClick("Cross", pDocID, "ING");
+		    	headerAction("open");
+		    	PrintClick("Cross", pDocID, "ING");
 		    }
 		    function btnClose_onclick() {
 		        bAttachProcess = false;
@@ -1367,11 +1383,11 @@
 		        }
 		        catch (e)
 		        { }
-		        try {
-		        	if (bAttachProcess == false)
-		        		window.opener.parent.frames["right"].openergetDocInfo();
-		        } catch (e) 
-		        { }
+		        // try {
+		        // 	if (bAttachProcess == false)
+		        // 		window.opener.parent.frames["right"].openergetDocInfo();
+		        // } catch (e)
+		        // { }
 		        try {
 		            bAttachProcess = true;
 		        }
@@ -1504,7 +1520,7 @@
 		        var PublicType = pPublicityYN.substring(0, 1);
 
 		        var PublicText = "";
-		        if (PublicType == "Y")
+		        if (PublicType == "Y" || PublicType == "B")
 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
 		        else if (PublicType == "N")
 		            PublicText = "<spring:message code='ezApprovalG.t46'/>";
@@ -1619,6 +1635,10 @@
 		        if (rtn[0] == "TRUE") {
 		            g_SepAttachLVXml = rtn[1];
 		            message.DocumentBodySetAttribute("SepAttachLVXml", g_SepAttachLVXml);
+
+		            if (pDraftFlag == "REDRAFT") {
+		            	SaveFile();
+		            }
 		        }
 		    }
 		    function GetSepAttParamXml(g_SepAttachLVXml) {
@@ -1814,8 +1834,13 @@
 		        
 		        parameter[60] = passAprLine;
 		        parameter[61] = tempKeyword;
-		
-		        ezapprovalinfo_dialogArguments[0] = parameter;
+
+				var frame_doctitle = message.document.getElementById("frame_doctitle");
+				if (frame_doctitle != null) {
+					parameter[65] = frame_doctitle.textContent;
+				}
+
+				ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		        
 				if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
@@ -1830,7 +1855,7 @@
 		        if (isUsed == "reuse") {
 		        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
 		        }
-		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1941,7 +1966,11 @@
 // 			                }
 			                if (ret[21].substring(0,1) == "N") {
 			                	tempPublic = "N";
-			                }
+			                } else if (ret[21].substring(0,1) == "Y") {
+			                	tempPublic = "Y";
+			                } else if (ret[21].substring(0,1) == "B") {
+								tempPublic = "B";
+							}
  			                setPublicFlag();
  			                setKeepPeriod();
 			                // setPublicFlag2();
@@ -1977,13 +2006,21 @@
                                 limitDate = ret[31];
                                 // passAprLine = ret[32];
                             }
+                            
+                         	// 2023-05-23 임정은 - 공람 추가
+		                	if (ret[22] == "noItem") {
+		                		delAprLineInfoCC();
+		                	} else if (ret[22] == "sameItem") {
+		                	} else {
+		                		SaveAprLineInfoCC(ret[22]);
+		                	}
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {
 		                		delAprLineInfoCC();
-		                		//없으니깐 암것도 안해도되려나 싶은데 기존꺼를 뺏을수도 있으니까 무조건 삭제
+		                		// ret[22] 값이 "noItem"일 경우 기존 데이터가 있을 수 있으므로 삭제함
 		                	} else if (ret[22] == "sameItem") {
-		                		//같으니깐 암것도 안해도 되려나
+		                		// ret[22] 값이 "sameItem"일 경우 동작 없음
 		                	} else {
 		                		//회람 저장
 		                		SaveAprLineInfoCC(ret[22]);
@@ -2055,6 +2092,9 @@
 		        
 		        var rtnVal = SaveTMPFile(AutoSave);
 		        if (rtnVal == "TRUE") {
+					if (isUsed == 'reuse') { 
+						Saveflag = false;
+					}					
 		            rtnVal = SaveTMPDocInfo(AutoSave);
                     if (useOpenGov == "YES") {
                         $.ajax({
@@ -2270,6 +2310,38 @@
 				}
 			}
 	    	
+	    	function checkHeaderAction() {
+	    		if (useHideHeaderArea == "YES" && message.GetListItem(message.GetFieldsList(), "headerArea") != null) {
+                	document.getElementById("headerTabTR").style.display = "";
+                	$('#headerMenu').hover(function() {
+                		$('#headerMenu').css('border-bottom', '3px black solid');
+                		$('#headerHide').css({'color':'black', 'font-weight':'bold'});
+                	}, function() {
+                		$('#headerMenu').css('border-bottom', 'solid 1px #eaeaea');
+                		$('#headerHide').css({'color':'#8f8e93', 'font-weight':'normal'});
+                	}) 
+                } else if (document.getElementById("headerTabTR") != null) {
+                	document.getElementById("headerTabTR").style.display = "none";
+                }
+	    	}
+	    	
+	    	function headerAction(action) {
+	    		if (useHideHeaderArea == "YES") {
+	    			var fields = message.GetFieldsList();
+		    	    var field = message.GetListItem(fields, "headerArea");
+		    	    
+		    	    if (field) {
+		    	        if (field.style.display == "none" || action == "open") {
+		    	        	field.style.display = "";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 숨기기";
+		    	        } else {
+		    	            field.style.display = "none";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 펼치기";
+		    	        }
+		    	    }
+	    		}
+	    	}
+	    	
 		</script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" style="height:100%;">
@@ -2329,6 +2401,17 @@
 		        </ul>
 		      </div></td>
 		  </tr>
+		  <c:if test="${useHideHeaderArea == 'YES'}">
+			  <tr id="headerTabTR" style="display:none;">
+			  	<td>
+					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
+					  	<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
+					  		<span id="headerHide" style="color:#8f8e93; font-size:14px;">헤더 숨기기</span>
+					  	</div>
+					  </div>
+			  	</td>
+			  </tr>
+		  </c:if>
 		  <tr>
 		    <td  style="padding-bottom:10px;height:86%;" >
 		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>

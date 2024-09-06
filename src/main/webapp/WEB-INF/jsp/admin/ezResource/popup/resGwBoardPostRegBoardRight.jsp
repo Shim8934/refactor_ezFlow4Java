@@ -45,6 +45,7 @@
 	        var pListXML_Info = null;
 	        var ReturnFunction;
 	        var userLang = "<c:out value='${userLang}'/>";
+	        var companyID = "<c:out value='${company}'/>";
 
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -112,7 +113,7 @@
 	                var objNode;
 	                createNodeInsert(xmlpara, objNode, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID + "/organ");
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
@@ -1166,7 +1167,7 @@
 	    	        	var treeNode = new TreeNode();
 	    	        	treeNode.LoadFromID(nodeIdx.NodeID);
 	            	} else {
-	                	alert(g_xmlHTTP.statusText)
+	                	alert(g_xmlHTTP.status)
 		                g_xmlHTTP = null;
 	            	}
 	        	}
@@ -1184,7 +1185,7 @@
 	                	    DisplayUserImageList();
 	                	}
 	            	} else {
-	                	alert(g_xmlHTTP.statusText);
+	                	alert(g_xmlHTTP.status);
 	            	}
 
 	            	g_xmlHTTP = null;
@@ -1534,7 +1535,9 @@
             		</td>
         		</tr>
     		</table>
+		<label style="display: inline-flex; align-items: center;">
     		<input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone" ><span class="txt" style="margin-bottom: 3px;"><spring:message code="ezResource.t372" /></span>    		
+		</label>
     		<div class="btnpositionNew">
         		<a class="imgbtn" onclick="close_onclick()"><span><spring:message code="ezResource.t15" /></span></a>
     		</div>

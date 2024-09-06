@@ -38,7 +38,13 @@
 		    }
 	        
 		    function btn_OpinionCANCEL_onclick() {
-		        window.close();
+				if (ReturnFunction != null) {
+					ReturnFunction("cancel");
+					window.close();
+				} else {
+					window.returnValue = "cancel";
+					window.close();
+				}
 		    }
 		    
 		    window.onload = function () {

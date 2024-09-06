@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezSurvey.vo.ResultViewPermissionVO;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,6 +39,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSurvey.dao.EzSurveyDAO;
@@ -82,6 +84,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name="EzNotificationService")
+	private EzNotificationService ezNotificationService;
 	
 	@Autowired
 	private EzEmailAsync ezEmailAsync;
@@ -236,6 +241,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("primary"   , userInfo.getPrimary());
 		map.put("offset"    , commonUtil.getMinuteUTC(userInfo.getOffset()));
 		
+		boolean isDeletedSurvey = ezSurveyDAO.comfirmSurveyDeletion(map);
+		
+		if (isDeletedSurvey) {
+			result.put("code", -1);
+			return result;
+		}
+		
 		List<SurveyVO> listSurvey  = ezSurveyDAO.getSurveyListForPermission(map);
 		
 		if (listSurvey == null || listSurvey.isEmpty()) {
@@ -245,6 +257,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		List<SurveyVO> otherSurvey = listSurvey.stream().filter(i -> !i.getCreatorId().equals(userId)).collect(Collectors.toList());
 		
+		// mode - 설문결과 공개 플래그. 0-비공개, 1-공개, 2-지정공개
 		if (mode == 1) { //delete, reuse check
 			if (otherSurvey.size() > 0) {
 				result.put("code", 3);
@@ -255,8 +268,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			if (otherSurvey.size() > 0) {
 				List<Long> listOtherSurveyId  = otherSurvey.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
 				List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
-				
-				if (!listReceivedSurvey.containsAll(listOtherSurveyId)) {
+				List<Long> resultList = new ArrayList<>(listReceivedSurvey);
+				if (mode == 2) {
+					List<Long> listReceivedSurveyResult = getUserReceivedSurveyResultList(userInfo, 0);
+					resultList.removeAll(listReceivedSurveyResult);
+					resultList.addAll(listReceivedSurveyResult);
+				}
+				if (!resultList.containsAll(listOtherSurveyId)) {
 					result.put("code", 3);
 					return result;
 				}
@@ -356,7 +374,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public synchronized JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int draftMode, LoginVO userInfo, int mailFlag, int popupFlag) throws Exception {
+	public synchronized JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int draftMode, LoginVO userInfo, int mailFlag, int popupFlag) throws Exception {
 		JSONObject result                    = new JSONObject();
 		int tenantId                         = userInfo.getTenantId();
 		String companyId                     = userInfo.getCompanyID();
@@ -612,12 +630,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 		survey.setTotalUser(setUsers.size());
 		
+		String mode = "";
 		//Check modify/save mode
 		if (crrSurveyId == surveyId) {
+			mode = "MODIFY";
 			cleanAndUpdateSurvey(survey);
 		}
 		else {
 			//Save new survey
+			mode = "NEW";
 			ezSurveyDAO.saveSurveyItem(survey);
 		}
 		
@@ -642,21 +663,41 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		}
 		
 		try {
+			List<SurveyParticipantVO> sendMailList = new ArrayList<SurveyParticipantVO>();
+			List<SurveyParticipantVO> userList = getSurveyParticipantListForMail(crrSurveyId, companyId, tenantId);
+			/* 2021-11-18 홍승비 - 대상자가 부서(회사)인 경우, 하위부서 허용여부를 체크하여 메일 발송 대상자 추가 (중복 제거된 개인 단위 VO) */
+			List<SurveyParticipantVO> subDeptList = getSurveySubDeptListForMail(crrSurveyId, companyId, tenantId);
+			
+			sendMailList.addAll(userList);
+			sendMailList.addAll(subDeptList);
+			String receipientIds = "";
+			String separator = ";;";
+			for (int i = 0; i < userList.size(); i++) {
+				SurveyParticipantVO userinfo = userList.get(i);
+				String userAccount = userinfo.getEmail();
+				String receiveId = userAccount.split("@")[0];
+				receipientIds += receiveId;
+				if (i != userList.size() - 1) {
+					receipientIds += separator;
+				}
+				
+			}
+			
+			if (mode == "NEW") {
+				String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId;
+		    	String linkUrlMobile = "";
+		    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), receipientIds, "SURVEY", mode, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+			}
+			
 			//Send notice mail
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Boolean notiMailFlag = mailFlag == 1 && dateFormat.format(new Date()).equals(startDate) && draftMode == 0;
+			
 			if (notiMailFlag) {
 				int mailSentFlag = ezSurveyDAO.getMailSentFlag(survey);
 				
 				if(mailSentFlag == 0) {
 					logger.debug("start send mail");
-					List<SurveyParticipantVO> sendMailList = new ArrayList<SurveyParticipantVO>();
-					List<SurveyParticipantVO> userList = getSurveyParticipantListForMail(crrSurveyId, companyId, tenantId);
-					/* 2021-11-18 홍승비 - 대상자가 부서(회사)인 경우, 하위부서 허용여부를 체크하여 메일 발송 대상자 추가 (중복 제거된 개인 단위 VO) */
-					List<SurveyParticipantVO> subDeptList = getSurveySubDeptListForMail(crrSurveyId, companyId, tenantId);
-					
-					sendMailList.addAll(userList);
-					sendMailList.addAll(subDeptList);
 					
 					ezEmailAsync.sendMail(sendMailList, survey, offset);
 					updateMailSentFlag(crrSurveyId, 1, companyId, tenantId);
@@ -667,6 +708,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			logger.error(e.getMessage(), e);
 		}
 		
+		result.put("survey_id", crrSurveyId);
 		result.put("status", "ok");
 		result.put("code", 0);
 		return result;
@@ -754,9 +796,11 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		if (pageMode.equals("processing") || pageMode.equals("finish") || pageMode.equals("all")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
+			List<Long> listReceivedResultSurvey = getUserReceivedSurveyResultList(userInfo, 0);
 			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String timeUTC                = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
 			searchVO.setSurveyIds(listReceivedSurvey);
+			searchVO.setSurveyResultIds(listReceivedResultSurvey);
 			searchVO.setToday(timeUTC);
 		}
 		
@@ -798,9 +842,11 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		if (mode != null && mode.equals("popup")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
+			List<Long> listReceivedResultSurvey = getUserReceivedSurveyResultList(userInfo, 0);
 			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String timeUTC                = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
 			map.put("surveyIds", listReceivedSurvey);
+			map.put("surveyResultIds", listReceivedResultSurvey);
 			map.put("today", timeUTC);
 		}
 		
@@ -828,6 +874,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("updateTime", timeUTC);
 		
 		ezSurveyDAO.deleteItems(map);
+		
+		// 게시물 삭제 시 설문결과 지정공개 대상자 삭제
+		for (int i=0; i<itemIdList.size(); i++) {
+			Map<String,Object> map2	= new HashMap<String, Object>();
+			map2.put("survey_id", itemIdList.get(i));
+			map2.put("tenant_id",   userInfo.getTenantId());
+			map2.put("company_id",  userInfo.getCompanyID());
+			ezSurveyDAO.deleteResultViewPermission(map2);
+	 	}
 	}
 	
 	private List<Long> getUserReceivedSurveyList(LoginVO userInfo, long surveyId) {
@@ -905,6 +960,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				}
 			}
 		}
+		JSONArray listResultUsers = getSurveyResultViewTarget(userInfo, surveyId);
 		List<AttachVO> surveyAttach         = ezSurveyDAO.getSurveyAttachList(map);
 		
 		//Clone attach files
@@ -912,6 +968,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		survey.setAttachList(surveyAttach);
 		survey.setUserList(listUsers);
+		survey.setResultViewTarget(listResultUsers);
+		
 		result.put("survey", survey);
 		
 		if (mode.equals("normal")) {
@@ -1488,6 +1546,12 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		SurveyVO survey  = ezSurveyDAO.getSurveyInfo(map);
 		
+		if (survey == null) {
+			result.put("status", "error");
+			result.put("code", 3);
+			return result;
+		}
+		
 		if (!survey.getCreatorId().equals(userInfo.getId())) {
 			//Check public date
 			if (adminYN.equals("N") && survey.getResultPublicFlag() == 0) {
@@ -1498,10 +1562,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			else {
 				//Check requirements
 				List<Long> checkReceivedSurvey = getUserReceivedSurveyList(userInfo, surveyId);
+				List<Long> checkReceivedResultSurvey = getUserReceivedSurveyResultList(userInfo, surveyId);;
 				
-				if (checkReceivedSurvey == null || checkReceivedSurvey.size() == 0) {
+				if (survey.getResultPublicFlag() != 2 && (checkReceivedSurvey == null || checkReceivedSurvey.size() == 0)) {
 					result.put("status", "error");
 					result.put("code", 3);
+					return result;
+				} else if (survey.getResultPublicFlag() == 2 && (checkReceivedResultSurvey == null || checkReceivedResultSurvey.size() == 0)) {
+					result.put("status", "error");
+					result.put("code", 3); 
 					return result;
 				}
 				
@@ -1516,7 +1585,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				calendar.add(Calendar.DATE, openDays);
 				Date endPublicDate         = calendar.getTime();
 				
-				if (adminYN.equals("N") && (today.compareTo(endPublicDate) > 0)) {
+				if (adminYN.equals("N") && (today.compareTo(endPublicDate) > 0) && survey.getResultPublicFlag() != 2) {
 					result.put("status", "error");
 					result.put("code", 7);
 					return result;
@@ -1716,6 +1785,125 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return result;
 	}
+
+	@Override
+	public String checkTenantConfig(String propertyName, int tenantID) throws Exception {
+		logger.debug("getIsUse started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("propertyName", propertyName);
+		map.put("tenantID", tenantID);
+
+		return ezSurveyDAO.checkTenantConfig(map);
+	}
 	
+	@Override
+	public void setPreviewFlag(String prevMode, String userId, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("prevMode", prevMode);
+		
+		ezSurveyDAO.setPreviewFlag(map);
+	}
 	
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 저장
+	@Override
+	public void saveSurveyResultViewTarget(LoginVO userInfo, Long survey, JSONArray resultViewTarget) throws Exception {
+		logger.debug("saveSurveyResultViewTarget started.");
+		Map<String,Object> map = new HashMap<String, Object>();
+		List<ResultViewPermissionVO> resultViewList = getSurveyResultViewTarget(userInfo, survey);
+		
+		map.put("survey_id", survey);
+		map.put("company_id", userInfo.getCompanyID());
+		map.put("tenant_id", userInfo.getTenantId());
+		
+		if (resultViewList.size() > 0) {
+			ezSurveyDAO.deleteResultViewPermission(map);
+		}
+		
+		for (int i = 0; i < resultViewTarget.size(); i++) {
+			JSONObject var = (JSONObject) resultViewTarget.get(i);
+			map.put("cn", var.get("userId"));
+			map.put("user_type",  var.get("userType"));
+			map.put("subdept_permitted", var.get("subDeptYN"));
+			map.put("cnName",  var.get("userName"));
+			map.put("cnName2", var.get("userName2"));
+			
+			ezSurveyDAO.saveSurveyResultViewTarget(map);
+		}
+		logger.debug("saveSurveyResultViewTarget end.");
+	}
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 리스트 조회
+	@Override
+	public JSONArray getSurveyResultViewTarget(LoginVO userInfo, Long survey_id) throws Exception {
+		logger.debug("saveSurveyResultViewTarget started.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("survey_id", survey_id);
+		map.put("company_id", userInfo.getCompanyID());
+		map.put("tenant_id", userInfo.getTenantId());
+
+		List<ResultViewPermissionVO> resultViewList = ezSurveyDAO.selectResultViewPermission(map);
+		
+		JSONArray result = new JSONArray();
+		for (int i = 0; i< resultViewList.size(); i++) {
+			ResultViewPermissionVO var = resultViewList.get(i);
+			JSONObject elem = new JSONObject();
+			elem.put("userId", var.getCn());
+			if (userInfo.getLang() == "1") {
+				elem.put("userName", var.getCnName());
+			} else {
+				elem.put("userName", var.getCnName2());
+			}
+			elem.put("userName1", var.getCnName());
+			elem.put("userName2", var.getCnName2());
+			elem.put("subdeptPermitted", var.getSubdept_permitted());
+			elem.put("userType", var.getUser_type());
+			elem.put("sn", i);
+			
+			result.add(elem);
+		}
+		return result;
+	}
+
+	// 2024-07-12 전인하 - 설문 > 사용자가 결과조회 가능한 설문 id 조회
+	@Override
+	public List<Long> getUserReceivedSurveyResultList(LoginVO userInfo, long surveyId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  userInfo.getTenantId());
+		map.put("deptId",    userInfo.getDeptID());
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("userId",    userInfo.getId());
+
+		if (surveyId != 0) {
+			map.put("surveyId", surveyId);
+		}
+		
+		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
+		map.put("deptList", userDeptList);
+		
+		/* 2021-11-18 홍승비 - 전자설문 하위부서 허용여부 체크 > 사용자 직속부서, 겸직부서의 모든 상위부서ID를 전달  */
+		List<String> userAllDeptPath = ezSurveyDAO.getUserAllDepartmentIdList(map);
+		List<String> userAllDeptList = new ArrayList<String>();
+		Set<String> userAllDeptSet = new HashSet<String>();
+
+		// 상위부서를 전부 포함하는 부서ID+회사ID를 리스트에 담아 쿼리에 전달함 (중복은 set으로 제거)
+		if (userAllDeptPath.size() > 0) {
+			for (int i = 0; i < userAllDeptPath.size(); i++) {
+				userAllDeptSet.addAll(Arrays.asList(userAllDeptPath.get(i).split(",")));
+			}
+		}
+		userAllDeptList.addAll(userAllDeptSet);
+		map.put("allDeptList", userAllDeptList);
+		
+		List<Long> result         = ezSurveyDAO.getReceivedSurveyResultList(map);
+		Set<Long> setSurveyIds    = new HashSet<>(result);
+		result.clear();
+		result.addAll(setSurveyIds);
+
+		return result;
+	}
 }

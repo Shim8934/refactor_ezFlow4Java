@@ -162,6 +162,7 @@
 		        document.getElementById("txtCabTitle").value = "";
 		        $("#Sdatepicker").datepicker('setDate', "");
 		        $("#Edatepicker").datepicker('setDate', "");
+				document.getElementById("chkTransExp").checked = false;
 		    }
 		    function btnSearch_onclick() {
 		        var oParamXml = GetCabSearchParamXml();

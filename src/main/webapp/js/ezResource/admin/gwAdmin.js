@@ -6,12 +6,13 @@
 			"DEL" : "gwBoardPostBoardDel.do",
 			"ITEMMOV" : "gwboardGetItemMoveSearch.do" ,
 			"ITEMUPDATE" : "gwboardGetItemMoveSearch.do",
-			"GONGJI" : "gwBoardPostRegGongjiBoard.do" };
+			"GONGJI" : "gwBoardPostRegGongjiBoard.do",
+			"STATUS" : "gwBoardListStatus.do" };
 
 
 function NavigateBrdAdmin_Res(pFlag) {
     var objSelected = "";
-    var pSelCompanyID = window.parent.frames["board_menu"].pCompanyID;;
+    var pSelCompanyID = window.parent.frames["board_menu"].pCompanyID;
     objSelected = window.parent.frames["board_menu"].TreeView.selectedIndex();
 
 	if( objSelected ){

@@ -166,7 +166,7 @@
 					makeDlList(data);
 					isScroll();
 				}, error:function(er) {
-					alert("<spring:message code='ezBoard.t19' /> " + er.status + " " + er.statusText);
+					alert("<spring:message code='ezBoard.t19' /> " + er.status );
 				}
 			});
 		}

@@ -346,42 +346,51 @@ function specialChk(val){
 	return rVal;
 }
 
-function loginCheckPassword(str, chkCompanyId) {
-	var test = "";
+/** 1. 로그인>첫로그인, 비밀번호 기한 만료 > 비밀번호 변경 : pw, chkCompanyId, userId */
+function loginCheckPasswordPolicy(dataParams) {
+	return checkPasswordPolicy(dataParams, "/user/login");
+}
+
+/**
+ * 암호 정책 확인
+ *
+ * @param dataParams
+ * 2. 포탈>환경설정>개인정보관리> 비밀번호관리 : pw, useLoginCookie
+ * 3. 관리자>조직도/메일>퇴직자관리/공유사서함관리> 암호관리/공유사서함 추가 : pw, chkCompanyId
+ * 4. 관리자>조직도>조직도관리> 암호관리 : pw, chkCompanyId, userId
+ * 5. 관리자>조직도>조직도관리> 사원추가 : pw, chkCompanyId, userId, usePropParams, TELEPHONENUMBER, MOBILE, HOMEPHONE, BIRTH
+ *
+ * @require jsp : <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
+ */
+function checkPasswordPolicy(dataParams, path) {
+	var result = false;
 	
 	$.ajax({
 		type:"post",
-		data:{"pw":str, "chkCompanyId":chkCompanyId},
+		data: dataParams,
 		async:false,
-		url : "/user/login/checkPasswordPolicy.do",
+		url : (path? path : "/ezOrgan") + "/checkPasswordPolicy.do",
 		success : function(data) {
-			test = (data!="OK") ? "NON" : data;
+			if (data == "OK") {
+				result = true;
+
+			} else if (data.includes("PREVERROR")) { // 2021-10-26 이사라 : 최근사용 비밀번호는 사용할 수 없는 로직 추가
+				var rememberPWCount = data.split('|');
+				alert(strLangLS06.replace("%s",rememberPWCount[1]));
+			} else if (data == "NUMBERERROR") { // 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
+				alert(strLangLS07);
+			} else {
+				alert(strLangKSA07);
+			}
 		}, error : function (err) {
-			test = "ERROR";
+			alert(strLangKSA06);
 		}
 	});
 	
-	return test;
+	return result;
 }
 
-function CheckPassword(str, chkCompanyId) {
-	var test = "";
-	
-	$.ajax({
-		type:"post",
-		data:{"pw":str, "chkCompanyId":chkCompanyId},
-		async:false,
-		url : "/ezOrgan/checkPasswordPolicy.do",
-		success : function(data) {
-			test = (data!="OK") ? "NON" : data;
-		}, error : function (err) {
-			test = "ERROR";
-		}
-	});
-	
-	return test;
-}
-
+/** 기존 공유사서함 관련 암호 정책 확인. ▲checkPasswordPolicy() 로 통합함. */
 function sharedMailCheckPassword(str) {
 	var pw = str;
 	var num = pw.search(/[0-9]/g);

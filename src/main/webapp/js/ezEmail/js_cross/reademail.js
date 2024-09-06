@@ -1,5 +1,3 @@
-﻿
-
 var m_bPrevNext = false;
 var real_href = "";
 var minimumWidth = 890;
@@ -74,6 +72,25 @@ function ReSend(pURL, pEmail) {
         else
             window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + pEmail, "", feature);
     }*/
+}
+
+// 2024.05.24 한슬기 : 수신인 이름을 사용하기위해 오버로딩
+function ReSend(pURL, pEmail, pReader) {
+    var pheight = window.screen.availHeight;
+    var conHeight = pheight * 0.8;
+    var pwidth = window.screen.availWidth;
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+    
+    var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail) + "&reciverName=" + encodeURIComponent(pReader);
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+    
+    window.open(requestUrl, "", feature);
+    
 }
 
 function encoding_mail() {
@@ -527,7 +544,7 @@ function func_addaddr_Complete(ret) {
             
             if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
                 if (xmlHTTP.status != 200) {
-                	alert(strLang133 + xmlHTTP.statusText);
+                	alert(strLang133 + xmlHTTP.status);
                 	return;
                 }
                 
@@ -547,7 +564,7 @@ function func_addaddr_Complete(ret) {
     	// duplicateList 동일한 메일주소
     	
     	if (duplicateList.length > 0) {
-    		var alertMsg = strLang136 + "\n" + strLangKSA01;
+    		var alertMsg = strLangKSA01;
     		var dupliNameTxt = [];
     		
     		$.each(duplicateList, function(i, e) {
@@ -587,7 +604,7 @@ function Get_DupliCateAddressCnt(senderEmail, folderId, type) {
 		xmlHTTP.send(xmlDom);
 		
 		if (xmlHTTP.status != 200){
-			alert(strLang133 + xmlHTTP.statusText);
+			alert(strLang133 + xmlHTTP.status);
 		} else {
 			returnValue = xmlHTTP.responseText;
 		}
@@ -612,8 +629,16 @@ function func_reject() {
     var params = new Array();
     params["email"] = new Array();
     params["link"] = new Array();
-    if (document.getElementById('LabelFromName').textContent != g_fromEmail) {
-        params["email"][0] = document.getElementById('LabelFromName').textContent + " <" + g_fromEmail + ">";
+    var labelFromName = document.getElementById('LabelFromName').textContent;
+    if (labelFromName != g_fromEmail) {
+        // "01099455495 <발신전용>" <01099455495@ktfmms.magicn.com>와 같이 이름안에 <> 기호가 있는 경우
+        // 이름을 감싸는 이중따옴표가 제거된 상태로 들어와서 이메일 주소 파싱에 오류가 발생함. 이에 < 기호가 있는 경우
+        // 다시 이중따옴표로 감싸도록 함.
+        if (labelFromName.indexOf('<') > -1) {
+            params["email"][0] = '"' + labelFromName + '"' + " <" + g_fromEmail + ">";
+        } else {
+            params["email"][0] = labelFromName + " <" + g_fromEmail + ">";
+        }
     }
     else {
         params["email"][0] = g_fromEmail;
@@ -1363,7 +1388,7 @@ function removeTag(span) {
 	$.ajax({
 		method: "post",
 		url: "/ezEmail/deleteMailTag.do",
-		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
+		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName, shareId: shareId },
 		success: function(result) {
 			if (result.status == "error") {
 				alert(strLang321);
@@ -1411,7 +1436,7 @@ function onEnterPreviewTagInput() {
 		async: false,
 		method: 'post',
 		url: "/ezEmail/addMailTag.do",
-		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
+		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName, shareId: shareId },
 		success: function(result) {
 			if (result.status == "error") {
 				alert(strLang321);
@@ -1429,4 +1454,90 @@ function onEnterPreviewTagInput() {
 			alert(strLang321);
 		}
 	});
+}
+
+function download_Single_mail() {
+
+    var parameters = "url=" + encodeURIComponent(g_paramURL);
+    var fullpath = "/ezEmail/mailExport.do?" + parameters;
+
+    AttachDownFrame.location.href = fullpath;
+    AttachDownFrame.target = "_blank";
+
+}
+
+var mail_originalEML_cross_dialogArguments = new Array();
+
+function view_OriginalEML() {
+    mail_originalEML_cross_dialogArguments[1] = DivPopUpHiddenReadMail;
+
+    var parameters = "url=" + encodeURIComponent(g_paramURL);
+    var requestUrl = "/ezEmail/getOriginalEML.do?" + parameters;
+
+    if (typeof(shareId) != "undefined" && shareId != "") {
+        requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    }
+
+    DivPopUpShow(620, 600, requestUrl);
+}
+
+function makeWindowPosition(width, height) {
+	var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+    var dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+
+    var screenWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+    var screenHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+    var left = (screenWidth - width) / 2 + dualScreenLeft;
+    var top = (screenHeight - height) / 2 + dualScreenTop;
+    
+    var feature = ", left=" + left + ",top=" + top;
+    return feature;
+}
+
+function openAttendChk() {
+	var height = 300;
+	var width = 800;
+	var feature = makeWindowPosition(width, height);
+    
+    var requestUrl = "/ezSchedule/scheduleReceiveAttendant.do?from=mail";
+    
+    window.open(requestUrl, "", "height=" + height + "px, width= " + width + "px" + feature);
+    
+}
+
+function openScheduleInfo() {
+	var scheduleId = event.target.getAttribute("scheduleId");
+	var repeatCount = event.target.getAttribute("repeatCount");
+	var height = 700;
+	var width = 800;
+	var feature = makeWindowPosition(width, height);
+    var requestUrl = "";
+    if (repeatCount != null) {
+    	requestUrl = "/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleId) + "&repeatcount=" + repeatCount;
+    } else {
+    	requestUrl = "/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleId) + "&isReceive=Y";
+    }
+    
+    window.open(requestUrl, "", "height=" + height + "px, width= " + width + "px" + feature);
+}
+
+//2023-09-06 한태훈 - 일정관리 > 미리알림 메일 링크
+function reminderMailLink() {
+	var reminder_link = document.getElementById("reminder_link");
+	var id = reminder_link.getAttribute("scheId");
+	var otherid = reminder_link.getAttribute("otherid");
+	var repeatcount = reminder_link.getAttribute("repeatcount");
+	var date = reminder_link.getAttribute("date");
+	var type = reminder_link.getAttribute("type");
+	var datetype = reminder_link.getAttribute("datetype");
+	var pattern = reminder_link.getAttribute("pattern");
+    var height = 750;
+    var width = 800;
+    
+    var feature = makeWindowPosition(width, height);
+	
+	var url = "/ezSchedule/scheduleRead.do?";
+	url += "id=" + encodeURIComponent(id) + "&otherid=" + encodeURIComponent(otherid) +"&repeatcount=" + encodeURIComponent(repeatcount) + "&date=" + encodeURIComponent(date) + "&type=" + encodeURIComponent(type) + "&datetype=" + encodeURIComponent(datetype) + "&pattern=" + encodeURIComponent(pattern);
+	window.open(url, "", "toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=0, resizable=1, height=" + height +"px, width=" + width +"px" + feature);
 }

@@ -99,9 +99,11 @@
 	                    
                     	// 로딩된 문서의 전체 갯수가 재기안 시작 시 가져온 전체 안의 갯수와 일치하는 경우
                     	if (parent.docLoadCompleteCnt == (parent.pDocIDAry.length - 1)) {
-            	        	parent.selTab(1); // 각 안을 전부 로딩한 뒤, 기본으로 1안을 선택하도록 한다.
             	        	parent.HiddenMailProgress(); // 전부 완료 시 로딩중 이미지 제거
             	        	parent.CheckOpinionYN(); // 모든 문서가 완료된 다음, 대표로 1안에 대해서만 의견 존재 여부를 확인하고, 레이어 팝업을 호출한다.
+            	        	setTimeout(function() {
+            	        		parent.selTab(1); // 각 안을 전부 로딩한 뒤, 기본으로 1안을 선택하도록 한다.
+    						}, parent.loadTime);
                     	}
 	                } else {
 	                	parent.HiddenMailProgress();

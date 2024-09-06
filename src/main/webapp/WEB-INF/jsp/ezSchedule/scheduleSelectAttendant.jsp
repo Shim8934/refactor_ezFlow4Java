@@ -26,7 +26,15 @@
 			}
 			.countColor {
 				color:#017BEC;
-			}	    	
+			}
+			input[type="checkbox"] {
+			    width: 13px;
+			    height: 13px;
+			    margin: 0px 5px 0px 18px;
+			    padding: 0px;
+			    overflow: hidden;
+			    vertical-align: middle;
+			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	    
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -50,6 +58,13 @@
 	        var RetValue;
 	        var ReturnFunction;	        
 	        var lang = "<c:out value='${lang}' />";
+	        var mList = [];
+	        <c:forEach var="member" items="${mList}">
+	            mList.push({
+	                memberId: "${member.memberId}",
+	                writePermission: "${member.writePermission}"
+	            });
+	        </c:forEach>
 	        
 	        /* 2023-07-19 홍승비 - 일정그룹관리로 접근한 경우, 해당 일정그룹의 관리자(그룹장) userID 추가 (그룹관리가 아니라면 공백) */
 	        var groupOwnerID = "<c:out value='${groupOwnerID}'/>";
@@ -152,7 +167,7 @@
 	            	
 	                if (type == "group") {
 	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezSchedule.t00001' />";
-	                    document.getElementById("btnAddUser").style.display = "";	// 2023-09-06 조소정 - 참석자 일정조회 버튼 활성화
+	                    document.getElementById("btnAddUser").querySelector("span").textContent = "<spring:message code='ezSchedule.groupSchedule.csj01' />";	// 2023-09-06 조소정 - 참석자 일정조회 버튼 활성화
 	                }
 	            }
 	            catch (ErrMsg) {
@@ -616,6 +631,7 @@
 	                    var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 	                    var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 	                    var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+	                    var writePermission = "Y"; // 기본값을 'Y'로 설정
 
 	                    var listid = "MsgToList";
 	                    var getlistview = new ListView();
@@ -623,10 +639,15 @@
 	                    var IsInsert = CheckMailReceiver(strId, "3");
 	                    
 	                    // 그룹관리가 아닌 경우 -> 비서관리, 일정의 참석자 초대이므로 추가하려는 구성원이 현재 사용자(작성자)인지 체크
-	                    if (type != "group" && strId == "<c:out value='${userID}'/>") {
+	                    if (type != "group" && type != "executive" && strId == "<c:out value='${userID}'/>") {
 	                        alert("<spring:message code='ezSchedule.t352' />"); // 작성자는 선택할 수 없습니다.
 	                        continue;
 	                    }
+
+						if (type != "group" && strId == "<c:out value='${executive}'/>") {
+							alert("<spring:message code='ezSchedule.lyj11' />"); // 임원은 선택할 수 없습니다.
+							continue;
+						}
 	                    
 	                    /* 2023-07-17 홍승비 - 관리자 > 일정관리 > 일정 그룹 관리 > 그룹 관리 > 구성원 추가 시 그룹장이 아닌 경우 추가 가능하도록 수정 */
 	                    // 그룹관리인 경우 -> 관리자단에서 그룹장이 아닌 사용자도 그룹 관리가 가능하므로, 추가하려는 구성원이 그룹장인지 체크
@@ -648,6 +669,7 @@
 	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+	                        pparsingXML = pparsingXML + "<DATA9>" + writePermission + "</DATA9>";
 	                        if(lang == "1") {
 	                        	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                        }
@@ -676,16 +698,19 @@
 	                            MaxCntNum = MaxCntNum + 1;
 	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
-	
+	                        
+	                        var inputs = objTr.getElementsByTagName("input");
+	                        for (var i = 0; i < inputs.length; i++) {
+	                            inputs[i].checked = true;
+	                        }
+	                        
 	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 	                        for (var y = 0; y < _tdlength; y++) {
 	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                        }
-	
 	                    }
 	                }
-	
 	            }
 	            else {
 	                if (p_ListOrderObject == "") {
@@ -701,6 +726,7 @@
 	                    var strDeptNM2 = p_ListOrderObject.getAttribute("_data13");
 	                    var jickwe = p_ListOrderObject.getAttribute("_data14");
 	                    var phone = p_ListOrderObject.getAttribute("_data8");
+	                    var writePermission = "Y"; // 기본값을 'Y'로 설정
 	
 	                    var listid = "MsgToList";
 	                
@@ -723,6 +749,7 @@
 	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+	                        pparsingXML = pparsingXML + "<DATA9>" + writePermission + "</DATA9>";
 	                        if(lang == "1") {
 	                       		 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                        }
@@ -856,7 +883,7 @@
 	                    M_TR.style.cursor = "pointer";
 	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.onmousedown = function () { event_listclick(this); };
 	                    M_TR.ondblclick = function () { event_listDBclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
@@ -951,7 +978,7 @@
 	                    M_TR.style.cursor = "pointer";
  	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.onmousedown = function () { event_listclick(this); };
 	                    M_TR.ondblclick = function () { event_listDBclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
@@ -1125,7 +1152,7 @@
 			}
 		    var rtn;
 		    function btnok_onclick() {
-		        rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+		        rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array(), "writepermission": new Array() };
 		
 		        var listid = "MsgToList";
 		        var selList = new ListView();
@@ -1150,6 +1177,15 @@
 		            rtn["deptname2"][i] = GetAttribute(totalRows[i], "DATA5");
 		            rtn["jikwe"][i] = GetAttribute(totalRows[i], "DATA7");
 		            rtn["phone"][i] = GetAttribute(totalRows[i], "DATA8");
+
+		            // writepermission 체크박스의 상태를 가져옴
+		            var curID = GetAttribute(totalRows[i], "DATA1");
+		            var checkbox = document.getElementById("cb_" + curID);
+		            if (checkbox) {
+		                rtn["writepermission"][i] = checkbox.checked ? "Y" : "N";
+		            } else {
+		                rtn["writepermission"][i] = "Y"; // 기본값 설정
+		            }
 		        }
 		        
 		        if (!CrossYN()) {
@@ -1555,7 +1591,7 @@
 	 	</table>	    
 		<!-- 2023-09-06 조소정 - 참석자 일정조회 및 취소 버튼 추가 -->	    
 		<div class="btnposition btnpositionNew">
-	    	<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()"><span><spring:message code='ezSchedule.t123' /></span></a>
+	    	<a id="btnAddUser" style="display:none;" class="imgbtn" onClick="Add_UserInfo_onclick()"><span><spring:message code='ezSchedule.t123' /></span></a>
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span class=""><spring:message code='ezSchedule.t4' /></span></a>
 	    	<a class="imgbtn" onClick="window.close()()" ><span><spring:message code='ezSchedule.t5' /></span></a>
 		</div>

@@ -58,7 +58,7 @@
 .content .white {background-color: #fff !important;}
 .content .large {width: 40%;}
 .white >input[type='text'] {height: 30px; padding: 0px 5px; outline: none;}
-.spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
+.spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 13px; vertical-align: unset; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left:0px; white-space: pre;}
 .spanName:hover {color: #9b9b9b;}
 .selectedNode {font-weight: bold; color: #0470e4;}
 .cabinetMinus, .cabinetPlus {width: 18px; height: 18px; cursor: pointer;}
@@ -368,7 +368,7 @@
 .ptdownloadwrap input[type='checkbox'] {vertical-align: top; position: absolute; z-index: 1; left: 2px; top: 2px; margin: 0px;}
 .ptdownloadwrap img {cursor:pointer; width: 100px; height: 100px;}
 
-.addRelatedConfig {height: 42px;}
+.addRelatedConfig {height: 55px;}
 .cabMgRelTree {position: relative; margin: 10px 5px; padding: 10px; border: 1px solid #ddd; overflow: auto; flex: 1; background-color: #fff;}
 .cabMgRelTree.hid {overflow: hidden !important;}
 .cabMgRelTree .mdlRelTree {height: 100%; z-index: 1; white-space: nowrap;}
@@ -476,3 +476,5 @@
 /* 20230703 자바 디자인 수정 */
 .cbTree div span.list_text{cursor: pointer;}
 .cabRlSearch input[type='text']{height: 25px; margin-top: 1px;}
+
+.list_text[level]{cursor:pointer;}

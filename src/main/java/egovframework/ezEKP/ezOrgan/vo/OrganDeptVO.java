@@ -71,7 +71,14 @@ public class OrganDeptVO {
 	 * ezOrganDAO.getDeptMemberList(map) */
     private String isAddjob;
 	private String jobId;
+
+	private String roleId;
+
+	private String histParentCn;
 	
+	//부서 숨김 처리
+	private String deptTreeFlag;
+
 	public String getCn() {
 		return cn;
 	}
@@ -275,5 +282,27 @@ public class OrganDeptVO {
 	}
 	public void setJobId(String jobId) {
 		this.jobId = jobId;
+	}
+
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+	public String getHistParentCn() {
+		return histParentCn;
+	}
+	public void setHistParentCn(String histParentCn) {
+		this.histParentCn = histParentCn;
+	}
+
+	public String getDeptTreeFlag() {
+		return deptTreeFlag;
+	}
+
+	public void setDeptTreeFlag(String deptTreeFlag) {
+		this.deptTreeFlag = deptTreeFlag;
 	}
 }

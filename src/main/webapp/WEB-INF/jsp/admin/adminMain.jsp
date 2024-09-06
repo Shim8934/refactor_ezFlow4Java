@@ -5,6 +5,7 @@
 	<head>		
 		<title><spring:message code="ezBoard.t84" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">        
+		<link rel="shortcut icon" href="/images/favicon.ico">
 	</head>
 	<script type="text/javascript">
 	    function reloadLoginPage(multiLoginFlag, url) {

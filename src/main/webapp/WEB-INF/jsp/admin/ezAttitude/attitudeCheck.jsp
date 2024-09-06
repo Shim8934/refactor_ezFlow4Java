@@ -431,6 +431,8 @@
 					success : function(result) {
 						if(result != "success"){
 							alert("<spring:message code='ezCommunity.t47'/>");
+						} else {
+							alert("완료되었습니다.");
 						}
 					}
 				});

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezBoard.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -370,5 +371,14 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	public void deleteAllTabBoard(Map<String, Object> map) throws Exception {
 		delete("EzBoardAdminDAO.deleteAllTabBoard", map);
+	}
+
+	public String getUseFormFlag(String boardID, int tenantID) throws Exception {
+		HashMap<String, String> map = new HashMap() {{
+			put("boardID", boardID);
+			put("tenantID", tenantID);
+		}};
+
+		return (String)select("EzBoardAdminDAO.getUseFormFlag", map);
 	}
 }

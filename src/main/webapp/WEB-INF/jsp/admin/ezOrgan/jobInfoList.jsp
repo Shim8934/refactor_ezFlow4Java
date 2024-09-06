@@ -21,8 +21,8 @@
 		.previewmail_info {border-bottom: 1px solid #e5e5e5; min-width: 300px;}
 		.previewmail_bar_h {position: relative; float: left; display: inline-block; width: 5px; height: 100%;}
 		.preContent_RayerH {position: absolute; display: inline-block; width: 49%;}
-		.preview_header {padding: 0px; font-weight: bold; height: 11px; line-height: 11px;}
-		.preview_title {display: inline-block; margin-top: -6px; margin-left: 13px;}
+		.preview_header {padding: 0px; font-weight: bold; height:auto; line-height:normal;}
+		.preview_title {display: inline-block; max-width:calc(100% - 40px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden; float:left; margin:0 10px 0 13px;}
 		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; padding-top: 70px; border-top: 1px solid #e5e5e5;}
@@ -191,11 +191,16 @@
 		    	pTotalCnt = Number(SelectSingleNodeValueNew(xmlDom, "LISTVIEWDATA/TOTALCOUNT"));
 				
 				var oRows = SelectNodes(xmlDom, "LISTVIEWDATA/ROWS/ROW");
+				var orgPosition = "";
 			    if (oRows.length > 0) {
 			    	xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
 			    	$(xmlRtn.getElementsByTagName("ROW")).each(function(index) {
 		            	if($(this).find("DATA5").text() == "addJob") {
-		            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+							if(Tab1_SelectID == "001") {
+		            			orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+							} else {
+								orgPosition = pJobNM;
+							}
 		            		$(this).find("CELL").eq(3).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
 		            	}
 		            });
@@ -332,15 +337,16 @@
 		/* (추가/수정) 팝업창 작업 완료 이벤트 */
 		function titleInfo_complete(rtnVal) {
 	        if (typeof (rtnVal) != "undefined") {
-	        	if (rtnVal[0] == "TRUE") {
-	        		if (rtnVal[1] == "Add") {
+	        	// 2024.07.05 한슬기 : alert위치 변경(safari에서 alert이 팝업창에 가려 안보이는 현상이 있어 변경)
+	        	/*if (rtnVal[0] == "TRUE") {
+	        		if (rtnVal[1] == "Add") { 
 		        		alert("<spring:message code = 'ezBoard.t269'/>");
 	        		} else {
 		        		alert("<spring:message code = 'ezCommunity.t8'/>");
 	        		}
 	        	} else {
 	        		alert("<spring:message code = 'main.sp12'/>");
-	        	}
+	        	}*/
 	        	
 	        	job_list();
 	        	job_userList();
@@ -373,9 +379,10 @@
 		
 		/* 유저수정 팝업창 완료 이벤트 */
 		function info_user_complete(rtnValue) {
-	        if (typeof (rtnValue) != "undefined") {
+			// 2024.07.05 한슬기 : alert위치 변경(safari에서 alert이 팝업창에 가려 안보이는 현상이 있어 변경)
+			/*if (typeof (rtnValue) != "undefined") {
 	        	alert("<spring:message code='ezOrgan.t11' />");
-	        }
+	        }*/
 	        
 	        job_userList();
 	    }
@@ -692,15 +699,17 @@
 			<div class="previewmail">
 				<div class="previewmail_info">
 					<div id="Preview_HeaderH">
-						<p class="preview_header">
-							<span class="preview_title" id="preview_title"></span>
-							<span class="preview_count" id="preview_count"></span>
-							<span id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px; margin-top: -9px;">
+						<div class="preview_header">
+							<span id="userSearchRayer" style="float:right; display: block; margin-right: 2px; margin-top: 4px;">
 								<select id="searchType" style="height: 26px; width: 60px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
-								<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px; margin-right: -2px;">
-								<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.png" style="width: 26px; height: 24px; margin-top:2px;" border="0" onClick="search()"></a>
+								<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px; height:26px !important; margin-right:-1px;">
+								<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
 							</span>
-						</p>
+							<div style="float:none; display:block; overflow:hidden; line-height:37px;">
+								<span class="preview_title" id="preview_title"></span>
+								<span class="preview_count" id="preview_count"></span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

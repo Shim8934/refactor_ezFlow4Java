@@ -1,6 +1,4 @@
-﻿// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 시작
-
-//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
+﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
@@ -63,10 +61,6 @@ function disable_browser_selection() {
 
     document.body.style.cursor = "default";
 }
-
-// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 끝
-//###########################################################################################
-
 
 //###########################################################################################
 // ListView 클래스 시작
@@ -731,13 +725,31 @@ function ListView() {
 
             //DATA1, DATA2, DATA3... 등의 값 세팅
             var oDatas = GetDataElements(oCells[0]);
+            var titleStr = "";
             for (var j = 0; j < oDatas.length; j++) {
                 var strData = oDatas[j].tagName;
                 var strValue = "";
                 if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null) {
                     strValue = oDatas[j].firstChild.nodeValue;
+
+	                // 2024-03-20 조수빈 mouseover 시 일반 게시판은 요약 내용이 나타나야 함.
+	                // tr의 title 속성은 mouseover 시 나타나는 내용이나, 일반 게시판은 요약 내용이 나타나야 함.
+	                // DATA6 => 요약 내용
+	                if (strData == "DATA6") {
+						titleStr = strValue;
+	                }
+
+	                if (strData != "TITLE" && strData != "DATA6") {
+						objTr.setAttribute(strData, strValue);
+	                } else {
+
+						if (titleStr) {
+							objTr.setAttribute(strData, unEscapeHtml(titleStr));
+						} else {
+							objTr.setAttribute(strData, unEscapeHtml(strValue));
+						}
+	                }
                 }
-                objTr.setAttribute(strData, strValue);
             }
             
             //2018-08-10 김보미 - null일경우 처리          
@@ -798,7 +810,7 @@ function ListView() {
                         objTd.style.fontWeight = "BOLD";
                     }
                     if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
-                        titleOneLineCnt = "<span style='color:#c64200; padding-left:3px;'>[" + getNodeText(oDatas[10]) + "]</span>";
+                        titleOneLineCnt = "<span style='color:#c64200; padding-left:3px; flex-shrink: 0;'>[" + getNodeText(oDatas[10]) + "]</span>";
                     
                     /* 2021-03-19 홍승비 - 원클릭 이벤트를 "제목" 칼럼에만 적용 */
                     objTd.onclick = function () {
@@ -900,7 +912,7 @@ function ListView() {
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('TITLE') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
                     	/* 2018-12-27 홍승비 - 새게시물, 답변아이콘, 댓글 제목에 붙는 위치 변경 (IE에서의 말줄임표 오류 수정) */
                     	if (getNodeText(oDatas[10]) != "0") {
-                    		objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + titleOneLineCnt + "</div> ";
+                    		objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span style='display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;'>" + MakeXMLString(strValue) + "</span>" + titleOneLineCnt + "</div> ";
                         } else if (getNodeText(oDatas[6]) == "Y") {
                         	objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + "</div> ";
                         } else {
@@ -1465,7 +1477,6 @@ function ListView() {
 
     function ListView_ToString() {
         return "KAONI ListView";
-        //return "영준이가 자바스크립트로 만든 리스트 뷰 v0.5";
     }    
 } // ListView 클래스 끝
 
@@ -1735,7 +1746,6 @@ function getOriginXML(pTagetID)
             width = width.substring(0, width.length - 2);            
         }        
         xmlHeader += "<WIDTH>" + width + "</WIDTH>";
-        //colname 어떻게 할까?
         xmlHeader += "<COLNAME></COLNAME>";
         xmlHeader += "</HEADER>";
     }

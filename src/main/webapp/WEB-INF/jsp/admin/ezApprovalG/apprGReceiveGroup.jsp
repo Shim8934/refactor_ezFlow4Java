@@ -52,7 +52,7 @@
 	        var useReceiveInfoName = "<c:out value='${useReceiveInfoName}'/>";
 		    
 		    $(document).ready(function(){
-		    	document.getElementById("SCompID").value = "<c:out value='${companyID}'/>";
+		    	document.getElementById("SCompID").value = companySelectID;
 		    	initializeApprGReceoveGroup();
 		    	
                 // 외부수신처 비동기로 호출
@@ -77,6 +77,7 @@
 		    }
 
 		    function InitlvtDeptSelectListView() {
+				document.getElementById('lvtDeptSelect').innerHTML = "";
 		        lvtDeptSelect.SetID("lvtDeptSelForm");
 		        lvtDeptSelect.SetMulSelectable(false);
 		        lvtDeptSelect.SetRowOnClick("lvtDeptSelect_SelChange");
@@ -115,7 +116,11 @@
 		            //pGroupID.innerText = selRow[0].getAttribute("DATA1");
 		            pGroupName2.innerText = ConvertEntityReferenceToChar(selRow[0].cells[0].innerHTML);
 		            pGroupName.value = ConvertEntityReferenceToChar(selRow[0].cells[0].innerHTML);
-		        }
+		        } else {
+					p_groupid = "";
+					pGroupName2.innerText = "";
+					pGroupName.value = "";
+				}
 		    }
 		    
 		    function getAdminReceivItem(groupid) {
@@ -709,7 +714,7 @@
 
 			function initializeApprGReceoveGroup() {
 				Tree_setconfig();
-				TreeViewinitialize("", "<c:out value='${topID}'/>", "extensionAttribute2;displayName", "<c:out value='${serverName}'/>", null, null, true);
+				TreeViewinitialize("", companySelectID + "/organ", "extensionAttribute2;displayName", "<c:out value='${serverName}'/>", null, null, true);
 				InitlvtDeptListView();
 				InitlvtDeptSelectListView();
 
@@ -717,25 +722,34 @@
 				// 페이지가 열리자마자 최상위 수신자 그룹 선택처리.
 				lvtDept_SelChange();
 			}
+
+			function changeCompany() {
+				document.getElementById("SCompID").value = companySelectID;
+				lvtDept_SelChange();
+				initializeApprGReceoveGroup();
+			}
 		</script>
 	</head>
 	<body class="mainbody">
+	<h1>
 		<c:choose>
 			<c:when test="${approvalFlag == 'S' }">
-				<h1><spring:message code='main.t39'/></h1>
+				<spring:message code='main.t39'/>
 			</c:when>
 			<c:otherwise>
-				<h1><spring:message code='ezApprovalG.t718'/></h1>
+				<spring:message code='ezApprovalG.t718'/>
 			</c:otherwise>
 		</c:choose>
+		<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
+	</h1>
 		<div id="mainmenu" style="padding-left: 5px;">
 			<ul class="on">
 				<li class="important off" id="2"><span onclick="excelUpload()"><spring:message code='ezApprovalG.pgb01'/></span></li>
 				<c:if test="${userLang eq '2'}">
-					<li id="3" class="off"><a href="<c:url value="/files/RecipientGroupBulkRegistrationForm.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
+					<li id="3" class="off"><a href="<c:url value="/files/RecipientGroupBulkRegistrationForm2.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
 				</c:if>
 				<c:if test="${userLang ne '2'}">
-					<li id="3" class="off btnDwn"><a href="<c:url value="/files/수신자그룹지정일괄등록양식.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
+					<li id="3" class="off btnDwn"><a href="<c:url value="/files/RecipientGroupBulkRegistrationForm1.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
 				</c:if>
 				<input type="file" name="excelFile" class="important off" id="excelFile" onchange="btn_AttachAdd_onclick()" />
 				<span class="info-message"><spring:message code='ezApprovalG.pgb10'/></span>
@@ -818,13 +832,11 @@
                 	</div>
             	</td>
         	</tr>
-        	<c:if test="${useReceiveInfoName == '1' }">
-	        	<tr>
-	        		<td colspan="3">
-	        			<a class="imgbtn imgbck" style="float: right;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
-	        		</td>
-	        	</tr>
-        	</c:if>
+			<tr>
+				<td colspan="3">
+					<a class="imgbtn imgbck" style="float: right;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
+				</td>
+			</tr>
     	</table>
     	<br/>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

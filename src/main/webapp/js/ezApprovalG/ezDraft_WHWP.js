@@ -1264,7 +1264,7 @@ function openAaprDocAttachUI() {
 	  aprcabinetattach_cross_dialogArguments[0] = parameter;
       aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_complete;
       
-	  DivPopUpShow(1050, 520, url);
+	  DivPopUpShow(1050, 560, url);
   } catch(e) {
 	  alert("openAaprDocAttachUI() :: " + e);
   }
@@ -1859,10 +1859,6 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
         	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
         	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
         }
-        //수상하지만 일단 지움
-//        if (Saveflag)
-//            xmlhttp.open("POST", "/ezApprovalG/doDraftTmpHWP.do", false);
-//        else
         
         xmlhttp.open("POST", "/ezApprovalG/doDraftHWP.do", false);
         xmlhttp.send(xmlpara);

@@ -18,7 +18,7 @@
 			var xmlHTTP = createXMLHttpRequest();
 			
 		    $(document).ready(function(){
-		    	var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		    	var strQuery = "<DATA><DEPTID></DEPTID><TOPID>" + topid + "/organ</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		    		
 		    	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		    	xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
@@ -89,6 +89,7 @@
 		        nodeIdx = treeView.GetSelectNode();
 		        
 		        selectedCompanyID = nodeIdx.GetNodeData("extensionattribute2");
+		        console.log("selectedCompanyID = ", selectedCompanyID);
 		        parent.getTitleOption(selectedCompanyID);
 		    }
 		    

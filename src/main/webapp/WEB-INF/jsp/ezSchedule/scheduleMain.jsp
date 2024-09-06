@@ -148,11 +148,11 @@
 			                    var repetition = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYREPEAT")[0].textContent;	                    
 			                    
 			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
-			                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+			                        memorialDays.push(new memorialDay(escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent), escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
 			                    } else {                   	
-			                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+			                        yearmemorialDays.push(new yearmemorialDay(escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent), escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
@@ -603,6 +603,7 @@
 		        }
 
 		        var sdate, edate, datetype;
+                var showtop = "N";
 
 		        // 2018-11-09 김민성 - 일보기/주보기일 때 종일일정 클릭시 시간 종일로 변경
 		        // 일보기, 주보기의 시간대 클릭
@@ -618,11 +619,18 @@
 					edate = sdate.replace(sdate.split(" ")[1], edateSplit[0] + ":" + leadingZeros(edateSplit[1]*1+30, 2) + ":" + edateSplit[2]);
 		        } 
 		        // 월보기 클릭
-		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0) {
+		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0 && GetAttribute(srcEl, "id").indexOf("TOP") == -1 ) {
 		        	datetype = "1";
 		        	// 시간데이터가 없는 경우 임의 시간
 		        	sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
 		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
+		        }
+		        // 상단표시
+		        else if (GetAttribute(srcEl, "id").indexOf("TOP") !== -1) {
+		            showtop = "Y"
+		            datetype = "1";
+                    sdate = GetAttribute(srcEl, "dispdate");
+                    edate = sdate;
 		        }
 		        // 일보기, 주보기의 종일일정 클릭
 		        else {
@@ -631,10 +639,25 @@
 		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
 		        }
 
+		        var popupHeight = 830;
+		        var popupWidth = 790;
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 760) / 2;
-		        var pLeft = (pwidth - 790) / 2;
+		        var pTop = (pheight - popupHeight) / 2;
+		        var pLeft = (pwidth - popupWidth) / 2;
+		
+		       	var dualScreenTop = window.screenY;
+		        var dualScreenLeft = window.screenX;
+		        	
+		       	pTop += dualScreenTop;
+		       	pLeft += dualScreenLeft;
+		       				
+				if (/MSIE|Trident/.test(window.navigator.userAgent)) {
+		       		if (window.screenLeft > window.screen.width) {
+		       			pTop -= 223;
+		       			pLeft -= 375;
+		       		}
+		       	}
 		        
 		        if (otherid == "") {
 		            /* var index = idSelect.selectedIndex;
@@ -643,15 +666,14 @@
 
 		            var feature = GetOpenPosition(790, 760);
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
-						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate) + "&showtop=" + showtop, "", "height = 830px, width = 790px,top=" + pTop + ", left=" + pLeft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                    window.open("schedule_write.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
+		                    window.open("schedule_write.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate) + "&showtop=" + showtop, "",
 						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		                }
 		                else {
-		                    window.open("schedule_write_IE.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
+		                    window.open("schedule_write_IE.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate) + "&showtop=" + showtop, "",
 						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		                }
 		            } */
@@ -661,7 +683,7 @@
 		            var feature = GetOpenPosition(790, 760);
 		            
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&type=" + type + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
+		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&type=" + type + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate) + "&showtop=" + showtop, "",
 						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -905,20 +927,56 @@
                 sDuration = event.duration;
             }
 			
-			
+			var schedule_print_dialogArguments = PrintModeSelect;
+            var schedule_print_data = new Array();
             function PrintSchedule() {
-                var year = sStartDate.split("-")[0];
-                var month = sStartDate.split("-")[1];
-                var day = sStartDate.split("-")[2];
-                var view = typeCal;
-                var date = year + "-" + month + "-" + day;
-                if (idlist == "")
-                    idlist = idtype;
-                var feature = GetOpenPosition(837, 660);
-                if (idlist == "G")
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
-                else
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                parent.frames["left"].document.body.style.overflow = "hidden";
+                
+                var leftFrameDocument = parent.frames["left"].document;
+                var newDiv = leftFrameDocument.createElement("div");
+                newDiv.id = "blockLeft";
+                newDiv.className = "blockLeft";
+                newDiv.style.position = "fixed";
+                newDiv.style.width = "100%";
+                newDiv.style.height = "100%";
+                newDiv.style.overflow = "hidden";
+                newDiv.onclick = function() {
+                    parent.frames["right"].BoardSearchOptionHidden();
+                };
+            
+                var leftDiv = leftFrameDocument.getElementById("left");
+                if (leftDiv) {
+                    leftDiv.insertAdjacentElement('afterend', newDiv);
+                }
+                
+                DivPopUpShow(350, 350, "/ezSchedule/schedulePrintMode.do");
+                
+            }
+            
+            function PrintModeSelect(rtn) {
+                DivPopUpHidden();
+                var curURL = "";
+                if (rtn == "list") {
+                
+                    var year = sStartDate.split("-")[0];
+                    var month = sStartDate.split("-")[1];
+                    var day = sStartDate.split("-")[2];
+                    var view = typeCal;
+                    var date = year + "-" + month + "-" + day;
+                    var feature = GetOpenPosition(837, 660);
+                    
+                    if (idlist == "")
+                        idlist = idtype;
+                    if (idlist == "G")
+                        curURL = "/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&groupid=" + groupid;
+                    else
+                        curURL = "/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view;
+                    
+                    window.open(curURL, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                } else {
+                    curURL = "/ezSchedule/schedulePrintCalendar.do?typeCal=" + typeCal + "&startDate=" + sStartDate + "&endDate=" + sEndDate;
+                    GetOpenWindow(curURL, "PrintSchedule", 1280, 1024, "YES");
+                }
             }
 			
             var schedule_repetition_del_dialogArugment = new Array();
@@ -1343,6 +1401,18 @@
 			
 			function scrollTopTime() {
 				$("#CalDiv").scrollTop($(".today").eq(0).position().top);
+			}
+
+			function escapeHtml(text) {
+				var map = {
+					'&': '&amp;',
+					'<': '&lt;',
+					'>': '&gt;',
+					'"': '&quot;',
+					"'": '&#039;'
+				};
+
+				return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 			}
 	    </script>
 	</head>

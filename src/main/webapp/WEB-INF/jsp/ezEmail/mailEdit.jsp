@@ -438,10 +438,10 @@
 			    mail_newreceiverchoose_dialogArguments[0] = receiverData;
 		        mail_newreceiverchoose_dialogArguments[1] = new_Address_Complete;
 			    if (CrossYN()) {
-				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=1120,height=655,status=no');
+				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=1120,height=720,status=no');
 		            try { OpenWin.focus(); } catch (e) { }
 			    } else {
-				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:1120px; status:no; help:no; edge:sunken");
+				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:720px;dialogWidth:1120px; status:no; help:no; edge:sunken");
                 }
 		        Simple_Choice();
 		    }
@@ -778,7 +778,7 @@
 		        
 		        return xmlReturnValue;
 		    }
-			
+			/*
 		    function changeTextOption(bodyType) {
 		    	if (bodyType == "1") {
 		        	//if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
@@ -790,7 +790,7 @@
 			        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
 		        	/*} else {
 		        		document.getElementById("bodyType").options[0].selected = true;
-		        	}*/
+		        	}
 		    	} else {
 		    		message.SetEditorTextContent(document.getElementById("plainTextArea").value);		    		
 		    		document.getElementById("message").style.display = "";
@@ -804,7 +804,7 @@
 	        		}
 		    	}
 		    }
-		    
+		    */
 		    function fromAddressChange(val) {
 		    	g_from = val;
 		    }
@@ -1220,7 +1220,7 @@
 		          <tr id="MsgTo_TR">
 		            <th rowspan="2">
 		            	<a class="imgbtn"><span onClick="SelectReceiver_onClick('To')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t66' /></span></a>
-		                <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe"/>
+		                <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="vertical-align: middle;"/>
 		                <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 		            </th>
 		            <td style="width:76%"><input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="1" style="WIDTH:99%;ime-mode:active;"></td>

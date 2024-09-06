@@ -61,17 +61,21 @@
 			<span><spring:message code="${survey.paritipateFlag == 1 ? 'ezSurvey.t54' : 'ezSurvey.t53'}"/></span>
 		</li>
 		<li><span class="srvyInfo srvyInfo03"></span><span><spring:message code="ezSurvey.t41" /> : </span>
-			<span><spring:message code="${survey.resultPublicFlag == 1 ? 'ezSurvey.t42' : 'ezSurvey.t43'}"/></span>
+			<span>
+			    <c:if test="${survey.resultPublicFlag == 0}"><spring:message code="ezSurvey.t43"/></c:if>
+			    <c:if test="${survey.resultPublicFlag == 1}"><spring:message code="ezSurvey.t42"/></c:if>
+			    <c:if test="${survey.resultPublicFlag == 2}"><spring:message code="ezSurvey.jih01"/></c:if>
+			</span>
 		</li>
 		<c:if test="${survey.resultPublicFlag == 1}">
 			<li><span class="srvyInfo srvyInfo04"></span><span><spring:message code="ezSurvey.t96" /> : </span>
 				<span><spring:message code="ezSurvey.t97"/><c:out value=" ${survey.openDays}"/> <spring:message code="ezSurvey.t45"/></span>
 			</li>
 		</c:if>
-		<li><span class="srvyInfo"></span><span><spring:message code="ezSurvey.t112" /> : </span>
+		<li><span class="srvyInfo srvyInfo05"></span><span><spring:message code="ezSurvey.t112" /> : </span>
 			<span><spring:message code="${survey.mailFlag == 1 ? 'ezSurvey.t114' : 'ezSurvey.t115'}"/></span>
 		</li>
-		<li><span class="srvyInfo"></span><span><spring:message code="ezSurvey.t113" /> : </span>
+		<li><span class="srvyInfo srvyInfo06"></span><span><spring:message code="ezSurvey.t113" /> : </span>
 			<span><spring:message code="${survey.popupFlag == 1 ? 'ezSurvey.t114' : 'ezSurvey.t115'}"/></span>
 		</li>
 	</ul>
@@ -713,7 +717,7 @@
 						
 					}
 					if (responseResult == 'fail') {
-						break;
+						return;
 					}
 				}
 			}
@@ -783,8 +787,8 @@
 				case 0 : alert(SurveyMessages.strSave2)    ;
 						 resposeObj.responses = [];
 						 
-						 if (window.opener.getPotletSurveyList != undefined) {
-							 window.opener.getPotletSurveyList();
+						 if (window.opener.reloadSurveyPage != undefined) {
+							 window.opener.reloadSurveyPage();
 							 // 일단 현 상황에 맞춰 주석처리
 							 // 나중에 필요하면 주석 풀면 됌
 							 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
@@ -820,24 +824,27 @@
 			
 			if (!isNaN(optId)) {
 				if (checkedBtn.attr("otherFlag") == 1) {
+					var checked = checkedBtn.prop("checked");
 					var otherValue = $("#othInput" + id).val().trim();
 					
-					if (otherValue != "") {
+					if (checked && otherValue != "") {
 						optionId['otherFlag'] = 1;
 						optionId['texts'] = otherValue;
-					}
-					else {
+					} else {
 						result = "fail";
 						alert(id + SurveyMessages.writeOthers);
 					}
 				}
-				optionId['optionId'] = optId;
-				optionId['responseId'] = responseId;
-				answer.push(optionId);
-				answerObj['answers'] = answer;
-				answerObj['type'] = type;
-				answerObj['questionLevel'] = id;
-				resposeObj.responses.push(answerObj);
+
+				if (result !== "fail") {
+					optionId['optionId'] = optId;
+					optionId['responseId'] = responseId;
+					answer.push(optionId);
+					answerObj['answers'] = answer;
+					answerObj['type'] = type;
+					answerObj['questionLevel'] = id;
+					resposeObj.responses.push(answerObj);
+				}
 			}
 			
 			return result;
@@ -860,17 +867,18 @@
 					
 					if (!isNaN(optId)) {
 						if (checkBox[i].getAttribute('otherFlag') == 1) {
+							var checked = checkBox[i].checked;
 							var otherValue = $("#othInput" + id).val().trim();
 							
-							if (otherValue != "") {
+							if (checked && otherValue != "") {
 								optionId['otherFlag'] = 1;
 								optionId['texts']     = otherValue;
-							}
-							else {
+							} else {
 								result = "fail";
 								alert(id + SurveyMessages.writeOthers);
 							}
 						}
+						// 기타추가가 현재 1개만 생성 가능하게 되어있으므로 하위 로직은 분기처리 안하고 일단 둔다.
 						optionId['optionId'] = optId;
 						optionId['responseId'] = responseId;
 						answer.push(optionId);
@@ -878,7 +886,7 @@
 				}
 			}
 			
-			if (answer.length > 0) {
+			if (answer.length > 0 && result !== "fail") {
 				answerObj['answers']       = answer;
 				answerObj['type']          = type;
 				answerObj['questionLevel'] = id;
@@ -1103,8 +1111,8 @@
 			alert(SurveyMessages.strDel);
 			if (window.opener && window.opener.openSurveyPopup)    {window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
 			
-			if (window.opener != null && window.opener.getPotletSurveyList != undefined) {
-				 window.opener.getPotletSurveyList();
+			if (window.opener != null && window.opener.reloadSurveyPage != undefined) {
+				 window.opener.reloadSurveyPage();
 				 // 일단 현 상황에 맞춰 주석처리
 				 // 나중에 필요하면 주석 풀면 됌
 				 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');

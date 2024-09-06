@@ -20,6 +20,7 @@ import egovframework.com.cmm.EgovMessageSource;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,9 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.FindPwdInfoVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -73,6 +76,9 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	private EzCommonService ezCommonService;
     
     @Autowired
+	private CommonUtil commonUtil;
+
+	@Autowired
     private EzEmailUserAdminService ezEmailUserAdminService;
     
     @Autowired
@@ -187,9 +193,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 
 	@Override
 	public boolean searchOtpKey(LoginVO vo) throws Exception {
-		boolean result = loginDAO.searchOtpKey(vo) > 0 ? true : false;
-
-		return result;
+		return loginDAO.searchOtpKey(vo) > 0;
 	}
 
 	@Override
@@ -207,6 +211,50 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 		loginDAO.insertLog(vo);
 	}
 
+	@Override
+	public void updateDbSessionLog(HashMap<String, Object> map) throws Exception {
+		loginDAO.updateDbSessionLog(map);
+	}
+
+	@Override
+	public void insertSession(SessionVO vo) throws Exception {
+		loginDAO.insertSession(vo);
+	}
+
+	@Override
+	public void updateSession(String ezSessionId, String loginCookie) throws Exception {
+		Map<String, String> map = new HashMap<>();
+		map.put("ezSessionId", ezSessionId);
+		map.put("loginCookie", loginCookie);
+		
+		loginDAO.updateSession(map);
+	}
+
+	@Override
+	public void deleteSession(String ezSessionId) throws Exception {
+		loginDAO.deleteSession(ezSessionId);
+	}
+
+	@Override
+	public SessionVO getSession(String ezSessionId) throws Exception {
+		return loginDAO.getSession(ezSessionId);
+	}
+
+	@Override
+	public void deleteDbSessionByTime() throws Exception {
+		String deSessionStoragePeriodStr = ezCommonService.getTenantConfig("dbSessionStoragePeriod", 0); // DB에서 컨트롤 하기 위해 tenant 컨피그를 사용하며, 0번을 default로 사용 함
+
+		if (StringUtils.isNotBlank(deSessionStoragePeriodStr)) {
+			int dbSessionStoragePeriod = Integer.parseInt(deSessionStoragePeriodStr);
+			loginDAO.deleteDbSessionByTime(dbSessionStoragePeriod);
+		}
+	}
+
+	@Override
+	public List<Integer> getTenantIdList() throws Exception {
+		List<Integer> tenantIdList = loginDAO.getTenantIdList();
+		return tenantIdList;
+	}
 
 	@Override
 	public void updateLog(LoginVO vo) throws Exception {

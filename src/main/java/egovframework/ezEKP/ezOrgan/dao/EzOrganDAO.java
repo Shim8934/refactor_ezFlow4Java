@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezOrgan.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,12 +109,14 @@ public class EzOrganDAO extends EgovAbstractDAO {
         
         String isAddJob = "";
         String jobId = "";
-        jobId = (map.containsKey("JOBID")) ? (String) map.get("JOBID") : "";
+        String roleId = "";
+        jobId = Optional.ofNullable((String)map.get("JOBID")).filter(str -> !str.isEmpty()).orElse("0");
+        roleId = Optional.ofNullable((String)map.get("ROLEID")).filter(str -> !str.isEmpty()).orElse("0");
         isAddJob = (map.containsKey("IS_ADDJOB") && !jobId.equals("")) ? (String)map.get("IS_ADDJOB") : "";
-        logger.debug("isAddJob=" + isAddJob + ", jobId=" + jobId);
+        logger.debug("isAddJob=" + isAddJob + ", jobId=" + jobId + ", roleId=" + roleId);
         
         OrganUserVO organUserVO = (OrganUserVO) select("EzOrganDAO.getTBLUserMaster", map);
-        
+        organUserVO.setJobID(jobId);
         logger.debug("getTBLUserMasterForLocal ended.");
         
         return organUserVO;
@@ -253,13 +256,14 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (String) select("EzOrganDAO.getLoginIP", map);
 	}
 	
-	private int deptSubDeptCntForLocal(String deptID, int tenantId, String isOrgan) throws Exception {
+	private int deptSubDeptCntForLocal(String deptID, int tenantId, String isOrgan, String adminOrgan) throws Exception {
         logger.debug("deptSubDeptCntForLocal started. deptID=" + deptID + ",tenantId=" + tenantId);
         
     	Map<String, Object> map = new HashMap<String, Object>();
     	map.put("deptID", deptID);
     	map.put("tenantId", tenantId);
     	map.put("isOrgan", isOrgan);
+		map.put("adminOrgan", adminOrgan);
     	
         int deptSubDeptCnt = (int) select("EzOrganDAO.deptSubDeptCnt", map);
         
@@ -269,8 +273,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
         return deptSubDeptCnt;
     }
 	
-	public int deptSubDeptCnt(String deptID, int tenantId, String isOrgan) throws Exception{
-		return deptSubDeptCntForLocal(deptID, tenantId, isOrgan);       
+	public int deptSubDeptCnt(String deptID, int tenantId, String isOrgan, String adminOrgan) throws Exception{
+		return deptSubDeptCntForLocal(deptID, tenantId, isOrgan, adminOrgan);       
 	}
 	
     private OrganUserVO getUserAddjobInfoForLocal(Map<String, Object> map) throws Exception{
@@ -438,14 +442,28 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public String getRollInfoBasisDept(Map<String, Object> map) throws Exception {
 		return (String) select("EzOrganDAO.selectPermissionBasisDept", map);
 	}
-	
+
 	// 2023-08-09 전인하 - 특정 유저의 모든 겸직 권한 호출하는 메소드
 	public List<OrganUserVO> getAllRollInfoForUserBasisDept(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganDAO.getAllRollInfoForUserBasisDept", map);
 	}
-	
+
 	// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > 리스트 생성 위한 겸직정보 조회
 	public List<OrganUserVO> getAddJobListForEzApprDropdown(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganDAO.addJobListForEzApprDropdown", map);
+	}
+
+	public OrganUserVO getAddJobInfo(Map<String, Object> map) throws Exception {
+		return (OrganUserVO) select("EzOrganDAO.getAddJobInfo", map);
+	}
+
+    @SuppressWarnings("unchecked")
+    // 2023-10-31 박기범 - 모든 유저정보 조회(사간 겸직 포함)
+    public List<OrganUserVO> getAllUserInfo(Map<String, Object> map) throws Exception {
+        return (List<OrganUserVO>) list("EzOrganDAO.getAllUserInfo", map);
+    }
+
+	public List<OrganUserVO> getRetireUserMail(int tenantId) throws Exception {
+		return (List<OrganUserVO>) list("EzOrganDAO.getRetireUserMail", tenantId);
 	}
 }

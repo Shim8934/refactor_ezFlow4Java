@@ -1320,9 +1320,7 @@ function SGetDraftAprLineInfo(ret) {
                     idx = LastSignNo;
                 }
                 
-                if (junGyulFlag == "1") {
-        			//아무것도 안함
-        		} else if (junGyulFlag == "4") {
+ 				if (junGyulFlag == "4") {
         			if (OrderType[i] == "003") {
         				continue;
         			}
@@ -2225,6 +2223,8 @@ function openFormUI_Complete(ret) {
     pDocType = ret[1];
     // 2021-01-21 심기영 오피스결재 추가
     officeFlag = ret[4];
+    
+    checkHeaderAction();
 
     if (pFormHref == "PC") {
         document.getElementById('pFile').click();
@@ -2663,7 +2663,7 @@ function SetAutoPropertyValue() {
             	//가변결재선 양식으로 수신문을 사용하는경우, 양식내에 수신처란이 없어도 수신문으로 인식되도록
             	if ($("#message").contents().find("#autoLine").length > 0 && DocType == "003") {
             		pSuSinFlag = "Y";
-            		setMenuBar("btnSetReceivLine", true); //사용하지도 않는 버튼 왜 살려두는지..
+            		setMenuBar("btnSetReceivLine", true);
             		CheckGubun = "1";
             	} else {
             		pSuSinFlag = "N";
@@ -2872,12 +2872,8 @@ function openAaprDocAttachUI() {
         if (CrossYN()) {
             aprcabinetattach_cross_dialogArguments[0] = parameter;
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
-            
-            if(approvalFlag == "G") {
-            	DivPopUpShow(1050, 520, url);
-            } else {
-            	DivPopUpShow(1050, 560, url);
-            }
+
+            DivPopUpShow(1050, 560, url);
         } else {
         	var feature;
         	if(approvalFlag == "G") {
@@ -2983,7 +2979,6 @@ function SaveDraftDocInfo_ilban(pState) {
         else
             startdate = "DRAFT";
         
-        //여기서 다국어 안되고있는데 원래 스펙이라 일단 봐줌
         createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startdate);
         createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");
         createNodeAndInsertText(xmlpara, objNode, "WRITERID", arr_userinfo[1]);
@@ -3096,6 +3091,10 @@ function SaveDraftDocInfo_ilban(pState) {
                 
                 createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
     		}
+
+            if (SelectNodes(NonElecXML, "DOCATTACHNAME").length > 0 ) {
+                createNodeAndInsertText(xmlpara, objNode, "DOCATTACHNAME", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DOCATTACHNAME"));
+            }
     	}
     	
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
@@ -3949,6 +3948,8 @@ function setMenuBar(id, flag) {
  *  mht파일 생성.
  * */
 function SaveFile() {
+	
+	headerAction("open");
 	var result = "";
 	var mhtBody = "";
 	mhtBody = message.Get_EditorBodyHTML();
@@ -4282,6 +4283,7 @@ function UpdateLineHistory() {
 var AutoSave;
 function SaveTMPFile(AutoSave) {
 	
+	headerAction("open");
     var mhtBody = "";
     mhtBody = message.Get_EditorBodyHTML();
     mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";

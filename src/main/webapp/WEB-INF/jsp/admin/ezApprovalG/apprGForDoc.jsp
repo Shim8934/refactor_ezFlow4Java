@@ -19,7 +19,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_obj.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/PreviewItem.js')}"></script>				
 		<script type="text/javascript">
 			var labelcolor = "gray";
 			var OrderCell = "";
@@ -39,7 +40,8 @@
 			var nowDate = "<c:out value = '${nowDateUTC}'/>";
 			var pOpenYear = "<c:out value = '${openYear}'/>";
 			var useWebHWP = "<c:out value = '${useWebHWP}'/>";
-			
+			var selectYear = "ALL";
+
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 				    return false;
@@ -47,6 +49,33 @@
 				    return true;
 				}
 			};
+			
+		    $(document).ready(function() {
+		    	var clickOutside;
+		    	
+		    	if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
+		    	} else {
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
+		    	}	    	
+		    	
+		    	clickOutside.mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.parent.frames['left'].document).mouseup(function (e) {
+			    	MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(parent.document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    });
 			
 			$(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -700,9 +729,9 @@
 			function selectCompanyID() {
 				if (pCompanyID != document.getElementById("ListCompany").value) {
 				    pCompanyID = document.getElementById("ListCompany").value;
-				    pChackYN = "FALSE";
+				    pChackYN = "INIT";
 				    pageNum = "1"; // 회사 선택 시 페이징 초기화
-				    
+	                
 				    GetDocList();
 				}
 			}
@@ -854,10 +883,11 @@
 			    pChackYN = "SEARCH";
 			    if (document.getElementById("txt_keyword").value != "") {
 			        var selectSearch = document.getElementById('selectType');
-			
+
+					/* 2024-02-16 양지혜 - 선택한 연도 정보를 유지하기 위해 주석처리
 			        for (var i = 0; i < 20; i++) {
 			            SearchCond[i] = "";
-			        }
+			        } */
 			
 			        if (selectSearch.item(0).selected) {
 			            SearchCond[1] = replaceCond(document.getElementById("txt_keyword").value);
@@ -875,14 +905,19 @@
 			    pageNum = 1;
 			    GetDocList();
   
-			    $('#sel_year').val("ALL");
+			    $('#sel_year').val(selectYear);
 			}
 			
 			//2018-10-01 김보미 - 년도가 string값이 아니라 발생하는 버그 수정
 			function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
 				return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 			}
-			
+
+			function restoreCond(condStr) {
+				return condStr.toString().replace(/\\_/g, "_").replace(/\\'/g, "'").replace(/\\%/g, "%").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&amp;/g, "&");
+			}
+
+
 			var Tab1_SelectID = "";
 		    function Tab1_MouserOver(obj) {
 		        obj.className = "tabover";
@@ -937,12 +972,13 @@
 	        function onSelect_Year() {
 	            pChackYN = "SEARCH";
 	            pageNum = 1;
+				selectYear = GetSelectVal("sel_year");
 	            
-	            if (GetSelectVal("sel_year") != "ALL") {
-	            	SearchCond[3] = GetSelectVal("sel_year");
+	            if (selectYear != "ALL") {
+	            	SearchCond[3] = selectYear;
 	            	SearchCond[4] = "01";
 	            	SearchCond[5] = "01";
-	            	SearchCond[6] = GetSelectVal("sel_year");
+	            	SearchCond[6] = selectYear;
 	            	SearchCond[7] = "12";
 	                SearchCond[8] = "31";
 	            }
@@ -987,6 +1023,171 @@
 				  var targetWin = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
 				  return targetWin;
 			} 
+		    
+		    // 선택한 리스트 개수에 맞춰 문서 리스트 표출하기
+		    function endAprListCount(count) {
+		    	 pChackYN = "FALSE";
+				 pageNum = "1"; // 회사 선택 시 페이징 초기화
+				 pageSize = count;   
+				 GetDocList();
+		    }
+		    
+		    // 현재 리스트 표출 문서 통합 PC 저장
+		    function btnTotalSaveZip_onclick() {
+		        listLoading(true);
+		    	var DocList = new ListView();
+		        DocList.LoadFromID("DocList");
+		        var allRows = DocList.GetDataRows();
+		        var docIdList = "";
+		        
+		        if (allRows.length == 1 && allRows[0].id == "DocList_TR_noItems") {
+		        	alert("<spring:message code='ezApprovalG.t1533'/>");
+		        	listLoading(false);
+			    	return;
+			    }
+		        
+		        for (var i = 0; i < allRows.length; i++) {
+		        	var docID = allRows[i].getAttribute("DATA1");
+		        	if (allRows[i].getAttribute("delflag") != "Y") { // 삭제된 문서 제외
+			        	docIdList += docID + "|||";
+		        	}
+		        }
+		        
+		        if (docIdList == "") { // 모든 문서가 삭제된 경우 - 문서 선택하라는 알림창 표출
+		        	alert("<spring:message code='ezApprovalG.t1533'/>");
+		        	listLoading(false);
+		        	return;
+		        }
+		        
+		        setCookie("fileDownload", "false");
+		        blockUI();
+		        
+		        totalSaveAll(docIdList);
+	    		
+		    }
+		   	
+		    // 현재 리스트 표출 문서 엑셀다운로드
+		    function btnExcel_onclick(AllFG) {
+				var url;
+				var tempPageSize = pageSize;
+				var tempPageNum = "1";
+				
+				if (AllFG != 1) {
+				    tempPageSize = pageSize;
+				    tempPageNum = pageNum;
+				}
+				
+				var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+			    var allRows = DocList.GetDataRows();
+			    
+			    var allDelChk = false; // 전체 삭제 여부 확인
+			    var delCount = 0;
+			    for (var k = 0; k < allRows.length; k++) {
+			    	if (allRows[k].getAttribute("delflag") == "Y") {
+			    		delCount++;
+			    	}
+			    }
+			    
+			    if (delCount == allRows.length) {
+			    	allDelChk = true;
+			    }
+				
+			    if ((allRows.length == 1 && allRows[0].id == "DocList_TR_noItems") || allDelChk) {
+			    	alert("<spring:message code='ezApprovalG.t1533'/>");
+			    	return;
+			    }
+			    
+	       		url = "/ezApprovalG/excelExportOut.do";
+	       		if (approvalFlag == "G") {
+					url += "?listType=SEARCH&P0=" + encodeURI(SearchCond[0]) + "&P1=" +
+					encodeURI(SearchCond[1]) + "&P2=" + encodeURI(SearchCond[2]) + "&P3=" + encodeURI(SearchCond[3]) +
+					"&P4=" + encodeURI(SearchCond[4]) + "&P5=" + encodeURI(SearchCond[5]) + "&P6=" + encodeURI(SearchCond[6]) +
+					"&P7=" + encodeURI(SearchCond[7]) + "&P8=" + encodeURI(SearchCond[8]) + "&P9=" + encodeURI(SearchCond[9]) +
+					"&P10=" + encodeURI(SearchCond[10]) + "&P11=" + encodeURI(SearchCond[11]) + "&P12=" + encodeURI(SearchCond[12]) +
+					"&P13=" + encodeURI(SearchCond[13]) + "&P14=" + encodeURI(SearchCond[14]) + "&P15=" + "" + "&P16=" + "" + "&P17=" +
+					 "" + "&P18=" + "" + "&P19=" + "" + "&P20=" + "" + "&P21=" + encodeURI(SearchCond[16]) +
+					"&P23=" + encodeURI(SearchCond[17]) + "&P24=" + "ADMIN" + "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
+					"&OO=" + "" + "&allFG=" + AllFG + "&SQ=" + encodeURI(restoreCond(SearchCond[18])) + "&orgCompanyID=" + pCompanyID;
+	       		} else {
+	       			url += "?listType=SEARCH&P0=" + encodeURI(SearchCond[0]) + "&P1=" + encodeURI(SearchCond[1]) +
+					"&P2=" + encodeURI(SearchCond[2]) +
+					"&P3=" + (SearchCond[3].toString().trim() != "" ? encodeURI(SearchCond[3] + "-" + SearchCond[4] + "-" + SearchCond[5]) : "" ) +
+					"&P4=" + (SearchCond[6].trim() != "" ? encodeURI(SearchCond[6] + "-" + SearchCond[7] + "-" + SearchCond[8]) : "" ) +
+					"&P5=" + (SearchCond[9].trim() != "" ? encodeURI(SearchCond[9] + "-" + SearchCond[10] + "-" + SearchCond[11] + " 00:00:01") : "") + 
+					"&P6=" + (SearchCond[12].trim() != "" ? encodeURI(SearchCond[12] + "-" + SearchCond[13] + "-" + SearchCond[14] + " 23:59:59") : "") +
+					"&P7=" + "" + "&P8=" + "" + "&P9=" + encodeURI(SearchCond[16]) +
+					"&P10=" + "" + "&P11=" + encodeURI(SearchCond[17]) + "&P12=" + "ADMIN" +
+					"&P13=" + "" + "&P14=" + "" + "&P15=" + "" + "&P16=" + "" + "&P17=" + "" + 
+					"&P18=" + "" + "&P19=" + "" + "&P20=" + "" + "&P21=" + "" +
+					"&P23=" + "" + "&P24=" + "ADMIN" + "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
+					"&OO=" + "" + "&allFG=" + AllFG + "&SQ=" + encodeURI(restoreCond(SearchCond[18])) + "&orgCompanyID=" + pCompanyID;
+	       		}
+	           
+			     window.frames["saveExcel"].location.href = url;
+		    }
+		    
+		    function totalSaveAll(docIdList) {
+		    	$.ajax ({
+	    			url: "/ezApprovalG/totalSaveFileAll.do",
+	    			type: 'POST',
+	    			dataType: 'text',
+	    			data: {
+	    				docIDstr: docIdList,
+	    				type: "END",
+	    				orgCompanyID: pCompanyID
+	    			}, success: function(result) {
+	    				if (result == "FALSE") {
+	    					alert("<spring:message code='ezApprovalG.t00017'/>");
+	    				} else {
+	    					AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(result) + "&isToDelFG=Y";
+	    				}
+	    				
+	    				// 사용한 쿠키 삭제.
+	    	    		setTimeout(() => delCookie(), 1000);
+	    			}, error: function() {
+	    				alert("<spring:message code='ezApprovalG.t00017'/>");
+	    				unBlockUI();
+	    				setTimeout(() => delCookie(), 1000);
+	    			}
+	    		});
+		    }
+		    
+		    // 쿠키 초기화
+		    function setCookie(cName, value){
+		    	var date = new Date(0);
+		    	document.cookie = cName + "=; expires=" + date.toUTCString() + ";path=/";
+		    }
+		    
+		    // controller 에서 세팅해준 fileDownload 값이 true인 경우 로딩바 숨김.
+		    function getCookie(name) {
+		        var parts = document.cookie.split(name+"=");
+		        if(parts.length == 2){
+		            return parts.pop().split(";").shift();
+
+		        }
+		    }
+		    
+		    var downloadTimer;
+		    
+		    // 로딩바 표출 이후, fileDownload 값을 주기적으로 확인하여 true 인경우 loading 바 숨김. 
+		    function blockUI() {
+		        downloadTimer = setInterval(function() {
+		            var token = getCookie("fileDownload");
+		            if(token == "true") {
+		                unBlockUI();
+		            }
+		        }, 1000 );
+		    }
+		    
+		    function unBlockUI() {
+		        listLoading(false);
+		        clearInterval(downloadTimer);
+		    }
+		    
+		    function delCookie() {
+		    	 document.cookie = "fileDownload=; expires=" + new Date(0) + "; path=/;";
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -1026,11 +1227,21 @@
                         </select>
                     </li>
         		</c:if>       	
+        		
+        		<%-- 2023-06-30 한태훈 - 관리자 완료문서 조회 > 통합PC저장, 내보내기(엑셀다운로드) 기능 추가 --%>
+        		<li id="totalSaveZip"><span id="btnTotalSaveZip" onclick="return btnTotalSaveZip_onclick()"><spring:message code = 'ezApprovalG.t00008' /></span></li>
+        		<li id="excelSave"><span id="btnExcelSave" onclick="return btnExcel_onclick(0)"><spring:message code = 'ezApprovalG.t1526' /></span></li>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
 	            <!-- 폐기버튼 숨김처리 -->
 	            <%-- <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li> --%>	            
 	            <li id="SearchCondi"><span class="icon16 icon16_search" onclick="return SearchCondi_onclick()"></span></li>
 
+				<%-- 2023-06-30 한태훈 - 관리자 완료문서 조회 > 리스트 표출 개수 선택 기능 추가 --%>
+				<div id="right" class="sub_frameIcon" style="float:right">	
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this, 'N');"></span></p>  
+					</div>
+				</div>	
 	      	 	<!-- 전체 문서 조회 년도별 select box 추가 -->
 	      	 	<li style="vertical-align: middle; float:right">
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
@@ -1040,7 +1251,35 @@
 		        <li id="tbtnDelete"><span class="icon16 icon16_delete" id="btnDelete" onclick="return btnDelete_onclick(1)"></span></li>
 	        </ul>
 	    </div>
-	
+	    
+	    <div id="layer_Viewpopup" style="width: 150px; position: absolute; left: 1540px; top: 83px; background-color: rgb(255, 255, 255); display: none;">
+	        <div class="popupwrap1">
+	            <div class="popupwrap2">
+	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
+	                    <caption></caption>
+	                    <colgroup>
+	                        <col style="width: 80px;">
+	                        <col>
+	                    </colgroup>
+						<tbody>
+							<tr>
+		                        <th><spring:message code='ezBoard.t10021'/></th>
+		                        <td>
+		                            <select id="listcount" style="width: 45px; height: 20px;" onchange="endAprListCount(this.value);">
+		                                <option value="10">10</option>
+		                                <option value="50">50</option>
+		                                <option value="100">100</option>
+		                            </select>
+		                        </td>
+		                    </tr>
+		                </tbody>
+	                </table>
+	            </div>
+	        </div>
+	        <div class="shadow">
+	        </div>
+		</div>
+	    
 		<div class="div_scroll" style="width:100%;HEIGHT:375px; overflow:AUTO" id="divList">
 	  		<div id="lvtDoclist" ></div>
 		</div>
@@ -1092,5 +1331,8 @@
 	        //selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 	        Tab1_NewTabIni("tab1");
 	    </script>
+	    
+	     <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
+		 <iframe id="saveExcel" name="saveExcel" style="display: none" ></iframe>
 	</body>
 </html>

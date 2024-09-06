@@ -62,11 +62,10 @@ public interface EzWebFolderAdminService {
 	void deleteFolderUsersByUserId(String userId, String userType, String companyId, int tenantId) throws Exception;
 	public void insertListFolderUsers(String userId, String folderId, String companyId, String folderUsers, String timeUTC, int tenantId
 			, String type, List<String> addUser, String subFolderType, String folderPath, List<String> addUserManager, String offset) throws Exception;
-	void deleteSelectedFolderUser(List<String> idList,	int tenantId, int folderManger) throws Exception;
+	void deleteSelectedFolderUser(String folderPath, List<String> userIdList,	int tenantId, int folderManger) throws Exception;
 	void deleteSelectedFileUser(List<String> userIdList, int tenantId, String fileId) throws Exception;
 	List<String> getFolderIdsByManagerUserId(String userId, String folderId, String companyId, int tenantId) throws Exception;
 	List<String> getTopFoldersByManagerUserId(String userId, int tenantId) throws Exception;
-	List<String> getSubFolderIdList(String folderPath, int tenantId, List<String> userIdList, String type) throws Exception;
 	public List<FolderSimpleVO> selectSubAllFolder(String folderPath, int tenantId) throws Exception;
 	void insertFolderUser(Map<String, Object> map) throws Exception;
 	List<FileVO> folderInFileList(Map<String, Object> map) throws Exception;

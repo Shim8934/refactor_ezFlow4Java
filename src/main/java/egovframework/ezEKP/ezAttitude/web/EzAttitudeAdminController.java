@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezAttitude.web;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -222,7 +225,9 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -368,7 +373,9 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -509,7 +516,9 @@ public class EzAttitudeAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = request.getParameter("companyId");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -531,7 +540,9 @@ public class EzAttitudeAdminController {
 		String attitudetypeId = request.getParameter("typeId");
 		String companyId = request.getParameter("companyId");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -686,7 +697,9 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -808,7 +821,9 @@ public class EzAttitudeAdminController {
 		String selectedUserIdList = request.getParameter("selectedUserIdList");
 		String companyId = request.getParameter("companyId");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -936,7 +951,9 @@ public class EzAttitudeAdminController {
 		String offset = userInfo.getOffset();
 		String adminCompany = "";
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -1094,7 +1111,9 @@ public class EzAttitudeAdminController {
 		String offset = userInfo.getOffset();
 		String adminCompany = "";
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -1306,7 +1325,9 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2120,7 +2141,9 @@ public class EzAttitudeAdminController {
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2325,8 +2348,8 @@ public class EzAttitudeAdminController {
 		sheet = workbook.createSheet("report");
 		row = sheet.createRow(0);
 		
-		String pFileName = "";
-		pFileName = "annualReport_format";
+		// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 연차현황관리_양식)
+		String pFileName = egovMessageSource.getMessage("ezAttitude.t237", userInfo.getLocale()) + egovMessageSource.getMessage("ezAttitude.t44", userInfo.getLocale());
 		
 		//header
 		row.createCell(0).setCellValue(egovMessageSource.getMessage("ezAttitude.t330", userInfo.getLocale()));
@@ -2353,7 +2376,7 @@ public class EzAttitudeAdminController {
 		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 812);
 		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 812);
 		
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode(pFileName, "UTF-8") + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
 		//workbook.close();
@@ -2784,8 +2807,8 @@ public class EzAttitudeAdminController {
 		sheet = workbook.createSheet("report");
 		row = sheet.createRow(0);
 		
-		String pFileName = "";
-		pFileName = EgovDateUtil.getToday("-") +"_annualReport";
+		// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 YYYY-MM-DD_연차현황관리)
+		String pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t237", userInfo.getLocale());
 		
 		//header
 		row.createCell(0).setCellValue("NO");
@@ -2843,7 +2866,7 @@ public class EzAttitudeAdminController {
 			sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);			
 		}
 		
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" +  URLEncoder.encode(pFileName, "UTF-8") + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
 		//workbook.close();
@@ -3059,7 +3082,9 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		

@@ -41,6 +41,14 @@ public class OrganUserVO {
 	private String title1;
 	/** */
 	private String title2;
+	/** 직책명*/
+	private String role;
+	
+	private String role1;
+	
+	private String role2;
+	/** 직책코드*/
+	private String roleId;
 	/** */
 	private String telephoneNumber;
 	/** */
@@ -137,6 +145,29 @@ public class OrganUserVO {
 
 	/** 겸직 직위*/
 	private String addJobTitle;
+
+	/** 겸직 최상위 부서명*/
+	private String physicalDeliveryOfficeName1;
+
+	/** 겸직 타입*/
+	private String jobType;
+
+	/** 권한 */
+	private String roleInfo;
+
+	/** 관리자 권한 객체 */
+	private OrganAuth auth;
+
+	/** 조직도 사용 여부*/
+	private String userTreeFlag;
+
+	public String getUserTreeFlag() {
+		return userTreeFlag;
+	}
+
+	public void setUserTreeFlag(String userTreeFlag) {
+		this.userTreeFlag = userTreeFlag;
+	}
 
 	public String getAddJobTitle() {
 		return addJobTitle;
@@ -662,5 +693,65 @@ public class OrganUserVO {
 
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
+
+	}
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getRole1() {
+		return role1;
+	}
+
+	public void setRole1(String role1) {
+		this.role1 = role1;
+	}
+	
+	public String getRole2() {
+		return role2;
+	}
+
+	public void setRole2(String role2) {
+		this.role2 = role2;
+	}
+
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+
+	public String getPhysicalDeliveryOfficeName1() {return physicalDeliveryOfficeName1; }
+
+	public void setPhysicalDeliveryOfficeName1(String physicalDeliveryOfficeName1) {this.physicalDeliveryOfficeName1 = physicalDeliveryOfficeName1; }
+
+	public String getJobType() {
+		return jobType;
+	}
+
+	public void setJobType(String jobType) {
+		this.jobType = jobType;
+	}
+
+	public String getRoleInfo() {
+		return roleInfo;
+	}
+
+	public void setRoleInfo(String roleInfo) {
+		this.roleInfo = roleInfo;
+	}
+
+	public OrganAuth getAuth() {
+		return auth;
+	}
+
+	public void setAuth(OrganAuth auth) {
+		this.auth = auth;
 	}
 }

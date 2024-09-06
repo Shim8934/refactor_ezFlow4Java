@@ -186,7 +186,7 @@ function getBoardComment() {
 			list = result.oneLineReplyList;
 			var commentBgColor = 1;
 			list.forEach(function(vo, index) {
-				if(gubun == 2) {
+				if (gubun == 2) {
 					vo.userID = "";
 				}
 				if (commentBgColor === 1) {
@@ -209,7 +209,7 @@ function getBoardComment() {
 				boardCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;word-wrap:break-word;line-height:1.5'>"
 									+ MakeXMLString(vo.content) + "&nbsp;&nbsp;";
 					
-				if ( typeof userInfoID == "undefined") {
+				if (typeof userInfoID == "undefined") {
 				    userInfoID = "";    	
 				}
 				
@@ -217,8 +217,8 @@ function getBoardComment() {
 					boardCommentList += "<img src='/images/ImgIcon/comment_del.gif'" +
 							" style='cursor:pointer;vertical-align:middle;inline-block;padding-bottom:1.6px' onclick='deleteBoardComment(this)'/>";
 				} else {
-					if (vo.userID == "") {
-						//익명일 경우
+					// 익명댓글인 경우
+					if (vo.userID == null || vo.userID == "") {
 						boardCommentList += "<img src='/images/ImgIcon/comment_del.gif'" +
 								" style='cursor:pointer;vertical-align:middle;inline-block;padding-bottom:1.6px;' onclick='deleteBoardComment(this)'/>";
 					} else {
@@ -300,7 +300,7 @@ function delete_onelinereply_Complete(ret) {
         return;
     }
 
-    xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&guBun=" + gubun, false);
+    xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&gubun=" + gubun, false);
     xmlhttp.send();
     getBoardComment();
     xmlhttp = null;
@@ -330,7 +330,7 @@ function deleteBoardComment(obj) {
                     return;
                 }
                 
-                xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&guBun=" + gubun, false);
+                xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&gubun=" + gubun, false);
                 xmlhttp.send();
                 if (xmlhttp.responseText == "FAIL") {
                     alert(strLang184);
@@ -348,14 +348,14 @@ function deleteBoardComment(obj) {
                 return;
             } else {
             	if (!confirm(strLang180)) return;
-            	xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&guBun=" + gubun, false);
+            	xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&gubun=" + gubun, false);
             	xmlhttp.send();	
             }
             
         }
     } else {
     	if (!confirm(strLang180)) return;
-    	xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&guBun=" + gubun, false);
+    	xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&gubun=" + gubun, false);
     	xmlhttp.send();	
     	
     }

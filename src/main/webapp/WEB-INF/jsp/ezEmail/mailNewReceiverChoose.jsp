@@ -43,6 +43,9 @@
 			
 			.popup h2{padding-top:4px !important;}
 			.receiver_tltype01{line-height:28px;}
+
+			.mainlist tr td[style*="display: none"]:first-child.none + td{padding-left:15px;}
+
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -282,12 +285,14 @@
 					remove_key_event();
 	
 	                document.getElementById("dept_select").style.display = "none";
-	            }
+ 	            }
 	            else {
 	                document.getElementById("h1Title").style.marginBottom = "0px";
 	                document.getElementById("mailReceiverInfoTxt").style.display = "block";
 	                
-	                window.resizeTo(window.outerWidth, window.outerHeight+18);
+	                // 2024.07.25 한슬기 : 새로고침시 화면 사이즈가 계속 늘어나는 문제가 있어 변경
+	                window.resizeTo(window.outerWidth, window.outerHeight);
+	                //window.resizeTo(window.outerWidth, window.outerHeight+18);
 	                
 	                SelectReceiverWindow(eval('<c:out value="${defaultWin}"/>' + "Title"), eval("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
 	            }
@@ -395,7 +400,7 @@
 		                treeView.DataBind("TreeView");
 		            }
 		            else {
-		                alert("<spring:message code='ezEmail.t17' />" + g_xmlHTTP.statusText)
+		                alert("<spring:message code='ezEmail.t17' />" + g_xmlHTTP.status)
 		                g_xmlHTTP = null;
 		            }
 		        }
@@ -695,7 +700,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.sharedMailbox07' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.sharedMailbox07' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewSharedMailbox").innerHTML = "";
 			            var pListViewSharedMailbox = new ListView();
@@ -718,10 +723,11 @@
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 			                else
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
-			
-			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
-			                }
+
+							// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+			                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+			                //     dataRows[i].ondragend = function (event) { event_listdragend(event); };
+			                // }
 			            }
 			            
 			            changeCheckBox();
@@ -2055,17 +2061,20 @@
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
-		                M_TR.ondblclick = function () { event_listDBclick(this); };
+		                if(type != 'auto'){
+		                    M_TR.ondblclick = function () { event_listDBclick(this); };
+		                }
 		                M_TR.onselectstart = function () { return false; };
 		                M_TR.setAttribute("draggable", true);
 		                if (CrossYN())
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 		                else
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); };
-		
-		                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                    M_TR.ondragend = function (event) { event_listdragend(event); };
-		                }
+						
+						// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+		                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+		                //     M_TR.ondragend = function (event) { event_listdragend(event); };
+		                // }
 		                if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < row.item(i).childNodes.item(0).childNodes.length; NodeCount++) {
 		                        if (row.item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
@@ -2171,17 +2180,20 @@
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
-		                M_TR.ondblclick = function () { event_listDBclick(this); };
+		                if(type != 'auto'){
+		                    M_TR.ondblclick = function () { event_listDBclick(this); };
+		                }
 		                M_TR.onselectstart = function () { return false; };
 		                M_TR.setAttribute("draggable", true);
 		                if (CrossYN())
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 		                else
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); };
-		
-		                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                    M_TR.ondragend = function (event) { event_listdragend(event); };
-		                }
+
+						// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+						// if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+						//     M_TR.ondragend = function (event) { event_listdragend(event); };
+						// }
 		                
 		                if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < row.item(i).childNodes.item(0).childNodes.length; NodeCount++) {
@@ -2322,10 +2334,7 @@
 		        }
 		        
 		        if (selTab == "orglistView" && $(".txtlist_DeptTD").length > 0) {
-		        	$(".txtlist_DeptTD").css("display", "none");
-			        $(".txtlist_DeptTD").css("padding-left", "4px");
-
-			        $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "15px");
+		        	$(".none").css("display", "none");
 		        }
 		    }
 	        function show_member() {
@@ -2540,10 +2549,11 @@
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 	                else
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
-	
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
-	                }
+
+					// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+	                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+	                //     addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+	                // }
 	            }
 	            addressList = null;
 	            document.getElementById('totalcount').textContent = xmlDom.getElementsByTagName("PAGECOUNT").item(0).firstChild.nodeValue;
@@ -3324,10 +3334,11 @@
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 	                else
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
-	
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
-	                }
+
+					// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+	                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+	                //     addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+	                // }
 	            }
 	            addressList = null;
 	            addrsearh = false;
@@ -4017,7 +4028,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewDL").innerHTML = "";
 			            var pListViewDL = new ListView();
@@ -4040,10 +4051,11 @@
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 			                else
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
-			
-			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
-			                }
+
+							// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+				            //     if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+			                //     dataRows[i].ondragend = function (event) { event_listdragend(event); };
+			                // }
 			            }
 			            
 			            changeCheckBox();
@@ -4147,8 +4159,6 @@
 		        m_selectedTree = orglistView;
 
 		        $(".txtlist_DeptTD").css("display", "table-cell");
-		        $(".txtlist_DeptTD").css("padding-left", "15px");
-		        $(".mainlist tr td:nth-child(2)").css("padding-left", "4px");
 		        
 		        orgJobMasterListSet(tabType);
 	        }
@@ -4666,7 +4676,7 @@
 	                                        <div id="txtlist_Layer" style="vertical-align: top; width: 100%; height: 395px; overflow: auto;" >
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 100px;color:#333;background-color: #f1f3f5; display:none;"  class="txtlist_DeptTD"><spring:message code='ezEmail.t26' /></td>
+	                                                    <td style="width: 100px;color:#333;background-color: #f1f3f5;"  class="txtlist_DeptTD none"><spring:message code='ezEmail.t26' /></td>
 	                                                    <td style="width: 120px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t31' /></td>
 	                                                    <td style="width: 90px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t28' /></td>
 	                                                    <td style="color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t99000045' /></td>

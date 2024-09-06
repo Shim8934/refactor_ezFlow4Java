@@ -4,8 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -14,6 +17,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,7 +62,10 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzCommonService ezCommonService;
-	
+
+	@Autowired
+	private EzNewPortalService ezNewPortalService;
+
 	/**
 	 * @author 이효진
 	 */
@@ -129,11 +137,17 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 포탈 테마관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalThemes.do", method=RequestMethod.GET)
-	public String portalThemes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String portalThemes(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("portalThemes started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
+		String usePortletSize = ezCommonService.getTenantConfig("usePortletSize", userInfo.getTenantId());
+		model.addAttribute("usePortletSize", usePortletSize);
+
+		if ("Y".equals(usePortletSize)) {
+			model.addAttribute("allSize", ezNewPortalService.getAllAvailablePortletSize());
+		}
+
 		if (userInfo == null) {
 			logger.debug("portalThemes accessDenied.");
 			
@@ -149,7 +163,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 포탈 메뉴관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalMenus.do", method=RequestMethod.GET)
-	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset, HttpServletResponse response) throws Exception {
+	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("portalMenus started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -161,7 +175,13 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		} else {
 			logger.debug("portalMenus ended.");
 
-			response.setHeader("Pragma", "no-cache"); //HTTP 1.0 
+			// 2023-11-23 조소정 - 관리자 > 포탈 > 메뉴관리 > 일본어, 중국어 사용 여부에 따라 메뉴명 표출/미표출 구현
+			model.addAttribute("useJapanese", ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId()));
+			model.addAttribute("useChinese", ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId()));
+			model.addAttribute("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId()));
+			model.addAttribute("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId()));
+
+			response.setHeader("Pragma", "no-cache"); //HTTP 1.0
 			response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
 			response.setHeader("Cache-Control", "no-store"); //HTTP 1.1 
 			response.setDateHeader("Expires", 0L); // Do not cache in proxy server
@@ -253,7 +273,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			model.addAttribute("userCompany", resultBody.get("userCompany"));
+			model.addAttribute("userCompany", userInfo.getCompanyID());
 			model.addAttribute("list", resultBody.get("data"));
 			model.addAttribute("primary", resultBody.get("primary"));
 			model.addAttribute("usePrimaryLangOnly", resultBody.get("usePrimaryLangOnly"));
@@ -620,11 +640,31 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 					
 			String status = resultBody.get("status").toString();
-			
+
+			// 2023-11-17 조소정 - 관리자 > 포탈 > 포틀릿관리 > 일본어, 중국어 사용 여부에 따라 포틀릿 추가 시 포틀릿명 표출/미표출 구현
+			String useJapanese = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
+			String useChinese = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
+			String useVietnamese = ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId());
+			String useIndonesian = ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId());
+
 			if (status.equals("ok")) {
+				String usePortletSize = ezCommonService.getTenantConfig("usePortletSize", userInfo.getTenantId());
+				model.addAttribute("usePortletSize", usePortletSize);
 				model.addAttribute("companyList", resultBody.get("data"));
 				model.addAttribute("userCompany", resultBody.get("userCompany"));
-				model.addAttribute("lang", resultBody.get("lang"));
+				// 2024-08-22 유길상 - 관리자 > 포탈 > 포틀릿 관리 > 포틀릿 저장 시 포틀릿 명 언어 처리 오류로 수정
+//				model.addAttribute("lang", resultBody.get("lang"));
+				model.addAttribute("lang", userInfo.getLang());
+				model.addAttribute("useJapanese", useJapanese);
+				model.addAttribute("useChinese", useChinese);
+				model.addAttribute("useVietnamese", useVietnamese);
+				model.addAttribute("useIndonesian", useIndonesian);
+				model.addAttribute("approvalFlag", ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId()));
+
+				if ("Y".equals(usePortletSize)) {
+					List<String> allSize = ezNewPortalService.getAllAvailablePortletSize();
+					model.addAttribute("allSize", allSize);
+				}
 			}
 			
 			logger.debug("portalPortlets ended.");
@@ -1057,9 +1097,15 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			String imgFolder = "kr";
 			
 			if (userLang.equals("2")) {
-				imgFolder = "en"; // en으로 나중에 변경 필요
+				imgFolder = "us";
 			} else if (userLang.equals("3")) {
 				imgFolder = "jp";
+			} else if (userLang.equals("4")) {
+				imgFolder = "cn";
+			} else if (userLang.equals("5")) {
+				imgFolder = "vn";
+			} else if (userLang.equals("6")) {
+				imgFolder = "id";
 			}
 			
 			model.addAttribute("themeId", request.getParameter("themeId"));
@@ -1157,9 +1203,9 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 
 	@RequestMapping(value = "/admin/ezNewPortal/getThemePortletList.do", method=RequestMethod.POST)
 	@ResponseBody
-	public JSONArray getThemePortletList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+	public JSONObject getThemePortletList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getThemePortletList started");
-		JSONArray result = new JSONArray();
+		JSONObject jo = new JSONObject();
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String themeId = paramMap.get("themeId").toString();
 		String companyId = paramMap.get("companyId").toString();
@@ -1172,11 +1218,14 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			result = (JSONArray) resultBody.get("data");
+			jo.put("poList", resultBody.get("data"));
+			if (resultBody.containsKey("fixBoard")) {
+				jo.put("fixBoard",  resultBody.get("fixBoard"));
+			}
 		}
 		
 		logger.debug("getThemePortletList ended");
-		return result;
+		return jo;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1728,5 +1777,68 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 
 		logger.debug("userList ended");
 		return "admin/ezNewPortal/userList";
+	}
+
+	@RequestMapping(value = "/admin/ezNewPortal/getAvailablePortletSize.do", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, method=RequestMethod.POST)
+	@ResponseBody
+	public Map<Integer, List<String>> getAvailablePortletSize(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap) throws IOException {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int themeId = Integer.parseInt(paramMap.get("themeId").toString());
+		String companyId = paramMap.get("companyId").toString();
+
+		return ezNewPortalService.getAvailablePortletSize(themeId, companyId, userInfo.getTenantId());
+	}
+
+	// 2023-11-24 황인경 - 관리자 > 포탈 > 포틀릿관리 > 일반게시판 포틀릿 > 카드형일 때 단어지정 팝업창
+	@RequestMapping(value = "/admin/ezNewPortal/cardViewPortletWordSetting.do", method=RequestMethod.GET)
+	public String cardViewPortletWordSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("cardViewPortletWordSetting started.");
+
+		String companyId = request.getParameter("companyId");
+		String portletId = request.getParameter("portletId");
+		String fileName = Optional.ofNullable(request.getParameter("fileName")).orElse("");
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("portletId", portletId);
+		model.addAttribute("fileName", fileName);
+
+		logger.debug("cardViewPortletWordSetting ended.");
+		return "/admin/ezNewPortal/portalWordSetting";
+	}
+	
+	// [GET] 2024-05-17 한태훈 - 포탈 > 포탈 탑메뉴 위치 회사 설정값 불러오기
+	@ResponseBody
+	@RequestMapping(value = "/admin/ezNewPortal/getTopMenuDisplayModeForCompany.do", method=RequestMethod.GET)
+	public JSONObject getTopMenuDisplayModeForCompany(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getTopMenuDisplayModeForCompany started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("userId", userInfo.getId());
+		param.put("companyId", request.getParameter("companyId"));
+		
+		JSONObject result = commonUtil.getJsonFromRestApi("/rest/admin/ezNewPortal/company/topMenuMode", param, request, "get", null);
+		
+		logger.debug("getTopMenuDisplayModeForCompany ended.");
+		return result;
+	}
+	
+	// [POST] 2024-05-17 한태훈 - 포탈 > 포탈 탑메뉴 위치 회사 설정값 수정
+	@RequestMapping(value = "/admin/ezNewPortal/updateTopMenuDisplayModeForCompany.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String updateTopMenuDisplayModeForCompany(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("updateTopMenuDisplayModeForCompany started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("userId", userInfo.getId());
+		param.put("companyId", request.getParameter("companyId"));
+		param.put("type", request.getParameter("type"));
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/admin/ezNewPortal/company/topMenuMode", param, request, "post", null);
+		String result = resultBody.get("status").toString();
+		logger.debug("updateTopMenuDisplayModeForCompany ended.");
+		return result;
 	}
 }

@@ -89,6 +89,7 @@
 		<![CDATA[
 			SELECT
 				FILE_ID AS fileId,
+				FILE_NAME AS fileName,
 				FILE_PATH AS filePath,
 				DATE_FORMAT(DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS modifiedDate,
 				UPDATE_NAME AS modifiedAuthorName,
@@ -1304,6 +1305,13 @@
 				a.TENANT_ID = #tenantId#
 			AND
 				a.CN <> a.EXTENSIONATTRIBUTE2
+			AND
+				a.CN NOT LIKE '%trash_dept_%'
+		]]>
+			<isEqual property="adminOrgan" compareValue="n" prepend="AND">
+				DEPTTREEFLAG = 'Y'
+			</isEqual>
+		<![CDATA[ 
 			ORDER BY
 				lpad(ifnull(a.EXTENSIONATTRIBUTE15, 0),6,0), a.DISPLAYNAME
 		]]>
@@ -1361,12 +1369,15 @@
 				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TENANT_ID = #tenantId#
+			<isEqual property="adminOrgan" compareValue="n" prepend="AND">
+				USERTREEFLAG = 'Y'
+			</isEqual>
 				
 			UNION ALL
 			
 			SELECT
 				A.CN                                                                                                                         AS CN,
-				CASE WHEN #primary# = '1'THEN A.TITLE ELSE A.TITLE2 END                                                                      AS POSITION,
+				CASE WHEN #primary# = '1'THEN B.TITLE ELSE B.TITLE2 END                                                                      AS POSITION,
 				CASE WHEN #primary# = '1'THEN A.DISPLAYNAME ELSE A.DISPLAYNAME2 END                                                          AS DISPLAYNAME,
 				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
 				A.DEPARTMENT                                                                                                                 AS DEPARTMENT,
@@ -1379,6 +1390,9 @@
 				B.DEPTID = #deptId#
 			AND
 				B.TENANT_ID = #tenantId#
+			<isEqual property="adminOrgan" compareValue="n" prepend="AND">
+				B.USERTREEFLAG = 'Y'
+			</isEqual>
 		) AA
 		ORDER BY
 			EXTENSIONATTRIBUTE15 ASC,
@@ -2224,11 +2238,11 @@
 				TBL_WEBFOLDER_FILE_HISTORY
 					(FILE_ID, FILE_PATH, FILE_SIZE, USE_STATUS, UPDATE_DATE, DELETER_ID, TENANT_ID,
 					UPDATE_ID, UPDATE_NAME, UPDATE_NAME2,
-					VERSION)
+					VERSION, FILE_NAME)
 				SELECT
 					F.FILE_ID, F.FILE_PATH, F.FILE_SIZE, F.USE_STATUS, F.UPDATE_DATE, NULL, F.TENANT_ID,
 					U.CN, U.DISPLAYNAME, U.DISPLAYNAME2,
-					#version#
+					#version#, F.FILE_NAME
 				FROM
 					TBL_WEBFOLDER_FILE F
 				LEFT JOIN

@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
+import egovframework.ezEKP.ezResource.vo.ResOccuVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -138,6 +139,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public String getBrdApproveFlag(Map<String, Object> map) {
 		return (String) select("EzResourceDAO.getBrdApproveFlag", map);
+	}
+
+	public String getBrdRepeatFlag(Map<String, Object> map) {
+		return (String) select("EzResourceDAO.getBrdRepeatFlag", map);
 	}
 	
 	public String getAclTblBrd_S1(Map<String, Object> map) {
@@ -373,5 +378,15 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ResGetClsAclListVO> getDeptAcl(Map<String, Object> map) {
 		return (List<ResGetClsAclListVO>) list("EzResourceDAO.getDeptAcl", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResOccuVO> getResOccuList(Map<String, Object> map) {
+		return (List<ResOccuVO>) list("EzResourceDAO.getResOccuList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResOccuVO> getScheduleListRepetiti2(Map<String, Object> map){
+		return  (List<ResOccuVO>) list("EzResourceDAO.getScheduleListRepetiti2", map);
 	}
 }

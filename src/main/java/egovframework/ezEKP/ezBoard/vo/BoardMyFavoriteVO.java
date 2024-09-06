@@ -6,8 +6,12 @@ public class BoardMyFavoriteVO {
 	private String boardId;
 	/**게시판명	 */
 	private String boardName;
-	/**게시판명(외국어)	 */
+	/**게시판명(영어)	 */
 	private String boardName2;
+	/**게시판명(일본어)  */
+	private String boardName3;
+	/**게시판명(중국어)	 */
+	private String boardName4;
 	/**탭번호	 */
 	private String tabUsed;
 	/** 구분	 */
@@ -18,8 +22,12 @@ public class BoardMyFavoriteVO {
 	private String userId;
 	/**트리명	 */
 	private String treeName;
-	/** 트리명	 */
+	/**트리명(영어)  */
 	private String treeName2;
+	/**트리명(일본어) */
+	private String treeName3;
+	/**트리명(중국어) */
+	private String treeName4;
 	/**트리 레벨	 */
 	private String treeLevel;
 	/**  트리 단계	*/
@@ -42,7 +50,7 @@ public class BoardMyFavoriteVO {
 	private String nowDate;
 	/** 현재시간 -5*/
 	private String fromNow;
-	/** */
+	/** 리스트 타입 (1: 일반보기, 2: 안읽은 게시물 보기, 3: 완료게시물 보기) */
 	private String type;
 	/** */
 	private String boardAdmin_FG;
@@ -76,6 +84,18 @@ public class BoardMyFavoriteVO {
 	}
 	public void setBoardName2(String boardName2) {
 		this.boardName2 = boardName2;
+	}
+	public String getBoardName3() {
+		return boardName3;
+	}
+	public void setBoardName3(String boardName3) {
+		this.boardName3 = boardName3;
+	}
+	public String getBoardName4() {
+		return boardName4;
+	}
+	public void setBoardName4(String boardName4) {
+		this.boardName4 = boardName4;
 	}
 	public String getTabUsed() {
 		return tabUsed;
@@ -112,6 +132,18 @@ public class BoardMyFavoriteVO {
 	}
 	public void setTreeName2(String treeName2) {
 		this.treeName2 = treeName2;
+	}
+	public String getTreeName3() {
+		return treeName3;
+	}
+	public void setTreeName3(String treeName3) {
+		this.treeName3 = treeName3;
+	}
+	public String getTreeName4() {
+		return treeName4;
+	}
+	public void setTreeName4(String treeName4) {
+		this.treeName4 = treeName4;
 	}
 	public String getTreeLevel() {
 		return treeLevel;

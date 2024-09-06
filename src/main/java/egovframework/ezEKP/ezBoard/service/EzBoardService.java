@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.w3c.dom.Document;
 
@@ -18,8 +19,12 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface EzBoardService {
 
@@ -28,7 +33,7 @@ public interface EzBoardService {
 	public List<BoardVO> get_apprUserList(String boardID, int tenantID) throws Exception;
 
 	/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID) throws Exception;
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID, String lang) throws Exception;
 
 	/* 2019-04-05 홍승비 - DB에 존재하지 않는 헤더 임의로 추가하는 경우 다국어 지원을 위해 userInfo 추가 */
 	public List<BoardListHeaderVO> getListHeader(LoginVO userInfo, BoardVO ezBoardVO) throws Exception;
@@ -398,4 +403,13 @@ public interface EzBoardService {
 
 	/* 2023-10-17 박기범 - 특정 게시판에 대한 관리자 권한 여부 체크 메서드 */
 	boolean isBoardAdmin(String boardId, String userId, String deptId, String companyId, int tenantId, String rollInfo);
+
+	public void downloadBackgroundItemFile(HttpServletRequest request, HttpServletResponse response, String realPath, String filePath, String fileName) throws Exception;
+
+	Optional<BoardAttachVO> getBoardAttachByName(String itemID, String fileName, int tenantID) throws Exception;
+	
+	/* 2024-04-01 한태훈 - 게시판 > 게시판 즐겨찾기 추가한 유저 리스트 가져오는 메소드 */
+	public List<OrganUserVO> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception;
+
+	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception;
 }

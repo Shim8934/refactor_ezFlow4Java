@@ -84,7 +84,8 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     	currIdx = currentTabIdx;
     }
     // 일괄기안 자식페이지에서 접근
-    else if (tempHref.indexOf("ezApprovalG/draftContentAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvContentAll_WHWP.do") > -1) {
+    else if (tempHref.indexOf("ezApprovalG/draftContentAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvContentAll_WHWP.do") > -1
+                || parent.location.href.indexOf("ezApprovalG/draftuiAll_WHWP.do") > -1 || parent.location.href.indexOf("ezApprovalG/approvuiAll_WHWP.do") > -1) {
     	isDraftAllPage = "Y";
     	attachTag = parent.document.getElementById(attachTag.id);
     	docAttachTag = parent.document.getElementById(attachTag.id + "Doc");
@@ -257,7 +258,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
 	                        return;
 	                    }
                 	} else {
-                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
+                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=&docAttachParent=" + escapenew(tempDocID);
                 	}
                 	strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
                 	strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
@@ -265,7 +266,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 	
                 } else {
                     openLocation = "/ezApprovalG/contDocView.do";
-                    openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=";
+                    openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=&docAttachParent=" + escapenew(tempDocID);
                     strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
                     strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
                     strDocAttach = strDocAttach + FileName + "</a> &nbsp; ";

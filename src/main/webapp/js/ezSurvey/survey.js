@@ -89,6 +89,11 @@ var SurveyCreate     = function() {
 			if (reuseSurvey["paritipateFlag"] == 1) {setSurveyUsers(reuseSurvey["userList"]);}
 			if (reuseSurvey["attachFlag"] == 1) {surveyFile.render(reuseSurvey["attachList"]);}
 			if (reuseSurvey["purpose"]) {surveyObj["infor"]["purpose"] = reuseSurvey["purpose"];}
+            // 설문 수정/재사용 > 설문결과 > 지정공개 대상자 정보 삽입
+            if (reuseSurvey["resultPublicFlag"] == 2) {
+                setSurveyResultUsers(reuseSurvey["resultViewTarget"]);
+                $("#rspdtList2").addClass('on');
+            }
 			getReuseQuestions();
 		}
 		
@@ -107,8 +112,11 @@ var SurveyCreate     = function() {
 		
 		var fileUploadBttn      = document.getElementById("fileBttn");
 		fileUploadBttn.onchange = function(e) {surveyFile.upload();};
-		var userMoreElmt        = document.querySelector("span[class='user-more']");
-		if (userMoreElmt) {userMoreElmt.onclick = function(e) {toggleUserPreview();};}
+		// 설문 작성 > 설문대상 지정자, 설문결과 지정공개 대상자 조회팝업 호출 버튼 이벤트 삽입
+		var userMoreElmt        = document.querySelector("#cf-userdiv span[class='user-more']");
+		if (userMoreElmt) {userMoreElmt.onclick = function(e) {toggleUserPreview('survey');};}
+        var userMoreResultElmt        = document.querySelector("#public-cfdiv span[class='user-more']");
+        if (userMoreResultElmt) {userMoreElmt.onclick = function(e) {toggleUserPreview('result');};}
 		var draftBttn           = document.getElementById("draftBttn");
 		if (draftBttn) {draftBttn.onclick = function(e) {saveDraftSurvey();};}
 		
@@ -158,8 +166,11 @@ var SurveyCreate     = function() {
 			cancelSv[i].addEventListener("click", cancelThisSurvey, false);
 		}
 		
-		document.getElementById("targetBttn"    ).addEventListener("click" , showSelectPopUp  , false);
-		document.getElementById("closeUserPanel").addEventListener("click",  toggleUserPreview, false);
+		// 설문 작성 > 설문대상 지정자, 설문결과 지정공개 대상자 선택 팝업 호출
+		document.getElementById("targetBttn"    ).addEventListener("click" , () => {showSelectPopUp('survey')} , false);
+		document.getElementById("selectResultTargetBtn"    ).addEventListener("click" , () => {showSelectPopUp('result')} , false);
+		// 설문 작성 > 설문대상 지정자, 설문결과 지정공개 대상자 리스트 조회 팝업창 닫기
+		document.getElementById("closeUserPanel").addEventListener("click",  () => {toggleUserPreview('close')}, false);		
 		document.getElementById("saveSurvey"    ).addEventListener("click",  saveSurvey       , false);
 		
 		if (!surveyItem) {
@@ -222,12 +233,19 @@ var SurveyCreate     = function() {
 			changeSurveyState();
 			window.parent.frames["left"].surveyId = -1;
 			window.parent.frames["left"].isInCreateSurvey = false; // 신규 설문 생성 취소
+			var ingSurveyLi = window.parent.frames["left"].document.getElementById("processingSurvey");
+			if (ingSurveyLi.querySelector(".list_text") && ingSurveyLi.tagName == "LI") {
+				window.parent.frames["left"].$(".node_selected").attr("class", "list_text");
+				ingSurveyLi.querySelector(".list_text").setAttribute("class", "list_text node_selected");
+			}
 			window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
 		}
 	}
 	// 설문 저장
 	function saveSurvey() {
 		if(confirm(SurveyMessages.strSaveAsk) == true) {
+			var saveSurveybtn = document.getElementById('saveSurvey');
+			saveSurveybtn.style.pointerEvents = 'none';
 			$.ajax({
 				type: "POST",
 				url: "/ezSurvey/saveSurvey.do",
@@ -240,6 +258,7 @@ var SurveyCreate     = function() {
 					afterSaveSuccessfully(data);
 				},
 				error : function(error) {
+					saveSurveybtn.style.pointerEvents = '';
 					alert(SurveyMessages.strError);
 				}
 			});
@@ -313,15 +332,16 @@ var SurveyCreate     = function() {
 	}
 	
 	function afterSaveSuccessfully(data) {
+		var saveSurveybtn = document.getElementById('saveSurvey');
 		var code = data.code;
 		switch(code) {
 			case 0 : window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
 					 window.parent.frames["left"].surveyId = -1;
 					 window.parent.frames["left"].isInCreateSurvey = false; // 신규 설문 생성 완료
 					 break;
-			case 1 : alert(SurveyMessages.strParamErr); break;
-			case 2 : alert(SurveyMessages.strError)   ; break;
-			default: alert(SurveyMessages.strError)   ; return;
+			case 1 : alert(SurveyMessages.strParamErr); saveSurveybtn.style.pointerEvents = ''; break;
+			case 2 : alert(SurveyMessages.strError)   ; saveSurveybtn.style.pointerEvents = ''; break;
+			default: alert(SurveyMessages.strError)   ; saveSurveybtn.style.pointerEvents = ''; return;
 		}
 	}
 	// 설문 정보 입력 단계
@@ -491,6 +511,7 @@ var SurveyCreate     = function() {
 		var popupFlag   = parseInt(document.querySelector('input[name="popupSpan"]:checked').value);
 		
 		var userList   = surveyObj["infor"]["users"];
+		var userResultList = surveyObj["infor"]["resultViewTarget"]; // 설문결과 지정조회 대상자
 //		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
 		ppContent      = replaceAll(ppContent, '<p style="font-size:13px;font-family:맑은 고딕"><br></p>', '');
 		var ttlValue   = replaceAll(surveyTtl.value, " ", "");
@@ -509,6 +530,7 @@ var SurveyCreate     = function() {
 		}
 		
 		if (userFlag == 1 && !userList) {returnObj["error"] = SurveyMessages.strUser1; return returnObj;}
+		if (publicFlag == 2 && !userResultList) {returnObj["error"] = SurveyMessages.strUser1; return returnObj;}
 		
 		//Check attach file progress
 		var divFileList = document.getElementById("fileDiv");
@@ -667,22 +689,42 @@ var SurveyCreate     = function() {
 		return feature;
 	}
 	
+	// 설문 > 설문결과 타입 선택 라디오박스 동작
 	function toggleDaysInput(inputElmt) {
-		var slxIdx    = inputElmt.getAttribute("value");
-		var inputElmt = document.querySelector("input[class='date-input']");
-		
-		if (slxIdx == 0) {
-			inputElmt.value    = "";
-			inputElmt.disabled = true;
-		}
-		else {
-			inputElmt.value    = "0";
-			inputElmt.disabled = false;
-		}
+        var slxIdx    = inputElmt.getAttribute("value");
+        var inputElmt = document.querySelector("input[class='date-input']");
+        
+        if (slxIdx == 1) {
+            $(inputElmt).attr('disabled', false);
+            $(inputElmt).val("0");
+            $('#userResultList_div').text("");
+            $("#rspdtList2").removeClass("on"); 
+            surveyObj["infor"]["resultViewTarget"] = null;
+        } else if (slxIdx == 2) {
+            $(inputElmt).attr('disabled', true);
+            $(inputElmt).val("");
+            $("#rspdtList2").addClass("on");
+        } else {
+            $(inputElmt).attr('disabled', true);
+            $(inputElmt).val("");
+            $('#userResultList_div').text("");
+            $("#rspdtList2").removeClass("on");
+            surveyObj["infor"]["resultViewTarget"] = null;
+        }
 	}
 	
-	function toggleUserPreview() {
+	// 설문 > 설문대상 지정자, 설문결과 지정공개 대상자 리스트 조회 팝업 호출
+	// mode: survey : 설문대상 / result: 설문결과 / close: 창 닫기
+	function toggleUserPreview(mode) {
 		var userPanel = document.getElementById("userPanel");
+		if (mode == 'survey') {
+		    $('#user-tblmain').show();
+		    $('#userResult-tblmain').hide();
+		} else if (mode == 'result') {
+		    $('#user-tblmain').hide();
+        	$('#userResult-tblmain').show();
+		}
+		
 		if (userPanel.className == "userPanel off") {
 			addFogPanel(toggleUserPreview);
 			var position          = getPosition(466, 210);
@@ -702,8 +744,8 @@ var SurveyCreate     = function() {
 		fogPanel.className            = "rfogPanel";
 		var leftFogPanel              = document.createElement("div");
 		leftFogPanel.className        = "blockLeft";
-		fogPanel.onclick              = function(e) {togglePanel();};
-		leftFogPanel.onclick          = function(e) {togglePanel();};
+		fogPanel.onclick              = function(e) {togglePanel('close');};
+		leftFogPanel.onclick          = function(e) {togglePanel('close');};
 		var leftFrameBody             = window.parent.frames["left"].document.body;
 		var rightFrameBody            = window.parent.frames["right"].document.body;
 		leftFrameBody.style.overflow  = "hidden";
@@ -765,24 +807,32 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	function showUserList() {
-		var userArr = surveyObj["infor"]["users"];
-		var divElmt = document.getElementById("userListDiv");
+	// 설문대상 지정자, 설문결과 지정공개 대상자 리스트 간단표출
+	function showUserList(mode) {
+		var userTempArr;
+		var divElmt;
+		if (mode == 'survey') {
+		   userTempArr = surveyObj["infor"]["users"];
+		   divElmt = document.getElementById("userListDiv");
+		} else if (mode == 'result') {
+		    userTempArr = surveyObj["infor"]["resultViewTarget"];
+		    divElmt = document.getElementById("userResultList_div");
+		} 
 		
 		while (divElmt.firstElementChild) {
 			divElmt.removeChild(divElmt.firstElementChild);
 		}
 		
-		for (var i = 0, len = userArr.length; i < len; i++) {
+		for (var i = 0, len = userTempArr.length; i < len; i++) {
 			var spanElmt = document.createElement("span");
 			var uElmt    = document.createElement("u");
 			var imgElmt  = document.createElement("img");
 			var divideSpan = document.createElement("span");
-			uElmt.setAttribute("role", userArr[i]["userId"]);
-			uElmt.setAttribute("type", userArr[i]["userType"]);
-			uElmt.textContent    = userArr[i]["userName"];
-			uElmt.onclick        = (function(userId, userType, userName, deptId){return function() {showUserInfoFromId(userId, userType, userName, deptId);};})(userArr[i]["userId"], userArr[i]["userType"], userArr[i]["userName"], userArr[i]["deptId"]);
-			imgElmt.onclick      = (function(userId, userType){return function() {removeUser(this, userId, userType);};})(userArr[i]["userId"], userArr[i]["userType"]);
+			uElmt.setAttribute("role", userTempArr[i]["userId"]);
+			uElmt.setAttribute("type", userTempArr[i]["userType"]);
+			uElmt.textContent    = userTempArr[i]["userName"];
+			uElmt.onclick        = (function(userId, userType, userName, deptId){return function() {showUserInfoFromId(userId, userType, userName, deptId);};})(userTempArr[i]["userId"], userTempArr[i]["userType"], userTempArr[i]["userName"], userTempArr[i]["deptId"]);
+			imgElmt.onclick      = (function(userId, userType){return function() {removeUser(this, userId, userType);};})(userTempArr[i]["userId"], userTempArr[i]["userType"]);
 			spanElmt.className   = "rlSpanBnk";
 			divideSpan.textContent = ";";
 			imgElmt.src          = "/images/icon/oneline_delete.gif";
@@ -793,14 +843,26 @@ var SurveyCreate     = function() {
 		}
 	}
 	
+	// 설문대상 지정자, 설문결과 지정공개 대상자 리스트 간단삭제
 	function removeUser(imgElmt, userId, userType) {
-		var userArr = surveyObj["infor"]["users"];
+		var id = imgElmt.closest("div").id;
+		var userArr;
+		if (id == 'userListDiv') {
+		    userArr = surveyObj["infor"]["users"];
+		} else if (id == 'userResultList_div') {
+		    userArr = surveyObj["infor"]["resultViewTarget"];
+		}
 		
 		for (var i = 0 ; i < userArr.length; i++) {
 			if (userArr[i]["userId"] == userId && userArr[i]["userType"] == userType) {userArr.splice(i, 1);}
 		}
 		
-		surveyObj["infor"]["users"] = userArr;
+        if (id == 'userList_div') {
+            surveyObj["infor"]["users"] = userArr;
+        } else if (id == 'userResultList_div') {
+            surveyObj["infor"]["resultViewTarget"] = userArr;
+        }
+        
 		var spanElmt = imgElmt.parentElement;
 		spanElmt.parentElement.removeChild(spanElmt);
 	}
@@ -1211,11 +1273,13 @@ var SurveyCreate     = function() {
 		return elements;
 	}
 	
-	function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(964, 645));}
+	function showSelectPopUp(mode) {selectPopup = window.open("/ezSurvey/selectUsers.do?mode=" + mode, "selectUser", getOpenWindowfeature(964, 645));}
 	function getSurveyQuestions() {return surveyObj["questions"];}
 	function setSurveyQuestions(question) {surveyObj["questions"].push(question);}
 	function getSurveyUsers() {return surveyObj["infor"]["users"];}
-	function setSurveyUsers(userList) {surveyObj["infor"]["users"] = JSON.parse(JSON.stringify(userList)); showUserList();}
+	function getSurveyResultUsers() {return surveyObj["infor"]["resultViewTarget"] ;}
+	function setSurveyUsers(userList) {surveyObj["infor"]["users"] = JSON.parse(JSON.stringify(userList)); showUserList('survey');}
+	function setSurveyResultUsers(userList) {surveyObj["infor"]["resultViewTarget"] = JSON.parse(JSON.stringify(userList)); showUserList('result');}
 	function getSurveyInfo() {return surveyObj["infor"];}
 	function isValid(value) {if (!isNaN(value) && parseFloat(value) >= 0 && value % 1 === 0) {return true;} else {return false;}}
 	
@@ -2199,25 +2263,38 @@ var SurveyCreate     = function() {
 		var sliderUnit = $("<div class='silder-unit'></div>");
 		var unitTxt    = $("<span class='slider-span'>" + SurveyMessages.strSlider7 + "</span>");
 		var unitInput  = $("<input type='input' class='slider-input' value='" + unit  + "'/>");
-		sliderUnit.append(unitTxt);
-		sliderUnit.append(unitInput);
-		
+		var cntTxt    = $("<span class='slider-span'>개수</span>");
+		var cnt = (highest - lowest) / unit;
+		cnt = !!cnt ? cnt : 1;
+		var cntInput  = $("<input type='input' class='slider-cnt' value='" + cnt  + "'/>");
 		var slidWrap   = $("<div class='silder-wrap'></div>");
-		var sliderLw   = $("<input type='input' class='slider-lw' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); value='" + lowest  + "'/>");
-		slidWrap.append(sliderLw);
-		
 		var slideMain = $("<input type='range' class='slider-main' value='0'/>");
 		slidWrap.append(slideMain);
-		
-		var sliderUp = $("<input type='input' class='slider-up' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); value='" + highest + "'/>");
-		
-		var lwUpDiv = $("<div><span class='slider-lwExp'>" + SurveyMessages.strSlider8 + "</span><span class='slider-upExp'>" + SurveyMessages.strSlider9 + "</span></div>")
-		
-		slidWrap.append(sliderUp);
+		var span = $("<p></p>");
+		var output = $("<output class='slider-output'></output>");
+
+		var sliderLw   = $("<span class='slider-span'>" + SurveyMessages.strSlider8 + "</span>");
+		var lowInput = $("<input type='input' class='slider-lw' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); value='" + lowest  + "'/>");
+		var sliderUp = $("<span class='slider-span'>" + SurveyMessages.strSlider9 + "</span>");
+		var upInput = $("<input type='input' class='slider-up' style='background-color:#cccccc;' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); readonly value='" + highest + "'/>");
+
+		sliderUnit.append(sliderLw);
+		sliderUnit.append(lowInput);
+		sliderUnit.append(unitTxt);
+		sliderUnit.append(unitInput);
+		sliderUnit.append(cntTxt);
+		sliderUnit.append(cntInput);
+		sliderUnit.append(sliderUp);
+		sliderUnit.append(upInput);
+
+		// slidWrap.append(sliderUp);
 		divWrap.append(slidWrap);
-		divWrap.append(lwUpDiv);
+		divWrap.append(span);
+		span.append(output);
+		// divWrap.append(lwUpDiv);
 		divWrap.append(sliderUnit);
-		
+
+		addChangeEvent(lowInput, unitInput, cntInput, upInput, slideMain, output);
 		return divWrap;
 	}
 	
@@ -2776,17 +2853,18 @@ var SurveyCreate     = function() {
 		var lowestInput  = qstnForm.querySelector("input[class='slider-lw']");
 		var highestInput = qstnForm.querySelector("input[class='slider-up']");
 		var unitInput    = qstnForm.querySelector("input[class='slider-input']");
+		var cntInput    = qstnForm.querySelector("input[class='slider-cnt']");
 		var unitValue    = unitInput    ? parseInt(unitInput.value)    : -1;
 		var lowestValue  = lowestInput  ? parseInt(lowestInput.value)  : -1;
 		var highestValue = highestInput ? parseInt(highestInput.value) : -1;
-		
+		var cntValue = cntInput ? parseInt(cntInput.value) : -1;
+
 		//Check slider requirements
-		if (!isValid(lowestValue))       {sliderObj.error = "strSlider1"; return sliderObj;}
-		if (!isValid(highestValue))      {sliderObj.error = "strSlider2"; return sliderObj;}
-		if (!isValid(unitValue))         {sliderObj.error = "strSlider5"; return sliderObj;}
+		if (!isValid(lowestInput.value))       {sliderObj.error = "strSlider1"; return sliderObj;}
+		if (!isValid(unitInput.value))         {sliderObj.error = "strSlider5"; return sliderObj;}
+		if (!isValid(highestInput.value))      {sliderObj.error = "strSlider2"; return sliderObj;}
 		if (lowestValue >= highestValue) {sliderObj.error = "strSlider3"; return sliderObj;}
-		if (((highestValue - lowestValue) % unitValue) != 0)  {sliderObj.error = "strSlider10"; return sliderObj;}
-		if (((highestValue - lowestValue) / unitValue) > 200) {sliderObj.error = "strSlider10"; return sliderObj;}
+		if (cntValue > 200) {sliderObj.error = "strSlider10"; return sliderObj;}
 		
 		var option = [];
 		option.push({content : lowestValue, level : 0});
@@ -3775,87 +3853,28 @@ var SurveyCreate     = function() {
 		document.getElementById("cf-mail").textContent   = qstInf["mail"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
 		document.getElementById("cf-popup").textContent   = qstInf["popup"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
 		
-		var surveyUserElmt = document.getElementById("cf-userdiv");
-		
+		// 설문 최종확인 시 설문결과 타입 표출
 		if (qstInf["public"] == 1) {
 			document.getElementById("public-cfdiv").innerHTML = SurveyMessages.strPublic1;
 			document.getElementById("public-days").innerHTML  = SurveyMessages.strPublic4 + " " + qstInf["publicDays"] + " " + SurveyMessages.strPublic5;
-		}
-		else {
+		} else if (qstInf["public"] == 2) {
+        	document.getElementById("public-days").innerHTML  = "";
+        	var resultUserList = qstInf["resultViewTarget"];
+		    if (resultUserList.length != 0) {
+		        openPreviewUserListPopup(resultUserList, 'result')
+		    }
+		} else {
 			document.getElementById("public-cfdiv").innerHTML = SurveyMessages.strPublic2;
 			document.getElementById("public-days").innerHTML  = "";
 		}
 		
-		surveyUserElmt.innerHTML = "";
-		
+		// 설문 최종확인 시 설문 대상자 표출
 		if (qstInf["userflag"] == 0) {
-			surveyUserElmt.innerHTML = "<span class='inf-survey'> " + SurveyMessages.strUser2 + "</span>";
+			document.getElementById("cf-userdiv").innerHTML = "<span class='inf-survey'> " + SurveyMessages.strUser2 + "</span>";
 		}
 		else {
 			var userList = qstInf["users"];
-			if (userList.length < 1) {
-				for (var i = 0 ; i < userList.length; i++) {
-					var spanElmt = document.createElement("span");
-					spanElmt.textContent = userList[i]["userName"];
-					spanElmt.className   = "user-inf";
-					spanElmt.onclick     = (function(userId, userType, userName, deptId) {
-						return function() {SurveyCreate.showUser(userId, userType, userName, deptId);};
-					})(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"], userList[i]["deptId"]);
-					
-					surveyUserElmt.appendChild(spanElmt);
-					
-					if (i != userList.length - 1) {
-						var divideSpan         = document.createElement("span");
-						divideSpan.textContent = "; ";
-						surveyUserElmt.appendChild(divideSpan);
-					}
-				}
-				
-				var spanElmt2         = document.createElement("span");
-				spanElmt2.className   = "total-user";
-				spanElmt2.textContent = "[" + SurveyMessages.strTotal + " " + userList.length + " " + SurveyMessages.strUser3 + "]";
-				surveyUserElmt.appendChild(spanElmt2);
-			}
-			else {
-				var spanElmt1 = document.createElement("span");
-				var spanElmt2 = document.createElement("span");
-				var spanElmt3 = document.createElement("span");
-				
-				spanElmt1.className   = "user-inf";
-				spanElmt1.textContent = userList[0]["userName"];
-				spanElmt2.className   = "total-user";
-				spanElmt2.textContent = "[" + SurveyMessages.strTotal + " " + userList.length + " " + SurveyMessages.strUser3 + "]";
-				spanElmt3.className   = "user-more";
-				spanElmt3.onclick     = function(e) {SurveyCreate.userMore()};
-				spanElmt1.onclick     = function(e) {SurveyCreate.showUser(userList[0]["userId"], userList[0]["userType"], userList[0]["userName"], userList[0]["deptId"]);};
-
-				surveyUserElmt.appendChild(spanElmt1);
-				surveyUserElmt.appendChild(spanElmt2);
-				surveyUserElmt.appendChild(spanElmt3);
-				
-				//Set user for user panel
-				var userTableElmt       = document.getElementById("user-tblmain");
-				userTableElmt.innerHTML = "";
-				
-				for (var i = 0 ; i < userList.length; i++) {
-					var trElmt      = document.createElement("tr");
-					var tdElmt1     = document.createElement("td");
-					var tdElmt2     = document.createElement("td");
-					tdElmt1.onclick = (function(userId, userType, userName, deptId) {
-						return function() {SurveyCreate.showUser(userId, userType, userName, deptId);};
-					})(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"], userList[0]["deptId"]);
-					
-					tdElmt1.textContent = userList[i]["userName"];
-					tdElmt2.textContent = getUserType(userList[i]["userType"]);
-					tdElmt1.className   = "user-field";
-					tdElmt2.className   = "center-field";
-					trElmt.appendChild(tdElmt1);
-					trElmt.appendChild(tdElmt2);
-					userTableElmt.appendChild(trElmt);
-				}
-				
-				document.getElementById("th-usertype").className  = userList.length == 5 ? "center-field" : "center-field right-field";
-			}
+		    openPreviewUserListPopup(userList, 'survey');
 		}
 		
 		//attach list
@@ -3905,24 +3924,12 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	function getUserType(userType) {
-		var stUserType = "";
-		switch(userType) {
-			case "user" : stUserType = SurveyMessages.strUser4; break;
-			case "dept" : stUserType = SurveyMessages.strUser5; break;
-			case "comp" : stUserType = SurveyMessages.strUser6; break;
-			default     : stUserType = SurveyMessages.strUser4; break;
-		}
-		
-		return stUserType;
-	}
-	
 	function checkUrl(str) {var pattern = new RegExp("^(http|https)://", "i"); return pattern.test(str);}
 	// URL 첨부 추가
 	function saveLinkAttach(elmt, ulClass) {
 		var attachName = document.getElementById("attfileName");
 		var attachUrl  = document.getElementById("attfileUrl");
-		
+
 		if (!replaceAll(attachName.value, " ", "")) {alert(SurveyMessages.strURL1); attachName.focus(); return;}
 		if (!replaceAll(attachUrl.value, " ", ""))  {alert(SurveyMessages.strURL2); attachUrl.focus() ; return;}
 		if (!checkUrl(attachUrl.value))             {alert(SurveyMessages.strURL3); attachUrl.focus() ; return;}
@@ -3952,6 +3959,18 @@ var SurveyCreate     = function() {
 		liElmt.setAttribute("fname", attachName.value);
 		liElmt.setAttribute("furl", attachUrl.value);
 		mainUlElmt.appendChild(liElmt);
+        // 이유정 - URL 추가시, 파일 추가와 마찬가지로 "divInform" div 제거 후 파일추가창이 안뜨도록 함.
+		var fileDivElmt         = document.getElementById("fileDiv");
+		var divfileListElmt     = fileDivElmt.firstElementChild;
+		var divInform = document.querySelector(".divInform");
+		if (divInform) {
+			divfileListElmt.className = "fileList";
+			var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
+			var helpDivElmt           = document.getElementById("helpTxt");
+			if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
+			if (helpDivElmt)   {helpDivElmt.className = "uploadHelp";}
+			fileDivElmt.onclick = null;
+		}
 		toggleUrlPanel();
 	}
 	// URL 첨부 삭제
@@ -3989,11 +4008,110 @@ var SurveyCreate     = function() {
 		return purpose;
 	}
 	
+	// 설문작성 > 최종확인 > 설문결과, 대상자 정보 표출
+    function openPreviewUserListPopup(userList, mode) {
+        var divId;
+        var surveyUserElmt;
+        var userTableElmt;
+        if (mode == 'survey') {
+            divId = 'cf-userdiv';
+            surveyUserElmt = document.getElementById(divId);
+            userTableElmt = document.getElementById("user-tblmain");
+            surveyUserElmt.innerHTML = "";
+        } else if (mode == "result") {
+            divId = 'public-cfdiv';
+            surveyUserElmt = document.getElementById(divId);
+            userTableElmt = document.getElementById("userResult-tblmain");
+            surveyUserElmt.innerHTML = SurveyMessages.strPublic3 + "  /  ";
+        }
+        
+        if (userList.length < 1) {
+            for (var i = 0 ; i < userList.length; i++) {
+                var spanElmt = document.createElement("span");
+                spanElmt.textContent = userList[i]["userName"];
+                spanElmt.className   = "user-inf";
+                spanElmt.onclick     = (function(userId, userType, userName, deptId) {
+                    return function() {SurveyCreate.showUser(userId, userType, userName, deptId);};
+                })(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"], userList[i]["deptId"]);
+                
+                surveyUserElmt.appendChild(spanElmt);
+                
+                if (i != userList.length - 1) {
+                    var divideSpan         = document.createElement("span");
+                    divideSpan.textContent = "; ";
+                    surveyUserElmt.appendChild(divideSpan);
+                }
+            }
+            
+            var spanElmt2         = document.createElement("span");
+            spanElmt2.className   = "total-user";
+            spanElmt2.textContent = "[" + SurveyMessages.strTotal + " " + userList.length + " " + SurveyMessages.strUser3 + "]";
+            surveyUserElmt.appendChild(spanElmt2);
+        } else {
+            var spanElmt1 = document.createElement("span");
+            var spanElmt2 = document.createElement("span");
+            var spanElmt3 = document.createElement("span");
+            
+            spanElmt1.className   = "user-inf";
+            spanElmt1.textContent = userList[0]["userName"];
+            spanElmt2.className   = "total-user";
+            spanElmt2.textContent = "[" + SurveyMessages.strTotal + " " + userList.length + " " + SurveyMessages.strUser3 + "]";
+            spanElmt3.className   = "user-more";
+            spanElmt3.onclick     = function(e) {SurveyCreate.userMore(mode)};
+            spanElmt3.style.display       = "inline-block"
+            spanElmt3.style.verticalAlign = "middle"
+            
+            spanElmt1.onclick     = function(e) {SurveyCreate.showUser(userList[0]["userId"], userList[0]["userType"], userList[0]["userName"], userList[0]["deptId"]);};
+        
+            surveyUserElmt.appendChild(spanElmt1);
+            surveyUserElmt.appendChild(spanElmt2);
+            surveyUserElmt.appendChild(spanElmt3);
+            
+            //Set user for user panel
+            userTableElmt.innerHTML = "";
+            
+            for (var i = 0 ; i < userList.length; i++) {
+                var trElmt      = document.createElement("tr");
+                var tdElmt1     = document.createElement("td");
+                var tdElmt2     = document.createElement("td");
+                tdElmt1.onclick = (function(userId, userType, userName, deptId) {
+                    return function() {SurveyCreate.showUser(userId, userType, userName, deptId);};
+                })(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"], userList[0]["deptId"]);
+                
+                tdElmt1.textContent = userList[i]["userName"];
+                tdElmt2.textContent = getUserType(userList[i]["userType"]);
+                tdElmt1.className   = "user-field";
+                tdElmt2.className   = "center-field";
+                trElmt.appendChild(tdElmt1);
+                trElmt.appendChild(tdElmt2);
+                userTableElmt.appendChild(trElmt);
+            }
+            document.getElementById("th-usertype").className  = userList.length < 4 ? "center-field" : "center-field right-field";
+        }
+    }
+    
+    // 유저 타입 텍스트 반환
+    function getUserType(userType) {
+        var stUserType = "";
+        switch(userType) {
+            case "user" : stUserType = SurveyMessages.strUser4; break;
+            case "dept" : stUserType = SurveyMessages.strUser5; break;
+            case "comp" : stUserType = SurveyMessages.strUser6; break;
+            case "jikwi" : stUserType = SurveyMessages.strUser9; break;
+            case "jikchek" : stUserType = SurveyMessages.strUser10; break;
+            case "group" : stUserType = SurveyMessages.strUser11; break;
+            default     : stUserType = SurveyMessages.strUser4; break;
+        }
+        return stUserType;
+    }
+	
 	function changeDownloadMode(flag) {downloadMode = flag;}
 	
 	return {
 		getUsers   : getSurveyUsers,
 		setUsers   : setSurveyUsers,
+		getResultUsers : getSurveyResultUsers,
+		setResultUsers : setSurveyResultUsers,
 		getQs      : getSurveyQuestions,
 		setQs      : setSurveyQuestions,
 		getInfo    : getSurveyInfo,
@@ -4010,3 +4128,37 @@ var SurveyCreate     = function() {
 function Editor_Complete() {
 	document.getElementById("info-input-pp").contentWindow.SetEditorContent(SurveyCreate.getPurpose());
 }
+
+function addChangeEvent(obLow, obUnit, obCnt, obMax, slideMain, output) {
+    var arr = [obLow, obUnit, obCnt];
+    for (var obj of arr) {
+        obj.on("propertychange change keyup paste input", function() {
+            var low = obLow.val();
+            var unit = obUnit.val();
+            var cnt = obCnt.val();
+
+            if (low !== '' && unit !== '' && cnt !== '') {
+                var max = low * 1 + unit * cnt;
+                slideMain.attr('min',low);
+                slideMain.attr('step',unit);
+                slideMain.attr('max',max);
+                output.val(slideMain.val());
+                obMax.val(max);
+            }
+        });
+    }
+
+    slideMain.on("change", function() {
+        output.val(this.value);
+    });
+}
+
+/* 2024-03-26 양지혜 - 숫자 외 입력금지 및 게시기간 제한 */
+$(".date-input").keyup(function(){
+	var inputVal = $(this).val();
+	$(this).val(inputVal.replace(/[^0-9.]/g,""));
+	if(inputVal > maxPeriod) {
+		alert(SurveyMessages.strLangYJH01 + maxPeriod + SurveyMessages.strLangYJH02);
+		$(this).val("");
+	}
+});

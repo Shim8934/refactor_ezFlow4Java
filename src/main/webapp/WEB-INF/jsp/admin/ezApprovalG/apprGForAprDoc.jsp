@@ -40,6 +40,7 @@
 	        var nowDate = "<c:out value = '${nowDateUTC}'/>";
 			var pOpenYear = "<c:out value = '${openYear}'/>";
 			var useWebHWP = "<c:out value ='${useWebHWP}'/>";
+			var selectYear = "ALL";
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -630,7 +631,14 @@
 		                    openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=&pageType=admin";
 		                }
 	                } else {
-                        var openLocation = "/ezApprovalG/aprDocView.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL);
+                        var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), ""); // 현재 소속한 회사의 문서가 보이므로, companyID 전달 없어도 됨
+                        var openLocation = "";
+
+                        if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+                            openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
+                        } else {
+                            var openLocation = "/ezApprovalG/aprDocView.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL);
+                        }
                         openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=&pageType=admin";
 	                }
 	                openwindow(openLocation, "", 880, 550);
@@ -877,10 +885,11 @@
 			    
 			    if (document.getElementById("txt_keyword").value != "") {
 			        var selectSearch = document.getElementById('selectType');
-			
+
+					/*
 			        for (var i = 0; i < 20; i++) {
 			            SearchCond[i] = "";
-			        }
+			        } */
 			
 			        if (selectSearch.item(0).selected) {
 			            SearchCond[1] = document.getElementById("txt_keyword").value;
@@ -898,7 +907,7 @@
 			    pageNum = 1;
 			    GetDocList();
 			    
-			    $('#sel_year').val("ALL");
+			    $('#sel_year').val(selectYear);
 			}
 			
 			var Tab1_SelectID = "";
@@ -975,12 +984,13 @@
 		    function onSelect_Year() {
 	            pChackYN = "SEARCH";
 	            pageNum = 1;
+				selectYear = GetSelectVal("sel_year");
 	            
-	            if (GetSelectVal("sel_year") != "ALL") {
-	            	SearchCond[3] = GetSelectVal("sel_year");
+	            if (selectYear != "ALL") {
+	            	SearchCond[3] = selectYear;
 	            	SearchCond[4] = "01";
 	            	SearchCond[5] = "01";
-	            	SearchCond[6] = GetSelectVal("sel_year");
+	            	SearchCond[6] = selectYear;
 	            	SearchCond[7] = "12";
 	                SearchCond[8] = "31";
 	            }

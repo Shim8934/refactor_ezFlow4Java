@@ -89,7 +89,12 @@
 	                }
 	                show_repetition_info2();
 	            } else {
-	                document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, sDT.lastIndexOf(":")) + " ~ " + eDT.substring(0, eDT.lastIndexOf(":"));
+					if(allDayFlag == "1") {
+						document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, 10) + " (" + strLang126 + ") ~ " + eDT.substring(0, 10) + " (" + strLang126 + ")";
+					}
+					else {
+						document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, sDT.lastIndexOf(":")) + " ~ " + eDT.substring(0, eDT.lastIndexOf(":"));
+					}
 	            }
 	            
 	            var iframeStyle = "<style>";
@@ -447,6 +452,8 @@
 
 	                if (rtnValue == "True") {
 	                    xmlHTTP = createXMLHttpRequest();
+	                    createNodeAndInsertText(xmlDOM, objNode, "STARTDATETIME", sDT);
+	                	createNodeAndInsertText(xmlDOM, objNode, "ENDDATETIME", eDT);
 	                    xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 	                    xmlHTTP.send(xmlDOM);
 	                    var ResponseXML = xmlHTTP.responseXML;

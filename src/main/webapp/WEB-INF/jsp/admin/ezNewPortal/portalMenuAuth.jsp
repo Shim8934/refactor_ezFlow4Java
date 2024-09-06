@@ -50,11 +50,11 @@
 					        		<div class="portlet_tabpart01_top" id="tab1" style="margin-top: 25px;margin-bottom: 2px;">
 						            	<p><span id="1tab1" tdname="portalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="tabon"><spring:message code='ezNewPortal.t024' /></span></p>
 						            	<%-- !!!TODO!!! 테마별, 포틀릿별 권한은 못사용하게 해놨어요! 로직은 구현되어있지만 나중에 QC할때는 이부분 주석풀어주세요 --%>
-						            	<c:if test="${mode eq 'menu' || mode eq 'portlet' }"> 
+<%--						            	<c:if test="${mode eq 'menu' || mode eq 'portlet' }"> --%>
 											<p><span id="1tab2" tdname="portalJikwi" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code='ezEmail.t28'/></span></p>
 											<p><span id="1tab3" tdname="portalJikcheck" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code='ezEmail.t281'/></span></p>
 											<p><span id="1tab4" tdname="portalGroup" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code='ezPersonal.yej05'/></span></p>
-						            	</c:if>
+<%--						            	</c:if>--%>
 						        	</div>
  		                            <!-- <h2 class="receiver_tltype01" style='margin-top:4px; border-bottom:none;'> 
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezNewPortal.t024' /></span>
@@ -166,9 +166,20 @@
 									</h2>
 								</div>
 								<div class="receiver_borderbox" style="border-top: 1px solid #ddd; margin-top: 2px;">
-									<div id="authList" style="width: 250px; Height: 511px; overflow-x: auto; overflow-y: auto;">
+									<div id="authList" style="width: 250px; Height: 482px; overflow-x: auto; overflow-y: auto;">
 									</div>
 								</div>
+								<table class="content" style="width: 100%;">
+									<tbody>
+									<tr>
+										<th><spring:message code='ezBoard.t999025' /></th>
+										<td>
+											<input type="checkbox" id="admin_OK" name="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t51' />
+											<input type="checkbox" id="admin_NO" name="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t50' />
+										</td>
+									</tr>
+									</tbody>
+								</table>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -360,8 +371,41 @@
 		                setUserList();
 	            	}
 	        	}
-	    	}	   		
-	   		
+	    	}
+
+			// 하위부서 허용/불가 클릭 이벤트
+			function checkbox_onclick(e) {
+				if (!CrossYN()) {
+					srcElementID = window.event.srcElement.id;
+				} else {
+					srcElementID = e.target.id;
+				}
+
+				var checkFlag = "Y";
+				if (srcElementID == "admin_OK") {
+					document.getElementById("admin_OK").checked = true;
+					document.getElementById("admin_NO").checked = false;
+					checkFlag = "Y";
+				} else {
+					document.getElementById("admin_OK").checked = false;
+					document.getElementById("admin_NO").checked = true;
+					checkFlag = "N";
+				}
+
+				var container = document.getElementById("authList");
+				var selectedRow = container.querySelectorAll("tr.selectTR");
+
+				if (selectedRow == "" || selectedRow.length == 0)
+					return;
+
+				selectedRow[0].setAttribute("data-subdeptPermitted", checkFlag);
+				var user = menuAuths.find(item => item.userId === selectedRow[0].getAttribute("data-id"));
+				if (user) {
+					user.subdeptPermitted = checkFlag;
+				}
+
+			}
+
 	   		//조직도 뿌리는 펑션
 	   		var setDeptList = function() {
 				$('#treeview').on('changed.jstree', function (e, data) {
@@ -475,6 +519,26 @@
 	   			}
 	   			
 	   			$(elem).addClass("selectTR");
+
+				if (elem.getAttribute("data-usertype") == "0") {
+					document.getElementById("admin_OK").disabled = false;
+					document.getElementById("admin_NO").disabled = false;
+					var subdeptPermitted = elem.getAttribute("data-subdeptPermitted")
+
+					if (subdeptPermitted == "Y" || subdeptPermitted == "true") {
+						document.getElementById("admin_OK").checked = true;
+						document.getElementById("admin_NO").checked = false;
+					} else {
+						document.getElementById("admin_OK").checked = false;
+						document.getElementById("admin_NO").checked = true;
+						elem.setAttribute("data-subdeptPermitted", "N");
+					}
+				} else {
+					document.getElementById("admin_OK").disabled = true;
+					document.getElementById("admin_OK").checked = false;
+					document.getElementById("admin_NO").disabled = true;
+					document.getElementById("admin_NO").checked = true;
+				}
 	   		}
 	   		
 	   		// 조직도 사원목록 클릭이벤트 적용
@@ -704,7 +768,7 @@
 		   		}
 		   		
 		   		if (chkFlag) {
-		   			menuAuths.push({"userName" : userName, "userId" : receiverId, "userDeptName" : userDeptName, "menuId" : menuId, "userType" : userType, "accessYN" : false});
+		   			menuAuths.push({"userName" : userName, "userId" : receiverId, "userDeptName" : userDeptName, "menuId" : menuId, "userType" : userType, "accessYN" : false, "subdeptPermitted" : "N"});
 		   		} else {
 		   			alert("<spring:message code='ezJournal.t127'/>");
 		   		}
@@ -738,6 +802,7 @@
 					authsHTML += " data-userDeptName=" + item.userDeptName;
 					authsHTML += " data-userType=" + item.userType;
 					authsHTML += " data-accessYN=" + item.accessYN;
+					authsHTML += " data-subdeptPermitted=" + item.subdeptPermitted;
 					authsHTML += " onclick='setMainListUserAuthorDept(this)' ondblclick='deleteAuth()'>";
 					authsHTML += "<td class='nameTD'>";
 					

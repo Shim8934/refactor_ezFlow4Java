@@ -104,5 +104,8 @@ var CabinetMessages = {
 	
 	/* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
 	srtLangHSBEx01 : "허용하지 않는 확장자입니다.",
-	srtLangHSBEx02 : "업로드 제한 확장자 파일이 있습니다."
+	srtLangHSBEx02 : "업로드 제한 확장자 파일이 있습니다.",
+
+	/* 이유정 - 캐비넷 공유관련 메세지 추가 */
+	strLangLYJEx01 : "부서를 먼저 선택해주세요."
 }

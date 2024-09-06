@@ -162,7 +162,6 @@
 				var ele = document.getElementById(splFolder);
 				var folderMailCnt = ele.getAttribute('data-folderMailCnt');
 				if (folderMailCnt === null || typeof folderMailCnt === "undefined") {
-					// 이 경우가 나오면 안되요.
 					console.log('folderTotalCount is null or undefined');
 					return;
 				} else if (folderMailCnt < 1) {
@@ -246,12 +245,17 @@
 		        var deleteURL = selectFolderName;
 		        ShowMailProgress();
 		        
+		        var mailConfigFrame = parent.parent.document.getElementsByName("right")[0].contentWindow;
+		        mailConfigFrame.showDim();
+		        
+		        
 		      	//지운편지함의 메일 영구삭제
 		        if (deleteURL == trashBoxURL) {
 		            if (confirm("<spring:message code='ezEmail.t470' />")) {
 		                delete_mail(deleteURL, true, "");
 		            } else {
 		            	HiddenMailProgress();
+				        mailConfigFrame.hiddenDim();
 		            }
 		        }
 		      	//편지함의 메일 지운편지함으로 이동
@@ -260,6 +264,7 @@
 		                delete_mail(deleteURL, false, trashBoxURL);
 		            } else {
 		            	HiddenMailProgress();
+				        mailConfigFrame.hiddenDim();
 		            }
 		        }
 		    }
@@ -296,6 +301,7 @@
 		    function delete_mail_complete() {
 				if (xmlHTTP2 != null && deltype != null && xmlHTTP2.readyState == 4) {
 					var href =selectFolderName;
+					var mailConfigFrame = parent.parent.document.getElementsByName("right")[0].contentWindow;
 					
 		            //지운편지함의 메일 영구삭제
 		            if (deltype == "MAILREALDEL") {
@@ -313,7 +319,8 @@
 		            //편지함의 메일 지운편지함으로 이동
 					else {
 						if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
-							if (xmlHTTP2.responseText == "OK") {
+							if (xmlHTTP2.responseText == "OK" || xmlHTTP2.responseText === "MAIL_NOT_EXISTS") {
+								// 이미 비워져있는 상태도 성공 처리
 								alert("<spring:message code='ezEmail.t478' />");
 		            		} else if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
 		            			alert(strLang241);
@@ -328,6 +335,7 @@
 		        }
 				requestFolderList();
 				HiddenMailProgress();
+				mailConfigFrame.hiddenDim();
 		    }
             
 		    

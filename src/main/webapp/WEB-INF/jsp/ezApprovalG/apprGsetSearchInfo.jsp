@@ -1215,10 +1215,10 @@
 		</table>
 		
 		<div class="btnposition btnpositionNew">
-			<a class="imgbtn"><span onClick="return btnSearch_onclick()" id="Submit3"><spring:message code='ezApprovalG.t111'/></span></a>
-			<a class="imgbtn"><span onClick="return btnToDaySearch_onclick()" id="Submit0"><spring:message code='ezApprovalG.t1336'/></span></a>
-			<a class="imgbtn"><span onClick="return btnWeekSearch_onclick()" id="Submit1"><spring:message code='ezApprovalG.t1337'/></span></a>
-			<a class="imgbtn"><span onClick="return btnMonthSearch_onclick()" id="Submit2"><spring:message code='ezApprovalG.t1557'/></span></a>			
+			<a class="imgbtn" style="padding-left: 8px"><span style="padding-right: 8px;" onClick="return btnSearch_onclick()" id="Submit3"><spring:message code='ezApprovalG.t111'/></span></a>
+			<a class="imgbtn" style="padding-left: 8px"><span style="padding-right: 8px;" onClick="return btnToDaySearch_onclick()" id="Submit0"><spring:message code='ezApprovalG.t1336'/></span></a>
+			<a class="imgbtn" style="padding-left: 8px"><span style="padding-right: 8px;" onClick="return btnWeekSearch_onclick()" id="Submit1"><spring:message code='ezApprovalG.t1337'/></span></a>
+			<a class="imgbtn" style="padding-left: 8px"><span style="padding-right: 8px;" onClick="return btnMonthSearch_onclick()" id="Submit2"><spring:message code='ezApprovalG.t1557'/></span></a>			
 		</div>
 		<c:if test ="${approvalFlag =='S'}">
 		<input type="text" id="formid" name="formid" style="width:1px;display:none" disabled="disabled" /> 

@@ -74,7 +74,9 @@
 	        var deptId = "<c:out value='${dept}'/>";
 	        var authList = [];
 	        var primary = "<c:out value='${lang}'/>";
-	        
+	        // 2024-07-11 전인하 - 'survey' - 설문자 지정 / 'result' - 설문결과 지정공개 대상자 지정
+	        var mode = "<c:out value='${mode}'/>";
+	         	        
 	        window.onload = function () {
 	            
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -129,7 +131,7 @@
 	                    treeView.DataBind("TreeView");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
+	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.status);
 	                    xmlHTTP = null;
 	                }
 	            }
@@ -151,8 +153,13 @@
 	        }
 		
 	        function getSurveydata(){
-	        	var crrList = [];
-	    		if (window.opener.SurveyCreate) {crrList = window.opener.SurveyCreate.getUsers();}
+	    		if (window.opener.SurveyCreate) {
+	    		    if (mode == 'survey') {
+	    		        crrList = window.opener.SurveyCreate.getUsers();
+	    		    } else if (mode == 'result') {
+	    		        crrList = window.opener.SurveyCreate.getResultUsers();
+	    		    }
+	    		}
 	    		loadSelectedList(crrList);
 	    		
 	        }
@@ -515,7 +522,7 @@
 	                        check_presence();
 	                    }
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                }
 	
 	                g_xmlHTTP = null;
@@ -716,7 +723,7 @@
 	                    treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 	                    treeView.DataBind("TreeView");
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                g_xmlHTTP = null;
 	            	}
 	        	}
@@ -753,7 +760,11 @@
 	    		}
 	    		
 	    		if (window.opener.SurveyCreate) {
-	    			window.opener.SurveyCreate.setUsers(userList);
+	    		    if (mode == "survey") {
+	    		        window.opener.SurveyCreate.setUsers(userList);
+	    		    } else if (mode == "result") {
+	    		        window.opener.SurveyCreate.setResultUsers(userList);
+	    		    }
 	    			closeWindow();
 	    		}
 	    		else {

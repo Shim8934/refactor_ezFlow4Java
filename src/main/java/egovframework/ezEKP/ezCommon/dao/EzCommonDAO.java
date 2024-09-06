@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
@@ -59,6 +62,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.getContentInfo", map);
 	}
 	
+	public void createTblSession() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblSession");
+		} catch (Exception e) {
+			logger.debug("tbl_session doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblSession");
+		}
+	}
+
     private String selectUserGetLangForLocal(String userID, int tenantID) throws Exception {
     	Map<String, Object> map = new HashMap<String, Object>();
     	
@@ -240,6 +253,10 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public void insertUserConfigInfo(Map<String, Object> map) throws Exception {
 		insert("EzCommonDAO.insertUserConfigInfo", map);
 	}
+
+	public void deleteUserConfigInfo(Map<String, Object> map) throws Exception {
+		delete("EzCommonDAO.deleteUserConfigInfo", map);
+	}
 	
 	public void deleteMultiLoginUser(Map<String, Object> map) throws Exception {
 		update("EzCommonDAO.deleteMultiLoginUser", map);
@@ -287,16 +304,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void createReformFlagColumn() throws Exception {
-		try {
-			select("EzCommonDAO.checkReformFlagColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_forminfo reformflag column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.createReformFlagColumn");
-		}
-	}
-	
 	public String getCompanyConfig(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommonDAO.getCompanyConfig", map);
 	}
@@ -317,36 +324,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		insert("EzCommonDAO.insertMultiLoginUser", map);
 	}
 
-	public void addMailToJMochaDistribution() throws Exception {
-		try {
-			select("EzCommonDAO.checkJMochaDistributionMail");
-		} catch (Exception e) {
-			logger.debug("jmocha_distribution mail column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addMailToJMochaDistribution");
-		}
-	}
-	
-	public void addAddJobMasterOrderBy() throws Exception {
-		try {
-			select("EzCommonDAO.checkAddJobMasterOrderBy");
-		} catch (Exception e) {
-			logger.debug("tbl_addjobmaster orderby column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addAddJobMasterOrderBy");
-		}
-	}
-	
-	public void addAddJobMasterProxy() throws Exception {
-		try {
-			select("EzCommonDAO.checkAddAddJobMasterProxy");
-		} catch (Exception e) {
-			logger.debug("tbl_addjobmaster proxy column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addAddJobMasterProxy");
-		}
-	}
-	
 	public void createTblIPAccessID() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblIPAccessID");
@@ -377,36 +354,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	public void addUserMasterManualFlag() throws Exception {
-		try {
-			select("EzCommonDAO.checkUserMasterManualFlag");
-		} catch (Exception e) {
-			logger.debug("tbl_usermaster MANUAL_FLAG column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addUserMasterManualFlag");
-		}
-	}
-	
-	public void addDeptMasterManualFlag() throws Exception {
-		try {
-			select("EzCommonDAO.checkDeptMasterManualFlag");
-		} catch (Exception e) {
-			logger.debug("tbl_deptmaster MANUAL_FLAG column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addDeptMasterManualFlag");
-		}
-	}
-	
-	public void addAddJobMasterManualFlag() throws Exception {
-		try {
-			select("EzCommonDAO.checkAddJobMasterManualFlag");
-		} catch (Exception e) {
-			logger.debug("tbl_addjobmaster MANUAL_FLAG column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addAddJobMasterManualFlag");
-		}
-	}
-	
 	public void createJmochaMailSignatureTemplate() throws Exception {
 		try {
 			select("EzCommonDAO.checkJMochaMailSignatureTemplate");
@@ -437,45 +384,49 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		insert ("EzCommonDAO.insertUseSession", map);
 	}
 	
-	public void addUserMasterPasswordUpdateDT() throws Exception {
-		try {
-			select("EzCommonDAO.checkUserMasterPasswordUpdateDT");
-		} catch (Exception e) {
-			logger.debug("tbl_usermaster PASSWORD_UPDATEDT column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addUserMasterPasswordUpdateDT");
-		}
-	}
-
-	/* 2021-09-10 김은실 - 메신저/인사 연동 효율성을 위한: 프로필사진 업데이트시각(PHOTO_UPDATEDT) 컬럼 추가 */
-	public void addUserMasterPhotoUpdateDT() throws Exception {
-		try {
-			select("EzCommonDAO.checkUserMasterPhotoUpdateDT");
-		} catch (Exception e) {
-			logger.debug("tbl_usermaster PHOTO_UPDATEDT column doesn't exist. creating the column...");
-
-			update("EzCommonDAO.addUserMasterPhotoUpdateDT");
-		}
-	}
-
 	/* 2022-01-19 김은실 - alter 재사용 모듈 추가 */
-	public void alter_AnyTbl_AnyColumns(Map<String, Object> map) throws Exception {
+	public void alterTableAddColumns(Map<String, Object> map) throws Exception {
 		try {
-			select("EzCommonDAO.check_AnyTbl_AnyColumns", map);
-		} catch (Exception e) {
-			logger.debug("{} {} column doesn't exist. creating the column...", map.get("TBL_NAME"), map.get("COLUMN_NAME"));
+			select("EzCommonDAO.alterTableCheckColumn", map);
 
-			update("EzCommonDAO.add_AnyTbl_AnyColumns", map);
-		}
-	}
-
-	public void addJobMasterJobID() throws Exception {
-		try {
-			select("EzCommonDAO.checkAddJobMasterJobID");
 		} catch (Exception e) {
-			logger.debug("tbl_addjobmaster jobid column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addAddJobMasterJobID");
+			String column = (String) map.get("COLUMN");
+			logger.debug("{} {} column doesn't exist. creating the column...", map.get("TABLE"), (column != null)? column : map.get("COLUMN_MYSQL"));
+
+			update("EzCommonDAO.alterTableAddColumn", map);
+
+			// 1. PRIMARY 수정이 필요한 경우
+			String primary = (String) map.get("PRIMARY");
+
+			if (StringUtils.isNotBlank(primary)) {
+				update("EzCommonDAO.alterTableDropPrimary", map);
+
+				String constraint = (String) map.get("CONSTRAINT"); // CONSTRAINT NAME : PRIMARY KEY를 생성하는 데에 꼭 필요치는 않다.
+				logger.debug("CONSTRAINT={} PRIMARY KEY={}", constraint, primary);
+
+				if (StringUtils.isNotBlank(constraint)) {
+					/**
+					 * ALTER TABLE $TBL_NAME$ ADD CONSTRAINT $제약조건이름$ PRIMARY KEY(...); 으로 생성한 경우를 제외하고
+					 * 혹시나
+					 * 1. CREATE UNIQUE INDEX $제약조건이름$ ON $TBL_NAME$ (...);
+					 * 2. ALTER TABLE $TBL_NAME$ ADD CONSTRAINT $제약조건이름$ PRIMARY KEY(...); 와 같이
+					 * PRIMARY KEY 와 INDEX 를 각각 생성한 경우 INDEX $제약조건이름$ 을 따로 DROP 해주는 과정이 필요하다.
+					 * 만약 같은 이름의 인덱스가 이미 있다면 drop할 것이고, 해당 이름의 인덱스가 없다면 Exception 발생하며 그냥 지나가면 된다.
+					 */
+					try { update("EzCommonDAO.alterTableDropIndex", map); } catch (Exception none) {}
+				}
+
+				update("EzCommonDAO.alterTableAddPrimary", map);
+			}
+
+			// 2. 초기 데이터 업데이트가 필요한 경우
+			String update = (String) map.get("UPDATE");
+
+			if (StringUtils.isNotBlank(update)) {
+				logger.debug("UPDATE={}", update);
+
+				update("EzCommonDAO.alterTableInitData", map);
+			}
 		}
 	}
 
@@ -486,56 +437,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_webfolder_token doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createTblWebfolderToken");
-		}
-	}
-	
-	public void addJmochaMailGenenalPreviewMailImage() {
-		try {
-			select("EzCommonDAO.checkJmochaMailGenenalPreviewMailImage");
-		} catch (Exception e) {
-			logger.debug("tbl_webfolder_token doesn't exist. creating the table...");
-			
-			update("EzCommonDAO.addJmochaMailGenenalPreviewMailImage");
-		}
-	}
-	
-	public void addPortalThemePortletIsFixed() {
-		try {
-			select("EzCommonDAO.checkPortalThemePortletIsFixed");
-		} catch (Exception e) {
-			logger.debug("tbl_portal_theme_portlet isFixed column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addPortalThemePortletIsFixed");
-		}
-	}
-	
-	public void addUserMasterMailBoxQuota() {
-		try {
-			select("EzCommonDAO.checkUserMasterMailBoxQuota");
-		} catch (Exception e) {
-			logger.debug("tbl_usermaster mailBoxQuota doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addUserMasterMailBoxQuota");
-		}
-	}
-	
-	public void addHolidayFlag() {
-		try {
-			select("EzCommonDAO.checkHolidayFlag");
-		} catch (Exception e) {
-			logger.debug("tbl_holidayList HolidayFlag doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addHolidayFlag");
-		}
-	}
-	
-	public void addHolidayRepeat() {
-		try {
-			select("EzCommonDAO.checkHolidayRepeat");
-		} catch (Exception e) {
-			logger.debug("tbl_holidayList HolidayRepeat doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addHolidayRepeat");
 		}
 	}
 	
@@ -573,16 +474,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void addJournalFormDelFlag() {
-		try {
-			select("EzCommonDAO.checkJournalFormDelFlag");
-		} catch (Exception e) {
-			logger.debug("tbl_journal_form JournalFormDelFlag doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addJournalFormDelFlag");
-		}
-	}
-
 	public void updateTaskUrl() {
 		try {
 			String taskUrl = select("EzCommonDAO.checkTaskUrl").toString();
@@ -599,39 +490,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	public void addPortalPortletUserPortletUsed() {
-		try {
-			select("EzCommonDAO.checkAddPortalPortletUserPortletUsed");
-		} catch (Exception e) {
-			logger.debug("tbl_portal_portlet_user portlet_used doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addPortalPortletUserPortletUsed");
-		}
-		
-	}
-
-	public void addPortalPortletUserThemeId() {
-		try {
-			select("EzCommonDAO.checkPortalPortletUserThemeId");
-		} catch (Exception e) {
-			logger.debug("tbl_portal_portlet_user theme_id doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addPortalPortletUserThemeId");
-			update("EzCommonDAO.deletePortalPortletUserPrimaryKey");
-			update("EzCommonDAO.addPortalPortletUserPrimaryKey");
-		}
-	}
-	
-	public void addTblPortalThemeUserIsDefault() {
-		try {
-			select("EzCommonDAO.checkAddTblPortalThemeUserIsDefault");
-		} catch (Exception e) {
-			logger.debug("tbl_portal_theme_user is_default doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addTblPortalThemeUserIsDefault");
-		}
-	}
-	
 	public void createJmochaMailCopyright() {
 		try {
 			select("EzCommonDAO.checkJmochaMailCopyright");
@@ -673,36 +531,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_board_like doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createBoardLike");
-		}
-	}
-	
-	public void addBoardLikeFlag() throws Exception {
-		try {
-			select("EzCommonDAO.checkTblBoardInfoLikeFlag");
-		} catch (Exception e) {
-			logger.debug("tbl_board_info likeFlag doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addBoardLikeFlag");
-		}
-	}
-
-	public void addQuickLinkLinkOrder() {
-		try {
-			select("EzCommonDAO.checkQuickLinkLinkOrder");
-		} catch (Exception e) {
-			logger.debug("tbl_ps_quicklink linkorder doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addQuickLinkLinkOrder");
-		}
-	}
-
-	public void addComCloseCompanyId() {
-		try {
-			select("EzCommonDAO.checkComCloseCompanyId");
-		} catch (Exception e) {
-			logger.debug("tbl_c_comclose companyid doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addComCloseCompanyId");
 		}
 	}
 	
@@ -751,54 +579,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_memo_config addMemoextensionColumns doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.addMemoExtensionColumns");
-		}
-	}
-	
-	public void addSurveyAlamColums() {
-		try {
-			select("EzCommonDAO.checkSurveyAlamColums");
-		} catch (Exception e) {
-			logger.debug("tbl_survey addSurveyAlamColums doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addSurveyAlamColums");
-		}
-	}
-		
-	public void addMsgInMailSearch() {
-		try {
-			if ((int) select("EzCommonDAO.checkMsgInMailSearch") == 0) {
-				update("EzCommonDAO.updateMsgInMailSearch");
-			}
-		} catch (Exception e) {
-			logger.debug("addMsgInMailSearch() ERROR...");
-			logger.error(e.getMessage(), e);
-		}
-	}
-
-	public void addFormVersion() {
-		try {
-			select("EzCommonDAO.checkFormVersionColumnOfForminfo");
-		} catch (Exception e) {
-			logger.debug("tbl_forminfo formVersion doesn't exist. creating the column...");
-			update("EzCommonDAO.addFormVersionColumnOfForminfo");
-		}
-		try {
-			select("EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo");
-		} catch (Exception e) {
-			logger.debug("tbl_expendaprdocinfo formVersion doesn't exist. creating the column...");
-			update("EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo");
-		}
-		try {
-			select("EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo");
-		} catch (Exception e) {
-			logger.debug("tbl_expaprdocinfo formVersion doesn't exist. creating the column...");
-			update("EzCommonDAO.addFormVersionColumnOfExpaprdocinfo");
-		}
-		try {
-			select("EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo");
-		} catch (Exception e) {
-			logger.debug("tbl_tmpexpaprdocinfo formVersion doesn't exist. creating the column...");
-			update("EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo");
 		}
 	}
 	
@@ -862,28 +642,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	public void addThemeContent2() throws Exception {
-		try {
-			select("EzCommonDAO.checkThemeContent2");
-		} catch (Exception e) {
-			logger.debug("tbl_portal_theme themeContent2 doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addThemeContent2");
-			update("EzCommonDAO.insertThemeContent2");
-		}
-	}
-
-	public void addThemeContent3() throws Exception {
-		try {
-			select("EzCommonDAO.checkThemeContent3");
-		} catch (Exception e) {
-			logger.debug("tbl_portal_theme themeContent3 doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addThemeContent3");
-			update("EzCommonDAO.insertThemeContent3");
-		}
-	}
-	
 	public void insertSurveyTenantConfig(Map<String, Object> map) throws Exception{
 		String propertyValue = (String) select("EzCommonDAO.checkSurveyTenantConfig");
 		
@@ -1070,26 +828,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void addSnMenuAuth() {
-		try {
-			select("EzCommonDAO.checkSnMenuAuth");
-		} catch (Exception e) {
-			logger.debug("tbl_portal_menu_auth sn doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.snMenuAuth");
-		}
-	}
-	
-	public void addBoardManageTypeColumn() {
-		try {
-			select("EzCommonDAO.checkBoardManageTypeColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_board_boardmanage type doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addBoardManageTypeColumn");
-		}
-	}
-
 	public void createPersonalPopupUser() {
 		try {
 			select("EzCommonDAO.checkTblPsPopupUser");
@@ -1100,41 +838,11 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void addSurveyMailSentFlagColumn() {
-		try {
-			select("EzCommonDAO.checkSurveyMailSentFlagColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_survey mail_sent_flag doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.addSurveyMailSentFlagColumn");
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
 	public List<LoginVO> getPermissionGroupMembers(Map<String, Object> map) throws Exception {
 		return (List<LoginVO>) list("EzCommonDAO.getPermissionGroupMembers", map);
 	}
 
-	public void addSnThemeAuth() {
-		try {
-			select("EzCommonDAO.checkSnThemeAuth");
-		} catch (Exception e) {
-			logger.debug("tbl_portal_theme_auth sn doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.snThemeAuth");
-		}
-	}
-
-	public void addSnPortletAuth() {
-		try {
-			select("EzCommonDAO.checkSnPortletAuth");
-		} catch (Exception e) {
-			logger.debug("tbl_portal_portlet_auth sn doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.snPortletAuth");
-		}
-	}
-	
 	public void alterChamjoView() {
 		try {
 			if ((int) select("EzCommonDAO.checkAlterChamjoView") <= 0) {
@@ -1175,16 +883,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void addOpenGovFlag() {
-		try {
-			select("EzCommonDAO.checkOpenGovFlag");
-		} catch (Exception e) {
-			logger.debug("tbl_forminfo openGovFlag doesn't exist. creating the column...");
-
-			update("EzCommonDAO.addOpenGovFlag");
-		}
-	}
-
 	public int checkDeptId(Map<String, Object> map) {
 		return (int) select("EzCommonDAO.checkDeptId", map);
 	}
@@ -1327,26 +1025,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 		
-	public void addIsBeforeDoc() throws Exception {
-		try {
-			select("EzCommonDAO.checkAddIsBeforeDoc");
-		} catch (Exception e) {
-			logger.debug("tbl_historydocinfo ISBEFOREDOC column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.updateAddIsBeforeDoc");
-		}
-	}
-
-	public void addBeforeDocUrl() throws Exception {
-		try {
-			select("EzCommonDAO.checkAddBeforeDocUrl");
-		} catch (Exception e) {
-			logger.debug("tbl_historydocinfo BEFOREDOCURL column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.updateAddBeforeDocUrl");
-		}
-	}
-
 	public void createPwPolicyTable() throws Exception {
 		try {
 			select("EzCommonDAO.checkPwPolicy");
@@ -1367,42 +1045,12 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void addAprAttachViewOrder() throws Exception {
-		try {
-			select("EzCommonDAO.checkAprAttachViewOrder");
-		} catch (Exception e) {
-			logger.debug("tbl_aprattachinfo VIEWORDER column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.updateAprAttachViewOrder");
-		}
-	}
-	
 	public void createTblShareDocDir() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblShareDocDir");
 		} catch (Exception e) {
 			logger.debug("tbl_share_doc_dir doesn't exist. creating the table...");
 			update("EzCommonDAO.createTblShareDocDir");
-		}
-	}
-	
-	public void addAprEndAttachViewOrder() throws Exception {
-		try {
-			select("EzCommonDAO.checkAprEndAttachViewOrder");
-		} catch (Exception e) {
-			logger.debug("tbl_endattachinfo VIEWORDER column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.updateAprEndAttachViewOrder");
-		}
-	}
-	
-	public void addAprTmpAttachViewOrder() throws Exception {
-		try {
-			select("EzCommonDAO.checkAprTmpAttachViewOrder");
-		} catch (Exception e) {
-			logger.debug("tbl_tmpattachinfo VIEWORDER column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.updateAprTmpAttachViewOrder");
 		}
 	}
 	
@@ -1455,16 +1103,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.checkReBebuOpinionCode", map);
 	}
 
-	public void addFormAprOptionColumn() {
-		try {
-			select("EzCommonDAO.checkFormAprOptionColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_forminfo APROPTION column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.updateFormAprOptionColumn");
-		}
-	}
-
 	public void insertAnnualScheduleTenantConfig(Map<String, Object> map) {
 		String propertyValue = (String) select("EzCommonDAO.checkAnnualScheduleTenantConfig");
 		
@@ -1501,38 +1139,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createAprAttachLimit");
 		}
 	}
-	
-	public void addDocStateIntoLastLines() {
-		try {
-			select("EzCommonDAO.checkDocStateIntoLastLines");
-		} catch (Exception e) {
-			logger.debug("TBL_LASTAPRLINE docState column doesn't exist. creating the column...");
-
-			update("EzCommonDAO.updateDocStateIntoLastLines");
-			
-			// 오라클의 경우, 기존 프라이머리 키 제거하고 새로운 키 삽입하는 동작 추가
-			if (globals.getProperty("Globals.DbType").equals("oracle")) {
-				update("EzCommonDAO.deleteLastAprLinePrimaryKey");
-				update("EzCommonDAO.addLastAprLinePrimaryKey");
-			}
-		}
-	}
-
-	public void addDocStateIntoLastDeptLines() {
-		try {
-			select("EzCommonDAO.checkDocStateIntoLastDeptLines");
-		} catch (Exception e) {
-			logger.debug("TBL_LASTDEPTLINE docState column doesn't exist. creating the column...");
-
-			update("EzCommonDAO.updateDocStateIntoLastDeptLines");
-			
-			// 오라클의 경우, 기존 프라이머리 키 제거하고 새로운 키 삽입하는 동작 추가
-			if (globals.getProperty("Globals.DbType").equals("oracle")) {
-				update("EzCommonDAO.deleteLastDeptLinePrimaryKey");
-				update("EzCommonDAO.addLastDeptLinePrimaryKey");
-			}
-		}
-	}
 
 	public void insertAlternateHolidayAttitudeType(Map<String, Object> map) {
 		String companyId = (String) select("EzCommonDAO.checkAlternateHolidayAttitudeTypeForCompany", map);
@@ -1559,16 +1165,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_attitude attend_type column doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.createMobileAttitudeColumn");
-		}
-	}
-	
-	public void alterTblPsApprovNotiMailConf() {
-		try {
-			select("EzCommonDAO.checkTblPsApprovNotiMailConf");
-		} catch (Exception e) {
-			logger.debug("tbl_ps_approvnotimailconf linePass doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.alterTblPsApprovNotiMailConf");
 		}
 	}
 	
@@ -1601,16 +1197,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	public void insertDailyWorkAttitudeColumn() {
-		try {
-			select("EzCommonDAO.checkDailyWorkAttitudeColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_attitude WORK_STATUS column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.createDailyWorkAttitudeColumn");
-		}
-	}
-	
 	public void createMenuTenantConfig(Map<String, Object> map) throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkTenantConfig", map);
 		
@@ -1620,26 +1206,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	public void addPassAprLineFlagColumn() throws Exception {
-		try {
-			select("EzCommonDAO.checkFormPassAprLineFlagColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_forminfo PASSAPRLINEFLAG column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.updateFormPassAprLineFlagColumn");
-		}
-	}
-
-   public void addFormSihangTypeColumn() {
-        try {
-            select("EzCommonDAO.checkFormSihangTypeColumn");
-        } catch (Exception e) {
-            logger.debug("tbl_forminfo SIHANGTYPE column doesn't exist. creating the column...");
-            
-            update("EzCommonDAO.updateFormSihangTypeColumn");
-        }
-    }
-   
    public void addScehdulegroup() {
 	   try {
 		   select("EzCommonDAO.addScehdulegroup");
@@ -1672,8 +1238,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public int checkPortletCodeString(Map<String, Object> map) {
-		return (int) select("EzCommonDAO.checkPortletCodeString", map);
+	public int checkPortletCodeString(String code) {
+		return (int) select("EzCommonDAO.checkPortletCodeString", code);
 	}
 
 	public void insertTabBoardPortletInfo(Map<String, Object> map) {
@@ -1821,7 +1387,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 		if (companyId == null) {
 			try {
-				logger.debug("insert portlet data");
+				logger.debug("insert portlet data:" + Optional.ofNullable(map.get("portletName1")).orElse(""));
 				insert("EzCommonDAO.insertPortletComp",map);
 				insert("EzCommonDAO.insertPortletName",map);
 				insert("EzCommonDAO.insertPortalThemePortlet",map);
@@ -1865,28 +1431,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		} catch (Exception e) {
 			logger.debug("jmocha_mailbox_progress doesn't exist. creating the table...");
 			update("EzCommonDAO.createJmochaMailboxProgress");
-		}
-	}
-
-	// 2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가	
-	public void addWebfolderUserSubdeptPermittedColumn() throws Exception {
-		try {
-			select("EzCommonDAO.checkWebfolderUserSubdeptPermittedColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_webfolder_user SUBDEPT_PERMITTED column doesn't exist. creating the column...");
-			
-			update("EzCommonDAO.createWebfolderUserSubdeptPermittedColumn");
-		}
-	}
-	
-	/* 2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 담당자 추가 */
-	public void addWebfolderUserFolderManagerColumn() throws Exception {
-		try {
-			select("EzCommonDAO.checkWebfolderUserFolderManagerColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_webfolder_folderuser FOLDER_MANAGER column doesn't exist. creating the column...");
-			// FOLDER_MANAGER : (카이스트) 폴더담당자 (1레벨만 해당)
-			update("EzCommonDAO.createWebfolderUserFolderManagerColumn");
 		}
 	}
 
@@ -1975,13 +1519,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	
 	public void checkWebfolderVersionTable() {
 		try {
-			select("EzCommonDAO.checkWebfolderFileVersionColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_webfolder_file VERSION column doesn't exist. creating the column...");
-			update("EzCommonDAO.createWebfolderFileVersionColumn");
-		}
-
-		try {
 			select("EzCommonDAO.checkWebfolderVersionTable");
 		} catch (Exception e) {
 			logger.debug("tbl_webfolder_version table doesn't exist. creating the table...");
@@ -1989,39 +1526,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void createWebfolderHierarchicalColumns() {
-		try {
-			select("EzCommonDAO.checkWebfolderFileDepthColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_webfolder_file DEPTH column doesn't exist. creating the column...");
-			update("EzCommonDAO.createWebfolderFileDepthColumn");
-		}
-
-		try {
-			select("EzCommonDAO.checkWebfolderFileRootIdColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_webfolder_file ROOT_ID column doesn't exist. creating the column...");
-			update("EzCommonDAO.createNullableWebfolderFileRootIdColumn");
-			update("EzCommonDAO.updateWebfolderFileRootIdColumn");
-		}
-
-		try {
-			select("EzCommonDAO.checkWebfolderFileParentIdColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_webfolder_file PARENT_ID column doesn't exist. creating the column...");
-			update("EzCommonDAO.createNullableWebfolderFileParentIdColumn");
-			update("EzCommonDAO.updateWebfolderFileParentIdColumn");
-		}
-
-		try {
-			select("EzCommonDAO.checkWebfolderFileHierarchicalPathColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_webfolder_file HIERARCHICAL_PATH column doesn't exist. creating the column...");
-			update("EzCommonDAO.createNullableWebfolderFileHierarchicalPathColumn");
-			update("EzCommonDAO.updateWebfolderFileHierarchicalPathColumn");
-		}
-	}
-
 	public void addWebfolderLogHistory() {
 		try {
             select("EzCommonDAO.checkWebfolderFileHistoryColumn");
@@ -2038,14 +1542,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		} catch (Exception e) {
 			logger.debug("tbl_webfolder_no_inherit table doesn't exist. creating the table...");
 			update("EzCommonDAO.createtWebfolderNoInherit");
-		}
-	}
-	
-	public void alterWebfolderApplyHistoryAddColumn() {
-		try {
-			update("EzCommonDAO.alterWebfolderApplyHistoryAddColumn");
-		} catch (Exception e) {
-			logger.debug("Already exists");
 		}
 	}
 	
@@ -2075,58 +1571,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	/* 2021-06-21 홍승비 - 게시판 메일알림 옵션 컬럼 추가 */
-	public void addBoardMailFGColumn() {
-		try {
-			select("EzCommonDAO.checkBoardMailFG_PostColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_Board_BoardInfo MailFG_Post column doesn't exist. creating the column...");
-			update("EzCommonDAO.addBoardMailFG_PostColumn");
-		}
-		try {
-			select("EzCommonDAO.checkBoardMailFG_ModColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_Board_BoardInfo MailFG_Mod column doesn't exist. creating the column...");
-			update("EzCommonDAO.addBoardMailFG_ModColumn");
-		}
-		try {
-			select("EzCommonDAO.checkBoardMailFG_CommentColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_Board_BoardInfo MailFG_Comment column doesn't exist. creating the column...");
-			update("EzCommonDAO.addBoardMailFG_CommentColumn");
-		}
-	}
-
-	/* 2021-06-28 홍승비 - 커뮤니티 공지사항 부모게시물 정보 칼럼 추가 */
-	public void addCommNoticeUpperNoColumn() {
-		try {
-			select("EzCommonDAO.checkCommNoticeUpperNoColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_C_Board UPPERNO column doesn't exist. creating the column...");
-			update("EzCommonDAO.addCommNoticeUpperNoColumn");
-		}
-	}
-		
-    public void alterTblAprReceiptProcessInfoAddColumn() {
-        try {
-            select("EzCommonDAO.checkTblAprReceiptProcessInfoAddColumn");
-        } catch (Exception e) {
-            logger.debug("tbl_aprreceiptprocessinfo rootdocid column doesn't exist. creating the column...");
-            update("EzCommonDAO.alterTblAprReceiptProcessInfoAddColumn");
-            update("EzCommonDAO.updateTblAprReceiptProcessInfoRootDocID");
-        }
-    }
-    
-    public void alterTblDocDeliveryAddColumn() {
-        try {
-            select("EzCommonDAO.checkTblDocDeliveryAddColumn");
-        } catch (Exception e) {
-            logger.debug("tbl_docdelivery extreceptyn column doesn't exist. creating the column...");
-            update("EzCommonDAO.alterTblDocDeliveryAddColumn");
-            update("EzCommonDAO.updateTblDocDeliveryExtReceptYn");
-        }
-    }
-    
     public void insertTblCodelistA54002() {
         try {
             int cnt = (int) select("EzCommonDAO.checkTblCodelistA54002");
@@ -2136,15 +1580,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
         } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
     }
     
-    public void addTblAdminReceiptGroupSubExtReceptYnColumn() {
-        try {
-            select("EzCommonDAO.checkTblAdminReceiptGroupSubExtReceptYnColumn");
-        } catch (Exception e) {
-            logger.debug("tbl_adminreceiptgroup_sub extreceptyn column doesn't exist. creating the column...");
-            
-            update("EzCommonDAO.addTblAdminReceiptGroupSubExtReceptYnColumn");
-        }
-    }
 	public void createTblCar() {
 		try {
 			select("EzCommonDAO.checkTblCar");
@@ -2211,52 +1646,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (List<Map<String, String>>) list("EzCommonDAO.getTenantConfigList", map);
 	}
 	
-	public void alterTblAddjobMaster() {
-		try {
-			if(select("EzCommonDAO.chkAddjobMasterJobIdIsPrimary") == null) {
-				update("EzCommonDAO.dropAddjobMasterPrimary");
-				logger.debug("addjobMaster drop primary.");
-				update("EzCommonDAO.addAddjobMasterPrimary");
-				logger.debug("addjobMaster add primary.");
-			}
-		} catch (Exception e) {
-			logger.debug("alterTblAddjobMaster ERROR...");
-			logger.error(e.getMessage(), e);
-		}
-	}
-	
-	/* 2021-11-12 홍승비 - 커뮤니티 게시판 메일알림 옵션 추가 (게시/수정/댓글알림)  */
-	public void addCommMailFGColumn() {
-		try {
-			select("EzCommonDAO.checkCommMailFG_PostColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_Comm_BoardInfo MailFG_Post column doesn't exist. creating the column...");
-			update("EzCommonDAO.addCommMailFG_PostColumn");
-		}
-		try {
-			select("EzCommonDAO.checkCommMailFG_ModColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_Comm_BoardInfo MailFG_Mod column doesn't exist. creating the column...");
-			update("EzCommonDAO.addCommMailFG_ModColumn");
-		}
-		try {
-			select("EzCommonDAO.checkCommMailFG_CommentColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_Comm_BoardInfo MailFG_Comment column doesn't exist. creating the column...");
-			update("EzCommonDAO.addCommMailFG_CommentColumn");
-		}
-	}
-
-	/* 2021-11-17 홍승비 - 전자설문 대상자 하위부서 허용여부 플래그 추가 (Y/N) */
-	public void addSurveySubDeptYNColumn() {
-		try {
-			select("EzCommonDAO.checkSurveySubDeptYNColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_survey_participant SubDeptYN column doesn't exist. creating the column...");
-			update("EzCommonDAO.addSurveySubDeptYNColumn");
-		}
-	}
-
 	public void createTblScheduleComplete() {
 		try {
 			select("EzCommonDAO.checkTblScheduleComplete");
@@ -2302,15 +1691,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		update("EzCommonDAO.createTblPermissionChangeInfo");
 	}
 
-	public void addSusinScheduleOffsetColumn() throws Exception {
-		try {
-			select("EzCommonDAO.checkSusinScheduleOffsetColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_SUSINSCHEDULE OFFSET column doesn't exist. creating the column...");
-			update("EzCommonDAO.addSusinScheduleOffsetColumn");
-		}
-	}
-	
 	public void insertReceiptHistoryListoption(Map<String, Object> map) throws Exception {
 		String companyId = checkReceiptHistoryListoption(map);
 		
@@ -2328,17 +1708,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.checkReceiptHistoryListoption", map);
 	}
 	
-	/* 2022-02-09 홍승비 - 일괄기안 테이블에 임시저장/결재올림 구분용 타입 칼럼 추가 */
-	public void addAprDocGroupInfoTypeColumn() {
-		try {
-			select("EzCommonDAO.checkAprDocGroupInfoTypeColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_APRDOCGROUPINFO TYPE column doesn't exist. creating the column...");
-			update("EzCommonDAO.addAprDocGroupInfoTypeColumn");
-		}
-	}
-	
-
 	public void alterTblDevMaster() {
 		try {
 			update("EzCommonDAO.alterTblDevMaster");
@@ -2400,16 +1769,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	/* 2023-08-21 이주원 - 2023-08-21 이주원 - 자원권한 테이블에 유저명 다국어 지원을 위해 MEMBER_NAM2 컬럼 추가 */
-	public void alterTblRsResaclAddColumn() {
-		try {
-			select("EzCommonDAO.checkRsResaclMemberNam2Column");
-		} catch (Exception e) {
-			logger.debug("TBL_RS_RESACL MEMBER_NAM2 column doesn't exist. creating the column...");
-			update("EzCommonDAO.addRsResaclMemberNam2Column");
-		}
-	}
-
 	// 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
 	public void addAttitudeFormFormHtml2Column() {
 		try {
@@ -2455,24 +1814,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	/* 2023-08-31 조소정 - 일정관리 > 일정그룹 테이블에 컬럼 추가(양도일자/그룹색상) */
-	public void addScheduleGroupColumn() {
-		try {
-			select("EzCommonDAO.checkScheduleGroup_TransferDateColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_SCHEDULEGROUP TRANSFERDATE column doesn't exist. creating the column...");
-
-			update("EzCommonDAO.addScheduleTransferDateColumn");
-		}
-		try {
-			select("EzCommonDAO.checkScheduleGroup_GroupColorColumn");
-		} catch (Exception e) {
-			logger.debug("TBL_SCHEDULEGROUP GROUPCOLOR column doesn't exist. creating the column...");
-
-			update("EzCommonDAO.addScheduleGroupColorColumn");
-		}
-	}
-
 	// 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 메소드
     public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception {
 		update("EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode1");
@@ -2489,15 +1830,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_board_reply_react doesn't exist. creating the table...");
 
 			update("EzCommonDAO.createTblBoardReplyReact");
-		}
-
-		// 게시판 > 댓글 좋아요/싫어요 사용여부 옵션 칼럼 추가
-		try {
-			select("EzCommonDAO.checkTblBoardInfoReactFlag");
-		} catch (Exception e) {
-			logger.debug("tbl_board_info reactFlag doesn't exist. creating the column...");
-
-			update("EzCommonDAO.addBoardReactFlag");
 		}
 	}
 
@@ -2558,16 +1890,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	public void createColumnRollInfoInAddJobMaster()  throws Exception {
-		try {
-			select("EzCommonDAO.checkRollInfoInAddJob");
-		} catch (Exception e) {
-			logger.debug("TBL_ADDJOBMASTER ROLL_INFO column doesn't exist. creating the column... ");
-
-			update("EzCommonDAO.AddRollInfoInAddJobColumn");
-		}
-	}
-
 	public void createTblDbLog() {
 		try {
 			select("EzCommonDAO.checkTblDbLog");
@@ -2575,6 +1897,633 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("TBL_DB_LOG table doesn't exist. creating the table...");
 
 			update("EzCommonDAO.createTblDbLog");
+		}
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 - 테넌트 아이디 SELECT */
+	public String getPortalMenuTenantList() throws Exception {
+		return (String) select("EzCommonDAO.getPortalMenuTenantList");
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 - 회사 아이디 SELECT */
+	public String getPortalMenuCompanyList(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommonDAO.getPortalMenuCompanyList", map);
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 */
+	public void insertPortalMenuChinese(Map<String, Object> map2) throws Exception {
+		try {
+			String checkMenuChinese = (String) select("EzCommonDAO.checkPortalMenuChinese", map2);
+
+			if (checkMenuChinese == null) {
+				logger.debug("TBL_PORTAL_MENU_NAME chinese version doesn't exist. insert data... ");
+
+				insert("EzCommonDAO.insertPortalMenuChinese", map2);
+			}
+		} catch (Exception e) {
+			logger.debug("insertPortalMenuChinese() ERROR...");
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 - 테넌트 아이디 SELECT */
+	public String getPortletNameTenantList() throws Exception {
+		return (String) select("EzCommonDAO.getPortletNameTenantList");
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 - 회사 아이디 SELECT */
+	public String getPortletNameCompanyList(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.getPortletNameCompanyList", map);
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 */
+	public void insertPortletNameChinese(Map<String, Object> map2) {
+		try {
+			String checkNameChinese = (String) select("EzCommonDAO.checkPortletNameChinese", map2);
+
+			if (checkNameChinese == null) {
+				logger.debug("TBL_PORTAL_PORTLET_NAME chinese version doesn't exist. insert data... ");
+
+				insert("EzCommonDAO.insertPortletNameChinese", map2);
+			}
+		} catch (Exception e) {
+			logger.debug("insertPortletNameChinese() ERROR...");
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	// 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가	
+	public void insertTenantConfigLangTertiary(Map<String, Object> map) {
+		String LangTertiary = (String) select("EzCommonDAO.checkTenantConfigLangTertiary", map);
+		if (LangTertiary == null) {
+			logger.debug("LangTertiary tenant config doesn't exist. insert data...");
+			
+			insert("EzCommonDAO.insertTenantConfigLangTertiary", map);
+		}
+	}
+
+	// 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
+	public void insertTenantConfigLangQuaternary(Map<String, Object> map) {
+		String LangQuaternary = (String) select("EzCommonDAO.checkTenantConfigLangQuaternary", map);
+		if (LangQuaternary == null) {
+			logger.debug("LangQuaternary tenant config doesn't exist. insert data...");
+			
+			insert("EzCommonDAO.insertTenantConfigLangQuaternary", map);
+		}
+	}
+	
+	public void insertLoadTimeForApprAllConfig() {
+		String propertyValue = (String) select("EzCommonDAO.checkLoadTimeForApprAllConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("loadTimeForApprAllConfig tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertLoadTimeForApprAllConfig");
+		}
+	}
+
+	public void createTblDeptChangeInfo() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblDeptChangeInfo");
+		} catch (Exception e) {
+			logger.debug("tbl_dept_dept_info doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblDeptChangeInfo");
+		}
+	}
+
+	public void insertSurveyPostingMaxPeriodConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkSurveyPostingMaxPeriodConfig", map);
+
+		if (propertyValue == null) {
+			logger.debug("SurveyPostingMaxPeriodConfig tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyPostingMaxPeriodConfig", map);
+		}
+	}
+
+	public void alterFileNameForWebfolderHistory() {
+		try {
+			select(("EzCommonDAO.checkFileNameColumnForHistory"));
+		} catch (Exception e) {
+			logger.debug("TBL_WEBFOLDER_FOLDER_HISTORY FILE_NAME column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterFileNameForWebfolderHistory");
+		}
+	}
+
+	/** 2023-06-26 한태훈 - 통합 PC 저장 이력 남기는 tbl_total_history 테이블 만들기(차후 다른 목적으로도 쓰일 수 있음.) */
+	public void createTblTotalHistory() {
+		try {
+			select("EzCommonDAO.chkTblTotalHistory");
+		} catch (Exception e) {
+			logger.debug("TBL_TOTAL_HISTORY table doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblTotalHistory");
+		}
+	}
+
+	/* 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부 */
+	public void insertdelAttachByOthersConfing(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkDelAttachByOthersConfing", map);
+
+		if (propertyValue == null) {
+			logger.debug("delAttachByOthers tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertDelAttachByOthersConfing", map);
+		}
+	}
+
+	// 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+	public void alterRepeatFlagForResourceInfo() {
+		try {
+			select(("EzCommonDAO.checkRepeatFlagColumnForResourceInfo"));
+		} catch (Exception e) {
+			logger.debug("TBL_RS_BRD REPEATFLAG column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterRepeatFlagForResourceInfo");
+		}
+	}
+
+	public void insertEndDateOptionConfig(Map<String, Object> map) throws Exception {
+		String endDateOptionConfig = (String) select("EzCommonDAO.checkEndDateOptionConfig", map);
+		if (endDateOptionConfig == null) {
+			logger.debug("endDateOptionConfig tenant config doesn't exist. insert data...");
+
+			insert("EzCommonDAO.insertEndDateOptionConfig", map);
+		}
+	}
+
+	// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부 테넌트 컨피그 추가
+	public void insertUseHideHeaderArea(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkUseHideHeaderArea", map);
+
+		if (propertyValue == null) {
+			logger.debug("useHideHeaderArea tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseHideHeaderArea", map);
+		}
+	}
+
+	/* 2024-05-28 김유진 - 포탈 메뉴,포틀릿,테마,빠른링크 > 하위부서 허용여부 컬럼 추가, 빠른링크 > 유저타입 컬럼 추가 */
+	public void alterSubPermittedForMenuAuth() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForMenuAuth"));
+		} catch (Exception e) {
+			logger.debug("tbl_portal_menu_auth subdept_permitted column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForMenuAuth");
+			update("EzCommonDAO.updateSubPermittedForMenuAuth"); // 기존 스펙상 부서 선택 시 하위부서 허용이 고정임으로 부서일 경우 허용으로 값 변경
+		}
+	}
+	public void alterSubPermittedForPortletAuth() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForPortletAuth"));
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_auth subdept_permitted column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForPortletAuth");
+			update("EzCommonDAO.updateSubPermittedForPortletAuth");
+		}
+	}
+	public void alterSubPermittedForThemeAuth() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForThemeAuth"));
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_auth subdept_permitted column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForThemeAuth");
+			update("EzCommonDAO.updateSubPermittedForThemeAuth");
+		}
+	}
+	public void alterSubPermittedForQuicklinkAcl() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForQuicklinkAcl"));
+		} catch (Exception e) {
+			logger.debug("tbl_ps_quicklink_acl subdept_permitted, user_type column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForQuicklinkAcl");
+			update("EzCommonDAO.updateSubPermittedForQuicklinkAcl"); // 유저,부서,직위,직책,그룹권한 user_type 세팅, 부서일 경우 허용으로 값 변경
+		}
+	}
+	/* 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 */
+	public void insertApprNonElecRecTypeConfing(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkApprNonElecRecTypeConfing", map);
+
+		if (propertyValue == null) {
+			logger.debug("apprNonElecRecType tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertApprNonElecRecTypeConfing", map);
+		}
+	}
+	public void addUserDeptHideFlag() {
+		try {
+			select("EzCommonDAO.checkUserHideFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster userHideFlag Columns doesn't exist. creating the column...");
+	
+			update("EzCommonDAO.addUserHideFlag");
+		}
+
+		try {
+			select("EzCommonDAO.checkAddJobHideFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster userHideFlag Columns doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addAddJobHideFlag");
+		}
+	
+		try {
+			select("EzCommonDAO.checkDeptHideFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_deptmaster deptHideFlag Columns doesn't exist. creating the column...");
+	
+			update("EzCommonDAO.addDeptHideFlag");
+		}
+		
+	}
+
+	public void createTable(String tableName) throws Exception {
+		String queryId 		= "";
+		String chkColumn 	= "TENANT_ID";
+		
+		switch(tableName) {
+			case "jmocha_appr_allowed_domain": 			queryId = "EzCommonDAO.createJmochaApprAllowedDomain"; break;
+			case "jmocha_appr_user": 					queryId = "EzCommonDAO.createJmochaApprUser"; break;
+			case "jmocha_appr_history": 				queryId = "EzCommonDAO.createJmochaApprHistory"; break;
+			case "jmocha_appr_comp_history": 			queryId = "EzCommonDAO.createJmochaApprCompHistory"; break;
+		}
+		
+		try {
+			checkTable(chkColumn, tableName);
+		} catch (Exception e) {
+			logger.debug("{} doesn't exist. creating the table...", tableName);
+			update(queryId);
+		}
+	}
+	
+	private void checkTable(String column, String tableName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COLUMN", column);
+		map.put("v_TABLE", tableName);
+
+		select("EzCommonDAO.checkTable", map);
+	}
+	
+    public void insertRecordHeaderClassTitle(Map<String, Object> map) throws Exception {
+        String companyId = (String) select("EzCommonDAO.checkRecordHeadereOption", map);
+        try {
+            if (companyId == null) {
+                // 2024-06-21 민지수 전자결재 > 기록물등록대장 헤더 > 기록물철명 존재하지 않는 경우 001 타입에 대한 헤더 지운 후 Insert 작업 (PrimaryKey 중복 오류)
+                delete ("EzCommonDAO.deleteRecordHeader",map);
+                logger.debug("ReName option doesn't exist. insert data...");
+                insert("EzCommonDAO.insertRecordHeaderClassTitle", map);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+	// 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용 여부 테넌트 컨피그 추가
+	public void insertUseReceiptDeptFileAttach(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkUseReceiptDeptFileAttach", map);
+
+		if (propertyValue == null) {
+			logger.debug("useReceiptDeptFileAttach tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseReceiptDeptFileAttach", map);
+		}
+	}
+
+	public void insertDocBinderListOption(Map<String, Object> map) {
+		int optionCount = (int) select("EzCommonDAO.checkExistDocBinderListOption", map);
+		if (optionCount < 5) {
+			logger.debug("DocBinder List Header Option doesn't exist. insert data...");
+			delete("EzCommonDAO.delDocBinderListOption", map);
+			insert("EzCommonDAO.insertDocBinderListOption", map);
+		}
+	}
+
+	// 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그
+	public void insertReturnByDesignationUsedConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.getTenantConfig", map);
+
+		if (propertyValue == null) {
+			logger.debug("insertReturnByDesignationUsedConfig tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertReturnByDesignationUsedConfig", map);
+		}
+	}
+
+	public void alterDocAttachNameCol() throws Exception {
+		try {
+			select(("EzCommonDAO.checkDocAttachNameCol"));
+		} catch (Exception e) {
+			logger.debug("In TBL_RECORD_TEMP doesn't exist DocAttach column. creating the column...");
+
+			update("EzCommonDAO.alterDocAttachNameCol");
+		}
+	}
+
+	// 2024-07-02 민지수 - 전자결재 > 비전자문서 등록 > 본문첨부 기능 사용여부 테넌트 컨피그 추가
+	public void insertNonUseDocAttachYN(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkNonUseDocAttachYN", map);
+
+		if (propertyValue == null) {
+			logger.debug("NonUseDocAttachYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertNonUseDocAttachYN", map);
+		}
+	}
+
+	public void insertReadingRecordHeader(Map<String, Object> map) {
+		int optionCount = (int) select("EzCommonDAO.checkReadingRecordHeader", map);
+		if (optionCount < 10) {
+			logger.debug("ReadingRecord List Header doesn't exist. insert data...");
+			delete("EzCommonDAO.delReadingRecordHeader", map);
+			insert("EzCommonDAO.insertReadingRecordHeader", map);
+		}
+	}
+
+	public void insertPortalPortletSizeTables() {
+		try {
+			select("EzCommonDAO.checkTblPortalPortletSize");
+		} catch (Exception e) {
+			update("EzCommonDAO.createPortalPortletSize");
+			update("EzCommonDAO.createPortalPortletCompanySize");
+			update("EzCommonDAO.createPortalPortletUserSize");
+			insert("EzCommonDAO.insertUsePortletSize");
+			insert("EzCommonDAO.insertPortalPortletSizeDefault");
+		}
+	}
+
+	public void insertTblPortalTopUser() {
+		try {
+			select("EzCommonDAO.checkTblPortalTopUser");
+		} catch (Exception e) {
+			logger.debug("TBL_PORTAL_TOP_USER doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblPortalTopUser");
+		}
+	}
+	// 2024-03-28 한태훈 > 통합알림 테이블 생성 메소드
+	public void createTblRealTimeNotification() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblRealTimeNotification");
+		} catch (Exception e) {
+			logger.debug("tbl_realtime_notification doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblRealTimeNotification");
+		}
+	}
+	
+	// 2024-03-28 한태훈 > 통합알림 보관기간 테넌트 컨피그 생성 메소드
+	public void addNotiStoragePeriodConfig(Map<String, Object> map) throws Exception {
+		String notiStoragePeriod = (String) select("EzCommonDAO.getNotiStoragePeriodConfig", map);
+		if (notiStoragePeriod == null) {
+			logger.debug("notiStoragePeriod tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.addNotiStoragePeriodConfig", map);
+		}
+	}
+	
+	// 2024-03-28 한태훈 > 통합알림 데이터 폴링 주기 설정 테넌트 컨피그 생성 메소드
+	public void addNotiPollingIntervalConfig(Map<String, Object> map) throws Exception {
+		String notiPollingInterval = (String) select("EzCommonDAO.getNotiPollingIntervalConfig", map);
+		if (notiPollingInterval == null) {
+			logger.debug("notiPollingInterval tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.addNotiPollingIntervalConfig", map);
+		}
+	}
+
+    public void insertFixPortlet() {
+        try {
+            select("EzCommonDAO.checkFixPortlet");
+        } catch (Exception e) {
+            logger.debug("TBL_PORTAL_TOP_USER doesn't exist. creating the table...");
+
+            update("EzCommonDAO.createTblPortalTopUser");
+        }
+    }
+
+	// 2024-05-17 한태훈 > 포탈 > 회사별 탑메뉴 위치 설정 테이블 생성 메소드
+	public void insertTblPortalTopCompany() {
+		try {
+			select("EzCommonDAO.checkTblPortalTopCompany");
+		} catch (Exception e) {
+			logger.debug("TBL_PORTAL_TOP_Company doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblPortalTopCompany");
+		}
+	}
+
+	// 2024-05-17 한태훈 > 포탈 > 회사별 탑메뉴 위치 설정 기본값 입력 메소드(기본값 : 0 - 상단)
+	public void insertPortalTopCompanyInitdata() {
+		List<OrganDeptVO> initList = ezNewPortalDAO.getInitCompanyListForTopMenu();
+		if (initList != null ) {
+			int initListCount = initList.size();
+
+			for (int i = 0; i < initListCount; i++) {
+				int tenantId = initList.get(i).getTenantId();
+				String companyId = initList.get(i).getCn();
+				
+				PortalTopVO companyMenuDisplayMode = new PortalTopVO();
+				companyMenuDisplayMode.setTenantID(tenantId);
+				companyMenuDisplayMode.setCompanyID(companyId);
+				companyMenuDisplayMode.setType(0);
+				
+				try {
+					ezNewPortalDAO.insertTopMenuDisplayModeForCompany(companyMenuDisplayMode);
+				} catch (Exception e1) {
+					logger.error(e1.getMessage(), e1);
+				}
+			}
+		}
+	}
+
+    public void addQuickLinkCompanyID() {
+        try {
+            select("EzCommonDAO.checkQuickLinkCompanyID");
+        } catch (Exception e) {
+            logger.debug("tbl_ps_quicklink copmpanyid doesn't exist. creating the column...");
+
+            update("EzCommonDAO.addQuickLinkCompanyID");
+        }
+    }
+
+	public void alterUserThemePagination() throws Exception {
+		try {
+			select(("EzCommonDAO.checkUserThemePagination"));
+		} catch (Exception e) {
+			logger.debug("In TBL_PORTAL_THEME_USER doesn't exist usePaging column. creating the column...");
+
+			update("EzCommonDAO.alterUserThemePagination");
+		}
+	}
+	
+	public String checkThemeInformation() {
+		return (String) select("EzCommonDAO.checkThemeInformation");
+	}
+	
+	public void alterThemeInformation(Map<String, Object> map) throws Exception {
+		try {
+			update("EzCommonDAO.alterThemeInformation", map);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return;
+		}
+	}
+	
+	public void alterCompanyMenuIconUrl() throws Exception {
+		try {
+			select("EzCommonDAO.checkCompanyMenuIconUrl");
+		} catch (Exception e) {
+			logger.debug("In TBL_PORTAL_MENU_COMP doesn't exist icon_url column. creating the column...");
+			update("EzCommonDAO.alterCompanyMenuIconUrl");
+			return;
+		}
+	}
+
+	// 2024-06-17 이주원 - 일정관리 > 상단표시 컬럼 추가
+	public void alterTblScheduleForShowtop() {
+		try {
+			select(("EzCommonDAO.checkTblScheduleForShowtop"));
+		} catch (Exception e) {
+			logger.debug("tbl_schedule showtop column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterTblScheduleForShowtop");
+		}
+	}
+
+	public void insertGongRamListOption(Map<String, Object> map) throws Exception {
+		map.put("listOption", "014"); // APR
+		String companyId = checkGongRamListOption(map);
+
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertGongRamListOption", map);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		map.put("listOption", "015"); // END
+		companyId = checkGongRamListOption(map);
+
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertGongRamListOption", map);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private String checkGongRamListOption(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkGongRamListOption", map);
+	}
+	
+	/** 2023-09-01 한태훈 - 일정관리 > 미리알림 > tbl_schedule_reminder_scheduler 테이블 생성  */
+	public void createTblScheduleReminderScheduler() throws Exception {
+		try {
+			select("EzCommonDAO.checkScheduleReminderScheduler");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULE_REMINDER_SCHEDULER doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblScheduleReminderScheduler");
+		}
+	}
+	
+	/** 2023-09-07 한태훈 - 일정관리 > 설정 > 미리알림 시간 설정 컬럼 추가 */
+	public void addReminderTimeAtTblScheduleConfig() throws Exception {
+		try {
+			select("EzCommonDAO.checkReminderTimeColumnAtTblScheduleConfig");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULECONFIG REMINDERTIME column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addReminderTimeAtTblScheduleConfig");
+		}
+	}
+	
+	/** 2023-09-11 한태훈 - 일정관리 > 미리알림 > 하루종일 일정의 시작 시각 설정 테넌트 컨피그 추가 */
+	public void insertReminderTenantConfig(Map<String, Object> map) throws Exception{
+		map.put("property", "allDaySTimeForReminder");
+		String allDaySTimeForReminder = (String) select("EzCommonDAO.getAllDaySTimeTenantConfig", map);
+
+		if (allDaySTimeForReminder == null) {
+			logger.debug("allDaySTimeForReminder tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertAllDaySTimeForReminderTenantConfig", map);
+		}
+	}
+	
+
+	// 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+	public void alterSaveFlagForCbShare() {
+		try {
+			select(("EzCommonDAO.checkSaveFlagForCbShare"));
+		} catch (Exception e) {
+			logger.debug("TBL_CB_SHARE SAVEFLAG column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterSaveFlagForCbShare");
+		}
+	}
+
+    public void alterBoardExtentionAttrByteSize() {
+		String[] tables = {"TBL_BOARD_ITEM", "TBL_BOARD_ITEM_TEMP"};
+		String[] columns = {"EXTENSIONATTRIBUTE6", "EXTENSIONATTRIBUTE7", "EXTENSIONATTRIBUTE8", "EXTENSIONATTRIBUTE9", "EXTENSIONATTRIBUTE10"};
+		String oracleDataType = "NVARCHAR2(500)";
+		String mysqlDataType = "VARCHAR(500)";
+		
+		for (String tbl : tables) {
+			for (String column : columns) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("table", tbl);
+				map.put("column", column);
+				map.put("dataTypeOracle", oracleDataType);
+				map.put("dataTypeMysql", mysqlDataType);
+				logger.debug("alter tbl " + tbl + " column " + column + " ...");
+				update("EzCommonDAO.alterBoardExtentionAttrByteSize", map);
+			}
+		}
+    }
+    
+    // 2024-08-21 유길상 닷넷 통합알림 컨피그
+	public void insertDotNetTotalNotificationConfig(Map<String, Object> map) {
+		map.put("property", "dotNetTotalNotification");
+		String allDaySTimeForReminder = (String) select("EzCommonDAO.getDotNetTotalNotificationConfig", map);
+
+		if (allDaySTimeForReminder == null) {
+			logger.debug("dotNetTotalNotification tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertDotNetTotalNotificationConfig", map);
+		}
+	}
+
+	public void updateInProcessJpCodeName3() {
+		List<String> codeList= (List<String>) list("EzCommonDAO.selectInProcessJpCodeName3");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("NAME3","進行中");
+		for (String code : codeList) {
+			map.put("CODE1",code);
+			update("EzCommonDAO.updateInProcessJpCodeName3",map);
+		}
+	}
+
+	public void createTblDistributeinfo() {
+		try {
+			select("EzCommonDAO.checkTblDistributeinfo");
+		} catch (Exception e) {
+			logger.debug("TBL_DISTRIBUTEINFO table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblDistributeinfo");
+		}
+	}
+
+	// 2024-08-06 이유정 - 임원일정 > 테이블 추가
+	public void createExecutiveTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkExecutiveTable");
+		} catch (Exception e) {
+			logger.debug("tbl_executive doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createExecutiveTable");
+		}
+	}
+
+	// 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 테이블 추가
+	public void createServeyResultviewPermTbl() {
+		try {
+			select("EzCommonDAO.checkServeyResultviewPermTbl");
+		} catch (Exception e) {
+			logger.debug("TBL_SERVEY_RESULTVIEWPERMISSION doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createServeyResultviewPermTbl");
 		}
 	}
 }

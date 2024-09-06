@@ -65,7 +65,13 @@
 
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = '${useAprFilePrvw}';
+
+			var attachedDocList;
 			
+			var junGyulFlag = "${junGyulFlag}";
+			var draftJunGyulFlag = "${draftJunGyulFlag}";
+			var isSplit = "${optisSplit}";
+
 	    	$(document).ready(function() {
 	    		// 1안 추가 시에 최초로 동작하는 부모창의 draftFlag 등 부여 함수
  	    		if (frameNum == "1") {
@@ -87,6 +93,13 @@
 	            xmluserInfo = parent.xmluserInfo;
 	            
                 parent.ShowMailProgress(); // 문서 로딩중 이미지 표출
+                
+                // 임시저장된 문서의 결재정보는 새로운 docId를 생성 후에 가져오는 방식으로 수정
+                if (frameNum == "1" && parent.ListType == "21") {
+                	parent.getLineModeAll(parent.pDocIDAry[1]); // 결재진행중/완료여부 체크
+                	parent.getDocInfoAll(parent.pDocIDAry); // 결재문서 기본 정보
+                	parent.getAttachInfoAll(parent.pDocIDAry); // 첨부파일 정보
+                }
                 
                 HwpCtrl = BuildWebHwpCtrl("hwpContent", "${webHWPUrl}", function () {Editor_Complete();});
                 window.onresize();
@@ -156,10 +169,27 @@
 	                    process_AfterOpen();
 	                    // 현재 안 탭의 정보를 부모페이지에도 저장
 	                    parent.setTabInfo(frameNum);
-	                    
+
+						if (frameNum == 1 && attachedDocList != "" && pDraftFlag == "DRAFT" && ListType != "21") {
+							var pd = parent.document;
+
+							attachRecordDoc();
+							pd.getElementById("ifrm" + frameNum).contentWindow.setAttachInfo(pDocID, "APR", pd.getElementById("lstAttachLink"));
+
+							attachedDocList = "";
+						}
+
 	                    // 반송문서가 아닌 임시저장 문서의 경우, 안 추가 시 초기 고정수신처 세팅 진행
 	                    if (pDraftFlag != "REDRAFT" || (ListType == "21" && parent.addFlag == true)) {
 	                        setFirstDrafter(); // 기본 결재선 설정 및 고정수신처 설정 등을 진행 (ezDraftAll_WHWP.js > GetDraftAprLineInfo)
+                            if(frameNum != 1 && parent.TempsaveAprlineinfo != undefined){
+                                var ret = new Array()
+                                ret[0] = parent.TempsaveAprlineinfo;
+                                if(approvalFlag == "S")
+                                    SGetDraftAprLineInfo(ret);
+                                else
+                                    GetDraftAprLineInfo(ret);
+                            }
 	                    } else {
 	                        // 반송문서 재기안 또는 임시저장문서를 초기에 가져오는 분기 -> 이미 결재선 및 수신처가 지정된 상태이므로, 수신처가 존재하는지만 간단하게 확인해서 부모의 btnReceivLineEnableAry배열에 값을 넣는다.
 	                        if (ListType == "21") { // 임시저장된 문서
@@ -743,7 +773,10 @@
 		        	if (isTrue) {
 		        		if (parent.contentOptionFlag == true) {
 		        			// 본문 내부 이미지까지 전부 가져오기 위해 HWP 타입으로 받아온다.
-		        			ifrm1.contentWindow.GetCloneData("body", "HWP", function (tempContent) { SetCloneData(tempContent, "body", "HWP"); });
+		        			if(ifrm1.src.indexOf("draftContentAll_WHWP") < 0)
+		        			    GetCloneData("body", "HWP", function(){AppendFieldText("body", ifrm1.contentWindow.GetBodyHTML(), false, true, true);});
+                            else
+		        			    ifrm1.contentWindow.GetCloneData("body", "HWP", function (tempContent) { SetCloneData(tempContent, "body", "HWP"); });
 		        		}
 		        	} else {
 	                    var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
@@ -946,7 +979,36 @@
 				
 				PutFieldText("docnumber", getDocNumByFormat(numberFormat));
 			}
-			 
+
+            function setSignSlash(pSignKinds, pSusin) {
+                var i, j;
+                var fieldName;
+                var field, fieldvalue;
+                var tempFieldName;
+                var fields = GetFieldList();
+                for (i = 1; i < 21; i++) {
+                    fieldName = pSusin + pSignKinds + i;
+                    if (FieldExist(fieldName)) {
+                        fieldvalue = trim(GetFieldText(fieldName));
+                        MoveToField(fieldName);
+                        var act = HwpCtrl.CreateAction("CellBorder");
+                        var set = act.CreateSet();
+                        act.GetDefault(set);
+                        if (fieldvalue == "") {
+                            set.SetItem("DiagonalType", 1);
+                            set.SetItem("SlashFlag", 0x02);
+                        }
+                        /* 2020-07-24 홍승비 - 전자결재 일반버전의 경우, 서명과 결재자명 필드 구분하도록 수정 */
+                        else if (trim(fieldvalue) == "[NOSLASH]") {
+                            set.SetItem("SlashFlag", 0x00);
+                            PutFieldText(fieldName, " ");
+                        }else
+                            set.SetItem("SlashFlag", 0x00);
+
+                        act.Execute(set);
+                    }
+                }
+            }
 	    </script>
 	</head>
 	<body>

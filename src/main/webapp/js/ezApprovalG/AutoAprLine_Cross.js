@@ -88,7 +88,7 @@ function APRLINEXMLParsing(APRLINE) {
     for (i = 0 ; i < CurListLen ; i++) {
         var Row = AprLineRow[i];
         var Cell = GetChildNodes(Row);
-        //첫 로그인을 자기 꺼 가져오길래 빠이
+
 //        if (i == CurListLen - 1) {
 //        	var pDraftDay = getGyulJeDate();
 //        	var TmpAprLineState = "002";

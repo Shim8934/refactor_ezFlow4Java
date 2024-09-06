@@ -16,6 +16,7 @@
 		#Sdatepicker:disabled {
 			background-color:white;
 		}
+		.qstSettingSpan{width: 130px !important;}
 	</style>
 	 
 	<script src="${util.addVer('/js/jquery/jquery.min.js')}"></script> 
@@ -693,7 +694,9 @@
 	        return document.getElementById("RangeXMLStr").value;
 	    }
     	    	
-    	function fun_OK() {
+    	function fun_OK(element) {
+			element.style.pointerEvents = 'none';
+			try {
     		$('#numberOfOptions').val($('#columnsbnk li').length); 
     		
 /*     		if (!$('#endDate').is(':checked')) {    			
@@ -777,6 +780,7 @@
 	        }
 	        
     		if (form_check() == false) {
+				element.style.pointerEvents = '';
         		return;
         	} 
     		else {        		
@@ -818,6 +822,10 @@
             	document.frmCreate.message = encodeURIComponent(document.frmCreate.message);             	
             	document.frmCreate.submit();
         	}
+			} catch (e) {
+				console.log(e);
+				element.style.pointerEvents = '';
+			}
     	}    	
     	
     	function checkOption() {
@@ -1349,7 +1357,7 @@
 							<a class="pollImgbtn1" id="receiverBttn" style="display: none;background-color: #e8e8e8;height:21px"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
 							<div style="display:none;" id="newTargetDiv"></div>																		
 							<div id="sendPostNotiMailDiv" class="qstSettingInnerDivRight">
-								<input id="sendPostMail" type="checkbox">
+								<input id="sendPostMail" type="checkbox" style="margin-bottom: -2px;">
 								<span style="vertical-align: middle;"><spring:message code="ezCommunity.t553"/></span>
 							</div>
 						</div>
@@ -1380,7 +1388,7 @@
 				</tr>						
 			</table>			
 			<div class="btnpositionJsp">				
-				<a class="imgbtn" onclick="fun_OK()"><span><spring:message code="ezPoll.kje01" /></span></a>				
+				<a class="imgbtn" onclick="fun_OK(this)"><span><spring:message code="ezPoll.kje01" /></span></a>
 				<a class="imgbtn" onclick="fun_Cancel()"><span><spring:message code="ezPoll.t139" /></span></a>				
 			</div>
 		</div>	

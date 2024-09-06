@@ -41,7 +41,7 @@
 	        document.onselectstart = function () { return true; };
 	        window.onload = function () {
 	            try {
-	                parent.DocumentComplete();
+	                parent.DocumentComplete(this);
 	            } catch (e)
 	            { }
 	            
@@ -147,7 +147,7 @@
 	                        }
 	                    }
 	                    BodyTagsDisabled(document.getElementById('div_Content'));
-	                    parent.FieldsAvailable();
+	                    parent.FieldsAvailable(this);
 	                }
 	            } catch (e)
 	            { }
@@ -313,6 +313,19 @@
 				
 				return xmlDom;
 			}
+
+            function GetFieldText(name){
+                var list = GetFieldsList();
+                var result = "";
+                list.forEach(function(item, i){
+                    if(item.id == name){
+                        result = item.textContent;
+                        return;
+                     }
+                });
+               return result;
+            }
+
 	    </script>
 	</head>
 	<body>

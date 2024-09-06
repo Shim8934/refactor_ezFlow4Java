@@ -131,7 +131,7 @@
 	                    treeView.DataBind("TreeView");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
+	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.status);
 	                    xmlHTTP = null;
 	                }
 	            }
@@ -301,7 +301,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType", type : "user", adminOrgan : 'y'},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
@@ -387,7 +387,7 @@
 	                        check_presence();
 	                    }
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                }
 	
 	                g_xmlHTTP = null;
@@ -588,7 +588,7 @@
 	                    treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 	                    treeView.DataBind("TreeView");
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                g_xmlHTTP = null;
 	            	}
 	        	}
@@ -1460,7 +1460,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewJikwi").innerHTML = "";
 			            var pListViewJikwi = new ListView();
@@ -1502,7 +1502,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewJikchek").innerHTML = "";
 			            var pListViewJikchek = new ListView();
@@ -2332,7 +2332,7 @@
 			            xmlHTTP.send("");
 			            
 			            if (xmlHTTP.status != 200) {
-				            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
+				            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.status);
 			            } else {
 			            	document.getElementById("ListViewJikwi").innerHTML = "";
 				            var pListViewJikwi = new ListView();
@@ -2356,7 +2356,7 @@
 			            xmlHTTP.send("");
 			            
 			            if (xmlHTTP.status != 200) {
-				            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
+				            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.status);
 			            } else {
 			            	document.getElementById("ListViewJikchek").innerHTML = "";
 				            var pListViewJikchek = new ListView();

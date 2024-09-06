@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -32,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -45,6 +48,14 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +66,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -63,6 +75,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -89,10 +102,14 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezMemo.service.EzMemoService;
 import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -155,6 +172,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Resource(name = "EzMemoService")
 	private EzMemoService ezMemoService;
 	
+	@Resource(name = "EzPersonalService")
+	private EzPersonalService ezPersonalService;
+
+	@Resource(name = "EzNotificationService")
+	private EzNotificationService ezNotificationService;
+
 	@Autowired
 	private KlibUtil klibUtil;
 
@@ -219,6 +242,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String boardLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception {
 		logger.debug("boardLeft started");
 
+		userInfo = commonUtil.userInfo(loginCookie);
+
 		String redirectBoardID = "";
         String redirectBoardGroupID = "";
         String qstId = "";
@@ -227,9 +252,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String applyFlag = "";
         String isAdminLeft = "";
         boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c");
-        
-        userInfo = commonUtil.userInfo(loginCookie);        
-        
+
         String strLang = userInfo.getLang();
 		String pUserID = userInfo.getId();
 		String pDeptID = userInfo.getDeptID();
@@ -320,7 +343,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2019-06-05 홍승비 - 결과가 항상 NO인 게시판그룹 관리자권한 체크 동작 제거 (boardGroupID 또는 boardID가 'top'인 게시판은 존재하지 않음) */
 		// Library 연결 부분 Method화
 		String resultXML = ezBoardService.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
-				commonUtil.getMultiData(strLang, userInfo.getTenantId()), isAdminLeft, isCompanyAdmin, "NO", pRollInfo, userInfo.getTenantId());
+				commonUtil.getLangData(strLang), isAdminLeft, isCompanyAdmin, "NO", pRollInfo, userInfo.getTenantId());
 		
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		int resultCount = doc.getElementsByTagName("NODE").getLength();
@@ -363,8 +386,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardItemList_favorite started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useRunTime", useRunTime);
 
 		logger.debug("boardItemList_favorite ended");
     	return "ezBoard/boardItemList_favorite";
@@ -384,8 +409,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userID = userInfo.getId();
 		String result = "";
 		
+		// 2023-12-01 조소정 - 사용자 설정 언어에 따라 즐겨찾기 게시판 이름 표출되도록 수정
+		String lang = commonUtil.getLangData(userInfo.getLang());
+		
 		/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
-		List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID, mode, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID, mode, userInfo.getCompanyID(), userInfo.getTenantId(), lang);
 		String parentName = parentBoardName(resultList, userInfo);
 		StringBuffer sb = new StringBuffer();
 		
@@ -424,7 +452,7 @@ public class EzBoardController extends EgovFileMngUtil{
         if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
         	memoFlag = "YES";
         }
-        else {	// 개발 끝나면 NO로 변경
+        else {
         	memoFlag = "NO";
         }
         
@@ -764,7 +792,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	   String pRootTreeID = req.getParameter("rootTreeID");
 	   String pCountFlag = req.getParameter("countFlag");
 	   // 마이게시판 가져올때 companyID 조건 추가
-	   String resultXML = getMyBoardTreeConfig(userInfo.getId(), pRootTreeID, commonUtil.getMultiData(lang, userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId());
+	   String resultXML = getMyBoardTreeConfig(userInfo.getId(), pRootTreeID, commonUtil.getLangData(lang), userInfo.getCompanyID(), userInfo.getTenantId());
 	   resultXML = commonUtil.stripScriptTags(resultXML);
 	   
 	   if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", userInfo.getTenantId()).equals("YES") && pCountFlag != null && pCountFlag.equals("YES")) {
@@ -838,21 +866,42 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int i = 0; i < resultList.size(); i++) {
 			sb.append("<NODE>");
 			
+			// 2023-11-29 조소정 - 게시판 > 마이게시판 일본어, 중국어 TreeName 컬럼 추가
+			String treeName;
+
 			if (lang.equals("")) {
-				sb.append("<VALUE><![CDATA[" + resultList.get(i).getTreeName() + "]]></VALUE>");
+			    treeName = resultList.get(i).getTreeName();
+			} else if (lang.equals("2")) {
+			    treeName = resultList.get(i).getTreeName2();
 			} else {
-				sb.append("<VALUE><![CDATA[" + resultList.get(i).getTreeName2() + "]]></VALUE>");
+			    treeName = resultList.get(i).getTreeName();
+			    if (lang.equals("3") && resultList.get(i).getTreeName3() != null && !resultList.get(i).getTreeName3().equals("")) {
+			        treeName = resultList.get(i).getTreeName3();
+			    } else if (lang.equals("4") && resultList.get(i).getTreeName4() != null && !resultList.get(i).getTreeName4().equals("")) {
+			        treeName = resultList.get(i).getTreeName4();
+			    }
 			}
 			
+			sb.append("<VALUE><![CDATA[" + treeName + "]]></VALUE>");
 			sb.append("<STYLE><![CDATA[]]></STYLE>");
 			sb.append("<DATA1>" + resultList.get(i).getTreeId().trim() + "</DATA1>");
 			
+			String treeNameData2;
+
 			if (lang.equals("")) {
-				sb.append("<DATA2><![CDATA[" + resultList.get(i).getTreeName().trim() + "]]></DATA2>");
+				treeNameData2 = resultList.get(i).getTreeName().trim();
+			} else if (lang.equals("2")) {
+				treeNameData2 = resultList.get(i).getTreeName2().trim();
 			} else {
-				sb.append("<DATA2><![CDATA[" + resultList.get(i).getTreeName2().trim() + "]]></DATA2>");
+				treeNameData2 = resultList.get(i).getTreeName2().trim();
+				if (lang.equals("3") && resultList.get(i).getTreeName3() != null && !resultList.get(i).getTreeName3().isEmpty()) {
+					treeNameData2 = resultList.get(i).getTreeName3().trim();
+				} else if (lang.equals("4") && resultList.get(i).getTreeName4() != null && !resultList.get(i).getTreeName4().isEmpty()) {
+					treeNameData2 = resultList.get(i).getTreeName4().trim();
+				}
 			}
-			
+
+			sb.append("<DATA2><![CDATA[" + treeNameData2 + "]]></DATA2>");			
 			sb.append("<DATA3><![CDATA[" + resultList.get(i).getTreeBoardId() + "]]></DATA3>");
 			
 			if (resultList.get(i).getTreeBoardId() == null || resultList.get(i).getTreeBoardId().equals("")) {
@@ -897,13 +946,24 @@ public class EzBoardController extends EgovFileMngUtil{
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String use_oneLineCount = "";
 		String pBoardID = boardPropertyVO.getBoardID() != null ? boardPropertyVO.getBoardID() : "";
-		String pBoardName = boardPropertyVO.getBoardName() != null ? boardPropertyVO.getBoardName() : "";
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
 		
 		BoardPropertyVO boardInfo = getBoardInfo(pBoardID, userInfo);
+		
+		// 2023-11-29 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();
+		String pBoardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+		    pBoardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+		    pBoardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+		    pBoardName = boardInfo.getBoardName4();
+		}
 		
 		if (boardPropertyVO.getAdminType() == null) {
 			boardInfo.setAdminType("");
@@ -942,9 +1002,9 @@ public class EzBoardController extends EgovFileMngUtil{
 				boardInfo.setSortBy(boardPropertyVO.getSortBy());
 			}
 			
-			if (boardInfo.getBoardName() != null) {
-				pBoardName = boardInfo.getBoardName();
-			}
+//			if (boardInfo.getBoardName() != null) {
+//				pBoardName = boardInfo.getBoardName();
+//			}
 		}
 		
 		// 현재 자신의 회사에서 즐겨찾기한 게시판 + 그룹사 게시판의 즐겨찾기 여부를 체크
@@ -954,16 +1014,43 @@ public class EzBoardController extends EgovFileMngUtil{
 			isMyBoard = "YES";
 		}
 		
+		//확장컬럼 데이터
+		List<BoardAttributeVO> boardAttr = new ArrayList<BoardAttributeVO>();
+		int boardAttrCount = 0;
+
+		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
+			boardAttr = ezBoardAdminService.getBoardAttribute(pBoardID, userInfo.getTenantId());
+			boardAttrCount = boardAttr.size();
+		}
+
+		// 2024-08-14 전인하 - 게시판 > json data 이용 시 문제가 되는 특정 특수문자 이스케이프 추가 
+		JsonSerializer<String> stringSerializer = new JsonSerializer<String>() {
+			@Override
+			public JsonElement serialize(String src, Type typeOfSrc, JsonSerializationContext context) {
+				String escapedString = src.replace("\\", "\\\\")
+											.replace("\"", "\\\"")
+											.replace("/", "\\/");
+				return new JsonPrimitive(escapedString);
+			}
+		};
+		
+		Gson gson = new GsonBuilder().registerTypeAdapter(String.class, stringSerializer).create();
+		String boardAttrJson = gson.toJson(boardAttr);
+		
+		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
+
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName).replace("\\", "&#92;"));
 		model.addAttribute("boardID", commonUtil.stripScriptTags(pBoardID));
+		model.addAttribute("boardAttrJson", boardAttrJson);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("use_Editor", use_Editor);
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
 		model.addAttribute("isMyBoard", isMyBoard);
-		
+		model.addAttribute("endDateOption", endDateOption);
+
 		logger.debug("boardItemList ended");
 		//logger.debug("requestURL : " + requestURL);
         return requestURL;
@@ -1157,7 +1244,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardInfo.setIsAllGroupBoard("");
 		
 		if (strProp != null) {
-			boardInfo.setExpireDays(commonUtil.getDateStringInUTC(strProp.getItemExpires(), userInfo.getOffset(), false));
+			boardInfo.setExpireDays(strProp.getItemExpires() != null ? strProp.getItemExpires() : "-1");
 			boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 			
 			if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
@@ -1169,7 +1256,15 @@ public class EzBoardController extends EgovFileMngUtil{
 			if (strProp.getBoardName2() != null) {
 				boardInfo.setBoardName2(strProp.getBoardName2());
 			}
-			
+
+			if (strProp.getBoardName3() != null) {
+				boardInfo.setBoardName3(strProp.getBoardName3());
+			}
+
+			if (strProp.getBoardName4() != null) {
+				boardInfo.setBoardName4(strProp.getBoardName4());
+			}
+
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGuBun(strProp.getGuBun());
 			boardInfo.setUrl(strProp.getUrl());
@@ -2019,7 +2114,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA8>" + noticeList.get(k).get("ITEMLEVEL") + "</DATA8>");
 						resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
 						resultXML.append("<DATA10></DATA10>");
-						resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
+						resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(noticeList.get(k).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
 						resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
 						
 						if (primaryData.equals("1")) {
@@ -2116,7 +2211,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA8>" + boardListItem.get(j).get("ITEMLEVEL") + "</DATA8>");
 					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10></DATA10>");
-					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
+//					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
+					resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(boardListItem.get(j).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME")) + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME2")) + "</WRITERNAME2>");
@@ -2339,7 +2435,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getSearchQuery().indexOf("SEARCHSUBBOARD;") != -1) {
 			boardVO.setSubFlag("Y");
 		}
-		//혜정 추가
+
 		if (boardVO.getSearchQuery().indexOf("SEARCHSUBSUBBOARD;") != -1) {
 			boardVO.setSubFlag("YY");
 		}
@@ -2351,7 +2447,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getSearchQuery().indexOf("SEARCHALLBOARD;") != -1) {
 			boardVO.setSubFlag("A");
 		}
-		//혜정 끝
 		
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
 			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
@@ -2397,7 +2492,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else if (boardVO.getBoardType().equals("A")) {
 			boardXML = getSearchApprListItemXML(userInfo, boardVO);
 		} else {
-			//혜정  추가
 			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) {
 				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO);
 			} else {
@@ -3203,7 +3297,8 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA8>" + noticeList.get(k).get("ITEMLEVEL") + "</DATA8>");
 						resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
 						resultXML.append("<DATA10></DATA10>");
-						resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
+						/* 2024-01-08 홍승비 - 일반게시판 > 공지사항 게시물 댓글 카운트 서브쿼리 제거, 각 게시물에 대해 별도로 리턴 */
+						resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(noticeList.get(k).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
 						
 						if (globals.getProperty("Globals.DbType").equals("oracle")) {
 							resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
@@ -3369,8 +3464,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		int pSelectBy = 0;
 		String pExcludeBoardID = " ";
 		String isAdminLeft = "";
-		boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c");
-		
+		String companyID = Optional.ofNullable(req.getParameter("companyID")).orElse(userInfo.getCompanyID());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		boolean isCompanyAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER,"");
+
 		if (req.getParameter("rootBoardID") != null && !req.getParameter("rootBoardID").equals("")) {
 			pRootBoardID = req.getParameter("rootBoardID");
 		}
@@ -3390,14 +3487,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (req.getParameter("isAdminLeft") != null && !req.getParameter("isAdminLeft").equals("")) {
 			isAdminLeft = req.getParameter("isAdminLeft");
 		}
-		
+
 		/* 2019-06-03 홍승비 - 게시판그룹 관리자권한 체크 시 사내겸직 및 하위부서 허용여부 체크하도록 수정 */
 		String boardGroupAdmin_FG = checkIfBoardGroupAdmin(pRootBoardID, userInfo);
-		int pMode = boardGroupAdmin_FG.equals("OK") || commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;n;k") ? 0 : 1;
+
+		int pMode = isCompanyAdmin || organAuth.isAuth(AdminAuth.COMPANY_MANAGER, companyID)
+				|| organAuth.isAuth(AdminAuth.BOARD_MANAGER, companyID)
+				|| boardGroupAdmin_FG.equals("OK") ? 0 : 1;
 		
 		/* 2018-10-16 홍승비 - 관리자단에서 접근했는지 판단하는 플래그를 인자로 추가 */
-		String strXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
-				commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), isAdminLeft, isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
+		String strXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), companyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
+				commonUtil.getLangData(userInfo.getLang()), isAdminLeft, isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
 		
 		Document doc = commonUtil.convertStringToDocument(strXML);
 		NodeList nList = doc.getElementsByTagName("NODE");
@@ -3700,6 +3800,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		location = request.getParameter("location");
 		
+		boolean isExistBoardItem = ezBoardService.confirmBoardItemDeletion(boardID, itemID, userInfo.getTenantId());
+		
+		if (!isExistBoardItem) {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", userInfo.getLocale()));
+			return "/common/error";
+		}
+		
 		if (!accessCheck(boardID, itemID, location, userInfo)) {
 			return "main/warning";
 		}
@@ -3817,11 +3924,29 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			useBoardFilePrvw = "0";
 		}
+		
+		// 2024-08-14 전인하 - 게시판 > json data 이용 시 문제가 되는 특정 특수문자 이스케이프 추가 
+		JsonSerializer<String> stringSerializer = new JsonSerializer<String>() {
+			@Override
+			public JsonElement serialize(String src, Type typeOfSrc, JsonSerializationContext context) {
+				String escapedString = src.replace("\\", "\\\\")
+											.replace("\"", "\\\"")
+											.replace("/", "\\/");
+						
+				return new JsonPrimitive(escapedString);
+			}
+		};
+
+		Gson gson = new GsonBuilder().registerTypeAdapter(String.class, stringSerializer).create();
+		String boardAttrJson = gson.toJson(boardAttr);
+		String boardItemJson = gson.toJson(boardItem);
 		 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
+		model.addAttribute("boardItemJson", boardItemJson);
 		model.addAttribute("boardAttr", boardAttr);
+		model.addAttribute("boardAttrJson", boardAttrJson);
 		model.addAttribute("boardAttrCount", boardAttrCount);
 		model.addAttribute("adjacentItem", adjacentItem);
 		model.addAttribute("boardPropertyVO", boardPropertyVO);
@@ -3937,6 +4062,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String browser = ClientUtil.getClientInfo(request, "browser");
 		String orgCompanyID = request.getParameter("orgCompanyID");
+		/* 2024-05-21 김유진 - 일정 > 게시판 게시에 사용 */
+		String scheduleId = request.getParameter("scheduleId") != null ? request.getParameter("scheduleId") : "";
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
@@ -4112,16 +4239,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		checkForm = ezBoardService.checkForm(boardID, "Y", userInfo.getTenantId());
 		useBackGround = ezBoardService.checkBackGroundImage(boardID, userInfo.getTenantId());
 		
-		if (boardInfo.getBoardName() != null && !boardInfo.getBoardName().equals("")) {
-			boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
-		}
-		
-		if (boardInfo.getBoardName1() != null && !boardInfo.getBoardName1().equals("")) {
-			boardInfo.setBoardName1(commonUtil.cleanValue(boardInfo.getBoardName1()));
-		}
-		
-		if (boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")) {
-			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+		// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();		
+		String boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+			boardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+			boardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+			boardName = boardInfo.getBoardName4();
 		}
 		
 		if (boardListVO.getTitle() != null && !boardListVO.getTitle().equals("")) {
@@ -4197,7 +4324,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("HwpSecurityNum", HwpSecurityNum);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
-		
+		model.addAttribute("scheduleId", scheduleId);
+		model.addAttribute("boardName", boardName);
+
 		logger.debug("newBoardItem ended");
 		return requestURL;
 	}
@@ -4782,11 +4911,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		
 		//logger.debug("FilePath: " + filePath + " || File Name: " + fileName + " || attID: " + attID);
-		
-		if (attID != null && !attID.equals("")) {
-			downFile(request, response, realPath + filePath, attID);
+
+		if (!fileName.endsWith(".mht")) {
+			if (attID != null && !attID.equals("")) {
+				downFile(request, response, realPath + filePath, attID);
+			} else {
+				downFile(request, response, realPath + filePath, fileName);
+			}
 		} else {
-			downFile(request, response, realPath + filePath, fileName);
+			ezBoardService.downloadBackgroundItemFile(request, response, realPath, filePath, fileName);
 		}
 
 		logger.debug("boardAttachDown ended");
@@ -5339,6 +5472,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardMyFavoriteVO.setTreeId(doc.getElementsByTagName("PTREEID").item(0).getTextContent());
 		boardMyFavoriteVO.setTreeName(doc.getElementsByTagName("PTREENAME").item(0).getTextContent());
 		boardMyFavoriteVO.setTreeName2(doc.getElementsByTagName("PTREENAME2").item(0).getTextContent());
+		boardMyFavoriteVO.setTreeName3(doc.getElementsByTagName("PTREENAME3").item(0).getTextContent());
+		boardMyFavoriteVO.setTreeName4(doc.getElementsByTagName("PTREENAME4").item(0).getTextContent());
 		boardMyFavoriteVO.setTreeUpper(doc.getElementsByTagName("PUPPERID").item(0).getTextContent());
 		boardMyFavoriteVO.setMode(doc.getElementsByTagName("PMODE").item(0).getTextContent());
 		
@@ -5802,6 +5937,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		mode = request.getParameter("mode");
 		
+		boolean isExistBoardItem = ezBoardService.confirmBoardItemDeletion(boardID, itemID, userInfo.getTenantId());
+		
+		if (!isExistBoardItem) {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", userInfo.getLocale()));
+			return "/common/error";
+		}
+		
 		if (!accessCheck(boardID, itemID, location, userInfo)) {
 			return "main/warning";
 		}
@@ -6034,7 +6176,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
 		if (boardInfo.getListView_FG().equals("true")) {
-			boardName = boardInfo.getBoardName();
+			// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+			String userLang = userInfo.getLang();
+			boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+			if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+				boardName = boardInfo.getBoardName2();
+			} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+				boardName = boardInfo.getBoardName3();
+			} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+				boardName = boardInfo.getBoardName4();
+			}
 			
 			if (request.getParameter("sortBy") != null) {
 				sortBy = request.getParameter("sortBy");
@@ -6053,7 +6205,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (isMyBoardExist > 0) {
 			isMyBoard = "YES";
 		}
-		
+		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
+
 		model.addAttribute("mode", mode);
 		model.addAttribute("apprFlag", apprFlag);
 		model.addAttribute("useOCS", useOCS);
@@ -6071,6 +6224,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardViewForm", boardViewForm);
 		model.addAttribute("isMyBoard", isMyBoard);
+		model.addAttribute("endDateOption", endDateOption);
 
 		logger.debug("boardItemListThumbnail ended");
 		return "ezBoard/boardItemListThumbnail";
@@ -6111,6 +6265,18 @@ public class EzBoardController extends EgovFileMngUtil{
 			userID = userInfo.getDisplayName2();
 		}
 		
+		// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();		
+		String boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+			boardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+			boardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+			boardName = boardInfo.getBoardName4();
+		}
+
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("boardID", boardID);
@@ -6121,6 +6287,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("boardName", boardName);
 
 		logger.debug("newBoardItemPhoto ended");
 		return "ezBoard/boardNewItemPhoto";
@@ -6963,9 +7130,21 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String boardID = request.getParameter("boardID");
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		String userLang = userInfo.getLang();
 		String strXML = "<DATA>";
+				
+		String boardName = boardInfo.getBoardName();
+		if (userLang.equals("1")) {
+			boardName = commonUtil.cleanValue(boardName);
+		} else if (userLang.equals("2")) {
+			boardName = commonUtil.cleanValue(boardInfo.getBoardName2());
+		} else if (userLang.equals("3")) {
+			boardName = commonUtil.cleanValue(boardInfo.getBoardName3());
+		} else if (userLang.equals("4")) {
+			boardName = commonUtil.cleanValue(boardInfo.getBoardName4());
+		}
 		
-		strXML += "<BOARDNAME>" + commonUtil.cleanValue(boardInfo.getBoardName()) + "</BOARDNAME>";
+		strXML += "<BOARDNAME>" + boardName + "</BOARDNAME>";
 		strXML += "<ATTACHLIMIT>" + boardInfo.getAttachSizeLimit() + "</ATTACHLIMIT>";
 		strXML += "<EXPIREDAYS>" + boardInfo.getExpireDays() + "</EXPIREDAYS>";
 		strXML += "<GUBUN>" + boardInfo.getGuBun() + "</GUBUN>";
@@ -7647,7 +7826,84 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("uploadApprovFile ended");
 		return strXML;
 	}
-	
+
+	/**
+	 * 게시판 게시판게시하기 일정 첨부파일업로드 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/uploadScheduleFile.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String uploadScheduleFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody String xmlPara) throws Exception {
+		logger.debug("uploadScheduleFile started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String strXML = "<ROOT><NODES>";
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+
+		String boardID = commonUtil.detectPathTraversal(xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent());
+		String realPath = commonUtil.getRealPath(request);
+		int cnt = xmlDom.getElementsByTagName("ROW").getLength();
+
+		String[] fileNames = new String[cnt];
+		String[] fileSizes = new String[cnt];
+		String[] fileLocations = new String[cnt];
+		String[] uploadSN = new String[cnt];
+		String[] downUrl = new String[cnt];
+
+		for (int k = 0; k < cnt; k++) {
+			fileNames[k] = xmlDom.getElementsByTagName("FILENAME").item(k).getTextContent();
+			fileLocations[k] = xmlDom.getElementsByTagName("FILEPATH").item(k).getTextContent();
+			fileSizes[k] = xmlDom.getElementsByTagName("FILESIZE").item(k).getTextContent();
+			uploadSN[k] = "{" + UUID.randomUUID().toString() + "}";
+		}
+
+		String dirPath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath2 = realPath + commonUtil.getUploadPath("upload_schedule.ROOT", userInfo.getTenantId());
+
+		File file = new File(dirPath + boardID);
+
+		if (!file.exists()) {
+			file.mkdirs();
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
+		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+		}
+
+		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+
+		for (int k = 0; k < cnt; k++) {
+			String fileName = fileNames[k];
+			String fileLocation = fileLocations[k];
+			String fileSize = fileSizes[k];
+			String puploadSN;
+			String uploadLocation;
+
+			fileLocation = commonUtil.detectPathTraversal(fileLocations[k]);
+
+			int extIndex = fileLocation.lastIndexOf(".");
+			String fileExt = fileLocation.substring(extIndex);
+			fileName = commonUtil.getUniqueFileName(fileNames[k], fileNameMap);
+			file = new File(dirPath2 + commonUtil.separator + fileLocation);
+			uploadLocation = dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName;
+			puploadSN = uploadSN[k] + "_" + fileName;
+
+			if (file.exists()) {
+				FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(uploadLocation)));
+			}
+
+			strXML += "<NODE><PUPLOADSN><![CDATA[" + puploadSN + "]]></PUPLOADSN>";
+			strXML += "<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>";
+			strXML += "<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>";
+			strXML += "<FILESIZE>" + fileSize + "</FILESIZE>";
+			strXML += "<FILELOCATION><![CDATA[" + uploadLocation + "]]></FILELOCATION>";
+			strXML += "</NODE>";
+		}
+
+		strXML += "</NODES></ROOT>";
+
+		logger.debug("uploadScheduleFile ended");
+		return strXML;
+	}
 	/**
 	 * 포탈 포토갤러리 포틀릿 표출 Method
 	 */
@@ -7760,18 +8016,18 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 게시알림 메일전송 실행 Method (관리자 권한자에게 발송하는 게시알림 메일)
+	 * 게시판 게시알림 전송 실행 Method (관리자 권한자에게 발송하는 게시알림)
 	 */
-	@RequestMapping(value = "/ezBoard/sendPostNotiMail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezBoard/sendPostNotiForAdmin.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendPostNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("sendPostNotiMail started.");
+	public void sendPostNotiForAdmin(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("sendPostNotiForAdmin started.");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
-		logger.debug("boardID=" + boardID + ",itemID=" + itemID);
+		logger.debug("boardID=" + boardID + ", itemID=" + itemID);
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
@@ -7791,6 +8047,10 @@ public class EzBoardController extends EgovFileMngUtil{
         
         if (boardInfo.getGuBun().equals("2")) {
         	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + boardItem.getWriterName());
+        }
+        /* 2024-02-02 홍승비 - 승인게시판의 경우, 승인자가 아닌 게시물 작성자의 정보가 메일에 표출되도록 수정 (익명게시판은 승인여부 사용불가, getBrdGetItemInfo로 가져온 데이터는 작성자/작성자 부서명/작성자 회사명 전부 다국어 대응됨) */
+        else if (boardInfo.getApprFlag() != null && boardInfo.getApprFlag().equalsIgnoreCase("Y")) { // 승인게시판
+        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + boardItem.getWriterName() + "(" + (boardItem.getExtensionAttribute3() == null || "null".equals(boardItem.getExtensionAttribute3()) ? "" : boardItem.getExtensionAttribute3()) + ", " + boardItem.getWriterDeptName() + ", " + boardItem.getWriterCompanyName() + ")");
         } else {
         	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
         }
@@ -7799,47 +8059,116 @@ public class EzBoardController extends EgovFileMngUtil{
         
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         String subject = "[" + egovMessageSource.getMessage("ezBoard.t255", userInfo.getLocale()) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
-        
+        String notiContent = "[" + egovMessageSource.getMessage("ezNotification.hth35", userInfo.getLocale()) + "]"+ boardInfo.getBoardName() + " - " + boardItem.getTitle();
+
+        String separator = ";;";
+        String notiRecipientParam = "";
         List<BoardAccessVO> list = ezBoardService.getPostNotiMailUserList(boardID, userInfo.getPrimary(), userInfo.getTenantId());
         
+        logger.debug("Sending board mail starts.");
         for (BoardAccessVO vo : list) {
-        	InternetAddress from = new InternetAddress();
-        	
-        	/* 2021-06-29 홍승비 - 익명게시판의 경우, 관리자에게 게시알림 메일발송 시 게시자 표출명과 임의의 이메일을 사용하도록 수정 */
-        	if (boardInfo.getGuBun().equals("2")) {
-        		from.setPersonal(boardItem.getWriterName(), "UTF-8");
-        		from.setAddress("AnonyBoardMail@boardmail");
-        	} else {
-        		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        		from.setAddress(userInfo.getEmail());
-        	}
-        	
-        	String mail = "";
-        	String toName = vo.getAccessName();
-        	
-        	/* 2021-10-12 홍승비 - 게시판 관리자 권한자에게 게시알림메일 발송 시 현재의 이름을 사용 (괄호 안의 부서명 제거 > 일반 사용자에 대한 게시알림메일의 받는사람 형식과 통일) */
         	try {
-        		OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
-        		
-        		mail = AccessUserInfo.getMail();
-        		toName = AccessUserInfo.getDisplayName();
-				logger.debug("user sendMail");
-			} catch (Exception e) {
-				OrganDeptVO accessDeptInfo = ezOrganService.getDeptInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
-				
-				mail = accessDeptInfo.getMail();
-				toName = accessDeptInfo.getDisplayName(); // 관리자 권한자가 부서인 경우에도 현재 부서명을 가져옴
-				logger.debug("dept sendMail");
-			}
-        	
-        	InternetAddress to = new InternetAddress();
-        	to.setPersonal(toName, "UTF-8");
-        	to.setAddress(mail);
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+	        	notiRecipientParam += vo.getAccessID() + separator;
+
+	        	InternetAddress from = new InternetAddress();
+
+	        	/* 2021-06-29 홍승비 - 익명게시판의 경우, 관리자에게 게시알림 메일발송 시 게시자 표출명과 임의의 이메일을 사용하도록 수정 */
+	        	if (boardInfo.getGuBun().equals("2")) {
+	        		from.setPersonal(boardItem.getWriterName(), "UTF-8");
+	        		from.setAddress("AnonyBoardMail@boardmail");
+	        	} else {
+	        		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	        		from.setAddress(userInfo.getEmail());
+	        	}
+
+	        	String mail = "";
+	        	String toName = vo.getAccessName();
+
+	        	/* 2021-10-12 홍승비 - 게시판 관리자 권한자에게 게시알림메일 발송 시 현재의 이름을 사용 (괄호 안의 부서명 제거 > 일반 사용자에 대한 게시알림메일의 받는사람 형식과 통일) */
+	        	try {
+	        		OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
+
+	        		mail = AccessUserInfo.getMail();
+	        		toName = AccessUserInfo.getDisplayName();
+					logger.debug("user sendMail");
+				} catch (Exception e) {
+					OrganDeptVO accessDeptInfo = ezOrganService.getDeptInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
+
+					mail = accessDeptInfo.getMail();
+					toName = accessDeptInfo.getDisplayName(); // 관리자 권한자가 부서인 경우에도 현재 부서명을 가져옴
+					logger.debug("dept sendMail");
+				}
+
+	        	InternetAddress to = new InternetAddress();
+	        	to.setPersonal(toName, "UTF-8");
+	        	to.setAddress(mail);
+
+	        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+
+        	} catch (Exception e) {
+        		logger.debug(e.getMessage());
+        		logger.debug("Sending board Mail is failed : "  + vo.getAccessID());
+        		continue;
+        	}
         }
-		
-		logger.debug("sendPostNotiMail ended.");
+
+        logger.debug("Sending board mail ends.");
+        // 2024-03-28 한태훈 > 게시판 관리자 게시알림 통합알림 추가
+        String boardType = boardInfo.getGuBun();
+		String linkUrl = "";
+		String linkUrlMobile = "";
+		String boardStatus = "";
+
+		String tempItemID = encodeURIComponent(itemID);
+		String tempBoardID = encodeURIComponent(boardID);
+
+		if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+			boardStatus = "photoBoardItem";
+		}
+
+		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			boardStatus = "newBoardItemList";
+		} else {
+			boardStatus = "boardItemList";
+		}
+
+		if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+			boardStatus = "photoBoardItem";
+		}
+
+		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			boardStatus = "newBoardItemList";
+		} else {
+			boardStatus = "boardItemList";
+		}
+
+		String tempBoardStatus = encodeURIComponent(boardStatus);
+
+		switch (boardType) {
+		case "3":
+		case "4":
+			linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		case "7":
+			linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		default:
+			linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		}
+
+		String senderName = boardType.equals("2") ? "익명" : userInfo.getDisplayName();
+
+        if (notiRecipientParam.length() > 0) {
+			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), senderName, notiRecipientParam, "board", "new", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "notChkSetting");
+			logger.debug("board " +  "new" + " noti status : " + notiStatus);
+        }
+
+		logger.debug("sendPostNotiForAdmin ended.");
 	}
 	
 	/**
@@ -7895,10 +8224,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 답변알림 메일전송 실행 Method
 	 */
-	@RequestMapping(value = "/ezBoard/sendReplyNoticeMail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezBoard/sendReplyNotice.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendReplyNoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("sendReplyNoticeMail started");
+	public void sendReplyNotice(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("sendReplyNotice started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -7909,7 +8238,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		//2023-05-10 전인하 - 답변알림에서 누락된 파라미터인 boardGubun(게시판의 타입을 규정)을 가져와 메소드에 삽입
+		// 2023-05-10 전인하 - 답변알림에서 누락된 파라미터인 boardGubun(게시판의 타입을 규정)을 가져와 메소드에 삽입
 		String boardGubun = boardInfo.getGuBun();
 		
 		if (!boardInfo.getReplyNotify().equals("1")) {
@@ -7930,37 +8259,102 @@ public class EzBoardController extends EgovFileMngUtil{
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t259", userInfo.getLocale()) + "<br><br>");
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardInfo.getBoardName()));
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
-        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+        
+        /* 2024-02-02 홍승비 - 승인게시판의 경우, 승인자가 아닌 게시물 작성자의 정보가 메일에 표출되도록 수정 (익명게시판은 승인여부 사용불가, getBrdGetItemInfo로 가져온 데이터는 작성자/작성자 부서명/작성자 회사명 전부 다국어 대응됨) */
+        if (boardInfo.getApprFlag() != null && boardInfo.getApprFlag().equalsIgnoreCase("Y")) { // 승인게시판
+        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + doc.getElementsByTagName("WriterName").item(0).getTextContent() + "(" + ("null".equals(doc.getElementsByTagName("ExtensionAttribute3").item(0).getTextContent()) ? "" : doc.getElementsByTagName("ExtensionAttribute3").item(0).getTextContent()) + ", " + doc.getElementsByTagName("WriterDeptName").item(0).getTextContent() + ", " + doc.getElementsByTagName("WriterCompanyName").item(0).getTextContent() + ")");
+        } else {
+        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+        }
+		
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</span>");
         
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         
         String subject = "[" + egovMessageSource.getMessage("ezBoard.t260", userInfo.getLocale()) + boardInfo.getBoardName() + "]" + title;
         
+        String notiContent = boardInfo.getBoardName() + " - " + title;
+		String notiReceiptIdList = "";
+
         List<BoardListVO> boardListVOs = ezBoardService.getReplyNoticeMail(boardID, itemTreeID, userInfo.getLang(), userInfo.getTenantId());
         
+        logger.debug("Sending board mail starts.");
         for (BoardListVO vo : boardListVOs) {
-        	InternetAddress from = new InternetAddress();
-        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        	from.setAddress(userInfo.getEmail());
+        	try {
+        		notiReceiptIdList += vo.getWriterID() + ";;";
+
+	        	InternetAddress from = new InternetAddress();
+	        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	        	from.setAddress(userInfo.getEmail());
+
+	        	InternetAddress to = new InternetAddress();
+	        	to.setPersonal(vo.getWriterName(), "UTF-8");
+	        	to.setAddress(vo.getMail());
+
+	        	if (!ezPersonalService.hasNotiDiableItem(vo.getWriterID(), NotiType.BOARD_REPLY, NotiPlatform.MAIL, userInfo.getTenantId())) {
+	        		ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+	        	}
+        	} catch (Exception e) {
+        		logger.debug(e.getMessage());
+        		logger.debug("Sending board mail is failed : " + vo.getWriterID());
+        		continue;
+        	}
         	
-        	InternetAddress to = new InternetAddress();
-        	to.setPersonal(vo.getWriterName(), "UTF-8");
-        	to.setAddress(vo.getMail());
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
         }
-        
-		logger.debug("sendReplyNoticeMail ended");
+        logger.debug("Sending board mail ends.");
+
+        // 2024-03-28 한태훈 > 게시판 답변알림 통합알림 추가
+        String linkUrl = "";
+		String linkUrlMobile = "";
+		String boardStatus = "";
+
+		if (boardGubun != null && (boardGubun.equals("4") || boardGubun.equals("3"))) {
+			boardStatus = "photoBoardItem";
+		}
+
+		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			boardStatus = "newBoardItemList";
+		} else {
+			boardStatus = "boardItemList";
+		}
+
+		itemID = encodeURIComponent(itemID);
+		boardID = encodeURIComponent(boardID);
+		boardStatus = encodeURIComponent(boardStatus);
+
+		switch (boardGubun) {
+		case "3":
+		case "4":
+			linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (itemID) + "&boardID=" + (boardID);
+			linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (boardID) + "&itemID=" + (itemID) + "&type=photoBoardItem&boardItemListType=" + (boardStatus);
+			break;
+		case "7":
+			linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (itemID) + "&boardID=" + (boardID);
+			linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (boardID) + "&itemID=" + (itemID) + "&type=movieBoardItem&boardItemListType=" + (boardStatus);
+			break;
+		default:
+			linkUrl += "/ezBoard/boardItemView.do?itemID=" + (itemID) + "&boardID=" + (boardID);
+			linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (boardID) + "&itemID=" + (itemID) + "&type=boardItem&boardItemListType=" + (boardStatus);
+			break;
+		}
+
+		if (notiReceiptIdList != null && !notiReceiptIdList.equals("")) {
+        	notiReceiptIdList = notiReceiptIdList.substring(0, notiReceiptIdList.length() - 2);
+        }
+
+        String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiReceiptIdList, "board", "reply", notiContent, "popup", "800", "1000", linkUrl, linkUrlMobile, "");
+		logger.debug("board " +  "reply" + "noti status : " + notiStatus);
+
+		logger.debug("sendReplyNotice ended");
 	}
 	
 	/**
-	 * 게시판 게시물승인관련 메일전송 실행 Method
+	 * 게시판 게시물승인관련 알림전송 실행 Method
 	 */
-	@RequestMapping(value = "/ezBoard/sendApprNoticeMail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezBoard/sendApprNotice.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendApprnoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("sendApprnoticemail started");
+	public void sendApprnotice(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("sendApprnotice started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -8001,29 +8395,84 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         
         List<LoginVO> loginVOs = ezBoardService.getSendApprMailList(boardID, userInfo.getLang(), userInfo.getTenantId());
-        
+        String notiRecipientParam = "";
+        String separator = ";;";
+
+        logger.debug("Sending board mail starts.");
         for (LoginVO vo : loginVOs) {
-        	InternetAddress from = new InternetAddress();
-        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        	from.setAddress(userInfo.getEmail());
-        	
-        	InternetAddress to = new InternetAddress();
-        	to.setPersonal(vo.getDisplayName(), "UTF-8");
-        	to.setAddress(vo.getEmail());
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	try {
+	        	notiRecipientParam += vo.getId() + separator;
+	        	InternetAddress from = new InternetAddress();
+	        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	        	from.setAddress(userInfo.getEmail());
+
+	        	InternetAddress to = new InternetAddress();
+	        	to.setPersonal(vo.getDisplayName(), "UTF-8");
+	        	to.setAddress(vo.getEmail());
+
+	        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	} catch (Exception e) {
+        		logger.debug(e.getMessage());
+        		logger.debug("Sending board mail is failed : " + vo.getId());
+        		continue;
+        	}
         }
-        
-		logger.debug("sendApprnoticemail ended");
+
+        logger.debug("Sending board mail ends.");
+
+        // 2024-03-28 한태훈 > 게시판 게시물 승인 통합알림 추가
+        String notiContent = boardInfo.getBoardName() + " - " + title;
+        String boardType = boardInfo.getGuBun();
+		String linkUrl = "";
+		String linkUrlMobile = "";
+		String boardStatus = "";
+
+		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			boardStatus = "newBoardItemList";
+		} else {
+			boardStatus = "boardItemList";
+		}
+
+		if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+			boardStatus = "photoBoardItem";
+		}
+
+		String tempItemID = encodeURIComponent(itemID);
+		String tempBoardID = encodeURIComponent(boardID);
+		String tempBoardStatus = encodeURIComponent(boardStatus);
+
+		switch (boardType) {
+		case "3":
+		case "4":
+			linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		case "7":
+			linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		default:
+			linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (tempBoardStatus);
+			break;
+		}
+
+		if (notiRecipientParam.length() > 0) {
+			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "board", "apprv_waiting", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "notChkSetting");
+			logger.debug("board " +  "apprv" + " noti status : " + notiStatus);
+		}
+
+		logger.debug("sendApprnotice ended");
 	}
 	
 	/**
 	 * 게시판 게시물반려관련 메일전송 실행 Method
 	 */
-	@RequestMapping(value = "/ezBoard/sendReturnNoticeMail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezBoard/sendReturnNotice.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendReturnNoticemail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("sendReturnNoticemail started");
+	public void sendReturnNotice(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("sendReturnNotice started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -8039,34 +8488,78 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			BoardListVO boardListVO = ezBoardService.getItemInfo("", tempItemID, userInfo.getLang(), userInfo.getTenantId());
 			
-			// 게시판ID, 게시물ID로 어느 회사에서 쓴것인지 확인 -> 현재 자신의 companyID와 다르다면 alert 후 창 닫음
-			String strURL = "javascript:Item_View_APPR('" + boardListVO.getBoardID() + "','" + tempItemID + "','" + boardListVO.getGuBun() + "');";
-	        strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
-	        
-	        StringBuilder bodyContent = new StringBuilder();
-	        
-	        /* 2018-10-26 홍승비 - 게시판 게시물 반려 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
-	        bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999015", userInfo.getLocale()) + "<br><br>");
-	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardListVO.getBoardName());
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardListVO.getTitle()) + "</a>");
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t999016", userInfo.getLocale()) + " : " + commonUtil.cleanValue(content) + "</a>");
-	        
-	        /* 2019-05-06 홍승비 - 루프 바깥의 content 변수 반복 사용으로 메세지 깨지는 오류 수정 */
-	        String subject = "[" + egovMessageSource.getMessage("ezBoard.t999017", userInfo.getLocale()) + "]" + boardListVO.getTitle();
-	        String contentTemp = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-	        
-        	InternetAddress from = new InternetAddress();
-        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        	from.setAddress(userInfo.getEmail());
-        	
-        	InternetAddress to = new InternetAddress();
-        	to.setPersonal(boardListVO.getWriterName(), "UTF-8");
-        	to.setAddress(boardListVO.getMail());
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, contentTemp, false);
+			if(!ezPersonalService.hasNotiDiableItem(boardListVO.getWriterID(), NotiType.fromString("BOARD_RETURN"), NotiPlatform.MAIL, userInfo.getTenantId())) {
+				// 게시판ID, 게시물ID로 어느 회사에서 쓴것인지 확인 -> 현재 자신의 companyID와 다르다면 alert 후 창 닫음
+				String strURL = "javascript:Item_View_APPR('" + boardListVO.getBoardID() + "','" + tempItemID + "','" + boardListVO.getGuBun() + "');";
+		        strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
+
+		        StringBuilder bodyContent = new StringBuilder();
+
+		        /* 2018-10-26 홍승비 - 게시판 게시물 반려 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
+		        bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999015", userInfo.getLocale()) + "<br><br>");
+		        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardListVO.getBoardName());
+		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardListVO.getTitle()) + "</a>");
+		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t999016", userInfo.getLocale()) + " : " + commonUtil.cleanValue(content) + "</a>");
+
+		        /* 2019-05-06 홍승비 - 루프 바깥의 content 변수 반복 사용으로 메세지 깨지는 오류 수정 */
+		        String subject = "[" + egovMessageSource.getMessage("ezBoard.t999017", userInfo.getLocale()) + "]" + boardListVO.getTitle();
+		        String contentTemp = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+
+
+	        	InternetAddress from = new InternetAddress();
+	        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	        	from.setAddress(userInfo.getEmail());
+
+	        	InternetAddress to = new InternetAddress();
+	        	to.setPersonal(boardListVO.getWriterName(), "UTF-8");
+	        	to.setAddress(boardListVO.getMail());
+
+	        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, contentTemp, false);
+			}
+
+        	// 2024-03-28 한태훈 > 게시판 게시물 반려 통합알림 추가
+        	String boardType = boardListVO.getGuBun();
+    		String linkUrl = "";
+    		String linkUrlMobile = "";
+    		String boardStatus = "";
+
+    		if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+    			boardStatus = "photoBoardItem";
+    		}
+
+    		if (tempItemID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+    			boardStatus = "newBoardItemList";
+    		} else {
+    			boardStatus = "boardItemList";
+    		}
+
+    		tempItemID = encodeURIComponent(tempItemID);
+    		String boardID = encodeURIComponent(boardListVO.getBoardID());
+    		boardStatus = encodeURIComponent(boardStatus);
+
+    		switch (boardType) {
+    		case "3":
+    		case "4":
+    			linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (boardID);
+    			linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (boardID) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (boardStatus);
+    			break;
+    		case "7":
+    			linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (boardID);
+    			linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (boardID) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (boardStatus);
+    			break;
+    		default:
+    			linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (boardID);
+    			linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (boardID) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (boardStatus);
+    			break;
+    		}
+
+    		String notiContent = boardListVO.getBoardName() + " - " + boardListVO.getTitle();
+        	String notiRecipientParam =  boardListVO.getWriterID();
+   			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "BOARD", "RETURN", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
+   			logger.debug("board " +  "return" + " noti status : " + notiStatus);
 		}
 		
-		logger.debug("sendReturnNoticemail ended");
+		logger.debug("sendReturnNotice ended");
 	}
 	
 	/**
@@ -9042,7 +9535,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
 		if (boardInfo.getListView_FG().equals("true")) {
-			boardName = boardInfo.getBoardName();
+			// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+			String userLang = userInfo.getLang();
+			boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+			if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+				boardName = boardInfo.getBoardName2();
+			} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+				boardName = boardInfo.getBoardName3();
+			} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+				boardName = boardInfo.getBoardName4();
+			}
 			
 			if (request.getParameter("sortBy") != null) {
 				sortBy = request.getParameter("sortBy");
@@ -9061,7 +9564,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (isMyBoardExist > 0) {
 			isMyBoard = "YES";
 		}
-		
+
+		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
+
 		model.addAttribute("mode", mode);
 		model.addAttribute("apprFlag", apprFlag);
 		model.addAttribute("useOCS", useOCS);
@@ -9078,6 +9583,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isMyBoard", isMyBoard);
+		model.addAttribute("endDateOption", endDateOption);
 
 		logger.debug("boardItemListMovie ended");
 		return "ezBoard/boardItemListMovie";
@@ -9116,6 +9622,18 @@ public class EzBoardController extends EgovFileMngUtil{
 			userID = userInfo.getDisplayName2();
 		}
 		
+		// 2024-08-22 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();		
+		String boardName = boardInfo.getBoardName(); // 기본값은 한국어로 설정
+
+		if (userLang.equals("2") && boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().isEmpty()) {
+			boardName = boardInfo.getBoardName2();
+		} else if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().isEmpty()) {
+			boardName = boardInfo.getBoardName3();
+		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
+			boardName = boardInfo.getBoardName4();
+		}
+
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("boardID", boardID);
@@ -9125,6 +9643,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("strNow", strNow);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("boardName", boardName);
 
 		logger.debug("newBoardItemMovie ended");
 		return "ezBoard/boardNewItemMovie";
@@ -9347,6 +9866,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardVO boardAdjacent = null;
 		
 		mode = request.getParameter("mode");
+		
+		boolean isExistBoardItem = ezBoardService.confirmBoardItemDeletion(boardID, itemID, userInfo.getTenantId());
+		
+		if (!isExistBoardItem) {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", userInfo.getLocale()));
+			return "/common/error";
+		}
 		
 		if (!accessCheck(boardID, itemID, location, userInfo)) {
 			return "main/warning";
@@ -9988,131 +10514,203 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 2021-06-21 홍승비 - 게시판 메일알림 메일 발송 컨트롤러 (게시알림, 수정알림, 댓글알림)
 	 * */
-	@RequestMapping(value = "/ezBoard/sendBoardAlertMail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezBoard/sendBoardAlert.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void sendBoardAlertMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("sendBoardAlertMail started.");
+	public void sendBoardAlert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("sendBoardAlert started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String pIsAllGroupBoard = request.getParameter("isAllGroupBoard");
 		String pMode = request.getParameter("mode");
+		// 2023-08-03 조수빈 - 개인이 게시판 알람을 설정한 항목인지에 대한 여부
+		boolean disableMail = false;
 		
 		// 게시판 옵션에서 메일알림을 사용하는 경우에만 발송한다.
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
+
+		if (boardProperty.getGuBun().equals("2")) {
+			logger.debug("Sending Noti doesn't support on Anonymous Board");
+			logger.debug("sendBoardAlert ended.");
+			return;
+		}
+
 		List<HashMap<String, String>> possibleUserInfo = new ArrayList<HashMap<String, String>>();
 		HashMap<String, String> recipientIDs = new HashMap<String, String>();
 		String companyID = pIsAllGroupBoard.equals("Y") ? "" : boardProperty.getCompanyID(); // 회사ID의 경우, 그룹사게시판이 아닌 경우에만 게시판이 속한 회사ID로 세팅한다.
 		
-		// 신규 게시물 등록, 수정 알림에 대한 수신인 ID 리턴
+		List<String> notiRecipientIds = new ArrayList<String>();
+		String notiRecipientParam = "";
+		String separator = ";;";
+
 		if ((pMode.equals("new") && boardProperty.getMailFG_Post() != null && boardProperty.getMailFG_Post().equals("Y")) || (pMode.equals("modify") && boardProperty.getMailFG_Mod() != null && boardProperty.getMailFG_Mod().equals("Y"))) {
 			// 표준모듈(포탈, 게시판)에 회사 전환 기능이 없으므로, 사간겸직에 대해서는 권한을 체크하지 않는다. (회사 변경기능이 있다면 해당 회사에 대응하도록 수정 필요)
-			possibleUserInfo = ezBoardService.getBoardUserInfoForMailSend(pIsAllGroupBoard, commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()), companyID, userInfo.getTenantId());
-			
-			// 관리자권한이 있는 사원 + 해당 회사 소속 사원 정보를 리턴받는다.
-			for (int i = 0; i < possibleUserInfo.size(); i++) {
-				String userID = possibleUserInfo.get(i).get("CN");
-				String userName = possibleUserInfo.get(i).get("USERNAME");
-				String mail = possibleUserInfo.get(i).get("MAIL");
-				String deptID = possibleUserInfo.get(i).get("DEPTID");
-				String userCompanyID = possibleUserInfo.get(i).get("COMPANYID");
-				String deptPathCode = userID + "," + possibleUserInfo.get(i).get("DEPT_CD_PATH");
-				String rollInfo = possibleUserInfo.get(i).get("ROLLINFO");
-				String value = userName + ";;" + mail;
-				
-				// userID가 메일발송 대상에 없는 경우 권한체크 진행
-				if (!recipientIDs.containsKey(userID)) {
-					boolean canAccess = accessListViewFGCheck(boardID, boardProperty.getGuBun(), userID, deptID, deptPathCode, rollInfo, pIsAllGroupBoard, userCompanyID, userInfo.getTenantId());
-					
-					if (canAccess) {
-						recipientIDs.put(userID, value);
-					}
+			// 2024-03-28 한태훈 > 게시판 일반 사용자 즐겨찾기 게시판 새게시물 등록 시 통합알림 추가
+			List<OrganUserVO> favoriteBoardUserList = ezBoardService.getFavoriteBoardUserList(boardID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+			for (int i = 0; i < favoriteBoardUserList.size(); i++) {
+				String writerID = favoriteBoardUserList.get(i).getCn();
+				String value = favoriteBoardUserList.get(i).getDisplayName() + ";;" + favoriteBoardUserList.get(i).getMail();
+				int tenantId = favoriteBoardUserList.get(i).getTenantId();
+				disableMail = ezPersonalService.hasNotiDiableItem(writerID, pMode.equals("new") ? NotiType.BOARD_NEW : NotiType.BOARD_MODIFY, NotiPlatform.MAIL, tenantId);
+				if (!disableMail) {
+			        recipientIDs.put(writerID, value);
+				}
+
+				if (!notiRecipientIds.contains(writerID)) {
+					notiRecipientIds.add(writerID);
+					notiRecipientParam += writerID + ";;";
 				}
 			}
+
 		}
 		// 게시물 댓글 알림에 대한 수신인 ID 리턴
 		else if (pMode.equals("comment") && boardProperty.getMailFG_Comment() != null && boardProperty.getMailFG_Comment().equals("Y")) {
 			possibleUserInfo = ezBoardService.getCommentNoticeMail(boardID, itemID, userInfo.getLang(), userInfo.getTenantId());
-			
 			for (int i = 0; i < possibleUserInfo.size(); i++) {
 				String writerID = possibleUserInfo.get(i).get("WRITERID");
 				String writerName = possibleUserInfo.get(i).get("WRITERNAME");
 				String mail = possibleUserInfo.get(i).get("MAIL");
+				int tenantId = Integer.parseInt(possibleUserInfo.get(i).get("TENANT_ID"));
 				String value = writerName + ";;" + mail;
+				disableMail = ezPersonalService.hasNotiDiableItem(writerID, NotiType.BOARD_COMMENT, NotiPlatform.MAIL, tenantId);
 				
-				recipientIDs.put(writerID, value);
+				if (!disableMail) {
+					recipientIDs.put(writerID, value);
+				}
+
+				if (!notiRecipientIds.contains(writerID)) {
+					notiRecipientIds.add(writerID);
+					notiRecipientParam += writerID + ";;";
+				}
+
 			}
 		}
-		// 메일발송 하지 않는 경우, 바로 리턴
+		// 알림발송 하지 않는 경우, 바로 리턴
 		else {
-			logger.debug("sendBoardAlertMail ended. (mail alert is not used for mode [" + pMode + "])");
+			logger.debug("sendBoardAlert ended. (Sending alert is not used for mode [" + pMode + "])");
 			return;
 		}
 		
-		// 게시물 링크, 게시일 정보 등 생성
 		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		
+		// 게시물 링크, 게시일 정보 등 생성
 		String strURL = "Item_View_New('" + boardID + "','" + itemID + "','" + boardProperty.getGuBun() + "');";
         strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
-        String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false); 
+        String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false);
         strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
-        
+
 		// 메일 본문 생성
 		StringBuilder bodyContent = new StringBuilder();
 		String content = "";
 		String subject = "";
-		
+
+
 		if (pMode.equals("new")) { // 게시판 게시알림 (아래 게시판에 새 게시글이 게시되었습니다.)
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250", userInfo.getLocale()) + "<br><br>");
 	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
-	        
+
+
 	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
 	        subject = "[" + egovMessageSource.getMessage("ezBoard.t255", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
-		}
-		else if (pMode.equals("modify")) { // 게시판 수정알림 (아래 게시판의 게시물이 수정되었습니다.)
+
+		} else if (pMode.equals("modify")) { // 게시판 수정알림 (아래 게시판의 게시물이 수정되었습니다.)
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail05", userInfo.getLocale()) + "<br><br>");
 	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
-	        
+
+
 	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
 	        subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail07", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
-		}
-		else if (pMode.equals("comment")) { // 게시판 댓글알림 (아래 게시판의 게시물에 댓글이 등록되었습니다.)
+
+		} else if (pMode.equals("comment")) { // 게시판 댓글알림 (아래 게시판의 게시물에 댓글이 등록되었습니다.)
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail06", userInfo.getLocale()) + "<br><br>");
 	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
-	        
+
 	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
 	        subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail08", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
 		}
-		
+
+		logger.debug("Sending mail starts.");
 		// 수신인 ID에 대해 개별 메일발송 실행
 		Iterator<String> keys = recipientIDs.keySet().iterator();
+		String key = "";
 		while (keys.hasNext()) {
-			String key = keys.next(); // userID
-			String value = recipientIDs.get(key); // userName;;mail
-			String userName = value.split(";;")[0];
-			String mail = value.split(";;")[1];
-					
-			InternetAddress from = new InternetAddress();
-        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        	from.setAddress(userInfo.getEmail());
-        	
-			InternetAddress to = new InternetAddress();
-        	to.setPersonal(userName, "UTF-8");
-        	to.setAddress(mail);
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+			try {
+				key = keys.next(); // userID
+				String value = recipientIDs.get(key); // userName;;mail
+				String userName = value.split(";;")[0];
+				String mail = value.split(";;")[1];
+
+				InternetAddress from = new InternetAddress();
+	        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	        	from.setAddress(userInfo.getEmail());
+
+				InternetAddress to = new InternetAddress();
+	        	to.setPersonal(userName, "UTF-8");
+	        	to.setAddress(mail);
+
+	        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+			} catch (Exception e) {
+				logger.debug(e.getMessage());
+				logger.debug("Sending mail is falied : " + key);
+				continue;
+			}
 		}
+
+		logger.debug("Sending mail ends.");
 		
-		logger.debug("sendBoardAlertMail ended.");
+		String notiContent = boardProperty.getBoardName() + " - " + boardItem.getTitle();
+		String boardType = boardProperty.getGuBun();
+		String linkUrl = "";
+		String linkUrlMobile = "";
+		String boardStatus = "";
+
+		if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+			boardStatus = "photoBoardItem";
+		}
+
+		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			boardStatus = "newBoardItemList";
+		} else {
+			boardStatus = "boardItemList";
+		}
+
+		String tempItemID = encodeURIComponent(itemID);
+		String tempBoardID = encodeURIComponent(boardID);
+		boardStatus = encodeURIComponent(boardStatus);
+
+		switch (boardType) {
+		case "3":
+		case "4":
+			linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (boardStatus);
+			break;
+		case "7":
+			linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (boardStatus);
+			break;
+		default:
+			linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+			linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (boardStatus);
+			break;
+		}
+		// 2024-03-28 한태훈 > 게시판 일반 사용자 통합 알림 추가
+		if (notiRecipientIds != null && notiRecipientIds.size() > 0) {
+			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "board", pMode, notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
+			logger.debug("board " +  pMode + " noti status : " + notiStatus);
+		}
+		logger.debug("sendBoardAlert ended.");
 	}
 	
 	/**
@@ -10452,5 +11050,91 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("getUserReplyReact ended.");
 		return getUserReplyReactList;
+	}
+
+	// 2024-05-29 전인하 - 게시판 > 게시물 리스트 > 만료된 게시물 리스트 표출 가능여부 메소드
+	public String checkEndDateConfig(BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception {
+		String endDateOptionConfig = ezCommonService.getTenantConfig("endDateOptionConfig", userInfo.getTenantId());
+		String endDateOption = "NO";
+		if (endDateOptionConfig != null) {
+			if (endDateOptionConfig.equals("ALWAYS") || (endDateOptionConfig.equals("ADMIN") && boardInfo.getBoardAdmin_FG().equals("true"))) {
+				endDateOption = "YES";
+			} else {
+				endDateOption = "NO";
+			}
+		}
+		return endDateOption;
+	}
+
+	@GetMapping("/ezBoard/boardView.do")
+	public String openBoardView(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		// 현재 기존 소스에서 모두 비어있는 값임. 추후 수정 가능성 있음.
+		String showAdjacent = Optional.ofNullable(request.getParameter("showAdjacent")).orElse("");
+
+		BoardPropertyVO vo = ezBoardService.getBoardProperty(boardID, commonUtil.userInfo(loginCookie).getTenantId());
+		UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
+
+		switch(vo.getGuBun()) {
+			case "3":
+			case "4":
+				builder.uri(URI.create("/ezBoard/boardItemViewPhoto.do"));
+				break;
+			case "7":
+				builder.uri(URI.create("/ezBoard/boardItemViewMovie.do"));
+				break;
+			default:
+				builder.uri(URI.create("/ezBoard/boardItemView.do"));
+				break;
+		}
+		builder.queryParam("boardID", boardID);
+		builder.queryParam("itemID", itemID);
+		builder.queryParam("showAdjacent", showAdjacent);
+
+		return "redirect:" + builder.build().encode().toUriString();
+	}
+
+	// 2023-12-07 한태훈 - java에서 encodeURIComponent 메소드 구현
+	private String encodeURIComponent(String s) throws Exception {
+	    String result = null;
+    	result = URLEncoder.encode(s, "UTF-8")
+                         .replaceAll("\\+", "%20")
+                         .replaceAll("\\%21", "!")
+                         .replaceAll("\\%27", "'")
+                         .replaceAll("\\%28", "(")
+                         .replaceAll("\\%29", ")")
+                         .replaceAll("\\%7E", "~");
+
+	    return result;
+	}
+	
+	// 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 > 유저 선택 팝업 호출
+	@RequestMapping(value = "/ezBoard/boardSelectUser.do", method = RequestMethod.GET)
+	public String personalPopupUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("personalPopupUser started");
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String deptID = auth.getDeptID();
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request.getParameter("name");
+		String companyId = request.getParameter("companyId");
+		String lang = auth.getLang();
+		String columnName = request.getParameter("columnName") == null ? "" : request.getParameter("columnName");
+
+		model.addAttribute("columnName", columnName);
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName", textName);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("dept", auth.getDeptID());
+		model.addAttribute("lang", lang);
+
+		logger.debug("personalPopupUser ended");
+		return "/ezBoard/boardSelectUser";
 	}
 }

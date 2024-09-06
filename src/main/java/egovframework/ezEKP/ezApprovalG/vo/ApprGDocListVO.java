@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezApprovalG.vo;
 
 
 public class ApprGDocListVO {
+	private String sn;
+
 	/** 문서 아이디*/
 	private String docID;
 	/** 양식 아이디*/
@@ -160,7 +162,15 @@ public class ApprGDocListVO {
 	private String fileState;
 	
 	private String delFlag;
-	
+
+	public String getSn() {
+		return sn;
+	}
+
+	public void setSn(String sn) {
+		this.sn = sn;
+	}
+
 	public String getDelFlag() {
 		return delFlag;
 	}

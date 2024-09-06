@@ -12,59 +12,56 @@
     <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
     <script type="text/javascript">
-    /*
-        var 대신 const와 let을 사용한 이유는 어디에서 어떻게 사용된지 파악하기 힘들기 때문에 사용했습니다.
-        let : 변수에 재할당이 가능합니다.
-        const : 변수 재선언, 변수 재할당 모두 불가능합니다.
-    */
-    let updateFileExList = ${fileExtension};
+
+    var updateFileExList = ${fileExtension};
     // 추가 또는 삭제시 view 타입 변경되는 오류
     window.onload = function () {
         makeExtensionUL_BOXinList();
 
         let fViewTypeValue = window.parent.frames["stat_left"].fileExtensionViewType;
         if (fViewTypeValue == 1) {
-            let obj = document.getElementById("listViewType");
-            let type = "list";
+            var obj = document.getElementById("listViewType");
+            var type = "list";
             viewType(obj,type);
         }
     }
     
     function makeExtensionUL_BOXinList () {
         
-        let ulElemnt = document.querySelector("#ExtensionUL_TYPE");
+        var ulElemnt = document.querySelector("#ExtensionUL_TYPE");
         
-        for (let i = 0; i < updateFileExList.length; i++) {
-            let item = updateFileExList[i];
+        for (var i = 0; i < updateFileExList.length; i++) {
+            var item = updateFileExList[i];
 
             // li 태그 생성
-            let liElement = document.createElement("li");
+            var liElement = document.createElement("li");
             liElement.setAttribute("_ext", item);
             liElement.setAttribute("name", "LI_EXT");
 
             // checkbox 생성
-            let checkboxElement = document.createElement("input");
+            var checkboxElement = document.createElement("input");
             checkboxElement.setAttribute("type", "checkbox");
             checkboxElement.setAttribute("name", "checkbox");
             checkboxElement.setAttribute("id", "checkbox" + i);
             checkboxElement.setAttribute("value", item);
 
             // label 생성
-            let labelElement = document.createElement("label");
+            var labelElement = document.createElement("label");
             labelElement.setAttribute("for", "checkbox" + i);
 
             // checkbox 내부에 span 추가
-            let spanElement = document.createElement("span");
+            var spanElement = document.createElement("span");
+            spanElement.setAttribute("title", item);
             spanElement.textContent = item;
 
             // a 태그 생성
-            let aElement = document.createElement("a");
+            var aElement = document.createElement("a");
             aElement.setAttribute("class", "imgbtn01");
 
             // span 태그 생성
-            let spanDeleteElement = document.createElement("span");
+            var spanDeleteElement = document.createElement("span");
             spanDeleteElement.setAttribute("class", "icon16 icon16_delete");
-            spanDeleteElement.onclick = function () {deleteFile(item)};
+            spanDeleteElement.setAttribute('onclick', 'deleteFile(\'' + item + '\')');;
             
             labelElement.appendChild(spanElement);
             labelElement.appendChild(aElement);
@@ -79,8 +76,8 @@
     }
     
     function viewType (thisObj, pViewType) {
-        let pSelectElement = document.getElementById("ExtensionUL_TYPE");
-        let fViewTypeValue = window.parent.frames["stat_left"].fileExtensionViewType;
+        var pSelectElement = document.getElementById("ExtensionUL_TYPE");
+        var fViewTypeValue = window.parent.frames["stat_left"].fileExtensionViewType;
         if (pViewType === "list") {
             pSelectElement.classList.add("ExtensionUL_LIST");
             pSelectElement.classList.remove("ExtensionUL_BOX");
@@ -112,7 +109,7 @@
     function addFileExtension() {
         $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"]'></div>").appendTo(parent.frames["stat_left"].document.body);
 
-        let popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+        var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 
         $("#addpopup").css("left", popupX);
 
@@ -120,33 +117,39 @@
 
         $("#addpopup").modal();
         // 추가 popup이 될때 마우스 focus를 작성란으로 focus이동
-        let inputFocus = document.getElementById("qname");
+        var inputFocus = document.getElementById("qname");
         inputFocus.focus();
     }
 
     // 허용 첨부 확장자 추가
     function add() {
-        let addValue = document.getElementById('qname').value.toLowerCase();
+        var addValue = document.getElementById('qname').value.toLowerCase();
         if (addValue == null || addValue == '') {
             alert("<spring:message code='ezSystem.kdh05' />  ");
             return;
         }
 
-        let addList = addValue.split(',');
-        let updateFileEx = '';
-        for (let i = 0; i < addList.length; i++) {
-            let trimTemp = addList[i].trim();
+        var addList = addValue.split(',');
+        var updateFileEx = '';
+        var addedItems = []; // 중복 발생 시 추가된 Item을 저장하는 배열
+        for (var i = 0; i < addList.length; i++) {
+            var trimTemp = addList[i].trim();
 
             if (updateFileExList.indexOf(trimTemp) !== -1) {
                 alert(trimTemp+" <spring:message code='ezSystem.kdh04' />  ");
-                add_close()
+                // 중간에 중복 발생 시 앞에 추가된 Item을 지워준다.
+                for (var j = 0; j < addedItems.length; j++) {
+                    updateFileExList.pop();
+                }
+                add_close();
                 return;
             } else {
                 updateFileExList.push(trimTemp);
+                addedItems.push(trimTemp); // 중복이 발생하기 전에 추가한 Item을 저장
             }
         }
         
-        let data = updateFileExList;
+        var data = updateFileExList;
 
         actionAjax(true, data);
     }
@@ -155,13 +158,15 @@
         if (!confirm("'"+deleteFE + "' <spring:message code='ezOrgan.t130'/>   ")) {
             return;
         }
-            updateFileExList = updateFileExList.filter((element) => element !== deleteFE);
+        updateFileExList = updateFileExList.filter(function(element) {
+            return element !== deleteFE;
+        });
 
         actionAjax(false, updateFileExList);
     }
 
     function actionAjax(isAdd, data) {
-        let msg = isAdd? "<spring:message code='ezSystem.jje17' />" : "<spring:message code='ezSystem.jje11' />";
+        var msg = isAdd? "<spring:message code='ezSystem.jje17' />" : "<spring:message code='ezSystem.jje11' />";
 
         $.ajax({
             type : "POST",
@@ -192,15 +197,15 @@
     }
 
     function deleteCheckList() {
-        let v = 'input[name="checkbox"]:checked';
-        let selectedList = document.querySelectorAll(v);
+        var v = 'input[name="checkbox"]:checked';
+        var selectedList = document.querySelectorAll(v);
 
         if (selectedList === undefined || selectedList === '' || selectedList.length === 0) {
             alert("<spring:message code='ezSystem.kdh03' />");
             return;
         }
         
-        let selectedListValue = '';
+        var selectedListValue = '';
         $.each(selectedList, function (index, item){
             selectedListValue += item.value+",";
             
@@ -213,7 +218,9 @@
         
         $.each(selectedList, function (index, item){
             
-            updateFileExList = updateFileExList.filter((element) => element !== item.value);
+            updateFileExList = updateFileExList.filter(function(element) {
+                return element !== item.value;
+            });
         })
         
         actionAjax(false, updateFileExList);
@@ -263,7 +270,7 @@
             <table class="popuplist" id="addpopup_list" style="width:478px;margin:10px 0px 0px 1px;">
                 <tr>
                     <th style="width:90px;height:30px"><spring:message code='ezSystem.kdh02' /></th>
-                    <td><input type="text" id="qname" name="qname" class="textarea" onkeyup="if(event.keyCode ==13) add();" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
+                    <td><input type="text" id="qname" name="qname" class="textarea" onkeyup="if(event.keyCode ==13) add();" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="10"></td>
                 </tr>
             </table>
             <div class="btnpositionLayer">

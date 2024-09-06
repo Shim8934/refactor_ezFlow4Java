@@ -978,6 +978,33 @@ function ListView() {
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
 
+			/* 2024-07-18 조소정 - 일정관리 > 그룹일정 작성 권한 기능 추가 */
+            if (type == "group") {
+			    var extTd = document.createElement("TD");
+			    var cb = document.createElement("INPUT");
+			    var curID = getNodeText(GetElementsByTagName(addXml, "DATA1")[0]);
+			    cb.id = "cb_" + curID;
+			    cb.type = "checkbox";
+			    cb.setAttribute("destID", curID);
+			    
+			    if (typeof mList !== 'undefined' && Array.isArray(mList)) {
+			    	var member = mList.find(function(m) {
+			        	return m.memberId === curID;
+			    	});
+			
+			    	if (member && member.writePermission === "Y") {
+			    		cb.setAttribute("checked", "checked");
+			    	}
+			    }
+			    else {
+			    	cb.setAttribute("checked", "checked");
+			    }
+			    
+			    extTd.appendChild(cb);
+			    extTd.innerHTML += ezSchedule_csj1;
+			    objTr.appendChild(extTd);
+            }
+            
             objTd = null;
             oText = null;
         }
@@ -1360,7 +1387,6 @@ function ListView() {
 
     function ListView_ToString() {
         return "KAONI ListView";
-        //return "영준이가 자바스크립트로 만든 리스트 뷰 v0.5";
     }    
 } // ListView 클래스 끝
 
@@ -1605,7 +1631,6 @@ function getOriginXML(pTagetID)
             width = width.substring(0, width.length - 2);            
         }        
         xmlHeader += "<WIDTH>" + width + "</WIDTH>";
-        //colname 어떻게 할까?
         xmlHeader += "<COLNAME></COLNAME>";
         xmlHeader += "</HEADER>";
     }

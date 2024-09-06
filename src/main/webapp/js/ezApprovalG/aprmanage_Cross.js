@@ -151,10 +151,10 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     
     /* 2023-06-19 조소정 - 공람할문서 메뉴(99) 복수 체크박스 추가 */
-    if(pListTypeValue == "1" || pListTypeValue == "99") { // 2020-04-29 : 결재할문서 복수체크박스 추가
+    if(pListTypeValue == "1" || pListTypeValue == "4" || pListTypeValue == "99" || pListTypeValue == "24") { // 2020-04-29 : 결재할문서 복수체크박스 추가
     	DocList.SetCheckBoxFlag(true);
     }
-    
+
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
     
@@ -349,7 +349,13 @@ function getReceivedDocList_after(xml) {
                 getSimsaDocList();
             return;
         }
-
+        
+        // 리스트를 닫기 전에 미리 선택한 row가 있을 때를 확인
+        var preDocList = new ListView();
+        var docListID = "DocList";
+        preDocList.LoadFromID(docListID);
+       	var preSelectedRow = preDocList.GetSelectedRows();
+        
         makePageSelPage();
 
         var xmlDoc;
@@ -368,15 +374,33 @@ function getReceivedDocList_after(xml) {
 
         if (document.getElementById("lvDocList").innerHTML != "") document.getElementById("lvDocList").innerHTML = "";
         var DocList = new ListView();
-        DocList.SetID("DocList");
+        DocList.SetID(docListID);
         DocList.SetMulSelectable(false);
         DocList.SetHeaderOnClick("lvDocList_HeaderClick");
         DocList.SetRowOnClick("lvDocList_SelChange");
         DocList.SetRowOnDblClick("lvDocList_DBSelChange");
         DocList.SetTitleIdx(0);
         DocList.SetUrgentFlag(false);
+        if (pListTypeValue == "4")  //2023-04-12 이가은 - 부서수신함 복수체크박스 추가
+            DocList.SetCheckBoxFlag(true);
         DocList.DataSource(xmlDoc);
         DocList.DataBind("lvDocList");
+        
+        // 2024-05-29 조수빈 - 부서수신함에서 이전 선택한 row를 유지하는 부분이 누락되어 추가
+        // 리스트를 닫기 전에 미리 선택한 row로 재선택
+        if (selRowChangeFlag && preSelectedRow.length > 0) {
+        	// 탭 이동 시에도 전 탭에서 선택된 row를 선택되는 오류 개선
+        	selRowChangeFlag = false;
+        	var docListLength = DocList.GetRowCount() - 1;
+        	// 마지막 row의 결재가 완료된 후 리스트로 돌아오면 로우가 선택되어 있지 않는 오류 개선
+            var beforeSelectedId = preSelectedRow[0].getAttribute('id');
+            if (docListLength < beforeSelectedId.split("_")[2]) {
+        		DocList.SetSelectedIndex(docListLength);
+        	} else {
+                tr_select(beforeSelectedId, docListID, true);
+        	}
+        }  
+        
         DocList = null;
 
         HiddenMailProgress();
@@ -859,11 +883,17 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     }
   
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
-    	openLocation = "/ezApprovalG/draftui.do?formURL=";
-        openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-        openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-        openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
-        
+        var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
+
+        if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+            openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        } else {
+            openLocation = "/ezApprovalG/draftui.do?formURL=";
+            openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        }
+            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
+
 //        // FormBuilder
 //        if (window.reformflag == null) {
 //        	// reformflag null 값이라면
@@ -960,7 +990,11 @@ function openApprovUI(allFlag) {
         		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         	}
         } else {
-            openLocation = "/ezApprovalG/approvui.do?docID=";
+            var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
+            if (isGroupDoc == "Y") // 일괄기안 문서를 여는 경우
+                openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=";
+            else
+                openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2")) + "&aprMemberSN=" + pArgument[4];
@@ -1074,7 +1108,7 @@ function openForm_Complete(ret) {
 }
 
 function openViewDocInfo(type) {
-	 if (type == undefined)
+	if (type == undefined)
 	        type = "";
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
@@ -1158,7 +1192,13 @@ function openViewDocInfo(type) {
         	}
         }
         else {
-        	openLocation = "/ezApprovalG/aprDocView.do";
+            var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
+
+            if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+                openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
+            } else {
+        	    openLocation = "/ezApprovalG/aprDocView.do";
+        	}
         }
         openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&docHref=" + encodeURI(pArgument[1]);
         openLocation = openLocation + "&opinionFlag=" + encodeURI(pArgument[2]) + "&docState=" + encodeURI(pArgument[3]) + "&listSusin=" + encodeURI(pArgument[4]) + "&oDoc=" + encodeURI(pArgument[5]);
@@ -1196,7 +1236,6 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                 openLocation = "";
                 
                 if (GetAttribute(pCurSelRow,"DATA15") == "001") {
-                	//언제타는지 궁금하구나
                 	openLocation = "/ezApprovalG/recevG.do";
                 } else {
                 	openLocation = "/ezApprovalG/recevGSusin.do";
@@ -1927,6 +1966,9 @@ function makePageSelPage() {
     		case "21":
     			parent.frames["left"].document.getElementById("count21").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
+            case "24":
+                parent.frames["left"].document.getElementById("count24").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
+                break;
     		case "99":
     			parent.frames["left"].document.getElementById("count99").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
@@ -2063,6 +2105,12 @@ function setbuttonenable() {
     
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
+        document.getElementById("tbtnReceiptAll").style.display = "none";
+        document.getElementById("tbtnRJunkyulAll").style.display = "none";
+    } else if (pListTypeValue == "4") {
+    	document.getElementById("tbtnApproveALL").style.display = "none";
+    	document.getElementById("tbtnReceiptAll").style.display = "";
+    	document.getElementById("tbtnRJunkyulAll").style.display = "";
     }
     else {
     	// apprGManage.jsp에서 공람버튼의 기본 스타일을 display = "none"으로 수정 (공람할문서 메뉴에서만 표출)
@@ -2070,6 +2118,8 @@ function setbuttonenable() {
 
         document.getElementById("tbtnApprove2").style.display = "none";
         document.getElementById("tbtnApproveALL").style.display = "none";
+        document.getElementById("tbtnReceiptAll").style.display = "none";
+        document.getElementById("tbtnRJunkyulAll").style.display = "none";
     }
 
     /*if (pListTypeValue == "8")
@@ -2077,7 +2127,7 @@ function setbuttonenable() {
     else
         document.getElementById("tbar1").style.display = "";*/
 
-    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 5 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11) {
+    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 5 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11 && pListTypeValue != 24) {
     	document.getElementById("tbtnRedraft").style.display = "none";		
         //SwapImage(document.getElementById("btnRedraft"), "dis");
         document.getElementById("tbtnRemoveDoc").style.display = "none";
@@ -2142,7 +2192,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnRemoveDoc").style.display = "none";
             }
         }
-    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99 || pListTypeValue == 11) {
+    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99 || pListTypeValue == 11 || pListTypeValue == 24) {
         document.getElementById("tbtnTotalSave").style.display = "";
         document.getElementById("tbtnSimsa").style.display = "none";
         //document.getElementById("tbtnGongRam").style.display = "";
@@ -2327,7 +2377,8 @@ function setbuttonenable() {
             if (approvalFlag == 'G') {
             	document.getElementById("tDocInfo").style.display = "none";
             }
-        } else if (pListTypeValue != 4 && tr.getAttribute("DATA2") != "" && tr.getAttribute("DATA12") == "011") {
+            /* 2023-05-22 양지혜 - 반송문서는 공람정보 버튼을 활성화하지 않도록 제외 */
+        } else if (pListTypeValue != 4 && tr.getAttribute("DATA2") != "" && tr.getAttribute("DATA12") == "011" && pFunctionType != "004") {
         	if (approvalFlag == 'G') {
         		document.getElementById("tDocInfo").style.display = "";
             }
@@ -2359,8 +2410,10 @@ function setbuttonenable() {
 
     if (approvalFlag == "S") {
 	    if (pListTypeValue == "4") {
-	        document.getElementById("tbtnViewDoc").style.display = "none";
+//	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
+	        document.getElementById("tbtnReceiptAll").style.display = "";
+	        document.getElementById("tbtnRJunkyulAll").style.display = "";
 	        
 	        if (pFunctionType == "015") {
 	            // 회송된 문서일 경우 접수버튼 display none 처리
@@ -2866,7 +2919,12 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     var openLocation = "";
     
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
-    	openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        var isGroupDoc = checkIsGroupDoc(pDocSN, "");
+        if (isGroupDoc == "Y") { // 임시저장된 일괄기안 문서를 여는 경우
+            openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        } else {
+    	    openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        }
     	openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
     	
@@ -3172,6 +3230,15 @@ function OpenAlertUI_Close() {
         DivPopUpHidden();
         parent.frames["left"].getAprCount();
         getDocList();
+    }catch(e){}
+}
+
+function OpenAlertUI_Close_Complete() {
+    try{
+        DivPopUpHidden();
+        parent.frames["left"].getAprCount();
+        getDocList();
+        OpenPopupWin.close();
     }catch(e){}
 }
 

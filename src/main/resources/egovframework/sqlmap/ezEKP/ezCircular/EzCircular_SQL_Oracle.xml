@@ -535,7 +535,7 @@
 				NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
 				B.updatestatus,
                 NVL(C.confirmcount, '0') AS confirmcount,
-				D.confirmtotalcount
+				NVL(D.confirmtotalcount, '0') AS confirmtotalcount
 							
 			FROM
 				TBL_CIRCULAR A
@@ -560,7 +560,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = #TENANTID#
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -578,7 +578,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = #TENANTID#
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON

@@ -47,6 +47,7 @@ import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.DataForModulesEnum;
+import egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
@@ -118,6 +119,11 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			if (paramName.equals("useSession") || paramName.equals("useSessionMobile")) {
 				int sessionParam = Integer.parseInt(paramValue);
 				paramValue = Integer.toString(sessionParam);
+			}
+			
+			if (paramName.equals("notiPollingInterval")) {
+				int notiIntervalParam = Integer.parseInt(paramValue) * (1000 * 60);
+				paramValue = Integer.toString(notiIntervalParam);
 			}
 			
 			sysParamVO.setName(paramName);
@@ -901,7 +907,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			String paramValue = list.get(i).get("value");
 			logger.debug("paramName:" + paramName + ", paramValue:" + paramValue);
 			
-			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail")) {
+			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail") || paramName.equals("LoginLockedDuration")) {
 				int changeInt = Integer.parseInt(paramValue);
 				paramValue = Integer.toString(changeInt);
 			}
@@ -1285,4 +1291,176 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 		return ezSystemAdminDAO.getUserChHistListCount(params);
 	}
+
+	@Override
+	public List<DeptChangeInfoVO> getDeptChHistList(int tenantID, String offset, int startPage, int maxItemPerPage,
+			String keyword, String keycode, String keycodeForType, String lang, String startDate, String endDate,
+			String companyId, boolean isMaster) throws Exception {
+		logger.debug("getDeptChHistList started. tenantID : {}", tenantID);
+
+		String companyOracleStr = "";
+		String isMasterAdmin = "";
+
+		if (!"Top/organ".equals(companyId)) {
+			companyOracleStr = " AND COMPANYID ='" + companyId + "'";
+		}
+
+		if (isMaster) {
+			isMasterAdmin = "Y";
+		}
+
+		logger.debug("lang : {} , search_keycode : {} , search_keyword : {} , search_keyType : {}", lang, keycode,keyword,keycodeForType);
+		Map<String, Object> params = new HashMap<>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("search_keycodeForType", keycodeForType);
+		params.put("lang", lang); // primary:기본명 / 1:영문명
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("isMasterAdmin", isMasterAdmin);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getDeptChHistList ended.");
+		List<DeptChangeInfoVO> list = ezSystemAdminDAO.getDeptChHistList(params);
+		return list;
+	}
+
+	@Override
+	public int getDeptChHistListCount(int tenantID, String offset, String keyword, String keycode,
+			String keycodeForType, String lang, String startDate, String endDate, String companyId,
+			boolean isMaster) throws Exception {
+		logger.debug("getDeptChHistListCount started. tenantID : {}", tenantID);
+
+		String companyOracleStr = "";
+		String isMasterAdmin = "";
+
+		if (!"Top/organ".equals(companyId)) {
+			companyOracleStr = " AND COMPANYID ='" + companyId + "'";
+		}
+
+		if (isMaster) {
+			isMasterAdmin = "Y";
+		}
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("search_keycodeForType", keycodeForType);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("isMasterAdmin", isMasterAdmin);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getDeptChHistListCount ended.");
+
+		return ezSystemAdminDAO.getDeptChHistListCount(params);
+	}
+
+	@Override
+	public void insertDeptChangeHist(DeptChangeInfoVO deptChangeInfoVO, LoginVO userInfo) throws Exception {
+		logger.debug("insertDeptChangeHist started.");
+
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		deptChangeInfoVO.setUpdatedt(nowDate);
+
+		deptChangeInfoVO.setExecutorId(userInfo.getId());
+		deptChangeInfoVO.setExecutorNm(userInfo.getDisplayName());
+		deptChangeInfoVO.setExecutorNm2(userInfo.getDisplayName2());
+
+		logger.debug("insertDeptChangeHist ended.");
+
+		ezSystemAdminDAO.insertDeptChangeHist(deptChangeInfoVO);
+	}
+
+	@Override
+	public List<ConnectionInfoVO> getConnectorList(int tenantID, String offset, int startPage, int maxItemPerPage,
+			String keycode, String keyword, String lang, String startDate, String endDate, String companyId)
+			throws Exception {
+		logger.debug("getConnectorList started. tenantID : " + tenantID);
+
+		String companyOracleStr = "";
+
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND COMPANYID ='" + companyId + "'";
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang); // primary:기본명 / 1:영문명
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getConnectorList ended.");
+		List<ConnectionInfoVO> list = ezSystemAdminDAO.getConnectorList(params);
+
+		return list;
+	}
+
+	@Override
+	public int getConnectorListCount(int tenantID, String offset, String keycode, String keyword, String lang,
+			String startDate, String endDate, String companyId) throws Exception {
+
+		logger.debug("getConnectorListCount started. tenantID : " + tenantID);
+
+		String companyOracleStr = "";
+
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND COMPANYID ='" + companyId + "'";
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getConnectorListCount ended.");
+
+		return ezSystemAdminDAO.getConnectorListCount(params);
+	}
+
+	@Override
+	public void resetThemeAllUser() throws Exception {
+		logger.debug("resetThemeAllUser started.");
+
+		ezSystemAdminDAO.updateResetThemeAllCompany(); // 모든 회사 테마 리셋
+		ezSystemAdminDAO.deleteThemeAllUser();
+		ezSystemAdminDAO.updateResetThemeAllUser();
+
+		logger.debug("resetThemeAllUser ended.");
+	}
+
+	@Override
+	public void resetPortletAllUser() throws Exception {
+		logger.debug("resetPortletAllUser started.");
+
+		ezSystemAdminDAO.deletePortletAllUser();
+		ezSystemAdminDAO.deletePortletSizeAllUser();
+
+		logger.debug("resetPortletAllUser ended.");
+	}
+
 }

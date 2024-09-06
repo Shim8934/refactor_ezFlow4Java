@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -581,25 +582,26 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception {
+	public void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level, String adminOrgan) throws Exception {
 		if (sDept.getHasSub().equals("1")) {
-			List<SimpleDeptVO> listSubSimpleDepts = getAllSimpleSubDepts(sDept.getDeptId(), level, primary, tenantId);
+			List<SimpleDeptVO> listSubSimpleDepts = getAllSimpleSubDepts(sDept.getDeptId(), level, primary, tenantId,adminOrgan);
 			sDept.setSubDepts(listSubSimpleDepts);
 			
 			for (SimpleDeptVO subDept: listSubSimpleDepts) {
 				if (order < path.length && subDept.getDeptId().equals(path[order])) {
-					getAllDepts(subDept, path, primary, tenantId, order + 1, level + 1);
+					getAllDepts(subDept, path, primary, tenantId, order + 1, level + 1, adminOrgan);
 				}
 			}
 		}
 	}
 
-	private List<SimpleDeptVO> getAllSimpleSubDepts(String deptId, int level, String primary, int tenantId) {
+	private List<SimpleDeptVO> getAllSimpleSubDepts(String deptId, int level, String primary, int tenantId, String adminOrgan) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("deptId",     deptId);
 		map.put("primary",    primary);
 		map.put("level",      level);
 		map.put("tenantId",   tenantId);
+		map.put("adminOrgan", adminOrgan);
 		
 		return ezWebFolderDAO.getAllSimpleSubDepts(map);
 	}
@@ -613,11 +615,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int tenantId) throws Exception {
+	public List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int tenantId, String adminOrgan) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("deptId",     deptId);
 		map.put("primary",    primary);
 		map.put("tenantId",   tenantId);
+		map.put("adminOrgan", adminOrgan);
 		
 		return ezWebFolderDAO.getDeptMemberList(map);
 	}
@@ -875,6 +878,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		if (StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {
 			for (int i = 0; i < cnt; i++) {
 				String _pFileName = (String)((JSONObject)nameArray.get(i)).get("originalFilename");
+				_pFileName = URLDecoder.decode(_pFileName,"UTF-8");
 				
 				if (_pFileName.indexOf(commonUtil.separator) > 0) {
 					_pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
@@ -1047,7 +1051,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 			try {
 				in = new BufferedInputStream(new FileInputStream(file));
-				String mimetype = "application/octet-stream";
+				Path path = Paths.get(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
+				String mimetype = Files.probeContentType(path);
+				//String mimetype = "application/octet-stream";
 
 				response.setBufferSize(BUFF_SIZE);
 				response.setContentType(mimetype);
@@ -1844,7 +1850,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			process: {
 				FolderVO destFolder = getFolderByFolderId(destFolderId, offset, tenantId);
 
-				// 같은 폴더인지는 js 단에서 처리하니까 상관 없을듯
+				// 같은 폴더인지는 js 단에서 처리함
 				// Check copy/move conditions
 				// if (folder.getFolderUpper().equals(destFolderId)) {
 				// code = 4;
@@ -2172,6 +2178,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("tenantId", tenantId);
 		map.put("timeUTC", currentTimeUTC);
 		map.put("fileSize", targetHistory.getFileSize());
+		map.put("fileName", targetHistory.getFileName());
 
 		// 새로운 filePath로 경로 생성 및 db 업데이트
 		ezWebFolderDAO_y.updateFileRealData(map);

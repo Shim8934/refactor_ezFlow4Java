@@ -110,7 +110,7 @@
 		    	resultRead();
 		    }
 		    
-		    // 이름, 이름(영문)뿌려주는애
+		    // 한글, 영문 이름 대입하는 함수
 		    function setDisplay(letter_displayname, letter_displayname2) {
 		    	document.getElementById("display").value = letter_displayname;
 			    document.getElementById("display2").value = letter_displayname2;

@@ -9,6 +9,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/mailbox_valid.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <script type = "text/javascript">
 	        var pUse_Editor = "${userEditor}";
@@ -126,7 +128,8 @@
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailUserDistribution.do";
 	                    break;
 	                case "tag":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailTagConfig.do";
+	                    var requestUrl = shareId != "" ? "/ezEmail/mailTagConfig.do?shareId=" + encodeURIComponent(shareId) : "/ezEmail/mailTagConfig.do";
+                        document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	            }
 	        }
@@ -174,7 +177,6 @@
             	this.selectFolderNameSpl = selectFolderNameSpl;
 				console.log('folderTotalCount=' + folderTotalCount);
 				if (folderTotalCount === null || typeof folderTotalCount === "undefined") {
-					// 이 경우가 나오면 안되요.
 					console.log('folderTotalCount is null or undefined');
 					return;
 				} else if (folderTotalCount < 1) {
@@ -517,33 +519,6 @@
 		        } catch (e) {}
 		    }
 		    
-		    //TODO: copy일때 비동기로 처리하도록 함수 따로 만들어야함.
-		    function mail_make_folder(szCMD, szURL, destURL, szName) {
-		    	var xmlHTTP = createXMLHttpRequest();
-		        var xmlDOM = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDOM, objNode, "DATA");
-		        createNodeAndInsertText(xmlDOM, objNode, "CMD", szCMD);
-		        createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
-		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
-		        createNodeAndInsertText(xmlDOM, objNode, "NAME", szName);
-		        
-				var requestUrl = "/ezEmail/mailMakeFolder.do";
-		        
-		        if (shareId != "") {
-		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
-	            }
-		        
-		        xmlHTTP.open("POST", requestUrl, false);
-		        xmlHTTP.send(xmlDOM);
-		        
-		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
-		            return xmlHTTP.responseText;
-		        } else {
-		            return "ERROR";
-		        }
-		    }
-		    
 		    var inputNameDlg_cross_dialogArguments = new Array();
             function add_onclick(selectFolderName, selectFolderNameSpl) {
             	this.selectFolderName = selectFolderName;
@@ -553,20 +528,17 @@
                 inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
                 DivPopUpShow(330, 150, "/ezEmail/inputNameDlg.do");
             }
-            
+
             function add_onclick_Complete(szName) {
-                szName = szName.replace("&", "＆");
-                szName = szName.replace("'", "＇");				
+				const jmochaSafeName = replaceMailboxNameForJmocha(szName);
 		        DivPopUpHidden();
-		        if (typeof (szName) == "undefined" || szName.trim() == "") {
-		            return;
-		        }
-		        else if (checkBadFolderName(szName)) {
+
+		        if (!jmochaSafeName || checkBadFolderName(jmochaSafeName)) {
 		            return;
 		        }
 		        
-		        var szURL = selectFolderName;
-		        var result = mail_make_folder("NEW", szURL, "", szName);
+				const result = mail_make_folder("NEW", selectFolderName, "", jmochaSafeName);
+
 		        if (result != "OK") {
 		            if (result == "ALREADY_EXISTS") {
 		                alert("<spring:message code='ezEmail.t456' />");
@@ -580,7 +552,6 @@
                 if(window.parent.frames["left"].configFlag == "false") {
 			        window.parent.frames["left"].mailbox_treeview_reload();
 		        }
-                
 		    }
             
             function modify_onclick(selectFolderName, selectFolderNameSpl) {
@@ -600,18 +571,19 @@
 		        inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
 		        DivPopUpShow(330, 150,"/ezEmail/inputNameDlg.do");
 		    }
-            
+
 		    function modify_onclick_Complete(szName) {
+				const jmochaSafeName = replaceMailboxNameForJmocha(szName);
 		        DivPopUpHidden();
-		        if (typeof (szName) == "undefined" || szName.trim() == "" || szName == selectFolderNameSpl) {
+
+				if (selectFolderNameSpl === jmochaSafeName) {
 		            return;
 		        }
-		        if (checkBadFolderName(szName)) {
+				if (!jmochaSafeName || checkBadFolderName(jmochaSafeName)) {
 		            return;
 		        }
 
-		        var result = mail_make_folder("MODIFY", selectFolderName, "", szName);
-		        
+				const result = mail_make_folder("MODIFY", selectFolderName, "", jmochaSafeName);
 		        if (result != "OK") {
 		        	if (result == "ALREADY_EXISTS") {
 		        		alert("<spring:message code='ezEmail.lhm05' />");
@@ -625,18 +597,6 @@
 			        window.parent.frames["left"].mailbox_treeview_reload();
 		        }
 		    }
-		    
-		    function checkBadFolderName(szName) 
-			{
-				var szBadChars = /[\<\>\#\%\*\"\+\|\\\.\/]/g;
-				var szChangedName = szName.replace(szBadChars, "");
-				if(szChangedName != szName)
-				{
-					alert("<spring:message code='ezEmail.t479' />< ~ # % & * ' \" + | \\ . / >)<spring:message code='ezEmail.t480' />");
-					return true;
-				}
-				return false;
-			}
 			
 		 // 2016-12-28 이효민 추가
 			function checkTopLevelFolder(nodeIdx) {
@@ -738,6 +698,7 @@
 							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 					    </c:otherwise>
 				    </c:choose>	
+					<%--24.06.12 이사라 - 공유사서함 태그 지원--%>
 					<c:if test="${useMailTag and flag ne 'address'}">
 						<p><span divname="tag" id="1tab12"><spring:message code='ezEmail.tag.config' /></span></p>
 					</c:if>

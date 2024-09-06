@@ -74,7 +74,8 @@
 				tenant_id,
 				COMPANYID,
 				MAILFG_POST,
-				MAILFG_MOD
+				MAILFG_MOD,
+				MAILFG_COMMENT
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  
@@ -940,8 +941,6 @@
                 ReadCount = ReadCount + 1
             WHERE
                 TENANT_ID = #v_TENANTID#
-            AND
-            	WRITERCOMPANYID = #v_COMPANYID#
             AND  
                 ItemID = #v_pItemID#
         ]]>

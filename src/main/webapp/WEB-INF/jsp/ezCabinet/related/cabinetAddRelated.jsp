@@ -23,11 +23,11 @@
 			<c:if test="${activeFlag == '1'}">
 				<div class="addRelatedConfig" id="addRelated">
 					<a class="cabRadio">
-						<input type="radio" name="checkCabinet" id="auto" checked="checked"/>
+						<input type="radio" name="checkCabinet" id="auto" checked="checked" style="vertical-align:middle;"/>
 						<label for="auto"><span><spring:message code="ezCabinet.t126"/></span></label><br>
 					</a>
 					<a class="cabRadio">
-						<input type="radio" name="checkCabinet" id="manual"/>
+						<input type="radio" name="checkCabinet" id="manual" style="vertical-align:middle;"/>
 						<label for="manual"><span><spring:message code="ezCabinet.t127"/></span></label>
 					</a>
 				</div>
@@ -239,7 +239,7 @@
 					
 					if (saveMode == 1) {
 						var cabinetTree  = document.getElementById("cabinetMgTree");
-						var selectedNode = cabinetTree.querySelector("span[class='selectedNode']");
+						var selectedNode = cabinetTree.querySelector("span.selectedNode");
 						
 						if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 						
@@ -889,9 +889,9 @@
 				
 				function getUserIdFromInline(elmtObj, divide) {
 					var clickStr    = elmtObj.getAttribute("onclick");
-					var start       = clickStr.indexOf(divide);
-					var end         = clickStr.lastIndexOf(divide);
-					return clickStr.substring(start + 1, end);
+					var start       = clickStr ? clickStr.indexOf(divide) : null;
+					var end         = clickStr ? clickStr.lastIndexOf(divide) : null;
+					return clickStr ? clickStr.substring(start + 1, end) : null;
 				}
 				
 				function getScheduleTypeName(schType) {

@@ -679,7 +679,7 @@ var CabinetItem = function() {
 	
 	function moveFile(mode) {
 		var moveTreeElmt = document.getElementById("moveCabTree");
-		var selectedNode = moveTreeElmt.querySelector("span[class='selectedNode']");
+		var selectedNode = moveTreeElmt.querySelector("span.selectedNode");
 		if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 		
 		var itemArr      = getSelectedItems();

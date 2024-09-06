@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>ChangePersonInfo</title>
 		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/datepicker.htc.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/composeappt.js')}"></script>
@@ -260,14 +261,12 @@
 				        return;
 				    }
 			    	
-			    	var checkPw = CheckPassword(document.getElementById('txtNewPassword').value, companyID);
-			        if (checkPw != "OK"){
-			        	if (checkPw == "ERROR") {
-			        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
-			        	} else {
-			        		alert("<spring:message code='ezSystem.ksaPwPolicy35'/>");
-			        	}
-			        	
+					var checkPw = checkPasswordPolicy({
+						"pw" : document.getElementById('txtNewPassword').value,
+						"useLoginCookie" : true
+					});
+
+			        if (!checkPw){
 			        	document.getElementById('txtNewPassword').focus();
 			        	return;
 			        }	
@@ -286,17 +285,25 @@
 				    	return;
 				    }
 			        
+                   /* 현재 persChangePersonInfo.jsp에만 있고, 의미 없는 것으로 보이기 때문에 주석처리 함.
+					* - newPw 100자 이상 안됨.
+					* 	1. Sep 1 2016	: 초기코드.	commit a9d6239fac seokz * ezHome 제거 -> main으로 변경    git-svn-id: svn://svn.opensol2014.com/repo1/ezEKP4Java@3220 746f5ef6-3e3b-473a-8c3d-618c0f8083c2
+					* 	2. Mar 31 2017	: 주석.		commit 6c3e9149f1 JeongSeok Ji * 개인정보관리 비밀번호 관리 유효성검사 부분 수정
+					* 	3. Apr 17 2017	: 주석해제됨. commit b030afd938 JeongSeok Ji * 콜론이 포함된 패스워드는 설정할 수 없게 수정
 			       if (document.getElementById('txtNewPassword').value.Length > 100) {
 						alert("<spring:message code='ezPersonal.t196'/>");
 				    	document.all['txtNewPassword'].focus();
 				    	return;
 					} 
 				    
+					* - 특수문자 ':' 안됨.
+					* 	1. Apr 17 2017	: 추가됨.	commit b030afd938 JeongSeok Ji * 콜론이 포함된 패스워드는 설정할 수 없게 수정
 					if (document.getElementById('txtNewPassword').value.indexOf(':') > -1) {
 						alert("<spring:message code='ezPersonal.t999900036'/>");
 			        	document.all['txtNewPassword'].focus();
 			     		return;
 			     	}
+					*/
 			        
 			        var xmlHTTP = createXMLHttpRequest();
 			        var xmlPara = createXmlDom();
@@ -318,10 +325,6 @@
 				            window.top.location.href = '/user/login/actionLogout.do';
 			            } else if (xmlHTTP.responseText == "CHKERROR") {    
 			                alert("<spring:message code='ezPersonal.t946'/>");
-			            } else if (xmlHTTP.responseText == "PREVERROR") {    
-			                alert("<spring:message code='ezOrgan.ls001'/>"); // 2021-10-26 이사라 : 최근사용 비밀번호는 사용할 수 없는 로직 추가
-			            } else if (xmlHTTP.responseText == "NUMBERERROR") {
-			                alert("<spring:message code='ezOrgan.ls008'/>"); // 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
 				        } else {
 				            alert("<spring:message code='ezPersonal.t198'/>");
 				        }
@@ -356,7 +359,9 @@
 			    		url : "/ezPersonal/saveUserInfo.do",
 			    		async : false,
 			    		data : {
-			    			cn : cn,
+			    			// 2024.02.13 한슬기 : cn, displayName 파라미터 변조하여 수정 불가능한 정보를 수정할 수 있는 문제. cn, displayName 제거
+			    			//cn : cn,
+			    			//displayName : "${labelDisplayName }",
 			    			telephoneNumber : document.getElementById("txtTelePhone").value,
 			    			mobile : document.getElementById("txtMobilePhone").value,
 			    			homePhone : document.getElementById("txtHomePhone").value,
@@ -366,7 +371,6 @@
 			    			birth : document.getElementById("txtBirth").value,
 			    			birthType : birthType,
 			    			info : document.getElementById("txtInfo").value,
-			    			displayName : "${labelDisplayName }",
 			    			extensionPhone : document.getElementById("txtExtensionPhone").value,
 			    			officeMobile : document.getElementById("txtOfficeMobile").value
 			    		},
@@ -505,7 +509,7 @@
         		<tr>
             		<th><spring:message code='ezPersonal.t2003'/></th>
             		<td colspan="3" class="manualFlagNotYClickOff">
-                		<input type="text" id="txtBirth" class="manualFlagNotYDisabled" style="width:80px;text-align:center;" value="${txtBirth}" oninput="this.value=this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" onkeydown="return checkKey()">
+                		<input type="text" id="txtBirth" class="manualFlagNotYDisabled" style="width:80px;text-align:center;" value="${txtBirth}" oninput="this.value=this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" onkeydown="return checkKey()" readonly="readonly">
                 			<img id="TempCalImage" src="/images/ImgIcon/calendar-month.png" style="margin-bottom:-5px"/>
                 			&nbsp;&nbsp;
              			   <c:choose>

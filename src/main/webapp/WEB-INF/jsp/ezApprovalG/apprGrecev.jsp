@@ -256,6 +256,9 @@
 		            } else {
 						ExcuteInfo("HESONG_FAIL");
 					}
+		        } else {
+		            var pAlertContent = "<spring:message code='ezApprovalG.cancelHesong.JIH01'/>";
+                    OpenAlertUI(pAlertContent);
 		        }
 		    }
 			
@@ -1049,7 +1052,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 
 		        try { OpenWin.focus(); } catch (e) { }
 		    }

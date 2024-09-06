@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -21,6 +22,7 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -37,7 +39,6 @@ import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
-import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -1915,7 +1916,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    	
     		logger.debug("curDN : " + curDN);
     		logger.debug("movDN: " + movDN);
-    		// 여기
+
     		Map<String, Object> map = new HashMap<String, Object>();
     		map.put("v_CN", vo.getCn());
     		
@@ -2296,6 +2297,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public OrganDeptVO getDeptDisplayNm(OrganDeptVO vo) throws Exception {
 		return (OrganDeptVO) select("EzOrganAdminDAO.getDeptDisplayNm",vo);
 	}
+
+	public String getDeptParentCn(OrganDeptVO vo) throws Exception {
+		return (String) select("EzOrganAdminDAO.getDeptParentCn",vo);
+	}
 	
 	public OrganUserVO getAddJobInfo(Map<String, Object> map) throws Exception {
 		return (OrganUserVO) select ("EzOrganAdminDAO.getAddJobInfo",map);
@@ -2326,5 +2331,53 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직일 경우의 권한 삽입
 	public void updatePermissionIntoAddJobMaster(HashMap<String, Object> map) throws Exception {
 		update("EzOrganAdminDAO.updatePermissionIntoAddJobMaster", map);
+	}
+
+	public int getUserJobCheckCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.getUserJobCheckCount", map);
+	}
+
+	// 지정된 부서에 속한 퇴직자 수를 반환한다.
+	public int retireUserCountCheck(String cn, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cn", cn);
+		map.put("tenantID", tenantID);
+
+		return retireUserCountCheckForLocal(map);
+	}
+
+	private int retireUserCountCheckForLocal(Map<String, Object> map) {
+		String cn = (String)map.get("cn");
+		int tenantID = (Integer)map.get("tenantID");
+
+		logger.debug("retireUserCountCheckForLocal started. cn=" + cn + ",tenantID=" + tenantID);
+
+		int userCount = (int) select("EzOrganAdminDAO.retireUserCountCheck", map);
+
+		logger.debug("retireUserCountCheckForLocal started. userCount=" + userCount);
+
+		return userCount;
+	}
+	
+	public String getUserExtension15(Map<String, Object> map) throws Exception {
+		return (String) Optional.ofNullable(select("EzOrganAdminDAO.getUserExtension15",map)).orElseGet(() -> "0");
+	}
+
+	public String getDeptExtension15(Map<String, Object> map) throws Exception {
+		 return (String) Optional.ofNullable(select("EzOrganAdminDAO.getDeptExtension15",map)).orElseGet(() -> "0");
+	}
+
+	// 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
+	public void insertCompanyTopMenuInfo(Map<String, Object> map) {
+		insert("EzOrganAdminDAO.insertCompanyTopMenuInfo", map);
+	}
+
+	// 2024-05-27 관리자 > 조직도 > 겸직 사용자 상세정보 내용 호출 함수
+	public OrganAddJobVO getAddJobPorpValue(Map<String, Object> map) throws Exception {
+		return (OrganAddJobVO) select("EzOrganAdminDAO.getAddJobPorpValue", map);
+	}
+	
+	public void updateAddJobInfo(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateAddJobInfo", map);
 	}
 }

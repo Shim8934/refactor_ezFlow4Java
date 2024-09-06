@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 	    <script type="text/javascript">
 	        var OrgAprUserID = "<c:out value ='${orgAprUserID}'/>";
 	        var OrgAprUserName = "<c:out value ='${orgAprUserName}'/>";
@@ -162,7 +163,15 @@
 			
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+
+			var type = "ING"; // 2023-05-23 임정은 - 공람 추가
 	        
+			// 2024-06-11 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
+			var useReceiptDeptFileAttach = "<c:out value ='${useReceiptDeptFileAttach}'/>";
+
+			// 2024-06-24 양지혜 - 지정반송 기능 사용여부
+			var useReturnByDesignation = "<c:out value ='${useReturnByDesignation}'/>";
+			
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {
@@ -374,6 +383,10 @@
 				        if(useExternalMailServer == "NO") {
 				    		$("#btnMail").css("display","");
 				    	}
+
+						if (useReturnByDesignation == "YES") {
+							document.getElementById("btnReject2").style.display = "";
+						}
 				        
 						// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 						setAttachGuideText();
@@ -568,7 +581,9 @@
 		        }
 			    
 			    if (pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
-			        setMenuBar("btntotaldocinfo", false);
+					if (pAprLineType != strAprType8 && pAprLineType != strAprType9) {
+						setMenuBar("btntotaldocinfo", false);
+					}
 			        setMenuBar("btnJunKyul", false);
 			        setMenuBar("btnModAprLine", false);
 			        setMenuBar("btnEdit", false);
@@ -594,10 +609,13 @@
 			        else
 			            setMenuBar("btnEdit", false);
 			
-			
 			        setMenuBar("btnModAprDept", false);
-			        setMenuBar("btnFileAttach", false);
-			        setMenuBar("btnAprDocAttach", false);
+			        
+			        if (useReceiptDeptFileAttach == "NO") {
+		            	setMenuBar("btnFileAttach", false);
+			            setMenuBar("btnAprDocAttach", false);	
+		            }
+			        
 			        pGubun = "6";
 			    }
 			
@@ -624,6 +642,11 @@
 			        }
 				}
 			    //SignCheck();
+
+				// 2024-06-27 임정은 - 협조자도 공람자 지정할 수 있도록 변경
+				if (approvalFlag == "G" && pGubun == "6" && (pAprLineType == strAprType8 || pAprLineType == strAprType9)) {
+					pGubun = "14";
+				}
 			}
 	
 			// btnApprove_onclick 시작
@@ -1007,9 +1030,16 @@
 			        }
 			        openOpinionUI_New("BanSong", btnReject_option_Complete);
 			    }
-			    
+
+				var returnUserSN = "";
 			    function btnReject_option_Complete(ret) {
-			    	DivPopUpHidden();
+					DivPopUpHidden();
+					// 2024-06-24 양지혜 - 전자결재 > 지정반송
+					if (ret != "cancel" && returnUserSN != "" && returnUserSN != "1") {
+						returnByDesignation(ret, returnUserSN);
+						return;
+					}
+
 			        if (ret != "cancel" && ret != undefined ) {
 			            UpdateLineHistory();
 			
@@ -1035,6 +1065,10 @@
 			            GetHTML(btnReject_option_Complete2);
 			        } else if (ret == "cancel" || ret == undefined) {
 			        	var pAlertContent = "<spring:message code='ezApprovalG.t38'/>";
+						if (returnChk == "Y") {
+							pAlertContent = "<spring:message code='ezApprovalG.yjh05'/>";
+							returnChk = "N";
+						}
 			        	OpenAlertUI(pAlertContent, null);
 				        return;
 			        }
@@ -1496,7 +1530,7 @@
                     ezapprovalinfo_dialogArguments[0] = parameter;
    		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-   		            var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+   		            var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
    		            try { OpenWin.focus(); } catch (e) { }
 				}
 
@@ -1613,6 +1647,14 @@
 
 							SummaryFlag = true;
    			                savexmlhttp = null;
+
+							// 2023-05-23 임정은 - 공람 추가
+							if (ret[22] == "noItem") {
+								delAprLineInfoCC();
+							} else if (ret[22] == "sameItem") {
+							} else {
+								SaveAprLineInfoCC(ret[22]);
+							}
    			            }
    			            catch (e) {
    			                alert("저장시 오류 발생");
@@ -1738,7 +1780,21 @@
                 	 document.getElementById("apprAttachGuideTR").style.display = "none";
                  }
 	    	}
-			 
+
+			/* 2024-06-24 양지혜 - 전자결재 > 지정반송 */
+			var returnChk = "N";
+			function btnReturnDesignation_onclick() {
+				returnChk = "Y";
+				if (checkAprState()) {
+					alert("<spring:message code='ezApprovalG.bhs23'/>");
+					window.returnValue = "CLOSE";
+					btnClose_onclick();
+					return;
+				}
+				var pInformationContent = "<spring:message code='ezApprovalG.yjh04'/>";
+				OpenInformationUI(pInformationContent, btnReject_onclick_Complete);
+			}
+
 	    </script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" onload="javascript:window_onload()">
@@ -1750,6 +1806,7 @@
 	                    <ul id="AllApprove" <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 	                        <li id="btnApprove"><span onclick="return btnApprove_onclick()"><spring:message code='ezApprovalG.t1'/></span></li>
 	                        <li id="btnReject"><span onclick="return btnReject_onclick()"><spring:message code='ezApprovalG.t49'/></span></li>
+							<li id="btnReject2" style="display: none"><span onClick="return btnReturnDesignation_onclick()"><spring:message code='ezApprovalG.yjh02'/></span></li>
 	                        <li id="btnStay"><span onclick="return btnStay_onclick()"><spring:message code='ezApprovalG.t50'/></span></li>
 	                        <span style="display: none">
 	                            <li id="btnSetTaskCode"><span onclick="btnSetTaskCode_onclick()"><spring:message code='ezApprovalG.t9994'/></span></li>

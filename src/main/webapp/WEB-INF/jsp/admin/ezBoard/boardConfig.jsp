@@ -16,7 +16,8 @@
 	        var pBoardType = "<c:out value='${boardType}'/>";
 	        var pParentBoardID = "<c:out value='${parentBoardID}'/>";
 	        var TabId = "<c:out value='${tabID}'/>";
-	        
+			let useFormFlag = "${ useFormFlag }";
+
 	        document.onselectstart = function () { return false; };
 	        window.onresize = window_resize;
 	        
@@ -33,7 +34,9 @@
 
 	            ChangeTab(document.getElementById(TabId));
 	            window_resize();
-	        });	        
+
+				setMenuBtnDisplay();
+	        });
 
 	        function window_resize() {
 	            document.getElementById("BoardEnv_ifrm").style.height = (document.documentElement.clientHeight - 85) + "PX";
@@ -113,6 +116,12 @@
 	                }
 	            }
 	        }
+
+			function setMenuBtnDisplay() {
+				let configFormBtn = document.getElementById("1tab5");	// 양식 설정 탭
+
+				configFormBtn.style.display = useFormFlag === "Y" ? "" : "none";
+			}
 	    </script>
 	</head>
 	<body class="mainbody" style="margin:0px;overflow-y:hidden">

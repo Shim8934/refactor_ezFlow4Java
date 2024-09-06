@@ -124,6 +124,7 @@
 		    var likeFlag = "${boardInfo.likeFlag}";
 		    var useNotReadCnt = "${useNotReadCnt}";
 		    var BoardGroupID = "${boardInfo.boardGroupID}";
+            var boardViewType = '1'; // 2024-05-24 전인하 - 기본보기(1) / 안읽은 게시물(2) / 만료게시물(3) 확인 플래그
 		    
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
@@ -302,17 +303,14 @@
 		    });		
 		
 		    var xmlhttp = createXMLHttpRequest();
-		    function getBoardList(type) {
-		        if (type == "1") {
-		            SQLPARADATA = "";
-		        }
+		    function getBoardList() {    
 		        starttime = new Date().getTime();
-		        if(document.getElementById("viewtype") != null)
-		        	type = document.getElementById("viewtype").value;
-		        if (SQLPARADATA != ""){
+		        
+		        if (SQLPARADATA != "") {
+		            document.getElementById('viewtype')[0].selected = true;
+		            boardViewType = '1';
 		        	url = "/ezBoard/getSearchBoardList.do";
-		        }
-		        else{
+		        } else {
 		        	url = "/ezBoard/getBoardList.do";
 		        }
 		        $.ajax({
@@ -326,7 +324,7 @@
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 type 		 : type,
+							 type 		 : boardViewType,
 							 likeFlag : likeFlag
 							},
 					success: function(xml){
@@ -417,12 +415,12 @@
 	            endtime = new Date().getTime();
 	            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 	            scroll();
-
+                MailOptionHidden();
 				Window_resize();
 		    }
 		
 		
-		    function MakeSubCondition() {
+		    function MakeSubCondition(type) {
 		        var TYPE = "";
 		        var DATA = "";
 		
@@ -432,7 +430,7 @@
 		            TYPE += "SEARCHSUBBOARD;";
 		        }
 		
-		        if (document.getElementById("txt_keyword").value != "") {
+		        if (type == "quick") {
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
@@ -1061,7 +1059,7 @@
 			    CurPage = "1";
 			    BoardSearchOptionHidden();
 		
-			    MakeSubCondition();
+			    MakeSubCondition(type);
 			    getBoardList();
 			}
 		    function check_presence() {
@@ -1191,6 +1189,14 @@
 				});
 	    	}
 	    	
+	    	// 2024-05-29 전인하 - 리스트설정 셀렉트박스 선택 동작 메서드
+            function selectBoardViewType(obj) {
+                boardViewType = obj.value;
+                CurPage = 1;
+                SQLPARADATA = "";
+                getBoardList();
+            }
+	    	
 		</script>
 	</head>
 	<c:choose>
@@ -1302,10 +1308,9 @@
                     <tr>
 		            	<th><spring:message code="ezEmail.t99000035" /></th>
 	                        <td>
-	                            <select id="viewtype" onchange="getBoardList('1')">
+	                            <select id="viewtype" onchange="selectBoardViewType(this)">
 					                <option value="1"><spring:message code='ezBoard.t4001' /></option>
 					                <option value="2"><spring:message code='ezBoard.t4002' /></option>
-					                <option value="3"><spring:message code='ezBoard.t4003' /></option>
 	            				</select>
 	                        </td>
 					</tr>

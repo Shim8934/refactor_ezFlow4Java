@@ -10,6 +10,7 @@
 	<typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
 	<typeAlias alias="portalDeptViewVO" 	type="egovframework.ezEKP.ezNewPortal.vo.DeptViewVO" />
 	<typeAlias alias="MenuAuthorUserVO" 	type="egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO" />
+	<typeAlias alias="PortalTopVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalTopVO"/>
 	<resultMap class="java.util.HashMap" id="ThemeAuthMap">
 		<result property="themeId" column="THEMEID" />
 		<result property="userId" column="USERID" />
@@ -17,6 +18,7 @@
 		<result property="userDeptName" column="USERDEPTNAME" />
 		<result property="userType" column="USERTYPE" />
 		<result property="accessYN" column="ACCESSYN" javaType="boolean"/>
+		<result property="subdeptPermitted" column="SUBDEPTPERMITTED" />
 	</resultMap>
 	<resultMap class="java.util.HashMap" id="PortletAuthMap">
 		<result property="portletId" column="PORTLETID" />
@@ -25,6 +27,7 @@
 		<result property="userDeptName" column="USERDEPTNAME" />
 		<result property="userType" column="USERTYPE" />
 		<result property="accessYN" column="ACCESSYN" javaType="boolean"/>
+		<result property="subdeptPermitted" column="SUBDEPTPERMITTED" />
 	</resultMap>
 	<resultMap class="portalDeptViewVO" id="deptViewMap">
 		<result property="id" 				column="id" />
@@ -66,6 +69,24 @@
 		<![CDATA[
 				B.theme_name3 AS themename,
 				B.theme_content3 AS themecontent,
+		]]>
+		</isEqual>
+		<isEqual property="lang" compareValue="4">
+		<![CDATA[
+				B.theme_name2 AS themename,
+				B.theme_content4 AS themecontent,
+		]]>
+		</isEqual>
+		<isEqual property="lang" compareValue="5">
+		<![CDATA[
+				B.theme_name2 AS themename,
+				B.theme_content4 AS themecontent,
+		]]>
+		</isEqual>
+		<isEqual property="lang" compareValue="6">
+		<![CDATA[
+				B.theme_name2 AS themename,
+				B.theme_content4 AS themecontent,
 		]]>
 		</isEqual>
 		<![CDATA[
@@ -121,7 +142,10 @@
 				B.menu_Type AS menutype,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
-				B.icon_url AS iconurl,
+				CASE WHEN A.icon_url IS NULL
+					THEN B.icon_url
+				   	ELSE A.icon_url
+				END AS iconurl,
 				CASE WHEN A.company_order IS NULL
 					THEN B.default_order
 					ELSE A.company_order
@@ -218,6 +242,18 @@
 			<isNotEmpty property="primaryLang" prepend="AND">
 				A.menu_lang = #primaryLang#
 			</isNotEmpty>
+			<isEqual property="useJapanese" compareValue="NO">
+				AND A.menu_lang != 3
+			</isEqual>
+			<isEqual property="useChinese" compareValue="NO">
+				AND A.menu_lang != 4
+			</isEqual>
+			<isEqual property="useVietnamese" compareValue="NO">
+				AND A.menu_lang != 5
+			</isEqual>
+			<isEqual property="useIndonesian" compareValue="NO">
+				AND A.menu_lang != 6
+			</isEqual>
 			<![CDATA[
 			ORDER BY
 				CASE A.menu_lang WHEN B.company_lang
@@ -252,7 +288,8 @@
 					ELSE (SELECT TO_CHAR(displayname$lang$) FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 				END AS userdeptname,
 				user_type AS usertype,
-				access_yn AS accessyn
+				access_yn AS accessyn,
+				subdept_permitted as subdeptPermitted
 			FROM
 				TBL_PORTAL_MENU_AUTH
 			WHERE
@@ -392,7 +429,8 @@
 			WHEN MATCHED THEN
 				UPDATE SET
 					access_yn = #accessYN#,
-					sn = #sn#
+					sn = #sn#,
+					subdept_permitted = #subdeptPermitted#
 				WHERE
 					tenant_id = #tenantId#
 				AND
@@ -403,9 +441,9 @@
 					user_id = #userId#
 			WHEN NOT MATCHED THEN
 				INSERT 
-					(menu_id, user_id, user_type, access_yn, company_id, tenant_id, sn)
+					(menu_id, user_id, user_type, access_yn, company_id, tenant_id, sn, subdept_permitted)
 				VALUES
-					(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#, #sn#)
+					(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#, #sn#, #subdeptPermitted#)
 		]]>
 	</update>
 	
@@ -506,7 +544,16 @@
 				A.boardid  as id,
 				A.parentboardid as parent,
 				A.boardname as boardname1,
-				A.boardname2 as boardname2,
+				CASE
+					WHEN (A.Boardname2 = '' OR A.Boardname2 IS NULL)
+					THEN A.Boardname
+					ELSE A.Boardname2
+				END as boardname2,
+				CASE
+					WHEN (A.Boardname3 = '' OR A.Boardname3 IS NULL)
+					THEN A.Boardname
+					ELSE A.Boardname3
+				END as boardname3,
 				A.treevieworder as sort,
 				B.parentboardid as topParent,
 				A.boardcolor,
@@ -683,7 +730,7 @@
 			AND
 				company_id = #companyId#
 			AND
-				portlet_id = #poortletId#
+				portlet_id = #portletId#
 		]]>
 	</delete>
 	
@@ -1105,13 +1152,28 @@
 				theme_id, tenant_id, company_id, portlet_id, portlet_used, portlet_order, menu_id, is_fixed
 			) VALUES (
 				#themeId#, #tenantId#, #companyId#, #portletId#, #portletUsed#, 
-				(SELECT portlet_order FROM TBL_PORTAL_PORTLET_COMP WHERE company_id = #companyId# AND tenant_id = #tenantId# AND portlet_id = #portletId#),
+				(SELECT DEFAULT_ORDER FROM TBL_PORTAL_PORTLET WHERE portlet_id = #portletId#),
 				#menuId#, #isFixed#
 			) 
 	]]>
 	</update>
-	
-	
+
+	<update id="ezNewPortal.updateThemePortlet" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET
+			menu_id = #menuId#
+		WHERE
+			theme_id = #themeId#
+		  AND
+			tenant_id = #tenantId#
+		  AND
+			company_id = #companyId#
+		  AND
+			portlet_id = #portletId#
+		]]>
+	</update>
 
 	<update id="ezNewPortal.updateAllThemePortletOrder" parameterClass="Map">
 	<![CDATA[
@@ -1154,7 +1216,8 @@
 				ELSE (SELECT TO_CHAR(displayname$lang$) FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
-			access_yn AS accessyn
+			access_yn AS accessyn,
+			subdept_permitted AS subdeptPermitted
 		FROM
 			TBL_PORTAL_THEME_AUTH
 		WHERE
@@ -1198,9 +1261,9 @@
 	<insert id="ezNewPortal.insertThemeAuth" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_THEME_AUTH (
-			theme_id, company_id, tenant_id, user_id, access_YN, user_type, sn
+			theme_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted
 		) VALUES (
-			#themeId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#
+			#themeId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#, #subdeptPermitted#
 		)
 	]]>
 	</insert>
@@ -1255,7 +1318,8 @@
 				ELSE (SELECT TO_CHAR(displayname$lang$) FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
-			access_yn AS accessyn
+			access_yn AS accessyn,
+			subdept_permitted as subdeptPermitted
 		FROM
 			TBL_PORTAL_PORTLET_AUTH
 		WHERE
@@ -1270,7 +1334,7 @@
 			sn, user_type
 	]]>
 	</select>
-	
+
 	<delete id="ezNewPortal.deletePortletAuth" parameterClass="Map">
 	<![CDATA[
 		DELETE FROM
@@ -1287,9 +1351,9 @@
 	<insert id="ezNewPortal.insertPortletAuth" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_PORTLET_AUTH (
-			portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn
+			portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted
 		) VALUES (
-			#portletId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#
+			#portletId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#, #subdeptPermitted#
 		)
 	]]>
 	</insert>
@@ -1383,7 +1447,8 @@
 		DEPARTMENT as dept_id,
 		DESCRIPTION$lang$ as dept_name,
 		EXTENSIONATTRIBUTE2 as user_img,
-		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15
+		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15,
+		'user' as userType
 		from
 		tbl_usermaster
 		where
@@ -1409,7 +1474,8 @@
 		B.DEPTID as dept_id,
 		C.DISPLAYNAME$lang$ as dept_name,
 		A.EXTENSIONATTRIBUTE2 as user_img,
-		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.EXTENSIONATTRIBUTE15, '0'))) || NVL(A.EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15
+		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.EXTENSIONATTRIBUTE15, '0'))) || NVL(A.EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15,
+		'addJob' as userType
 		from
 		tbl_addjobmaster B
 		join
@@ -1472,4 +1538,61 @@
 		</isEqual>
 		) AA
 	</select>
+
+	<select id="ezNewPortal.getAllAvailablePortletSize" resultClass="String">
+		SELECT CLASS_SIZE FROM TBL_PORTAL_PORTLET_SIZE
+	</select>
+
+	<update id="ezNewPortal.clearPortletSize" parameterClass="Map">
+		DELETE
+		FROM TBL_PORTAL_PORTLET_COMPANY_SIZE
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND THEME_ID = #themeId#
+	</update>
+
+	<insert id="ezNewPortal.insertPortletSizeCompany" parameterClass="list">
+		INSERT ALL
+			<iterate>
+				INTO TBL_PORTAL_PORTLET_COMPANY_SIZE (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID, DEFAULT_FLAG)
+				VALUES ( #[].tenantId#, #[].companyId#, #[].portletId#,
+				#[].themeId#, (SELECT SIZE_ID
+				FROM TBL_PORTAL_PORTLET_SIZE
+				WHERE CLASS_SIZE = #[].portletSize# AND ROWNUM = 1)
+				, #[].default# )
+			</iterate>
+		SELECT *
+		FROM DUAL
+	</insert>
+	
+	<select id="ezNewPortal.getTopMenuDisplayModeForCompany" parameterClass="PortalTopVO" resultClass="PortalTopVO">
+		SELECT
+			TYPE
+		FROM
+			TBL_PORTAL_TOP_COMPANY
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANY_ID = #companyID#
+	</select>
+	
+	<update id="ezNewPortal.updateTopMenuDisplayModeForCompany" parameterClass="PortalTopVO">
+		UPDATE 
+			TBL_PORTAL_TOP_COMPANY
+		SET
+			TYPE = #type#
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANY_ID = #companyID#
+	</update>
+	
+	<insert id="ezNewPortal.insertTopMenuDisplayModeForCompany" parameterClass="PortalTopVO">
+		INSERT
+			INTO 
+    	TBL_PORTAL_TOP_COMPANY 
+    		(COMPANY_ID, TENANT_ID, TYPE)
+    	VALUES
+    		(#companyID#, #tenantID#, #type#)
+	</insert>
 </sqlMap>

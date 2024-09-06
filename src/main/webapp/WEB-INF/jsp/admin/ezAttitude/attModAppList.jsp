@@ -1131,7 +1131,7 @@
 	    function getHistory(t) {
 		    var attModId = $(t).parent().parent().find('td input').attr("value");
 			var companyId = $("#ListCompany").val();
-			window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId + "&companyId=" + companyId, "history", GetOpenWindowfeature(600, 300));
+			window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId + "&companyId=" + companyId, "history", GetOpenWindowfeature(700, 300));
 	    }
 	    
 	    function layerHidden() {
@@ -1196,10 +1196,10 @@
 					<th style="cursor:pointer" colname="WRITER_DEPT_NAME"><spring:message code='ezAttitude.t148'/></th>
 					<th width="125px" style="cursor:pointer" colname="ORIGIN_TIME"><spring:message code='ezAttitude.t206'/></th>
 					<th width="125px" style="cursor:pointer" colname="NO"><spring:message code='ezAttitude.t207'/></th>
-					<th width="80px" style="cursor:pointer" colname="APPR_STATUS" ><spring:message code='ezAttitude.kje01'/></th>
+					<th width="125px" style="cursor:pointer" colname="APPR_STATUS" ><spring:message code='ezAttitude.kje01'/></th>
 					<th width="100px" style="cursor:pointer" colname="APPR_USER_NAME"><spring:message code='ezAttitude.t104'/></th>
 					<th width="130px" style="cursor:pointer" colname="APPL_DATE"><spring:message code='ezAttitude.t108'/></th>
-					<th width="100px" style="cursor:pointer" colname="NO"><spring:message code='ezAttitude.t97'/></th>
+					<th width="125px" style="cursor:pointer" colname="NO"><spring:message code='ezAttitude.t97'/></th>
 				</tr>		
 			    <c:if test="${list.size() == 0}"> 
 			        <tr>

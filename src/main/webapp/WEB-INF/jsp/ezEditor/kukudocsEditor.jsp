@@ -130,6 +130,12 @@
 		    	case "4": 
 		    		lang = "zh";
 		    		break;
+		    	case "5": 
+		    		lang = "vi";
+		    		break;
+		    	case "6": 
+		    		lang = "id";
+		    		break;
 		    	default :
 		    		lang = "en";
 		    		break;
@@ -230,7 +236,7 @@
 	            customMagicLineStyle : 'background-color:#888;',
 	            customAlignMenu : customAlignMenu,
 	            useMenuBar : false,
-	            useHTMLMode : useHTMLMode,
+	            useHtmlMode : useHTMLMode,
 	            useTextMode : false,
 	            usePreviewMode : false,
 	            useEditorResize : false,

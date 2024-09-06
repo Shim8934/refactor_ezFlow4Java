@@ -290,6 +290,9 @@
              	QUICKLINKNAME ,
              	QUICKLINKNAME2 ,
              	QUICKLINKNAME3 ,
+             	QUICKLINKNAME4 ,
+             	QUICKLINKNAME5 ,
+             	QUICKLINKNAME6 ,
              	LINKTYPE ,
              	LINKTYPEURL,
              	URL ,
@@ -306,46 +309,42 @@
 	
 	<select id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" parameterClass="Map"		resultClass="PersonalQuickLinkVO">
 		<![CDATA[
-			(SELECT
+			SELECT
 				QUICKLINKID ,
              	ACCESSID ,
-             	(U.DISPLAYNAME || '(' || DESCRIPTION || ')') AS ACCESSNAME ,
-             	(U.DISPLAYNAME2 || '(' || DESCRIPTION2 || ')') AS ACCESSNAME2 ,
-             	VIEW_FLAG 
+				NVL(CASE
+						WHEN USER_TYPE = 'USER'
+							THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantID# AND cn = ACCESSID)
+						WHEN USER_TYPE = 'DEPT'
+							THEN (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = ACCESSID)
+						WHEN USER_TYPE = 'JIKWI'
+							THEN (SELECT displayname FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = ACCESSID AND type = '001')
+						WHEN USER_TYPE = 'JIKCHEK'
+							THEN (SELECT displayname FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = ACCESSID AND type = '002')
+						WHEN USER_TYPE = 'GROUP'
+							THEN (SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantID# AND group_id = ACCESSID)
+						END, '') AS ACCESSNAME,
+				NVL(CASE
+						WHEN USER_TYPE = 'USER'
+							THEN (SELECT displayname2 FROM TBL_USERMASTER WHERE tenant_id = #tenantID# AND cn = ACCESSID)
+						WHEN USER_TYPE = 'DEPT'
+							THEN (SELECT displayname2 FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = ACCESSID)
+						WHEN USER_TYPE = 'JIKWI'
+							THEN (SELECT displayname2 FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = ACCESSID AND type = '001')
+						WHEN USER_TYPE = 'JIKCHEK'
+							THEN (SELECT displayname2 FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = ACCESSID AND type = '002')
+						WHEN USER_TYPE = 'GROUP'
+							THEN (SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantID# AND group_id = ACCESSID)
+						END, '') AS ACCESSNAME2,
+             	VIEW_FLAG,
+				USER_TYPE as userType,
+				SUBDEPT_PERMITTED as subdeptPermitted
         	FROM
-        		TBL_PS_QUICKLINK_ACL P
-        	INNER JOIN
-        		TBL_USERMASTER U
-			ON
-				P.TENANT_ID = U.TENANT_ID
-			AND
-				P.ACCESSID = U.CN
+        		TBL_PS_QUICKLINK_ACL
        		WHERE
        			QUICKLINKID = #v_QUICKLINKID#
        		AND
-       			P.TENANT_ID = #tenantID#)
-       			
-       		UNION
-       		
-			(SELECT
-				QUICKLINKID ,
-             	ACCESSID ,
-             	D.DISPLAYNAME AS ACCESSNAME ,
-             	D.DISPLAYNAME2 AS ACCESSNAME2 ,
-             	VIEW_FLAG 
-        	FROM
-        		TBL_PS_QUICKLINK_ACL P
-        	INNER JOIN
-        		TBL_DEPTMASTER D
-			ON
-				P.TENANT_ID = D.TENANT_ID
-			AND
-				P.ACCESSID = D.CN
-       		WHERE
-       			QUICKLINKID = #v_QUICKLINKID#
-       		AND
-       			P.TENANT_ID = #tenantID#)
-		]]>
+       			TENANT_ID = #tenantID#
 	</select>
 	
 	<select id="EzPersonalAdmin.EZSP_GETPOLLRESULT" parameterClass="Map"		resultClass="PersonalLightPollVO">
@@ -524,7 +523,10 @@
 				CASE
 					WHEN #lang# = '1' THEN QUICKLINKNAME
 					WHEN #lang# = '2' THEN QUICKLINKNAME2
-					ELSE QUICKLINKNAME3
+					WHEN #lang# = '3' THEN QUICKLINKNAME3
+					WHEN #lang# = '4' THEN QUICKLINKNAME4
+					WHEN #lang# = '5' THEN QUICKLINKNAME5
+					ELSE QUICKLINKNAME6
 				END AS QUICKLINKNAME ,
 	            LINKTYPE ,
 	            LINKTYPEURL ,
@@ -544,7 +546,7 @@
             WHERE
                 Q.TENANT_ID = #tenantID#
             AND
-                U.PHYSICALDELIVERYOFFICENAME = #companyID#
+                Q.COMPANYID = #companyID#
             ORDER BY
                 Q.LINKORDER ASC                
 		]]>
@@ -554,7 +556,7 @@
 		<isEqual property="v_pMode" compareValue="A">
 			<![CDATA[
 				SELECT
-					COUNT(ITEMSEQ)
+					COUNT(ITEMSEQ)        		( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, LINKORDER, TENANT_ID, COMPANYID )
            		FROM
            			TBL_PS_NOTICE 
           		WHERE
@@ -622,9 +624,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_QUICKLINK
-        		( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, LINKORDER, TENANT_ID )
+            ( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, LINKORDER, TENANT_ID, COMPANYID )
         	VALUES
-        		( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, ' ', #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #LINKORDER#, #tenantID# )
+                ( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, ' ', #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #LINKORDER#, #tenantID#, #companyID# )
 		]]>
 	</insert>
 	
@@ -636,6 +638,9 @@
          		QUICKLINKNAME = #v_QUICKLINKNAME#,
              	QUICKLINKNAME2 = #v_QUICKLINKNAME2#,
              	QUICKLINKNAME3 = #v_QUICKLINKNAME3#,
+             	QUICKLINKNAME4 = #v_QUICKLINKNAME4#,
+             	QUICKLINKNAME5 = #v_QUICKLINKNAME5#,
+             	QUICKLINKNAME6 = #v_QUICKLINKNAME6#,
              	LINKTYPE = #v_LINKTYPE#,
              	LINKTYPEURL = #v_LINKTYPEURL#,
              	URL = #v_URL#,
@@ -645,6 +650,7 @@
        			QUICKLINKID = #v_QUICKLINKID#
        		AND
        			TENANT_ID = #tenantID#	
+       		AND COMPANYID = #companyID#
 		]]>
 	</update>
 	
@@ -663,9 +669,25 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_QUICKLINK_ACL
-        		( QUICKLINKID, ACCESSID, ACCESSNAME, ACCESSNAME2, VIEW_FLAG, TENANT_ID )
-        	VALUES
-        		( #v_QUICKLINKID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, #v_VIEW_FLAG#, #tenantID# )
+        		( QUICKLINKID, ACCESSID, ACCESSNAME, ACCESSNAME2, VIEW_FLAG,  USER_TYPE, SUBDEPT_PERMITTED, TENANT_ID )
+			SELECT
+				#v_QUICKLINKID#, #v_ACCESSID#,
+				CASE
+					WHEN #v_USER_TYPE# = 'USER' THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantID# AND cn = #v_ACCESSID#)
+					WHEN #v_USER_TYPE# = 'DEPT' THEN (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #v_ACCESSID#)
+					WHEN #v_USER_TYPE# = 'JIKWI' THEN (SELECT displayname FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = #v_ACCESSID# AND type = '001')
+					WHEN #v_USER_TYPE# = 'JIKCHEK' THEN (SELECT displayname FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = #v_ACCESSID# AND type = '002')
+					WHEN #v_USER_TYPE# = 'GROUP' THEN (SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantID# AND group_id = #v_ACCESSID#)
+					END,
+				CASE
+					WHEN #v_USER_TYPE# = 'USER' THEN (SELECT displayname2 FROM TBL_USERMASTER WHERE tenant_id = #tenantID# AND cn = #v_ACCESSID#)
+					WHEN #v_USER_TYPE# = 'DEPT' THEN (SELECT displayname2 FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #v_ACCESSID#)
+					WHEN #v_USER_TYPE# = 'JIKWI' THEN (SELECT displayname2 FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = #v_ACCESSID# AND type = '001')
+					WHEN #v_USER_TYPE# = 'JIKCHEK' THEN (SELECT displayname2 FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = #v_ACCESSID# AND type = '002')
+					WHEN #v_USER_TYPE# = 'GROUP' THEN (SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantID# AND group_id = #v_ACCESSID#)
+					END,
+				#v_VIEW_FLAG#, #v_USER_TYPE#, #v_SUBDEPT_PERMITTED#, #tenantID#
+			FROM DUAL
 		]]>
 	</insert>
 	
@@ -831,6 +853,12 @@
            				CN = #v_pUserID#
                     AND
                     	DEPARTMENT = #v_pDeptID#
+        ]]>
+		<isNotEmpty property="jobName">
+					AND
+						TITLE = #jobName#
+		</isNotEmpty>
+		<![CDATA[
                     AND
                     	TENANT_ID = #tenantID#
                     AND
@@ -869,6 +897,12 @@
            				B.CN = #v_pUserID#
                     AND
                     	A.DEPTID = #v_pDeptID#
+        ]]>
+		<isNotEmpty property="jobName">
+					AND
+						A.TITLE = #jobName#
+		</isNotEmpty>
+		<![CDATA[
                     AND
                     	A.TENANT_ID = #tenantID#
                     AND

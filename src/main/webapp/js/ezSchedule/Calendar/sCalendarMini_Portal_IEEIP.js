@@ -44,7 +44,6 @@ function CalendarMiniView(pTagetID) {
 	        mTable.setAttribute("cellpadding", "0");
 	        mTable.setAttribute("cellspacing", "0");
 	        mTable.setAttribute("border", "0");
-	        mTable.setAttribute("style", "margin: 10px 10px; padding: 0px 25px 0px 3px;");
 	        mTable.setAttribute("width", "100%");
 	        var mTr = document.createElement("TR");
 
@@ -308,7 +307,7 @@ function GetTableMiniBodyObj() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;
@@ -394,7 +393,6 @@ function GetTableMiniBodyObj() {
     return oTbody;
 }
 
-// 그냥 Top 전용함수 똑같은거 하나 더 만듬
 function GetTableMiniBodyObjTop() {
     var year = document.getElementById("iYearTop").value;
     var month = parseInt(document.getElementById("iMonTop").value);
@@ -411,7 +409,7 @@ function GetTableMiniBodyObjTop() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;
@@ -455,7 +453,6 @@ function GetTableMiniBodyObjTop() {
     //Month Start
     for (var i = 0; i < 6; i++) {
         var objTr = document.createElement("TR");
-        //이거 그냥 이름정해놓고 그대로 갖다 쓰는거 같은데 TR뒤에 TOP만 붙여봄
         objTr.setAttribute("id", "TR_TOP" + oThisMonth + "_" + i);
 
         for (var j = 0; j < 7; j++) {
@@ -515,7 +512,6 @@ function MonthMiniData(oThisDate) {
     }
 
     var oDiv = document.createElement("DIV");
-    //이건 This라서 그대로 써도 될것같다
     oDiv.setAttribute("onclick", "DayOnMouseClick(this);");
 //    oDiv.setAttribute("ondblclick", "MonthMiniDbClick()");
 

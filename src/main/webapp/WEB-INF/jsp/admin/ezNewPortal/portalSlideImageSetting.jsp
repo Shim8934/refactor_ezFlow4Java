@@ -25,7 +25,7 @@
 .theme {position:relative;background-color : white; width : 390px; height : 270px; text-align : center; border: 1px solid #cecece; cursor: pointer;}
 .themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 .themeTitle {margin-top : 9px;}
-.themeName {margin-left : 10px;font-size : 14px;font-weight : bold;}
+.themeName {margin-left : 5px;font-size : 14px;font-weight : bold; display:inline-block; white-space:normal; overflow-y:auto; max-width:325px; height:24px; word-wrap:break-word;}
 .hideDetails {display : none;}
 .showDetails {display : block;}
 .close {margin-top : 6px;}
@@ -155,7 +155,7 @@ var getSlideImage = function () {
 					if (item.url == null || item.url == "") {
 						slideImageHTML += "<span class='themeName'>url : <spring:message code='ezNewPortal.t089'/></span>";
 					} else {
-						slideImageHTML += "<span class='themeName'>url : " + item.url + "</span>";
+						slideImageHTML += "<span class='themeName'>url : </span><span class='themeName'>" + item.url + "</span></span>";
 					}
 					slideImageHTML += "</div></div></div>";
 					slideImageHTML += "</li>";

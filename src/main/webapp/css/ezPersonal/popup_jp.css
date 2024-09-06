@@ -1,47 +1,46 @@
-.skinList {margin-left:-38px;list-style:none;}
-.skinList li {float:left;margin:5px;}
-.skins {position:relative;width:110px;height:44px;text-align:center;border:1px solid #cecece;cursor:pointer;}
-.skinImages {display:inline-block;position:relative;width:100%;height:100%; border:1px solid #cecece;}
-/* .checked {background-color:#edf7ff;border:1px solid #2196f3;} */
-.skinPopup {width:500px;height:500px;position:absolute;background:rgba(0,0,0,0.4);border-radius:30px;top:100px;left:150px;}
-.skinDivTop {display:inline-block;float:right;width:40px;margin-top:15px;}
-.skinPopImg {width:400px;height:400px;position:relative;top:50px;left:45px;}
-.skinCloseBtn {cursor:pointer;font-size:25px;}
-.skinImg {width:98%;height:95%;}
-.isDefault {position:absolute; background:rgba(0,0,0,0.3);width:110px; height:44px; top:0px;}
-.isDefault img {margin-top:7px; width:27px; height:27px;}
+@import "popup.css";
+/* 한국어,영어,일본어 css 차이가 없어서 한국어 기준 css import처리 */
+/* font-family는 portal.css 에서 상속받도록 함 */
 
-.popup_notice{height:100%;padding:20px;}
-.popup_type0{background:url(/images/admin/popup_bg01.png) #0078fe top right no-repeat;border:1px solid #0053b3;}
-.popup_type1{background:url(/images/admin/popup_bg02.png) #ffb4b4 top right no-repeat;border:1px solid #ff8080;}
-.popup_type2{background:url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;border:1px solid #e6a400;}
-.popup_type3{background:url(/images/admin/popup_bg04.png) #CCC top right no-repeat;border:1px solid #a6a6a6;}
-.popup_notice form{display:inline; margin:0px;}
-.popup_notice .popup_noticeLayout{height:100%;}
+/*.skinList {margin-left:-38px;list-style:none;}*/
+/*.skinList li {float:left;margin:5px;}*/
+/*.skins {position:relative;width:110px;height:44px;text-align:center;border:1px solid #cecece;cursor:pointer;}*/
+/*.skinImages {display:inline-block;position:relative;width:100%;height:100%; border:1px solid #cecece;}*/
+/*.skinPopup {width:500px;height:500px;position:absolute;background:rgba(0,0,0,0.4);border-radius:30px;top:100px;left:150px;}*/
+/*.skinDivTop {display:inline-block;float:right;width:40px;margin-top:15px;}*/
+/*.skinPopImg {width:400px;height:400px;position:relative;top:50px;left:45px;}*/
+/*.skinCloseBtn {cursor:pointer;font-size:25px;}*/
+/*.skinImg {width:98%;height:95%;}*/
+/*.isDefault {position:absolute; background:rgba(0,0,0,0.3);width:110px; height:44px; top:0px;}*/
+/*.isDefault img {margin-top:7px; width:27px; height:27px;}*/
 
-.popup_type0 .popup_noticeLayout .popup_noticeList {border:1px solid #0053b3;}
-.popup_type1 .popup_noticeLayout .popup_noticeList {border:1px solid #ff8080;}
-.popup_type2 .popup_noticeLayout .popup_noticeList {border:1px solid #e6a400;}
-.popup_type3 .popup_noticeLayout .popup_noticeList {border:1px solid #a6a6a6;}
+/*.popup_notice{height:100%;padding:20px;}*/
+/*.popup_type0{background:url(/images/admin/popup_bg01.png) #0078fe top right no-repeat;border:1px solid #0053b3;}*/
+/*.popup_type1{background:url(/images/admin/popup_bg02.png) #ffb4b4 top right no-repeat;border:1px solid #ff8080;}*/
+/*.popup_type2{background:url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;border:1px solid #e6a400;}*/
+/*.popup_type3{background:url(/images/admin/popup_bg04.png) #CCC top right no-repeat;border:1px solid #a6a6a6;}*/
+/*.popup_notice form{display:inline; margin:0px;}*/
+/*.popup_notice .popup_noticeLayout{height:100%;}*/
 
-.popup_notice .popup_noticeTitle{overflow:hidden; margin:0px 0px 20px 0px; padding:0px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-.popup_notice .popup_noticeTitle dt{float:left; width:38px; height:38px; margin:0px 10px 0px 0px; padding:0px;}
-.popup_notice .popup_noticeTitle dt.title_type0 { background:url(/images/admin/popup_title_icon01.png) no-repeat;}
-.popup_notice .popup_noticeTitle dt.title_type1 { background:url(/images/admin/popup_title_icon02.png) no-repeat;}
-.popup_notice .popup_noticeTitle dt.title_type2 { background:url(/images/admin/popup_title_icon03.png) no-repeat;}
-.popup_notice .popup_noticeTitle dt.title_type3 { background:url(/images/admin/popup_title_icon04.png) no-repeat;}
-.popup_notice .popup_noticeTitle dd{margin:5px 48px; padding:0px; font-size:16px; color:#333; line-height:26px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-.popup_notice .popup_noticeTitle dd.name_type0{color:#FFF;}
+/*.popup_type0 .popup_noticeLayout .popup_noticeList {border:1px solid #0053b3;}*/
+/*.popup_type1 .popup_noticeLayout .popup_noticeList {border:1px solid #ff8080;}*/
+/*.popup_type2 .popup_noticeLayout .popup_noticeList {border:1px solid #e6a400;}*/
+/*.popup_type3 .popup_noticeLayout .popup_noticeList {border:1px solid #a6a6a6;}*/
 
-.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; margin:0px; padding:20px; background:#FFF; height:calc(100% - 126px); font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-.popup_notice .popup_noticeLayout .popup_noticeList p{margin:0px; padding:0px; line-height:18px; font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;word-break:break-all; word-wrap: break-word;}
-.popup_notice .popup_noticeLayout .notice_btn{overflow:hidden; margin:14px 0px 0px 0px; padding:0px;height:24px;}
-.popup_notice .popup_noticeLayout .notice_btn p{display:inline-block; margin:0px; padding:0px; font-size:12px; color:#333; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox{float:left; cursor:pointer;padding:0px;}
-.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox label.name_type0{color:#FFF;}
-.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox .inp_noticeCheck{width:13px; height:13px; margin:-2px 0px 0px 0px; padding:0; vertical-align:middle; overflow:hidden;}
-.popup_notice .notice_btnClose{width:30px; height:30px; background:url(/images/webfolder/close.png) no-repeat; cursor:pointer;position:absolute;margin:0;right:-11px;top:-8px;border-radius:12px;}
-/* .popup_notice .notice_btnClose.close_type0 {background:url(/images/admin/noMenu.png) no-repeat;}
-.popup_notice .notice_btnClose.close_type1 {background:url(/images/admin/noMenu.png) no-repeat;}
-.popup_notice .notice_btnClose.close_type2 {background:url(/images/admin/noMenu.png) no-repeat;}
-.popup_notice .notice_btnClose.close_type3 {background:url(/images/admin/noMenu.png) no-repeat;} */
+/*.popup_notice .popup_noticeTitle{overflow:hidden; margin:0px 0px 20px 0px; padding:0px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}*/
+/*.popup_notice .popup_noticeTitle dt{float:left; width:38px; height:38px; margin:0px 10px 0px 0px; padding:0px;}*/
+/*.popup_notice .popup_noticeTitle dt.title_type0 { background:url(/images/admin/popup_title_icon01.png) no-repeat;}*/
+/*.popup_notice .popup_noticeTitle dt.title_type1 { background:url(/images/admin/popup_title_icon02.png) no-repeat;}*/
+/*.popup_notice .popup_noticeTitle dt.title_type2 { background:url(/images/admin/popup_title_icon03.png) no-repeat;}*/
+/*.popup_notice .popup_noticeTitle dt.title_type3 { background:url(/images/admin/popup_title_icon04.png) no-repeat;}*/
+/*.popup_notice .popup_noticeTitle dd{margin:5px 48px; padding:0px; font-size:16px; color:#333; line-height:26px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}*/
+/*.popup_notice .popup_noticeTitle dd.name_type0{color:#FFF;}*/
+
+/*.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; margin:0px; padding:20px; background:#FFF; height:calc(100% - 126px); font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}*/
+/*.popup_notice .popup_noticeLayout .popup_noticeList p{margin:0px; padding:0px; line-height:18px; font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;word-break:break-all; word-wrap: break-word;}*/
+/*.popup_notice .popup_noticeLayout .notice_btn{overflow:hidden; margin:14px 0px 0px 0px; padding:0px;height:24px;}*/
+/*.popup_notice .popup_noticeLayout .notice_btn p{display:inline-block; margin:0px; padding:0px; font-size:12px; color:#333; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}*/
+/*.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox{float:left; cursor:pointer;padding:0px;}*/
+/*.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox label.name_type0{color:#FFF;}*/
+/*.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox .inp_noticeCheck{width:13px; height:13px; margin:-2px 0px 0px 0px; padding:0; vertical-align:middle; overflow:hidden;}*/
+/*.popup_notice .notice_btnClose{width:30px; height:30px; background:url(/images/webfolder/close.png) no-repeat; cursor:pointer;position:absolute;margin:0;right:-11px;top:-8px;border-radius:12px;}*/

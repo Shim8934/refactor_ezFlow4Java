@@ -168,7 +168,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 
 	@Override
-	public void addResSch(String ownerId, String companyId, int tenantId,
+	public Integer addResSch(String ownerId, String companyId, int tenantId,
 			String pNum, String writerId, String deptNm, String ownerNm,
 			String title, String location, String timeDisplay,
 			String startDate, String endDate, String allDay, String alterTime,
@@ -203,7 +203,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PCHARACTERID", 0);
 
 		logger.debug("map: " + map);
-		mResourceDAO.addResSch(map);
+		return mResourceDAO.addResSch(map);
 	}
 
 	@Override
@@ -1445,7 +1445,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("tenantID", tenantID);
 		map.put("check", check);
 		
-		logger.debug("sql이 없을수도 있나");
 		return mResourceDAO.getScheduleApprList(map);
 	}
 	

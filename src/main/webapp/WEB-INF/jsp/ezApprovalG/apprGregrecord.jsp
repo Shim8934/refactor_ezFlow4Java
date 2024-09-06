@@ -150,17 +150,17 @@
             return false;
         }
 
-        if (!ValidateNumber(txtRegM.value)) {
+        if (!ValidateNumber(txtRegM.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1047'/>");
             return false;
         }
 
-        if (!ValidateNumber(txtRegD.value)) {
+        if (!ValidateNumber(txtRegD.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1048'/>");
             return false;
         }
 
-        if (!ValidateNumber(txtRegH.value)) {
+        if (!ValidateNumber(txtRegH.value, 'N')) {
             alert("<spring:message code='ezApprovalG.t1049'/>");
             return false;
         }
@@ -176,7 +176,7 @@
             return false;
         }
         
-        if (!ValidateNumber(txtExeM.value)) {
+        if (!ValidateNumber(txtExeM.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1052'/>");
             return false;
         }
@@ -187,7 +187,7 @@
             return false;
         }
 
-        if (!ValidateNumber(txtExeD.value)) {
+        if (!ValidateNumber(txtExeD.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1053'/>");
             return false;
         }
@@ -239,7 +239,7 @@
             }
         }
 
-        if (!ValidateNumber(txtTotalPage.value)) {
+        if (!ValidateNumber(txtTotalPage.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1060'/>");
             return false;
         }
@@ -311,7 +311,7 @@
     }
     function openFileAttachUI() {
         try {
-            DivPopUpShow(570, 285, "/ezApprovalG/regRecordAttach.do?docID=" + pDocID + "&orgCompanyID=" + orgCompanyID);
+            DivPopUpShow(800, 610, "/ezApprovalG/aprAttach.do?formID=&docID=" + encodeURI(pDocID) + "&draftFlag=DRAFT" + "&orgCompanyID=" + CompanyID + "&ext=" + ext);
         }
         catch (e) {
             alert("openFileAttachUI()" + e.description);
@@ -512,13 +512,12 @@
     
     function GetPublicCode2() {
     	var publicCode2 = "";
-    	if (document.getElementsByName("rdoSecType2")[0].checked) {
-    		publicCode2 = "Y";
-    	} else {
-    		publicCode2 = "N";
-    	}
-    	
-    	return publicCode2;
+        var rdoSecType2SelectBox = document.getElementById("rdoSecType2");
+        if (rdoSecType2SelectBox){
+            publicCode2 = rdoSecType2SelectBox.value;
+        }
+
+        return publicCode2;
     }
     
     /* 2020-09-11 홍승비 - 숫자 이외의 값 입력 방지 함수 */
@@ -738,12 +737,18 @@
               </tr>
                <tr>
                 <th style="border-left: 0px;"><spring:message code='ezApprovalG.t109'/></th>
-                <td><input type="radio" name="rdoSecType2" value="Y" checked onClick="return rdoSecType2_onclick(this.value)" checked  style="height:13px;width:13px;padding:0px;margin:0px;">
+                <td>
+                    <select id="rdoSecType2" name="rdoSecType2" style="WIDTH: 85px">
+                        <option value="Y"><spring:message code='ezApprovalG.kmh03'/></option>
+                        <option value="B"><spring:message code='ezApprovalG.kmh04'/></option>
+                        <option value="N"><spring:message code='ezApprovalG.kmh05'/></option>
+                    </select>
+                  <%--<input type="radio" name="rdoSecType2" value="Y" checked onClick="return rdoSecType2_onclick(this.value)" checked  style="height:13px;width:13px;padding:0px;margin:0px;">
                   <span><spring:message code='ezApprovalG.t47'/></span>
                   <input type="radio" name="rdoSecType2" value="N" onClick="return rdoSecType2_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;">
                   <span><spring:message code='ezApprovalG.t1072'/></span>
                   <select id="selSecLevel" style="width:60px;display:none" name="select2">
-                  </select>
+                  </select>--%>
                 </td>
               </tr>
               <tr>
@@ -792,7 +797,8 @@
             <td colspan="2" style="height:20px">
                 <div style="text-align:left; line-height:20px;">
 		      		<img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px;">
-		      		<span style="color:#3a76c3;height:18px;display:inline-block;"><spring:message code='ezSystem.HSBAppr02'/>${apprTotalAttachLimit}<spring:message code='ezSystem.HSBAppr03'/></span>
+                    <span style="color:#3a76c3;height:18px;display:inline-block;">${pAttachWarning0}</span><br>
+                    <span style="color:#3a76c3;height:18px;display:${spanDisplayStyle}; margin-left:29px;">${pAttachWarning1}</span>
 		      	</div>
             </td>
         </tr>

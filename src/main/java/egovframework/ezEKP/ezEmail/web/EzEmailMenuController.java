@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,10 +18,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -34,8 +37,10 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -74,7 +79,10 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.rest.JgwResult;
 import egovframework.let.utl.rest.Rest;
 import net.lingala.zip4j.core.ZipFile;
-/** 
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+/**
  * @Description [Controller] 메일 메뉴
  * @author 오픈솔루션팀 이효민
  * @Modification Information
@@ -143,7 +151,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String useSpamSniper = ezCommonService.getTenantConfig("useSpamSniper", loginInfo.getTenantId());
 		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree + ",useBottomFrameOnly=" + useBottomFrameOnly 
 				+ ",useMailBoxBackUp=" + useMailBoxBackUp + ",useMailReceiveScreen=" + useMailReceiveScreen + ",useSharedMailbox=" + useSharedMailbox);
-		
+		boolean useApprMail = commonUtil.checkTenantConfigBool(loginInfo.getTenantId(), "useApprMail", "false")
+							? ezEmailUtil.useApprMailPolicy(loginInfo.getTenantId(), loginInfo.getCompanyID()) : false; // 2024-03-06 이사라 - 승인메일 사용 여부
+        boolean isApprMailApprover = useApprMail ? ezEmailService.checkApprMailApprover(loginInfo.getTenantId(), loginInfo.getCompanyID(), loginInfo.getId()) : false; // 2024-03-06 이사라 - 승인자 여부 확인
+		logger.debug("useApprMail={}, isApprMailApprover={}", useApprMail, isApprMailApprover);
+        
 		if (useMailReceiveScreen.equals("YES")) {
 			model.addAttribute("useMailReceiveScreen", useMailReceiveScreen);
 		}
@@ -310,11 +322,17 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("refreshInterval", mailGeneralVO.getRefreshInterval());
 		model.addAttribute("withoutNodeSelect", withoutNodeSelect);
+		model.addAttribute("useApprMail", useApprMail); // 승인메일 정책에서 하나라도 사용이면 true
+		model.addAttribute("isApprMailApprover", isApprMailApprover);
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
 		
 		if (useBizmekaSpambox.equals("YES")) {
-			String credentialForBizmekaSpambox = ezEmailUtil.getCredentialForBizmekaSpambox(userEmail);
+			String authString = userEmail + ".." + (System.currentTimeMillis()/1000 - 100*60);
+			
+			logger.debug("authString={}", authString);
+			
+			String credentialForBizmekaSpambox = ezEmailUtil.getCredentialForBizmekaSpambox(authString);
 			
 			model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 			model.addAttribute("credentialForBizmekaSpambox", credentialForBizmekaSpambox);
@@ -1605,6 +1623,141 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	}
 
 	/**
+	 * 2024-05-20 이사라
+	 * 메일검색에서 검색된 메일파일을 zip파일로 서버에 저장하기 실행 함수
+	 */
+	@RequestMapping(value = "/ezEmail/searchedMailExportZipForAll.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String searchedMailExportZipForAll(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject requestObject, Locale locale, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("searchedMailExportZipForAll started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
+
+		String mailFolder = (String) requestObject.get("MAILFOLDER");
+		String startDate = (String) requestObject.get("STARTDATE");
+		String endDate = (String) requestObject.get("ENDDATE");
+		String andorStatus = (String) requestObject.get("ANDORSTATUS");
+		String attachStatus = (String) requestObject.get("ATTACHSTATUS");
+		String userkey = (String) requestObject.get("USERKEY");
+		int maxCount = requestObject.get("MAXCOUNT") == null ? 0 : (Integer) requestObject.get("MAXCOUNT");
+		int startIndex = 0;
+		String shareId = (String) requestObject.get("SHAREID");
+
+		if (useSharedMailbox.equals("YES")) {
+			logger.debug("searchedMailExportZipForAll shareId=" + shareId);
+
+			if (!StringUtils.isBlank(shareId)) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("searchedMailExportZipForAll ended.");
+
+					return "";
+				} else {
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+		}
+
+		logger.debug("searchedMailExportZipForAll userId=" + userInfo.getId() + ",userEmail=" + userEmail);
+
+		List listCategory = (ArrayList) requestObject.get("CATEGORY");
+		List listKeyword = (ArrayList) requestObject.get("KEYWORD");
+		String[] categoryArray = new String[listCategory.size()];
+		String[] keywordArray = new String[listKeyword.size()];
+
+		for (int i = 0; i < listCategory.size(); i++) {
+			categoryArray[i] = (String) listCategory.get(i);
+		}
+
+		for (int i = 0; i < listKeyword.size(); i++) {
+			keywordArray[i] = (String) listKeyword.get(i);
+		}
+
+		if (startDate == null) {
+			return "";
+		}
+
+		if (endDate == null) {
+			return "";
+		}
+
+		startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
+		endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
+
+		SimpleDateFormat sdfForParsing = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdfForParsing.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
+		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
+
+		// 가온누리에서 분석 결과 endDate가 없는 경우 null보다 현재 시각으로 지정하는 것이 성능이 훨씬 좋게 나와 추가함.
+		if (endDateObj == null) {
+			endDateObj = new Date();
+		}
+
+		String returnValue = "";
+		IMAPAccess ia = null;
+
+		try {
+			int totalCount = 0;
+
+			Map<String, Object> extraMap = new HashMap<String, Object>();
+			extraMap.put("andorStatus", andorStatus);
+			extraMap.put("attachStatus", attachStatus);
+
+			if (useRDBOnlyMailList.equals("YES")) {
+				String folderPath = "";
+
+				if (!mailFolder.equals("ALL")) {
+					folderPath = mailFolder;
+				}
+
+				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderPath, categoryArray, keywordArray, startDateObj, endDateObj, true,
+						false, false, "receivedDate", true, startIndex, maxCount, false, extraMap, userInfo.getTenantId(), false, "");
+
+				totalCount = (int) extraMap.get("totalCount");
+				logger.debug("searchedMailExportZipForAll totalCount=" + totalCount);
+
+				Map<String, String[]> urlMap = new HashMap<>();
+				Map<String, String> mailMap = new HashMap<>();
+
+				for (Map<String, String> mail : mailList) {
+					String mailIdInfo = mail.get("MAIL_ID");
+					String mailbox = mailIdInfo.substring(0, mailIdInfo.lastIndexOf("/"));
+					String mailId = mailIdInfo.substring(mailIdInfo.lastIndexOf("/") + 1);
+
+					if (StringUtils.isBlank(mailMap.get(mailbox))) {
+						mailMap.put(mailbox, mailId);
+					} else {
+						String mailIds = mailMap.get(mailbox);
+						mailIds += ("," + mailId);
+						mailMap.put(mailbox, mailIds);
+					}
+				}
+
+				for (Entry<String, String> elem : mailMap.entrySet()) {
+					String[] mailMapValue = { elem.getValue() };
+					urlMap.put(elem.getKey(), mailMapValue);
+				}
+
+				String realPath = commonUtil.getRealPath(request);
+
+				returnValue = mailExportZipExcute(loginCookie, locale, shareId, urlMap, realPath, maxCount, userkey);
+			}
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("searchedMailExportZipForAll ended.");
+		return returnValue;
+	}
+
+	/**
 	 * 여러개의 메일파일을 zip파일로 서버에 저장하기 실행 함수
 	 * 2022-12-29 이사라 : 중복코드를 피하기 위해 mailExportZipExcute 함수와 분리
 	 */
@@ -1916,8 +2069,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				
 				ezEmailService.setMailboxProgress(userkey, userId, "EXPORT", tenantId, 0);
 				for (Message message : messages) {
-					String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".eml";
+					String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message);
 					fileName = commonUtil.getUniqueFileName(fileName, fileNameMap);
+					
+					// fileName이 너무길면 entry name too long 오류 발생으로 150글자 이상이면 150글자까지만 남기고 뒤에 문자열은 삭제
+					fileName = fileName.chars()
+							.limit(150)
+							.mapToObj(c -> String.valueOf((char) c))
+							.collect(Collectors.joining()) + ".eml";
 					
 					ZipEntry zipEntry = new ZipEntry(fileName);
 					zos.putNextEntry(zipEntry);
@@ -2144,7 +2303,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 		} else {
 			//handleMessage(jsonStr, session);
-			downFile(request, response, filePath, userEmail + "_" + folderName + ".zip");
+			downFile(request, response, filePath, userEmail + folderName + ".zip");
 		}
 		
 		File zipFile = new File(filePath);
@@ -2317,5 +2476,101 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("getUserKey ended.");
 		return userkey;
 	}
+
+	@RequestMapping(value = "/ezEmail/getOriginalEML.do", method = RequestMethod.GET)
+	public String getEmlText(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model ,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("getOriginText started.");
+
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userInfo.get(1);
+
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if ("YES".equals(useSharedMailbox)) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailExport ended.");
+
+					return "";
+				}
+
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+
+		String url = request.getParameter("url");
+		logger.debug("url=" + url);
+
+		long uid = 0;
+		String folderPath = null;
+
+		if (url != null) {
+			int index = url.lastIndexOf("/");
+
+			// separate the passed-in url into a folder path and a message uid
+			if (index != -1) {
+				folderPath = url.substring(0, index);
+				uid = Long.parseLong(url.substring(index + 1));
+			}
+		}
+
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+			Folder folder = ia.getFolder(folderPath);
+
+			String mimetype = "application/octet-stream";
+			response.setContentType(mimetype);
+
+			if (folder == null || !folder.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				folder.open(Folder.READ_ONLY);
+				Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+
+				if (message == null) {
+					logger.error("Message not found. uid=" + uid);
+				} else {
+
+					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+						message.writeTo(outputStream);
+						String emlText = outputStream.toString();
+
+						//escape 처리
+						emlText	= StringEscapeUtils.escapeHtml3(emlText);
+
+						model.addAttribute("emlText", emlText);
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+
+				folder.close(true);
+			}
+
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+
+
+		logger.debug("getOriginText ended.");
+		return "ezEmail/mailOriginalEMLViewer";
+	}
+	
 	 
 }

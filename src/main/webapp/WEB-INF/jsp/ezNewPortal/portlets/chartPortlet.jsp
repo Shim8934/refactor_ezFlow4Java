@@ -10,43 +10,50 @@
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/moment.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/chart.js')}"></script>
 <style>
-#chartPortletList{
-	display: flex;
-}
 #chartLeft{
 	z-index: 0;
-	width: 25%;
-	height: 100%;
-	position: relative;
+	width: 0;
+	height: calc(100% - 20px);;
+	display: none;
+	box-sizing: border-box;
 }
-#countsDiv{
-	float: left;
-    position: absolute;
-	bottom: 0;
-    text-align: center;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-#yearProduceCountsSpan{
-    color: rgb(63 76 95);
-    font-size: 15px;
-    font-weight: bold;
-	height: auto;
-}
+
 #chartRight{
-	border-left: 1px solid #dbdbdb;
-    padding: 10px;
+	padding: 10px;
 	width: 100%;
 	height: 100%;
+	border: none;
+	box-sizing: border-box;
 }
 
-.layDIV {
-	height: 100%;
+.one_by_two #chartLeft {display: block; width: 25%;}
+.one_by_two #chartRight {width: 75%;}
+
+.one_by_two #chartRight:before {
+	border-left: 1px solid #dbdbdb;
+	content : "";
+	position: absolute;
+	height: calc(100% - 85px);
 }
 
-.portlet_list {
-	height: calc(100% - 70px);
+.two_by_one #chartLeft {
+	display: block;
+	width: 100%;
+	height: calc(50% - 40px);
+	margin:20px 0;
+}
+.two_by_one #chartRight {width: 100%; height: 50%;}
+.two_by_one #chartPortletList {
+	align-items: center;
+	justify-content: space-around;
+	flex-direction: column;
+}
+
+#chartPortletList {
+	display: flex;
+	align-items: center;
+	height: calc(100% - 63px);
+	width: 100%;
 }
 </style>
 </head>
@@ -58,11 +65,8 @@
            		<dt class="portletText"><c:out value='${portletName }'/></dt>
            </dl>
 			<div class="portlet_list" id="chartPortletList">
-	           <div id="chartLeft" style="display: none">
+	           <div id="chartLeft">
 	           		<canvas id="canvas2"></canvas>
-	           		<div id="countsDiv">
-	           			<span id="yearProduceCountsSpan"></span>
-	           		</div>
 	           </div>
 	           <div id="chartRight">
 		           	<canvas id="canvas"></canvas>
@@ -71,4 +75,42 @@
     	</div>
     </article>
 </body>
+<script>
+	var initFail = function() {
+		var failSpace = document.getElementById("chartPortletList");
+		failSpace.innerHTML =
+				"<dl class='nodata'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>"
+				+ messages.strLang1
+				+ "</dd></dl>";
+		if (!!failSpace.firstChild) failSpace.firstChild.style.margin = "0 auto";
+	}
+
+	var getDataForSampleChart = function () {
+		var request = new XMLHttpRequest();
+		request.open('GET', '/ezNewPortal/sampleChartPortlet.do', true);
+		request.responseType = 'text';
+
+		request.onload = function () {
+			if (request.status >= 200 && request.status < 400) {
+				var jsonArr = JSON.parse(request.response);
+				var canvas2 =  document.getElementById("canvas2");
+				var douChart = new EzChartPortlet();
+				douChart.draw(canvas2).initDou(jsonArr[1]).count();
+				var canvas = document.getElementById("canvas");
+				var stackChart = new EzChartPortlet();
+				stackChart.draw(canvas).initStackBar(jsonArr[0]);
+			} else {
+				initFail();
+			}
+		}
+		request.onerror = function () {
+			initFail();
+		};
+		request.send();
+	}
+
+	var initChartPortlet = function () {
+		getDataForSampleChart();
+	}
+</script>
 </html>

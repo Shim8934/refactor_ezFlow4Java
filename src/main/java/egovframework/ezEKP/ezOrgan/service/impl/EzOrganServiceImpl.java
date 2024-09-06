@@ -1,5 +1,31 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+
+import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
 import java.text.ParseException;
@@ -12,39 +38,18 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
-
-import javax.annotation.Resource;
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
-import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 
 @Service("EzOrganService")
 public class EzOrganServiceImpl implements EzOrganService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzOrganServiceImpl.class);
-	
+
+	/** CRYPTO */
+	@Resource(name="crypto")
+	private EgovFileScrty egovFileScrty;
+
 	@Resource(name = "EzOrganDAO")
 	private EzOrganDAO ezOrganDAO;
 	
@@ -62,7 +67,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	@Autowired
 	private Properties globals;
-	
+
+	@Autowired
+	private EzOrganDAO ezOrganDao;
+
     // 지정된 사원 혹은 부서의 특정 필드의 값을 반환한다.
 	@Override
 	public String getPropertyValue(String userid, String propName, int tenantID) throws Exception{
@@ -123,9 +131,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return ezOrganDAO.getDeptInfo(map);
 	}
 
-	// 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
 	@Override
 	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, String displayTrashDept, int tenantID) throws Exception {
+		return getDeptTreeInfo(pUserID, pDeptID, pTopID, pPropList, primary, displayTrashDept, tenantID, "N");
+	}
+	// 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
+	@Override
+	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, String displayTrashDept, int tenantID, String adminOrgan) throws Exception {
 	    logger.debug("getDeptTreeInfo started");
 	    logger.debug("pUserID=" + pUserID + ",pDeptID=" + pDeptID + ",pTopID=" + pTopID
 	            + ",pPropList=" + pPropList + ",primary=" + primary + ",displayTrashDept=" + displayTrashDept + ",tenantID=" + tenantID);
@@ -162,6 +174,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 			map.put("v_TENANT_ID", tenantID);
 			map.put("isOrgan", isOrgan);
 			map.put("displayTrashDept", displayTrashDept);
+			map.put("adminOrgan", adminOrgan);
 			
 			// 지정된 부서의 자식 부서 목록을 가져온다.
 			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map);
@@ -184,7 +197,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 					OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
 	                
 					// 자식 부서의 상세 정보를 XML String 형태로 변환한다.
-	                memberInfo[memberCount] = getTreeNodeInfo(result, pDeptID, prevDeptID, deptInfo, pPropList, "");
+	                memberInfo[memberCount] = getTreeNodeInfo(result, pDeptID, prevDeptID, deptInfo, pPropList, "", adminOrgan);
 	                memberCount++;
 				}		
 			}
@@ -224,7 +237,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        // 부모 부서가 있는 경우 부모 부서로 이동하여 처리를 반복한다. 
         } while (!prevDeptID.toLowerCase().equals(pTopID.toLowerCase()) && !deptID.equals(""));
 		
-        deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList, isOrgan) + "</TREEVIEWDATA>";
+        deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList, isOrgan, adminOrgan) + "</TREEVIEWDATA>";
         
         logger.debug("deptInfo=" + deptInfo);
         logger.debug("getDeptTreeInfo ended");
@@ -233,15 +246,15 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	// 지정된 부서의 자식 부서 목록을 XML 형식으로 반환한다.
-	// 폐지부서 표출 안 함
+	// 폐지부서 표출 안 함, 숨김부터 표시 안 함
 	@Override
 	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID) throws Exception {
-		return getDeptSubTreeInfo(pDeptID, pPropList, primary, tenantID, false);
+		return getDeptSubTreeInfo(pDeptID, pPropList, primary, tenantID, false, "N");
 	}
 	
 	// 지정된 부서의 자식 부서 목록을 XML 형식으로 반환한다.
 	@Override
-	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID, boolean displayTrashDept) throws Exception {
+	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID, boolean displayTrashDept, String adminOrgan) throws Exception {
 	    logger.debug("getDeptSubTreeInfo started");
 	    logger.debug("pDeptID=" + pDeptID + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
 	    
@@ -250,7 +263,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CN", pDeptID);
 		map.put("v_LANGDATA", primary);
 		map.put("v_TENANT_ID", tenantID);
-		
+		map.put("adminOrgan", adminOrgan);
+
 		if (displayTrashDept) {
 			map.put("displayTrashDept", true);
 		}
@@ -272,7 +286,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				
 				OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
 
-                memberInfo[memberCount] = getTreeNodeInfo(result, "", "", "", pPropList, "");
+                memberInfo[memberCount] = getTreeNodeInfo(result, "", "", "", pPropList, "", adminOrgan);
                 memberCount++;
 			}		
 		}
@@ -291,7 +305,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return deptlist.toString();
 	}
 	
-	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList, String isOrgan) throws Exception {
+	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList, String isOrgan, String adminOrgan) throws Exception {
 		logger.debug("getTreeNodeInfo started");
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", vo.getTenantId());
@@ -319,9 +333,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 				                    + "</" + propname.toUpperCase() + ">");
 			}
 		}
-		
+
+		if (vo.getCn() != null && vo.getExtensionAttribute2() != null && vo.getCn().toLowerCase().equals(vo.getExtensionAttribute2().toLowerCase())) {
+			isOrgan= "true";
+		}
 		// 부서의 자식 부서의 갯수를 구한다.
-		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId(), isOrgan);
+		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId(), isOrgan, adminOrgan);
 		
 		if (cnt > 0) {
 	        nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");
@@ -360,6 +377,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 			    }		    
 			}
 		}
+
+		String deptTreeFlag = vo.getDeptTreeFlag() == null ? "N" : vo.getDeptTreeFlag();
+		nodeInfo.append("<DEPTTREEFLAG>"+ deptTreeFlag +"</DEPTTREEFLAG>");
+		
 	    nodeInfo.append("</NODE>");
 
 	    logger.debug("nodeInfo=" + nodeInfo.toString());
@@ -389,12 +410,17 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	@Override
 	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, int tenantID, String noAddJob) throws Exception {
-	    logger.debug("getDeptMemberList started");
-	    logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
-	            + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
-		
+		return getDeptMemberList(pDeptID,pCellList,pPropList,pClass,pLangCode,tenantID,noAddJob,"n");
+	}
+	
+	@Override
+	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, int tenantID, String noAddJob,String adminOrgan) throws Exception {
+		logger.debug("getDeptMemberList started");
+		logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
+				+ ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
+
 		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID);
-		
+
 	    // 2019-01-09 황윤호
 		// 조직도 관리에서 부서장 column을 id -> name으로 바꿔주기 위해 사용
 		String deptMaster = "";
@@ -411,6 +437,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_LANGDATA", pLangCode);
 		map.put("v_TENANT_ID", tenantID);
 		map.put("noAddJob", noAddJob);
+		map.put("adminOrgan", adminOrgan);
 		
 		// 지정된 부서의 멤버 목록을 구한다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberList(map);
@@ -434,11 +461,12 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("IS_ADDJOB", obj.getIsAddjob());
         		map1.put("JOBID", obj.getJobId());
 				map1.put("permissionBasisDeptYN", permissionBasisDeptYN);
-        		
+        		map1.put("ROLEID", obj.getRoleId());
+
         		// 사원의 상세 정보를 가져온다.
 				Object userVO = ezOrganDAO.getTBLUserMaster(map1);
 				sb.append(commonUtil.getQueryResult(userVO));
-				
+
             // 멤버가 부서인 경우
             } else {
             	map1.put("v_CN", obj.getCn());
@@ -473,9 +501,14 @@ public class EzOrganServiceImpl implements EzOrganService {
         
         return memberlist.toString();
 	}
-	
+
 	@Override
 	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage, int tenantID) throws Exception {
+		return getDeptMemberListPagination(pDeptID, pCellList, pPropList, pClass, pLangCode, pPage, tenantID, "N");
+	}
+	
+	@Override
+	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage, int tenantID, String adminOrgan) throws Exception {
 		logger.debug("getDeptMemberListPagination started");
 		logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
 				+ ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",pPage=" + pPage + ",tenantID=" + tenantID);
@@ -493,7 +526,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_ENDROW", Integer.parseInt(pPage) * 50 + 1);
         map.put("v_STARTROWForMySQL", (Integer.parseInt(pPage) -1) * 50);
         map.put("v_COUNT", 50);
-		
+		map.put("adminOrgan", adminOrgan);
+	
 		// 지정된 부서의 멤버 목록을 페이지를 고려하여 구한다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberListPage(map);
 		
@@ -514,7 +548,8 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("v_TENANT_ID", tenantID);
         		map1.put("IS_ADDJOB", obj.getIsAddjob());
         		map1.put("JOBID", obj.getJobId());
-        		
+        		map1.put("ROLEID", obj.getRoleId());
+
         		// 사원의 상세 정보를 가져온다.
         		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
                 sb.append(commonUtil.getQueryResult(userVO));
@@ -593,7 +628,40 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return totalCount;
 	}
 	
+	/**
+	 * 하위부서 포함하여 카운트 필요시 사용
+	 * 2024.07.19 한슬기 : 조직도 숨김처리 기능 사용시 관리자페이지, 사용자페이지 구분하기위해 오버로딩
+	 * @param companyList 하위회사 목록
+	 * @param containLow YES일때 본인포함 하위, NO일때 본인제외 하위 (하위가 회사인경우를 위해 추가함)
+	 * @param tenantID
+	 * @param adminOrgan y: 관리자페이지에서 호출, n: 사용자페이지에서 호출
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int getMemberListCount2(String deptCN, List<String> companyList, int totalCount, String containLow, int tenantID, String adminOrgan) throws Exception {
+		logger.debug("getMemberListCount2 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptCN", deptCN);
+		map.put("containConfig", containLow);
+		map.put("tenantID", tenantID);
+		map.put("adminOrgan", adminOrgan);
+		
+		totalCount = ezOrganDAO.getMemberListCount2(map);
+		
+		logger.debug("totalCount2 = {}, adminOrgan = {} ", totalCount, adminOrgan);
+		
+		logger.debug("getMemberListCount2 ended.");
+		
+		return totalCount;
+	}	
+	
 	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception {
+		return getDeptMemberListCount(deptID,containLow,primary,tenantID,"n");
+	}
+	
+	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID, String adminOrgan) throws Exception {
 		logger.debug("getDeptMemberListCount started.");
 		logger.debug("deptID = " + deptID + " || containLow = " + containLow + " || primary = " + primary + " || tenantID = " + tenantID);
 		
@@ -602,7 +670,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN", deptID);
 		map.put("v_TENANT_ID", tenantID);
-		
+		map.put("adminOrgan", adminOrgan);		
 		if (!containLow) {
 			//totalCount
 			totalCount = Integer.parseInt(ezOrganDAO.getMemberListCount(map));
@@ -694,7 +762,6 @@ public class EzOrganServiceImpl implements EzOrganService {
     						isAbsence = true;
     					}
     				} catch (ParseException e) {
-    					// TODO Auto-generated catch block
     					logger.error("dateFormat.parse(dateFormat.format(new Date())) error :: " + e);
     					logger.error(e.getMessage(), e);
     				} catch (Exception ee) {
@@ -750,8 +817,8 @@ public class EzOrganServiceImpl implements EzOrganService {
         logger.debug("getMemberInfo ended");
         
         return nodeInfo.toString();        
-    }	
-
+    }
+	
 	@Override
 	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID, String adminOrgan) throws Exception {
 		logger.debug("getSearchList started");
@@ -793,15 +860,15 @@ public class EzOrganServiceImpl implements EzOrganService {
                 if (i == 0) {
                 	if (checkSearchField(searchInfo[0])) {
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParam[0].toString().equals("/")) {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "')";
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "')";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
                             		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -812,11 +879,11 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 } else {
                     if (checkSearchField(searchInfo[0])) {
-                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
+                        strSQL = strSQL + " AND ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
                         		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -830,14 +897,19 @@ public class EzOrganServiceImpl implements EzOrganService {
         }        
         
         if (pClass.equals("user") || pClass.equals("all")){
-            strSQL = strSQL.replace("cn", "a.cn");
-            strSQL = strSQL.replace("title", "a.title");
-                        
+            //strSQL = strSQL.replace("cn", "a.cn");
+            //strSQL = strSQL.replace("title", "a.title");
+        	
+        	// 2024.06.27 한슬기 : 검색하려는 단어에 cn, userLoginId, title이 포함되어있으면 검색이 되지 않아 앞뒤로 공백추가
+    		strSQL = strSQL.replace(" cn ", " a.cn ");
+    		strSQL = strSQL.replace(" title ", " a.title ");
+    		strSQL = strSQL.replace(" title2 ", " a.title2 ");
+    		
             type = "U";
         }else{
         	type = "G";
         }
-		
+
 		String strSQLForAddJob = strSQL;
 		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
 			strSQLForAddJob = strSQLForAddJob.replace("extensionattribute1", "A.roll_info");
@@ -845,7 +917,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-                
+
         map.put("strSQL", strSQL + strSize);
         map.put("strSQLForMySQL", strSQL);
         map.put("strSizeForMySQL", strSizeForMySQL);
@@ -855,6 +927,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("v_TENANT_ID", tenantID);
         map.put("adminOrgan", adminOrgan);
 		map.put("strSQLForAddJobForMySQL", strSQLForAddJob);
+		map.put("adminOrgan", adminOrgan);
         
         logger.debug("strSQL=" + strSQL);
         
@@ -878,7 +951,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        		map1.put("v_TENANT_ID", tenantID); 
             		map1.put("IS_ADDJOB", organVO.getIsAddjob());
             		map1.put("JOBID", organVO.getJobId());
-	        		
+					map1.put("ROLEID", Optional.ofNullable(organVO.getRoleId()).filter(str -> !str.isEmpty()).orElse("0"));
+
 	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
 	        	}else{
 	        		map1.put("v_CN", organVO.getCn());
@@ -1084,14 +1158,14 @@ public class EzOrganServiceImpl implements EzOrganService {
         			if (i == 0) {
         				if (checkSearchField(searchInfo[0])) {
         					if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParm[0].toString().equals(":")) {
-        						strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + "=UPPER('" + searchParm[i] + "') OR " + searchInfo[0].toLowerCase() + "2 = UPPER('" + searchParm[i] + "'))";
+        						strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " =UPPER('" + searchParm[i] + "') OR " + searchInfo[0].toLowerCase() + "2 = UPPER('" + searchParm[i] + "'))";
         						searchParm[0] = searchParm[0].substring(0, searchParm[0].length() - 1);
         					} else {
-        						strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
+        						strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
         					}
         				} else {
         					if (searchInfo[0].indexOf("EXACT_") == 0) {
-        						strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "=UPPER('" + searchParm[i] + "') ";
+        						strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + " =UPPER('" + searchParm[i] + "') ";
         					} else if (searchInfo[0].indexOf("LEFT_") == 0) {
         						strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
         					} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -1102,10 +1176,10 @@ public class EzOrganServiceImpl implements EzOrganService {
         				}
         			} else {
         				if (checkSearchField(searchInfo[0])) {
-        					strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString +")";
+        					strSQL = strSQL + " AND ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString +")";
         				} else {
         					if (searchInfo[0].indexOf("EXACT_") == 0) {
-        						strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "=UPPER('" + searchParm[i] + "') ";
+        						strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + " =UPPER('" + searchParm[i] + "') ";
         					} else if (searchInfo[0].indexOf("LEFT_") == 0) {
         						strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
         					} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -1119,8 +1193,13 @@ public class EzOrganServiceImpl implements EzOrganService {
         	}
 
         	if (pClass.equals("user") || pClass.equals("all")) {
-        		strSQL = strSQL.replace("cn", "a.cn");
-        		strSQL = strSQL.replace("title", "a.title");
+           		//strSQL = strSQL.replace("cn", "a.cn");
+        		//strSQL = strSQL.replace("title", "a.title");
+        		
+        		// 2024.06.27 한슬기 : 검색하려는 단어에 cn, userLoginId, title이 포함되어있으면 검색이 되지 않아 앞뒤로 공백추가 
+        		strSQL = strSQL.replace(" cn ", " a.cn ");
+        		strSQL = strSQL.replace(" title ", " a.title ");
+        		strSQL = strSQL.replace(" title2 ", " a.title2 ");
 
         		type = "U";
         	} else {
@@ -1195,6 +1274,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         				map1.put("v_TENANT_ID", tenantID);
                 		map1.put("IS_ADDJOB", organVO.getIsAddjob());
                 		map1.put("JOBID", organVO.getJobId());
+                		map1.put("ROLEID", organVO.getRoleId());
 
         				result = ezOrganDAO.getTBLUserMaster(map1);                 
         			} else {
@@ -1482,8 +1562,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	public String getPropertyList(String id, String pPropList, String primary, int tenantID) throws Exception {
 	    logger.debug("getPropertyList started");
 	    logger.debug("id=" + id + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
-	    
-		String propValue = "";
+
 		StringBuilder propInfo = new StringBuilder("<DATA>");
 		
 		String dataType = "user";
@@ -1511,19 +1590,23 @@ public class EzOrganServiceImpl implements EzOrganService {
 		}
 		
 		pPropList = convertAddandConvert(dataType, pPropList);
-        String[] propList = pPropList.split(";");
+        String[] propList = pPropList.toUpperCase().split(";");
 		
         for (String propname : propList) {
-        	if (checkDBColum(propname.toUpperCase()) == false) {
-                propValue = getPropertyValue(id, propname, tenantID);
-                propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propValue) + "</" + propname.toUpperCase() + ">");
-            } else if (!propname.toUpperCase().equals("")) {            	
-                if (xmldom != null && xmldom.getElementsByTagName(propname.toUpperCase()).getLength() > 0) {
-                    propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(xmldom.getElementsByTagName(propname.toUpperCase()).item(0).getTextContent()) + "</" + propname.toUpperCase() + ">");
-                } else {
-                    propInfo.append("<" + propname.toUpperCase() + "></" + propname.toUpperCase() + ">");
+			if (StringUtils.isBlank(propname)) continue;
+
+			String propValue = null; // null 이면 cleanValue 에서 "" 빈 값 리턴한다.
+
+			if (checkDBColum(propname)) {
+                if (xmldom != null && xmldom.getElementsByTagName(propname).getLength() > 0) {
+                    propValue = xmldom.getElementsByTagName(propname).item(0).getTextContent();
                 }
+
+            } else {
+                propValue = getPropertyValue(id, propname, tenantID); // getPropertyValue 에서 propname 는 대문자로 사용된다.
             }
+
+			propInfo.append("<" + propname + ">" + commonUtil.cleanValue(propValue) + "</" + propname + ">");
         }
         
         propInfo.append("</DATA>");
@@ -1543,7 +1626,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_PCN", id);
 		map.put("v_PDEPT", pDeptID);
 		map.put("v_LANGDATA", primary);
-		
+
 		OrganUserVO userVO = (ezOrganDAO.getUserAddjobInfo(map));
 		
 		if (userVO != null) {
@@ -1564,6 +1647,43 @@ public class EzOrganServiceImpl implements EzOrganService {
 			strXML = stb.toString();
 		}
 		
+		return strXML;
+	}
+
+	@Override
+	public String getUserAddjobInfoWithJobId(String id, String pDeptID, String primary, String jobID, int tenantID) throws Exception {
+		String strXML = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_PCN", id);
+		map.put("v_PDEPT", pDeptID);
+		map.put("v_LANGDATA", primary);
+		// 2024.05.16 장혜연 직원 상세정보 조회시 jobId도 고려되도록 추가
+		map.put("v_jobID", jobID);
+
+		OrganUserVO userVO = (ezOrganDAO.getUserAddjobInfo(map));
+
+		if (userVO != null) {
+			StringBuilder stb = new StringBuilder();
+
+			stb.append("<ROW>");
+			stb.append("<TITLE>");
+			stb.append(commonUtil.cleanValue(userVO.getTitle()));
+			stb.append("</TITLE>");
+			stb.append("<DISPLAYNAME>");
+			stb.append(commonUtil.cleanValue(userVO.getDisplayName()));
+			stb.append("</DISPLAYNAME>");
+			stb.append("<COMPANY>");
+			stb.append(commonUtil.cleanValue(userVO.getCompany()));
+			stb.append("</COMPANY>");
+			stb.append("<EXTENSIONATTRIBUTE10>");
+			stb.append(commonUtil.cleanValue(userVO.getRole()));
+			stb.append("</EXTENSIONATTRIBUTE10>");
+			stb.append("</ROW>");
+			strXML = stb.toString();
+		}
+
 		return strXML;
 	}
 
@@ -2128,7 +2248,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         String type = ""; 
         int i = 0;
 		String strSQLForAddJob = "";
-        
+
         if (pLimit != 0) {
             strSize = " AND ROWNUM <= " + pLimit;
             strSizeForMySQL = " LIMIT " + pLimit;
@@ -2156,14 +2276,14 @@ public class EzOrganServiceImpl implements EzOrganService {
                 if (i == 0) {
                     if (checkSearchField(searchInfo[0])) {
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParam[0].toString().equals("/")) {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i]+ "')";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i]+ "')";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + " )";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + " )";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -2174,10 +2294,10 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 } else {
                     if (checkSearchField(searchInfo[0])) {
-                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
+                        strSQL = strSQL + " AND ( " + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -2191,8 +2311,13 @@ public class EzOrganServiceImpl implements EzOrganService {
         }        
         
         if (pClass.equals("user") || pClass.equals("all")){
-            strSQL = strSQL.replace("cn", "a.cn");
-            strSQL = strSQL.replace("title", "a.title");
+            //strSQL = strSQL.replace("cn", "a.cn");
+            //strSQL = strSQL.replace("title", "a.title");
+        	
+        	// 2024.06.27 한슬기 : 검색하려는 단어에 cn, userLoginId, title이 포함되어있으면 검색이 되지 않아 앞뒤로 공백추가
+    		strSQL = strSQL.replace(" cn ", " a.cn ");
+    		strSQL = strSQL.replace(" title ", " a.title ");
+    		strSQL = strSQL.replace(" title2 ", " a.title2 ");
                         
             type = "U";
         }else{
@@ -2211,7 +2336,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         		strSQLAddjobCom = strSQLAddjobCom.replace("a.DEPTID", "b.PHYSICALDELIVERYOFFICENAME");
         	}
         }
-		
+
 		strSQLForAddJob = strSQL;
 		// 2023-08-23 전인하 - 권한 겸직/사용자 기준 설정 기능 대응, 해당 옵션 사용 시 권한 설정 컬럼을 addJobMaster의 추가컬럼에서 찾게 함
 		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
@@ -2233,7 +2358,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("noAddJob", noAddJob);
         map.put("adminOrgan", adminOrgan);
 		map.put("strSQLForAddJobForMySQL", strSQLForAddJob);
-        
+
         logger.debug("strSQL=" + strSQL);
         logger.debug("strSQLCom=" + strSQLCom);//getSearchList
         logger.debug("strSQLAddjobCom=" + strSQLAddjobCom);
@@ -2258,7 +2383,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        		map1.put("v_TENANT_ID", tenantID); 
 	        		map1.put("IS_ADDJOB", organVO.getIsAddjob());
 	        		map1.put("JOBID", organVO.getJobId());
-	        		
+					map1.put("ROLEID", Optional.ofNullable(organVO.getRoleId()).filter(str -> !str.isEmpty()).orElse("0"));
+
 	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
 	        	}else{
 	        		map1.put("v_CN", organVO.getCn());
@@ -2472,7 +2598,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getJobMasterMemberList(String type, String jobID, String celllist, String proplist, String pageSize, String pageNum, 
-			String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception {
+			String searchType, String searchValue, String primary, String companyID, int tenantID, String adminOrgan) throws Exception {
 		logger.debug("getJobMasterMemberList started.");
 		
 		StringBuilder userInfo = new StringBuilder();
@@ -2482,6 +2608,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_JOBID", jobID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_ADMINORGAN", adminOrgan);
 		
 		if (!pageNum.equals("") && !pageSize.equals("")) {
 			int pPageSize = Integer.parseInt(pageSize);
@@ -2493,17 +2620,27 @@ public class EzOrganServiceImpl implements EzOrganService {
 			map.put("v_PAGENUM", pPageNum);
 		}
 		
-		if (!searchType.equals("") && !searchValue.equals("")) {
+		if (!searchType.equals("") && !searchValue.equals("") || "n".equals(adminOrgan)) {
+			String v_subQuery = "WHERE ";
 			if (searchType.equalsIgnoreCase("displayname")) {
-				String v_subQuery = primary.equals("1") ? " DISPLAYNAME " : " DISPLAYNAME2 ";
+				v_subQuery += primary.equals("1") ? " DISPLAYNAME " : " DISPLAYNAME2 ";
 				v_subQuery += " LIKE '%" + searchValue.trim() + "%' ";
 				
 				if (globals.getProperty("Globals.DbType").equals("oracle")) {
 					v_subQuery += " ESCAPE '\\' ";
 				}
-
-				map.put("v_SUBQUERY", "WHERE " + v_subQuery);
 			}
+			
+			if ("n".equals(adminOrgan)) {
+				String regex = "WHERE\\\\s+\\\\S+.*";
+				if (v_subQuery.matches(regex)) {
+					// where절 뒤에 searchType문자열이 들어갔는지 확인하고 있으면 AND 추가
+					v_subQuery += "AND ";
+				}
+				v_subQuery += "USERTREEFLAG = 'Y'";
+				v_subQuery += " AND DEPTTREEFLAG = 'Y'";
+			}
+			map.put("v_SUBQUERY", v_subQuery);
 		}
 		
 		List<OrganUserVO> userList = ezOrganAdminDao.getTitleUserList(map);
@@ -2514,14 +2651,16 @@ public class EzOrganServiceImpl implements EzOrganService {
 			for (OrganUserVO obj : userList) {
 				String tmpUserType = obj.getUserType();
 				tmpUserType = (tmpUserType != null && tmpUserType.equalsIgnoreCase("addJob")) ? "Y" : "";
-				
+				String roleId = Optional.ofNullable(obj.getRoleId()).filter(str -> !str.isEmpty()).orElse("0");
+
 				Map<String, Object> userMap = new HashMap<String, Object>();
 				userMap.put("v_CN", obj.getCn());
 				userMap.put("v_DEPTCD", obj.getDepartment());
 				userMap.put("v_LANGDATA", primary);
 				userMap.put("v_TENANT_ID", tenantID);
 				userMap.put("IS_ADDJOB", tmpUserType);
-				userMap.put("JOBID", jobID);
+				userMap.put("JOBID", obj.getJobID());
+				userMap.put("ROLEID", roleId);
 				Object userVO = ezOrganDAO.getTBLUserMaster(userMap);  
 				
 				StringBuilder userSb = new StringBuilder();
@@ -2664,15 +2803,15 @@ public class EzOrganServiceImpl implements EzOrganService {
 	@Override
 	public String getRollInfoBasisDept(String userID, int tenantID, String deptID, String jobID) throws Exception {
 		logger.debug("getRollInfoBasisDept started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN",userID);
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_DEPTID", deptID);
 		map.put("v_JOBID", jobID);
-		
+
 		logger.debug("getRollInfoBasisDept ended");
-		
+
 		return ezOrganDAO.getRollInfoBasisDept(map);
 	}
 
@@ -2690,10 +2829,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 		List<OrganUserVO> returnVal = ezOrganDAO.getAllRollInfoForUserBasisDept(map);
 
 		logger.debug("getAllRollInfoForUserBasisDept ended");
-		
+
 		return returnVal;
 	}
-	
+
 	// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > 리스트 생성 위한 겸직정보 조회
 	@Override
 	public List<OrganUserVO> getAddJobListForEzApprDropdown(String lang, String userId, int tenantId) throws Exception {
@@ -2710,5 +2849,57 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 		return returnVal;
 	}
-	
+
+	public OrganUserVO getAddJobInfo(String id, String dept, String jobId, int tenantId) throws Exception {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", id);
+		map.put("dept", dept);
+		map.put("jobID", jobId);
+		map.put("tenantID", tenantId);
+		return ezOrganDAO.getAddJobInfo(map);
+	}
+
+    @Override
+	public String changeCookie(String loginCookie, String deptId, String companyId, int tenantId, String jobId) throws Exception {
+		logger.debug("changeCookie => deptId = " + deptId + ", companyId = " + companyId + ", tenantId = " + tenantId + ", jobId = " + jobId);
+        String decData = egovFileScrty.decryptAES(loginCookie);
+		String[] decDataArray = decData.split("///", -1);
+		decDataArray[8] = String.valueOf(tenantId);
+		decDataArray[9] = deptId;
+		decDataArray[10] = companyId;
+		decDataArray[11] = jobId;
+        String newCookieStr = String.join("///", decDataArray);
+
+        return egovFileScrty.encryptAES(newCookieStr);
+    }
+
+	@Override
+	public Optional<OrganUserVO> getUserInfo(int tenantId, String userId, String companyId, String deptId, String jobId, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_CN", userId);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_LANGDATA", lang);
+
+		List<OrganUserVO> allUserInfo = ezOrganDAO.getAllUserInfo(map);
+
+		// jobId 가 빈경우-> null인 유저정보(본직). 또는 회사, 부서, jobid가 일치한 vo 반환
+		return allUserInfo.stream().filter(vo -> (StringUtils.isBlank(jobId) && StringUtils.isBlank(vo.getJobID())) ||
+                (companyId.equals(vo.getCompanyId()) && deptId.equals(vo.getDepartment()) && jobId.equals(vo.getJobID()))).findAny();
+	}
+
+	@Override
+	public List<OrganUserVO> getAllUserinfo(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_CN", userId);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_LANGDATA", "1");
+		List<OrganUserVO> allUserInfo = ezOrganDao.getAllUserInfo(map);
+
+		if (allUserInfo.isEmpty()) {
+			throw new Exception("getAllUserinfo - 유저 정보 조회 실패 : " + tenantId + "/" + userId);
+		}
+
+		return allUserInfo;
+	}
 }

@@ -42,6 +42,8 @@
 			    	window.resizeTo(window.outerWidth, windowHeight);
 			    }
 
+				document.getElementById("deptTreeFlag").checked = true;
+				
 			    if(RetValue[1] == ""){
 					subtitle.innerText = "<spring:message code='ezOrgan.t80' />";
 			        ParentID.value = RetValue[0];
@@ -64,7 +66,7 @@
 						dataType : "text",
 						url : "/admin/ezOrgan/getEntryInfo.do",
 						async : false,
-						data : {cn : DeptID.value, prop : "displayName;extensionAttribute9;extensionAttribute1;extensionAttribute2;extensionAttribute3;extensionAttribute4;extensionAttribute5;extensionAttribute6;extensionAttribute8;extensionAttribute10;extensionAttribute15;extensionAttribute11", pMode : "dept" },
+						data : {cn : DeptID.value, prop : "displayName;extensionAttribute9;extensionAttribute1;extensionAttribute2;extensionAttribute3;extensionAttribute4;extensionAttribute5;extensionAttribute6;extensionAttribute8;extensionAttribute10;extensionAttribute15;extensionAttribute11;deptTreeFlag", pMode : "dept" },
 						success : function(result){
 							xmlDom = loadXMLString(result);
 							DeptName.value = SelectSingleNodeValueNew(xmlDom,"DATA/DISPLAYNAME1").trim();
@@ -77,7 +79,11 @@
 							SortNum.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE15").trim();
 							ParentID.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").trim();
 							DocManage.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE4").trim();
-					
+							
+							var deptTreeFlag = SelectSingleNodeValueNew(xmlDom,"DATA/DEPTTREEFLAG").trim();
+							var deptTreeFlagTag = document.getElementById("deptTreeFlag");
+							deptTreeFlagTag.checked = deptTreeFlag === 'Y' ? true : false;
+							
 							if (SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE8") == "1"){
 								if(approvalFlag == 'G') {
 									InsDept.checked = true;	
@@ -114,6 +120,14 @@
 			   if(approvalFlag === "S") {
 			   	$(".onlyUseG").css("display", "none");
 			   }
+
+				var useOrganHideFlag = "${useOrganHideFlag}";
+				var treeFlagClass = document.querySelectorAll(".treeFlag");
+				if ("NO" === useOrganHideFlag) {
+					treeFlagClass.forEach(function (treeFlag) {
+						treeFlag.style.display = "none";
+					});
+				}
 			});
 			
 			function Check_ID(pValue, isAdd) {
@@ -153,10 +167,10 @@
 					return;
 				}
 				
-				/* if (DeptName.value.indexOf("\"") > -1 || DeptName.value.indexOf("'") > -1) {
-					OpenAlertUI("<spring:message code='ezOrgan.t214'/> [\"], ['] <spring:message code='ezOrgan.t260' />");
+				 if (DeptName.value.indexOf("\"") > -1 || DeptName.value.indexOf("\\") > -1) {
+					OpenAlertUI("<spring:message code='ezOrgan.t214'/> [\"], [\\] <spring:message code='ezOrgan.t260' />");
 					return;
-				} */
+				}
 				
 				if (!SortNum.value.match(/^\d*$/)) {
 					OpenAlertUI("<spring:message code='ezOrgan.t226' />: <spring:message code='ezEmail.t99000066'/>");
@@ -164,13 +178,16 @@
 				}
 				
 				var parentCn;
+				var histParentCn;
 				var extensionattribute8 = "0";
 				/* 2017-12-29 장진혁 - 조직도에서 기본적으로 해당 부서를 수신처로 등록할 수 있게 수정 */
 				var extensionattribute11 = "";
 				
 				if (OldDeptName == ""){
 					parentCn = ParentID.value;
-			    }				
+			    } else {
+			    	histParentCn = ParentID.value;
+			    }
 				
 				if(approvalFlag == 'G') {
 					if (InsDept.checked){
@@ -183,6 +200,15 @@
 						extensionattribute11 = "N";
 					}
 				}
+
+				// var deptHide = document.getElementById("deptHide");
+				// var checkDeptHide = deptHide.checked;
+				// var deptHideValue = "N";
+				// if (checkDeptHide) {
+				// 	deptHideValue = "Y";
+				// }
+				var deptTreeFlag = document.getElementById("deptTreeFlag");
+				var deptTreeFlagValue = deptTreeFlag.checked ? 'Y' : 'N';
 				
 				$.ajax({
 					type : "POST",
@@ -192,12 +218,12 @@
 					data : {parentCn: parentCn, cn: DeptID.value, displayName: DeptName.value.trim(), displayName2: DeptName2.value.trim(), extensionAttribute10: SusinSymbol.value, 
 						    extensionAttribute15: SortNum.value, extensionAttribute9: Manager.value, extensionAttribute5: BalsinPerson.value, extensionAttribute6: SimpleName.value, 
 						    extensionAttribute4: DocManage.value, extensionAttribute8: extensionattribute8, extensionAttribute11: extensionattribute11, manualFlag: "Y",
-						    selectDomain: selectDomain},
+						    selectDomain: selectDomain, histParentCn: histParentCn, deptTreeFlag: deptTreeFlagValue},
 					success : function(result){						
 						if (result == "PRE"){
 							OpenAlertUI("<spring:message code='ezOrgan.t119'/>");
 						}else if (result == "EMAIL_ERROR"){
-							OpenAlertUI("<spring:message code='ezOrgan.t217'/>");//TODO: 적절한 메시지 넣기
+							OpenAlertUI("<spring:message code='ezOrgan.t217'/>");
 						}else{
 							if (ReturnFunction != null){
 					            ReturnFunction(DeptID.value);
@@ -340,6 +366,10 @@
 		    	<td><input type="checkbox" id="ouDoumentReceiveYN" value="checkbox"></td> 
 		  	</tr> 
 		  	</c:if>
+			<tr class="treeFlag">
+				<th ><spring:message code='ezOrgan.kdh07' /></th>
+				<td><input type="checkbox" id=deptTreeFlag></td>
+			</tr>
 		</table> 
 		<div class="btnpositionNew">
 		    <a class="imgbtn" id=bt_OK  onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>

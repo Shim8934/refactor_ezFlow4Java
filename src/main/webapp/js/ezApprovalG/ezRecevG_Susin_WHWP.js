@@ -900,7 +900,7 @@ function openOpinionUI(pOpinionFlag) {
 	}
 }*/
 
-function openFileAttachUI()
+/*function openFileAttachUI()
 {
   try{
 	var parameter	= pDocID;
@@ -916,7 +916,7 @@ function openFileAttachUI()
   }catch(e){
     alert("openFileAttachUI : " + e.description);
   }
-}
+}*/
 
 
 function SaveDraftDocInfo() {
@@ -1665,6 +1665,10 @@ function setBtnEnable() {
 			btnAssign.style.display = "";
 			btnDistribute.style.display = "";
 			btnReqReSend.style.display = "";
+			if (pAprState === "014") {
+				btnReqReSend.style.display = "none";
+				btnReDistribute.style.display = "";
+			}
 		} else { //일반부서
 			if (pAprState === "012") {
 				btnAssign.style.display = "";

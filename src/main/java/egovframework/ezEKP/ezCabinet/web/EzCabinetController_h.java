@@ -43,7 +43,7 @@ public class EzCabinetController_h {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetController_h.class);
 	
-	@RequestMapping(value="/ezCabinet/cabinetFileDetail.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/cabinetFileDetail.do", method = RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("jspGetCabinetFileDetail started");
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
@@ -121,10 +121,11 @@ public class EzCabinetController_h {
 		String cabinetId    = request.getParameter("cabinetId")  != null ? request.getParameter("cabinetId")   : "";
 		String searchOpt    = request.getParameter("searchOpt")  != null ? request.getParameter("searchOpt")   : "";
 		String searchValue  = request.getParameter("searchValue")!= null ? request.getParameter("searchValue") : "";
+		String searchFlag  = request.getParameter("searchFlag")!= null ? request.getParameter("searchFlag") : ""; // 공유자 검색 Flag
 		
 		logger.debug("CabinetId: " + cabinetId + " || searchOpt: " + searchOpt + " || searchValue" + searchValue);
 		
-		JSONObject resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId, searchOpt, searchValue);
+		JSONObject resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId, searchOpt, searchValue, searchFlag);
 		
 		if (resultObj.get("status").toString().equals("ok")) {
 			List<SimpleUserVO> listUsers = (List<SimpleUserVO>)resultObj.get("shareList");
@@ -155,7 +156,7 @@ public class EzCabinetController_h {
 		return "ezCabinet/share/cabinetAncestorShare";
 	}
 	
-	@RequestMapping(value="/ezCabinet/getDeptMembers.do", method=RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/getDeptMembers.do", method=RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String jsonGetDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetDeptMembers started");
@@ -180,7 +181,7 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getShareUserList.do", method=RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/getShareUserList.do", method=RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String jsonGetShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetShareUserList started");
@@ -188,6 +189,7 @@ public class EzCabinetController_h {
 		String cabinetId    = request.getParameter("cabinetId")  != null ? request.getParameter("cabinetId")   : "";
 		String searchOpt    = request.getParameter("searchOpt")  != null ? request.getParameter("searchOpt")   : "";
 		String searchValue  = request.getParameter("searchValue")!= null ? request.getParameter("searchValue") : "";
+		String searchFlag   = request.getParameter("searchFlag")!= null ? request.getParameter("searchFlag") : ""; // 공유자 검색 Flag
 		
 		logger.debug("CabinetId: " + cabinetId + " || searchOpt: " + searchOpt + " || searchValue" + searchValue);
 		
@@ -199,7 +201,7 @@ public class EzCabinetController_h {
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId, searchOpt, searchValue);
+		resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId, searchOpt, searchValue, searchFlag);
 		
 		logger.debug("jsonGetShareUserList ended");
 		return resultObj.toString();
@@ -225,7 +227,7 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSearchMember.do", method=RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/getSearchMember.do", method=RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String jsonGetSearchMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetSearchMember started");
@@ -300,7 +302,7 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getFileDetail.do", method=RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getFileDetail.do", method=RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonGetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetFileDetail started");

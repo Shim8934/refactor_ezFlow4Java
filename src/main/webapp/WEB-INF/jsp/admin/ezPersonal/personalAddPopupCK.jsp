@@ -587,7 +587,7 @@
 			<tr> 
 				<th>
 					<a class="imgbtn" style="user-select: auto;">
-						<span id="setAuth" style="width: 37px; text-align: center; user-select: auto;"><spring:message code="ezPersonal.yej03"/></span>
+						<span id="setAuth" style="width: 48px; text-align: center; user-select: auto;"><spring:message code="ezPersonal.yej03"/></span>
 					</a>
 				</th>
 				<td id="authList_td"><div id="authList_div">&nbsp;</div></td> 

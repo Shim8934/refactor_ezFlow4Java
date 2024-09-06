@@ -138,7 +138,7 @@ function CalendarMiniView(pTagetID) {
         var mText = document.createTextNode(curMonth);
         
         if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mText.textContent = curMonth + strLangHSBScPt2; // "월" 표기
+        	mText.textContent = curMonth; // "월" 표기
         }
         
         imSpan.appendChild(mText);
@@ -212,7 +212,7 @@ function GetTableMiniBodyObj() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;

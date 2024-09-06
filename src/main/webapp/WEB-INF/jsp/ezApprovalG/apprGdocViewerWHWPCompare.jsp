@@ -104,7 +104,21 @@
 				_DocBody = _HTMLTag.innerHTML;
 				
 				_OrgHTMLTag.innerHTML = htmldiff(_DocOrgBody, _DocBody);
-				
+
+                // 특정 양식에서 발생하는 오류 수정 - 본문 왼쪽에 빈값인 td태그가 생성되어 본문이 오른쪽으로 밀려나는 현상 수정
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(_OrgHTMLTag.innerHTML, 'text/html');
+
+                var tdElements = doc.querySelectorAll('td');
+
+                tdElements.forEach(td => {
+                    if (td.innerHTML.trim() === '') {
+                        td.parentNode.removeChild(td);
+                    }
+                });
+
+                _OrgHTMLTag.innerHTML = doc.body.innerHTML;
+
 				// HWP 파일이기 때문에 "ezeditor"라는 id는 존재하지 않으나, 만일을 위해 하단 코드 유지
                   for (var i = 0; i < _OrgHTMLTag.getElementsByTagName("*").length; i++) {
                       if (_OrgHTMLTag.getElementsByTagName("*")[i].id.toLocaleLowerCase() == "ezeditor" && _OrgHTMLTag.getElementsByTagName("*")[i].innerHTML.trim() == "") {

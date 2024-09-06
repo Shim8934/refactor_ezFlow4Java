@@ -60,11 +60,11 @@
 		        {
 		            alert("<spring:message code='ezApprovalG.t957'/>");
 		        }
-		        else if(! ValidateNumber(txtDisplayEndM.value) || txtDisplayEndM.value > 12)
+		        else if(! ValidateNumber(txtDisplayEndM.value, 'Y') || txtDisplayEndM.value > 12)
 		        { // 월의 범위를 12까지로 제한
 		            alert("<spring:message code='ezApprovalG.t958'/>");
 		        }
-		        else if(! ValidateNumber(txtDisplayEndD.value) || txtDisplayEndD.value > 31)
+		        else if(! ValidateNumber(txtDisplayEndD.value, 'Y') || txtDisplayEndD.value > 31)
 		        { // 일의 범위를 31까지로 제한
 		            alert("<spring:message code='ezApprovalG.t959'/>");
 		        }

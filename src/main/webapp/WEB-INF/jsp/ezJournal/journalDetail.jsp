@@ -316,12 +316,12 @@
                 sizeOn();
 	        }
 		    
-		    //작성자 정보창
+		    // 작성자 정보창
 		    function OpenUserInfo(pUserID) {
 		        GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
 		    }
 			
-		    //메일로?
+		    // 메일 발송 버튼
 		    function fromJournalToMail() {
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
@@ -333,7 +333,7 @@
 		        window.close();
 		    }
 		    
-		    //조회자정보
+		    // 조회자정보
 		    function journalViewerList(currentPage) {
 		    	if (!currentPage) {
 					currentPage = "";

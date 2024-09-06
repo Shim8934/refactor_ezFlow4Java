@@ -33,7 +33,19 @@ public class UserChangeInfoVO {
 	private String targetType;
 	private String countryName;
 
+	private UserChangeInfoVO userChVo;
 	
+	public UserChangeInfoVO getUserChVo() {
+		return userChVo;
+	}
+	public void setUserChVo(UserChangeInfoVO userChVo, String userID, String deptId, String deptNm, String deptNm2, String updateType) {
+		userChVo.setUserId(userID);
+		userChVo.setTargetDeptId(deptId);
+		userChVo.setTargetDeptNm(deptNm);
+		userChVo.setTargetDeptNm2(deptNm2);
+		userChVo.setUpdateType(updateType);
+		this.userChVo = userChVo;
+	}
 	public int getSeq() {
 		return seq;
 	}

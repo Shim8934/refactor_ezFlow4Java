@@ -667,7 +667,8 @@
 			function setFormName() {
 				var url = "/ezJournal/getFormList.do?typeId=" + typeId;
 				if(listType == "department" || listType == "mine"){
-					url += "&deptId=" + $("#dept").val();
+					url += "&deptId=";
+					url += $("#dept").length > 0 ? $("#dept").val() : "";
 				}
 				$.ajax({
 	   				type : "post",
@@ -1112,7 +1113,7 @@
 				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:29px;">
 					<c:forEach items="${deptList}" var="dept">
 						<option value="${dept.deptId}"
-							<c:if test="${dept.mine eq 'yes' }">selected</c:if>>${dept.deptName }
+							<c:if test="${dept.deptId eq userDept}">selected</c:if>>${dept.deptName }
 						</option>
 					</c:forEach>
 				</select></li>

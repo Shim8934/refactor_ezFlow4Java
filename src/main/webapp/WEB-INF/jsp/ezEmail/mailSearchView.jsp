@@ -44,8 +44,14 @@
 			var searchCArray = new Array();
 			var searchKArray = new Array();
 			var shareId = "${shareId}";
+			var startDate = "";
+            var endDate = "";
 			var listType = "searchList";
 			var mailSearchPeriodSDate = "";
+			var searchMode = true;
+            var searchRequiredKeyword = [];
+            var searchRequiredCategory = [];
+            var searchRequirement = [];
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -215,6 +221,10 @@
 					this.usepostDate = true;
 				}
 		    	if (!TrimText(ALL.value)) {
+                    if (TrimText(prekeywordDetail1.value).length == 1 || TrimText(prekeywordDetail2.value).length == 1 || TrimText(prekeywordDetail3.value).length == 1) {
+                        alert("<spring:message code='ezSystem.yja01' />");
+                        return;
+                    }
 		    		if( $("#moreSearch").css("display") != "none"){
 			    		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) 
 			    				&& !this.usepostDate) {
@@ -228,6 +238,10 @@
 		    			}
 		    		}
 		        } else {
+		            if (TrimText(ALL.value).length == 1) {
+                        alert("<spring:message code='ezSystem.yja01' />");
+                        return;
+                    }
 	        		searchCArray.push("ALL");
 	    			searchKArray.push(TrimText(ALL.value));
 		        	document.getElementById("resultTD").setAttribute("curPage", 1);
@@ -786,38 +800,65 @@
 			
 			var selcheck = new Array();
 			var checkMailCnt;
-			
+
+            function mailbox_getUserKey() {
+                var userKey = "";
+
+                $.ajax({
+                    type : "POST",
+                    url : "/ezEmail/getUserKey.do",
+                    async : false,
+                    success : function(result) {
+                        userKey = result;
+                    }
+                });
+
+                return userKey;
+            }
+
 			function mail_export() {
 				var exportType = "MAIL";
-				if (document.getElementById("maillist") == null && listContentArry.length == 0){
-					alert(strLang42);
-					return;
-				}
-				var mailcount = listContentArry.length;
-			    var count = 0;
-				var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
-				
-			    for (var i = 0; i < Rows.length; i++) {
-			        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
-			            selcheck[count] = Rows.item(i);
-			            count++;
-			            checkMailCnt = count;
-			        }
-			    }
-				
-				if (checkMailCnt == 0 || checkMailCnt == null) {
-					alert(strLang42);
-					return;
+				if (listContentArry.length == 0){
+					if (!confirm(strLangLS02)) {
+                        return;
+                    } else {
+                        if (!confirm(strLangLS03)) {
+                            return;
+                        } else {
+                            try {
+                                setTimeout(function() {
+                                searchedMailExportZip();
+                                }, 1000);
+                            } catch (e) {
+                                console.log("searchedMailExportZip error!");
+                            }
+                        }
+                    }
 				} else {
-					
-					if (useEncryptZipForEmail == "YES") {
-						mailExportOption_onClick(exportType);
-					} else {
-						mailExport_start();
-					}
-				
+                    var mailcount = listContentArry.length;
+                    var count = 0;
+                    var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
+
+                    for (var i = 0; i < Rows.length; i++) {
+                        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+                            selcheck[count] = Rows.item(i);
+                            count++;
+                            checkMailCnt = count;
+                        }
+                    }
+
+                    if (checkMailCnt == 0 || checkMailCnt == null) {
+                        alert(strLang42);
+                        return;
+                    } else {
+
+                        if (useEncryptZipForEmail == "YES") {
+                            mailExportOption_onClick(exportType);
+                        } else {
+                            mailExport_start();
+                        }
+                    }
 				}
-				
 			}
 		
 			function mailExport_start(pwd) {
@@ -887,7 +928,113 @@
 				
 				checkMailCnt = 0;
 			}
-			
+
+            function HiddenMailProgressNew() {
+                $('#progressNum').text('');
+                document.getElementById("mailPanel").style.display = "none";
+                document.getElementById("mailPanel").style.backgroundColor = "";
+                document.getElementById("MailProgress").style.backgroundColor = "";
+                document.getElementById("MailProgress").style.display = "none";
+                document.getElementById("cancleProgressBtn").style.display = "none";
+                parent.document.getElementById("left").contentWindow.hideProgress();
+
+              <c:if test="${!isDotNetIntegration}">
+                if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+                    parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+                }
+              </c:if>
+            }
+
+            function ShowMailProgressNew() {
+                var CurrentHeight = document.body.clientHeight;
+                var CurrenWidth = document.body.clientWidth;
+
+                document.getElementById("mailPanel").style.display = "block";
+                document.getElementById("mailPanel").style.opacity = 0.5;
+                document.getElementById("mailPanel").style.background = "rgba(0,0,0,0.7)";
+                document.getElementById("MailProgress").style.backgroundColor = "#ffffff";
+                document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
+                document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 150 + "px";
+                // IE 지원이 안되어 기존 것 유지, 아래 사용 시 리사이즈 자동처리 됨
+                //document.getElementById("MailProgress").style.top = "50%";
+                //document.getElementById("MailProgress").style.left = "50%";
+                //document.getElementById("MailProgress").style.transform = "translate(calc(-50% - 110px), calc(-50% - 27px))"; // lnb width/2= 110, topmenu height/2 = 27
+                document.getElementById("MailProgress").style.display = "";
+                document.getElementById("cancleProgressBtn").style.display = "block";
+                parent.document.getElementById("left").contentWindow.showProgress();
+            }
+
+            function ShowPercent(data) {
+                $('#progressNum').text('');
+
+                if (data == "uploading"){ // 리소스 정리예정
+                    $('#progressNum').text("<spring:message code='ezEmail.kyj10' />");
+                } else if (data == "dec") {
+                    $('#progressNum').text("<spring:message code='ezEmail.kyj11' />");
+                } else if (data == "enc") {
+                    $('#progressNum').text("<spring:message code='ezEmail.kyj12' />");
+                } else {
+                    $('#progressNum').text("<spring:message code='ezEmail.kyj01' /> : " + data + " %");
+                }
+            }
+
+            var pgSetTimeout;
+            var pgSetTime = 2000;
+            var psSetTimeFlag = false;
+            function mailboxProgressFun(act, userKey) { // mailboxProgress start or stop
+                psSetTimeFlag = act;
+                if (act) {
+                    mailboxProgress(userKey);
+                } else {
+                    clearTimeout(pgSetTimeout);
+                    mailboxProgressDel(socketUserkey);
+                }
+            }
+
+            function mailboxProgress(userKey) { // get mailbox Export or Import progress
+                var uk = userKey;
+
+                pgSetTimeout = setTimeout(function getMailboxProgress() {
+                    if (!psSetTimeFlag) { return; }
+
+                    $.ajax({
+                        type : "POST",
+                        url : "/ezEmail/getMailboxProgress.do",
+                        data : {"userKey" : uk},
+                        dataType : "json",
+                        async : true,
+                        success : function(data) {
+                            if (!psSetTimeFlag) { return; }
+                            var pg = data.progress;
+
+                            if (pg > -1 && pg <= 100) {
+                                ShowPercent(pg);
+                            }
+                            if (pg < 100) {
+                                setTimeout(getMailboxProgress, pgSetTime);
+                            }
+                        }, error : function(e) {
+                            alert("error. " + e.status);
+                        }
+                    });
+                }, pgSetTime)
+            }
+
+            function mailboxProgressDel(userKey) {
+                $.ajax({
+                    type : "POST",
+                    url : "/ezEmail/delMailboxProgress.do",
+                    data : {"userKey" : userKey}
+                });
+            }
+
+            function cancleProgress(){
+                HiddenMailProgressNew();
+                mailboxProgressFun(false);
+                webSocket.close();
+                location.reload();
+            }
+
 			function window_onbeforeprint()
 			{
 				normalblock.style.display = "none";
@@ -1171,7 +1318,7 @@
 		<h2 class="h2_dot"><spring:message code="ezEmail.t655" /><span id="resultCount"></span></h2>
 		    
 		<div id="printblock"> 
-			<table class="mainlist" style="width:100%;table-layout:fixed;" id="maillist">
+			<table id="mailHeader" class="mainlist" style="width:100%;table-layout:fixed;" >
 				<tr> 
 			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;" align="center" nowrap title><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></th>
 			        <th style="width: 24px; padding: 0px; color: black;padding-left:3px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="importance" orderoption="ASC" ><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
@@ -1191,8 +1338,12 @@
 		<div id="tblPageRayer" style="width:470px; margin:6px auto;"></div>
 		
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="ContextMenuHidden();" ></div>
-		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
-		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
+            <div style="width:200px; padding:20px 0; border-radius:8px; text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+                <img src="/images/email/progress_img.gif"/>
+		    <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+            <a class="btnposition" id="cancleProgressBtn" style="display: none; padding-top: 10px; width: 50px; height:20px;
+                cursor:pointer; margin:0 auto;" onclick="cancleProgress();">
+            <input type="button" value="<spring:message code="ezEmail.t39" />"/></a>
 		</div>
 		<div style="border:1px solid gray;width:450px;position:absolute;background-color:#ffffff;z-index:8000;text-align:center;display:none;" id="progressviewerRayer">
 		    <iframe src="<spring:message code='main.kms4' />" style="width:450px;height:170px;border:none" id="progressviewer"></iframe>

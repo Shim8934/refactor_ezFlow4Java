@@ -190,6 +190,9 @@
         return getXmlString(rtnXml);
     }
     function btnReset_onclick() {
+        // 2024-02-20 양지혜 - 재입력 시 선택/수정 내용을 초기화
+        g_ArrPageInitFlag[1] = false;
+        InitCabinetInfo();
         document.getElementById("txtChangeReason").value = "";
     }
     function btnOK_onclick() {
@@ -211,11 +214,11 @@
                     OpenAlertUI("<spring:message code='ezApprovalG.t957'/>");
                     return "";
                 }
-                else if (!ValidateNumber(txtDisplayEndM.value)) {
+                else if (!ValidateNumber(txtDisplayEndM.value, 'Y')) {
                     OpenAlertUI("<spring:message code='ezApprovalG.t958'/>");
                     return "";
                 }
-                else if (!ValidateNumber(txtDisplayEndD.value)) {
+                else if (!ValidateNumber(txtDisplayEndD.value, 'Y')) {
                     OpenAlertUI("<spring:message code='ezApprovalG.t959'/>");
                     return "";
                 }
@@ -326,11 +329,32 @@
         var rtn;
         AddSpecialCatalog_Cross_dialogArguments[0] = para;
         AddSpecialCatalog_Cross_dialogArguments[1] = btnAddSpecialCatalog_onclick_Complete;
-        var OpenWin;
         
-            OpenWin = window.open(url, "AddSpecialCatalog_Cross", GetOpenWindowfeature(500, 435));
+        var popupHeight = 435;
+        var popupWidth = 500;
+        
+        var pheight = window.screen.availHeight;
+        var pwidth = window.screen.availWidth;
+        
+        var pTop = (pheight - popupHeight) / 2;
+        var pLeft = (pwidth - popupWidth) / 2;   
+         
+        if (pwidth > 1600) {
+            var dualScreenTop = window.screenY;
+            var dualScreenLeft = window.screenX;
 
-        try { OpenWin.focus(); } catch (e) { }
+            pTop += dualScreenTop - 315;
+            pLeft += dualScreenLeft - 750 ;
+        }
+        
+        var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + popupHeight + ",width=" + popupWidth + ",top=" + pTop + ",left=" + pLeft;
+
+        var OpenWin = window.open(url, "AddSpecialCatalog_Cross", feature, "");
+
+        try { 
+        	OpenWin.moveTo(pLeft, pTop);
+        	OpenWin.focus();
+        } catch (e) { }
     }
     function btnAddSpecialCatalog_onclick_Complete(rtn) {
     	   DivPopUpHidden();

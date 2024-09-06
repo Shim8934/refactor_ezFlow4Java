@@ -338,7 +338,7 @@ function Save_OneLineReply() {
 			}
 			
 			/* 2021-06-23 홍승비 - 댓글알림 기능 추가 (댓글알림 시에 그룹사게시판 여부 파라미터는 필요없음) */
-			sendBoardAlertMail("comment", pBoardID, pItemID, "");
+			sendBoardAlert("comment", pBoardID, pItemID, "");
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert("ajax error");
@@ -380,12 +380,12 @@ function DivPopUpHidden2() {
 }
 
 /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : true,
-		url : "/ezBoard/sendBoardAlertMail.do",	        			
+		url : "/ezBoard/sendBoardAlert.do",	        			
 		data : {
 			mode : pMode,
 			boardID : pBoardID,
@@ -448,4 +448,31 @@ function showUserReplyReact(pItemID) {
 			}
 		}
 	});
+}
+
+
+// 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 출력값 가공
+function peoplePickerDisplay(attr, userLang) {
+    if (attr == null || typeof attr == "undefined") {
+        return "";
+    }
+    attr = attr.trim();
+    if (attr == "") {
+        return attr;
+    }
+    
+    var rtnString = "";
+    var tempAuthListArr = attr.split(";");
+    for (let i = 0 ; i < tempAuthListArr.length; i++) {
+        var tempAuthObj = tempAuthListArr[i].split("/");
+        if (tempAuthListArr[i] == "") {
+            break;
+        }
+        if (i != 0) {
+            rtnString += ", "
+        }
+        
+        rtnString += userLang == "1" ? tempAuthObj[1] : tempAuthObj[2];
+    }
+    return rtnString;
 }

@@ -43,11 +43,11 @@
 	        if(approvalFlag == "G") {
         		$(".approvalG").css("display","");
         		$(".approval").css("display","none");
-        		$("#summary_txta").css("width", "388px").css("height", "82px");
+        		$("#summary_txta").css("width", "398px").css("height", "82px");
         	} else {
         		$(".approvalG").css("display","none");
         		$(".approval").css("display","");
-        		$("#summary_txta").css("width", "387px").css("height", "200px");
+        		$("#summary_txta").css("width", "398px").css("height", "200px");
         	}
 	        
 	        setDocInfo();
@@ -92,17 +92,19 @@
 	    		}
 	    		
 	    		if (securityCode != "") {
-	    			var securityText = "<spring:message code='ezApprovalG.t991'/> " + securityCode.substring(0, 1);
+	    			var securityText = securityCode.substring(0, 1) + " <spring:message code='ezApprovalG.t991'/> ";
 	    			
 	    	        $("#securityCode_span").text(securityText);
 	    		}
 	    		
 	    		if (publicityYN != "") {
-	    			if (publicityYN == "Y") {
-	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.t47'/>");
+	    			if (publicityYN == "N") {
+	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.kmh05'/>");
+	    			} else if (publicityYN == "B"){
+	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.kmh04'/>");
 	    			} else {
-	    				$("#publicityCode_span").text("<spring:message code='ezApprovalG.t46'/>");
-	    			}
+						$("#publicityCode_span").text("<spring:message code='ezApprovalG.kmh03'/>");
+					}
 	    		}
 	    		
 	    		if (publicityCode != "") {
@@ -153,7 +155,7 @@
 	    			$("#taskCode_span").text(taskCode + "(" + replaceEntityCodeToStr(itemName) + ")");
 	    		}
 	    		if (securityCode != "") {
-	    			var	securityText = "<spring:message code='ezApprovalG.t991'/> " + securityCode.substring(0, 1);
+	    			var	securityText = securityCode.substring(0, 1) + " <spring:message code='ezApprovalG.t991'/>";
 	    			
 	    	        $("#securityCode_span").text(securityText);
 	    		}

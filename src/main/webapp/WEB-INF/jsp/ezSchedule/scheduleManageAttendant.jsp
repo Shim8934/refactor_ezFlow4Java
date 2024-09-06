@@ -35,8 +35,8 @@
 					}
 				});
 		    	
-		        var feature = GetOpenPosition(420, 450);
-		        window.open("/ezCommon/showPersonInfo.do?id=" + userid + "&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        // var feature = GetOpenPosition(420, 450);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + userid + "&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
 		    }
 			
 		    var OpenWin;

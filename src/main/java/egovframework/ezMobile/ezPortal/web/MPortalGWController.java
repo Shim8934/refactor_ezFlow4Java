@@ -186,11 +186,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				Locale locale = new Locale(ld);
 				
 				MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-				if ( opt.getLang().equals("1") ) {
-					locale = new Locale("ko");	
-				} else if ( opt.getLang().equals("3") ) {
-					locale = new Locale("ja");
-				}
+				locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(opt.getLang()));
 				
 				if (useExternalMailServer.equalsIgnoreCase("NO")) {
 					JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
@@ -203,7 +199,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 						mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
 
 						// 메일 중요도 색깔 구하기
-						// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
+						// jgw 요청은 비용이 높으므로 먼저 중요도 높음 메일이 있는지 체크함
 						if (mailList.stream().anyMatch(mail -> ((JSONObject) mail).get("importance").equals(2))) {
 							String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
 									.map(MailColorVO::getImportanceColor).orElse("#ff0000");
@@ -280,7 +276,6 @@ public class MPortalGWController extends EgovFileMngUtil {
 		
 				long startTime = System.currentTimeMillis();				
 				
-				//한번에 가져오긴 힘들고 귀찮다.
 				List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionService.getTimeLineList(info, utcSessionDate, listCnt, approvalAccess, boardAccess);
 				
 				logger.debug("## 전자결재/게시판 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
@@ -310,7 +305,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					}
 					
 					// 메일 중요도 색상
-					// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
+					// jgw 요청은 비용이 높으므로 먼저 중요도 높음 메일이 있는지 체크함
 					if (hasHighImportance) {
 						String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
 								.map(MailColorVO::getImportanceColor).orElse("#ff0000");
@@ -363,7 +358,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					//일정관리 조인
 					String tempSDate = nowDate.substring(0, 10) + " 00:00:00";
 					String tempEDate = nowDate.substring(0, 10) + " 23:59:59";
-					List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "");
+					List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "", "");
 					
 					String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 					if(useGoogleCalendar.equals("YES")) {

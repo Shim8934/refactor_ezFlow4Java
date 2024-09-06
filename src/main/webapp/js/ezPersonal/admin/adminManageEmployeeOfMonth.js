@@ -39,6 +39,10 @@ function changeYear() {
 	getEmployeeList(selectedYear);
 }
 
+function changeCompany() {
+	changeYear();
+}
+
 function getEmployeeList(year) {
 	selectedYear = year;
 	
@@ -46,7 +50,7 @@ function getEmployeeList(year) {
 		type : "POST",
 		url : "/admin/ezPersonal/getEmployeeOfMonthList.do",
 		dataType : "JSON",
-		data : {year: selectedYear},
+		data : {year: selectedYear, companyID : companySelectID},
 		success : function(result) {
 			renderList(result.list, selectedYear);
 		}
@@ -252,7 +256,7 @@ function btn_add(obj) {
 	selectedTerm = term;
 	
 	selectperson_cross_dialogArguments[1] = btn_add_Complete;
-	var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(860, 535));
+	var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP&companyID=" + companySelectID, "SelectPerson", GetOpenWindowfeature(860, 535));
 	popup = SelectPerson_cross;
 	try { SelectPerson_cross.focus(); } catch (e) { }
 	
@@ -262,13 +266,18 @@ function btn_add_Complete(rtv) {
 	if (typeof (rtv) != "undefined") {
 		var userId = rtv.split(":")[0];
 		var deptId = rtv.split(":")[4];
+		var jobName = rtv.split(":")[3]; // 같은 부서에 겸직이 되어있는경우 오류가 발생하여 직위 조건 추가
+
+		if (jobName.includes("(겸)")) {
+			jobName = jobName.replace("(겸)", "").trim();
+		}
 	}
 	
 	$.ajax({
 		type : "POST",
 		url : "/admin/ezPersonal/setEmployeeMonth.do",
 		async : true,
-		data : {type : "INS", userID : userId, deptID : deptId, term : selectedTerm},
+		data : {type : "INS", userID : userId, deptID : deptId,companyID: companySelectID, term : selectedTerm, jobName : jobName},
 		dataType : "text",
 		success : function (result) {
 			if (result != "OK") {
@@ -299,13 +308,18 @@ function btn_modify_Complete(rtv) {
 	if (typeof (rtv) != "undefined") {
 		var userId = rtv.split(":")[0];
 		var deptId = rtv.split(":")[4];
+		var jobName = rtv.split(":")[3]; // 같은 부서에 겸직이 되어있는경우 오류가 발생하여 직위 조건 추가
+
+		if (jobName.includes("(겸)")) {
+			jobName = jobName.replace("(겸)", "").trim();
+		}
 	}
 	
 	$.ajax({
 		type : "POST",
 		url : "/admin/ezPersonal/setEmployeeMonth.do",
 		async : true,
-		data : {type : "UPD", userID : userId, deptID : deptId, term : selectedTerm},
+		data : {type : "UPD", userID : userId, deptID : deptId, term : selectedTerm, jobName : jobName},
 		dataType : "text",
 		success : function (result) {
 			if (result != "OK") {

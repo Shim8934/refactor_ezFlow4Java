@@ -187,10 +187,14 @@ function GetDocSearch() {
     if (approvalFlag == 'S') {
     	document.getElementById("tbtnRemoveDoc").style.display = "none";
     	for (i = 0; i < 12 ; i++) {
-            if (typeof (condition[i]) == "undefined")
+            if (typeof (condition[i]) == "undefined") {
                 createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
-            else
+            } else {
+                if (i == 1) {
+                    condition[1] = condition[1].replace(/\\/g, "\\\\");
+                }
                 createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
+            }
         }
         
         if (typeof (ContainerID) == "undefined")
@@ -229,7 +233,9 @@ function GetDocSearch() {
         
         createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
         createNodeAndInsertText(xmlpara, objNode, "shareDeptId", shareDeptId);
-        
+
+        listLoading(true);
+
 	    if (GamSaFlag){
 	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
 	    } else {
@@ -240,11 +246,15 @@ function GetDocSearch() {
 	    
 	    listLoading(false);
 	} else {
-	        for (i = 0; i < condition.length - 1 ; i++) {
-	        if (typeof(condition[i]) == "undefined")
-	            createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
-	        else
-	            createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
+        for (i = 0; i < condition.length - 1 ; i++) {
+	        if (typeof(condition[i]) == "undefined") {
+                createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
+            } else {
+                if (i == 1) {
+                    condition[1] = condition[1].replace(/\\/g, "\\\\");
+                }
+                createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
+            }
 	    }
 	    if (typeof(ContainerID) == "undefined") {
 	    	createNodeAndInsertText(xmlpara, objNode, "Param24", "");
@@ -267,7 +277,9 @@ function GetDocSearch() {
 
 	    createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
 	    createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
-	    
+
+        listLoading(true);
+
 	    if (GamSaFlag){
 	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
 	    } else {
@@ -320,7 +332,7 @@ function GetUserContListSave(AllFG) {
         OrderOption = "";
         OrderCell = "";
     }
-    document.getElementById("tbtnRemoveDoc").style.display = "";
+    // document.getElementById("tbtnRemoveDoc").style.display = "";
 
     var xmlpara = createXmlDom();
     var objNode;
@@ -638,8 +650,12 @@ function selFirstRow(Resultxml) {
     var tr = oArrRows[0];
 
     if (oArrRows.length != 0) {
-    	document.getElementById("tbtnExcel").style.display = "";
-    	document.getElementById("tbtnExcelAll").style.display = "";
+    	if (!!document.getElementById("tbtnExcel")) {
+    		document.getElementById("tbtnExcel").style.display = "";
+    	}
+    	if (!!document.getElementById("tbtnExcelAll")) {
+    		document.getElementById("tbtnExcelAll").style.display = "";
+    	}
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
@@ -682,9 +698,14 @@ function selFirstRow(Resultxml) {
                 document.getElementById("tresend").style.display = "none";
             }
         }
-
-        document.getElementById("tSearchCondi").style.display = "";
-        document.getElementById("tViewDoc").style.display = "";
+        
+        if (!!document.getElementById("tSearchCondi")) {
+        	document.getElementById("tSearchCondi").style.display = "";
+        }
+        
+        if (!!document.getElementById("tViewDoc")) {
+        	document.getElementById("tViewDoc").style.display = "";
+        }
         //if((share || share == 'share') || DocListType == "UserContDocList"){
         //	document.getElementById("tbtnExcel").style.display = "none";
         //	document.getElementById("tbtnExcelAll").style.display = "none";
@@ -695,30 +716,62 @@ function selFirstRow(Resultxml) {
         //}
 
         if (approvalFlag == "G") {
-	        if (tr.getAttribute("DATA5").trim() != "")
+	        if (tr.getAttribute("DATA5").trim() != "" && !!document.getElementById("tDocInfo")) {
 	            document.getElementById("tDocInfo").style.display = "";
-	        else
-	            document.getElementById("tDocInfo").style.display = "none";
+	        } else {
+	        	if (!!document.getElementById("tDocInfo")) {
+	        		document.getElementById("tDocInfo").style.display = "none";
+	        	}
+	        }
         }
     }
     else {
         DocID = "";
         pURL = "";
-
-        document.getElementById("tSearchCondi").style.display = "";
-        document.getElementById("tViewDoc").style.display = "none";
-        document.getElementById("tbtnExcel").style.display = "none";
-        document.getElementById("tbtnExcelAll").style.display = "none";
-        if (approvalFlag == "G") {
+        
+        if (!!document.getElementById("tSearchCondi")) {
+        	document.getElementById("tSearchCondi").style.display = "";
+        }
+        
+        if (!!document.getElementById("tViewDoc")) {
+        	document.getElementById("tViewDoc").style.display = "none";
+        }
+        
+        if (!!document.getElementById("tbtnExcel")) {
+        	document.getElementById("tbtnExcel").style.display = "none";
+        }
+        
+        if (!!document.getElementById("tbtnExcelAll")) {
+        	document.getElementById("tbtnExcelAll").style.display = "none";
+        }
+        if (approvalFlag == "G" && !!document.getElementById("tDocInfo")) {
         	document.getElementById("tDocInfo").style.display = "none";
         }
+        
         if(DocListType == "UserContDocList"){
-            document.getElementById("tbtnExcel").style.display = "none";
-            document.getElementById("tbtnExcelAll").style.display = "none";
-            document.getElementById("tbtnRegUserCont").style.display = "none";
-            document.getElementById("tenforce").style.display = "none";
-            document.getElementById("tresend").style.display = "none";
-            document.getElementById("tbtnSelContainer").style.display = "none";
+        	if (!!document.getElementById("tbtnExcel")) {
+        		document.getElementById("tbtnExcel").style.display = "none";
+        	}
+        	
+        	if (!!document.getElementById("tbtnExcelAll")) {
+        		document.getElementById("tbtnExcelAll").style.display = "none";
+        	}
+        	
+        	if (!!document.getElementById("tbtnRegUserCont")) {
+        		document.getElementById("tbtnRegUserCont").style.display = "none";
+        	}
+        	
+        	if (!!document.getElementById("tenforce")) {
+        		document.getElementById("tenforce").style.display = "none";
+        	}
+        	
+        	if (!!document.getElementById("tresend")) {
+        		document.getElementById("tresend").style.display = "none";
+        	}
+        	
+        	if (!!document.getElementById("tbtnSelContainer")) {
+        		document.getElementById("tbtnSelContainer").style.display = "none";
+        	}
         }
     }
 
@@ -1280,52 +1333,52 @@ function check_presence2() {
     function MakeSubCondition() {
         var TYPE = "";
         var DATA = "";
-        if (condition[0] != "") {
+        if (condition[0] != "" && condition[0] !== undefined) {
             TYPE += "DOCNO;"
             DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
         }
 
-        if (condition[1] != "") {
+        if (condition[1] != "" && condition[0] !== undefined) {
             TYPE += "DOCTITLE;"
             DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
         }
 
-        if (condition[2] != "") {
+        if (condition[2] != "" && condition[0] !== undefined) {
             TYPE += "WRITERNAME;"
             DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
         }
 
-        if (condition[3] != "null" && condition[3].trim() != "") {
+        if (condition[3] != ""  && condition[0] !== undefined) {
             TYPE += "STARTDATEAF;"
             DATA += "<STARTDATEAF>" + condition[3] + "</STARTDATEAF>";
         }
 
-        if (condition[4] != "null" && condition[4].trim() != "") {
+        if (condition[4] != ""  && condition[0] !== undefined) {
             TYPE += "STARTDATEBF;"
             DATA += "<STARTDATEBF>" + condition[4] + "</STARTDATEBF>";
         }
 
-        if (condition[5] != "null" && condition[5].trim() != "") {
+        if (condition[5] != ""  && condition[0] !== undefined) {
             TYPE += "ENDDATEAF;"
             DATA += "<ENDDATEAF>" + condition[5] + "</ENDDATEAF>";
         }
 
-        if (condition[6] != "null" && condition[6].trim() != "") {
+        if (condition[6] != ""  && condition[0] !== undefined) {
             TYPE += "ENDDATEBF;"
             DATA += "<ENDDATEBF>" + condition[6] + "</ENDDATEBF>";
         }
 
-        if (condition[9] != "") {
+        if (condition[9] != ""  && condition[0] !== undefined) {
             TYPE += "FORMID;"
             DATA += "<FORMID>" + condition[9] + "</FORMID>";
         }
 
-        if (condition[11] != "") {
+        if (condition[11] != ""  && condition[0] !== undefined) {
             TYPE += "WRITERDEPTNAME;"
             DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
         }
 
-        if (condition[12] != "") {
+        if (condition[12] != ""  && condition[0] !== undefined) {
             TYPE += condition[12];
             DATA += condition[13];
         }

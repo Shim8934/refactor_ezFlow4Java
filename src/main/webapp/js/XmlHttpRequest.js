@@ -700,7 +700,12 @@ function ConvertMHTtoHTML(pURL) {
 			rtnVal = result;
 		}        			
 	});
-    return rtnVal;
+    /* 2024-05-08 양지혜 - 공개문서에서 파라미터 조작으로 접근 취약점 보완. 권한 없을 시 권한없음 페이지 노출 */
+    if (rtnVal == "NoAccess") {
+        window.parent.location.replace('/ezApprovalG/accessWarning.do');
+    } else {
+        return rtnVal;
+    }
 }
 
 function ConvertHTMLtoMHT(pContent) {
@@ -858,17 +863,23 @@ function GetOpenPosition(popUpW, popUpH) {
     //2011.07.28 FireFox는 ShowModalDialog() 호출시 화면 중앙에 뜨지 않아 top, left를 지정해 줘야한다.
     var heigth = window.screen.availHeight;
     var width = window.screen.availWidth;
-    var left = 0;
-    var top = 0;
-    var pleftpos;
-    pleftpos = parseInt(width) - popUpW;
-    heigth = parseInt(heigth) - popUpH;
-    width = parseInt(width) - pleftpos;
+    var pTop = (heigth - popUpH) / 2;
+    var pLeft = (width - popUpW) / 2;
 
-    left = pleftpos / 2;
-    top = heigth / 2;
+   	var dualScreenTop = window.screenY;
+    var dualScreenLeft = window.screenX;
+    	
+   	pTop += dualScreenTop;
+   	pLeft += dualScreenLeft;
+   				
+	if (/MSIE|Trident/.test(window.navigator.userAgent)) {
+   		if (window.screenLeft > window.screen.width) {
+   			pTop -= 223;
+   			pLeft -= 375;
+   		}
+   	}
 
-    var feature = ",left=" + left + ",top=" + top;
+    var feature = ",left=" + pLeft + ",top=" + pTop;
 
     return feature
 }
@@ -950,14 +961,16 @@ function GetOpenWindowfeature(popUpW, popUpH, resizable) {
 	var resiableAttr = !!resizable ? ',resizable=yes' : ',resizable=no';
 	var heigth = window.screen.availHeight;
 	var width = window.screen.availWidth;
-	var left = 0;
-	var top = 0;
+	// var left = 0;
+	// var top = 0;
 	var pleftpos;
 	pleftpos = parseInt(width) - popUpW;
 	heigth = parseInt(heigth) - popUpH;
 	width = parseInt(width) - pleftpos;
-	left = pleftpos / 2;
-	top = heigth / 2;
+	// left = pleftpos / 2;
+	// top = heigth / 2;
+    var left = window.outerWidth / 2 + window.screenX - (popUpW / 2);
+    var top = window.outerHeight / 2 + window.screenY - (popUpH / 2);
 	var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, scrollbars=yes" + resiableAttr;
 	return feature;
 }
@@ -966,22 +979,20 @@ function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {
     if (MACSAFARIYN())
         popUpH = popUpH + 50;
 
-    //var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-    //var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
-    //var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-    //var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-    //var left = ((width / 2) - (popUpW / 2)) + dualScreenLeft;
-    //var top = ((height / 2) - (popUpH / 2)) + dualScreenTop;
+    var heigth = window.screen.availHeight;
+    var width = window.screen.availWidth;
+    var pTop = (heigth - popUpH) / 2;
+    var pLeft = (width - popUpW) / 2;
 
-    var left = (screen.width / 2) - (popUpW / 2);
-    var top = (screen.height / 2) - (popUpH / 2);
+    var left = window.outerWidth / 2 + window.screenX - (popUpW / 2);
+    var top = window.outerHeight / 2 + window.screenY - (popUpH / 2);
 
     if (resizeFlag == undefined || resizeFlag.toUpperCase() == "NO")
         resize = "resizable=no";
     else
         resize = "resizable=yes";
     
-    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + "px ,top=" + top + "px, status = no, toolbar=no, menubar=no,location=no," + resize;
+    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + pLeft + "px ,top=" + pTop + "px, status = no, toolbar=no, menubar=no,location=no," + resize;
     var result = window.open(url, target, feature);
     result.focus();
     return result;
@@ -2070,4 +2081,144 @@ function frontLogging(title, msg, stack) {
     } catch (e) {
         console.log("frontLogging 이 동작 안함");
     }
+}
+
+
+
+
+
+
+// pageTotalNum, pageStartNum, pageBlockSize, goToPageByNum, selbeforeBlock, selafterBlock 따로 설정
+function mkPageSelPage() {
+	var pageRayer = document.getElementById("tblPageRayer");
+
+	var totalPage 		= parseInt(pageTotalNum);
+	var pageNum 		= parseInt(pageStartNum);
+	var BlockSize 		= parseInt(pageBlockSize);
+	var MaxNum;
+	var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	if (totalPage >= (startNum + parseInt(BlockSize))) {
+		MaxNum = (startNum + parseInt(BlockSize)) - 1;
+	} else {
+		MaxNum = totalPage;
+	}
+	
+    // 이미지
+    const pprevImg_able = "/images/kr/cm/btn_p_prev.gif";
+    const pprevImg_disable = "/images/kr/cm/btn_p_prev01.gif";
+    const prevImg_able = "/images/kr/cm/btn_prev.gif";
+    const prevImg_disable = "/images/kr/cm/btn_prev01.gif";
+    const nnextImg_able = "/images/kr/cm/btn_n_next.gif";
+    const nnextImg_disable = "/images/kr/cm/btn_n_next01.gif";
+    const nextImg_able = "/images/kr/cm/btn_next.gif";
+    const nextImg_disable = "/images/kr/cm/btn_next01.gif";
+    
+    // 사용 요소
+    var imgSPAN_IMG = document.createElement("img");
+    var imgSPAN = document.createElement("span");
+    	imgSPAN.classList.add("btnimg");
+    	imgSPAN.appendChild(imgSPAN_IMG);
+    	
+    var pprevEle = imgSPAN.cloneNode(true);
+    if (totalPage > 1 && pageNum != 1) {
+    	pprevEle.setAttribute("onClick", "goToPageByNum(1)");
+    	pprevEle.querySelector("img").src = pprevImg_able;
+    } else {
+    	pprevEle.querySelector("img").src = pprevImg_disable;
+    }
+    	
+    var prevEle = imgSPAN.cloneNode(true);
+    if (totalPage > BlockSize && pageNum > BlockSize) {
+    	prevEle.setAttribute("onClick", "selbeforeBlock()");
+    	prevEle.querySelector("img").src = prevImg_able;
+    } else {
+    	prevEle.querySelector("img").src = prevImg_disable;
+    }
+
+    var nnextEle = imgSPAN.cloneNode(true);
+    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+    	nnextEle.setAttribute("onClick", "goToPageByNum("+totalPage+")");
+    	nnextEle.querySelector("img").src = nnextImg_able;
+    } else {
+    	nnextEle.querySelector("img").src = nnextImg_disable;
+    }
+
+    var nextEle = imgSPAN.cloneNode(true);
+    if (totalPage > BlockSize && totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+    	nextEle.setAttribute("onClick", "selafterBlock()");
+    	nextEle.querySelector("img").src = nextImg_able;
+    } else {
+    	nextEle.querySelector("img").src = nextImg_disable;
+    }
+    
+    // pagenavi
+    var pagenaviDIV = document.createElement("div");
+    	pagenaviDIV.classList.add("pagenavi");
+    	
+    	pagenaviDIV.appendChild(pprevEle);
+    	pagenaviDIV.appendChild(prevEle);
+    	if (MaxNum == 0) {
+    	    var pageSPAN = document.createElement("span");
+    		pageSPAN.classList.add("on");    		
+    		pageSPAN.append(1);
+    		
+    		pagenaviDIV.appendChild(pageSPAN);
+    	} else {
+    		for (var i = startNum; i <= MaxNum; i++) {
+        	    var pageSPAN = document.createElement("span");
+        	    
+    	        if (i == pageNum) {
+    	    		pageSPAN.classList.add("on");    		
+    	    		pageSPAN.append(i);
+    	        } else {
+    	    		pageSPAN.setAttribute("onClick", "goToPageByNum("+i+")");    		
+    	    		pageSPAN.append(i);
+    	        }
+        		pagenaviDIV.appendChild(pageSPAN);
+    	    }
+    	}
+    	pagenaviDIV.appendChild(nextEle);
+    	pagenaviDIV.appendChild(nnextEle);
+    
+    // append
+    pageRayer.innerHTML = "";
+    pageRayer.appendChild(pagenaviDIV);
+}
+
+function escapeForJson(inputString) {
+    return inputString.replace(/[\b\f\n\r\t\"\\]/g, function (char) {
+        switch (char) {
+            case '\b':
+                return '\\b';
+            case '\f':
+                return '\\f';
+            case '\n':
+                return '\\n';
+            case '\r':
+                return '\\r';
+            case '\t':
+                return '\\t';
+            default:
+                return char;
+        }
+    });
+}
+
+function unescapeForJson(inputString) {
+    return inputString.replace(/\\[bfnrt\"\\]/g, function (char) {
+        switch (char) {
+            case '\\b':
+                return '\b';
+            case '\\f':
+                return '\f';
+            case '\\n':
+                return '\n';
+            case '\\r':
+                return '\r';
+            case '\\t':
+                return '\t';
+            default:
+                return char;
+        }
+    });
 }

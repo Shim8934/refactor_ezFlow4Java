@@ -59,6 +59,10 @@
 	    		display: inline-block;
 	    		vertical-align: middle;
 	    	}
+
+
+             .mainlist tr td[style*="display: none"]:first-child.none + td{padding-left:15px;}
+
 	    </style>
 	    <script>
 	        var cn = "${cn}";
@@ -182,7 +186,7 @@
 	                    treeView.DataBind("TreeView");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
+	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.status);
 	                    xmlHTTP = null;
 	                }
 	            } */
@@ -376,7 +380,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", type : "user", adminOrgan :"y"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
@@ -468,7 +472,7 @@
 	                        check_presence();
 	                    }
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                }
 	
 	                g_xmlHTTP = null;
@@ -679,7 +683,7 @@
 	                    treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 	                    treeView.DataBind("TreeView");
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                g_xmlHTTP = null;
 	            	}
 	        	}
@@ -706,8 +710,8 @@
 	            }
 	            
 	            if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
-		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
-	           		alert("<spring:message code='ezEmail.t710' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ]");
+		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1 || strName.indexOf("\\") > -1 ) {
+	           		alert("<spring:message code='ezEmail.t710' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' \\ ]");
 	           		document.getElementById("TextName").focus();
 		            return;
 		        }
@@ -1063,9 +1067,7 @@
 	            }
 	            
 	            if (selSpan == "orgSpan" && $(".txtlist_DeptTD").length > 0) {
-		        	$(".txtlist_DeptTD").css("display", "none");
-
-			        $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "15px");
+		        	$(".none").css("display", "none");
 		        }
 	        }
 	
@@ -1743,7 +1745,7 @@
 	                    treeView.DataBind("TreeView");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
+	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.status);
 	                    xmlHTTP = null;
 	                }
 	            }
@@ -1816,7 +1818,7 @@
 		        }
 		        
 		        if (xmlHTTP.status != 200) {
-		            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+		            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		                xmlHTTP = null;
 		                xmlDom = null;
 		                return;
@@ -2793,8 +2795,8 @@
                 }
                 
                 if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
-		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
-                	alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ]");
+		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1 || strName.indexOf("\\") > -1) {
+                	alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' \\ ]");
                 	document.getElementById("emailname").focus();
 		            return;
 		        }
@@ -3069,7 +3071,7 @@
 		        }
 		        
 		        if (xmlHTTP.status != 200) {
-		            alert("<spring:message code='ezEmail.userDL29' />" + xmlHTTP.statusText);
+		            alert("<spring:message code='ezEmail.userDL29' />" + xmlHTTP.status);
 		                xmlHTTP = null;
 		                xmlDom = null;
 		                return;
@@ -3373,7 +3375,7 @@
 						jobID : jobId,
 						pageNum : CurPage,
 						cell : "company;description;displayName;title;telephoneNumber", 
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
 						searchType : "",
 						searchValue : "",
 						comID : comId
@@ -3666,7 +3668,7 @@
 		                                        <div style="vertical-align: top; height: 426px; overflow: auto; width: 446px;" id="txtlist_Layer">
 		                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 		                                                <tr>
-		                                                	<td style="width: 110px; color:#333; display:none; font-weight: bold;" class="td_gray txtlist_DeptTD"><spring:message code='ezAddress.t54' /></td>
+		                                                	<td style="width: 110px; color:#333; font-weight: bold;" class="td_gray txtlist_DeptTD"><spring:message code='ezAddress.t54' /></td>
 		                                                    <td style="width: 100px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
 		                                                    <td style="width: 120px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>

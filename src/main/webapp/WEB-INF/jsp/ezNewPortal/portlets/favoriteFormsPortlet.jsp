@@ -10,15 +10,16 @@
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 	</head>
 	<body>
-	<article class="box_shadow">
+	<article class="box_shadow favorite">
 		<div class="layDIV">
 			<dl class="portlet_title sortablePortlet" style="border-bottom:0px;">
 				<%-- portalMain에서 타이틀을 넣어주는 것이 더 나을 수 있음 --%>
 				<dt class="portletText"><c:out value = "${portletName}" /></dt>
-				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/resources_setting.png"></dd>
+				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_setting<c:out value='${usedTheme }'/>.png"></dd>
 			</dl>
 			<div class = "bookmark_content">
 				<ul class="bookmark">
+					<li class='bookmarkLi_none'></li>
 					<li class='bookmarkLi_none'></li>
 					<li class='bookmarkLi_none'></li>
 					<li class='bookmarkLi_none'></li>
@@ -97,6 +98,8 @@
 	</article>
 		<script type="text/javascript">
 			// 즐겨찾기 양식목록 조회
+			var BString = "${buJaeInfo}";
+			
 			var getFavoriteForms = function() {
 				var request = new XMLHttpRequest();
 				request.open('GET', '/ezNewPortal/getFavoriteForms.do', true);
@@ -108,15 +111,18 @@
 						var forms = result.resultList;
 						var formsHTML = "";
 						
-						for (var i = 0; i < 5; i++) {
+						for (var i = 0; i < 6; i++) {
 							if (forms[i]) {
-								formsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span style='overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:3; -webkit-box-orient:vertical; height: 39px;";
+								// 텍스트 한줄 ... 처리로 수정(기존 3줄 ... 처리는 주석 처리(uiux 조기완)
+								// formsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span style='overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:3; -webkit-box-orient:vertical; height: 39px;";
+								formsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span";
 								if (navigator.userAgent.indexOf("Trident") > -1) {
-									formsHTML += " display:-ms-flexbox; -ms-flex-pack:center; "
+									// formsHTML += " display:-ms-flexbox; -ms-flex-pack:center; "
 								} else {
-									formsHTML += " display:-webkit-box; "
+									// formsHTML += " display:-webkit-box; "
 								}
-								formsHTML += "'>" + forms[i].formName + "</span></li>";
+								// formsHTML += "'>" + forms[i].formName + "</span></li>";
+								formsHTML += ">" + forms[i].formName + "</span></li>";
 							} else {
 								formsHTML += "<li class='bookmarkLi_none'></li>";
 							}
@@ -324,22 +330,23 @@
 			
 		    // 부재자 설정 체크 로직
 			var checkBujaeInfo = function (type, formURL, formDocType) {
-				var BString = "${buJaeInfo}";
 				
 		        if (BString != "") {
 		            var BDim = new Array("");
 		            BDim = BString.split(":");
 		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
 		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
+		            var now = "${now}";
+		            now = now.substring(0, 16);
 		
 		            tmpStartDate = tmpStartDate.replace("/", ":");
 		            tmpEndDate = tmpEndDate.replace("/", ":");
-		            if (tmpEndDate < "${now}") {
+		            if (tmpEndDate < now) {
 		                setBujaeOff();
 		                checkBujaeInfo_Complete(true, type, formURL, formDocType);
 		                return true;
 
-		            } else if (tmpStartDate > "${now}") {
+		            } else if (tmpStartDate > now) {
 		            	checkBujaeInfo_Complete(true);
 		                return true;
 		            }
@@ -364,6 +371,7 @@
 		    var checkBujaeInfo_Complete = function (Rtnval, type, formURL, formDocType) {
 	            if (Rtnval == true) {
 	                setBujaeOff();
+	                clearAbsence(true);
 	                
 		            if (type == "form") {
 		            	openForm();
@@ -387,6 +395,7 @@
 		    				},
 		    		success: function(xml) {
 // 		    			arr_userinfo[7] = "";
+		    			BString = "";
 		    		}
 		    	});
 		    }

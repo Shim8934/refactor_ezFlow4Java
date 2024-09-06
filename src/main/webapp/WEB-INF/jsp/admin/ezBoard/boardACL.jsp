@@ -996,7 +996,7 @@
                     <input type="checkbox" id="admin_NO" onclick="checkbox_onclick(event)">
                     &nbsp;<spring:message code='ezBoard.t100'/><span id="PostSpan">
                         <input type="checkbox" id="PostNotice" onclick="checkbox_onclick(event)">
-                        &nbsp;<spring:message code='ezBoard.t101'/></span></td>
+                        &nbsp;<spring:message code='ezNotification.hth36'/></span></td>
             </tr>
             <tr>
                 <th><spring:message code='ezBoard.t83'/></th>

@@ -1133,7 +1133,7 @@
 	    	        	var treeNode = new TreeNode();
 	    	        	treeNode.LoadFromID(nodeIdx.NodeID);
 	            	} else {
-	                	alert(g_xmlHTTP.statusText)
+	                	alert(g_xmlHTTP.status)
 		                g_xmlHTTP = null;
 	            	}
 	        	}
@@ -1151,7 +1151,7 @@
 	                	    DisplayUserImageList();
 	                	}
 	            	} else {
-	                	alert(g_xmlHTTP.statusText);
+	                	alert(g_xmlHTTP.status);
 	            	}
 
 	            	g_xmlHTTP = null;

@@ -58,7 +58,6 @@
 		    var useEditor = "<c:out value='${useEditor}'/>";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var realPath = "<c:out value = '${realPath}' />";
-		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
 		    var ext = "<c:out value='${ext}'/>";
 		    var locale = "<c:out value = '${locale}' />";
 		    // FormBuilder
@@ -334,13 +333,13 @@
 									document.getElementById("setOpenGovFlag").checked = true;	
 								}
 								
-								/* 2022-01-07 홍승비 - 전자결재G 일괄기안 옵션 추가 */
-								if (result.vo.formDraftAllFlag == "Y") {
-		        					document.getElementById("setDraftAllFlag").checked = true;
-		        					$("input:checkbox[id='setConnFlag']").attr("disabled", true);
-		        					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
-		        				}
 							}
+                            /* 2022-01-07 홍승비 - 전자결재G 일괄기안 옵션 추가 2024-07-04 S 버전도 사용 */
+                            if (result.vo.formDraftAllFlag == "Y") {
+                                document.getElementById("setDraftAllFlag").checked = true;
+                                $("input:checkbox[id='setConnFlag']").attr("disabled", true);
+                                $("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+                            }
 
 							var formXslt = result.vo.formXslt;
 							if(formXslt) {
@@ -1119,14 +1118,14 @@
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
 			    	
- 			    	if (approvalFlag === "G" && useDraftAll == "YES") {
+ 			    	if (useDraftAll == "YES") {
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
 			    	}
 		    	} else {
 		    		$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
 		    		
- 		    		if (approvalFlag === "G" && useDraftAll == "YES") {
+ 		    		if (useDraftAll == "YES") {
 		    			$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
 		    		}
 		    	}
@@ -1147,14 +1146,14 @@
 		    function changePassAprLineFlag() {
 		    	if ($("input:checkbox[id='setPassAprLineFlag']").is(":checked")) {
  		    		
-		    		if (approvalFlag === "G" && useDraftAll == "YES") {
+		    		if (useDraftAll == "YES") {
 			    		$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
 		    		}
 			    	$("input:checkbox[id='setConnFlag']").attr("checked", false);
 			    	$("input:checkbox[id='setConnFlag']").attr("disabled", true);
 		    	} else {
- 		    		if (approvalFlag === "G" && useDraftAll == "YES") {
+ 		    		if (useDraftAll == "YES") {
 			    		$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
 		    		}
 		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
@@ -1388,7 +1387,7 @@
 						</c:if>
                         <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
                         <%-- 2022-01-07 홍승비 - 전자결재G 웹한글 일괄기안 기능 표준모듈 반영 --%>
-                         <span style="<c:if test="${useEditor != 'WebHWP' || useDraftAll != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span> 
+                         <span style="<c:if test="${useDraftAll != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span>
 						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
 					</td>
 				</tr>
@@ -1559,7 +1558,7 @@
                         <img style="cursor:pointer;margin-bottom:50px;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()">
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
-                        <h2><spring:message code='ezApproval.t61'/><c:if test="${useReceiveInfoName == '1' }"><a class="imgbtn imgbck" style="float: right; margin-bottom: 0px;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a></c:if></h2>
+                        <h2><spring:message code='ezApproval.t61'/><a class="imgbtn imgbck" style="float: right; margin-bottom: 0px;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a></h2>
                         <div class="div_scroll" style="border:none; height:775px;">
                             <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%;overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>

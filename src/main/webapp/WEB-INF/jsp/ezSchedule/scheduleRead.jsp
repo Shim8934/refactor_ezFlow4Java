@@ -59,7 +59,8 @@
 	        var isOnlyGoogle = "<c:out value='${isOnlyGoogle}' />";
 	        var repetition = "<c:out value='${repetition}' />";
 	        var lang = "<c:out value='${lang}' />";
-	        
+	        var showtop = "<c:out value='${showtop}' />";
+
 	        /* 2021-11-25 홍승비 - 일정완료 관련 데이터 추가 (반복일정 대응) */
 	        var repeatCount = "<c:out value='${repeatCount}' />";
 	        var repStartDate = "<c:out value='${repStartDate}' />";
@@ -170,11 +171,11 @@
 					}
 				});
 	        	
-	            var feature = GetOpenPosition(420, 450);
+	            // var feature = GetOpenPosition(420, 450);
 	            if (userid.indexOf('@') > 0)
-	                window.open("/ezCommon/showPersonInfo.do?email=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?email=" + userid+"&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
 	            else
-	                window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
 	        }
 	
 			/* function group_info() {
@@ -190,29 +191,68 @@
 			}
 	        
 			function attach_Download() {
-			    checks = document.getElementById('attachedfileDIV').getElementsByTagName("input");
-			    downloadAll(checks)
+			    checks = document.getElementById('attachedfileDIV');
+// 			    downloadAll(checks);
+			    AttachAllDownload(checks);
 			}
 
 			var suffix = 0;
+			
 			function downloadAll(checks) {
-			    if (checks.item(suffix)) {
-			        if (checks.item(suffix).checked) {
-			            if (GetAttribute(checks.item(suffix), "attachid") != "" && GetAttribute(checks.item(suffix), "attachid") != null) {
-			                location.href = GetAttribute(checks.item(suffix++), "filepath");
-			            } else {		            	
-			                location.href = "/ezSchedule/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
-			            }
-			            setTimeout(function () { downloadAll(checks) }, 1000);
-			        } else {
-			            suffix++;
-			            downloadAll(checks);
-			        }
-			    } else
-			        suffix = 0;
-			}	
+		        if (checks.getElementsByTagName("input").item(suffix)) {
+		            if (checks.getElementsByTagName("input").item(suffix).checked) {
+		                location.href = GetAttribute(checks.getElementsByTagName("a").item(suffix++), "href");
+		                setTimeout(function () { downloadAll(checks) }, 1000);
+		            }
+		            else {
+		                suffix++;
+		                downloadAll(checks);
+		            }
+		        }
+		        else
+		            suffix = 0;
+		    }
 
-	        function manage_attendant() {	
+			/* 2020-01-30 홍승비 - 체크한 파일이 1개 이상인 경우, zip 파일로 다운받는 함수 */
+	        function AttachAllDownload(checks) {
+	            var checkedFiles = $("#attachedfileDIV").find("input:checkbox[name='fileSelect']:checked");
+	            var checkedFilesLength = checkedFiles.length;
+	            var filePath = ""; // 전체파일경로
+	            var filePathTemp = "";
+				var fileNames = ""; // 파일이름
+				var fileNamesUID = ""; // 파일이름(UID 포함)
+				
+				if (checkedFilesLength == 1) { // 하나만 저장
+					downloadAll(checks);
+				}
+				else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
+					filePath = decodeURIComponent(GetAttribute(checkedFiles.get(0), "filepath"));
+					filePath = filePath.substr(0, filePath.lastIndexOf("/") + 1);
+					
+					for (var i = 0; i < checkedFilesLength; i++) {
+						filePathTemp = decodeURIComponent(GetAttribute(checkedFiles.get(i), "filepath")); // 각 파일의 풀경로
+						fileNames += MakeXMLString(checkedFiles.get(i).value) + ":"; // 각 파일의 이름을 :로 이어붙인 것
+						fileNamesUID += MakeXMLString(filePathTemp.substr(filePathTemp.lastIndexOf("/"), filePathTemp.length)) + ":"; // 각 파일의 이름+UID를 :로 이어붙인 것
+					}
+					
+					var $frm = $("<form></form>");
+			    	$frm.attr('action', "/ezSchedule/downloadAttachAll.do");
+			    	$frm.attr('method', 'post');
+			    	$frm.appendTo('body');
+			
+			    	param1 = $('<input type="hidden" value="' + filePath + '" name="filePath" />');
+			    	param2 = $("<input type='hidden' value='" + fileNames + "' name='fileNames' />");
+			    	param3 = $("<input type='hidden' value='" + fileNamesUID + "' name='fileNamesUID' />");
+			    	
+			    	$frm.append(param1).append(param2).append(param3);
+			    	$frm.submit();
+				}
+				else { // 체크된 파일 없음
+					return;
+				}
+	        }
+			
+			function manage_attendant() {	
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 355) / 2;
@@ -326,7 +366,7 @@
 	            /* 2021-11-25 홍승비 - 일정 수정 시 반복일정의 repeatCount와 repStartDate를 전달 */
 	            if (CrossYN()) {
 	                win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
-	                		+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                		+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate) + "&showtop=" + showtop, "", "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            } else {
 	            	win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
 	            			+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
@@ -674,6 +714,33 @@
 				});
 				window.close();
 			}
+
+			var writeboardselect_modal_dialogArguments = new Array();
+			function NewItem_onclick() {
+				writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+				var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+				try { OpenWin.focus(); } catch (e) { }
+			}
+
+			function NewItem_onclick_Complete(ret) {
+				if (typeof (ret) != "undefined") {
+					pBoardID = ret[0];
+					if (pBoardID == "" || typeof (pBoardID) == "undefined") {
+						return;
+					}
+					var pheight = window.screen.availHeight;
+					var pwidth = window.screen.availWidth;
+					var pTop = (pheight - 720) / 2;
+					var pLeft = (pwidth - 765) / 2;
+
+					if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+						alert(ezSchedule_kyj1);
+					}
+					else {
+						window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&url=" + encodeURIComponent(contentpath) + "&scheduleId=" + scheduleid, '', GetOpenWindowJun(765, 870));
+					}
+				}
+			}
 		</script>
 	</head>
 	
@@ -684,13 +751,16 @@
 	                <td style="height:20px">	                    
 	                    <div id="menu">
 	                        <ul>
-	                        	<c:if test="${_editPosible == 'Y'}">
+	                        	<c:if test="${_editPosible == 'Y' && usage == 'Y'}">
 	                                <li>
 	                                	<span onclick="edit_schedule()"><spring:message code='ezSchedule.t302' /></span>
 	                                </li>
 	                                <li id ="manageli">
 	                                	<span id=managespan onclick="manage_attendant()"><spring:message code='ezSchedule.t303' /></span>
 	                                </li>
+									<li id="btnBoard">
+										<span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span>
+									</li>
 	                                <li>
 	                                	<span class="icon16 popup_icon16_delete" onclick="check_schedule()"></span>
 	                                </li>
@@ -708,7 +778,7 @@
 	                            </c:if>
 								<li>
                             		<span class="icon16 popup_icon16_print" onclick="Print_onClick()"></span>
-                            	</li>                            	
+                            	</li>
 	                        </ul>
 	                    </div>
 	                    <div id="close">
@@ -859,7 +929,7 @@
 	                                    <c:forEach var="item" items="${attachList}" varStatus="status">
 	                                    	<div style="margin-top:3px;height:auto;">
 	                                    		<c:set var="imagePath" value="/images/file.gif" />
-	                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
+	                                    		<input type="checkbox" name="fileSelect" filename="${item.fileEncodeName}" filepath="${item.filePath}" value="${item.fileName}">
 	                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
 	                                    			<c:set var="imagePath" value="/images/image.png" />
 	                                    		</c:if>

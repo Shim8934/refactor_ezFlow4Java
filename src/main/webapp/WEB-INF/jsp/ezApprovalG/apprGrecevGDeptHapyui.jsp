@@ -686,7 +686,7 @@
 		        DivPopUpHidden();
 		        if (Ans) {
 		            //기록물철 선택과정에서 버그가 있어 파라미터를 14로 수정. 2019-03-12 홍대표
-		        	btnApprovalInfo("14");
+		        	btnApprovalInfo("15");
 		            return;
 		        }
 		        else {
@@ -919,7 +919,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1272,7 +1272,7 @@
 		    <td style="height:20px"><div id="menu">
 				<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
 		        <ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
-		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('14')" ><spring:message code="ezApprovalG.t1742"/></span></li>
+		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('15')" ><spring:message code="ezApprovalG.t1742"/></span></li>
 		          <span style ="display:none" ><li id="btnSetAprLine"> <span onclick="return btnSetAprLine_onclick()" ><spring:message code='ezApprovalG.t153'/></span></li></span>
 		          <li id="btnSendDraft"> <span onclick="return btnSendDraft_onclick()" ><spring:message code='ezApprovalG.t156'/></span></li>
 		          <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>

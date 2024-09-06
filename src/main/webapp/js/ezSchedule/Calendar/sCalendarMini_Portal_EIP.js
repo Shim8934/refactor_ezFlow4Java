@@ -44,7 +44,6 @@ function CalendarMiniView(pTagetID) {
 	        mTable.setAttribute("cellpadding", "0");
 	        mTable.setAttribute("cellspacing", "0");
 	        mTable.setAttribute("border", "0");
-	        mTable.setAttribute("style", "margin: 10px 10px; padding: 0px 25px 0px 3px;");
 	        mTable.setAttribute("width", "100%");
 	        var mTr = document.createElement("TR");
 
@@ -308,7 +307,7 @@ function GetTableMiniBodyObj() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;
@@ -411,7 +410,7 @@ function GetTableMiniBodyObjTop() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;
@@ -609,11 +608,13 @@ function DayOnMouseClick(event) {
  
     //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
     if ($("#CalendarMini_Top").length > 0) {
-    	if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
-    		$("#"+event.getAttribute("id")).css("background","#f0f6ff").css("color","red");
-    	} else {
-    		$("#"+event.getAttribute("id")).css("background","#f0f6ff").css("color","black");
-    	}
+    	// if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
+    	// 	$("#"+event.getAttribute("id")).css("background","#f0f6ff").css("color","red");
+    	// } else {
+    	// 	$("#"+event.getAttribute("id")).css("background","#f0f6ff").css("color","black");
+    	// }
+		$("#CalendarMini .scalendar_mini td").removeClass("select");
+		$("#"+event.getAttribute("id")).parent().addClass("select");
     } else {
     	if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
     		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("color","red");
@@ -660,12 +661,13 @@ function DayOnMouseClickTop(event) {
  
     //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
     if ($("#CalendarMini_Top").length > 0) {
-    	if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
-    		$("#"+event.getAttribute("id")).css("background","#f0f6ff").css("color","red");
-    	} else {
-    		$("#"+event.getAttribute("id")).css("background","#f0f6ff").css("color","black");
-    	}
-    	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
+    	// if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
+    	// 	$("#"+event.getAttribute("id")).css("background","#f0f6ff").css("color","red");
+    	// } else {
+    	// 	$("#"+event.getAttribute("id")).css("background","#f0f6ff").css("color","black");
+    	// }
+		$("#CalendarMini_Top .scalendar_mini td").removeClass("select");
+		$("#"+event.getAttribute("id")).parent().addClass("select");
     } else {
     	if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
     		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("color","red");
@@ -875,11 +877,13 @@ function clickDay(val01) {
 	}
 
 	if ($("#CalendarMini_Top").length > 0) {
-		if ($("#"+val01).parent().attr('class').indexOf('sun') > -1) {
-			$("#"+val01).css("background","#f0f6ff").css("color","red");
-		} else {
-			$("#"+val01).css("background","#f0f6ff").css("color","black");
-		}
+		// if ($("#"+val01).parent().attr('class').indexOf('sun') > -1) {
+		// 	$("#"+val01).css("background","#f0f6ff").css("color","red");
+		// } else {
+		// 	$("#"+val01).css("background","#f0f6ff").css("color","black");
+		// }
+		$("#CalendarMini .scalendar_mini td").removeClass("select");
+		$("#"+val01).parent().addClass("select");
 	} else {
 		if ($("#"+val01).parent().attr('class').indexOf('sun') > -1) {
 			$("#"+val01).css("background","#f0f6ff").parent().css("color","red");
@@ -916,11 +920,13 @@ function clickDayTop(val01) {
 	}
 	
 	if ($("#CalendarMini_Top").length > 0) {
-		if ($("#"+val01).parent().attr('class').indexOf('sun') > -1) {
-	    	$("#"+val01).css("background","#f0f6ff").css("color","red");
-		} else {
-			$("#"+val01).css("background","#f0f6ff").css("color","black");
-		}
+		// if ($("#"+val01).parent().attr('class').indexOf('sun') > -1) {
+	    // 	$("#"+val01).css("background","#f0f6ff").css("color","red");
+		// } else {
+		// 	$("#"+val01).css("background","#f0f6ff").css("color","black");
+		// }
+		$("#CalendarMini_Top .scalendar_mini td").removeClass("select");
+		$("#"+val01).parent().addClass("select");
 	} else {
 		if ($("#"+val01).parent().attr('class').indexOf('sun') > -1) {
 	    	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","red");

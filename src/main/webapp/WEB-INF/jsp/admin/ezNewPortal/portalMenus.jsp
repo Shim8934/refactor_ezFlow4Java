@@ -7,6 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t055' /></title>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
@@ -62,17 +63,37 @@
 			<spring:message code='ezNewPortal.t055' />
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
-			<span><spring:message code='ezNewPortal.garm07' /></span>
 		</h1>
-		
+		<div style="margin-bottom:10px;">
+			<span style="font-size: 14px; font-weight: 500;">▒ <spring:message code="ezNewPortal.topMenu.hth01"/></span> <span style="font-size: 11px; font-weight: 400;">(<spring:message code="ezNewPortal.topMenu.hth02"/></span>)</span>
+			<form id="Form1" method="post">
+				<br>
+				<table class="content" style="width: 450px; margin-top:10px;">
+				    <tbody><tr>
+				        <th><spring:message code="ezNewPortal.topMenu.hth01"/></span></th>
+				        <td>
+				            <input style="margin-top: 0px;" type="radio" id="topDisplayMode" name="topMenuDisplayMode" value="0"><label for="topDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezNewPortal.kwc01"/></label>
+				            <input style="margin-top: 0px;" type="radio" id="leftDisplayMode" name="topMenuDisplayMode" value="1"><label for="leftDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezPortal.t72"/></label>
+				        </td>
+				    </tr>
+				</tbody></table>
+				<div class="btnpositionJsp" style="width: 436px; margin-top:10px;">
+				    <a class="imgbtn" onclick="topMenuDisplayModeSave()"><span><spring:message code="ezNewPortal.topMenu.hth05"/></span></span></a>
+				    <a class="imgbtn" onclick="getCompanyTopMenuDisplayMode()"><span><spring:message code="ezNewPortal.topMenu.hth06"/></span></span></a>
+				</div>
+			</form>
+		</div>
 		
 		<%-- <div id="mainmenu">
 			<ul style="margin-top: 15px;">
 				<li class="menuOrderResetButton" id="menuOrderReset"><span><spring:message code='ezNewPortal.t003' /></span></li>
 			</ul>
 		</div> --%>
+		<div>
+		<span style="font-size: 14px; font-weight: 500;">▒ <spring:message code="ezNewPortal.topMenu.hth04"/></span> </span> <span style="font-size: 11px; font-weight: 400;">(<spring:message code='ezNewPortal.garm07' />)</span>
 		<ul id="menuList">
 		</ul>
+		</div>
 	</body>
 	
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -83,10 +104,15 @@
 		var menuAuths = [];
 		var usePrimaryLangOnly = "";
 		var primary = "";
+		var useJapanese = "${useJapanese}";
+		var useChinese = "${useChinese}";
+		var useVietnamese = "${useVietnamese}";
+		var useIndonesian = "${useIndonesian}";
 		
 		$(function(){
 			getCompanies();
 			getMenus();
+			getCompanyTopMenuDisplayMode();
 			/* document.getElementById("menuOrderReset").addEventListener("click", resetMenuOrder); */
 		});
 		
@@ -132,6 +158,7 @@
 					
 					document.getElementById("ListCompany").addEventListener('change', function() {
 						getMenus();
+						getCompanyTopMenuDisplayMode();
 					});
 				} else {
 					// We reached our target server, but it returned an error
@@ -167,7 +194,7 @@
 					}
 					
 					menuList.forEach(function (item, index) {
-						menusHTML += "<li class='menu' id='menu" + item.menuId + "'>";
+						menusHTML += "<li class='menu draggable-item' id='menu" + item.menuId + "'>";
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
@@ -204,19 +231,36 @@
 					});
 					
 					//메뉴 드래그앤드롭
-					$("#menuList").sortable({ 
-						//handle : ".menuSortable",
-						items: "li.menu",
-						scroll: false,
-					    helper: 'clone',
-						start : function(event, ui) {
-							//$(".menuDetails").css("display", "none");
-							$(".menuDetails").remove();
-							
-						},
-						update : function(event, ui) {
-							updateMenuOrder();
-						}
+					$("#menuList .draggable-item").draggable({
+					    revert: "invalid",
+					    containment: "parent",
+					    zIndex: 100,
+					    start: function (event, ui) {
+					    	var dragElem = $(this);
+					    	dragElem.css({
+					    		"cursor": "move",
+					    		"opacity": "0.6"
+					    	});
+					    },
+					    snap:'#menuList li',
+					    stop : function(event, ui) {
+					    	var dragElem = $(this);
+					    	dragElem.css({
+					    		"cursor": "pointer",
+					    		"opacity": ""
+					    	});
+					    },
+					    helper : "clone"
+					});
+					  
+					$("#menuList .draggable-item").droppable({
+					    tolerance: "intersect",
+					    drop: function(event, ui) {
+						var dragElem = ui.draggable;
+						var dropElem = $(this);
+						changePosition(dragElem, dropElem);
+						updateMenuOrder();
+					  }
 					});
 					
 					//$("#menuList").disableSelection();
@@ -233,6 +277,34 @@
 			});
 			 
 			request.send(data);
+		}
+		
+		var getCompanyTopMenuDisplayMode = function() {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			$.ajax({
+				type: "GET",
+				url: "/admin/ezNewPortal/getTopMenuDisplayModeForCompany.do",
+				dataType: "JSON",
+				data : {
+					companyId : companyValue	
+				},
+				async: true,
+				success: function(result) {
+					var topMenuDisplayModeBtn = document.getElementsByName('topMenuDisplayMode');
+					for (var i = 0; i < topMenuDisplayModeBtn.length; i++) {
+						if (topMenuDisplayModeBtn[i].value == result.data) {
+							topMenuDisplayModeBtn[i].checked = true;
+							break;
+						}
+					}
+					
+				},
+				error: function (xhr, status, e){
+					
+				}
+			});
 		}
 		
 		var openMenuDetail = function(event) {
@@ -271,9 +343,9 @@
 					menusHTML += "<div class='admin_menu_content'>";
 					menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span class='" + menuInfo.iconUrl + "'></span></dt>";
 					
-					if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함					
-						menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd>";
-					}
+					// if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함					
+					menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd>";
+					// }
 					
 					menusHTML += "</dl><table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
 					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th>";
@@ -301,6 +373,8 @@
 							country = "<spring:message code='ezNewPortal.t079' />";
 						} else if (item.menuLang == 3) {
 							country = "<spring:message code='ezNewPortal.t080' />";
+						} else if (item.menuLang == 4) {
+							country = "<spring:message code='ezPortal.t4094' />";
 						}
 						
 						menusHTML += country + ")</td>";
@@ -454,8 +528,8 @@
 			var menuNamesCount = menuNames.length;
 			var menuType = event.data.menuType;
 			var menuNameEmptyNum = 0;
-			//특수문자  체크
-			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			//특수문자  체크 (앤드&, 소괄호(), 슬래쉬/만 허용함)
+			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\-_+<>@\#$%\\\=\'\"]/g;
 			const regex = new RegExp(special_pattern);
 			
 			//메뉴 사용 유무
@@ -492,7 +566,7 @@
 				menuLang = menuLang.substring(4);
 				
 				if (regex.test($.trim(menuName.value))) {
-					alert("<spring:message code='ezNewPortal.ljw01' />");
+					alert("<spring:message code='ezNewPortal.csj01' />");
 				    return;
 				}
 				
@@ -566,44 +640,94 @@
 					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
 					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
 					menusHTML += "</tr>";	
+				} else if (primary == "4") {
+					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
+					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+					menusHTML += "</tr>";	
 				}
 			} else {
 				var mainTitle = "<spring:message code='ezNewPortal.t078' />";
 				var subTitle1 = "<spring:message code='ezNewPortal.t079' />";
 				var subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+				var subTitle3 = "<spring:message code='ezPortal.t4094' />";
 				
 				var mainTitleId = "menu1";
 				var subTitle1Id = "menu2";
 				var subTitle2Id = "menu3";
+				var subTitle3Id = "menu4";
+				
+				var subTitleTr1Id = "en";
+				var subTitleTr2Id = "ja";
+				var subTitleTr3Id = "zh";
 				
 				if (primary == "2") {
 					mainTitle = "<spring:message code='ezNewPortal.t079' />";
 					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
 					subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+					subTitle3 = "<spring:message code='ezPortal.t4094' />";
 					
 					mainTitleId = "menu2";
 					subTitle1Id = "menu1";
 					subTitle2Id = "menu3";
+					subTitle3Id = "menu4";
+					
+					subTitleTr1Id = "ko";
+					subTitleTr2Id = "ja";
+					subTitleTr3Id = "zh";
 				} else if (primary == "3") {
 					mainTitle = "<spring:message code='ezNewPortal.t080' />";
 					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
 					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
+					subTitle3 = "<spring:message code='ezPortal.t4094' />";
 					
 					mainTitleId = "menu3";
 					subTitle1Id = "menu1";
 					subTitle2Id = "menu2";
-				}
+					subTitle3Id = "menu4";
 					
+					subTitleTr1Id = "ko";
+					subTitleTr2Id = "en";
+					subTitleTr3Id = "zh";
+				} else if (primary == "4") {
+					mainTitle = "<spring:message code='ezPortal.t4094' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
+					subTitle3 = "<spring:message code='ezNewPortal.t080' />";
+					
+					mainTitleId = "menu4";
+					subTitle1Id = "menu1";
+					subTitle2Id = "menu2";
+					subTitle3Id = "menu3";
+					
+					subTitleTr1Id = "ko";
+					subTitleTr2Id = "en";
+					subTitleTr3Id = "ja";
+				}
 				
-				menusHTML += "<tr><th rowspan='3' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
+				// 2023-11-23 조소정 - 일본어, 중국어 사용 여부에 따라 메뉴명 rowspan 및 height 조정
+				var menuLength = 0;
+				if (useJapanese === "YES" && useChinese === "YES") {
+					  menuLength = 4;
+				} else if (useJapanese === "YES" && useChinese === "NO") {
+				  menuLength = 3;
+				} else if (useJapanese === "NO" && useChinese === "YES") {
+				  menuLength = 3;
+				} else {
+				  menuLength = 2;
+				}
+
+				menusHTML += "<tr><th rowspan=" + menuLength + " class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
 				menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + mainTitle + ")</td>";
 				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + mainTitleId + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle1 + ")</td>";
+				menusHTML += "<tr id='" + subTitleTr1Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle1 + ")</td>";
 				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle1Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle2 + ")</td>";
+				menusHTML += "<tr id='" + subTitleTr2Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle2 + ")</td>";
 				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle2Id + "' type='text' maxlength='50'></td>";
+				menusHTML += "</tr>";
+				menusHTML += "<tr id='" + subTitleTr3Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle3 + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle3Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
 			}
 			menusHTML += "</table>";
@@ -653,7 +777,15 @@
 			$(".addMenuBtn").on("click", insertMenu);
 			
 			//메뉴 추가 iconTable01 height 지정
-			$(".iconTable01, .iconTable02").css("height", (usePrimaryLangOnly == "YES" ? 106 : 172) + "px");
+			$(".iconTable01, .iconTable02").css("height", (usePrimaryLangOnly == "YES" ? 106 : (106 + 33 * (menuLength -1))) + "px");
+			
+			if (useJapanese == "NO") {
+				document.getElementById("ja").style.display = "none";
+			}
+			
+			if (useChinese == "NO") {
+				document.getElementById("zh").style.display = "none";
+			}
 		}
 		
 		var insertMenu = function() {
@@ -661,8 +793,8 @@
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
 			var menuNameEmptyNum = 0;
-			// 특수문자 체크
-			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			// 특수문자 체크 (앤드&, 소괄호(), 슬래쉬/만 허용함)
+			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\-_+<>@\#$%\\\=\'\"]/g;
 			const regex = new RegExp(special_pattern);
 			
 			//메뉴 사용 유무
@@ -693,7 +825,7 @@
 				menuLang = menuLang.substring(4);
 				
 				if (regex.test($.trim(menuName.value))) {
-					alert("<spring:message code='ezNewPortal.ljw01' />");
+					alert("<spring:message code='ezNewPortal.csj01' />");
 				    return;
 				}
 				
@@ -776,7 +908,7 @@
 			var top = (height - 500) / 2;
 			var left = (width - 765) / 2;
 			   
-			window.open("/admin/ezNewPortal/selectMenuIcon.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=342,width=500,top=" + top + ",left=" + left, "");
+			window.open("/admin/ezNewPortal/selectMenuIcon.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=470,width=660,top=" + top + ",left=" + left, "");
 		}
 		
 		var updateMenuOrder = function() {
@@ -819,6 +951,65 @@
 			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId + "&mode=menu";
 			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
 		    	try { OpenWin.focus(); } catch (e) { }
+		}
+		
+		var topMenuDisplayModeSave = function () {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			var topMenuDisplayModeBtn = document.getElementsByName('topMenuDisplayMode');
+		    var type = 0;
+		    for (let i = 0; i < topMenuDisplayModeBtn.length; i++) {
+		        if (topMenuDisplayModeBtn[i].checked) {
+		        	type = topMenuDisplayModeBtn[i].value;
+		        	break;
+		        }
+		    }
+			
+			$.ajax({
+				type: "POST",
+				url: "/admin/ezNewPortal/updateTopMenuDisplayModeForCompany.do",
+				dataType: "text",
+				data : {
+					companyId : companyValue,
+					type : type
+				},
+				async: true,
+				success: function(result) {
+					alert("저장하였습니다.");
+				},
+				error: function (xhr, status, e){
+					
+				}
+			});
+		}
+		
+		function changePosition(dragElem, dropElem) {
+			var menuListChildren = $("#menuList li");
+			var dragElemIndex = menuListChildren.index(dragElem);
+			var dropElemIndex = menuListChildren.index(dropElem);
+			var menuList = $('#menuList');
+			
+			dragElem.insertAfter(menuList.children().eq(dropElemIndex));
+			if (dragElemIndex > dropElemIndex) {
+				dropElem.insertAfter(menuList.children().eq(dragElemIndex));
+			} else {
+				if (dragElemIndex - 1 < 0) {
+					dropElem.insertBefore(menuList.children().eq(0));
+				} else {
+					dropElem.insertAfter(menuList.children().eq(dragElemIndex - 1));
+				}
+			}
+			
+			dragElem.css({
+				left: '0',
+			    top: '0'
+			});
+			
+			dropElem.css({
+				left: '0',
+			    top: '0'
+		    });
 		}
 
 	</script>

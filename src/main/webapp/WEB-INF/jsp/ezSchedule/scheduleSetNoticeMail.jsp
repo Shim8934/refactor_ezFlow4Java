@@ -28,6 +28,10 @@
 			        strmail += "Y;";
 			    else
 			        strmail += "N;";
+		        if (document.getElementById("inviteScheModMail").checked == true)
+			    	strmail += "Y;";
+			    else
+			        strmail += "N;";    
 			    if (document.getElementById("cancellationMail").checked == true)
 			    	strmail += "Y;";
 			    else
@@ -79,6 +83,17 @@
 						</c:otherwise>
 					</c:choose>
 					<td>&nbsp;<spring:message code='ezSchedule.kmss09'/></td>
+				</tr>
+				<tr>
+					<c:choose>
+						<c:when test="${mailConfig.inviteScheModMail == null || mailConfig.inviteScheModMail == 'Y'}">
+							<th style="white-space:nowrap"><input type="checkbox" id="inviteScheModMail" checked="checked"/></th>
+						</c:when>
+						<c:otherwise>
+							<th style="white-space:nowrap"><input type="checkbox" id="inviteScheModMail"/></th>
+						</c:otherwise>
+					</c:choose>
+				  <td>&nbsp;<spring:message code='ezSchedule.cofig.hth01'/></td>
 				</tr>
 				<tr>
 					<c:choose>		

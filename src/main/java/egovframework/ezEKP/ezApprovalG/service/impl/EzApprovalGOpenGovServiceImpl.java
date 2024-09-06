@@ -178,8 +178,6 @@ public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService 
     public List<String> getOpenGovResendCsv() throws Exception {
         logger.debug("getOpenGovResendCsv started.");
 
-        //이거 시간있으면 getOpenGovCsv랑 합쳐야함. 쿼리 밑에 조건 두줄 빼고 다 똑같
-
         List<String> resendDate = getResendDate();
 
         if (resendDate.size() == 0 || resendDate == null || resendDate.toString().equals("[null]")) {

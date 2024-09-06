@@ -2908,6 +2908,30 @@
 						(START_DATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
 					)
 				]]>
+		<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 근태 연동 시 전체검색, 제목검색, 지역검색 추가 -->
+		<isNotEmpty property="v_SEARCHTITLE">
+			AND
+				B.TYPE_NAME like concat(concat('%', #v_SEARCHTITLE#), '%')
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCHLOCATION">
+			AND
+				A.REGION like concat(concat('%', #v_SEARCHLOCATION#), '%')
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCHALL">
+			OR (
+					B.TYPE_NAME like concat(concat('%', #v_SEARCHALL#), '%')
+				AND
+					A.REGION like concat(concat('%', #v_SEARCHALL#), '%')
+			)
+		</isNotEmpty>
+		<isEqual property="v_PFILTER" compareValue="IsPublic">
+			<isNotEmpty property="v_INDILIST">
+				<![CDATA[
+				AND
+					A.WRITER_ID IN ($v_INDILIST$)								
+				]]>
+			</isNotEmpty>
+		</isEqual>
 	</select>
 	
 	<select id="ezAttitudeDAO.getAttitudeTime" parameterClass="Map" resultClass="String">
@@ -2957,8 +2981,8 @@
 						A.tenant_id AS tenantid,
 						A.writer_id AS writerid,
 						A.dept_id AS deptid,
-						to_char(A.start_date, 'YYYY-MM-DD HH24:MI:SS') AS startdate,
-		                SUBSTR(TO_CHAR(A.start_date, 'YYYY-MM-DD HH24:MI:SS'), 12) AS starttime,
+						A.start_date AS startdate,
+		                TO_CHAR(A.start_date, 'HH24:MI:SS') AS starttime,
 						A.modappl,
 						A.type_id AS typeid,
 						B.type_name$primary$ AS typename,

@@ -15,6 +15,7 @@
     <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
 	<typeAlias  alias="OrganUserVO"         						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
+	<typeAlias  alias="ResOccuVO" 								type="egovframework.ezEKP.ezResource.vo.ResOccuVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -153,7 +154,8 @@
 		<result property="makeDate"				column="MAKEDATE"				columnIndex="15"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="16"/>
 		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="17"/>
-		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="18"/>
+		<result property="repeatFlag"			column="REPEATFLAG"			    columnIndex="18"/>
+		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="19"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleVO">
@@ -283,6 +285,24 @@
 		<result property="memberNam"				column="MEMBER_NAM"			    columnIndex="3" nullValue=""/>
 		<result property="memberID"				    column="MEMBER_ID"				columnIndex="4" nullValue=""/>
 		<result property="accessLvl"				column="ACCESS_LVL"			    columnIndex="5" nullValue=""/>
+	</resultMap>
+	
+	<resultMap class="ResOccuVO"    	   id="resOccuVO">
+		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
+		<result property="count"				column="COUNT"					columnIndex="3"/>
+		<result property="usageTime"			column="USAGE_TIME"				columnIndex="4"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="5"/>
+	</resultMap>
+	
+	<resultMap class="ResOccuVO"    	   id="resOccuVO2">
+		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="3"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="4"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="5"/>
+		<result property="num"					column="NUM"					columnIndex="6"/>
+		<result property="pNum"					column="PNUM"					columnIndex="7" 		nullValue="0"/>
 	</resultMap>
 	
 	<!-- <procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
@@ -965,6 +985,7 @@
              	SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE  ,
              	NVL(APPROVEFLAG, '0') APPROVEFLAG ,
              	NVL(RETURNFLAG, '0') RETURNFLAG ,
+				NVL(REPEATFLAG, '1') REPEATFLAG ,
              	BRD_ACCESS 
         	FROM
         		TBL_RS_BRD 
@@ -1067,6 +1088,7 @@
           		BRD_EXPLAIN = RTRIM(#v_P_Brd_Explain#),
           		APPROVEFLAG = RTRIM(#v_P_Approve#),
           		RETURNFLAG = RTRIM(#v_P_Return#),
+				REPEATFLAG = RTRIM(#v_P_Repeat#),
           		BRD_NM2 = RTRIM(#v_P_Brd_NM2#),
           		OWNDEPTNM2 = RTRIM(#v_P_ODeptNm2#),
           		OWNERNM2 = RTRIM(#v_P_OwnerNm2#),
@@ -1124,14 +1146,14 @@
 			INSERT INTO TBL_RS_BRD ( 
 				BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY
       			, BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE, ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, APPROVEFLAG
-      			, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, RETURNFLAG, TENANT_ID 
+      			, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, RETURNFLAG, REPEATFLAG, TENANT_ID
       		)
         	VALUES ( 
         		#v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#)
         		,RTRIM(#v_P_OwnerCall#), RTRIM(#v_P_Brd_NM#), RTRIM(#v_P_ResLocation#), RTRIM(#v_P_Brd_Explain#), RTRIM(#v_P_CompanyID#), #v_Brd_ID#
         		,RTRIM(#v_Brd_GB#), RTRIM(#v_Brd_Level#), RTRIM(#v_Brd_Step#), TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYYMMDD')
         		,20, u'A00', u'', #v_Brd_Access#, 365, 0, 0, RTRIM(#v_P_Approve#)
-      			,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), RTRIM(#v_P_Return#), #tenantID# 
+      			,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), RTRIM(#v_P_Return#), RTRIM(#v_P_Repeat#), #tenantID#
       		)
 		]]>		
 	</insert>
@@ -1457,6 +1479,23 @@
 				BRD_GB = '2'
 			AND
 				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+
+	<select id="EzResourceDAO.getBrdRepeatFlag" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT
+			NVL(REPEATFLAG, '1') REPEATFLAG
+		FROM
+			TBL_RS_BRD
+		WHERE
+			BRD_ID = #v_PBRDID#
+		  AND
+			BRD_COMPANY = #v_PCOMPANYID#
+		  AND
+			BRD_GB = '2'
+		  AND
+			TENANT_ID = #tenantID#
 		]]>
 	</select>
 	
@@ -2197,8 +2236,10 @@
         <![CDATA[
 			SELECT
 				BRD_NM BRDNM ,
+				BRD_NM2 BRDNM2 ,
 				HR.DISPLAYNAME OWNERNM ,
-				HR.MAIL MAILADDRESS  
+				HR.MAIL MAILADDRESS,
+                HR.CN OWNERID 
 			FROM
 				TBL_RS_BRD RES
 			JOIN
@@ -2502,6 +2543,7 @@
              	SUBSTR(A.MAKEDATE, 1, 4) || '-' || SUBSTR(A.MAKEDATE, 5, 2) || '-' || SUBSTR(A.MAKEDATE, 7, 2) MAKEDATE  ,
              	NVL(A.APPROVEFLAG, '0') APPROVEFLAG ,
              	NVL(A.RETURNFLAG, '0') RETURNFLAG ,
+				NVL(A.REPEATFLAG, '1') REPEATFLAG ,
              	A.BRD_ACCESS
 			FROM 
 				TBL_RS_BRD A
@@ -2571,5 +2613,97 @@
 				 and 
 				 	( a.member_id = #userID# or a.member_id = 'everyone' or a.member_id = #deptID#) )
 			 ]]>
+	</select>
+	
+	<select id="EzResourceDAO.getResOccuList" parameterClass="map" resultMap="resOccuVO">
+		<![CDATA[
+			SELECT
+				DISTINCT b.OWNERID,
+				b.BRD_NM,
+				b.COUNT,
+				b.USAGE_TIME,
+				a.COMPANYID
+			FROM
+				TBL_RS_SCHEDULE a
+			INNER JOIN
+				(SELECT 
+					e.OWNERID ,
+					brd_nm,
+					count(e.OWNERID) COUNT ,
+					SUM(ROUND((ENDDATE - STARTDATE)*24*60)) USAGE_TIME
+					FROM
+						TBL_RS_SCHEDULE e
+					JOIN
+						TBL_RS_BRD f
+					ON
+						e.OWNERID = f.BRD_ID
+					AND
+						e.TENANT_ID = f.TENANT_ID
+					WHERE
+						e.TENANT_ID = #tenantID#
+					AND
+						e.COMPANYID = #v_PCOMPANYID#
+					AND
+						e.APPROVEFLAG = '1'
+					AND
+						STARTDATE >= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						ENDDATE <= to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+					AND (e.NUM, e.OWNERID) NOT IN ( SELECT
+														c.NUM, c.OWNERID 
+													FROM
+														TBL_RS_SCHEDULEREPETITION c
+													WHERE
+														c.TENANT_ID = #tenantID#
+													AND
+														c.COMPANYID = #v_PCOMPANYID#
+													)
+					GROUP BY e.OWNERID , f.BRD_NM) b
+			ON
+				a.OWNERID = b.OWNERID
+			ORDER BY 
+				TO_NUMBER(b.OWNERID) ASC
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleListRepetiti2" parameterClass="Map" resultMap="resOccuVO2">
+		<![CDATA[
+			SELECT 
+				A.NUM ,
+            	PNUM ,
+            	A.OWNERID ,
+            	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+            	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+            	A.COMPANYID ,
+            	C.BRD_NM
+			FROM
+				TBL_RS_SCHEDULE A
+			JOIN
+				TBL_RS_SCHEDULERepetition B 
+			ON 
+				A.NUM = B.NUM
+			AND
+				A.TENANT_ID = B.TENANT_ID	
+			AND
+				A.OWNERID = B.OWNERID
+			LEFT JOIN
+				TBL_RS_BRD C
+			ON
+				A.OWNERID = C.BRD_ID			
+			WHERE
+				STARTDATE <= to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			AND
+				A.COMPANYID = #v_PCOMPANYID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND
+				REFLAG = '1'
+			AND
+				A.APPROVEFLAG = '1'				
+			AND
+				( to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME )
+			ORDER BY
+				TO_NUMBER(A.OWNERID), TO_NUMBER(A.NUM) ASC
+		]]>
 	</select>
 </sqlMap>

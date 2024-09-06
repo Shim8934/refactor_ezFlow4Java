@@ -44,7 +44,7 @@ public interface EzSurveyService {
 	void getDownloadedFile(String fileName, String filePath, String realPath, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
 	//Save/Delete/Get survery item
-	JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int drafMode, LoginVO userInfo, int mailFlag, int popupFlag) throws Exception;
+	JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int drafMode, LoginVO userInfo, int mailFlag, int popupFlag) throws Exception;
 	JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode) throws Exception;
 	JSONObject getPopupItems(String mode, /*String startDate, String endDate,*/ LoginVO userInfo) throws Exception;
 	void deleteItems(List<Long> itemIdList, LoginVO userInfo) throws Exception;
@@ -61,4 +61,16 @@ public interface EzSurveyService {
 	void updateMailSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception;
 	JSONObject checkRespondent(Long surveyId, LoginVO userInfo);
 	int getSurveyIngCnt(MCommonVO userInfo);
+	String checkTenantConfig(String propertyName, int tenantID) throws Exception;
+	
+	void setPreviewFlag(String prevMode, String userId, String companyId, int tenantId) throws Exception;
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 저장
+    public void saveSurveyResultViewTarget(LoginVO userInfo, Long survey_id, JSONArray resultViewTarget) throws Exception;
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 리스트 조회
+	public JSONArray getSurveyResultViewTarget(LoginVO userInfo, Long survey_id) throws Exception;
+
+	// 2024-07-12 전인하 - 설문 > 사용자가 결과조회 가능한 설문 id 조회
+	public List<Long> getUserReceivedSurveyResultList(LoginVO userInfo, long surveyId) throws Exception;
 }

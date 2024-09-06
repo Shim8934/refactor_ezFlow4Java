@@ -148,7 +148,7 @@ var strLang254 = "입력하신 필드의 내용은 "
 var strLang255 = "까지만 입력이 가능합니다. (한글 "
 var strLang256 = "자)"
 // ezAPRDOCATTACH
-var strLang257 = "문서리스트에서 이동할 문서를 선택해주십시요."
+var strLang257 = "문서리스트에서 추가할 문서를 선택해주세요."
 var strLang258 = "이미 등록되어 있는 문서입니다."
 // ezAPRDOCATTACH\aprDocAttach.js
 // ezAPRDOCATTACH\getDocAttach.js
@@ -684,7 +684,7 @@ var strLang1027 = "의견을 수정하였습니다.";
 var strLang1028 = "년";
 var strLang1029 = "월";
 var strLang1030 = "일";
-var strLang1031 = "익명게시판 또는 포토게시판 또는 URL링크 게시판에는 메일/결재문서 게시를 할 수 없습니다.";
+var strLang1031 = "일반게시판, Q&A게시판에만 게시가 가능합니다.";
 var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "선택한 사용자는 부재중입니다.</br>추가하시겠습니까?";
 
@@ -1163,4 +1163,16 @@ var strLang975 = "양식 버전이 달라 재사용 할 수 없습니다.";
 /* 2023-06-16 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 관련 메시지 추가 */
 var strLangJIH01 = "보안 문서는 미리보기 열람이 불가합니다.";
 var strLangJIH02 = "/blank_kr.htm";
-var strLangJIH03 = "대외수신함에서는 미리보기가 불가합니다.";
+var strLangJIH03 = "대외수신함에서 미리보기 열람은 문서 최초 열람 후 가능합니다.";
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "일괄접수 완료되었습니다.";
+var strLangLGEAR02 = "일괄접수 중 오류가 발생하였습니다.<br>";
+var strLangLGEAR03 = "일괄접수자전결 완료되었습니다.";
+var strLangLGEAR04 = "일괄접수자전결 중 오류가 발생하였습니다.<br>";
+
+// 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "일괄접수를 진행하시겠습니까?<br>상태가 회송인 문서, 시행문과 합의문, 분리첨부가 존재하는 문서는 대상에서 제외됩니다.";
+var strLangJSBAP03 = "일괄접수자전결을 진행하시겠습니까?<br>상태가 회송인 문서, 시행문과 합의문, 분리첨부가 존재하는 문서는 대상에서 제외됩니다.";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."

@@ -44,7 +44,7 @@
 	</style>	
     <script type="text/javascript">
 		// el
-		var userName = "${userInfo.userName}";		// 이건 왜 있는 걸까?
+		var userName = "${userInfo.userName}";
 		var folderInfo = '${folderInfo}';
 		var allFileFlag = "${allFileFlag}";
 		var parentId = "${parentId}";

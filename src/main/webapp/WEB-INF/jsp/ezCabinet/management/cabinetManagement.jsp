@@ -164,7 +164,7 @@
 				}
 				
 				function moveCabinetHandler() {
-					var selectedNode = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']");
+					var selectedNode = document.getElementById("cabinetMgTree").querySelector("span.selectedNode");
 					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
 					
@@ -178,7 +178,7 @@
 				
 				function addCabinet(strName1) {
 					var url      = "/ezCabinet/addCabinet.do";
-					var parentId = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role");
+					var parentId = document.getElementById("cabinetMgTree").querySelector("span.selectedNode").getAttribute("role");
 					var data     = {parentId : parentId, cabName1 : strName1};
 					
 					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "add");
@@ -187,7 +187,7 @@
 				function changeCabinet(strName1) {
 					var url  = "/ezCabinet/renameCabinet.do";
 					var data = {
-						cabinetId : document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role"),
+						cabinetId : document.getElementById("cabinetMgTree").querySelector("span.selectedNode").getAttribute("role"),
 						cabName1  : strName1
 					};
 					
@@ -196,9 +196,9 @@
 				
 				function moveCabinet(mode) {
 					var url        = "/ezCabinet/moveCabinet.do";
-					var cabinetId  = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role");
+					var cabinetId  = document.getElementById("cabinetMgTree").querySelector("span.selectedNode").getAttribute("role");
 					
-					var parentNode = document.getElementById("cabinetMoveTree").querySelector("span[class='selectedNode']");
+					var parentNode = document.getElementById("cabinetMoveTree").querySelector("span.selectedNode");
 					if (!parentNode) {alert(CabinetMessages.strSelect); return;}
 					
 					var parentId   = parentNode.getAttribute("role");
@@ -215,7 +215,7 @@
 				
 				function delCabinet() {
 					var url  = "/ezCabinet/deleteCabinet.do";
-					var data = {cabinetId : document.querySelector("span[class='selectedNode']").getAttribute("role")};
+					var data = {cabinetId : document.querySelector("span.selectedNode").getAttribute("role")};
 					
 					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "del");
 				}
@@ -250,7 +250,7 @@
 				}
 				
 				function addCabinetDialog() {
-					var selectedNode = document.querySelector("span[class='selectedNode']");
+					var selectedNode = document.querySelector("span.selectedNode");
 					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 					
 					addFogPanel();
@@ -260,7 +260,7 @@
 				}
 				
 				function changeCabinetDialog() {
-					var selectedNode = document.querySelector("span[class='selectedNode']");
+					var selectedNode = document.querySelector("span.selectedNode");
 					
 					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot1); return;}
@@ -272,7 +272,7 @@
 				}
 				
 				function deleteCabinetDialog() {
-					var selectedNode = document.querySelector("span[class='selectedNode']");
+					var selectedNode = document.querySelector("span.selectedNode");
 					
 					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
@@ -282,7 +282,7 @@
 				}
 				
 				function moveCabinetDialog(mode) {
-					var selectedNode = document.querySelector("span[class='selectedNode']");
+					var selectedNode = document.querySelector("span.selectedNode");
 					
 					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot2); return;}

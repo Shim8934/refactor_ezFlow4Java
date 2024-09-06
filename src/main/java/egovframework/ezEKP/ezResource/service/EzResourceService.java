@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezResource.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -12,6 +13,8 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
+import egovframework.ezEKP.ezResource.vo.ResOccuVO;
+import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 
 public interface EzResourceService {
@@ -51,6 +54,8 @@ public interface EzResourceService {
 	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode, int tenantID, String deptID) throws Exception;
 	
 	public String getBrdApproveFlag(int brdID, String companyID, int tenantID) throws Exception;
+
+	public String getBrdRepeatFlag(int brdID, String companyID, int tenantID) throws Exception;
 	
 	public String addResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
@@ -72,7 +77,7 @@ public interface EzResourceService {
 			String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear, String strPownerID, String strPnum, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
 
 	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
-	
+
 	public void insertForm(String resID, String brdNm, String formText, int tenantID) throws Exception;
 	
 	public void updateSchedule(int num, String ownerID, String companyID, String approve, int tenantID) throws Exception;
@@ -98,4 +103,13 @@ public interface EzResourceService {
 	public String saveResourcePortlet(String loginCookie, String resources) throws Exception;
 	
 	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception;	
+	
+	public ResScheduleRepetitionVO resStruct(ResGetScheduleRepetitionVO vo) throws Exception;
+	
+	public List<Date[]> getRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception;
+	
+	public List<String> getDeletedRepScheduleDate(int pNum, String companyID, String ownerID, int tenantID) throws Exception;
+	
+	public List<ResOccuVO> getResOccuList(String companyID, int tenantID, String startTime, String endTime, String offset) throws Exception;
+	
 }

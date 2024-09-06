@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/PreviewItem.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<!-- data picker-->
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
@@ -126,6 +127,8 @@
 		    var useNotReadCnt = "${useNotReadCnt}";
 		    var BoardGroupID = "${boardInfo.boardGroupID}";
 		    var stringFnParam = "SortPage"; // 2021-04-27 홍승비 - 문자열인 함수명에 접근하기 위한 변수
+		    var endDateOption = "<c:out value='${endDateOption}'/>" // 2024-05-24 전인하 - 만료게시물 표출여부 확인 플래그
+		    var boardViewType = '1'; // 2024-05-24 전인하 - 기본보기(1) / 안읽은 게시물(2) / 만료게시물(3) 확인 플래그
 		    
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
@@ -361,20 +364,15 @@
 		    
 		    var xmlhttp = createXMLHttpRequest();
 		    var viewtypeChangeFlag = false;
-		    function getBoardList(type) {
-		        if (type == "1") {
-		            SQLPARADATA = "";
-		            CurPage = 1;
-		            viewtypeChangeFlag = true;
-		        }
+		    function getBoardList() {
+		        
 		        starttime = new Date().getTime();
-		        if(document.getElementById("viewtype") != null){
-		        	type = document.getElementById("viewtype").value;
-		        }
-		        if (SQLPARADATA != ""){
+		        
+		        if (SQLPARADATA != "") {
+		            document.getElementById('viewtype')[0].selected = true;
+		            boardViewType = '1';
 		        	url = "/ezBoard/getSearchBoardList.do";
-		        }
-		        else{
+		        } else {
 		        	url = "/ezBoard/getBoardList.do";
 		        }
 		        $.ajax({
@@ -388,7 +386,7 @@
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 type 		 : type,
+							 type 		 : boardViewType,
 							 likeFlag : likeFlag
 							},
 					success: function(xml){
@@ -404,6 +402,51 @@
 		            var pagenode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 		            var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 
+                    if (listNode.getElementsByTagName("ROW").length > 0) {
+                        // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 출력값 가공
+                        var userLang = "${userInfo.lang}";
+                        var domHeaders = xml.getElementsByTagName("HEADER"); 
+                        var boardAttrListTemp = "<c:out value='${boardAttrJson}'/>";
+                        var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+                        var resultRows = listNode.getElementsByTagName("ROW");
+                        var peopleTableColList = boardAttrListJson
+                                                    .filter((e) => e.colType == "people")
+                                                    .map((e) => e.tableCol);
+                        for (let i = 0 ; i < resultRows.length; i++) {      
+                            peopleTableColList.forEach(colName => {
+                                for (let j = 0 ; j < domHeaders.length; j++) {
+                                    var header = domHeaders.item(j);
+                                    var colNameNode = header.getElementsByTagName("COLNAME")[0];
+                                    if (colNameNode && colNameNode.textContent === colName) {
+                                        var PPValueNode = listNode.getElementsByTagName("ROW")[i].getElementsByTagName("CELL")[j].getElementsByTagName("VALUE")[0];
+                                        if (PPValueNode) {
+                                            PPValueNode.textContent = peoplePickerDisplay(PPValueNode.textContent, userLang);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        
+                        // 2024-07-31 전인하 - 게시판 > 확장컬럼 > textArea 타입 출력값 가공
+                        var textAreaTableColList = boardAttrListJson
+                                                    .filter((e) => e.colType == "textArea")
+                                                    .map((e) => e.tableCol);
+                        for (let i = 0 ; i < resultRows.length; i++) {
+                            textAreaTableColList.forEach(colName => {
+                                for (let j = 0 ; j < domHeaders.length; j++) {
+                                    var header = domHeaders.item(j);
+                                    var colNameNode = header.getElementsByTagName("COLNAME")[0];
+                                    if (colNameNode && colNameNode.textContent === colName) {
+                                        var PPValueNode = listNode.getElementsByTagName("ROW")[i].getElementsByTagName("CELL")[j].getElementsByTagName("VALUE")[0];
+                                        if (PPValueNode) {
+                                            PPValueNode.textContent = PPValueNode.textContent.replace(/<br\s*\/?>/gi, '');
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    
 		            pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
 		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
 		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
@@ -519,12 +562,14 @@
 		            }
 		            endtime = new Date().getTime();
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
+		            MailOptionHidden();
 		        }
 		        catch (e) {
+		            console.log(e);
 		            alert("getBoardList_after : " + e.description);
 		        }
 		    }
-		    function MakeSubCondition() {
+		    function MakeSubCondition(type) {
 		        var TYPE = "";
 		        var DATA = "";
 		        //하위 게시판 검색할 건지에 대한 조건
@@ -532,7 +577,7 @@
 		        {
 		            TYPE += "SEARCHSUBBOARD;";
 		        }
-		        if (document.getElementById("txt_keyword").value != "") {
+		        if (type == "quick") {
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
@@ -1257,7 +1302,7 @@
 		        }
 		        CurPage = "1";
 		        BoardSearchOptionHidden();
-		        MakeSubCondition();
+		        MakeSubCondition(type);
 		        getBoardList();
 		    }
 		    function check_presence() {
@@ -1408,6 +1453,15 @@
 					}
 				});
 	    	}
+	    	
+	    	// 2024-05-29 전인하 - 리스트설정 셀렉트박스 선택 동작 메서드
+	    	function selectBoardViewType(obj) {
+                boardViewType = obj.value;
+                CurPage = 1;
+                SQLPARADATA = "";
+                viewtypeChangeFlag = true;
+                getBoardList();
+	    	}
 		    
 		</script>
 	</head>
@@ -1530,10 +1584,12 @@
 		                    <tr>
 		                        <th><spring:message code="ezEmail.t99000035" /></th>
 		                        <td>
-		                            <select id="viewtype" onchange="getBoardList('1')">
+		                            <select id="viewtype" onchange="selectBoardViewType(this)">
 						                <option value="1"><spring:message code='ezBoard.t4001' /></option>
 						                <option value="2"><spring:message code='ezBoard.t4002' /></option>
-						                <option value="3"><spring:message code='ezBoard.t4003' /></option>
+						                <c:if test="${endDateOption eq 'YES'}">
+						                    <option value="3"><spring:message code='ezBoard.t4003' /></option>
+						                </c:if>
 		            				</select>
 		                        </td>
 		                    </tr>

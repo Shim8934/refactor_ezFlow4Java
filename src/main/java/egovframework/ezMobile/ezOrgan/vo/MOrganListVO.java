@@ -31,6 +31,10 @@ public class MOrganListVO {
 	private String mobile;
 	/** 집 전화번호 */
 	private String telephoneNumber;
+	/** 직위 아이디*/
+	private String jobId;
+	/** 유저 회사아이디 */
+	private String userCompanyID;
 
 	public String getIsLast() {
 		return isLast;
@@ -151,4 +155,16 @@ public class MOrganListVO {
 	public void setTelephoneNumber(String telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
+
+	public String getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
+	}
+
+	public String getUserCompanyID() { return userCompanyID; }
+
+	public void setUserCompanyID(String userCompanyID) { this.userCompanyID = userCompanyID; }
 }

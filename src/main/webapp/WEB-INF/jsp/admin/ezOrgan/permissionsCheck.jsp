@@ -89,8 +89,8 @@
 		        } catch (e) {}
 	
 		        popupTitle();
-		        
-		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+				var top = (type ==='c=1') ? "top" : deptTreeTopId + "/organ"
+		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>" + top + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
 		        xmlHTTP.send(strQuery);
@@ -173,6 +173,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 		        createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
 		        createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
+				createNodeAndInsertText(xmlpara, objNode, "ADMINORGAN", "y");
 
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(xmlpara);
@@ -248,7 +249,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype;department;extensionAttribute7", type : "user", noAddJob : "Y"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype;department;extensionAttribute7", type : "user", noAddJob : "Y", adminOrgan : 'y'},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -1024,9 +1025,9 @@
 		            g_xmlHTTP = createXMLHttpRequest();
 
 		            if (CrossYN()) {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		            } else {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		            }
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -1048,7 +1049,7 @@
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP></DATA>";
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP><ADMINORGAN>y</ADMINORGAN></DATA>";
 		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
@@ -1061,7 +1062,7 @@
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -1178,12 +1179,16 @@
 			        data2.push(totalArry[i].data2);
 			        data3.push(totalArry[i].data3);
 					data4.push(totalArry[i].data4);
-					data5.push(totalArry[i].data5);
+					if (totalArry[i].data5 == '') { // jobId가 없음 - 원직일 경우
+					    data5.push('empty');
+					} else {
+					    data5.push(totalArry[i].data5);
+					}
 		        }
 
 				if(data1.length == 0 || data2.length == 0) {
 					if(document.getElementById('lvPermissionList').children[1].childElementCount == 0) {
-						alert("등록할 사원을 선택해주세요.");
+						alert("<spring:message code='ezAttitude.t52' />");
 						return;
 					}
 					alert(strLang14);
@@ -1380,6 +1385,7 @@
 	        	var titleTxt_f = "<spring:message code='ezOrgan.t303' />";
 	        	var titleTxt_e = "<spring:message code='ezOrgan.kbm01' />";
 	        	var titleTxt_s = "<spring:message code='ezOrgan.t9904' />";	// 준법지원인
+	        	var titleTxt_v = "<spring:message code='ezOrgan.lhr01' />";
 	        	
 	        	var titleTxt = eval("titleTxt_" + delType);
 	        	document.getElementById("subtitle").innerText = titleTxt;

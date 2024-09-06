@@ -239,7 +239,12 @@ public class EzEditorController extends EgovFileMngUtil {
 			filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 		} else if (type.equals("MAILLETTER")) {
 			filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
-		} else {
+		}
+		/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */
+		else if (type.equals("RESOURCE")) {
+			filePath = commonUtil.getUploadPath("upload_resource.CONTENT", userInfo.getTenantId());
+		}
+		else {
 			filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		}
 
@@ -400,7 +405,13 @@ public class EzEditorController extends EgovFileMngUtil {
 
 			// /files/upload_mail/letterBoxUpload/letterBoxNo/letterId/images
 			filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId + "/images";
-		} else {
+		}
+		/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */
+		else if (type.equals("RESOURCE")) {
+			filePath = commonUtil.getUploadPath("upload_resource.CONTENT", userInfo.getTenantId());
+			filePath = filePath + commonUtil.separator + today;
+		}
+		else {
 			filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 			filePath = filePath + commonUtil.separator + today;
 		}
@@ -444,12 +455,17 @@ public class EzEditorController extends EgovFileMngUtil {
 
 		if (type.equals("MAILSIGNATURE")) { // 메일 서명 이미지 저장경로
 			filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-		} else {
+		}
+		/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */
+		else if (type.equals("RESOURCE")) {
+			filePath = commonUtil.getUploadPath("upload_resource.CONTENT", userInfo.getTenantId());
+		}
+		else {
 			filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		}
-
+		
 		filePath = filePath + commonUtil.separator + today;
-
+		
 		if (type.equals("MAILLETTER")) { // 편지지 등록, 수정때의 업로드
 			String letterBoxNo = request.getParameter("letterBoxNo");
 			String letterId = request.getParameter("letterId");
@@ -543,7 +559,12 @@ public class EzEditorController extends EgovFileMngUtil {
 
 			if (type.equals("MAILSIGNATURE")) { // 메일 서명 이미지 저장경로
 				filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-			} else {
+			}
+			/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */
+			else if (type.equals("RESOURCE")) {
+				filePath = commonUtil.getUploadPath("upload_resource.CONTENT", userInfo.getTenantId());
+			}
+			else {
 				filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 			}
 
@@ -654,7 +675,7 @@ public class EzEditorController extends EgovFileMngUtil {
 			// 메일 부재중설정 또는 커뮤니티 포토게시판일 경우 이미지 업로드되지 않도록 한다.
 			if (type.equals("MAILOUTOFOFFICE") || type.equals("COMMUNITYPHOTO")) {
 				logger.debug("Cannot upload image. type=" + type);
-				result = "fail_image"; // TODO: 적절한 result가 필요함..
+				result = "fail_image";
 			} else {
 				LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -665,18 +686,13 @@ public class EzEditorController extends EgovFileMngUtil {
 				long maxSize = 10485760;
 				logger.debug("fileType=" + fileType + ",fileSize=" + fileSize);
 
-				if (!(fileType.equals("gif") || fileType.equals("jpeg") || fileType.equals("jpg") || fileType.equals("png") || fileType.equals("bmp"))) { // 이미지
-																																							// 파일이
-																																							// 아닐
-																																							// 경우
+				if (!(fileType.equals("gif") || fileType.equals("jpeg") || fileType.equals("jpg") || fileType.equals("png") || fileType.equals("bmp"))) { // 이미지 파일이 아닐 경우
 					logger.debug("fileType is not image.");
 					result = "invalid_image";
-
 				} else if (fileSize > maxSize) {
 					logger.debug("file size over. fileSize=" + fileSize);
 					resultArray.add(maxSize);
 					result = "invalid_size";
-
 				} else {
 					String filePath = "";
 					if (type.equals("MAILSIGNATURE")) { // 메일 서명 저장경로로 이미지 저장
@@ -684,7 +700,12 @@ public class EzEditorController extends EgovFileMngUtil {
 					} else if (type.equals("MAILLETTER")) {
 						// userInfo tenantId -> 회사의 tenantId로 변경하기 (수아)
 						filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
-					} else {
+					}
+					/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */
+					else if (type.equals("RESOURCE")) {
+						filePath = commonUtil.getUploadPath("upload_resource.CONTENT", userInfo.getTenantId());
+					}
+					else {
 						filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 					}
 
@@ -822,10 +843,14 @@ public class EzEditorController extends EgovFileMngUtil {
 					try {
 						String filePath = "";
 
-						if (type.equals("MAILSIGNATURE")) { // 메일 서명 저장경로로 이미지
-															// 저장
+						if (type.equals("MAILSIGNATURE")) { // 메일 서명 저장경로로 이미지 저장
 							filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-						} else {
+						}
+						/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */
+						else if (type.equals("RESOURCE")) {
+							filePath = commonUtil.getUploadPath("upload_resource.CONTENT", userInfo.getTenantId());
+						}
+						else {
 							filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 						}
 
@@ -885,6 +910,10 @@ public class EzEditorController extends EgovFileMngUtil {
 				if (type.equals("MAILSIGNATURE")) { // 메일 서명 저장경로로 이미지 저장
 					filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 				}
+				/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */
+				else if (type.equals("RESOURCE")) {
+					filePath = commonUtil.getUploadPath("upload_resource.CONTENT", userInfo.getTenantId());
+				}
 
 				String realPath = commonUtil.getRealPath(request);
 				String today = EgovDateUtil.getToday("");
@@ -912,7 +941,7 @@ public class EzEditorController extends EgovFileMngUtil {
 				msg = filePath + commonUtil.separator + fileName;
 
 				if (type.equals("MAILLETTER")) {
-					String reProtocol = request.getScheme() + "://";
+					String reProtocol = "YES".equals(ezCommonService.getTenantConfig("USE_HTTPS", userInfo.getTenantId())) ? "https://" : "http://";
 					String reServer = request.getServerName()
 							+ ("http".equals(request.getScheme())
 								&& request.getServerPort() == 80

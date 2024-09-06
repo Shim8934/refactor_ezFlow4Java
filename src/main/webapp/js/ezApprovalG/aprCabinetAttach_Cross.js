@@ -35,10 +35,14 @@ function DocMove() {
 
             if (selRow) {
                 var DuplicateFlag = false;
+                var docName = GetChildNodes(selRow)[4].textContent;
+                if (GetAttribute(selRow, "DATA99") != null && GetAttribute(selRow, "DATA99") != "") {
+                    docName = "【" + GetAttribute(selRow, "DATA99") + "】" + docName;
+                }
                 for (i = 0; i < SelDocList.GetRowCount() ; i++) {
                     countsel = SelDocList.GetDataRows();
 
-                    if (GetAttribute(countsel[i], "DATA1") == GetAttribute(selRow, "DATA2") && countsel[i].cells[0].innerHTML == selRow.childNodes[5].innerHTML) {
+                    if (GetAttribute(countsel[i], "DATA1") == GetAttribute(selRow, "DATA2")) {
                         DuplicateFlag = true;
                     }
                 }
@@ -51,7 +55,7 @@ function DocMove() {
                     var GetXml = "<LISTVIEWDATA>";
                     GetXml += "<HEADERS><HEADER><NAME>" + strLang940 + "</NAME><WIDTH>50</WIDTH></HEADER></HEADERS>"
                     GetXml += "<ROWS><ROW><CELL>"
-                    GetXml += "<VALUE><![CDATA[" + GetChildNodes(selRow)[5].textContent + "]]></VALUE>";
+                    GetXml += "<VALUE><![CDATA[" + docName + "]]></VALUE>";
                     GetXml += "<DATA1>" + MakeXMLString(GetAttribute(selRow, "DATA2")) + "</DATA1>";
                     GetXml += "<DATA2 ></DATA2>";
                     GetXml += "<DATA3>" + MakeXMLString(pDocID) + "</DATA3>";
@@ -61,7 +65,7 @@ function DocMove() {
                     GetXml += "<DATA7>" + MakeXMLString(pDeptName) + "</DATA7>";
                     GetXml += "<DATA8>" + MakeXMLString(pUserName) + "</DATA8>";
                     GetXml += "<DATA9>N</DATA9>";
-                    GetXml += "<DATA10><![CDATA[" + GetChildNodes(selRow)[5].textContent + "]]></DATA10>";
+                    GetXml += "<DATA10><![CDATA[" + docName + "]]></DATA10>";
                     GetXml += "<DATA11>" + MakeXMLString(arr_userinfo[11]) + "</DATA11>";
                     GetXml += "<DATA12>" + MakeXMLString(arr_userinfo[12]) + "</DATA12>";
                     GetXml += "<DATA13>" + MakeXMLString(arr_userinfo[13]) + "</DATA13>";
@@ -112,6 +116,27 @@ function AttachList() {
     DocList.DataBind("lvTDoc");
     if (DocList.GetRowCount() > 0)
         DocList.SetSelectFlag(true);
+}
+function orgAttachList(orgDocId) {
+	var result = "";
+	var returnXml = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getAttachInfo.do",
+		data : {
+			docID : orgDocId,
+			mode : "END"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+	returnXml = loadXMLString(result);
+	return returnXml;
 }
 function delAttachDoc() {
 	var result = "";

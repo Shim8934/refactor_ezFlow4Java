@@ -182,7 +182,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezsurvey/list-type/userid/{userid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/list-type/userid/{userid:.+}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -453,6 +453,8 @@ public class EzSurveyGWController {
 			String serverName   = request.getHeader("host-name") != null ? request.getHeader("host-name")         : "";
 			String userId       = surveyItem.get("userId")       != null ? surveyItem.get("userId").toString()    : "";
 			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
 			if (serverName.equals("") || userId.equals("") || ((questions == null || questions.isEmpty()) && draftMode == 0) || infor == null || infor.toJSONString().equals("")) {
 				logger.debug("Parameter error!");
 				result.put("status", "error");
@@ -475,6 +477,7 @@ public class EzSurveyGWController {
 			int useStatus           = infor.get("status")     != null ? ((Long)infor.get("status")).intValue()     : 1;
 			JSONArray attchList     = infor.get("attach")     != null ? (JSONArray)infor.get("attach")             : null;
 			JSONArray users         = infor.get("users")      != null ? (JSONArray)infor.get("users")              : null;
+			JSONArray resultViewTarget = infor.get("resultViewTarget") != null ? (JSONArray) infor.get("resultViewTarget") : null;
 			int userFlag            = (users == null || users.size() == 0) ? 0 : 1;
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			
@@ -485,9 +488,13 @@ public class EzSurveyGWController {
 				return result;
 			}
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
+			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
+		
+			if (publicFlag == 2 && resultViewTarget != null) {
+				Long NewSurveyId = (Long) result.get("survey_id");
+				surveyService.saveSurveyResultViewTarget(userInfo, NewSurveyId, resultViewTarget);
+			}
 		}
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);

@@ -1392,7 +1392,7 @@ form{display:inline;margin:0}
 	line-height:16px;
 	vertical-align:top;
 	color:#666;
-	text-align:left;
+	text-align:right;
 }
 .btnimg { cursor:pointer;}
 
@@ -1754,7 +1754,7 @@ form{display:inline;margin:0}
 	word-break:keep-all;
 	white-space:nowrap;
 	z-index:15;
-	background-color:#f8f8fa!;
+	background-color:#f8f8fa;
 	background-image:none!important;
 	cursor:default !important;
 	
@@ -2500,6 +2500,7 @@ div#txtContent table {margin:auto;}
 .tree_appr_record10{background-position: -234px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물철인계 */
 .tree_appr_record11{background-position: -260px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 종료연기승인 */
 .tree_appr_record12{background-position: -286px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 편철확정 */
+.tree_appr_return{background-position: -288px -26px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px;} /* tree 반송된문서 */
 
 .tree_pims_all{ background-position:-26px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 모든일정 */
 .tree_pims_individual{ background-position:-52px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 개인일정 */
@@ -2603,6 +2604,7 @@ div#txtContent table {margin:auto;}
 .node_div .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;}
 .admin_left_title { position:relative; height:52px; background:#fff; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';line-height:52px; font-size:20px; font-weight:bold; color:#333; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
 .companySelect {margin-left:10px; height:26px; /* float:right; */ border:1px solid #bbb;}
+.companySelect.adminBoardLeft {margin-left: 20px; margin-top: 15px; height:26px; width: 186px; white-space: nowrap; text-overflow: ellipsis; border:1px solid #bbb;}
 
 /* icon16 */
 .icon16:hover{background-color:#f7fbff !important}
@@ -2705,7 +2707,7 @@ div#txtContent table {margin:auto;}
 /* admin menu */
 .admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:287px; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .admin_menuDL{ margin:0px; padding:0px; height:44px; line-height:42px; background:#edf7ff; border:1px solid #2196f3; box-sizing:border-box;}
-.admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; float:left;}
+.admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .admin_menuDL .admin_menuX{ margin:0px; padding:0px;}
 .admin_menu_content{ margin:0px; padding:15px 10px; box-sizing:border-box; overflow:hidden; border-left:1px solid #cfd0d2; border-right:1px solid #cfd0d2; border-bottom:1px solid #cfd0d2;}
 .adminMenu_icon{ margin:0px 10px 0px 0px; padding:0px; float:left;}
@@ -2785,7 +2787,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_categoryTab{float:left; width:199px; height:440px; border-right:1px solid #e7e7e7; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .contents_tabCategory{height:44px; margin:0px; padding:0px; color:#333333; font-size:14px; font-weight:bold; border-bottom:1px solid #e7e7e7; background: #F8F9FB;}
 .contents_tabCategory dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
-.contents_listCategory{overflow:hidden; list-style:none; margin:0px; padding:0; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
+.contents_listCategory{overflow:auto; height:395px; list-style:none; margin:0px; padding:0; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .contents_listCategory li{margin:0px; padding: 6px 0 6px 15px; line-height:26px; color:#555555; font-size:13px; cursor:pointer; border-bottom: 1px solid #E5E5E5;}
 .contents_listCategory li span{display:inline-block; margin:0px; padding:0px;}
 .contents_listCategory li span.icon img{vertical-align:middle; margin:-3px 6px 0px 0px;}
@@ -3492,7 +3494,7 @@ input::-ms-clear {display: none;}
 /* slider part */
 .silder-wrap {display:flex; padding:10px 0px; align-items:center;}
 .silder-wrap span{width:28px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
-.slider-lw, .slider-up, .slider-input {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
+.slider-lw, .slider-up, .slider-input, .slider-cnt {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333; margin-right: 10px;}
 .slider-lwExp {float: left; padding-left: 8px;}
 .slider-upExp {float: right; padding-right: 6px;}
 .slider-main, .slider-range {-webkit-appearance: none; border: 1px solid white; flex: 1; cursor:pointer; margin: 0px 10px; padding: 0px;}
@@ -3585,6 +3587,8 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
+.upage-ul li .srvyInfo05{display:inline-block; width:16px; height:16px; background-position:-66px -110px !important; margin:6px 8px 0px 0px;}
+.upage-ul li .srvyInfo06{display:inline-block; width:16px; height:16px; background-position:-82px -110px !important; margin:6px 8px 0px 0px;}
 
 /* 검색 */
 .searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:0px;}
@@ -3833,7 +3837,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .lnbUL li .list_text{padding: 0px 0px 0px 0px; height: 26px; ;line-height: 26px;}
 .lnbUL{padding: 0px 0px 17px 0px;}
 .tree_plus{margin: 3px 0px 0px 0px;}
-.btn_writeBox .btn_write01{height: 40px; line-height: 40px; font-size: 15px; padding: ;}
+.btn_writeBox .btn_write01{height: 40px; line-height: 40px; font-size: 15px;}
 .btn_writeBox{height: 66px;}
 #left h2.on, #TopBoards h2.on{background: #F8F9FB !important;}
 .lnb h2.on + .lnbUL{background:#F8F9FB; margin-bottom: 0px;}
@@ -3936,7 +3940,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 
 /* 20231004 자바 서브 추가 */
 #addr{margin: 0px 4px 0px 0px; vertical-align: middle;}
-#TreeView{padding: 6px 8px; box-sizing: border-box;}
+#TreeView, #TreeView2, #TreeView3, #TreeViewCC {padding: 6px 8px; box-sizing: border-box;}
 .file td input{margin: -4px 4px 0px 0px; vertical-align: middle;}
 #txtLimitRange{width: 60% !important;}
 
@@ -3970,3 +3974,47 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 #TreeView .tree_resource_refuse{margin-top: 4px}
 
 .content input{margin-top: 0px;}
+
+.community_section01{height: 101px;}
+.contents_bannerCommunity{height: 103px; padding-top: 25px;}
+.contents_bannerCommunity p img{height: 49px;}
+.contents_categoryViewList{height: 351px;}
+.contents_listCommunity li{color: #333;}
+.contents_searchCategory dl dt.searchinput input{height: 34px !important;}
+
+/* 20240517 메일보기 상단바 디자인수정 */
+.popup #menu ul li span.view_more{ display: inline-block; height: 29px; border-radius: 20px; padding: 0px 6px;}
+.popup #menu ul li span.view_more:hover{background: #F8F9FB;}
+.popup #menu ul li span.view_more.on{ display: inline-block; height: 29px; border-radius: 20px; padding: 0px 6px; background: #F8F9FB;}
+
+.popup #menu ul.layer_select{border: 1px solid #D3D3D3; border-radius: 3px; background: #fff; padding: 5px 0px; z-index: 10; position: relative;}
+.popup #menu ul.layer_select li{float: none; margin: 0px;}
+.popup #menu ul.layer_select li:hover span{background: #F8F9FB; color: #0470E4;}
+.popup #menu ul.layer_select li span{border: none; display: block;}
+.popup #menu ul.layer_select{margin-left: -33px; top: 6px;}
+/* //20240517 메일보기 상단바 디자인수정 */
+
+.mt0{margin-top:0px !important;}
+.mt5{margin-top:5px !important;}
+.mt10{margin-top:10px !important;}
+.mt15{margin-top:15px !important;}
+.mt30{margin-top:30px !important;}
+.mr0{margin-right:0px !important;}
+.mr5{margin-right:5px !important;}
+.mr10{margin-right:10px !important;}
+.mr15{margin-right:15px !important;}
+.ml5{margin-left:5px !important;}
+.ml10{margin-left:10px !important;}
+.mb0{margin-bottom:0 !important;}
+.mb5{margin-bottom:5px !important;}
+.mb10{margin-bottom:10px !important;}
+.pd0{padding:0 !important;}
+.pd15{padding:15px !important;}
+.pd30{padding:30px !important;}
+.plr20{padding:0 20px;}
+.c_blue{color:#017BEC !important;}
+
+#fixLeft {width:calc(60% - 10px); margin:5px}
+#fixRight {width:calc(40% - 10px); margin:5px}
+
+.resetBtn {line-height: 0px;}

@@ -1,5 +1,6 @@
 target/
 output/
+src/main/webapp/fileroot
 .idea
 *.iml
 #Eclipse Setting
@@ -7,3 +8,4 @@ output/
 .classpath
 .vscode
 .DS_Store
+.updateSource

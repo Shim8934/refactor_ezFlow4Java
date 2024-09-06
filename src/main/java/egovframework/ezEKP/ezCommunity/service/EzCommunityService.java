@@ -35,8 +35,9 @@ public interface EzCommunityService {
 	
 	public List<CommunityCBoardVO> getLeftBoardList(int tenantID) throws Exception;
 
+	/* 2024-01-22 홍승비 - 커뮤니티 게시판 댓글 표출 시 게시판 구분값 분기 추가 */
 	/* 2018-07-17 홍승비 - 사원정보 deptID 파라미터 선택을 위해 companyID 조건 추가 */
-	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, String companyID, int tenantID, String offset) throws Exception;
+	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, String companyID, int tenantID, String offset, String gubun) throws Exception;
 	
 	/* 커뮤니티 게시물 조회자 정보 가져올 때 deptID도 함께 가져오도록 수정(companyID 조건 추가) */
 	public StringBuffer getReaderList(String pBoardID, String pItemID, String string, String string2, String companyID, int tenantID, int pageNum, int perCount, String offset) throws Exception;
@@ -200,7 +201,7 @@ public interface EzCommunityService {
 	
 	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C, LoginVO userInfo) throws Exception;
 
-	public String commOutOk(String loginCookie, String code, String reason) throws Exception;
+	public String commOutOk(HttpServletRequest request, String loginCookie, String code, String reason) throws Exception;
 
 	public String adminBasicGet1(String code, int tenantID) throws Exception;
 
@@ -363,9 +364,9 @@ public interface EzCommunityService {
 
 	public void adminLogoUploadIE9(String code, String type, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception;
 
-	public void joinOkSendMail(String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception;
+	public void joinOkSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception;
 	
-	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception;
+	public void okNoSetSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception;
 
 	public void deleteExpiredItems(String realPath) throws Exception;
 
@@ -373,7 +374,7 @@ public interface EzCommunityService {
 
 	public void deleteReservedBoardItem(String realPath)throws Exception;
 
-	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception;
+	public void sendReplyNoticeMail(HttpServletRequest request, String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception;
 
 	public String getOneLineReplyCount(String pBoardID, String pItemID,int tenantId) throws Exception;
 	
@@ -386,4 +387,6 @@ public interface EzCommunityService {
 	public String getIsNewItemExists(String boardID, String userID, int tenantID) throws Exception;
 
 	public boolean checkUserInCommunity(String clubNo, String userID, int tenantID) throws Exception;
+	
+	public String encodeURIComponent(String url) throws Exception; 
 }

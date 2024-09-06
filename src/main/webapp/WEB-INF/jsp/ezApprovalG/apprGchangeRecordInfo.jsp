@@ -360,13 +360,7 @@
     }
     function InitPublicCode2(pCode) {
         var objCode = new String(pCode);
-		if (objCode == "N") {
-// 			document.getElementsByName("rdoSecType2")[1].checked = true;
-			$("#rdoSecType2N").prop("checked", true)
-		} else {
-// 			document.getElementsByName("rdoSecType2")[0].checked = true;
-			$("#rdoSecType2Y").prop("checked", true)
-		}
+        document.getElementById("rdoSecType2").value = objCode;
     }
     function GetRecordSimpleInfo(pRecID) {
         var XmlHttp = createXMLHttpRequest();
@@ -394,9 +388,20 @@
 
         return getXmlString(rtnXml);
     }
+
     function btnReset_onclick() {
+        // 2024-02-20 양지혜 - 재입력 시 선택/수정 내용을 초기화
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][name^="special"], input[type="checkbox"][name^="selSecLevel"]');
+        checkboxes.forEach(function(checkbox) {
+          checkbox.checked = false;
+        });
+
+        g_ArrPageInitFlag[1] = false;
+        InitRecordInfo();
+
         document.getElementById("txtChangeReason").value = "";
     }
+
     function btnOK_onclick() {
         if (g_ModifyFlag == "0")
         {
@@ -437,6 +442,14 @@
             rtnVal[0] = "TRUE";
             OpenAlertUI("<spring:message code='ezApprovalG.t975'/>", ChangeCabinetInfo_Complete);
             //window.close();
+        }
+        /* 2024-03-26 양지혜 - 공개가 아닌경우 공개등급 선택 필수 */
+        if (document.querySelector('input[name="rdoSecType"]:checked').value != '1') {
+            var checkboxes = document.querySelectorAll('input[name^="selSecLevel"]:checked');
+            if (checkboxes.length === 0) {
+                OpenAlertUI("<spring:message code='ezApprovalG.yjh01'/>");
+                return;
+            }
         }
     }
     function ChangeCabinetInfo() {
@@ -635,11 +648,10 @@
     
     function GetPublicCode2() {
     	var publicCode2 = "";
-    	if (document.getElementsByName("rdoSecType2")[0].checked) {
-    		publicCode2 = "Y";
-    	} else {
-    		publicCode2 = "N";
-    	}
+        var rdoSecType2SelectBox = document.getElementById("rdoSecType2");
+        if (rdoSecType2SelectBox){
+          publicCode2 = rdoSecType2SelectBox.value;
+        }
     	
     	return publicCode2;
     }
@@ -791,13 +803,19 @@
         </table></td>
     </tr>
     <tr>
-      <th ><spring:message code='ezApprovalG.t109'/></th>
-      <td><Input type="radio" name="rdoSecType2" id="rdoSecType2Y" value="Y" checked >
+      <th ><spring:message code='ezApprovalG.t944'/></th>
+      <td>
+        <select id="rdoSecType2" name="rdoSecType2" style="WIDTH: 85px">
+          <option value="Y"><spring:message code='ezApprovalG.kmh03'/></option>
+          <option value="B"><spring:message code='ezApprovalG.kmh04'/></option>
+          <option value="N"><spring:message code='ezApprovalG.kmh05'/></option>
+        </select>
+        <%--<Input type="radio" name="rdoSecType2" id="rdoSecType2Y" value="Y" checked >
         <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t47'/></span>  
         <Input type="radio"  name="rdoSecType2" id="rdoSecType2N" value="N">
         <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t988'/></span>
         <Select id="selSecLevel" style="width:60px;display:none">
-        </Select>
+        </Select>--%>
       </td>
     </tr>
     

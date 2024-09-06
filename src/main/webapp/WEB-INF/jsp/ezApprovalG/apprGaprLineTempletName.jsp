@@ -33,7 +33,7 @@
 		        if (p_AprLineTempletName.trim() == "") {
 		        	var pAlertContent;
 		        	if (type == "") {
-	                    alert("<spring:message code='ezApprovalG.t387'/>");
+	                    alert("<spring:message code='ezApprovalG.t2107'/>");
 		        	} else {
 		        		if (approvalFlag == "G") {
 			        		alert("<spring:message code='ezApprovalG.t6003'/>");
@@ -119,9 +119,15 @@
 		</script>
 	</head>
 	<body class="popup">
-		<c:if test="${type == ''}">
-			<h1><spring:message code='ezApprovalG.t384'/></h1>
-			<span>▒ <spring:message code='ezApprovalG.t2107'/></span>
+		<c:if test="${type == ''}">			
+			<c:if test="${mode == ''}">
+				<h1><spring:message code='ezApprovalG.t384'/></h1>
+				<span>▒ <spring:message code='ezApprovalG.t2107'/></span>
+			</c:if>
+			<c:if test="${mode == 'modify'}">
+				<h1><spring:message code='ezApprovalG.lineMod.mjs01'/></h1>
+				<span>▒ <spring:message code='ezApprovalG.lineMod.mjs02'/></span>
+			</c:if>
 		</c:if>
 		<c:if test="${type != ''}">
 			<c:if test="${approvalFlag == 'G'}">

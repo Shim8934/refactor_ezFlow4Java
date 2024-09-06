@@ -569,36 +569,41 @@ function event_btnOk_onclick()
 	switch (pRepetitionFlag) {
 	case 0://매일
 		if (document.getElementById("id0D1").checked) {
-			if (NumCheck(document.getElementById("txt_De").value) == false) {
-		        alert(g_Error);
+			if (NumCheck(document.getElementById("txt_De").value) == false || document.getElementById("txt_De").value == 0) {
+		        alert(strLangHTH02);
 		        document.getElementById("txt_De").value = "1";
+		        document.getElementById("txt_De").focus();
 			    return;
 		    }
 		}
 		break;
 	case 1://매주
-		if (NumCheck(document.getElementById("txt_We").value) == false) {
-	        alert(g_Error);
+		if (NumCheck(document.getElementById("txt_We").value) == false || document.getElementById("txt_We").value == 0) {
+	        alert(strLangHTH03);
 	        document.getElementById("txt_We").value = "1";
+	        document.getElementById("txt_We").focus();
 		    return;
 	    }
 		break;
 	case 2://매월
 		if (document.getElementById("idOM1").checked) {
-			if (NumCheck(document.getElementById("list_MonthInterval").value) == false) {
-		        alert(g_Error);
+			if (NumCheck(document.getElementById("list_MonthInterval").value) == false || document.getElementById("list_MonthInterval").value == 0) {
+		        alert(strLangHTH04);
 		        document.getElementById("list_MonthInterval").value = "1";
+		        document.getElementById("list_MonthInterval").focus();
 			    return;
 		    }
 		    if (NumCheck(document.getElementById("list_MonthlyDays").value) == false) {
-		        alert(g_Error);
+		        alert(strLangHTH01);
+		        document.getElementById("list_MonthlyDays").focus();
 		        //document.getElementById("list_MonthlyDays").value = idDatepickers.startDate();
 			    return;
 		    }
 		} else {
-			if (NumCheck(document.getElementById("list_MonthInterval2").value) == false) {
-		        alert(g_Error);
+			if (NumCheck(document.getElementById("list_MonthInterval2").value) == false || document.getElementById("list_MonthInterval2").value == 0) {
+		        alert(strLangHTH04);
 		        document.getElementById("list_MonthInterval2").value = "1";
+		        document.getElementById("list_MonthInterval2").focus();
 			    return;
 		    }
 		}
@@ -606,7 +611,8 @@ function event_btnOk_onclick()
 	case 3://매년
 		if (document.getElementById("optY1").checked) {
 			if (NumCheck(document.getElementById("list_YearlyDays").value) == false) {
-		        alert(g_Error);
+		        alert(strLangHTH01);
+		        document.getElementById("list_YearlyDays").focus();
 		        //document.getElementById("list_YearlyDays").value = idDatepickers.startDate();
 			    return;
 		    }
@@ -616,8 +622,9 @@ function event_btnOk_onclick()
 		break;
 	}
 	
-	if (document.getElementById("Instances").checked == true && NumCheck(document.getElementById("list_ReCount").value) == false) {
+	if (document.getElementById("Instances").checked == true && (NumCheck(document.getElementById("list_ReCount").value) == false || document.getElementById("list_ReCount").value == "0")) {
         alert(g_Error);
+        document.getElementById("list_ReCount").focus();
         document.getElementById("list_ReCount").value = "10";
 	    return;
     }
@@ -723,15 +730,19 @@ function event_btnOk_onclick()
                 break;
 
             case 2:
-                MonthlyDisposal(xmlDoc, 2);
+                if (MonthlyDisposal(xmlDoc, 2) == 0) {
+                	return;
+                }
                 break;
 
             case 3:
-                YearlyDisposal(xmlDoc, 3);
+            	if (YearlyDisposal(xmlDoc, 3) == 0) {
+            		return;
+            	}
                 break;
 
-                defualt:
-                    break;
+            defualt:
+                break;
         }
 
         if (document.getElementById("alldaycheck").checked == true) {
@@ -943,10 +954,9 @@ function MonthlyDisposal( xmlDoc, nPattern )
 			var	iDays =	validateNumber(document.getElementById("list_MonthlyDays").value);
 			var	iMonth = validateNumber(document.getElementById("list_MonthInterval").value);
 			
-			if( isNaN(iDays) ||	iDays >	31 )
-			{
-				document.getElementById("list_MonthInterval").focus();
-				alert( g_Error );			
+			if(isNaN(iDays) ||	iDays >	31 || iDays <= 0) {
+				document.getElementById("list_MonthlyDays").focus();
+				alert(strLangHTH01);			
 				return 0;
 			}
 			
@@ -1046,10 +1056,10 @@ function YearlyDisposal( xmlDoc, nPattern )
 		if( nCount == 0)
 		{
 			iNumber	= validateNumber( document.getElementById("list_YearlyDays").value );
-			if( isNaN(iNumber) || iNumber >	31 )
+			if( isNaN(iNumber) || iNumber >	31 || iNumber <= 0)
 			{
 				document.getElementById("list_YearlyDays").focus();
-				alert( g_Error );			
+				alert(strLangHTH01);			
 				return 0;
 			}
 			createNodeAndInsertText(xmlDoc, objNode, "selType",  0);

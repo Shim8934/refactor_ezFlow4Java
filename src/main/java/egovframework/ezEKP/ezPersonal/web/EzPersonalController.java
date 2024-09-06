@@ -21,12 +21,14 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.*;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -123,6 +125,9 @@ public class EzPersonalController extends EgovFileMngUtil {
     private EzEmailUtil ezEmailUtil;
 	
 	@Autowired
+    private LoginService loginService;
+
+	@Autowired
 	private EzOrganAdminController ezOrganAdminController;
 	
     // dhlee
@@ -153,7 +158,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String dept = request.getParameter("dept");
 		String buJaeId = request.getParameter("buJaeId");
 //		String proxyInfo2 = "";
-		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
+		// 전자결재만 존재하면 아래와 같이 "user"로 하드코딩이 가능하나, 다른 모듈 존재 시 수정 필요함
 		String pClass = "user";
 		if (buJaeInfo != null && !buJaeInfo.equals("")) {
 			if (buJaeInfo.split(":").length >= 5) {
@@ -289,7 +294,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String newTempPass = EgovFileScrty.decryptRsa(pk, newPass);
 		String newPassword = EgovFileScrty.encryptPassword(newTempPass, userID);
 		
-		//결재 암호 나 로그인 암호가 같으면 인증되게--이사님이...
+		// 결재 암호나 로그인 암호가 같으면 인증되게 처리
 		if (loginPass.trim().equals(newPassword) || oldPass.trim().equals(newPassword)) {
 			result = "OK";
 		} else {
@@ -438,7 +443,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("type")));
 		String dept = request.getParameter("dept"); 
 		String tagName = request.getParameter("tagName");
-		
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		userInfo.setDeptID(dept);
@@ -447,6 +453,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("type", type);
 		model.addAttribute("tagName", tagName);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("companyID", companyID);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
 		logger.debug("selectPerson ended");
@@ -764,7 +771,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 				resultDom.getElementsByTagName("PERCENT").item(i).setTextContent(String.format("%.1f", temp));
 			}
 			//subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
-			subjectCnt +=  egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+			subjectCnt +=  egovMessageSource.getMessage("ezPersonal.t248", locale) + " " + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
 		}
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
 		else {
@@ -1373,6 +1380,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		// displayname2가 null로 넘어오는데, 이럴 경우 displayname2은 displayname으로 대체되는 문제가 생겨서 추가
 		vo.setDisplayName2(userInfo.getDisplayName2());
 		
+		// 2024.02.13 한슬기 : cn, displayName 파라미터 변조하여 수정 불가능한 정보를 수정할 수 있는 문제. 파라미터로 cn과 displayName을 전달받지 않고 백단에서 처리
+		vo.setCn(userInfo.getId());
+		
 		logger.debug("<<<1. : " + vo.getCn());
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1403,13 +1413,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@ResponseBody
 	public String changePassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale, OrganUserVO vo, @RequestBody String xmlStr) throws Exception {
 		logger.debug("changePassword started");
+		String result = "ERROR";
 
-		userInfo = commonUtil.userInfo(loginCookie);
-		int tenantID = userInfo.getTenantId();
-		String companyID = userInfo.getCompanyID();
-		
-		logger.debug("tenantID=" + tenantID);       
-		
+		process : {
+
+		// 1. 주 수행 변수 oldPw, newPw
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		String prm = egovFileScrty.getPrm();
@@ -1422,45 +1430,26 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String decryptedOldPassword = EgovFileScrty.decryptRsa(pk, oldPassword);
 		String decryptedNewPassword = EgovFileScrty.decryptRsa(pk, newPassword);
 		
-		// 2021-10-26 이사라 : prev비번과 새비번 비교 추가
-		// 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
-		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), decryptedOldPassword, tenantID, companyID, decryptedNewPassword);
-		
-		if (checkResult == 0) { // 0 : 현암호와 db암호가 일치하지 않음(실패), 1 : 일치 (성공)
-			return "CHKERROR";
-		}
-		
-		if (checkResult == 2) { // 2 : 가장최근 prev암호가 새암호와 일치 (실패)
-			return "PREVERROR";
-		} 
-		
-		if (checkResult == 3) { // 3 : 새암호에 연속숫자, 생일, 전화번호 포함 (실패)
-			return "NUMBERERROR";
+		// 2. 사용자 정보 : loginCookie
+		userInfo = commonUtil.userInfo(loginCookie);
+		String cn = userInfo.getId();
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		logger.debug("userInfo : cn={}, companyID={}, tenantID={}", cn, companyID, tenantID);
+
+		// 3. 비밀번호 검증
+		if (!ezPersonalService.checkPassword(cn, decryptedOldPassword, tenantID)) {	// 현암호와 db암호가 일치하지 않음(실패)
+			result = "CHKERROR";
+			break process;
 		}
 
-		// dhlee
-		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String mailAddr = userInfo.getId() + "@" + domain;
-		
-		// 이메일 계정의 암호를 새 암호로 설정한다.
-		int rc = ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedOldPassword, decryptedNewPassword);
-		
-		if (rc == 0) { // checkAndUpdateUserPassword 성공                                                 
-			try {
-				// 로컬 시스템에서 해당 User의 암호를 변경한다.
-				ezOrganAdminService.setPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, newPassword), tenantID);
-			} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-				ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedNewPassword, decryptedOldPassword);
-				
-				throw e;
-			}                                       
-		} else {
-			throw new Exception("setting the user '" + mailAddr + "' password failed.");
-		}        
-		// dhlee - end
+		// 4. 비밀번호 변경 수행
+		result = ezOrganAdminService.changePasswordWithEmailSystem(cn, tenantID, decryptedOldPassword, decryptedNewPassword);
+		}
 
-		logger.debug("changePassword ended");
-		return "OK";
+		logger.debug("changePassword ended. result ={}", result);
+		return result;
 	}
 	
 	/**
@@ -1478,10 +1467,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 		
 		model.addAttribute("strTimeZone", userInfo.getOffset());
-		model.addAttribute("strLang", userInfo.getLang());
-		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("strLang", StringUtils.isBlank(userInfo.getLang())? "1" : userInfo.getLang());
+		model.addAttribute("primaryLang", StringUtils.isBlank(primaryLang)? "1" : primaryLang);
 		model.addAttribute("usePrimaryLangOnly", usePrimaryLangOnly);
 		model.addAttribute("useJapanese", ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId()));
+		model.addAttribute("useChinese", ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId()));
+		model.addAttribute("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId()));
+		model.addAttribute("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId()));
 
 		logger.debug("timeZone ended");
 		return "/ezPersonal/persTimeZone";
@@ -1499,6 +1491,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String timeZone = "";
 		String lang = "";
 		String returnValue = "";
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+		String ezSessionId = loginCookie; // useDbSession가 true인 경우에만 사용
 		
 		if (req.getParameter("timeZone") != null && !req.getParameter("timeZone").equals("")) {
 			timeZone = req.getParameter("timeZone");
@@ -1515,14 +1509,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String result = ezCommonService.saveUserLocalInfo(userInfo.getId(), userInfo);
 		
 		if (result != null && result.equals("OK")) {
-			if (lang != null &&lang.equals("1")) {
-				returnValue = "ko";
-			} else if (lang != null && lang.equals("2")) {
-				returnValue = "en";
-			} else if (lang != null && lang.equals("3")) {
-				returnValue = "ja";
-			} else if (lang != null && lang.equals("4")) {
-				returnValue = "zh";
+			if (lang != null) {
+				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
 			}
 			
 			//CookieLocaleResolver에 lang값을 set해줌
@@ -1532,15 +1520,30 @@ public class EzPersonalController extends EgovFileMngUtil {
 			String cookieValue1 = "";
 			Cookie[] cookies = req.getCookies();
 			if (cookies != null) {
+				/* loginCookie를 파라미터로 받기때문에 for이 불필요하여 주석 처리
 				for (int i=0; i<cookies.length; i++) {
 					if (cookies[i].getName().equals("loginCookie")) {
 						cookieValue1 = egovFileScrty.decryptAES(cookies[i].getValue());
 					}
-				}
+				}*/
+
+				cookieValue1 = commonUtil.getDecryptedLoginCookie(loginCookie);
+
 				//loginCookie에 lang값, locale값 설정
-				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2] + "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///" + lang + "///" + timeZone  + "///" + userInfo.getTenantId() + "///" + userInfo.getDeptID() +  "///" + userInfo.getCompanyID();
+				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2]
+						+ "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///"
+						+ lang + "///" + timeZone  + "///" + userInfo.getTenantId() + "///" + userInfo.getDeptID() +  "///" + userInfo.getCompanyID()
+						+ "///" + Optional.ofNullable(userInfo.getJobId()).orElse("");
+
+				loginCookie = egovFileScrty.encryptAES(cInfo);
 				
-				Cookie cookieID = new Cookie("loginCookie", egovFileScrty.encryptAES(cInfo));
+				if (useDbSession) {
+					loginService.updateSession(ezSessionId, loginCookie);
+		
+					loginCookie = ezSessionId;
+				}
+
+				Cookie cookieID = new Cookie("loginCookie", loginCookie);
 				cookieID.setPath("/");
 				resp.addCookie(cookieID);
 			}
@@ -2539,7 +2542,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		return result;
 	}
 
-	// gbp-todo 다른 개발자가 부재중 설정 관련 개발중이라 기존의 로직을 그대로 쓰는 것으로 임시 처리.
 	@PostMapping("/ezPersonal/clearAbsence.do")
 	@ResponseBody
 	public String clearAbsence(@CookieValue("loginCookie") String loginCookie) {

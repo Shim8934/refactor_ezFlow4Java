@@ -13,6 +13,7 @@
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
@@ -298,16 +299,16 @@
 		                    }
 		                }
 		            }
-
+					var inboxRuleValue = escapeHtml(inboxRuleCon1.value);
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-							ConCellRow.setAttribute("value",inboxRuleCon1.value);
-							ConCellRow.firstChild.innerText = inboxRuleCon1.value;
+							ConCellRow.setAttribute("value",inboxRuleValue);
+							ConCellRow.firstChild.innerText = inboxRuleValue;
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
 		                else {
-							Conitems.innerHTML += createCellRow(inboxRuleCon1.value, inboxRuleCon1.value);
+							Conitems.innerHTML += createCellRow(inboxRuleValue, inboxRuleValue);
 		                }
 		            }
 		            else {
@@ -595,6 +596,7 @@
 		        if (obj.value != "") {
 		            for (var i = 0; i < obj.getAttribute("value").split(';').length; i++) {
 		                var _value = obj.getAttribute("value").split(';')[i];
+						_value = escapeHtml(_value);
 		                pop_addcon2(_RuleKind, _value, i+1);
 		            }
 		        }
@@ -619,7 +621,7 @@
 		        receiverData["window"] = this;
 		        mail_newreceiverchoose_dialogArguments[0] = receiverData;
 		        mail_newreceiverchoose_dialogArguments[1] = addReceiver;
-		        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 655));
+		        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 720));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function addReceiver(pListView) {

@@ -34,6 +34,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraft_WHWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 	    <script type="text/javascript">
 	        var FormHref = "<c:out value ='${formURL}'/>";
 	        var DraftFlag = "<c:out value ='${draftFlag}'/>";
@@ -180,10 +181,15 @@
 			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
 
 			var formPath = "<c:out value ='${formPath}'/>";
-			
+			var type = "ING"; // 2023-05-23 임정은 - 공람 추가
+
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
-	        
+
+			var attachedDocList = "${ attachedDocList }";
+
+			var pTenantID = "<c:out value='${userInfo.tenantId}'/>";
+
 	        window.onload = function () {
 	            try {
 	                pSusinSN = SusinSN;
@@ -488,6 +494,22 @@
 			                        setClearSusinCellInfo();
 			                    }
 			                    pDocID = createNewDoc();
+
+								// 기록물등록대장 첨부기안
+								if (attachedDocList != "") {
+									attachRecordDoc();
+									setAttachInfo(pDocID, "APR", document.getElementById("lstAttachLink"));
+
+									attachedDocList = "";
+								}
+
+								// 2024-04-19 조소정 - G버전 whwp문서 재사용 시 첨부파일 재사용 및 첨부파일이력 추가
+			                    if (isUsed == "reuse") {
+			                    	if (apprReuseConfig != '1') {
+			                    		getDocInfo();
+										setAttachInfo(pDocID, "APR", lstAttachLink);
+			                    	}
+								}
 			                }
 			            }
 					}
@@ -1142,7 +1164,7 @@
 		        if (!message.FieldExist("publication")) return;
 		        var PublicType = pPublicityYN.substring(0, 1);
 
-		        if (PublicType == "Y")
+		        if (PublicType == "Y" || PublicType == "B")
 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
 		        else if (PublicType == "N")
 		            PublicText = "<spring:message code='ezApprovalG.t46'/>";
@@ -1252,6 +1274,10 @@
 		        if (rtn[0] == "TRUE") {
 		            g_SepAttachLVXml = rtn[1];
 		            SetDocumentElement("sepattachlvxml", g_SepAttachLVXml);
+		            
+		            if (pDraftFlag == "REDRAFT") {
+		            	GetHTML(before_saveFile);	            	
+		            }
 		        }
 			}
 			
@@ -1384,7 +1410,7 @@
 	                var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID;
 			        //var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        //var ret = window.showModalDialog(url, parameter, feature);
-			        var ret = window.open(url, '', 'height=750,width=1194,scrollbars=no' + GetOpenPosition(1194, 750));
+			        var ret = window.open(url, '', 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
 
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e);
@@ -1449,7 +1475,11 @@
 		            tempSecurityDate = ret[14];
 		            if (ret[21].substring(0,1) == "N") {
 	                	tempPublic = "N";
-	                }
+	                } else if (ret[21].substring(0,1) == "Y") {
+	                	tempPublic = "Y";
+	                } else if (ret[21].substring(0,1) == "B") {
+                        tempPublic = "B";
+                    }
 		            setPublicFlag();
 		            SummaryFlag = true;
 		            
@@ -1486,6 +1516,14 @@
                         limitDate = ret[31];
                         // passAprLine = ret[32];
 					}
+
+		         	// 2023-05-23 임정은 - 공람 추가
+                	if (ret[22] == "noItem") {
+                		delAprLineInfoCC();
+                	} else if (ret[22] == "sameItem") {
+                	} else {
+                		SaveAprLineInfoCC(ret[22]);
+                	}
 		        }
 			}
 	
@@ -1627,7 +1665,7 @@
 		    	if (result != "N") {
 		    		chk_Passwd();
 		    	} else {
-		    		 if (IsSkipDrafter == "FALSE") {
+		    		 if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
 	                    //var ret;
 	                    var parameter = new Array();
 	
@@ -1725,7 +1763,7 @@
                     return;
                 }
 	    		
-	    		if (IsSkipDrafter == "FALSE") {
+	    		if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
                 	//if (nonElecRec != "Y") {
 	                    //var ret;
 	                    var parameter = new Array();
@@ -1876,6 +1914,11 @@
 
 				var numberFormat = message3.GetFieldText("docnumber");
 				message.PutFieldText("docnumber", getDocNumByFormat(numberFormat));
+			}
+			
+			function before_saveFile(html) {
+				pSaveHtml = html;
+				SaveFile();
 			}
 	    </script>
 	</head>

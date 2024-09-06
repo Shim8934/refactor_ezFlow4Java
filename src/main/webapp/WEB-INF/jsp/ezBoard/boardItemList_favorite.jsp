@@ -30,8 +30,10 @@
 	    </style>
 	    <script type="text/javascript">
 	        var userLang = "${userInfo.primary}";
+	        var lang = "${userInfo.lang}";
 	        var xmlhttp = createXMLHttpRequest();
 	        var timer = null;
+			var useRunTime = "${useRunTime}"
 	        
 			window.onresize = function () {
 				var delay = 100;
@@ -47,6 +49,13 @@
 			
 	        window.onload = function () {
 	            GetMyBoardItem();
+				/* 2024-07-09 김유진 - RunTime 표시 기능 사용 시 즐겨찾기 페이지 높이 조절 */
+				if (useRunTime == "YES" && document.getElementById("FBoard_ifrm") != null) {
+					var FBoardHeight = document.getElementById("FBoard_ifrm").clientHeight;
+					var newHeight = FBoardHeight - 22;
+					document.getElementById("FBoard_ifrm").style.height = ((newHeight / FBoardHeight) * 100) + "%";
+
+				}
 	        };
 	        
 	        /**
@@ -128,6 +137,8 @@
 	                    for (var i = 0; i < xmlnode.length; i++) {
 	                        var BoardName = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME")));
 	                        var BoardName2 = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2")));
+	                        var BoardName3 = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME3")));
+	                        var BoardName4 = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME4")));
 	                        var BoardId = getNodeText(SelectSingleNode(xmlnode[i], "BOARDID"));
 	                        var BoardType = getNodeText(SelectSingleNode(xmlnode[i], "GUBUN"));
 	                        var _p = document.createElement("P");
@@ -144,13 +155,8 @@
 								_span.setAttribute("DATA2", "<spring:message code='ezBoard.t480'/>");
 								_span.innerHTML = "<spring:message code='ezBoard.t480'/>";
                         	} else {
-		                        if (userLang == "1") { // primary값에 따라 다국어 설정
-									_span.setAttribute("DATA2", BoardName);
-									_span.innerHTML = BoardName;
-		                        } else {
-		                            _span.setAttribute("DATA2", BoardName2);
-		                            _span.innerHTML = BoardName2;
-								}
+								_span.setAttribute("DATA2", BoardName);
+								_span.innerHTML = BoardName;
                         	}
 	                        _span.setAttribute("DATA5", BoardType);
 	                        
@@ -379,6 +385,12 @@
 		        	obj.style.height = (document.documentElement.clientHeight - 85) + "px";
 		        } else {
 		        	obj.style.height = "100%";
+					/* 2024-07-09 김유진 - RunTime 표시 기능 사용 시 즐겨찾기 페이지 높이 조절 */
+					if (useRunTime == "YES" && obj != null) {
+						var FBoardHeight = obj.clientHeight;
+						var newHeight = FBoardHeight - 22;
+						obj.style.height = ((newHeight / FBoardHeight) * 100) + "%";
+					}
 		        }
 	        }
 	        

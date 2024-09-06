@@ -174,6 +174,10 @@
 						$("#chkOneLineBottom").prop("disabled", true);
 						$("#chkOneLineLayer").prop("disabled", true);
 						$("#chkOneLineNone").prop("disabled", true);
+						/* 2024-05-08 양지혜 - URL 게시판인 경우, 탭 게시판 disabled */
+						$("#chktabBoard1").prop("disabled", true);
+						$("#chktabBoard2").prop("disabled", true);
+						$("#chktabBoard3").prop("disabled", true);
 	                }
 	                
 	                if (!$("#chkURLBoard").is(":checked")) {
@@ -191,6 +195,13 @@
 	            if ($.trim($("#txtBoardName2").val()) == "") {
 	            	$("#txtBoardName2").val($("#txtBoardName").val());
 	            }
+	            if ($.trim($("#txtBoardName3").val()) == "") {
+	            	$("#txtBoardName3").val($("#txtBoardName").val());
+	            }
+	            if ($.trim($("#txtBoardName4").val()) == "") {
+	            	$("#txtBoardName4").val($("#txtBoardName").val());
+	            }
+	            
 	            //승인게시판
 	            if (APPRFLAG == "Y") {
 	                if (ApprUserList == "") {
@@ -385,6 +396,21 @@
 	            else if (tabBoardID3 == BoardID && $("#chktabBoard3").is(":checked") == false) {
 	            	ptabBoardMod3 = "DELETE"; 
 	            }
+				
+				// 탭게시판 선택 여부 확인
+				var tabBoardCheck1 = "";
+				var tabBoardCheck2 = "";
+				var tabBoardCheck3 = "";
+				
+				if ($("#chktabBoard1").is(":checked") == true) {
+					tabBoardCheck1 = "true";
+				}
+				if ($("#chktabBoard2").is(":checked") == true) {
+					tabBoardCheck2 = "true";
+				}
+				if ($("#chktabBoard3").is(":checked") == true) {
+					tabBoardCheck3 = "true";
+				}
 
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
@@ -394,6 +420,7 @@
 	            	async : false,
 	            	data : {
 	            		boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(),
+	            		boardName3:$("#txtBoardName3").val(), boardName4:$("#txtBoardName4").val(),
 	            		boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
 	            		itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter,
 	            		boardColor:brd_color, portlet:"N", backGround:background,
@@ -402,20 +429,22 @@
 	            		likeFlag:useBoardLike, noticeBoardMod:pNoticeBoardMod,
 						tabBoardMod1:ptabBoardMod1,tabBoardMod2:ptabBoardMod2,tabBoardMod3:ptabBoardMod3,
 						mailFG_Post : mailFG_Post, mailFG_Mod : mailFG_Mod, mailFG_Comment : mailFG_Comment,
-						reactFlag:useBoardReplyReact
+						reactFlag:useBoardReplyReact,
+						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("<c:out value='${adminType}'/>" == "y") {
-	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + encodeURIComponent(BoardID);
-	            			return;	            			
+							if (!!parent.parent.board_menu && !!parent.parent.board_menu.refreshLeft) {
+	            				parent.parent.board_menu.refreshLeft();
+							}
 	            		} else {
-	            			parent.frames.location = parent.frames.location;
+							if (!!parent.board_menu && !!parent.board_menu.refreshLeft) {
+								parent.board_menu.refreshLeft();
+							}
 	            		}
-	            		
-	            		location.href = location.href;
-	            	}	            		
+	            	}
 	            });
 	        }
 			
@@ -573,7 +602,11 @@
 					$("#chkOneLineBottom").prop("disabled", true);
 					$("#chkOneLineLayer").prop("disabled", true);
 					$("#chkOneLineNone").prop("disabled", true);
-					
+					/* 2024-05-08 양지혜 - URL 게시판인 경우, 탭 게시판 disabled */
+					$("#chktabBoard1").prop("disabled", true);
+					$("#chktabBoard2").prop("disabled", true);
+					$("#chktabBoard3").prop("disabled", true);
+
                     document.getElementById("chkApprBoard").checked = false;
                     checkApprBoard();                   
                     document.getElementById("chkExpires").checked = false;
@@ -621,6 +654,10 @@
 					$("#chkOneLineBottom").prop("disabled", false);
 					$("#chkOneLineLayer").prop("disabled", false);
 					$("#chkOneLineNone").prop("disabled", false);
+					/* 2024-05-08 양지혜 - URL 게시판인 경우, 탭 게시판 disabled 해제 */
+					$("#chktabBoard1").prop("disabled", false);
+					$("#chktabBoard2").prop("disabled", false);
+					$("#chktabBoard3").prop("disabled", false);
 	            }
 
 	            /* 2019-04-29 홍승비 - 포토, 썸네일, 익명, 동영상게시판 선택 시 답변메일발송 disabled 처리 */
@@ -903,7 +940,14 @@
 					$("#chkBoardReplyReact").prop("disabled", true);
 		    	}
 		    }
-		    
+
+			function setMenuBtnDisplay() {
+				if (parent != null) {
+					let configFormBtn = parent.document.getElementById("1tab5");
+
+					configFormBtn.style.display = document.getElementById("chkform").checked ? "" : "none";
+				}
+			}
 	    </script>
 	    <style type="text/css">
 	    	.mainlist tr {
@@ -929,10 +973,22 @@
 		                        <th><c:out value='${lang_primary}' /></th>
 		                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName}' /></td>
 		                    </tr>
-		                    <tr class="secondary">
+		                    <tr class="primary">
 		                        <th><c:out value='${lang_secondary}' /></th>
-		                        <td><c:out value='${model.boardName2}' /></td>
+		                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName2}' /></td>
 		                    </tr>
+		                    <c:if test="${useJapanese == 'YES'}">
+			                    <tr class="primary">
+			                        <th><c:out value='${lang_tertiary}' /></th>
+			                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName3}' /></td>
+		                    	</tr>
+		                    </c:if>
+		                    <c:if test="${useChinese == 'YES'}">
+			                    <tr class="secondary">
+			                        <th><c:out value='${lang_quaternary}' /></th>
+			                        <td style="border-bottom:none;"><c:out value='${model.boardName4}' /></td>
+			                    </tr>
+		                    </c:if>
 		                </table>
 		            </c:if>
 		            <c:if test="${use_multiData != 'YES'}"><c:out value='${model.boardName}' /></c:if>
@@ -954,12 +1010,28 @@
 		                            <input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
-		                    <tr class="secondary">
+		                    <tr class="primary">
 		                        <th><c:out value='${lang_secondary}' /></th>
-		                        <td>
+		                        <td style="border-bottom:1px solid #ddd;">
 		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
+			          		<c:if test="${useJapanese == 'YES'}">
+			                    <tr class="primary">
+			                        <th><c:out value='${lang_tertiary}' /></th>
+			                        <td style="border-bottom:1px solid #ddd;">
+			                            <input type="text" id="txtBoardName3" style="width: 100%" value="<c:out value='${model.boardName3}' />" maxlength="20" />
+			                        </td>
+			                    </tr>
+		                    </c:if>
+		                    <c:if test="${useChinese == 'YES'}">
+			                    <tr class="secondary">
+			                        <th><c:out value='${lang_quaternary}' /></th>
+			                        <td>
+			                            <input type="text" id="txtBoardName4" style="width: 100%" value="<c:out value='${model.boardName4}' />" maxlength="20" />
+			                        </td>
+			                    </tr>
+		                   	</c:if>
 		                </table>
 		            </c:if>    
 	          		<c:if test="${use_multiData != 'YES'}">
@@ -1146,7 +1218,7 @@
 	        
 	        <%-- 2021-06-21 홍승비 - 메일알림 옵션 분리, 게시알림 / 수정알림 / 댓글알림 추가 --%>
 			<tr id="boardMailOptionTR" style="${style}">
-	        	<th><spring:message code="ezBoard.HSBMail00" /></th>
+	        	<th><spring:message code="ezNotification.hth38" /></th>
 	        	<td>
 	        		<c:if test="${model.mailFG_Post == 'Y'}">	
 	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail01" />&nbsp;</span>

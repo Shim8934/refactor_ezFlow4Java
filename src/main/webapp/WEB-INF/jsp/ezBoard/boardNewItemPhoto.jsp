@@ -202,6 +202,22 @@
 	            xmldom_attachlist = null;
 	            return strRet;
 	        }
+	        
+	        var isSubmit = false;
+	        
+	        function checkDuplicateSubmit(pMode) {
+	        	console.log("click!");
+				if (!isSubmit) { 
+					isSubmit = true;
+					
+					SaveItem(pMode);
+
+					setTimeout(function() {
+						isSubmit = false;
+					}, 5000);
+				}
+	        }
+	        
 	        function SaveItem(pMode)
 	        {
 	            if (pBoardID == "") {
@@ -376,31 +392,31 @@
 				    xmlhttp = null;
 				    xmldom = null;
 				    if (pMode != "temp") {
-				    	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림메일을 보내지 않도록 수정 + 답변알림메일을 보내지 않도록 수정 */
+				    	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림을 보내지 않도록 수정 + 답변알림을 보내지 않도록 수정 */
 	                	if ("${boardInfo.apprFlag}" != "Y") {
 							if (strItemID == "") {
 							    xmlhttp = createXMLHttpRequest();
-								xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
+								xmlhttp.open("POST", "/ezBoard/sendPostNotiForAdmin.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 								xmlhttp.send();
 								xmlhttp = null;
 							}
 							if (pMode == "reply") {
 							    xmlhttp = createXMLHttpRequest();
-							    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
+							    xmlhttp.open("POST", "/ezBoard/sendReplyNotice.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
 							    xmlhttp.send();
 							    xmlhttp = null;
 							}
 							
 							/* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송) 추가 (승인게시판의 경우, 게시물 승인 전에 게시알림 메일 사용안함) */
 		                    if (pMode == "new") { // 게시알림
-		                    	sendBoardAlertMail("new", pBoardID, itemid, isAllGroupBoard);
+		                    	sendBoardAlert("new", pBoardID, itemid, isAllGroupBoard);
 		                    }
 	                	}
 						
-						/* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
+						/* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림 발송하지 않도록 수정 */
 						if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 						    xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
+						    xmlhttp.open("POST", "/ezBoard/sendApprNotice.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}
@@ -801,12 +817,12 @@
 			}
 		    
 	        /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+	        function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendBoardAlertMail.do",
+					url : "/ezBoard/sendBoardAlert.do",
 					data : {
 						mode : pMode,
 						boardID : pBoardID,
@@ -829,10 +845,10 @@
 	            <td style="height:20px">
 	              <div id="menu">
 	                <ul>
-	                  <li ><span onClick="SaveItem('new');"><spring:message code='ezBoard.t98'/></span></li>
+	                  <li ><span onClick="checkDuplicateSubmit('new');"><spring:message code='ezBoard.t98'/></span></li>
 	                  <li ><span ID='btn_Reply' onclick='btn_PhotoAttachAdd()'><spring:message code='ezBoard.t1001'/></span></li>
 	                  <li ><span id="Span2" onClick="return btn_PhotoAttachDel()"><spring:message code='ezBoard.t1003'/></span></li>
-	                  <li><span  onClick="SaveItem('temp');"><spring:message code='ezBoard.t10034'/></span></li>
+	                  <li><span  onClick="checkDuplicateSubmit('temp');"><spring:message code='ezBoard.t10034'/></span></li>
 	                </ul>
 	              </div>
 	              <div id="close">
@@ -862,7 +878,7 @@
 	          <td style="width:70%" id="tdBoardName">
 	          	<c:choose>
 	          		<c:when test="${boardType != 'SELECT'}">
-	          			${boardInfo.boardName}
+	          			${boardName}
 	          		</c:when>
 	          		<c:otherwise>
 	          			<c:choose>
@@ -870,7 +886,7 @@
 			                    <span id="BoardSpan"><spring:message code='ezBoard.t57'/></span>
 	          				</c:when>
 	          				<c:otherwise>
-			                    <span id="BoardSpan">${boardInfo.boardName}</span>
+			                    <span id="BoardSpan">${boardName}</span>
 	          				</c:otherwise>
 	          			</c:choose>
 	          		</c:otherwise>

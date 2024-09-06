@@ -33,7 +33,7 @@
     	if (cChk == "1") {
         	parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";        
     	} else {
-    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
+			parent.frames[1].location.href = "/admin/ezSystem/systemConnectorHist.do";
     	}
     };
 	
@@ -49,8 +49,11 @@
 	    switch(this_menu)
 	    {	
 	    	case "PARAMETER":
-           		parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";
-           	 	break;
+				parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";
+				break;
+			case "CONNECTORLIST":
+				parent.frames[1].location.href = "/admin/ezSystem/systemConnectorHist.do";
+				break;
 	    	case "LOGINHIST":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
 	    		break;
@@ -59,7 +62,10 @@
 	    		break;
 	    	case "USERCHANGEHIST":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemUserChangeHist.do";
-	    		break;	
+				break;
+			case "DEPTCHANGEHIST":
+				parent.frames[1].location.href = "/admin/ezSystem/systemDeptChangeHist.do";
+				break;
 			case "PERMISSIONCHHIST":
 				parent.frames[1].location.href = "/admin/ezSystem/permissionChangeHist.do";
 				break;
@@ -86,6 +92,9 @@
 			case "FILEEXTENSION":
 				fileExtensionViewType = 0;
 				parent.frames[1].location.href = "/admin/ezSystem/systemFileExtension.do";
+				break;
+			case "NOTISETTING":
+				parent.frames[1].location.href = "/admin/ezSystem/notiSetting.do";
 				break;
 	    }
 	    
@@ -139,9 +148,11 @@
 		            	<h2 class="on">
 		            </c:otherwise>
 	            </c:choose>
-	            <span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span></h2>
+	            <span id="CONNECTORLIST" style="display:inline-block;width:100%;" onClick="menu_change('CONNECTORLIST')" ><spring:message code='ezSystem.jhy17' /></span></h2>
+	            <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span></h2>
 	            <h2><span id="ADMINACCESSHIST" style="display:inline-block;width:100%;" onClick="menu_change('ADMINACCESSHIST')" ><spring:message code='ezSystem.ls07' /></span></h2>
 				<h2><span id="USERCHANGEHIST" style="display:inline-block;width:100%;" onClick="menu_change('USERCHANGEHIST')" ><spring:message code='ezSystem.jhy01' /></span></h2>
+				<h2><span id="DEPTCHANGEHIST" style="display:inline-block;width:100%;" onClick="menu_change('DEPTCHANGEHIST')" ><spring:message code='ezSystem.jhy10' /></span></h2>
 				<h2><span id="PERMISSIONCHHIST" style="display:inline-block;width:100%;" onClick="menu_change('PERMISSIONCHHIST')" ><spring:message code='ezOrgan.ls06' /></span></h2>
 	            <c:if test="${cChk == '1' }">
 	            <h2><span id="ADMINIPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('ADMINIPMANAGER')" ><spring:message code='ezSystem.ksa08'/></span></h2>
@@ -158,6 +169,7 @@
 	            	<h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh21' /></span></h2>
 	            </c:if>
 				<h2><span id="FILEEXTENSION" style="display:inline-block;width:100%;" onClick="menu_change('FILEEXTENSION')" ><spring:message code='ezSystem.x0009' /></span></h2>
+				<h2><span id="NOTISETTING" style="display:inline-block;width:100%;" onClick="menu_change('NOTISETTING')" ><spring:message code='ezNotification.hth21' /></span></h2>
 			</div>
       	</div>
     </body>

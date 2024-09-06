@@ -34,6 +34,8 @@ public interface EzCommonService {
 	
 	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, String realPath, Locale locale, String domain, String scheme) throws Exception;
 	
+	void createTblSession() throws Exception;
+
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception;
 	
 	public String selectUserGetLang(String userID, int tenantID) throws Exception;
@@ -65,10 +67,10 @@ public interface EzCommonService {
 	public int updateUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
 	
 	public void insertUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
+
+	public void deleteUserConfigInfo(int tenantID, String userID, String propertyName) throws Exception;
 	
 	public void createTblCompanyConfig() throws Exception;
-	
-	public void createReformFlagColumn() throws Exception;
 	
 	public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception;
 
@@ -86,22 +88,12 @@ public interface EzCommonService {
 	
 	public void createTblUserMultiLogin() throws Exception;
 
-	public void addMailToJMochaDistribution() throws Exception;
-	
-	public void addAddJobMasterOrderBy() throws Exception;
-	
 	public void createTblIPAccessID() throws Exception;
 	
 	public void createTblIPAccessIP() throws Exception;
 	
 	public void createJMochaDistributionSub() throws Exception;
 
-	public void addUserMasterManualFlag() throws Exception;
-	
-	public void addDeptMasterManualFlag() throws Exception;
-	
-	public void addAddJobMasterManualFlag() throws Exception;
-	
 	public void createJMochaMailSignatureTemplate() throws Exception;
 
 	public void createJobMasterTable() throws Exception;
@@ -110,29 +102,11 @@ public interface EzCommonService {
 
 	public void insertUseSession(Map<String, Object> map);
 	
-	public void addJobMasterJobID() throws Exception;
-
 	public void createWebfolderToken() throws Exception;
-	
-	public void addJmochaMailGenenalPreviewMailImage() throws Exception;
-
-	public void addUserMasterPasswordUpdateDT() throws Exception;
-	
-	public void addUserMasterPhotoUpdateDT() throws Exception;
-
-	public void addUserMasterMailBoxQuota() throws Exception;
-
-	public void addPortalThemePortletIsFixed() throws Exception;
-
-	public void addHolidayFlag() throws Exception;
-	
-	public void addHolidayRepeat() throws Exception;
 	
 	public void createPortalThemePortlet() throws Exception;
 	
 	public void insertPortalThemePortletInitdata() throws Exception;
-	
-	public void addJournalFormDelFlag() throws Exception;
 	
 	public void createJmochaMailCopyright() throws Exception;
 	
@@ -140,41 +114,19 @@ public interface EzCommonService {
 
 	public void updateTaskUrl() throws Exception;
 
-	public void addPortalPortletUserPortletUsed() throws Exception;
-
-	public void addPortalPortletUserThemeId() throws Exception;
-	
-	public void addTblPortalThemeUserIsDefault() throws Exception;
-
 	public void updateListOptionData() throws Exception;
 	
 	public void createBoardLike() throws Exception;
 	
-	public void addBoardLikeFlag() throws Exception;
-
-	public void addQuickLinkLinkOrder() throws Exception;
-	
-	public void addComCloseCompanyId() throws Exception;
-
 	public void addWebfolderTotalLimit() throws Exception;
 	
-	public void addMsgInMailSearch() throws Exception;
-
-	public void addFormVersion() throws Exception;
-
 	public void addMemoExtensionColumns() throws Exception;
-
-	public void addSurveyAlamColums() throws Exception;
-	
-	public void addAddJobMasterProxy() throws Exception;
 
 	public void createAttitudeAnnual() throws Exception;
 
 	public void createResourcePortlet() throws Exception;
 
 	public void insertSurveyTenantConfig() throws Exception;
-
-	public void addThemeContentLang() throws Exception;
 
 	public void insertPortletInfo() throws Exception;
 
@@ -186,27 +138,17 @@ public interface EzCommonService {
 
 	public void createAccessCountry() throws Exception;
 	
-	public void addSnMenuAuth() throws Exception;
-
-	public void addBoardManageTypeColumn() throws Exception;
-
 	public void createPersonalPopupUser() throws Exception;
 
 	public boolean getPermissionGroupAccessYN (String groupId, String companyId, int tenantId, String userId, String deptId, boolean applySubDeptYN) throws Exception;
 	
-	public void addSurveyMailSentFlagColumn() throws Exception;
-	
 	public List<LoginVO> getPermissionGroupMembers (String groupId, String companyId, int tenantId, boolean applySubDeptYN) throws Exception;
 	
-	public void addSnThemeAndPortletAuth() throws Exception;
-
 	public void alterChamjoView() throws Exception;
 
 	public void addAddressFurigana() throws Exception;
 
 	public void createOpenGovTable() throws Exception;
-
-	public void addOpenGovFlag() throws Exception;
 
 	public int checkDeptId(String userID, String deptID, String tenantId);
 
@@ -216,7 +158,7 @@ public interface EzCommonService {
 
 	public void createUserDistributionTable();
 
-	public void alter_AnyTbl_AnyColumns() throws Exception;
+	public void alterTableAddColumns() throws Exception;
 
 	public void addThemeAndPorteltAuthInit() throws Exception;
 	
@@ -224,33 +166,17 @@ public interface EzCommonService {
 	
 	public void insertMailBigSizeAttachLimit() throws Exception;
 
-	public void addIsBeforeDoc() throws Exception;
-
-	public void addBeforeDocUrl() throws Exception;
-
 	public void setCompanyConfigs() throws Exception;
 	
 	public void createPwPolicyTable() throws Exception;
 	
 	public void createPwPolicyPatternTable() throws Exception;
 	
-	public void addAprAttachViewOrder() throws Exception;
-
 	public void createTblShareDocDir() throws Exception;
-	
-	public void addAprEndAttachViewOrder() throws Exception;
-	
-	public void addAprTmpAttachViewOrder() throws Exception;
-	
-	public void alterTblPsApprovNotiMailConf() throws Exception;
 	
 	public void createTblNoticeBoard() throws Exception;
 	
 	public void createAprAttachLimit() throws Exception;
-	
-	public void addDocStateIntoLastLines() throws Exception;
-
-	public void addDocStateIntoLastDeptLines() throws Exception;
 	
 	public void insertUseExternalMailServerConfig() throws Exception;
 
@@ -258,8 +184,6 @@ public interface EzCommonService {
 	
 	public void createAdminAccessIpTable() throws Exception;
 	
-	public void addFormAprOptionColumn() throws Exception;
-
 	public void insertAnnualScheduleTenantConfig();
 
 	public void insertHalfOffAttitudeType();
@@ -272,14 +196,8 @@ public interface EzCommonService {
 	
 	public void insertMobileAttitudeColumn() throws Exception;
 
-	public void insertDailyWorkAttitudeColumn() throws Exception;
-	
 	public void createMenuTenantConfig() throws Exception;
 
-	public void addPassAprLineFlag() throws Exception;
-	
-	public void addFormSihangTypeColumn() throws Exception;
-	
 	public void insertAutoSendOfferFlag() throws Exception;
 
 	public void insertTabBoardPortlet() throws Exception;
@@ -302,10 +220,6 @@ public interface EzCommonService {
 
 	public void createJmochaMailboxProgress() throws Exception;
 	
-	public void addWebfolderUserSubdeptPermittedColumn() throws Exception;
-	
-	public void addWebfolderUserFolderManagerColumn() throws Exception;
-	
 	public void createWebfolderFileUserTable();
 	
 	public void insertApprContainterConfig() throws Exception;
@@ -319,13 +233,9 @@ public interface EzCommonService {
 	
 	public void checkWebfolderVersionTable() throws Exception;
 	
-	void createWebfolderHierarchicalColumns();
-
 	public void addWebfolderLogHistory() throws Exception;
 	
 	void createWebfolderNoInherit();
-	
-	public void alterWebfolderApplyHistoryAddColumn() throws Exception;
 	
 	public void createSerialnumgenGrant() throws Exception;
 	
@@ -333,16 +243,6 @@ public interface EzCommonService {
 
 	public JSONObject attachWebFolderFile(JSONArray fileListJson, LoginVO userInfo, String param, HttpServletRequest request);
 
-	public void addBoardMailFGColumn() throws Exception;
-
-	public void addCommNoticeUpperNoColumn() throws Exception;
-	
-	public void alterTblAprReceiptProcessInfoAddColumn() throws Exception;
-	
-	public void alterTblDocDeliveryAddColumn() throws Exception;
-	
-    public void addTblAdminReceiptGroupSubExtReceptYnColumn() throws Exception;
-    
     public void createTblCar() throws Exception;
     
     public void createTblCarAcl() throws Exception;
@@ -355,16 +255,10 @@ public interface EzCommonService {
 
 	public HashMap<String, String> getTenantConfigList(int tenantID, String... propertyNames) throws Exception;
 
-	public void alterTblAddjobMaster() throws Exception;
-	
 	public String getPrevPwd(int tenantID, String pCN) throws Exception;
 	
 	public int setPrevPwd(int tenantID, String pCN, String propertyValue) throws Exception;
 	
-	public void addCommMailFGColumn() throws Exception;
-
-	public void addSurveySubDeptYNColumn() throws Exception;
-
 	public void createTblScheduleComplete() throws Exception;
 	
 	public void alterTblConnectionInfo() throws Exception;
@@ -377,12 +271,8 @@ public interface EzCommonService {
 	
 	void createTblPermissionChangeInfo() throws Exception;
 	
-	public void addSusinScheduleOffsetColumn() throws Exception;
-
 	public void insertReceiptHistoryListoption() throws Exception;
 	
-	public void addAprDocGroupInfoTypeColumn() throws Exception;
-
 	public void alterTblDevMaster() throws Exception;
 
 	String createExcelByList (String fileName, String dirPath, String sheetName, List<List<Object>> data) throws Exception;
@@ -398,14 +288,10 @@ public interface EzCommonService {
 	/* 2023-06-26 민지수 - 완료문서 추가의견타입 추가 */
 	public void insertOpinionGB() throws Exception;
 
-	public void alterTblRsResaclAddColumn() throws Exception;
-
 	public void addAttitudeFormFormHtml2Column() throws Exception;
 
 	public void createTblUserChangeInfo() throws Exception;
 	
-	public void addScheduleGroupColumn() throws Exception;
-
 	// 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 메소드
 	public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception;
 
@@ -424,7 +310,123 @@ public interface EzCommonService {
 	
 	public void insertPermissionBasisDeptYN_Config() throws Exception;
 	
-	public void createColumnRollInfoInAddJobMaster() throws Exception;
-	
 	void createTblDbLog();
+
+	// 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
+	public void insertPortalMenuChinese() throws Exception;
+
+	// 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
+	public void insertPortletNameChinese() throws Exception;
+
+	// 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가	
+	public void insertTenantConfigLangTertiary() throws Exception;
+
+	// 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
+	public void insertTenantConfigLangQuaternary() throws Exception;
+	
+	public void insertLoadTimeForApprAllConfig() throws Exception;
+
+	public void createTblDeptChangeInfo() throws Exception;
+
+	public void insertSurveyPostingMaxPeriodConfig() throws Exception;
+
+	public void alterFileNameForWebfolderHistory() throws Exception;
+
+	/** 2023-06-26 한태훈 - 통합 PC 저장 이력 남기는 테이블(차후 다른 목적으로도 쓰일 수 있음) 추가 */
+	public void createTblTotalHistory() throws Exception;
+
+	public void insertdelAttachByOthersConfing() throws Exception;
+
+	public void insertUseHideHeaderArea() throws Exception;
+
+	// 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+	public void alterRepeatFlagForResourceInfo() throws Exception;
+
+	/* 2024-05-28 김유진 - 포탈 메뉴,포틀릿,테마,빠른링크 > 하위부서 허용여부 컬럼 추가, 빠른링크 > 유저타입 컬럼 추가 */
+	public void alterSubPermittedForMenuAuth() throws Exception;
+
+	public void alterSubPermittedForPortletAuth() throws Exception;
+
+	public void alterSubPermittedForThemeAuth() throws Exception;
+
+	public void alterSubPermittedForQuicklinkAcl() throws Exception;
+
+	public void insertApprNonElecRecTypeConfing() throws Exception;
+	
+	public void createTables() throws Exception;
+
+    public void insertRecordHeaderClassTitle() throws Exception;
+
+	public void insertUseReceiptDeptFileAttach() throws Exception;
+
+	public void insertDocBinderListOption() throws Exception;
+
+	public void insertEndDateOptionConfig() throws Exception;
+
+	/* 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그 */
+	public void insertReturnByDesignationUsedConfig() throws Exception;
+
+	public void alterDocAttachNameCol() throws Exception;
+
+	public void insertNonUseDocAttachYN() throws Exception;
+
+	public void insertReadingRecordHeader() throws Exception;
+
+    void insertPortalPortletSizeTables();
+
+	void insertTblPortalTopUser();
+	
+	// 2024-03-28 한태훈 > 통합알림 테이블 생성하는 메소드
+	public void createTblRealTimeNotification() throws Exception;
+
+	// 2024-03-28 한태훈 > 알림 보관기간 테넌트 컨피그 추가 메소드
+	public void addNotiStoragePeriodConfig() throws Exception;
+	
+	// 2024-03-28 한태훈 > 통합알림 polling 방식 이용시 알림 데이터 새로고침 주기 설정
+	public void addNotiPollingIntervalConfig() throws Exception;
+
+	void insertFixPortlet();
+
+	public void insertTblPortalTopCompany() throws Exception;
+
+	public void insertPortalTopCompanyInitdata() throws Exception;
+
+    void addQuickLinkCompanyID() throws Exception;
+
+	public void alterUserThemePagination() throws Exception;
+
+	public void alterThemeInformation() throws Exception;
+	
+	public void alterCompanyMenuIconUrl() throws Exception;
+
+    public void alterTblScheduleForShowtop() throws Exception;
+	
+	public void addUserDeptHideFlag() throws Exception;
+
+	public void insertGongRamListOption() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테이블 추가 */
+	public void createTblScheduleReminderScheduler() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 시간 컬럼 추가 */
+	public void addReminderTimeAtTblScheduleConfig() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테넌트 컨피그 추가 */
+	public void insertReminderTenantConfig() throws Exception;
+
+	// 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+	public void alterSaveFlagForCbShare() throws Exception;
+	
+	public void alterBoardExtentionAttrByteSize() throws Exception;
+
+	// 2024-08-21 유길상 닷넷 통합알림 컨피그
+	public void insertDotNetTotalNotificationConfig() throws Exception;
+	
+	public void updateInProcessJpCodeName3() throws Exception;
+
+	public void createTblDistributeinfo() throws Exception;
+	
+	public void createExecutiveTable() throws Exception;
+ 
+	public void createServeyResultviewPermTbl() throws Exception;
 }

@@ -148,4 +148,6 @@ public interface EzEmailUserAdminService {
 
 	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale) throws Exception;
 
+	public int removeUserMailSetting(String userEmailAddress) throws Exception;
+
 }

@@ -191,7 +191,7 @@
         	</ul>
  		</div>
  		<div id="divCross" style="margin-top:10px;vertical-align:top;height:535px">
-			<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+			<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do?type=RESOURCE" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
        	</div>
        	<div class="btnpositionNew">
        		<a class="imgbtn" onClick="return idDocSaveBtn_onclick()" id="idDocSaveBtn"><span><spring:message code="ezResource.t378" /></span></a>

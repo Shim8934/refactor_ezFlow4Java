@@ -51,13 +51,13 @@
                 var result = xmlhttp.responseXML;
                 		        
                 if (CrossYN()) {
-                    var resultvalue2 = "<spring:message code='ezEmail.t313' />" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent + "<spring:message code='ezEmail.t314' />";
-                    resultvalue2 += GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent + "(" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent + "%)<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
+                    var resultvalue2 = "<spring:message code='ezEmail.t313' /> " + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent + " <spring:message code='ezEmail.t314' /> ";
+                    resultvalue2 += GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent + "(" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent + "%) " + "<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
                     MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent));
                 } else {
-                    var resultvalue2 = "<spring:message code='ezEmail.t313' />" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text + "<spring:message code='ezEmail.t314' />";
-                    resultvalue2 += GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text + "(" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text + "%)<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
-                    MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text));                    
+                    var resultvalue2 = "<spring:message code='ezEmail.t313' /> " + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text + "<spring:message code='ezEmail.t314' /> ";
+                    resultvalue2 += GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text + "(" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text + "%) "  + "<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
+                    MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text));
                 }
                 
 		        MailQuater.refreshtitle(resultvalue2);		        
@@ -155,7 +155,7 @@
 				    if (xmlHTTP.status == 200)
 				        alert("<spring:message code='ezEmail.t42' />");
 				    else
-				        alert("<spring:message code='ezEmail.t176' />" + xmlHTTP.statusText);
+				        alert("<spring:message code='ezEmail.t176' />" + xmlHTTP.status);
 				}
 			}
 			

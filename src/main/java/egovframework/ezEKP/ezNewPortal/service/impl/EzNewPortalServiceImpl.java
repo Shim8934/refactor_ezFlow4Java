@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,12 +14,27 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
+import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -30,6 +47,7 @@ import org.springframework.stereotype.Service;
 import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.ChineseCalendar;
 
+import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
@@ -71,29 +89,47 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Resource(name = "EzNewPortalDAO")
 	private EzNewPortalDAO ezNewPortalDAO;
-	
+
+	@Autowired
+	private EzCommonService ezCommonService;
+
 	@Autowired
 	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private EzApprovalGService ezApprovalGService;
-	
+
+	@Autowired
+	private EzOrganDAO ezOrganDAO;
+
 	@Resource(name  ="EzOrganAdminDAO")
 	private EzOrganAdminDAO ezOrganAdminDAO;
+	
+	@Resource(name = "EzBoardDAO")
+	private EzBoardDAO ezBoardDAO;
 	
 	@Autowired
 	private CommonUtil commonUtil;
 	
-	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset) throws Exception {
+	// public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset, String lang) throws Exception {
+	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("limit", limit);
+//		map.put("limit", limit);
 		map.put("portletId", 2); // 공지사항 포틀릿 ID 는 2
 		map.put("nowDate", nowDate);
 		
-		return ezNewPortalDAO.getNoticePortletList(map);
+		if (!lang.equals("1")) {
+			map.put("lang", 2);
+		}
+		
+		map.put("startRow", (currentPage - 1) * listCntSize);
+		map.put("listCount", listCntSize);
+		List<BoardListVO> notiList = ezNewPortalDAO.getNoticePortletList(map);
+
+		return notiList;
 	}
 	@Override
 	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId, String offset) throws Exception {
@@ -305,7 +341,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	// 퀵링크 가져오기
-	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit, String userId, String deptId) throws Exception {
+	public  Map<String, Object> getQuickLinkList(String companyId, int tenantId, int page, int limit, String userId, String deptId) throws Exception {
 		logger.debug("[Serivce] getQuickLinkList Started");
 		
 		int offset = (page-1) * limit;
@@ -317,9 +353,79 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("offset", offset);
 		map.put("userId", userId);
 		map.put("deptId", deptId);
-		
+
+		// 2024-05-17 김유진 - 퀵링크 권한 체크 로직 추가
+		List<String> quickLinkIds = new ArrayList<>();
+		//유저 권한체크
+		map.put("userType", "USER");
+		List<QuickLinkVO> result = ezNewPortalDAO.getCheckQuickLinkAcl(map);
+		for (QuickLinkVO userQuickLink : result) {
+			String quickLinkId = userQuickLink.getQuickLinkId();
+			logger.debug("getQuickLinkList userQuickLink: " + quickLinkId);
+			if (quickLinkIds.indexOf(quickLinkId) == -1) {
+				quickLinkIds.add(quickLinkId);
+			}
+		}
+		result.removeIf(vo -> ("N".equals(vo.getViewflag())));
+
+		// 직위,직책 권한체크
+		map.put("userType", "PERMISSION");
+		List<QuickLinkVO> permissionResult = ezNewPortalDAO.getCheckQuickLinkAcl(map);
+		for (QuickLinkVO permissionQuickLink : permissionResult) {
+			String quickLinkId = permissionQuickLink.getQuickLinkId();
+			logger.debug("getQuickLinkList permissionQuickLink: " + quickLinkId);
+			if (quickLinkIds.indexOf(quickLinkId) == -1) {
+				quickLinkIds.add(quickLinkId);
+				if ("Y".equals(permissionQuickLink.getViewflag())) {
+					result.add(permissionQuickLink);
+				}
+			}
+		}
+
+		// 부서 권한체크 - 하위부서부터 체크
+		String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
+		List<String> deptIds = Arrays.asList(deptPath.split(","));
+		Collections.reverse(deptIds);
+
+		List<QuickLinkVO> deptResult = null;
+		map.put("userType", "DEPT");
+		for(String pathId : deptIds) {
+			map.put("deptId", pathId);
+			if (pathId.equals(deptId)) {
+				map.put("isUserDept", true);
+			} else {
+				map.put("isUserDept", false);
+			}
+			deptResult = ezNewPortalDAO.getCheckQuickLinkAcl(map);
+
+			for (QuickLinkVO deptQuickLink : deptResult) {
+				String quickLinkId = deptQuickLink.getQuickLinkId();
+				if (quickLinkIds.indexOf(quickLinkId) == -1) {
+					quickLinkIds.add(quickLinkId);
+					if ("Y".equals(deptQuickLink.getViewflag())) {
+						result.add(deptQuickLink);
+					}
+				}
+			}
+		}
+
+		ArrayList<String> quickLinkIdList = new ArrayList<>();
+		for (QuickLinkVO quickLink : result ) {
+			quickLinkIdList.add(quickLink.getQuickLinkId());
+		}
+		if (quickLinkIdList.size() > 0) {
+			map.put("quickLinkIdList", quickLinkIdList);
+		}
+
+		Map<String, Object> resultMap = new HashMap<>();
+		// getQuickLinkTotalPageCnt 총 개수 구하기
+		int totalCnt = ezNewPortalDAO.getQuickLinkTotalCnt(map);
+		float pageCnt = (float)totalCnt / (float)limit;
+		resultMap.put("totalPageCnt", (int) Math.ceil(pageCnt));
+		resultMap.put("quickLinkList", ezNewPortalDAO.getQuickLinkList(map));
+
 		logger.debug("[Serivce] getQuickLinkList Ended");
-		return ezNewPortalDAO.getQuickLinkList(map);
+		return resultMap;
 	}
 	// 퀵링크 전체 페이지 개수 가져오기
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit, String userId, String deptId) throws Exception {
@@ -334,7 +440,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int totalCnt = ezNewPortalDAO.getQuickLinkTotalCnt(map);
 		
 		float pageCnt = (float)totalCnt / (float)limit;
-		
+
 		logger.debug("[Serivce] getQuickLinkTotalPageCnt Ended");
 		return (int) Math.ceil(pageCnt);
 	}
@@ -373,14 +479,26 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("[Serivce] updateUserUsedFrame Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> param = (Map<String, Object>) jObj.get("param");
+		String themeId = (String) param.get("themeId");
+		// 2024-06-11 조수빈 - 한 프레임만 사용하게 됨에 따라 테마에 맞는 해당 프레임을 지정해서 update하도록 수정.
+		Object frameId = "";
+		
+		if (themeId.equals("1")) {
+			frameId = "1";
+		} else if (themeId.equals("2")) {
+			frameId = "5";
+		} else if (themeId.equals("3")) {
+			frameId = "8";
+		}
 		
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("frameId", param.get("frameId"));
-		map.put("themeId", param.get("themeId"));
+		map.put("frameId", frameId);
+		map.put("themeId", themeId);
+		map.put("usePaging", param.get("usePaging") == null ? 1 : param.get("usePaging"));
 		map.put("isDefault", 1);
-		map.put("usedTheme", param.get("themeId"));
+		map.put("usedTheme", themeId);
 		
 		logger.debug("map.toString() : " + map.toString());
 		
@@ -597,7 +715,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) throws Exception {
+	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId, String userType, String deptId) throws Exception {
 		logger.debug("[Serivce] getVotePortletCount Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String[] deptArr = deptPath.split(",");
@@ -606,13 +724,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("deptPath", deptPath);
 		map.put("tenantId", tenantId);
 		map.put("deptArr", deptArr);
-		
+		map.put("userType", userType);
+		map.put("deptId", deptId);
+
 		logger.debug("[Serivce] getVotePortletCount Ended");
 		return ezNewPortalDAO.getVotePortletCount(map);
 	}
 
 	@Override
-	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId) throws Exception {
+	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId, String userType) throws Exception {
 		logger.debug("[Serivce] getVotePortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String[] deptArr = deptPath.split(",");
@@ -621,6 +741,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("deptPath", deptPath);
 		map.put("tenantId", tenantId);
 		map.put("deptArr", deptArr);
+		map.put("userType", userType);
 		
 		logger.debug("[Serivce] getVotePortletInfo Ended");
 		return ezNewPortalDAO.getVotePortletInfo(map);
@@ -650,6 +771,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		logger.debug("[Serivce] getPhotoBoardPortletInfo Ended");
 		return ezNewPortalDAO.getphotoBoardPortletInfo(map);
+	}
+	
+	@Override
+	public int getPhotoBoardPortletTotalCnt(int tenantId, String boardId, String offset) throws Exception {
+		logger.debug("[Serivce] getPhotoBoardPortletTotalCnt Started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		map.put("tenantId", tenantId);
+		map.put("boardId", boardId);
+		map.put("nowDate", nowDate);
+		logger.debug("[Serivce] getPhotoBoardPortletTotalCnt Ended");
+		return ezNewPortalDAO.getPhotoBoardPortletTotalCnt(map);
 	}
 
 	@Override
@@ -710,14 +843,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 				
 				if (!canAccessTheme) {
-					map.put("usedTheme", themeList.get(0).getThemeId());
-					userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
-					
-					if (userPortalSetting == null) {
+					if (themeList == null || themeList.size() == 0) {
+						// 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기
 						userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+					} else {
+						map.put("usedTheme", themeList.get(0).getThemeId());
+						userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
+						if (userPortalSetting == null) {
+							map.put("themeId", themeList.get(0).getThemeId());
+							userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+						}
 					}
 				}
 			}
+			
+			// 2024-06-11 조수빈 - 회사 혹은  기준으로 포탈 설정을 가져올 경우 페이징 처리에 대한 값이 없으므로 default 값인 1을 넣는다.
+			userPortalSetting.setUsePaging(1);
 		} else {
 			List<ThemeInfoVO> themeList = getUserThemeList(companyId, tenantId, userId, deptPath, portletLang);
 			boolean canAccessTheme = false;
@@ -733,7 +874,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			
 			if (!canAccessTheme) {
 				if (themeList == null || themeList.size() == 0) {
-					map.put("themeId", themeList.get(0).getThemeId());
+					// 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기
 					userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
 				}  else {
 					map.put("usedTheme", themeList.get(0).getThemeId());
@@ -760,12 +901,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		//List<Integer> portletIdList = new ArrayList<Integer>();
-	
+		List<Map<String, Object>> sizeList = new ArrayList<Map<String, Object>>();
+
 		//포틀릿 순서 업데이트 (없으면 insert)
 		for (Object item : portletOrder) {
 			if (item instanceof JSONObject) {
 				JSONObject portlet = (JSONObject) item;
-				
+
 				map = new ObjectMapper().readValue(portlet.toJSONString(), Map.class);
 				map.put("userId", userId);
 				map.put("companyId", companyId);
@@ -774,12 +916,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("themeId", themeId);
 				map.put("portletUsed", 1);
 				ezNewPortalDAO.updatePortletOrderUser(map);
-				
+
 				/*int portletId = Integer.parseInt(portlet.get("portletId").toString());
 				portletIdList.add(portletId);*/
+
+				sizeList.add(new HashMap<>(map));
 			}
 		}
-				
+
+		boolean usePortletSize = "Y".equals(ezCommonService.getTenantConfig("usePortletSize", tenantId));
+
+		if (usePortletSize) {
+			ezNewPortalDAO.clearPortletSizeUser(map);
+			ezNewPortalDAO.insertPortletSizeUser(sizeList);
+		}
+
+
 		//tbl_portal_portlet_user에는 있는데 포틀릿 순서에 없었던 목록 가져오기
 		/*map.put("portletIdList", portletIdList);
 		
@@ -824,23 +976,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		logger.debug("updatePortletOrderUser ended.");
 	}
-	
+
 	@Override
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month) throws Exception {
 		logger.debug("getMonthlyBirthdayEmployeesCount started.");
 		String monthStr = "";
-		
+
 		if (month < 10) {
 			monthStr = "0" + month;
 		} else {
 			monthStr = String.valueOf(month);
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("month", monthStr);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		
+
 		List<PortalUserInfoVO> tempList = ezNewPortalDAO.getMonthlyBirthdayEmployees(map);
 		int birthdayListCount = tempList.size();
 		List<PortalUserInfoVO> birthdayList = new ArrayList<PortalUserInfoVO>();
@@ -851,23 +1003,45 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		logger.debug("convertLunarToSolar started.");
 
-
+		/*(시작) 2024-02-22 곽동석, 음력 생일자 양력변환 계산 일자 오류 수정 */
 		for (int i = 0; i < birthdayListCount; i++) {
 			PortalUserInfoVO portalUserInfo = tempList.get(i);
-			
+
 			if (portalUserInfo.isSolar()) {
 				birthdayList.add(portalUserInfo);
 			} else {
-				String toSolarDate = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
-				
-				if (!toSolarDate.equals("")) {
-					lastLunarId = portalUserInfo.getUserId();
-					lastLunarDate = portalUserInfo.getUserBirthday();
-					portalUserInfo.setUserBirthday(toSolarDate);
-					birthdayList.add(portalUserInfo);
-					lastSolarDate = toSolarDate;
-					lunarCount++;
+				/*(시작) 2024-02-22 곽동석, 음력 생일자 양력변환 계산 일자 오류 수정 */
+				String toSolarDate ="";
+				ArrayList toSolarDateSet = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
+				//logger.debug("[getMonthlyBirthdayEmployeesCount] toSolarDateSet >>>>" + toSolarDateSet + " (0)=" + toSolarDateSet.get(0) + " (1)=" + toSolarDateSet.get(1));
+
+				String diffIdx = "";
+				for(int j=0; j<2; j++) {
+					if (toSolarDateSet.get(j).equals("")) {
+						diffIdx = "";
+					} else {
+						diffIdx = toSolarDateSet.get(j).toString().substring(5, 7);
+					}
+
+					if (monthStr.equals(diffIdx)) { //2024-02-07 곽동석, toSolarDateSet(0)의 월과 비교하는 월의 비교값이 같을경우.
+						toSolarDate = toSolarDateSet.get(j).toString();
+					} else {
+						toSolarDate = "";
+					}
+					//logger.debug("[getMonthlyBirthdayEmployeesCount] toSolarDate >>>>" + toSolarDate);
+
+					//logger.debug("[getMonthlyBirthdayEmployeesCount] diffIdx >>>>" + diffIdx);
+
+					if (!toSolarDate.equals("")) {
+						lastLunarId = portalUserInfo.getUserId();
+						lastLunarDate = portalUserInfo.getUserBirthday();
+						portalUserInfo.setUserBirthday(toSolarDate);
+						birthdayList.add(portalUserInfo);
+						lastSolarDate = toSolarDate;
+						lunarCount++;
+					}
 				}
+				/*(종료) 2024-02-22 곽동석, 음력 생일자 양력변환 계산 일자 오류 수정 */
 			}
 		}
 
@@ -876,9 +1050,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 
 		logger.debug("convertLunarToSolar ended.");
-		
+
 		int birthCount = 0;
-		
+
 		if (birthdayList == null || birthdayList.isEmpty()) {
 			birthCount = 0;
 		} else {
@@ -888,60 +1062,83 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("getMonthlyBirthdayEmployeesCount ended.");
 		return birthCount;
 	}
-	
+
 	@Override
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow,String lang) throws Exception {
 		logger.debug("getMonthlyBirthdayEmployees started.");
 		String monthStr = "";
-		
+
 		if (month < 10) {
 			monthStr = "0" + month;
 		} else {
 			monthStr = String.valueOf(month);
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("month", monthStr);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("lang", lang);
-		
+		if (lang != null && !lang.equals("") && !lang.equals("1")) {
+			map.put("lang", 2);
+		}
+
 		List<PortalUserInfoVO> tempList = ezNewPortalDAO.getMonthlyBirthdayEmployees(map);
 		int birthdayListCount = tempList.size();
 		List<PortalUserInfoVO> birthdayList = new ArrayList<PortalUserInfoVO>();
-		
+
 		for (int i = 0; i < birthdayListCount; i++) {
 			PortalUserInfoVO portalUserInfo = tempList.get(i);
 			String imgPath = "";
-			
+//			logger.debug("portalUserInfo.getUserBirthday() >>>> " + portalUserInfo.getUserBirthday());
 			if (portalUserInfo.isSolar()) {
 				if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
 					imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
 				} else {
 					imgPath = "/images/ezNewPortal/info_pic_none.png";
 				}
-				
+
 				portalUserInfo.setUserImg(imgPath);
 				birthdayList.add(portalUserInfo);
 			} else {
-				String toSolarDate = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
-				
-				if (!toSolarDate.equals("")) {
-					if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
-						imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
+				/*(시작) 2024-02-22 곽동석, 음력 생일자 양력변환 계산 일자 오류 수정 */
+				String toSolarDate ="";
+				ArrayList toSolarDateSet = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
+				//logger.debug("[getMonthlyBirthdayEmployees] toSolarDateSet >>>>" + toSolarDateSet + " (0)=" + toSolarDateSet.get(0) + " (1)=" + toSolarDateSet.get(1));
+
+				String diffIdx = "";
+				for(int j=0; j<2; j++) {
+					if (toSolarDateSet.get(j).equals("")) {
+						diffIdx = "";
 					} else {
-						imgPath = "/images/ezNewPortal/info_pic_none.png";
+						diffIdx = toSolarDateSet.get(j).toString().substring(5, 7);
 					}
-					
-					portalUserInfo.setUserBirthday(toSolarDate);
-					portalUserInfo.setUserImg(imgPath);
-					birthdayList.add(portalUserInfo);
+					//logger.debug("[getMonthlyBirthdayEmployees] diffIdx >>>>" + diffIdx);
+
+					if (monthStr.equals(diffIdx)) { //2024-02-07 곽동석, toSolarDateSet(0)의 월과 비교하는 월의 비교값이 같을경우.
+						toSolarDate = toSolarDateSet.get(j).toString();
+					} else {
+						toSolarDate = "";
+					}
+
+					if (!toSolarDate.equals("")) {
+						if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
+							imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
+						} else {
+							imgPath = "/images/ezNewPortal/info_pic_none.png";
+						}
+
+						portalUserInfo.setUserBirthday(toSolarDate);
+						portalUserInfo.setUserImg(imgPath);
+						birthdayList.add(portalUserInfo);
+					}
+//					logger.debug("[getMonthlyBirthdayEmployees] toSolarDate >>>>" + toSolarDate);
 				}
+				/*(종료) 2024-02-22 곽동석, 음력 생일자 양력변환 계산 일자 오류 수정 */
 			}
 		}
-		
+
 		int birthCount = birthdayList.size();
-		
+
 		//오름차순 정렬
 		Collections.sort(birthdayList, new Comparator<PortalUserInfoVO>() {
 			@Override
@@ -949,70 +1146,136 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				return o1.getUserBirthday().split("-")[2].compareTo(o2.getUserBirthday().split("-")[2]);
 			}
 		});
-		
+
 		if (startRow >= birthCount) {
 			startRow = 0;
 		}
-		
+
 		List<PortalUserInfoVO> birthdayListLmit = new ArrayList<PortalUserInfoVO>();
-		
+
 		for (int i = startRow; i < startRow + count; i++) {
 			if (i < birthCount) {
 				birthdayListLmit.add(birthdayList.get(i));
 			}
 		}
 		
+		// 2024-05-27 한태훈 > 6초마다 자동페이지네이션 기능 사용하려면 return birthdayListLmit을 해줘야함. 2018년?에 만들어진 기능인데, 호출을 6초마다하는 게 부담이 되니 다른 방법으로 구현하는 것도 좋아보임.
+
 		logger.debug("getMonthlyBirthdayEmployees ended.");
-		return birthdayList;
+		return birthdayListLmit;
 	}
-	
-	public String convertLunarToSolar (String birthday, int compMonth) {
+
+	public static ArrayList convertLunarToSolar(String birthday, int compMonth) {
 		/*
 		 * 20.05.29 강승구 : 음력변환 오류 수정
 		 * 아직 윤달, 평달에 대한 문제 해결 필요
 		 */
+		/*
+		 * 24.02.07 곽동석 : 연 2회 생일자에 대한 로직 추가 수정.
+		 * 특정 음력생일자의 경우, 실제로 연 2회 생일자가 있음.
+		 * convertLunarToSolar 메서드를 ArrayList로 변경.
+		 * 연내 상반기 생일과 하반기 생일값을 추가하기 위함.
+		 * ex) 음력 23년 11월 29일은 -> 24년 1월 10일, 23년 11월 29일은 -> 24년 12월 29일 이다.
+		 */
+		//logger.debug("[convertLunarToSolar] birthday >>>> " + birthday);
 		String result = "";
+		ArrayList resultSet = new ArrayList(); // 2024.02.07 곽동석, result를 담는 리스트.
 		ChineseCalendar cc = new ChineseCalendar();
 		java.util.Calendar cal = java.util.Calendar.getInstance();
-		birthday = cal.get(1) + birthday.substring(4);
-		
-		if(birthday.length() == 10) {
-			birthday = birthday.replace("-", "");
+
+		String currentYear = String.valueOf(cal.get(1));
+		int currentYearInt = Integer.parseInt(currentYear); // 2024.02.07 곽동석, currentYear값 계산.
+
+		/*(시작) 2024.02.07 곽동석, "'for' 'if (i==1)'는 전년도와 지금년도를 비교하여 년2회이상 중복생일자를 확인하기 위함." */
+		for (int i=0; i<2; i++) {
+			if (i == 1) {
+				currentYear = String.valueOf(currentYearInt - 1);
+			}
+			birthday = currentYear + birthday.substring(4);
+
+			if (birthday.length() == 10) {
+				birthday = birthday.replace("-", "");
+			}
+
+			cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0, 4)) + 2637);
+			cc.set(ChineseCalendar.MONTH, Integer.parseInt(birthday.substring(4, 6)) - 1);
+			cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(birthday.substring(6, 8)));
+			cc.set(ChineseCalendar.IS_LEAP_MONTH, 0);
+
+			cal.setTimeInMillis(cc.getTimeInMillis());
+
+			String year = String.valueOf(cal.get(Calendar.YEAR));
+
+			/*(시작) 2024-01-12 박수빈 "생일자 음양력 변환 1년 앞당기는 오류 수정"*/
+			if (!currentYear.equals(year)) { // 만약 변환한 양력이 올해가 아니라면 작년 생일로 다시 양력변환 시도
+
+				cal = java.util.Calendar.getInstance(); // 객체 초기화
+				cc = new ChineseCalendar();
+
+				cal.add(Calendar.YEAR, -1); // 작년으로 생일 재설정
+				birthday = cal.get(1) + birthday.substring(4);
+
+				// 음력 -> 양력 계산
+				cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0, 4)) + 2637);
+				cc.set(ChineseCalendar.MONTH, Integer.parseInt(birthday.substring(4, 6)) - 1);
+				cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(birthday.substring(6, 8)));
+				cc.set(ChineseCalendar.IS_LEAP_MONTH, 0);
+
+				cal.setTimeInMillis(cc.getTimeInMillis());
+
+				// 변환된 양력 생일에서 연도 추출
+				year = String.valueOf(cal.get(Calendar.YEAR));
+			}
+			/*(종료) 2024-01-12 박수빈 "생일자 음양력 변환 1년 앞당기는 오류 수정"*/
+
+			String month = String.valueOf(cal.get(Calendar.MONTH) + 1);
+			String day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+
+			String pad4Str = "0000";
+			String pad2Str = "00";
+
+			String retYear = (pad4Str + year).substring(year.length());
+			String retMonth = (pad2Str + month).substring(month.length());
+			String retDay = (pad2Str + day).substring(day.length());
+
+			result = retYear + "-" + retMonth + "-" + retDay;
+
+			String monthComp = String.valueOf(compMonth);
+
+			String chineseMonth = result.substring(5, 7);
+
+			if (chineseMonth.indexOf("0") == 0) {
+				chineseMonth = chineseMonth.substring(1);
+			}
+
+			if (!chineseMonth.equals(monthComp)) {
+				result = "";
+			}
+
+			if (!retYear.equals(String.valueOf(currentYearInt))) { // 비교년도가 다를경우 값을 지운다.
+				result = "";
+			}
+			//logger.debug("[convertLunarToSolar] currentYearInt >>>>" + currentYearInt);
+			//logger.debug("[convertLunarToSolar] monthComp >>>>" + monthComp);
+			//logger.debug("[convertLunarToSolar] result >>>>" + result);
+
+			resultSet.add(result); // 2024-02-07 곽동석, Array List인 resultSet에 result값을 담는다.
+
 		}
-		
-		cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0,4)) + 2637);
-        cc.set(ChineseCalendar.MONTH        , Integer.parseInt(birthday.substring(4,6)) - 1);
-        cc.set(ChineseCalendar.DAY_OF_MONTH , Integer.parseInt(birthday.substring(6,8)));
-        cc.set(ChineseCalendar.IS_LEAP_MONTH, 0);
 
-        cal.setTimeInMillis(cc.getTimeInMillis());
+		// '인덱스 0 = 하반기', '인덱스 1 = 상반기' 값이므로 서로의 인덱스를 스위치한다.
+		Object temp = resultSet.get(0); // 2024-02-07 곽동석, resultSet(0)과 (1)의 값을 서로 바꾼다(교환).
+		resultSet.set(0, resultSet.get(1));
+		resultSet.set(1, temp);
 
-        String year  = String.valueOf(cal.get(Calendar.YEAR        )    );
-        String month = String.valueOf(cal.get(Calendar.MONTH       ) + 1);
-        String day   = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)    );
-
-        String pad4Str = "0000";
-        String pad2Str = "00";
-
-        String retYear  = (pad4Str + year ).substring(year .length());
-        String retMonth = (pad2Str + month).substring(month.length());
-        String retDay   = (pad2Str + day  ).substring(day  .length());
-
-        result = retYear + "-" + retMonth + "-" + retDay;
-		
-		String monthComp = String.valueOf(compMonth);
-		
-		String chineseMonth = result.substring(5, 7);
-		
-		if (chineseMonth.indexOf("0") == 0) {
-			chineseMonth = chineseMonth.substring(1);
+		//
+		if (resultSet.get(0).equals(resultSet.get(1))) { // resultSet의 두 인덱스 값이 같을경우 인덱스 0의 값만 반환한다.
+			resultSet.set(0, "");
 		}
-		
-		if (!chineseMonth.equals(monthComp)) {
-			result = "";
-		}
+		//logger.debug("[convertLunarToSolar] resultSet >>>>" + resultSet);
+		return resultSet;
 
-		return result;
+		/*(종료) 2024.02.07 곽동석, "'for' 'if (i==1)'는 전년도와 지금년도를 비교하여 년2회이상 중복생일자를 확인하기 위함." */
 	}
 	
 	@Override
@@ -1051,7 +1314,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//path 거꾸로 돌려야해서
 		List<String> deptIds = Arrays.asList(deptPath.split(","));
 		Collections.reverse(deptIds);
-		
+		String userDeptId = deptIds.get(0);
+
 		map.put("lang", lang);
 		
 		//유저권한체크
@@ -1090,7 +1354,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
 		for(String pathId : deptIds) {
 			map.put("userId", pathId);
-			
+			if (pathId.equals(userDeptId)) {
+				map.put("isUserDept", true);
+			} else {
+				map.put("isUserDept", false);
+			}
+
 			deptResult = ezNewPortalDAO.getUserThemeList(map);
 			
 			//권한잇는것들 && 기존 권한체크안된것들 추가
@@ -1112,6 +1381,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return result;
 	}
 	
+
+	/* 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기 */
+	public List<ThemeInfoVO> getCompThemeList(String companyId, int tenantId, String lang) throws Exception {
+		logger.debug("getCompThemeList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("lang", lang);
+		List<ThemeInfoVO> result = ezNewPortalDAO.getCompThemeList(map);
+		logger.debug("getCompThemeList ended.");
+		return result;
+	}
 
 	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception {
 		logger.debug("getUserStartPage started.");
@@ -1180,7 +1461,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("updateUserThemeSetting ended.");
 	}
 	
-	//관리자부분!! ------ boardtree가져오기
+	//관리자부분 ------ boardtree가져오기
 	@Override
 	public List<PortalBoardTreeVO> getBoardTree(String parentBoardId, String companyId, int tenantId) throws Exception {
 		logger.debug("getBoardTree started.");
@@ -1202,11 +1483,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		//메뉴
 		map = new ObjectMapper().readValue(portletInfo.toJSONString(), Map.class);
-		map.put("boardId", commonUtil.stripScriptTags(map.get("boardId").toString()));
+		map.put("boardId", map.get("boardId") != null? commonUtil.stripScriptTags(map.get("boardId").toString()) : null);
 		
 		String connectionUrl = commonUtil.stripScriptTags(map.get("connectionUrl").toString());
 		connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
-		connectionUrl = specialCharacterToEmptyString(connectionUrl);
+		connectionUrl = specialCharacterToEmptyString(URLDecoder.decode(connectionUrl, "UTF-8"));
 		
 		map.put("connectionUrl", connectionUrl);
 		map.put("menuId", commonUtil.stripScriptTags(map.get("menuId").toString()));
@@ -1236,6 +1517,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				String portletName = commonUtil.stripScriptTags(map.get("portletName").toString());
 				portletName = commonUtil.detectPathTraversal(portletName);
 				portletName = specialCharacterToEmptyString(portletName);
+				
+				portletName = portletName.replaceAll("& #40;", "(");
+				portletName = portletName.replaceAll("& #41;", ")");
 
 				String portletLang = commonUtil.stripScriptTags(map.get("portletLang").toString());
 				portletLang = commonUtil.detectPathTraversal(portletLang);
@@ -1291,7 +1575,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			if (connectionUrl != null) {
 				connectionUrl = commonUtil.stripScriptTags(connectionUrl);
 				connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
-				connectionUrl = specialCharacterToEmptyString(connectionUrl);
 			}
 			
 			map.put("connectionUrl", connectionUrl);
@@ -1320,7 +1603,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				String portletName = commonUtil.stripScriptTags(map.get("portletName").toString());
 				portletName = commonUtil.detectPathTraversal(portletName);
 				portletName = specialCharacterToEmptyString(portletName);
-
+				
+				portletName = portletName.replaceAll("& #40;", "(");
+				portletName = portletName.replaceAll("& #41;", ")");
+				
 				String portletLang = commonUtil.stripScriptTags(map.get("portletLang").toString());
 				portletLang = commonUtil.detectPathTraversal(portletLang);
 				portletLang = specialCharacterToEmptyString(portletLang);
@@ -1337,6 +1623,16 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				ezNewPortalDAO.updateCompanyPortletNameInfo(map);
 			}
 		}
+
+		/* 2024-06-13 김유진 - 테마별 포틀릿도 업데이트 */
+		map.put("lang", 1);
+		List<ThemeInfoVO> themeList = ezNewPortalDAO.getCompanyThemes(map);
+		int themeCount = themeList.size();
+		for (int i = 0; i < themeCount; i ++) {
+			map.put("themeId", themeList.get(i).getThemeId());
+			ezNewPortalDAO.updateThemePortlet(map);
+		}
+
 		logger.debug("updateCompanyPortletInfo ended.");
 		
 	}
@@ -1383,7 +1679,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.deletePortlet(map);
 		
 		ezNewPortalDAO.deleteThemePortlet(map);
-		
+
+		// 2024-04-25 기범 : 포틀릿 삭제시 테마 포틀릿 데이터는 삭제 되지 않던 버그 수정 및 포틀릿 삭제시 권한도 지우도록 추가
+		ezNewPortalDAO.deletePortletAuth(map);
 		
 		logger.debug("deletePortlet ended.");
 	}
@@ -1450,6 +1748,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public List<BoardListVO> getBoardPortletInfo (String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal) throws Exception {
+		return getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, offset, isQnANormal, 0);
+		
+	}
+	
+	@Override
+	public List<BoardListVO> getBoardPortletInfo(String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal, int startRow) throws Exception {
 		logger.debug("getBoardPortletInfo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
@@ -1460,12 +1764,27 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("nowDate", nowDate);
 		map.put("userId", userId);
 		map.put("isQnANormal", isQnANormal ? "Y" : "N");
+		map.put("startRow", startRow);
 
 		logger.debug("getBoardPortletInfo ended.");
 		return ezNewPortalDAO.getBoardPortletInfo(map);
-		
 	}
 	
+	@Override
+	public int getBoardPortletTotalCnt(String userId, int tenantId, String boardId, String companyId, String offset, boolean isQnANormal) throws Exception {
+		logger.debug("getBoardPortletInfo started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		map.put("boardId", boardId);
+		map.put("tenantId", tenantId);
+		map.put("nowDate", nowDate);
+		map.put("userId", userId);
+		map.put("isQnANormal", isQnANormal ? "Y" : "N");
+
+		logger.debug("getBoardPortletInfo ended.");
+		return ezNewPortalDAO.getBoardPortletTotalCnt(map);
+	}
+
 	@Override
 	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception {
 		logger.debug("getThemePortletList started.");
@@ -1759,20 +2078,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			result.put("list", list);
 			
 			if (list.size() > 0) {
-				if (approvalFlag.equalsIgnoreCase("G")) {
-					map.put("code1", "A04");
-				} else {
-					map.put("code1", "SA04");
+				for (int i = 0; i < list.size(); i++) {
+					if (approvalFlag.equalsIgnoreCase("G")) {
+						map.put("code1", "A04");
+					} else {
+						map.put("code1", "SA04");
+					}
+					
+					map.put("docId", list.get(i).getDocID());
+					map.put("lang", lang.equals("1") ? "" : lang);
+					
+					//결재선 정보
+					List<ApprGDocListVO> list2 = null;
+					list2 = assembleApprPortletList(map);
+					result.put("aprLines" + i, list2);
 				}
-				
-				map.put("docId", list.get(0).getDocID());
-				map.put("lang", lang.equals("1") ? "" : lang);
-				
-				//결재선 정보
-				list = assembleApprPortletList(map);
-				result.put("aprLines", list);
 			}
-			
 			break;
 		case "reject":
 			//반송
@@ -1783,6 +2104,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		case "draft":
 			//기안
 			list = ezNewPortalDAO.getApprovalDraftList(map);
+			result.put("list", list);
+			
+			break;
+		case "display":
+			// 공람 / 회람
+			list = ezNewPortalDAO.getApprovalDisplayList(map);
 			result.put("list", list);
 			
 			break;
@@ -1847,6 +2174,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			list = getCompanyThemes(companyId, tenantId, lang);
 		} else {
 			list = getUserThemeList(companyId, tenantId, userId, deptPath, lang);
+			// 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기
+			if (list == null || list.size() == 0) {
+				list = getCompThemeList(companyId, tenantId, lang);
+			}
 		}
 		
 		logger.debug("getThemes ended.");
@@ -1990,13 +2321,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return vo;
 	}
 	
-	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId) throws Exception {
+	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId, String useJapanese, String useChinese, String useVietnamese, String useIndonesian) throws Exception {
 		logger.debug("getMenuNames started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("menuId", menuId);
+		map.put("useJapanese", useJapanese);
+		map.put("useChinese", useChinese);
+		map.put("useVietnamese", useVietnamese);
+		map.put("useIndonesian", useIndonesian);
 		
 		if (usePrimaryLangOnly.equals("YES")) {
 			map.put("primaryLang", primaryLang);
@@ -2018,7 +2353,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("lang", lang);
-//		나중에 쪼갤수도 rest 호출할때 arg받아서 처리해야할수도잇을거같은데
 //		map.put("accessType", "Y","N","TOTAL")
 		map.put("accessType", "1");
 		List<MenuAuthVO> menuAuthsY = ezNewPortalDAO.getMenuAuth(map);
@@ -2082,6 +2416,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				menuName = commonUtil.detectPathTraversal(menuName);
 				menuName = specialCharacterToEmptyString(menuName);
 				
+			    menuName = menuName.replaceAll("& #40;", "(");
+			    menuName = menuName.replaceAll("& #41;", ")");
+			    
 				map.put("menuLang", menuLang);
 				map.put("menuName", menuName);
 				
@@ -2189,7 +2526,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int menuId = ezNewPortalDAO.insertMenu(map);
 		
 		map.put("menuId", menuId);
-		//TODO 이효진 companyLang 만들고 나면 하드코딩한거 지우고 DB에서 get
 		map.put("companyLang", 1);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -2211,6 +2547,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				menuName = commonUtil.detectPathTraversal(menuName);
 				menuName = specialCharacterToEmptyString(menuName);
 				
+			    menuName = menuName.replaceAll("& #40;", "(");
+			    menuName = menuName.replaceAll("& #41;", ")");
+				
 				map.put("menuLang", menuLang);
 				map.put("menuName", menuName);
 				
@@ -2223,7 +2562,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 		
 		//권한은 셀렉트키로 받아서 ezNewPortal.updateCompanyMenuNameInfo
-		//지금 권한 안들어오지 조직도없지 선택못하지
 		updateMenuAuth(menuAuths, menuId, companyId, tenantId);
 		
 		logger.debug("insertMenu ended.");
@@ -2285,14 +2623,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception {
+	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId, String deptId) throws Exception {
 		logger.debug("getFavoriteForms started.");
-		logger.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		
+		logger.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || deptId = " + deptId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("deptId", deptId);
 		
 		List<ApprGFormVO> list = ezNewPortalDAO.getFavoriteForms(map);
 		
@@ -2339,9 +2678,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	/**
 	 * 구해안
 	 */
-
+	
 	@Override
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit, String offset) {
+		return getFavNewItemList(userId,tenantId, companyId, nowDate, 0, limit, offset);
+	}
+	
+	@Override
+	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int startRow, int limit, String offset) {
 		logger.debug("getFavNewItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -2349,6 +2693,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("nowDate", nowDate);
 		map.put("limit", limit);
+		map.put("startRow", startRow);
 		map.put("v_OFFSETMIN", offset);
 		
 		List<FavoriteBoardVO> favNewItemList = ezNewPortalDAO.getFavNewItemList(map);
@@ -2358,7 +2703,27 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
+	public int getFavNewItemListCnt(String userId, int tenantId, String companyId, String nowDate, String offset) {
+		logger.debug("getFavNewItemListCnt started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("nowDate", nowDate);
+		map.put("v_OFFSETMIN", offset);
+		
+		logger.debug("getFavNewItemListCnt ended.");
+		return ezNewPortalDAO.getFavNewItemListCnt(map);
+		
+	}
+	
+	@Override
 	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit, String offset) throws Exception {
+		return getFavItemList(boardId, tenantId, companyId, 0, limit, offset);
+	}
+	
+	@Override
+	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int startRow, int limit, String offset) throws Exception {
 		logger.debug("getFavItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
@@ -2366,6 +2731,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("limit", limit);
+		map.put("startRow", startRow);
 		map.put("v_OFFSETMIN", offset);
 		map.put("nowDate", nowDate);
 		
@@ -2373,20 +2739,46 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		logger.debug("getFavItemList ended.");
 		return FavItemList;
+		
 	}
 	
 	@Override
-	public List<CommunityMyCommunityVO> getCommunityList(String lang, String companyId, int tenantId) throws Exception {
+	public int getFavItemListCnt(String boardId, int tenantId, String companyId, String offset) throws Exception {
+		logger.debug("getFavItemList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		map.put("boardId", boardId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("nowDate", nowDate);
+		logger.debug("getFavItemList ended.");
+		return ezNewPortalDAO.getFavItemListCnt(map);
+	}
+	
+	@Override
+	public List<CommunityMyCommunityVO> getCommunityList(String lang, int startRow, int listSize, String companyId, int tenantId) throws Exception {
 		logger.debug("getCommunityList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANG", commonUtil.getMultiData(lang, tenantId));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("listSize", listSize);
+		map.put("startRow", startRow);
 		
 		List<CommunityMyCommunityVO> CommunityList = ezNewPortalDAO.getCommunityList(map);
 		
 		logger.debug("getCommunityList ended.");
 		return CommunityList;
+	}
+	
+	@Override
+	public int getCommunityListTotalCnt(String companyId, int tenantId) throws Exception {
+		logger.debug("getCommunityListTotalCnt started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		logger.debug("getCommunityListTotalCnt ended.");
+		return ezNewPortalDAO.getCommunityListTotalCnt(map);
 	}
 	
 	@Override
@@ -2428,21 +2820,19 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId, String usePrimaryLangOnly, String primaryLang) {
-		logger.debug("getPortletNameList started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
+	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId) throws Exception {
+
+		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("portletId", portletId);
 		
-		if (usePrimaryLangOnly.equals("YES")) {
-			map.put("primaryLang", primaryLang);
-		}
+		map.put("useChinese", ezCommonService.getTenantConfig("useChinese", tenantId));
+		map.put("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", tenantId));
+		map.put("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", tenantId));
 		
 		List<PortletNameInfoVO> portetList = ezNewPortalDAO.getPortletNameList(map);
 		
-		logger.debug("getPortletNameList ended");
 		return portetList;
 	}
 	
@@ -2457,9 +2847,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		URL url;
 		URL todayUrl;
 		InputStreamReader isr;
-		
+
 		JSONObject jsonTemp;
-		
+
 		for (int i = 0; i < weatherKeyList.size(); i++) {
 			if (primaryLangList.get(i) == null) {
 				logger.debug("not enough weatherKey!!");
@@ -2468,22 +2858,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			String primaryLang = primaryLangList.get(i);
 			logger.debug("primaryLang = " + primaryLang);
 			cityCodeList = ezNewPortalDAO.getCityCodeList(primaryLang);
-			
+
 			StringBuffer buffer = new StringBuffer();
-			
+
 			for (String str : cityCodeList) {
 				buffer.append(str + ",");
 			}
-			
+
 			cityCode = buffer.toString();
 			cityCode = cityCode.substring(0, cityCode.length() - 1);
-			
+
 			url = new URL("http://api.openweathermap.org/data/2.5/group?" + "id=" + cityCode + "&units=metric" + "&appid=" + weatherKeyList.get(i));
-			
+
 			isr = new InputStreamReader(url.openConnection().getInputStream(),"UTF-8");
 			
 			JSONObject items = (JSONObject) JSONValue.parseWithException(isr); 
-			
+
 			JSONArray jsonCurrentWeatherArr = (JSONArray)items.get("list");
 			
 			for (int j = 0; j < jsonCurrentWeatherArr.size(); j++) {
@@ -2509,7 +2899,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 			
 			//3시간당 오늘의 날씨
-			//이거는 다른 스케줄러로 뺴서 매일 00시에서 3시 사이에 돌려줘야함
 			String todayWeather;
 			
 			for (String tempCityCode : cityCodeList) {
@@ -2561,11 +2950,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@Override
 	public List<WeatherVO> getCityList(int primaryLang) {
 		logger.debug("getCityList started.");
-		
+
 		List<WeatherVO> result = ezNewPortalDAO.getCityList(primaryLang);
 		
 		logger.debug("getCityList ended.");
-		
+
 		return result;
 	}
 	
@@ -2609,9 +2998,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		
 		MenuAuthVO userAuth = ezNewPortalDAO.getCheckUserAuth(map);
-		
-		//여기서 부터 떠오르지 않아서 더러운 코드로 그냥 분기분기분기
-		//좋은 아이디어 있으신분이 수정 바랍니다
+
 		if (userAuth != null) {
 			//유저 권한이 있으면 바로 리턴
 			if (userAuth.isAccessYN() == true) {
@@ -2659,7 +3046,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				
 				if (comAuth != null) {
 					//유저든 부서든 둘다 Y,N이 있을때만 company 권한보다 앞서므로 다 권한이 모두 없을 때 마지막에 company를 탐색하였다
-					//더 좋은 아이디어 있으신분 수정바랍니다
 					if (comAuth.isAccessYN() == true) {
 						logger.debug("Auth : comTrue");
 						resultAuth = true;
@@ -2909,18 +3295,34 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<FileVO> getWebFolderFileList(String folderId, int tenantId) throws Exception {
+	public List<FileVO> getWebFolderFileList(String folderId, int tenantId, int startRow, int folderListCount) throws Exception {
 		logger.debug("getWebFolderFileList started.");
 		logger.debug("folderId = " + folderId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
+		map.put("startRow", startRow);
+		map.put("folderListCount", folderListCount);
 		
 		List<FileVO> fileList = ezNewPortalDAO.getWebFolderFileList(map);
 		
 		logger.debug("getWebFolderFileList ended.");
 		return fileList;
+	}
+	
+	@Override
+	public int getWebFolderFileListTotalCnt(String folderId, int tenantId) throws Exception {
+		logger.debug("getWebFolderFileListTotalCnt started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		
+		int fileListTotalCnt = ezNewPortalDAO.getWebFolderFileListTotalCnt(map);
+		
+		logger.debug("getWebFolderFileListTotalCnt ended.");
+		return fileListTotalCnt;
 	}
 	
 //	@Override
@@ -3030,4 +3432,185 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		return userListCount;
 	}
+
+	/**
+	 * 유저의 모든 본직/겸직 정보를 가져온다.
+	 * @param lang
+	 * @param userId
+	 * @param tenantId
+	 * @return egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO
+	 * @throws Exception
+	 */
+	@Override
+	public List<PortalUserSwitchVO> getArrayUserJob(String lang, String userId, int tenantId) throws Exception {
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_CN", userId);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_LANGDATA", lang);
+
+		List<OrganUserVO> allUserInfo = ezOrganDAO.getAllUserInfo(map);
+		List<PortalUserSwitchVO> userInfoList = new ArrayList<>();
+
+		for (OrganUserVO vo : allUserInfo) {
+			PortalUserSwitchVO portalUserSwitchVO = new PortalUserSwitchVO();
+			portalUserSwitchVO.setCompanyId(vo.getCompanyId());
+			portalUserSwitchVO.setCompanyName(vo.getCompany());
+			portalUserSwitchVO.setCompanyName2(vo.getCompany2());
+			portalUserSwitchVO.setDeptId(vo.getDepartment());
+			portalUserSwitchVO.setDeptName(vo.getDescription() == null ? "" : vo.getDescription());
+			portalUserSwitchVO.setDeptName2(vo.getDescription2() == null ? "" : vo.getDescription2());
+			portalUserSwitchVO.setTitle(vo.getTitle() == null ? "" : vo.getTitle());
+			portalUserSwitchVO.setTitle2(vo.getTitle2() == null ? "" : vo.getTitle2());
+			portalUserSwitchVO.setJobId(vo.getJobID() == null ? "" : vo.getJobID());
+			portalUserSwitchVO.setJobType(vo.getJobType() == null ? "" : vo.getJobType());
+			userInfoList.add(portalUserSwitchVO);
+		}
+
+		return userInfoList;
+	}
+
+	@Override
+	public void switchAllUserInfo(HttpServletRequest request, HttpServletResponse response, String loginCookie, String companyId, String deptId, String jobId, String jobType) throws Exception {
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		List<PortalUserSwitchVO> list = getArrayUserJob(userInfo.getLang(), userInfo.getId(), userInfo.getTenantId());
+
+		Optional<PortalUserSwitchVO> optionalUserInfoVO = list.stream()
+				.filter(vo -> companyId.equals(vo.getCompanyId()) && deptId.equals(vo.getDeptId()) && jobId.equals(vo.getJobId()))
+				.findFirst();
+		if (!optionalUserInfoVO.isPresent()) throw new Exception("switchAllUserInfo error");
+		PortalUserSwitchVO infoVO = optionalUserInfoVO.get();
+		ezApprovalGService.changeAprUserInfo(response,
+				infoVO.getDeptId(), infoVO.getDeptName(), infoVO.getDeptName2(),
+				infoVO.getCompanyName(), infoVO.getCompanyName2(),
+				infoVO.getTitle(), infoVO.getTitle2(), infoVO.getCompanyId(), infoVO.getJobId());
+
+		String cookieStr = ezOrganService.changeCookie(loginCookie, infoVO.getDeptId(), infoVO.getCompanyId(), userInfo.getTenantId(), Optional.ofNullable(jobId).orElse(""));
+		Cookie cookie = new Cookie("loginCookie", cookieStr);
+		cookie.setPath("/");
+		response.addCookie(cookie);
+	}
+
+	@Override
+	public List<String> getAllAvailablePortletSize() {
+		return ezNewPortalDAO.getAllAvailablePortletSize();
+	}
+
+	@Override
+	public Map<Integer, List<String>> getAvailablePortletSize(int themeId, String companyId, int tenantId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("themeId", themeId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		List<PortletInfoVO> infoVOList = ezNewPortalDAO.getAvailablePortletSize(map);
+		return infoVOList.stream()
+				.collect(Collectors.groupingBy(PortletInfoVO::getPortletId,
+						Collectors.mapping(PortletInfoVO::getClassSize, Collectors.toList())));
+	}
+
+	@Override
+	public void updateThemePortletSize(int themeId, int tenantId, String companyId, JSONArray sizeList) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("themeId", themeId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		try {
+			ezNewPortalDAO.clearPortletSize(map);
+
+			ArrayList<Map<String, Object>> arrayList = new Gson().fromJson(sizeList.toJSONString(), new ArrayList<Map<String, Object>>().getClass());
+			for (Map<String, Object> sizeMap : arrayList) {
+				sizeMap.put("tenantId", tenantId);
+				sizeMap.put("themeId", themeId);
+				sizeMap.put("companyId", companyId);
+			}
+
+			ezNewPortalDAO.insertPortletSizeCompany(arrayList);
+		} catch (Exception e) {
+			logger.error("updateThemePortletSize error : " + e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void insertPortalTopFrameInfo(String userID, String companyID, int tenantID, TopFrameType type) throws Exception {
+		PortalTopVO vo = new PortalTopVO();
+		vo.setTenantID(tenantID);
+		vo.setCompanyID(companyID);
+		vo.setUserID(userID);
+		vo.setType(type.getCode());
+
+		ezNewPortalDAO.updatePortalTopFrameInfo(vo);
+	}
+
+	@Override
+	public Optional<TopFrameType> getPortalTopFrameInfo(String userID, String companyID, int tenantID) throws Exception {
+		PortalTopVO vo = new PortalTopVO();
+		vo.setTenantID(tenantID);
+		vo.setCompanyID(companyID);
+		vo.setUserID(userID);
+		
+		PortalTopVO menudisplayInfo = ezNewPortalDAO.getUserMenuDisplayMode(vo);
+		
+		if (menudisplayInfo == null) {
+			menudisplayInfo = Optional.ofNullable(ezNewPortalDAO.getTopMenuDisplayModeForCompany(vo)).orElse(new PortalTopVO());
+		}
+		
+		return Optional.ofNullable(menudisplayInfo.getTypeEnum());
+	}
+
+	@Override
+	public List<BoardListVO> getNewBoardPortletInfo(LoginVO userInfo, String userType, int startRow, int itemCount) throws Exception {
+		logger.debug("getNewBoardPortletInfo started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("iv_PORDERBYSUB", " A.WRITEDATE DESC ");
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", itemCount);
+		map.put("limit", startRow);
+		map.put("userType",userType);
+		
+		logger.debug("getNewBoardPortletInfo ended");
+		return ezNewPortalDAO.getNewBoardPortletInfo(map);
+	}
+	
+	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 가져오는 메소드
+	@Override
+	public Optional<TopFrameType> getTopMenuDisplayModeForCompany(String companyId, int tenantId) throws Exception {
+		logger.debug("getTopMenuDisplayModeForCompany started");
+		
+		PortalTopVO companyMenuDisplayVO = new PortalTopVO();
+		companyMenuDisplayVO.setCompanyID(companyId);
+		companyMenuDisplayVO.setTenantID(tenantId);
+		PortalTopVO companyMenuDisPlayInfo = Optional.ofNullable(ezNewPortalDAO.getTopMenuDisplayModeForCompany(companyMenuDisplayVO)).orElse(new PortalTopVO());
+		
+		logger.debug("getTopMenuDisplayModeForCompany ended");
+		
+		return Optional.ofNullable(companyMenuDisPlayInfo.getTypeEnum());
+	}
+	
+	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 수정하는 메소드
+	@Override
+	public void updateTopMenuDisplayModeForCompany(int type, String companyId, int tenantId) throws Exception {
+		logger.debug("updateTopMenuDisplayModeForCompany started");
+		
+		PortalTopVO vo = new PortalTopVO();
+		vo.setCompanyID(companyId);
+		vo.setTenantID(tenantId);
+		vo.setType(type);
+		
+		PortalTopVO companyMenuDiplayMode = ezNewPortalDAO.getTopMenuDisplayModeForCompany(vo);
+		
+		if (companyMenuDiplayMode == null) {
+			ezNewPortalDAO.insertTopMenuDisplayModeForCompany(vo);
+		} else {
+			ezNewPortalDAO.updateTopMenuDisplayModeForCompany(vo);
+		}
+		
+		logger.debug("updateTopMenuDisplayModeForCompany ended");
+	}
+	
 }

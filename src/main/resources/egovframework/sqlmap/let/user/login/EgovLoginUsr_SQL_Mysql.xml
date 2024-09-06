@@ -5,6 +5,7 @@
 
     <typeAlias  alias="egovMap"                 type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
     <typeAlias  alias="loginVO"                 type="egovframework.let.user.login.vo.LoginVO"/>
+    <typeAlias  alias="SessionVO"               type="egovframework.let.user.login.vo.SessionVO"/>
 	<typeAlias 	alias="loginDeviceVO" 			type="egovframework.let.user.login.vo.LoginDeviceVO"/>
 	<typeAlias 	alias="CountryVO" 			type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	<typeAlias 	alias="findPwdInfo" 			type="egovframework.let.user.login.vo.FindPwdInfoVO"/>
@@ -38,8 +39,20 @@
         <result property="password_updatedt"    column="password_updatedt"          columnIndex="25"/>
         <result property="mobile"    			column="mobile"          			columnIndex="26"/>
         <result property="extensionattribute5"	column="extensionattribute5"		columnIndex="27"/>
+		<result property="jobId"				column="jobId"						columnIndex="28"/>
+		<result property="roleId"				column="roleId"						columnIndex="29"/>
     </resultMap>    
     
+    <resultMap id="session" class="egovframework.let.user.login.vo.SessionVO">
+        <result property="ezSessionId"           column="SESSION_ID"                columnIndex="1"/>
+        <result property="loginCookie"           column="LOGINCOOKIE"               columnIndex="2"/>
+        <result property="creationTime"          column="CREATION_TIME"             columnIndex="3"/>
+        <result property="lastAccessTime"        column="LAST_ACCESS_TIME"          columnIndex="4"/>
+        <result property="maxInactiveInterval"   column="MAX_INACTIVE_INTERVAL"     columnIndex="5"/>
+        <result property="type"   			 	 column="TYPE"     					columnIndex="6"/>
+        <result property="timeDiff"   			 column="TIME_DIFF"     			columnIndex="7"/>
+    </resultMap>
+
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
         <result property="serverName"           column="SERVER_NAME"                columnIndex="1"/>    
         <result property="tenantId"             column="TENANT_ID"                  columnIndex="2"/>
@@ -207,9 +220,7 @@
     <!-- 일반 로그인 -->
     <select id="loginDAO.selectUser" resultMap="login">
         <!-- 일반회원 -->       
-        <isEmpty property="deptID">
-	        <![CDATA[
- 	            SELECT  
+ 	            SELECT
  	                cn, 
  	                password,                
  	                displayname, 
@@ -229,24 +240,31 @@
  	                extensionattribute10 as jikchek, 
  	                tenant_id, 
  	                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode, 
- 	                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang, 
+ 	                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
  	                loginCnt, 
  	                extensionattribute4 as gyumJik, 
  	                extensionattribute2 as userFileUrl, 
  	                extensionattribute14 as sabun, 
  	                password_updatedt,
  	                mobile,
- 	                extensionattribute5
- 	            FROM  
+ 	                extensionattribute5,
+ 	                EXTENSIONATTRIBUTE7  as jobId,
+ 	            	EXTENSIONATTRIBUTE8  as roleId
+ 	            FROM
  	                TBL_USERMASTER a 
  	            WHERE  
- 	                (cn = #id# OR extensionattribute14 = #id#) AND tenant_id = #tenantId# 
- 	        ]]> 
-	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
-	            password = #password#
-	        </isNotEqual>
-	    </isEmpty>
+ 	                (cn = #id# OR extensionattribute14 = #id#) AND tenant_id = #tenantId#
+					<isNotEmpty property="deptID">
+						and department = NVL(#deptID#, department)
+					</isNotEmpty>
+					<isNotEmpty property="jobId">
+						and EXTENSIONATTRIBUTE7 = NVL(#jobId#, EXTENSIONATTRIBUTE7)
+					</isNotEmpty>
+			<isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >
+				password = #password#
+			</isNotEqual>
 	    <isNotEmpty property="deptID">
+			UNION
 	            SELECT 
 					u.cn,
 					u.password,               
@@ -255,54 +273,49 @@
 					d.cn department,              
 					d.displayname description,
 					d.displayname2 description2,
-					case u.department
-				    when #deptID#
-				    then u.title
-				    else
-					(select title from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title,
-					case u.department
-				    when #deptID#
-				    then u.title2
-				    else
-					(select title2 from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title2,
+					b.title as title,
+					b.title2 as title2,
 					d.EXTENSIONATTRIBUTE2 companyid,
 					d.EXTENSIONATTRIBUTE3 company,
 					d.COMPNM2 company2,
 					u.updatedt,
 					case u.department
-				    when #deptID#
-				    then u.extensionattribute1
-				    else
-					'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;'
-				    end
-				    as rollinfo,
+						when #deptID#
+						then u.extensionattribute1
+						else
+						b.ROLL_INFO
+						end
+						as rollinfo,
 					u.telephonenumber,
 					u.mail,
 					u.extensionattribute10 as jikchek,
 					u.tenant_id,
 					concat('top,Top,', d.dept_cd_path) AS deptPathCode,
-					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
 					u.loginCnt,
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
 					u.password_updatedt,
 					u.mobile as mobile,
-					u.extensionattribute5
-				FROM 
-					TBL_USERMASTER u
+					u.extensionattribute5,
+					b.jobid as jobId,
+					b.roleId as roleId
+				FROM
+					TBL_ADDJOBMASTER b
+				JOIN
+					TBL_USERMASTER u ON b.CN = u.CN AND b.TENANT_ID = u.TENANT_ID
 				inner join
 					tbl_deptMaster d
 				on (u.tenant_id = d.tenant_id)
-				WHERE 
+				AND d.CN = b.DEPTID
+				and b.JOBID = #jobId#
+				WHERE
 					(u.cn = #id# OR u.extensionattribute14 = #id#) 
 				    AND u.tenant_id = #tenantId#
 				    and d.cn = #deptID#
-	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+					and b.jobid = #jobId#
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >
 	            password = #password#
 	        </isNotEqual>
 	    </isNotEmpty>
@@ -310,46 +323,51 @@
     
     <select id="loginDAO.selectUserWithCnOnly" resultMap="login">
         <!-- 일반회원 --> 
-         <isEmpty property="deptID">
-	        <![CDATA[
-	            SELECT  
-	                cn, 
-	                password,                
-	                displayname, 
-	                displayname2, 
-	                department,               
-	                description, 
-	                description2, 
-	                title, 
-	                title2, 
-	                physicaldeliveryofficename as companyid, 
-	                company, 
-	                company2, 
-	                updatedt, 
-	                extensionattribute1 as rollinfo, 
-	                telephonenumber, 
-	                mail, 
-	                extensionattribute10 as jikchek, 
-	                tenant_id, 
-	                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode, 
-	                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang, 
-	                loginCnt, 
-	                extensionattribute4 as gyumJik, 
-	                extensionattribute2 as userFileUrl, 
-	                extensionattribute14 as sabun,
-	                password_updatedt,
-	                mobile as mobile,
-	                extensionattribute5
-	            FROM  
-	                TBL_USERMASTER a 
-	            WHERE  
-	               cn = #id# AND tenant_id = #tenantId#
-	        ]]> 
-	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
-	            password = #password#
-	        </isNotEqual>
-	    </isEmpty>
-	    <isNotEmpty property="deptID">      
+			SELECT
+				cn,
+				password,
+				displayname,
+				displayname2,
+				department,
+				description,
+				description2,
+				title,
+				title2,
+				physicaldeliveryofficename as companyid,
+				company,
+				company2,
+				updatedt,
+				extensionattribute1 as rollinfo,
+				telephonenumber,
+				mail,
+				extensionattribute10 as jikchek,
+				tenant_id,
+				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
+				loginCnt,
+				extensionattribute4 as gyumJik,
+				extensionattribute2 as userFileUrl,
+				extensionattribute14 as sabun,
+				password_updatedt,
+				mobile as mobile,
+				extensionattribute5,
+				EXTENSIONATTRIBUTE7  as jobId,
+				EXTENSIONATTRIBUTE8  as roleId
+			FROM
+				TBL_USERMASTER a
+			WHERE
+			   cn = #id# AND tenant_id = #tenantId#
+			<isNotEmpty property="deptID">
+				and department = NVL(#deptID#, department)
+			</isNotEmpty>
+			<isNotEmpty property="jobId">
+				and EXTENSIONATTRIBUTE7 = NVL(#jobId#, EXTENSIONATTRIBUTE7)
+			</isNotEmpty>
+		<isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >
+			password = #password#
+		</isNotEqual>
+	    <isNotEmpty property="deptID">
+		UNION
             SELECT 
 					u.cn,
 					u.password,               
@@ -358,20 +376,8 @@
 					d.cn department,              
 					d.displayname description,
 					d.displayname2 description2,
-					case u.department
-				    when #deptID#
-				    then u.title
-				    else
-					(select title from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title,
-					case u.department
-				    when #deptID#
-				    then u.title2
-				    else
-					(select title2 from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title2,
+					b.title as title,
+					b.title2 as title2,
 					d.EXTENSIONATTRIBUTE2 companyid,
 					d.EXTENSIONATTRIBUTE3 company,
 					d.COMPNM2 company2,
@@ -380,7 +386,7 @@
 				    when #deptID#
 				    then u.extensionattribute1
 				    else
-					'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;'
+					b.ROLL_INFO
 				    end
 				    as rollinfo,
 					u.telephonenumber,
@@ -388,23 +394,30 @@
 					u.extensionattribute10 as jikchek,
 					u.tenant_id,
 					concat('top,Top,', d.dept_cd_path) AS deptPathCode,
-					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
 					u.loginCnt,
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
 					u.password_updatedt,
 					u.mobile as mobile,
-					u.extensionattribute5
-				FROM 
-					TBL_USERMASTER u
+					u.extensionattribute5,
+					b.jobid as jobId,
+					b.roleId  as roleId
+				FROM
+					TBL_ADDJOBMASTER b
+				JOIN
+					TBL_USERMASTER u ON b.CN = u.CN AND b.TENANT_ID = u.TENANT_ID
 				inner join
 					tbl_deptMaster d
 				on (u.tenant_id = d.tenant_id)
-				WHERE 
+				AND d.CN = b.DEPTID
+				and b.JOBID = #jobId#
+				WHERE
 					u.cn = #id# AND u.tenant_id = #tenantId#
 				    and d.cn = #deptID#
-	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+					and b.jobid = #jobId#
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >
 	            password = #password#
 	        </isNotEqual>
 	    </isNotEmpty>
@@ -450,6 +463,78 @@
         ]]>
     </update>
     
+    <update id="loginDAO.updateDbSessionLog" parameterClass="Map">
+        <![CDATA[
+            UPDATE 	TBL_CONNECTION_INFO
+    		SET    	SESSIONCODE 	= #ezSessionId#
+    		WHERE 	SESSIONCODE 	= #sessionCode#
+    		AND		TENANT_ID 		= #tenantId#
+        ]]>
+    </update>
+    
+    <insert id="loginDAO.insertSession" parameterClass="SessionVO">
+        <![CDATA[
+            INSERT INTO TBL_SESSION(
+                SESSION_ID,        	LOGINCOOKIE,        CREATION_TIME,      LAST_ACCESS_TIME,   MAX_INACTIVE_INTERVAL
+            )
+            VALUES(
+                #ezSessionId#,      #loginCookie#,      utc_timestamp(),  	utc_timestamp(),
+                (SELECT PROPERTY_VALUE FROM TBL_TENANT_CONFIG WHERE PROPERTY_NAME = #type# AND TENANT_ID = #tenantId#)
+            )
+        ]]>
+    </insert>
+
+	<update id="loginDAO.updateSession" parameterClass="Map">
+            UPDATE
+            	TBL_SESSION
+    		SET
+    			LAST_ACCESS_TIME = utc_timestamp()
+    		<isNotEmpty prepend="," property="loginCookie">
+    			LOGINCOOKIE = #loginCookie#
+    		</isNotEmpty>
+    		WHERE
+    			SESSION_ID 	= #ezSessionId#
+    </update>
+
+   	<delete id="loginDAO.deleteSession" parameterClass="String">
+   		<![CDATA[
+			DELETE FROM
+				TBL_SESSION
+			WHERE
+				SESSION_ID 	= #ezSessionId#
+		]]>
+    </delete>
+
+   	<select id="loginDAO.getSession" parameterClass="String" resultMap="session">
+        <![CDATA[
+            SELECT
+            	SESSION_ID,        	LOGINCOOKIE,        CREATION_TIME,      LAST_ACCESS_TIME,   MAX_INACTIVE_INTERVAL,
+            	(timestampdiff(minute, LAST_ACCESS_TIME, utc_timestamp())) AS TIME_DIFF,		TYPE
+    		FROM
+    			TBL_SESSION
+    		WHERE
+    			SESSION_ID 	= #ezSessionId#
+        ]]>
+    </select>
+
+    <delete id="loginDAO.deleteFidoSessionByTime" parameterClass="Integer">
+		<![CDATA[
+		DELETE FROM
+			TBL_SESSION
+		WHERE
+			LAST_ACCESS_TIME <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL #dbSessionStoragePeriod# DAY)
+		]]>
+	</delete>
+
+    <select id="loginDAO.getTenantIdList" resultClass="Integer">
+    	 <![CDATA[
+            SELECT
+            	TENANT_ID
+    		FROM
+    			TBL_TENANT
+        ]]>
+    </select>
+
     <update id="loginDAO.updateUser" parameterClass="loginVO">
         <![CDATA[
             UPDATE TBL_USERMASTER
@@ -519,7 +604,7 @@
                 extensionattribute10 as jikchek,
                 tenant_id,
                 (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
-                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
                 loginCnt,
                 extensionattribute4 as gyumJik,
                 extensionattribute2 as userFileUrl,
@@ -561,7 +646,7 @@
                 extensionattribute10 as jikchek,
                 tenant_id,
                 (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
-                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
                 loginCnt,
                 extensionattribute4 as gyumJik,
                 extensionattribute2 as userFileUrl,
@@ -603,14 +688,16 @@
                 extensionattribute10 as jikchek,
                 tenant_id,
                 (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
-                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
                 loginCnt,
                 extensionattribute4 as gyumJik,
                 extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun,
                 password_updatedt,
                 mobile,
-                extensionattribute5
+                extensionattribute5,
+                EXTENSIONATTRIBUTE7 as jobId,
+ 	            EXTENSIONATTRIBUTE8 as roleId
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -656,7 +743,7 @@
 			 	a.extensionattribute10 as jikchek,
 			    a.tenant_id,
 			    (SELECT 'top,Top,' || dept_cd_path FROM	TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
-			    (SELECT property_value FROM TBL_TENANT_CONFIG	WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+			    (SELECT property_value FROM TBL_TENANT_CONFIG	WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
 			    a.loginCnt,
 			    a.extensionattribute4 as gyumJik,
 			    a.extensionattribute2 as userFileUrl,

@@ -16,6 +16,7 @@
 	<typeAlias  alias="BoardMyFavoriteVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardDeleteItemVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO"/>
 	<typeAlias  alias="BoardPollConfigVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO"/> <!-- baonk added -->
+	<typeAlias  alias="OrganUserVO" 			type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
@@ -197,9 +198,8 @@
 			<![CDATA[
 				(SELECT 
 					BOARDID ,
-	                BOARDNAME ,
-	                BOARDNAME2 ,
-	                TABUSED,
+					CASE WHEN (BOARDNAME$v_LANG$ = '' OR BOARDNAME$v_LANG$ IS NULL) THEN BOARDNAME ELSE BOARDNAME$v_LANG$ END BOARDNAME,	                
+					TABUSED,
 	                VIEWORDER
 	            FROM 
 	            	TBL_Board_MyBoards
@@ -214,8 +214,7 @@
 	            
 	            (SELECT 
 					A.BOARDID ,
-	                A.BOARDNAME ,
-	                A.BOARDNAME2 ,
+					CASE WHEN (A.BOARDNAME$v_LANG$ = '' OR A.BOARDNAME$v_LANG$ IS NULL) THEN A.BOARDNAME ELSE A.BOARDNAME$v_LANG$ END BOARDNAME,	                
 	                B.TABUSED,
 	                B.VIEWORDER
 	            FROM
@@ -248,8 +247,7 @@
 			<![CDATA[
 				(SELECT 
 					A.BOARDID ,
-                    A.BOARDNAME ,
-                    A.BOARDNAME2 ,
+					CASE WHEN (A.BOARDNAME$v_LANG$ = '' OR A.BOARDNAME$v_LANG$ IS NULL) THEN A.BOARDNAME ELSE A.BOARDNAME$v_LANG$ END BOARDNAME,	                
                     TABUSED ,
                     B.GUBUN ,
                     A.VIEWORDER
@@ -274,8 +272,7 @@
                 	
                 (SELECT 
 					A.BOARDID ,
-                    A.BOARDNAME ,
-                    A.BOARDNAME2 ,
+					CASE WHEN (A.BOARDNAME$v_LANG$ = '' OR A.BOARDNAME$v_LANG$ IS NULL) THEN A.BOARDNAME ELSE A.BOARDNAME$v_LANG$ END BOARDNAME,	                
                     C.TABUSED ,
                     B.GUBUN ,
                     C.VIEWORDER
@@ -764,7 +761,7 @@
 							 AND 
 							 	S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
 		]]>
-<!-- 		테스트해보고 안되면 이걸로 대체 -->
+<!-- 		오류 발생시 이것으로 대체 -->
 <!--             	A.StartDate > DATE_SUB(DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL 5 DAY) -->
 	</select>
 	
@@ -815,7 +812,8 @@
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION,
 	                    C.MAIL,
-	                    A.ITEMID
+	                    A.ITEMID,
+	                    A.WRITERID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -842,7 +840,8 @@
 						BOARDID, 
 	                    CONTENTLOCATION,
 	                    ITEMID,
-	                    TITLE
+	                    TITLE,
+	                    WRITERID
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
@@ -862,7 +861,8 @@
 	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION,
-	                    A.ITEMID
+	                    A.ITEMID,
+	                    A.WRITERID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -883,7 +883,8 @@
 						BOARDID, 
 	                    CONTENTLOCATION,
 	                    ITEMID,
-	                    TITLE
+	                    TITLE,
+	                    WRITERID
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
@@ -1015,7 +1016,9 @@
                 EXTENSIONATTRIBUTE8 ,
                 EXTENSIONATTRIBUTE9 ,
                 EXTENSIONATTRIBUTE10 ,
-                CONTENT  
+                CONTENT,
+				NTSTARTDATE notiStart,
+				NTENDDATE notiEnd
         	FROM 
         		TBL_Board_Item 
        		WHERE
@@ -1323,14 +1326,6 @@
   				A.WRITERNAME2,
   				A.WRITERDEPTNAME2,
   				A.WRITERCOMPANYNAME2,
-  				( SELECT 
-  					COUNT(*)
-				  FROM 
-				  	TBL_Board_OneLineReply
-				  WHERE  
-				  	TENANT_ID = A.TENANT_ID
-				  AND
-				  	ITEMID = A.ITEMID ) as ONELINECNT,
   				A.UPPERITEMIDTREE,
   				A.DOCNO,
   			    '' AS NOTICE,
@@ -1433,14 +1428,6 @@
                 A.WRITERNAME2 ,
                 A.WRITERDEPTNAME2 ,
                 A.WRITERCOMPANYNAME2 ,
-                (SELECT 
-                	COUNT(*)  
-    				FROM 
-    					TBL_Board_OneLineReply 
-   				WHERE  
-   					TENANT_ID = A.TENANT_ID
-   				AND
-   					ITEMID = A.ITEMID) ONELINECNT  ,
                 A.UPPERITEMIDTREE ,
                 A.DOCNO ,
                 A.EXTENSIONATTRIBUTE2 NOTICE  ,
@@ -2118,7 +2105,7 @@
             AND 
             	STARTDATE <= #nowDate#
             AND 
-            	ENDDATE > #nowDate#
+            	NTENDDATE > #nowDate#
             AND 
             	extensionAttribute1 = '0'
             AND 
@@ -2763,13 +2750,13 @@
                 		TBL_Board_Item A
                    LEFT JOIN 
                    	( SELECT 
-                   		COUNT(USERID)  TOTALCOUNT  ,
+                   		COUNT(USERID)  TOTALCOUNT,
                    		ITEMID,
                    		TENANT_ID 
                    	  FROM 
                    	  	TBL_Board_Item_Read
                    	  WHERE
-                   	  	TENANT_ID = #V_TENANTID#
+                   	  	TENANT_ID = #v_TENANTID#
                    	  AND  
                    	  	USERID = #v_PUSERID#
                          AND 
@@ -3730,6 +3717,10 @@
 	        	startdate <= #nowDate#
 	        AND 
 	        	enddate > #nowDate#
+		    AND
+			    ntstartdate <= #nowDate#
+		    AND
+			    ntenddate > #nowDate#
 	        AND 
 	        	extensionattribute1 = '0'
 	        AND 
@@ -4228,18 +4219,18 @@
 	<insert id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
 		<isEqual property="parentWriteDate" compareValue="docNO">
 			INSERT INTO TBL_Board_Item ( 
-				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content
+				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content, ntstartdate, ntenddate
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content# 
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#
 	        )
 		</isEqual>
 		<isNotEqual property="parentWriteDate" compareValue="docNO">
 			INSERT INTO TBL_Board_Item ( 
-				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content
+				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content, ntstartdate, ntenddate
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#
 	        )
 		</isNotEqual>
 	</insert>
@@ -6017,20 +6008,28 @@
 	<select id="EzBoardDAO.getCompanyTabBoardIDList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 			SELECT
-				TABID,
-				BOARDID,
-				BOARDNAME,
-				BOARDNAME2
+				A.TABID,
+				A.BOARDID,
+				A.BOARDNAME,
+				A.BOARDNAME2,
+				CASE WHEN (B.BOARDNAME3 = '' OR B.BOARDNAME3 IS NULL) THEN A.BOARDNAME ELSE B.BOARDNAME3 END BOARDNAME3,
+				CASE WHEN (B.BOARDNAME4 = '' OR B.BOARDNAME4 IS NULL) THEN A.BOARDNAME ELSE B.BOARDNAME4 END BOARDNAME4
 			FROM
-				TBL_BOARD_TABBOARD
+				TBL_BOARD_TABBOARD A
+			INNER JOIN
+				TBL_BOARD_BOARDINFO B
+			ON 
+				A.BOARDID = B.BOARDID
 			WHERE
-				(COMPANYID = #v_COMPANYID#
+				(A.COMPANYID = #v_COMPANYID#
 			OR
-				TRIM(COMPANYID) = ''
+				TRIM(A.COMPANYID) = ''
 			OR
-				COMPANYID IS NULL)
+				A.COMPANYID IS NULL)
 			AND
-				TENANT_ID = #v_TENANTID#
+				A.TENANT_ID = #v_TENANTID#
+			ORDER BY
+				TABID
 		]]>
 	</select>
 
@@ -6065,7 +6064,8 @@
                 D.EXTENSIONATTRIBUTE2 AS COMPANYID,
                 U.EXTENSIONATTRIBUTE1 AS ROLLINFO,
                 D.DEPTLEVEL,
-                CONCAT('top,', CONCAT('Top,', D.DEPT_CD_PATH)) AS DEPT_CD_PATH
+                CONCAT('top,', CONCAT('Top,', D.DEPT_CD_PATH)) AS DEPT_CD_PATH,
+                CAST(U.TENANT_ID AS CHAR(1)) AS TENANT_ID
 			FROM
 				TBL_USERMASTER U
 			INNER JOIN
@@ -6097,7 +6097,8 @@
 			SELECT 
 				DISTINCT WRITERID, 
 				WRITERNAME$lang$ AS WRITERNAME, 
-				TUM.MAIL 
+				TUM.MAIL,
+				CAST(TUM.TENANT_ID AS CHAR(1)) AS TENANT_ID
 			FROM 
 				TBL_BOARD_ITEM TBI
             INNER JOIN 
@@ -6315,6 +6316,58 @@
 			AND
 				TENANT_ID = #v_TENANTID#
 		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getFavoriteBoardUserList" parameterClass="Map" resultClass="OrganUserVO">
+		SELECT
+			BM.USERID AS cn,
+			U.DISPLAYNAME AS displayName,
+			U.MAIL AS mail,
+			BM.TENANT_ID AS tenantId,
+			BM.COMPANYID AS companyID
+		FROM
+			TBL_BOARD_MYBOARDS BM
+		INNER JOIN
+			TBL_USERMASTER U
+		ON 
+			BM.TENANT_ID  = U.TENANT_ID 
+		AND
+			BM.USERID = U.CN
+		LEFT JOIN
+			TBL_USERMASTER_RETIRE R
+		ON
+			BM.TENANT_ID = R.TENANT_ID
+		AND
+			BM.USERID = R.CN
+		LEFT JOIN
+			TBL_USERMASTER_DELETE D
+		ON
+			BM.TENANT_ID = D.TENANT_ID
+		AND
+			BM.USERID = D.CN
+		WHERE
+			BM.TENANT_ID = #tenantId#
+		AND
+			BM.boardid = #boardId#
+		AND
+			R.CN IS NULL
+		AND
+			D.CN IS NULL
+		AND
+			(COMPANYID = #companyId# OR COMPANYID = '*')
+	</select>
+	
+	<select id="EzBoardDAO.confirmBoardItemDeletion" parameterClass="map" resultClass="boolean">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			ITEMID = #itemID#
+		AND
+			BOARDID = #boardID#
+		AND
+			TENANT_ID = #tenantID#
 	</select>
 
 </sqlMap>

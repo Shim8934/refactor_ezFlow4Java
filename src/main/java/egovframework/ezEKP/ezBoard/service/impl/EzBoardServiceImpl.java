@@ -1,16 +1,22 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,18 +29,27 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.StringJoiner;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.FileCopyUtils;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -59,6 +74,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -126,7 +142,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
 	@Override
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID) throws Exception {
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID, String lang) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -135,6 +151,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_MODE", pMode);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_LANG", lang);
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = ezBoardDAO.getBoardNewBoardOrder(map);
 		
@@ -201,6 +218,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<DESCRIPTION><![CDATA[" + strProp.getBoardDescription() + "]]></DESCRIPTION>");
 		sb.append("<BOARDNAME><![CDATA[" + strProp.getBoardName() + "]]></BOARDNAME>");
 		sb.append("<BOARDNAME2><![CDATA[" + strProp.getBoardName2() + "]]></BOARDNAME2>");
+		sb.append("<BOARDNAME3><![CDATA[" + strProp.getBoardName3() + "]]></BOARDNAME3>");
+		sb.append("<BOARDNAME4><![CDATA[" + strProp.getBoardName4() + "]]></BOARDNAME4>");
 		sb.append("<ALERTPOSTITEM><![CDATA[" + strProp.getAlertPostItem() + "]]></ALERTPOSTITEM>");
 		sb.append("<REPLYNOTIFY><![CDATA[" + strProp.getReplyNotify() + "]]></REPLYNOTIFY>");
 		sb.append("<URL><![CDATA[" + strProp.getUrl() + "]]></URL>");
@@ -588,7 +607,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		/* 2019-12-17 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라 조회자정보 유지 */
 		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
-		if (isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("COPY") || isReadCountCopyUsed.equals("ALL"))) {
+		if (StringUtils.isNotBlank(isReadCountCopyUsed) && ("COPY".equals(isReadCountCopyUsed) || "ALL".equals(isReadCountCopyUsed))) {
 			ezBoardDAO.insertBoardItemReadForCopy(map);
 		}
 
@@ -612,7 +631,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		/* 2019-12-17 홍승비 - 게시물 이동 시, 테넌트 컨피그에 따라 기존의 조회자정보를 유지함 */
 		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
-		if (isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("MOVE") || isReadCountCopyUsed.equals("ALL"))) {
+		if (StringUtils.isNotBlank(isReadCountCopyUsed) && ("MOVE".equals(isReadCountCopyUsed) || "ALL".equals(isReadCountCopyUsed))) {
 			ezBoardDAO.updateBoardItemRead(map);
 		} else {
 			ezBoardDAO.deleteBoardItemRead2(map);
@@ -1196,7 +1215,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
-		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("lang", commonUtil.getLangData(userInfo.getLang()));
 		map.put("v_TYPE", type);
 		map.put("v_START", start);
 		map.put("v_END", end);
@@ -1229,7 +1248,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("lang", commonUtil.getLangData(userInfo.getLang()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -1263,7 +1282,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("lang", commonUtil.getLangData(userInfo.getLang()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -1296,7 +1315,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("lang", commonUtil.getLangData(userInfo.getLang()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -2913,8 +2932,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			if (pStrLang.equals("")) {
 				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
-			} else {
+			} else if (pStrLang.equals("2")) {
 				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
+			} else if (pStrLang.equals("3")) {
+				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName3()) + "</VALUE>");
+			} else if (pStrLang.equals("4")) {
+				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName4()) + "</VALUE>");
 			}
 			
 			result.append("<STYLE><![CDATA[]]></STYLE>");
@@ -2922,8 +2945,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			if (pStrLang.equals("")) {
 				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
-			} else {
+			} else if (pStrLang.equals("2")) {
 				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
+			} else if (pStrLang.equals("3")) {
+				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName3()) + "</DATA2>");
+			} else if (pStrLang.equals("4")) {
+				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName4()) + "</DATA2>");
 			}
 			
 			result.append("<DATA3>" + pRootBoardID + "</DATA3>");
@@ -3274,8 +3301,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setWriterCompanyName2(doc.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
 			boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
 			boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
-			boardListVO.setTitle(commonUtil.stripScriptTags(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
-			boardListVO.setMainContent(commonUtil.stripScriptTags(doc.getElementsByTagName("CONTENT").item(0).getTextContent()));
+			boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
+			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
 			boardListVO.setMainImageID(mainImageID);
 			boardListVO.setRealPath(realPath);
 			boardListVO.setTenantID(userInfo.getTenantId());
@@ -3885,7 +3912,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        }
 	        /* 2019-12-13 홍승비 - 게시물 이동 시 조회수, 조회자정보 유지 */
 	        sb.append("<READCOUNT>" + boardListVO.getReadCount() + "</READCOUNT>");
-	        
+			
+			/* 2024-02-19 민지수 - 게시물 이동 시 공지사항 등록기간 유지 */
+			sb.append("<NTSTARTDATE>" + boardListVO.getNotiStart() + "</NTSTARTDATE>");
+			sb.append("<NTENDDATE>" + boardListVO.getNotiEnd() + "</NTENDDATE>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -3969,12 +3999,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setWriterCompanyName2(doc.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
 		boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
 		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
-		boardListVO.setTitle(commonUtil.stripScriptTags(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
+		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
 		boardListVO.setRealPath(realPath);
 		boardListVO.setTenantID(userInfo.getTenantId());
 		
 		if (doc.getElementsByTagName("DOCCONTENT").item(0) != null) {
-			boardListVO.setContent(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("DOCCONTENT").item(0).getTextContent())));
+			boardListVO.setContent(commonUtil.htmlUnescape(doc.getElementsByTagName("DOCCONTENT").item(0).getTextContent()));
 		}
 
 		if (pMode.equals("copy") || pMode.equals("move")) {
@@ -4094,8 +4124,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		/* 2019-12-17 홍승비 - 게시물 복사/이동 시 테넌트 컨피그에 따라 조회수 유지 */
 		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", userInfo.getTenantId());
-		if ((pMode.equals("copy") && isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("COPY") || isReadCountCopyUsed.equals("ALL"))) ||
-				(pMode.equals("move") && isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("MOVE") || isReadCountCopyUsed.equals("ALL")))) {
+		if ((pMode.equals("copy") && StringUtils.isNotBlank(isReadCountCopyUsed) && ("COPY".equals(isReadCountCopyUsed) || "ALL".equals(isReadCountCopyUsed))) ||
+				(pMode.equals("move") && StringUtils.isNotBlank(isReadCountCopyUsed) && ("MOVE".equals(isReadCountCopyUsed) || "ALL".equals(isReadCountCopyUsed)))) {
 			boardListVO.setReadCount(Integer.valueOf(doc.getElementsByTagName("READCOUNT").item(0).getTextContent()));
 		} else { // READCOUNT값은 기본적으로 0으로 삽입된다.
 			boardListVO.setReadCount(0);
@@ -4104,11 +4134,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		/* 2023-11-16 홍승비 - 게시물 복사 및 이동 시 공지사항 기간설정값을 가져오지 않는 오류 null 체크 부분 수정 (쿼리단 미수정, 차후 수정 필요) */
 		/* 2023-09-25 민지수 - 게시판 > 공지사항 > 공지 시작, 종료일 추가 */
 		if (doc.getElementsByTagName("NTSTARTDATE").item(0) != null && doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent().equals("")) {
-			boardListVO.setNotiStart(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			if (pMode.equals("copy") || pMode.equals("move")) {
+				boardListVO.setNotiStart(doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent());
+			} else {
+				boardListVO.setNotiStart(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			}
 		}
 
 		if (doc.getElementsByTagName("NTENDDATE").item(0) != null && doc.getElementsByTagName("NTENDDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("NTENDDATE").item(0).getTextContent().equals("")) {
-			boardListVO.setNotiEnd(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			if (pMode.equals("copy") || pMode.equals("move")) {
+				boardListVO.setNotiEnd(doc.getElementsByTagName("NTENDDATE").item(0).getTextContent());
+			} else {
+				boardListVO.setNotiEnd(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			}
 		}
 		
 		if (pMode.equals("modify")) {
@@ -4275,7 +4313,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        
 	        /* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라  조회수, 조회자정보 유지 */
 	        sb.append("<READCOUNT>" + boardLisitVO.getReadCount() + "</READCOUNT>");
-	        
+			/* 2024-02-19 민지수 - 게시물 복사 시 공지사항 등록기간 유지 */
+			sb.append("<NTSTARTDATE>" + boardLisitVO.getNotiStart() + "</NTSTARTDATE>");
+			sb.append("<NTENDDATE>" + boardLisitVO.getNotiEnd() + "</NTENDDATE>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -5072,5 +5112,174 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			logger.error("isBoardAdmin error : " + e.getMessage(), e);
         }
 		return result;
+	}
+
+	@Override
+	public void downloadBackgroundItemFile(HttpServletRequest request, HttpServletResponse response, String realPath, String filePath, String fileName) throws Exception {
+		logger.info("downloadBackgroundItemFile started");
+
+		ZipOutputStream zos = null;
+		FileInputStream fis = null;
+
+		String saveZipPath = "";
+
+		saveZipPath = createZipFile(zos, fis, realPath, filePath, fileName);
+		downloadFile(request, response, zos, fis, saveZipPath, fileName);
+
+		logger.info("downloadBackgroundItemFile ended");
+	}
+
+	private String createZipFile(ZipOutputStream zos, FileInputStream fis, String realPath, String filePath, String fileName) throws Exception {
+		logger.info("createZipFile started");
+
+		String saveZipPath = "";
+		String ext = ".zip";
+
+		byte buffer[] = new byte[4096];
+		int length = 0;
+
+		try {
+			try {
+				saveZipPath = filePath.substring(0, filePath.lastIndexOf("/")) + commonUtil.separator + fileName.substring(0, fileName.lastIndexOf(".")) + ext;
+
+				zos = new ZipOutputStream(
+					new FileOutputStream(realPath + saveZipPath),
+					StandardCharsets.UTF_8
+				);
+				fis = new FileInputStream(realPath + filePath);
+
+				zos.putNextEntry(new ZipEntry(fileName));
+
+				while ((length = fis.read(buffer)) > 0) {
+					zos.write(buffer, 0, length);
+				}
+
+				zos.flush();
+				zos.close();
+				fis.close();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		} catch (Exception e) {
+
+		}
+
+		logger.info("createZipFile ended");
+
+		return saveZipPath;
+	}
+
+	private void downloadFile(HttpServletRequest request, HttpServletResponse response, ZipOutputStream zos, FileInputStream fis, String filePath, String fileName) throws Exception {
+		logger.info("downloadFile started");
+
+		fileName = fileName.substring(0, fileName.lastIndexOf(".")) + ".zip";
+		int buffer = 2048;
+
+		String downFileName = EgovStringUtil.isNullToString(commonUtil.getRealPath(request) + filePath);
+		String orgFileName = EgovStringUtil.isNullToString(fileName);
+
+		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
+
+		File file = new File(commonUtil.detectPathTraversal(downFileName));
+
+		if (!file.exists()) {
+			throw new FileNotFoundException(downFileName);
+		}
+
+		if (!file.isFile()) {
+			throw new FileNotFoundException(downFileName);
+		}
+
+		long fSize = file.length();
+		if (fSize > 0) {
+			BufferedInputStream in = null;
+
+			try {
+				in = new BufferedInputStream(new FileInputStream(file));
+
+				String mimetype = "application/octet-stream"; //"application/x-msdownload"
+
+				String nfcFilename = commonUtil.normalizeFileName(orgFileName);
+
+				response.setBufferSize(buffer);
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");
+				response.setHeader("Content-Length", Long.toString(fSize));
+
+				FileCopyUtils.copy(in, response.getOutputStream());
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+				}
+			}
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}
+
+		logger.info("downloadFile ended");
+	}
+
+	/**
+	 * 이미지 파일명을 조사하여 첫번째 포함 파일 객체를 리턴
+	 * @param itemID 조사할 게시판 id
+	 * @param fileName 포함될 단어
+	 * @param tenantID tenant ID
+	 * @return	해당하는 첨부 이미지 객체
+	 * @throws Exception 해당 게시판 조회 쿼리(when itemID, tenantID) 가 예외 발생
+	 */
+	public Optional<BoardAttachVO> getBoardAttachByName(String itemID, String fileName, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+
+		// 파일이름이 없을경우 empty 리턴
+		if (StringUtils.isBlank(fileName)) return Optional.empty();
+
+		List<BoardAttachVO> voList = ezBoardDAO.brdGetItemAttachmentInfo(map);
+		for (BoardAttachVO vo : voList) {
+			// 파일이름이 비어있거나 이미지 파일의 확장자가 아닌경우 스킵
+			if (StringUtils.isBlank(vo.getFileName()) || !commonUtil.checkImgExtension(FilenameUtils.getExtension(vo.getFileName()))) {
+				continue;
+			}
+
+			// 파일이름에 주어진 단어가 포함된 경우 vo 바로 리턴
+			if (FilenameUtils.getBaseName(vo.getFileName()).contains(fileName)) {
+				return Optional.of(vo);
+			}
+		}
+
+		return Optional.empty();
+	}
+	
+	@Override
+	/* 2024-04-01 한태훈 - 게시판 즐겨찾기 추가 구성원 리스트 가져오는 메소드 */
+	public List<OrganUserVO> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception {
+		logger.debug("getFavoriteBoardUserList starts");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardId", boardId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		logger.debug("getFavoriteBoardUserList ends");
+		return ezBoardDAO.getFavoriteBoardUserList(map);
+	}
+
+	@Override
+	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception {
+		logger.debug("confirmBoardItemDeletion starts");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantId);
+		map.put("itemID", itemID);
+
+		logger.debug("confirmBoardItemDeletion ends");
+		return ezBoardDAO.confirmBoardItemDeletion(map);
 	}
 }

@@ -1085,6 +1085,15 @@ function CheckSignCellValueLast() {
         	pAlertContent = pAlertContent + "" + strLang349 + "" + pSignCount + "" + strLang350 + "<br>";
         }
     }
+    
+    // 2023-04-20 이가은 - 일괄접수 시 양식마다 다른 결재칸 수로 인해 가장 작은 결재칸 수로 제한시킴
+    if (opener.pCurSelRowSend != undefined) {
+    	if ((opener.pCurSelRowSend).length >= 2) {
+    		if ((pCurDraft + pCurSign + pCurAprove + pCurDekyul + pCurJunkyul + pCurGamsa) > opener.minSignCountInfo[0]) {
+    			pAlertContent = pAlertContent + "'" + opener.opener.minSignCountInfo[1] + "' " + strLangCSJ01 +  strLang349 + opener.minSignCountInfo[0] + strLang350;
+    		}
+    	}
+    }
 
     if (pCurHapyui > pHapYuiCount) {
     	if (draftAllFlag != undefined && draftAllFlag == "Y") {
@@ -1810,6 +1819,15 @@ function OpenAlertUI_Complete() {
     DivPopUpHidden();
 }
 
+function OpenAlertUI_Close() {
+	try {
+		DivPopUpHidden();
+		window.close();
+		opener.frames["left"].getAprCount();
+		opener.getDocList();
+	} catch(e) {}
+}
+
 //function APRLINETYPECHANGEFunction()
 //{
 //	// 표준모듈 (2007.05.09) : 다국어
@@ -2437,7 +2455,6 @@ function AprDeptListXML() {
 
     var AprDeptInfo = AprDeptListxml;
 
-    //일단 크로스 위주로 했으니깐 나중에 고치자 도르야
 //    if (CrossYN()) {
 //        var xmlRtn = AprDeptPara.documentElement;
 //        var Node = AprDeptInfo.importNode(xmlRtn, true);

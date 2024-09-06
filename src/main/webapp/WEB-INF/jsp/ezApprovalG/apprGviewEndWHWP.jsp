@@ -23,6 +23,9 @@
 	        var pListSusin = "<c:out value='${listSusin}'/>";
 	        var porgDocID = "<c:out value='${orgDocID}'/>";
 	        var pFormID = "<c:out value='${formID}'/>";
+	        var formUrl = "<c:out value='${formUrl}'/>";
+	        var formDocType = "<c:out value='${formDocType}'/>";
+	        var useFormContOnReuseForWHWP = "<c:out value='${useFormContOnReuseForWHWP}'/>";
 	        var pTitle = "<c:out value='${docTitle}'/>";
 	        var pOpinionFlag;
 	        var pListTypeValue = 4;
@@ -72,6 +75,9 @@
 			/* 2023-12-07 홍승비 - 전자결재 서명데이터 재맵핑에 필요한 docState 파라미터 추가 */
 			var pDocState = "<c:out value ='${docState}'/>";
 			
+			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
+			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
+			
 	        window.onresize = function () {
 	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
 	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
@@ -102,22 +108,59 @@
 	        function openOpinionUI_Complete() {
 		        DivPopUpHidden();
 		    }
-	
+			/* 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴 */
+			function getAprOrEndStr() {
+				var result = "";
+
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getAprOrEndStr.do",
+					data : {
+						docID : pDocID,
+						orgCompanyID : orgCompanyID
+					},
+					success: function(text){
+						result = text;
+					}
+				});
+
+				return result;
+			}
 	        function CheckOpinionInfo() {
 				var result = "";
-		    	
-		    	$.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezApprovalG/getEndOpinionInfo.do",
-		    		data : {
-		    			docID : pDocID
-		    		},
-		    		success: function(xml){
-		    			result = loadXMLString(xml);
-		    		}
-		    	});
+				var aprOrEndStr = getAprOrEndStr();
+				if (aprOrEndStr == "APR") {
+					$.ajax({
+						type: "POST",
+						dataType: "text",
+						async: false,
+						url: "/ezApprovalG/opinionRequest.do",
+						data: {
+							docID: pDocID,
+							orgCompanyID: orgCompanyID,
+							state : aprOrEndStr
+						},
+						success: function (xml) {
+							result = loadXMLString(xml);
+						}
+					});
+				} else {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/getEndOpinionInfo.do",
+						data : {
+							docID : pDocID
+							,orgCompanyID : orgCompanyID
+						},
+						success: function(xml){
+							result = loadXMLString(xml);
+						}
+					});
+				}
 		
 		        Resultxml = result;
 		
@@ -293,7 +336,7 @@
 				var url = "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + ingFlag;
 			    //var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    //var RtnVal = window.showModalDialog(url, "", feature);
-				DivPopUpShow(420, 520, url);
+				DivPopUpShow(430, 530, url);
 			}
 			
 			function btnDocInfo_onclick_Complete() {
@@ -462,7 +505,7 @@
 		            var pTop = (pheight - 720) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 		            
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 		                alert(strLang1031);
 		            }
 		            else {
@@ -501,28 +544,35 @@
 		var editable = "";
 	 	function btnReuse_onclick(type) {
 	 		editable = type;
-	 		var parameter = new Array();
-	        parameter[0] = "sol2";
-	        parameter[1] = "A01000";
-	        
-	        url = "/ezApprovalG/getFormCont.do";
-	        
-	        if (CrossYN()) {
-	            getformcont_cross_dialogArguments[0] = parameter;
-	            getformcont_cross_dialogArguments[1] = btnReuse_onclick_complete;
-	            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
-	            
-	            try { getFormCont_Cross.focus(); } catch (e) {}
-	        } else {
-	            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
-	            var ret = window.showModalDialog(url, parameter, feature);
-	            formURL = ret[0];
-	            formDocType = ret[1];
-	            
-	            if (formURL != "cancel") {
-	                openDraftUI(formURL, formDocType);
-	            }
-	        }
+	 		if (useFormContOnReuseForWHWP === "YES") {
+		 		var parameter = new Array();
+		        parameter[0] = "sol2";
+		        parameter[1] = "A01000";
+		        
+		        url = "/ezApprovalG/getFormCont.do";
+		        
+		        if (CrossYN()) {
+		            getformcont_cross_dialogArguments[0] = parameter;
+		            getformcont_cross_dialogArguments[1] = btnReuse_onclick_complete;
+		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            
+		            try { getFormCont_Cross.focus(); } catch (e) {}
+		        } else {
+		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+		            var ret = window.showModalDialog(url, parameter, feature);
+		            formURL = ret[0];
+		            formDocType = ret[1];
+		            
+		            if (formURL != "cancel") {
+		                openDraftUI(formURL, formDocType);
+		            }
+		        }
+	 		}
+	 		else {
+	 			newFormURL = formUrl;
+	 			newFormDocType = formDocType;
+	 	        openDraftUI("DRAFT");
+	 		}
 	 	}
 	 	
 	 	var editable = "";
@@ -566,37 +616,40 @@
 	     }
 		 
 		function openDraftUI(pDraftFlag) {
-			var param = {
-				formURL : newFormURL,
-				draftFlag : pDraftFlag,
-				formDocType : newFormDocType,
-				susinSN : "0",
-				docstate : "",
-				listType : "1",
-				aprState : "",
-				isTmpDoc : "",
-				isUsed : editable,
-				beforeDocID : pDocID
-			}
+			var pArgument = new Array();
+			
+	        pArgument[0] = newFormURL;
+	        pArgument[1] = pDraftFlag;
+	        pArgument[2] = newFormDocType;
+            pArgument[3] = "0";
+            pArgument[4] = "";
+            pArgument[5] = "1";
+            pArgument[6] = "";
+            pArgument[7] = "";
+            pArgument[8] = editable;
+            pArgument[9] = pDocID;
+            
+			var params = {
+				formURL: escape(pArgument[0]),
+				draftFlag: escape(pArgument[1]),
+				formDocType: escape(pArgument[2]),
+				susinSN: escape(pArgument[3]),
+				docstate: escape(pArgument[4]),
+				listType: escape(pArgument[5]),
+				aprState: escape(pArgument[6]),
+				isTmpDoc: escape(pArgument[7]),
+				isUsed: escape(pArgument[8]),
+				beforeDocID: escape(pArgument[9])
+			};
 	        
 			var openLocation = "";
 			
-			if(useWebHWP == "YES")
-				openLocation = "/ezApprovalG/draftuiWHWP.do";
-			else 
-				openLocation = "/ezApprovalG/draftuiHWP.do";
-			
-			openLocation = openLocation
-				+ "?formURL=" + escape(param.formURL)
-				+ "&draftFlag=" + escape(param.draftFlag)
-				+ "&formDocType=" + escape(param.formDocType)
-				+ "&susinSN=" + escape(param.susinSN) 
-				+ "&docState=" + escape(param.docstate) 
-				+ "&listType=" + escape(param.listType) 
-				+ "&aprState=" + escape(param.aprState)
-				+ "&isTmpDoc=" + escape(param.isTmpDoc) 
-				+ "&isUsed=" +  escape(param.isUsed)
-				+ "&beforeDocID=" + escape(param.beforeDocID);
+			if(useWebHWP == "YES") {
+				openLocation = "/ezApprovalG/draftuiWHWP.do?" + new URLSearchParams(params);
+			}
+			else {
+				openLocation = "/ezApprovalG/draftuiHWP.do?" + new URLSearchParams(params);
+			}
 	        
 	        var result = GetOpenWindow(openLocation, "", 1050, 970, "YES");
 	        window.close();
@@ -604,8 +657,8 @@
 
 			window.onbeforeunload = function () {
 				try {
-					if ((window.opener.g_sFlag == undefined) || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01")) {
-						// 전자결재 > 완료문서, 기록물등록대장에만 적용 되도록 조건 추가
+					if ((window.opener.g_sFlag == undefined && isDocAttach == "false") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "docShare")) {
+						// 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
 						window.opener.openergetDocInfo();
 					} else {
 						return;
@@ -632,7 +685,7 @@
 	                        <c:if test="${useBoard == 'YES' }">
 	                        <li id="btnBoard"><span onclick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 	                        </c:if>
-	                        <c:if test="${formID != '2018000000'}">
+	                        <c:if test="${formID != '2018000000' && docAprEnd != 'APR'}"> <%-- 2024-08-19 조소정 - 배부대장의 경우 apr(진행중) 문서인 경우 버튼 숨김처리 --%>
 	                        <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 	                        </c:if>
 	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>

@@ -213,6 +213,25 @@
 						addheight = AtttributeCount * 30;
 		            }
 		            
+		            // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입, textArea 타입 출력값 가공
+		            var userLang = "${userInfo.lang}"
+		            var boardAttrListTemp = '<c:out value="${boardAttrJson}"/>';
+		            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+		            var boardItemTemp = '<c:out value="${boardItemJson}"/>';
+                    var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
+                    
+		            for (let i = 0 ; i < boardAttrListJson.length ; i++ ) {
+		                var boardAttr = boardAttrListJson[i];
+		                if (boardAttr.colType == 'people') {
+		                    var peoplePickerString = peoplePickerDisplay(boardItemJson[boardAttr.tableCol], userLang);
+		                    document.getElementById(boardAttr.tableCol).innerText = peoplePickerString;
+		                } else if (boardAttr.colType == 'textArea') {
+		                    var peoplePickerString = boardItemJson[boardAttr.tableCol];
+		                    peoplePickerString = peoplePickerString.replace(/<script.*?>(.*?)<\/script>/gs, '$1');
+		                    document.getElementById(boardAttr.tableCol).innerHTML = unescapeForJson(peoplePickerString);
+		                }
+		            }
+		            
 		            /* 2019-11-05 홍승비 - 본문 하단에 댓글영역 표출 */
  		            if (OneLineReplyFlag == "2") {
  		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
@@ -294,6 +313,7 @@
 		            if (g_progresswin) g_progresswin.close();
 		        }
 		        catch (e) {
+		            console.log(e);
 		            alert(e.description);
 		        }
 		    };
@@ -508,12 +528,13 @@
 		                try {
 		                	window.opener.leftCountRf(pBoardID);
 						} catch (e) {console.log(e);}
+						
 		                try {
 		                    window.opener.refresh_onclick();
 		                } catch (e) {console.log(e);}
 
-	                    //2019.03.04 유은정 - 게시판 적용
-	                    try {
+	                    // 게시판 포틀릿 리스트 업데이트 되도록 수정
+	                    try { // 공지사항 포틀릿 새로고침
 		                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
 		                    	parent.opener.getNoticePortletList();
 		                    }
@@ -525,9 +546,9 @@
 		                    }
 	                    } catch (e) {console.log(e);}
 
-	                 	// 게시판 포틀릿 리스트 업데이트 되도록 수정
-						try {
-				            if (parent.opener.getBoardPortletInfo != undefined) {
+	                 	
+						try { // 카드 A형, 카드 B형, 리스트형 포틀릿 새로고침
+				            if (parent.opener.refreshBordPortletInfo != undefined) {
 				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
 				            	var customBoardCount = customBoardList.length;
 				            	
@@ -537,13 +558,19 @@
 				            		if (boardId == pBoardID) {
 				            			var portletId = customBoardList[i].parentElement.id;
 				            			portletId = portletId.substring(0, portletId.indexOf("P"));
-				            			parent.opener.getBoardPortletInfo(portletId);
+				            			parent.opener.refreshBordPortletInfo(portletId);
 				            		}
 				            	}
 				            }
 	                 	} catch (e) {console.log(e);}
 	                 	
-	                 	try {
+	                 	try { // 탭게시판 포틀릿 새로고침
+	                 		if (parent.opener.refreshTab != undefined) {
+	                 			parent.opener.refreshTab();
+	                 		}
+	                 	} catch (e) {console.log(e);}
+	                 	
+	                 	try { // 즐겨찾기 포틀릿 새로고침
 				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
 								parent.opener.getBoardList_NewBoardSTD();
 							}
@@ -639,7 +666,7 @@
 		        
 		        var portletId = "";
 		     	// 게시판 포틀릿 리스트 업데이트 되도록 수정
-	            if (parent.opener.getBoardPortletInfo != undefined) {
+	            if (parent.opener.refreshBordPortletInfo != undefined) {
 	            	portletId = "<c:out value='${portletId}'/>";
 	            }
 		     	
@@ -703,10 +730,10 @@
 		        var pwidth = window.screen.availWidth;
 		        pheigth = parseInt(pheigth) / 2;
 		        pwidth = parseInt(pwidth) / 2;
-		        pheigth = pheigth - 200;
+		        pheigth = pheigth + 1000;
 		        pwidth = pwidth - 127;
 		        var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
-		        feature = feature + GetOpenPosition(355,600);
+		        feature = feature + GetOpenPosition(pheigth,pwidth);
 		        copyboarditem_cross_dialogArguments[1] = CopyItem_onclick_Complete
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(pItemID) + ";" + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", feature, "");
 		    }
@@ -1342,19 +1369,19 @@
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "OK") {
-		            	/* 2023-11-17 홍승비 - 승인게시판의 게시물 승인 시 게시알림메일 발송 기능 추가 */
+		            	/* 2023-11-17 홍승비 - 승인게시판의 게시물 승인 시 게시알림 발송 기능 추가 */
 		                if (pFlag == "Y") { // 승인
-		                	// 해당 게시판의 관리자에게 게시알림메일 발송 (게시판 권한설정 > 관리자 권한자인 경우 '게시 메일로 알림' 옵션)
-		                	sendPostNotiMail(pBoardID, pItemID);
+		                	// 해당 게시판의 관리자에게 게시알림 발송 (게시판 권한설정 > 관리자 권한자인 경우 '게시 알림' 옵션)
+		                	sendPostNotiForAdmin(pBoardID, pItemID);
 		                	
 		                	// 답변게시물이 아닌 경우
 			                if (strParentWriteDate == strDocNo) {
-			                	// 해당 게시판의 일반 사용자(접근 권한자)에게 게시알림메일 발송 (게시판 일반설정 > 메일알림 > '게시알림' 옵션)
-			                	sendBoardAlertMail("new", pBoardID, pItemID, isAllGroupBoard);
+			                	// 해당 게시판의 일반 사용자(접근 권한자)에게 게시알림 발송 (게시판 일반설정 > 메일알림 > '게시알림' 옵션)
+			                	sendBoardAlert("new", pBoardID, pItemID, isAllGroupBoard);
 			                }
 			                else { // 답변게시물인 경우
-			                	// 해당 게시물의 부모게시물 작성자에게 답변알림메일 발송 (게시판 일반설정 > 메일알림 > '답변알림' 옵션)
-			                	sendReplyNoticeMail(pBoardID, pItemID, strUpperItemIDTree);
+			                	// 해당 게시물의 부모게시물 작성자에게 답변알림 발송 (게시판 일반설정 > '답변알림' 옵션)
+			                	sendReplyNotice(pBoardID, pItemID, strUpperItemIDTree);
 			                }
 		                	
 		                    alert("<spring:message code='ezBoard.t999002' />");
@@ -1461,13 +1488,13 @@
 		        return str;
 		    }
 		    
-	        /* 2023-11-17 홍승비 - 관리자 권한자의 '게시 메일로 알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendPostNotiMail(pBoardID, pItemID) {
+	        /* 2023-11-17 홍승비 - 관리자 권한자의 '게시 알림' 옵션에 대한 게시판 알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendPostNotiForAdmin(pBoardID, pItemID) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendPostNotiMail.do",
+					url : "/ezBoard/sendPostNotiForAdmin.do",
 					data : {
 						boardID : pBoardID,
 						itemID : pItemID
@@ -1476,12 +1503,12 @@
 	        }
 		    
 	        /* 2023-11-17 홍승비 - 일반 사용자(접근 권한자)의 '게시알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+	        function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendBoardAlertMail.do",
+					url : "/ezBoard/sendBoardAlert.do",
 					data : {
 						mode : pMode,
 						boardID : pBoardID,
@@ -1491,13 +1518,13 @@
 				});
 	        }
 	        
-	        /* 2023-11-17 홍승비 - 답변게시물의 부모게시물 작성자의 '답변알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendReplyNoticeMail(pBoardID, pItemID, pStrUpperItemIDTree) {
+	        /* 2023-11-17 홍승비 - 답변게시물의 부모게시물 작성자의 '답변알림' 옵션에 대한 게시판 알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendReplyNotice(pBoardID, pItemID, pStrUpperItemIDTree) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendReplyNoticeMail.do",
+					url : "/ezBoard/sendReplyNotice.do",
 					data : {
 						boardID : pBoardID,
 						itemID : pItemID,
@@ -1597,7 +1624,8 @@
 		        	<c:if test="${(boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 		        		<li ID='Retrans'><span onclick='btn_Retrans_Onclick()'><spring:message code='ezBoard.t10100' /></span></li>
 		        	</c:if>
-					<c:if test="${useCabinet == 'YES'}">
+					<%-- 2024-02-02- 홍승비 - 게시물 승인 > 승인되지 않은 게시물 팝업창에서 캐비넷등록 버튼이 표출되는 오류 수정 (apprFlag값이 'W'인 경우는 승인게시판인데도 승인자가 없는 경우임) --%>
+					<c:if test="${useCabinet == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 					</c:if>
 		        </ul>
@@ -1740,6 +1768,12 @@
 									</c:choose>
 					                <td colspan="5">
 					                	<c:choose>
+                                            <c:when test="${boardAttr.colType == 'people' || boardAttr.colType == 'textArea'}">                                         
+                                                <span id="${boardAttr.tableCol}"></span>
+                                            </c:when>
+                                            <c:when test="${boardAttr.colType == 'people'}">
+                                                <span id="${boardAttr.tableCol}"></span>
+                                            </c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
 					                			<c:out value="${boardItem.extensionAttribute6}"/>
 					                		</c:when>

@@ -202,14 +202,13 @@ function drag(ev) {
 var xmlhttp_MailReceiverList = null;
 function MakeListInfoHTML(ConentObject) {
     if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST"
-    	 || p_ListorderValue == "INTERNAL" || p_ListorderValue == "EXTERNAL" || p_ListorderValue == "SECUREMAIL" || p_ListorderValue == "IMPORTANT") {
+    	 || p_ListorderValue == "INTERNAL" || p_ListorderValue == "EXTERNAL" || p_ListorderValue == "SECUREMAIL" || p_ListorderValue == "IMPORTANT" || p_ListorderValue == "ATTACH") {
     	try {
             var XmlList = GetList_HTTP.responseXML;
             
             if (XmlList == null) {
                 return;
             }
-            
             var XmlRows = SelectNodes(XmlList, "maillist/response");
             var p_TotalCnt = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);
             var szRangeHeader = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);
@@ -227,7 +226,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_Attach = SelectSingleNodeValue(XmlRows[Cnt], "attach");
                 var p_Sender = SelectSingleNodeValue(XmlRows[Cnt], "sender");
                 var p_Msgto = SelectSingleNodeValue(XmlRows[Cnt], "msgto");
-                var p_Subject = SelectSingleNodeValue(XmlRows[Cnt], "subject").replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
+                var p_Subject = SelectSingleNodeValue(XmlRows[Cnt], "subject");
                 var p_ReceiveDT = SelectSingleNodeValue(XmlRows[Cnt], "receivedt");
                 var p_Size = SelectSingleNodeValue(XmlRows[Cnt], "size");
                 var p_Read = SelectSingleNodeValue(XmlRows[Cnt], "read");
@@ -339,7 +338,7 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.innerHTML = innerHTML;
-                            
+                            _TDColum.title = p_Msgto;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             // 수아 수정 (보낸사람 클릭 -> 보낸 사람에게 메일 전송창)
                             _TDColum.setAttribute("data-msgtoLen", recipientsLen);
@@ -374,7 +373,7 @@ function MakeListInfoHTML(ConentObject) {
                             }
                             
                             _TDColum.innerHTML = p_Subject;
-                            _TDColum.title = p_Subject;
+                            _TDColum.title = p_Subject.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) {
                                 event_listclick(this, event);
@@ -455,10 +454,10 @@ function MakeListInfoHTML(ConentObject) {
                     	var _TDColumSpan = document.createElement("span");
                     	_TDColumSpan.style.padding = "7px 3px";
                     	_TDColumSpan.innerHTML = innerHTML;
-                    	var countryTitle = "";
+                        var countryTitle = "";
                     	
                     	if (useCountryIP == "YES") {
-                    		countryTitle = p_countryName;
+                    		countryTitle = p_Msgto + p_countryName;
                     		if (p_mailIP != "") {
                     			countryTitle += "( " + p_mailIP + " )";
                     		}
@@ -693,8 +692,9 @@ function makeReceiverList(parentId) {
             var TD6_Span = document.createElement("SPAN");
             TD6_Span.innerHTML = reSendMsg;
             TD6_Span.setAttribute("EMAIL", readerEmail);
+            TD6_Span.setAttribute("READERNAME", readerName);
             TD6_Span.onclick = function () {
-                ReSend(msgHref, this.getAttribute("EMAIL"));
+                ReSend(msgHref, this.getAttribute("EMAIL"), this.getAttribute("READERNAME"));
             };
             TD6_ATag.appendChild(TD6_Span);
             
@@ -885,24 +885,25 @@ function MailSelect_One() {
         document.getElementById("Maillist_0").onclick();
 }
 var pOldSearchKeyword;
+
 function GetListInfo(HeaderObject, ContentObject) {
-	/* 수아 재은 수정 */
-	checkedHrefArry = getCheckHrefArry();
-    
+    /* 수아 재은 수정 */
+    checkedHrefArry = getCheckHrefArry();
+
     listSubContentArry = new Array();
     listContentArry = new Array();
     var xmlpara = createXmlDom();
     var objNode;
     var pageCount = parseInt(document.getElementById("MailList").getAttribute("listpageCount"));
-    var curPage =  parseInt(document.getElementById("MailList").getAttribute("curPage"));
+    var curPage = parseInt(document.getElementById("MailList").getAttribute("curPage"));
     var MaxCount = parseInt(document.getElementById("MailList").getAttribute("MaxCount"));
     var MaxPage = parseInt(document.getElementById("MailList").getAttribute("MaxPage"));
     var pStart;
     var pEnd;
-    
+
     pStart = (pageCount * (curPage - 1));
     pEnd = ((curPage) * pageCount) - 1;
-        
+
     if (pStart >= MaxCount && pEnd >= MaxCount && MaxCount != 0) {
         curPage = Math.ceil(MaxCount / pageCount);
         document.getElementById("MailList").setAttribute("curPage", curPage);
@@ -916,72 +917,74 @@ function GetListInfo(HeaderObject, ContentObject) {
 
     createNodeInsert(xmlpara, objNode, "DATA");
 
-	// 태그 페이지라면 모든 폴더를 대상으로 함 (빈 문자열로 넘기면 모든 편지함)
-	createNodeAndInsertText(xmlpara, objNode, "FOLDERID", window.tagName ? "" : g_moveUrl);
+    // 태그 페이지라면 모든 폴더를 대상으로 함 (빈 문자열로 넘기면 모든 편지함)
+    createNodeAndInsertText(xmlpara, objNode, "FOLDERID", window.tagName ? "" : g_moveUrl);
     createNodeAndInsertText(xmlpara, objNode, "SORTTYPE", pOrderyOption);
     pOldSearchKeyword = SearchKeyword;
-    if (mailsearchDetail == "N" && document.getElementsByName('keyword').item(0) == ""){
-    	searchKArray = [];
-    	searchCArray = [];
+    if (mailsearchDetail == "N" && document.getElementsByName('keyword').item(0) == "") {
+        searchKArray = [];
+        searchCArray = [];
     }
 
     searchRequiredKeyword = [];
-    searchRequiredCategory =[];
+    searchRequiredCategory = [];
 
-    for (var i = 0 ; i < searchCArray.length; i++ ){
-    	// 2021-06-22 김은실 - 이미 변경된 단어를 새로고침시 다시 변경하여, 직접 변경하기 보다 -> 그때만 변경하여 넘겨는 것이 좋을 것으로 보임. (&lt; -> &amp;lt; 등이 되는 경우가 있음.)
-    	var searchKTemp = searchKArray[i];
-    	searchKTemp = ReplaceText(searchKTemp, "&", "&amp;");
-    	searchKTemp = ReplaceText(searchKTemp, "<", "&lt;");
-    	searchKTemp = ReplaceText(searchKTemp, ">", "&gt;");
-    	searchKTemp = ReplaceText(searchKTemp, "'", "''");
-    	createNodeAndInsertText(xmlpara, objNode, "KEYWORD", searchKTemp);
-    	createNodeAndInsertText(xmlpara, objNode, "CATEGORY", searchCArray[i]);
-    	searchRequiredKeyword.push(searchKTemp);
-    	searchRequiredCategory.push(searchCArray[i]);
+    for (var i = 0; i < searchCArray.length; i++) {
+        // 2021-06-22 김은실 - 이미 변경된 단어를 새로고침시 다시 변경하여, 직접 변경하기 보다 -> 그때만 변경하여 넘겨는 것이 좋을 것으로 보임. (&lt; -> &amp;lt; 등이 되는 경우가 있음.)
+        var searchKTemp = searchKArray[i];
+        searchKTemp = ReplaceText(searchKTemp, "&", "&amp;");
+        searchKTemp = ReplaceText(searchKTemp, "<", "&lt;");
+        searchKTemp = ReplaceText(searchKTemp, ">", "&gt;");
+        searchKTemp = ReplaceText(searchKTemp, "'", "''");
+        createNodeAndInsertText(xmlpara, objNode, "KEYWORD", searchKTemp);
+        createNodeAndInsertText(xmlpara, objNode, "CATEGORY", searchCArray[i]);
+        searchRequiredKeyword.push(searchKTemp);
+        searchRequiredCategory.push(searchCArray[i]);
     }
     createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
     var attachStatus = "all";
-	var andorStatus = "and";
-	if(mailsearchDetail == "Y"){
-		if(document.querySelector("input[name=attachment]:checked").value != null ){
-			attachStatus = document.querySelector("input[name=attachment]:checked").value;
-		} 
-		
-		if(document.querySelector("input[name=andor]:checked").value != null ){
-			andorStatus = document.querySelector("input[name=andor]:checked").value;
-		}
-	}
-	
-	createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startDate);
-	createNodeAndInsertText(xmlpara, objNode, "ENDDATE", endDate);
-	createNodeAndInsertText(xmlpara, objNode, "ATTACHSTATUS", attachStatus);
-	createNodeAndInsertText(xmlpara, objNode, "ANDORSTATUS", andorStatus);
-    
-    
-    if (p_ListorderValue == "GROUPSUBLIST") {
-    	createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
-    } else {
-    	createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
+    var andorStatus = "and";
+    if (mailsearchDetail == "Y") {
+        if (document.querySelector("input[name=attachment]:checked").value != null) {
+            attachStatus = document.querySelector("input[name=attachment]:checked").value;
+        }
+
+        if (document.querySelector("input[name=andor]:checked").value != null) {
+            andorStatus = document.querySelector("input[name=andor]:checked").value;
+        }
     }
-    
+
+    createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startDate);
+    createNodeAndInsertText(xmlpara, objNode, "ENDDATE", endDate);
+    createNodeAndInsertText(xmlpara, objNode, "ATTACHSTATUS", attachStatus);
+    createNodeAndInsertText(xmlpara, objNode, "ANDORSTATUS", andorStatus);
+
+
+    if (p_ListorderValue == "GROUPSUBLIST") {
+        createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
+    } else {
+        createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
+    }
+
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", document.getElementById("select").selectedIndex);
-    
+
     var secureMailFilter = document.getElementById("select").value == "SECUREMAIL" ? 1 : 0;
     createNodeAndInsertText(xmlpara, objNode, "SECUREMAILFILTER", secureMailFilter);
-	createNodeAndInsertText(xmlpara, objNode, "TAGNAME", window.tagName ? tagName : "" );
-
+    createNodeAndInsertText(xmlpara, objNode, "TAGNAME", window.tagName ? tagName : "");
+    var attachFileFilter = document.getElementById("select").value === "ATTACH" ? 1 : 0;
+    createNodeAndInsertText(xmlpara,objNode, "ATTACHFILEFILTER", attachFileFilter);
+    
     var _url = "/ezEmail/mailGetList.do";
-    
-    if (typeof(shareId) != "undefined" && shareId != "") {
-    	_url += "?shareId=" + encodeURIComponent(shareId);
+
+    if (typeof (shareId) != "undefined" && shareId != "") {
+        _url += "?shareId=" + encodeURIComponent(shareId);
     }
-    
+
     if (useReceivingChk) {
-    	_url = "/ezEmail/getReceiverMailList.do";
+        _url = "/ezEmail/getReceiverMailList.do";
     }
-    
+
     GetList_HTTP = createXMLHttpRequest();
     GetList_HTTP.open("POST", _url, true);
     GetList_HTTP.onreadystatechange = GetListIevent_ongetxmlcomplete;
@@ -989,7 +992,7 @@ function GetListInfo(HeaderObject, ContentObject) {
     GetListInfo_HeaderObject = HeaderObject;
     GetListInfo_ContentObject = ContentObject;
     if (!importExportMode) {
-    	ShowMailProgress();
+        ShowMailProgress();
     }
 }
 var p_ListorderType_SUB;
@@ -1229,6 +1232,11 @@ function on_changeView(listtypeValue) {
         	p_ListorderValue = "IMPORTANT";
         	searchMode = true;
         	break;
+        case "ATTACH":
+            p_ListorderType = "ATTACH";
+            p_ListorderValue = "ATTACH";
+            searchMode = true;
+            break;
     }
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && p_ListorderValue != "RECEIV") {
         if (pPreviewShow_HOW == "H") {
@@ -2073,6 +2081,12 @@ function event_senderNameClick(thisParent, event){
 	if (!mailWriteSenderChk) { 
 		return; 
 	} else {
+        var p_Msgto = $(thisParent).attr("data-msgto");
+
+        if (p_Msgto.includes("&")) {
+            $(thisParent).attr("data-msgto", encodeURIComponent(p_Msgto));
+        }
+
 		setTimeout(function(){
 			var msgToLen = $(thisParent).attr("data-msgtoLen");
 			

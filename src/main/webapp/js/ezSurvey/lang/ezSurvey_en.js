@@ -9,6 +9,7 @@ var SurveyMessages = {
 	strAdd       : "Add",
 	strPublic1   : "Open",
 	strPublic2   : "Secrete",
+	strPublic3   : "Designation Open",
 //	strPublic3   : "Result",
 	strPublic4   : "After the survey",
 	strPublic5   : "Days",
@@ -24,6 +25,9 @@ var SurveyMessages = {
 	strUser6     : "Company",
 //	strUser7     : "All",
 	strUser8     : "Setting",
+    strUser9     : "Title",
+    strUser10    : "Role",
+    strUser11    : "Group",
 	strDate1     : "Specify start date faster than end date.",
 	strDate2     : "Please specify the end date of the search term.",
 	strDate3     : "Please specify the start date of the search term.",
@@ -79,7 +83,7 @@ var SurveyMessages = {
 	strSlider7   : "Interval",
 	strSlider8   : "Minimum",
 	strSlider9   : "Maximum",
-	strSlider10  : "'The value of (maximum-minimum)÷interval' should be less than or equal to 200.",
+	strSlider10  : "Set the count to a natural number of 200 or less.",
 	strOptErr    : "At least two views are required.",
 	strMaxtrix1  : "At least one row is required.",
 	strMaxtrix2  : "At least one column is required.",
@@ -165,5 +169,8 @@ var SurveyMessages = {
 	
 	/* 2021-12-10 홍승비 - 확장자 관련 메세지 추가 */
 	srtLangHSBEx01 : "Unacceptable extension.",
-	srtLangHSBEx02 : "Limited extension upload files."
+	srtLangHSBEx02 : "Limited extension upload files.",
+	/* 2024-03-26 양지혜 - 게시기간 메시지 추가 */
+	strLangYJH01 : "Posting can be done for up to ",
+	strLangYJH02 : " days."
 }

@@ -27,6 +27,7 @@
 			var offsetMin = "${offsetMin}";
 			var individualMailUser = parseInt("${individualMailUser}");
 			var shareId = '<c:out value="${shareId}"/>';
+			var useSecureMail = '${useSecureMail}';
 			
 		    var RetValue;
 		    var ReturnFunction;
@@ -163,14 +164,13 @@
 		        }
 		        
 		        if (individualMailUser > 0) {
-
-		        	if (rgParams["EachMail"] == "true") {
+					if (rgParams["EachMail"] == "true") {
 			            document.getElementById("eachMailSend").checked = true;
 			        } else {
 			            document.getElementById("eachMailSend").checked = false;
 			        }
 		        }
-		        
+
 				if (rgParams["secureMail"] == "Security" || rgParams["isSecureMail"] == "true") {
 					document.getElementById("chkSecureMail").checked = true;
 				}
@@ -301,7 +301,7 @@
 	            //    return;
 	            // }
 	            
-	            if (document.querySelector("#chkSecureMail").checked) {
+	            if (useSecureMail === 'YES' && document.querySelector("#chkSecureMail").checked) {
 	                RetValue["secureMail"] = "Security";
 	            } else {
 	                RetValue["secureMail"] = "Normal";
@@ -352,9 +352,9 @@
 		<h2 id="etcLang"><spring:message code='ezEmail.t358' /></h2>
 		<table width="100%" class="content">
 			<tr>
-				<td>
+				<td style="line-height: 29px;">
 					<spring:message code='ezEmail.t367' /> &nbsp;
-					<select id="bodyType" style="vertical-align:top;">
+					<select id="bodyType">
 			            <option value="0">HTML</option>
 			   		    <option value="1">PlainText</option>
 			        </select>

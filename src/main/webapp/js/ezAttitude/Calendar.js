@@ -22,7 +22,6 @@ function CalendarView(pTargetID) {
 	var btnType = $(".mainmenuTabUL li.on").attr("id");
 	if (btnType == "btnCalList" || btnType == undefined) {
 		getAttitudeMainList();
-		//CalViewSource(); //달력에 근태 데이터 뿌리면 되고
 	} else {
 		getAttitudeTableList();
 	}
@@ -142,7 +141,7 @@ function getMonthBodyObj() {
 	
 	var oBeforeMaxDay = oBeforeDate.getDate();
 	var startThisDay = oThisDate.getDay();
-	oThisMonth = oThisDate.getMonth() + 1;
+	oThisMonth = oBeforeDate.getMonth() + 1;
 	
 	if (oThisMonth == 12) {
 		oThisMonth = 0;

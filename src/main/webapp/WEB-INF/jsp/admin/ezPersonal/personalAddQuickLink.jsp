@@ -113,7 +113,7 @@
 				    var QuickLinkName = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME");
 				    var QuickLinkName2 = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME2");
 				    var QuickLinkName3 = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME3");
-				    //var QuickLinkName4 = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME4");
+				    var QuickLinkName4 = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME4");
 				    var LinkType = SelectSingleNodeValue(xmldomNode[i], "LINKTYPE");
 				    var URL = SelectSingleNodeValue(xmldomNode[i], "URL");
 				    var SIZE = SelectSingleNodeValue(xmldomNode[i], "SIZE_");
@@ -137,7 +137,7 @@
 				    document.getElementById("Title1").value = QuickLinkName;
 				    document.getElementById("Title2").value = QuickLinkName2;
 				    document.getElementById("Title3").value = QuickLinkName3;
-				    //document.getElementById("Title4").value = QuickLinkName4;
+				    document.getElementById("Title4").value = QuickLinkName4;
 				
 				    checkValue = LinkType;
 				    LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
@@ -326,14 +326,17 @@
 					mainTitle = "Title1";
 					subTitle1 = "Title2";
 					subTitle2 = "Title3";
+					subTitle3 = "Title4";
 				} else if (lang == "2") {
 					mainTitle = "Title2";
 					subTitle1 = "Title1";
 					subTitle2 = "Title3";
+					subTitle3 = "Title4";
 				} else {
 					mainTitle = "Title3";
 					subTitle1 = "Title1";
 					subTitle2 = "Title2";
+					subTitle3 = "Title4";
 				}
 				
 	            if (document.getElementById(mainTitle).value.trim() == "") {
@@ -365,6 +368,10 @@
 	                document.getElementById(subTitle2).value = document.getElementById(mainTitle).value;
 	            }
 	
+	            if (document.getElementById(subTitle3).value.trim() == "") {
+	                document.getElementById(subTitle3).value = document.getElementById(mainTitle).value;
+	            }
+
 	            SaveQuickLink();
 	        }
 	        
@@ -384,11 +391,14 @@
 	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName", document.getElementById("Title1").value);
 	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName2", document.getElementById("Title2").value);
 	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName3", document.getElementById("Title3").value);
-	            //createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName4", document.getElementById("Title4").value);
+	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName4", document.getElementById("Title4").value);
+	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName5", "");
+	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName6", "");
 	            createNodeAndInsertText(xmlpara, objNode, "pLinkType", checkValue);
 	            createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", LinkTypeURL);
 	            createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
 	            createNodeAndInsertText(xmlpara, objNode, "pURL", document.getElementById("txtURL").value);
+	            createNodeAndInsertText(xmlpara, objNode, "companyID", document.getElementById("ListCompany").value);
 	
 	            if (eval("chk_Full").checked == true) {
 	                createNodeAndInsertText(xmlpara, objNode, "pSize", "FULL");

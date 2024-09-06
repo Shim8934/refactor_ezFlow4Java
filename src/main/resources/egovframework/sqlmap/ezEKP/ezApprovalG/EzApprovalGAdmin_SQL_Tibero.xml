@@ -312,7 +312,11 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					TRIM(TBL_TASK_DEPTINFO.processdeptcode) = #v_DEPTCODE#
+					(TRIM(TBL_TASK_DEPTINFO.processdeptcode) = #v_DEPTCODE#
+				OR
+					#v_TASKCODE# LIKE 'ZZ%'
+				OR
+					#v_TASKCODE# = '99999999')
 			]]>
 		</isNotEqual>
 	</select>
@@ -386,6 +390,8 @@
 	<select id="EzApprovalGAdmin.getTaskFullList" parameterClass="Map"
 		resultClass="ApprGTaskVO">
 		<![CDATA[
+		SELECT *
+		FROM (
 			SELECT
 				processdeptcode,
 				processdeptname,
@@ -411,7 +417,8 @@
 				sc1,
 				sc2,
 				sc3,
-				tempflag
+				tempflag,
+				rownum num
 			FROM
 				VTASKCLASS
 			WHERE
@@ -430,11 +437,68 @@
 						taskcode = '99999999')
 			]]>
 		</isNotEqual>
-		
-		<![CDATA[
+		<isNotEmpty property="title">
+			AND
+				UPPER(TASKNAME) LIKE UPPER(CONCAT(CONCAT('%', #title#), '%'))
+		</isNotEmpty>
+		<isNotEmpty property="code">
+			AND
+				UPPER(TASKCODE) LIKE UPPER(CONCAT(CONCAT('%', #code#), '%'))
+		</isNotEmpty>
+		<isEmpty property="v_ORDEROPTION1">
 			ORDER BY
-				taskcode ASC
+			taskcode ASC
+		</isEmpty>
+		<isNotEmpty property="v_ORDEROPTION1">
+			ORDER BY
+			<isEqual property="v_ORDEROPTION1" compareValue="PROCESSDEPTNAME">PROCESSDEPTNAME</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="TASKNAME">TASKNAME</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="TASKCODE">TASKCODE</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="TEMPFLAG">TEMPFLAG</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="CNAME">CNAME</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="MCNAME">MCNAME</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="SCNAME">SCNAME</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="KEEPINGPERIOD">KEEPINGPERIOD</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="KEEPINGMETHOD">KEEPINGMETHOD</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="KEEPINGPLACE">KEEPINGPLACE</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="DISPLAYRECFLAG">DISPLAYRECFLAG</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="SPECIALCATALOGFLAG">SPECIALCATALOGFLAG</isEqual>
+			<isNotEmpty property="v_ORDEROPTION2">DESC</isNotEmpty>
+		</isNotEmpty>
+		)
+		WHERE
+			NUM BETWEEN #startRowForOracle# AND #endRowForOracle#
+	</select>
+
+	<select id="EzApprovalGAdmin.getTaskListCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				VTASKCLASS
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
 		]]>
+		<isNotEqual property="v_DEPTCODE" compareValue="">
+			<![CDATA[
+			AND
+				(TRIM(processdeptcode) = #v_DEPTCODE#
+				OR
+					taskcode LIKE 'ZZ%'
+				OR
+					taskcode = '99999999')
+		]]>
+		</isNotEqual>
+		<isNotEmpty property="title">
+			AND
+				TASKNAME LIKE CONCAT(CONCAT('%', #title#), '%')
+		</isNotEmpty>
+		<isNotEmpty property="code">
+			AND
+				TASKCODE LIKE CONCAT(CONCAT('%', #code#), '%')
+		</isNotEmpty>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeDeptInfo" -->
@@ -960,8 +1024,8 @@
 					formdescription,
 					formfilelocation,
 					formconnflag,
+					keepPeriod,
 					passaprlineflag,
-					TBL_AUTODOCNUM_ITEM.keepPeriod,
 					TBL_AUTODOCNUM_ITEM.securityLevel,
 					TBL_AUTODOCNUM_ITEM.isPublic,
 					TBL_AUTODOCNUM_ITEM.itemCode,
@@ -971,7 +1035,12 @@
 					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
 					aproption,
 					SIHANGTYPE,
-					formxslt
+					CASE
+						WHEN O.FORMID IS NULL THEN 'N'
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+                    END AS officeFlag,
+                    formxslt,
+                    FORMDRAFTALLFLAG
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -982,6 +1051,14 @@
 	            	TBL_FORMINFO.companyid = TBL_AUTODOCNUM_ITEM.companyid
 	            AND
 	            	TBL_FORMINFO.formid = TBL_AUTODOCNUM_ITEM.formid
+            	LEFT JOIN
+					TBL_FORM_OFFICE O
+				ON 
+	            	TBL_FORMINFO.tenant_id = O.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = O.companyid
+	            AND
+	            	TBL_FORMINFO.formid = O.formid
 				WHERE
 					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
@@ -994,7 +1071,7 @@
 			<![CDATA[
 				SELECT
 					formcontid,
-					formid,
+					TBL_FORMINFO.formid,
 					formname,
 					formname2,
 					formdoctype,
@@ -1002,17 +1079,31 @@
 					formfilelocation,
 					formconnflag,
 					FORMDRAFTALLFLAG,
+					opengovflag,
 					aproption ,
 					passaprlineflag,
-					SIHANGTYPE
+					SIHANGTYPE,
+					CASE
+						WHEN O.FORMID IS NULL THEN 'N'
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+                    END AS officeFlag,
+                    formxslt
 				FROM
 					TBL_FORMINFO
+				LEFT JOIN
+					TBL_FORM_OFFICE O
+				ON 
+	            	TBL_FORMINFO.tenant_id = O.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = O.companyid
+	            AND
+	            	TBL_FORMINFO.formid = O.formid
 				WHERE
-					tenant_id = #tenantID#
+					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
-					companyid = #companyID#
+					TBL_FORMINFO.companyid = #companyID#
 				AND
-					formid = #v_PFORMID#
+					TBL_FORMINFO.formid = #v_PFORMID#
 			]]>
 		</isEqual>
 	</select>
@@ -1737,10 +1828,11 @@
 				FORMDRAFTALLFLAG,
 				reformflag,
 				passaprlineflag,
-				aprOption,
-				tenant_id,
 				companyid,
-                SIHANGTYPE,
+				tenant_id,
+				opengovflag,
+				aprOption,
+				SIHANGTYPE,
 				formxslt)
 			VALUES
 				(#v_PFORMCONTAINERID#,
@@ -1754,10 +1846,11 @@
 				#v_PFORMDRAFTALLFLAG#,
 				#v_PREFORMFLAG#,
 				#v_PPASSAPRLINEFLAG#,
-				#v_formAprOption#,
-				#tenantID#,
 				#companyID#,
-                #v_FORMSIHANGTYPE#,
+				#tenantID#,
+				#v_POPENGOVFLAG#,
+				#v_formAprOption#,
+				#v_FORMSIHANGTYPE#,
 				#v_FORMXSLT#)
 		]]>
 	</insert>
@@ -1774,8 +1867,10 @@
 				formdescription = #v_PFORMDESCRIPT#,
 				formfilelocation = #v_PURL#,
 				formconnflag = #v_PFORMCONNFLAG#,
+				FORMDRAFTALLFLAG = #v_PFORMDRAFTALLFLAG#,
 				reformflag = #v_PREFORMFLAG#,
 				formversion = formversion + 1,
+				opengovflag = #v_POPENGOVFLAG#,
 				aprOption = #v_formAprOption#,
 				passaprlineflag = #v_PPASSAPRLINEFLAG#,
                 SIHANGTYPE = #v_FORMSIHANGTYPE#,
@@ -2090,6 +2185,88 @@
 			</isEqual>
 		</isEqual>
 		<isEqual property="approvalFlag" compareValue="S">
+			<!-- 2024-05-14 양지혜 - S버전 > TBL_TASKCODE에서 단위업무 존재여부 확인 추가 -->
+			<isNotEqual property="v_CATETYPE" compareValue="3">
+				SELECT
+					CASE
+						WHEN (SELECT
+								COUNT(1)
+						FROM
+							TBL_TASKCODE
+						WHERE
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						AND
+							subcategorycode = #v_CATECODE#
+						<![CDATA[
+			            AND
+						    delflag = 0) > 0
+			            ]]>
+					THEN 1
+					ELSE (
+						<isEqual property="v_CATETYPE" compareValue="1">
+							<![CDATA[
+								SELECT
+									NVL(COUNT(mcategorycode), 0)
+								FROM
+									TBL_TASKMIDDLECATEGORY
+								WHERE
+									tenant_id = #tenantID#
+								AND
+									companyid = #companyID#
+								AND
+									categorycode = #v_CATECODE#
+								AND
+									mcategorycode != #v_CATECODE#
+								AND
+									oldflag IS NULL
+							]]>
+						</isEqual>
+						<isEqual property="v_CATETYPE" compareValue="2">
+							<![CDATA[
+								SELECT
+									NVL(COUNT(subcategorycode), 0)
+								FROM
+									TBL_TASKSUBCATEGORY
+								WHERE
+									tenant_id = #tenantID#
+								AND
+									companyid = #companyID#
+								AND
+									mcategorycode = #v_CATECODE#
+								AND
+									subcategorycode != #v_CATECODE#
+								AND
+									oldflag IS NULL
+							]]>
+						</isEqual>
+						)
+					END
+				FROM DUAL
+			</isNotEqual>
+			<isEqual property="v_CATETYPE" compareValue="3">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(taskcode), 0)
+					FROM
+						TBL_TASKCODE
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+					AND
+						delflag = '0'
+				]]>
+			</isEqual>
+		</isEqual>
+	</select>
+
+	<select id="EzApprovalGAdmin.getTaskCategoryNodeCnt"
+			remapResults="true" parameterClass="Map" resultClass="Integer">
+		<isEqual property="approvalFlag" compareValue="G">
 			<isEqual property="v_CATETYPE" compareValue="1">
 				<![CDATA[
 					SELECT
@@ -2099,7 +2276,57 @@
 					WHERE
 						tenant_id = #tenantID#
 					AND
-						companyid = #companyID#   
+						companyid = #companyID#
+					AND
+						categorycode = #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="2">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(subcategorycode), 0)
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="3">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(taskcode), 0)
+					FROM
+						TBL_TASKCODE
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+					AND
+						delflag = '0'
+				]]>
+			</isEqual>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="S">
+			<isEqual property="v_CATETYPE" compareValue="1">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(mcategorycode), 0)
+					FROM
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
 					AND
 						categorycode = #v_CATECODE#
 					AND
@@ -3464,7 +3691,19 @@
 				formid = #v_FORMID#
 		]]>
 	</delete>
-
+	
+	<delete id="EzApprovalGAdmin.deleteForm3" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORM_OFFICE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_FORMID#
+		]]>
+	</delete>
 	<!-- <procedure id="EzApprovalGAdmin.setContainerIDForDoc2" -->
 	<!-- parameterClass="Map"> -->
 	<!-- <![CDATA[ -->
@@ -5988,5 +6227,21 @@
 				A.TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
-	
+
+	<select id = "EzApprovalGAdminDAO.getIronListYear" parameterClass = "map" resultClass = "String">
+		SELECT
+			DISTINCT(PRODUCTIONYEAR)
+		FROM
+			TBL_CABINETCLASS
+		WHERE
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+		<![CDATA[
+			PRODUCTIONYEAR <= TO_CHAR(SYSDATE, 'YYYY')
+		]]>
+		ORDER BY
+			PRODUCTIONYEAR DESC
+	</select>
 </sqlMap>

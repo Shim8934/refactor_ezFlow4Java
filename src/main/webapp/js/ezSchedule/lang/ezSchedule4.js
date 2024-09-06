@@ -2,12 +2,13 @@
 var strLang1 = "上午"
 var strLang2 = "下午"
 var strLang3 = "月;2月;3月;4月;5月;6月;7月;8月;9月;10月;11月;12月"
-var strLang4 = "星期日;星期一;星期二;星期三;星期四;星期五;星期六"
-var strLang4_1 = "星期日;星期一;星期二;星期三;星期四;星期五;星期六"
-var strLang5 = "日;月;火;水;木;金;土"
-var strLang6 = "月;火;水;木;金;土;日"
-var strLang5_1 = "日;月;火;水;木;金;土"
-var strLang6_1 = "月;火;水;木;金;土;日"
+var strLang4 ="周日;周一;周二;周三;周四;周五;周六"
+var strLang4_1 ="周日;周一;周二;周三;周四;周五;周六"
+var strLang5 ="周日;周一;周二;周三;周四;周五;周六"
+var strLang6 ="周一;周二;周三;周四;周五;周六;周日"
+var strLang5_1 = "周日;周一;周二;周三;周四;周五;周六"
+var strLang6_1 ="周一;周二;周三;周四;周五;周六;周日"
+
 //var strLang4 = "Sun;Mon;Tue;Wed;Thu;Fri;Sat"
 //var strLang5 = "Sun;Mon;Tue;Wed;Thu;Fri;Sat"
 //var strLang6 = "Mon;Tue;Wed;Thu;Fri;Sat;Sun"
@@ -18,43 +19,43 @@ var strLang8 = "确定变更内容吗？"
 var strLang9 = "请输入标题。"
 var strLang10 = "标题"
 var strLang11 = "位置"
-var strLang17 = "保存日程失败。"
-var strLang18 = "保存日程完毕。"
-var strLang19 = "参与者目录"
-var strLang20 = "加载组织图失败。- "
-var strLang21 = "相同的使用者。"
-var strLang22 = "已被指定为共有业务的使用者。"
-var strLang24 = "不能指定自己为共有业务者。"
-var strLang25 = "附件大小不能超过10MB"
-var strLang26 = "正在加载中。  "
-var strLang27 = "加载失败。\n\n服务器出错"
-var strLang28 = "加载失败。"
-var strLang29 = "没有删除的项目。"
-var strLang30 = "复原全部删除的项目吗？"
-var strLang31 = "复原删除的项目失败。"
-var strLang32 = "复原删除的项目完毕。"
-var strLang33 = "重复周期 :  "
+var strLang17 ="保存日程时，发生错误。"
+var strLang18 ="日程已保存"
+var strLang19 ="参与者列表"
+var strLang20 ="搜索组织图时发生错误。"
+var strLang21 ="没有对应于用户。"
+var strLang22 ="此用户已在您的邀请名单。"
+var strLang24 ="不能添加制作者。"
+var strLang25 ="附件大小不能超过5MB。"
+var strLang26 ="你是上传。"
+var strLang27 ="上传时发生错误。\n\n 服务器侧错误。"
+var strLang28 ="在上传时发生错误。"
+var strLang29 ="没有删除的项目。"
+var strLang30 ="确定要恢复所有被删除的项目？"
+var strLang31 ="试图恢复已删除的项目时发生错误。"
+var strLang32 ="已恢复被删除的项目。"
+var strLang33 ="重复周期"
 var strLang34 = "每日"
-var strLang35 = "每周"
+var strLang35 ="每周"
 var strLang36 = "每月"
 var strLang37 = "每年"
-var strLang38 = "约定时间  :  "
-var strLang39 = "一整天"
-var strLang40 = "오"
-var strLang41 = "删除的项目： "
-var strLang42 = "回次"
-var strLang43 = "不能超过"
-var strLang44 = "个字。";
-var strLang45 = "每日(平日)";
-var strLang46 = "不设置终结日期";
-var strLang47 = "回";
-var strLang48 = "星期日";
-var strLang49 = "星期一";
-var strLang50 = "星期二";
-var strLang51 = "星期三";
-var strLang52 = "星期四";
-var strLang53 = "星期五";
-var strLang54 = "星期六";
+var strLang38 = "约定时间"
+var strLang39 ="整天"
+var strLang40 = "O"
+var strLang41 ="已删除项目"
+var strLang42 = "批次"
+var strLang43 = "是"
+var strLang44 ="字符不能通过。"
+var strLang45 = "每日（平日）";
+var strLang46 ="未指定结束日期";
+var strLang47 = "次";
+var strLang48 = "周日";
+var strLang49 = "周一";
+var strLang50 = "周二";
+var strLang51 = "周三";
+var strLang52 = "周四";
+var strLang53 = "周五";
+var strLang54 = "周六";
 var strLang55 = "第一"
 var strLang56 = "第二"
 var strLang57 = "第三"
@@ -67,35 +68,35 @@ var strLang63 = "星期三"
 var strLang64 = "星期四"
 var strLang65 = "星期五"
 var strLang66 = "星期六"
-var strLang67 = "1月"
-var strLang68 = "2月"
-var strLang69 = "3月"
-var strLang70 = "4月"
-var strLang71 = "5月"
-var strLang72 = "6月"
-var strLang73 = "7月"
-var strLang74 = "8月"
-var strLang75 = "9月"
-var strLang76 = "10月"
-var strLang77 = "11月"
-var strLang78 = "12月"
+var strLang67 = "1月。"
+var strLang68 = "二月"
+var strLang69 = "三月"
+var strLang70 = "四月"
+var strLang71 = "五月"
+var strLang72 = "六月"
+var strLang73 = "七月"
+var strLang74 = "八月"
+var strLang75 = "九月"
+var strLang76 = "十一月"
+var strLang77 = "十一月"
+var strLang78 = "十二月"
 var strLang79 = "期间"
 var strLang80 = "日"
 var strLang81 = "每日"
 var strLang82 = "每周"
 var strLang83 = "个月一次"
-var strLang84 = "请选择要删除的项目。"
-var strLang85 = "删除成功。"
-var strLang86 = "删除失败。"
-var strLang87 = "保存代理人失败。"
-var strLang88 = "成功保存代理人了。"
-var strLang89 = "请指定代理人。"
-var strLang90 = "不能指定使用者为代理人。"
-var strLang91 = "您没有选择的代理人。请确认。"
-var strLang92 = "请选择一名代表。"
-var strLang93 = "请选择一名使用者。"
-var strLang94 = "请选择部门。"
-var strLang95 = "使用者也选择了此部门。\r\n请选择其他部门。"
+var strLang84 ="请选择要删除的项目。"
+var strLang85 ="已被删除。"
+var strLang86 ="无法删除。"
+var strLang87 ="保存代理人设置时发生错误。"
+var strLang88 ="已保存代理人设置。"
+var strLang89 ="请指定代理人"
+var strLang90 ="自己不能当代理人。"
+var strLang91 ="你没有选择的代理人。请再次确认。"
+var strLang92 ="请选择一个代理人。"
+var strLang93 ="请选择一个使用者。"
+var strLang94 ="请选择一个部门。"
+var strLang95 ="与用户所属部门相同。\r\n 请选择其他部门。"
 
 // ### 2011-06 GoogleCalendar
 var strLang96 = "请输入谷歌邮件地址。"
@@ -104,18 +105,18 @@ var strLang98 = "请输入谷歌密码。"
 var strLang99 = "已保存成功。"
 var strLang100 = "保存失败。"
 
-var strLang101 = "反复周期 : ";
+var strLang101 = "重复周期";
 var strLang102 = "每日";
 var strLang103 = "每周";
-var strLang104 = "预约时间 : ";
+var strLang104 = "约定时间";
 var strLang105 = "整日";
 var strLang106 = "每月";
 var strLang107 = "每年";
-var strLang108 = "请重新选择预定资源的时间。";
-var strLang109 = "沒有选择的資源。\n請选择资源。";
-var strLang110 = "保存预约失败。";
-var strLang111 = "删除反复日程失败。";
-var strLang112 = "设定反复日程失败。";
+var strLang108 ="资源中重复了预约时间。"
+var strLang109 ="没有选择的资源，请选择资源。"
+var strLang110 ="预约保存失败";
+var strLang111 ="重复删除失败。";
+var strLang112 ="重复设置失败。";
 
 var strLang113 = "查看日";
 var strLang114 = "查看周";
@@ -131,26 +132,28 @@ var strLang121 = "-";
 var strLang122 = "月";
 var strLang123 = "日";
 var strLang124 = "一整天";
-var strLang125 = "个人时间表";
-var strLang125_1 = "个人时间表";
-var strLang126 = "部门时间表";
-var strLang126_1 = "部门时间表";
-var strLang127 = "公司时间表";
-var strLang127_1 = "公司时间表";
-var strLang128 = ".";
-var strLang129 = "";
-var strLang130 = "组计划";
-var strLang130_1 = "组计划";
-var strLang253 = "还没有选定的资源。"
-var strLang254 = "所选择的资源不能被删除。"
-var strLang255 = "资源预留失败。"
+var strLang125 = "个人日程";
+var strLang125_1 = "个人日程";
+var strLang126 = "部门日程";
+var strLang126_1 = "部门日程";
+var strLang127 = "公司日程";
+var strLang127_1 = "公司日程";
+var strLang128 = "时";
+var strLang129 = "分钟";
+var strLang130 = "群组日程";
+var strLang130_1 = "群组日程";
+var strLang131 = "在顶部显示";
+
+var strLang253 ="没有选择的资源。"
+var strLang254 ="你不能删除选定的资源。"
+var strLang255 ="资源保留已失败。"
 var strLang256 = "人";
 var strLang257 = "搜索结果";
 var strLang258 = "正在添加附件。"
 var strLang259 = "文件大小"
-var strLang259 = "文件"
-var StrLang261 = "接触测试处理完毕.";
-var StrLang262 = "接触失败、请从新输入服 帐号，密码.";
+var strLang260 = "文件"
+var strLang261 ="连接测试已成功完成。";
+var strLang262 ="连接过程中出现错误，请重新确认您的ID和密码。";
 var strLang263 = "沒有數據。";
 var strLang264 = "集团简介";
 var strLang265 = "集团成员";
@@ -159,52 +162,73 @@ var strLang267 = "有限的扩展上传文件。";
 var strLang268 = "上一页";
 var strLang269 = "下一页";
 var strLang270 = "时间表";
-var strLang271 = "请选择要删除的附件。"
-var strLang272 = "结束时间比今天时间早。";
-var strLang273 = "某些部门可以注册一个部门经理，公司经理。";
-var strLang274 = "公司可以注册只有某些公司经理。";
-/*2018.02.01*/
-var strLang275 = "반복 일정은 시작시간을 현재시간 이전으로 등록할 수 없습니다.";
-var strLang535 = "沒有數據。";
-
-var strLang1000 = "Can not insert company schedule.";
-var strLang1001 = "Can not insert department schedule.";
+var strLang271 ="选择要删除的附件。";
+var strLang272 ="终止日期不能在今天以前登记。。";
+var strLang273 ="部门日程可由部门管理者、公司管理者登记";
+var strLang274 ="公司日程只有公司管理者才能登记。";
+var strLang535 = "没有数据。";
+var strLang1000 = "公司日程只有公司管理者才能登记。";
+var strLang1001 = "部门日程可由部门管理者、公司管理者登记。";
+/* 2017-07-11 */
+var strLang1002 = "闰 ";
 /* 2017-11-17 */
-var strLang1003 = "이미 등록된 일정공유정보가 있습니다.";
-//2018.02.22
-var strLangKMS1 = "100회 이하만 반복가능합니다.";
+var strLang1003 = "已登记的日程共享信息已存在。";
+/*2018.02.01*/
+var strLang275 = "起始日期不能在今天以前登记。";
+// 2018.02.22
+var strLangKMS1 = "只能重复100次以下。";
+/*2018-07-16*/
+var strLang276 = "请选择一个要查看成员的小组 。";
+/*2018-09-27*/
+var strLang277 = "请登记日程。"
 //2018.10.24
-var strLangKHJ1 = "날짜를 지정해 주세요.";
-var strLangKHJ2 = "시작일을 지정해 주세요.";
-var strLangKHJ3 = "종료일을 지정해 주세요.";
-var strLangKHJ4 = "시작일을 종료일보다 빠르게 지정하세요.";
-var strLangKHJ5 = "ics파일 가져오기를 완료했습니다.";
-var strLangKHJ6 = "ics파일 형식에 맞지 않습니다.";
-var strLangKHJ7 = "ics파일을 저장하는 중 에러발생";
+var strLangKHJ1 ="请指定日期。";
+var strLangKHJ2 ="请指定的开始日期。";
+var strLangKHJ3 ="请指定结束日期。";
+var strLangKHJ4 ="指定起始日期时需要比终止日期要早。";
+var strLangKHJ5 = "我已完成导入ics文件。";
+var strLangKHJ6 ="不匹配ics文件格式。";
+var strLangKHJ7 ="ics文件保存时时出错";
 //2018-11-12
-var strLangKHJ8 = "권한이 없습니다.";
+var strLangKHJ8 ="您没有权限。";
+var strLangKHA1 = "公司休息日";
+var strLangKHA2 = "法定公休日";
+//2018-02-22
+var strLangGHA1 = ", ";
 /* 2019-04-03 */
-var strLangHSB1 = "MHT 파일을 저장하는데 실패하였습니다.";
+var strLangHSB1 ="保存MHT文件失败。";
 /* 2020-05-19 */
-var strLang131_1 = "협업일정";
+var strLang131_1 = "合作日程";
 var strLang141_1 = "Google";
 
 var googleSyncMessages = {
-		strConfirmSync : "동기화를 진행하시겠습니까?",
-		strSyncSuccess : "구글캘린더와 동기화에 성공하였습니다.",
-		strSyncFail : "동기화에 실패하였습니다.",
-		strNoSync : "동기를 위한 인증정보가 없습니다. 수정,삭제를 할 수 없습니다",
-		strOnlyGoogle : "구글캘린더에서만 제공하는 기능입니다.\n 수정,삭제 및 드래그엔드롭을 할수 없습니다.",
-		strConfirmDelete : "동기화를 취소하시겠습니까?"
-	}
+	strConfirmSync : "定要同步吗?",
+	strSyncSuccess : "成功同步 Google 日历",
+	strSyncFail : "同步失败.",
+	strNoSync : "没有关于同步的验证信息 。 不能修改、删除。",
+	strOnlyGoogle : "仅在谷歌日历上提供的功能。\n 无法修改、 删除或拖放 。",
+	strConfirmDelete : "您确定要取消同步吗 ？"
+}
 
 /* 2023-05-31 홍승비 - 일정관리 포틀릿 디자인 개선을 위한 메세지 추가 */
-var strLang125_2 = "개인";
-var strLang126_2 = "부서";
-var strLang127_2 = "회사";
-var strLang130_2 = "그룹";
-var strLang131_2 = "협업";
-var strLang141_2 = "구글";
-var strLangHSBScPt1 = "년";
-var strLangHSBScPt2 = "월";
-var strLangHSBScPt3 = "일";
+var strLang125_2 = "Personal";
+var strLang126_2 = "Dept";
+var strLang127_2 = "Company";
+var strLang130_2 = "Group";
+var strLang131_2 = "Collabo";
+var strLang141_2 = "Google";
+var strLangHSBScPt1 = ".";
+var strLangHSBScPt2 = ".";
+var strLangHSBScPt3 = "";
+
+/* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
+var ezSchedule_kyj1 = "不得在匿名公告栏、照片公告栏或URL链接公告栏上发布日程安排。";
+
+/* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
+var ezSchedule_kyj2 = "请再确认一下重复周期。";
+
+/* 2024-07-18 조소정 - 일정관리 > 그룹일정 관리 > 작성 권한 기능 추가 */
+var ezSchedule_csj1 = "可写";
+
+/* 2024-08-06 이유정 - 임원일정 메세지 추가 */
+var strLang151_2 = "行政人员";

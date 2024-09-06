@@ -150,6 +150,15 @@
 					var fileName = document.getElementById("imagefile").value;
 					fileName = fileName.substr(fileName.lastIndexOf("/") + 1);
 					
+					// 2024.09.02 한슬기 : 저장 버튼을 여러 번 누를 경우 오류 발생. 저장버튼 누르면 이미지등록, 저장버튼 비활성화.
+					var saveButton = document.getElementsByClassName("imgbtn");
+					
+					for (var i = 0; i < saveButton.length; i++){
+						saveButton[i].style.pointerEvents = "none";
+						saveButton[i].style.backgroundColor = "#cccccc"; 
+						saveButton[i].style.color = "#666666";
+					}
+					
 			        $.ajax({
 			    		type : "POST",
 			    		url : "/ezPersonal/photoUploadByUser.do",
@@ -157,6 +166,7 @@
 				    			fileName: fileName
 			    		},
 			    		success: function(){
+			    			
 			    			cancel_onclick();
 			    		}        			
 			    	});

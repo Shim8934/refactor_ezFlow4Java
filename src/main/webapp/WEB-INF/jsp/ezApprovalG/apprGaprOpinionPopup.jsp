@@ -15,6 +15,8 @@
 		var RetValue, ReturnFunction;
 		var pOpinionMod, pOpinionContent;
 		var primary = "<c:out value='${primary}'/>"; // 의견 작성 시 다국어 대응을 위한 변수 (1:기본언어, 2:다국어)
+		var designationUsed; // 지정반송 사용여부
+		var pUserName;
 		
 		window.onload = function () {
 			if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
@@ -40,11 +42,18 @@
 			
 			pOpinionMod = RetValue[0];
 			pOpinionContent = RetValue[1];
+			designationUsed = RetValue[2]; // 2024-06-24 양지혜 - 전자결재 > 지정반송
+			pUserName = RetValue[4];
 			
 			document.getElementById("txt_OpinionContent").focus();
 			
 			if (pOpinionMod == "MOD") {
 				document.getElementById("txt_OpinionContent").value = pOpinionContent;
+			}
+
+			if (designationUsed == "YES" && RetValue[3] == "Y") {
+				document.getElementById("returnUserArea").style.display = "";
+				document.getElementById("txt_OpinionContent").style.height = "200px";
 			}
 		};
 		
@@ -58,6 +67,12 @@
 		
 		function btn_OpinionSave_onclick() {
 			var opinionContent = document.getElementById("txt_OpinionContent").value;
+
+			// 2024-06-24 양지혜 - 전자결재 > 지정반송 > 의견내용에 관련 정보 추가
+			var returnUserSN = getReturnUserSN();
+			if (returnUserSN != "") {
+				opinionContent += returnInfo;
+			}
 			
 			if (opinionContent.trim() != "") {
 				var returnValue = new Array();
@@ -70,6 +85,7 @@
 					pNewOpinionFlag = true;
 				}
 				returnValue[2] = pNewOpinionFlag;
+				returnValue[3] = returnUserSN;
 				
 				if (ReturnFunction != null) {
 					ReturnFunction(returnValue);
@@ -87,6 +103,27 @@
 			DivPopUpHidden();
 			document.getElementById("txt_OpinionContent").focus();
 		}
+
+		/* 2024-06-24 양지혜 - 전자결재 > 지정반송 > 의견내용에 관련 정보 추가 */
+		var returnInfo = "";
+		function getReturnUserSN() {
+			var checkedId = "";
+			var userList = document.getElementsByName('returnUser');
+			for (var i=0; i < userList.length; i++) {
+				if (userList[i].checked) {
+					checkedId = userList[i].value;
+					returnInfo = "\n└ [지정반송] " + getNowDate() + " " + pUserName + " → " + userList[i].getAttribute('data1');
+ 				}
+			}
+			return checkedId
+		}
+
+		function getNowDate() {
+			var now = new Date();
+			var month = now.getMonth().toString().length == 1 ? "0" + (now.getMonth() + 1) : now.getMonth() + 1;
+			var date = now.getDate().toString().length == 1 ? "0" + now.getDate() : now.getDate();
+			return now.getFullYear() + "-" + month + "-" + date;
+		}
 		</script>
 		<style type="text/css">
 		</style>
@@ -99,6 +136,16 @@
         </div>
         
 	    <textarea id="txt_OpinionContent" style="width:477px; height:255px; resize: none;"></textarea>
+
+		<%-- 2024-06-24 양지혜 - 전자결재 > 지정반송 > 반송위치 영역 --%>
+		<div id="returnUserArea" style="display: none ">
+			<h2 style="margin-top: 10px; margin-bottom: 3px;"><spring:message code='ezApprovalG.yjh03'/></h2>
+			<div class="listview">
+				<div id="lvUserList" style="height: 130px; overflow-x:hidden; overflow-y: AUTO; padding: 5px;">
+					${aprUserList}
+				</div>
+			</div>
+		</div>
 	    
 	    <div class="btnposition btnpositionNew">
 		    <a class="imgbtn" id="bbtn_OpinionSave"><span id="btn_OpinionSave" onClick="return btn_OpinionSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a>

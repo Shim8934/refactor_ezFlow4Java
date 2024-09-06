@@ -57,7 +57,7 @@ function setPublicFlag2() {
     var PublicType = pPublicityYN.substring(0, 1);
 
     var PublicText = "";
-    if (PublicType == "Y")
+    if (PublicType == "Y" || PublicType == "B")
         PublicText = strLang82;
     else if (PublicType == "N")
         PublicText = strLang84;
@@ -875,9 +875,7 @@ function SGetDraftAprLineInfo(ret) {
                 }
                 var j, chkflag
                 
-                if (junGyulFlag == "1") {
-        			//아무것도 안함
-        		} else if (junGyulFlag == "4") {
+        		if (junGyulFlag == "4") {
         			if (OrderType[i] == "003") {
         				continue;
         			}
@@ -1962,17 +1960,13 @@ function openOpinionUI_New_Complete(ret) {
 	}
 }
 
+var aprattach_cross_dialogArguments = new Array();
 function openFileAttachUI() {
     try {
-        var parameter = pDocID;
-        var url = "../ezAPRATTACH/Aprattach_Cross.aspx";
-        var feature = "status:no;dialogWidth:390px;dialogHeight:285px;edge:sunken;scroll:no"; 
-        var ret = window.showModalDialog(url, parameter, feature);
+        aprattach_cross_dialogArguments[0] = "";
+        aprattach_cross_dialogArguments[1] = "";
 
-        if (ret != "cancel") {
-            setAttachInfo(pDocID, "APR", lstAttachLink);
-        }
-        return ret;
+        DivPopUpShow(800, 610, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext);
     } catch (e) {
         alert("openFileAttachUI : " + e.description);
     }
@@ -2128,7 +2122,9 @@ function SaveDraftDocInfo_susin() {
     		}
     		
     		// 분리첨부가 존재할 경우
-    		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW").length > 0) {
+            var tempSepNodes = SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH");
+            var sepChildNode = typeof tempSepNodes[0].children[0] == "undefined" ? "" : tempSepNodes[0].children[0].tagName;
+    		if (sepChildNode != "" && sepChildNode == "LISTVIEWDATA" && SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW").length > 0) {
     			var sepAtt, Data, i;
     			var rtnXml = createXmlDom();
     	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
@@ -2144,6 +2140,28 @@ function SaveDraftDocInfo_susin() {
                     Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA2"));
                     Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i].childNodes[6], "VALUE"));
                     Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA3"));
+                }
+                createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
+    		} else if (sepChildNode != "" && sepChildNode == "ROWS" && SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
+                var sepAtt, Data, i;
+                var rtnXml = createXmlDom();
+                var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
+                var sepLVXml = createXmlDom();
+                sepLVXml = loadXMLString(nonElecRecInfoXml);
+                var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
+
+                for (i = 0; i < rows.length; i++) {
+                    sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+                    if (SelectSingleNodeValue(rows[i], "SEPCABINETID") != "") {
+                        Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "SEPCABINETID"));
+                    } else {
+                        Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                    }
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i], "SEPSUMMARY"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
                 }
                 createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
     		}
@@ -2888,20 +2906,51 @@ function setFirstDrafter() {
     return;
 }
 
-
+var aprcabinetattach_cross_dialogArguments = new Array();
 function openAaprDocAttachUI() {
     try {
-        var parameter = pUserID;
-        var url = "../ezAprDocAttach/aprDocAttach_Cross.aspx";
-        var feature = "status:no;dialogWidth:574px;dialogHeight:385px;edge:sunken;scroll:no";
-        var ret = window.showModalDialog(url, parameter, feature);
-
-        if (ret != "cancel") {
-            setAttachInfo(pDocID, "APR", lstAttachLink);
+        var parameter = pDocID;
+        var url ;
+        
+        if(approvalFlag == "G") {
+        	url = "/ezApprovalG/aprCabinetAttach.do?" + "draftFlag=" + pDraftFlag;
+        } else {
+        	url = "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID;
         }
-        return ret;
+        	
+        if (CrossYN()) {
+            aprcabinetattach_cross_dialogArguments[0] = parameter;
+            aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
+            
+            if(approvalFlag == "G") {
+            	DivPopUpShow(1050, 520, url);
+            } else {
+            	DivPopUpShow(1050, 560, url);
+            }
+        } else {
+        	var feature;
+        	if(approvalFlag == "G") {
+        		feature = "status:no;dialogWidth:805px;dialogHeight:395px;edge:sunken;scroll:no;help:no";
+        		feature = feature + GetShowModalPosition(675, 395);
+        	} else {
+        		feature = "status:no;dialogWidth:1050px;dialogHeight:660px;edge:sunken;scroll:no";
+        	}
+           
+            var ret = window.showModalDialog(url, parameter, feature);
+            if (ret != "cancel") {
+                setAttachInfo(pDocID, "APR", lstAttachLink);
+            }
+            return ret;
+        }
     } catch (e) {
-        alert("openAaprDocAttachUI : " + e.description);
+        alert("openAaprDocAttachUI()" + e.description);
+    }
+}
+
+function openAaprDocAttachUI_Complete(ret) {
+    DivPopUpHidden();
+    if (ret != "cancel") {
+        setAttachInfo(pDocID, "APR", lstAttachLink);
     }
 }
 
@@ -3126,7 +3175,7 @@ function SignCheck() {
         return;
 
     SignXML = result;
-    //필요없을것 같아서 추가
+
     return;
     var rtnVal = putSignXML(SignXML);
 

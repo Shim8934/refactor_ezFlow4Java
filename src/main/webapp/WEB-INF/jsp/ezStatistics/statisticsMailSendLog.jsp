@@ -18,6 +18,7 @@
 	var strLang3 = "KB";
 	var strLang7 = "<spring:message code='main.t252'/>";
 	var strLang8 = "<spring:message code='ezSystem.kyj2'/>";
+	var strLang9 = "<spring:message code='ezSystem.yja01'/>";
 	var currPage = "";
 	var totalPage = "";
 	var totalCount = "";
@@ -267,7 +268,13 @@
 	//**/ 검색 버튼 클릭시 이벤트
     function search() {
 		$(function() {
-			
+
+			var searchValue = document.getElementById("searchValue").value;
+            if (searchValue.length > 0 && searchValue.length < 2) {
+                alert(strLang9);
+                return false;
+            }
+
 			if ($('#startDatepicker').val() != '' && $('#endDatepicker').val() == '') {
 				alert(strLang5);
 				return false;

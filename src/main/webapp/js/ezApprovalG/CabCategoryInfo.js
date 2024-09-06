@@ -6,6 +6,7 @@ g_arrInitValue[0]="";
 g_arrInitValue[1]="";
 g_arrInitValue[2]="";
 g_arrInitValue[3]="";
+var viewFlag = "N";
 
 function selTaskCategory_onchange() 
 {
@@ -139,15 +140,90 @@ function GetTaskMiddleCategory(pCode)
 		selTaskMCategory_onchange();
 	}
 }
+
+function changeViewFlag() {
+    var cate = document.getElementById('selTaskCategory');
+    var mCate = document.getElementById('selTaskMCategory');
+    if (viewFlag == 'Y') {
+//        cate.options[0].text = "";
+//        mCate.options[0].text = "";
+        cate.value = "";
+        mCate.value = "";
+    }
+}
+
+//2024-06-20 이주원 부서철보기(GetTaskSubCategory메서드 카피)
+function viewDeptBinder(pCode, pSubCategoryCode){
+    var GetXml = "";
+
+    $.ajax({
+        type : "POST",
+        dataType : "text",
+        async : false,
+        url : "/ezApprovalG/getTaskSubCategoryAll.do",
+        data : {
+            cateCode   : pCode,
+            companyID  : CompanyID,
+            deptCode   : g_DeptCode,
+            strType    : UserLang,
+            initFlag   : g_InitFlag,
+            viewFlag   : 'Y'
+        },
+        success: function(xml){
+            GetXml = xml;
+            viewFlag = 'Y';
+            changeViewFlag();
+        }
+    });
+
+    var xmldoc = loadXMLString(GetXml);
+    var headerData = createXmlDom();
+    headerData = loadXMLString(Category_h.innerHTML.toUpperCase());
+
+    if (CrossYN()) {
+        var xmlRtn = xmldoc.documentElement.getElementsByTagName("ROWS")[0];
+        var Node = headerData.importNode(xmlRtn, true);
+        headerData.documentElement.appendChild(Node);
+    }
+    else {
+        var xmlRtn = xmldoc.documentElement.getElementsByTagName("ROWS")[0];
+        headerData.documentElement.appendChild(xmlRtn);
+    }
+
+    if (document.getElementById("TaskSCateList").innerHTML != "") document.getElementById("TaskSCateList").innerHTML = "";
+    var DocList = new ListView();
+    DocList.SetID("DivTaskSCateList");
+    DocList.SetMulSelectable(false);
+    DocList.SetSelectFlag(false);
+    DocList.SetRowOnClick("TaskSCateList_onclick");
+    DocList.SetTitleIdx(0);
+    DocList.DataSource(headerData);
+    DocList.DataBind("TaskSCateList");
+
+    var len = DocList.GetRowCount();
+    if (len > 0 && g_SelCabID != "")
+    {
+        if(typeof(pSubCategoryCode)!="undefined")
+        {
+            if(pSubCategoryCode != "")
+            {
+                iSeledtedIdx = GetSelIdxForSubCate(DocList.GetDataRows(), len, g_SelCabID);
+            }
+        }
+        selectRow("DivTaskSCateList", iSeledtedIdx);
+    }
+
+    DocList = null;
+}
 function GetTaskSubCategory(pCode, pSubCategoryCode)
-{	    
+{	viewFlag = 'N';
 	var GetXml = "";
 	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/getTaskSubCategoryAll.do",
+            url : "/ezApprovalG/getTaskSubCategoryAll.do",
 		data : {
 			cateCode   : pCode,
 			companyID  : CompanyID,

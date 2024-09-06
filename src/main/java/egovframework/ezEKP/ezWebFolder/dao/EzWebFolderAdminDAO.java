@@ -155,10 +155,6 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 		delete("EzWebFolderAdminDAO.deleteSelectedFileUser", map);
 	}
 		
-	public List<String> getSubFolderIdList(Map<String, Object> map) {
-		return (List<String>) list("EzWebFolderAdminDAO.getSubFolderIdList", map);
-	}
-
 	public List<FolderSimpleVO> selectSubAllFolder(Map<String, Object> map) {
 		return (List<FolderSimpleVO>) list("EzWebFolderAdminDAO.selectSubAllFolder", map);
 	}

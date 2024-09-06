@@ -18,7 +18,7 @@ input.time { width: 53px; margin: 0 5px; text-align: center; }
 <body>
 	<table class="content">
 		<colgroup>
-			<col style="width: 115px;">
+			<col style="width: 138px;">
 			<col>
 		</colgroup>
 		<tr>

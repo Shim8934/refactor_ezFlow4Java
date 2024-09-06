@@ -75,6 +75,18 @@
 		    var permissionBasisDeptYN = "<c:out value='${permissionBasisDeptYN}'/>"; // 겸직/사용자 기준 권한부여 옵션 여부
 		    var adminDeptListTemp = "<c:out value='${AdminDeptList}'/>"; // 부서관리자 권한이 존재하는 부서 id string
 		    var adminDeptList = adminDeptListTemp.split(";").filter(Boolean);
+			var chkPublic = "<c:out value='${chkSchedulePublic}'/>"; // 개인일정 작성시 공개/비공개값 설정가능 여부
+		    var showtop = "<c:out value='${showtop}'/>";
+
+		    /* 20203-09-22 한태훈 - 초대 일정 수정시 참석자에게 메일 보내는 용도 */
+			var modAttendIdList = [];
+			var modAttendName1List = [];
+			var modAttendName2List = [];
+		    
+		    /* 20203-09-22 한태훈 - 초대 일정 수정시 참석자에게 메일 보내는 용도 */
+			var modAttendIdList = [];
+			var modAttendName1List = [];
+			var modAttendName2List = [];
 		    
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
@@ -90,7 +102,38 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        // 상단표시로 바로 작성할 때
+                if (showtop == 'Y') {
+                    document.getElementById("topcheck").checked = true;
+                    var now = new Date();
 
+                    //시작시간
+                    var startTime;
+                    var hour = now.getHours();
+                    var time = now.getMinutes();
+
+                    if (parseInt(time) < 30) {
+                        startTime = hour + ":00:00";
+                    } else {
+                        startTime = hour + ":30:00";
+                    }
+
+                    //종료시간
+                    var endTime;
+                    now.setMinutes(now.getMinutes() + 30);
+
+                    hour = now.getHours();
+                    time = now.getMinutes();
+
+                    if (parseInt(time) < 30) {
+                        endTime = hour + ":00:00";
+                    } else {
+                        endTime = hour + ":30:00";
+                    }
+
+                    $('#Stimepicker').timepicker('setTime', startTime);
+                    $('#Etimepicker').timepicker('setTime', endTime);
+                }
 		        if (scheduleid != "") {
 		            document.getElementById("importantSelect").value = importance;
 		            document.getElementById("publicSelect").value = ispublic;	                
@@ -104,7 +147,13 @@
                     	if(document.getElementById("HolderEdit2") != null){
 							document.getElementById("HolderEdit2").style.display = "none";
 						}
-                    }
+                    } else {
+						// chkPublic이 OFF일 경우 비공개가 기본값임.
+						if (chkPublic == "OFF") {
+							document.getElementById("publicSelect").disabled = true;
+							document.getElementById("publicSelect").value = "N";
+						}
+					}
 
 	                /* if (scheduletype == "7") {
 		                //document.getElementById("HolderEdit2").style.display = "none";
@@ -146,7 +195,7 @@
 		        }
 
 		        document.getElementById("publicSelect").disabled = true;
-		        if (scheduletype == "1" || scheduletype == "6")
+		        if ((scheduletype == "1" && chkPublic == "ON") || scheduletype == "6")
 		            document.getElementById("publicSelect").disabled = false;
 
 		        if (scheduleid == "")
@@ -155,10 +204,10 @@
 		        if (hasattach == "Y") {
 		            setAttachFileInfo("${strAttach}");
 		        }
-		        
-		        if(ispublic != "") {
+
+		        /*if(ispublic != "") {
 		        	document.getElementById("publicSelect").value = ispublic;
-		        }
+		        }*/
 
 		        try{
 		            if (document.getElementById("TextTitle").value == "")
@@ -633,6 +682,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3" id="LabelOwner">
                                                 ${strLabelOwner}
+                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
                                             </td>
                                         </tr>
                                         </c:if>
@@ -640,6 +690,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3">
                                             	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;">${strOwnerID}</select>
+                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
                                             </td>
                                         </tr>
 	                                    <tr>
@@ -706,7 +757,12 @@
                                             <th><spring:message code='ezSchedule.t163'/></th>
                                             <td colspan="2">
                                             	<div style="overflow-y: auto; height: 14px; padding-top: 2px" id="LabelAttendant">                                                
-													<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
+													<c:forEach var="item" items="${attendantList}" varStatus="status">
+														<script>
+															modAttendIdList.push('${item.attendantId}');
+															modAttendName1List.push('${item.attendantName}');
+															modAttendName2List.push('${item.attendantName2}');
+														</script>                                		  		
 			                                	 		<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
 			                                	 			<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
 			                                	 			<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>
@@ -730,7 +786,7 @@
                                         </tr>
                                         <tr id="receiverTr2">
                                             <td colspan="2">
-                                                <div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
+                                                <div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 20px"></div>
                                             </td>
                                         </tr>
 	                                </table>

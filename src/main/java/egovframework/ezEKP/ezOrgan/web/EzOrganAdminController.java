@@ -33,6 +33,9 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.BooleanUtils;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -80,6 +83,7 @@ import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -153,171 +157,165 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public void init() throws Exception {
     	logger.debug("init started.");
     	try {
+			// create table
+    		ezCommonService.createTables(); // 2024-07-01 김수아 - 테이블 생성 공통함수 추가
 	    	ezCommonService.createMailTemplateSequence();
     		ezCommonService.createJmochaMailboxProgress();
-	    	ezCommonService.alterTblAddjobMaster();
+	    	ezCommonService.createTblSession(); // 2023-11-07 이사라 - DB 기반 세션 테이블 생성
 	    	ezCommonService.createUserMailTemplate(); // 2020-07-27 김수아 - 메일 템플릿 테이블 생성
 	    	ezCommonService.createMailOutOfOfficeTemplate(); // 2020-07-17 김수아 - 부재중 설정 템플릿 테이블 생성
 	    	ezCommonService.createTblCompanyConfig();
-	    	ezCommonService.createReformFlagColumn();
-	    	ezCommonService.addMailToJMochaDistribution();
-	    	ezCommonService.addAddJobMasterOrderBy();
 	    	ezCommonService.createTblIPAccessID();
 	    	ezCommonService.createTblIPAccessIP();
 	    	ezCommonService.createJMochaDistributionSub();
-	    	ezCommonService.addUserMasterManualFlag();
-	    	ezCommonService.addDeptMasterManualFlag();
-	    	ezCommonService.addAddJobMasterManualFlag();
 	    	ezCommonService.createJMochaMailSignatureTemplate();
 	    	ezCommonService.createJobMasterTable();
-	    	ezCommonService.addUserMasterPasswordUpdateDT();
-	    	ezCommonService.addUserMasterPhotoUpdateDT(); // 2021-09-10 김은실 - 메신저/인사 연동 효율성을 위한: 프로필사진 업데이트시각(PHOTO_UPDATEDT) 컬럼 추가
-	    	ezCommonService.alter_AnyTbl_AnyColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
-	    	ezCommonService.addJobMasterJobID();
 	    	ezCommonService.createWebfolderToken();
-	    	ezCommonService.addJmochaMailGenenalPreviewMailImage();
 	    	ezCommonService.createPortalThemePortlet();
-	    	ezCommonService.insertPortalThemePortletInitdata();
-	    	ezCommonService.addPortalThemePortletIsFixed();
-	    	ezCommonService.addUserMasterMailBoxQuota();
 	    	ezCommonService.createTblUserMultiLogin();
-	    	ezCommonService.addHolidayFlag();
-	    	ezCommonService.addHolidayRepeat();
-	    	ezCommonService.addJournalFormDelFlag();
-	    	ezCommonService.updateTaskUrl();
-	    	ezCommonService.addPortalPortletUserPortletUsed();
-	    	ezCommonService.addPortalPortletUserThemeId();
-	    	ezCommonService.addTblPortalThemeUserIsDefault();
 	    	ezCommonService.createJmochaMailCopyright();
 	    	ezCommonService.createJamesMailDeletedId();
-	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
     		ezCommonService.createRsFavoriteTable(); // 2019-03-28 이석화 - 모바일 오라클 자원관리 즐겨찾기 테이블 생성
-	    	ezCommonService.addQuickLinkLinkOrder();
-	    	ezCommonService.addComCloseCompanyId();
-	    	ezCommonService.addWebfolderTotalLimit();
-	    	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
-	    	ezCommonService.addMsgInMailSearch(); 
-			ezCommonService.addFormVersion();
-	    	ezCommonService.addAddJobMasterProxy();
 	    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
-	    	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
 	    	ezCommonService.createThemeAndPortletAuth();
 	    	ezCommonService.createTblYearlyDocCount(); // 2021-02-22 박기범 - 차트 통계 테이브 없을시 자동 생성
-			ezCommonService.insertChartPortletInfo(); //2021-02-22 박기범 - 차트 포틀릿 없을시 자동 생성
-	    	ezCommonService.addMenuAndPortletCode(); //2019-07-15 유은정 - 메뉴, 포틀릿 호출 로직 개선 위한 컬럼 추가
 	    	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
-	    	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
-	    	ezCommonService.addSnThemeAndPortletAuth();
-	    	ezCommonService.addThemeAndPorteltAuthInit(); //2020-02-20 테마별, 포틀릿별 권한 추가
-	    	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
-	    	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가 
-	    	ezCommonService.createJobMasterTable();
 	    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
-	    	ezCommonService.addPassAprLineFlag(); // 2020-08-13 홍승비 - 양식옵션 > 기결재통과 플래그 추가
-	    	ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
-	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
     		ezCommonService.createUserDistributionTable(); // 20200226 사용자 정의 공용배포그룹 테이블 생성
 	    	ezCommonService.createResourcePortlet(); // 2019-06-28 황윤호 -자원관리 포틀릿 테이블 추가
-	    	ezCommonService.insertSurveyTenantConfig(); // 2019-06-25 이석화 전자설문 리뉴얼 테넌트 컨피그 추가
-	    	ezCommonService.insertPortletInfo(); // 2019-07-02 자원, 웹폴더, 전자설문 포틀릿 데이터 확인 후 없으면 추가
 	    	ezCommonService.createJmochaBigAttachDownloadLimit(); // 2020-03-12 홍대표 - 메일 대용량 첨부 제한 테이블 추가.
-	    	ezCommonService.insertMailBigSizeAttachLimit(); // 2020-03-12 홍대표 - 메일 대용량 첨부 제한 컨피그 추가.
-	    	ezCommonService.addIsBeforeDoc(); // 2020-02-24 홍승비 - 전자결재문서 편집전후여부 플래그 컬럼 추가
-	    	ezCommonService.addBeforeDocUrl(); // 2020-02-27 홍승비 - 전자결재문서 편집전후 문서경로 URL컬럼 추가
-	    	ezCommonService.setCompanyConfigs(); // 2020-03-30 김수아 - companyConfig 추가
 	    	ezCommonService.createPwPolicyTable(); // 2020-04-06 김수아 - tbl_password_policy table
 	    	ezCommonService.createPwPolicyPatternTable(); // 2020-04-06 김수아 - tbl_password_policy_Pattern table
-	    	ezCommonService.addBoardLikeFlag(); // 2019-04-05 홍승비 - 게시판 좋아요 기능 관련 테이블 생성 및 칼럼 추가
 	    	ezCommonService.createBoardLike();
-	    	ezCommonService.addSurveyAlamColums(); // 2019-10-07 이석화 - 설문 알림 컬럼 추가
-	    	ezCommonService.addBoardManageTypeColumn(); //2019-09-19 홍승비 - 게시판 권한그룹 적용을 위한 TYPE 칼럼 추가
 	    	ezCommonService.createPersonalPopupUser();
-	    	ezCommonService.addSurveyMailSentFlagColumn(); // 2019-10-10 홍대표 - 설문 알림 메일 발송 상태 컬럼 추가
-	    	ezCommonService.addAprAttachViewOrder(); // 2020-03-23 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (진행문서)
-	    	ezCommonService.addAprEndAttachViewOrder(); // 2020-03-25 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (완료문서)
-	    	ezCommonService.addAprTmpAttachViewOrder(); // 2020-03-26 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (임시문서)
 	    	ezCommonService.createAprAttachLimit(); // 2020-05-15 홍승비 - 전자결재 일반 첨부파일 개수제한 테이블 추가 (회사별 데이터)
-	    	ezCommonService.insertUseExternalMailServerConfig();		// 2020-04-16 김민성 - 메일 기능 사용 관련 컨피그 추가(외부/내부)
 	    	ezCommonService.createAdminAccessIpTable(); // 2020-04-28 김수아 - 관리자 IP 제한 테이블
 			ezCommonService.createTblPermissionChangeInfo(); // 2022-01-18 이사라 - 권한 변경 히스토리 테이블 추가
-	    	ezCommonService.insertReBebuOpinionCode();		// 2020-05-14 홍대표 - 재배부요청 의견 코드 추가
-	    	ezCommonService.addFormAprOptionColumn(); // 2020-05-14 홍승비 - 전자결재 양식 옵션 관련 칼럼 추가
-	    	ezCommonService.insertAnnualScheduleTenantConfig(); // 2020-02-24 김정언 - useAnnualScheduleYN 컨피그 추가
-	    	ezCommonService.insertHalfOffAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 반반차 추가
-	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가
-			ezCommonService.addDocStateIntoLastLines();
-			ezCommonService.addDocStateIntoLastDeptLines();
-	    	//ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가 (중복)
-	    	ezCommonService.insertAlternateHolidayAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 대체휴무 추가
-	    	ezCommonService.insertBeforeOutComeAttitudeType(); // 2020-06-03  김정언 - 근태관리 휴가유형 전일퇴근 추가
-	    	ezCommonService.insertMobileAttitudeColumn();			// 2020-06-10 김민성 - 모바일 근태관리 기능 추가
 	    	ezCommonService.createTblShareDocDir(); //2019-10-14 박성빈 - 문서함공유 테이블 추가
-	    	ezCommonService.alterTblPsApprovNotiMailConf(); //기결재통과 알림 컬럼 추가
 	    	ezCommonService.createTblNoticeBoard(); //2020-06-17 홍승비 - 회사별 공지사항 게시판 기능을 위한 NOTICEBOARD 테이블 추가
-	    	ezCommonService.createMenuTenantConfig();		// 2020-08-06 김민성 - 메뉴 숨김처리 관련 config 추가
-	    	ezCommonService.insertDailyWorkAttitudeColumn(); //2020-08-07 김정언 - 근태관리 WORK_STATUS (일근무/반근무) 컬럼 추가
-	    	ezCommonService.addFormSihangTypeColumn(); //2020-11-23 김보혜 전자결재G 시행문일때 내부발송/유통(외부)발송 양식 구분 컬럼 추가
-	    	ezCommonService.insertAutoSendOfferFlag(); //2020-11-23 김보혜 전자결재G 문서발송시 발송옵션 추가
-	    	ezCommonService.insertTabBoardPortlet(); //2020-12-03 박기범 - 탭게시판포틀릿 추가
 	    	ezCommonService.createTblTabBoard(); //2020-12-04 탭게시판 등록 용 테이블 추가
-	    	ezCommonService.addScehdulegroup(); //2021-02-17 그룹일정의 tbl_schedulegroup 컬럼 추가
 	    	ezCommonService.insertApprBigAttachInfo(); //2021-02-10 홍승비 - 전자결재 대용량첨부 컨피그, 칼럼, 테이블 추가
-	    	ezCommonService.addScheduleMailNotiConfig();		// 2021-02-23 김민성 - 일정메일알림 컨피그 추가
-			ezCommonService.addTblUserMultiLoginMobileFlagColumn(); // 2021-03-19 중복로그인 모바일 플래그 컬럼 추가
-	    	ezCommonService.insertApprContainterConfig();		// 2021-05-21 김민성 - 전자결재 양식별문서함, 분류코드문서함 컨피그 추가
 	    	ezCommonService.createSerialnumgenGrant();			// 2021-06-08 김민성 - 전자결재 상위부서 채번 기능 테이블 추가
-	    	ezCommonService.insertApprSatViewerConfig(); // 2021-06-15 심기영 - 전자결재 첨부파일 SAT 뷰어 사용 컨피그 추가
 	    	ezCommonService.createTblCar(); // 2021-07-12 차량관리 테이블 추가
 	    	ezCommonService.createTblCarAcl(); // 2021-07-12 차량관리 테이블 추가
 	    	ezCommonService.createTblCarAttach(); // 2021-07-12 차량관리 테이블 추가
 	    	ezCommonService.createTblCarForm(); // 2021-07-12 차량관리 테이블 추가
-    		ezCommonService.addBoardMailFGColumn(); // 2021-06-21 홍승비 - 게시판 메일알림 옵션 추가
-    		ezCommonService.addCommNoticeUpperNoColumn(); // 2021-06-28 홍승비 - 커뮤니티 공지사항 부모게시물 정보 칼럼 추가
-    		ezCommonService.alterTblAprReceiptProcessInfoAddColumn(); // 2021-06-29 - 수신결재정보 테이블 오리지날 docid 컬럼 추가 
-    		ezCommonService.alterTblDocDeliveryAddColumn(); // 2021-06-29 - 배부테이블에 대내/대외 여부 컬럼 추가
-    		ezCommonService.addTblAdminReceiptGroupSubExtReceptYnColumn(); // 2021-06-29 수신처그룹 멤버 테이블에 외부/내부 수신여부 컬럼 추가
-    		ezCommonService.addViewTaskOldFlag(); // 2021-08-31 홍승비 - 전자결재 분류코드체계 뷰에 삭제여부(OLDFLAG) 칼럼 추가 (VTASKCLASS, SVTASKCLASS)
-    		ezCommonService.addCommMailFGColumn(); // 2021-11-12 홍승비 - 커뮤니티 게시판 메일알림 옵션 추가 (게시/수정/댓글알림) 
-    		ezCommonService.addSurveySubDeptYNColumn(); // 2021-11-17 홍승비 - 전자설문 대상자 하위부서 허용여부 플래그 추가 (Y/N)
     		ezCommonService.createTblScheduleComplete(); // 2021-11-23 홍승비 - 일정 완료여부 레코드 저장 테이블 추가
-    		ezCommonService.alterTblConnectionInfo();	// 2021-12-22 이사라 : 로그아웃시간, 상태 컬럼 추가
     		ezCommonService.createTblAdminAccessInfo();	// 2022-01-06 이사라 - 관리자 메뉴 접속 히스토리 테이블 추가
-    		ezCommonService.addSusinScheduleOffsetColumn();	// 2022-02-11 홍승비 - 수신스케줄러 알림메일 발송 시 다국어(시간대) 지원을 위해 OFFSET 칼럼 추가
-    		ezCommonService.insertReceiptHistoryListoption();	// 2022-02-16 정주환 - 수신이력 확인 listoption 추가
     		ezCommonService.createTblDisableNotiItem(); // 2022-03-11 - 알림환경설정 테이블 추가
-    		ezCommonService.addAprDocGroupInfoTypeColumn();	// 2022-02-09 홍승비 - 일괄기안 테이블에 임시저장/결재올림 구분용 타입 칼럼 추가
-			ezCommonService.alterTblRsResaclAddColumn(); // 2023-08-21 이주원 - 자원권한 테이블에 유저명 다국어 지원을 위해 MEMBER_NAM2 컬럼 추가
 			ezCommonService.createTblUserChangeInfo(); // 2023-09-05 장혜연 - 사용자 변경 히스토리 테이블 추가
-
-	    	// webfolder
-	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
-	    	ezCommonService.addWebfolderUserFolderManagerColumn(); 		//2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 담당자 추가
 	    	ezCommonService.createWebfolderFileUserTable(); 			
 	    	ezCommonService.createTblWebfolderApplyHistroy();			
 			ezCommonService.checkWebfolderEncryptTable(); 				
 			ezCommonService.checkWebfolderVersionTable(); 				
-	    	ezCommonService.createWebfolderHierarchicalColumns(); 		
-	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
-    		ezCommonService.alterWebfolderApplyHistoryAddColumn();
-    		
-    		ezCommonService.alterTblDevMaster();						//20220315 조진호 - mobile Pin 사용 관련 여부 컬럼 추가 (원래는 Talk에서 관리하는 테이블이나 Talk이 없는 경우 ezEKP DB의 테이블을 사용하기 떄문에 추가)
 	    	ezCommonService.createTblAprpreview(); //2020-11-18 정소미 - 전자결재 미리보기 설정 테이블 추가
 	    	ezCommonService.createTblSerialNoRollback(); // 2022-09-21 홍승비 - 전자결재G > 문서 기록물 레코드 중복삽입 시 에러 롤백방지 기록 테이블 추가
-	    	ezCommonService.insertHWPSecurityConfig(); // 2023-05-31 김우철 - 한글 배포용 문서 저장 관련 테넌트 컨피그 2건 추가
-			ezCommonService.insertOpinionGB(); // 2023-06-26 민지수 - 전자결재 > 완료문서 의견타입 추가의견 추가
-	    	ezCommonService.addAttitudeFormFormHtml2Column(); // 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
-	    	ezCommonService.addScheduleGroupColumn(); // 2023-08-31 조소정 - 일정관리 > 일정그룹 테이블에 컬럼 추가 (양도일자/그룹 색상)
-			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
 	    	ezCommonService.createTblBoardReplyReact();	// 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가
+			ezCommonService.createTblDbLog(); // 2023-12-11 박기범 - DB 로그 테이블 추가
+			ezCommonService.createTblDistributeinfo(); // 2024-08-07 김유진 - 배부이력정보 테이블 추가
+			ezCommonService.createExecutiveTable(); // 2024-08-06 이유정 - 임원일정 테이블 추가
+
+			// alter table
+	    	ezCommonService.alterTableAddColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
+	    	ezCommonService.addWebfolderTotalLimit();
+	    	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
+	    	ezCommonService.addMenuAndPortletCode(); //2019-07-15 유은정 - 메뉴, 포틀릿 호출 로직 개선 위한 컬럼 추가
+	    	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가 
+	    	ezCommonService.insertMobileAttitudeColumn();			// 2020-06-10 김민성 - 모바일 근태관리 기능 추가
+	    	ezCommonService.addScehdulegroup(); //2021-02-17 그룹일정의 tbl_schedulegroup 컬럼 추가
+	    	ezCommonService.addScheduleMailNotiConfig();		// 2021-02-23 김민성 - 일정메일알림 컨피그 추가
+			ezCommonService.addTblUserMultiLoginMobileFlagColumn(); // 2021-03-19 중복로그인 모바일 플래그 컬럼 추가
+    		ezCommonService.alterTblConnectionInfo();	// 2021-12-22 이사라 : 로그아웃시간, 상태 컬럼 추가
+	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
+    		ezCommonService.alterTblDevMaster();						//20220315 조진호 - mobile Pin 사용 관련 여부 컬럼 추가 (원래는 Talk에서 관리하는 테이블이나 Talk이 없는 경우 ezEKP DB의 테이블을 사용하기 떄문에 추가)
+	    	ezCommonService.addAttitudeFormFormHtml2Column(); // 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
 			ezCommonService.addTblBoardItemNoti(); /* 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 */
 			ezCommonService.addTblBoardItemTempNoti(); /* 2023-09-25 민지수 - 게시판 > 임시저장 > 공지게시물 > 기간설정 컬럼 추가 */
+			ezCommonService.alterRepeatFlagForResourceInfo(); // 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+			ezCommonService.alterSubPermittedForMenuAuth();		/* 2024-05-28 김유진 - 포탈 > 메뉴관리 하위부서 허용여부 컬럼 추가 */
+			ezCommonService.alterSubPermittedForPortletAuth();	/* 2024-05-28 김유진 - 포탈 > 포틀릿관리 하위부서 허용여부 컬럼 추가 */
+			ezCommonService.alterSubPermittedForThemeAuth();	/* 2024-05-28 김유진 - 포탈 > 테마관리 하위부서 허용여부 컬럼 추가 */
+			ezCommonService.alterSubPermittedForQuicklinkAcl(); /* 2024-05-28 김유진 - 포탈 > 빠른링크관리 하위부서 허용여부, 유저타입 컬럼 추가 */
+			ezCommonService.alterDocAttachNameCol(); // 2024-06-24 민지수 > 전자결재 > 비전자 기록물 > 본문첨부 파일명 컬럼 추가
+			ezCommonService.alterUserThemePagination();
+			ezCommonService.alterTblScheduleForShowtop(); /* 2024-06-17 이주원 - 일정관리 > 상단표시 컬럼 추가 */
+			ezCommonService.addUserDeptHideFlag(); //2024-07-25 김대현 - 사용자 숨김, 부서 숨김 Flag 컬럼 추가
+			ezCommonService.alterSaveFlagForCbShare(); // 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+
+			// tenant config
+	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
+	    	ezCommonService.insertSurveyTenantConfig(); // 2019-06-25 이석화 전자설문 리뉴얼 테넌트 컨피그 추가
+	    	ezCommonService.insertMailBigSizeAttachLimit(); // 2020-03-12 홍대표 - 메일 대용량 첨부 제한 컨피그 추가.
+	    	ezCommonService.insertAnnualScheduleTenantConfig(); // 2020-02-24 김정언 - useAnnualScheduleYN 컨피그 추가
+	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가
+	    	ezCommonService.createMenuTenantConfig();		// 2020-08-06 김민성 - 메뉴 숨김처리 관련 config 추가
+	    	ezCommonService.insertAutoSendOfferFlag(); //2020-11-23 김보혜 전자결재G 문서발송시 발송옵션 추가
+	    	ezCommonService.insertApprSatViewerConfig(); // 2021-06-15 심기영 - 전자결재 첨부파일 SAT 뷰어 사용 컨피그 추가
+	    	ezCommonService.insertHWPSecurityConfig(); // 2023-05-31 김우철 - 한글 배포용 문서 저장 관련 테넌트 컨피그 2건 추가
 	    	ezCommonService.insertPrvwConfig(); // 2023-10-27 조수빈 - 전자결재 / 게시판 모듈 미리보기 테넌트 컨피그 2건 추가
 	    	ezCommonService.insertApprSignRemapApplyTime(); // 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가
 			ezCommonService.insertPermissionBasisDeptYN_Config(); // 2023-08-16 전인하 - PermissionBasisDeptYN 테넌트 컨피그 추가
-			ezCommonService.createColumnRollInfoInAddJobMaster(); // 2023-08-16 전인하 - tbl_addJobMaster 테이블에 Roll_INFO 컬럼 추가
-			ezCommonService.createTblDbLog(); // 2023-12-11 박기범 - DB 로그 테이블 추가
-    	} catch (Exception e) {
+			ezCommonService.insertTenantConfigLangTertiary(); // 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가
+			ezCommonService.insertTenantConfigLangQuaternary(); // 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
+			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
+			ezCommonService.insertUseHideHeaderArea(); // 2024-05-23 김우철 - 헤더 숨기기 기능 사용여부 테넌트 컨피그 추가
+			ezCommonService.insertUseReceiptDeptFileAttach(); // 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부 테넌트 컨피그 추가
+			ezCommonService.insertNonUseDocAttachYN(); // 2024-07-02 민지수 - 전자결재 > 비전자문서등록 > 본문첨부 기능 사용여부 테넌트 컨피그 추가
+
+	    	ezCommonService.insertPortalThemePortletInitdata();
+	    	ezCommonService.updateTaskUrl();
+	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+			ezCommonService.insertChartPortletInfo(); //2021-02-22 박기범 - 차트 포틀릿 없을시 자동 생성
+	    	ezCommonService.addThemeAndPorteltAuthInit(); //2020-02-20 테마별, 포틀릿별 권한 추가
+	    	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
+	    	ezCommonService.insertPortletInfo(); // 2019-07-02 자원, 웹폴더, 전자설문 포틀릿 데이터 확인 후 없으면 추가
+	    	ezCommonService.setCompanyConfigs(); // 2020-03-30 김수아 - companyConfig 추가
+	    	ezCommonService.insertUseExternalMailServerConfig();		// 2020-04-16 김민성 - 메일 기능 사용 관련 컨피그 추가(외부/내부)
+	    	ezCommonService.insertReBebuOpinionCode();		// 2020-05-14 홍대표 - 재배부요청 의견 코드 추가
+	    	ezCommonService.insertHalfOffAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 반반차 추가
+	    	ezCommonService.insertAlternateHolidayAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 대체휴무 추가
+	    	ezCommonService.insertBeforeOutComeAttitudeType(); // 2020-06-03  김정언 - 근태관리 휴가유형 전일퇴근 추가
+	    	ezCommonService.insertTabBoardPortlet(); //2020-12-03 박기범 - 탭게시판포틀릿 추가
+	    	ezCommonService.insertApprContainterConfig();		// 2021-05-21 김민성 - 전자결재 양식별문서함, 분류코드문서함 컨피그 추가
+    		ezCommonService.addViewTaskOldFlag(); // 2021-08-31 홍승비 - 전자결재 분류코드체계 뷰에 삭제여부(OLDFLAG) 칼럼 추가 (VTASKCLASS, SVTASKCLASS)
+    		ezCommonService.insertReceiptHistoryListoption();	// 2022-02-16 정주환 - 수신이력 확인 listoption 추가
+			ezCommonService.insertOpinionGB(); // 2023-06-26 민지수 - 전자결재 > 완료문서 의견타입 추가의견 추가
+			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
+			ezCommonService.insertPortalMenuChinese(); // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
+			ezCommonService.insertPortletNameChinese(); // 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
+			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
+			ezCommonService.createTblDeptChangeInfo(); // 2024-02-20 장혜연 - tbl_dept_change_info 테이블 추가
+			ezCommonService.insertSurveyPostingMaxPeriodConfig(); // 2024-03-26 - 전자설문 종료 후 게시기간 설정 추가
+			ezCommonService.alterFileNameForWebfolderHistory(); // 2023-10-18 남진구 - 웹폴더 > 버전관리 > 파일 복원시 파일명 복원을 위한 FILE_NAME 칼럼 추가
+			ezCommonService.createTblTotalHistory(); // 2023-06-04 - 통합 PC 다중 파일 저장시 다운로드 로그 남기는 테이블
+			ezCommonService.insertdelAttachByOthersConfing(); // 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부
+			ezCommonService.insertApprNonElecRecTypeConfing(); // 2024-05-29 김유진 - 전자결재G 비전자문서등록 양식 확장자 정보
+			ezCommonService.insertEndDateOptionConfig(); // 2024-05-29 전인하 - 게시판 > 게시물 리스트 > 만료된 게시물 리스트 표출 가능여부
+            ezCommonService.insertRecordHeaderClassTitle(); // 2024-06-11 민지수 - 전자결재 > 기록물대장 > 기록물철명 헤더 추가
+    		ezCommonService.insertDocBinderListOption(); // 2024-06-12 전인하 - 전자결재G > 기록물철인계 > 기록물철리스트 리스트헤더 컬럼 추가
+			ezCommonService.insertReturnByDesignationUsedConfig(); // 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그 추가
+			ezCommonService.insertReadingRecordHeader(); // 2024-06-21 김우철 - 전자결재G > 열람문서함 헤더 추가
+            ezCommonService.insertPortalPortletSizeTables(); // 2023-11-20 박기범 - 포탈 포틀릿 사이즈 관련 테이블 추가
+			ezCommonService.insertTblPortalTopUser(); // 2024-04-11  TBL_PORTAL_TOP_USER 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
+			ezCommonService.insertTblPortalTopCompany(); // 2024-05-17 한태훈 - TBL_PORTAL_TOP_COMPANY 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
+			ezCommonService.createTblRealTimeNotification(); // 2024-03-28 한태훈 - 통합알림 테이블 추가
+			ezCommonService.addNotiStoragePeriodConfig(); // 2024-03-28 한태훈 - 통합알림 보관기간 tenantConfig 추가
+			ezCommonService.addNotiPollingIntervalConfig(); // 2024-03-28 한태훈 - 통합알림 데이터 새로고침 간격 tenantConfig 추가
+			ezCommonService.insertFixPortlet(); // 2024-05-17 박기범 - 고정포틀릿 추가
+			ezCommonService.insertPortalTopCompanyInitdata(); // 2024-05-17 한태훈 - 포탈 탑 메뉴 위치 설정 회사 기본 데이터 세팅
+            ezCommonService.addQuickLinkCompanyID(); // 2023-12-15 박차웅 - 퀵링크 tbl_ps_quicklink 테이블 COMPANYID 필드 추가
+            ezCommonService.alterThemeInformation(); // 2024-06-20 한태훈 - 테마 설명 내용 수정.
+            ezCommonService.alterCompanyMenuIconUrl(); // 2024-07-08 황인경 - 회사별 메뉴 아이콘 추가
+			ezCommonService.insertGongRamListOption(); // 2024-06-17 임정은 - 공람 listoption 추가
+			ezCommonService.addReminderTimeAtTblScheduleConfig(); //2023-09-04 한태훈 - 일정관리 > 설정 > 미리알림 시간 컬럼 추가
+	    	ezCommonService.createTblScheduleReminderScheduler(); // 2023-09-04 한태훈 - 일정관리 > 미리알림 스케줄러 테이블 추가
+	    	ezCommonService.insertReminderTenantConfig(); // 2023-09-11 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그, 미리알림 시 하루종일 일정의 시작 시각 설정 테넌트 컨피그 추가
+			ezCommonService.alterBoardExtentionAttrByteSize(); // 2024-07-31 전인하 - 게시판 > 확장컬럼 > 저장할 수 있는 데이터 크기 변경 (mysql, oracle 일괄 500자)
+			ezCommonService.insertDotNetTotalNotificationConfig(); // 2024-08-21 유길상 닷넷 통합알림 컨피그
+			ezCommonService.updateInProcessJpCodeName3(); // 2024-08-22 유길상 - CODELIST > a04(진행) 일본어 변경 
+			ezCommonService.createServeyResultviewPermTbl(); // 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 테이블 추가
+		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
     	logger.debug("init ended.");
@@ -348,8 +346,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
 		String cChk = "0";
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
 		
-		if (user.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) { // 전체 관리자
 			cChk = "1";
 		}
 		
@@ -400,9 +399,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/organRight.do", method = RequestMethod.GET)
 	public String organRight(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
-		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		//관리자 권한 체크
-		if (user == null) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -416,14 +417,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
 		String useOTP = ezCommonService.getTenantConfig("useOTP", user.getTenantId());
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", user.getTenantId());
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", user.getTenantId());
 		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
 			useExternalMailServer = "NO";
 		}
 		
 		String topid = "";
 		String deptTreeTopId = "";
-		
-		if (user.getRollInfo().indexOf("c=1") == -1) {
+
+		if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 			topid = user.getCompanyID();
 			deptTreeTopId = topid;
 			useSyncServer = "NO";
@@ -450,6 +452,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useOTP", useOTP);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("useOrganHideFlag", useOrganHideFlag);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
@@ -690,21 +693,32 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String cn = request.getParameter("cn");
 		String pClass = "group";
 		String result = "";
-		
+
 		logger.debug("cn=" + cn);
-		
+
+		// 24.03.18 장혜연 : 부서 변경 히스토리 기록을 위해 삭제 하기 전 부서 명을 조회한다.
+		OrganDeptVO deptNm = ezOrganAdminService.getDeptDisplayNm(cn, tenantID);
+
+		// 24.03.18 장혜연 : 부서 변경 히스토리 기록을 위해 삭제 하기 전 상위 부서 cn을 조회한다.
+		String parentCn = ezOrganAdminService.getDeptParentCn(cn, tenantID);
+
 		// 제거하고자 하는 회사 혹은 부서 바로 아래에 위치한 자식 부서의 수를 구한다.
 		int cnt = ezOrganAdminService.companyChildCheck(cn, tenantID);
 		
 		// 제거하고자 하는 회사 혹은 부서에 속한 사원의 수를 반환한다.
 		int usercnt = ezOrganAdminService.userCountCheck(cn, tenantID);
 		
-		logger.debug("cnt=" + cnt + ",usercnt=" + usercnt);
+		// 제거하고자 하는 회사 혹은 부서에 속한 퇴직자 수를 구한다.
+		int retireUserCnt = ezOrganAdminService.retireUserCountCheck(cn,tenantID);
+		
+		logger.debug("cnt=" + cnt + ",usercnt=" + usercnt + ",retireUserCnt=" + retireUserCnt);
 		
 		if (cnt > 0) {
 			result = "HASCHILD";
 		} else if(usercnt > 0) {
 			result = "HASCHILD";
+		} else if(retireUserCnt > 0) {
+			result = "HASRETIRE";
 		} else {			
 			// skyblue0o0
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -749,8 +763,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				    	
     					ezOrganAdminService.deleteDBData(cn, pClass, tenantID);
     					removeEmailAddressBasedOnCompanyDomainName(cn, dept.getExtensionAttribute2(), userInfo);
-    					
-    					result = "OK";
+
+						result = "OK";
+						// 24.03.18 장혜연 : 부서 삭제 시 부서 변경 히스토리에 기록한다
+						if ("OK".equals(result)) {
+							DeptChangeInfoVO deptChangeInfo = new DeptChangeInfoVO();
+							deptChangeInfo.setDeptChVo(cn, deptNm.getDisplayName(), deptNm.getDisplayName2(), parentCn,
+									"", "", "", "delete", ClientUtil.getClientIP(request));
+							ezSystemAdminService.insertDeptChangeHist(deptChangeInfo, userInfo);
+						}
     				// 예외가 발생하면 그룹 주소를 다시 등록한다.
 				    } catch (Exception e) {
 				    	logger.error(e.getMessage(), e);
@@ -807,6 +828,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         companyMailDomain = pageType.equals("modify") ? deptMail.split("@")[1] : companyMailDomain; // 수정이면 수정할 부서의 도메인
 		String companyDomainList = ezCommonService.getCompanyConfig(tenantID, deptCompanyID, "MailInnerDomain");
 		String[] domainList = companyDomainList.split(";");
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId());
        
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
@@ -816,6 +838,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("domainList", domainList);
         model.addAttribute("deptMail", deptMail);
         model.addAttribute("pageType", pageType);
+        model.addAttribute("useOrganHideFlag", useOrganHideFlag);
         
         logger.debug("deptInfo ended");
         
@@ -855,7 +878,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String saveDeptInfo(@CookieValue("loginCookie") String loginCookie, OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("saveDeptInfo started");
-	    
+
+		DeptChangeInfoVO deptChangeInfo = new DeptChangeInfoVO();
+
         LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
         
         if (userInfo == null) {
@@ -877,13 +902,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         date.setTimeZone(TimeZone.getTimeZone("GMT"));
         String nowDate = date.format(new Date()); 
         vo.setNowDate(nowDate);
+        String cn = vo.getCn();
+
+        // 업데이트 전 부서의 기존 이름을 조회한다
+        OrganDeptVO orgDeptNm = ezOrganAdminService.getDeptDisplayNm(cn, tenantID);
         
         // 부서정보를 수정하는 경우
 		if (vo.getParentCn() == null || vo.getParentCn().isEmpty()) {
+
 			ezOrganAdminService.updateDBData_dept(vo);
+
+			// 2024-03-20 장혜연 : 부서명 수정 할 경우 부서변경 히스토리에 기록한다.
+			if (!vo.getDisplayName().equals(orgDeptNm.getDisplayName())) {
+				deptChangeInfo.setDeptChVo(cn, orgDeptNm.getDisplayName(), orgDeptNm.getDisplayName2(),
+						vo.getHistParentCn(), vo.getCn(), vo.getDisplayName(), vo.getDisplayName2(), "nameChange",
+						ClientUtil.getClientIP(request));
+				ezSystemAdminService.insertDeptChangeHist(deptChangeInfo, userInfo);
+			}
+
 		// 새로운 부서를 생성하는 경우
 		} else {
-			String cn = vo.getCn();
 			
 			// 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
 			// 공용배포그룹ID, 메일ID(alias 메일ID 포함)로 이미 사용중인지도 체크한다.
@@ -948,7 +986,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							ezEmailUserAdminService.removeGroup(mailAddr);							
 							result = "EMAIL_ERROR";
 						}
-									
+						// 2024-03-20 장혜연 : 부서 추가 시 부서변경히스토리에 기록한다.
+						if (result.equals("OK")) {
+							deptChangeInfo.setDeptChVo(vo.getCn(), vo.getDisplayName(), vo.getDisplayName2(),
+									vo.getParentCn(), "", "", "", "add", ClientUtil.getClientIP(request));
+							ezSystemAdminService.insertDeptChangeHist(deptChangeInfo, userInfo);
+						}
 					}
 					else {
 						ezEmailUserAdminService.removeGroup(mailAddr);
@@ -1070,21 +1113,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/selectDept.do", method = RequestMethod.GET)	
 	public String selectDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
 		//관리자 권한 체크
-		if (user == null) {
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 				
-		String topid = "";
-		
-		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topid = user.getCompanyID();
-		} else {
-			topid = "Top";
-		}
-		
-		model.addAttribute("companyID", topid);
+		String topID = organAuth.isAuth(AdminAuth.ADMIN_MASTER)? "Top" : user.getCompanyID();
+
+        model.addAttribute("companyID", topID);
 		
         logger.debug("selectDept ended.");
         
@@ -1118,8 +1156,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         String result = "OK";
 		String bizmekaResult = "ERROR";
-		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);		
-        
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+        String orgParentCn = ezOrganAdminService.getDeptParentCn(cn, tenantID);
 		if (useBizmekaSpambox.equals("YES")) {
 			String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
 			String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
@@ -1144,9 +1182,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	        result = ezOrganAdminService.moveEntry(parentCn, cn, "group", userInfo.getOffset(), tenantID);
 	        	        
 	        logger.debug("moveEntry result=" + result);
+	        //2024-03-20 장혜연 : 부서 이동 시 부서변경히스토리에 기록한다.
+			if ("OK".equals(result)) {
+				DeptChangeInfoVO deptChangeInfo = new DeptChangeInfoVO();
+				OrganDeptVO deptNm = ezOrganAdminService.getDeptDisplayNm(cn, tenantID); // 이동 할 부서 명
+				OrganDeptVO parentNm = ezOrganAdminService.getDeptDisplayNm(parentCn, tenantID); // 이동 후 상위부서 명
+
+			deptChangeInfo.setDeptChVo(cn, deptNm.getDisplayName(), deptNm.getDisplayName2(), orgParentCn, parentCn,
+					parentNm.getDisplayName(), parentNm.getDisplayName2(), "move", ClientUtil.getClientIP(request));
+			ezSystemAdminService.insertDeptChangeHist(deptChangeInfo, userInfo);
 		}
 		
 		
+	}
+
 		//게시판 트리캐시 삭제
 		ezBoardAdminService.trunkBoard(tenantID);
         
@@ -1228,6 +1277,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
 		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId());
 		
 		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
 			useZipCodeSearch = "YES";
@@ -1247,6 +1297,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("locale", userInfo.getLocale());
 		model.addAttribute("userPrimary", userInfo.getPrimary());
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("useOrganHideFlag", useOrganHideFlag);
 				
 		logger.debug("userInfo ended");
 		
@@ -1320,20 +1371,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		int tenantId = userInfo.getTenantId();
 		
 		String companyId = request.getParameter("companyId");
-		String type = request.getParameter("type");
-		type = type == null ? "" : type;
-		logger.debug("companyId="+ companyId + ", type=" + type);
+		String userId = request.getParameter("userId");
+		logger.debug("companyId={}, userId={}", companyId, userId);
 		
-		String pwPolicyExplain = "";
-		
-		if (type.equals("shared")) {
-			pwPolicyExplain = "▒ " + egovMessageSource.getMessage("main.jjh04", locale);
-		} else {
-			pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
-		}
+		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
 		
 		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
-		model.addAttribute("type", type);
+		model.addAttribute("userId", userId);
 		return "admin/ezOrgan/inputPassword";
 	}
 	
@@ -1510,6 +1554,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    			
 	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
 	    		}
+				// 메일 자동 전달, 자동분류 설정 삭제
+				rc = ezEmailUserAdminService.removeUserMailSetting(mailAddr);
+				logger.debug("removeUserMailSetting rc=" + rc);
 			}
 
 
@@ -1909,6 +1956,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		// masteradmin 사용자를 제외하기 위해 1을 뺀다.
 		userCount--;
+		// 승인메일 공유사서함이 있으면 해당 계정은 라이센스에서 제외
+		Boolean apprSharedExist = BooleanUtils.toBoolean(ezOrganAdminService.userCheck("__approved_mail", tenantID));
+		if (apprSharedExist) {
+			userCount--;
+		}
 		
 		logger.debug("licensedUserCount=" + licensedUserCount + ",userCount=" + userCount);
 				
@@ -1955,12 +2007,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    
 	    logger.debug("tenantID=" + tenantID + ",parentCn=" + vo.getParentCn());
 	    
-		String result = "";		
-		
-		// 전체관리자가 아닌데 전체관리자 권한을 설정하려는 경우엔 CHECKPERMISSION을 반환한다.
-        if (userInfo.getRollInfo().indexOf("c=1") == -1 
-                && vo.getExtensionAttribute1() != null
-                && vo.getExtensionAttribute1().toLowerCase().indexOf("c=1") > -1) {
+		String result = "";
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		// 전체관리자가 또는 회사관리자가 아닌데 관리자 권한을 설정하려는 경우엔 CHECKPERMISSION을 반환한다.
+        if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER) && !organAuth.isAuth(AdminAuth.COMPANY_MANAGER)) {
             result = "CHECKPERMISSION";		
 		// 기존 사용자를 수정하는 경우엔 parentCn의 값이 null 혹은 empty string 이다.
         } else if (vo.getParentCn() == null || vo.getParentCn().equals("")) {
@@ -2440,7 +2490,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         logger.debug("tenantID=" + tenantID);
 		
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER) && !organAuth.isAuth(AdminAuth.COMPANY_MANAGER)) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2450,17 +2501,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", tenantID);
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
-				resultList.add(j++, vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
 		
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("userCompany", user.getCompanyID());
@@ -2606,6 +2647,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String titleInfoWithManualFlag = "";
 		String deleteTitleInfo = "";
 		String jobID = "";
+		String role = "";
+		String roleInfo = "";
+		String deleteRoleId = "";
 		String delType = doc.getElementsByTagName("DEPTID").item(0).getTextContent().equals("") ? "ALL" : ""; // 삭제타입(ALL인경우
 																												// 전체겸직삭제)
 		String delJobId = ""; // 2022-07-06 이사라 - 한 부서에 겸직이 2개 이상 있는 경우 1개만 삭제 시 삭제하는 jobId가 필요하여 추가
@@ -2613,11 +2657,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		List<UserChangeInfoVO> userChInfoList = new ArrayList<UserChangeInfoVO>();
 		String updateType = "";
 		List<OrganUserVO> newAddJobList = new ArrayList<>();
-
+		boolean isAddRole = doc.getElementsByTagName("ROLEID").getLength() > 0 ? true : false; 
+		
 		for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
 			String titleValue = doc.getElementsByTagName("TITLE").item(i).getTextContent();
 			String manualFlag = Optional.ofNullable(doc.getElementsByTagName("MANUAL_FLAG").item(i))
 					.map(Node::getTextContent).filter(str -> !str.isEmpty()).orElse(null);
+			String roleId = Optional.ofNullable(doc.getElementsByTagName("ROLEID").item(i))
+					.map(Node::getTextContent).filter(str -> !str.isEmpty()).orElse("0"); 
 
 			if (!titleValue.equals("")) {
 
@@ -2642,8 +2689,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				String[] title = titleValue.split(":");
 				organVo.setDepartment(doc.getElementsByTagName("DEPTID").item(i).getTextContent());
 				organVo.setJobID(doc.getElementsByTagName("JOBID").item(i).getTextContent());
-				organVo.setTitle(title[0]);
-				organVo.setTitle2(title[1]);
+				organVo.setRoleId(roleId);
+				if(title.length >0) {
+					organVo.setTitle(title[0]);
+					organVo.setTitle2(title[1]);
+				}
 				newAddJobList.add(organVo);
 
 			} else { // 선택삭제, 전체겸직삭제인경우
@@ -2663,11 +2713,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						// 2023-07-03 장혜연 겸직 전체 삭제 정보 사용자 변경 히스토리에 들어갈 값 vo에 setting (겸직부서의 직위를 가져오기 위해
 						// 겸직정보를 지우기 전에 실행)
 						UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
-						userChangeInfoVO.setUserId(cn);
-						userChangeInfoVO.setTargetDeptId(organUserVOList.get(j).getDepartment());
-						userChangeInfoVO.setTargetDeptNm(organUserVOList.get(j).getDescription1() + "/" + organUserVOList.get(j).getTitle1());
-						userChangeInfoVO.setTargetDeptNm2(organUserVOList.get(j).getDescription2() + "/" + organUserVOList.get(j).getTitle2());
-						userChangeInfoVO.setUpdateType(updateType);
+						userChangeInfoVO.setUserChVo(userChangeInfoVO, userID, organUserVOList.get(j).getDepartment(),
+								organUserVOList.get(j).getDescription1() + "/" + organUserVOList.get(j).getTitle1(),
+								organUserVOList.get(j).getDescription2() + "/" + organUserVOList.get(j).getTitle2(), updateType);
 						userChInfoList.add(userChangeInfoVO);
 					}
 
@@ -2681,17 +2729,29 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					if (deleteTitleInfo.equals("")) {
 						deleteTitleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
 						delJobId = doc.getElementsByTagName("JOBID").item(i).getTextContent(); // 아이콘 선택삭제는 1개씩 가능하여
+						deleteRoleId = doc.getElementsByTagName("ROLEINFO").item(i).getTextContent(); // 아이콘 선택삭제는 1개씩 가능(직위 동일, 직책만 불일치한 경우 RoleId로 구분)
 					// else쪽에는 추가 안함
 					} else {
 						deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
 					}
 
-					logger.debug("deleteTitleInfo : {} ", deleteTitleInfo);
+					logger.debug("deleteTitleInfo : {} ", deleteTitleInfo + " deleteRoleId : {} " + deleteRoleId);
 				}
 			}
-			jobID += doc.getElementsByTagName("JOBID").item(i).getTextContent() + ";";
+			jobID += doc.getElementsByTagName("JOBID").item(i).getTextContent() + ";";	
+			// 2023-11-21 장혜연 : 직책명 추가 (primary언어만 있을 경우 role2도 동일하게) 
+			if (isAddRole) {
+				String orgRole2 = doc.getElementsByTagName("ROLE2").item(i).getTextContent();
+				role = Optional.ofNullable(doc.getElementsByTagName("ROLE").item(i))
+						.map(Node::getTextContent).filter(str -> !str.isEmpty()).orElse(""); 
+				roleInfo += roleId + ":" + role + ":"
+						+ (!"".equals(role) && "".equals(orgRole2) ? role : orgRole2) + ";";
+			} 
 		} // for문완료
 		jobID = jobID.substring(0, jobID.length() - 1);
+		if (isAddRole) {
+			roleInfo = roleInfo.substring(0, roleInfo.length() - 1);			
+		}
 
 		// 2022-07-06 이사라 - 한 부서에 겸직이 2개 이상 있는 경우 1개만 삭제 시 rewrite테이블에서 삭제되는 것을 방지하기 위해
 		// 이중겸직인지 확인
@@ -2700,7 +2760,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 
 		if (!delType.equals("ALL")) { //전체겸직삭제가 아닌 경우
-			logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo + ",delJobId=" + delJobId + ",isAddJobMoreInOneDept=" + isAddJobMoreInOneDept);
+			logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo + ",delJobId=" + delJobId +  ",deleteRoleId=" + deleteRoleId + ",isAddJobMoreInOneDept=" + isAddJobMoreInOneDept);
 			
 			ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID); //usermaster update
 		}
@@ -2714,17 +2774,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 			for (int i = 0; i < deletInfo.length; i++) {
 				String deltDeptID[] = deletInfo[i].split(":");
-				OrganUserVO jobInfo = ezOrganAdminService.getAddJobInfo(userID, deltDeptID[0], delJobId, tenantID);
-				userChangeInfoVO.setUserId(userID);
-				userChangeInfoVO.setTargetDeptId(deltDeptID[0]);
-				userChangeInfoVO.setTargetDeptNm(jobInfo.getDescription() + "/" + jobInfo.getTitle());
-				userChangeInfoVO.setTargetDeptNm2(jobInfo.getDescription1() + "/" + jobInfo.getTitle1());
-				userChangeInfoVO.setUpdateType(updateType);
+				OrganUserVO jobInfo = ezOrganAdminService.getAddJobInfo(userID, deltDeptID[0], delJobId, deleteRoleId, tenantID);
+				userChangeInfoVO.setUserChVo(userChangeInfoVO, userID, deltDeptID[0],
+						jobInfo.getDescription() + "/" + jobInfo.getTitle(),
+						jobInfo.getDescription1() + "/" + jobInfo.getTitle1(), updateType);
 
 				userChInfoList.add(i, userChangeInfoVO);
 			}
 
-			ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID, delJobId, isAddJobMoreInOneDept);
+			ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID, delJobId, deleteRoleId, isAddJobMoreInOneDept);
 
 		} else {
 		    if (!titleInfo.equals("")) { // 겸직 추가, 팝업 수정 일경우
@@ -2751,15 +2809,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				for (OrganUserVO orgAddJob : organUserVOList) {
 					boolean isContainedNewList = newAddJobList.stream()
 							.anyMatch(newAddJob -> newAddJob.getDepartment().equals(orgAddJob.getDepartment())
-									&& newAddJob.getJobID().equals(orgAddJob.getJobID()));
+									&& newAddJob.getJobID().equals(orgAddJob.getJobID())
+									&& newAddJob.getRoleId().equals(orgAddJob.getRoleId()));
 					if (!isContainedNewList) {
 						UserChangeInfoVO userChVo = new UserChangeInfoVO();
 						updateType = "clearAddJob";
-						userChVo.setUserId(userID);
-						userChVo.setTargetDeptId(orgAddJob.getDepartment());
-						userChVo.setTargetDeptNm(orgAddJob.getDescription1() + "/" + orgAddJob.getTitle());
-						userChVo.setTargetDeptNm2(orgAddJob.getDescription2() + "/" + orgAddJob.getTitle2());
-						userChVo.setUpdateType(updateType);
+						userChVo.setUserChVo(userChVo, userID, orgAddJob.getDepartment(),
+								orgAddJob.getDescription1() + "/" + orgAddJob.getTitle(),
+								orgAddJob.getDescription2() + "/" + orgAddJob.getTitle2(), updateType);
 						userChInfoList.add(userChVo);
 
 					}
@@ -2773,11 +2830,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						updateType = "grantAddJob";
 						UserChangeInfoVO userChVo = new UserChangeInfoVO();
 						OrganDeptVO newDeptNm = ezOrganAdminService.getDeptDisplayNm(newAddJob.getDepartment(), tenantID);
-						userChVo.setUserId(userID);
-						userChVo.setTargetDeptId(newAddJob.getDepartment());
-						userChVo.setTargetDeptNm(newDeptNm.getDisplayName() + "/" + newAddJob.getTitle());
-						userChVo.setTargetDeptNm2(newDeptNm.getDisplayName2() + "/" + newAddJob.getTitle2());
-						userChVo.setUpdateType(updateType);
+						userChVo.setUserChVo(userChVo, userID, newAddJob.getDepartment(),
+								newDeptNm.getDisplayName() + "/" + newAddJob.getTitle(),
+								newDeptNm.getDisplayName2() + "/" + newAddJob.getTitle2(), updateType);
 						userChInfoList.add(userChVo);
 					}
 				}
@@ -2828,7 +2883,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				logger.debug("new titleInfo with manualFlag=" + titleInfoWithManualFlag);
 
 				// 새로운 겸직 목록을 설정한다.
-				ezOrganAdminService.addJob(userID, titleInfoWithManualFlag, jobID, tenantID);
+				ezOrganAdminService.addJob(userID, titleInfoWithManualFlag, jobID, roleInfo, tenantID);
 
 			}
 		}
@@ -2875,13 +2930,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + user.getLang(), user.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + user.getLang(), user.getTenantId());
 		String deptTreeTopId = "";
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
 		
-		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topID = user.getCompanyID();
-			deptTreeTopId = topID;
-		} else {
+		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 			topID = "Top";
 			deptTreeTopId = topID + "/organ";
+		} else {
+			topID = selCompany;
+			deptTreeTopId = topID;
 		}
 
 		model.addAttribute("topID", topID);
@@ -2907,13 +2964,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
-		
-		if (companyID == null || companyID.equals("")) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+
+		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) || StringUtils.isBlank(companyID)) {
 			companyID = "Top";
-			
-			if (user.getRollInfo().indexOf("c=1") != -1) { // 전체관리자일때
-				companyID += "/organ";			
-			}
 		}
 
 		logger.debug("companyID=" + companyID);
@@ -2964,25 +3018,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (useSurvey == null || useSurvey.equals("")) {
 			useSurvey = "YES";
 		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
-				resultList.add(j++, vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
 		
 		String packageType = commonUtil.getPackageType(user.getTenantId());
 		
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
-		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);	
+		model.addAttribute("isAdmin", organAuth.isAuth(AdminAuth.ADMIN_MASTER));
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalForDoc", approvalForDoc);
         //2018-07-31 김보미 - 근태 추가
@@ -3107,14 +3152,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String type = (request.getParameter("type") !=null ? request.getParameter("type") : "");
 		String packageType = commonUtil.getPackageType(user.getTenantId());
 		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", user.getTenantId());
-		
-		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topID = user.getCompanyID();
-			deptTreeTopId = topID;
-		} else {
-			topID = "Top";
-			deptTreeTopId = topID + "/organ";
-		}
+
+        topID = user.getCompanyID();
+        deptTreeTopId = selCompany;
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
@@ -3125,13 +3165,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		boolean isAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 		
 		model.addAttribute("packageType", packageType);
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
 		model.addAttribute("topID", topID);
 		model.addAttribute("userInfo", user);
-		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
+		model.addAttribute("isAdmin", isAdmin);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
 		model.addAttribute("use_attitude", use_attitude);
@@ -3152,28 +3194,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezOrgan/retireUserManage.do", method = RequestMethod.GET)	
 	public String retireUserManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("retireUserManage started");
-	    
-		LoginVO user = commonUtil.checkAdmin(loginCookie);
-		
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+
 		//관리자 권한 체크
-		if (user == null) {
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		String companyId = user.getCompanyID();
 		
    		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
-   		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
-   		
-   		List<OrganDeptVO> companylist = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
-   		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < companylist.size(); i++) {
-			OrganDeptVO vo = companylist.get(i);			
-			
-			if (user.getRollInfo().indexOf("c=1") > -1 || (user.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(user.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+   		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
 		
    		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
@@ -3308,6 +3342,21 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					try {
 						// 로컬 시스템에서 해당 User의 복원처리를 수행한다.
 						ezOrganAdminService.restoreRetireEntry(cn[i], deptID, tenantID, offset);
+
+						//사용자 변경 히스토리 테이블에 insert
+						UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
+						userChangeInfoVO.setUserId(cn[i]);
+						userChangeInfoVO.setTenantId(tenantID);
+						userChangeInfoVO.setUpdateType("restore");
+						userChangeInfoVO.setExecutorIp(ClientUtil.getClientIP(request));
+						userChangeInfoVO.setTargetType("user");
+
+						try {
+							ezSystemAdminService.insertUserChangeHist(userChangeInfoVO, userInfo);
+						} catch (Exception e) {
+							logger.error(e.getMessage(), e);
+						}
+
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						ezEmailUserAdminService.retireUser(mailAddr);
@@ -3325,7 +3374,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					break;					
 				}
 			}
-			// dhlee - end			
+			// dhlee - end
 		}	
 		
 		//게시판 트리캐시 삭제
@@ -3345,7 +3394,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER) && !organAuth.isAuth(AdminAuth.COMPANY_MANAGER)) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -3439,7 +3489,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (aliasAddress[0].equals(primaryAddr)) {
 				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + " (Primary)</option>");
 			} else {
-				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + " </option>");
+				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + "</option>");
 			}
 		}
 		
@@ -3692,8 +3742,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		try {
 			// 전체관리자 권한 체크
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
 
-			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 				return returnValue;
 			}
 
@@ -3740,8 +3791,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		try {
 			// 전체관리자 권한 체크
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
 
-			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 				return returnValue;
 			}
 			
@@ -4086,17 +4138,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
@@ -4489,7 +4532,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				tmpvo.setAuthorizerId(id);
 				tmpvo.setAuthorizerIp(ip);
 				tmpvo.setDeptId(dept[i]);
-				tmpvo.setJobId(job[i]); // 중복겸직 대응하기 위한 JOBID 데이터 추가
+				if (!job[i].equals("empty")) {
+					tmpvo.setJobId(job[i]); // 중복겸직 대응하기 위한 JOBID 데이터 추가
+				}
 				pvo.add(tmpvo);
 			}
 		} else { // 모든권한 삭제
@@ -4651,9 +4696,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String addJobUserModify(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addJobUserModify started.");
 
-		LoginVO user = commonUtil.checkAdmin(loginCookie);
-		//관리자 권한 체크
-		if (user == null) {
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 
@@ -4665,12 +4710,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + user.getLang(), user.getTenantId());
 		String deptTreeTopId = "";
 
-		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topID = user.getCompanyID();
-			deptTreeTopId = topID;
-		} else {
+		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 			topID = "Top";
 			deptTreeTopId = topID + "/organ";
+		} else {
+			topID = user.getCompanyID();
+			deptTreeTopId = topID;
 		}
 
 		model.addAttribute("topID", topID);
@@ -4777,18 +4822,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(
-				auth.getPrimary(), auth.getTenantId());
-
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(auth.getId(), auth.getTenantId(), auth.getPrimary());
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", auth.getCompanyID());
 		model.addAttribute("useOcs", config.getProperty("config.USE_OCS"));
@@ -4805,31 +4839,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String loginStop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("loginStop started");
 	    
-		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		int rollCheck = 0;
-		
-		//관리자 권한 체크
-		if (user == null) {
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
-		if (user.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER)) { // 전체 관리자
 			rollCheck = 1;
-		} else if (user.getRollInfo().indexOf("k=1") != -1) {
-			rollCheck = 2;
 		}
+
 		String companyId = user.getCompanyID();
-   		
-   		List<OrganDeptVO> companylist = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
-   		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < companylist.size(); i++) {
-			OrganDeptVO vo = companylist.get(i);			
-			
-			if (user.getRollInfo().indexOf("c=1") > -1 || (user.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(user.getCompanyID()))) {
-				resultList.add(vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
 
 		model.addAttribute("companylist", resultList);
 		model.addAttribute("companyId", companyId);
@@ -4859,17 +4882,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				.getParameter("name");
 		String useOcs = config.getProperty("config.USE_OCS");
 		String companyId = request.getParameter("companyId");
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(auth.getPrimary(), auth.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(auth.getId(), auth.getTenantId(), auth.getPrimary());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("deptID", deptID);
@@ -5691,7 +5705,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				String realPath              = request.getServletContext().getRealPath("");
 				String pDirPath              = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
 				pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
-				excelPath             = ezOrganAdminService.createExcelPermissionsList(realPath + commonUtil.separator, pDirPath, exportPermissionList, primary, locale);
+				excelPath             = ezOrganAdminService.createExcelPermissionsList(realPath + commonUtil.separator, pDirPath, exportPermissionList, primary, locale, isRollC);
+				//일반사용자 리스트 요청이라면
 			} else {
 				List<OrganUserVO> exportUserlist = ezOrganAdminService.getExportUserList(primary, companyId, tenantId);
 				String realPath              = request.getServletContext().getRealPath("");
@@ -5771,6 +5786,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String result = "EMAIL_ERROR";
 		
+		OrganDeptVO deptNm = ezOrganAdminService.getDeptDisplayNm(cn, tenantId);
+
+		String parentCn = ezOrganAdminService.getDeptParentCn(cn, tenantId);
+
 		try {
 			// 제거하고자 하는 회사 혹은 부서 바로 아래에 위치한 자식 부서의 수를 구한다.
 			int cnt = ezOrganAdminService.companyChildCheck(cn, tenantId);
@@ -5823,13 +5842,163 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				logger.debug("cn={}, parentCN={}", cn, trashDeptId);
 				
 				result = ezOrganAdminService.moveEntry(trashDeptId,cn,"group",userInfo.getOffset(),tenantId);
+				// 2024-03-20 장혜연 : 부서 폐지 시 부서변경히스토리에 기록한다.
+				if ("OK".equals(result)) {
+					DeptChangeInfoVO deptChangeInfo = new DeptChangeInfoVO();
+					deptChangeInfo.setDeptChVo(cn, deptNm.getDisplayName(), deptNm.getDisplayName2(), parentCn, "", "",
+							"", "abolition", ClientUtil.getClientIP(request));
+					ezSystemAdminService.insertDeptChangeHist(deptChangeInfo, userInfo);
+				}
 			}
-			
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("trashDept ended");
 		return result;
+	}
+
+	@RequestMapping(value = "/admin/ezOrgan/getUserJobCheck", method = RequestMethod.POST)
+	@ResponseBody
+	public int getUserJobCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getUserJobCheck started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String cn = request.getParameter("cn");
+		String deptId = request.getParameter("deptId");
+		String jobId = request.getParameter("jobId");
+		String roleId = request.getParameter("roleId");
+		
+		int result = ezOrganAdminService.userJobCheck(cn, deptId, jobId, roleId, userInfo.getTenantId());
+
+		logger.debug("getUserJobCheck ended. result = " + result);
+
+		return result;
+	}
+
+	/**
+	 * 조직도관리 겸직정보 팝업 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/addJobInfo.do", method = RequestMethod.GET)
+	public String addJobInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("addJobInfo started");
+
+		userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+
+		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
+		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId());
+
+		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
+			useZipCodeSearch = "YES";
+		}
+		
+		boolean useOnlyInnerMail = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
+		String deptId = request.getParameter("selectDeptId");
+		String jobId = request.getParameter("jobId");
+		
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("lang", lang);
+		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
+		model.addAttribute("birthDay", "");
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("locale", userInfo.getLocale());
+		model.addAttribute("userPrimary", userInfo.getPrimary());
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("deptId", deptId);
+		model.addAttribute("jobId", jobId);
+		model.addAttribute("useOrganHideFlag", useOrganHideFlag);
+
+		logger.debug("addJobInfo ended");
+
+		return "admin/ezOrgan/addJobInfo";
+	}
+
+	@RequestMapping(value = "/admin/ezOrgan/getEntryAddJobInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getEntryAddJobInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+									 HttpServletResponse response) throws Exception {
+		logger.debug("getEntryAddJobInfo started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String language = userInfo.getLang();
+
+		int tenantID = userInfo.getTenantId();
+		logger.debug("tenantID={}", tenantID);
+
+		String cn = request.getParameter("cn");
+		String deptId = request.getParameter("deptId");
+		String jobId = request.getParameter("jobId");
+		//String deptId = ezOrganAdminService.getUserInfo(cn, userInfo.getPrimary(), tenantID).getDepartment();
+		String prop = request.getParameter("prop");
+
+		String entryAddJobInfo = ezOrganAdminService.getEntryAddJobInfo(cn, deptId, language, jobId, tenantID, prop);
+
+		logger.debug("getEntryAddJobInfo ended");
+		return entryAddJobInfo;
+	}
+
+	@RequestMapping(value = "/admin/ezOrgan/updateAddJobInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveAddJobInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+									 HttpServletResponse response) throws Exception {
+		logger.debug("updateAddJobInfo started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "OK";
+		// loginCookie 체크
+		if (userInfo == null) {
+			return "EMAIL_ERROR";
+		}
+
+		int tenantID = userInfo.getTenantId();
+		logger.debug("tenantID={}", tenantID);
+
+		String cn = request.getParameter("cn");
+		String deptId = request.getParameter("deptId");
+		String jobId = request.getParameter("jobId");
+		String userTreeFlag = request.getParameter("userTreeFlag");
+		String orderBy = request.getParameter("orderBy");
+		
+		try {
+			ezOrganAdminService.updateAddJobInfo(cn, deptId, jobId, tenantID, orderBy, userTreeFlag);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result = "ERROR";
+		}
+		
+		logger.debug("updateAddJobInfo ended");
+		return result;
+	}
+
+	@RequestMapping(value = "/admin/ezOrgan/getCompanies.do", method=RequestMethod.GET)
+	public String getCompanys(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("getCompanys started.");
+
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getLang());
+
+		model.addAttribute("userCompany", userInfo.getCompanyID());
+		model.addAttribute("list", adminCompanyList);
+
+		logger.debug("getCompanys ended.");
+
+		return "json";
 	}
 }

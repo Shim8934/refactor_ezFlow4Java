@@ -57,7 +57,7 @@
 		    catch (e) {
 		    }
 
-		    window.resizeTo(1000, 630);
+		    window.resizeTo(1000, 650);
 		    var xmlHTTP = createXMLHttpRequest();
 		    xmlHTTP.open("GET", "/xml/organtree_config.xml", false);
 		    xmlHTTP.send();
@@ -643,6 +643,40 @@
 		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>"+ strLang401 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span></span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
+		        }
+		        
+		        var listCount =  SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length;
+		        if (listCount <= 0) {
+		        	var M_TR = document.createElement("TR");
+	                M_TR.setAttribute("id", "MailUserlist_NoData");
+	                var M_TR_TD = document.createElement("TD");
+	                
+	                M_TR_TD.textContent = "<spring:message code='main.t00026'/>";
+	                M_TR_TD.style.textAlign = "center";
+	                M_TR.appendChild(M_TR_TD);
+		        	
+		        	if (!pSeach) {
+		        		if (pListType == "IMG") {
+		        			var nodataSpan = document.createElement("span");
+		        			nodataSpan.textContent = "<spring:message code='main.t00026'/>";
+				        	document.getElementById("DeptUserImgList").appendChild(nodataSpan);
+				                
+		        		} else {
+		        			M_TR_TD.setAttribute('colspan', '3')
+		        			document.querySelector("#txtlist_table tbody").appendChild(M_TR);
+		        		}
+		        	} else {
+		        		if (pListType == "IMG") {
+		        			var nodataSpan = document.createElement("span");
+		        			nodataSpan.textContent = "<spring:message code='main.t00026'/>";
+				        	document.getElementById("DeptUserImgList").appendChild(nodataSpan);
+		        		} else {
+		        			M_TR_TD.setAttribute('colspan', '4')
+		                	document.querySelector("#Search_txtlist_table tbody").appendChild(M_TR);
+		        		}
+		        	}
+		        	
+		        	return;
 		        }
 
 		        for (var i = 0; i < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length; i++) {
@@ -1517,7 +1551,7 @@
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code="ezResource.t106"/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewOwner" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" style="width: 250px; height: 427px; overflow: auto;" onclick="" ondblclick="" class="ui-sortable"></div>
+	                                <div id="ListViewOwner" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" style="width: 250px; height: 425px; overflow: auto;" onclick="" ondblclick="" class="ui-sortable"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

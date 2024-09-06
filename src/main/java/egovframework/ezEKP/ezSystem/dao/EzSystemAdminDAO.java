@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
@@ -238,5 +239,46 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	
 	public int getUserChHistListCount(Map<String, Object> map) throws Exception{
 		return (int) select("EzSystemAdminDAO.getUserChHistListCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<DeptChangeInfoVO> getDeptChHistList(Map<String, Object> map) throws Exception {
+		return (List<DeptChangeInfoVO>) list("EzSystemAdminDAO.getDeptChHistList", map);
+	}
+
+	public int getDeptChHistListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getDeptChHistListCount", map);
+	}
+
+	public void insertDeptChangeHist(DeptChangeInfoVO deptChangeInfoVO) throws Exception {
+		insert("EzSystemAdminDAO.insertDeptChangeHist", deptChangeInfoVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ConnectionInfoVO> getConnectorList(Map<String, Object> map) throws Exception {
+		return (List<ConnectionInfoVO>) list("EzSystemAdminDAO.getConnectorList", map);
+	}
+
+	public int getConnectorListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getConnectorListCount", map);
+	}
+	public void updateResetThemeAllCompany() throws Exception {
+		update("EzSystemAdminDAO.updateResetThemeAllCompany");
+	}
+
+	public void deleteThemeAllUser() throws Exception {
+		delete("EzSystemAdminDAO.deleteThemeAllUser");
+	}
+
+	public void updateResetThemeAllUser() throws Exception {
+		update("EzSystemAdminDAO.updateResetThemeAllUser");
+	}
+
+	public void deletePortletAllUser() throws Exception {
+		delete("EzSystemAdminDAO.deletePortletAllUser");
+	}
+
+	public void deletePortletSizeAllUser() throws Exception {
+		delete("EzSystemAdminDAO.deletePortletSizeAllUser");
 	}
 }
