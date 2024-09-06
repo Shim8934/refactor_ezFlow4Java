@@ -642,7 +642,7 @@
 		        		<tr>
 		            		<th><spring:message code='ezResource.t224' /></th>
 		            		<td colspan="3">
-		                		<div id="titleDIV"> <c:out value='${title}' /></div>
+		                		<div id="titleDIV"> <c:out value='${title}' escapeXml='false'/></div>
 		            		</td>
 		        		</tr>	        			
 	        		</table>
