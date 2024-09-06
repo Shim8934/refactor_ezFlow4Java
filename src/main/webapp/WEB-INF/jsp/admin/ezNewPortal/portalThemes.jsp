@@ -1165,7 +1165,15 @@
 			request.setRequestHeader('Content-Type', 'application/json');
 			
 			request.onload = function() {
-				getThemes();
+				if (webType != "mobile") {
+					getThemes();
+				} else {
+					if (request.status >= 200 && request.status < 300) {
+						alert("<spring:message code='ezNewPortal.t102' />");
+					} else {
+						alert("<spring:message code='ezNewPortal.t032' />");
+					}
+				}
 			}
 			
 			request.onerror = function() {
@@ -1182,11 +1190,6 @@
 			
 			request.send(data);
 
-			if (webType == "mobile") {
-				setTimeout(function() {
-					getThemePortletList();
-				}, 300);
-			}
 		}
 		
 		//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발

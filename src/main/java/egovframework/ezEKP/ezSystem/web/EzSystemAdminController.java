@@ -371,8 +371,8 @@ public class EzSystemAdminController {
 		
 		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
 
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		String isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER) ? "y" : "";
 		
@@ -1586,7 +1586,7 @@ public class EzSystemAdminController {
 		useMultiLogin = Optional.ofNullable(useMultiLogin).filter(StringUtils::isNotEmpty).orElse("YES");
 		
 		// 회사리스트
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), tenantID, userInfo.getPrimary());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), tenantID, userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("companyList", adminCompanyList);
@@ -1805,8 +1805,8 @@ public class EzSystemAdminController {
 		String companyID = userInfo.getCompanyID();
 		
 		// 회사리스트
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), tenantID, userInfo.getPrimary());
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), tenantID, userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		boolean isDotNetAdmin = false;
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
@@ -2332,8 +2332,8 @@ public class EzSystemAdminController {
 		 * model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
 		 */
 
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), tenantId, user.getPrimary());
-		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), tenantId, user.getPrimary(), user.getDeptID(), user.getJobId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
 		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
 		// 관리자 구분 셀렉트박스 적용
@@ -2749,8 +2749,8 @@ public class EzSystemAdminController {
 		}
 
 		String companyId = user.getCompanyID();
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
-		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary(), user.getDeptID(), user.getJobId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
 		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
 		model.addAttribute("list", adminCompanyList);
@@ -3106,8 +3106,8 @@ public class EzSystemAdminController {
 		String companyId = user.getCompanyID();
 		int tenantId = user.getTenantId();
 
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
-		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary(), user.getDeptID(), user.getJobId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
 		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
 		model.addAttribute("list", adminCompanyList);

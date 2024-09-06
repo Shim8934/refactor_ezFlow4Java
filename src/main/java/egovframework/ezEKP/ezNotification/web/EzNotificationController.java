@@ -372,7 +372,7 @@ public class EzNotificationController {
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		String deptTreeTopId = "";
 
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 			topID = "Top";

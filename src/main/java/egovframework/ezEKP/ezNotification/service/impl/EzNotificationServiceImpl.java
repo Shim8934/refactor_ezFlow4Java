@@ -521,7 +521,7 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 		logger.debug("checkEmergencyPermission started");
 		String adminFlag = "false";
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userId, tenantId);
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userId, tenantId, deptPath, jobId);
 		
 		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 			adminFlag = "emergencyAdmin";
