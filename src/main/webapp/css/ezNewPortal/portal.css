@@ -350,7 +350,7 @@ nav > .countBox .hidden_nav_count_off{position:absolute; right:0px; top:6px; dis
 
 
 /* portlet_list approval */
-.approval .portletText{width:130px;}
+.approval .portletText{width:355px;}
 .approval .approval_line span{display:inline-block; padding:0 14px; height:30px; line-height:28px; border-radius:15px; font-size:15px; cursor:pointer; background:#F2F3F5; color:#444; border:1px solid #EFEFEF;}
 .approval .approval_line span:hover, .approval .approval_line span.on{background:#DCEDFF; color:#388CE5;}
 .approval .portlet_list li{margin:0px; padding:7px 0px; background:none; font-size:13px; color:#444; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
