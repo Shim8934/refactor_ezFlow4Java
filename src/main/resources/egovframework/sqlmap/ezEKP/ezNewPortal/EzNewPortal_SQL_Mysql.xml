@@ -3785,7 +3785,16 @@ ORDER BY
 
 	<select id="ezNewPortal.getApprovalDisplayList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
-		SELECT	*
+		SELECT	docid,
+				docstate,
+				functiontype,
+			    doctitle,
+			    DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
+			    writerid,
+			    writername,
+			    writername2,
+			    href,
+			    companyid
 		FROM	vgongramaprdoingdoclist
 		WHERE	APRMEMBERID = #userId#
 		AND		APRTYPE = '015'
