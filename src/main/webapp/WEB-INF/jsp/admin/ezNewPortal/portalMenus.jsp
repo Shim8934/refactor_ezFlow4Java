@@ -477,7 +477,7 @@
 					}
 					
 					//기본메뉴일때 연결 URL변경 불가능
-					if (menuInfo.menuType == "G") { //기본 메뉴는 아이콘 변경이 불가능함
+					if (menuInfo.menuType == "G" || menuInfo.menuType == "MG") { //기본 메뉴는 아이콘 변경이 불가능함
 						$(".conUrl").find("input[type='text']").attr('readonly','readonly');
 					}
 					
@@ -496,7 +496,7 @@
 					//저장기능 
 					$(".updateMenu").on("click", {"menuId" : menuInfo.menuId, "menuType" : menuInfo.menuType}, updateMenu);
 					
-					if (menuInfo.menuType == "A") {
+					if (menuInfo.menuType == "A" || menuInfo.menuType == "MA") {
 						$(".deleteMenu").on("click", {"menuId" : menuInfo.menuId}, deleteMenu);
 					}
 					
