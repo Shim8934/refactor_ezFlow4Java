@@ -230,13 +230,10 @@ public class MSurveyGWController {
 			throw new FileNotFoundException(fileName);
 		}
 		
-		String _fileName = fileName;
-		_fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
 		byte[] fileBytes = Files.readAllBytes(file.toPath());
 		
 		JSONObject data = new JSONObject();
 		data.put("bytes", fileBytes);
-		data.put("fileName", _fileName);
 		result.put("data", data);
 		
 		logger.debug("MOBILE G/W Survey [GET /mobile/ezSurvey/attachfile/file-download] ended");
