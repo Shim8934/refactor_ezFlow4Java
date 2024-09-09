@@ -1557,7 +1557,7 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 #theme3Body .top_info_area ul li:last-child h3{color:rgb(51,51,51); font-size:14px; font-weight:bold; margin:0 0 16px;}
 #theme3Body .top_info_area ul li:last-child .noti{padding:0; background:none;}
 #theme3Body .top_info_area ul li:last-child .noti .swiper_txt{font-size:15px;}
-#theme3Body .top_info_area ul li:last-child .noti .swiper_txt:before{content:"공지"; display:inline-block; padding:0 7px; height:22px; border-radius:4px; line-height:20px; color:#fff; background:#B7BBC9; margin-right:10px;}
+/*#theme3Body .top_info_area ul li:last-child .noti .swiper_txt:before{content:"공지"; display:inline-block; padding:0 7px; height:22px; border-radius:4px; line-height:20px; color:#fff; background:#B7BBC9; margin-right:10px;}*/
 
 
 #theme3Body #fixBoardArea{margin:15px auto 0; display:block; max-height:none; width:470px;}
@@ -2440,3 +2440,5 @@ div.orbit img{border-radius:5px;}
 .set-body .btnpositionLayer a.imgbtn span:hover {color: #388ce5;}
 
 .sscheduleUL .Tcollaborate {background-color: rgba(63, 81, 181, 0.62); border: 1px solid rgba(20, 81, 181, 0.16);}
+
+.notiBox {margin-left: 1px; padding:0 7px; height:22px; border-radius:4px; line-height:20px; color:#fff; background:#B7BBC9; margin-right:10px;}

@@ -688,6 +688,15 @@
 	            wrapper.appendChild(slide);
 	            const divText = document.createElement('div');
 	            divText.classList.add('swiper_txt');
+
+				if (board.extensionAttribute2 == 1) {
+					divText.style.display ="flex";
+					const notiDiv = document.createElement('div');
+					notiDiv.className = "notiBox";
+					notiDiv.innerText = "<spring:message code = 'ezNotification.hth89' />";
+					divText.appendChild(notiDiv);
+				}
+				
 	            slide.appendChild(divText);
 	            var textNode = document.createTextNode(board.title);
 	            divText.appendChild(textNode);
