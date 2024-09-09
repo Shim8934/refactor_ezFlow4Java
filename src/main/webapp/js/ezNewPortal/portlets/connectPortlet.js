@@ -255,7 +255,6 @@ function makePlusBtn(portletId, usedTheme, linkUrl, pWidth, pHeight) {
 	if (document.getElementById(portletId + "Portlet").querySelector('#portletPlus' + portletId)) {
 		return;
 	}
-	var str = '<dd id="portletPlus' + portletId + '" class="portletPlus" onclick="openWindow(\''+ linkUrl +'\', '+ pWidth + ', ' + pHeight +')">';
-	str += '<img src="/images/ezNewPortal/portlet_Plus' + usedTheme + '.png"></dd>';
+	var str = '<dd id="portletPlus' + portletId + '" class="portletPlus plus" onclick="openWindow(\''+ linkUrl +'\', '+ pWidth + ', ' + pHeight +')"></dd>';
 	document.getElementById(portletId + "Portlet").getElementsByClassName('portlet_title')[0].insertAdjacentHTML('beforeend', str);
 }
