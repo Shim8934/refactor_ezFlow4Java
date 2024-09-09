@@ -13217,6 +13217,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (apprGMemberSnVO != null) {
 					apprGDocInfo.setAprMemberSN(apprGMemberSnVO.getAprMemberSN());
 					apprGDocInfo.setAprState(apprGMemberSnVO.getAprState());
+					apprGDocInfo.setDocState(apprGMemberSnVO.getDocState());
 				}
 			}
 

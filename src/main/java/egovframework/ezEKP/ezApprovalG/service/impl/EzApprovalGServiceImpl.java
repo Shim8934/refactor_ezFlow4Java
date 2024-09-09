@@ -36369,9 +36369,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 		case "GONGRAM":
 		case "CIRCULATION":
-		case "CHAMJO":
 			linkUrl = "/ezApprovalG/openDocViewByLink.do?docID=" + docID + "&userID=" + userID + "&userDeptID=" + userDeptId + "&companyID=" + companyID + "&listType=" + 99;
 			break;
+		case "CHAMJO":
 		default:
 			linkUrl = "/ezApprovalG/openApprovByLink.do?" + "docID=" + docID + "&userID=" + userID + "&userName=" + userName + "&userDeptID=" + userDeptId + "&companyID=" + companyID;
 			break;
@@ -36422,6 +36422,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "END":
 			mContainerMode = "END";
 			break;
+		case "CHAMJO":
 		default:
 			mContainerMode = "DO";
 			break;
