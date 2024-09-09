@@ -1410,6 +1410,7 @@ function goToPageByNum(szNum) {
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
     GetListInfo(HeaderObject,ContentObject);
+    $("#contentlistDiv").scrollTop(0);
 }
 function selbeforeBlock() {
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
