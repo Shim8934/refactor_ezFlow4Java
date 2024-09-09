@@ -1,4 +1,4 @@
-@import url('xfe-chart-data.css');
+
 
 body {
 	padding:8px;
@@ -6,15 +6,17 @@ body {
 	
 }
 
-.xfe_zb {
-	border-left : #d3d3d3 1px dotted;	 
-	border-top : #d3d3d3 1px dotted;
-	border-right : #d3d3d3 1px dotted;
-	border-bottom : #d3d3d3 1px dotted;
-	
-	line-height : 1;
-	*line-height : ;	/* IE 7 이하의 브라우저에 작용. */
+/* Rule to fix quirks-mode inheritance behavior */
+/* IE 에서는 body 태그에 있는 글자 크기 및 글꼴이 테이블 내부에 적용 되지 않기 때문에 추가. */
+table, caption {
+
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  font-variant: inherit;
+  
 }
+
 
 .xfe_zb_nolh {
 	border-left : #d3d3d3 1px dotted;	 
@@ -56,5 +58,62 @@ input.xfe_hidden_style {
 
 .xfe_bookmark {
 	background : url(../images/common/bookmark-1.png) no-repeat;
-	margin : 0px 3px;
+}
+
+.xfe_bookmark_40 {
+	background : url(../images/icon/v40/common/bookmark-1.png) no-repeat;
+}
+
+.xfe-rh-lt:hover, .xfe-rh-ct:hover, .xfe-rh-rt:hover, .xfe-rh-lm:hover,
+.xfe-rh-rm:hover, .xfe-rh-lb:hover, .xfe-rh-cb:hover, .xfe-rh-rb:hover {
+
+	border-color : #5587ED !important;
+}
+
+
+/* 
+table:hover td[class^=xfunc-] {
+	 
+	background-color: #fff2e5;
+
+}
+*/
+
+td[class^=xfunc-]:hover {
+	 
+	background-color: #fff2e5;
+	background-image : url(../images/icon/v40/common/func.png);
+	
+	
+	background-repeat: no-repeat;
+	background-position: 97% 1%;
+	/*background-position: right top;*/
+
+}
+
+
+td[class^=xfe-formula-result]:hover {
+
+	background-color: #f8b16a;
+	background-image : url(../images/icon/v40/common/func.png);
+	background-repeat: no-repeat;
+	background-position: 97% 1%;
+}
+
+
+input[xfe_disabled^=true] {
+
+	opacity: 0.5 !important;
+}
+
+/* 텍스트를 마우스로 드래그 했을 때 색상. */
+::-moz-selection { /* Code for Firefox */
+
+	/*color: #000;*/
+	background: #e0f3e0;
+}
+  
+::selection {
+	/*color: #000;*/
+	background: #e0f3e0;
 }

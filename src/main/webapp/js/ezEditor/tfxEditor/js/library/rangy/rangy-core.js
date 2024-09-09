@@ -157,18 +157,19 @@
     if ({}.hasOwnProperty) {
         util.extend = extend = function(obj, props, deep) {
             var o, p;
-            for (var i in props) {
+            Object.keys(props).forEach(function(i) {
                 if (props.hasOwnProperty(i)) {
                     o = obj[i];
                     p = props[i];
-                    if (deep && o !== null && typeof o == "object" && p !== null && typeof p == "object") {
+                    if (deep && o !== null && typeof o === "object" && p !== null && typeof p === "object") {
                         extend(o, p, true);
+                    } else {
+                        obj[i] = p;
                     }
-                    obj[i] = p;
                 }
-            }
-            // Special case for toString, which does not show up in for...in loops in IE <= 8
-            if (props.hasOwnProperty("toString")) {
+            });
+            // Special case for toString and other non-enumerable properties
+            if (props.hasOwnProperty("toString") && typeof props.toString === "function") {
                 obj.toString = props.toString;
             }
             return obj;
@@ -205,7 +206,9 @@
                         return slice.call(arrayLike, 0);
                     };
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.log(e);
+            }
         }
 
         if (!toArray) {
@@ -367,10 +370,21 @@
 
     Module.prototype = {
         init: function() {
-            var requiredModuleNames = this.dependencies || [];
             
+            /**
+             *  웹스퀘어로 인해 일단 추가.
+             * 초기화 할때 해당 객체가 없으면 일단 넘긴다.
+             * 
+             * @20200410    .kscho
+             */
+            if(typeof(xfeBrowserFlag) === "undefined") {
+                
+                return true;
+            }             
+            
+            var requiredModuleNames = this.dependencies || [];
             var IE_version = xfeBrowserFlag.getDocumentMode() ? xfeBrowserFlag.getDocumentMode() : xfeBrowserFlag.getBrowserVersion();
-
+            
             for (var i = 0, len = requiredModuleNames.length, requiredModule, moduleName; i < len; ++i) {
                 moduleName = requiredModuleNames[i];
 
@@ -383,7 +397,7 @@
 
                 if (!requiredModule.supported) {
                 
-                    /**                    
+                    /**                     
                      * @20161226    .kscho
                      */
                     if(xfeBrowserFlag.isIE() && IE_version !== 11) {
@@ -1375,8 +1389,9 @@
         try {
             styleEl.innerHTML = "<b>x</b>";
             htmlParsingConforms = (styleEl.firstChild.nodeType == 3); // Opera incorrectly creates an element node
-        } catch (e) {
+        } catch (e) {            
             // IE 6 and 7 throw
+            console.log(e);
         }
 
         api.features.htmlParsingConforms = htmlParsingConforms;
@@ -3027,21 +3042,25 @@
                                 r2.setStart(textNode, 2);
                                 
                                 /**
+                                 * 에디터를 보이지 않는 위치, 백그라운드, visibility false 로 할 경우
+                                 * 오류가 발생한다.
+                                 * 일단 예외 처리한다.
+                                 * 어차피 멀티 셀렉션 등을 체크하는 소스이기 때문에....
+                                 * 
                                  * @20171026    .kscho
                                  */
-                                try{
-                                    
+                                try {
                                     sel.addRange(r1);
                                     
                                     // current chrome doesn't support multiple ranges. 20140718
                                     if(!xfeBrowserFlag.isChrome()) {
                                         sel.addRange(r2);    
                                     }
-                                    //sel.addRange(r2);    
-                                } catch (e) {
+                                    //sel.addRange(r2);
+                                } catch(e) {
                                     
+                                    console.log(e);
                                 }
-                                
                                 
                                 
                                 selectionSupportsMultipleRanges = (sel.rangeCount == 2);    
@@ -3364,6 +3383,8 @@
                             try {
                                 this.nativeSelection.addRange(clonedNativeRange);
                             } catch (ex) {
+
+                                console.log(ex);
                             }
 
                             // Check whether adding the range was successful
@@ -3439,7 +3460,10 @@
                             this.docSelection.empty();
                         }
                     }
-                } catch(ex) {}
+                } catch(ex) {
+
+                    console.log(ex);
+                }
                 updateEmptySelection(this);
             };
 
