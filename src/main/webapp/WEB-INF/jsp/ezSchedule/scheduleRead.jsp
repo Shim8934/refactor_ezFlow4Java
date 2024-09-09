@@ -894,7 +894,7 @@
 	                                <spring:message code='ezSchedule.t313' />
 	                            </th>
 	                            <td>
-	                                <div style="word-break: break-all; overflow-y: auto; height: 19px; padding-top: 2px" id="LabelLocation">	                                    
+	                                <div style="word-break: break-all; overflow-y: auto; height: 20px; padding-top: 2px" id="LabelLocation">	                                    
 	                                    <c:out value="${scheduleInfo.location }" />
 	                                </div>
 	                            </td>
