@@ -301,7 +301,7 @@
 	
 	    var popUrl = "/admin/ezEmail/appr/addApproverPopUp.do?companyId=" + COMPANYID;
 	
-	    GetOpenWindow(popUrl, "", 1100, 630, "no");
+	    GetOpenWindow(popUrl, "", 1100, 730, "no");
 	}
 	
 	// 승인자 추가
