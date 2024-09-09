@@ -220,6 +220,7 @@ function deleteLetterBox() {
 	
 	var letter = selectNode.node;
 	var letterBoxNo = letter.id;
+	var letterBoxParentNo = letter.parent;
 	var realCheck = false;
 	
 	if (addCheck == -1) { // 편지지함 추가중
@@ -232,7 +233,7 @@ function deleteLetterBox() {
 			$(".jstree-clicked").click();
 			
 		}
-	} else if (letterBoxNo == result[0].letterBoxNo) { //treeCollection[0].id == 
+	} else if (letterBoxParentNo == '#') { //treeCollection[0].id ==
 		alert(letterStr23);
 		return;
 	} else if (letter.children.length !== 0) {
