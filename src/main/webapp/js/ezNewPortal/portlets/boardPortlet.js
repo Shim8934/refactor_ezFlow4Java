@@ -232,6 +232,8 @@ function getBoardListBType(data, portletId) {
 			if (!!item.thumbnail) {
 				dlEle.style.background = "url('" + item.thumbnail + "')";
 				dlEle.style.backgroundSize = "100% 100%";
+			} else {
+                dlEle.style.setProperty('background', 'url(/images/portal/noti_nodata.png) no-repeat 0 0 / 100% 100%', 'important');
 			}
 			// var dt = document.createElement('dt');
 			// dlEle.appendChild(dt);
