@@ -894,7 +894,7 @@
 	                                <spring:message code='ezSchedule.t313' />
 	                            </th>
 	                            <td>
-	                                <div style="word-break: break-all; overflow-y: auto; height: 17px; padding-top: 2px" id="LabelLocation">	                                    
+	                                <div style="word-break: break-all; overflow-y: auto; height: 20px; padding-top: 2px" id="LabelLocation">	                                    
 	                                    <c:out value="${scheduleInfo.location }" />
 	                                </div>
 	                            </td>
@@ -904,7 +904,7 @@
 	                                <spring:message code='ezSchedule.t314' />
 	                            </th>
 	                            <td colspan="3">
-	                                <div style="word-break: break-all; overflow-y: auto; height: 17px;" id="LabelSubject">	                                    
+	                                <div style="word-break: break-all; overflow-y: auto; height: 19px;" id="LabelSubject">	                                    
 	                                    <c:out value="${scheduleInfo.title}" />
 	                                </div>
 	                            </td>

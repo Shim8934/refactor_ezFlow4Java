@@ -916,8 +916,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 		String strSQLForAddJob = strSQL;
 		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
-			strSQLForAddJob = strSQLForAddJob.replace("extensionattribute1", "A.roll_info");
-			strSQLForAddJob = strSQLForAddJob.replace("department", "deptID");
+			strSQLForAddJob = strSQLForAddJob.replace(" extensionattribute1 ", " A.roll_info ");
+			strSQLForAddJob = strSQLForAddJob.replace(" department ", " deptID ");
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2344,8 +2344,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		strSQLForAddJob = strSQL;
 		// 2023-08-23 전인하 - 권한 겸직/사용자 기준 설정 기능 대응, 해당 옵션 사용 시 권한 설정 컬럼을 addJobMaster의 추가컬럼에서 찾게 함
 		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
-			strSQLForAddJob = strSQLForAddJob.replace("extensionattribute1", "A.roll_info");
-			strSQLForAddJob = strSQLForAddJob.replace("department", "deptID");
+			strSQLForAddJob = strSQLForAddJob.replace(" extensionattribute1 ", " A.roll_info ");
+			strSQLForAddJob = strSQLForAddJob.replace(" department ", " deptID ");
 		}
 
         Map<String, Object> map = new HashMap<String, Object>();

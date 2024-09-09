@@ -14971,7 +14971,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						nextMemberId = docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent();
 						nextMemberName = docXML2.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent();
 						nextMemberDeptId = docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent();
-						sendNoti(docID, "", "", nextMemberId, nextMemberName, nextMemberDeptId, "ING", companyID, lang, userInfo.getTenantId());
+						sendNoti(docID, "", "", nextMemberId, nextMemberName, nextMemberDeptId, "CHAMJO", companyID, lang, userInfo.getTenantId());
 						k += 1;
 						chamJoCnt += 1;
 					}
@@ -36255,6 +36255,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			notiSubType = "pass";
             notiType = NotiType.APPROVAL_PASS;
 			break;
+		case "CHAMJO" :
+			notiSubType = "arrive";
+            notiType = NotiType.APPROVAL_ARRIVE;
+			break;
 		default :
             notiSubType = "default";
             notiType = NotiType.APPROVAL_ARRIVE;
@@ -36367,6 +36371,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "CIRCULATION":
 			linkUrl = "/ezApprovalG/openDocViewByLink.do?docID=" + docID + "&userID=" + userID + "&userDeptID=" + userDeptId + "&companyID=" + companyID + "&listType=" + 99;
 			break;
+		case "CHAMJO":
 		default:
 			linkUrl = "/ezApprovalG/openApprovByLink.do?" + "docID=" + docID + "&userID=" + userID + "&userName=" + userName + "&userDeptID=" + userDeptId + "&companyID=" + companyID;
 			break;
@@ -36417,6 +36422,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "END":
 			mContainerMode = "END";
 			break;
+		case "CHAMJO":
 		default:
 			mContainerMode = "DO";
 			break;
