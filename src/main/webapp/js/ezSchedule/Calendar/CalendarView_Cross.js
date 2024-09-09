@@ -666,7 +666,8 @@ function GetMonthBodyObj() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    /* 2024-08-22 김유진 - 윈도우 표준시간대 변경 시 달력에 회색 영역 표시 관련해서 oBeforeDate에서 month 추출 */
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;

@@ -161,7 +161,7 @@
     		</c:if>
     		<c:if test="${deviceInfo eq null}">
     			<tr height=24px bgcolor=ffffff>
-    				<td colspan="4" align="center"><spring:message code='ezOrgan.kyj09' /></td>
+    				<td colspan="5" align="center"><spring:message code='ezOrgan.kyj09' /></td>
     			</tr>
     		</c:if>
         </table>

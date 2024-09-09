@@ -15377,6 +15377,72 @@ CREATE TABLE `tbl_realtime_notification` (
 		  PRIMARY KEY (`NOTISEQ`,`TENANT_ID`)
 		) ENGINE=InnoDB AUTO_INCREMENT=736 DEFAULT CHARSET=utf8mb4;
 
+
+--
+-- Table structure for table `tbl_distributeinfo`
+--
+
+DROP TABLE IF EXISTS `TBL_DISTRIBUTEINFO`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_DISTRIBUTEINFO`
+(
+  `SN` bigint(10) NOT NULL,
+  `DOCID` varchar(80) NOT NULL,
+  `RECEIPTDATE` datetime DEFAULT NULL,
+  `ORGANID` varchar(400) NOT NULL,
+  `ORGAN` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGANUSERNAME` varchar(100) DEFAULT NULL,
+  `DOCNUMBER` varchar(200) DEFAULT NULL,
+  `MANAGEDEPTID` varchar(400) DEFAULT NULL,
+  `MANAGEDEPT` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGDOCNUMCODE` varchar(200) DEFAULT NULL,
+  `DOCTITLE` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `MANAGEDEPT2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGAN2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGANUSERNAME2` varchar(100) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(20) NOT NULL,
+  `PARENTDOCID` varchar(80) NULL,
+  `ORGDOCID` varchar(80) NOT NULL,
+  `DELIVERYSN` bigint(10) DEFAULT NULL,
+  `TYPE` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SN`,`DOCID`,`ORGANID`(255))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='배부이력 정보';
+
+--
+-- Table structure for table `tbl_executive`
+--
+
+DROP TABLE IF EXISTS `tbl_executive`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_executive` (
+          `CN` VARCHAR(50) NOT NULL,
+          `PRIORITY` INT(11) NOT NULL,
+          `USAGE` CHAR(1) NOT NULL,
+          `CREATEUSER` VARCHAR(50) NOT NULL,
+          `LASTUPDATE` DATETIME NOT NULL,
+          `COMPANYID` VARCHAR(50) NOT NULL,
+          `TENANT_ID` MEDIUMINT DEFAULT 0 NOT NULL,
+          PRIMARY KEY (`CN`, `COMPANYID`, `TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '임원 테이블';
+
+DROP TABLE IF EXISTS TBL_SURVEY_RESULTVIEWPERMISSION;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE TBL_SURVEY_RESULTVIEWPERMISSION (
+    SURVEY_ID 			INT(11) 		NOT NULL,
+    COMPANY_ID 			VARCHAR(100) 	NOT NULL,
+    TENANT_ID 			INT(9) 			NOT NULL,
+    CN 					VARCHAR(100) 	NOT NULL 	COMMENT '권한자 아이디',
+    USER_TYPE 			VARCHAR(30) 				COMMENT '권한자 타입',
+    SUBDEPT_PERMITTED 	VARCHAR(30) 	DEFAULT 'N' COMMENT 'Y(하위 가능), N(하위 불가)',
+    CNNAME 				VARCHAR(120) 				COMMENT '권한자 이름',
+    CNNAME2 			VARCHAR(120) 				COMMENT '권한자 이름',
+    PRIMARY KEY (SURVEY_ID, COMPANY_ID, TENANT_ID, CN)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '설문 지정공개대상자 정보 테이블'
+
 DROP TABLE IF EXISTS `TBL_SYSTEMCONFIG`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

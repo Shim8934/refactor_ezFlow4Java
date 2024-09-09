@@ -54,7 +54,7 @@
 		    catch (e) {
 		    }
 
-		    window.resizeTo(1000, 630);
+		    window.resizeTo(1000, 650);
 		    var xmlHTTP = createXMLHttpRequest();
 		    xmlHTTP.open("GET", "/xml/organtree_config.xml", false);
 		    xmlHTTP.send();
@@ -1548,7 +1548,7 @@
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code="ezResource.t106"/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewOwner" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" style="width: 250px; height: 427px; overflow: auto;" onclick="" ondblclick="" class="ui-sortable"></div>
+	                                <div id="ListViewOwner" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" style="width: 250px; height: 425px; overflow: auto;" onclick="" ondblclick="" class="ui-sortable"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

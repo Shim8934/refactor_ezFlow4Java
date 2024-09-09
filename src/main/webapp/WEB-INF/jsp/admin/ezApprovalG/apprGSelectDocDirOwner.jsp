@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>문서함공유</title>
+		<title><spring:message code='ezApprovalG.share01' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />	    
@@ -1362,7 +1362,7 @@
 	    	</tr> 
 	 	</table>	    
 		<div class="btnposition btnpositionNew">
-	    	<a class="imgbtn" onClick="selectOwnerComplete('D');" ><span>부서선택</span></a>
+	    	<a class="imgbtn" onClick="selectOwnerComplete('D');" ><span><spring:message code='ezOrgan.t105' /></span></a>
 	    	<a class="imgbtn" onClick="selectOwnerComplete('U');" ><span><spring:message code='ezSchedule.t4' /></span></a>
 		</div>
 		<script type="text/javascript">

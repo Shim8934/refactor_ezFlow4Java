@@ -4123,6 +4123,27 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 
     @Override
+    public void createTblDistributeinfo() throws Exception {
+        ezCommonDAO.createTblDistributeinfo();
+    }
+    
+    @Override
+    public void createExecutiveTable() throws Exception {
+        ezCommonDAO.createExecutiveTable();
+    }
+    
+    @Override
+    public void createServeyResultviewPermTbl() throws Exception {
+        ezCommonDAO.createServeyResultviewPermTbl();
+    }
+
+    /* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
+    @Override
+    public void addTblFormContainerSN() throws Exception {
+        ezCommonDAO.addTblFormContainerSN();
+    }
+
+	@Override
     public void insertInitMobileTheme() throws Exception {
 
         Map<String, Object> map = new HashMap<>();

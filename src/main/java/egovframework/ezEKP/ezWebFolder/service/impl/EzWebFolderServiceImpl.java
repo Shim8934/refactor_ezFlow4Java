@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -877,6 +878,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		if (StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {
 			for (int i = 0; i < cnt; i++) {
 				String _pFileName = (String)((JSONObject)nameArray.get(i)).get("originalFilename");
+				_pFileName = URLDecoder.decode(_pFileName,"UTF-8");
 				
 				if (_pFileName.indexOf(commonUtil.separator) > 0) {
 					_pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];

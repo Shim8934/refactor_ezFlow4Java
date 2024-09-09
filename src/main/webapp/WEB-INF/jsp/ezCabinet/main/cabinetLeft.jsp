@@ -106,6 +106,16 @@
 					});
 					
 					cabinetTree.makeTree({cabinetNode : "root"});
+					var targetSpan = "";
+					var checkInterval = setInterval(function() {
+						targetSpan = document.querySelector("#cabinetTree div span.list_text[level='0']");
+						if (targetSpan) {
+							targetSpan.className = "list_text node_selected selectedNode";
+							var cabinetId = targetSpan.getAttribute("role");
+							window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
+							clearInterval(checkInterval);
+						}
+					}, 100);
 					
 					document.getElementById("myCabinet"        ).addEventListener("click", function(e) {getMyCabinet();     }, false);
 					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();    }, false);

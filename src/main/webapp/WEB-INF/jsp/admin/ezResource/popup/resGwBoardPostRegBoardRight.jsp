@@ -1532,7 +1532,9 @@
             		</td>
         		</tr>
     		</table>
+		<label style="display: inline-flex; align-items: center;">
     		<input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone" ><span class="txt" style="margin-bottom: 3px;"><spring:message code="ezResource.t372" /></span>    		
+		</label>
     		<div class="btnpositionNew">
         		<a class="imgbtn" onclick="close_onclick()"><span><spring:message code="ezResource.t15" /></span></a>
     		</div>

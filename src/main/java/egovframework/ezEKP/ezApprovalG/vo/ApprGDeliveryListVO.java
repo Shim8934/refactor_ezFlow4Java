@@ -21,6 +21,8 @@ public class ApprGDeliveryListVO {
 	private String docTitle;
 	private String organUserName;
 	private String securityApproval;  // 2023-09-05 보안결재 정보를 추가
+	private String orgDocID;
+	private String organUserName2;
 	public String getOrganUserName() {
 		return organUserName;
 	}
@@ -137,4 +139,16 @@ public class ApprGDeliveryListVO {
 	}
 	public String getSecurityApproval() { return securityApproval; }
 	public void setSecurityApproval(String securityApproval) { this.securityApproval = securityApproval; }
+	public String getOrgDocID() {
+		return orgDocID;
+	}
+	public void setOrgDocID(String orgDocID) {
+		this.orgDocID = orgDocID;
+	}
+	public String getOrganUserName2() {
+		return organUserName2;
+	}
+	public void setOrganUserName2(String organUserName2) {
+		this.organUserName2 = organUserName2;
+	}
 }

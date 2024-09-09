@@ -34,6 +34,9 @@
 	    	#mCSB_1_container {
 				margin-right: 0px;
 			}  	
+			#newCircularCount, #circularCompleteCount, #myCircularCount, #circularTempCount, #circularDeleteCount{  
+				pointer-events: none;
+			}
 		</style>
 	    <script type="text/javascript">
 	        document.onselectstart = function () { return false; };

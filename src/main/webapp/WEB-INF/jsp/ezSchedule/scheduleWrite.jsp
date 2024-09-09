@@ -147,7 +147,13 @@
                     	if(document.getElementById("HolderEdit2") != null){
 							document.getElementById("HolderEdit2").style.display = "none";
 						}
-                    }
+                    } else {
+						// chkPublic이 OFF일 경우 비공개가 기본값임.
+						if (chkPublic == "OFF") {
+							document.getElementById("publicSelect").disabled = true;
+							document.getElementById("publicSelect").value = "N";
+						}
+					}
 
 	                /* if (scheduletype == "7") {
 		                //document.getElementById("HolderEdit2").style.display = "none";
@@ -189,7 +195,7 @@
 		        }
 
 		        document.getElementById("publicSelect").disabled = true;
-		        if (scheduletype == "1" || scheduletype == "6")
+		        if ((scheduletype == "1" && chkPublic == "ON") || scheduletype == "6")
 		            document.getElementById("publicSelect").disabled = false;
 
 		        if (scheduleid == "")
@@ -199,9 +205,9 @@
 		            setAttachFileInfo("${strAttach}");
 		        }
 
-		        if(ispublic != "") {
+		        /*if(ispublic != "") {
 		        	document.getElementById("publicSelect").value = ispublic;
-		        }
+		        }*/
 
 		        try{
 		            if (document.getElementById("TextTitle").value == "")

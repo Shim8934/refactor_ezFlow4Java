@@ -2516,4 +2516,49 @@
 				TENANT_ID = #v_TENANTID#
 		]]>
 	</update>
+	
+	<select id="EzScheduleDAO.checkExecutiveType" parameterClass="Map" resultClass="String">
+		select
+			case
+				when executive > 0 and secreatry > 0 then 'a'
+				when executive > 0 then 'u'
+				when secreatry > 0 then 's'
+				else 'none'
+				end as result
+		from
+			(
+				select
+					(
+						select
+							COUNT(*)
+						from
+							tbl_executive
+						where
+							cn = #v_USERID#
+						  and COMPANYID = #v_COMPANYID#
+						  and TENANT_ID = #v_TENANTID#) as executive,
+					(
+						select
+							COUNT(*)
+						from
+							tbl_secretary
+						where
+							SECRETARYID = #v_USERID#
+						  and COMPANYID = #v_COMPANYID#
+						  and TENANT_ID = #v_TENANTID#) as secreatry
+				FROM dual
+			)
+	</select>
+	
+	<select id="EzScheduleDAO.checkExecutiveUsage" parameterClass="Map" resultClass="String">
+		SELECT
+			usage
+		FROM
+			tbl_executive
+		WHERE
+			COMPANYID = #v_COMPANYID#
+		  AND TENANT_ID = #v_TENANTID#
+		  AND CN = #v_USERID#
+	</select>
+	
 </sqlMap>

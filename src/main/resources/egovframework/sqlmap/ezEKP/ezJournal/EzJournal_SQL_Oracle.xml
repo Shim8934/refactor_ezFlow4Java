@@ -358,8 +358,12 @@
 									  and d.EXTENSIONATTRIBUTE2 = a.company_id)
 				where 
 					(b.dept_id = #deptId# or b.dept_id is null)
+			]]>
+			<isNotEqual property="typeId" compareValue="basic">
 				and
 					a.type_id = #typeId#
+			</isNotEqual>
+			<![CDATA[	  
 				and
 					a.tenant_id = #tenantId#
 				and

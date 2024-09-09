@@ -164,8 +164,10 @@ function CabinetTree() {
 			}
 			else {
 				var parentElmt = divTree.parentElement;
-				var listOfImgElmt = [].filter.call(parentElmt.querySelectorAll("img"), function(element){return element.parentNode == parentElmt;});
-				level = (!listOfImgElmt || listOfImgElmt.length == 0) ? 1 : listOfImgElmt.length - 1;
+				var spans = parentElmt.querySelectorAll(':scope > span.sub_iconLNB.tree_blank');
+				level = spans.length + 1;
+				/*var listOfImgElmt = [].filter.call(parentElmt.querySelectorAll("img"), function(element){return element.parentNode == parentElmt;});
+				level = (!listOfImgElmt || listOfImgElmt.length == 0) ? 1 : listOfImgElmt.length - 1;*/
 			}
 		}
 		

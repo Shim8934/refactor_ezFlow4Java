@@ -45,7 +45,10 @@
 		    //2023-05-16 임정은 - 공람 회수
 		    var count;
 		    var aprMemberSN;
-		    
+
+			// 의견 모달창을 띄우기 위한 companyID
+			var orgCompanyID = "<c:out value ='${companyID}'/>";
+
 		    window.onload = function () {
 		        try {
 		            var xmlpara = createXmlDom();
@@ -226,9 +229,26 @@
 		        }
 		    }
 		    function lvAprLine_DBSelChange() {
-		        if (pDocInfoValue == "1" || pDocInfoValue == "5")
+		        if (pDocInfoValue == "1" || pDocInfoValue == "5") {
 		            openUserInfo();
+				} else if (pDocInfoValue == "4") { // 의견 탭
+					btnOpinion_onclick();
+				}
 		    }
+			var aprendopinion_dialogArgument = new Array();
+			function btnOpinion_onclick() {
+				var parameter = new Array();
+				parameter[0] = tempDocID;
+				parameter[1] = "Show";
+				parameter[2] = orgCompanyID;
+
+				aprendopinion_dialogArgument[0] = parameter;
+				aprendopinion_dialogArgument[1] = openOpinionUI_Complete;
+				DivPopUpShow(430, 420, "/ezApprovalG/aprEndOpinion.do?resize=true");
+			}
+			function openOpinionUI_Complete() {
+				DivPopUpHidden();
+			}
 		    function openUserInfo() {
 		        var listview = new ListView();
 		        listview.LoadFromID("AprLine");
