@@ -355,6 +355,8 @@ var strLangHSG02 = "垃圾邮件举报未能成功处理。";
 // 2024.04.29 한슬기 : 메일 관련 메시지
 var strLangHSG03 = "主题栏为空。";
 
+var strLangKDH01 = "收信确认";
+
 //new ui
 const strLangFolderManage = "管理文件夹";
 const strLangSubscribe = "订阅";

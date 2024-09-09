@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezSchedule.vo.ScheduleExecutiveVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -237,6 +238,80 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 		
 		return cnt;
 	}
-	
+
+	@Override
+	public String scheduleGetExecutiveList(String cn, String companyID, int tenantID, String offset, String keyword, String lang, String companyName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cn", cn);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_KEYWORD", keyword);
+		map.put("v_LANG", lang);
+		map.put("v_COMPANYNAME", companyName);
+
+		List<ScheduleExecutiveVO> list = ezScheduleAdminDAO.scheduleGetExecutiveList(map);
+
+		StringBuilder sb = new StringBuilder("<DATA>");
+
+		for (int i=0; i < list.size(); i++) {
+			ScheduleExecutiveVO vo = list.get(i);
+			vo.setLastUpdate(commonUtil.getDateStringInUTC(vo.getLastUpdate(), offset, false));
+			sb.append(commonUtil.getQueryResult(vo));
+		}
+		sb.append("</DATA>");
+
+		return sb.toString();
+	}
+
+	@Override
+	public void scheduleSaveExecutive(String userID, int priority, String usage, String createUser, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_PRIORITY", priority);
+		map.put("v_USAGE", usage);
+		map.put("v_CREATEUSER", createUser);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		ezScheduleAdminDAO.scheduleSaveExecutive(map);
+	}
+
+	@Override
+	public void scheduleUpdateExecutive(String userID, int priority, String usage, String createUser, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_PRIORITY", priority);
+		map.put("v_USAGE", usage);
+		map.put("v_CREATEUSER", createUser);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		ezScheduleAdminDAO.scheduleUpdateExecutive(map);
+	}
+
+	@Override
+	public void scheduleDelExecutive(String userID, String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+
+		ezScheduleAdminDAO.scheduleDelExecutive(map);
+
+		logger.debug("deleted holidayID : " + userID);
+	}
+
+	@Override
+	public void scheduleNumUpdateExecutive(String userID, int priority, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_PRIORITY", priority);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		ezScheduleAdminDAO.scheduleUpdateExecutive(map);
+	}
 }
 

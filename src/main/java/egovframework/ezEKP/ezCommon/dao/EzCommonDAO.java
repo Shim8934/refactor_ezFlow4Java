@@ -1930,7 +1930,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.getPortletNameCompanyList", map);
 	}
 
-    /* 2023-11-22 조소정 - 포탈 > ㅣ기본 포틀릿명 중국어 버전 추가 */
+    /* 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 */
 	public void insertPortletNameChinese(Map<String, Object> map2) {
 		try {
 			String checkNameChinese = (String) select("EzCommonDAO.checkPortletNameChinese", map2);
@@ -2489,6 +2489,48 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			map.put("CODE1",code);
 			update("EzCommonDAO.updateInProcessJpCodeName3",map);
 		}
+	}
+
+	public void createTblDistributeinfo() {
+		try {
+			select("EzCommonDAO.checkTblDistributeinfo");
+		} catch (Exception e) {
+			logger.debug("TBL_DISTRIBUTEINFO table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblDistributeinfo");
+		}
+	}
+
+	// 2024-08-06 이유정 - 임원일정 > 테이블 추가
+	public void createExecutiveTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkExecutiveTable");
+		} catch (Exception e) {
+			logger.debug("tbl_executive doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createExecutiveTable");
+		}
+	}
+
+	// 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 테이블 추가
+	public void createServeyResultviewPermTbl() {
+		try {
+			select("EzCommonDAO.checkServeyResultviewPermTbl");
+		} catch (Exception e) {
+			logger.debug("TBL_SERVEY_RESULTVIEWPERMISSION doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createServeyResultviewPermTbl");
+		}
+	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
+	public void addTblFormContainerSN() {
+		try {
+			select("EzCommonDAO.checkTblFormContainerSN");
+		} catch (Exception e) {
+			logger.debug("tbl_formcontainer SN column doesn't exist. creating the column...");
+			update("EzCommonDAO.addTblFormContainerSN");
+		}
+
 	}
 	
 	public void insertMobileTheme() throws Exception {

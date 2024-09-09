@@ -2795,7 +2795,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_categoryTab{float:left; width:199px; height:440px; border-right:1px solid #e7e7e7; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .contents_tabCategory{height:44px; margin:0px; padding:0px; color:#333333; font-size:14px; font-weight:bold; border-bottom:1px solid #e7e7e7; background: #F8F9FB;}
 .contents_tabCategory dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
-.contents_listCategory{overflow:hidden; list-style:none; margin:0px; padding:0; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
+.contents_listCategory{overflow:auto; height:395px; list-style:none; margin:0px; padding:0; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .contents_listCategory li{margin:0px; padding: 6px 0 6px 15px; line-height:26px; color:#555555; font-size:13px; cursor:pointer; border-bottom: 1px solid #E5E5E5;}
 .contents_listCategory li span{display:inline-block; margin:0px; padding:0px;}
 .contents_listCategory li span.icon img{vertical-align:middle; margin:-3px 6px 0px 0px;}

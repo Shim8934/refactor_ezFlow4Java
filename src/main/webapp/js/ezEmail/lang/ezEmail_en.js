@@ -355,6 +355,8 @@ var strLangHSG02 = "Spam report was not processed successfully.";
 // 2024.04.29 한슬기 : 메일 관련 메시지
 var strLangHSG03 = "Subject field is empty.";
 
+var strLangKDH01 = "Read info";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";

@@ -349,6 +349,8 @@ var strLangHSG02 = "Laporan spam tidak diproses dengan berhasil.";
 // 2024.04.29 한슬기 : 메일 관련 메시지
 var strLangHSG03 = "Kolom subjek kosong.";
 
+var strLangKDH01 = "Baca info";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";

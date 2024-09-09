@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezSurvey.dao;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezSurvey.vo.ResultViewPermissionVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezSurvey.vo.AttachVO;
@@ -283,5 +284,25 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		boolean isDeletedSurvey = (boolean) select("EzSurveyDAO.comfirmSurveyDeletion", map);
 		
 		return isDeletedSurvey;
+	}
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 저장
+	public void saveSurveyResultViewTarget(Map<String, Object> map) {
+		insert("EzSurveyDAO.saveSurveyResultViewTarget", map);
+	}
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 리스트 조회
+	public List<ResultViewPermissionVO> selectResultViewPermission(Map<String, Object> map) {
+		return (List<ResultViewPermissionVO>) list("EzSurveyDAO.selectResultViewPermission", map);
+	}
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 삭제
+	public void deleteResultViewPermission(Map<String, Object> map) {
+		delete("EzSurveyDAO.deleteResultViewPermission", map);
+	}
+
+	// 2024-07-12 전인하 - 설문 > 사용자가 결과조회 가능한 설문 id 조회
+	public List<Long> getReceivedSurveyResultList(Map<String, Object> map) {
+		return (List<Long>)list("EzSurveyDAO.getReceivedSurveyResultList", map);
 	}
 }

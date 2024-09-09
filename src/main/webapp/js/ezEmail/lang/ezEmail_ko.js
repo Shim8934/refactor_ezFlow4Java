@@ -355,6 +355,8 @@ var strLangHSG02 = "스팸신고가 정상적으로 처리되지 않았습니다
 // 2024.04.29 한슬기 : 메일 관련 메시지
 var strLangHSG03 = "제목란이 비어있습니다.";
 
+var strLangKDH01 = "수신확인";
+
 // new ui
 const strLangFolderManage = "편지함관리";
 const strLangSubscribe = "구독";

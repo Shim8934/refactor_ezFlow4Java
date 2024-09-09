@@ -545,7 +545,7 @@
 		        var tr2 = listview2.GetSelectedRows();
                 var langTDName ="";
 
-                if (${lang_user} == 1 ) {
+                if (${lang_user} == 1 || ${lang_user} == 3 || ${lang_user} == 4 ) {
                     langTDName = getNodeText(tr2[0].cells[0]);
                 } else if (${lang_user} == 2 ) {
                     langTDName = getNodeText(tr2[0].cells[1])

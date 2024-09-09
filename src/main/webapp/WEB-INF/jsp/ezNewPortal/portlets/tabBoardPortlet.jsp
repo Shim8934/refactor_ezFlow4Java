@@ -14,9 +14,9 @@
 		<div class="layDIV" id="tabBoard">
 			<dl class="sortablePortlet portlet_tab">
 					<dt class="portletText" id="tabBoardPortletName"><span><c:out value='${portletName }'/></span></dt>
-					<dt id="tabBoardList1Tab" class="tabBoardTab" style="display: none;"><span></span></dt>
-					<dt id="tabBoardList2Tab" class="tabBoardTab" style="display: none;"><span></span></dt>
-					<dt id="tabBoardList3Tab" class="tabBoardTab" style="display: none;"><span></span></dt>
+					<dt id="tabBoardList1Tab" class="tabBoardTab" style="display: none;"><span class="longTitle"></span></dt>
+					<dt id="tabBoardList2Tab" class="tabBoardTab" style="display: none;"><span class="longTitle"></span></dt>
+					<dt id="tabBoardList3Tab" class="tabBoardTab" style="display: none;"><span class="longTitle"></span></dt>
 			</dl>
 			<dl class="portlet_tab_plus">
 				<dd class="portletPlus plus" id="tabBoardPlus" onclick="tabBoardPlus()"></dd>

@@ -1803,8 +1803,13 @@
     <select id="EzWebFolderDAO_y.getRootFolderListInfo" parameterClass="Map" resultClass="java.util.HashMap">
     	<isNotEqual property="folderType" compareValue="S">
     		SELECT 
-    			distinct folder.FOLDER_ID AS FOLDER_ID, 
-    			folder.FOLDER_NAME1 AS FOLDER_NAME,   
+    			distinct folder.FOLDER_ID AS FOLDER_ID,
+			<isEqual property="primary" compareValue="1" >
+				folder.FOLDER_NAME1 AS FOLDER_NAME,
+			</isEqual>
+			<isNotEqual property="primary" compareValue="1" >
+				folder.FOLDER_NAME2 AS FOLDER_NAME,
+			</isNotEqual>   
     			folder.folder_type AS FOLDER_TYPE,
     			folder.FOLDER_LEVEL AS FOLDER_LEVEL  
     		FROM 
@@ -1841,8 +1846,13 @@
 		</isNotEqual>
 		<isEqual property="folderType" compareValue="S">
 			SELECT
-				distinct FOLDER_ID AS FOLDER_ID, 
-    			D2.FOLDER_NAME1 AS FOLDER_NAME,  
+				distinct FOLDER_ID AS FOLDER_ID,
+			<isEqual property="primary" compareValue="1" >
+				D2.FOLDER_NAME1 AS FOLDER_NAME,
+			</isEqual>
+			<isNotEqual property="primary" compareValue="1" >
+				D2.FOLDER_NAME2 AS FOLDER_NAME,
+			</isNotEqual>
     			D2.folder_type AS FOLDER_TYPE,
     			D2.FOLDER_LEVEL AS FOLDER_LEVEL  
 			FROM TBL_WEBFOLDER_FOLDER D2

@@ -751,7 +751,7 @@
 	                <td style="height:20px">	                    
 	                    <div id="menu">
 	                        <ul>
-	                        	<c:if test="${_editPosible == 'Y'}">
+	                        	<c:if test="${_editPosible == 'Y' && usage == 'Y'}">
 	                                <li>
 	                                	<span onclick="edit_schedule()"><spring:message code='ezSchedule.t302' /></span>
 	                                </li>
