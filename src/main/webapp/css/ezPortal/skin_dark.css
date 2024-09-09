@@ -522,3 +522,7 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .util li span.util_messenger:hover{background-image:url(../../images/ezNewPortal/skin/dark/util_messenger_hover.svg);}
 .form_set.theme li{border: 1px solid #565656; background: #393a3b;}
 .form_set.default li .form_image{border: 1px solid #797979;}
+
+*::-webkit-scrollbar-thumb{background: #bebebe !important;}
+*::-webkit-scrollbar-track{background: #efefef !important;}
+*::-webkit-scrollbar{width: 8px !important;}

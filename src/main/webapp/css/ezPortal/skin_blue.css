@@ -85,11 +85,11 @@ nav .navUL li.on{color:#003497;}
 
 .lnb ul li.icon_nav_menuset_leftmenu:hover:before{border-color:#578DF3; background-image:url(../../images/ezNewPortal/skin/blue/lnb_menuset_on.svg);}
 
-.lnb ul li:hover:before, .lnb ul li.on:before{background-color:#6E8CC4; box-shadow:2px 3px 5px rgba(0,0,0,0.33);}
+.lnb ul li:hover:before, .lnb ul li.on:before{background-color:#578DF3; box-shadow:2px 3px 5px rgba(0,0,0,0.33);}
 .lnb ul li span{color:#fff;}
 .lnb ul:not(.lnb_list) li:before{background-color:#002F88;}
 .lnb ul:not(.lnb_list) li.on:before{background-color:#6E8CC4;}
-.lnb ul:not(.lnb_list) li:hover:before, .lnb ul:not(.lnb_list) li.on:before{box-shadow:none; background-color:#6E8CC4;}
+.lnb ul:not(.lnb_list) li:hover:before, .lnb ul:not(.lnb_list) li.on:before{box-shadow:none; background-color:#578DF3;}
 
 .lnb_menu_all ul.active li:nth-child(-n+7){border:1px dashed #2E75FF; background:#E3EEF9; border-left:none; border-top:none;}
 .lnb_menu_all ul.active li:nth-child(-n+7):before{background-color:#578DF3;}
