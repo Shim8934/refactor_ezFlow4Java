@@ -2235,8 +2235,12 @@ function getCookie(name) {
 }
 
 function setColorMode() {
-	var useColor = getCookie('useColor');
 	
+	if (window.location.href.indexOf('admin') > 0) {
+		return;
+	}
+	
+	var useColor = getCookie('useColor');
 	if (useColor) {
 		var link = document.createElement('link');
 		link.rel = 'stylesheet';
