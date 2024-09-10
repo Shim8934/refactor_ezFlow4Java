@@ -294,12 +294,12 @@ nav > .countBox .hidden_nav_count_off{position:absolute; right:0px; top:6px; dis
 
 /* portlet_list */
 .portlet_list{margin:0px; padding:10px 20px 0px; list-style:none; height:calc(100% - 73px); box-sizing:border-box; overflow:hidden;}
-.portlet_list li{padding:8px 0; margin:0 0 0; font-size:13px; color:#333; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor:pointer; border-bottom:1px solid #E6E6E6; line-height:normal; height:auto;}
+.portlet_list li{padding:8px 0; margin:0 0 0; font-size:13px; color:#333; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor:pointer; border-bottom:1px solid #E6E6E6; line-height:normal; height:58px; box-sizing:border-box;}
 .portlet_list li:last-child{margin-bottom:0;}
-.portlet_list li .txt{display:block; padding:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-0.5px; font-size:14px; color:#333; box-sizing:border-box; font-weight:500; line-height:24px;}
+.portlet_list li .txt{display:block; padding:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-0.5px; font-size:14px; color:#333; box-sizing:border-box; font-weight:500; line-height:18px; height:22px;}
 .portlet_list li:hover .txt{color:#000;}
-.portlet_list li .name{display:block; float:none; overflow:hidden; letter-spacing:-0.5px; white-space:nowrap; text-overflow:ellipsis; padding-right:7px; color:#838383; font-size:13px; font-weight:normal;}
-.portlet_list li .date{float:right; width:100px; text-align:right;overflow:hidden; letter-spacing:-0.5px; padding:0px 1px 0px 0px; color:#838383; font-weight:normal;}
+.portlet_list li .name{display:block; float:none; overflow:hidden; letter-spacing:-0.5px; white-space:nowrap; text-overflow:ellipsis; padding-right:7px; color:#838383; font-size:13px; font-weight:normal; height:22px; line-height:20px;}
+.portlet_list li .date{float:right; width:100px; text-align:right;overflow:hidden; letter-spacing:-0.5px; padding:0px 1px 0px 0px; color:#838383; font-weight:normal; height:22px; line-height:20px;}
 
 .portlet.two_by_one .portlet_list li{padding:11.4px 0;}
 .portlet.two_by_one .portlet_list li.first_approval{padding:0;}
@@ -353,7 +353,7 @@ nav > .countBox .hidden_nav_count_off{position:absolute; right:0px; top:6px; dis
 .approval .portletText{width:355px;}
 .approval .approval_line span{display:inline-block; padding:0 14px; height:30px; line-height:28px; border-radius:15px; font-size:15px; cursor:pointer; background:#F2F3F5; color:#444; border:1px solid #EFEFEF;}
 .approval .approval_line span:hover, .approval .approval_line span.on{background:#DCEDFF; color:#388CE5;}
-.approval .portlet_list li{margin:0px; padding:7px 0px; background:none; font-size:13px; color:#444; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.approval .portlet_list li{height:58px; box-sizing:border-box; margin:0px; padding:7px 0px; background:none; font-size:13px; color:#444; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
 .approval .portlet_list li .approval_tit{margin:0;}
 .portlet.two_by_one .portlet_list li.first_approval{margin:8px 0px 16px; box-sizing:border-box; height:auto; border:none;}
 .portlet.two_by_one .approval_tit{margin:0px; padding:0px; height:24px; line-height:16px;}
@@ -684,7 +684,7 @@ nav > .countBox .hidden_nav_count_off{position:absolute; right:0px; top:6px; dis
 .voteTitle{margin:0px 10px; padding:8px 0px; text-align:left; font-size:14px; font-weight:bold; color:#444; letter-spacing:-0.5px;  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:calc(100% - 50px);}
 .voteBtn{margin:0px 0px 0px 0px; padding:2px 10px; font-size:14px; font-weight:500; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; cursor:pointer; color:#388CE5; line-height:30px; width:50px; box-sizing:border-box;}
 .voteList{margin:0px; padding:0px 20px; list-style:none; clear:both; overflow-y:auto; height:calc(100% - 68px);}
-.voteList li{margin:0px 0px; padding:6px 0px; overflow:hidden; height:20px; line-height:20px;}
+.voteList li{margin:0px 0px; padding:6px 0px; overflow:hidden; height:20px; line-height:20px; box-sizing:content-box;}
 .voteList li .voteT{margin:0px; padding:0px 10px 0 0; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:40%; text-align:left;}
 .voteList li .voteT .Vnum{margin:0px 3px 0px 0px; padding:0 5px; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px; background:#BCC2C7; font-size:12px; font-weight:400; color:#fff; height:17px; line-height:17px;}
 .voteList li .voteT .Vtext{font-size:14px; color:#444;}
@@ -1388,8 +1388,8 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 
 /* time_check */
 
-#theme3Body .main_time .timeCheckIn:hover{background:#7ea2d8; color:#fff;}
-#theme3Body .main_time .timeCheckOut:hover{background:#7ea2d8; color:#fff;}
+#theme3Body .main_time .timeCheckIn:hover {background: #fff;color: #388CE5;border: 1px solid #388CE5}
+#theme3Body .main_time .timeCheckOut:hover { background: #fff; color: #388CE5; border: 1px solid #388CE5}
 
 #theme3Body .time_check{background:#fff;}
 #theme3Body .main_time .timeCheckIn{background:#fff; border:1px solid #E3E3E3; line-height:30px;}
@@ -1857,7 +1857,7 @@ div.orbit img{border-radius:5px;}
 .main_main_time .main_timeCheckIn .main_lateIn{color:#333333;}
 .main_time .timeCheckIn.lateIn{color:#333;}
 #theme2Body .personal_content dl.commute dt.main_lateIn{color:#333;}
-#theme3Body .main_time .timeCheckIn.commute_on{border-color:#6F90BC;}
+#theme3Body .main_time .timeCheckIn.commute_on{border-color: #fff; background: #F4F4F4; color: #000;}
 
 
 .main_main_time .main_timeCheckOut .main_out{color:#333;}
