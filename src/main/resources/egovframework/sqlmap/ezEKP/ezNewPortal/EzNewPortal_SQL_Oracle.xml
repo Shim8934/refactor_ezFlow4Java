@@ -4110,7 +4110,8 @@ ORDER BY
 					A.DOCNO,
 					'' AS NOTICE,
 					P.GUBUN,
-					A.MAINCONTENT
+					A.MAINCONTENT,
+					A.extensionAttribute2
 				FROM
 					TBL_BOARD_ITEM A
 				INNER JOIN
