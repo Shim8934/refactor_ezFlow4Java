@@ -457,7 +457,7 @@
 				// 통합알림
 				str += '<li id="util_noti"><span class="util_alarm" title="' + '<spring:message code="ezPortal.notification.hth01" />"' + ' onclick="toggleNoti()"><span id="notiin"></span></span></li>';
 				// 퀵메뉴
-				str += '<li><span class="util_quick_menu" id="util_quickmenu" title="퀵메뉴"></span>';
+				str += '<li><span class="util_quick_menu" id="util_quickmenu" title="<spring:message code="ezPersonal.khj1" />"></span>';
                 str += '<div class="quick_menu_list util_div_menu" id="quickMenuContainer"><p><spring:message code="ezPersonal.khj1" /></p><ul id="quickMenuList"></ul></div></li>';
                 
                 // 프로필 정보
