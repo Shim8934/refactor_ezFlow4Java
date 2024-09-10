@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -488,39 +489,30 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 				recipientMap.put("cn", (String) recipient.get("USERID"));
 				notiRecipientList.add(recipientMap);
 				
-				String notiSubType = "";
 				String notiContent = (String)recipient.get("C_CLUBNAME");
 				String c_clubno = (String)recipient.get("C_CLUBNO");
-				String linkUrl = "";
+				String notiSubType = isAdmit ? "CREATE_ADMIT" : "CREATE_REJECT";
+				String linkUrl = isAdmit ? "/ezCommunity/checkCommHome.do?communityCD=" + c_clubno : "";
 				//logger.debug("recipient=" + (String)recipient.get("USERNAME") + ", " + (String)recipient.get("C_CLUBNAME") + ", " + (String)recipient.get("EMAIL"));
 				
 				InternetAddress to = new InternetAddress();
 				to.setPersonal((String)recipient.get("USERNAME"), "UTF-8");
 				to.setAddress((String)recipient.get("EMAIL"));
-				
-				StringBuilder subject = new StringBuilder();
-				subject.append(egovMessageSource.getMessage("ezCommunity.t51", locale));
-				subject.append("[\"");
-				subject.append((String)recipient.get("C_CLUBNAME"));
-				subject.append("\"] ");
-				
-				if (isAdmit == true) {
-					subject.append(egovMessageSource.getMessage("ezCommunity.lhj09", locale));
-					notiSubType = "CREATE_ADMIT";
-					linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + c_clubno;
-				} else {
-					subject.append(egovMessageSource.getMessage("ezCommunity.lhj10", locale));
-					notiSubType = "CREATE_REJECT";
-				}
-				
+
+				StringBuilder subject = buildMessage("ezCommunity.t51", "ezCommunity.lhj09", "ezCommunity.lhj10",
+						(String) recipient.get("C_CLUBNAME"), isAdmit, locale);
+
 				/*String subject = egovMessageSource.getMessage("ezCommunity.t51", locale)
 						+ "[\"" + (String)recipient.get("C_CLUBNAME") + "\"] "
 						+ egovMessageSource.getMessage("ezCommunity.t52", locale) 
 						+ pDivi 
 						+ egovMessageSource.getMessage("ezCommunity.t54", locale);*/
-								
+
+				StringBuilder mailBody = buildMessage("ezCommunity.t51", "ezCommunity.lhj09", "ezCommunity.lhj10",
+						StringEscapeUtils.escapeHtml4((String) recipient.get("C_CLUBNAME")), isAdmit, locale);
+
 				// 2018-11-07 김민성 - 커뮤니티 승인 메일 폰트 수정
-				String content = commonUtil.createNotiMailContent(subject.toString(), userInfo.getTenantId(), userInfo.getLocale());
+				String content = commonUtil.createNotiMailContent(mailBody.toString(), userInfo.getTenantId(), userInfo.getLocale());
 				
 				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject.toString(), content, false);
 				
@@ -531,6 +523,23 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		}
 		
 		logger.debug("createCommunityAdmitSendMail ended.");
+	}
+
+	private StringBuilder buildMessage(String prefixMessage, String admitMessage, String rejectMessage,
+									   String clubName, boolean isAdmit, Locale locale) {
+		StringBuilder message = new StringBuilder();
+		message.append(egovMessageSource.getMessage(prefixMessage, locale));
+		message.append("[\"");
+		message.append(clubName);
+		message.append("\"] ");
+
+		if (isAdmit) {
+			message.append(egovMessageSource.getMessage(admitMessage, locale));
+		} else {
+			message.append(egovMessageSource.getMessage(rejectMessage, locale));
+		}
+
+		return message;
 	}
 
 	@Override
