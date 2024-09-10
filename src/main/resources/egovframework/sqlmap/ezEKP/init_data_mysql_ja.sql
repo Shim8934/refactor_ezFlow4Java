@@ -27,25 +27,38 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'PrimaryTimeZone', '시스템 표준 시간대', '230|+09:00', '시스템 primary 표준 시간대를 설정한다.시스템 Primary 표준 시간대 설정  (첫 로그인 시 사용자의 표준 시간대를 정할 수 없을 경우 시스템의 표준 시간대를 따름) (default: 230|+09:00)', '2017-01-06 00:00:00', '일반');
 
 -- 게시판
-INSERT INTO TBL_Board_BoardInfo (BoardID, BoardName, BoardName2, TreeViewOrder, BoardLevel, ParentBoardID, BoardDescription, ItemExpires, AttachsizeLimit, ReplyNotify, BoardGroupID, AlertPostItem, Gubun, URL, DeleteAfter, BoardColor, BoardNo, Portlet, tenant_ID, companyID) VALUES ('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', @tenant_id_value, 'Top');
-INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 'Top',@tenant_id_value);
+INSERT INTO TBL_Board_BoardInfo (BoardID, BoardName, BoardName2, BoardName3, BoardName4, TreeViewOrder, BoardLevel, ParentBoardID, BoardDescription, ItemExpires, AttachsizeLimit, ReplyNotify, BoardGroupID, AlertPostItem, Gubun, URL, DeleteAfter, BoardColor, BoardNo, Portlet, tenant_ID, companyID) VALUES ('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', '新着', '新帖子', -1, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', @tenant_id_value, 'Top');
+INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, BoardName3, BoardName4, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', '新着', '新帖子', -1, 'Top',@tenant_id_value);
 
 -- 전자결재
 INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000001', N'共通', N'ALL', N'ROOT', N'共通', N'DEPT003','Top',@tenant_id_value);
 -- INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000003', N'HWP양식함', N'ALL', N'ROOT', NULL, NULL,'Top',@tenant_id_value);
 
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES ('ZZ000001', N'共通', N'共通', NULL, N'C','Top',@tenant_id_value);
+-- INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES ('ZZ000001', N'共通', N'共通', NULL, N'C','Top',@tenant_id_value);
+INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZA000001', N'総務行政', N'総務行政', NULL, N'총무행정_Eng','Top',@tenant_id_value);
+INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZB000001', N'経済', N'経済', NULL, N'경제_Eng','Top',@tenant_id_value);
+INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZC000001', N'財務', N'財務', NULL, N'재무_Eng','Top',@tenant_id_value);
+INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000001', N'監事', N'監事', NULL, N'감사_Eng','Top',@tenant_id_value);
+INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000002', N'資料', N'資料', NULL, N'에너지_Eng','Top',@tenant_id_value);
 
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'100', N'稟議', N'Draft','Top',@tenant_id_value);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'200', N'協力', N'Support','Top',@tenant_id_value);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'300', N'監査', N'Audit','Top',@tenant_id_value);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'500', N'受信', N'Receive','Top',@tenant_id_value);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'600', N'合意', N'Agree','Top',@tenant_id_value);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'610', N'発信', N'Send','Top',@tenant_id_value);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'700', N'差し戻し', N'Reject','Top',@tenant_id_value);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'999', N'廃棄', N'Obsolete','Top',@tenant_id_value);
+INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'100', N'稟議箱', N'Draft','Top',@tenant_id_value);
+INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'200', N'協調箱', N'Support','Top',@tenant_id_value);
+INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'300', N'監事箱', N'Audit','Top',@tenant_id_value);
+INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'500', N'受信箱', N'Receive','Top',@tenant_id_value);
+INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'600', N'合意箱', N'Agree','Top',@tenant_id_value);
+INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'610', N'発信箱', N'Send','Top',@tenant_id_value);
+INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'700', N'返送箱', N'Reject','Top',@tenant_id_value);
+INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'999', N'廃棄箱', N'Obsolete','Top',@tenant_id_value);
 
 -- INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'aa000001', N'共通', N'共通', N'ZZ000001', NULL, N'COMMON','Top',@tenant_id_value);
+INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'aa000001', N'監事結果処理', N'監事結果処理', N'ZZ000001', NULL, N'감사결과처리_Eng','Top',@tenant_id_value);
+INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'aa000002', N'人事管理', N'人事管理', N'ZZ000001', NULL, N'인사관리_Eng','Top',@tenant_id_value);
+INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ab000001', N'記録管理', N'記録管理', N'ZA000001', NULL, N'기록관리_Eng','Top',@tenant_id_value);
+INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ac000001', N'経済協力', N'経済協力', N'ZB000001', NULL, N'경제협력_Eng','Top',@tenant_id_value);
+INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ad000001', N'租税', N'租税', N'ZC000001', NULL, N'조세_Eng','Top',@tenant_id_value);
+INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'cb000001', N'記録管理', N'記録管理', N'ZA000001', NULL, N'기록관리_Eng','Top',@tenant_id_value);
+INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'cc000001', N'人事管理', N'人事管理', N'ZA000001', NULL, N'인사관리_Eng','Top',@tenant_id_value);
+INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000022', N'資料', N'資料', N'ZZ000002', NULL, N'에너지용_Eng','Top',@tenant_id_value);
 
 INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDXS',		'',							'',									'ROOT');
 INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'INIT',						'When loading a document (draft, reception)',				'PROCESSIDXS');
