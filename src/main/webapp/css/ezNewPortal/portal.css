@@ -2442,3 +2442,5 @@ div.orbit img{border-radius:5px;}
 .sscheduleUL .Tcollaborate {background-color: rgba(63, 81, 181, 0.62); border: 1px solid rgba(20, 81, 181, 0.16);}
 
 .notiBox {margin-left: 1px; padding:0 7px; height:22px; border-radius:4px; line-height:20px; color:#fff; background:#B7BBC9; margin-right:10px;}
+
+.notEmptySlider.sliderUrl {cursor: pointer;}

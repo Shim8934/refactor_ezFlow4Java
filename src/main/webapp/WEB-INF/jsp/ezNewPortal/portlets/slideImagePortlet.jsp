@@ -21,7 +21,7 @@
 									<img src="${slider.imagePath}" class="notEmptySlider noSliderUrl" onclick="portletWindowOpen('${slider.url}')" />
 		            			</c:when>
 								<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
-									<img src="${slider.imagePath}" class="notEmptySlider" onclick="portletWindowOpen('${slider.url }')" />
+									<img src="${slider.imagePath}" class="notEmptySlider sliderUrl" onclick="portletWindowOpen('${slider.url }')" />
 								</c:when>
 								<c:otherwise>
 									<img src="${slider.imagePath}" class="notEmptySlider" onclick="portletWindowOpen('${slider.url }')" />
