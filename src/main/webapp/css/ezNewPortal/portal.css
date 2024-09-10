@@ -2444,3 +2444,4 @@ div.orbit img{border-radius:5px;}
 .notiBox {margin-left: 1px; padding:0 7px; height:22px; border-radius:4px; line-height:20px; color:#fff; background:#B7BBC9; margin-right:10px;}
 
 .notEmptySlider.sliderUrl {cursor: pointer;}
+.notEmptySlider.noSliderUrl {cursor: auto;}
