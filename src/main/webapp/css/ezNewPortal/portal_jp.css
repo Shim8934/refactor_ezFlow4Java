@@ -6,7 +6,7 @@ html,input,button,select,textarea{font-family:  Meiryo UI, ＭＳ Ｐゴシッ�
 .my_info_wrap .my_info{width:calc(99.999% - 280px);}
 .webFolder_portlet .portlet_title .portletText{width:110px;}
 .btn_prev span img, .btn_next span img{margin-top:3px;}
-.portlet_list li{padding:9px 0;}
+.portlet_list li{padding:9px 0 !important;}
 .portlet.two_by_one .portlet_list li{padding:12px 0;}
 .voteList li{padding:6px 0;}
 .portlet.two_by_one .voteList li{padding:10.5px 0;}
