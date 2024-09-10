@@ -33,7 +33,7 @@
 	.updatePortlet, .addNewPortlet {float :right;margin :0px; padding :0px;}
 	.updatePortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 	.deletePortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}	
-	.boardSetting, .menuSetting, .connectionSetting {float:right; position:relative; margin-top:-20px; margin-right:5px; padding:0px;text-align:left;display:inline-block;vertical-align:top;cursor:pointer;}
+	.boardSetting, .menuSetting, .connectionSetting {float:right; position:relative; margin-top:-18px; margin-right:5px; padding:0px;text-align:left;display:inline-block;vertical-align:top;cursor:pointer;}
 	.portletInfo {display:inline-block;marging-top:8px;}
 	.portletInfoTH {background-color :white;border:0px; padding:0px 15px 0px 0px; color:#393939; font-weight:bold; letter-spacing:-1px; line-height:34px;}
 	.portletInfoTH, .portletInfoTD {}
@@ -72,7 +72,7 @@
 	}
 
 	@media only screen and (max-width :1920px) and (min-width :1423px) {
-		.portlet, .newPortlet{ width:20%;}
+		.portlet, .newPortlet{ width:24%;}
 	}
 
 	@media only screen and (max-width :1422px) and (min-width :1280px) {
@@ -84,7 +84,7 @@
 	}
 	.slideImageSetting {
 		position: absolute;
-	    right: 70px;
+	    right: 90px;
 	    top: 12px;
         cursor: pointer;
         display: inline-block;

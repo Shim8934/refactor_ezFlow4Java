@@ -1610,14 +1610,14 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 /* //20181002 collaborate */
 
 /* webFolder 포틀릿*/
-.fileListWrapper{height:calc(100% - 83px); overflow:hidden;}
+.fileListWrapper{height:calc(100% - 73px); overflow:hidden; padding-top:35px;}
 .webFolder_portlet .portlet_title .portletText{width:100px;}
 .webFolder_portlet .portlet_title .mailGraph{margin:0px; padding:0px; width:206px; overflow:hidden; float:right; height:100%;}
 
 .webFolder{margin:0 auto; padding:0 20px 0; list-style:none; box-sizing:border-box; overflow:hidden; height:100%;}
-.webFolder .webFolderLi{width:calc((99.999% - 14px) / 3); padding:0px; box-sizing:border-box; border:1px solid #E7E7E7; height:183px; font-size:12px; color:#444; text-align:center; float:left; display:table-row; cursor:pointer; border-radius:5px; background:#fff; margin:0 0 7px 7px;}
+.webFolder .webFolderLi{width:calc((99.999% - 14px) / 3); padding:0px; box-sizing:border-box; border:1px solid #E7E7E7; height:140px; font-size:12px; color:#444; text-align:center; float:left; display:table-row; cursor:pointer; border-radius:5px; background:#fff; margin:0 0 7px 7px;}
 .webFolder .webFolderLi:nth-child(3n+1){margin-left:0;}
-.webFolder .webFolderLi .webFolderIcon{margin:0px; padding:40px 0px 15px 0px;}
+.webFolder .webFolderLi .webFolderIcon{margin:0px; padding:20px 0px 15px 0px;}
 
 .webFolder .webFolderLi .webFolderDL{margin:0px; padding:0px;}
 .webFolder .webFolderLi .webFolderDL dt{margin:0px; padding:0px 8px 0px 8px; font-size:13px; color:#393939; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
@@ -1625,6 +1625,7 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 .webFolder .webFolderLi_none{margin:2px 2px; padding:0px; width:75px; box-sizing:border-box; border:1px solid #e7e7e7; background:url(/images/ezNewPortal/bookmarkIcon_none.png) no-repeat center; height:168px; font-size:12px; color:#444; text-align:center; float:left; display:table-row;}
 .webFolder .webFolderLi:hover{background:#F3F9FF;}
 
+.portlet.two_by_one .fileListWrapper{padding-top:17px;}
 .portlet.two_by_one .webFolder .webFolderLi{width:calc((99.999% - 7px) / 2); height:151px; margin:0 0 7px 7px;}
 .portlet.two_by_one .webFolder .webFolderLi:nth-child(2n+1){margin-left:0;}
 .portlet.two_by_one .webFolder .webFolderLi:nth-child(-n+2){margin-top:0;}
@@ -2442,3 +2443,6 @@ div.orbit img{border-radius:5px;}
 .sscheduleUL .Tcollaborate {background-color: rgba(63, 81, 181, 0.62); border: 1px solid rgba(20, 81, 181, 0.16);}
 
 .notiBox {margin-left: 1px; padding:0 7px; height:22px; border-radius:4px; line-height:20px; color:#fff; background:#B7BBC9; margin-right:10px;}
+
+.notEmptySlider.sliderUrl {cursor: pointer;}
+.notEmptySlider.noSliderUrl {cursor: auto;}

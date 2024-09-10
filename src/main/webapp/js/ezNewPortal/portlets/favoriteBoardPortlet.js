@@ -15,10 +15,21 @@ function initFavoritePortlet(portletId) {
 	newObj.portletCode = "favoriteboard";
 	newObj.activeTabId = "";
 	newObj.tabIdList = [];
+	newObj.tabBoardIdList = [];
+	newObj.tabBoardNameList = [];
 	newObj.paging = {};
     portletInfoMap["portlet" + portletId] = newObj;
     favoriteObj.portletId = portletId;
+    newObj.page = new Paging().setPageStart(1).init(getFavoriteBoardPagePerCount(portletId));
+    newObj.page.getPagePerCount = function () {
+		return getFavoriteBoardPagePerCount(portletId);
+	}
     newObj.getPortletList = function () {
+    	var activeTabId = newObj.activeTabId;
+    	var activeTabIndex = newObj.tabIdList.indexOf(activeTabId);
+    	var activeBoardId = newObj.tabBoardIdList[activeTabIndex];
+    	var activeBoardName = newObj.tabBoardNameList[activeTabIndex];
+    	
 		getBoardList_NewBoardSTD();
 	}
     
@@ -65,6 +76,12 @@ function getTabList(portletId) {
     		    var classon = "class='on'";
     		    
     		    for (var i = 0; i < tabCnt; i++) {
+    		    	
+    		    	var tabBoardPage = new Paging().setPageStart(1).init(perCount);
+                	tabBoardPage.getPagePerCount = function () {
+                		return getFavoriteBoardPagePerCount(portletId);
+                	}
+                	
     		        var BoardName = "";
     		        var boardId = "";
     		        var guBun = "";
