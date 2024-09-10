@@ -136,8 +136,7 @@ nav .navUL li.on{color:#003497;}
 #theme3Body .portlet_title .portletPlus.setting{background-image:url(../../images/ezNewPortal/skin/blue/portlet_setting3.png);}
 
 
-.main_time .timeCheckIn:hover{background:#E3ECFC; color:#003497;}
-.main_time .timeCheckOut:hover{background:#E3ECFC; color:#003497;}
+
 
 
 .writebannerIcon .count{background:rgba(32,106,246,0.18); color:#003497;}
@@ -313,8 +312,6 @@ nav .navUL li.on{color:#003497;}
 .employee_search span:hover:after{background:#003497;}
 
 #theme3Body .top_info_area_wrap .top_info_toggle_btn{background: #fff url(../../images/ezNewPortal/theme3Img/info_toggle_btn.svg) no-repeat center; box-shadow: 4px 1px 8px rgb(0 0 0 / 6%)}
-.main_time .timeCheckIn.commute_on:hover{border-color:#003497}
-.main_time .timeCheckOut.commute_on:hover{border-color:#003497}
 
 .set-head{background:#F5F5F5}
 .set-tab ul li.on{background: #003497;}
@@ -322,3 +319,9 @@ nav .navUL li.on{color:#003497;}
 .set-body .btnpositionLayer a.imgbtn span:hover{color:#003497 !important}
 .form_set.theme li.select:before, .form_set.default li.select .form_image:before{border: 1px solid #003497;}
 .form_set.theme li.select:before, .form_set.default li.select .form_image:before{background: url(../../images/ezNewPortal/form_select_blue.png) no-repeat center rgba(0,0,0,0.2);}
+
+
+.main_time .timeCheckIn:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
+.main_time .timeCheckOut:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
+.main_time .timeCheckIn.commute_on:hover{color:#333; border-color:#fff;background:none}
+.main_time .timeCheckOut.commute_on:hover{color:#333; border-color:#fff;background:none}

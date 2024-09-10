@@ -161,7 +161,7 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .lnb ul.active li.icon_nav_menuset_leftmenu{background-color:#c8c7c7;}
 
 /* 메인 상단 */
-.mainbg{background-color:#1E1E20;}
+.mainbg{background-color:#1E1E20 !important;}
 .my_info_wrap{background:#2D2E2F; border-color:#2D2E2F;}
 .my_info_wrap .my_info span{color:#fff;}
 .my_info_wrap .portal_setting{color:#fff;}
@@ -246,7 +246,7 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 
 
 /* 날씨 */
-.portlet_title .portletPlus .weatherSelect{border:1px solid #444444; background:#343638; color:#F3F3F3;}
+.portlet_title .portletPlus .weatherSelect{border:1px solid #444444; background:#343638; color:#F3F3F3; outline: none;}
 .weather_title .weatherPresent dd{color:#F3F3F3;}
 .weather_title .weatherPer li > span.text > span:nth-child(1){color:#B5B5B5;}
 .weather_mini{background:none; border-radius:0; border-top:1px solid rgba(112,112,112,0.2);}
@@ -526,3 +526,7 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 *::-webkit-scrollbar-thumb{background: #bebebe !important;}
 *::-webkit-scrollbar-track{background: #efefef !important;}
 *::-webkit-scrollbar{width: 8px !important;}
+
+#theme2Body .section1 .sec1Layout_middle .portlet_list li .txt span{color: #fff; margin-right: 6px;}
+#theme2Body .section1 .sec1Layout_middle .portlet_list li .txt{color: #fff;}
+#theme2Body .section1 .sec1Layout_middle .portlet_list li{background: url(/images/ezNewPortal/skin/dark/list_bul.png) no-repeat 0 center;}

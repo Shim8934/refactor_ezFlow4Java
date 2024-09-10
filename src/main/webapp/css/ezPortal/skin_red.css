@@ -138,6 +138,8 @@ nav .navUL li.on{color:#A20000;}
 
 .main_time .timeCheckIn:hover{background:#FFFFFF; color:#A20000; border:1px solid #A20000; line-height:30px;}
 .main_time .timeCheckOut:hover{background:#FFFFFF; color:#A20000; border:1px solid #A20000; line-height:30px;}
+.main_time .timeCheckIn.commute_on:hover{color:#333; border-color:#fff;background:none}
+.main_time .timeCheckOut.commute_on:hover{color:#333; border-color:#fff;background:none}
 
 
 .writebannerIcon .count{background:rgba(162,0,0,0.07); color:#E00000;}

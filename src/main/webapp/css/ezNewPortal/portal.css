@@ -1388,8 +1388,8 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 
 /* time_check */
 
-#theme3Body .main_time .timeCheckIn:hover{background:#7ea2d8; color:#fff;}
-#theme3Body .main_time .timeCheckOut:hover{background:#7ea2d8; color:#fff;}
+#theme3Body .main_time .timeCheckIn:hover {background: #fff;color: #388CE5;border: 1px solid #388CE5}
+#theme3Body .main_time .timeCheckOut:hover { background: #fff; color: #388CE5; border: 1px solid #388CE5}
 
 #theme3Body .time_check{background:#fff;}
 #theme3Body .main_time .timeCheckIn{background:#fff; border:1px solid #E3E3E3; line-height:30px;}
@@ -1856,7 +1856,7 @@ div.orbit img{border-radius:5px;}
 .main_main_time .main_timeCheckIn .main_lateIn{color:#333333;}
 .main_time .timeCheckIn.lateIn{color:#333;}
 #theme2Body .personal_content dl.commute dt.main_lateIn{color:#333;}
-#theme3Body .main_time .timeCheckIn.commute_on{border-color:#6F90BC;}
+#theme3Body .main_time .timeCheckIn.commute_on{border-color: #fff; background: #F4F4F4; color: #000;}
 
 
 .main_main_time .main_timeCheckOut .main_out{color:#333;}
