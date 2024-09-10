@@ -53,7 +53,7 @@
 		</li>
 		<li id="menu-2" class="menuList">
 			<dl class="full_menu_toggleDL">
-				<dt><span class='icon_topmenu icon_nav_board'></span></dt>
+				<dt><span class='icon_topmenu icon_nav_connection'></span></dt>
 				<dd><span><spring:message code='ezSystem.config.hth28' /></span></dd>
 			</dl>
 		</li>
