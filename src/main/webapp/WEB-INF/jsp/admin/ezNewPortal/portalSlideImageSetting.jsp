@@ -75,10 +75,10 @@ dd {margin : 20px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: b
 					<tbody>
 						<tr>
 							<th><spring:message code='ezNewPortal.t107' /></th>
-							<td><input type="text" id="imageUrl" style="width: 100%"></td>
+							<td><input type="text" id="imageUrl" style="width: 100%" tabindex="1"></td>
 						</tr>
 						<tr>
-							<th><a class="imgbtn"><span onclick="ImageUploadBtn()"><spring:message code='ezNewPortal.t108' /></span></a>
+							<th><a class="imgbtn" tabindex="2"><span onclick="ImageUploadBtn()"><spring:message code='ezNewPortal.t108' /></span></a>
 							</th>
 							<td id="tdNormalImage">
 								<img id="UploadSliderImage" src="" onload="imgdisplay()" style="width:100%; height: 100%; display: none">
