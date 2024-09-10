@@ -1072,7 +1072,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			String companyId = request.getParameter("companyId");
 			String deptId = info.getDeptId();
