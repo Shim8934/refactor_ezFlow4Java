@@ -4,7 +4,7 @@
 .contextMenuBtn{background:rgba(0,52,151,0.8);}
 
 .set_portlet{background-color:#4294EA !important;}
-.set_portlet:hover{background-color:#555555;}
+.set_portlet:hover{background-color:#555555 !important;}
 .body_pop_for_size{border-color:#4294EA !important;}
 .body_pop_for_size img:hover{background-color:#4294EA !important;}
 .portlet.one_by_one .body_pop_for_size img.one_by_one,
