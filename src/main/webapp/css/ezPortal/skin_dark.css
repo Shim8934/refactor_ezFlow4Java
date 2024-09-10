@@ -528,11 +528,9 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 *::-webkit-scrollbar-track{background: #efefef !important;}
 *::-webkit-scrollbar{width: 8px !important;}
 
-<<<<<<< HEAD
 #theme2Body .section1 .sec1Layout_middle .portlet_list li .txt{color:#B5B5B5;}
 #theme2Body .section1 .sec1Layout_middle .portlet_list li .txt span{color:#F3F3F3;}
-=======
 #theme2Body .section1 .sec1Layout_middle .portlet_list li .txt span{color: #fff; margin-right: 6px;}
 #theme2Body .section1 .sec1Layout_middle .portlet_list li .txt{color: #fff;}
 #theme2Body .section1 .sec1Layout_middle .portlet_list li{background: url(/images/ezNewPortal/skin/dark/list_bul.png) no-repeat 0 center;}
->>>>>>> e603ff5ef6619889b300c1fbe49e576218c6b091
+
