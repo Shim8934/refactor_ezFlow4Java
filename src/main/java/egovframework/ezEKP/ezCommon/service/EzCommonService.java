@@ -517,4 +517,10 @@ public interface EzCommonService {
 
 	// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 테이블 추가
 	public void addTblCommunityClubguestOnelinereply() throws Exception;
+
+	/* 2024-09-11 이유정 - 게시판 > 최근게시물 리스트헤더 추가 */
+	public void insertBoardItemListOptionAN() throws Exception;
+
+	/* 2024-09-11 이유정 - 게시판 > 최근게시물 게시판정보 추가 */
+	public void insertRecentBoardInfo() throws Exception;
 }

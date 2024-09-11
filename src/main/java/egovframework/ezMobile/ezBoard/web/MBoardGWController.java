@@ -751,7 +751,8 @@ public class MBoardGWController {
 			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
 			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 새게시물 카운트 표시 시 companyID 조건 추가 */
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
-
+			int listCount2 = mBoardService.getAllNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
+			
 			int allListCount = mBoardService.getAllBoardItemListCount(userId, info.getCompanyId(), info.getTenantId()); 
 			
 			// rootBoardId의 guBun 값 전달 > 카테고리게시판인 경우 동작을 막기위함
@@ -764,6 +765,8 @@ public class MBoardGWController {
 
 			data.put("list", list);
 			data.put("listCount", listCount);
+			data.put("listCount2", listCount2);
+
 			data.put("allListCount", allListCount);
 			data.put("myBoardScrapFlag", myBoardScrapFlag);
 			
@@ -2282,6 +2285,61 @@ public class MBoardGWController {
 		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}] ended.");
 
 	    return result;
+	}
+
+	/**
+	 * 모바일 G/W 게시판 [GET] 최근게시물 리스트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/allnew-list/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getBoardMainNewList(@PathVariable String userId, HttpServletRequest request, Model model) {
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/allnew-list/{userId}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String boardId = request.getParameter("boardID");
+			String lastDate = request.getParameter("lastDate");
+			String pSearchText = request.getParameter("pSearchText");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+
+			logger.debug("serverName = " + serverName + " | boardId = " + boardId + " | lastDate = " + lastDate + " | pSearchText = " + pSearchText + " | primary = " + primary);
+
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+
+			logger.debug("deptPathCode = " + deptPathCode);
+
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+			
+			List<MBoardNewListVO> list = mBoardService.getAllNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true), info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet(),pSearchText);
+			
+			int listCount = mBoardService.getAllNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), pSearchText);
+			logger.debug("listCount ="+listCount);
+
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("boardInfo", boardInfo);
+			data.put("listCount", listCount);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/allnew-list/{userId}] ended.");
+
+		return result;
 	}
 
 	/**

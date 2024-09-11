@@ -395,7 +395,7 @@ public class MBoardServiceImpl implements MBoardService {
 			mBoardInfoVO.setUseKeyword(orgBoardProp.getUseKeyword());
 		}
 		
-	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || mBoardInfoVO.getBoardID().equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
+	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || mBoardInfoVO.getBoardID().equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") || mBoardInfoVO.getBoardID().equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
 	    	mBoardInfoVO.setAccess_("1");
 	    	mBoardInfoVO.setAccess_FG("1");
 	    	mBoardInfoVO.setBoardAdmin_FG("false");
@@ -2078,4 +2078,45 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		return result;
 	}
+
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 카운트 */
+	@Override
+	public Integer getAllNewBoardListCount(String userID, String startDate, String companyID, int tenantID, String pSearchText) throws Exception {
+		logger.debug("getAllNewBoardListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("startDate", startDate);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+
+		logger.debug("getAllNewBoardListCount ended");
+		return mBoardDAO.getAllNewBoardListCount(map);
+	}
+
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 */
+	@Override
+	public List<MBoardNewListVO> getAllNewBoardList(String userID, String lastDate, String deptID, String companyID, int tenantID, String offset,String pSearchText) throws Exception {
+		logger.debug("getAllNewBoardList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		//mainList 임시 10까지
+		map.put("listSize", 50);
+		map.put("lastDate", lastDate);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+
+		logger.debug("getAllNewBoardList ended");
+		return mBoardDAO.getAllNewBoardList(map);
+	}
+	
 }

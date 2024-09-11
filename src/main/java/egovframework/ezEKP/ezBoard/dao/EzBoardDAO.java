@@ -1167,4 +1167,14 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void thumbnailUpdate(Map<String, Object> map) throws Exception {
 		update("EzBoardDAO.thumbnailUpdate", map);
 	}
+
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 카운트 쿼리 */
+	public int getAllNewItemListCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getAllNewItemListCount", map);
+	}
+	
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 쿼리 */
+	public List<HashMap<String, Object>> getAllNewItemList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getAllNewItemList", map);
+	}
 }

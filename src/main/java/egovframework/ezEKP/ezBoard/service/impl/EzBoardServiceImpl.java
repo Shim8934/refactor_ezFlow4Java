@@ -6880,4 +6880,53 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		ezBoardDAO.thumbnailUpdate(map);
 	}
+
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 카운트 메서드 */
+	@Override
+	public int getAllNewItemListCount(LoginVO userInfo)  throws Exception {
+		logger.debug("getAllNewItemListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_pUserID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+
+		logger.debug("getAllNewItemListCount ended");
+		return ezBoardDAO.getAllNewItemListCount(map);
+	}
+
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 메서드 */
+	@Override
+	public List<HashMap<String, Object>> getAllNewItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception {
+		logger.debug("getAllNewItemList started");
+
+		if (orderByMap.get("orderByCol") == null || "".equals(orderByMap.get("orderByCol"))) {
+			orderByMap.put("orderByCol", "WRITEDATE");
+			orderByMap.put("orderByColDesc", "Y");
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_COMPANYID", boardListVO.getWriterCompanyID());
+		map.put("v_TENANTID", boardListVO.getTenantID());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+
+		if (orderByMap.get("orderByCol") != null) {
+			map.put("iv_PORDERBYCOL1", orderByMap.get("orderByCol"));
+			if (orderByMap.get("orderByColDesc") != null) {
+				map.put("iv_PORDERBYCOL1DESC", orderByMap.get("orderByColDesc"));
+			}
+		}
+		
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
+		
+		logger.debug("getAllNewItemList ended");
+		return ezBoardDAO.getAllNewItemList(map);
+	}
 }

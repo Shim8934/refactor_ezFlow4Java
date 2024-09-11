@@ -126,4 +126,10 @@ public interface MBoardService {
 	Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception;
 
 	public Map<String, ArrayList<String>> getScrapBoardListReadView_FG(MCommonVO info) throws Exception;
+
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 카운트 */
+	Integer getAllNewBoardListCount(String userID, String startDate, String companyID, int tenantID, String pSearchText) throws Exception;
+	
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 */
+	List<MBoardNewListVO> getAllNewBoardList(String userID, String lastDate, String deptID, String companyID, int tenantID, String offset, String pSearchText) throws Exception;
 }

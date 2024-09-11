@@ -2970,4 +2970,131 @@
 		]]>
   </delete>
 
+	
+	<select id="MBoardDAO.getAllNewBoardListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+	      SELECT
+	        COUNT(A.ITEMID) CNT
+	          FROM
+	            TBL_Board_Item A
+	            JOIN
+	              	TBL_Board_BoardInfo P
+	            ON
+	              	A.TENANT_ID = P.TENANT_ID
+	            AND
+					A.BoardID = P.boardid
+				AND 
+					A.TENANT_ID = #tenantID#
+				AND
+	            	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = ''
+	            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+				AND 
+	              ( A.APPRFLAG = 'Y'
+	                  OR A.APPRFLAG IS NULL )
+				AND 
+				  	A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+				AND 
+				  	A.STARTDATE <= #nowDate#
+				AND 
+				  	A.ENDDATE > #nowDate#
+		]]>
+		<isNotEmpty property="pSearchText">
+		<![CDATA[
+	        WHERE
+	            (A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+	                OR
+	            A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))
+	    ]]>
+		</isNotEmpty>
+	</select>
+
+	<select id="MBoardDAO.getAllNewBoardList" parameterClass="Map" resultClass="MBoardNewListVO">
+		<![CDATA[
+          SELECT
+              A.BOARDID,
+              P.BOARDNAME AS BOARDNAME,   
+              A.ITEMID,           
+              A.WRITERID,           
+              A.WRITERNAME,         
+              A.WRITERDEPTNAME,     
+              A.WRITERCOMPANYNAME,  
+              DATE_ADD(DATE_FORMAT(A.startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS startdate,
+			  DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,   
+              A.PARENTWRITEDATE,    
+              A.IMPORTANCE,         
+              A.TITLE,            
+              A.ATTACHMENTS,       
+              A.READCOUNT,        
+              A.ITEMLEVEL,        
+              A.ABSTRACT,         
+              P.BOARDNAME2 AS BOARDNAME2,   
+              A.WRITERNAME2,          
+              A.WRITERDEPTNAME2,      
+              A.WRITERCOMPANYNAME2,  
+              (SELECT 
+					COUNT(*)  
+               FROM 
+                  	TBL_Board_OneLineReply 
+               WHERE  
+               		TENANT_ID = A.TENANT_ID
+               AND
+                	ITEMID = A.ItemID) ONELINECNT,
+              A.UPPERITEMIDTREE,
+              A.DOCNO,
+              '' AS NOTICE,
+              P.GUBUN,
+              A.MAINCONTENT
+              FROM 
+                TBL_BOARD_ITEM A            
+              INNER JOIN 
+                TBL_BOARD_BOARDINFO P  
+              ON 
+                A.TENANT_ID = P.TENANT_ID
+              AND
+     			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+					OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+              AND
+                A.BOARDID = P.BOARDID
+              AND 
+                A.TENANT_ID = #tenantID#
+              AND
+              	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = ''
+					OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+              AND
+                (A.APPRFLAG = 'Y' 
+                 OR A.APPRFLAG IS NULL)
+              AND 
+                A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+            ]]>
+
+		<isNotEmpty property="lastDate">
+			<![CDATA[
+                    AND 
+                        A.writedate < #lastDate#
+                    AND 
+                        A.ENDDATE > #nowDate#
+                ]]>
+		</isNotEmpty>
+		<isEmpty property="lastDate">
+			<![CDATA[
+                    AND 
+                        A.writedate < #nowDate#
+                    AND 
+                        A.ENDDATE > #nowDate#
+                ]]>
+		</isEmpty>
+
+		<isNotEmpty property="pSearchText">
+			<![CDATA[
+                    AND
+                        (A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+                            OR
+                        A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+                ]]>
+		</isNotEmpty>
+			ORDER BY
+			A.writedate DESC
+			LIMIT #listSize#
+	</select>
+	
 </sqlMap>

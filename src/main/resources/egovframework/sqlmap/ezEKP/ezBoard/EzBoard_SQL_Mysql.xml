@@ -8836,6 +8836,118 @@
 			</isEmpty>
 	</select>
 
+	<select id="EzBoardDAO.getAllNewItemListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*) CNT
+        	FROM 
+        		TBL_BOARD_BOARDINFO P              
+			INNER JOIN 
+			  	TBL_Board_Item A 
+			ON 
+			  	A.TENANT_ID = P.TENANT_ID
+			AND
+			  	A.BOARDID = P.BOARDID
+			AND 
+			  	A.TENANT_ID = #v_TENANTID#
+	 		AND
+            	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+			AND
+			  	(A.APPRFLAG = 'Y' 
+			     OR A.APPRFLAG IS NULL)
+			AND 
+			  	A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+			AND 
+			  	A.STARTDATE <= #nowDate#
+			AND 
+			  	A.ENDDATE > #nowDate#
+		]]>
+		<!-- 		오류 발생시 이것으로 대체 -->
+		<!--             	A.StartDate > DATE_SUB(DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL 5 DAY) -->
+	</select>
+
+	<select id="EzBoardDAO.getAllNewItemList" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				A.BOARDID,
+				P.BOARDNAME AS BOARDNAME,
+				A.ITEMID,
+				A.WRITERID,
+				A.WRITERNAME,
+				A.WRITERDEPTNAME,
+				A.WRITERCOMPANYNAME,
+				A.WRITEDATE,
+				A.STARTDATE,
+				A.PARENTWRITEDATE,
+				A.IMPORTANCE,
+				A.TITLE,
+				A.ATTACHMENTS,
+				A.READCOUNT,
+				A.ITEMLEVEL,
+				A.ABSTRACT,
+				P.BOARDNAME2 AS BOARDNAME2,
+				A.WRITERNAME2,
+				A.WRITERDEPTNAME2,
+				A.WRITERCOMPANYNAME2,
+				(SELECT
+					 COUNT(*)
+				 FROM
+					 TBL_Board_OneLineReply
+				 WHERE
+					 TENANT_ID = A.TENANT_ID
+				   AND
+					 ITEMID = A.ItemID) ONELINECNT,
+				A.UPPERITEMIDTREE,
+				A.DOCNO,
+				'' AS NOTICE,
+				P.GUBUN,
+				A.MAINCONTENT,
+				P.BOARDGROUPID
+			FROM
+				TBL_BOARD_ITEM A
+					INNER JOIN
+				TBL_BOARD_BOARDINFO P
+				ON
+							A.TENANT_ID = P.TENANT_ID
+						AND
+							(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+								OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+						AND
+							A.BOARDID = P.BOARDID
+						AND
+							A.TENANT_ID = #v_TENANTID#
+						AND
+							(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+								OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+						AND
+							(A.APPRFLAG = 'Y'
+								OR A.APPRFLAG IS NULL)
+						AND
+							A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+						AND
+							A.STARTDATE <= #nowDate#
+						AND
+							A.ENDDATE > #nowDate#
+		]]>
+			ORDER BY
+					<isEqual property="iv_PORDERBYCOL1" compareValue="BOARDNAME"> P.BOARDNAME </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERCOMPANYNAME"> A.WRITERCOMPANYNAME </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="STARTDATE"> A.STARTDATE </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="PARENTWRITEDATE"> A.PARENTWRITEDATE </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+					<isEqual property="iv_PORDERBYCOL1" compareValue="DOCNO"> A.DOCNO </isEqual>
+					<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+				LIMIT
+				#limit#, #rowCount#
+	</select>
+
 	<select id="EzBoardDAO.getScrapContItemList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 		  	SELECT
@@ -9290,4 +9402,5 @@
      		AND 
      			BoardID = #v_pBoardID#
 	</update>
+
 </sqlMap>
