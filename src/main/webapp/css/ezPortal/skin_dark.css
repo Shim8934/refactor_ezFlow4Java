@@ -219,9 +219,9 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 #theme3Body .my_info_wrap .portal_setting:hover, #theme3Body .my_info_wrap .config_setting:hover {background: #404040;}
 .info_div > span:hover{background: #414346;}
 .info_btn .info_logout:hover {background: #414346;}
-.main_time .timeCheckIn.commute_on{background: #1e1e20; border: 1px solid #6e6e6e;}
+.main_time .timeCheckIn.commute_on{background: #1e1e20 !important; border: 1px solid #6e6e6e !important; color:#fff !important;}
 .main_time .timeCheckIn.lateIn{color: #fff;}
-.main_time .timeCheckOut.commute_on{background: #1e1e20; border: 1px solid #6e6e6e;}
+.main_time .timeCheckOut.commute_on{background: #1e1e20 !important; border: 1px solid #6e6e6e !important; color:#fff !important;}
 .main_time .timeCheckOut.in{color: #fff;}
 
 /* 카운트포틀릿 */

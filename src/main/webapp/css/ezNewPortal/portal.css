@@ -1397,7 +1397,6 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 #theme3Body .main_time .timeCheckIn.commute_on{background:rgba(153,182,222,0.68); border-color:#FFF;}
 #theme3Body .main_time .timeCheckOut{background:#fff; border:1px solid #fff; line-height:30px; border:1px solid #E3E3E3;}
 #theme3Body .main_time .timeCheckOut.commute_on{background:rgba(153,182,222,0.68); border-color:#6F90BC;}
-#theme3Body .presentTime .timeTxt{padding:0px; text-align:center;background:url(/images/ezNewPortal/theme3Img/present_time_icon.png) no-repeat  45px 6px;}
 
 #theme3Body .countingIcon dl{margin:0px; padding:0px 13px; position:relative; float:left; cursor:pointer;}
 #theme3Body .birthList li .birthListDL{margin:0px; padding:0px;  overflow:hidden;cursor:pointer;}
@@ -1743,12 +1742,12 @@ nav .navUL li:hover:after{width:50%; transition:all 0.2s ease;}
 
 /* 20230601 포탈메인 css수정 */
 .main_time .timeCheckOut{font-size:14px; background:#fff; cursor:pointer; padding:0px; height:32px; line-height:32px; box-sizing:border-box; color:#333; text-align:center; width:67px;}
-.main_time .timeCheckOut.in{font-size:14px; background:#fff; cursor:pointer; padding:0px; height:32px; line-height:32px; box-sizing:border-box; color:#333; text-align:center; width:67px;}
+.main_time .timeCheckOut.in{font-size:14px; background:#fff; cursor:pointer; padding:0px; height:32px; line-height:30px; box-sizing:border-box; color:#333; text-align:center; width:67px;}
 .main_time .timeCheckIn{width:67px; float:left; margin:0px; padding:0; border-radius:5px; color:#444; font-size:14px; text-align:center; background:#fff; cursor:pointer; box-shadow:0px 0px 5px rgba(221,221,221,0.64); height:32px; line-height:32px; box-sizing:border-box;}
 .main_time .timeCheckIn.lateIn{float:left; margin:0px; border-radius:5px; color:#0470e4; font-size:14px; text-align:center; background:#fff; cursor:pointer; box-shadow:0px 0px 5px rgba(221,221,221,0.64); height:32px; line-height:32px;}
 .main_time .timeCheckIn.lateIn dd{margin:0px;}
-.main_time .timeCheckIn.commute_on{background:#F4F4F4; border:1px solid #fff; font-weight:bold; line-height:30px;}
-.main_time .timeCheckOut.commute_on{background:#F4F4F4; border:1px solid #fff; font-weight:bold; line-height:30px;}
+.main_time .timeCheckIn.commute_on{background:#F4F4F4 !important; border:1px solid #fff !important; font-weight:bold !important; line-height:30px !important; color:#333 !important;}
+.main_time .timeCheckOut.commute_on{background:#F4F4F4 !important; border:1px solid #fff !important; font-weight:bold !important; line-height:30px !important; color:#333 !important;}
 .main_time dl{width:87px; box-sizing:border-box;}
 .infoImg img{-webkit-border-radius:50%; object-fit:cover; position:relative; display:block; width:100%; height:100%;}
 /* .vote_contents{overflow-y:hidden !important;} */
@@ -1849,7 +1848,6 @@ div.orbit img{border-radius:5px;}
 #theme3Body .portlet_list li.mail_open{color:#333;}
 #theme3Body .portlet_list li .txt{color:#333;}
 /* #theme3Body .first_approval .approval_content{padding:8px 0px 0px 0px;} */
-#theme3Body .presentTime .timeTxt{background:url(/images/ezNewPortal/theme3Img/present_time_icon.png) no-repeat  190px 6px;}
 /* #theme3Body .portlet_tab{box-shadow:0px 3px 7px 0px rgb(0 0 0 / 7%);} */
 /* #theme3Body .first_approval .approval_content .apprDL .apprText_blue span, */
 /* #theme3Body .first_approval .approval_content .apprDL .apprText_green span, */
@@ -1858,6 +1856,7 @@ div.orbit img{border-radius:5px;}
 .main_time .timeCheckIn.lateIn{color:#333;}
 #theme2Body .personal_content dl.commute dt.main_lateIn{color:#333;}
 #theme3Body .main_time .timeCheckIn.commute_on{border-color: #fff; background: #F4F4F4; color: #000;}
+#theme3Body .main_time .timeCheckOut.commute_on{border-color: #fff; background: #F4F4F4; color: #000;}
 
 
 .main_main_time .main_timeCheckOut .main_out{color:#333;}
