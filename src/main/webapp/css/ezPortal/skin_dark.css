@@ -223,6 +223,11 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .main_time .timeCheckIn.lateIn{color: #fff;}
 .main_time .timeCheckOut.commute_on{background: #1e1e20 !important; border: 1px solid #6e6e6e !important; color:#fff !important;}
 .main_time .timeCheckOut.in{color: #fff;}
+.main_time .timeCheckIn:hover{color:#0470e4; border:1px solid #4294ea; background:#343638;}
+.main_time .timeCheckOut:hover{color:#0470e4; border:1px solid #4294ea; background:#343638;}
+#theme3Body .main_time .timeCheckIn:hover{color:#0470e4; border:1px solid #4294ea; background:#343638;}
+#theme3Body .main_time .timeCheckOut:hover{color:#0470e4; border:1px solid #4294ea; background:#343638;}
+
 
 /* 카운트포틀릿 */
 .writebannerTop li:hover{box-shadow:none;}
