@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommunity.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -481,7 +482,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
         	from.setAddress(userInfo.getEmail());
 			
 			for (HashMap<String, Object> recipient : recipientList) {
-				String notiRecipientParam = (String) recipient.get("USERID");
+				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", userInfo.getCompanyID());
+				recipientMap.put("cn", (String) recipient.get("USERID"));
+				notiRecipientList.add(recipientMap);
+				
 				String notiContent = (String)recipient.get("C_CLUBNAME");
 				String c_clubno = (String)recipient.get("C_CLUBNO");
 				String notiSubType = isAdmit ? "CREATE_ADMIT" : "CREATE_REJECT";
@@ -510,7 +517,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject.toString(), content, false);
 				
 				String linkUrlMobile = "";
-				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "COMMUNITY", notiSubType, notiContent, "popup", "1300", "900", linkUrl, linkUrlMobile, "notChkSetting");
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "COMMUNITY", notiSubType, notiContent, "popup", "1300", "900", linkUrl, linkUrlMobile, "notChkSetting");
 				logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
 			}
 		}

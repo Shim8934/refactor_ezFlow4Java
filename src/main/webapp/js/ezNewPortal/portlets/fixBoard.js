@@ -56,10 +56,11 @@ function  FixBoardUtil() {
         titleText.appendChild(textNode);
         var titlePlus = document.createElement('dd');
         titlePlus.classList.add(_enum.CLASS_TITLE_PLUS);
+        titlePlus.classList.add('plus');
         dlTitle.appendChild(titlePlus);
-        var plusImg = document.createElement('img');
-        plusImg.setAttribute('src', '/images/ezNewPortal/portlet_Plus1_white.png');
-        titlePlus.appendChild(plusImg);
+        // var plusImg = document.createElement('img');
+        // plusImg.setAttribute('src', '/images/ezNewPortal/portlet_Plus1_white.png');
+        // titlePlus.appendChild(plusImg);
 
         var swiper = document.createElement('div');
         swiper.classList.add(_enum.CLASS_SWIPER);

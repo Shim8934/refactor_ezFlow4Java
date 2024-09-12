@@ -138,7 +138,7 @@ public class EzScheduleAdminController {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 
 		// 관리자 권한이 있는 회사가 하나도 없음
 		if (adminCompanyList.isEmpty()) {
@@ -555,7 +555,7 @@ public class EzScheduleAdminController {
 		
 		String primary = userInfo.getPrimary();
 
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 
 		// 관리자 권한이 있는 회사가 하나도 없음
 		if (adminCompanyList.isEmpty()) {
@@ -621,7 +621,7 @@ public class EzScheduleAdminController {
 		
 		String primary = userInfo.getPrimary();
 		
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		StringBuffer companyList = new StringBuffer();
 
@@ -951,7 +951,7 @@ public class EzScheduleAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 
 		// 관리자 권한이 있는 회사가 하나도 없음
 		if (adminCompanyList.isEmpty()) {

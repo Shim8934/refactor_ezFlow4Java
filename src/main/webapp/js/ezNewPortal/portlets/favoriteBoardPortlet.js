@@ -15,10 +15,21 @@ function initFavoritePortlet(portletId) {
 	newObj.portletCode = "favoriteboard";
 	newObj.activeTabId = "";
 	newObj.tabIdList = [];
+	newObj.tabBoardIdList = [];
+	newObj.tabBoardNameList = [];
 	newObj.paging = {};
     portletInfoMap["portlet" + portletId] = newObj;
     favoriteObj.portletId = portletId;
+    newObj.page = new Paging().setPageStart(1).init(getFavoriteBoardPagePerCount(portletId));
+    newObj.page.getPagePerCount = function () {
+		return getFavoriteBoardPagePerCount(portletId);
+	}
     newObj.getPortletList = function () {
+    	var activeTabId = newObj.activeTabId;
+    	var activeTabIndex = newObj.tabIdList.indexOf(activeTabId);
+    	var activeBoardId = newObj.tabBoardIdList[activeTabIndex];
+    	var activeBoardName = newObj.tabBoardNameList[activeTabIndex];
+    	
 		getBoardList_NewBoardSTD();
 	}
     
@@ -65,6 +76,12 @@ function getTabList(portletId) {
     		    var classon = "class='on'";
     		    
     		    for (var i = 0; i < tabCnt; i++) {
+    		    	
+    		    	var tabBoardPage = new Paging().setPageStart(1).init(perCount);
+                	tabBoardPage.getPagePerCount = function () {
+                		return getFavoriteBoardPagePerCount(portletId);
+                	}
+                	
     		        var BoardName = "";
     		        var boardId = "";
     		        var guBun = "";
@@ -78,11 +95,11 @@ function getTabList(portletId) {
     		        }
     		        
     	            if (i == 0) {
-    	                listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "'" + classon + " data2='" + guBun + "'><span> " + BoardName + " </span></dt>";
+    	                listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "'" + classon + " data2='" + guBun + "'><span class='longTitle'> " + BoardName + " </span></dt>";
     	                boardType = guBun;
     	                favoritePortletObj.activeTabId = boardId;
     	            } else {
-    		            listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "' data2='" + guBun + "'><span> " + BoardName + " </span></dt>";
+                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "' data2='" + guBun + "'><span class='longTitle'> " + BoardName + " </span></dt>";
     		        }
     	            
     	            favoritePortletObj.tabIdList.push(boardId);
@@ -98,7 +115,10 @@ function getTabList(portletId) {
     		    }
     		    
 		        // 2023-06-22 황인경 - 디자인 개선 > 즐겨찾기 포틀릿 > '+' 더보기 태그 위치 변경
-		        plusHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/ezNewPortal/portlet_Plus" + usedTheme + ".png'></dd>";
+		        // plusHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/ezNewPortal/portlet_Plus" + usedTheme + ".png'></dd>";
+
+				// img태그 > 백그라운드처리(css) (uiux팀 - 조기완)
+				plusHTML += "<dd class='portletPlus plus' onclick='Boardmore_NewBoardSTD_btnClick()'></dd>";
 		        document.getElementById("BoardTabPlus").innerHTML = plusHTML;
 				document.getElementById("BoardTab").innerHTML = listHTML;
 		        favoriteBoardId = $('#Board0').attr('data1');

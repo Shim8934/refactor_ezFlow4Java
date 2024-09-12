@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1085,6 +1086,8 @@ public class EzResourceController extends EgovFileMngUtil {
 
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
 		
+		String lang = userInfo.getLang();
+		
 		if (attachFileNameMaxLength.equals("")) {
 			attachFileNameMaxLength = "100";
 		}
@@ -1094,9 +1097,17 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("userName", userInfo.getName());
-		model.addAttribute("deptName", userInfo.getDeptName1());
-		model.addAttribute("title", userInfo.getTitle1());
-		model.addAttribute("displayName", userInfo.getDisplayName1());
+		
+		if (lang.equals("1")) {
+			model.addAttribute("displayName", userInfo.getDisplayName1());
+			model.addAttribute("deptName", userInfo.getDeptName1());
+			model.addAttribute("title", userInfo.getTitle1());
+		} else {
+			model.addAttribute("displayName", userInfo.getDisplayName2());
+			model.addAttribute("deptName", userInfo.getDeptName2());
+			model.addAttribute("title", userInfo.getTitle2());
+		}
+		
 		model.addAttribute("ownerCall", userInfo.getPhone());
 		model.addAttribute("makeDate", EgovDateUtil.getTodayTime().substring(0, 10));
 		model.addAttribute("langPrimary", ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId()));
@@ -2206,6 +2217,10 @@ public class EzResourceController extends EgovFileMngUtil {
 				endDate = dateFormat.format(cal.getTime());
 				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 			}
+			
+			Element elementDept = dom.createElement("DEPTID");
+			elementDept.setTextContent(userInfo.getDeptID());
+			dom.getDocumentElement().appendChild(elementDept);
 
 			ret = ezResourceService.addResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 		} else if (cmd.equals("mod")) {
@@ -2507,7 +2522,19 @@ public class EzResourceController extends EgovFileMngUtil {
     	
     	String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + ownerID + "&type=Master&startDate=" + startDateTime.substring(0,10) + "&endDate=" + endDateTime.substring(0,10);
     	String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + ownerID + "&num=" + num + "&startDate=" + startDateTime.substring(0,19) + "&endDate=" + endDateTime.substring(0,19) + "&type=" + "res";
-    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), resbrd.getOwnerID().replaceAll(",", ";;"), "RESOURCE", "RESERVE", brdNm + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting");
+    	
+    	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+    	for (String cn : ownerList) {
+    		Map<String, Object> recipientMap = new HashMap<String, Object>();
+    		recipientMap.put("userType", "PERSON");
+    		recipientMap.put("companyId", userInfo.getCompanyID());
+    		recipientMap.put("cn", cn);
+    		notiRecipientList.add(recipientMap);
+    	}
+    	
+    	if (notiRecipientList != null && notiRecipientList.size() > 0) {
+    		ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "RESOURCE", "RESERVE", brdNm + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting");
+    	}
     	
         logger.debug("sendMail ended");
         
@@ -2597,7 +2624,17 @@ public class EzResourceController extends EgovFileMngUtil {
      	
         String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + resID + "&type=Master&startDate=" + startDateTime.substring(0,10) + "&endDate=" + endDateTime.substring(0,10);
         String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + resID + "&num=" + num + "&startDate=" + startDateTime.substring(0,19) + "&endDate=" + endDateTime.substring(0,19) + "&type=" + "res";
-    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), resInfo.getWriterID(), "RESOURCE", notiSubType, brdNm + " - " + resInfo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
+        
+        List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+        Map<String, Object> recipientMap = new HashMap<String, Object>();
+        recipientMap.put("userType", "PERSON");
+        recipientMap.put("companyId", userInfo.getCompanyID());
+        recipientMap.put("cn", resInfo.getWriterID());
+        notiRecipientList.add(recipientMap);
+
+        
+    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "RESOURCE", notiSubType, brdNm + " - " + resInfo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
         logger.debug("sendMailToUser ended");
 	}
 	
@@ -2612,8 +2649,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			JSONObject err = new JSONObject();
 			return err;
 		}
-
-		List<ResBrdVO> list = ezResourceService.getResourcePortlet(loginCookie, date);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    
+		List<ResBrdVO> list = ezResourceService.getResourcePortlet(userInfo, date);
 		JSONObject jObject = new JSONObject();
 		jObject.put("status", "ok");
 		jObject.put("list", list);

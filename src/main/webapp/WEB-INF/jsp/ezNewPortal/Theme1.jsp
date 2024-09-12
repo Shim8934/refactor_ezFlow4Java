@@ -56,6 +56,8 @@
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
         <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
     </div>
+
+    <div class="title_tooltip"></div>
 <%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
@@ -277,6 +279,10 @@
         }
 		makePortlets(portletOrder);
 		setPortalRefresh();
+		
+		setPortalCount();		// 포탈 카운트 세팅
+		setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+		makeSwiperByTopMenu();
 	});
 	
 	var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
@@ -541,12 +547,12 @@
 		}
 	}
     
-    window.onload = function() {
-        setPortalCount();		// 포탈 카운트 세팅
-        setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
-        makeSwiperByTopMenu();
-        // callAllUserTab();
-    }
+//     window.onload = function() {
+//         setPortalCount();		// 포탈 카운트 세팅
+//         setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+//         makeSwiperByTopMenu();
+//         // callAllUserTab();
+//     }
 
     function setPortalCount(){
         var reqURL = "/ezNewPortal/allCount.do";

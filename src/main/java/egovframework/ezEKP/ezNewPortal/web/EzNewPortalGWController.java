@@ -22,6 +22,7 @@ import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezNewPortal.vo.ConnectPortletDTO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
@@ -96,6 +97,9 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -203,6 +207,9 @@ public class EzNewPortalGWController {
 	
 	@Autowired
 	private EzScheduleGoogleService googleService;
+	
+	@Autowired
+	private EzSystemAdminService ezSystemAdminService;
 
 	// ///사용자///////
 	/**
@@ -878,10 +885,20 @@ public class EzNewPortalGWController {
 			/**
 			 * 1) 로고
 			 */
+			int themeColor = ezNewPortalService.getUserColor(userId, companyId, tenantId);
+			
+			if (themeColor == 3) { // 다크모드
+				logoType = "D";
+			}
+			
 			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
 			
 			if (logoUrl == null || logoUrl.equals("")) {
-				logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+				if (themeColor == 3) {
+					logoUrl = "/images/ezNewPortal/skin/dark/logo_white.png";
+				} else {
+					logoUrl = "/files/upload_portal/Top/Logo/logo.gif";	
+				}
 			} else {
 				logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + logoUrl;
 			}
@@ -1078,8 +1095,10 @@ public class EzNewPortalGWController {
 			String roleInfo = "user";
 			
 			// 전체관리자, 회사관리자, 웹폴더관리자면 관리자 버튼이 나타나도록 추가 -> 관리자 안에서 웹폴더관리자는 웹폴더 관리만 나타나도록 수정
-			OrganAuth organAuth = commonUtil.makeOrganAuth(userId, tenantId);
-			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER) || organAuth.isAuth(AdminAuth.WEB_FOLDER_MANAGER)) {
+			OrganAuth organAuth = commonUtil.makeOrganAuth(userId, tenantId, deptId, jobId);
+			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) 
+					|| organAuth.isAuth(AdminAuth.COMPANY_MANAGER, companyId) 
+					|| organAuth.isAuth(AdminAuth.WEB_FOLDER_MANAGER, companyId)) {
 				roleInfo = "admin";
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
 				data.put("utilAdminUrl", "/admin/main.do");
@@ -1126,6 +1145,12 @@ public class EzNewPortalGWController {
 			Optional<TopFrameType> topFrameInfo = ezNewPortalService.getPortalTopFrameInfo(userId, companyId, tenantId);
 			
 			data.put("menuDisplayMode", topFrameInfo.orElse(TopFrameType.TOP).getCode());
+			
+			/**
+			 * 6) 사용자별 선택 색상(모드) 조회
+			 */
+			data.put("useColor", ezNewPortalService.getUserColor(userId, companyId, tenantId));
+			
 			//end
 
 			//logger.debug("TopMenu Data : " + data.toJSONString()); // 로그정리 : EzNewPortalController 에서 중복으로 로깅
@@ -1492,8 +1517,8 @@ public class EzNewPortalGWController {
 			int limit = 6; // 한 페이지에 뿌려지는 리스트 개수 // 다르게 처리할 수 있는 방법 찾아보기
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
-			String deptId = info.getDeptId();
 			String userId = request.getParameter("userId");
+			String deptId = request.getParameter("deptId");
 
 			// 2024-05-17 김유진 - 퀵링크 list, cnt 가져오기
 			Map<String, Object> map = ezNewPortalService.getQuickLinkList(companyId, tenantId, page, limit, userId, deptId);
@@ -1776,7 +1801,16 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
-			int frameDefault = Integer.parseInt(request.getParameter("frameDefault"));
+			int frameDefault = 0;
+			
+			if (themeId == 1) {
+				frameDefault = 1;
+			} else if (themeId == 2) {
+				frameDefault = 5;
+			} else if (themeId == 3) {
+				frameDefault = 8;
+			}
+			
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			logger.debug("usedTheme : " + themeId + "usedFrame : " + frameDefault);
 			
@@ -2121,6 +2155,8 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String deptId = request.getParameter("deptId");
+			String jobId = Optional.ofNullable(request.getParameter("jobId")).orElse("");
 
 			String primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 			int tenantId = userInfo.getTenantId();
@@ -2134,7 +2170,7 @@ public class EzNewPortalGWController {
 			result.put("userCompany", userInfo.getCompanyID());
 			result.put("lang",lang);
 
-			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, userInfo.getTenantId(), userInfo.getLang());
+			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, userInfo.getTenantId(), userInfo.getLang(), deptId, jobId);
 			
 			result.put("data", adminCompanyList);
 			result.put("primary", primary);
@@ -2302,11 +2338,12 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
 			String menuLang = userInfo.getLang();
-			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId(), menuLang);
+			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId(), menuLang, type);
 			
 			//tenant config가 NO인 경우 관리자 메뉴 관리에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -2559,61 +2596,18 @@ public class EzNewPortalGWController {
 			if (menuNamesCount > 2) {
 				List<MenuNameVO> menuNamesWithOrder = new ArrayList<MenuNameVO>();
 				
-				if (menuNamesCount > 3 && menuNamesCount < 5) {
-					int[] langOrder = new int[4];
-					
-					if (primaryLang.equals("2")) {
-						langOrder[0] = 2;
-						langOrder[1] = 1;
-						langOrder[2] = 3;
-						langOrder[3] = 4;
-					} else if (primaryLang.equals("3")){
-						langOrder[0] = 3;
-						langOrder[1] = 1;
-						langOrder[2] = 2;
-						langOrder[3] = 4;
-					} else {
-						langOrder[0] = 1;
-						langOrder[1] = 2;
-						langOrder[2] = 3;
-						langOrder[3] = 4;
+				// 사용 언어가 가장 먼저 위치하도록 순서 조정.
+				menuNamesWithOrder.add(menuNames.get(Integer.parseInt(primaryLang) - 1));
+				
+				for (MenuNameVO vo : menuNames) {
+					if (!vo.getMenuLang().equals(primaryLang)) {
+						menuNamesWithOrder.add(vo);
 					}
-					
-					for (int i = 0; i < langOrder.length; i++) {
-						int langIndex = langOrder[i] - 1;
-						
-						menuNamesWithOrder.add(menuNames.get(langIndex));
-					}
-					
-					data.put("menuNames", menuNamesWithOrder);
-				} else if (menuNamesCount > 2 && menuNamesCount < 4) {
-					int[] langOrder = new int[3];
-					
-					if (primaryLang.equals("2")) {
-						langOrder[0] = 2;
-						langOrder[1] = 1;
-						langOrder[2] = 3;
-					} else if (primaryLang.equals("3")){
-						langOrder[0] = 3;
-						langOrder[1] = 1;
-						langOrder[2] = 2;
-					} else {
-						langOrder[0] = 1;
-						langOrder[1] = 2;
-						langOrder[2] = 3;
-					}
-					
-					for (int i = 0; i < langOrder.length; i++) {
-						int langIndex = langOrder[i] - 1;
-						
-						menuNamesWithOrder.add(menuNames.get(langIndex));
-					}
-					data.put("menuNames", menuNamesWithOrder);
 				}
-			}
-			else {
-				data.put("menuNames", menuNames);
-			}
+				
+				data.put("menuNames", menuNamesWithOrder);
+			} 
+			data.put("menuNames", menuNames);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2810,8 +2804,9 @@ public class EzNewPortalGWController {
 			String lang = info.getLang();
 			
 			JSONObject data = new JSONObject();
+			String webType = request.getParameter("type");
 
-			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
+			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang), webType);
 			
 			//1. tenant config가 NO인 경우 관리자 포틀릿 관리에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -3095,11 +3090,19 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
+			String webType = "";
+			if (jsonParam.get("type").toString() != null) {
+				webType = jsonParam.get("type").toString();
+			}
+			
 			JSONObject portletInfo = new JSONObject();
 			portletInfo.put("boardId", jsonParam.get("boardId"));
 			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
 			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
 			portletInfo.put("menuId", jsonParam.get("menuId"));
+			portletInfo.put("type", webType);
+			portletInfo.put("portletCode", jsonParam.get("portletCode"));
+			portletInfo.put("connectionId", jsonParam.get("connectionId"));
 			
 			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
 			
@@ -3171,6 +3174,8 @@ public class EzNewPortalGWController {
 			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
 			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
 			portletInfo.put("menuId", jsonParam.get("menuId"));
+			portletInfo.put("portletCode", jsonParam.get("portletCode"));
+			portletInfo.put("connectionId", jsonParam.get("connectionId"));
 			
 			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
 			ezNewPortalService.updateCompanyPortletInfo(portletInfo, portletNames, companyId, tenantId);
@@ -3272,13 +3277,16 @@ public class EzNewPortalGWController {
 
 			String loginLogoUrl = "";
 			String portalLogoUrl = "";
+			String darkLogoUrl = "";
 			boolean loginLogoUrlDefault = true;
 			boolean portalLogoUrlDefault = true;
+			boolean darkLogoUrlDefault = true;
 			
 			//로그인 가져오기
 			if (companyId != null) {
 				loginLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "L");
 				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
+				darkLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "D");
 			}
 			
 			if (loginLogoUrl == null || loginLogoUrl.equals("")) {
@@ -3297,6 +3305,14 @@ public class EzNewPortalGWController {
 				portalLogoUrlDefault = false;
 			}
 			
+			if (darkLogoUrl == null || darkLogoUrl.equals("")) {
+				darkLogoUrl = "/images/ezNewPortal/skin/dark/logo_white.png";
+				darkLogoUrlDefault = true;
+			} else {
+				darkLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + darkLogoUrl;
+				darkLogoUrlDefault = false;
+			}
+			
 			List<PortalLogoVO> logoList = new ArrayList<PortalLogoVO>();
 			
 			PortalLogoVO loginLogo = new PortalLogoVO();
@@ -3312,6 +3328,13 @@ public class EzNewPortalGWController {
 			portalLogo.setLogoDefault(portalLogoUrlDefault);
 			
 			logoList.add(portalLogo);
+
+			PortalLogoVO darkLogo = new PortalLogoVO();
+			darkLogo.setLogoType("D");
+			darkLogo.setLogoUrl(darkLogoUrl);
+			darkLogo.setLogoDefault(darkLogoUrlDefault);
+
+			logoList.add(darkLogo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -4056,11 +4079,11 @@ public class EzNewPortalGWController {
 					totalCnt = ezBoardService.getBrdTotalItemCount(brdVo);
 					// 권한이 true이면 boardList불러오기
 					List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
+					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize, portletId);
 					
 					if (currentPage > 1 && noticeList.size() < 1) {
 						currentPage--;
-						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
+						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize, portletId);
 					}
 					
 					int noticeCount = noticeList.size();
@@ -4115,6 +4138,13 @@ public class EzNewPortalGWController {
 			
 			PersonalLightPollVO pollInfo = new PersonalLightPollVO();
 			pollInfo = ezNewPortalService.getPollPortlet(companyId, tenantId, request.getParameter("userId"), offset);
+			
+			if (pollInfo == null) {
+				result.put("status", "empty");
+				result.put("code", 0);
+				result.put("data", "");
+				return result;
+			}
 			
 			// 2023-07-28 황인경 - 포탈 > 빠른 설문 포틑릿 > 설문제목 다국어 지원 추가 
 			if (!lang.equals("")) {
@@ -4189,9 +4219,11 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
-			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId(), info.getDeptID());
+			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, companyId, info.getTenantId(), deptId);
 			
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int listCount = list.size();
@@ -4597,8 +4629,14 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
+			String jobId = request.getParameter("jobId");
+			String lang = request.getParameter("lang");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			OrganUserVO userInfo = ezOrganService.getUserInfo(info.getTenantId(), userId, companyId, deptId, jobId, lang).orElseThrow(NoSuchFieldException::new);
+			
 			
 			String userName = "";
 			String userTitle = "";
@@ -4606,16 +4644,9 @@ public class EzNewPortalGWController {
 			String userPhoto = "";
 			String userEmail = "";
 
-			// 회원정보 불러오기
-			if (info.getPrimary().equals("1")) {
-				userName = info.getUserName();
-				userTitle = info.getTitle();
-				deptName = info.getDeptName();
-			} else {
-				userName = info.getUserName2();
-				userTitle = info.getTitle2();
-				deptName = info.getDeptName2();
-			}
+			userName = userInfo.getDisplayName();
+			userTitle = userInfo.getTitle();
+			deptName = userInfo.getDescription();
 			userEmail = info.getEmail();
 			
 			// 유저이미지
@@ -5306,11 +5337,11 @@ public class EzNewPortalGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
 			String lang = userInfo.getLang();
-			
+			String webType = "";
 			List<PortletInfoVO> themePortletList = ezNewPortalService.getThemePortletList(themeId, tenantId, companyId, lang);
 			
 			if (themePortletList == null || themePortletList.isEmpty()) {
-				themePortletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
+				themePortletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang), webType);
 			}
 			
 			//1. tenant config가 NO인 경우 관리자 포틀릿 관리에서도 나오면 안됨
@@ -5486,10 +5517,11 @@ public class EzNewPortalGWController {
 
 			JSONArray themePortletList = (JSONArray)jsonParam.get("themePortletList");
 			JSONArray sizeList = (JSONArray)jsonParam.get("sizeList");
+			String webType = jsonParam.get("webType").toString();
 
 			ezNewPortalService.updateThemePortletUsed(themeId, tenantId, companyId, themePortletList);
 
-			if (usePortletSize) {
+			if (!webType.equals("mobile") && usePortletSize) {
 				ezNewPortalService.updateThemePortletSize(themeId, tenantId, companyId, sizeList);
 			}
 
@@ -6222,7 +6254,7 @@ public class EzNewPortalGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezPortal/setMenuDisplayMode/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezPortal/setMenuDisplayMode/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject setUserMenuDisplayMode(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		logger.debug("ezPortal G/W setUserMenuDisplayMode started.");
 
@@ -6236,6 +6268,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			ezNewPortalService.insertPortalTopFrameInfo(userId, companyId, tenantId, TopFrameType.fromCode(menuDisplayMode));
 			
+			result.put("code", 0);
+			result.put("status", "ok");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result.put("code", 1);
@@ -6244,6 +6278,99 @@ public class EzNewPortalGWController {
 		}
 		
 		logger.debug("ezPortal G/W setUserMenuDisplayMode ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈 G/W [GET] 포틀릿 - 연계 포틀릿 정보 조회
+	 */
+	@RequestMapping(value = "/rest/ezPortal/portlets/connect/list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getConnectPortlet(HttpServletRequest request) throws Exception {
+		logger.debug("ezNewPortal G/W getConnectPortlet started.");
+
+		String serverName = request.getHeader("x-user-host");
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String deptId = request.getParameter("deptId");
+		int currentPage = Integer.parseInt((String)request.getParameter("currentPage"));
+		int listCnt = Integer.parseInt(request.getParameter("listCnt"));
+		MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+		int tenantId = info.getTenantId();
+		int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
+		if (deptId == null || deptId.equals("")) {
+			deptId = info.getDeptId();
+		}
+		
+		SystemConfigVO systemConfig = ezNewPortalService.getSystemConfig(portletId, companyId, tenantId);
+		ConnectPortletDTO connectPortletDTO = new ConnectPortletDTO();
+		connectPortletDTO.setUserId(userId);
+		connectPortletDTO.setDeptId(deptId);
+		connectPortletDTO.setCompanyId(companyId);
+		connectPortletDTO.setSystemConfig(systemConfig);
+		connectPortletDTO.setRequest(request);
+		connectPortletDTO.setCurrentPage(currentPage);
+		connectPortletDTO.setListCnt(listCnt);
+		connectPortletDTO.setTenantId(tenantId);
+		connectPortletDTO.setPortletId(portletId);
+		JSONObject resultData = ezNewPortalService.getConnectPortletData(connectPortletDTO);
+		
+		logger.debug("ezNewPortal G/W getConnectPortlet ended.");
+
+		return resultData;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/admin/ezPortal/company/systemconfig", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject setUserMenuDisplayMode(HttpServletRequest request) throws Exception {
+		logger.debug("ezPortal G/W setUserMenuDisplayMode started.");
+
+		JSONObject result = new JSONObject();
+		try {
+			String companyId = request.getParameter("companyId");
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			List<SystemConfigTypeVO> configTypeList = ezSystemAdminService.getSystemConfigTypeListNotXml("", commonUtil.getMinuteUTC(info.getOffSet()), 0, 0, "ALL", companyId, info.getTenantId());
+			
+			result.put("code", 0);
+			result.put("status", "ok");
+			result.put("data", configTypeList);
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		logger.debug("ezPortal G/W setUserMenuDisplayMode ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezPortal/colorMode/{useColor}/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	public JSONObject setUserColorMode(HttpServletRequest request,@PathVariable int useColor, @PathVariable String userId) throws Exception {
+		logger.debug("ezPortal G/W setUserColorMode started.");
+
+		JSONObject result = new JSONObject();
+		try {
+			String companyId = request.getParameter("companyId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezNewPortalService.setUserColorMode(userId, tenantId, companyId, useColor);
+			
+			result.put("code", 0);
+			result.put("status", "ok");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		logger.debug("ezPortal G/W setUserColorMode ended.");
 		return result;
 	}
 	

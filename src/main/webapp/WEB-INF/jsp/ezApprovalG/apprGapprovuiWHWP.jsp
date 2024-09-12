@@ -488,7 +488,7 @@
 				        
 				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				        	parent.opener.getApprovalList("doing");
+				        	parent.opener.clearAbsence(true);
 				        }
 				        return; */
 				    }
@@ -509,7 +509,7 @@
 				        
 				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				        	parent.opener.getApprovalList("doing");
+				        	parent.opener.clearAbsence(true);
 				        }
 				        return; */
 				    }
@@ -527,7 +527,7 @@
 				        
 				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				        	parent.opener.getApprovalList("doing");
+				        	parent.opener.clearAbsence(true);
 				        }
 				        return; */
 				    }
@@ -554,7 +554,7 @@
 		        
 		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-		        	parent.opener.getApprovalList("doing");
+		        	parent.opener.clearAbsence(true);
 		        }
 		    }
 		    

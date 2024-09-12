@@ -81,8 +81,11 @@ var SurveyMessages = {
     strSlider9: "Tối đa",
     strSlider10: "Đặt số đếm thành số tự nhiên từ 200 trở xuống.",
     strOptErr: "Cần ít nhất hai chế độ xem.",
+	strOptErr1   : "Không thể sử dụng giá trị trùng lặp.",
     strMaxtrix1: "Cần ít nhất một hàng.",
     strMaxtrix2: "Cần ít nhất một cột.",
+	strMaxtrix3  : "Nội dung hàng không thể chứa giá trị trùng lặp.",
+	strMaxtrix4  : "Nội dung cột không thể chứa giá trị trùng lặp.",
     
     strURL1: "Vui lòng nhập tên tệp.",
     strURL2: "Vui lòng nhập URL tệp.",

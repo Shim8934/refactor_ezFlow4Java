@@ -18,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -65,6 +68,9 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzNewPortalService ezNewPortalService;
+	
+	@Autowired
+	private EzSystemAdminService ezSystemAdminService;
 
 	/**
 	 * @author 이효진
@@ -137,7 +143,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 포탈 테마관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalThemes.do", method=RequestMethod.GET)
-	public String portalThemes(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String portalThemes(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest requset) throws Exception {
 		logger.debug("portalThemes started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -146,6 +152,12 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 
 		if ("Y".equals(usePortletSize)) {
 			model.addAttribute("allSize", ezNewPortalService.getAllAvailablePortletSize());
+		}
+
+		String webType = requset.getParameter("type");
+
+		if (webType != null && webType.equals("mobile")) {
+			model.addAttribute("webType", webType);
 		}
 
 		if (userInfo == null) {
@@ -163,7 +175,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 포탈 메뉴관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalMenus.do", method=RequestMethod.GET)
-	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset, HttpServletResponse response, Model model) throws Exception {
+	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("portalMenus started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -180,12 +192,15 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("useChinese", ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId()));
 			model.addAttribute("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId()));
 			model.addAttribute("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId()));
-
+			model.addAttribute("type", request.getParameter("type"));
+			String type = request.getParameter("type") == null ? "" : request.getParameter("type");
+			String connectMenuId = type.equals("mobile") ? "-2" : "-1";
+			model.addAttribute("connectMenuId", connectMenuId);
+			
 			response.setHeader("Pragma", "no-cache"); //HTTP 1.0
 			response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
 			response.setHeader("Cache-Control", "no-store"); //HTTP 1.1 
 			response.setDateHeader("Expires", 0L); // Do not cache in proxy server
-			
 			return "/admin/ezNewPortal/portalMenus";
 		}
 	}
@@ -260,11 +275,13 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/getCompanies.do", method=RequestMethod.GET)
 	public String getCompanys(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getCompanys started.");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("jobId", userInfo.getJobId());
 		
 		String url = "/rest/admin/ezportal/companies";
 		
@@ -413,6 +430,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("type", paramMap.get("type"));
 		
 		String url = "/rest/admin/ezPortal/menus/companies/" + paramMap.get("companyId");
 		
@@ -634,6 +652,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			
 			HashMap<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userInfo.getId());
+			param.put("deptId", userInfo.getDeptID());
+			param.put("jobId", userInfo.getJobId());
 			
 			String url = "/rest/admin/ezportal/companies";
 			
@@ -660,11 +680,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("useVietnamese", useVietnamese);
 				model.addAttribute("useIndonesian", useIndonesian);
 				model.addAttribute("approvalFlag", ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId()));
+				model.addAttribute("type", request.getParameter("type"));
 
 				if ("Y".equals(usePortletSize)) {
 					List<String> allSize = ezNewPortalService.getAllAvailablePortletSize();
 					model.addAttribute("allSize", allSize);
 				}
+				
+				String type = request.getParameter("type") == null ? "" : request.getParameter("type");
+				String connectMenuId = type.equals("mobile") ? "-2" : "-1";
+				model.addAttribute("connectMenuId", connectMenuId);
 			}
 			
 			logger.debug("portalPortlets ended.");
@@ -713,6 +738,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String url = "/rest/admin/ezPortal/portlets/companies/" + companyId;
 		
 		paramMap.put("userId", userInfo.getId());		
+		paramMap.put("type", req.getParameter("type"));		
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "get", null);
 		String result = resultBody.get("status").toString();
@@ -808,6 +834,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("boardList", resultBody.get("data"));
 				model.addAttribute("companyId", companyId);
 				model.addAttribute("portletId", request.getParameter("portletId"));
+				model.addAttribute("portletCode", request.getParameter("code"));
 			}
 			
 			logger.debug("openBoardTree ended.");
@@ -868,7 +895,10 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String companyId = json.get("companyId").toString();
 		String url = "/rest/admin/ezPortal/portlets/companies/" + companyId;
 		
+		String type = req.getParameter("type");
+
 		json.put("userId", userInfo.getId());
+		json.put("type", req.getParameter("type"));
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "post", json);
 		
@@ -936,6 +966,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			//게시판이 top인 목록 가져오기
 			String userId = userInfo.getId();
 			String companyId = request.getParameter("companyId");
+			String webType = request.getParameter("type") == null ? "" : request.getParameter("type");
 			
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userId);
@@ -949,6 +980,9 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("menuList", resultBody.get("data"));
 				model.addAttribute("companyId", companyId);
 				model.addAttribute("portletId", commonUtil.stripScriptTags(request.getParameter("portletId")));
+				model.addAttribute("webType", webType);
+				String connectMenuID = webType.equals("mobile") ? "-2" : "-1";
+				model.addAttribute("connectMenuID", connectMenuID);
 			}
 			
 			logger.debug("openPortalMenu ended.");
@@ -1237,9 +1271,14 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String themeId = json.get("themeId").toString();
 		String companyId = json.get("companyId").toString();
 		String userId = userInfo.getId();
+		String webType = "web";
+		if (json.get("webType") != null) {
+			webType = json.get("webType").toString();
+		}
 		
 		String url = "/rest/admin/ezPortal/themes/" + themeId + "/portlets/companies/" + companyId;
 		json.put("userId", userId);
+		json.put("webType", webType);
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, request, "patch", json);
 		
@@ -1840,5 +1879,49 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String result = resultBody.get("status").toString();
 		logger.debug("updateTopMenuDisplayModeForCompany ended.");
 		return result;
+	}
+	
+	/**
+	 * Config 트리 오픈
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/openConfigTree.do", method=RequestMethod.GET)
+	public String openConfigTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("openBoardTree started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			logger.debug("openConfigTree accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			logger.debug("openConfigTree ended.");
+			String companyId = request.getParameter("companyId");
+			String typeCode = request.getParameter("typeCode");
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userInfo.getId());
+			param.put("companyId", companyId);
+			param.put("typeCode", typeCode);
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/admin/ezPortal/company/systemconfig", param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			if (status.equals("ok")) {
+				JSONArray configTypeList = (JSONArray) resultBody.get("data");
+				model.addAttribute("configTypeList", configTypeList);
+			}
+			
+			model.addAttribute("companyId", companyId);
+			model.addAttribute("portletId", request.getParameter("portletId"));
+			model.addAttribute("typeCode", typeCode);
+			
+			logger.debug("openConfigTree ended.");
+			return "/admin/ezNewPortal/portalConfigTree";
+		}
 	}
 }

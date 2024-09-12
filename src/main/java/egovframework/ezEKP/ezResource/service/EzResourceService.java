@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResOccuVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzResourceService {
 	
@@ -98,7 +99,7 @@ public interface EzResourceService {
 	
 	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID, String deptID) throws Exception;
 
-	public List<ResBrdVO> getResourcePortlet(String loginCookie, String date) throws Exception;
+	public List<ResBrdVO> getResourcePortlet(LoginVO userInfo, String date) throws Exception;
 
 	public String saveResourcePortlet(String loginCookie, String resources) throws Exception;
 	
@@ -109,6 +110,10 @@ public interface EzResourceService {
 	public List<Date[]> getRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception;
 	
 	public List<String> getDeletedRepScheduleDate(int pNum, String companyID, String ownerID, int tenantID) throws Exception;
+
+	public List<ResBrdVO> getUserResourceList(String userId, String companyId, String deptId, int tenantId) throws Exception;
+
+	public List<ResBrdVO> getResourceScheduleList(String brdId, String date, int currentPage, int listCnt, int tenantId, String companyId, String offset, String lang) throws Exception;
 	
 	public List<ResOccuVO> getResOccuList(String companyID, int tenantID, String startTime, String endTime, String offset) throws Exception;
 	

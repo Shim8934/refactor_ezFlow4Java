@@ -9,6 +9,7 @@ var mainType = {
 	community : "cộng đồng",
 	webfolder : "thư mục web",
 	journal : "Nhật ký công việc",
+	noti : "Thông báo",
 	etc : "vân vân"
 }
 
@@ -49,9 +50,7 @@ var subType = {
 		cancel : "Hủy phê duyệt",
 		reject : "Phê duyệt bị từ chối"
 	},
-	survey : {
-		modify : "Thông báo sửa đổi"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "Phê duyệt sáng tạo",
@@ -74,6 +73,9 @@ var subType = {
 	journal : {
 		comment : "Đăng bình luận",
 		recv : "Thông báo nhận"
+	},
+	noti : {
+		emergency : "Thông báo khẩn cấp"
 	}
 }
 
@@ -89,3 +91,5 @@ subType["community"]["new"] = "Đăng kí mới";
 var notiMessages = {
 	strLang1 : "Dữ liệu bị thiếu"
 }
+
+var notiDayNames = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];

@@ -64,7 +64,7 @@ function getCircularComment() {
 					}
 					
 					circularCommentList += "</td>";
-					circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate.substring(0, 16) + "</td>";
+					circularCommentList += "<td style='text-align:right;padding-right:5px'>" + vo.regDate.substring(0, 16) + "</td>";
 					circularCommentList += "</tr>";
 					
 					if (vo.status == 0) {
@@ -121,7 +121,7 @@ function getCircularComment() {
 					circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;white-space:pre-wrap;'>" + vo.circularComment + "&nbsp;&nbsp;";
 					
 					circularCommentList += "</td>";
-					circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate.substring(0, 16) + "</td>";
+					circularCommentList += "<td style='text-align:right;padding-right:5px'>" + vo.regDate.substring(0, 16) + "</td>";
 					circularCommentList += "</tr>";
 				});
 				

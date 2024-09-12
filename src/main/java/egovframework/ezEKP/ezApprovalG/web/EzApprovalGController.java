@@ -280,7 +280,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		referenceTemp.add(subTitleString);
 		referenceTemp.add(isSubTitle);
 		
-		getUserSubTitle(userInfo, referenceTemp);
+		if (!"Y".equals(ezCommonService.getTenantConfig("switchUserCompany", userInfo.getTenantId()))) {
+			getUserSubTitle(userInfo, referenceTemp);
+		}
 		
 		String autoSendOfferFlag = ezCommonService.getTenantConfig("autoSendOfferFlag", userInfo.getTenantId());
 		
@@ -497,8 +499,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else {
 			susinAdmin = "NO";
 		}
+
+		List<PortalTopOtherCompanyAddJobVO> companyList;
 		
-		List<PortalTopOtherCompanyAddJobVO> companyList = ezApprovalGService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId());
+		if ("Y".equals(ezCommonService.getTenantConfig("switchUserCompany", userInfo.getTenantId()))) {
+			companyList = Collections.emptyList();
+		} else {
+			companyList = ezApprovalGService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId());
+		}
 		
 		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(result);
@@ -13211,6 +13219,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (apprGMemberSnVO != null) {
 					apprGDocInfo.setAprMemberSN(apprGMemberSnVO.getAprMemberSN());
 					apprGDocInfo.setAprState(apprGMemberSnVO.getAprState());
+					apprGDocInfo.setDocState(apprGMemberSnVO.getDocState());
 				}
 			}
 

@@ -14,3 +14,8 @@ html,input,button,select,textarea{font-family:'Noto Sans KR', sans-serif, 'malgu
 }
 .btn_prev span img, .btn_next span img{margin-top:4px;}
 .quickMenuBtn{width:710px !important;}
+
+#theme3Body .top_info_area ul li > span > span{white-space:normal; word-break:break-word; max-width:100%; height:auto; line-height:17px;}
+#theme3Body .my_info_wrap .portal_setting{height:44px; line-height:16px; display:flex; justify-content:center; align-items:center;}
+#theme3Body .my_info_wrap .config_setting{height:44px; line-height:16px; display:flex; justify-content:center; align-items:center; width: 88px;}
+

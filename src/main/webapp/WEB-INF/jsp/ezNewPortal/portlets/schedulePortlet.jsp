@@ -26,9 +26,7 @@
 							<dl class="portlet_title portlet_schedule sortablePortlet">
 								<dt class="portletText" id="scheduleDateTextDT">
 								</dt>
-								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-								</dd>
+								<dd class="portletPlus plus" onclick="goSchedule();" style="position: relative; z-index: 999;"></dd>
 								<dd class="portletPlus portlet_cal" style="position: relative; z-index: 999;">
 									<input type="text" class="DatePicker_class" name="scheduleSdatepicker" id="scheduleSdatepicker"  size="10" readonly="readonly">
 								</dd>
@@ -43,7 +41,7 @@
 		</c:when>
 		<c:when test="${usedTheme eq 3}">
 			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none;"></dl>
-			<div class="box_shadow" style="position:relative; bottom:63px; overflow:hidden;"  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.10); border-radius: 20px;">
+			<div class="box_shadow" style="position:relative; bottom:53px; overflow:hidden;"  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.10); border-radius: 20px;">
 				<article class="schedule_small box_shadow schedule_calendar">
 					<div class="layDIV">
 						<div class="sCalendarArea">
@@ -58,9 +56,7 @@
 							<dl class="portlet_title portlet_schedule sortablePortlet">
 								<dt class="portletText" id="scheduleDateTextDT">
 								</dt>
-								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_Plus1.png">
-								</dd>
+								<dd class="portletPlus plus" onclick="goSchedule();" style="position: relative; z-index: 999;"></dd>
 								<dd class="portletPlus portlet_cal" style="position: relative; z-index: 999;">
 									<input type="text" class="DatePicker_class" name="scheduleSdatepicker" id="scheduleSdatepicker"  size="10" readonly="readonly">
 								</dd>
@@ -75,7 +71,7 @@
 		</c:when>
 		<c:otherwise>
 			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none;"></dl>
-			<div class="box_shadow" style="position:relative; bottom:63px; overflow:hidden;">
+			<div class="box_shadow" style="position:relative; bottom:53px; overflow:hidden;">
 				<article class="schedule_small box_shadow schedule_calendar">
 					<div class="layDIV">
 						<div class="sCalendarArea">
@@ -90,9 +86,7 @@
 							<dl class="portlet_title portlet_schedule sortablePortlet">
 								<dt class="portletText" id="scheduleDateTextDT">
 								</dt>
-								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-								</dd>
+								<dd class="portletPlus plus" onclick="goSchedule();" style="position: relative; z-index: 999;"></dd>
 								<dd class="portletPlus portlet_cal" style="position: relative; z-index: 999;">
 									<input type="text" class="DatePicker_class" name="scheduleSdatepicker" id="scheduleSdatepicker"  size="10" readonly="readonly">
 								</dd>

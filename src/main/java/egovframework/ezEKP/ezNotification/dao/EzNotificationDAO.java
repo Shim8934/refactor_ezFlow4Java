@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiItemVO;
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO;
+import egovframework.ezEKP.ezNotification.vo.NotiRecipientVO;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -19,12 +22,6 @@ public class EzNotificationDAO extends EgovAbstractDAO {
 		return (Integer) select("EzNotificationDAO.getTotalNotiListCnt", map);
 	}
 	
-	// 2024-03-28 한태훈 - 통합알림 > 사용자 알림 가져오기
-	@SuppressWarnings("unchecked")
-	public List<NotificationVO> getMyNotiList(Map<String, Object> map) throws Exception {
-		return (List<NotificationVO>) list("EzNotificationDAO.getMyNotiList", map);
-	}
-
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 개별 알림 읽음 또는 삭제
 	public void updateNoti(Map<String, Object> map) throws Exception {
 		update("EzNotificationDAO.updateNoti", map);
@@ -70,4 +67,63 @@ public class EzNotificationDAO extends EgovAbstractDAO {
 	public boolean isJavaApprovalUse(Map<String, Object> map) throws Exception {
 		return (boolean) select("EzNotificationDAO.isJavaApprovalUse", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<EmergencyNotiPermissionVO> getEmergencyPermissionList(Map<String, Object> map) throws Exception {
+		return (List<EmergencyNotiPermissionVO>) list("EzNotificationDAO.getEmergencyPermissionList", map);
+	}
+
+	public void addEmergencyPermission(Map<String, Object> map) throws Exception {
+		insert("EzNotificationDAO.addEmergencyPermission", map);
+	}
+	
+	public void updateEmergencyPermission(Map<String, Object> map) throws Exception {
+		update("EzNotificationDAO.updateEmergencyPermission", map);
+	}
+
+	public void deleteEmergencyPermission(Map<String, Object> map) throws Exception {
+		delete("EzNotificationDAO.deleteEmergencyPermission", map);
+	}
+
+	public String selectEmergencyPermission(Map<String, Object> map) throws Exception {
+		return (String) select("EzNotificationDAO.selectEmergencyPermission", map);
+	}
+
+	public String getEmergencyContent(Map<String, Object> map) throws Exception {
+		return (String) select("EzNotificationDAO.getEmergencyContent", map);
+	}
+
+	public void addEmergencyCompanyContent(Map<String, Object> map) throws Exception {
+		insert("EzNotificationDAO.addEmergencyCompanyContent", map);
+	}
+
+	public boolean checkEmergencyPermission(Map<String, Object> map) throws Exception {
+		return (boolean) select("EzNotificationDAO.checkEmergencyPermission", map);
+	}
+
+	public boolean checkEmergencyGroupPermission(Map<String, Object> map) throws Exception{
+		return (boolean) select("EzNotificationDAO.checkEmergencyGroupPermission", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<NotiRecipientVO> getNotiRecipientByDeptId(Map<String, Object> map) throws Exception {
+		return (List<NotiRecipientVO>) list("EzNotificationDAO.getNotiRecipientByDeptId", map);
+	}
+
+	public int addEmergencyNotiItem(Map<String, Object> map) throws Exception {
+		return (int) insert("EzNotificationDAO.addEmergencyNotiItem", map);
+	}
+
+	public EmergencyNotiItemVO getEmergencyNotiItem(Map<String, Object> map) throws Exception {
+		return (EmergencyNotiItemVO) select("EzNotificationDAO.getEmergencyNotiItem", map);
+	}
+
+	public void deleteEmergencyNoti(Map<String, Object> map) throws Exception {
+		delete("EzNotificationDAO.deleteEmergencyNoti", map);
+	}
+
+	public String selecetCompanyIdByDeptId(Map<String, Object> map) throws Exception {
+		return (String) select("EzNotificationDAO.selecetCompanyIdByDeptId", map);
+	}
+
 }

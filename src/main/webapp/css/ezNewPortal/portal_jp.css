@@ -6,7 +6,7 @@ html,input,button,select,textarea{font-family:  Meiryo UI, ＭＳ Ｐゴシッ�
 .my_info_wrap .my_info{width:calc(99.999% - 280px);}
 .webFolder_portlet .portlet_title .portletText{width:110px;}
 .btn_prev span img, .btn_next span img{margin-top:3px;}
-.portlet_list li{padding:9px 0;}
+.portlet_list li{padding:9px 0 !important;}
 .portlet.two_by_one .portlet_list li{padding:12px 0;}
 .voteList li{padding:6px 0;}
 .portlet.two_by_one .voteList li{padding:10.5px 0;}
@@ -14,7 +14,7 @@ html,input,button,select,textarea{font-family:  Meiryo UI, ＭＳ Ｐゴシッ�
 .voteBtn{width:60px;}
 .dataHave{margin-left:-3px;}
 .portlet .board_Atype .portlet_list li{padding:0;}
-#theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{margin-left:-11px;}
+#theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{margin-left:1px;}
 .quickMenuBtn{width:565px !important;}
 
 
@@ -22,3 +22,4 @@ html,input,button,select,textarea{font-family:  Meiryo UI, ＭＳ Ｐゴシッ�
 .mainbg .ui-state-default,
 .mainbg .ui-widget-content .ui-state-default,
 .mainbg .ui-widget-header .ui-state-default{font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+

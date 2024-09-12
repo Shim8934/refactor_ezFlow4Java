@@ -1,5 +1,5 @@
 ﻿// 회사 변경 method
-function company_change() {
+function changeCompany() {
 	makelist();
 	showPreview(2, 0);
 }
@@ -281,7 +281,7 @@ var add_poll = function() {
 		rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do?flag=add", document.getElementById("ListCompany").value, "dialogHeight:550px;dialogwidth:450px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 550));
 
 		if (typeof (rtnValue) != "undefined") {
-			company_change();
+			changeCompany();
 		}
 	}
 }
@@ -289,7 +289,7 @@ var add_poll = function() {
 // 등록 완료 method
 function add_poll_Complete(rtv) {
 	if (typeof (rtv) != "undefined") {
-		company_change();
+		changeCompany();
 	}
 }
 
@@ -327,7 +327,7 @@ var mod_poll = function() {
 		rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do?flag=mod&itemSeq=" + pollList, document.getElementById("ListCompany").value, "dialogHeight:550px;dialogwidth:450px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 550));
 
 		if (typeof (rtnValue) != "undefined") {
-			company_change();
+			changeCompany();
 		}
 	}
 	pollList = "";
@@ -556,28 +556,28 @@ function makePageSelPage() {
 	var strtext;
 	var PagingHTML = "";
 	document.getElementById("tblPageRayer").innerHTML = "";
-	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + TotalCount + "</span>";
+	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + TotalCount + "</span>";
 	strtext = "<div class='pagenavi'>";
 	PagingHTML += strtext;
 
 		if (totalPage > 1 && pageNum != 1) {
-		strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+		strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 		PagingHTML += strtext;
 	} else {
-		strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+		strtext = "<span class='btnimg first disabled'></span>";
 		PagingHTML += strtext;
 	}
 
 	if (totalPage > BlockSize) {
 		if (pageNum > BlockSize) {
-			strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+			strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 			PagingHTML += strtext;
 		} else {
-			strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+			strtext = "<span class='btnimg prev disabled'></span>";
 			PagingHTML += strtext;
 		}
 	} else {
-		strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		strtext = "<span class='btnimg prev disabled'></span>";
 		PagingHTML += strtext;
 	}
 
@@ -613,24 +613,24 @@ function makePageSelPage() {
 	if (totalPage > BlockSize) {
 		if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 			strtext = "";
-			strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+			strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 			PagingHTML += strtext;
 		} else {
 			strtext = "";
-			strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+			strtext = strtext + "<span class='btnimg next disabled'></span>";
 			PagingHTML += strtext;
 		}
 	} else {
 		strtext = "";
-		strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		strtext = strtext + "<span class='btnimg next disabled'></span>";
 		PagingHTML += strtext;
 	}
 
 	if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+		strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 		PagingHTML += strtext;
 	} else {
-		strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+		strtext = "<span class='btnimg last disabled'></span>";
 		PagingHTML += strtext;
 	}
 

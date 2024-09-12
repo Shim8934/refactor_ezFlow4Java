@@ -38,6 +38,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -809,6 +810,20 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getApprovalDisplayList(Map<String, Object> map) throws Exception {
 		return (List<ApprGDocListVO>) list("ezNewPortal.getApprovalDisplayList", map);
+	}
+
+	public SystemConfigVO getSystemConfig(Map<String, Object> map) {
+		return (SystemConfigVO) select("ezNewPortal.getSystemConfig", map);
+	}
+	
+	// 2024-08-21 조수빈 - 유저 사용 색상(모드) 조회
+	public int getUserColor(PortalTopVO potalTopVO) throws Exception {
+		return (null != select("ezNewPortal.getUserColor", potalTopVO)) ? (int) select("ezNewPortal.getUserColor", potalTopVO) : 0;
+	}
+
+	// 2024-08-21 조수빈 - 유저 사용 색상(모드) 조회
+	public void setUserColorMode(Map<String, Object> map) {
+		update("ezNewPortal.setUserColorMode", map);
 	}
 	
 }

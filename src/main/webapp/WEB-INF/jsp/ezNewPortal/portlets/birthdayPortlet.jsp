@@ -24,7 +24,7 @@
 <!-- 				<img src="/images/ezNewPortal/photo_pre.png"> -->
 <!-- 			</dd> -->
 		</dl>
-		<div style="height:calc(100% - 83px);">
+		<div style="height:calc(100% - 73px);">
 			<div class="birthdayList" id="birthcount" style="display: none;">
 				<ul class="birthList portletPagingArea" id="birthdayList"></ul>
 			</div>

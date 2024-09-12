@@ -44,7 +44,7 @@
 			.themePortlet img {cursor:pointer;background-color:#b9b9b9;}
 			.themePortlet {float:left; margin-top:3px; margin-left:13px;}
 			
-			.ui-portlet { position:relative;  width: 244px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
+			.ui-portlet { position:relative;  width: 290px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
 			.ui-portlet-off { background-color: #f0f0f0; }
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
@@ -55,6 +55,7 @@
 			.portlet_switch {margin: 1px 0px 10px 14px;}
 			.portlet_switch .slider {z-index:10;}
 			.admin_theme_portlet {width : 1151px;}
+			.admin_theme_portlet.mobilePortlet {width : 315px;}
 			.bottomBtn {clear:both;}
 			#themePortletList {display:inline-block;}
 			
@@ -65,8 +66,8 @@
 	        .admin_menuX span img {margin-right:5px; vertical-align:text-bottom;}
 	        /*2019.06.18 테마별권한 디자인 추가 */
 	        .admin_thema .frameList {float:left;border-right:none;}
-	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:359px;} 
-	        .admin_thema .authList th {width:90px; border-left:none;} 
+	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:100%;} 
+	        .admin_thema .authList th {width:90px; /*border-left:none;*/} 
 	        .admin_thema .menuIconTD {padding:0px;}
 	        .admin_thema .menuIconTD div {height:82px; overflow:auto; padding:5px;}
 		</style>
@@ -74,17 +75,22 @@
 	
 	<body class="mainbody">
 		<h1 class="adminH1">
-			<spring:message code='ezNewPortal.t054' />
+			<c:if test="${webType != 'mobile'}"><spring:message code='ezNewPortal.t054' /></c:if>
+			<c:if test="${webType == 'mobile'}"><spring:message code='ezNewPortal.mobilePortal02' /></c:if>
 		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
 		<div id="mainmenu">
 			<ul style="margin-top: 15px;">
-				<li id="setDefaultTheme"><span><spring:message code='ezNewPortal.t110' /></span></li>
+				<c:if test="${webType != 'mobile'}">
+					<li id="setDefaultTheme"><span><spring:message code='ezNewPortal.t110' /></span></li>
+				</c:if>
 			</ul>
 		</div>
-		<ul id="themeList" style="margin-top:10px">
-		</ul>
+		<c:if test="${webType != 'mobile'}">
+			<ul id="themeList" style="margin-top:10px">
+			</ul>
+		</c:if>
 	</body>
 	
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -103,11 +109,13 @@
 		var themeAuths = [];
 		var usePortletSize = "<c:out value='${usePortletSize}'/>" === "Y";
 		var allSize = !!"<c:out value='${allSize}'/>" ? "<c:out value='${allSize}'/>".slice(1, -1).split(", ") : [];
-
+		var webType = "<c:out value='${webType}'/>";
 		$(function() {
 			getCompanies();
 			getThemes();
-			
+			if (webType == "mobile") {
+				getThemePortletList();
+			}
 			$("#setDefaultTheme").on("click", updateDefaultTheme);
 			
 		});
@@ -161,6 +169,9 @@
 					
 					document.getElementById("ListCompany").addEventListener('change', function() {
 						getThemes();
+						if (webType == "mobile") {
+							getThemePortletList();
+						}
 					});
 				} else {
 					// We reached our target server, but it returned an error
@@ -193,44 +204,42 @@
 					var themesHTML = "";
 					
 					themes.forEach(function (item, index) {
-						themesHTML += "<li>";
-						themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
-						
-						var themeImgFolder = "kr";
-						
-						if (userLang == "2") {
-							themeImgFolder = "us";
-						} else if (userLang == "3") {
-							themeImgFolder = "jp";
-						} else if (userLang == "4") {
-							themeImgFolder = "cn";
-						} else if (userLang == "5") {
-							themeImgFolder = "vn";
-						} else if (userLang == "6") {
-							themeImgFolder = "id";
+						if (index != 3) { // 모바일 테마 제외
+							themesHTML += "<li>";
+							themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
+							
+							var themeImgUrl = "";
+							
+							if (item.themeId == 1) {
+								themeImgUrl = "/images/ezNewPortal/theme_default.png";
+							} else if (item.themeId == 2) {
+								themeImgUrl = "/images/ezNewPortal/theme_shortcut.png";
+							} else if (item.themeId == 3) {
+								themeImgUrl = "/images/ezNewPortal/theme_separation.png";
+							}
+							
+							themesHTML += "<div class='themeImg'><img src='" + themeImgUrl + "' class='themeThumbnails' alt='img02'/>";
+							themesHTML += "</div><div>";
+							themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
+							themesHTML += "<span class='themePortlet' id='themePortlet" + item.themeId + "'><img src='/images/admin/frameSetting3.png'></span>";
+							themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
+							themesHTML += "<span class='themeSetting' id='"+item.themeId+"'><img src='/images/kr/left/icon_setup.gif'/></span>";
+							themesHTML += "</div>";
+							themesHTML += "</li>";
+							
+							/* themesHTML += "<div class='themeDetails' id='themeDetails" + item.themeId + "'>";
+							themesHTML += "<div class='themeInfo'>";
+							themesHTML += "<div class='themeActive'><div>[테마 활성화] </div><label class='switch'><input type='checkbox' name='usedTheme'><span class='slider round'></span></label></div>";
+							themesHTML += "<div class='btnpositionJsp'><a class='imgbtn previewBtn'><span>미리보기</span></a><a class='imgbtn updateThemeBtn'><span>저장</span></a><div id='close' class='close'><ul><li><span></li></ul></div></div>";
+							themesHTML += "<div class='themeDefault'>[기본 테마 설정] <label class='switch'><input type='checkbox' name='defaultTheme'><span class='slider round'></span></label></div>";
+							themesHTML += "<div class='themeContent'></div>";
+							themesHTML += "</div>";
+							themesHTML += "<div class='frameInfo'>";
+							themesHTML += "<p>[프레임 설정]</p>";
+							themesHTML += "<table class='frameList'></table>";
+							themesHTML += "</div>";
+							themesHTML += "</div>"; */
 						}
-						
-						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/themeImg/" + themeImgFolder + "/Theme" + item.themeId + ".png' class='themeThumbnails' alt='img02'/>";
-						themesHTML += "</div><div>";
-						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
-						themesHTML += "<span class='themePortlet' id='themePortlet" + item.themeId + "'><img src='/images/admin/frameSetting3.png'></span>";
-						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
-						themesHTML += "<span class='themeSetting' id='"+item.themeId+"'><img src='/images/kr/left/icon_setup.gif'/></span>";
-						themesHTML += "</div>";
-						themesHTML += "</li>";
-						
-						/* themesHTML += "<div class='themeDetails' id='themeDetails" + item.themeId + "'>";
-						themesHTML += "<div class='themeInfo'>";
-						themesHTML += "<div class='themeActive'><div>[테마 활성화] </div><label class='switch'><input type='checkbox' name='usedTheme'><span class='slider round'></span></label></div>";
-						themesHTML += "<div class='btnpositionJsp'><a class='imgbtn previewBtn'><span>미리보기</span></a><a class='imgbtn updateThemeBtn'><span>저장</span></a><div id='close' class='close'><ul><li><span></li></ul></div></div>";
-						themesHTML += "<div class='themeDefault'>[기본 테마 설정] <label class='switch'><input type='checkbox' name='defaultTheme'><span class='slider round'></span></label></div>";
-						themesHTML += "<div class='themeContent'></div>";
-						themesHTML += "</div>";
-						themesHTML += "<div class='frameInfo'>";
-						themesHTML += "<p>[프레임 설정]</p>";
-						themesHTML += "<table class='frameList'></table>";
-						themesHTML += "</div>";
-						themesHTML += "</div>"; */
 					});
 					
 					$("#themeList").html(themesHTML);
@@ -300,7 +309,7 @@
 					themeAuths = themeAuths.concat(themeAuthsN);
 					
 					var themesHTML = "<div id='themeDetails" + theme.themeId + "' class='themeDetails'>";
-					themesHTML += "<div class='admin_thema'><dl class='admin_menuDL'><dt class='admin_menuTit'>" + theme.themeName + "</dt><dd class='admin_menuX'></dd></dl>";
+					themesHTML += "<div class='admin_thema'><dl class='admin_menuDL'><dd class='admin_menuX'></dd><dt class='admin_menuTit'>" + theme.themeName + "</dt></dl>";
 					themesHTML += "<div class='admin_menu_content'>";
 					themesHTML += "<table class='themaTable' border='0' cellpadding='0' cellspacing='0' width='100%'>";
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t111' /></th>";
@@ -321,7 +330,7 @@
 					
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t112' /></th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent' readOnly></td></tr>";						
 					themesHTML += "</table>";
-					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
+					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='display:none; margin:20px 0px 0px 0px;'></table>";
 					themesHTML += "<table class='themaTable iconTable02 authList' border='0' cellpadding='0' cellspacing='0'>";
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
 					
@@ -660,14 +669,24 @@
 
 			isBtnClicked = true;
 
-			var themeId = event.data.themeId;
+			var themeId = "";
+			var themeName = "";
+			
+			if (webType == "mobile"){
+				themeId = 4;
+				themeName = "<spring:message code='ezNewportal.mPortletSort01' />";
+			} else {
+				themeId = event.data.themeId;
+				themeName = event.data.themeName;
+			}
+			
 			var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
-			var themeName = event.data.themeName;
+			
 			var frameSize = -1;
 			var availableSize = {};
 
-			if (usePortletSize) {
+			if (webType != "mobile" && usePortletSize) {
 				frameSize = getFrameSize(themeId);
 				availableSize = getAvailablePortletSize(companyId, themeId);
 			}
@@ -678,252 +697,353 @@
 			
 			request.onload = function() {
 				if (request.status >= 200 && request.status < 400) {
-					var data = JSON.parse(request.responseText);
-					var fixList = data['fixBoard'];
-					var portletList = data['poList'];
-
-					var listHTML = "<div id='themePortletList" + themeId + "' class='portletList' data-themeid='" + themeId + "'>";
-					listHTML += "<div class='admin_thema admin_theme_portlet'>";
-					listHTML += "<dl class='admin_menuDL'>";
-					listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
-					listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'><spring:message code='ezNewPortal.t134' /></span></dd>";
-					if (usePortletSize) {
-						var dd = document.createElement("dd");
-						dd.className = "admin_menuX";
-						var btnR = document.createElement("div");
-						btnR.className = "btn_size";
-						btnR.id = "removeAllSize";
-						btnR.innerText = "<spring:message code='ezNewPortal.pgb02' />";
-						dd.append(btnR);
-						var dd2 = dd.cloneNode(true);
-						dd2.childNodes[0].innerText = "<spring:message code='ezNewPortal.pgb01' />";
-						dd2.childNodes[0].id = "addAllSize";
-						listHTML += dd.outerHTML + dd2.outerHTML;
-					}
-					listHTML += "</dl>";
-					if (fixList != null) {
+					if (webType != "mobile") {
+	
+						var data = JSON.parse(request.responseText);
+						var fixList = data['fixBoard'];
+						var portletList = data['poList'];
+	
+						var listHTML = "<div id='themePortletList" + themeId + "' class='portletList' data-themeid='" + themeId + "'>";
+						listHTML += "<div class='admin_thema admin_theme_portlet'>";
+						listHTML += "<dl class='admin_menuDL'>";
+						listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'><spring:message code='ezNewPortal.t134' /></span></dd>";
+						if (usePortletSize) {
+							var dd = document.createElement("dd");
+							dd.className = "admin_menuX";
+							var btnR = document.createElement("div");
+							btnR.className = "btn_size";
+							btnR.id = "removeAllSize";
+							btnR.innerText = "<spring:message code='ezNewPortal.pgb02' />";
+							dd.append(btnR);
+							var dd2 = dd.cloneNode(true);
+							dd2.childNodes[0].innerText = "<spring:message code='ezNewPortal.pgb01' />";
+							dd2.childNodes[0].id = "addAllSize";
+							listHTML += dd.outerHTML + dd2.outerHTML;
+						}
+						listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
+						listHTML += "</dl>";
+						if (fixList != null) {
+							listHTML += "<div class='admin_menu_content'>";
+	
+							var fixCount = fixList.length * -1;
+							fixList.forEach(function (item) {
+								var portletId = item.portletId;
+	
+								listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content'";
+								listHTML += " id='" + item.portletCode + "'";
+								listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "' data-fix=" + fixCount++ + ">";
+								listHTML += "<span class='ui-portlet-span'>";
+	
+								listHTML += ConvertCharToEntityReference(item.portletName);
+								listHTML += "</span>";
+								listHTML += "<label class='portlet_switch switch' title='" + "<spring:message code='ezNewPortal.fixportlet.theme2' />" + "'>";
+	
+								listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' ";
+								listHTML += item.fixBoard ? " data-fix=true " : "";
+	
+								if (themeId == 2) {
+									listHTML += " disabled > ";
+								} else {
+									listHTML += item.portletUsed ? " checked>" : ">";
+								}
+	
+								listHTML += "<span class='slider round'></span></label>";
+								listHTML += "</div>";
+							});
+							listHTML += "</div>";
+						}
 						listHTML += "<div class='admin_menu_content'>";
-
-						var fixCount = fixList.length * - 1;
-						fixList.forEach(function (item) {
+						if (usePortletSize) {
+							listHTML += "<div id='themePortletList' class=" + ClassPortlet.AREA_PORTLET + ">";
+						} else {
+							listHTML += "<div id='themePortletList'>";
+						}
+	
+						portletList.forEach(function (item, index) {
 							var portletId = item.portletId;
 	
-							listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content'";
-							listHTML += " id='" + item.portletCode + "'";
-							listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "' data-fix=" + fixCount++ + ">";
+							listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content";
+							if (usePortletSize) {
+								listHTML += " " + ClassPortlet.PORTLET + " " + item.classSize;
+								listHTML += item.portletUsed ? "'" : " off_portlet'";
+								listHTML += " data-size='" + item.classSize + "' ";
+							} else {
+								listHTML += "'";
+							}
+							listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "'>";
+							if (usePortletSize) {
+								listHTML += "<div class=wrap_title>";
+							}
 							listHTML += "<span class='ui-portlet-span'>";
+	
+							if (item.fixed) {
+								listHTML += "<img class='fixedPortlet' id='fixedPortlet" + portletId + "' src='/images/ezNewPortal/portlet_fixed.png'>";
+							} else {
+								listHTML += "<img class='noneFixedPortlet' id='fixedPortlet" + portletId + "' src='/images/ezNewPortal/portlet_not_fixed.png'>";
+							}
 	
 							listHTML += ConvertCharToEntityReference(item.portletName);
 							listHTML += "</span>";
-							listHTML += "<label class='portlet_switch switch' title='"+ "<spring:message code='ezNewPortal.fixportlet.theme2' />" +"'>";
+							if (usePortletSize) {
+								listHTML += "<div class='sortablePortlet'></div>";
+							}
+							listHTML += "<label class='portlet_switch switch'>";
 	
-							listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' ";
-							listHTML += item.fixBoard ? " data-fix=true " : "";
-	
-							if (themeId == 2) {
-								listHTML +=  " disabled > ";
+							if (item.portletUsed) {
+								listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' checked>";
 							} else {
-								listHTML += item.portletUsed ? " checked>" : ">";
+								listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "'>";
 							}
 	
 							listHTML += "<span class='slider round'></span></label>";
-							listHTML += "</div>";
-						});
-						listHTML += "</div>";
-					}
-					listHTML += "<div class='admin_menu_content'>";
-					if (usePortletSize) {
-						listHTML += "<div id='themePortletList' class=" + ClassPortlet.AREA_PORTLET + ">";
-					} else {
-						listHTML += "<div id='themePortletList'>";
-					}
-
-					portletList.forEach(function (item, index) {
-						var portletId = item.portletId;
-
-						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content";
-						if (usePortletSize) {
-							listHTML += " " + ClassPortlet.PORTLET + " " + item.classSize ;
-							listHTML += item.portletUsed ? "'" : " off_portlet'";
-							listHTML += " data-size='" + item.classSize + "' ";
-						} else {
-							listHTML += "'";
-						}
-						listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "'>";
-						if (usePortletSize) {
-							listHTML += "<div class=wrap_title>";
-						}
-						listHTML += "<span class='ui-portlet-span'>";
-
-						if (item.fixed) {
-							listHTML += "<img class='fixedPortlet' id='fixedPortlet" + portletId + "' src='/images/ezNewPortal/portlet_fixed.png'>";
-						} else {
-							listHTML += "<img class='noneFixedPortlet' id='fixedPortlet" + portletId + "' src='/images/ezNewPortal/portlet_not_fixed.png'>";
-						}
-
-						listHTML += ConvertCharToEntityReference(item.portletName);
-						listHTML += "</span>";
-						if (usePortletSize) {
-							listHTML += "<div class='sortablePortlet'></div>";
-						}
-						listHTML += "<label class='portlet_switch switch'>";
-
-						if (item.portletUsed) {
-							listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' checked>";
-						} else {
-							listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "'>";
-						}
-
-						listHTML += "<span class='slider round'></span></label>";
-						if (usePortletSize) {
-							listHTML += "</div><div class='" + ClassPortlet.BODY_POP + "'>";
-							var btnSet = document.createElement("img");
-							btnSet.src = "/images/verified.png?version=23110801";
-							btnSet.className = "btn_set";
-							listHTML += btnSet.outerHTML;
-							for (var i = 0; i < allSize.length; i++) {
-								var size = allSize[i];
-								var img = document.createElement("img");
-								img.src = "/images/portal/" + size + ".svg?version=23110801"; // queryString. 이미지 변경시 YYMMDD + 넘버링 (01, 02, 03)
-								img.className = size;
-								img.dataset.size = size;
-								if (size !== GridSize.ONE_BY_ONE && item.classSize !== size
-										&& (availableSize[portletId] === undefined || availableSize[portletId].indexOf(size) === -1)) {
-									img.classList.add(ClassPortlet.UNAVAILABLE_SIZE);
-								} else {
-									img.classList.add(ClassPortlet.AVAILABLE_SIZE);
+							if (usePortletSize) {
+								listHTML += "</div><div class='" + ClassPortlet.BODY_POP + "'>";
+								var btnSet = document.createElement("img");
+								btnSet.src = "/images/verified.png?version=23110801";
+								btnSet.className = "btn_set";
+								listHTML += btnSet.outerHTML;
+								for (var i = 0; i < allSize.length; i++) {
+									var size = allSize[i];
+									var img = document.createElement("img");
+									img.src = "/images/portal/" + size + ".svg?version=23110801"; // queryString. 이미지 변경시 YYMMDD + 넘버링 (01, 02, 03)
+									img.className = size;
+									img.dataset.size = size;
+									if (size !== GridSize.ONE_BY_ONE && item.classSize !== size
+											&& (availableSize[portletId] === undefined || availableSize[portletId].indexOf(size) === -1)) {
+										img.classList.add(ClassPortlet.UNAVAILABLE_SIZE);
+									} else {
+										img.classList.add(ClassPortlet.AVAILABLE_SIZE);
+									}
+									listHTML += img.outerHTML;
 								}
-								listHTML += img.outerHTML;
+								listHTML += "</div></div>";
+							} else {
+								listHTML += "</div>";
 							}
-							listHTML += "</div></div>";
-						} else {
+						});
+	
+						listHTML += "</div>";
+						listHTML += "<div class='bottomBtn'><a class='btnA updateThemePortletBtn'><spring:message code='ezNewPortal.t002'/></a></div>";
+						listHTML += "</div>";
+						if (usePortletSize) {
 							listHTML += "</div>";
 						}
-					});
+	
+						var nowShowList = document.getElementsByClassName("portletList")[0];
+	
+						if (nowShowList != undefined) {
+							nowShowList = nowShowList.getAttribute("data-themeid");
+						}
+	
+						//themeDetails가 열려있으면 없애기
+						var themeDetails = document.getElementsByClassName("themeDetails")[0];
+	
+						if (themeDetails != undefined) {
+							$(".themeDetails").remove();
+						}
+	
+						if (nowShowList == themeId) {
+							$(".portletList").slideUp(function () {
+								$(".portletList").remove();
+							});
+						} else {
+							$(".portletList").slideUp(function () {
+								$(".portletList").not("#themePortletList" + themeId).remove();
+							});
+						}
+	
+						if (nowShowList != themeId) {
+							$("#themeList").after(listHTML);
+	
+							$(".portletList").slideDown(function () {
+								isBtnClicked = false;
+							});
+						}
+	
+						//drag and drop
+						if (usePortletSize) {
+							gridElement = null;
+							startGridElement();
+						} else {
+							$("#themePortletList").sortable({
+								items: ".portlets",
+								scroll: false
+							});
+						}
+	
+						$("#themePortletList").disableSelection();
+	
+						//저장버튼 활성화
+						$(".updateThemePortletBtn").on("click", {"themeId": themeId}, updateThemePortlet);
+						//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
+						$(".ui-portlet-span").find("img").on("click", changeFixed);
+						$(".portlet_switch").find("input").on("change", checkFixedInput);
+	
+						if (usePortletSize) {
+							// 포틀릿 사이즈 변경
+							var btnList = document.querySelectorAll("img[data-size]");
+							Array.prototype.forEach.call(btnList, function (btn) {
+								btn.addEventListener("click", function (e) {
+									var target = e.target;
+									if (target.classList.contains(ClassPortlet.EDITING)) {
+										// edit 중일때 동작 - 포틀릿 사용가능 사이즈 지정
+										if (target.classList.contains(ClassPortlet.AVAILABLE_SIZE)) {
+											target.classList.remove(ClassPortlet.AVAILABLE_SIZE);
+											target.classList.add(ClassPortlet.UNAVAILABLE_SIZE);
+										} else {
+											target.classList.remove(ClassPortlet.UNAVAILABLE_SIZE);
+											target.classList.add(ClassPortlet.AVAILABLE_SIZE);
+										}
+									} else {
+										// edit 중이지 않을때 - 포틀릿 사이즈 변경
+										changePortletSize(target.closest("." + ClassPortlet.PORTLET), target.dataset.size);
+									}
+								});
+							});
+	
+							// 포틀릿 사용가능 사이즈 설정 버튼
+							var btnSetList = document.querySelectorAll(".body_pop_for_size .btn_set");
+							Array.prototype.forEach.call(btnSetList, function (btn) {
+								btn.addEventListener("click", function (e) {
+									var target = e.target;
+									var siblings = !!target && target.parentElement.querySelectorAll("img:not(." + GridSize.ONE_BY_ONE + ")") || [];
+									Array.prototype.forEach.call(siblings, function (node) {
+										if (node.classList.contains(ClassPortlet.UNAVAILABLE_SIZE)) {
+											var portlet = node.closest("." + ClassPortlet.PORTLET);
+											if (portlet.classList.contains(node.dataset.size)) {
+												changePortletSize(portlet, GridSize.ONE_BY_ONE);
+											}
+										}
+										node.classList.toggle(ClassPortlet.EDITING);
+									});
+								});
+							});
+	
+							// 사이즈 일괄 추가
+							var btnAList = document.getElementById("addAllSize");
+							btnAList.addEventListener("click", function (e) {
+								var nodes = document.querySelectorAll("." + ClassPortlet.UNAVAILABLE_SIZE);
+								Array.prototype.forEach.call(nodes, function (node) {
+									node.classList.remove(ClassPortlet.UNAVAILABLE_SIZE);
+									node.classList.add(ClassPortlet.AVAILABLE_SIZE);
+								});
+							});
+	
+							// 사이즈 일괄 제거
+							var btnRList = document.getElementById("removeAllSize");
+							btnRList.addEventListener("click", function (e) {
+								var nodes = document.querySelectorAll("." + ClassPortlet.AVAILABLE_SIZE + ":not(." + GridSize.ONE_BY_ONE + ")");
+								Array.prototype.forEach.call(nodes, function (node) {
+									node.classList.remove(ClassPortlet.AVAILABLE_SIZE);
+									node.classList.add(ClassPortlet.UNAVAILABLE_SIZE);
+								});
+	
+								var notDefaultSizePortletList = document.querySelectorAll("." + ClassPortlet.PORTLET + ":not(." + GridSize.ONE_BY_ONE + ")");
+								Array.prototype.forEach.call(notDefaultSizePortletList, function (portlet) {
+									changePortletSize(portlet, GridSize.ONE_BY_ONE);
+								});
+							});
+						}
+					} else {
+						var portletLists = JSON.parse(request.responseText);
+						var portletList = portletLists.poList;
+						var portletListCount = portletList.length;
 
-					listHTML += "</div>";
-					listHTML += "<div class='bottomBtn'><a class='btnA updateThemePortletBtn'><spring:message code='ezNewPortal.t002'/></a></div>";
-					listHTML += "</div>";
-					if (usePortletSize) {
+						var listHTML = "<div id='themePortletList" + themeId + "' class='portletList' data-themeid='" + themeId + "'>";
+						listHTML += "<div class='admin_thema admin_theme_portlet mobilePortlet'>";
+						listHTML += "<dl class='admin_menuDL'>";
+						listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'><spring:message code='ezNewPortal.t134' /></span></dd>";
+						listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
+						listHTML += "</dl>";
+						listHTML += "<div class='admin_menu_content'>";
+						listHTML += "<div id='themePortletList'>";
+
+						portletList.forEach(function (item, index) {
+							var portletId = item.portletId;
+
+							listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content' data-portletid='" + portletId + "' data-menuid='" + item.menuId + "'>";
+							listHTML += "<span class='ui-portlet-span'>";
+
+							if (item.fixed) {
+								listHTML += "<img class='fixedPortlet' id='fixedPortlet" + portletId + "' src='/images/ezNewPortal/portlet_fixed.png'>";
+							} else {
+								listHTML += "<img class='noneFixedPortlet' id='fixedPortlet" + portletId + "' src='/images/ezNewPortal/portlet_not_fixed.png'>";
+							}
+
+							listHTML += ConvertCharToEntityReference(item.portletName);
+							listHTML += "</span>";
+							listHTML += "<label class='portlet_switch switch'>";
+
+							if (item.portletUsed) {
+								listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' checked>";
+							} else {
+								listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "'>";
+							}
+
+							listHTML += "<span class='slider round'></span></label>";
+							listHTML += "</div>";
+						});
+
 						listHTML += "</div>";
-					}
+						listHTML += "<div class='bottomBtn'><a class='btnA updateThemePortletBtn'>저장</a></div>";
+						listHTML += "</div>";
+						listHTML += "</div>";
 
-					var nowShowList = document.getElementsByClassName("portletList")[0]; 
-					
-					if (nowShowList != undefined) {
-						nowShowList = nowShowList.getAttribute("data-themeid");
-					}
-					
-					//themeDetails가 열려있으면 없애기
-					var themeDetails = document.getElementsByClassName("themeDetails")[0];
-					
-					if (themeDetails != undefined) {
-						$(".themeDetails").remove();
-					}
-					
-					if (nowShowList == themeId) { 
-						$(".portletList").slideUp(function(){
-							$(".portletList").remove();
-						});
-					} else {
-						$(".portletList").slideUp(function(){
-							$(".portletList").not("#themePortletList" + themeId).remove();
-						});
-					}
+						var nowShowList = document.getElementsByClassName("portletList")[0];
 
-					if (nowShowList != themeId) {
-						$("#themeList").after(listHTML);
+						if (nowShowList != undefined) {
+							nowShowList = nowShowList.getAttribute("data-themeid");
+						}
 
-						$(".portletList").slideDown(function(){
-							isBtnClicked = false;
-						});
-					}
+						//themeDetails가 열려있으면 없애기
+						var themeDetails = document.getElementsByClassName("themeDetails")[0];
 
-					//drag and drop
-					if (usePortletSize) {
-						gridElement = null;
-						startGridElement();
-					} else {
+						if (themeDetails != undefined) {
+							$(".themeDetails").remove();
+						}
+
+						if (nowShowList == themeId) {
+							$(".portletList").slideUp(function(){
+								$(".portletList").remove();
+							});
+						} else {
+							$(".portletList").slideUp(function(){
+								$(".portletList").not("#themePortletList" + themeId).remove();
+							});
+						}
+
+						if (nowShowList != themeId) {
+
+							if (nowShowList == null || nowShowList == undefined) {
+								$(".adminH1").after(listHTML);
+
+								$(".portletList").slideDown(function(){
+									isBtnClicked = false;
+								});
+							} else {
+								$("#themeList").after(listHTML);
+
+								$(".portletList").slideDown(function(){
+									isBtnClicked = false;
+								});
+							}
+						}
+
+						//drag and drop
 						$("#themePortletList").sortable({
 							items : ".portlets",
 							scroll: false
 						});
+
+						$("#themePortletList").disableSelection();
+
+						//저장버튼 활성화
+						$(".updateThemePortletBtn").on("click", {"themeId" : themeId}, updateThemePortlet);
+						//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
+						$(".ui-portlet-span").find("img").on("click", changeFixed);
+						$(".portlet_switch").find("input").on("change", checkFixedInput);
+
 					}
-
-					$("#themePortletList").disableSelection();
-
-					//저장버튼 활성화
-					$(".updateThemePortletBtn").on("click", {"themeId" : themeId}, updateThemePortlet);
-					//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
-					$(".ui-portlet-span").find("img").on("click", changeFixed);
-					$(".portlet_switch").find("input").on("change", checkFixedInput);
-
-					if (usePortletSize) {
-						// 포틀릿 사이즈 변경
-						var btnList = document.querySelectorAll("img[data-size]");
-						Array.prototype.forEach.call(btnList, function (btn) {
-							btn.addEventListener("click", function (e) {
-								var target = e.target;
-								if (target.classList.contains(ClassPortlet.EDITING)) {
-									// edit 중일때 동작 - 포틀릿 사용가능 사이즈 지정
-									if (target.classList.contains(ClassPortlet.AVAILABLE_SIZE)) {
-										target.classList.remove(ClassPortlet.AVAILABLE_SIZE);
-										target.classList.add(ClassPortlet.UNAVAILABLE_SIZE);
-									} else {
-										target.classList.remove(ClassPortlet.UNAVAILABLE_SIZE);
-										target.classList.add(ClassPortlet.AVAILABLE_SIZE);
-									}
-								} else {
-									// edit 중이지 않을때 - 포틀릿 사이즈 변경
-									changePortletSize(target.closest("." + ClassPortlet.PORTLET), target.dataset.size);
-								}
-							});
-						});
-
-						// 포틀릿 사용가능 사이즈 설정 버튼
-						var btnSetList = document.querySelectorAll(".body_pop_for_size .btn_set");
-						Array.prototype.forEach.call(btnSetList, function (btn) {
-							btn.addEventListener("click", function (e) {
-								var target = e.target;
-								var siblings = !!target && target.parentElement.querySelectorAll("img:not(." + GridSize.ONE_BY_ONE + ")") || [];
-								Array.prototype.forEach.call(siblings, function (node) {
-									if (node.classList.contains(ClassPortlet.UNAVAILABLE_SIZE)) {
-										var portlet = node.closest("." + ClassPortlet.PORTLET);
-										if (portlet.classList.contains(node.dataset.size)) {
-											changePortletSize(portlet, GridSize.ONE_BY_ONE);
-										}
-									}
-									node.classList.toggle(ClassPortlet.EDITING);
-								});
-							});
-						});
-
-						// 사이즈 일괄 추가
-						var btnAList = document.getElementById("addAllSize");
-						btnAList.addEventListener("click", function (e) {
-							var nodes = document.querySelectorAll("." + ClassPortlet.UNAVAILABLE_SIZE);
-							Array.prototype.forEach.call(nodes, function (node) {
-								node.classList.remove(ClassPortlet.UNAVAILABLE_SIZE);
-								node.classList.add(ClassPortlet.AVAILABLE_SIZE);
-							});
-						});
-
-						// 사이즈 일괄 제거
-						var btnRList = document.getElementById("removeAllSize");
-						btnRList.addEventListener("click", function (e) {
-							var nodes = document.querySelectorAll("." + ClassPortlet.AVAILABLE_SIZE + ":not(." + GridSize.ONE_BY_ONE + ")");
-							Array.prototype.forEach.call(nodes, function (node) {
-								node.classList.remove(ClassPortlet.AVAILABLE_SIZE);
-								node.classList.add(ClassPortlet.UNAVAILABLE_SIZE);
-							});
-
-							var notDefaultSizePortletList = document.querySelectorAll("." + ClassPortlet.PORTLET + ":not(." + GridSize.ONE_BY_ONE + ")");
-							Array.prototype.forEach.call(notDefaultSizePortletList, function (portlet) {
-								changePortletSize(portlet, GridSize.ONE_BY_ONE);
-							});
-						});
-					}
-
 				}else {
 					// We reached our target server, but it returned an error
 				}
@@ -945,50 +1065,87 @@
 			var themeId = event.data.themeId;
 			var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
-
-			if (usePortletSize) gridElement.synchronize();
-			var themePortletList = $(".portlets");
 			
-			var themePortletListCount = themePortletList.length;
-			var themePortlet = [];
-			var portletSizeList = [];
+			if (webType != "mobile") {
+				if (usePortletSize) gridElement.synchronize();
+				var themePortletList = $(".portlets");
 
-			if (usePortletSize) {
-				portletSizeList = [];
+				var themePortletListCount = themePortletList.length;
+				var themePortlet = [];
+				var portletSizeList = [];
+
+				if (usePortletSize) {
+					portletSizeList = [];
+					for (var i = 0; i < themePortletListCount; i++) {
+						var portlet = themePortletList[i];
+						var portletId = portlet.dataset.portletid;
+						var portletSize = portlet.dataset.size;
+						var btnList = portlet.querySelectorAll("img." + ClassPortlet.AVAILABLE_SIZE + "[data-size]");
+						Array.prototype.forEach.call(btnList, function (btn) {
+							portletSizeList.push({
+								portletId: portletId,
+								portletSize: btn.dataset.size,
+								default: btn.dataset.size === portletSize ? 1 : 0
+							});
+						});
+					}
+				}
+
+				var index = 1;
+
 				for (var i = 0; i < themePortletListCount; i++) {
 					var portlet = themePortletList[i];
-					var portletId = portlet.dataset.portletid;
-					var portletSize = portlet.dataset.size;
-					var btnList = portlet.querySelectorAll("img." + ClassPortlet.AVAILABLE_SIZE + "[data-size]");
-					Array.prototype.forEach.call(btnList, function (btn) {
-						portletSizeList.push({
-							portletId: portletId,
-							portletSize: btn.dataset.size,
-							default: btn.dataset.size===portletSize?1:0
-						});
+					var portletId = portlet.getAttribute("data-portletid");
+					var menuId = portlet.getAttribute("data-menuid");
+					var portletUsed = $("#portlet" + portletId).prop("checked");
+					// 고정 포틀릿은 순서 고정
+					var fixOrder = portlet.getAttribute('data-fix');
+					var currIndex;
+					if (!!fixOrder) {
+						currIndex = fixOrder;
+					} else {
+						currIndex = index++;
+					}
+					var isFixed = false;
+					var fixPo = document.getElementById("fixedPortlet" + portletId);
+					if (!!fixPo) {
+						var fixedClassList = fixPo.classList;
+
+						for (var j = 0; j < fixedClassList.length; j++) {
+							if (fixedClassList[j] === "fixedPortlet") {
+								isFixed = true;
+								break;
+							} else if (fixedClassList[j] === "noneFixedPortlet") {
+								isFixed = false;
+								break;
+							}
+						}
+					} else {
+						isFixed = true;
+					}
+
+					themePortlet.push({
+						"portletId": portletId,
+						"menuId": menuId,
+						"portletUsed": portletUsed,
+						"portletOrder": currIndex,
+						"isFixed": isFixed
 					});
 				}
-			}
+			} else {
+				var themePortletList = $(".portlets");
 
-			var index = 1;
+				var themePortletListCount = themePortletList.length;
+				var themePortlet = [];
 
-			for (var i = 0; i < themePortletListCount; i++) {
-				var portlet = themePortletList[i];
-				var portletId = portlet.getAttribute("data-portletid");
-				var menuId = portlet.getAttribute("data-menuid");
-				var portletUsed = $("#portlet" + portletId).prop("checked");
-				// 고정 포틀릿은 순서 고정
-				var fixOrder = portlet.getAttribute('data-fix');
-				var currIndex;
-				if (!!fixOrder) {
-					currIndex = fixOrder;
-				} else {
-					currIndex = index++;
-				}
-				var isFixed = false;
-				var fixPo = document.getElementById("fixedPortlet" + portletId);
-				if (!!fixPo) {
-					var fixedClassList = fixPo.classList;
+				for (var i = 0; i < themePortletListCount; i++) {
+					var portlet = themePortletList[i];
+					var portletId = portlet.getAttribute("data-portletid");
+					var menuId = portlet.getAttribute("data-menuid");
+					var portletUsed = $("#portlet" + portletId).prop("checked");
+
+					var isFixed = false;
+					var fixedClassList = document.getElementById("fixedPortlet" + portletId).classList;
 
 					for (var j = 0; j < fixedClassList.length; j++) {
 						if (fixedClassList[j] === "fixedPortlet") {
@@ -999,19 +1156,24 @@
 							break;
 						}
 					}
-				} else {
-					isFixed = true;
-				}
 
-				themePortlet.push({"portletId" : portletId, "menuId" : menuId, "portletUsed" : portletUsed, "portletOrder" : currIndex, "isFixed" : isFixed});
+					themePortlet.push({"portletId" : portletId, "menuId" : menuId, "portletUsed" : portletUsed, "portletOrder" : i + 1, "isFixed" : isFixed});
+				}
 			}
-			
 			var request = new XMLHttpRequest();
 			request.open('POST', '/admin/ezNewPortal/updateThemePortletUsed.do', true);
 			request.setRequestHeader('Content-Type', 'application/json');
 			
 			request.onload = function() {
-				getThemes();
+				if (webType != "mobile") {
+					getThemes();
+				} else {
+					if (request.status >= 200 && request.status < 300) {
+						alert("<spring:message code='ezNewPortal.t102' />");
+					} else {
+						alert("<spring:message code='ezNewPortal.t032' />");
+					}
+				}
 			}
 			
 			request.onerror = function() {
@@ -1022,10 +1184,12 @@
 				companyId : companyId,
 				themeId : themeId,
 				themePortletList : themePortlet,
-				sizeList : portletSizeList
+				sizeList : portletSizeList,
+				webType : webType
 			});
 			
 			request.send(data);
+
 		}
 		
 		//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
