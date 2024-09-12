@@ -5,9 +5,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -656,53 +653,6 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 		logger.debug("deleteEmergencyNoti ended");
 		
 		ezNotificationDAO.deleteEmergencyNoti(map);
-	}
-
-	@Override
-	public boolean addMobilePushForTestServer(String recipientId, String senderName, String pushNotiContent, String mainTypeForMobilePush, String subTypeForMobilePush, String linkUrlMobile) throws Exception {
-		  // 데이터베이스 연결 정보
-        String url = "jdbc:mariadb://222.106.242.167:3306/eztalk";
-        String user = "ezEKP2017";
-        String password = "ezflow_010";
-        boolean returnFlag = true;
-        Connection conn = null;
-        CallableStatement stmt = null;
-        
-        try {
-            // 데이터베이스 연결
-            conn = DriverManager.getConnection(url, user, password);
-            
-            String procedureCall = "{call sp_notification_insert2(?, now(), ?, ?, ?, ?, NULL, NULL)}";
-            stmt = conn.prepareCall(procedureCall);
-            
-            // 파라미터 설정
-            stmt.setObject(1, recipientId);
-            stmt.setObject(2, senderName);
-            stmt.setObject(3, pushNotiContent);
-            stmt.setObject(4, mainTypeForMobilePush);
-            stmt.setObject(5, linkUrlMobile);
-            
-            
-            int count = stmt.executeUpdate();
-
-			if (count == 0) {
-				returnFlag = false;
-			}
-            
-        } catch (Exception e) {
-        	logger.debug(e.getMessage());
-        	returnFlag = false;
-        } finally {
-            // 리소스 정리
-            try {
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-            	logger.debug(e.getMessage());
-            	returnFlag = false;
-            }
-        }
-		return returnFlag;
 	}
 
 }
