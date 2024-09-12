@@ -4006,3 +4006,4 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .popup #menu ul.layer_select li span{border: none; display: block;}
 .popup #menu ul.layer_select{margin-left: -33px; top: 6px;}
 /* //20240517 메일보기 상단바 디자인수정 */
+#ownerInput.us{width:calc(100% - 80px) !important;}
