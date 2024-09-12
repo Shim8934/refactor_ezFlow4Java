@@ -326,3 +326,6 @@ nav .navUL li.on{color:#003497;}
 .main_time .timeCheckOut:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
 .main_time .timeCheckIn.commute_on:hover{color:#333; border-color:#fff;background:none}
 .main_time .timeCheckOut.commute_on:hover{color:#333; border-color:#fff;background:none}
+
+#theme3Body .main_time .timeCheckIn:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
+#theme3Body .main_time .timeCheckOut:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
