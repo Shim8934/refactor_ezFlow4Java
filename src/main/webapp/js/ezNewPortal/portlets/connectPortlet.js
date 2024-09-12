@@ -58,7 +58,11 @@ function getConnectList(currentPage, portletId) {
 		dataType: "JSON",
 		success : function(data) {
 			if (data.portletType == "standard") {
-				makeStandardConnectPortlet(data, portletId);
+				try {
+					makeStandardConnectPortlet(data, portletId);
+				} catch (e) {
+					makeMessageContent(messages.strLang2, document.getElementById(portletId + "Portlet").querySelector('.portletPagingArea'));
+				}
 			}
 		},
 		error : function(error) {
