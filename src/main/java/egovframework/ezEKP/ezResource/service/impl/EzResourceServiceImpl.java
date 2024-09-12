@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -954,7 +955,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	public int addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay,
 			String startDate, String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag,
-			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception {
+			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset, String deptId) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
@@ -989,6 +990,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_Num", "");
 		map.put("v_WriteDay", "");
 		map.put("tenantID", tenantID);
+		map.put("deptId", deptId);
 		map.put("nowDate", nowDate);
 
 		String approveFlag = ezResourceDAO.addRessch_S1(map);
@@ -1096,6 +1098,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					timeDisplay = "";
 				}
 				returnStr.append("<busystatus>"+timeDisplay+"</busystatus>");
+				returnStr.append("<title>"+ title +"</title>");
 				returnStr.append("</appointment>");
 			} else {
 				returnStr.append("<appointment>");
@@ -1159,6 +1162,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<owner_nm><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm").item(i).getTextContent() + "]]></owner_nm>");
 				returnStr.append("<dept_name><![CDATA[" + scheRSDom.getElementsByTagName("dept_name").item(i).getTextContent() + "]]></dept_name>");
 				returnStr.append("<writeDay>"+ writeDay +"</writeDay>");
+				returnStr.append("<title>"+ title +"</title>");
 					
 				/*if (pType == null || pType.equals("")) {
 					returnStr.append("<owner_nm2><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm2").item(i).getTextContent() + "]]></owner_nm2>");
@@ -2962,6 +2966,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		if (nodeList.getLength() > 23) {
 			scheduleID = nodeList.item(23).getTextContent().trim();
 		}
+
+		Node nodeDept = xmlRes.getElementsByTagName("DEPTID").item(0);
+		String deptId = nodeDept != null ? nodeDept.getTextContent() : "";
 		
 		if (attachFiles != null && !attachFiles.equals("")) {
 			attachFlag = "1";
@@ -2971,7 +2978,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		timeDisplay = "1";
 		int num = addResSch(ownerID, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance, reFlag, gresFlag, 
-				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID, offset);
+				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID, offset,  deptId);
 		String returnStr = "";
 		returnStr += "<RTN_DATA>";
         returnStr += "<NUM>" + num + "</NUM>";
@@ -4302,10 +4309,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResBrdVO> getResourcePortlet(@CookieValue("loginCookie") String loginCookie, String date) throws Exception {
+	public List<ResBrdVO> getResourcePortlet(LoginVO userInfo, String date) throws Exception {
 		logger.debug("Service getResourePortlet started");
-		
-		LoginVO userInfo  = commonUtil.userInfo(loginCookie);
+
 		String  id        = userInfo.getId();
 		String  companyID = userInfo.getCompanyID();
 		String  offset    = userInfo.getOffset();
@@ -4334,6 +4340,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					StringBuilder number   = new StringBuilder();	// 자원1의번호;자원2의번호;....
 					StringBuilder ownName  = new StringBuilder();	// 소유자1의이름;소유자2의이름;...
 					StringBuilder deptName = new StringBuilder();	// 소유자1부서;소유자2의부서
+					StringBuilder titleName = new StringBuilder();	// 자원예약1의제목;자원예약2의제목
+					StringBuilder startAllTime = new StringBuilder();	// 예약1의시작날짜시간;예약1의시작날짜시간
+					StringBuilder endAllTime = new StringBuilder();	// 예약1의종료날짜시간;예약1의종료날짜시간
 					String retVal = getScheduleXML(date, resources.get(i).getBrdID(), companyID, "", "P", "", "",  "", "", tenantID, offset, lang);
 					Document xmlDom2 = commonUtil.convertStringToDocument(retVal);
 					for (int j=0; j<xmlDom2.getDocumentElement().getChildNodes().getLength(); j++) {
@@ -4344,15 +4353,24 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						String num   = xmlDom2.getElementsByTagName("number").item(j).getTextContent();
 						String own   = xmlDom2.getElementsByTagName("owner_nm").item(j).getTextContent();
 						String dept  = xmlDom2.getElementsByTagName("dept_name").item(j).getTextContent();
+						String title  = xmlDom2.getElementsByTagName("title").item(j).getTextContent();
+						String startDateAll = xmlDom2.getElementsByTagName("dtstart").item(j).getTextContent();
+						String endDateAll  = xmlDom2.getElementsByTagName("dtend").item(j).getTextContent();
 						sb.append(sDate + "~" + eDate + ";");
 						number.append(num + ";" );
 						ownName.append(own + ";");
 						deptName.append(dept + ";");
+						titleName.append(title + ";");
+						startAllTime.append(startDateAll + ";");
+						endAllTime.append(endDateAll + ";");
 					}
 					resources.get(i).setRsPortletTime(sb.toString());
 					resources.get(i).setRsPortletNum(number.toString());
 					resources.get(i).setRsPortletOwnName(ownName.toString());
 					resources.get(i).setRsPortletDeptName(deptName.toString());
+					resources.get(i).setRsPortletTitle(titleName.toString());
+					resources.get(i).setRsPortletStratAllTime(startAllTime.toString());
+					resources.get(i).setRsPortletEndAllTime(endAllTime.toString());
 				}
 			}
 		}
@@ -4519,18 +4537,87 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		if (addResRepOccuList && getResOccuList.size() > 0) {
 			Collections.sort(getResOccuList, new Comparator<ResOccuVO>() {
-			    public int compare(ResOccuVO v1, ResOccuVO v2) {
-			    	if (Integer.parseInt(v1.getOwnerId()) > Integer.parseInt(v2.getOwnerId())) {
-			    		return 1;
-			    	} else if (Integer.parseInt(v1.getOwnerId()) < Integer.parseInt(v2.getOwnerId())) {
-			    		return -1;
-			    	} 
-			    	return 0;
-			    }
+				public int compare(ResOccuVO v1, ResOccuVO v2) {
+					if (Integer.parseInt(v1.getOwnerId()) > Integer.parseInt(v2.getOwnerId())) {
+						return 1;
+					} else if (Integer.parseInt(v1.getOwnerId()) < Integer.parseInt(v2.getOwnerId())) {
+						return -1;
+					} 
+					return 0;
+				}
 			});
 		}
 		
 		logger.debug("getResOccuList end");
 		return getResOccuList;
+	}
+
+	@Override
+	public List<ResBrdVO> getUserResourceList(String userId, String companyId, String deptId, int tenantId) throws Exception {
+		logger.debug("getUserResourceList start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cn",          userId);
+		map.put("tenant_id",   tenantId);
+		map.put("brd_company", companyId);
+		
+		logger.debug("getAttachList start");
+		List<ResBrdVO> resources = ezResourceDAO.getResourcePortlet(map);
+		int cnt = resources.size();
+		for(int i=0; i < cnt; i++) {
+			// 접근 권한이 없을 경우 삭제
+			if(getACL(companyId, resources.get(i).getBrdID(), userId, "everyone", tenantId, deptId).equals("")) {
+				resources.remove(i);
+				i--;
+				cnt--;
+			}
+		}
+		return resources;
+	}
+
+	@Override
+	public List<ResBrdVO> getResourceScheduleList(String brdId, String date, int currentPage, int listCnt, int tenantId, String companyId, String offset, String lang) throws Exception {
+		List<ResBrdVO> resourceScheduleList = new ArrayList<ResBrdVO>();
+		
+		if(date != null && !date.equals("")) {
+			String retVal = getScheduleXML(date, brdId, companyId, "", "P", "", "",  "", "", tenantId, offset, lang);
+			Document xmlDom2 = commonUtil.convertStringToDocument(retVal);
+			for (int i = 0; i < xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
+				// 허가되지 않은 자원의 리스트는 skip 비승인0 승인1 
+				if (xmlDom2.getElementsByTagName("approveFlag").item(i).getTextContent().equals("0")) {
+					continue;
+				}
+				
+				String sDate = xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent().substring(11, 16);
+				String eDate = xmlDom2.getElementsByTagName("dtend").item(i).getTextContent().substring(11, 16);
+				String num   = xmlDom2.getElementsByTagName("number").item(i).getTextContent();
+				String own   = xmlDom2.getElementsByTagName("owner_nm").item(i).getTextContent();
+				String dept  = xmlDom2.getElementsByTagName("dept_name").item(i).getTextContent();
+				String title  = xmlDom2.getElementsByTagName("title").item(i).getTextContent();
+				String startDateAll = xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent();
+				String endDateAll  = xmlDom2.getElementsByTagName("dtend").item(i).getTextContent();
+				
+				ResBrdVO resourceReservation = new ResBrdVO();
+						
+				resourceReservation.setRsPortletTime(startDateAll.replaceAll("-", ".").substring(0, 16) + " ~ " + endDateAll.replaceAll("-", ".").substring(0, 16));
+				resourceReservation.setRsPortletNum(num);
+				resourceReservation.setRsPortletOwnName(own);
+				resourceReservation.setRsPortletDeptName(dept);
+				resourceReservation.setRsPortletTitle(title);
+				resourceReservation.setRsPortletStratAllTime(startDateAll);
+				resourceReservation.setRsPortletEndAllTime(endDateAll);
+				
+				resourceScheduleList.add(resourceReservation);
+			}
+		}
+		
+		int totalCnt = resourceScheduleList.size();
+		int startRow = (currentPage - 1) * listCnt;
+		int lastRow = Math.min(totalCnt, startRow + listCnt);
+		
+		List<ResBrdVO> resultList = null;
+		resultList = resourceScheduleList.subList(startRow, lastRow);
+		
+		return resultList;
 	}
 }

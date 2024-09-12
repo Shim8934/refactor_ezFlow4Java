@@ -14,14 +14,12 @@
 		<div class="layDIV" id="tabBoard">
 			<dl class="sortablePortlet portlet_tab">
 					<dt class="portletText" id="tabBoardPortletName"><span><c:out value='${portletName }'/></span></dt>
-					<dt id="tabBoardList1Tab" class="tabBoardTab" style="display: none;"><span></span></dt>
-					<dt id="tabBoardList2Tab" class="tabBoardTab" style="display: none;"><span></span></dt>
-					<dt id="tabBoardList3Tab" class="tabBoardTab" style="display: none;"><span></span></dt>
+					<dt id="tabBoardList1Tab" class="tabBoardTab" style="display: none;"><span class="longTitle"></span></dt>
+					<dt id="tabBoardList2Tab" class="tabBoardTab" style="display: none;"><span class="longTitle"></span></dt>
+					<dt id="tabBoardList3Tab" class="tabBoardTab" style="display: none;"><span class="longTitle"></span></dt>
 			</dl>
 			<dl class="portlet_tab_plus">
-				<dd class="portletPlus" id="tabBoardPlus" onclick="tabBoardPlus()">
-					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-				</dd>
+				<dd class="portletPlus plus" id="tabBoardPlus" onclick="tabBoardPlus()"></dd>
 			</dl>
 			<div id="notexistence" class="portlet_list" style="display:none;">
 				<dl class='nodata'>

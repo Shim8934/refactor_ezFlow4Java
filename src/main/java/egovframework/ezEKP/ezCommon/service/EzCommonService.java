@@ -399,7 +399,7 @@ public interface EzCommonService {
     public void alterTblScheduleForShowtop() throws Exception;
 	
 	public void addUserDeptHideFlag() throws Exception;
-
+	
 	public void insertGongRamListOption() throws Exception;
 	
 	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테이블 추가 */
@@ -429,4 +429,27 @@ public interface EzCommonService {
 
 	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
 	public void addTblFormContainerSN() throws Exception;
+	
+	public void insertInitMobileTheme() throws Exception;
+	
+	public void alterMenuOpenType() throws Exception;
+	
+	public void createSystemConfig() throws Exception;
+	
+	public void createConnectionMenu() throws Exception;
+	
+	public void insertStandardSystemConfigData() throws Exception;
+	
+	public void createEmergencyNotiTable() throws Exception;
+	
+	// 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
+	public void insertMobileToggleMenus() throws Exception;
+	
+	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
+	public void alterUseColor() throws Exception;
+	
+	// 2024-09-02 조수빈 - 테마 변경에 따른 테마 데이터 update
+	public void updateThemeData() throws Exception;
+	
+	void createRsScheduleDeptIdColumn() throws Exception;
 }

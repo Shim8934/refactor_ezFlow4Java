@@ -1254,14 +1254,20 @@
 				A.NUM, 
 				A.PNUM, 
 				A.COMPANYID, 
-				A.WRITERID, 
-				A.DEPTNM, 
-				A.OWNERNM, 
+				A.WRITERID,
+				CASE #v_LANG#
+					WHEN '1' THEN NVL(D.DISPLAYNAME, U.DESCRIPTION)
+					ELSE NVL(D.DISPLAYNAME2, U.DESCRIPTION2)
+					END DEPTNM,
+				CASE #v_LANG#
+					WHEN '1' THEN U.DISPLAYNAME
+					ELSE U.DISPLAYNAME2
+					END OWNERNM,
 				A.TITLE, 
 				A.LOCATION, 
 				A.TIMEDISPLAY, 
 				TO_CHAR(NVL(B.STARTDATETIME, A.STARTDATE), 'YYYY-MM-DD HH24:MI:SS') STARTDATE, 
-				TO_CHAR(NVL(B.ENDDATETIME, A.ENDDATE), 'YYYY-MM-DD HH24:MI:SS') ENDDATE, 
+				TO_CHAR(NVL(B.ENDDATETIME, A.ENDDATE), 'YYYY-MM-DD HH24:MI:SS' ) ENDDATE, 
 				A.ALLDAY, 
 				A.ALERTTIME, 
 				A.CONTENT, 
@@ -1278,7 +1284,10 @@
 				A.SCHEDULEID, 
 				A.TENANT_ID
       		FROM
-      			TBL_RS_SCHEDULE A 
+      			TBL_RS_SCHEDULE A
+			LEFT JOIN
+				TBL_DEPTMASTER D
+				ON D.CN = A.DEPTID AND D.TENANT_ID = A.TENANT_ID
       		LEFT JOIN
       			TBL_RS_SCHEDULEREPETITION B
       			ON
@@ -1289,6 +1298,12 @@
 	      			A.NUM = B.NUM
 	      		AND
 	      			A.TENANT_ID = B.TENANT_ID
+			LEFT JOIN
+				TBL_USERMASTER U
+				ON
+					A.WRITERID = U.CN
+						AND
+					A.TENANT_ID = U.TENANT_ID
       		WHERE  
       			A.COMPANYID = #v_pCompanyID#
       		AND 
@@ -2003,13 +2018,13 @@
 		<![CDATA[
 			INSERT INTO TBL_RS_SCHEDULE ( 
 				OWNERID, NUM, PNUM, COMPANYID, WRITERID, DEPTNM, OWNERNM, TITLE, LOCATION, TIMEDISPLAY, STARTDATE, ENDDATE, ALLDAY, ALERTTIME, CONTENT, IMPORTANCE
-     			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, RETURNFLAG, SCHEDULEID, TENANT_ID
+     			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, RETURNFLAG, SCHEDULEID, TENANT_ID, DEPTID
      		)
      		VALUES ( 
      			RTRIM(#v_P_ownerID#), RTRIM(#v_Num#), RTRIM(#v_P_pnum#), RTRIM(#v_P_companyID#), RTRIM(#v_P_writerID#), RTRIM(#v_P_deptNM#), RTRIM(#v_P_ownerNM#), RTRIM(#v_P_title#)
      			, RTRIM(#v_P_location#), RTRIM(#v_P_timeDisplay#), TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'), TO_DATE(RTRIM(#v_P_endDate#),'YYYY-MM-DD HH24:MI:SS')
      			, RTRIM(#v_P_allDay#), RTRIM(#v_P_alertTime#), #v_P_content#, RTRIM(#v_P_importance#), NVL(#v_P_reFlag#,' '), NVL(#v_P_gresFlag#,' '), TO_DATE(#nowDate#, 'yyyy-MM-dd hh24:MI:ss')
-     			, RTRIM(#v_P_entryList#), NVL(#v_P_characterID#,0), RTRIM(#v_P_attachFlag#), RTRIM(#v_P_Approve#), RTRIM(#v_P_ReturnFlag#), RTRIM(#v_P_ScheduleID#), #tenantID#
+     			, RTRIM(#v_P_entryList#), NVL(#v_P_characterID#,0), RTRIM(#v_P_attachFlag#), RTRIM(#v_P_Approve#), RTRIM(#v_P_ReturnFlag#), RTRIM(#v_P_ScheduleID#), #tenantID#, #deptId#
      		)
 		]]>
 	</insert>

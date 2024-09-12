@@ -1224,7 +1224,7 @@
 <%--                       	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></li> --%>
                     	<c:if test="${applyFlag == 'OK'}">
 	                    	<h2 class="off">	
-	                           	<span class="sub_iconLNB tree_plus"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount" style="color: #0470e4; position: absolute;">(${applyCount})</span>
+	                           	<span class="sub_iconLNB tree_plus"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount">(${applyCount})</span>
 	                        </h2>
                     	</c:if>
 			        </ul>

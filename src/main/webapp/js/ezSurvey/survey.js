@@ -2584,7 +2584,7 @@ var SurveyCreate     = function() {
 					  question["option"] = rankingObj.option;
 					  body = mkRankingQstn(question); break;
 			case 9  : var dropDownObj = mkRankingDropDownObj("dropdown", qstnForm);
-					  if (dropDownObj.error) {alert(SurveyMessages[rankingObj.error]); return;}
+					  if (dropDownObj.error) {alert(SurveyMessages[dropDownObj.error]); return;}
 					  question["option"] = dropDownObj.option;
 					  body = mkDropDownQstn(question); break;
 			default : alert(SurveyMessages.strError); return;
@@ -2820,19 +2820,22 @@ var SurveyCreate     = function() {
 		var optList   = qstnForm.find("." + type + "-select");
 		var optCnt    = optList.length;
 		var option    = [];
+		var optSet    = new Set(); // 중복값 확인.
 		
 		for (var i = 0; i < optCnt; i++) {
 			var optObj   = {};
-			var optValue = replaceAll(optList[i].querySelector("input[class='textInput']").value, "(<(\/?)(script|applet|object)>)", "");
+			var optValue = replaceAll(optList[i].querySelector("input[class='textInput']").value, "(<(\/?)(script|applet|object)>)", "").trim();
 			
 			if (optValue) {
 				optObj["content"] = optValue;
 				optObj["level"]   = i;
 				option.push(optObj);
+				optSet.add(optValue);
 			}
 		}
 		
 		if (option.length < 2) {returnObj['error'] = "strOptErr"; return returnObj;}
+		if (optSet.size != option.length) {returnObj['error'] = "strOptErr1"; return returnObj;}
 		
 		returnObj["option"] = option;
 		return returnObj;
@@ -2931,39 +2934,45 @@ var SurveyCreate     = function() {
 		
 		if (rows) {
 			var row = [];
+			var rowSet = new Set(); // 행 데이터 중복 체크
 			
 			for (var i = 0, len = rows.length; i < len; i++) {
 				var rowObj = {};
-				var rowVal = replaceAll(rows[i].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "");
+				var rowVal = replaceAll(rows[i].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "").trim();
 				
 				if (rowVal) {
 					rowObj["colLevel"] = -1;
 					rowObj["rowLevel"] = row.length;
 					rowObj["content"]  = rowVal;
 					row.push(rowObj);
+					rowSet.add(rowVal);
 				}
 			}
 			
 			if (row.length == 0) {mtrObj["error"] = "strMaxtrix1"; return mtrObj;}
+			if (rowSet.size != row.length) {mtrObj["error"] = "strMaxtrix3"; return mtrObj;}
 			Array.prototype.push.apply(option, row);
 		}
 		
 		if (cols) {
 			var col = [];
+			var colSet = new Set();
 			
 			for (var i = 0, len = cols.length; i < len; i++) {
 				var colObj = {};
-				var colVal = replaceAll(cols[i].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "");
+				var colVal = replaceAll(cols[i].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "").trim();
 				
 				if (colVal) {
 					colObj["colLevel"] = col.length;
 					colObj["rowLevel"] = -1;
 					colObj["content"]  = colVal;
 					col.push(colObj);
+					colSet.add(colVal);
 				}
 			}
 			
 			if (col.length == 0) {mtrObj["error"] = "strMaxtrix2"; return mtrObj;}
+			if (colSet.size != row.length) {mtrObj["error"] = "strMaxtrix4"; return mtrObj;}
 			Array.prototype.push.apply(option, col);
 		}
 		

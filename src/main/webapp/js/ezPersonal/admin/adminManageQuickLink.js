@@ -1,9 +1,10 @@
 function makeList(com) {
+	var companyID = com || document.getElementById('ListCompany').value;
 	$.ajax({
 		url : "/admin/ezPersonal/getQuickLinkList.do",
 		async : false,
 		data:{
-			companyID : com
+			companyID : companyID
 		},
 		dataType : "JSON",
 		success : function(result) {
@@ -560,11 +561,11 @@ function regit() {
 		selecttarget_dialogArguments[0] = g_attendant;
 		selecttarget_dialogArguments[1] = regit_Complete;
 		
-		var SelectTarget = window.open("/admin/ezPersonal/selectTargetQuickLink.do", "SelectTarget", GetOpenWindowfeature(980, 650));
+		var SelectTarget = window.open("/admin/ezPersonal/selectTargetQuickLink.do", "SelectTarget", GetOpenWindowfeature(980, 670));
 		try { SelectTarget.focus(); } catch (e) { }
 	} 
 	else {
-		var config = "status:false;dialogWidth:840px;dialogHeight:480px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(980, 650);
+		var config = "status:false;dialogWidth:840px;dialogHeight:480px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(980, 670);
 		var ret = window.showModalDialog("/admin/ezPersonal/selectTargetQuickLink.do", g_attendant, config);
 		
 		if (ret == undefined)

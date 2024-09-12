@@ -755,7 +755,7 @@ function tableListControl_Week()
                 _span.setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
                 _span.setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
                 _span.setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
-                _span.setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[j]));
+                _span.setAttribute("subject", ConvertEntityReferenceToChar(xmldom.getElementsByTagName("subject")[j].textContent));
                 _span.setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
                 _span.setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
                 _span.setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
@@ -787,7 +787,7 @@ function tableListControl_Week()
                 var pResourceName = "";
                 pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();             
                 _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + escapeHtml(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
-                setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[j]));
+                setNodeText(_span, ConvertEntityReferenceToChar(getNodeText(xmldom.getElementsByTagName("subject")[j])));
                 _td.appendChild(_span2);
                 _td.appendChild(_span);
                 _tr.appendChild(_td);

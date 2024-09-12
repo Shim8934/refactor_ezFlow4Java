@@ -129,7 +129,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			redirectBoardGroupID = leftBoardList.get(0).getBoardGroupId();
 		}
 
-		List<OrganDeptVO> listCompanyBoard = ezBoardAdminService.getListCompanyInBoard(user.getId(), user.getPrimary(), user.getTenantId());
+//		List<OrganDeptVO> listCompanyBoard = ezBoardAdminService.getListCompanyInBoard(user.getId(), user.getPrimary(), user.getTenantId());
 
 		/* 2019-07-09 홍승비 - 게시판 좌측메뉴 게시물 개수 표출 사용여부 플래그 추가 */
         String useLeftCnt = "";
@@ -143,7 +143,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("useLeftCnt", useLeftCnt);
 		model.addAttribute("userCompany", companyID);
-		model.addAttribute("listCompany", listCompanyBoard);
+//		model.addAttribute("listCompany", listCompanyBoard);
 
 		logger.debug("boardLeft ended");
 		return "admin/ezBoard/boardLeft";

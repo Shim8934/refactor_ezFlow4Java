@@ -367,8 +367,8 @@
 			parentId = data.data.folderUpp;
 			
 			namePath(folderPath, originalPath);
-			document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
-			 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+			document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span class='txt_color'>" + fldCnt +" </span>"
+			 + " / " + messages.strLang16 + " <span class='txt_color'> " 
 				+ fileCnt +" </span>";
 			$("#listcount").val(result.listCount).prop("selected", true);
 			capacity.load();

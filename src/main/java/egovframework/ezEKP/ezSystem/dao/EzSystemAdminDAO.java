@@ -13,6 +13,8 @@ import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -280,5 +282,80 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 
 	public void deletePortletSizeAllUser() throws Exception {
 		delete("EzSystemAdminDAO.deletePortletSizeAllUser");
+	}
+	
+	public int getSystemConfigListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getSystemConfigListCount", map);
+	}
+	
+	public int getSystemConfigListCountPopup(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getSystemConfigListCountPopup", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<SystemConfigVO> getSystemConfigList (Map<String, Object> map) throws Exception {
+		return (List<SystemConfigVO>) list("EzSystemAdminDAO.getSystemConfigList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<SystemConfigVO> getSystemConfigListPopup (Map<String, Object> map) throws Exception {
+		return (List<SystemConfigVO>) list("EzSystemAdminDAO.getSystemConfigListPopup", map);
+	}
+	
+	public SystemConfigVO getSystemConfig(Map<String, Object> map) throws Exception {
+		return (SystemConfigVO) select("EzSystemAdminDAO.getSystemConfig", map);
+	}
+	
+	public void deletesyStemConfig(Map<String, Object> map) throws Exception {
+		delete("EzSystemAdminDAO.deletesyStemConfig", map);
+	}
+	
+	public void insertStemConfig(Map<String, Object> map) throws Exception {
+		insert("EzSystemAdminDAO.insertStemConfig", map);
+	}
+	
+	public void updateStemConfig(Map<String, Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateStemConfig", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<SystemConfigTypeVO> getSystemConfigTypeList(Map<String, Object> map) throws Exception {
+		return (List<SystemConfigTypeVO>) list("EzSystemAdminDAO.getSystemConfigTypeList", map);
+	}
+
+	public int getSystemConfigTypeListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getSystemConfigTypeListCount", map);
+	}
+
+	public void deleteSystemConfigType(Map<String, Object> map) throws Exception {
+		delete("EzSystemAdminDAO.deleteSystemConfigType", map);
+	}
+
+	public int checkDuplicateCode(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.checkDuplicateCode", map);
+	}
+
+	public void deleteSystemConfigByTypeCode(Map<String, Object> map) throws Exception {
+		delete("EzSystemAdminDAO.deleteSystemConfigByTypeCode", map);
+	}
+
+	public SystemConfigTypeVO getSystemConfigType(Map<String, Object> map) throws Exception {
+		return (SystemConfigTypeVO) select("EzSystemAdminDAO.getSystemConfigType", map);
+	}
+
+	public int checkDuplicateTypeCode(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.checkDuplicateTypeCode", map);
+	}
+
+	public void insertSystemConfigType(Map<String, Object> map) {
+		insert("EzSystemAdminDAO.insertSystemConfigType", map);
+	}
+
+	public void updateSystemConfigType(Map<String, Object> map) {
+		update("EzSystemAdminDAO.updateSystemConfigType", map);
+	}
+
+	public void disableDeleteSystemConfig(Map<String, Object> map) {
+		update("EzSystemAdminDAO.disableDeleteSystemConfig", map);
 	}
 }

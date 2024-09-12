@@ -225,7 +225,7 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
@@ -373,7 +373,7 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
@@ -516,7 +516,7 @@ public class EzAttitudeAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = request.getParameter("companyId");
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
@@ -540,7 +540,7 @@ public class EzAttitudeAdminController {
 		String attitudetypeId = request.getParameter("typeId");
 		String companyId = request.getParameter("companyId");
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
@@ -697,7 +697,7 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
@@ -821,7 +821,7 @@ public class EzAttitudeAdminController {
 		String selectedUserIdList = request.getParameter("selectedUserIdList");
 		String companyId = request.getParameter("companyId");
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
@@ -951,7 +951,7 @@ public class EzAttitudeAdminController {
 		String offset = userInfo.getOffset();
 		String adminCompany = "";
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
@@ -1111,7 +1111,7 @@ public class EzAttitudeAdminController {
 		String offset = userInfo.getOffset();
 		String adminCompany = "";
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
@@ -1325,7 +1325,7 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
@@ -1539,6 +1539,10 @@ public class EzAttitudeAdminController {
 		//조직도 회사,부서 리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/organtree/depts";
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
+			return "cmm/error/adminDenied";
+		}
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2141,7 +2145,7 @@ public class EzAttitudeAdminController {
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
@@ -3082,7 +3086,7 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";

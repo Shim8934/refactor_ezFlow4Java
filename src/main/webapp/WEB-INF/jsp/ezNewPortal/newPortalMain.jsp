@@ -131,12 +131,17 @@
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
-		<div id="iframeShawdowLayer" class="iframeShawdowLayer" onclick = "hidefunc()" style="display: none; width:100vw; right:0;">
+		<div id="iframeShawdowLayer" class="iframeShawdowLayer" onclick = "hidefunc(this)" style="display: none; width:100vw; right:0;">
 			<div id="myNotificationUL" style="padding: 0px; margin: 0px;  width: 390px; height: 603px; right: 50px; z-index:20; position:absolute;">
 				<iframe id="iframeNoti" style="width:100%; height:603px;" frameborder="0" scrolling="NO" src="/ezNotification/notificationMain.do">
 				</iframe>
 			</div>
 		</div>
+		<div id="noticeLayer" onclick="hidefunc(this)" style="display:none; right: 0px; width: 100%; height: 100vh; background-color: rgba(0, 0, 0, 0.3); z-index: 9999; position: absolute;">
+			<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">
+	        	<iframe id="noticeLayerFrame" style="margin:0; padding:0; border:0 none; width:640px; height:430px; border-radius:20px; box-shadow:0 3px 6px rgba(0,0,0,0.16); background:#fff;" src=""></iframe>
+	    	</div>
+    	</div>
 		<div style="height:60px;"><iframe src="/ezNewPortal/newPortalTopMenu.do" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
 		<iframe src="<c:out value='${mainUrl }'/>" name="main" id="mainFrame" style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;overflow:auto;" frameborder="0" allowfullscreen="true"></iframe>
 		<%-- <div style="height:${topHeight}px"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
@@ -337,8 +342,8 @@
 	    	}
 	    });
 	 	
-	 	function hidefunc() {
-            document.getElementById("iframeShawdowLayer").style.display = "none";
+	 	function hidefunc(element) {
+	 		element.style.display = "none";
         }
 	 	
 	</script>

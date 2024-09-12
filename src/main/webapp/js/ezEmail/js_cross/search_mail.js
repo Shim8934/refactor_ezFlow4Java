@@ -44,22 +44,22 @@ function makePageSelPage() {
     var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
     
     if (totalPage > 1 && pageNum != 1) {
-        PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg first\" onclick= 'return goToPageByNum(1)'></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg first disabled\"></span>";
     }
     
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg prev\" onclick= 'return selbeforeBlock()'></span>";
         }
         else {
-            PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg prev disabled\" ></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg prev disabled\" ></span>";
     }
     
     var MaxNum;
@@ -88,21 +88,21 @@ function makePageSelPage() {
     
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg next\" onclick='return selafterBlock()'></span>";
         }
         else {
-            PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg next disabled\"></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg next disabled\"></span>";
     }
     
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg last\" onclick='return goToPageByNum(" + totalPage + ")'></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg last disabled\"></span>";
     }
     
     PagingHTML += "</div>";

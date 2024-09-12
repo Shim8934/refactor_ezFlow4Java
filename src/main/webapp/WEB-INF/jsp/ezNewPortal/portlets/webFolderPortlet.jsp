@@ -8,14 +8,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>WebFolder Portlet</title>
 </head>
+<script type="text/javascript">
+    $(function() {
+        var portletId = "<c:out value='${portletId }'/>";
+        var portletName = "<c:out value='${portletName }'/>";
+        ellipsisTitle(portletName, portletId);
+    });
+</script>
 <body>
 <article class="webFolder_portlet box_shadow">
     <div class="layDIV">
         <dl class="portlet_title sortablePortlet">
             <dt class="portletText"><c:out value="${portletName}"></c:out></dt>
-            <dd class="portletPlus" onclick="openWebFolderPage()">
-            	<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png">
-            </dd>
+            <dd class="portletPlus plus" onclick="openWebFolderPage()"></dd>
             <dd class="mailGraph" id="webFolderGraph">
             	<p class="mGraph">
             		<span id="usedRate"></span>

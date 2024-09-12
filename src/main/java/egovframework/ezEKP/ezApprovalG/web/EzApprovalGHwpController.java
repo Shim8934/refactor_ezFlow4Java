@@ -1213,6 +1213,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		String attachedDocList = request.getParameter("attachedDocList") == null ? "" : request.getParameter("attachedDocList");
 		
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+		String draftJunGyulFlag = ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId());
+
 		if (nonElecRec == null) {
 			nonElecRec = "";
 		}
@@ -1232,13 +1235,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0,4) + commonUtil.separator;
 		
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
-		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String optIsSplit = ezApprovalGService.getOptionInfo(approvalFlag.equals("S") ? "SA33" : "A33", "001", userInfo, "CODE");
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
@@ -1337,6 +1340,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		model.addAttribute("attachedDocList", attachedDocList);
 		model.addAttribute("tenantID",userInfo.getTenantId());
+		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("draftJunGyulFlag", draftJunGyulFlag);
 		
 		logger.debug("draftuiWHWP ended. formPath:" + formPath);
 		
@@ -1376,6 +1381,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
 		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+		String draftJunGyulFlag=ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId());
+		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -1489,6 +1497,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		// 2024-06-11 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
 		String useReceiptDeptFileAttach = ezCommonService.getTenantConfig("useReceiptDeptFileAttach", userInfo.getTenantId());
 		
+
+		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+
 		if (useAprFilePrvw.equals("1") && useImageConvertServer.equals("1")) {
 			useAprFilePrvw = "1";
 		} else {
@@ -1549,6 +1560,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		/* 2024-06-24 양지혜 - 지정반송 사용 여부 */
 		model.addAttribute("useReturnByDesignation", ezCommonService.getTenantConfig("returnByDesignationUsed", userInfo.getTenantId()));
 		
+		model.addAttribute("draftJunGyulFlag", draftJunGyulFlag);
+		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId())); // 수신처에 "장" 붙이는 옵션
+		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
+		model.addAttribute("signImageType", signImageType);
+
 		logger.debug("approvuiWHWP ended");
 		
 		return "/ezApprovalG/apprGapprovuiWHWP";
@@ -1898,12 +1915,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
-		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String optIsSplit = ezApprovalGService.getOptionInfo(approvalFlag.equals("S") ? "SA33" : "A33", "001", userInfo, "CODE");
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 
 		String docID = request.getParameter("docID");
@@ -2037,6 +2055,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("viewDocFlag", viewDocFlag); // 문서보기 Flag
 		model.addAttribute("orgCompanyID", orgCompanyID);
 
+		model.addAttribute("junGyulFlag", junGyulFlag);
 		
 		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
 
@@ -2052,10 +2071,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
-		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String optIsSplit = ezApprovalGService.getOptionInfo(approvalFlag.equals("S") ? "SA33" : "A33", "001", userInfo, "CODE");
 
 		String docID = request.getParameter("docID");
 		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
@@ -2074,7 +2093,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
 		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
-		
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
 		}
@@ -2141,6 +2161,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		model.addAttribute("junGyulFlag", junGyulFlag);
 		
 		logger.debug("ezDeptRecevUI_WHWP ended");
 		
@@ -2155,6 +2176,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 	    String docID = request.getParameter("docID");
 	    String docHref = request.getParameter("docHref");
+	    String pFormURL = request.getParameter("pFormURL");
 	    String orgDocID = request.getParameter("orgDocID");
 	    String docTitle = request.getParameter("docTitle");
 	    String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
@@ -2211,6 +2233,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("isConvSihang", isConvSihang);
 	    model.addAttribute("recordID", recordID);
 	    model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+	    model.addAttribute("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()));
+	    model.addAttribute("pFormURL", pFormURL);
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수

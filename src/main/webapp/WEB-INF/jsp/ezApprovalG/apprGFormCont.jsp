@@ -30,6 +30,7 @@
 		    var Rtnval = new Array();
 		    var DocFileType = "<c:out value = '${docFileType}'/>";
 		    var onlySihang = "<c:out value='${onlySihang}'/>";
+		    var ext = "<c:out value='${ext}'/>";
 		    var TreeIdx;
 		    var ListIdx;
 		    var RetValue;
@@ -167,6 +168,10 @@
 		            if ((DocFileType == "") || (URL.substr(URL.length - 3, URL.length).toLowerCase() == DocFileType)) {
 		            	if (onlySihang == "YES" && selRow.getAttribute("DATA3") != "004") {
 		            		var pAlertContent = "<spring:message code='ezApprovalG.t191'/>";
+		            		OpenAlertUI(pAlertContent);
+		            		return;
+		            	}else if(ext != "" && URL.indexOf(ext) == -1){
+		            		var pAlertContent = ext + " <spring:message code='ezApprovalG.t1536'/>";
 		            		OpenAlertUI(pAlertContent);
 		            		return;
 		            	}
