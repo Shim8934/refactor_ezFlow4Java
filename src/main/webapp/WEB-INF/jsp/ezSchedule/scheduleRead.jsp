@@ -313,7 +313,13 @@
 						alert("<spring:message code='ezSchedule.t213' />");
 						
 		                try { window.opener.RefreshView() } catch (e) { }
-		
+						
+		                try { // 일정 포틀릿 새로고침
+		                    if (parent.opener != null && parent.opener.refreshSchedulePortlet != undefined) {
+		                    	parent.opener.refreshSchedulePortlet();
+		                    }
+	                    } catch (e) {console.log(e);}
+		                
 		                if (window.opener.reload != undefined)
 		                    window.opener.reload();
 		                window.close();
