@@ -32,6 +32,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
+import egovframework.ezEKP.ezApprovalG.vo.PortletAprInfoVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
 import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.ConnectPortletDTO;
@@ -65,7 +68,9 @@ import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.ChineseCalendar;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.type.PortletAprListType;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
@@ -128,6 +133,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Resource(name  ="EzApprovalGDAO")
+	private EzApprovalGDAO ezApprovalGDAO;
 	
 	// public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset, String lang) throws Exception {
 	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize, int portletId) throws Exception {
@@ -4034,5 +4042,127 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("useColor", useColor);
 		
 		ezNewPortalDAO.setUserColorMode(map);
+	}
+	
+	@Override
+	public JSONArray getPortalApprovalList(PortletAprInfoVO portletAprInfoVO) throws Exception {
+		logger.debug("getPortalApprovalList started.");
+
+		List<ApprGDocListVO> result = new ArrayList<>();
+		JSONArray jsonArray = new JSONArray();
+		PortletAprListType portletAprListType = new PortletAprListType();
+		int listType = Integer.parseInt(portletAprInfoVO.getListType());
+
+		int aprIngEndType = portletAprListType.getAprIngEndType(listType);
+		if (aprIngEndType == 1) {
+			result = ezApprovalGService.portletAprDocList(portletAprInfoVO);
+		} else {
+			result = ezApprovalGService.portletEndAprDocList(portletAprInfoVO);
+		}
+
+		Collections.reverse(result);
+		jsonArray = convertPortletAprList(changeDocHrefToURL(result, portletAprInfoVO.getUserInfo(), listType), aprIngEndType);
+
+		logger.debug("getPortalApprovalList ended.");
+
+		return jsonArray;
+	}
+	
+	private List<ApprGDocListVO> changeDocHrefToURL(List<ApprGDocListVO> apprGDocListVOList, LoginVO userInfo, int listType) {
+		List<ApprGDocListVO> resultList = apprGDocListVOList.stream().peek(docInfo -> {
+			try {
+				docInfo.setHref(getRedirectUrl(docInfo, userInfo, listType));
+				docInfo.setStartDate(getLocalDate(docInfo.getStartDate(), userInfo));
+				docInfo.setEndDate(getLocalDate(docInfo.getEndDate(), userInfo));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).collect(Collectors.toList());
+		return resultList;
+	}
+	
+	private String getLocalDate(String startDate, LoginVO userInfo)  throws Exception {
+		if (startDate != null && !"".equals(startDate)) {
+			startDate = commonUtil.getDateStringInUTC(convertDate(startDate), userInfo.getOffset(), false);
+		}
+		return startDate;
+	}
+
+	public String convertDate(String date) {
+		if (date.trim().equals("")) {
+			return date;
+		}
+		return date.substring(0, 19);
+	}
+
+
+	public String getRedirectUrl(ApprGDocListVO docInfo, LoginVO userInfo, int listType) throws Exception {
+		String redirectUrl = "";
+		String mode = "";
+		String docId = docInfo.getDocID();
+
+		try {
+
+			if (listType == PortletAprListType.AprListType.APPR.intValue()) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("companyID", userInfo.getCompanyID());
+				map.put("v_TENANTID", userInfo.getTenantId());
+				map.put("v_habDocID", docId);
+
+				List<ApprGDocListVO> docState = ezApprovalGDAO.getLastHabYuiDocState(map);
+				String functionType = docState.get(0).getFunctionType();
+				if ("006".equals(functionType)) {
+					mode = "HESU";
+				} else if ("004".equals(functionType)){
+					mode = "BAN";
+				} else {
+					mode = "ING";
+					LoginVO aprMemberUserInfo = commonUtil.getUserForGw(docInfo.getAprMemberID(), userInfo.getServerName());
+					if (aprMemberUserInfo.getId() != null && !"".equals(aprMemberUserInfo.getId())) {
+						userInfo = aprMemberUserInfo;
+						userInfo.setDeptID(docInfo.getAprMemberDeptID());
+					}
+				}
+			} else if (listType == PortletAprListType.AprListType.APPR_PROGRESSING.intValue()) {
+				mode = "PROCESSING";
+			} else if (listType == PortletAprListType.AprListType.APPR_END.intValue()) {
+				mode = "END";
+			} else if (listType == PortletAprListType.AprListType.APPR_GONGRAM.intValue()) {
+				mode = "GONGRAM";
+			}
+			redirectUrl = ezApprovalGService.getRedirectUrl(docId, mode, userInfo);
+		} catch (Exception e) {
+			logger.error("getRedirectUrl error = {}", e.toString());
+			redirectUrl = "";
+		}
+
+		logger.debug("getRedirectUrl redirectUrl = {}", redirectUrl);
+
+
+		return redirectUrl;
+	}
+	
+	
+	public JSONArray convertPortletAprList (List<ApprGDocListVO> apprGDocListVOList, int aprIngEndType) throws Exception  {
+
+		JSONArray jArray = new JSONArray();
+		String draftDate = "";
+		for (ApprGDocListVO apprGDocListVO : apprGDocListVOList) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("docTitle", apprGDocListVO.getDocTitle());
+			jsonObject.put("drafterName", apprGDocListVO.getWriterName());
+			
+			if (aprIngEndType == 1) {
+				draftDate = apprGDocListVO.getStartDate();
+			} else {
+				draftDate = apprGDocListVO.getEndDate();
+			}
+			
+			jsonObject.put("draftDate", draftDate);
+			jsonObject.put("href", apprGDocListVO.getHref());
+			jArray.add(jsonObject);
+		}
+
+		return jArray;
 	}
 }

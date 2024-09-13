@@ -104,7 +104,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.context.ApplicationContext; 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service; 
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile; 
 import org.w3c.dom.Document; 
 import org.w3c.dom.Node; 
@@ -38045,5 +38047,358 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         }
         logger.debug("getDistributeInfo2 ended.");
         return resultList;
+    }
+        
+	@Override
+	public List<ApprGDocListVO> portletAprDocList(PortletAprInfoVO portletAprInfoVO) throws Exception {
+		logger.debug("portletAprDocList started.");
+        LoginVO userInfo = portletAprInfoVO.getUserInfo();
+
+        String userID = userInfo.getId();
+        String userLang = userInfo.getLang();
+        String companyID = userInfo.getCompanyID();
+        int tenantID = userInfo.getTenantId();
+        String offSet = userInfo.getOffset();
+
+        List<ApprGProxyVO> proxyList = getBujaeList(userID, userLang, companyID, tenantID, offSet);
+        portletAprInfoVO.setProxyList(proxyList);
+        portletAprInfoVO.setMineViewYN(ezCommonService.getTenantConfig("MineViewYN", tenantID));
+
+        Map<Object, Object> objectObjectMap = portletAprInfoVO.portletAprInfoConvertToAprMap(portletAprInfoVO);
+        objectObjectMap.put("v_ISDOORREJECTFG", "true");
+
+        logger.debug(portletAprInfoVO.toString());
+        List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getAprDocList(objectObjectMap);
+
+        logger.debug("portletAprDocList ended.");
+
+        return apprGDocListVOList;
+	}
+
+	@Override
+	public List<ApprGDocListVO> portletEndAprDocList(PortletAprInfoVO portletAprInfoVO) throws Exception {
+		logger.debug("portletEndAprDocList started");
+
+        PortletAprInfoVO paramPortletAprInfoVO = setEndAprDocListFlag(portletAprInfoVO);
+        
+        Map<String, Object> map = paramPortletAprInfoVO.portletAprInfoConvertToEndMap(paramPortletAprInfoVO);
+        List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getSearchDocList(map);
+
+        logger.debug("portletEndAprDocList ended");
+        return apprGDocListVOList;
+	}
+	
+	private PortletAprInfoVO setEndAprDocListFlag(PortletAprInfoVO portletAprInfoVO) throws Exception {
+        logger.debug("setEndAprDocListFlag started");
+
+        LoginVO userInfo = portletAprInfoVO.getUserInfo();
+        String userID = userInfo.getId();
+        String userLang = userInfo.getLang();
+        String companyID = userInfo.getCompanyID();
+        int tenantID = userInfo.getTenantId();
+        Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userLang));
+
+        if (userLang.equals("")){
+            userLang = "1";
+        }
+        portletAprInfoVO.setpStrLang(userLang);
+
+
+        boolean publicFlag = false;
+        boolean securityFlag = false;
+        String userSecurityCode = "";
+
+        if (getIsUse("A22", "004", companyID, userLang, tenantID).equals("1")) {
+            publicFlag = true;
+        }
+        if (publicFlag) {
+            portletAprInfoVO.setPubFlag("Y");
+        } else {
+            portletAprInfoVO.setPubFlag("N");
+        }
+
+
+        if (getIsUse("A22", "001", companyID, userLang, tenantID).equals("1")) {
+            securityFlag = true;
+        }
+        if (securityFlag) {
+            userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6", tenantID);
+        }
+        if (userSecurityCode == null || userSecurityCode.equals("")) {
+            userSecurityCode = "0";
+        }
+        portletAprInfoVO.setUserSecCode(userSecurityCode);
+
+
+        String aprFlag = "";
+        String tmpProcessDate1 = Optional.ofNullable(portletAprInfoVO.getProcessDate1()).map(String::toString).orElse("");
+        String tmpProcessDate2 = Optional.ofNullable(portletAprInfoVO.getProcessDate2()).map(String::toString).orElse("");
+
+        if(tmpProcessDate1.length() > 0 || tmpProcessDate2.length() > 0) {
+            aprFlag = "INMYAPPRSEARCH";
+        }
+
+        String containerID = Optional.ofNullable(portletAprInfoVO.getContId()).map(String::toString).orElse("");
+        if(containerID.length() == 0 ) {
+            aprFlag = "";
+        }
+        portletAprInfoVO.setIvAprFlag(aprFlag);
+
+
+        String orderOption1 = Optional.ofNullable(portletAprInfoVO.getOrderOption1()).map(String::toString).orElse("");
+        String sortValue = "";
+
+        if(orderOption1.length() > 0 ) {
+            portletAprInfoVO.setOrderOptionValue(orderOption1.substring(0, orderOption1.trim().length()).toLowerCase());
+                    sortValue = "DESC";
+        } else {
+            sortValue = "ASC";
+        }
+        portletAprInfoVO.setSortValue(sortValue);
+
+
+        String orderOption2 = Optional.ofNullable(portletAprInfoVO.getOrderOption2()).map(String::toString).orElse("");
+        if (orderOption2.length() > 0 ) {
+            portletAprInfoVO.setOrderOptionValue2(orderOption2.substring(0, orderOption2.trim().length()).toLowerCase());
+        }
+
+
+        String approvUser = Optional.ofNullable(portletAprInfoVO.getApprovUser()).map(String::toString).orElse("");
+        portletAprInfoVO.setApprovUser(approvUser.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+
+
+        portletAprInfoVO.setReturnCodeName(messageSource.getMessage("ezApprovalG.t1434", locale));
+        portletAprInfoVO.setIngCodeName(messageSource.getMessage("ezApprovalG.t1422", locale));
+        portletAprInfoVO.setWatingCodeName(messageSource.getMessage("ezApprovalG.t1687", locale));
+        portletAprInfoVO.setEndCodeName(messageSource.getMessage("ezApproval.t854", locale));
+
+        String draftfrom = commonUtil.makeLocalDateToUTCDate(1, true, userInfo.getOffset());
+        String draftto = commonUtil.makeLocalDateToUTCDate(0, false, userInfo.getOffset());
+
+        portletAprInfoVO.setStartDate(draftfrom);
+        portletAprInfoVO.setStartDate2(draftto);
+
+        logger.debug("setEndAprDocListFlag ended");
+        return portletAprInfoVO;
+    }
+	
+	public List<ApprGProxyVO> getBujaeList(String userID, String userLang, String companyID, int tenantID, String offSet) throws Exception {
+        List<ApprGProxyVO> proxyList = new ArrayList<>();
+        String proxyOption = getIsUse("A23", "001", companyID, userLang, tenantID);
+
+        // 대리결재를 사용할 경우.
+        if (proxyOption.equals("1")) {
+            proxyList = getProxyUserInfo(userID, userLang, tenantID, offSet);
+        }
+        return proxyList;
+
+    }
+
+	@Override
+	public String getRedirectUrl(String docID, String mode, LoginVO userInfo) {
+		String redirectUrl = "";
+        mode = mode.toUpperCase();
+        String userId = userInfo.getId();
+        int tenantId = userInfo.getTenantId();
+
+        try {
+
+            if (userInfo.getCompanyID() == null || "".equals(userInfo.getCompanyID())) {
+                userInfo.setCompanyID(ezOrganService.getPropertyValue(userId, "physicaldeliveryofficename", tenantId));
+            }
+
+            if (userInfo.getDeptID() == null || "".equals(userInfo.getDeptID())) {
+                userInfo.setDeptID(ezOrganService.getPropertyValue(userId, "department", tenantId));
+            }
+
+            if ("ING".equals(mode)) {
+                redirectUrl = getAprUrl(docID, userInfo);
+            } else if ("END".equals(mode)) {
+                redirectUrl = getEndUrl(docID, userInfo);
+            } else if ("PROCESSING".equals(mode) || "GONGRAM".equals(mode)) {
+              redirectUrl = getProcessingUrl(docID, userInfo);
+            } else {
+                return "";
+            }
+            logger.debug("getRedirectUrl redirectUrl = {}", redirectUrl);
+            redirectUrl = commonUtil.makeSSOUrl(redirectUrl, userInfo.getTenantId());
+
+        } catch (Exception e) {
+            logger.error("getRedirectUrl error = {}", e);
+        }
+        return redirectUrl;
+	}
+	
+	private String getAprUrl(String docID, LoginVO userInfo) throws Exception {
+
+        String companyID = userInfo.getCompanyID();
+        int tenantID = userInfo.getTenantId();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("docID", docID);
+        map.put("tenantID", tenantID);
+        map.put("companyID", companyID);
+
+        List<ApprGLineTempletVO> nextAprUserInfoList = new ArrayList<>();
+        nextAprUserInfoList = ezApprovalGDAO.getNextAprLineInfo(map);
+
+        String nextUserID = "";
+        String nextUserDeptId = "";
+        String nextUserName = "";
+        String nextUserSN = "";
+        if (nextAprUserInfoList.size() == 1) {
+            nextUserID = nextAprUserInfoList.get(0).getAprMemberID();
+            nextUserDeptId = nextAprUserInfoList.get(0).getAprMemberDeptID();
+            nextUserName = nextAprUserInfoList.get(0).getAprMemberName();
+            nextUserSN = nextAprUserInfoList.get(0).getAprMemberSN();
+        } else {
+            nextUserID = userInfo.getId();
+            nextUserDeptId = userInfo.getDeptID();
+            nextUserName = ezOrganService.getPropertyValue(nextUserID, "displayName", userInfo.getTenantId());
+            for (ApprGLineTempletVO vo : nextAprUserInfoList) {
+            	if(nextUserID.equals(vo.getAprMemberID())) {
+            		nextUserSN = vo.getAprMemberSN();
+            		break;
+            	}
+			}
+        }
+
+        String docHref = getDocHref(docID, "APR", "", "", companyID, tenantID);
+        String isGroupDoc = checkIsGroupDoc(nextUserID, docID, companyID, tenantID);
+        String path = "";
+        String docInfo = getDocInfo(docID, "APR", "ALL", userInfo, companyID, userInfo.getTenantId(), "", "");
+
+		Document xmlDom = commonUtil.convertStringToDocument(docInfo);
+		String docState = xmlDom.getElementsByTagName("DOCSTATE").item(0).getTextContent();
+
+        MultiValueMap queryParam = new LinkedMultiValueMap();
+        if (docHref.endsWith(".mht")) {
+            path = "/ezApprovalG/approvui.do";
+        } else if (docHref.endsWith(".hwp")) {
+            if ("Y".equals(isGroupDoc)) {
+                path = "/ezApprovalG/approvuiAll_WHWP.do";
+            } else {
+                path = "/ezApprovalG/approvuiWHWP.do";
+            }
+        } else {
+            throw new Exception();
+        }
+
+        queryParam.set("docID", docID);
+        queryParam.set("id", nextUserID);
+        queryParam.set("name", nextUserName);
+        queryParam.set("deptID", nextUserDeptId);
+        queryParam.set("allFlag", "0");
+        queryParam.set("mailchk", "Y");
+        queryParam.set("orgCompanyID", companyID);
+        if (!"".equals(docState)) {
+        	queryParam.set("docState", docState);
+        }
+        if("".equals(nextUserSN)) {
+        	queryParam.set("aprMemberSN", nextUserSN);
+        }
+
+        return commonUtil.makeUrl(path, queryParam);
+    }
+	
+	public String getEndUrl(String docID, LoginVO userInfo) throws Exception {
+
+        String nextUserID = userInfo.getId();
+        String companyID = userInfo.getCompanyID();
+        int tenantID = userInfo.getTenantId();
+
+        String docInfoStr = getDocInfo(docID, "END", "ALL", userInfo, companyID, tenantID, "", "");
+        Document docInfo = commonUtil.convertStringToDocument(docInfoStr);
+
+        String docHref = docInfo.getElementsByTagName("HREF").item(0).getTextContent().trim();
+        String docState = docInfo.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
+        String orgDocId = docInfo.getElementsByTagName("ORGDOCID").item(0).getTextContent().trim();
+        String formId = docInfo.getElementsByTagName("FORMID").item(0).getTextContent().trim();
+        String isGroupDoc = checkIsGroupDoc(nextUserID, docID, companyID, tenantID);
+
+        String tempDocHref = docHref;
+        if (tempDocHref.endsWith(".ezd")) {
+            tempDocHref = tempDocHref.replace(".ezd", "");
+        }
+
+        String path = "";
+        MultiValueMap queryParam = new LinkedMultiValueMap();
+        if (tempDocHref.endsWith(".mht")) {
+            path = "/ezApprovalG/contDocView.do";
+        } else if (tempDocHref.endsWith(".hwp")) {
+            if ("Y".equals(isGroupDoc)) {
+                path = "/ezApprovalG/ezViewEndAll_WHWP.do";
+            } else {
+                path = "/ezApprovalG/ezViewEnd_WHWP.do";
+            }
+        } else if (tempDocHref.endsWith(".pdf")) {
+            if ("Y".equals(isGroupDoc)) {
+                path = "/ezApprovalG/ezViewEndAll_WHWP.do";
+            } else {
+                path = "/ezApprovalG/contDocView.do";
+            }
+        } else {
+            throw new Exception();
+        }
+        queryParam.set("docID", docID);
+        queryParam.set("docHref", docHref);
+        queryParam.set("formID", formId);
+        queryParam.set("orgDocID", orgDocId);
+        queryParam.set("docState", docState);
+        queryParam.set("orgCompanyID", companyID);
+
+        return commonUtil.makeUrl(path, queryParam);
+    }
+	
+	private String getProcessingUrl(String docID, LoginVO userInfo) throws Exception {
+
+        String nextUserID = userInfo.getId();
+        String companyID = userInfo.getCompanyID();
+        int tenantID = userInfo.getTenantId();
+
+        String docInfoStr = getDocInfo(docID, "APR", "ALL", userInfo, companyID, tenantID, "", "");
+        Document docInfo = commonUtil.convertStringToDocument(docInfoStr);
+
+        String docHref = docInfo.getElementsByTagName("HREF").item(0).getTextContent().trim();
+        String docState = docInfo.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
+        String orgDocId = docInfo.getElementsByTagName("ORGDOCID").item(0).getTextContent().trim();
+        String opinionFlag = docInfo.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim();
+
+        //String susinAdmin = getSusinAdmin(nextUserID, tenantID);
+
+        String isGroupDoc = checkIsGroupDoc(nextUserID, docID, companyID, tenantID);
+
+
+        String tempDocHref = docHref;
+        if (tempDocHref.endsWith(".ezd")) {
+            tempDocHref = tempDocHref.replace(".ezd", "");
+        }
+
+        String path = "";
+        MultiValueMap queryParam = new LinkedMultiValueMap();
+        if (tempDocHref.endsWith(".mht")) {
+            path = "/ezApprovalG/aprDocView.do";
+        } else if (tempDocHref.endsWith(".hwp")) {
+            if ("Y".equals(isGroupDoc)) {
+                path = "/ezApprovalG/ezviewAprAll_WHWP.do";
+            } else {
+                path = "/ezApprovalG/ezviewAprWHWP.do";
+            }
+        } else {
+            throw new Exception();
+        }
+        queryParam.set("docID", docID);
+        queryParam.set("docHref", docHref);
+        queryParam.set("opinionFlag", opinionFlag);
+        queryParam.set("docState", docState);
+        queryParam.set("listSusin", "");
+        queryParam.set("oDoc", orgDocId);
+        queryParam.set("isOpinion", "OPINION_SHOW");
+        queryParam.set("listType", "3");
+        queryParam.set("CallBackType", "");
+        queryParam.set("ext", docHref.substring(docHref.lastIndexOf(".") + 1));
+        queryParam.set("orgCompanyID", userInfo.getCompanyID());
+
+        return commonUtil.makeUrl(path, queryParam);
     }
 }

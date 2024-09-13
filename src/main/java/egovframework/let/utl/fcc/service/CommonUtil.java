@@ -123,10 +123,12 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
@@ -3406,5 +3408,32 @@ public class CommonUtil {
 		}
 		
         return organAuth;
+	}
+	
+	public String makeLocalDateToUTCDate(int minusYear, boolean isFrom, String offset) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime nowMinusOneYear = now.minusYears(minusYear);
+		String timeStr = isFrom ? " 00:00:00" : " 23:59:59";
+		String utcDate = getDateStringInUTC(nowMinusOneYear.format(formatter) + timeStr, offset, false);
+
+		return utcDate;
+	}
+
+	public String makeUrl(String path, MultiValueMap queryParam) throws Exception {
+		UriComponents uriComponents = UriComponentsBuilder.newInstance()
+				.path(path)
+				.queryParams(queryParam)
+				.build();
+
+		return uriComponents.toUriString();
+	}
+
+	public String makeSSOUrl(String url, int tenantId) throws Exception {
+		if (!"".equals(url) && url != null) {
+			String serverUrl = ezCommonService.getTenantConfig("serverName", tenantId);
+			url = serverUrl + url;
+		}
+		return url;
 	}
 }

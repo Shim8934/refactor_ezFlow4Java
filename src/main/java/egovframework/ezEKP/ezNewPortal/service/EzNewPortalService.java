@@ -14,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.PortletAprInfoVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
@@ -291,4 +292,5 @@ public interface EzNewPortalService {
 	// 2024-08-21 조수빈 - 유저 사용 색상(모드) 저장
 	public void setUserColorMode(String userId, int tenantId, String companyId, int useColor);
 	
+	public JSONArray getPortalApprovalList(PortletAprInfoVO portletAprInfoVO) throws Exception;
 }
