@@ -376,6 +376,11 @@ function settingScheduleCalendar() {
 	$("#scheduleSdatepicker").datepicker('setDate', scheduleSdatepicker);
 }
 
+function refreshSchedulePortlet() {
+	var selectedDate = $('#scheduleSdatepicker').val();
+	getThisSchedule(selectedDate);
+}
+
 
 //function today() {
 //	newDate = new Date();
