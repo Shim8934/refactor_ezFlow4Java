@@ -5385,7 +5385,7 @@
 	]]>
 	</select>
 	
-	<insert id="EzCommonDAO.insertMoibileMenus"  parameterClass="Integer">
+	<insert id="EzCommonDAO.insertMobileMenus"  parameterClass="Integer">
 		<![CDATA[
 		INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode)
 		SELECT
