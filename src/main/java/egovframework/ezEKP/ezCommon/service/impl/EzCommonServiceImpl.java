@@ -4288,7 +4288,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		if (!ezCommonDAO.hasMobileMenus()) {
 			
 			int menuId = ezCommonDAO.getNewMenuId();
-			ezCommonDAO.insertMoibileMenus(menuId);
+			ezCommonDAO.insertMobileMenus(menuId);
 			
 			List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
 			
