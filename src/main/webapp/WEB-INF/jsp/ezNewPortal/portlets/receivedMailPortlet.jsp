@@ -21,7 +21,7 @@
 				<dt class="portletText">
 				</dt>
 				<dd class="portletPlus plus" onclick="Mailmore_btnClick()"></dd>
-				<dd class="mailGraph" id="mailGraph"></dd>
+				<dd class="mailGraph sortablePortlet" id="mailGraph"></dd>
 			</dl>
 			<ul id="MailList" class="portlet_list portletPagingArea"></ul>
 		</div>

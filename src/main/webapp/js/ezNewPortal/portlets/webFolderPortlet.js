@@ -243,10 +243,10 @@ function loadCapacity(webFolderId) {
 			var newSize = getFileSize(usedCapacity);
 			
 			var html = "";
-			html += newSize + "<span>/" + totalCapacity + "G</span>"
+			html += newSize + "<span class='sortablePortlet'>/" + totalCapacity + "G</span>"
 			
 			$("#usingCpacity").html(html);
-
+			
 			$("#usedRate").css("backgroundColor", progressColor);
 			$("#usedRate").stop().animate({width: usedRate + "%"},{duration: 500});
 			
