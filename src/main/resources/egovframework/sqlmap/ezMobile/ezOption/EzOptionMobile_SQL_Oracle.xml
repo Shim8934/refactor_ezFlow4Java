@@ -62,7 +62,7 @@
                 b.extensionattribute2 as userFileUrl,
                 b.mail as email,
                 b.telephonenumber,
-				DATE_FORMAT(b.lastlogin, '%Y-%c-%d %T') as lastLogin,
+				TO_CHAR(b.lastlogin, 'YYYY-MM-DD HH24:MI:SS') AS lastLogin,
 				b.extensionattribute7,
 				b.extensionattribute8
 			FROM
@@ -305,7 +305,7 @@
                 b.extensionattribute2 as userFileUrl,
                 b.mail as email,
 				b.telephonenumber,
-				DATE_FORMAT(b.lastlogin, '%Y-%c-%d %T') as lastLogin,
+				TO_CHAR(b.lastlogin, 'YYYY-MM-DD HH24:MI:SS') AS lastLogin,
 				b.extensionattribute7,
 				b.extensionattribute8
 			FROM
