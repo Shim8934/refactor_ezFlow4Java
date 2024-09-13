@@ -8447,7 +8447,7 @@
 <!-- 	<procedure id="EzApprovalG.getReceiveDocList" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
 <!-- 		{CALL EZSP_GETRECEIVEDOCLIST(#v_MODE#, #v_USERID#, #v_DEPTID#, #v_DEPTIDS#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getReceiveDocList" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+	<select id="EzApprovalG.getReceiveDocList" parameterClass="Map" resultClass="ApprGReceiveDocVO" remapResults="true">
 		SELECT 
 		   * 
 		FROM (
@@ -8484,6 +8484,7 @@
 		      				TBL_EXPAPRDOCINFO.URGENTAPPROVAL,
 		      				TBL_EXPAPRDOCINFO.SEPERATEATTACHXML,
 		      				TBL_APRDOCINFO.COMPANYID,
+							TBL_APRDOCINFO.WRITERID,
 	      					TBL_APRDOCINFO.WRITERNAME,
 	      					TBL_APRDOCINFO.WRITERNAME2,
 							TBL_APRDOCINFO.FORMID
