@@ -1623,8 +1623,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 			// 회사의 포틀릿 정보 가져오기
 			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
 			String boardId = portlet.getPortletBoardId();
-			if (boardId.equals("null")) {
-				data.put("boardId", boardId);
+			if (boardId == null || boardId.isEmpty()) {
+				data.put("boardId", "");
 			} else {
 				data.put("boardId", boardId);
 				data.put("portletName", portlet.getPortletName());
