@@ -103,6 +103,8 @@
 	    		},
 	    		success : function(result) {   			
 	    			 if (result == "OK") {
+	    				 updateWeatherUser(flagValue); //언어 변경에 따른 사용자별 날씨 포틀릿 변경
+	    				 
 	    				 alert("<spring:message code='ezPersonal.t191'/>");
 	    				 window.parent.parent.location = window.parent.parent.location.href;
 	    			} 
@@ -127,6 +129,18 @@
                     }
                 }
             }
+        }
+        
+        function updateWeatherUser(countryCode) {
+        	$.ajax({
+	    		type : "GET",
+	    		url : "/ezNewPortal/weatherPortletChange.do",
+	    		async : false,
+	    		data : {
+	    			cityCode : "none",
+	    			countryCode : countryCode
+	    		}
+	    	});
         }
 
 		</script> 
