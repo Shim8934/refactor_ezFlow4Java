@@ -22,10 +22,10 @@
             <dt class="portletText"><c:out value="${portletName}"></c:out></dt>
             <dd class="portletPlus plus" onclick="openWebFolderPage()"></dd>
             <dd class="mailGraph" id="webFolderGraph">
-            	<p class="mGraph">
-            		<span id="usedRate"></span>
+            	<p class="mGraph sortablePortlet">
+            		<span id="usedRate" class="sortablePortlet"></span>
             	</p>
-           		<span class="mGraph_text" id="usingCpacity">
+           		<span class="mGraph_text sortablePortlet" id="usingCpacity">
            		</span>
             </dd>
         </dl>
