@@ -2692,8 +2692,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (int) select("EzCommonDAO.getNewMenuId");
 	}
 	
-	public void insertMoibileMenus(int menuId) throws Exception {
-		insert("EzCommonDAO.insertMoibileMenus", menuId);
+	public void insertMobileMenus(int menuId) throws Exception {
+		insert("EzCommonDAO.insertMobileMenus", menuId);
 	}
 	
 	public void insertCompanyMobileMenus(Map<String, Object> param) {
