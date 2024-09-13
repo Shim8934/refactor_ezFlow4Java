@@ -59,7 +59,6 @@ function getWebFolderFileList(currentPage) {
 			
 			var fileList = result.data.fileList;
 			var fileLength = fileList.length;
-			fileLength = 0;
 			$(ulEl).empty();
             
 			/* 2023-06-01 홍승비 - 홈 > 웹폴더 포틀릿 > 디자인 개선을 위해 파일은 최대 4개까지만 표출하도록 수정 */
