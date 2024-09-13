@@ -2445,3 +2445,5 @@ div.orbit img{border-radius:5px;}
 
 .notEmptySlider.sliderUrl {cursor: pointer;}
 .notEmptySlider.noSliderUrl {cursor: auto;}
+
+.webFolder_portlet .fileListWrapper.empty{padding-top:0px;}
