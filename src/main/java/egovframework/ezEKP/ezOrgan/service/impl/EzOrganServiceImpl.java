@@ -2880,7 +2880,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         String newCookieStr = String.join("///", decDataArray);
 		loginCookie = egovFileScrty.encryptAES(newCookieStr);
 
-		if (useDbSession) {
+		if (useDbSession && ezSessionId.length() == 36) {
 			loginService.updateSession(ezSessionId, loginCookie);
 
 			loginCookie = ezSessionId;
