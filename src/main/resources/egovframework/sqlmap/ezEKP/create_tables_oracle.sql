@@ -436,7 +436,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"MAIL_BYTES" BLOB, 
 	"HEADER_BYTES" BLOB, 
 	"MAILBOX_ID" NUMBER, 
-	"MAIL_UID" NUMBER
+	"MAIL_UID" NUMBER,
+	"DISK_ID" NUMBER
    ) ;
 --------------------------------------------------------
 --  DDL for Table JAMES_MAIL_DELETED_ID
@@ -9020,6 +9021,8 @@ CREATE TABLE "JMOCHA_APPR_COMP_HISTORY" (
 
   CREATE UNIQUE INDEX "IDX_JAMES_MAIL_BLOB" ON "JAMES_MAIL_BLOB" ("MAILBOX_ID", "MAIL_UID") 
   ;
+  CREATE UNIQUE INDEX "JAMES_MAIL_BLOB_DISK_ID_IDX" ON "JAMES_MAIL_BLOB" ("DISK_ID")
+  ;
 --------------------------------------------------------
 --  DDL for Index IDX_JAMES_MAIL_USERFLAG
 --------------------------------------------------------
@@ -13188,6 +13191,14 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE TRIGGER trigger_mail_deleted_id
+AFTER DELETE ON JAMES_MAIL
+FOR EACH ROW
+BEGIN
+    INSERT INTO james_mail_deleted_id (MAILBOX_ID, MAIL_UID) VALUES (:OLD.MAILBOX_ID, :OLD.MAIL_UID);
+END;
+/
+
 --------------------------------------------------------
 --  Constraints for Table APPROVCONNKAMCO
 --------------------------------------------------------
@@ -13250,6 +13261,7 @@ END;
   ALTER TABLE "JAMES_MAIL_BLOB" ADD CONSTRAINT "JAMES_MAIL_BLOB_PK" PRIMARY KEY ("MAIL_BLOB_ID")
   USING INDEX;
   ALTER TABLE "JAMES_MAIL_BLOB" MODIFY ("MAIL_BLOB_ID" NOT NULL ENABLE);
+  ALTER TABLE "JAMES_MAIL_BLOB" MODIFY ("DISK_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JAMES_MAIL_DELETED_ID
 --------------------------------------------------------
