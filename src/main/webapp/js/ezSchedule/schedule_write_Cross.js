@@ -479,6 +479,19 @@ function save_schedule(pageFrom)
 	    	try { window.opener.RefreshView() } catch (e) { }
 	    }
 	    
+	    try { // 바로가기 테마 새로고침
+            if (parent.opener != null && parent.opener.getScheduleList_Top != undefined) {
+            	var selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.select div');
+            	if (!selectedTd) {
+            		selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.main_today div');
+            	}
+            	var selectedDate = selectedTd.getAttribute('dispdate');
+            	parent.opener.getScheduleList_Top(selectedDate, 'P');
+            	parent.opener.openerCalendarMiniView("CalendarMini_Top");	    		
+            	parent.opener.openerCalendarMiniDataSource("Top");
+            }
+        } catch (e) {console.log(e);}
+	    
 	    window.close();
 	}
 }
