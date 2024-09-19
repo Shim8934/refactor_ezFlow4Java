@@ -4199,6 +4199,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
  		
  		// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
  		String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
+ 		
+ 		if (approvalFlag.equals("G")) {
+ 			String nonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+ 			if (!nonElecRec.equals("")) {
+ 				model.addAttribute("nonElecRec", nonElecRec);
+ 			}
+ 		}
 
 		model.addAttribute("editor", editor);
 		model.addAttribute("susinAdmin", susinAdmin);
