@@ -14857,10 +14857,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else if (curAprType.equals(staATChamJo)) {
 			    int i = 0;
 			    do {
-                    map3.put("v_APRMEMBERSN", apprGAprLineVOList2.get(i).getAprMemberSN());
+                    map3.put("v_APRMEMBERSN", apprGAprLineVOList.get(i).getAprMemberSN());
                     ezApprovalGDAO.updateAprLineInfo(map3);
                     i++;
-                } while (staATChamJo.equals(apprGAprLineVOList2.get(i - 1).getAprType()));
+                } while (staATChamJo.equals(apprGAprLineVOList.get(i - 1).getAprType()));
             }
 			
 			ezApprovalGDAO.setAprLineStateBanSongToStay(map);
