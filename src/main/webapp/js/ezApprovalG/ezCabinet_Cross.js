@@ -1335,7 +1335,9 @@ function ViewDoc_onclick_Complete(Rtn) {
         if (tr.length > 0) {
             var selRow = tr[0];
             if (DocList_Flag == "RECORD") {
-                if (AdminYN != "TRUE" && (!g_bRecAdmin)) {
+               // 2024-09-19 전인하 - 결재선에 존재하였던 유저의 경우 기록물대장에서 비공개문서라도 열람이 가능
+               var checkAprLineFlag = CheckAprLine(trim_Cross(selRow.getAttribute("DATA1")));
+               if (AdminYN != "TRUE" && (!g_bRecAdmin) && checkAprLineFlag !== "TRUE") {
                     if (!HasRecReadRight(trim_Cross(selRow.getAttribute("DATA6")), trim_Cross(selRow.getAttribute("DATA8")), UserID)) {
                         OpenAlertUI(strLang580);
                         return "";
