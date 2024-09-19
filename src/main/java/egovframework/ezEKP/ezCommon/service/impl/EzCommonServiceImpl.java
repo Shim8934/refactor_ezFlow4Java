@@ -3826,8 +3826,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				map.put("COLUMN", columns.getColumnNm());
 				map.put("TYPE_MYSQL", columns.getColumnType());
 				map.put("TYPE_ORACLE", columns.getColumnType());
-				map.put("AFTER_MYSQL", columns.getIsNullAble() + columns.getColumnDefault() == null ? "" : " DEFAULT " + columns.getColumnDefault());
-				map.put("AFTER_ORACLE", columns.getIsNullAble() + columns.getColumnDefault() == null ? "" : " DEFAULT " + columns.getColumnDefault());
+				map.put("AFTER", columns.getIsNullAble() + columns.getColumnDefault() == null ? "" : " DEFAULT " + columns.getColumnDefault());
 
 				ezCommonDAO.alterTableAddColumns(map);
 			}
