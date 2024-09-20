@@ -49,7 +49,9 @@
 		.chk_noneDisplay {
 			display:none;
 		}
-		
+		*::-webkit-scrollbar {
+			width: 11px;
+		}
 		</style>
 		<script type="text/javascript">		    
 			var timeZoneStr = "<c:out value='${timeZoneStr}'/>";
