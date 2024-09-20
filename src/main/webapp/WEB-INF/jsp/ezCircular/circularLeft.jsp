@@ -233,11 +233,9 @@
 						if (result.count == "0") {
 							rcnt = "";	
 						} else {
-							rcnt = result.count;
-							// 2023-06-22 황인경 - 디자인 개선 > 회람판 > 좌측메뉴 > 카운트 괄호 추가
-							$("#newCircularCount").html("(" + rcnt + ")");
+							rcnt = "(" + result.count + ")";
 						}
-						//$("#newCircularCount").html("&nbsp;" + rcnt);
+						$("#newCircularCount").html(rcnt);
 					}
 				});
 	        }
