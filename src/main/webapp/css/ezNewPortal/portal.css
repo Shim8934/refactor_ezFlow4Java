@@ -1093,7 +1093,7 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 #theme2Body .section1 .portlet_title{border:none; padding:0px; background:none;}
 #theme2Body .section1 .sec1Layout_btm_left .portlet_title .portletText > span{display:inline-block; width:26px; height:26px; background:url(../../images/ezNewPortal/theme2Img/sec1_noti.svg) no-repeat center / 26px 25px; margin:14px 10px 0 0; vertical-align:top;}
 #theme2Body .section1 .sec1Layout_btm_left .portlet_list{padding:0 20px;}
-#theme2Body .section1 .sec1Layout_btm_left .portlet_list li{padding:4px 0 4px 20px; border:none; line-height:26px; background:url(/images/ezNewPortal/list_bul2.png) no-repeat 7px center; color:#444;}
+#theme2Body .section1 .sec1Layout_btm_left .portlet_list li{padding:4px 0 4px 20px; border:none; line-height:26px; background:url(/images/ezNewPortal/list_bul2.png) no-repeat 7px center; color:#444;height:auto;}
 #theme2Body .section1 .sec1Layout_btm_left .portlet_list li .txt{color:#444; padding-bottom:0; float:left; max-width:calc(100% - 180px);}
 #theme2Body .section1 .sec1Layout_btm_left .portlet_list li .name{float:right; width:55px; text-align:right;}
 #theme2Body .section1 .sec1Layout_middle{overflow:hidden; float:left; padding:0px; margin-left:20px; box-sizing:border-box; background:#fff; border-radius:10px; box-shadow:0 1px 5px rgba(0,0,0,0.1);height:190px;}
