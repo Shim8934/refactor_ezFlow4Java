@@ -286,7 +286,7 @@
 				return;
 			}
 			
-			if (portletMenuId == 4 && boardId == null && portletId != 10) {
+			if (portletMenuId == 4 && boardId == null) {
 				alert("<spring:message code='ezNewPortal.t050' />");
 				return;
 			}
