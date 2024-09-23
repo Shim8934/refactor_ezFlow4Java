@@ -60,9 +60,9 @@
 							strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'><spring:message code='ezBoard.t480'/></td>";
                     	} else {
 	        	            if (strPrimary == "1") {
-								strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME")[i]) + "</td>";
+								strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + escapeHtml(getNodeText(listdom.getElementsByTagName("BOARDNAME")[i])) + "</td>";
 	        	            } else {
-		           		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME2")[i]) + "</td>";
+		           		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + escapeHtml(getNodeText(listdom.getElementsByTagName("BOARDNAME2")[i])) + "</td>";
 	        	            }
                     	}
                     	strHTML += "<td style='width:28%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + parentBoardName[i] + "</td>";
@@ -293,6 +293,16 @@
                 	listview_TR[i].setAttribute("BoardOrder", i);
             	}
         	}
+			function escapeHtml(text) {
+				var map = {
+					'&': '&amp;',
+					'<': '&lt;',
+					'>': '&gt;',
+					'"': '&quot;',
+					"'": '&#039;'
+				};
+				return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+			}
     	</script>
     	<style>
     		.mainlist tr th {border-top:0px}

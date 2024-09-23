@@ -12,6 +12,7 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -4732,8 +4733,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         	
         	List<InternetAddress> to = new ArrayList<InternetAddress>();
         	
-        	String notiRecipientParam = "";
-        	String separator = ";;";
+        	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 			for(CommunityClubVO vo : list) {
 				if (vo.getEmail() != null) {
 		        	InternetAddress to1 = new InternetAddress();
@@ -4746,7 +4746,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		        	
 		        	to.add(to1);
 		        	
-		        	notiRecipientParam += vo.getUserId() + separator;
+		        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+		        	recipientMap.put("userType", "PERSON");
+		        	recipientMap.put("companyId", userInfo.getCompanyID());
+		        	recipientMap.put("cn", vo.getUserId());
+		        	notiRecipientList.add(recipientMap);
 		        	//logger.debug("to = " + vo.getEmail());
 		        }
 			}
@@ -4757,12 +4761,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 				ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, content, false);
 			}
 			
-			if (notiRecipientParam.length() > 0) {
-				notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+			if (notiRecipientList != null && notiRecipientList.size() > 0) {
 				String linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + code;
 	        	String linkUrlMobile = "";
 	        	String notiSubType = "NOTICE";
-				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "COMMUNITY", notiSubType, clubVO.getC_ClubName() + " - 상세 내용은  메일함에서 확인 필요", "popup", "1300", "900", linkUrl, linkUrlMobile, "");
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "COMMUNITY", notiSubType, clubVO.getC_ClubName() + " - 상세 내용은  메일함에서 확인 필요", "popup", "1300", "900", linkUrl, linkUrlMobile, "");
 				logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
 			}
 			
@@ -5002,9 +5005,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardItemVO itemVO = ezCommunityService.getItemXML(boardID, itemID, userInfo);
 		
 		// 2024-04-29 한태훈 > 커뮤니티 통합알림 추가
-		String notiRecipientParam = "";
-		String separator = ";;";
-		
+		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();		
 		// 신규 게시물 등록, 수정 알림에 대한 수신인 ID 리턴 (커뮤니티에 가입승인된 모든 사용자들)
 		if ((pMode.equals("new") && boardProperty.getMailFG_Post() != null && boardProperty.getMailFG_Post().equals("Y")) || (pMode.equals("modify") && boardProperty.getMailFG_Mod() != null && boardProperty.getMailFG_Mod().equals("Y"))) {
 			List<CommunityClubVO> list = ezCommunityService.adminNoticeMailOkGet2(boardProperty.getC_ClubNo(), userInfo.getTenantId());
@@ -5015,8 +5016,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 			        	to1.setPersonal(vo.getUserName(), "UTF-8");
 			        	to1.setAddress(vo.getEmail());
 			        	
-			        	notiRecipientParam += vo.getUserId() + separator;
-			        	
+						Map<String, Object> recipientMap = new HashMap<String, Object>();
+						recipientMap.put("userType", "PERSON");
+						recipientMap.put("companyId", userInfo.getCompanyID());
+						recipientMap.put("cn", vo.getUserId());
+						notiRecipientList.add(recipientMap);
+						
 			        	if (ezPersonalService.hasNotiDiableItem(vo.getUserId(), NotiType.fromString("COMMUNITY_" + pMode.toString()), NotiPlatform.MAIL, userInfo.getTenantId())) {
 							continue;
 						}
@@ -5036,7 +5041,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 				InternetAddress to1 = new InternetAddress();
 				to1.setPersonal(uvo.getDisplayName(), "UTF-8");
 	        	to1.setAddress(uvo.getMail());
-	        	notiRecipientParam += itemVO.getWriterID() + separator;
+	        	
+	        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", userInfo.getCompanyID());
+				recipientMap.put("cn", itemVO.getWriterID());
+				notiRecipientList.add(recipientMap);
 	        	
 	        	if (!ezPersonalService.hasNotiDiableItem(itemVO.getWriterID(), NotiType.fromString("COMMUNITY_COMMENT"), NotiPlatform.MAIL, userInfo.getTenantId())) {
 	        		to.add(to1);
@@ -5134,9 +5144,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
     	String notiSubType = pMode.toUpperCase();
 		
-    	if (notiRecipientParam.length() > 0) {
-			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam , "community", notiSubType, boardProperty.getBoardName() + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
+    	if (notiRecipientList != null && notiRecipientList.size() > 0) {
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "community", notiSubType, boardProperty.getBoardName() + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
 			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
     	}
     	

@@ -3159,12 +3159,14 @@ public class EzEmailUtil {
 		String mailInnerDomainParam = "&inexternalFilter=&mailInnerDomainStr=";
 		String isSecureMail = "&isSecureMail=";
 		String tagNameParam = "&tagName=" + URLEncoder.encode(tagName, "utf-8");
+		String isAttachMail = "&isAttachMail=";
 
 		if(extraMap != null){
 			logger.debug("extraMAP is not null.extraMap:" + extraMap);
 			andorStatus += extraMap.get("andorStatus") == "" ? "and" : extraMap.get("andorStatus");
 			attachStatus += extraMap.get("attachStatus") == "" ? "all" :  extraMap.get("attachStatus");
 			isSecureMail += extraMap.get("useSecureMailFilter");
+			isAttachMail += extraMap.get("useAttachFileFilter");
 
 			//2020-07-16 김은실 - (사조그룹)내부·외부필터 상태값 및 내부기준 도메인
 			if (extraMap.get("inexternalFilter") != null && extraMap.get("mailInnerDomainStr") != null) {
@@ -3197,7 +3199,7 @@ public class EzEmailUtil {
 				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
 				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
-				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam + mailInnerDomainParam + isSecureMail + tagNameParam;
+				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam + mailInnerDomainParam + isSecureMail + tagNameParam + isAttachMail;
 		
 		logger.debug("inputParams=" + inputParams);
 

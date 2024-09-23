@@ -883,11 +883,17 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     }
   
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
-    	openLocation = "/ezApprovalG/draftui.do?formURL=";
-        openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-        openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-        openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
-        
+        var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
+
+        if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+            openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        } else {
+            openLocation = "/ezApprovalG/draftui.do?formURL=";
+            openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        }
+            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
+
 //        // FormBuilder
 //        if (window.reformflag == null) {
 //        	// reformflag null 값이라면
@@ -984,7 +990,11 @@ function openApprovUI(allFlag) {
         		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         	}
         } else {
-            openLocation = "/ezApprovalG/approvui.do?docID=";
+            var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
+            if (isGroupDoc == "Y") // 일괄기안 문서를 여는 경우
+                openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=";
+            else
+                openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2")) + "&aprMemberSN=" + pArgument[4];
@@ -1182,7 +1192,13 @@ function openViewDocInfo(type) {
         	}
         }
         else {
-        	openLocation = "/ezApprovalG/aprDocView.do";
+            var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
+
+            if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+                openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
+            } else {
+        	    openLocation = "/ezApprovalG/aprDocView.do";
+        	}
         }
         openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&docHref=" + encodeURI(pArgument[1]);
         openLocation = openLocation + "&opinionFlag=" + encodeURI(pArgument[2]) + "&docState=" + encodeURI(pArgument[3]) + "&listSusin=" + encodeURI(pArgument[4]) + "&oDoc=" + encodeURI(pArgument[5]);
@@ -1920,7 +1936,7 @@ function makePageSelPage() {
     	period = getDatePeriod(userLang, document.getElementById("sel_year").value, 1, 1, document.getElementById("sel_year").value, 12, 31);
     }
     //document.getElementById("presentcell").innerHTML = " - " + localValue;
-    document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
+    document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
     try {
     	if (ViewLeftCount == "YES" && ($("#sel_status option:selected").val() == "ALL" || $("#sel_status option:selected").val() == undefined)) {
@@ -1969,29 +1985,34 @@ function makePageSelPage() {
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
     if (totalPage > 1 && pageNum != 1) {
-        strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        // strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
         PagingHTML += strtext;
     } else {
-        strtext = "<span class='btnimg'><a >";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        // strtext = "<span class='btnimg'><a >";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        strtext = "<span class='btnimg first disabled'></span>";
         PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            // strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            // strtext = "<span class='btnimg'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            strtext = "<span class='btnimg prev disabled'></span>";
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+        strtext = "<span class='btnimg prev disabled'></span>";
         PagingHTML += strtext;
     }
     var MaxNum;
@@ -2019,30 +2040,35 @@ function makePageSelPage() {
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            // strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            strtext = "<span class='btnimg next' onclick='return selafterBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+            // strtext = "<span class='btnimg'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+            strtext = "<span class='btnimg next disabled'></span>";
 
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+        strtext = "<span class='btnimg next disabled'></span>";
         PagingHTML += strtext;
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif'/></span>";
+        // strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif'/></span>";
+        strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        strtext = "<span class='btnimg last disabled'></span>";
         PagingHTML += strtext;
     }
     PagingHTML += "</div>";
@@ -2903,7 +2929,12 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     var openLocation = "";
     
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
-    	openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        var isGroupDoc = checkIsGroupDoc(pDocSN, "");
+        if (isGroupDoc == "Y") { // 임시저장된 일괄기안 문서를 여는 경우
+            openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        } else {
+    	    openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        }
     	openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
     	

@@ -1068,10 +1068,10 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${listType eq 'recv' }">
-			<span id="mailBoxInfo">&nbsp;<span id="recvCount" style="color: #017BEC;"></span> / <span id="totalCount"></span></span>
+			<span id="mailBoxInfo">&nbsp;<span id="recvCount" class='txt_color'></span> / <span id="totalCount"></span></span>
 		</c:when>
 		<c:otherwise>
-			<span id="mailBoxInfo">&nbsp;<span id="totalCount" style="color: #017BEC;"></span></span>
+			<span id="mailBoxInfo">&nbsp;<span id="totalCount" class='txt_color'></span></span>
 		</c:otherwise>
 	</c:choose>
 	<span class="searchForm">

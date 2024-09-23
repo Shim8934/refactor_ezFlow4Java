@@ -9,6 +9,7 @@ var mainType = {
 	community : "コミュニティ",
 	webfolder : "Webフォルダ",
 	journal : "業務日誌",
+	noti : "お知らせ",
 	etc : "その他"
 }
 
@@ -49,9 +50,7 @@ var subType = {
 		cancel : "承認キャンセル",
 		reject : "承認拒否"
 	},
-	survey : {
-		modify : "修正通知"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "生成承認",
@@ -74,6 +73,9 @@ var subType = {
 	journal : {
 		comment : "コメント登録",
 		recv : "受信通知"
+	},
+	noti : {
+		emergency : "緊急通知"
 	}
 }
 
@@ -89,3 +91,5 @@ subType["community"]["new"] = "新規登録";
 var notiMessages = {
 	strLang1 : '"没有数据."'
 }
+
+var notiDayNames = ["日", "月", "火", "水", "木", "金", "土"];

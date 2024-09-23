@@ -24,6 +24,28 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
+
+			.companySelect {
+				position: relative;
+				display: inline-block;
+				width: 100px; /* 원하는 너비로 조정하세요 */
+			}
+			
+			/* IE10+ 에서 화살표 제거 */
+			.companySelect select::-ms-expand {
+				display: none;
+			}
+
+			/* 크로스 브라우저 화살표 스타일링 */
+			.companySelect::after {
+				content: "\25BC";
+				position: absolute;
+				top: 50%;
+				right: 5px;
+				transform: translateY(-50%);
+				pointer-events: none;
+			}
+			
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
@@ -458,11 +480,11 @@
 	</head>
 	<body class="newLeft">
 	    <div id="left" class="lnb" style="overflow: auto">
-            <select id="ListCompany" class="companySelect" onchange="changeCompany()">
+            <%--<select id="ListCompany" class="companySelect adminBoardLeft" onchange="changeCompany()">
                 <c:forEach var="item" items="${listCompany}">
                     <option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
                 </c:forEach>
-            </select>
+            </select>--%>
             <div class="admin_left_title">
                 <spring:message code="ezBoard.t58" />
             </div>

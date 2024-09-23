@@ -1491,10 +1491,8 @@ function getCurApproverAprLine(type) {
         var pCurrentAprState = getNodeText(dataNodes[12]);
         if ((getNodeText(dataNodes[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5) || (pCurrentAprState == strAprState0))) {
             pAprLineType = getNodeText(dataNodes[11]);
-            if (ext == "mht") {
-            	wAprMemberSN = getNodeText(dataNodes[19]);
-            }
-            
+            wAprMemberSN = getNodeText(dataNodes[19]);
+
             if (approvalFlag == "S") {
             	if (pAprLineType == strAprType4)
                     var pTmpAprLineType = strAprType1;
@@ -2458,7 +2456,7 @@ function SReAprLineSingMapping(ret) {
             field = message.GetListItem(fields, fieldname);
             if (field) {
             	// 합의자 사인 필드만 존재, 합의자명 필드 없음
-            	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+            	if (message.GetListItem(fields, ("habyuisign" + hidx)) != null && message.GetListItem(fields, ("habyuija" + hidx)) == null) {
             		setNodeText(field , OrderName[i]);
             	}
                 //setNodeText(field , OrderName[i]);
@@ -3594,7 +3592,7 @@ function setPublicFlag2() {
 	var PublicText = "";
 	
 	
-	if (PublicType == "Y")
+	if (PublicType == "Y" || PublicType == "B")
 		PublicText = strLang82;
 	else if (PublicType == "N")
 		PublicText = strLang84

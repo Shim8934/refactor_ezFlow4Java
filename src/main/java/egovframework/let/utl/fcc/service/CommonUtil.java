@@ -123,10 +123,12 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
@@ -495,9 +497,7 @@ public class CommonUtil {
 		String decData = "";
 
 		try {
-			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
-
-			if (useDbSession) {
+			if (loginCookie.length() == 36) {
 				String ezSessionId = loginCookie;
 				SessionVO resultVO = loginService.getSession(ezSessionId);
 
@@ -598,7 +598,7 @@ public class CommonUtil {
 	public LoginVO checkAdmin(String loginCookie){
 		try{
 			LoginVO user = userInfo(loginCookie);
-			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId());
+			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
 	
 			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 				return user;
@@ -829,6 +829,11 @@ public class CommonUtil {
 		try {
 			String ip = ClientUtil.getClientIP(request);
 			String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());
+
+			// 2024-09-02 - db 세션 사용 시에는 ip check 생략 함
+			if ("YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"))) {
+				return checkDeptId(decryptedLoginCookie);
+			}
 
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
 			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
@@ -3390,19 +3395,45 @@ public class CommonUtil {
 	public boolean checkTenantConfigBool(int tenantId, String propertyName, String defaultValue) throws Exception {
 		return BooleanUtils.toBoolean(StringUtils.defaultIfBlank(ezCommonService.getTenantConfig(propertyName, tenantId), defaultValue));
 	}
-	public OrganAuth makeOrganAuth(String userId, int tenantId) throws Exception {
+	public OrganAuth makeOrganAuth(String userId, int tenantId, String deptId, String jobId) throws Exception {
 		List<OrganUserVO> allUserinfo = ezOrganService.getAllUserinfo(userId, tenantId);
 		OrganAuth organAuth = new OrganAuth();
-		boolean permissionBasisDeptYN = "Y".equalsIgnoreCase(ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantId));
-
-		if (permissionBasisDeptYN) {
-			for (OrganUserVO user : allUserinfo) {
+		
+		// 현재 권한만 체크하도록 변경
+		for (OrganUserVO user : allUserinfo) {
+			if (user.getDepartment().equalsIgnoreCase(deptId) && user.getJobID().equalsIgnoreCase(jobId)) {
 				organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
+				break;
 			}
-		} else {
-            OrganUserVO user = allUserinfo.get(0);
-            organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
-        }
+		}
+		
         return organAuth;
+	}
+	
+	public String makeLocalDateToUTCDate(int minusYear, boolean isFrom, String offset) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime nowMinusOneYear = now.minusYears(minusYear);
+		String timeStr = isFrom ? " 00:00:00" : " 23:59:59";
+		String utcDate = getDateStringInUTC(nowMinusOneYear.format(formatter) + timeStr, offset, false);
+
+		return utcDate;
+	}
+
+	public String makeUrl(String path, MultiValueMap queryParam) throws Exception {
+		UriComponents uriComponents = UriComponentsBuilder.newInstance()
+				.path(path)
+				.queryParams(queryParam)
+				.build();
+
+		return uriComponents.toUriString();
+	}
+
+	public String makeSSOUrl(String url, int tenantId) throws Exception {
+		if (!"".equals(url) && url != null) {
+			String serverUrl = ezCommonService.getTenantConfig("serverName", tenantId);
+			url = serverUrl + url;
+		}
+		return url;
 	}
 }

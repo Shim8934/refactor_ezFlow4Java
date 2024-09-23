@@ -88,9 +88,9 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 	
 	var portletDiv = document.getElementById(portletId + "Portlet");
 	var portletPagingArea = portletDiv.querySelector('.portletPagingArea');
+	var prevBtn = portletDiv.querySelector('.portlet_list_nav.prev');
+	var nextBtn = portletDiv.querySelector('.portlet_list_nav.next');
 	if (portletPagingArea) {
-		var prevBtn = portletDiv.querySelector('.portlet_list_nav.prev');
-		var nextBtn = portletDiv.querySelector('.portlet_list_nav.next');
 		prevBtn.addEventListener('click', function(event) {
 			portletMovePage(portletId, 'prev');
 		});
@@ -544,6 +544,26 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 					console.log(exception);
 				});
 
+			break;
+		case "connectPortlet" : // 연계 포틀릿 추가
+			if (isReload) {
+				getConnectList();
+			} else {
+				url = "/js/ezNewPortal/portlets/connectPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							initConnectionPortlet(portletId);
+						} catch (err) {
+							console.log(err);
+						}
+
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
 			break;
 	}
 }

@@ -204,12 +204,230 @@ function AprrovMappingSign(ret)
 			signCnt = signCnt + 1;
 		}
 	}
+    if(ret == "BANSONG" && KuyjeType == "001" && approvalFlag == "S") {
+        var pAprMemberSignSN = pAprMemberSN;
+        var signID;
+        var seumyungID;
+        var seumyungdateID;
+
+        signID = "sign" + pAprMemberSignSN;
+        seumyungID = "seumyung" + pAprMemberSignSN;
+        seumyungdateID = "seumyungdate" + pAprMemberSignSN;
+
+        if (message.FieldExist(signID)) {
+            var SContent = strLang4 + "\15" + arr_userinfo[2];
+            message.PutFieldText(signID, SContent);
+            signInfo[signCnt] = signID;
+
+            SignName[signCnt] = signID;
+            SignType[signCnt] = "TEXT";
+            SignContent[signCnt] = SContent;
+            newSignInfo.push(signID);
+
+            signCnt = signCnt + 1;
+        }
+
+        if (message.FieldExist(seumyungID)) {
+            message.PutFieldText(seumyungID, arr_userinfo[5]);
+            signInfo[signCnt] = seumyungID;
+            SignName[signCnt] = seumyungID;
+            SignType[signCnt] = "TEXT";
+            SignContent[signCnt] = arr_userinfo[5];
+            newSignInfo.push(seumyungID);
+
+            signCnt = signCnt + 1;
+        }
+
+        if (message.FieldExist(seumyungdateID)) {
+            message.PutFieldText(seumyungdateID, s);
+            signInfo[signCnt] = seumyungdateID;
+            SignName[signCnt] = seumyungdateID;
+            SignType[signCnt] = "TEXT";
+            SignContent[signCnt] = s;
+            signCnt = signCnt + 1;
+            newSignInfo.push(seumyungdateID);
+        }
+    }
+    else if (pAprLineType == strAprType4 && approvalFlag == "S") { // 4 : 전결
+        var pAprMemberSignSN = pAprMemberSN;
+        var signID;
+        var seumyungID;
+        var seumyungdateID;
+
+        var pSusinSN2 = "";
+        if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N")) {
+            pSusinSN2 = pSusinSN;
+        }
+
+        if (junGyulFlag == "1") {
+            /* 2018-04-27 천성준 - 전결자만 결재칸에 전결 표시 >> 전결자 결재칸에 전결String */
+            signID = pSusinSN2 + "sign" + pAprMemberSignSN;
+
+            if (message.FieldExist(signID)) {
+                message.PutFieldText(signID, strLang6);
+            }
+
+            //최종결재자 인덱스 구하기
+            for (var i=0; i<20; i++) {
+                signID = pSusinSN2 + "sign" + i;
+
+                if (message.FieldExist(signID)) {
+                    LastKyulSN = i;
+                }
+            }
+
+            //최종결재자 결재칸에 싸인
+            signID = pSusinSN2 + "sign" + LastKyulSN;
+            seumyungID = pSusinSN2 + "jikwe" + LastKyulSN;
+            seumyungdateID = pSusinSN2 + "seumyungdate" + LastKyulSN;
+
+            if (message.FieldExist(seumyungdateID)) {
+                message.PutFieldText(seumyungdateID, s);
+            }
+
+            if (message.FieldExist(seumyungID)) {
+                message.PutFieldText(seumyungID, message.GetFieldText(seumyungID) + PositionText);
+            }
+
+            if (message.FieldExist(signID)) {
+                if (ret != "NAME") { //이미지 서명
+                    var strimg;
+                    message.PutFieldText(signID, "");
+
+                    if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                        message.PrependFieldText(signID, strLang8);
+                    }
+
+                    if (!message.FieldExist(seumyungdateID)) {
+                        message.PrependFieldText(signID, OpinionText);
+                    }
+
+                    var contents = OpinionText;
+
+//                        if (signImageType == "NAME") {
+//                            message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSignName_after);
+//                        } else {
+                        message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+//                        }
+                    SignType[signCnt] = "IMAGE";
+                    SignContent[signCnt] = ret+"::"+contents;
+                }
+                else { //문자 서명
+                    var content ="";
+                    if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                        message.PutFieldText(signID, strLang8 + arr_userinfo[2]);
+                        content = strLang8 + arr_userinfo[2];
+                    } else {
+                        message.PutFieldText(signID, arr_userinfo[2]);
+                        content = arr_userinfo[2];
+                    }
+
+                    if (!message.FieldExist(seumyungdateID)) {
+                        message.PrependFieldText(signID, OpinionText);
+                        content = OpinionText + content;
+                    }
+
+                    SignType[signCnt] = "TEXT";
+                    SignContent[signCnt] = content;
+                }
+                signInfo[signCnt] = signID;
+                SignName[signCnt] = signID;
+                signCnt = signCnt + 1
+                SingFlag = false;
+                newSignInfo.push(signID);
+            }
+        } else if (junGyulFlag == "4") {
+            signID = pSusinSN2 + "sign" + pAprMemberSignSN;
+            seumyungID = pSusinSN2 + "jikwe" + pAprMemberSignSN;
+            seumyungdateID = pSusinSN2 + "seumyungdate" + pAprMemberSignSN;
+
+            if (message.FieldExist(seumyungdateID)) {
+                message.PutFieldText(seumyungdateID, s);
+            }
+
+            if (message.FieldExist(seumyungID)) {
+                message.PutFieldText(seumyungID, message.GetFieldText(seumyungID) + PositionText);
+            }
+
+            if (message.FieldExist(signID)) {
+                if (ret != "NAME") { //이미지 서명
+                    var strimg;
+                    message.PutFieldText(signID, "");
+
+                    if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                        message.PrependFieldText(signID, strLang8);
+                    }
+
+                    if (!message.FieldExist(seumyungdateID)) {
+                        message.PrependFieldText(signID, OpinionText);
+                    }
+
+                    message.PrependFieldText(signID, strLang6);
+                    var contents = strLang6 + OpinionText;
+
+                    message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+
+                    SignType[signCnt] = "IMAGE";
+                    SignContent[signCnt] = ret+"::"+contents;
+                }
+                else { // 문자 서명
+                    if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                        message.PutFieldText(signID, strLang8 + arr_userinfo[2]);
+                        contents = strLang8 + arr_userinfo[2];
+                    }
+                    else {
+                        message.PutFieldText(signID, arr_userinfo[2]);
+                        contents = arr_userinfo[2];
+                    }
+
+                    if (!message.FieldExist(seumyungdateID)) {
+                        message.PrependFieldText(signID, OpinionText);
+                        contents = OpinionText + contents;
+                    }
+
+                    message.PrependFieldText(signID, strLang6);
+                    contents = strLang6 + contents;
+
+                    SignType[signCnt] = "TEXT";
+                    SignContent[signCnt] = contents;
+                }
+                signInfo[signCnt] = signID;
+                SignName[signCnt] = signID;
+                signCnt = signCnt + 1
+                SingFlag = false;
+                newSignInfo.push(signID);
+            }
+        }
+        //TODO: junGyulFlag 2,3 일때 처리
+    }
 	else { 
 		var pAprMemberSignSN = pAprMemberSN;
 		var signID;
 		var seumyungID;
 		var seumyungdateID;
 		
+        if (approvalFlag == "S") {
+            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
+                for (i = 1; i <= 20; i++) {
+                    if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N"))
+                        signID = pSusinSN + "sign" + i
+                    else
+                        signID = "sign" + i
+                            
+                    if (message.FieldExist(signID)) {
+                        LastSignNo = i;
+                    }
+                }
+                
+                if (LastKyulSN == pAprMemberSN) {
+                    pAprMemberSignSN = LastSignNo;
+                }
+                
+                if (pAprLineType == strAprType4) {
+                    LastKyulSN = LastSignNo;
+                }
+            }
+        }
 		if(pDraftFlag == "SUSIN")
 		{
 			signID = pSusinSN + "sign" + pAprMemberSignSN;
@@ -560,27 +778,94 @@ function SaveApproveInfo(pApproveFlag) {
 	pDocTitle = message.GetFieldText("doctitle");
 	createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
 
-	if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
-		if (message.FieldExist("receiptnumber")) {
-			createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("receiptnumber"));
-		} else if (message.FieldExist("docnumber")) {
-			createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("docnumber"));
-		} else if (message.FieldExist("be_docnumber")) {
-		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("be_docnumber"));
-		} else if (message.FieldExist("deptshortedname")) {
-		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("deptshortedname"));
-		} else {
-		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
-		}
-	} else {
-		if (message.FieldExist("docnumber"))
-		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("docnumber"));
-		else if (message.FieldExist("be_docnumber"))
-		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("be_docnumber"));
-		else if (message.FieldExist("deptshortedname"))
-		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("deptshortedname"));
-		else
-		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+    if (approvalFlag == 'S' && pApproveFlag == "2") {
+        if (message.FieldExist("opinions")) {
+        	message.PutFieldText("opinions", "");
+        }
+
+//    	if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+//    		if (field) {
+//    			var forTest = getfieldValue(field).slice(-1);
+//    			if (getfieldValue(field).slice(-1) == "-") {
+//    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+//    			} else {
+//    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+//    			}
+//    		} else {
+//    			var field = message.GetListItem(fields, "receiptnumber");
+//    			if (field) {
+//    				var forTest = getfieldValue(field).slice(-1);
+//    				if (getfieldValue(field).slice(-1) == "-") {
+//    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+//    				} else {
+//    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+//    				}
+//    			}
+//    		}
+//    	} else {
+    		if (message.FieldExist("deptshortedname")) {
+    		    var fieldText = message.GetFieldText("deptshortedname");
+    			var forTest = fieldText.slice(-1);
+    			if (forTest == "-") {
+    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", fieldText.substring(0, fieldText.length - 1));
+    			} else {
+    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", fieldText);
+    			}
+    		} else {
+    			if (message.FieldExist("docnumber")) {
+    				var fieldText = message.GetFieldText("deptshortedname");
+                    var forTest = fieldText.slice(-1);
+
+    				/* 2021-08-25 홍승비 - 개인병렬협조/합의자가 반송하는 경우, 테넌트 컨피그 PersonalAgreeReturnType를 체크하여 DOCNO 뒤의 '-' 문자를 지우거나 유지함 */
+    				if (forTest == "-") {
+    					// PersonalAgreeReturnType값이 1인 경우, 개인병렬협조/합의자가 반송해도 다음 결재권자에게 문서를 전달하며 결재가 가능하다.
+    					var personalAgreeReturnType = getPersonalAgreeReturnType();
+    					if (pAprLineType == "009" && personalAgreeReturnType.trim() == "1") {
+    						createNodeAndInsertText(xmlpara, objNode, "DOCNO", fieldText);
+    					} else {
+    						createNodeAndInsertText(xmlpara, objNode, "DOCNO", fieldText.substring(0, fieldText.length - 1));
+    					}
+    				} else {
+    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", fieldText);
+    				}
+    			} else {
+    				if (message.FieldExist("bedocnumber")) {
+                        var fieldText = message.GetFieldText("deptshortedname");
+                        var forTest = fieldText.slice(-1);
+    					if (forTest == "-") {
+    						createNodeAndInsertText(xmlpara, objNode, "DOCNO", fieldText.substring(0, fieldText.length - 1));
+    					} else {
+    						createNodeAndInsertText(xmlpara, objNode, "DOCNO", fieldText);
+    					}
+    				} else {
+    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+    				}
+    			}
+    		}
+//    	}
+    } else {
+        if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+            if (message.FieldExist("receiptnumber")) {
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("receiptnumber"));
+            } else if (message.FieldExist("docnumber")) {
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("docnumber"));
+            } else if (message.FieldExist("be_docnumber")) {
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("be_docnumber"));
+            } else if (message.FieldExist("deptshortedname")) {
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("deptshortedname"));
+            } else {
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+            }
+        } else {
+            if (message.FieldExist("docnumber"))
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("docnumber"));
+            else if (message.FieldExist("be_docnumber"))
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("be_docnumber"));
+            else if (message.FieldExist("deptshortedname"))
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("deptshortedname"));
+            else
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+        }
 	}
 
 	if (pHasAttachYN == "")
@@ -901,6 +1186,389 @@ function CheckDocCellInfo()
 		pSuSinFlag = "Y";
 	
 	pChamJoFlag = "Y";
+}
+
+function SReAprLineSingMapping(ret) {
+    var xmlKuljea, chamjo, hapyuiCnt, SignCnt, referCnt, xmlReDraft
+    var OrderType = new Array();
+    var OrderTypeName = new Array();
+    var OrderDept = new Array();
+    var OrderName = new Array();
+    var OrderStat = new Array();
+    var OrderStatName = new Array();
+    var OrderJobtitle = new Array();
+    var OrderReason = new Array();
+    var reMappingSign = false;
+
+    if (typeof ret == "object") {
+    	xmlKuljea = ret[1];
+    	xmlReDraft = ret[5];
+//    	New_DrawAutoLine(ret[1], pDraftFlag);
+    } else {
+    	reMappingSign = true;
+    	xmlKuljea = ret;
+    }
+
+    var xmldom = createXmlDom();
+    xmldom = loadXMLString(xmlKuljea);
+    var objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+    var findstring;
+    var lastno;
+    var count = objNodes.length;
+    if (message.FieldExist("refer"))
+        message.PutFieldText("refer", "");
+
+    for(i=1;i < 20;i++) {
+        if (message.FieldExist("gongram" + i))
+            message.PutFieldText("gongram" + i, "");
+    }
+
+    for (i = 0; i < count; i++) {
+    	var dataNodes = GetChildNodes(objNodes[i]);
+    	if (reMappingSign) {
+    		var KyljeaOrder = SelectSingleNodeValue(dataNodes[0], "VALUE").trim();
+
+    		OrderType[KyljeaOrder] = SelectSingleNodeValue(dataNodes[0], "DATA11").trim();
+    		OrderTypeName[KyljeaOrder] = SelectSingleNodeValue(dataNodes[4], "VALUE").trim();
+    		OrderName[KyljeaOrder] = SelectSingleNodeValue(dataNodes[1], "VALUE").trim();
+    		OrderDept[KyljeaOrder] = SelectSingleNodeValue(dataNodes[3], "VALUE").trim();
+    		OrderStat[KyljeaOrder] = SelectSingleNodeValue(dataNodes[0], "DATA12").trim();
+    		OrderStatName[KyljeaOrder] = SelectSingleNodeValue(dataNodes[5], "VALUE").trim();
+    		OrderJobtitle[KyljeaOrder] = SelectSingleNodeValue(dataNodes[2], "VALUE").trim();
+    		OrderReason[KyljeaOrder] = SelectSingleNodeValue(dataNodes[0], "DATA7").trim();
+    		lastno = i;
+    	} else {
+    		var KyljeaOrder = getNodeText(dataNodes[0]);
+    		var KyljeaName = getNodeText(dataNodes[1]);
+    		var KyljeaDeptName = getNodeText(dataNodes[3]);
+    		var KyljeaType = getNodeText(dataNodes[16]);
+    		var KyljeaTypeName = getNodeText(dataNodes[4]);
+    		var KyljeaStat = getNodeText(dataNodes[17]);
+    		var KyljeaStatName = getNodeText(dataNodes[5]);
+    		var KyljeaJobtitle = getNodeText(dataNodes[2]);
+    		var ReasonDoNotApprov = getNodeText(dataNodes[12]);
+
+    		OrderType[KyljeaOrder] = KyljeaType;
+    		OrderTypeName[KyljeaOrder] = KyljeaTypeName;
+    		OrderName[KyljeaOrder] = KyljeaName;
+    		OrderDept[KyljeaOrder] = KyljeaDeptName;
+    		OrderStat[KyljeaOrder] = KyljeaStat;
+    		OrderStatName[KyljeaOrder] = KyljeaStatName;
+    		OrderJobtitle[KyljeaOrder] = KyljeaJobtitle;
+    		OrderReason[KyljeaOrder] = ReasonDoNotApprov;
+    		lastno = i;
+    	}
+    }
+
+    if (pDraftFlag != "SUSIN") {
+        lastKyulName = OrderName[LastSignSN];
+        lastKyuljiwee = OrderJobtitle[LastSignSN];
+
+		if (message.FieldExist("lastKyuljikwee"))
+			message.PutFieldText("lastKyuljikwee", lastKyuljiwee);
+
+		if (message.FieldExist("lastKyulName"))
+			message.PutFieldText("lastKyulName", lastKyulName);
+    }
+    else {
+        lastKyulName = OrderName[LastSignSN];
+        lastKyuljiwee = OrderJobtitle[LastSignSN];
+
+		if (message.FieldExist("slastKyuljikwee"))
+			message.PutFieldText("slastKyuljikwee", lastKyulName);
+
+		if (message.FieldExist("slastKyulName"))
+			message.PutFieldText("slastKyulName", lastKyulName);
+    }
+
+    var hapyuiCnt = 1;
+    var startIdx = 0;
+    var IngFlag = false;
+    for (i = 1; i < OrderStat.length; i++) {
+        if ((OrderStat[i] == strAprState1 || OrderStat[i] == strAprState1 == "") && IngFlag) {
+            startIdx = startIdx;
+            break;
+        }
+        else {
+            if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5) {
+                startIdx = startIdx + 1;
+                IngFlag = true;
+            }
+            else if (OrderType[i] != strAprType31 && OrderType[i] != strAprType17 && OrderType[i] != strAprType2 && OrderType[i] != strAprType7 && OrderType[i] != strAprType8 && OrderType[i] != strAprType9 && OrderType[i] != strAprType11 && OrderType[i] != strAprType12)
+                startIdx = startIdx + 1;
+            else if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
+                hapyuiCnt = hapyuiCnt + 1;
+        }
+    }
+
+    var refer = "";
+    referCnt = 1;
+    for (i = 1; i < OrderType.length; i++) {
+        if (OrderType[i] == strAprType7) {
+            if (referCnt == 1) {
+                refer = refer + OrderName[i];
+                referCnt = referCnt + 1
+            }
+            else
+                refer = refer + ", " + OrderName[i];
+        }
+    }
+    if (refer != "") {
+		fieldname = "refer";
+		if (message.FieldExist(fieldname))
+			message.PutFieldText(fieldname, refer);
+    }
+
+    var susinSN = ""
+    if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N")) {
+        susinSN = pSusinSN
+    }
+
+    for (i = startIdx; i <= 20; i++) {
+		fieldname = susinSN + "jikwe" + i
+		if (message.FieldExist(fieldname))
+			message.PutFieldText(fieldname, "");
+
+        fieldname = susinSN + "sign" + i
+        if (message.FieldExist(fieldname))
+            message.PutFieldText(fieldname, " "); /* 2023-04-28 양지혜 - 서명부분에 공백을 삽입하여 Paragraph 2개 생기는 문제 방지  */
+
+        fieldname = susinSN + "seumyungdate" + i
+        if (message.FieldExist(fieldname))
+            message.PutFieldText(fieldname, "");
+
+        fieldname = susinSN + "approdept" + i;
+        if (message.FieldExist(fieldname))
+            message.PutFieldText(fieldname, "");
+    }
+    for (i = 1; i < 50; i++) {
+        name = susinSN + "habyuidate" + i;
+        if (message.FieldExist(name))
+        {
+            if(trim(message.GetFieldText(name)) == "")
+            {
+                name = susinSN + "habyui" + i
+                if (message.FieldExist(name))
+                    message.PutFieldText(name, "");
+
+                name = susinSN + "habyuisign" + i;
+                if (message.FieldExist(name))
+                    message.PutFieldText(name, " ");
+
+                name = susinSN + "habyuipositon" + i;
+                if (message.FieldExist(name))
+                    message.PutFieldText(name, "");
+
+                name = susinSN + "habyuiapprodept" + i;
+                if (message.FieldExist(name))
+                    message.PutFieldText(name, "");
+            }
+        }
+        else
+            break;
+    }
+
+    var idx = startIdx;
+    var hidx = hapyuiCnt;
+    var startOrder = 1;
+    for (i = 1; i < OrderStat.length; i++) {
+        if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
+            break;
+        else
+            startOrder = startOrder + 1;
+    }
+
+    var tempLastSignSN = OrderType.length
+    for (i = 1; i < OrderType.length; i++) {
+        if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40)
+            tempLastSignSN = i;
+    }
+
+    for (i = startOrder; i < OrderJobtitle.length; i++) {
+        if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
+            var j, chkflag;
+            if (count == i || i == tempLastSignSN) {
+                var cnt = 20;
+
+                for (k = 1; k <= cnt; k++) {
+                    if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N"))
+                        signID = pSusinSN + "sign" + k
+                    else
+                        signID = "sign" + k
+
+                    if (message.FieldExist(signID)) {
+                        var LastSignNo1 = k;
+                    }
+                }
+                idx = LastSignNo1;
+            }
+
+            if (junGyulFlag == "4") { // 전결 이후 결재안함(003) 결재자들은 서명칸에 표출하지 않음
+    			if (OrderType[i] == "003") {
+    				continue;
+    			}
+    		}
+
+            if (OrderType[i] == strAprType3) {
+                chkflag = false;
+                for (j = startOrder; j < i; j++) {
+                    if (OrderType[j] == strAprType4) { // 004 전결
+                        chkflag = true;
+                        break;
+                    }
+                }
+
+                if (!chkflag) {
+                    fieldname = susinSN + "jikwe" + idx;
+                    if (message.FieldExist(fieldname))
+                        message.PutFieldText(fieldname, OrderJobtitle[i]);
+
+                    fieldname = susinSN + "sign" + idx;
+                    if (message.FieldExist(fieldname))
+                        message.PutFieldText(fieldname, OrderName[i] + "\15" + OrderReason[i]);
+
+                    fieldname = susinSN + "approdept" + idx;
+                    if (message.FieldExist(fieldname))
+                    	message.PutFieldText(fieldname, OrderDept[i]);
+
+                    idx = idx + 1;
+                    continue;
+                }
+            }
+
+            fieldname = susinSN + "jikwe" + idx;
+            if (message.FieldExist(fieldname)){
+                if (trim(OrderJobtitle[i]) == "") {
+                    message.PutFieldText(fieldname , "");
+                }
+                else
+                    message.PutFieldText(fieldname, OrderJobtitle[i]);
+            }
+
+            /* 2020-07-27 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
+            fieldname = susinSN + "sign" + idx;
+            if (message.FieldExist(fieldname)){
+            	// 서명필드만 존재
+            	if (!message.FieldExist(susinSN + "seumyung" + idx)) {
+            		/* 2022-08-04 홍승비 - 전결인 경우 전결 표시를 함께 부여 (단, draftJunGyulFlag를 체크하여 기안 시점에 '전결' 텍스트를 표출한 경우에만 동일하게 표출함) */
+            		if (draftJunGyulFlag == '1' && OrderType[i] == strAprType4) {
+            			message.PutFieldText(fieldname, strLang6 + "\15" + OrderName[i]);
+            		} else {
+            			message.PutFieldText(fieldname, OrderName[i]);
+            		}
+            	}
+            	// 서명필드 + 결재자명 필드가 함께 존재
+            	else {
+                    message.PutFieldText(fieldname, "[NOSLASH]");
+            	}
+            }
+
+            fieldname = susinSN + "seumyung" + idx;
+            if (message.FieldExist(fieldname)) {
+            	message.PutFieldText(fieldname, OrderName[i]);
+            }
+
+            fieldname = susinSN + "approdept" + idx;
+            if (message.FieldExist(fieldname)) {
+            	message.PutFieldText(fieldname, OrderDept[i]);
+            }
+            idx = idx + 1;
+        }
+
+        if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9) { // 개인순차합의, 개인병렬합의
+            fieldname = susinSN + "habyui" + hidx;
+            if (message.FieldExist(fieldname)) {
+                message.PutFieldText(fieldname, OrderDept[i]);
+            }
+
+            /* 2020-07-27 홍승비 - 합의자명 필드가 존재하지 않는 경우, 합의자 사인 필드에 이름 표출하도록 수정 */
+            fieldname = susinSN + "habyuisign" + hidx;
+            if (message.FieldExist(fieldname)) {
+            	// 합의자 사인 필드만 존재, 합의자명 필드 없음
+            	if (message.FieldExist("habyuija" + hidx)) {
+            		message.PutFieldText(fieldname, OrderName[i]);
+            	}
+            }
+
+            fieldname = susinSN + "habyuija" + hidx;
+            if (message.FieldExist(fieldname)) {
+                message.PutFieldText(fieldname, OrderName[i]);
+            }
+
+            fieldname = susinSN + "habyuipositon" + hidx;
+            if (message.FieldExist(fieldname)) {
+                message.PutFieldText(fieldname, OrderJobtitle[i]);
+            }
+
+            fieldname = susinSN + "habyuiapprodept" + hidx;
+            if (message.FieldExist(fieldname)) {
+                message.PutFieldText(fieldname, OrderDept[i]);
+            }
+            hidx = hidx + 1;
+        }
+
+        if (OrderType[i] == strAprType11 || OrderType[i] == strAprType12) { // 부서순차합의, 부서병렬합의
+        	fieldname = susinSN + "habyui" + hidx;
+            if (message.FieldExist(fieldname)) {
+                message.PutFieldText(fieldname, OrderDept[i]);
+            }
+
+            fieldname = susinSN + "habyuisign" + hidx;
+            if (message.FieldExist(fieldname)) {
+                message.PutFieldText(fieldname, OrderDept[i]);
+            }
+
+            fieldname = susinSN + "habyuipositon" + hidx;
+            if (message.FieldExist(fieldname)) {
+                message.PutFieldText(fieldname, OrderJobtitle[i]);
+            }
+
+            fieldname = susinSN + "habyuiapprodept" + hidx;
+            if (message.FieldExist(fieldname)) {
+                message.PutFieldText(fieldname, OrderDept[i]);
+            }
+            hidx = hidx + 1;
+        }
+    }
+    if (isSplit == "Y")
+        setSignSlash("sign", susinSN);
+
+    if (pADMIN == "N") {
+        if (chkflag)
+            setMenuBar("btnJunKyul", false);
+        else
+            setMenuBar("btnJunKyul", false);
+    }
+}
+
+function setSignSlash(pSignKinds, pSusin) {
+    var i, j;
+    var fieldName;
+    var field, fieldvalue;
+    var tempFieldName;
+    var fields = message.GetFieldsList();
+    for (i = 1; i < 21; i++) {
+        fieldName = pSusin + pSignKinds + i;
+        if (message.FieldExist(fieldName)) {
+            fieldvalue = trim(message.GetFieldText(fieldName));
+            message.MoveToField(fieldName);
+            var act = message.HwpCtrl.CreateAction("CellBorder");
+            var set = act.CreateSet();
+            act.GetDefault(set);
+            if (fieldvalue == "") {
+                set.SetItem("DiagonalType", 1);
+                set.SetItem("SlashFlag", 0x02);
+            }
+            /* 2020-07-24 홍승비 - 전자결재 일반버전의 경우, 서명과 결재자명 필드 구분하도록 수정 */
+            else if (trim(fieldvalue) == "[NOSLASH]") {
+                set.SetItem("SlashFlag", 0x00);
+            	message.PutFieldText(fieldName, " ");
+            }else
+                set.SetItem("SlashFlag", 0x00);
+            
+            act.Execute(set);
+        }
+    }
 }
 
 function ReAprLineSingMapping(ret)
@@ -1404,7 +2072,7 @@ function setRecevInfo(ret) {
         if (recipflag) {
         	if (getNodeText(dataNodes[3]) == "Y") {
 				if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
-					precipent = strLang92;
+					precipent = approvalFlag == "G" ? strLang92 : strLangS68;
 					precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
 				} else {
 					precipent = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
@@ -1414,7 +2082,7 @@ function setRecevInfo(ret) {
             } else {
             	if (isExtDoc == "Y") {
 					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
-						precipent = strLang92;
+						precipent = approvalFlag == "G" ? strLang92 : strLangS68;
 						precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
 					} else {
 						precipent = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
@@ -1423,7 +2091,7 @@ function setRecevInfo(ret) {
                     recipflag = false;
                 } else {
 					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
-						precipent = strLang92;
+						precipent = approvalFlag == "G" ? strLang92 : strLangS68;
 						precipents = getNodeText(dataNodes[0]);
 					} else {
 						precipent = getNodeText(dataNodes[0]);
@@ -1433,7 +2101,7 @@ function setRecevInfo(ret) {
                 }
             }
         } else {
-        	 precipent = strLang92;
+        	 precipent = approvalFlag == "G" ? strLang92 : strLangS68;
 
              if (getNodeText(dataNodes[3]) == "Y") {
                  precipents = precipents + ", " + (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
@@ -1526,7 +2194,7 @@ function setPublicFlag2() {
     if (!message.FieldExist("publication")) return;
     var PublicType = pPublicityYN.substring(0, 1);
 
-    if (PublicType == "Y")
+    if (PublicType == "Y" || PublicType == "B")
         PublicText = strLang82;
     else if (PublicType == "N")
         PublicText = strLang84;

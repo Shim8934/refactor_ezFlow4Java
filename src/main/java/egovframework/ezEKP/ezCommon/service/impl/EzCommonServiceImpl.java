@@ -4052,7 +4052,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addUserDeptHideFlag() throws Exception {
         ezCommonDAO.addUserDeptHideFlag();
     }
-
+    
     @Override
     public void insertGongRamListOption() throws Exception {
         List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
@@ -4103,6 +4103,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterBoardExtentionAttrByteSize() throws Exception {
         ezCommonDAO.alterBoardExtentionAttrByteSize();
     }
+    
     // 2024-08-21 유길상 닷넷 통합알림 컨피그
     @Override
     public void insertDotNetTotalNotificationConfig() throws Exception{
@@ -4120,4 +4121,204 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void updateInProcessJpCodeName3() throws Exception{
     	ezCommonDAO.updateInProcessJpCodeName3();
     }
+
+    @Override
+    public void createTblDistributeinfo() throws Exception {
+        ezCommonDAO.createTblDistributeinfo();
+    }
+    
+    @Override
+    public void createExecutiveTable() throws Exception {
+        ezCommonDAO.createExecutiveTable();
+    }
+    
+    @Override
+    public void createServeyResultviewPermTbl() throws Exception {
+        ezCommonDAO.createServeyResultviewPermTbl();
+    }
+
+    /* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
+    @Override
+    public void addTblFormContainerSN() throws Exception {
+        ezCommonDAO.addTblFormContainerSN();
+    }
+
+	@Override
+    public void insertInitMobileTheme() throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        ezCommonDAO.resetMobileUser(); // 모바일 메인화면 타입 포틀릿으로 통합 "D"
+
+        String[] checkMobileCodes = {"mFixTop", "mFixBottom", "mSchedule", "mResource", "mApprovallist", "mReceivedmail", "mNotice", "mPhotoboard"};
+        
+        int[] menuId = {4, 4, 2, 6, 3, 1, 4, 4};
+        
+        String[] portletUrl = {
+            "/mobile/ezNewPortal/getCustomBoardInfo.do",
+            "/mobile/ezNewPortal/getCustomBoardInfo.do",
+            "/mobile/ezNewPortal/schedulePortlet.do",
+            "/mobile/ezNewPortal/resourcePortlet.do",
+            "/mobile/ezNewPortal/approvalListPortlet.do",
+            "/mobile/ezNewPortal/receivedMailPortlet.do",
+            "/mobile/ezNewPortal/noticePortlet.do",
+            "/mobile/ezNewPortal/photoBoardPortlet.do"
+        };
+
+        String[][] portletNames = {
+            {"고정 포틀릿","fixed portlet","固定ポートレット","固定门户组件","portlet cố định","portlet tetap"},
+            {"고정 포틀릿","fixed portlet","固定ポートレット","固定门户组件","portlet cố định","portlet tetap"},
+            {"일정","Schedule","日程","附表","Schedule","Schedule"},
+            {"자원관리","Resource","設備管理","教学资源","Resource","Resource"},
+            {"결재리스트","Approval List","電子決裁リスト","批准名单","Approval List","Approval List"},
+            {"받은 메일","Mail","受信トレイ","收件邮件","Mail","Mail"},
+            {"공지사항","Notice","お知らせ","公告","Notice","Notice"},
+            {"포토 갤러리","Photo Gallery","フォトギャラリー","相片集","Photo Gallery","Photo Gallery"}
+        };
+        
+        int portletId = ezCommonDAO.getNewPortletId();
+        map.put("webType", "mobile");
+        if ((int)ezCommonDAO.checkPortletCodeString("mFixTop") < 1) { // 모바일 init data 유무 판단
+            ezCommonDAO.insertMobileTheme(); // portal_theme
+            ezCommonDAO.insertMobileFrame(); // portal_frame
+            for (int i = 0;  i < checkMobileCodes.length; i++) {
+                if ((int)ezCommonDAO.checkPortletCodeString(checkMobileCodes[i]) < 1) {
+                    map.put("portletId", portletId);
+                    map.put("menuId", menuId[i]);
+                    map.put("portletUrl", portletUrl[i]);
+                    map.put("connectionUrl", portletUrl[i]);
+                    map.put("portletType", "MG");
+                    map.put("portletUsed", "1");
+                    map.put("defaultOrder", i+1);
+                    map.put("portletOrder", i+1);
+                    map.put("portletCode", checkMobileCodes[i]);
+                    ezCommonDAO.insertPortletWithCode(map); //portal_portlet
+                    
+                    for (int j = 0; j < portletNames[i].length; j++) {
+                        map.put("portletName" + (j + 1), portletNames[i][j]);
+                    }
+                    
+                    // portlet_comp, portlet_name, theme_portlet, portal_portlet_auth
+                    for (int j = 0; j < companyList.size(); j++) {
+                        CompanyInfoVO company = companyList.get(j);
+                        if (company.getCompanyId() != null) {
+                            map.put("companyId", company.getCompanyId());
+                            map.put("tenantId", company.getTenantId());
+                            ezCommonDAO.insertPortletInfoData(map);
+                            ezCommonDAO.insertMobileFrameComp(map);
+                            ezCommonDAO.insertMobileThemeComp(map);
+                        }
+                    }
+                }
+                portletId++;
+            }
+        }
+    }
+
+	@Override
+	public void alterMenuOpenType() throws Exception {
+		ezCommonDAO.alterMenuOpenType();
+	}
+	
+	@Override
+	public void createSystemConfig() throws Exception {
+		logger.debug("createSystemConfig started");
+		ezCommonDAO.createTblSystemConfig();
+		ezCommonDAO.createTblSystemConfigType();
+		ezCommonDAO.addConnectionIDtoTblPortalPortletComp();
+		logger.debug("createSystemConfig ended");
+	}
+
+	@Override
+	public void createConnectionMenu() throws Exception {
+		logger.debug("createConnectionMenu started");
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		
+		String connectMenuId = ezCommonDAO.checkConnectionMenu();
+		
+		if (connectMenuId == null) {
+			logger.debug("connectionMenu doesn't exist. add connection menu data...");
+			ezCommonDAO.insertConnectionMenu();
+			for (CompanyInfoVO company : companyList) {
+				if (company.getCompanyId() != null) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("companyId", company.getCompanyId());
+					map.put("tenantId", company.getTenantId());
+					ezCommonDAO.insertConnectMenuInfo(map);
+				}
+			}
+		}
+		logger.debug("createConnectionMenu ended");
+	}
+
+	@Override
+	public void insertStandardSystemConfigData() throws Exception {
+		logger.debug("insertStandardSystemConfigData started");
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		String nowDate = commonUtil.getTodayUTCTime("");
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("nowDate", nowDate);
+				ezCommonDAO.insertStandardSystemConfigData(map);
+			}
+		}
+		
+		logger.debug("insertStandardSystemConfigData ended");
+	}
+
+	@Override
+	public void createEmergencyNotiTable() throws Exception {
+		logger.debug("createEmergencyNotiTable started");
+		
+		ezCommonDAO.createTblNotiEmergencyCompany();
+		ezCommonDAO.createTblNotiEmergencyItem();
+		ezCommonDAO.createTblNotiEmergencyPermission();
+		
+		logger.debug("createEmergencyNotiTable ended");
+	}
+	
+	// 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
+	public void insertMobileToggleMenus() throws Exception {
+		logger.debug("insertMobileToggleMenus started.");
+		
+		// menu_type이 'MG'인 데이터가 있는지 확인 (연계인 -1 제외)
+		if (!ezCommonDAO.hasMobileMenus()) {
+			
+			int menuId = ezCommonDAO.getNewMenuId();
+			ezCommonDAO.insertMobileMenus(menuId);
+			
+			List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+			
+			for (CompanyInfoVO compVo : companyList) {
+				Map<String, Object> param = new HashMap<>();
+				param.put("companyId", compVo.getCompanyId());
+				param.put("tenantId", compVo.getTenantId());
+				param.put("menuId", menuId);
+				
+				ezCommonDAO.insertCompanyMobileMenus(param);
+				ezCommonDAO.insertCompanyMobileMenuNames(param);
+				ezCommonDAO.insertMobileMenusAuth(param);
+			}
+		}
+		
+		logger.debug("insertMobileToggleMenus ended.");
+	}
+
+	@Override
+	public void alterUseColor() throws Exception {
+		ezCommonDAO.alterUseColor();
+	}
+
+	@Override
+	public void updateThemeData() throws Exception {
+		ezCommonDAO.updateThemeData();
+	}
+
+    @Override
+    public void createRsScheduleDeptIdColumn() throws Exception {
+        ezCommonDAO.createRsScheduleDeptIdColumn();
+    } 
 }

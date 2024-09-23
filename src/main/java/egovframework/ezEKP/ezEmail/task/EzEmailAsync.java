@@ -207,7 +207,7 @@ public class EzEmailAsync {
 			String timeZone = ezCommonService.selectUserGetTimeZone(survey.getCreatorId(), survey.getTenantId());
 			System.out.println("timezone" + timeZone);
 			String[] timeZoneArr = timeZone.split("\\|");
-			realTimeZone = " ( GMT | " + timeZoneArr[1] + " )";
+			realTimeZone = " ( UTC | " + timeZoneArr[1] + " )";
 			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

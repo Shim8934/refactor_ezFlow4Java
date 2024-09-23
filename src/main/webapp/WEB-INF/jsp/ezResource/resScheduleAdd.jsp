@@ -118,7 +118,7 @@
 	        	if (cmd == "mod") {
 	        		/* 2018-07-10 김민성 - 자원 수정시 특수문자 처리 */
 	            	document.getElementById("importance1").value = "${importance}";
-	            	document.getElementById("title").value = ConvMakeXMLString("<c:out value='${title}'/>");
+					document.getElementById("title").value = ConvMakeXMLString("<c:out value='${title}' escapeXml='false'/>");
 	            	document.getElementById("loc").value = ConvMakeXMLString("<c:out value='${loc}'/>");
 	            	
 	            	if(allDay == "1") {
@@ -586,7 +586,7 @@
 	    		createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", document.getElementById("importance1").value);
 	    		createNodeAndInsertText(xmlDom, objNode, "ISPUBLIC", "N");
 	    		createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
-	    		createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("title").value);
+				createNodeAndInsertText(xmlDom, objNode, "TITLE", ConvertCharToEntityReference(document.getElementById("title").value));
 	    		createNodeAndInsertText(xmlDom, objNode, "LOCATION", "");
 	    		createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
 	    		
@@ -852,7 +852,7 @@
 						</tr>
 						<tr>
 	         				<th> <spring:message code="ezResource.t224"/></th>
-	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" value="" /></td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
+							<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" value="<c:out value='${title}' escapeXml="false"/>" /></td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
 	       				</tr>
 	       				<c:if test="${useSchedule && cmdStr eq 'add'}">
 	       				<tr>

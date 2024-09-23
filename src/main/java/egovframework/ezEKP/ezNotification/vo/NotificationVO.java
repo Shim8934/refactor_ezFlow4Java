@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezNotification.vo;
 
+import java.util.List;
+import java.util.Map;
+
 public class NotificationVO {
 	/** 알림id **/
 	private int notiSeq;
@@ -41,8 +44,10 @@ public class NotificationVO {
 	private String tenantId;
 	/** 회사 아이디 **/
 	private String companyId;
-	/** 알림 수신자 Id List **/
-	private String recipientIdList;
+	
+	private List<Map<String, Object>> recipient;
+	
+	private String notiBody;
 	
 	public int getNotiSeq() {
 		return notiSeq;
@@ -165,11 +170,17 @@ public class NotificationVO {
 		this.companyId = companyId;
 	}
 	
-	public String getRecipientIdList() {
-		return recipientIdList;
+	public List<Map<String, Object>> getRecipient() {
+		return recipient;
 	}
-	public void setRecipientIdList(String recipientIdList) {
-		this.recipientIdList = recipientIdList;
+	public void setRecipient(List<Map<String, Object>> recipient) {
+		this.recipient = recipient;
+	}
+	public String getNotiBody() {
+		return notiBody;
+	}
+	public void setNotiBody(String notiBody) {
+		this.notiBody = notiBody;
 	}
 	
 	@Override
@@ -181,7 +192,5 @@ public class NotificationVO {
 				+ linkUrlMobile + ", viewType=" + viewType + ", viewWidth=" + viewWidth + ", viewHeight=" + viewHeight
 				+ ", tenantId=" + tenantId + ", companyId=" + companyId + "]";
 	}
-	
-	
 	
 }

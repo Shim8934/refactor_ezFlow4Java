@@ -27,13 +27,15 @@
 			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:12px 10px 0px 0px; padding:0px; width:245px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
 		</style>
 		<script>
+			var useColor = '<c:out value="${useColor}"/>';
 			// UI 스킨 작업용
 			function skin(skinId){
 				var skinLink = "";
 				var skinCss = document.getElementById("skinCss");
 				var mainFrame = window.parent.document.getElementById("mainFrame").contentWindow;
 				var mainSkinCss = mainFrame.document.getElementById("mainSkinCss");
-				var mainSkinLink = document.createElement("link");
+				var notiFrame = window.parent.document.getElementById("iframeNoti").contentWindow;
+				var notiSkinCss = notiFrame.document.getElementById("notiSkinCss");
 				var themeId = mainFrame.document.querySelector(".mainbg");
 
 				if(skinCss){
@@ -49,77 +51,63 @@
 				if(mainSkinCss){
 					mainSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
 				} else {
-					mainSkinLink.id = "mainSkinCss";
-					mainSkinLink.rel = "stylesheet";
-					mainSkinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
-					mainFrame.document.head.appendChild(mainSkinLink);
+					skinLink = document.createElement("link");
+					skinLink.id = "mainSkinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					mainFrame.document.head.appendChild(skinLink);
 				}
 
-				if(skinId == "dark"){
-					document.querySelector(".logo img").src = "/images/ezNewPortal/skin/dark/logo_white.png";
-				} else{
-					document.querySelector(".logo img").src = "/files/upload_portal/Top/Logo/logo.gif";
+				if(notiSkinCss){
+					notiSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					skinLink = document.createElement("link");
+					skinLink.id = "notiSkinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					notiFrame.document.head.appendChild(skinLink);
 				}
 
-				var plusBtn = mainFrame.document.querySelectorAll(".portletPlus");
-				plusBtn.forEach(function(item){
-					var btnImg = item.querySelector("img");
-
-					if(skinId == "dark"){
-						if(btnImg && btnImg.src.includes("/images/ezNewPortal/portlet_Plus")){
-							btnImg.src = "/images/ezNewPortal/skin/dark/portlet_Plus.png";
-						} else if(btnImg && btnImg.src.includes("/images/ezNewPortal/portlet_setting")){
-							btnImg.src = "/images/ezNewPortal/skin/dark/portlet_setting.png";
-						}
-					} else{
-						if(btnImg && btnImg.src.includes("/images/ezNewPortal/skin/dark/portlet_Plus")){
-							if(themeId.id == "theme1Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_Plus1.png";
-							} else if(themeId.id == "theme2Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_Plus2.png";
-							} else if(themeId.id == "theme3Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_Plus3.png";
-							}
-						} else if(btnImg && btnImg.src.includes("/images/ezNewPortal/skin/dark/portlet_setting")){
-							if(themeId.id == "theme1Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_setting1.png";
-							} else if(themeId.id == "theme2Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_setting2.png";
-							} else if(themeId.id == "theme3Body"){
-								btnImg.src = "/images/ezNewPortal/portlet_setting3.png";
-							}
-						}
-					}
-				})
-
-				if(themeId.id == "theme2Body"){
-					var theme2Img = mainFrame.document.querySelectorAll("#theme2Body .writebanner .writebannerDL dt");
-					theme2Img.forEach(function(item){
-						var listImg = item.querySelector("img");
-						if(listImg){
-							if(skinId == "dark"){
-								listImg.src = listImg.src.replace("/images/ezNewPortal/theme2Img","/images/ezNewPortal/skin/dark");
-							} else {
-								listImg.src = listImg.src.replace("/images/ezNewPortal/skin/dark","/images/ezNewPortal/theme2Img");
-							}
-						}
-					})
-
-					var theme2Img2 = mainFrame.document.querySelector("#theme2Body .exellentEmployee .portlet_title .portletText img");
-					if(skinId == "dark"){
-						theme2Img2.src = theme2Img2.src.replace("/images/ezNewPortal/theme2Img","/images/ezNewPortal/skin/dark");
+				if (mainFrame.document.getElementsByName("left")[0]) {
+					var leftFrame = mainFrame.document.getElementsByName("left")[0].contentWindow;
+					var leftSkinCss = leftFrame.document.getElementById("leftSkinCss");
+	
+					if(leftSkinCss){
+						leftSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
 					} else {
-						theme2Img2.src = theme2Img2.src.replace("/images/ezNewPortal/skin/dark","/images/ezNewPortal/theme2Img");
+						skinLink = document.createElement("link");
+						skinLink.id = "leftSkinCss";
+						skinLink.rel = "stylesheet";
+						skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+						leftFrame.document.head.appendChild(skinLink);
+					}
+				}
+				
+				if (mainFrame.document.getElementsByName("right")[0]) {
+					var rightFrame = mainFrame.document.getElementsByName("right")[0].contentWindow;
+					var rightSkinCss = rightFrame.document.getElementById("rightSkinCss");
+	
+					if(rightSkinCss){
+						rightSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					} else {
+						skinLink = document.createElement("link");
+						skinLink.id = "rightSkinCss";
+						skinLink.rel = "stylesheet";
+						skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+						rightFrame.document.head.appendChild(skinLink);
 					}
 				}
 			}
+			
 		</script>
 	</head>
 	<body>
 		<%-- ui 확인용 버튼(추후 삭제 예정)-조기완 --%>
-		<div style="position:absolute; left:50%; top:0; transform:translateX(-50%); z-index:10000; display:none;">
+		<div class="skin_test" style="position:absolute; left:50%; top:0; transform:translateX(-50%); z-index:10000; user-select:none; display:none;">
 			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('');">기본</span>
-			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer;" onclick="skin('dark');">다크</span>
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('dark');">다크</span>
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('blue');">블루</span>
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer;" onclick="skin('red');">레드</span>
 		</div>
 		<header id="top"></header>
 		<div class="lnb">
@@ -130,25 +118,11 @@
 	                <div class="menu_set" id="editBtn">
 	                    <p><spring:message code="ezNewPortal.topMenu.hth09" /></p>
 	                </div>
+
 	                <div class="set_btn" id="editMenuBtn">
 	                    <span id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span><span id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>
 	                </div>
 	            </div>
-
-				<%-- 메인메뉴 위치 html --%>
-				<div class="menu_position">
-					<span class="tit"><spring:message code="ezNewPortal.topMenu.hth10" /></span>
-					<div class="input_radio">
-						<input type="radio" id="menuDispalyTop" name="userMenuDisplayMode" value="0">
-						<label for="menuDispalyTop"><spring:message code="ezNewPortal.topMenu.hth11" /></label>
-					</div>
-					<div class="input_radio">
-						<input type="radio" id="menuDispalyLeft" name="userMenuDisplayMode" value="1">
-						<label for="menuDispalyLeft"><spring:message code="ezNewPortal.topMenu.hth12" /></label>
-					</div>
-				</div>
-				<%-- 메인메뉴 위치 html --%>
-
 	            <ul id="menuListAll" class="menu_list_all">
 	         	</ul>
 	         </div>
@@ -286,14 +260,6 @@
 					menuName: item.menuName,
 				};
 			});
-			
-			var userMenuDisplayModeBtn = document.getElementsByName('userMenuDisplayMode');
-			for (var i = 0; i < userMenuDisplayModeBtn.length; i++) {
-				if (menuDisplayMode == userMenuDisplayModeBtn[i].value) {
-					userMenuDisplayModeBtn[i].checked = true;
-				}
-			}
-			
 		}
 		
 		function leftMainMecuClickEvent(menuUrl, openType) {
@@ -461,7 +427,7 @@
 				} else if (id == 'util_logout') {
 			        subMenuClickEvent('off');
 			        self.top.location.href = url;
-			    } else if (id != 'util_employee_search' && id != 'util_admin') {
+			    } else if (id != 'util_employee_search' && id != 'util_admin' && id != 'util_set') {
 			    	offMenuAll();
 					subMenuClickEvent('off', url);
 				} else {
@@ -485,13 +451,13 @@
 				str += '<li><span class="util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
 				/* str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>'; */
 			    /* 2023-08-29 - 민지수 포탈 > 탑메뉴 > 다국어 > ? 아이콘 클릭시 영어매뉴얼 다운로드 되도록 수정 */
-				if ('${lang}' != '2') str += '<li style="display :none;"><span class="icon_topmenu util_help" id="util_help" title="' + '<spring:message code="ezNewPortal.t007" />' + '"></span></li>';
+				if ('${lang}' != '2') str += '<li style="display :none;"><span class="util_help" id="util_help" title="' + '<spring:message code="ezNewPortal.t007" />' + '"></span></li>';
 				if ('${lang}' == '2') str += '<li><a href="<%= request.getContextPath() %>/files/QST User Guide.pptx"><span class="icon_topmenu util_help" id="util_help" title="' + '<spring:message code="ezNewPortal.t007" />' + '">'+'</span></a></li>';
 				
 				// 통합알림
 				str += '<li id="util_noti"><span class="util_alarm" title="' + '<spring:message code="ezPortal.notification.hth01" />"' + ' onclick="toggleNoti()"><span id="notiin"></span></span></li>';
 				// 퀵메뉴
-				str += '<li><span class="util_quick_menu" id="util_quickmenu" title="퀵메뉴"></span>';
+				str += '<li><span class="util_quick_menu" id="util_quickmenu" title="<spring:message code="ezPersonal.khj1" />"></span>';
                 str += '<div class="quick_menu_list util_div_menu" id="quickMenuContainer"><p><spring:message code="ezPersonal.khj1" /></p><ul id="quickMenuList"></ul></div></li>';
                 
                 // 프로필 정보
@@ -616,7 +582,7 @@
 		} */
 		
 		// 확장버튼 UI 이벤트 함수
-		var subMenuClickEvent = function (type, menuUrl) {
+		var subMenuClickEvent = function (type, menuUrl, openType) {
 			if(type === 'on') {
 				toggleAllMenu(type);
 				
@@ -626,11 +592,14 @@
 				toggleDivMenu(document.querySelector('#profileContainer') ,type);
 				closeNoti(); // 통합알림 팝업창 닫기
 
-				if (menuUrl != undefined && menuUrl.toString().indexOf("http") != -1) {
-					window.open(menuUrl);
-				} else if (menuUrl != null) {
+				if (openType == 1) {
+					window.open(menuUrl, '_blank');
+				} else if (openType == 2) {
+					window.open(menuUrl, '_blank', 'width=1000,height=900');
+				} else if (openType == 3) {
 					window.open(menuUrl, 'main', '');
 				}
+
 				// 취소버튼과 같은 역할
 				var editMenuCancel = document.getElementById('editMenuCancel');
 				editMenuCancel.click();	
@@ -721,7 +690,6 @@
 		
 		var menuReset = function () {
 			HTMLCollection.prototype.forEach = Array.prototype.forEach;
-			$(".menu_position").css("display","flex");	// 메인 메뉴 위치 설정
 			$('#menuListAll li').removeClass("on");							
 			$("#menuListAll .sortable-item").draggable({
 			    revert: "invalid",
@@ -775,9 +743,8 @@
 			// 취소버튼
 			var editMenuCancel = document.getElementById('editMenuCancel');
 			editMenuCancel.addEventListener('click', function() {
-				$(".menu_position").hide();	// 메인 메뉴 위치 설정
+				document.getElementById("editBtn").style.display = "block";
 				document.getElementById('editMenuBtn').style.display = 'none';
-				document.getElementById('editBtn').style.display = 'block';
 				$("#menuAllContainer ul").removeClass("active");
 				
 				var sortedMenu = document.getElementById('menuListAll');
@@ -793,41 +760,18 @@
 			// 저장버튼
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
-				$(".menu_position").hide();	// 메인 메뉴 위치 설정
-				document.getElementById('editBtn').style.display = 'block';
-				document.getElementById('editMenuBtn').style.display = 'none';
-				 $("#menuAllContainer ul").removeClass("active");
+				document.getElementById("editBtn").style.display = "block";
+				document.getElementById('editMenuBtn').style = 'none';
+				$("#menuAllContainer ul").removeClass("active");
 				 
-				var sortedMenu = document.getElementById('menuListAll');
-				sortedMenu.className = 'full_menu_toggleUL';
+				var menuListAll = document.getElementById('menuListAll');
+				menuListAll.className = 'full_menu_toggleUL';
 				
 				$('#menuListAll .sortable-item').draggable("disable");
 				$('#menuListAll .sortable-item').droppable("disable");
 				
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
 				var sortedMenu = document.getElementById('menuListAll').getElementsByClassName('sortable-item');
-				
-				var userMenuDisplayModeBtn = document.getElementsByName('userMenuDisplayMode');
-				for (var i = 0; i < userMenuDisplayModeBtn.length; i++) {
-					if (userMenuDisplayModeBtn[i].checked) {
-						menuDisplayMode = userMenuDisplayModeBtn[i].value;
-						break;
-					}
-				}
-				
-				$.ajax({
-					type: "POST",
-					url: "/ezNewPortal/setUserMenuDisplayMode.do",
-					data:{
-						menuDisplayMode : menuDisplayMode
-					},
-					success: function(result) {
-						
-					},
-					error: function (xhr, status, e){
-						
-					}
-				});
 				
 				var orderObj = [];
 				sortedMenu.forEach(function (item, index) {
@@ -865,39 +809,6 @@
 				}
 				
 			});			
-			
-			// 메뉴 순서 초기화 버튼
-			/* var editcompanyOrder = document.getElementById('editcompanyOrder');
-			editcompanyOrder.addEventListener('click', function() {
- 
-				var elements = document.getElementById('toggleMenu').childNodes;
-	 			Array.prototype.forEach.call(elements, function (item, index) { 				
-					newPortalTopMenu.companyOrder[index] = {
-						menuId: item.id,
-						companyOrder: item.dataset.companyorder*1,
-						iconUrl: newPortalTopMenu.menuListObj['menu_'+item.id].iconUrl,
-						menuName: newPortalTopMenu.menuListObj['menu_'+item.id].menuName,
-						menuUrl: newPortalTopMenu.menuListObj['menu_'+item.id].menuUrl,
-					};
-				});
-	 			
-	 			var temp = [];
-	 			for(var i=0; i<newPortalTopMenu.companyOrder.length; i++ ) {
-	 				for(var j=i; j<newPortalTopMenu.companyOrder.length; j++) {
-	 					if(newPortalTopMenu.companyOrder[i].companyOrder > newPortalTopMenu.companyOrder[j].companyOrder ) {
-	 						temp = newPortalTopMenu.companyOrder[i];
-	 						newPortalTopMenu.companyOrder[i] = newPortalTopMenu.companyOrder[j];
-	 						newPortalTopMenu.companyOrder[j] = temp;
-	 					}
-	 				}
-	 			};
-	 			
-				// 확장메뉴 재배치	
-	 			setExpandMenuList(newPortalTopMenu.companyOrder);
-				
-				// 메뉴 순서 초기화 값 true로 변경
-				newPortalTopMenu.isInitOrder = true;
-			});	 */		
 		}
 		
 		function changePosition(dragElem, dropElem) {
@@ -980,8 +891,7 @@
 			bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 			
 			if (menuDisplayMode == "1") {
-				document.querySelector('#mainMenuListLeft').style.backgroundColor = 'rgba(0, 0, 0, 0)';
-				document.querySelector('#mainMenuListLeft').style.border = "none";
+				document.querySelector('#mainMenuListLeft').classList.add('layer');
 				parent.document.getElementById('mainFrame').style.position = 'static';
 				$('#mainMenuListLeft li').addClass("layer");
 			}
@@ -1525,12 +1435,6 @@
 				var topFrame = parent.document.getElementById('topFrame');
 				document.getElementsByTagName("body")[0].style.backgroundColor = "";
 				topFrame.style.position = "";
-				if (menuDisplayMode == "1") {
-					// document.querySelector('#mainMenuListLeft').style.backgroundColor = '#fff';
-					// document.querySelector('#mainMenuListLeft').style.borderRight = '1px solid #ddd';
-					parent.document.getElementById('mainFrame').style.position = 'relative';
-					$('#mainMenuListLeft li').removeClass("layer");
-				}
 			}
 		}
 		
@@ -1543,6 +1447,12 @@
 				var popup = parent.document.getElementById(popupId);
 				
 				popup.parentNode.removeChild(popup);
+			}
+			
+			if (menuDisplayMode == "1") {
+				document.querySelector('#mainMenuListLeft').classList.remove('layer');
+				parent.document.getElementById('mainFrame').style.position = 'relative';
+				$('#mainMenuListLeft li').removeClass("layer");
 			}
 		}
 		
@@ -1620,9 +1530,8 @@
 		}
  		
  		var showProgress = function(position) {
- 			
  			if (position == "notice") {
- 				document.getElementById("progressPanel").style.height = "60px"; 
+				document.getElementById("progressPanel").style.height = "100%";
  				parent.document.getElementById("popupArea").style.display = "block";
  			} else {
  				document.getElementById("progressPanel").style.height = "100%";
@@ -1639,6 +1548,12 @@
         	if (area === "notice") {
         		parent.document.getElementById("popupArea").style.display = "none";
         	}
+        	
+        	if (menuDisplayMode == "1") {
+				document.querySelector('#mainMenuListLeft').classList.remove('layer');
+				parent.document.getElementById('mainFrame').style.position = 'relative';
+				$('#mainMenuListLeft li').removeClass("layer");
+			}
         }
         
         /* 2022-10-14 홍승비 - 상단 메뉴 확장버튼 클릭하여 body 전체에 회색 영역 표출 시, 상단 메뉴가 아닌 회색 영역을 클릭하는 경우 확장메뉴 숨김처리 */

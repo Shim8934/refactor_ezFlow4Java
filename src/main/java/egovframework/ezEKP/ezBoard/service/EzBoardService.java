@@ -412,4 +412,6 @@ public interface EzBoardService {
 	public List<OrganUserVO> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception;
 
 	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception;
+	
+	public List<HashMap<String, Object>> getNoticePostItemList(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception;
 }

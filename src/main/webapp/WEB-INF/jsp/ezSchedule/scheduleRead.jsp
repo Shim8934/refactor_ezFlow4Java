@@ -312,8 +312,31 @@
 					success: function() {
 						alert("<spring:message code='ezSchedule.t213' />");
 						
-		                try { window.opener.RefreshView() } catch (e) { }
-		
+						try {
+		                	if (window.opener != null && window.opener.RefreshView != undefined) {
+		                		window.opener.RefreshView();
+		                	}
+		                 } catch (e) { }
+		                 
+		                try { // 일정 포틀릿 새로고침
+		                    if (parent.opener != null && parent.opener.refreshSchedulePortlet != undefined) {
+		                    	parent.opener.refreshSchedulePortlet();
+		                    }
+	                    } catch (e) {console.log(e);}
+	                    
+	                    try { // 바로가기 테마 새로고침
+		                    if (parent.opener != null && parent.opener.getScheduleList_Top != undefined) {
+		                    	var selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.select div');
+		                    	if (!selectedTd) {
+		                    		selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.main_today div');
+		                    	}
+		                    	var selectedDate = selectedTd.getAttribute('dispdate');
+		                    	parent.opener.getScheduleList_Top(selectedDate, 'P');
+		                    	parent.opener.openerCalendarMiniView("CalendarMini_Top");	    		
+		                    	parent.opener.openerCalendarMiniDataSource("Top");
+		                    }
+	                    } catch (e) {console.log(e);}
+	                    
 		                if (window.opener.reload != undefined)
 		                    window.opener.reload();
 		                window.close();
@@ -342,8 +365,31 @@
 					success: function() {
 						alert("<spring:message code='ezSchedule.t213' />");
 						
-		                try { window.opener.RefreshView() } catch (e) { }
-		
+		                try {
+		                	if (parent.opener != null && parent.opener.RefreshView != undefined) {
+		                		parent.opener.RefreshView();
+		                	}
+		                 } catch (e) { }
+						
+		                try { // 일정 포틀릿 새로고침
+		                    if (parent.opener != null && parent.opener.refreshSchedulePortlet != undefined) {
+		                    	parent.opener.refreshSchedulePortlet();
+		                    }
+	                    } catch (e) {console.log(e);}
+	                    
+	                    try { // 바로가기 테마 새로고침
+		                    if (parent.opener != null && parent.opener.getScheduleList_Top != undefined) {
+		                    	var selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.select div');
+		                    	if (!selectedTd) {
+		                    		selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.main_today div');
+		                    	}
+		                    	var selectedDate = selectedTd.getAttribute('dispdate');
+		                    	parent.opener.getScheduleList_Top(selectedDate, 'P');
+		                    	parent.opener.openerCalendarMiniView("CalendarMini_Top");	    		
+		                    	parent.opener.openerCalendarMiniDataSource("Top");
+		                    }
+	                    } catch (e) {console.log(e);}
+	                    
 		                if (window.opener.reload != undefined)
 		                    window.opener.reload();
 		                window.close();
@@ -751,7 +797,7 @@
 	                <td style="height:20px">	                    
 	                    <div id="menu">
 	                        <ul>
-	                        	<c:if test="${_editPosible == 'Y'}">
+	                        	<c:if test="${_editPosible == 'Y' && usage == 'Y'}">
 	                                <li>
 	                                	<span onclick="edit_schedule()"><spring:message code='ezSchedule.t302' /></span>
 	                                </li>
@@ -894,7 +940,7 @@
 	                                <spring:message code='ezSchedule.t313' />
 	                            </th>
 	                            <td>
-	                                <div style="word-break: break-all; overflow-y: auto; height: 17px; padding-top: 2px" id="LabelLocation">	                                    
+	                                <div style="word-break: break-all; overflow-y: auto; height: 20px; padding-top: 2px" id="LabelLocation">	                                    
 	                                    <c:out value="${scheduleInfo.location }" />
 	                                </div>
 	                            </td>
@@ -904,7 +950,7 @@
 	                                <spring:message code='ezSchedule.t314' />
 	                            </th>
 	                            <td colspan="3">
-	                                <div style="word-break: break-all; overflow-y: auto; height: 17px;" id="LabelSubject">	                                    
+	                                <div style="word-break: break-all; overflow-y: auto; height: 19px;" id="LabelSubject">	                                    
 	                                    <c:out value="${scheduleInfo.title}" />
 	                                </div>
 	                            </td>

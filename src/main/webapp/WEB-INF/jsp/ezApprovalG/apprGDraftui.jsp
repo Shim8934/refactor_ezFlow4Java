@@ -1133,7 +1133,7 @@
 		        draftFlag = true;
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) { 
-		        	parent.opener.getApprovalList("reject");
+		        	parent.opener.clearAbsence(true);
 		        }
 		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가
 		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
@@ -1156,7 +1156,7 @@
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		      if(pConnKey == "") {
 		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) {
-		        	parent.opener.getApprovalList("reject");
+		        	parent.opener.clearAbsence(true);
 		        }
 		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가--아직 개발중
 		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
@@ -1515,7 +1515,7 @@
 		        var PublicType = pPublicityYN.substring(0, 1);
 
 		        var PublicText = "";
-		        if (PublicType == "Y")
+		        if (PublicType == "Y" || PublicType == "B")
 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
 		        else if (PublicType == "N")
 		            PublicText = "<spring:message code='ezApprovalG.t46'/>";
@@ -1963,7 +1963,9 @@
 			                	tempPublic = "N";
 			                } else if (ret[21].substring(0,1) == "Y") {
 			                	tempPublic = "Y";
-			                }
+			                } else if (ret[21].substring(0,1) == "B") {
+								tempPublic = "B";
+							}
  			                setPublicFlag();
  			                setKeepPeriod();
 			                // setPublicFlag2();

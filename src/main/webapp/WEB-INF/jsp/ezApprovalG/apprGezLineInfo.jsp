@@ -45,7 +45,10 @@
 		    //2023-05-16 임정은 - 공람 회수
 		    var count;
 		    var aprMemberSN;
-		    
+
+			// 의견 모달창을 띄우기 위한 companyID
+			var orgCompanyID = "<c:out value ='${companyID}'/>";
+
 		    window.onload = function () {
 		        try {
 		            var xmlpara = createXmlDom();
@@ -226,9 +229,26 @@
 		        }
 		    }
 		    function lvAprLine_DBSelChange() {
-		        if (pDocInfoValue == "1" || pDocInfoValue == "5")
+		        if (pDocInfoValue == "1" || pDocInfoValue == "5") {
 		            openUserInfo();
+				} else if (pDocInfoValue == "4") { // 의견 탭
+					btnOpinion_onclick();
+				}
 		    }
+			var aprendopinion_dialogArgument = new Array();
+			function btnOpinion_onclick() {
+				var parameter = new Array();
+				parameter[0] = tempDocID;
+				parameter[1] = "Show";
+				parameter[2] = orgCompanyID;
+
+				aprendopinion_dialogArgument[0] = parameter;
+				aprendopinion_dialogArgument[1] = openOpinionUI_Complete;
+				DivPopUpShow(430, 420, "/ezApprovalG/aprEndOpinion.do?resize=true");
+			}
+			function openOpinionUI_Complete() {
+				DivPopUpHidden();
+			}
 		    function openUserInfo() {
 		        var listview = new ListView();
 		        listview.LoadFromID("AprLine");
@@ -452,7 +472,9 @@
        			<c:if test="${approvalFlag == 'G'}">
 	       			<p id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()"><spring:message code='ezApprovalG.t946'/></span></p>
        			</c:if>
+				<c:if test="${docState == '015'}">
        			<input type="button" id="btnWithdraw" name="btnWithdraw" value="<spring:message code='ezApprovalG.LJEAppr03'/>" style="float:right; width:80px; padding:2px; cursor:pointer;" onclick="btnWithdraw_onclick()">
+				</c:if>
        		</div>
        	</div>
        	

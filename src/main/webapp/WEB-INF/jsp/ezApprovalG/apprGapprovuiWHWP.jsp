@@ -21,6 +21,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 	    <script type="text/javascript">
@@ -172,6 +173,18 @@
 			// 2024-06-24 양지혜 - 지정반송 기능 사용여부
 			var useReturnByDesignation = "<c:out value ='${useReturnByDesignation}'/>";
 			
+		    var junGyulFlag = "<c:out value ='${junGyulFlag}'/>";
+			var draftJunGyulFlag = "<c:out value ='${draftJunGyulFlag}'/>"; // 일반버전 서명 remapping 시 전결문자 표출 확인용 (0 : 미표출 / 1 : 표출, default)
+			var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임)
+			var addLastKyulJeYN = "<c:out value ='${addLastKyulJeYN}'/>";
+			var signImageType = "<c:out value ='${signImageType}'/>";
+			var pADMIN = "N";
+			var AprLineArea = 0;
+			var HapyuiArea = 0;
+		  	//회람
+			var type = "ING";
+			var pGongRamDocID = "";
+
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {
@@ -475,7 +488,7 @@
 				        
 				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				        	parent.opener.getApprovalList("doing");
+				        	parent.opener.clearAbsence(true);
 				        }
 				        return; */
 				    }
@@ -496,7 +509,7 @@
 				        
 				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				        	parent.opener.getApprovalList("doing");
+				        	parent.opener.clearAbsence(true);
 				        }
 				        return; */
 				    }
@@ -514,7 +527,7 @@
 				        
 				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				        	parent.opener.getApprovalList("doing");
+				        	parent.opener.clearAbsence(true);
 				        }
 				        return; */
 				    }
@@ -541,7 +554,7 @@
 		        
 		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-		        	parent.opener.getApprovalList("doing");
+		        	parent.opener.clearAbsence(true);
 		        }
 		    }
 		    
@@ -571,25 +584,51 @@
 			function process_AfterOpen() {
 			    getCurApproverAprLine();
 			    pGubun = "8";
-			    
-			    if (pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
-					if (pAprLineType != strAprType8 && pAprLineType != strAprType9) {
-						setMenuBar("btntotaldocinfo", false);
-					}
-			        setMenuBar("btnJunKyul", false);
-			        setMenuBar("btnModAprLine", false);
-			        setMenuBar("btnEdit", false);
-			        setMenuBar("btnDocInfo", false);
-			        setMenuBar("btnFileAttach", false);
-			        setMenuBar("btnAprDocAttach", false);
-			        setMenuBar("btnModAprDept", false);
-			        setMenuBar("btnSetTaskCode", false);
-			        setMenuBar("btnAddSepAttach", false);
-			        pGubun = "10";
-			    }
-			    else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-			        setMenuBar("btnModAprLine", false);
-			        pGubun = "5";
+
+			    if (approvalFlag == "S") {
+                    if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)  {
+                        if (pAprLineType != strAprType8 && pAprLineType != strAprType9) {
+                            setMenuBar("btntotaldocinfo", false);
+                        }
+                        setMenuBar("btnJunKyul", false);
+                        setMenuBar("btnModAprLine", false);
+                        setMenuBar("btnEdit", false);
+                        setMenuBar("btnDocInfo", false);
+                        setMenuBar("btnFileAttach", false);
+                        setMenuBar("btnAprDocAttach", false);
+                        setMenuBar("btnModAprDept", false);
+                        setMenuBar("btnSetTaskCode", false);
+                        setMenuBar("btnAddSepAttach", false);
+                        pGubun = "10";
+                    } else if (pAprLineType == strAprType4) {
+                        setMenuBar("btnJunKyul", false);
+                        setMenuBar("btnModAprLine", false);
+                        setMenuBar("btnModAprDept", false);
+                        setMenuBar("btnEdit", false);
+                        setMenuBar("btnFileAttach", false);
+                        setMenuBar("btnAprDocAttach", false);
+                        pGubun = "14";
+                    }
+                } else {
+                    if (pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
+                        if (pAprLineType != strAprType8 && pAprLineType != strAprType9) {
+                            setMenuBar("btntotaldocinfo", false);
+                        }
+                        setMenuBar("btnJunKyul", false);
+                        setMenuBar("btnModAprLine", false);
+                        setMenuBar("btnEdit", false);
+                        setMenuBar("btnDocInfo", false);
+                        setMenuBar("btnFileAttach", false);
+                        setMenuBar("btnAprDocAttach", false);
+                        setMenuBar("btnModAprDept", false);
+                        setMenuBar("btnSetTaskCode", false);
+                        setMenuBar("btnAddSepAttach", false);
+                        pGubun = "10";
+                    }
+                    else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+                        setMenuBar("btnModAprLine", false);
+                        pGubun = "5";
+                    }
 			    }
 			
 			    if (KuyjeType == "001")
@@ -782,6 +821,69 @@
 			   // Approve -> (openSingUI_Complete) -> Approve_complete 시작
 			   function Approve_complete(ret) {
 				   DivPopUpHidden();
+
+                   var habYuiAprStateFlag = true;
+				   if (approvalFlag == "S") {
+                        if(checkAprState()){
+                            alert("<spring:message code='ezApprovalG.bhs23'/>");
+                            window.returnValue = "CLOSE";
+                            btnClose_onclick();
+                            return;
+                        }
+
+                        //공유결재 - 결재, 전결 일때만 사인칸을 다시그리도록 조건추가
+                        if (pAprLineType == strAprType1 || pAprLineType == strAprType4) {
+                            var reMappingAprLine = getAprLineList("");
+
+                            //참조가 END인 경우 종료된 문서임으로 굳이 sign이나 수신처를 remap할 필요가 없다.
+                            if (reMappingAprLine != "END") {
+                                SReAprLineSingMapping(reMappingAprLine);
+
+                                if (pSuSinFlag == "Y") {
+                                    var reMappingReceipt = getReceiptList();
+
+                                    setRecevInfo(reMappingReceipt);
+                                }
+                            }
+                        }
+
+                        if (addLastKyulJeYN != "0") {
+                            var hDocID ;
+                            if (pDraftFlag == "HABYUI") {
+                                hDocID = pOrgDocID;
+                            } else {
+                                hDocID = pDocID;
+                            }
+                            $.ajax({
+                                type : "POST",
+                                dataType : "text",
+                                async : false,
+                                url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
+                                data : {
+                                        docID     : hDocID,
+                                        flag      : "approvUi"
+                                        },
+                                success : function(result){
+                                    totalMemSN = result;
+                                }
+                            });
+
+                            $.ajax({
+                                type : "POST",
+                                dataType : "text",
+                                async : false,
+                                url : "/ezApprovalG/checkHabYuiState.do",
+                                data : {
+                                        docID     : hDocID,
+                                        },
+                                success : function(result) {
+                                    if (result == "FALSE") {
+                                        habYuiAprStateFlag = false;
+                                    }
+                                }
+                            });
+                        }
+                    }
 				   
 				   if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
@@ -796,38 +898,78 @@
 		            }
 				   
 				   if (pDraftFlag != "SUSIN" && pDraftFlag != "HABYUI") {
-		                if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-		                    if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                        var rtnval;
-		                        //rtnval = getDocNumber(drafterDeptid, "");
-		                        rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
-		
-		                        if (!rtnval) {
-		                            var pAlertContent = "[<spring:message code='ezApprovalG.t1384'/>";
-							        OpenAlertUI(pAlertContent);
-							        setMenuDisable("btnApprove", false);
-							        return;
-							    }
-		                    }
-		                }
+				        if (approvalFlag == "S") {
+                            // '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
+                            // 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
+                            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7 && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
+                                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
+                                    var rtnval;
+                                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+                                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
+                                    if (!rtnval) {
+                                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+                                        OpenAlertUI(pAlertContent);
+                                        setMenuDisable("btnApprove", false);
+                                        return;
+                                    }
+                                }
+                            }
+                        } else {
+                            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+                                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+                                    var rtnval;
+                                    //rtnval = getDocNumber(drafterDeptid, "");
+                                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
+
+                                    if (!rtnval) {
+                                        var pAlertContent = "[<spring:message code='ezApprovalG.t1384'/>";
+                                        OpenAlertUI(pAlertContent);
+                                        setMenuDisable("btnApprove", false);
+                                        return;
+                                    }
+                                }
+                            }
+                        }
 			         } else {
 			            	//useReceiveDocNo 처리
 				            if (useReceiveDocNo == 'NO') {
-				            	if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-					            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
-					                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-					                    var rtnval;
-//					                    rtnval = getDocNumber(drafterDeptid, "");
-					                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
-					                    
-					                    if (!rtnval) {
-					                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
-					                        OpenAlertUI(pAlertContent);
-					                        setMenuDisable("btnApprove", false);
-					                        return;
-					                    }
-					                }
-					            }
+				                if (approvalFlag == "S") {
+                                    //일반 미처리
+                                    if (pDraftFlag == "HABYUI") {
+                                        // pDraftFlag != "HABYUI" <- 추가되서 일부서합의 채번작업 코드추가
+                                        // '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
+                                        // 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
+                                        if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7 && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
+                                            if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
+                                                var rtnval;
+                                                //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+                                                rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
+                                                if (!rtnval) {
+                                                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+                                                    OpenAlertUI(pAlertContent);
+                                                    setMenuDisable("btnApprove", false);
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+                                        // 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
+                                        if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+                                            var rtnval;
+    //					                    rtnval = getDocNumber(drafterDeptid, "");
+                                            rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
+
+                                            if (!rtnval) {
+                                                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+                                                OpenAlertUI(pAlertContent);
+                                                setMenuDisable("btnApprove", false);
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
 				            }
 			            }
 				   
@@ -900,16 +1042,26 @@
 		            
 		            if (rtnVal != "TRUE") {
 		                if (pDraftFlag != "SUSIN") {
-                            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-                                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-                                    rollbackDocNumber(drafterDeptid, "doc", pDocID);
+                            if (approvalFlag == "S") {
+                                if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7  && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
+                                    if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
+                                        rollbackDocNumber(drafterDeptid, "doc", pDocID);
+                                    }
+                                }
+                            } else {
+                                if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+                                    if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+                                        rollbackDocNumber(drafterDeptid, "doc", pDocID);
+                                    }
                                 }
                             }
 		                } else {
                             if (useReceiveDocNo == 'NO') {
-                                if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-                                    if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-                                        rollbackDocNumber(drafterDeptid, "receipt", pDocID);
+                                if (approvalFlag == "G") {
+                                    if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+                                        if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+                                            rollbackDocNumber(drafterDeptid, "receipt", pDocID);
+                                        }
                                     }
                                 }
                             }
@@ -1207,6 +1359,14 @@
 	
 			    // btnEdit_onclick 편집모드 시작
 			    function btnEdit_onclick() {
+                    if (approvalFlag == "S") {
+                        if(checkAprState()){
+                            alert("<spring:message code='ezApprovalG.bhs23'/>");
+                            window.returnValue = "CLOSE";
+                            btnClose_onclick();
+                            return;
+                        }
+                    }
 			        if (modeflag) {
 			            modeflag = false;
 			            chkBtnConfirm("1");
@@ -1268,7 +1428,11 @@
 			        TempsaveAprlineinfo = ret[0];
 			
 			        if (ret[0] != "cancel" && ret[0] != "EXIST") {
-			            ReAprLineSingMapping(ret);
+			            if (approvalFlag == "S") {
+                            SReAprLineSingMapping(ret);
+                        } else {
+                            ReAprLineSingMapping(ret);
+                        }
 			            SaveFile();
 			            getCurApproverAprLine();
 			        }
@@ -1481,6 +1645,7 @@
    			        parameter[11] = gamsaCount;
    			        parameter[12] = "DRAFT";
    			        parameter[28] = onlydocinfiview;
+   			        parameter[29] = TaskCode;
    			        parameter[30] = cabinetID;
    			        parameter[31] = tempSecurity;
    			        parameter[32] = tempUrgent;
@@ -1494,6 +1659,7 @@
    			        parameter[40] = "";
    			        parameter[45] = pPublicityYN;
    			        parameter[46] = nonElecRec;
+		            parameter[52] = OrgAprUserDeptID;
    				    
    				    if (nonElecRec == "Y") {
    				    	if (pGubun != "1") {
@@ -1506,6 +1672,21 @@
    				        parameter[50] = g_szSCListXml;
    				        parameter[51] = sepAttachCheckYN; // 분첨
    			        }
+
+   			        if (approvalFlag == "S") {
+                        parameter[13] = pOrgAprUserID;
+                        parameter[14] = aprlineinfoTMP;
+                        parameter[17] = AprLineArea;
+                        parameter[18] = HapyuiArea;
+                        parameter[19] = "ING";
+                        parameter[20] = tempKeep;
+                        parameter[23] = tempPublic;
+                        parameter[25] = tempItemCode;
+                        parameter[29] = TaskCode;
+                        parameter[33] = pSummery;
+                        parameter[41] = tempItemName;
+                        parameter[42] = tempItemName2;
+                    }
 
    			        if (useOpenGov == "YES") {
                         parameter[52] = basis;
@@ -1529,30 +1710,59 @@
 			    function btnApprovalInfo_Complete(ret) {
    			        if (ret != undefined && ret[0] == "OK") {
    			            try {
-   			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
-   			                    if (ret[1] != false) {
-   			                    	$.ajax({
-   			                    		type : "POST",
-   			                    		dataType : "json",
-   			                    		async : false,
-   			                    		url : "/ezApprovalG/aprLineSave.do",
-   			                    		data : {
-   			                    				ret    : ret[1]
-   			                    				},
-   			                    		success : function(result){
-   			                    			
-   			                    		}
-   			                    	});
-   			
-   			                        IsSkipDrafter = "FALSE";
-   			                        btnSendDraftEnable = "true";
-   			                        ReAprLineSingMapping(ret);
-   			                        //SaveFile();
-   			                        getCurApproverAprLine();
-   			                    }
-   			                    savexmlhttp = null;
-   			                    savexmlhttp = createXMLHttpRequest();
-   			                }
+   			                //결재선 저장
+                            if (approvalFlag == "S") {
+                                if (pGubun != "14" && pGubun != "10") {
+                                    if (ret[1] != false) {
+                                        $.ajax({
+                                            type : "POST",
+                                            dataType : "json",
+                                            async : false,
+                                            url : "/ezApprovalG/aprLineSave.do",
+                                            data : {
+                                                    ret    : ret[1],
+                                                    orgCompanyID : orgCompanyID
+                                                    },
+                                            success : function(result){
+
+                                            }
+                                        });
+
+                                        btnSendDraftEnable = "true";
+                                        SReAprLineSingMapping(ret);
+                                        IsSkipDrafter = "FALSE";
+                                        //SaveFile();
+                                        getCurApproverAprLine("");
+                                    }
+                                    savexmlhttp = null;
+                                    savexmlhttp = createXMLHttpRequest();
+                                }
+                            } else {
+                                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
+                                    if (ret[1] != false) {
+                                        $.ajax({
+                                            type : "POST",
+                                            dataType : "json",
+                                            async : false,
+                                            url : "/ezApprovalG/aprLineSave.do",
+                                            data : {
+                                                    ret    : ret[1]
+                                                    },
+                                            success : function(result){
+
+                                            }
+                                        });
+
+                                        IsSkipDrafter = "FALSE";
+                                        btnSendDraftEnable = "true";
+                                        ReAprLineSingMapping(ret);
+                                        //SaveFile();
+                                        getCurApproverAprLine();
+                                    }
+                                    savexmlhttp = null;
+                                    savexmlhttp = createXMLHttpRequest();
+                                }
+                            }
    			
    			                if (pGubun != "6" && pGubun != "7" && pGubun != "9" && pGubun != "11" && pGubun != "12" && pGubun != "13") {
    			                	$.ajax({
@@ -1590,47 +1800,70 @@
    			                pSummery = ret[9];                    // 요약 내용 관련
    			                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
    			                pPublicityCode = ret[11];             // 대민공개여부 및 공개등급 관련 
-   			                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련 
-   			                pSpecialRecordCode = ret[10];
-   			                pLimitRange = ret[12];
-   			                pPageNum = ret[13];
-   			                // 문서 공개 범위 설정 (대민 공개 여부)
-   			                // setPublicFlag2();
-   			                setPublicFlag();
-   			                
-   			                if (nonElecRec == "Y") {
-   				            	nonElecRecInfoXml = ret[23];
-   				            	nonSepAttachLVXml = ret[24];
-   				            	g_szSCListXml = ret[25];
-   						        sepAttachCheckYN = ret[26];
-   				            	if (ext == "hwp") {
-   					            	setNonElecRecInfo_whwp(nonElecRecInfoXml);
-   				            	}
-   				            }
+   			                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련
 
-   				            if (useOpenGov == "YES") {
-                                   $.ajax({
-                                       type : "POST",
-                                       dataType : "text",
-                                       async : false,
-                                       url : "/ezApprovalG/openGovInfoSave.do",
-                                       data : {
-                                           openGovListFlag : ret[27],
-                                           fileOpenFlagList : ret[28],
-                                           basis : ret[29],
-                                           reason : ret[30],
-                                           publicity : ret[11],
-                                           docID : pDocID,
-                                           limitDate : ret[31]
-                                       }
-                                   });
+   			                if (approvalFlag == "G") {
+                                pSpecialRecordCode = ret[10];
+                                pLimitRange = ret[12];
+                                pPageNum = ret[13];
+                                // 문서 공개 범위 설정 (대민 공개 여부)
+                                // setPublicFlag2();
+                                setPublicFlag();
 
-                                   listOpenFlag = ret[27];
-                                   fileOpenFlagList = ret[28];
-                                   basis = ret[29];
-                                   reason = ret[30];
-                                   limitDate = ret[31];
-   							}
+                                if (nonElecRec == "Y") {
+                                    nonElecRecInfoXml = ret[23];
+                                    nonSepAttachLVXml = ret[24];
+                                    g_szSCListXml = ret[25];
+                                    sepAttachCheckYN = ret[26];
+                                    if (ext == "hwp") {
+                                        setNonElecRecInfo_whwp(nonElecRecInfoXml);
+                                    }
+                                }
+
+                                if (useOpenGov == "YES") {
+                                       $.ajax({
+                                           type : "POST",
+                                           dataType : "text",
+                                           async : false,
+                                           url : "/ezApprovalG/openGovInfoSave.do",
+                                           data : {
+                                               openGovListFlag : ret[27],
+                                               fileOpenFlagList : ret[28],
+                                               basis : ret[29],
+                                               reason : ret[30],
+                                               publicity : ret[11],
+                                               docID : pDocID,
+                                               limitDate : ret[31]
+                                           }
+                                       });
+
+                                       listOpenFlag = ret[27];
+                                       fileOpenFlagList = ret[28];
+                                       basis = ret[29];
+                                       reason = ret[30];
+                                       limitDate = ret[31];
+                                }
+                            } else {
+                                //회람
+                                if (ret[22] == "noItem") {
+                                    // ret[22] 값이 "noItem"일 경우 기존 데이터가 있을 수 있으므로 삭제함
+                                    delAprLineInfoCC();
+                                } else if (ret[22] == "sameItem") {
+                                    // ret[22] 값이 "sameItem"일 경우 동작 없음
+                                } else {
+                                    //회람 저장
+                                    SaveAprLineInfoCC(ret[22]);
+                                }
+
+                                tempKeep = ret[16];
+                                tempItemName = ret[17];
+                                tempItemName2 = ret[18];
+                                pPageNum = "1";
+                                pLimitRange = "1";
+                                pSpecialRecordCode = "1";
+                                tempPublic = ret[11];
+                                SetDocOption(ret[20], ret[19]);
+                            }
 
    							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
    							setApprDocInfo();	
@@ -1787,6 +2020,140 @@
 				OpenInformationUI(pInformationContent, btnReject_onclick_Complete);
 			}
 
+			 function getAprLineList(type) {
+                var result = "";
+                var pMode = "";
+                if (docState == "017") {
+                      $.ajax({
+                            type : "POST",
+                            dataType : "text",
+                            async : false,
+                            url : "/ezApprovalG/getLineMode.do",
+                            data : {
+                                    docID : pDocID
+                                    },
+                            success: function(xml){
+                                    pMode = xml;
+                            }
+                      });
+                }
+
+                if (pMode != "END") {
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : "/ezApprovalG/aprLineRequest.do",
+                        data : {
+                                docID    : pDocID,
+                                userID 	 : "",
+                                formID   : "",
+                                orgCompanyID : orgCompanyID,
+                                isUsed   : type,
+                                mode     : pMode
+                                },
+                        success: function(xml){
+                            result = xml;
+                        }
+                    });
+                } else {
+                    return pMode;
+                }
+                return result;
+            }
+
+            function getReceiptList() {
+                var result = "";
+
+                $.ajax({
+                    type : "POST",
+                    dataType : "text",
+                    async : false,
+                    url : "/ezApprovalG/aprDeptRequest.do",
+                    data : {
+                        docID : pDocID,
+                        orgCompanyID : orgCompanyID
+                    },
+                    success: function(xml){
+                        result = loadXMLString(xml);
+                    }
+                });
+
+                var rows = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
+
+                var xmlpara = createXmlDom();
+                var objRoot, objRow, objDocinfoNode;
+                objRoot = createNodeInsert(xmlpara, objRoot, "ROWS");
+
+                for (var i = 0; i < rows.length; i++) {
+                    var dataNodes = GetChildNodes(rows[i]);
+                    objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
+
+                    /* 2022-08-03 홍승비 - 수신처그룹에는 "장"을 붙이지 않으며, 수신자에 "장" 붙이는 컨피그 옵션 미사용 분기 추가 */
+                    if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0 || useReceiveInfoName == "0") {
+                        createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim());
+                    } else {
+                        createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? "장" : ""));
+                    }
+                    createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTID", SelectSingleNodeValue(dataNodes[0], "DATA1").trim());
+                    createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME", SelectSingleNodeValue(dataNodes[0], "DATA2").trim());
+                    createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "EXTRECEPTYN", SelectSingleNodeValue(dataNodes[0], "DATA3").trim());
+                    createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "PROCESSYN", SelectSingleNodeValue(dataNodes[0], "DATA4").trim());
+                    createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "CANEDITYN", SelectSingleNodeValue(dataNodes[0], "DATA5").trim());
+                    createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "EMAIL", SelectSingleNodeValue(dataNodes[0], "DATA6").trim());
+                    createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "JOBTITLE", SelectSingleNodeValue(dataNodes[0], "DATA9").trim());
+                    createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME1", SelectSingleNodeValue(dataNodes[0], "DATA10").trim());
+                    createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME2", SelectSingleNodeValue(dataNodes[0], "DATA11").trim());
+                }
+
+                return getXmlString(xmlpara);
+            }
+
+            function SetDocOption(pkeeperiodvaltemp) {
+                if (message.FieldExist("keepperiod"))
+                    message.PutFieldText("keepperiod" , pkeeperiodvaltemp);
+
+                if (message.FieldExist("securitylevel"))
+                    message.PutFieldText("securitylevel" , tempSecurityValue);
+
+                if (message.FieldExist("publication")){
+                    if (tempPublic == "N")
+                        message.PutFieldText("publication" , "비공개");
+                    else
+                        message.PutFieldText("publication" , "공개");
+                }
+
+                if (message.FieldExist("docnumber") && tempItemCode != ""){
+                    var tempdocnumber = message.GetFieldText("docnumber");
+                    tempdocnumber = tempdocnumber.replace(tempdocnumcode, tempItemCode);
+                    message.PutFieldText("docnumber" , tempdocnumber);
+                }
+            }
+
+            function checkAprState() {
+                editedFlag = false;
+                var result = "";
+
+                if (approvalFlag == "S") {
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : "/ezApprovalG/checkAprState.do",
+                        data : {
+                            docID : pDocID,
+                            docState : docState,
+                            userID : OrgAprUserID,
+                            aprMemberSN : wAprMemberSN,
+                            orgCompanyID : orgCompanyID
+                        },
+                        success : function(text) {
+                            result = text;
+                        }
+                    });
+                }
+                return result == "FALSE" ? true : false;
+            }
 	    </script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" onload="javascript:window_onload()">
@@ -1818,7 +2185,7 @@
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnFileAttach"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 	                        <li id="btnAprDocAttach"><span onclick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
-	                        <li id="btnAddSepAttach"><span onclick="btnAddSepAttach_onclick()"><spring:message code='ezApprovalG.t58'/></span></li>
+	                        <li id="btnAddSepAttach"<c:if test="${approvalFlag == 'S'}"> style="display:none"</c:if>><span onclick="btnAddSepAttach_onclick()"><spring:message code='ezApprovalG.t58'/></span></li>
 	                        <li id="btnSave" style="display:none"><span onclick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t157'/></span></li>

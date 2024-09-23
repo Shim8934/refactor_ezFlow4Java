@@ -46,6 +46,7 @@
 		 	var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
 	        /*2021-03-05 남학선 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 값*/
 	        var delAttachByOthers = "<c:out value ='${delAttachByOthers}'/>";
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
 		 	
 	        subCondition = "";
 
@@ -55,6 +56,10 @@
 
 			var orgResultxml;
 
+            // 일괄기안 관련 변수 추가
+            var draftAllFlag = "<c:out value ='${draftAllFlag}'/>";
+            var anNo = "<c:out value ='${anNo}'/>";
+	        
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 	            window.onblur = function () {
 	                window.focus();
@@ -215,6 +220,12 @@
 	                }
 	
 	                var AprDocAttachxml = DocMoveParser();
+
+                    if (draftAllFlag == "Y") {
+                        parent.pHasDocAttachYN = "Y";
+                        parent.pHasDocAttachYNAry[anNo] = "Y";
+                    }
+
 	                if (CrossYN()) {
 	                    ReturnFunction(AprDocAttachxml);
 	                }
@@ -226,6 +237,12 @@
 	            else {
 	                delAttachDoc();
 	                var AprDocAttachxml = DocMoveParser();
+
+                    if (draftAllFlag == "Y") {
+                        parent.pHasDocAttachYN = "N";
+                        parent.pHasDocAttachYNAry[anNo] = "N";
+                    }
+
 	                if (CrossYN()) {
 	                    ReturnFunction(AprDocAttachxml);
 	                }
@@ -276,6 +293,54 @@
 	            DivPopUpHidden();
 	        }
 
+			function showDocView_onclick() {
+				var listview = new ListView();
+				listview.LoadFromID("lvSDocList");
+				var selRow = listview.GetSelectedRows()[0];
+
+				if (selRow.length <= 0) {
+					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
+					return;
+				}
+				showDocView_onclick_Complete("True");
+			}
+
+			function showDocView_onclick_Complete() {
+				var listview = new ListView();
+				listview.LoadFromID("lvSDocList");
+				var selRow = listview.GetSelectedRows()[0];
+				var DocID = GetAttribute(selRow, "DATA1");
+				var pURL = GetAttribute(selRow, "DATA2");
+				var orgdocid = trim_Cross(selRow.getAttribute("DATA5"));
+				var formid = selRow.getAttribute("DATA6");
+				var docState =  selRow.getAttribute("DATA7");
+				var openLocation;
+				var tempURL = pURL;
+
+				if (tempURL.substr(tempURL.length - 4, tempURL.length).toLowerCase() == ".ezd") {
+					tempURL = tempURL.substr(0, tempURL.length - 4);
+				}
+
+				if (tempURL.substr(tempURL.length - 3, tempURL.length).toLowerCase() == "hwp") {
+					if(useWebHWP == "NO") {
+						if (isIE()) {
+							openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+						} else {
+							var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+							alert(pAlertContent);
+							return;
+						}
+					} else {
+						openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
+					}
+				} else {
+					openLocation = "/ezApprovalG/contDocView.do";
+				}
+				openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&orgCompanyID=" + encodeURI(orgCompanyID);
+				openwindow(openLocation, "", 880, 570);
+			}
+			
 			function moveDataRow(e) {
 				let listView = new ListView();
 				listView.LoadFromID("lvTDocList");
@@ -407,6 +472,7 @@
 	                <h2><spring:message code='ezApprovalG.t366'/>
 	                    <select id="selSContName" name="selSContName" onchange="return bt_selSContName_onclick()" style="height:22px"></select>
 	                    <a class="imgbtn imgbck"><span id="SearchCondi" onclick="return SearchCondi_onclick()" style="font-weight: normal"><spring:message code='ezApprovalG.t111'/></span></a>
+	                    <a class="imgbtn imgbck"><span onclick="return showDocView_onclick()" style="font-weight: normal"><spring:message code='ezApprovalG.t367'/></span></a>
 					</h2>
 	            </td>
 	            <td style="text-align: right; white-space: nowrap; float: right; margin-top: 10px;">

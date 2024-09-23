@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -209,7 +210,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	public String mhtToHTML(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("mhtToHTML started");
 
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String filePath = "";
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator; 
         String realPath = commonUtil.getRealPath(request);
@@ -234,7 +235,7 @@ public class EzCommonController extends EgovFileMngUtil{
 				String aprPass = "";
 				String endPass = "";
 				aprPass = ezApprovalGService.getAccessYNGforAPR(docID, accessInfo, approvalFlag, userInfo);
-				endPass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+				endPass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 				if (aprPass.contains("FALSE") || endPass.contains("FALSE")) {
 					return "NoAccess";
 				}

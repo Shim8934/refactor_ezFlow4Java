@@ -33,7 +33,7 @@
 	.updatePortlet, .addNewPortlet {float :right;margin :0px; padding :0px;}
 	.updatePortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 	.deletePortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}	
-	.boardSetting, .menuSetting {float:right; position:relative; margin-top:-20px; margin-right:5px; padding:0px;text-align:left;display:inline-block;vertical-align:top;cursor:pointer;}
+	.boardSetting, .menuSetting, .connectionSetting {float:right; position:relative; margin-top:-18px; margin-right:5px; padding:0px;text-align:left;display:inline-block;vertical-align:top;cursor:pointer;}
 	.portletInfo {display:inline-block;marging-top:8px;}
 	.portletInfoTH {background-color :white;border:0px; padding:0px 15px 0px 0px; color:#393939; font-weight:bold; letter-spacing:-1px; line-height:34px;}
 	.portletInfoTH, .portletInfoTD {}
@@ -46,6 +46,7 @@
 	.portlet-toggle {cursor:pointer;}
 	.newPortlet .portlet-header {cursor:default;}
 	.notUsedTR {display : none;}
+	.notUsedTR2 {display : none;}
 	.usedTR {display:table-row;}
 	.cancelNewPortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 	.addNewPortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
@@ -71,7 +72,7 @@
 	}
 
 	@media only screen and (max-width :1920px) and (min-width :1423px) {
-		.portlet, .newPortlet{ width:20%;}
+		.portlet, .newPortlet{ width:24%;}
 	}
 
 	@media only screen and (max-width :1422px) and (min-width :1280px) {
@@ -83,7 +84,7 @@
 	}
 	.slideImageSetting {
 		position: absolute;
-	    right: 70px;
+	    right: 90px;
 	    top: 12px;
         cursor: pointer;
         display: inline-block;
@@ -144,6 +145,8 @@
 		var useChinese = "${useChinese}";
 		var useVietnamese = "${useVietnamese}";
 		var useIndonesian = "${useIndonesian}";
+		var webType = "${type}";
+		const connectMenuId = "${connectMenuId}"; 
 
 		// 일반 게시판 포틀릿의 표출 타입 enum.
 		var BoardViewType = Object.freeze({
@@ -246,14 +249,28 @@
 			if (boardName != undefined) {
 				boardId = boardName.getAttribute("data1");
 			}
-				
+			
+			//연계 설정(Config 아이디)
+			var connectionName = document.getElementById("newPortletConnection");
+			var connectionId = null;
+			
+			if (connectionName != undefined) {
+				connectionId = connectionName.getAttribute("data1");
+			}
+			
 			//새로운 포틀릿인 경우 connection url
 			var connectionUrl = document.getElementById("newPortlet").querySelector(".connectionUrl").value;
 			connectionUrl = $.trim(connectionUrl);
 			
 			//새로운 포틀릿인 경우 관련 메뉴 지정
 			var portletMenuId = document.getElementById("newPortlet").querySelector("#newPortletMenu").getAttribute("data2");
-	
+			
+			// 포틀릿 코드
+			var portletCode = "";
+			if (portletMenuId == connectMenuId) { // 연계포틀릿 추가
+				portletCode = "connectPortlet";
+			}
+			
 			if (connectionUrl == "" && portletMenuId != 4) {
 				alert("<spring:message code='ezNewPortal.t092' />");
 				return;
@@ -274,13 +291,18 @@
 				return;
 			}
 			
+			if (portletMenuId == connectMenuId && (connectionId == null || connectionId == "")) {
+				alert("<spring:message code='ezSystem.config.hth29' />");
+				return;
+			}
+			
 			if (portletMenuId == 3) {
 				console.log(connectionUrl + " / cabinetType: " + document.getElementById("newPortlet").querySelector("#cabinetType").value);
 				connectionUrl += ("?cabinetType=" + document.getElementById("newPortlet").querySelector("#cabinetType").value);
 			}
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/addPortlet.do', true);
+			request.open('POST', '/admin/ezNewPortal/addPortlet.do?type=' + webType, true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
@@ -295,7 +317,9 @@
 				boardId : boardId,
 				portletUsed : isUsed,
 				connectionUrl : connectionUrl,
-				menuId : portletMenuId
+				menuId : portletMenuId,
+				portletCode : portletCode,
+				connectionId : connectionId
 			});
 			 
 			request.send(data);
@@ -337,6 +361,10 @@
 			var portletId = event.data.portletId;
 	 		var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+			var portletCode = "";
+			if (portletId != null) {
+				portletCode = document.getElementById("portlet" + portletId).getAttribute("data3");
+			}
 			
 	        var wWeight = "355";
 	        var wHeight = "600";
@@ -347,7 +375,7 @@
 	        var left = (width - wWeight) / 2;
 	        var top = (heigth - wHeight) / 2;
 	        
-	        window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId, "",
+	        window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId + "&code=" + portletCode, "",
 	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		}
 		  
@@ -399,6 +427,14 @@
 				boardId = boardName.getAttribute("data1");
 			}
 			
+			//연계 설정(Config 아이디)
+			var connectionName = document.getElementById("portletConnection" + portletId);
+			var connectionId = null;
+			
+			if (connectionName != null) {
+				connectionId = connectionName.getAttribute("data1");
+			}
+			
 			//새로운 포틀릿인 경우에는 메뉴 아이디
 			//var portletMenuId = document.getElementById("portlet" + portletId);
 			var menuId = document.getElementById("portlet" + portletId).getAttribute("data2");
@@ -410,7 +446,11 @@
 				alert("<spring:message code='ezNewPortal.t050' />");
 				return;
 			}
-	
+			
+			if (menuId == connectMenuId && (connectionId == null || connectionId == "")) {
+				alert("<spring:message code='ezSystem.config.hth29' />");
+				return;
+			}
 			
 			//새로운 포틀릿인 경우 ...connection url
 			var url = document.getElementById("portlet" + portletId).querySelector(".connectionUrl");
@@ -426,7 +466,7 @@
 				}
 			}
 			
-			if (menuId == 3 && !dataGeneral) {
+			if (menuId == 3 && !(dataGeneral == 'true')) {
 				connectionUrl += ("?cabinetType=" + document.getElementById("portlet" + portletId).querySelector("#cabinetType" + portletId).value);
 			}
 			
@@ -447,9 +487,11 @@
 				companyId : companyValue,
 				nameList : nameList,
 				boardId : boardId,
+				connectionId : connectionId,
 				portletUsed : isUsed,
 				connectionUrl : connectionUrl,
-				menuId : menuId
+				menuId : menuId,
+				portletCode : portletCode
 			});
 			 
 			request.send(data);
@@ -461,7 +503,7 @@
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/getPortlets.do', true);
+			request.open('POST', '/admin/ezNewPortal/getPortlets.do?type=' + webType, true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
@@ -482,12 +524,12 @@
 						portletId = result[i].portletId;
 						defaultOrder = result[i].defaultOrder;
 						portletName = result[i].portletName;
-						portletType = result[i].portletType;
+						portletType = result[i].portletType == null ? "" : result[i].portletType;
 						portletURL = result[i].connectionUrl;
 						portletNameList = result[i].portletNameList;
 						menuId = result[i].menuId;
 						portletNameListCnt = portletNameList.length;
-						portletCode =  result[i].portletCode;
+						portletCode =  result[i].portletCode == null ? "" : result[i].portletCode;
 
 						// 2020-12-08 박기범 - data3에 portletCode 추가
 						listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder
@@ -572,7 +614,7 @@
 							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div>";
 							listHTML += "</td></tr>";
 							
-							if (menuId != 4) {
+							if (menuId != 4 && menuId != connectMenuId) {
 								listHTML += "<tr class='connectionTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
 							} else {
 								if (!result[i].general) {
@@ -593,7 +635,7 @@
 							var boardName = "";
 							
 							if (result[i].boardName1 == null || result[i].boardName1 == "null") {
-								boardName = "<spring:message code='ezNewPortal.t089' />";
+								boardName = "<spring:message code='ezNewportal.boardNameNone01' />";
 							} else {
 								boardName = ReplaceText(ReplaceText(result[i].boardName1, '\"', "&#39;"), "\'", "&#34;");
 							}
@@ -602,14 +644,48 @@
 							listHTML += "<div class='boardSetting'>";
 							listHTML += "<a class='boardSettingtBtn'>";
 							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
+							
+							listHTML += "<tr class='boardTR2 notUsedTR'><th class='portletInfoTH'><spring:message code='ezSystem.w018' /> :</th><td class='portletInfoTD'>";
+							listHTML += "<input id='portletConnection" + portletId + "' type='text' readonly>";
+							listHTML += "<div class='connectionSetting'>";
+							listHTML += "<a class='connectionSettingtBtn'>";
+							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";	
 						} else if (result[i].general && (menuId != 4 || portletId == 10)){
 							listHTML += "<tr class='boardNotUsed'><th class='portletInfoTH'>&nbsp;</th><td class='portletInfoTD'>&nbsp;<br/></td></tr>";
+						} else if (menuId == connectMenuId) {
+							var connectionName = "";
+							
+							if (result[i].connectionName == null || result[i].connectionName == "null") {
+								connectionName = "없음";
+							} else {
+								connectionName = ReplaceText(ReplaceText(result[i].connectionName, '\"', "&#39;"), "\'", "&#34;");
+							}
+							
+							listHTML += "<tr class='boardTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
+							listHTML += "<input id='portletBoard" + portletId + "' type='text' readonly>";
+							listHTML += "<div class='boardSetting'>";
+							listHTML += "<a class='boardSettingtBtn'>";
+							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
+							
+							listHTML += "<tr class='boardTR2 UsedTR'><th class='portletInfoTH'><spring:message code='ezSystem.w018' /> :</th><td class='portletInfoTD'>";
+							listHTML += "<input id='portletConnection" + portletId + "' type='text' value='" + connectionName + "' data1='" + result[i].portletConnectionId + "' readonly>";
+							listHTML += "<div class='connectionSetting'>";
+							listHTML += "<a class='connectionSettingtBtn'>";
+							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
+							
 						} else if (!result[i].general) {
 							listHTML += "<tr class='boardTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
 							listHTML += "<input id='portletBoard" + portletId + "' type='text' readonly>";
 							listHTML += "<div class='boardSetting'>";
 							listHTML += "<a class='boardSettingtBtn'>";
 							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
+							
+							listHTML += "<tr class='boardTR2 notUsedTR'><th class='portletInfoTH'><spring:message code='ezSystem.w018' /> :</th><td class='portletInfoTD'>";
+							listHTML += "<input id='portletConnection" + portletId + "' type='text' readonly>";
+							listHTML += "<div class='connectionSetting'>";
+							listHTML += "<a class='connectionSettingtBtn'>";
+							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";	
+							
 						}
 
 						if (!result[i].general) {
@@ -643,12 +719,19 @@
 						if ((result[i].menuId == 4 && result[i].portletId != 10) || !result[i].isGeneral) {
 							$("#portlet" + result[i].portletId).find(".boardSetting").on("click", {"portletId" : result[i].portletId}, openBoardTree);
 						}
+						
+						var connectionSettingBtn = $("#portlet" + result[i].portletId).find(".connectionSetting");
+						if (connectionSettingBtn) {
+							connectionSettingBtn.on("click", {"portletId" : result[i].portletId}, openConfigTree);
+						}
+						
 						$("#portlet" + result[i].portletId).find(".updatePortletBtn").on("click", {"portletId" : result[i].portletId}, portletUpdate);
 						if (!result[i].general) {
 							$("#portletMenu" + result[i].portletId).parent().find(".menuSetting").on("click", {"portletId" : result[i].portletId}, openMenuList);
 							$("#portlet" + result[i].portletId).find(".deletePortletBtn").on("click", {"portletId" : result[i].portletId, "menuId" : result[i].menuId}, portletDelete);
 							
 						}
+						
 						//슬라이드 이미지 버튼 활성화
 						if (result[i].portletId == 34) {
 							$("#portlet" + result[i].portletId).find(".slideImageSetting").on("click", {"portletId" : result[i].portletId}, openSlideImageSetting);
@@ -772,6 +855,11 @@
 			listHTML += "<div class='btnpositionJsp boardSetting'>";
 			listHTML += "<a class='boardSettingtBtn'>";
 			listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
+			listHTML += "<tr class='notUsedTR2'><th class='portletInfoTH'><spring:message code='ezSystem.w018' /> </th><td class='portletInfoTD'>";
+			listHTML += "<input id='newPortletConnection' type='text' readonly>";
+			listHTML += "<div class='btnpositionJsp connectionSetting'>";
+			listHTML += "<a class='connectionSettingtBtn'>";
+			listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
 
 			listHTML += getBoardViewTypeRowStr('', '');
 			
@@ -794,6 +882,7 @@
 			$(".addNewPortletBtn").on("click", {"portletId" : null}, portletAdd);
 			$(".cancelNewPortletBtn").on("click", cancelPortlet);
 			$(".newPortlet").find(".boardSetting").on("click", {"portletId" : null}, openBoardTree);
+			$(".newPortlet").find(".connectionSetting").on("click", {"portletId" : null}, openConfigTree);
 		}
 		
 		var cancelPortlet = function() {
@@ -807,13 +896,18 @@
 	        var wWeight = "662";
 	        var wHeight = "445";
 	
+			if (webType == 'mobile') {
+				wWeight = 450;
+				wHeight = 300;
+			}
+
 	        var heigth = window.screen.availHeight;
 	        var width = window.screen.availWidth;
 	
 	        var left = (width - wWeight) / 2;
 	        var top = (heigth - wHeight) / 2;
 	        
-	        window.open("/admin/ezNewPortal/openPortalMenu.do?portletId=" + portletId + "&companyId=" + companyId, "",
+	        window.open("/admin/ezNewPortal/openPortalMenu.do?portletId=" + portletId + "&companyId=" + companyId +"&type=" + webType, "",
 	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		}
 		
@@ -901,14 +995,15 @@
 		function getBoardViewTypeRowStr(portletURL, portletId) {
 			var portletUrl = URLParamsUtils(portletURL);
 			var viewType = portletUrl.get('type');
+			var mobileType = portletURL.indexOf("/mobile/ezNewPortal/boardPortlet.do?type=b");
 
 			var resultStr = "<tr id='rowViewType" + portletId + "' class='cardTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.board.pgb04' /> :</th><td class='portletInfoTD typeTD'>";
-			resultStr += "<select id='portletViewType" + portletId + "' name='portletViewType" + portletId + "' style='font-size:12px;' onchange='updateViewTypeOfBoard(this.value,\"" + portletId + "\");'>";
+			resultStr += "<select id='portletViewType" + portletId + "' name='portletViewType" + portletId + "' style='font-size:12px;' onchange='updateViewTypeOfBoard(this.value,\"" + portletId + "\", \"" + portletURL + "\");'>";
 			resultStr += "<option value='" + BoardViewType.DEFAULT + "' " + (viewType === BoardViewType.DEFAULT ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb01' /></option>";
 			resultStr += "<option value='" + BoardViewType.CARD_A + "' " + (viewType === BoardViewType.CARD_A ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb02' /></option>";
 			resultStr += "<option value='" + BoardViewType.CARD_B + "' " + (viewType === BoardViewType.CARD_B ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb03' /></option>";
 			resultStr += "</select>   ";
-			resultStr += "<a class='imgbtn wordSelect " + (isWordSelectDisplay(viewType) ? "" : CLASS_DISPLAY_NONE) + "' id='wordSelect" + portletId + "' onclick='selectWord(\"" + portletId + "\");'>";
+			resultStr += "<a class='imgbtn wordSelect " + (isWordSelectDisplay(viewType, portletURL) && mobileType == -1 ? "" : CLASS_DISPLAY_NONE) + "' id='wordSelect" + portletId + "' onclick='selectWord(\"" + portletId + "\");'>";
 			resultStr += "<span style='font-size:11px;'><spring:message code='ezNewPortal.board.pgb05' /></span></a>";
 
 			return resultStr;
@@ -972,9 +1067,9 @@
 
 		}
 
-		function updateViewTypeOfBoard(type, portletId) {
+		function updateViewTypeOfBoard(type, portletId, mobileUrl) {
 			var anchor = document.getElementById('wordSelect' + portletId);
-			if (isWordSelectDisplay(type)) {
+			if (isWordSelectDisplay(type, mobileUrl)) {
 				anchor.classList.remove(CLASS_DISPLAY_NONE);
 			} else {
 				anchor.classList.add(CLASS_DISPLAY_NONE);
@@ -988,12 +1083,23 @@
 
 		function isFixBoardPortlet(code) {
 			if (!code) return false;
-			return code === 'fixLeft' || code === 'fixRight';
+			return code === 'fixLeft' || code === 'fixRight' || code === 'mFixTop' || code === 'mFixBottom';
 		}
 
 		// 단어설정 버튼 표출 조건
-		function isWordSelectDisplay(viewType) {
-			return viewType === BoardViewType.CARD_A || viewType === BoardViewType.CARD_B;
+		function isWordSelectDisplay(viewType, portletURL) {
+			var mobilePortlet = -1;
+			var mobileUrl = portletURL.indexOf("/mobile/");
+			
+			if (mobileUrl > -1) {
+				if (viewType == "b") {
+					mobilePortlet = 1;
+				}
+			} 
+			
+			if (mobilePortlet == -1) {
+				return viewType === BoardViewType.CARD_A || viewType === BoardViewType.CARD_B;
+			}
 		}
 		
 		// 2024-06-26 조수빈 - 관련 메뉴가 전자결재일 경우 포틀릿에 보여질 문서함을 선택하는 ui 생성 메소드
@@ -1007,12 +1113,37 @@
 			resultStr += "<option value='" + CabinetType.DOING + "' " + (cabinetType === CabinetType.DOING ||  !cabinetType ? "selected" : "") + "><spring:message code='main.t00003' /></option>";
 			resultStr += "<option value='" + CabinetType.REJECT + "' " + (cabinetType === CabinetType.REJECT ? "selected" : "") + "><spring:message code='main.t00004' /></option>";
 			resultStr += "<option value='" + CabinetType.DRAFT + "' " + (cabinetType === CabinetType.DRAFT ? "selected" : "") + "><spring:message code='main.t00005' /></option>";
-			resultStr += "<option value='" + CabinetType.DISPLAY + "' " + (cabinetType === CabinetType.DISPLAY ? "selected" : "") + ">";
-			resultStr += approvalFlag === "G" ? "<spring:message code='ezApprovalG.t10011' />" : "<spring:message code='ezCircular.t7' />";
-			resultStr += "</option>";
+			
+			if (webType != 'mobile') {
+				resultStr += "<option value='" + CabinetType.DISPLAY + "' " + (cabinetType === CabinetType.DISPLAY ? "selected" : "") + ">";
+				resultStr += approvalFlag === "G" ? "<spring:message code='ezApprovalG.t10011' />" : "<spring:message code='ezCircular.t7' />";
+				resultStr += "</option>";
+			} else if (webType == 'mobile' && approvalFlag === "G") {
+				resultStr += "<option value='" + CabinetType.DISPLAY + "' " + (cabinetType === CabinetType.DISPLAY ? "selected" : "") + "><spring:message code='ezApprovalG.t10011' /></option>";
+			}
+			
 			resultStr += "</select></tr>";
 
 			return resultStr;
+		}
+		
+		/* 2024-07-12 한태훈 > 연계 포틀릿 시스템 컨피그 선택창*/
+		var openConfigTree = function(event) {
+			var portletId = event.data.portletId;
+	 		var companiesObj = document.getElementById("ListCompany");
+			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+			
+	        var wWeight = "690";
+	        var wHeight = "650";
+	
+	        var heigth = window.screen.availHeight;
+	        var width = window.screen.availWidth;
+	
+	        var left = (width - wWeight) / 2;
+	        var top = (heigth - wHeight) / 2;
+	        
+	        window.open("/admin/ezNewPortal/openConfigTree.do?portletId=" + portletId + "&companyId=" + companyId + "&typeCode=PORTLET", "",
+		            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		}
 		
 	</script>

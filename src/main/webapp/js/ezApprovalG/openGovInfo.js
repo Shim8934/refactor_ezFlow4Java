@@ -138,27 +138,24 @@ function rdoSecType_onclick_Old(Val) {
 
 
 function GetRegisterDate() {
-    if (txtRegY.value != "" && txtRegM.value != "" && txtRegD.value != "") {
-        return txtRegY.value + "-" + GetTwoDigitNumber(txtRegM.value) + "-" + GetTwoDigitNumber(txtRegD.value) + " " +
-				GetTwoDigitNumber(txtRegH.value) + ":" + GetTwoDigitNumber(txtRegMi.value);
-    }
-    else {
+    if (regDate.value != "" && regTime.value != "") {
+        return regDate.value + " " + regTime.value;
+    } else {
         return "";
     }
 }
 
 function GetRegisterYear() {
-    if (txtRegY.value != "")
-        return txtRegY.value;
+    if (regDate.value != "")
+        return regDate.value.substring(0, 4);
     else
         return "";
 }
 
 function GetExecuteDate() {
-    if (txtExeY.value != "" && txtExeM.value != "" && txtExeD.value != "") {
-        return txtRegY.value + "-" + GetTwoDigitNumber(txtRegM.value) + "-" + GetTwoDigitNumber(txtRegD.value);
-    }
-    else {
+    if (exeDate.value != "") {
+        return exeDate.value;
+    } else {
         return "";
     }
 }

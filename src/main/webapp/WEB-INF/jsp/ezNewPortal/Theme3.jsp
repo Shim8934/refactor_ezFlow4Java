@@ -52,37 +52,41 @@
 </head>
 <body class="mainbg" id="theme3Body">
 	<div id="Center">
-	
-		<section class="section_main">
-			 <!-- 상단 고정부분 html start -->
-	        <div class="top_info_area">
-	            <div class="my_info_wrap">
-	                <div class="my_info" id="myInfo">
-	                    <span class="name">${userName} ${userTitle}</span>
-	                    <span class="team">${deptName}</span>
-	                </div>
+		<div class="top_info_area_wrap">
+			<span class="top_info_toggle_btn"></span>
+			<div class="top_info_area">
+				<div class="my_info_wrap">
+					<div class="my_info" id="myInfo">
+						<div class="my_info_img"><img src="/images/ezNewPortal/bannerImg_left.png"></div>
+						<div class="my_info_div">
+							<span class="name">${userName} ${userTitle}</span>
+							<span class="team">${deptName}</span>
+						</div>
+					</div>
 
 					<div class="portal_setting" onclick="viewPortletEnv()"><spring:message code = 'ezNewPortal.HSBPT01' /></div>
+					<div class="config_setting" onclick="infoSetClick()"><spring:message code = 'ezNewPortal.t006' /></div>
 
-						<div class="news_setting">
-							<input type="checkbox" id="portal_set" onchange="displayFixPortlet()">
-							<label for="portal_set"><span></span><spring:message code='ezNewPortal.topMenu.hth13'/></label>
-						</div>
-	
-	                <%-- <div class="info_logout" onclick="infoLogoutClick()"><spring:message code = 'ezNewPortal.t008' /></div> --%>
-	            </div>
-	            <ul>
-	                <li>
-	                    <div class="noti" id="noti"></div>
-	                </li>
-	                <li>
-	                    <span class="mail" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.topMenu.unReadMail' /></span><em id="unReadMailCount"></em></span>
-	                    <span class="appr" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.gu2' /></span><em id="approvalCnt"></em></span>
-	                    <span class="board" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezBoard.t480' /></span><em id="newBoardCnt"></em></span>
-	                </li>
-	            </ul>
-	        </div>
-			<div id="fixBoardArea"></div>
+					<div class="news_setting" style="display:none;">
+						<input type="checkbox" id="portal_set" onchange="displayFixPortlet()">
+						<label for="portal_set"><span></span><spring:message code='ezNewPortal.topMenu.hth13'/></label>
+					</div>
+				</div>
+				<ul>
+					<li>
+						<span class="mail" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.topMenu.unReadMail' /></span><em id="unReadMailCount"></em></span>
+						<span class="appr" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.gu2' /></span><em id="approvalCnt"></em></span>
+                        <span class="board" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezBoard.t480' /></span><em id="newBoardCnt"></em></span>
+					</li>
+					<li>
+						<h3><spring:message code = 'ezPortal.newPost' /></h3>
+						<div class="noti" id="noti"></div>
+					</li>
+				</ul>
+				<div id="fixBoardArea" style=""></div>
+			</div>
+		</div>
+		<section class="section_main active">
 			<div id="dummyArea"></div>
 			<div id="portletArea" class="portlet_area">
 			</div>
@@ -93,7 +97,8 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-	</div>		
+	</div>
+	<div class="title_tooltip"></div>
 <%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
@@ -683,6 +688,15 @@
 	            wrapper.appendChild(slide);
 	            const divText = document.createElement('div');
 	            divText.classList.add('swiper_txt');
+
+				if (board.extensionAttribute2 == 1) {
+					divText.style.display ="flex";
+					const notiDiv = document.createElement('div');
+					notiDiv.className = "notiBox";
+					notiDiv.innerText = "<spring:message code = 'ezNotification.hth89' />";
+					divText.appendChild(notiDiv);
+				}
+				
 	            slide.appendChild(divText);
 	            var textNode = document.createTextNode(board.title);
 	            divText.appendChild(textNode);
@@ -732,6 +746,45 @@
 			fixArea.classList.remove("hidden");
 		}
 	}
+
+	$(document).ready(function(){
+		$(".top_info_toggle_btn").click(function(){
+			if($(this).hasClass("on")){
+				$(".top_info_area_wrap").css("width","510px");
+			} else {
+				$(".top_info_area_wrap").css("width","0");
+			}
+			$(this).toggleClass("on");
+
+			if($(".top_info_area_wrap").hasClass("position")) {
+				$(".section_main").attr("class","section_main");
+			} else {
+				$(".section_main").toggleClass("active");
+			}
+			
+			$(".top_info_area_wrap").one("transitionend", function() {
+				resizePortlet();
+			});
+		})
+
+		$(window).resize(function(){
+			if($(window).width() < 1320){
+				if($(".top_info_area_wrap").hasClass("position") == false){
+					$(".top_info_area_wrap").css("width","0");
+					$(".top_info_toggle_btn").addClass("on");
+				}
+				$(".top_info_area_wrap").attr("class","top_info_area_wrap position");
+				$(".section_main").attr("class","section_main");
+			} else{
+				$(".top_info_area_wrap").attr("class","top_info_area_wrap");
+				if($(".top_info_toggle_btn").hasClass("on")){
+					$(".section_main").attr("class","section_main");
+				} else{
+					$(".section_main").attr("class","section_main active");
+				}
+			}
+		})
+	})
 	</script>
 	</body>
 </html>

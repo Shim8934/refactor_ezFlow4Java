@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
+import egovframework.ezEKP.ezNewPortal.vo.ConnectPortletDTO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
@@ -13,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.PortletAprInfoVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
@@ -34,6 +36,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -45,7 +48,7 @@ public interface EzNewPortalService {
 	/**
 	 * 박종균
 	 * */
-	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize) throws Exception;
+	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize, int portletId) throws Exception;
 	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId, String offset) throws Exception;
 	public List<PersonalLightPollVO> getPollPortletResult(String companyId, int tenantId, int itemSeq) throws Exception;
 	public List<Map<String, Object>> getAssemblePollData(PersonalLightPollVO poll, List<PersonalLightPollVO> pollResult) throws Exception;
@@ -136,7 +139,7 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 회사별 메뉴목록조회
 	 */
-	public List<MenuInfoVO> getMenus(String companyId, int tenantId, String menuLang) throws Exception;
+	public List<MenuInfoVO> getMenus(String companyId, int tenantId, String menuLang, String type) throws Exception;
 	/**
 	 * 관리자 메뉴상세정보조회
 	 */
@@ -195,7 +198,7 @@ public interface EzNewPortalService {
 	 * @return List<PortletInfoVO>
 	 * @throws Exception
 	 */
-	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang);
+	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang, String type);
 	// 2024-07-10 조수빈 - 다국어 사용 여부 판단 로직 추가 위해 수정함. 
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId) throws Exception;
 	public void setWeather() throws Exception;
@@ -279,4 +282,15 @@ public interface EzNewPortalService {
 	// 2024-05-17 한태훈 - 포탈 > 포탈 탑 메뉴 위치 회사 설정값 수정하는 메소드
 	public void updateTopMenuDisplayModeForCompany(int type, String companyId, int tenantId) throws Exception;
 	
+	public SystemConfigVO getSystemConfig(int portletId, String companyId, int tenantId) throws Exception;
+	
+	public JSONObject getConnectPortletData(ConnectPortletDTO connectPortletDto) throws Exception;
+	
+	// 2024-08-21 조수빈 - 유저 사용 색상(모드) 조회
+	public int getUserColor(String userId, String companyId, int tenantId) throws Exception;
+
+	// 2024-08-21 조수빈 - 유저 사용 색상(모드) 저장
+	public void setUserColorMode(String userId, int tenantId, String companyId, int useColor);
+	
+	public JSONArray getPortalApprovalList(PortletAprInfoVO portletAprInfoVO) throws Exception;
 }

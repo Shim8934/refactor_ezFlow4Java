@@ -61,6 +61,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService.Device;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
@@ -129,6 +130,9 @@ public class LoginController {
     
     @Autowired
     private LocaleResolver localeResolver;
+    
+    @Autowired
+    private EzNewPortalService ezNewPortalService;
     
 	/**
 	 * 로그인 화면으로 들어간다
@@ -1310,8 +1314,13 @@ public class LoginController {
 	        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
         	}
     	}    	
-
-    	return ezSessionId;
+		
+		// 2024-08-28 조수빈 - 유저 색상 테마 정보
+		Cookie useColor = new Cookie("useColor", Integer.toString(ezNewPortalService.getUserColor(userId, companyID, tenantId)));
+		useColor.setPath("/");
+		response.addCookie(useColor);
+		
+		return ezSessionId;
     }
     
 	// 2023-03-22 이사라 : [TFA] 2-factor 설정화면
@@ -1364,7 +1373,7 @@ public class LoginController {
 			// 오류가 발생한 경우 otpKey 비워 줌
 			ezCommonService.updateUserConfigInfo(tenantId, userId, "otpKey", "");
 
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "fail";
 		}
 

@@ -15,6 +15,7 @@
     <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
     <typeAlias  alias="OrganUserVO"         						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
+	<typeAlias  alias="ResOccuVO" 								type="egovframework.ezEKP.ezResource.vo.ResOccuVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO"       id="resGetAdmSubClsTreeVO">
 		<result property="brdID"				column="BRD_ID"					columnIndex="1"/>
@@ -284,6 +285,24 @@
 		<result property="memberNam"				column="MEMBER_NAM"			    columnIndex="3" nullValue=""/>
 		<result property="memberID"				    column="MEMBER_ID"				columnIndex="4" nullValue=""/>
 		<result property="accessLvl"				column="ACCESS_LVL"			    columnIndex="5" nullValue=""/>
+	</resultMap>
+	
+	<resultMap class="ResOccuVO"    	   id="resOccuVO">
+		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
+		<result property="count"				column="COUNT"					columnIndex="3"/>
+		<result property="usageTime"			column="USAGE_TIME"				columnIndex="4"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="5"/>
+	</resultMap>
+	
+	<resultMap class="ResOccuVO"    	   id="resOccuVO2">
+		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="3"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="4"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="5"/>
+		<result property="num"					column="NUM"					columnIndex="6"/>
+		<result property="pNum"					column="PNUM"					columnIndex="7" 		nullValue="0"/>
 	</resultMap>
 	
 	<!-- <parameterMap class="map" id="deptAccessLvlParam">
@@ -1248,9 +1267,9 @@
 				A.NUM, 
 				A.PNUM, 
 				A.COMPANYID, 
-				A.WRITERID, 
-				IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) DEPTNM, 
-				IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) OWNERNM, 
+				A.WRITERID,
+				IF(#v_lang# LIKE '1', IFNULL(D.DISPLAYNAME, U.DESCRIPTION) , IFNULL(D.DISPLAYNAME2, U.DESCRIPTION2)) DEPTNM,
+				IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM,
 				A.TITLE, 
 				A.LOCATION, 
 				A.TIMEDISPLAY, 
@@ -1273,6 +1292,9 @@
 				A.TENANT_ID
       		FROM
       			TBL_RS_SCHEDULE A
+			LEFT JOIN 
+				TBL_DEPTMASTER D
+              		ON D.CN = A.DEPTID AND D.TENANT_ID = A.TENANT_ID 
       		LEFT JOIN
       			TBL_RS_SCHEDULEREPETITION B
 	      			ON
@@ -1982,12 +2004,12 @@
 			INSERT INTO
 				TBL_RS_SCHEDULE
      			( OWNERID, NUM, PNUM, COMPANYID, WRITERID, DEPTNM, OWNERNM, TITLE, LOCATION, TIMEDISPLAY, STARTDATE, ENDDATE, ALLDAY, ALERTTIME, CONTENT, IMPORTANCE
-     			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, RETURNFLAG, SCHEDULEID, TENANT_ID )
+     			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, RETURNFLAG, SCHEDULEID, TENANT_ID , DEPTID)
      		VALUES
      			( #v_P_ownerID#, #v_Num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_deptNM#, #v_P_ownerNM#, #v_P_title#
      			, #v_P_location#, #v_P_timeDisplay#, STR_TO_DATE(#v_P_startDate#,'%Y-%m-%d %T'), STR_TO_DATE(#v_P_endDate#,'%Y-%m-%d %T')
      			, #v_P_allDay#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, IFNULL(#v_P_reFlag#,' '), IFNULL(#v_P_gresFlag#,' '), STR_TO_DATE(#nowDate#, '%Y-%m-%d %T')
-     			, #v_P_entryList#, IFNULL(#v_P_characterID#,0), #v_P_attachFlag#, #v_P_Approve#, #v_P_ReturnFlag#, #v_P_ScheduleID#, #tenantID# )
+     			, #v_P_entryList#, IFNULL(#v_P_characterID#,0), #v_P_attachFlag#, #v_P_Approve#, #v_P_ReturnFlag#, #v_P_ScheduleID#, #tenantID#, #deptId# )
 		]]>
 	</insert>
 	
@@ -2420,7 +2442,7 @@
 			AND
 				B.BRD_COMPANY = #brd_company#
 			AND
-				A.BRD_COMPANY = B.BRD_COMPANY;
+				A.BRD_COMPANY = B.BRD_COMPANY
 		]]>
 	</select>
 
@@ -2476,5 +2498,93 @@
 					 ( a.member_id = #userID# or a.member_id = 'everyone' or a.member_id = #deptID# )
 				 )
 			 ]]>
+	</select>
+	
+	<select id="EzResourceDAO.getResOccuList" parameterClass="map" resultMap="resOccuVO">
+		<![CDATA[
+			SELECT
+				a.OWNERID,
+				b.BRD_NM,
+				COUNT(a.OWNERID) COUNT,
+				SUM(TIMESTAMPDIFF(minute, STARTDATE, ENDDATE)) USAGE_TIME,
+				a.COMPANYID
+			FROM
+				TBL_RS_SCHEDULE a
+			JOIN
+				TBL_RS_BRD b
+			ON
+				a.OWNERID = b.BRD_ID
+			AND
+				a.TENANT_ID = b.TENANT_ID
+			WHERE
+				a.TENANT_ID = #tenantID#
+			AND
+				a.COMPANYID = #v_PCOMPANYID#
+			AND
+				a.APPROVEFLAG = '1'
+			AND
+				b.BRD_GB = '2'
+			AND
+				(a.NUM, a.OWNERID) NOT IN ( SELECT
+												c.NUM, c.OWNERID
+											FROM
+												TBL_RS_SCHEDULEREPETITION c
+											WHERE
+												c.TENANT_ID = #tenantID#
+											AND
+												c.COMPANYID = #v_PCOMPANYID#
+											)
+			AND
+				STARTDATE >= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+			AND
+				ENDDATE <= STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T')
+			GROUP BY
+				a.OWNERID
+			ORDER BY
+				CAST(a.OWNERID AS UNSIGNED) ASC
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleListRepetiti2" parameterClass="Map" resultMap="resOccuVO2">
+		<![CDATA[
+			SELECT 
+				A.NUM ,
+            	PNUM ,
+            	A.OWNERID ,
+            	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+            	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+            	A.COMPANYID ,
+            	C.BRD_NM
+			FROM
+				TBL_RS_SCHEDULE A
+			JOIN
+				TBL_RS_SCHEDULERepetition B 
+			ON 
+				A.NUM = B.NUM
+			AND
+				A.TENANT_ID = B.TENANT_ID	
+			AND
+				A.OWNERID = B.OWNERID
+			LEFT JOIN
+				TBL_RS_BRD C
+			ON
+				A.OWNERID = C.BRD_ID			
+			WHERE
+				STARTDATE <= STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T')
+			AND
+				A.COMPANYID = #v_PCOMPANYID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND
+				REFLAG = '1'	
+			AND
+				A.APPROVEFLAG = '1'		
+			AND
+				( STR_TO_DATE(#v_PSTARTDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PSTARTDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
+			GROUP BY
+				A.NUM
+			ORDER BY
+				CAST(A.OWNERID AS UNSIGNED) ASC				
+		]]>
 	</select>
 </sqlMap>

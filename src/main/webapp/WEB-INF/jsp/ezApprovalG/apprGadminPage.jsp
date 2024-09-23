@@ -1219,10 +1219,10 @@
 		//리스트 총 갯수
 		function TotalCount(pTotalCnt){
 			if (pTotalCnt != null || pTotalCnt != undefined) {
-				document.getElementById("TitleInfo").innerHTML = "&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
+				document.getElementById("TitleInfo").innerHTML = "&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>";
 			}
 			else {
-	            document.getElementById("TitleInfo").innerHTML = "&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
+	            document.getElementById("TitleInfo").innerHTML = "&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 			}
 			
 		}

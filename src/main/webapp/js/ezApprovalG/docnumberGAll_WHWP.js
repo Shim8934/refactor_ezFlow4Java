@@ -15,7 +15,7 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt, currIdx) {
 	name = pPrefix + "docnumber";
 	
 	try {
-		if (approvalFlag == "G") {
+//		if (approvalFlag == "G") {
 			/*
 			if (pDraftFlag == "SUSIN" && useReceiveDocNo == "NO") { // 일괄기안창에서는 타지 않는 분기이므로 주석처리
 				name = "receiptnumber";
@@ -121,7 +121,7 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt, currIdx) {
 				
 				return true;
 			}
-		}
+//		}
 		// 일괄기안은 G버전 웹한글 전용으로 개발됨
 		/*
 		else {

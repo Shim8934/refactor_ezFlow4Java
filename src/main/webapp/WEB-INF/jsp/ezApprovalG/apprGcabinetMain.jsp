@@ -230,6 +230,7 @@
 		        	
 		            switch (g_sFlag) {
 		                case "m01": // 기록물등록대장
+							document.getElementById("rad3").style.display = "";	
 		                    RecordList_onclick();
 		                    break;
 		                case "m02": // 기록물철등록부
@@ -1709,6 +1710,7 @@
 				var selRow = selRows[0];
 				
 				var DocID = GetAttribute(selRow, "DATA1");
+				var sn = GetAttribute(selRow, "DATA3");
 		        if (DocID == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t99991'/>";
 		            OpenAlertUI(pAlertContent);
@@ -2147,17 +2149,23 @@
 		            
 		            if (radiosearch.value == "rad_Subject") {
 						if (selectYear == "ALL") {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM></SEARCHPARAM>";
 						} else {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM></SEARCHPARAM>";
 						}
 		            } else if (radiosearch.value == "rad_Writer") {
 						if (selectYear == "ALL") {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM></SEARCHPARAM>";
 						} else {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM></SEARCHPARAM>";
 						}
-		            }
+		            } else if (radiosearch.value == "rad_DocNum") {
+						if (selectYear == "ALL") {
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DOCNUM></SEARCHPARAM>";
+						} else {
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DOCNUM></SEARCHPARAM>";
+						}
+					}
 		            
 		            switch (ListTypeFlag) {
 		                case "2":
@@ -2576,6 +2584,34 @@
                     }
                 }
 			}
+
+			/* 2024-07-05 임정은 - 기록물배부대장 > 배부정보 */
+			function btnBaeBuInfo_onclick() {
+				var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+
+				var selRows = DocList.GetSelectedRows();
+				if (selRows.length === 0) {
+					var pAlertContent = "spring:message code='ezApprovalG.t99991'/>";
+					alert(pAlertContent);
+					return;
+				}
+
+				var DocID = GetAttribute(selRows[0], "DATA1");
+				var SN = GetAttribute(selRows[0], "DATA3");
+				if (DocID == "") {
+					var pAlertContent = "<spring:message code='ezApprovalG.t99991'/>";
+					OpenAlertUI(pAlertContent);
+					return;
+				}
+
+				var url = "/ezApprovalG/ezDistributeInfo.do?docId=" + DocID + "&sn=" + SN;
+				var OpenWin = window.open(url, "ezDistributeInfo_Cross", GetOpenWindowfeature(800, 400));
+				try {
+					OpenWin.focus();
+				} catch (e) {
+				}
+			}
 		</script>
 	</head>
 	<%-- 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 프리뷰 리사이징바 영역 동작 추가 --%>
@@ -2585,6 +2621,7 @@
 				<select id="selectType" class="text" style="width:80px; height:27px; border-color: #c8c8c8;">
 					<option selected="" value="rad_Subject" id="rad1"><spring:message code='ezApprovalG.t106'/></option>
 					<option value="rad_Writer" id="rad2"><spring:message code='ezApprovalG.t445'/></option>
+					<option value="rad_DocNum" id="rad3" style="display: none;"><spring:message code='ezApprovalG.t440'/></option>
 				</select>
 				<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true" onmousedown="keyword_Clear();"> 
 				<a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onclick="search()"></a>
@@ -2691,6 +2728,7 @@
 	        <ul id="trDeliveryMenu" style="display: none">
 	        	<li class="important" id="tbnBaeBu"><span id="Span2" onclick="return btnBaeBu_onclick()"><spring:message code='ezApprovalG.t100000'/></span></li>
 	            <li id="Li1"><span id="Span1" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
+				<li id="btnBaeBuInfo"><span id="Span3" onclick="return btnBaeBuInfo_onclick()"><spring:message code='ezApprovalG.LJEAppr09'/></span></li>
 	            <li id="tbSearchDelivery"><span class="icon16 icon16_search" id="SearchDelivery" onclick="return btnSearchDelivery_onclick()"></span></li>
 
 	            <%-- 2023-06-07 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 영역 상단 아이콘 삽입 (배부 대장) --%>

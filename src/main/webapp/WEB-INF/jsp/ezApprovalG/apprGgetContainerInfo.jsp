@@ -1007,8 +1007,9 @@
 			            enforceDocID = GetAttribute(selRow[0], "DATA1");
 			            enforceDocHref = GetAttribute(selRow[0], "DATA2");
 			            enforceDocOrgCompanyID = GetAttribute(selRow[0], "ORGCOMPANYID");
+			            enforceExt = GetAttribute(selRow[0], "DATA2").indexOf("hwp") > -1 ? "hwp" : "mht";
 			            
-		        		var pURL = "/ezApprovalG/getFormCont.do?pFormType=004"; //일반버전의 FormType=004는 시행문
+		        		var pURL = "/ezApprovalG/getFormCont.do?pFormType=004&ext=" + enforceExt; //일반버전의 FormType=004는 시행문
 		        		var getFormCont_Cross = window.open(pURL, "formCont", GetOpenWindowfeature(713, 570));
 		        		try { getFormCont_Cross.focus(); } catch (e) {}
 		        	} else {
@@ -1023,17 +1024,23 @@
 	        var enforceDocID = "";
 	        var enforceDocHref = "";
 	        var enforceDocOrgCompanyID = "";
+	        var enforceExt = "";
 	        function enforce_onclick_complete(ret) {
 	        	if (ret[0] != "cancel") {
-	        		var pURL = "/ezApprovalG/enforceSihangDocView.do";
+	        	    var isHwp = enforceExt == "hwp";
+	        		var pURL = isHwp ? "/ezApprovalG/ezConvSihang_WHWP.do" : "/ezApprovalG/enforceSihangDocView.do";
 	        		pURL += "?pFormURL=" + encodeURIComponent(ret[0]);
 	        		pURL += "&pFormType=" + encodeURIComponent(ret[1]);
 	        		pURL += "&pFormID=" + encodeURIComponent(ret[2]);
-	        		pURL += "&pDocID=" + encodeURIComponent(enforceDocID);
-	        		pURL += "&pDocHref=" + encodeURIComponent(enforceDocHref);
-	        		pURL += "&pOrgCompanyID=" + encodeURIComponent(enforceDocOrgCompanyID);
-	        		
-	        		window.open(pURL, "", GetOpenWindowfeature(850, 900));
+	        		pURL +=  (isHwp ? "&docID=" : "&pDocID=") + encodeURIComponent(enforceDocID);
+	        		pURL += (isHwp ? "&docHref=" : "&pDocHref=") + encodeURIComponent(enforceDocHref);
+	        		pURL += (isHwp ? "&orgCompanyID=" : "&pOrgCompanyID=") + encodeURIComponent(enforceDocOrgCompanyID);
+
+                    var height = window.screen.availHeight;
+                    var width = window.screen.availWidth;
+                    var height = height - 50;
+                    var width = width/2;
+	        		window.open(pURL, "", GetOpenWindowfeature(isHwp ? width : 850, isHwp ? height : 900));
 	        	}
 	        }
 			function Approval_onclick() {
@@ -1463,37 +1470,42 @@
 	            	}
 		        }
 		
-		        document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>&nbsp;/ " + period;
+		        document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'> " + NodeListLen + " </span>&nbsp;/ " + period;
 		
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var totalPage = totalPages;
 		        var pageNum = curpage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+		            // strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+					strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><a >";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+		            // strtext = "<span class='btnimg'><a >";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+					strtext = "<span class='btnimg first disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' ></span>";
+		                // strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
+		                // strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' ></span>";
+						strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
+		                // strtext = "<span class='btnimg'>";
+		                // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
+						strtext = "<span class='btnimg prev disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
+		            // strtext = "<span class='btnimg'>";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
+					strtext = "<span class='btnimg prev disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1521,29 +1533,34 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'></span>";
+		                // strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+		                // strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'></span>";
+						strtext = "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
+		                // strtext = "<span class='btnimg'>";
+		                // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
+						strtext = "<span class='btnimg next disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
+		            // strtext = "<span class='btnimg'>";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
+					strtext = "<span class='btnimg next disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
+		            // strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
+					strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+		            // strtext = "<span class='btnimg'>";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+					strtext = "<span class='btnimg last disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";

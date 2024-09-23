@@ -885,7 +885,7 @@ function SaveSchedule_onClick( cmd , resItem) {
 	var objNode ;
 	
 	createNodeInsert(xmlDoc, objNode, "PARAMETER");	
-	createNodeAndInsertText(xmlDoc, objNode, "TITLE", document.getElementById("title").value);
+	createNodeAndInsertText(xmlDoc, objNode, "TITLE", ConvertCharToEntityReference(document.getElementById("title").value));
     createNodeAndInsertText(xmlDoc, objNode, "LOC", ""); // 2011-04 : 자원 항목 등록시 자원 사용하지 않음.
     createNodeAndInsertText(xmlDoc, objNode, "T_DISPLAY", document.getElementById("timeDisplay").value);
    

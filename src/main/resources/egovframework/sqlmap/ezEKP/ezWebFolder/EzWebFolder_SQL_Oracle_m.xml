@@ -2244,9 +2244,18 @@
 	<select id="EzWebFolderDAO_m.getWebFolderApplyHistory" parameterClass="Map" resultMap="applicationHistory">
 		<![CDATA[
 			SELECT
-				APPLY_ID,  FOLDER_NAME, CONTENT,
-				to_char(APPLICATION_DATE+NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-mm-dd hh24:mi') AS APPLICATION_DATE,
-				to_char(APPROVAL_STATUS_UPDATEDT+NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-mm-dd hh24:mi') AS APPROVAL_STATUS_UPDATEDT, COMPANY_ID
+				APPLY_ID,
+				FOLDER_NAME,
+				CONTENT,
+				TO_CHAR(
+							APPLICATION_DATE
+							+ NUMTODSINTERVAL(TO_NUMBER(SUBSTR(#offset#, 1, INSTR(#offset#, '|') - 1)), 'MINUTE')
+							+ INTERVAL '09:00' HOUR TO MINUTE,'yyyy-mm-dd hh24:mi') AS APPLICATION_DATE,
+				TO_CHAR(
+							APPROVAL_STATUS_UPDATEDT
+							+ NUMTODSINTERVAL(TO_NUMBER(SUBSTR(#offset#, 1, INSTR(#offset#, '|') - 1)), 'MINUTE')
+							+ INTERVAL '09:00' HOUR TO MINUTE,'yyyy-mm-dd hh24:mi') AS APPROVAL_STATUS_UPDATEDT,
+				COMPANY_ID
 			FROM 
 				TBL_WEBFOLDER_APPLY_HISTORY
 			WHERE 

@@ -18,7 +18,7 @@ function GetTaskFullList(pTitle, pCode, pFlag) {
             }
 
             if (pageAdminFlag == 'admin') {
-                document.getElementById("listcount").innerHTML = "<b>" + deptName + "</b>의 단위업무 : <span style='color:#017BEC;font-weight:bold;'>" + taskCount + "</span> 개";
+                document.getElementById("listcount").innerHTML = "<b>" + deptName + "</b>의 단위업무 : <span class='txt_color' style='font-weight:bold;'>" + taskCount + "</span> 개";
             } else {
                 document.getElementById("listcount").innerHTML = taskCount;
             }
@@ -240,36 +240,32 @@ function makePagenationBar(pTitle, pCode, pFlag) {
     taskCount = getTaskCount(pTitle, pCode, pFlag);
     totalPage = Math.ceil(taskCount/PageSize) > 1 ? Math.ceil(taskCount/PageSize) : 1;
 
-    var getFirstBtn = $('<span class="btnimg">');
-    var getPrevBlockBtn = $('<span class="btnimg">');
-    var getNextBlockBtn = $('<span class="btnimg">');
-    var getLastBtn = $('<span class="btnimg">');
+    var getFirstBtn = $('<span class="btnimg first">');
+    var getPrevBlockBtn = $('<span class="btnimg prev">');
+    var getNextBlockBtn = $('<span class="btnimg next">');
+    var getLastBtn = $('<span class="btnimg last">');
 
     if (curpage != 1) {
         $(getFirstBtn).on("click", {pTitle:pTitle, pCode:pCode, pFlag:pFlag}, getFirstPage);
-        $(getFirstBtn).append("<img src='/images/kr/cm/btn_p_prev.gif'>");
     } else {
-        $(getFirstBtn).append("<img src='/images/kr/cm/btn_p_prev01.gif'>");
+        $(getFirstBtn).addClass("disabled");
     }
     if (curpage != totalPage) {
         $(getLastBtn).on("click", {pTitle:pTitle, pCode:pCode, pFlag:pFlag}, getLastPage);
-        $(getLastBtn).append('<img src="/images/kr/cm/btn_n_next.gif">');
     } else {
-        $(getLastBtn).append('<img src="/images/kr/cm/btn_n_next01.gif">');
+        $(getLastBtn).addClass("disabled");
     }
 
     if (Math.ceil(curpage/10) < Math.ceil(totalPage/10)) {
         $(getNextBlockBtn).on("click", {pTitle:pTitle, pCode:pCode, pFlag:pFlag}, getNextBlockPage);
-        $(getNextBlockBtn).append('<img src="/images/kr/cm/btn_next.gif">')
     } else {
-        $(getNextBlockBtn).append('<img src="/images/kr/cm/btn_next01.gif">')
+        $(getNextBlockBtn).addClass("disabled");
     }
 
     if (Math.ceil(curpage/10) > 1) {
         $(getPrevBlockBtn).on("click", {pTitle:pTitle, pCode:pCode, pFlag:pFlag}, getPrevBlockPage);
-        $(getPrevBlockBtn).append('<img src="/images/kr/cm/btn_prev.gif">')
     } else {
-        $(getPrevBlockBtn).append('<img src="/images/kr/cm/btn_prev01.gif">')
+        $(getPrevBlockBtn).addClass("disabled");
     }
 
     removeAllChildNode($('#tblPageRayer')[0]); // 기존 네비 삭제
