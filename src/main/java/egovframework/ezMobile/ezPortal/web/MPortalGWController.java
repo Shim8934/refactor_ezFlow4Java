@@ -1311,9 +1311,11 @@ public class MPortalGWController extends EgovFileMngUtil {
 						String subject =  mailInfo.get("SUBJECT");
 						subject = (subject != null) ? subject : "";
 
-						if ("1".equals(mailInfo.get("MAIL_IS_SECURED"))) {
-							subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
-						}
+//						if ("1".equals(mailInfo.get("MAIL_IS_SECURED"))) {
+//							subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+//						}
+
+						String securedMail = String.valueOf("1".equals(mailInfo.get("MAIL_IS_SECURED")));
 
 						int readFlag = "1".equals(mailInfo.get("MAIL_IS_SEEN")) ? 1 : 0;
 						String readClass = "";
@@ -1330,6 +1332,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 						mailMap.put("sender", sender);
 						mailMap.put("subject", subject);
 						mailMap.put("readClass", readClass);
+						mailMap.put("securedMail", securedMail);
 
 						mailList.add(mailMap);
 					}
