@@ -2916,7 +2916,7 @@
 			   SIPURI,
 			   POSITIONCD,
 			   'user'                                USERTYPE,
-			   EXTENSIONATTRIBUTE7                   JOBID,
+			   NVL(EXTENSIONATTRIBUTE7, '')          JOBID,
 			   CAST('' AS NVARCHAR2(50))			JOBTYPE,
 			   EXTENSIONATTRIBUTE8                  AS ROLEID,
 			   EXTENSIONATTRIBUTE1 AS ROLEINFO

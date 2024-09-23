@@ -2771,7 +2771,7 @@
                SIPURI,
                POSITIONCD,
                'user'                                USERTYPE,
-			   EXTENSIONATTRIBUTE7                   JOBID,
+			   IFNULL(EXTENSIONATTRIBUTE7, '')       JOBID,
 			   ''									JOBTYPE,
 			   EXTENSIONATTRIBUTE8                  AS ROLEID,
 			   EXTENSIONATTRIBUTE1 AS ROLEINFO
