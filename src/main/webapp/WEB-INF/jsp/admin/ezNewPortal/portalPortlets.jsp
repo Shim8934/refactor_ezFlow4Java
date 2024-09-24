@@ -125,6 +125,8 @@
 </head>
 	
 <body class="mainbody" marginwidth="0" marginheight="0">
+	<input type="hidden" id="mobileBrdId">
+	<input type="hidden" id="mobileAprId">
 	<h1>
 		<spring:message code='ezNewPortal.t056' />
 		<span class="title_bar"><img src="/images/name_bar.gif"></span>
@@ -298,7 +300,6 @@
 			}
 			
 			if (portletMenuId == 3) {
-				console.log(connectionUrl + " / cabinetType: " + document.getElementById("newPortlet").querySelector("#cabinetType").value);
 				connectionUrl += ("?cabinetType=" + document.getElementById("newPortlet").querySelector("#cabinetType").value);
 			}
 			
@@ -525,6 +526,17 @@
 					var portletNameList;
 					var listHTML = "";
 					var portletCnt = result.length;
+					var mobileBrdId = 4;
+					var mobileAprdId = 3;
+					
+					if (webType == "mobile") {
+						portletCnt = portletCnt - 1;
+						mobileBrdId = result[portletCnt].mobileBrdMenuId;
+						mobileAprdId = result[portletCnt].mobileAprMenuId;
+						$("#mobileBrdId").val(mobileBrdId);
+						$("#mobileAprId").val(mobileAprdId);
+					}
+					
 					// 2020-12-07 박기범 - portletCode 조회 추가 
 					var portletCode ="";
 					for (var i = 0; i < portletCnt; i++) {
@@ -627,7 +639,7 @@
 							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div>";
 							listHTML += "</td></tr>";
 							
-							if (menuId != 4 && menuId != connectMenuId) {
+							if (menuId != 4 && menuId != connectMenuId && menuId != mobileBrdId && menuId != mobileAprdId) {
 								listHTML += "<tr class='connectionTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
 							} else {
 								if (!result[i].general) {
@@ -642,7 +654,7 @@
 						}
 						
 						// 2020-12-07 박기범:tabBoard 게시판도 게시판설정 감추도록 분기 추가
-						if (menuId == 4 && portletId != 10 && portletCode != "tabBoard") {
+						if ((menuId == 4 || menuId == mobileBrdId) && portletId != 10 && portletCode != "tabBoard") {
 							listHTML += "<tr class='boardTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
 							
 							var boardName = "";
@@ -755,9 +767,9 @@
 
 						if (isFixBoardPortlet(result[i].portletCode)) {
 							switchBoardViewTypeRow(result[i].portletId, true);
-						} else if (result[i].menuId == 4 && !result[i].general && result[i].boardGubun == 0) {
+						} else if ((result[i].menuId == 4 || result[i].menuId == mobileBrdId) && !result[i].general && result[i].boardGubun == 0) {
 							switchBoardViewTypeRow(result[i].portletId, true);
-						} else if (result[i].menuId == 3 && !result[i].portletCode) {
+						} else if ((result[i].menuId == 3 || result[i].menuId == mobileAprdId) && !result[i].portletCode) {
 							document.getElementById("portlet" + result[i].portletId).querySelector(".connectionTR").style.display = "none";
 							document.getElementById("portlet" + result[i].portletId).querySelector(".connectionUrl").value = portletURL.split('?')[0];
 							document.getElementById("portlet" + result[i].portletId).querySelector("#cabinetSelRow" + result[i].portletId).style.display = "";
