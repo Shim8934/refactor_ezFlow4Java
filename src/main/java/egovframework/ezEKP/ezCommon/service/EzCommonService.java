@@ -613,4 +613,7 @@ public interface EzCommonService {
 
 	// 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
 	public void addBoardContentSize() throws Exception;
+
+	// 2024-09-12 황인경 - 모바일 메뉴 권한 별도 생성으로 인한 포틀릿 데이터 변경
+	public void updateMobilePortletMenuId() throws Exception;
 }
