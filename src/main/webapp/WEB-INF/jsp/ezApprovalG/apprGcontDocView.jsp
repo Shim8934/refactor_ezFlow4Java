@@ -866,28 +866,31 @@
 		                    return RtnVal;
 		                }
 
-		                if (RtnVal != "NAME") {
+		                if (RtnVal != "NAME") { // 서명이 이미지인 경우 
 		                    try {
 		                        var signWidth = 50;
-		                        //var signHeight = 28;
-		                        var signHeight = 50;
+		                        var signHeight = 50; // 후결승인은 대리결재가 불가능하므로 代 문자의 삽입 없음 (이미지 서명의 높이가 50으로 고정됨)
 		                        var strimg;
-		                        //strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?filepath=" + escape(RtnVal) + "' border=0  embedding='1' ";
 		                        strimg = "<img src='" + escape(RtnVal) + "' border=0 embedding='1' ";
 		                        strimg = strimg + " width=" + signWidth;
 		                        
-		                        
-		                        if (signImageType = "NAME") {
-	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >" + "<br>" + arr_userinfo[2];
+		                        if (signImageType == "NAME") {
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'>" + "<br>" + arr_userinfo[2];
 	                            } else {
-	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >";
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'>";
 	                            }
 
 		                        field.innerHTML = strimg;
+		                        
+		                        /* 2024-09-11 홍승비 - 후결승인 시 서명 데이터 DB 저장 형식 수정 */
+		                        var content = RtnVal;
+		                        if (signImageType == "NAME") {
+		                        	content = content + "::" + arr_userinfo[2];
+		                        }
 
 		                        SignType[signCnt] = "IMAGE";
 		                        SignName[signCnt] = signID;
-		                        SignContent[signCnt] = RtnVal;
+		                        SignContent[signCnt] = content;
 
 		                        signCnt = signCnt + 1;
 		                    }
@@ -896,7 +899,7 @@
 		                else {
 		                    strimg = "<p style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</p>";
 		                    field.innerHTML = strimg;
-		                    SignType[signCnt] = "TEXT";
+		                    SignType[signCnt] = "HTML";
 		                    SignName[signCnt] = signID;
 		                    SignContent[signCnt] = strimg;
 		                    signCnt = signCnt + 1;
