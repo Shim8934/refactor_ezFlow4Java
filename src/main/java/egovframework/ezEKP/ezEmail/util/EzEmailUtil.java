@@ -1670,6 +1670,9 @@ public class EzEmailUtil {
 			// style 태그가 1536개인 메일(홈플러스 메일)의 경우 IE에서 로딩이 오래 걸리는 문제가 발생하여 추가함.
 			htmlBody = stripTooManyStyleTags(htmlBody);
 			
+			// 본문안에 따로 style태그가 들어가는 경우 sytle class= 를 찾아서 삭제하는 로직추가
+			htmlBody = styleClassTagsReplace(htmlBody);
+			
 			// XSS(Cross Site Scripting)을 방지하기 위한 처리
 			htmlBody = stripScriptTags(htmlBody);
 			
@@ -5096,6 +5099,20 @@ public class EzEmailUtil {
 				
 		return src;		
 	}
+
+	/**
+	 * 본문안에 따로 style태그가 들어가는 경우 sytle class= 를 찾아서 삭제하는 로직추가
+	 */
+	private String styleClassTagsReplace(String str) {
+
+		Pattern p = Pattern.compile("<style\\s+class=[\"'][^\"']*[\"'][\\s\\S]*?</style>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(str);
+		
+		str = m.replaceAll("");
+		
+		return str;
+	}
+	
 	
 	/** 
 	 * strip <object>,<applet>,<script> tags
