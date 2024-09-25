@@ -125,6 +125,18 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			//일정 정보 저장
 			schedulePath = mhtPath + schedulePath;
 			
+			String cycleSet = "";
+			String repetitionCycle = "";
+			String isAllday = "2".equals(jsonParam.get("dateType").toString()) ? "1" : "0";
+			
+			cycleSet = jsonParam.containsKey("cycleSet") ? jsonParam.get("cycleSet").toString() : "";
+			repetitionCycle = jsonParam.containsKey("repetitionCycle") ? (jsonParam.get("repetitionCycle").toString()).replaceAll(",", "|") : "";
+			
+			String repetition = "";
+			if (cycleSet != "" && repetitionCycle != "") {
+				repetition = cycleSet + "|" + isAllday + "|" + repetitionCycle;
+			}
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			
 			map.put("v_OWNERID", jsonParam.get("ownerId").toString());
@@ -142,7 +154,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			map.put("v_DATETYPE", jsonParam.get("dateType").toString());
 			map.put("v_STARTDATE", utcStartDate);
 			map.put("v_ENDDATE", utcEndDate);
-			map.put("v_REPETITION", "");
+			map.put("v_REPETITION", repetition);
 			map.put("v_TITLE", jsonParam.get("title").toString());
 			map.put("v_LOCATION", jsonParam.get("location").toString());
 			map.put("v_CONTENTPATH", schedulePath);
