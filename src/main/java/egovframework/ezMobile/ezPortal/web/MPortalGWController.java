@@ -719,66 +719,94 @@ public class MPortalGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			String menuCodeStr = "approval,mail,schedule,board,resource,workspace,address,webfolder,survey";
-			String[] menuCodeArr = menuCodeStr.split(",");
-			ArrayList<String> menuCodeList =  new ArrayList<>(Arrays.asList(menuCodeArr));
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();
 			String lang = info.getLang();
 			
-			Map<String, Boolean> menuAccessList = commonUtil.checkMenuAccess(menuCodeList, companyId, tenantId, lang, userId, deptId);
+			Map<String, Object> userInfoMap = new HashMap<>();
+			userInfoMap.put("companyId", companyId);
+			userInfoMap.put("tenantId", tenantId);
+			userInfoMap.put("langType", lang);
+			userInfoMap.put("userId", userId);
+			userInfoMap.put("deptId", deptId);
 			
+			String menuCodeStr = "mApproval,mMail,mSchedule,mBoard,mResource,workspace,mAddress,mWebfolder,mSurvey";
+			String[] menuCodeArr = menuCodeStr.split(",");
+			ArrayList<String> menuCodeList =  new ArrayList<>(Arrays.asList(menuCodeArr));
+			
+			Map<String, Boolean> menuAccessList = commonUtil.checkMenuAccess(menuCodeList, companyId, tenantId, lang, userId, deptId);
+			List<MenuInfoVO> mobileMenuList = mOptionService.getMobileMenuList(userInfoMap);
 			int footerAccessCount = 0;
 			int portalAccessCount = 0;
 			List<String> accessMenuCode = new ArrayList<String>();
 
 			String useMobileMail2 =  config.getProperty("config.useMobileMail2");
+			for (int i = 0; i < menuCodeList.size(); i++){
+				dataObject.put(menuCodeList.get(i), false);
+				dataObject.put(menuCodeList.get(i) + "Access", false);
+			}
+			
+			for (MenuInfoVO menuInfo : mobileMenuList) {
+				String menuCode = menuInfo.getMenuCode();
+				boolean access = menuInfo.isAccessYN();
+				
+				if (menuCodeList.contains(menuCode)) {
+                    switch (menuCode) {
+                        case "mApproval":
+                        case "mMail":
+                        case "mSchedule":
+                        case "mBoard":
+                        case "mResource":
+                        case "mWebfolder":
+                            footerAccessCount = access ? footerAccessCount + 1 : footerAccessCount;
+                            portalAccessCount = access ? portalAccessCount + 1 : portalAccessCount;
+
+                            if (access) {
+                                accessMenuCode.add(menuCode);
+                            }
+
+                            dataObject.put(menuCode, access);
+                            dataObject.put(menuCode + "Access", access);
+
+                            if ("mail".equalsIgnoreCase(menuCode)){
+                                if ("Y".equalsIgnoreCase(useMobileMail2)){
+                                    footerAccessCount = access? footerAccessCount + 1 : footerAccessCount;
+                                    portalAccessCount = access? portalAccessCount + 1 : portalAccessCount;
+                                    accessMenuCode.add("mail2");
+                                }
+                            }
+
+                            break;
+                        case "mSurvey":
+                        case "mAddress":
+                            dataObject.put(menuCode, access);
+                            dataObject.put(menuCode + "Access", access);
+                            break;
+                    }
+				} else if (menuCode != null) {
+					dataObject.put(menuCode, access);
+					dataObject.put(menuCode + "Access", access);
+					System.out.println(menuCode + " is NOT in the menuCodeList.");
+				}
+			}
+
 			for (Map.Entry<String, Boolean> menuAccess : menuAccessList.entrySet()) {
 				String menuCode = menuAccess.getKey();
 				boolean access = menuAccess.getValue();
-				
-				switch(menuCode) {
-				case "approval" :
-				case "mail" :
-				case "schedule" :
-				case "board" :
-				case "resource" : 
-				case "webfolder" :
-					footerAccessCount = access? footerAccessCount + 1 : footerAccessCount;
-					portalAccessCount = access? portalAccessCount + 1 : portalAccessCount;
-					
-					if(access) {
-						accessMenuCode.add(menuCode);
-					}
-					
-					dataObject.put(menuCode, access);
-					dataObject.put(menuCode + "Access", access);
+				if (menuCode != null) {
+					switch(menuCode) {
+						case "workspace":
+						footerAccessCount = access ? footerAccessCount + 1 : footerAccessCount;
 
-					if ("mail".equalsIgnoreCase(menuCode)){
-						if ("Y".equalsIgnoreCase(useMobileMail2)){
-							footerAccessCount = access? footerAccessCount + 1 : footerAccessCount;
-							portalAccessCount = access? portalAccessCount + 1 : portalAccessCount;
-							accessMenuCode.add("mail2");
+						if (access) {
+							accessMenuCode.add(menuCode);
 						}
-					}
 
-					break;
-				case "survey":
-				case "workspace":
-					footerAccessCount = access ? footerAccessCount + 1 : footerAccessCount;
-
-					if (access) {
-						accessMenuCode.add(menuCode);
+						dataObject.put(menuCode, access);
+						dataObject.put(menuCode + "Access", access);
+						break;
 					}
-					
-					dataObject.put(menuCode, access);
-					dataObject.put(menuCode + "Access", access);
-					break;
-				case "address" : 
-					dataObject.put(menuCode, access);
-					dataObject.put(menuCode + "Access", access);
-					break;
 				}
 			}
 			logger.debug("[access result] footerAccessCount : " + footerAccessCount + ", accessMenuCode : " + accessMenuCode.toString() + ", portalAccessCount : " + portalAccessCount);
@@ -981,15 +1009,15 @@ public class MPortalGWController extends EgovFileMngUtil {
 			}
 
 			if (useSchedule.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("schedule")));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mSchedule")));
 			}
 
 			if (useResource.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("resource")));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mResource")));
 			}
 
 			if (useBoard.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("board")));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mBoard")));
 			}
 
 			if (useFixBoard.equals("NO")) {
@@ -997,8 +1025,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 			}
 
 			if (useExternalMailServer.equalsIgnoreCase("YES")) {
-				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
-				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mMail")));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mAddress")));
 			}
 
 			List<PortletInfoVO> fixedPortletList = portletOrder.stream()
@@ -1012,6 +1040,15 @@ public class MPortalGWController extends EgovFileMngUtil {
 			});
 
 			JSONObject data = new JSONObject();
+			
+			for (int i = 0; i < portletOrder.size(); i++) {
+				if (portletOrder.get(i).getMenuCode().equals("mApproval")) {
+					data.put("aprMenuId", portletOrder.get(i).getMenuId());
+				} else if (portletOrder.get(i).getMenuCode().equals("mBoard")) {
+					data.put("brdMenuId", portletOrder.get(i).getMenuId());
+				}
+			}
+			
 			data.put("fixedPortletList", fixedPortletList);
 			data.put("portletOrder", portletOrder);
 
@@ -1032,22 +1069,36 @@ public class MPortalGWController extends EgovFileMngUtil {
 
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
 
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
-
+//			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+			Map<String, Object> userInfoMap = new HashMap<>();
+			userInfoMap.put("companyId", companyId);
+			userInfoMap.put("tenantId", tenantId);
+			userInfoMap.put("langType", portletLang);
+			userInfoMap.put("userId", userId);
+			userInfoMap.put("deptId", deptId);
+			
+			List<MenuInfoVO> mobileMenuList = mOptionService.getMobileMenuList(userInfoMap); // 모바일 메뉴 권한
 			boolean isUseScheduleAuth = false;
 
-			for (MenuInfoVO mVO : menuList) {
-				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("approval")) {
+			for (MenuInfoVO mVO : mobileMenuList) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("mApproval")) {
 					useApproval = "YES";
+					data.put("aprMenuId", mVO.getMenuId());
 				}
 
-				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("mail")) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("mMail")) {
 					useMail = "YES";
 				}
 
-				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("schedule") && useSchedule.equals("YES")) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("mSchedule") && useSchedule.equals("YES")) {
 					isUseScheduleAuth = true;
 				}
+				
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("mBoard")) {
+					useBoard = "YES";
+					data.put("brdMenuId", mVO.getMenuId());
+				}
+				
 			}
 
 			if(isUseScheduleAuth) {
@@ -1854,7 +1905,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			
 			Map<String, Object> userInfoMap = new HashMap<>();
 			userInfoMap.put("companyId", request.getParameter("companyId"));
-			userInfoMap.put("tenantId", request.getParameter("tenantId"));
+			userInfoMap.put("tenantId", Integer.parseInt(request.getParameter("tenantId")));
 			userInfoMap.put("langType", request.getParameter("langType"));
 			userInfoMap.put("userId", request.getParameter("userId"));
 			
