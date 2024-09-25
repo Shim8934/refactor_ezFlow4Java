@@ -358,7 +358,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			ScheduleInfoVO vo = sList.get(i);
 						
 			//반복일정 구현 시작
-			if (vo.getDateType().equals("3")) {
+			if (vo.getDateType().equals("3") && vo.getRepetition() != null && !vo.getRepetition().trim().equals("")) {
 				map.put("v_SCHEDULEID", vo.getScheduleId());
 				
 				List<String> rList = ezScheduleDAO.getScheduleRepeDelList(map);
@@ -710,61 +710,61 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			useWorkspaceSchedule = "NO";
 		}
 		
-	    // 협업 일정 가져오기
-	    if (useWorkspaceSchedule.equalsIgnoreCase("yes")) {
-	    	String[] sDate = orgStartDate.split("-");
-			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
-			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+		try {
+			// 협업 일정 가져오기
+			if(useWorkspaceSchedule.equalsIgnoreCase("yes")) {
+				String[] sDate = orgStartDate.split(" ");
+				String startDate = sDate[0];
+				String[] eDate = orgEndDate.split(" ");
+				String endDate = eDate[0];
+				String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
+				String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", tenantId);
 			
-			String startDate = sDate[0] + "-" + sMon + "-" + sDay;
-			
-			String[] eDate = orgEndDate.split("-");		
-			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
-			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
-			
-			String endDate = eDate[0] + "-" + eMon + "-" + eDay;
-			
-			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
-			String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", tenantId);
-			
-			/* 2025-04-11 전인하 - ezWork 협업을 위해 검색키워드 지정 (전체검색일 경우 키워드 넘김, 상세검색일 경우 제목 넘김. */
-			String ezWorkSearchKeyword = Strings.isBlank(searchAll) && !Strings.isNotBlank(searchTitle) ? searchTitle : searchAll;
-	        
-			/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
-			String domain = workspaceHostUrl + workspaceAppPath + "/api/GroupwareApi/post/scheduleread/";
-	    	String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(startDate, "UTF-8") 
-	    						+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + ezWorkSearchKeyword + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
-	    	String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
-	    	
-	    	if (workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
-		    	JSONParser jsonparser = new JSONParser();
-		    	JSONArray jsonarray = (JSONArray)jsonparser.parse(workspaceScheduleLists);
-		    	
-		    	logger.debug("data.length = " + jsonarray.size());
-		    	
-		    	for (int i=0; i<jsonarray.size(); i++) {
-		    		ScheduleInfoVO sVo = new ScheduleInfoVO();
-		    		JSONObject jsonobject = (JSONObject)jsonarray.get(i);
-		    		
-		    		sVo.setDateType(jsonobject.get("ItemDateType").toString());
-					sVo.setScheduleType("4");
-					sVo.setScheduleId("collaboration:" + jsonobject.get("ItemId").toString());
-					sVo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
-					sVo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
-					sVo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
-					sVo.setCreatorName(jsonobject.get("ItemUserName").toString());
-					sVo.setTitle(jsonobject.get("ItemPostTitle").toString());
-					sVo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
-					sVo.setOwnerName(jsonobject.get("ItemUserName").toString());
-					sVo.setRepeatCount(Integer.parseInt(jsonobject.get("ItemRepeatCount").toString()));
-					
-					int importance = Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1;
-					sVo.setImportance(importance + "");
-	
-					resultList.add(sVo);
-		    	}
+				/* 2025-04-11 전인하 - ezWork 협업을 위해 검색키워드 지정 (전체검색일 경우 키워드 넘김, 상세검색일 경우 제목 넘김. */
+				String ezWorkSearchKeyword = Strings.isBlank(searchAll) && !Strings.isNotBlank(searchTitle) ? searchTitle : searchAll;
+				
+				/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+				String domain = workspaceHostUrl+ workspaceAppPath + "/api/GroupwareApi/post/scheduleread/";
+				String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(startDate, "UTF-8")
+						+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + ezWorkSearchKeyword + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
+				String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
+
+				if(workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
+					JSONParser jsonparser = new JSONParser();
+					JSONArray jsonarray = (JSONArray)jsonparser.parse(workspaceScheduleLists);
+
+					logger.debug("data.length = " + jsonarray.size());
+
+					for(int i=0; i<jsonarray.size(); i++) {
+						ScheduleInfoVO sVo = new ScheduleInfoVO();
+						JSONObject jsonobject = (JSONObject)jsonarray.get(i);
+
+						sVo.setDateType(jsonobject.get("ItemDateType").toString());
+						sVo.setScheduleType("4");
+						sVo.setScheduleId("collaboration:" + jsonobject.get("ItemId").toString());
+						sVo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
+						sVo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
+						sVo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
+						sVo.setCreatorName(jsonobject.get("ItemUserName").toString());
+						sVo.setTitle(jsonobject.get("ItemPostTitle").toString());
+						sVo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
+						sVo.setOwnerName(jsonobject.get("ItemUserName").toString());
+						sVo.setRepeatCount(Integer.parseInt(jsonobject.get("ItemRepeatCount").toString()));
+
+						int importance = Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1;
+						sVo.setImportance(importance + "");
+
+						resultList.add(sVo);
+					}
+				}
 			}
-	    }
+		} catch (java.net.UnknownHostException e) {
+			logger.error("workspace host error : " + e.getMessage());
+		} catch (java.net.ConnectException e) {
+			logger.error("workspace connect error : " + e.getMessage());
+		} catch (Exception e) {
+			logger.error("error : " + e.getMessage());
+		}
 
 		logger.debug("=====getScheduleList Ended=====");
 		if (tempResultList != null) {

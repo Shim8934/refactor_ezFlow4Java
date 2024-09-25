@@ -4,6 +4,7 @@
 <sqlMap namespace="ezScheduleMobile">
 
 	<typeAlias alias="MScheduleInfoVO" 					type="egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO"/>
+	<typeAlias  alias="MResourceScheGetHolidayVO" 		type="egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO"/>
     
     <resultMap class="MScheduleInfoVO" id="MScheduleInfoVO">
 		<result property="scheduleId"		column="SCHEDULEID"			columnIndex="1"/>
@@ -34,6 +35,22 @@
 		<result property="title"			column="TITLE"				columnIndex="26"/>
 		<result property="location"			column="LOCATION"			columnIndex="27"/>
 		<result property="contentPath"		column="CONTENTPATH"		columnIndex="28"/>		
+		<result property="showTop"			column="SHOWTOP"			columnIndex="30"/>		
+	</resultMap>
+	
+	<resultMap class="MResourceScheGetHolidayVO" id="resScheGetHolidayVO">
+		<result property="holidayId"		column="HOLIDAYID"			columnIndex="1"/>
+		<result property="holidayName"		column="HOLIDAYNAME"		columnIndex="2"/>
+		<result property="holidayName2"		column="HOLIDAYNAME2"		columnIndex="3"/>
+		<result property="holidayDate"		column="HOLIDAYDATE"		columnIndex="4"/>
+		<result property="isSolar"			column="ISSOLAR"			columnIndex="5"/>
+		<result property="isRepeat"			column="ISREPEAT"			columnIndex="6"/>
+		<result property="isRest"			column="ISREST"				columnIndex="7"/>
+		<result property="isUse"			column="ISUSE"				columnIndex="8"/>
+		<result property="useCompany"		column="USECOMPANY"			columnIndex="9"/>
+		<result property="calendarDay"		column="CALENDARDAY"		columnIndex="10"/>
+		<result property="holidayFlag"		column="HOLIDAYFLAG"		columnIndex="11"/>
+		<result property="holidayRepeat"	column="HOLIDAYREPEAT"		columnIndex="12"/>
 	</resultMap>
     
     <select id="MScheduleDAO.scheduleContentPath" parameterClass="Map" resultClass="String">
@@ -79,7 +96,8 @@
 	            repetitiondelete,
 	            title,
 	            location,
-	            contentpath
+	            contentpath,
+	            showTop
 			from 
 				tbl_schedule
 	       	where  
@@ -88,5 +106,78 @@
 	       		tenant_id = #v_TENANTID#
 		]]>
   	</select>
+  	
+  	<!-- 휴일가져오기 모바일 -->
+	<select id="MScheduleDAO.getTholiday" parameterClass="Map" resultMap="resScheGetHolidayVO">
+		<isEqual property="v_COMPANYID" compareValue="ALL">
+			<![CDATA[
+				select 
+					holidayid,
+	                holidayname,
+	                holidayname2,
+	                holidaydate,
+	                TO_CHAR(holidaydate, 'YYYY/MM/DD') calendarday ,
+	                NVL(issolar, '0') issolar,
+	                NVL(isrepeat, '0') isrepeat,
+	                NVL(isuse, '0') isuse,
+	                NVL(isrest, '0') isrest,
+	                usecompany,
+	                holidayflag,
+	                holidayrepeat
+	           	from 
+					tbl_holidaylist
+				where
+					tenant_id = #v_TENANTID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_COMPANYID" compareValue="ALL">
+	   		<isEqual property="v_COMPANYID" compareValue="VIEW">
+	   			<![CDATA[
+					select 
+						holidayid,
+		                holidayname,
+		                holidayname2,
+		                holidaydate,
+		                TO_CHAR(holidaydate, 'YYYY/MM/DD') calendarday ,
+		                NVL(issolar, '0') issolar,
+		                NVL(isrepeat, '0') isrepeat,
+		                NVL(isuse, '0') isuse,
+		                NVL(isrest, '0') isrest,
+		                usecompany,
+	               	 	holidayflag,
+	                	holidayrepeat
+		           	from 
+		           		tbl_holidaylist 
+					where  
+						(usecompany = '1' or usecompany = #v_USERCOMPANY#)
+					and
+						tenant_id = #v_TENANTID#
+				]]>		                   
+			</isEqual>           
+            <isNotEqual property="v_COMPANYID" compareValue="VIEW">
+            	<![CDATA[
+		          	select 
+		          		holidayid,
+		                holidayname,
+		                holidayname2,
+		                holidaydate,
+		                TO_CHAR(holidaydate, 'YYYY-MM-DD') calendarday ,
+		                NVL(issolar, '0') issolar,
+		                NVL(isrepeat, '0') isrepeat,
+		                NVL(isuse, '0') isuse,
+		                NVL(isrest, '0') isrest,
+		                usecompany,
+	              		holidayflag,
+	               		holidayrepeat
+					from 
+						tbl_holidaylist 
+					where  
+						usecompany = #v_COMPANYID#
+					and
+						tenant_id = #v_TENANTID#	
+				]]>
+			</isNotEqual>                       	
+		</isNotEqual>			
+	</select>
 </sqlMap>
 
