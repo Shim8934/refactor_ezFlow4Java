@@ -854,7 +854,7 @@
 	</isEqual>
 	<isEqual  property="subDeptYn" compareValue="Y">
 	AND
-		(B.DEPT_CD_PATH LIKE #cn# || ',%')
+		(B.DEPT_CD_PATH LIKE #cn# || ',%'
 	OR
 		B.DEPT_CD_PATH = #cn#
 	OR
@@ -881,7 +881,7 @@
 	</isEqual>
 	<isEqual  property="subDeptYn" compareValue="Y">
 	AND		
-		(D.DEPT_CD_PATH LIKE #cn# || ',%')
+		(D.DEPT_CD_PATH LIKE #cn# || ',%'
 	OR
 		D.DEPT_CD_PATH = #cn#
 	OR
