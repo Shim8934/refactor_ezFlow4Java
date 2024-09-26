@@ -35,7 +35,7 @@
 		    var NextOpinionFlag = true;
 		    var doctitle = "";
 		    var pOrgAttach = "";
-		    var pendDir = "${endDir}'/>";
+		    var pendDir = "${endDir}";
 		    var xmlhttp = createXMLHttpRequest();
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
@@ -91,6 +91,7 @@
 			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
+			var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 
 		    $(function () {
 		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
@@ -702,6 +703,12 @@
 		    var getformcont_cross_dialogArguments = new Array();
 		    var editable = "";
 		    function btnReuse_onclick(type) {
+		    	if (nonElecRec != "") {
+		    		var pAlertContent = strLangKWC01;
+					OpenAlertUI(pAlertContent);
+					return;
+		    	}
+		    	
 				$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -720,12 +727,18 @@
 						if (xml.getElementsByTagName("FORMCONNFLAG").length > 0) {
 			                form.connflag = xml.getElementsByTagName("FORMCONNFLAG").item(0).textContent;
 						}
+						
+						if (typeof form.currVersion === "undefined" && docFormVersion == "") {
+							var pAlertContent = strLangKWC02;
+							OpenAlertUI(pAlertContent);
+							return;
+						}
 
-						if(form.currVersion != docFormVersion) {
+						if (form.currVersion != docFormVersion) {
 							var pAlertContent = strLang975;
 							OpenAlertUI(pAlertContent);
 							return;
-						} else if(form.connflag == 'Y') {
+						} else if (form.connflag == 'Y') {
 							var pAlertContent = strLang1150;
 		                    OpenAlertUI(pAlertContent);
 							return;

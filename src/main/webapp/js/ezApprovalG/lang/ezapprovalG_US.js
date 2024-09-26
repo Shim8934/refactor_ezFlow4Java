@@ -1176,3 +1176,6 @@ var strLangJSBAP02 = "Would you like to proceed with batch submission? <br>Docum
 var strLangJSBAP03 = "Would you like to proceed with batch submission and final approval? <br>Documents with forwarding status, implementation statements and agreements, and documents with separate attachments are excluded.";
 
 var strJangJIH04 = "Please specify a start date faster than the end date."
+
+var strLangKWC01 = "비전자문서는 재사용 할 수 없습니다.";
+var strLangKWC02 = "양식이 삭제되어 재사용 할 수 없습니다.";

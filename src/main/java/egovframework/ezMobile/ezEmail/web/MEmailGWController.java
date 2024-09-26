@@ -776,6 +776,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							messageJson.put("contentclass", "IPM.Note");
 						}
 					}
+
+					// secureMail
+					messageJson.put("securedMail", "1".equals(mailInfo.get("MAIL_IS_SECURED")));
 					
 					if (!endDate.equals(receivedDateStr)) {
 						messageJsonArray.add(messageJson);
