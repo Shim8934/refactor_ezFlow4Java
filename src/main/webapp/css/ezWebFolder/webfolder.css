@@ -32,8 +32,8 @@
 .spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; white-space:nowrap;}
 .spanName3 {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; white-space:nowrap; overflow:hidden;}
 
-.webfolderMinus {cursor: pointer; margin-top:4px; vertical-align:top;}
-.webfolderPlus {cursor: pointer; margin-top:4px; vertical-align:top;}
+.webfolderMinus {cursor: pointer; margin-top:4px; vertical-align:top;padding : 6px 4px 0px 4px;}
+.webfolderPlus {cursor: pointer; margin-top:4px; vertical-align:top; padding : 4px 6px 0px 5px;}
 
 #layer_Viewpopup {z-index:1000; margin:0px; padding:0px;}
 #layer_Viewpopup .btn_area {border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}

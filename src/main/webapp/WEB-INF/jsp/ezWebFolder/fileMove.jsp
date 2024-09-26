@@ -16,9 +16,6 @@
 	   	.list_text {
 	   		font-size: 14px !important;
 	   	}
-	   	.webfolderMinus {
-			margin-right: 3px;
-	   	}
 	   	
 	</style>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
