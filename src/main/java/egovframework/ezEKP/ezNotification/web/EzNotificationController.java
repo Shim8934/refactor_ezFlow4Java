@@ -67,6 +67,10 @@ public class EzNotificationController {
 	public String notificationMain(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("notificationMain started");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("deptID", userInfo.getDeptID());
+		model.addAttribute("userID", userInfo.getId());
+		
 		logger.debug("notificationMain ended");
 		
 		return "/ezNotification/notificationMain";
