@@ -3145,10 +3145,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} else {
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
-			
-			/* 2022-01-07 홍승비 - 전자결재G 일괄결재 옵션 추가 */
-			formDraftAllFlag = doc.getElementsByTagName("draftAllFlag").item(0).getTextContent();
 		}
+		
+		/* 2022-01-07 홍승비 - 전자결재G 일괄결재 옵션 추가 */
+		/* 2024-09-26 이가은 - S버전 일괄결재 옵션 포함 */
+		formDraftAllFlag = doc.getElementsByTagName("draftAllFlag").item(0).getTextContent();
 		formAprOption = doc.getElementsByTagName("APPROPTION").item(0).getTextContent();
 
 		passAprLineFlag = doc.getElementsByTagName("passAprLineFlag").item(0).getTextContent();
