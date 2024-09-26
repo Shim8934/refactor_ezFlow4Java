@@ -812,13 +812,17 @@ public class MPortalGWController extends EgovFileMngUtil {
 			logger.debug("[access result] footerAccessCount : " + footerAccessCount + ", accessMenuCode : " + accessMenuCode.toString() + ", portalAccessCount : " + portalAccessCount);
 			
 			// 2023-05-25 이가은 - 전자결재 > 공람문서 메뉴 표출을 위한 approvalFlag 값 추가
-			String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", info.getTenantId());	
+			String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", info.getTenantId());
+			List<String> footerMenuSort = Arrays.asList("mApproval", "mMail", "mSchedule", "mBoard", "mResource", "workspace", "mWebfolder", "mSurvey");
+			List<String> sortedMenu = footerMenuSort.stream()
+					.filter(accessMenuCode::contains)
+					.collect(Collectors.toList());
 			
 			List<ScheduleGroupListVO> gatherList = ezScheduleService.getMyGatherList(userId, tenantId, companyId); // 2023-10-06 임정은 - 모바일 일정관리 > 일정 모아보기 추가
 
 			dataObject.put("portalAccessCount", portalAccessCount);
 			dataObject.put("footerAccessCount", footerAccessCount);
-			dataObject.put("accessMenuCode", accessMenuCode);
+			dataObject.put("accessMenuCode", sortedMenu);
 			dataObject.put("approvalFlag", approvalFlag);
 			dataObject.put("useMobileMail2", useMobileMail2);
 			dataObject.put("gatherList", gatherList);
