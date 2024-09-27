@@ -3906,4 +3906,12 @@ ORDER BY
 		VALUES (#userId#, #tenantId#, #companyId#, #useColor#)
 		ON DUPLICATE KEY UPDATE user_id = #userId#, tenant_id = #tenantId#, company_id = #companyId#, USECOLOR = #useColor#
 	</insert>
+
+	<select id="ezNewPortal.getResportletId" resultClass="Integer">
+		SELECT
+			PORTLET_ID
+		FROM TBL_PORTAL_PORTLET
+		WHERE PORTLETCODE = 'resource'
+	</select>
+	
 </sqlMap>
