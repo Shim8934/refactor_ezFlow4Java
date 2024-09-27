@@ -515,87 +515,86 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		            	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		            	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
 
-						boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
-						
-						logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount
-								+ ",secureReadDate=" + secureReadDate + ",serverName=" + serverName);
-						
-						// remove header
-						message.removeHeader("X-JMocha-Secure-Mail-Password");
-						message.removeHeader("X-JMocha-Secure-Mail-ReadCount");
-						message.removeHeader("X-JMocha-Secure-Mail-ReadDate");
-						message.removeHeader("X-JMocha-Secure-Mail-ServerName");
-						message.removeHeader("X-JMocha-Secure-Mail");
-						message.removeHeader("X-JMocha-Secure-Mail-PasswordHint");
-						
-						// timezone 처리 확인
-						if (!secureReadDate.equals("")) {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-							secureReadDate = sdf.format(new Date(Long.parseLong(secureReadDate)));
-							secureReadDate = commonUtil.getDateStringInUTC(secureReadDate, offset, true);
-						}
-						
-						// securePassword 암호화
-						securePassword = ezEmailService.encryptSecureValue(securePassword, useKlibEncrypt);
-						
-						// save secure mail info and get secureId
-	            		int secureId = ezEmailService.setMailSecure(tenantId, userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
-    		        	
-	            		if (secureId == 0) {
-    		        		throw new Exception("INSERTSECUREMAILFAIL");
-    		        	}
-						
-	            		MimeMessage secureMessage = sa.createMimeMessage();
-	            		
-	            		// copy message's headers
-	            		@SuppressWarnings("unchecked")
-						Enumeration<Header> headerEnum = message.getAllHeaders();
-	            		
-	            		while (headerEnum.hasMoreElements()) {
-	            			Header header = headerEnum.nextElement();
-	            			secureMessage.setHeader(header.getName(), header.getValue());
-	            		}
-						
-	            		MimeMultipart secureMixedPart = new MimeMultipart();
-    		        	
-    		        	// make secureBodyPart and add to secureMixedPart
-    		        	MimeBodyPart secureBodyPart = new MimeBodyPart();
-    		        	MimeMultipart secureBodyRelatedPart = new MimeMultipart("related");
-    		        	MimeBodyPart secureBodyHtmlPart = new MimeBodyPart();
-    		        	MimeBodyPart secureBodyImagePart = new MimeBodyPart();
-    		        	
-    		        	String tempFileName = UUID.randomUUID().toString();
-    		        	
-    		        	secureBodyHtmlPart.setContent(ezEmailUtil.getSecureBodyHtml(tempFileName, locale), "text/html; charset=utf-8");
-    		        	
-    		        	secureBodyImagePart.setHeader("Content-Disposition", "inline;\r\n\tfilename=\"" + tempFileName + ".gif\"");
-    		        	secureBodyImagePart.setHeader("Content-ID", "<" + tempFileName + ".gif@12345678.87654321>");
-    		        	secureBodyImagePart.setHeader("Content-Type", "image/gif");
-    		        	FileDataSource source = new FileDataSource(new File(realPath + "/images/email/secureMail/security_img.gif"));
-    		        	secureBodyImagePart.setDataHandler(new DataHandler(source));
-    		        	
-    		        	secureBodyRelatedPart.addBodyPart(secureBodyHtmlPart);
-    		        	secureBodyRelatedPart.addBodyPart(secureBodyImagePart);
-    		        	
-    		        	secureBodyPart.setContent(secureBodyRelatedPart);
-    		        	secureMixedPart.addBodyPart(secureBodyPart);
-    		        	// make secureBodyPart and add to secureMixedPart - end
-	            		
-    		        	// make secureAttachPart and add to secureMixedPart
-    		        	MimeBodyPart secureAttachPart = new MimeBodyPart();
-    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
-    		        	secureAttachPart.setHeader("Content-Type", "text/html");
-    		        	
-    		        	String useHttps = ezCommonService.getTenantConfig("USE_HTTPS", tenantId);
-    		        	logger.debug("useHttps=" + useHttps);
-    		        	
-    		        	String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
-    		        	
-    		        	String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
-						secureMailKey = ezEmailService.encryptSecureValue(secureMailKey, useKlibEncrypt);
-						
-						secureAttachHtml = secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey);
-						secureAttachHtml = secureAttachHtml.replace("${passwordHint}", securePasswordHint);
+                        boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
+                        
+                        logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount
+                                + ",secureReadDate=" + secureReadDate + ",serverName=" + serverName + ",useKlibEncrypt=" + useKlibEncrypt);
+
+                        // remove header
+                        message.removeHeader("X-JMocha-Secure-Mail-Password");
+                        message.removeHeader("X-JMocha-Secure-Mail-ReadCount");
+                        message.removeHeader("X-JMocha-Secure-Mail-ReadDate");
+                        message.removeHeader("X-JMocha-Secure-Mail-ServerName");
+                        message.removeHeader("X-JMocha-Secure-Mail-PasswordHint");
+
+                        // timezone 처리 확인
+                        if (!secureReadDate.equals("")) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            secureReadDate = sdf.format(new Date(Long.parseLong(secureReadDate)));
+                            secureReadDate = commonUtil.getDateStringInUTC(secureReadDate, offset, true);
+                        }
+
+                        // securePassword 암호화
+                        securePassword = ezEmailService.encryptSecureValue(securePassword, useKlibEncrypt);
+
+                        // save secure mail info and get secureId
+                        int secureId = ezEmailService.setMailSecure(tenantId, userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
+
+                        if (secureId == 0) {
+                            throw new Exception("INSERTSECUREMAILFAIL");
+                        }
+
+                        MimeMessage secureMessage = sa.createMimeMessage();
+
+                        // copy message's headers
+                        @SuppressWarnings("unchecked")
+                        Enumeration<Header> headerEnum = message.getAllHeaders();
+
+                        while (headerEnum.hasMoreElements()) {
+                            Header header = headerEnum.nextElement();
+                            secureMessage.setHeader(header.getName(), header.getValue());
+                        }
+
+                        MimeMultipart secureMixedPart = new MimeMultipart();
+
+                        // make secureBodyPart and add to secureMixedPart
+                        MimeBodyPart secureBodyPart = new MimeBodyPart();
+                        MimeMultipart secureBodyRelatedPart = new MimeMultipart("related");
+                        MimeBodyPart secureBodyHtmlPart = new MimeBodyPart();
+                        MimeBodyPart secureBodyImagePart = new MimeBodyPart();
+
+                        String tempFileName = UUID.randomUUID().toString();
+
+                        secureBodyHtmlPart.setContent(ezEmailUtil.getSecureBodyHtml(tempFileName, locale), "text/html; charset=utf-8");
+
+                        secureBodyImagePart.setHeader("Content-Disposition", "inline;\r\n\tfilename=\"" + tempFileName + ".gif\"");
+                        secureBodyImagePart.setHeader("Content-ID", "<" + tempFileName + ".gif@12345678.87654321>");
+                        secureBodyImagePart.setHeader("Content-Type", "image/gif");
+                        FileDataSource source = new FileDataSource(new File(realPath + "/images/email/secureMail/security_img.gif"));
+                        secureBodyImagePart.setDataHandler(new DataHandler(source));
+
+                        secureBodyRelatedPart.addBodyPart(secureBodyHtmlPart);
+                        secureBodyRelatedPart.addBodyPart(secureBodyImagePart);
+
+                        secureBodyPart.setContent(secureBodyRelatedPart);
+                        secureMixedPart.addBodyPart(secureBodyPart);
+                        // make secureBodyPart and add to secureMixedPart - end
+
+                        // make secureAttachPart and add to secureMixedPart
+                        MimeBodyPart secureAttachPart = new MimeBodyPart();
+                        secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
+                        secureAttachPart.setHeader("Content-Type", "text/html");
+
+                        String useHttps = ezCommonService.getTenantConfig("USE_HTTPS", tenantId);
+                        logger.debug("useHttps=" + useHttps);
+
+                        String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
+
+                        String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
+                        secureMailKey = ezEmailService.encryptSecureValue(secureMailKey, useKlibEncrypt);
+
+                        secureAttachHtml = secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey);
+                        secureAttachHtml = secureAttachHtml.replace("${passwordHint}", securePasswordHint);
 
 						secureAttachPart.setContent(secureAttachHtml, "text/html; charset=utf-8");
     		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");

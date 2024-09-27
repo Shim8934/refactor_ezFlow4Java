@@ -4430,6 +4430,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 									message.setHeader("X-JMocha-Secure-Mail-Password", securePassword);
 									message.setHeader("X-JMocha-Secure-Mail-ReadCount", secureReadCount);
 									message.setHeader("X-JMocha-Secure-Mail-ReadDate", secureReadDate);
+									message.setHeader("X-JMocha-Secure-Mail-PasswordHint", securePasswordHint);
 
 									// set serverName
 									String serverName = userInfo.getServerName();
