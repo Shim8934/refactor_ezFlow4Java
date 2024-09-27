@@ -248,6 +248,13 @@
 			//게시판 설정(게시판 아이디)
 			var boardName = document.getElementById("newPortletBoard");
 			var boardId = null;
+			var brdMenuId = 4;
+			var aprMenuId = 3;
+			
+			if (webType == "mobile") {
+				brdMenuId = $("#mobileBrdId").val();
+				aprMenuId = $("#mobileAprId").val();
+			}
 			
 			if (boardName != undefined) {
 				boardId = boardName.getAttribute("data1");
@@ -289,7 +296,7 @@
 				return;
 			}
 			
-			if (portletMenuId == 4 && boardId == null) {
+			if ((portletMenuId == 4 || portletMenuId == brdMenuId) && boardId == null) {
 				alert("<spring:message code='ezNewPortal.t050' />");
 				return;
 			}
@@ -299,7 +306,7 @@
 				return;
 			}
 			
-			if (portletMenuId == 3) {
+			if (portletMenuId == 3 || portletMenuId == aprMenuId) {
 				connectionUrl += ("?cabinetType=" + document.getElementById("newPortlet").querySelector("#cabinetType").value);
 			}
 			
@@ -430,6 +437,14 @@
 			//게시판 설정(게시판 아이디)
 			var boardName = document.getElementById("portletBoard" + portletId);
 			var boardId = null;
+			var brdMenuId = 4;
+			var aprMenuId = 3;
+			
+			if (webType == "mobile") {
+				brdMenuId = $("#mobileBrdId").val();
+				aprMenuId = $("#mobileAprId").val();
+			}
+			
 			
 			if (boardName != null) {
 				boardId = boardName.getAttribute("data1");
@@ -450,7 +465,7 @@
 			var dataGeneral = document.getElementById("portlet" + portletId).getAttribute("data-general");
 			
 			var favoriteBoardUrl = document.getElementById("portlet" + portletId).dataset.url;
-			if ((menuId == 4 && favoriteBoardUrl != '/ezNewPortal/favoriteBoardPortlet.do') && boardId == null && portletCode != "tabBoard") {
+			if (((menuId == 4 || menuId == brdMenuId) && favoriteBoardUrl != '/ezNewPortal/favoriteBoardPortlet.do') && boardId == null && portletCode != "tabBoard") {
 				alert("<spring:message code='ezNewPortal.t050' />");
 				return;
 			}
@@ -474,7 +489,7 @@
 				}
 			}
 			
-			if (menuId == 3 && !(dataGeneral == 'true')) {
+			if ((menuId == 3 || menuId == aprMenuId) && !(dataGeneral == 'true')) {
 				connectionUrl += ("?cabinetType=" + document.getElementById("portlet" + portletId).querySelector("#cabinetType" + portletId).value);
 			}
 			
@@ -639,7 +654,7 @@
 							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div>";
 							listHTML += "</td></tr>";
 							
-							if (menuId != 4 && menuId != connectMenuId && menuId != mobileBrdId && menuId != mobileAprdId) {
+							if (menuId != 4 && menuId != connectMenuId && menuId != mobileBrdId) {
 								listHTML += "<tr class='connectionTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
 							} else {
 								if (!result[i].general) {
@@ -675,7 +690,7 @@
 							listHTML += "<div class='connectionSetting'>";
 							listHTML += "<a class='connectionSettingtBtn'>";
 							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";	
-						} else if (result[i].general && (menuId != 4 || portletId == 10)){
+						} else if (result[i].general && ((menuId != 4 && menuId != mobileBrdId) || portletId == 10)){
 							listHTML += "<tr class='boardNotUsed'><th class='portletInfoTH'>&nbsp;</th><td class='portletInfoTD'>&nbsp;<br/></td></tr>";
 						} else if (menuId == connectMenuId) {
 							var connectionName = "";
