@@ -363,6 +363,9 @@ function MakeListInfoHTML(ConentObject) {
                             if (p_SecureMail == 1) {
                             	p_Subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"12\" />" + p_Subject;
                             }
+                            
+                            var p_Title  = SelectSingleNodeValue(XmlRows[Cnt], "subject");
+                            _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
 
                             if (useMailNewWindow == "YES") {
                             	if (g_bdraft == true) {
@@ -373,7 +376,7 @@ function MakeListInfoHTML(ConentObject) {
                             }
                             
                             _TDColum.innerHTML = p_Subject;
-                            _TDColum.title = p_Subject.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
+                            _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) {
                                 event_listclick(this, event);
