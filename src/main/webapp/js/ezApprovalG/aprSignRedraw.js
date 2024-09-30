@@ -144,7 +144,7 @@ function redrawAllAprSign_WHWP(pSignDataXML) {
 		 for (i = 0; i < signDataLength; i++) {
              var signType = getNodeText(SelectSingleNode(signDataDom[i], "SIGNTYPE"));
              var signName = getNodeText(SelectSingleNode(signDataDom[i], "SIGNNAME"));
-             var signCont = getNodeText(SelectSingleNode(signDataDom[i], "CONTENT"));
+             var signCont = getNodeText(SelectSingleNode(signDataDom[i], "CONTENT")).replace(/(\r\n|\r|\n)/g, '\15'); // 웹한글용 개행문자 \15
              
              // signName으로 필드 ID를 찾아, DB 상에 서명 데이터가 존재하는 경우에만 재맵핑 진행
              var fieldExist = FieldExist(signName);
