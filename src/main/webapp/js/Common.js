@@ -944,3 +944,13 @@ URLParamsUtilsProto = {
     }
 }
 
+/**
+ * c:out 으로 escape된 문자를 parsing 하여 스트링만 추출
+ */
+var parserForHtmlParser = new DOMParser();
+function htmlParser(text) {
+    var dom = parserForHtmlParser.parseFromString(
+        text, 'text/html');
+    return dom.body.textContent;
+}
+

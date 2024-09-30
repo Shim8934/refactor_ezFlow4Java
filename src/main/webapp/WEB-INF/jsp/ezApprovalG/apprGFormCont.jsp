@@ -35,6 +35,7 @@
 		    var ListIdx;
 		    var RetValue;
 		    var ReturnFunction;
+		    var reuseFlag = "<c:out value='${reuseFlag}'/>";
 		    window.onload = function () {
 		        Get_Favoritelist();
 		
@@ -197,7 +198,11 @@
 		                if (DocFileType == "doc") {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1528'/>" + "<br>MHT, HWP " + "<spring:message code='ezApprovalG.t1529'/>";
 		                } else if (DocFileType == "hwp") {
-		                    var pAlertContent = "<spring:message code='ezApprovalG.t1530'/>" + "<br>MHT," + "<spring:message code='ezApprovalG.t1531'/>";
+		                	if (reuseFlag != "Y") {
+			                    var pAlertContent = "<spring:message code='ezApprovalG.t1530'/>" + "<br>MHT," + "<spring:message code='ezApprovalG.t1531'/>";
+		                	} else {
+		                		var pAlertContent = "HWP " + "<spring:message code='ezApprovalG.t1532'/>";
+		                	}
 		                } else {
 		                    var pAlertContent = "MHT " + "<spring:message code='ezApprovalG.t1532'/>" + "<br>HWP, " + "<spring:message code='ezApprovalG.t1531'/>";
 		                }

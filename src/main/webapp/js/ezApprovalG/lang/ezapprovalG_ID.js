@@ -1176,3 +1176,6 @@ var strLangJSBAP02 = "Apakah Anda ingin melanjutkan pengiriman secara berkelompo
 var strLangJSBAP03 = "Apakah Anda ingin melanjutkan pengiriman secara berkelompok dan persetujuan akhir? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian, dan dokumen dengan lampiran pemisahan dikecualikan dari target.";
 
 var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."
+
+var strLangKWC01 = "비전자문서는 재사용 할 수 없습니다.";
+var strLangKWC02 = "양식이 삭제되어 재사용 할 수 없습니다.";

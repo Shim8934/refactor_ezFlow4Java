@@ -779,7 +779,7 @@ function ellipsisTitle(portletName, portletId) {
     var portlet = portletId + "Portlet";
     var portletTitleId = document.getElementById(portlet);
     var portletTitle = portletTitleId.querySelector(".portletText");
-    portletTitle.textContent = portletName;
+    portletTitle.textContent = htmlParser(portletName);
     
     if (portletTitle.scrollWidth > portletTitle.clientWidth) {
         $(portletTitle).on({

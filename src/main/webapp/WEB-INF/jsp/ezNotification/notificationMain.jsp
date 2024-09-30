@@ -285,7 +285,7 @@
 		var date = targetDate.substring(8);
 		var dateStr = year + "." + month + "." + date + " ";
 		
-		var tempDate = new Date(year, month, date);
+		var tempDate = new Date(year, (parseInt(month, 10) - 1), date);
 		dateStr += "(" + notiDayNames[tempDate.getDay()] + ")";
 		
 		return dateStr;
