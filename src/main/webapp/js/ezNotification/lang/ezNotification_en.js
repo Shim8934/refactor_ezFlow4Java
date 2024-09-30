@@ -9,6 +9,7 @@ var mainType = {
 	community : "Community",
 	webfolder : "Web folder",
 	journal : "Work Journal",
+	noti : "Notice",
 	etc : "Etc"
 }
 
@@ -49,9 +50,7 @@ var subType = {
 		cancel : "Cancel approval",
 		reject : "Approval denied"
 	},
-	survey : {
-		modify : "Modification notice"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "Creation approval",
@@ -74,6 +73,9 @@ var subType = {
 	journal : {
 		comment : "New comment",
 		recv : "Received Journal"
+	},
+	noti : {
+		emergency : "Emergency Notice"
 	}
 }
 
@@ -89,3 +91,5 @@ subType["community"]["new"] = "New registration";
 var notiMessages = {
 	strLang1 : '"No data."'
 }
+
+var notiDayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

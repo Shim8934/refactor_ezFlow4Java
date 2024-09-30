@@ -158,9 +158,17 @@
 					}
 				}
 			}
-	    	
+
+	    	var timeoutCnt = 0;
 	        function FieldsAvailable(isTrue) {
 	            try {
+                    if(typeof DeptSymbol == "undefined"){
+                        DeptSymbol = parent.DeptSymbol;
+                        if(timeoutCnt++ == 6)
+                            location.reload();
+	                    setTimeout(function(){FieldsAvailable(isTrue)}, 500);
+	                    return;
+	                }
 	                if (isTrue) {
 	                	// 기안자 정보 xmluserInfo 변수는 onload 시 부모 페이지에서 가져온 값을 그대로 사용 (하단의 SetAutoPropertyValue에서 사용됨)
 	                	// getDraftUserInfo();

@@ -7,6 +7,10 @@
 		<title><spring:message code = 'ezPersonal.t998' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+        <style>
+			.mainlist tr th{white-space:normal; word-break:break-all;}
+			.mainlist tr select{max-width:100%;}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
@@ -118,7 +122,7 @@
     		<input type="submit" name="btnMobilManaged" value="<spring:message code="ezPersonal.t34" />" id="btnMobilManaged" class="ftbt" onclick="setNotUsedStatus();">
     	</div>
     	<br/>
-    	<table class="mainlist" style="white-space: nowrap; width:100%; overflow-x: hidden; overflow-y: scroll;">
+    	<table class="mainlist" style="width:100%; overflow-x: hidden; overflow-y: scroll;">
             <tr>
                 <th width='50%'><spring:message code="ezPersonal.kyj01" /></th>
                 <th width='15%'><spring:message code="ezPersonal.t513" /></th>

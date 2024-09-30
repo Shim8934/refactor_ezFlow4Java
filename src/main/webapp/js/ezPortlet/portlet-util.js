@@ -160,10 +160,11 @@ function changePortletSize(pot, size) {
     if (typeof usedTheme == 'undefined' || !usedTheme) usedTheme = document.querySelector('.portletList').getAttribute('data-themeid');
     userPortletUpdateWithSize(usedTheme);
 
-    var portletPagingArea = pot.querySelectorAll('.portletPagingArea');
-    if (portletPagingArea != null && portletPagingArea.length > 0) { // 포틀릿 페이지네이션 처리
-        changePortletViewCount(pot.id.replace('Portlet', ''), portletPagingArea);
+    var portletPagingArea = pot.querySelector('.portletPagingArea');
+    if (portletPagingArea) { // 포틀릿 페이지네이션 처리
+        changePortletViewCount(pot.id.replace('Portlet', ''));
     }
+    
 }
 
 // 포틀릿 사이즈 변경 팝업 만들기
@@ -504,7 +505,7 @@ function Paging() {
     };
 }
 
-function changePortletViewCount(portletId, portletPagingArea) {
+function changePortletViewCount(portletId) {
     var portletInfoObj = portletInfoMap["portlet" + portletId];
     var portletPageObj = null;
     if (portletInfoObj.portletCode == "tabBoard") {
@@ -512,21 +513,21 @@ function changePortletViewCount(portletId, portletPagingArea) {
         for (var i = 0; i < tabBoardIdList.length; i++) {
             var tabBoardId = tabBoardIdList[i];
             portletPageObj = portletInfoObj.paging[tabBoardId];
-            changePortletPageCount(portletInfoObj, portletId);
+            changePortletPageCount(portletInfoObj, portletPageObj, portletId);
         }
     } else if (portletInfoObj.portletCode == "favoriteboard") {
         var favoriteActiveTabId = portletInfoObj.activeTabId;
         portletPageObj = portletInfoObj.paging[favoriteActiveTabId];
-        changePortletPageCount(portletInfoObj, portletId);
+        changePortletPageCount(portletInfoObj, portletPageObj, portletId);
     } else {
         portletPageObj = portletInfoObj.page;
-        changePortletPageCount(portletInfoObj, portletId);
+        changePortletPageCount(portletInfoObj, portletPageObj, portletId);
     }
 }
 
-function changePortletPageCount(portletInfoObj, portletId) {
-    var perCount = portletInfoObj.page.getPagePerCount(portletId);
-    portletInfoObj.page.changeCount(perCount);
+function changePortletPageCount(portletInfoObj, portletPageObj, portletId) {
+    var perCount = portletPageObj.getPagePerCount(portletId);
+    portletPageObj.changeCount(perCount);
     portletInfoObj.getPortletList();
 }
 
@@ -772,3 +773,57 @@ function makePortlets(portletOrder) {
         }
     }
 }
+
+// 2024-08-13 황인경 - 포틀릿 제목 ... 처리시 title 표출
+function ellipsisTitle(portletName, portletId) {
+    var portlet = portletId + "Portlet";
+    var portletTitleId = document.getElementById(portlet);
+    var portletTitle = portletTitleId.querySelector(".portletText");
+    portletTitle.textContent = htmlParser(portletName);
+    
+    if (portletTitle.scrollWidth > portletTitle.clientWidth) {
+        $(portletTitle).on({
+            "mouseenter" : function(){
+                $(".title_tooltip").text($(this).text());
+                $(portletTitle).mousemove(function(){
+                    var mouseX = event.clientX;
+                    var mouseY = event.clientY;
+                    var scrollLeft = $("html").scrollLeft();
+                    var scrollTop = $("html").scrollTop();
+                    $(".title_tooltip").css({
+                        left : mouseX + scrollLeft - 15,
+                        top : mouseY + scrollTop + 25
+                    })
+                })
+                $(".title_tooltip").show();
+            },
+    
+            "mouseleave" : function(){
+                $(".title_tooltip").hide();
+            }
+        })
+    }
+}
+
+// 툴팁 추가 - 즐겨찾기게시판, 탭게시판 포틀릿
+$(document).on('mouseenter', '.longTitle', function() {
+    var tooltipText = $(this).text();
+    $(".title_tooltip").text(tooltipText);
+    $(".title_tooltip").show();
+});
+
+$(document).on('mousemove', '.longTitle', function(event) {
+    var mouseX = event.clientX;
+    var mouseY = event.clientY;
+    var scrollLeft = $(window).scrollLeft();
+    var scrollTop = $(window).scrollTop();
+    
+    $(".title_tooltip").css({
+        left: mouseX + scrollLeft - 15,
+        top: mouseY + scrollTop + 25
+    });
+});
+
+$(document).on('mouseleave', '.longTitle', function() {
+    $(".title_tooltip").hide();
+});

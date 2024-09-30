@@ -139,61 +139,9 @@
             alert("<spring:message code='ezApprovalG.t955'/>");
             return false;
         }
-
-        if (txtRegY.value == "" || txtRegD.value == "" || txtRegM.value == "") {
+        
+        if (regDate.value.trim() == "" || regTime.value.trim() == "") {
             alert("<spring:message code='ezApprovalG.t1045'/>");
-            return false;
-        }
-
-        if (!ValidateYearValue(txtRegY.value)) {
-            alert("<spring:message code='ezApprovalG.t1046'/>");
-            return false;
-        }
-
-        if (!ValidateNumber(txtRegM.value, 'Y')) {
-            alert("<spring:message code='ezApprovalG.t1047'/>");
-            return false;
-        }
-
-        if (!ValidateNumber(txtRegD.value, 'Y')) {
-            alert("<spring:message code='ezApprovalG.t1048'/>");
-            return false;
-        }
-
-        if (!ValidateNumber(txtRegH.value, 'N')) {
-            alert("<spring:message code='ezApprovalG.t1049'/>");
-            return false;
-        }
-        
-     	// 등록일자의 분에 00을 입력할 경우, 등록되지 않던 버그 수정. 2019-12-03 홍대표.
-        if (!ValidateMinuteNumber(txtRegMi.value)) {
-            alert("<spring:message code='ezApprovalG.t1050'/>");
-            return false;
-        }
-
-        if (!ValidateYearValue(txtExeY.value)) {
-            alert("<spring:message code='ezApprovalG.t1051'/>");
-            return false;
-        }
-        
-        if (!ValidateNumber(txtExeM.value, 'Y')) {
-            alert("<spring:message code='ezApprovalG.t1052'/>");
-            return false;
-        }
-        
-        /* 2020-09-11 홍승비 - 월과 일의 최대 입력 가능 숫자를 제한 */
-        if (txtExeM.value > 12) {
-            alert("<spring:message code='ezApprovalG.hsbRG01'/>");
-            return false;
-        }
-
-        if (!ValidateNumber(txtExeD.value, 'Y')) {
-            alert("<spring:message code='ezApprovalG.t1053'/>");
-            return false;
-        }
-        
-        if (txtExeD.value > 31) {
-            alert("<spring:message code='ezApprovalG.hsbRG02'/>");
             return false;
         }
 
@@ -621,16 +569,9 @@
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t831'/></th>
-                <td><input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regY}" name="txtRegY" id="txtRegY" maxlength = "4" size="4" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regM}" name="txtRegM"  id="txtRegM" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t977'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t1068'/></span></td>
+                <td>
+                    <input type="date" class="text" name="regDate" id="regDate" /><input type="time" name="regTime" id="regTime" />
+                </td>
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t979'/></th>
@@ -649,12 +590,9 @@
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t863'/></th>
-                <td><input type="text" class="text" style="height:16px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength="4" size="4" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength="2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength="2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span></td>
+                <td>
+                    <input type="date" class="text" name="exeDate" id="exeDate" />
+                </td>
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t864'/></th>

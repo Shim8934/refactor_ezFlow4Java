@@ -3465,7 +3465,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pExcludeBoardID = " ";
 		String isAdminLeft = "";
 		String companyID = Optional.ofNullable(req.getParameter("companyID")).orElse(userInfo.getCompanyID());
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 		boolean isCompanyAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER,"");
 
 		if (req.getParameter("rootBoardID") != null && !req.getParameter("rootBoardID").equals("")) {
@@ -8061,14 +8061,17 @@ public class EzBoardController extends EgovFileMngUtil{
         String subject = "[" + egovMessageSource.getMessage("ezBoard.t255", userInfo.getLocale()) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
         String notiContent = "[" + egovMessageSource.getMessage("ezNotification.hth35", userInfo.getLocale()) + "]"+ boardInfo.getBoardName() + " - " + boardItem.getTitle();
 
-        String separator = ";;";
-        String notiRecipientParam = "";
+        List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
         List<BoardAccessVO> list = ezBoardService.getPostNotiMailUserList(boardID, userInfo.getPrimary(), userInfo.getTenantId());
         
         logger.debug("Sending board mail starts.");
         for (BoardAccessVO vo : list) {
         	try {
-	        	notiRecipientParam += vo.getAccessID() + separator;
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", userInfo.getCompanyID());
+				recipientMap.put("cn", vo.getAccessID());
+				notiRecipientList.add(recipientMap);
 
 	        	InternetAddress from = new InternetAddress();
 
@@ -8162,9 +8165,8 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		String senderName = boardType.equals("2") ? "익명" : userInfo.getDisplayName();
 
-        if (notiRecipientParam.length() > 0) {
-			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), senderName, notiRecipientParam, "board", "new", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "notChkSetting");
+        if (notiRecipientList != null && notiRecipientList.size() > 0) {
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), senderName, notiRecipientList, "board", "new", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "notChkSetting");
 			logger.debug("board " +  "new" + " noti status : " + notiStatus);
         }
 
@@ -8274,14 +8276,18 @@ public class EzBoardController extends EgovFileMngUtil{
         String subject = "[" + egovMessageSource.getMessage("ezBoard.t260", userInfo.getLocale()) + boardInfo.getBoardName() + "]" + title;
         
         String notiContent = boardInfo.getBoardName() + " - " + title;
-		String notiReceiptIdList = "";
+        List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 
         List<BoardListVO> boardListVOs = ezBoardService.getReplyNoticeMail(boardID, itemTreeID, userInfo.getLang(), userInfo.getTenantId());
         
         logger.debug("Sending board mail starts.");
         for (BoardListVO vo : boardListVOs) {
         	try {
-        		notiReceiptIdList += vo.getWriterID() + ";;";
+        		Map<String, Object> recipientMap = new HashMap<String, Object>();
+        		recipientMap.put("userType", "PERSON");
+        		recipientMap.put("companyId", userInfo.getCompanyID());
+        		recipientMap.put("cn", vo.getWriterID());
+        		notiRecipientList.add(recipientMap);
 
 	        	InternetAddress from = new InternetAddress();
 	        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -8338,12 +8344,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			break;
 		}
 
-		if (notiReceiptIdList != null && !notiReceiptIdList.equals("")) {
-        	notiReceiptIdList = notiReceiptIdList.substring(0, notiReceiptIdList.length() - 2);
+		if (notiRecipientList != null && notiRecipientList.size() > 0) {
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "board", "reply", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
+			logger.debug("board " +  "reply" + "noti status : " + notiStatus);
         }
-
-        String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiReceiptIdList, "board", "reply", notiContent, "popup", "800", "1000", linkUrl, linkUrlMobile, "");
-		logger.debug("board " +  "reply" + "noti status : " + notiStatus);
 
 		logger.debug("sendReplyNotice ended");
 	}
@@ -8395,13 +8399,17 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         
         List<LoginVO> loginVOs = ezBoardService.getSendApprMailList(boardID, userInfo.getLang(), userInfo.getTenantId());
-        String notiRecipientParam = "";
-        String separator = ";;";
-
+        List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+        
         logger.debug("Sending board mail starts.");
         for (LoginVO vo : loginVOs) {
         	try {
-	        	notiRecipientParam += vo.getId() + separator;
+        		Map<String, Object> recipientMap = new HashMap<String, Object>();
+        		recipientMap.put("userType", "PERSON");
+        		recipientMap.put("companyId", userInfo.getCompanyID());
+        		recipientMap.put("cn", vo.getId());
+        		notiRecipientList.add(recipientMap);
+        		
 	        	InternetAddress from = new InternetAddress();
 	        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
 	        	from.setAddress(userInfo.getEmail());
@@ -8457,9 +8465,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			break;
 		}
 
-		if (notiRecipientParam.length() > 0) {
-			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "board", "apprv_waiting", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "notChkSetting");
+		if (notiRecipientList != null && notiRecipientList.size() > 0) {
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "board", "apprv_waiting", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "notChkSetting");
 			logger.debug("board " +  "apprv" + " noti status : " + notiStatus);
 		}
 
@@ -8554,8 +8561,16 @@ public class EzBoardController extends EgovFileMngUtil{
     		}
 
     		String notiContent = boardListVO.getBoardName() + " - " + boardListVO.getTitle();
-        	String notiRecipientParam =  boardListVO.getWriterID();
-   			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "BOARD", "RETURN", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
+    		
+    		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+    		Map<String, Object> recipientMap = new HashMap<String, Object>();
+    		recipientMap.put("userType", "PERSON");
+    		recipientMap.put("companyId", userInfo.getCompanyID());
+    		recipientMap.put("cn", boardListVO.getWriterID());
+    		notiRecipientList.add(recipientMap);
+    		
+   			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "BOARD", "RETURN", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
    			logger.debug("board " +  "return" + " noti status : " + notiStatus);
 		}
 		
@@ -10541,9 +10556,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String companyID = pIsAllGroupBoard.equals("Y") ? "" : boardProperty.getCompanyID(); // 회사ID의 경우, 그룹사게시판이 아닌 경우에만 게시판이 속한 회사ID로 세팅한다.
 		
 		List<String> notiRecipientIds = new ArrayList<String>();
-		String notiRecipientParam = "";
-		String separator = ";;";
-
+		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+		
 		if ((pMode.equals("new") && boardProperty.getMailFG_Post() != null && boardProperty.getMailFG_Post().equals("Y")) || (pMode.equals("modify") && boardProperty.getMailFG_Mod() != null && boardProperty.getMailFG_Mod().equals("Y"))) {
 			// 표준모듈(포탈, 게시판)에 회사 전환 기능이 없으므로, 사간겸직에 대해서는 권한을 체크하지 않는다. (회사 변경기능이 있다면 해당 회사에 대응하도록 수정 필요)
 			// 2024-03-28 한태훈 > 게시판 일반 사용자 즐겨찾기 게시판 새게시물 등록 시 통합알림 추가
@@ -10560,7 +10574,11 @@ public class EzBoardController extends EgovFileMngUtil{
 
 				if (!notiRecipientIds.contains(writerID)) {
 					notiRecipientIds.add(writerID);
-					notiRecipientParam += writerID + ";;";
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+					recipientMap.put("userType", "PERSON");
+					recipientMap.put("companyId", userInfo.getCompanyID());
+					recipientMap.put("cn", writerID);
+					notiRecipientList.add(recipientMap);
 				}
 			}
 
@@ -10582,7 +10600,11 @@ public class EzBoardController extends EgovFileMngUtil{
 
 				if (!notiRecipientIds.contains(writerID)) {
 					notiRecipientIds.add(writerID);
-					notiRecipientParam += writerID + ";;";
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+					recipientMap.put("userType", "PERSON");
+					recipientMap.put("companyId", userInfo.getCompanyID());
+					recipientMap.put("cn", writerID);
+					notiRecipientList.add(recipientMap);
 				}
 
 			}
@@ -10706,8 +10728,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		// 2024-03-28 한태훈 > 게시판 일반 사용자 통합 알림 추가
 		if (notiRecipientIds != null && notiRecipientIds.size() > 0) {
-			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientParam, "board", pMode, notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "board", pMode, notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "");
 			logger.debug("board " +  pMode + " noti status : " + notiStatus);
 		}
 		logger.debug("sendBoardAlert ended.");

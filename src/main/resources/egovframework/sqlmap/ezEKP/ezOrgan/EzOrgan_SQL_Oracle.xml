@@ -86,6 +86,7 @@
 		<result property="role2" 							    column="role2" 						    columnIndex="47"  nullValue=""/>
 		<result property="physicalDeliveryOfficeName1" 			column="physicalDeliveryOfficeName1" 	columnIndex="44"/>
 		<result property="userTreeFlag" 						column="usertreeflag" 					columnIndex="48"/>
+		<result property="companyId" 			                column="companyId" 	                    columnIndex="49"/>
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
@@ -1270,7 +1271,8 @@
 	            'user' TYPE  ,
 	            SIPURI ,
 	            POSITIONCD ,
-	            'user' USERTYPE
+	            'user' USERTYPE,
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1386,7 +1388,8 @@
              'user' TYPE  ,
              SIPURI ,
              B.POSITIONCD ,
-	         'addJob' USERTYPE
+	         'addJob' USERTYPE,
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
@@ -1509,7 +1512,8 @@
 	            POSITIONCD ,
 	            PHYSICALDELIVERYOFFICENAME AS PHYSICALDELIVERYOFFICENAME1 ,
 	            'user' USERTYPE,
-	            USERTREEFLAG
+	            USERTREEFLAG,
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1612,7 +1616,7 @@
              CAST(B.PROXY AS NVARCHAR2(200)) AS EXTENSIONATTRIBUTE5 ,
              A.EXTENSIONATTRIBUTE6 ,
              B.JOBID as EXTENSIONATTRIBUTE7 ,
-             A.EXTENSIONATTRIBUTE8 ,
+             B.ROLEID as EXTENSIONATTRIBUTE8 ,
              A.EXTENSIONATTRIBUTE9 ,
              CASE
              	#v_LANGDATA#
@@ -1635,7 +1639,8 @@
              SIPURI ,
              B.POSITIONCD ,
 	         'addJob' USERTYPE,
-	         B.USERTREEFLAG
+	         B.USERTREEFLAG,
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
@@ -2917,7 +2922,7 @@
                SIPURI,
                POSITIONCD,
                'user'                                USERTYPE,
-			   EXTENSIONATTRIBUTE7                   JOBID,
+			   NVL(EXTENSIONATTRIBUTE7, '')          JOBID,
 			   CAST('' AS NVARCHAR2(50))		JOBTYPE,
 			   EXTENSIONATTRIBUTE8                  AS ROLEID,
 			   EXTENSIONATTRIBUTE1 AS ROLEINFO

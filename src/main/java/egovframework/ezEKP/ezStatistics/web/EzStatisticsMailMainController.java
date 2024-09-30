@@ -68,7 +68,7 @@ public class EzStatisticsMailMainController {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary());
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary(), user.getDeptID(), user.getJobId());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", user.getCompanyID());

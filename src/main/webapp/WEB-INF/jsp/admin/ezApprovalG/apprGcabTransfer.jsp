@@ -33,6 +33,7 @@
 	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
             var adminFlag = "<c:out value ='${adminFlag}'/>"; // 2024-06-12 전인하 - 관리자 여부 판별 플래그
             var listHeaderString = "${listHeaderString}"; // 2024-06-12 전인하 - 리스트헤더 정보
+			var deptCabFlag = "N";
                         
 	        var date = new Date();
             var nowYear = date.getFullYear();
@@ -54,18 +55,19 @@
 	            // }
 				//
 	            $("#selYear").val(nowYear).prop("selected", true);
+				$("#selYear2").text($("#selYear").val());
 	        };
 	
 	        function bt_OK_onclick() {
 	        	/*
 	        		기록물철 인계할 때 인계부서 단위업무 체크 로직 추가
 	        	*/
-	        	var isEmptyCode = $("#tdSTaskCode").text().trim();
+	        	/*var isEmptyCode = $("#tdSTaskCode").text().trim();
         	
 	        	if(isEmptyCode === "" || isEmptyCode === null) {
 	        		alert("<spring:message code='ezApprovalG.pjg05'/>");
 	        		return;
-	        	}
+	        	}*/
 	        	
 	            var SelCabinetList = new ListView();
 	            SelCabinetList.LoadFromID("DivSelCabinetList");
@@ -80,7 +82,11 @@
 					else {
 					    if (TransferCabinet()) {
 					        alert("<spring:message code='ezApprovalG.t563'/>");
-					        GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2");
+							if(deptCabFlag == "Y"){
+								GetCabinetSimpleList(g_SDeptCode, "", "", "", "2", $('#selYear').val());
+							}else{
+								GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2", $('#selYear').val());
+							}
 					        DelAllRowOfLV("DivSelCabinetList");
 					    }
 					}
@@ -225,6 +231,7 @@
 	    	}
 	    	
 	       	SelectTask(g_SDeptCode, g_SDeptName, "0", "0", "OPEN", btnChangeSTask_onclick_Complete);
+			deptCabFlag = "N";
 	    }
 	
 	    function btnChangeSTask_onclick_Complete(rtn) {
@@ -435,13 +442,21 @@
 	    function selYear_onChange() {
 	    	console.log(g_SDeptCode == "")
 	    	console.log(g_STaskCode == "")
-	    	
+			$("#selYear2").text($("#selYear").val());
 	    	if (g_SDeptCode != "" && g_STaskCode != "") {
 	    		var selYear = $('#selYear').val();
 	    		GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2", selYear);
 	    	}
 	    }
-	
+
+		function btnViewDeptCab_onclick(){
+			if(g_SDeptCode == ""){
+				alert("<spring:message code='ezApprovalG.lms01'/>")
+				return;
+			}
+			GetCabinetSimpleList(g_SDeptCode, "", "", "", "2", $('#selYear').val());
+			deptCabFlag = "Y";
+		}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -455,6 +470,26 @@
 	        <tr>
 	            <td style="width:49%">
 	                <table class="content" style="width: 100%">
+						<tr>
+							<th><spring:message code='ezApprovalG.KMHG01'/></th>
+							<td>
+								<table style="border: 0px; width: 100%">
+									<tbody>
+									<tr>
+										<td>
+											<select id="selYear" style="width: 55px;" onchange="selYear_onChange()">
+												<c:forEach var = "year" items = "${ ironListYear }">
+													<option value = "${ year }">
+														${ year }
+													</option>
+												</c:forEach>
+											</select>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t575'/></th>	                        
 	                        <td>
@@ -487,17 +522,10 @@
 	                    </tr>
 	                </table>
 	                <br>
-	                <h2 class="h2_dot" style="font-weight: normal;margin-bottom:5px;">
+	                <h2 class="h2_dot" style="font-weight: normal;margin-bottom:10px;">
 						<spring:message code='ezApprovalG.t578'/>
-						<span style="float:right">
-							<select id="selYear" style="width: 55px;" onchange="selYear_onChange()">
-								<c:forEach var = "year" items = "${ ironListYear }">
-									<option value = "${ year }">
-										${ year }
-									</option>
-								</c:forEach>
-							</select>
-						</span></h2>
+						<span onclick="btnViewDeptCab_onclick()" class="imgbtn imgbck" style="float:right; height: 25px; text-align: center; cursor: pointer; color:#393939; border: 1px solid #CECECE; border-radius: 3px; padding-left: 12px; padding-right: 12px;"><spring:message code='ezApprovalG.KMHG02'/></span>
+					</h2>
 	                
 	                <div style="WIDTH: 100%; HEIGHT: 500px; OVERFLOW-Y: AUTO;" class="listview">
 	                    <div id="CabinetList"></div>
@@ -510,6 +538,16 @@
 	            </td>
 	            <td style="vertical-align: top; width:49%">
 	                <table class="content" style="width: 100%">
+						<tr>
+							<th><spring:message code='ezApprovalG.KMHG01'/></th>
+							<td>
+								<table style="border: 0px; width: 100%">
+									<tr>
+										<td id="selYear2"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t579'/></th>
 	                        <td>
@@ -542,7 +580,7 @@
 	                    </tr>
 	                </table>
 	                <br>
-	                <h2 class="h2_dot" style="font-weight: normal; margin-bottom:5px;"><spring:message code='ezApprovalG.t580'/></h2>
+	                <h2 class="h2_dot" style="font-weight: normal; margin-bottom:10px;"><spring:message code='ezApprovalG.t580'/></h2>
 	                <div style="WIDTH: 100%; HEIGHT: 500px; OVERFLOW-Y: AUTO;" class="listview">
 	                    <div id="SelCabinetList"></div>
 	                </div>

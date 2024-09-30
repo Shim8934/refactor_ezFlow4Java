@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.google.gson.Gson;
 
 import egovframework.let.utl.rest.callback.HttpEntityRequestCallback;
+import org.springframework.web.util.WebUtils;
 
 /** ezFlow 내부의 GW 와의 통신을 쉽게 하기 위한 유틸리티 */
 @Component
@@ -77,8 +79,8 @@ public class Rest {
 	}
 
 	/** GW 호출을 위한 빌더를 반환한다. */
-	public RestBuilder gateway(Module module, ServletRequest request) {
-		return gateway(module, request.getServerName());
+	public RestBuilder gateway(Module module, HttpServletRequest request) {
+		return gateway(module, request.getServerName(), WebUtils.getCookie(request, "loginCookie").getValue());
 	}
 
 	/** GW 호출을 위한 빌더를 반환한다. */
@@ -88,6 +90,13 @@ public class Rest {
 				.header("x-user-host", serverName);
 	}
 
+	public RestBuilder gateway(Module module, String serverName, String loginCookie) {
+		return new RestBuilder(config.getProperty(module.configKey))
+				.header("Accept", MediaType.APPLICATION_JSON_VALUE)
+				.header("x-user-host", serverName)
+				.header("x-login-cookie", loginCookie);
+	}
+	
 	public RestBuilder jgw() {
 		return new RestBuilder(jgwServerUrl)
 				.post().header("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");

@@ -849,21 +849,27 @@
 	</select>
 	
 	<select id="EzScheduleDAO.getPublicScheduleCumuler" parameterClass="map" resultMap="scheduleCumulerVO">		
-		<![CDATA[			       	      
-			SELECT 
-				DEPTID,
-             	CASE #v_LANG#
-					WHEN '1' THEN B.DISPLAYNAME
-					WHEN '2' THEN B.DISPLAYNAME2   
-				END TITLE  
-        	FROM 
-        		TBL_ADDJOBMASTER A JOIN TBL_DEPTMASTER B ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
-       		WHERE  
-       			A.CN = #v_CN#
-       		AND
-       			A.TENANT_ID = #v_TENANTID#
-     		AND
-       			B.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+		<![CDATA[
+		SELECT DEPARTMENT AS DEPTID,
+			   case #v_LANG#
+				   when '1' then U.DESCRIPTION
+				   when '2' then U.DESCRIPTION2
+				   end       title
+		FROM TBL_USERMASTER U
+		WHERE U.CN = #v_CN#
+		  AND U.TENANT_ID = #v_TENANTID#
+		  AND PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+		UNION ALL
+		select deptid,
+			   case #v_LANG#
+				   when '1' then b.displayname
+				   when '2' then b.displayname2
+				   end title
+		from tbl_addjobmaster a
+				 join tbl_deptmaster b on a.deptid = b.cn and a.tenant_id = b.tenant_id
+		where a.cn = #v_CN#
+		  and a.tenant_id = #v_TENANTID#
+		  and b.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 		]]>			
 	</select>
 	
@@ -2215,7 +2221,9 @@
 		DATETYPE = #v_DATETYPE#,
 		</isNotEmpty>
 		REPETITION = NVL(#v_REPETITION#, ''),
+		<isNotEmpty property="v_TITLE">
 		TITLE = #v_TITLE#,
+		</isNotEmpty>
 		REMINDERSTATUS = #v_REMINDERSTATUS#
 	WHERE
 		SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#

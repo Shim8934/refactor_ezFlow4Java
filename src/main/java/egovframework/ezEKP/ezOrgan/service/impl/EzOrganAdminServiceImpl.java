@@ -879,7 +879,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				portalTopVO.setTenantID(tenantID);
 				portalTopVO.setType(0);
 				ezNewPortalDAO.insertTopMenuDisplayModeForCompany(portalTopVO); // 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
-				
+				ezOrganAdminDao.insertConnectMenuForNewCompany(map1);
+				ezOrganAdminDao.insertMobileMenuForNewCompany(map1);	// 2024-08-12 조수빈 - 모바일 기본 메뉴 생성
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
@@ -3547,10 +3548,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	 * @return 전체관리자 - 모든 회사 리스트 / 회사관리자 - 권한이 있는 회사리스트
 	 * @throws Exception if an error occurs while retrieving the company list
 	 */
-	public List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary) throws Exception {
+	public List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary, String deptId, String jobId) throws Exception {
 		List<OrganDeptVO> list = getCompanyList(primary, tenantID);
 
-		OrganAuth organAuth = commonUtil.makeOrganAuth(id, tenantID);
+		OrganAuth organAuth = commonUtil.makeOrganAuth(id, tenantID, deptId, jobId);
 
         if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER, "")) {
             list.removeIf(vo -> !organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn()));

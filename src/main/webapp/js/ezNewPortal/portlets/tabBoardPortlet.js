@@ -13,6 +13,10 @@ function initTabPortletInfo(portletId) {
     tabBoardObj.tabBoardNameList = [];
     tabBoardObj.paging = {};
     portletInfoMap["portlet" + portletId] = tabBoardObj;
+    tabBoardObj.page = new Paging().setPageStart(1).init(getTabBoardPagePerCount(portletId));
+    tabBoardObj.page.getPagePerCount = function () {
+		return getTabBoardPagePerCount(portletId);
+	}
     tabBoardObj.getPortletList = function () {
     	var activeTabId = tabBoardObj.activeTabId;
     	var activeTabIndex = tabBoardObj.tabIdList.indexOf(activeTabId);

@@ -14,7 +14,7 @@
 <body class="mainbody">
 	<h1>
 		<spring:message code='email.appr.title.request' /> <% // 발송요청목록 %>
-		<span style="color:#017BEC;">${listTotalCount}</span>
+		<span class='txt_color'>${listTotalCount}</span>
 	</h1>
 	
 	<!-- 안내문구 -->

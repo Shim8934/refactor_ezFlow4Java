@@ -307,11 +307,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
-	    String regY = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,4);
-	    String regM = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5,7);
-	    String regD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(8,10);
-	    String regH = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(11,13);
-	    String regMi = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(14,16);
 	    String apprTotalAttachLimit = ezCommonService.getTenantConfig("ApprTotalAttachLimit", userInfo.getTenantId());
 		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
  		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
@@ -373,11 +368,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
  		
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("useEditor", useEditor);
-	    model.addAttribute("regY", regY);
-	    model.addAttribute("regM", regM);
-	    model.addAttribute("regD", regD);
-	    model.addAttribute("regH", regH);
-	    model.addAttribute("regMi", regMi);
 	    model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
 	    model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		model.addAttribute("pAttachWarning0", commonUtil.stripScriptTagsAndFunctions(pAttachWarning0));

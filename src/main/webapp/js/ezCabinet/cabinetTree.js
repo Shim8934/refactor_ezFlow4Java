@@ -217,7 +217,11 @@ function CabinetTree() {
 			}
 			
 			imgElmt.src       = _minusImg;
-			imgElmt.className = "cabinetMinus";
+			if (level == 0) {
+				imgElmt.className = "cabinetMinus";
+			} else {
+				imgElmt.className = "sub_iconLNB tree_minus";
+			}
 			
 			var len = list[_nodeSub].length;
 			

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포탈설정</title>
+    <link rel="stylesheet" type="text/css" href="../../css/default_kr.css">
+    <link rel="stylesheet" type="text/css" href="../../css/ezNewPortal/portal.css">
+    <link rel="stylesheet" href="../../css/ezNewPortal/jquery.flipster.min.css" type="text/css">
+    <style>
+			html { height: 100%; }
+			#set-body { background-color: white;}
+			.set-head { background-color: rgb(228, 238, 254); height:44px; line-height:42px; display: flex; align-items: center; margin:0 0 18px; padding:0px;}
+			.set-head h1 { font-size: 16px; margin-left: 20px; color:black;}
+			.set-action { height: 9%; display: flex; justify-content: center; align-items: center;} 
+			
+			.flipsterLi { width:95px; height: 64px; margin-top:20px; margin-left:20px; padding:20px; background:#fff;}
+			.frameList { height: 151px; /* background-color: #e0e3e4; */ margin-left: 20px; margin-right: 20px;}
+			
+			.select-flipster {border:1px solid #2196f3;}
+			.paginationBtn { border: 1px solid black; width: 100px; height: 30px; margin-left:20px; margin-right:20px;}
+			
+			/*.switch {margin-top:15px;} */
+			.flipster__container {margin-left:-20px;}
+			.mCSB_container {margin-right:10px !important; padding:0;}
+			.flipster__button {height:65px;}
+			.fixed_span img { vertical-align: top; margin: 3px 5px 0px 0px;}
+			/* Tooltip text */
+			.fixed_span .tooltiptext {
+				visibility: hidden;
+			    width: 132px;
+			    background-color: rgba(66, 66, 66, 0.5);
+			    color: #fff;
+			    text-align: center;
+			    padding: 5px 0;
+			    border-radius: 6px;
+			    position: absolute;
+			    font-weight: normal;
+			    z-index: 1;
+			    top: 6px;
+			    opacity: 0;
+			    transition: opacity 1s;
+			}
+			
+			/* Show the tooltip text when you mouse over the tooltip container */
+			.fixed_span img:hover ~ .tooltiptext {visibility: visible;opacity: 1;}
+			.fixed_span .tooltiptext::after {
+				content: " ";
+				position: absolute;
+				top: 40%;
+				right: 100%;
+				margin-top: -5px;
+				border-width: 5px;
+				border-style: solid;
+				border-color: transparent rgba(0,0,0, 0.5) transparent transparent;
+			}
+
+			._mCS_2 {overflow: auto;}
+			#fixBoardList .mCSB_scrollTools_vertical{display:none !important;}
+    </style>
+    <script>
+        window.onload=function(){
+            var tabs = document.querySelectorAll(".set-tab ul li");
+            tabs.forEach(function(tab){
+                tab.addEventListener("click",function(){
+                    tabs.forEach(function(tab){
+                        tab.classList.remove("on");
+                    })
+                    tab.classList.add("on");
+                    if(tab.id == "t1"){
+                        document.querySelector(".set-frame").style.display = "block";
+                        document.querySelector(".set-portlet").style.display = "none";
+                    } else{
+                        document.querySelector(".set-frame").style.display = "none";
+                        document.querySelector(".set-portlet").style.display = "block";
+                    }
+                })
+            })
+
+            var themeTab = document.querySelectorAll(".form_set.theme li");
+            themeTab.forEach(function(theme){
+                theme.addEventListener("click",function(){
+                    themeTab.forEach(function(theme){
+                        theme.classList.remove("select");
+                    })
+                    theme.classList.add("select");
+                })
+            })
+
+            var modeTab = document.querySelectorAll(".form_set.mode li");
+            modeTab.forEach(function(mode){
+                mode.addEventListener("click",function(){
+                    modeTab.forEach(function(mode){
+                        mode.classList.remove("select");
+                    })
+                    mode.classList.add("select");
+                })
+            })
+
+            var menuTab = document.querySelectorAll(".form_set.menu li");
+            menuTab.forEach(function(menu){
+                menu.addEventListener("click",function(){
+                    menuTab.forEach(function(menu){
+                        menu.classList.remove("select");
+                    })
+                    menu.classList.add("select");
+                })
+            })
+
+            document.querySelector(".portlet-scroll").style.height = (window.innerHeight - 299) + "px";
+            // 295는 메인 타이틀 / 탭 / 서브 타이틀 / 하단 버튼 영역 / margin 값 / 하단 여백 10 을 더한값
+
+            if(document.querySelectorAll(".portlet-scroll .ui-portlet-content").length >= 15){
+                document.querySelector(".portlet-scroll").style.padding = "0 8px 0 20px";
+            } // 스크롤 생기면 여백 조정
+        }
+    </script>
+</head>
+<body id="set-body" class="set-body">
+    <section class="set-head">
+        <h1>포탈설정</h1>
+    </section>
+
+    <section class="set-tab">
+        <ul>
+            <li id="t1" class="">테마/모드 설정</li>
+            <li id="t2" class="on">포틀릿 설정</li>
+        </ul>
+    </section>
+
+    <section class="set-frame" style="display:none;">
+        <h3>테마</h3>
+        <ul class="form_set theme">
+            <li class="default select">
+                <span class="form_image"></span>
+                <span class="form_name">기본형</span>
+            </li>
+            <li class="shortcut">
+                <span class="form_image"></span>
+                <span class="form_name">바로가기형</span>
+            </li>
+            <li class="separation">
+                <span class="form_image"></span>
+                <span class="form_name">정보 분리형</span>
+            </li>
+        </ul>
+
+        <h3>모드</h3>
+        <ul class="form_set mode default">
+            <li class="white select">
+                <span class="form_image"></span>
+                <span class="form_name">White</span>
+            </li>
+            <li class="blue">
+                <span class="form_image"></span>
+                <span class="form_name">Blue</span>
+            </li>
+            <li class="red">
+                <span class="form_image"></span>
+                <span class="form_name">Red</span>
+            </li>
+            <li class="dark">
+                <span class="form_image"></span>
+                <span class="form_name">Dark Mode</span>
+            </li>
+        </ul>
+
+        <h3>메뉴 위치</h3>
+        <ul class="form_set menu default">
+            <li class="top select">
+                <span class="form_image"></span>
+                <span class="form_name">상단</span>
+            </li>
+            <li class="left">
+                <span class="form_image"></span>
+                <span class="form_name">좌측</span>
+            </li>
+        </ul>
+    </section>
+
+    <section class="set-portlet">
+        <h3>고정 포틀릿</h3>
+        <div class="ui-portlet-list">
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="fixed_portlet"></span>
+                    <span class="tooltiptext">관리자가 지정한 필수 사용 포틀릿 입니다.</span>
+                    <span class="ui-portlet-span">상단고정포틀릿(좌)</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">상단고정포틀릿(좌)</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+
+        <h3>포틀릿
+            <div class="cont_slide_check">
+                <label>
+                    <input type="checkbox">컨텐츠 슬라이드 사용
+                </label>
+            </div>
+        </h3>
+        <div class="ui-portlet-list portlet-scroll">
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="ui-portlet ui-portlet-on ui-portlet-content">
+                <div class="fixed_span">
+                    <span class="ui-portlet-span">소식배너</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="portletid_78">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <div class="btnpositionLayer">
+        <a class="imgbtn">
+            <span id="saveBtn">저장</span>
+        </a>
+        <a class="imgbtn">
+            <span id="cancelBtn">취소</span>
+        </a>
+    </div>
+</body>
+</html>

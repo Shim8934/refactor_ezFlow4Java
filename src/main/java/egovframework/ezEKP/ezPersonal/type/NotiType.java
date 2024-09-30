@@ -53,8 +53,6 @@ public enum NotiType {
 	
 	// 전자설문 신규등록
 	SURVEY_NEW(6, 1),
-	// 전자설문 수정알림
-	SURVEY_MODIFY(6, 2),
 	
 	// 투표 신규등록
 	POLL_NEW(7, 1),

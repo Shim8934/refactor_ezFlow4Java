@@ -85,7 +85,7 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
@@ -278,7 +278,7 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
@@ -385,7 +385,7 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		StringBuilder companySel = new StringBuilder();
 		
@@ -395,7 +395,7 @@ public class EzStatisticsApprController {
 					.append("</option>");
 		}
 		
-		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 		String topID = organAuth.isAuth(OrganAuth.AdminAuth.ADMIN_MASTER) ? "Top/organ" : userInfo.getCompanyID();
 		
 		model.addAttribute("companyID", topID);
@@ -493,7 +493,7 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
@@ -559,7 +559,7 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());

@@ -9,6 +9,7 @@ var mainType = {
 	community : "社区",
 	webfolder : "网络文件夹",
 	journal : "工作日志",
+	noti : "通告",
 	etc : "ETC"
 }
 
@@ -50,9 +51,7 @@ var subType = {
 		cancel : "取消批准",
 		reject : "批准被拒绝"
 	},
-	survey : {
-		modify : "修改通知"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "创建审批",
@@ -75,6 +74,9 @@ var subType = {
 	journal : {
 		comment : "发表评论",
 		recv : "接收通知"
+	},
+	noti : {
+		emergency : "紧急通知"
 	}
 }
 
@@ -90,3 +92,5 @@ subType["community"]["new"] = "新注册";
 var notiMessages = {
 	strLang1 : '"没有数据."'
 }
+
+var notiDayNames = ["日", "一", "二", "三", "四", "五", "六"];

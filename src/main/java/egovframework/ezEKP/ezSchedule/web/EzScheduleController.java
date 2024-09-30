@@ -35,7 +35,7 @@ import javax.mail.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import egovframework.ezEKP.ezSchedule.service.EzScheduleAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -121,6 +121,8 @@ import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.util.MapTimeZoneCache;
+
+import static egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 
 /** 
  * @Description [Controller] 스케쥴
@@ -1936,16 +1938,19 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", loginVO.getTenantId());
 		
 		loginVO = commonUtil.userInfo(loginCookie);
-
-        if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "c;k")) {
-        	pCompanyAdmin = "Y";
-        	pDeptAdmin = "Y";
-        }
-		if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "g")) {
-        	pDeptAdmin = "Y";
-        }
-		if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "v")) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(loginVO.getId(), loginVO.getTenantId(), loginVO.getDeptID(), loginVO.getJobId());
+		
+		if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER, companyID)) {
 			pCompanyAdmin = "Y";
+			pDeptAdmin = "Y";
+		} else {
+			if (organAuth.isAuth(AdminAuth.DEPT_MANAGER, loginVO.getDeptID())) {
+				pDeptAdmin = "Y";
+			}
+
+			if (organAuth.isAuth(AdminAuth.SCHEDULE_MANAGER, companyID)) {
+				pCompanyAdmin = "Y";
+			}
 		}
 
         String _defaultid = request.getParameter("defaultid");
@@ -2089,10 +2094,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 					
 					//겸직일정
 					for (ScheduleCumulerVO vo : cList) {
-						if (loginVO.getDeptID().equals(vo.getDeptId())) {
+						String deptId = vo.getDeptId();
+						if (loginVO.getDeptID().equals(deptId)) {
 							continue;
-						} else {
-							strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
+						} else if ("Y".equals(pCompanyAdmin) || organAuth.isAuth(AdminAuth.DEPT_MANAGER, deptId)){
+							strOwnerID.append("<option value='2;;" + deptId + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
 							count++;
 						}
 	            	}
@@ -2510,9 +2516,18 @@ public class EzScheduleController extends EgovFileMngUtil {
      					ezScheduleService.scheduleSendMail(result, v_attendantId, v_attendantName, title, periodConetent, "add", loginVO, loginCookie, startdate, enddate);
      				}
 
-     				String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do?from=mail";
+     				String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do";
      				String linkUrlMobile = "/mobile/ezSchedule/mScheduleReceiveAttendant.do";
-     				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), v_attendantId, "schedule", "add", title, "popup", "730", "370", linkUrl, linkUrlMobile, "");
+     				
+     				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+     				Map<String, Object> recipientMap = new HashMap<String, Object>();
+     				recipientMap.put("userType", "PERSON");
+     				recipientMap.put("companyId", loginVO.getCompanyID());
+     				recipientMap.put("cn", v_attendantId);
+     				notiRecipientList.add(recipientMap);
+     				
+     				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "schedule", "add", title, "popup", "730", "370", linkUrl, linkUrlMobile, "");
      			}
         	 }
 	    } else {
@@ -3181,10 +3196,18 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 
 			/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
-			String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do?from=mail";
+			String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do";
 			String linkUrlMobile = "/mobile/ezSchedule/mScheduleReceiveAttendant.do";
 			
-			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), attendantId, "schedule", "add", vo.getTitle(), "popup", "730", "370", linkUrl, linkUrlMobile, "");
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+			Map<String, Object> recipientMap = new HashMap<String, Object>();
+			recipientMap.put("userType", "PERSON");
+			recipientMap.put("companyId", loginVO.getCompanyID());
+			recipientMap.put("cn", attendantId);
+			notiRecipientList.add(recipientMap);
+			
+			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "schedule", "add", vo.getTitle(), "popup", "730", "370", linkUrl, linkUrlMobile, "");
 		}
 	}
 	
@@ -3239,7 +3262,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 			/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 			String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleId;
 			String linkUrlMobile = "";
-			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), attendantId, "SCHEDULE", "CANCEL", vo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
+			
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+			Map<String, Object> recipientMap = new HashMap<String, Object>();
+			recipientMap.put("userType", "PERSON");
+			recipientMap.put("companyId", loginVO.getCompanyID());
+			recipientMap.put("cn", attendantId);
+			notiRecipientList.add(recipientMap);
+			
+			ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "SCHEDULE", "CANCEL", vo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
 		}
 	}
 	
@@ -3323,7 +3355,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 				/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 				String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleIdList[i];
 				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&date=" + startDate.substring(0,16) + "&type=monthList&purpose=scheduleInfoDetail";
-				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), creatorId, "schedule", "accept", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+				
+				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", loginVO.getCompanyID());
+				recipientMap.put("cn", creatorId);
+				notiRecipientList.add(recipientMap);
+				
+				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "schedule", "accept", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 			else {
 				if (!ezPersonalService.hasNotiDiableItem(creatorId, NotiType.SCHEDULE_REJECT, NotiPlatform.MAIL, loginVO.getTenantId())) {
@@ -3333,7 +3374,15 @@ public class EzScheduleController extends EgovFileMngUtil {
 				/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
 				String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleIdList[i];
 				String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleIdList[i] + "&startDate=" + startDate.substring(0,16) + "&endDate=" + endDate.substring(0,16) + "&date=" + startDate.substring(0,16) + "&type=monthList&purpose=scheduleInfoDetail";
-				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), creatorId, "schedule", "reject", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+
+				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", loginVO.getCompanyID());
+				recipientMap.put("cn", creatorId);
+				notiRecipientList.add(recipientMap);
+				
+				ezNotificationService.sendNoti(request, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "schedule", "reject", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 		}	
 	}

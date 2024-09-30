@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO;
@@ -12,6 +14,8 @@ import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -81,4 +85,23 @@ public interface EzSystemAdminService {
 	public int getConnectorListCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate, String companyId) throws Exception;
 	public void resetThemeAllUser () throws Exception;
 	public void resetPortletAllUser () throws Exception;
+	
+	public int getSystemConfigListCount(String searchValue, String type, String companyID, int tenantID) throws Exception;
+	public int getSystemConfigListCountPopup(String searchValue, String typeCode, String companyID, int tenantID) throws Exception;
+	public List<SystemConfigVO> getSystemConfigList(String searchValue, String type, String offset, int startRow, int endRow, String companyID, int tenantID) throws Exception;
+	public List<SystemConfigVO> getSystemConfigListPopup(String searchValue, String type, String offset, int startRow, int pageCount, String companyID, int tenantID) throws Exception;
+	public SystemConfigVO getSystemConfig(String CODE, String offset, String companyID, int tenantID) throws Exception;
+	public void deletesyStemConfig(String sCode, String companyID, int tenantID) throws Exception;
+	public String insertStemConfig(Document doc, String WRITERID, String WRITERNAME, int tenantID) throws Exception;
+	public String updateStemConfig(Document doc, String WRITERID, String WRITERNAME, int tenantID) throws Exception;
+	public int getSystemConfigTypeListCount(String searchValue, String companyID, int tenantId) throws Exception;
+	public String getSystemConfigTypeList(String searchValue, String offset, int startRow, int pageSize, String searchMode, String primaryLang, String companyID, int tenantId) throws Exception;
+	public void deleteSystemConfigType(String typeCode, String companyID, int tenantId) throws Exception;
+	List<SystemConfigTypeVO> getSystemConfigTypeListNotXml(String searchValue, String offset, int startRow,	int pageSize, String searchMode, String companyID, int tenantId) throws Exception;
+	public String checkDuplicateCode(String code, int tenantId, String companyID) throws Exception;
+	public SystemConfigTypeVO getSystemConfigType(String typeCode, String offset, String companyID, int tenantId) throws Exception;
+	public String checkDuplicateTypeCode(String typeCode, int tenantId, String companyID) throws Exception;
+	public void insertSystemConfigType(String typeCode, String typeName, String typeName2, String description, String writerId, String writerName, String writerName2, int tenantId, String companyId) throws Exception;
+	public void updateSystemConfigType(String typeCode, String typeName, String typeName2, String description, String writerId, String writerName, String writerName2, int tenantId, String companyId) throws Exception;
+	public void disableDeleteSystemConfig(String sCode, String companyID, int tenantId) throws Exception;
 }

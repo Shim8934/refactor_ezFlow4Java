@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -477,6 +478,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezportal/portlets/favoriteforms";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
@@ -937,6 +940,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("jobId", userInfo.getJobId());
+		param.put("lang", userInfo.getLang());
+		
 		
 		String url = "/rest/ezportal/portlets/userinfomations";
 		
@@ -1459,5 +1467,134 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		logger.debug("getBoardList End");
 		return data;
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/connectionPortlet.do", method=RequestMethod.GET)
+	public String connectionPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("connectionPortlet started");
+		
+		model.addAttribute("portletId", req.getParameter("portletId"));
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+		
+		logger.debug("connectionPortlet ended");
+		
+		return "/ezNewPortal/portlets/connectPortlet";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ezNewPortal/getConnectList.do", method=RequestMethod.GET)
+	public JSONObject getConnectList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getConnectList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("portletId", req.getParameter("portletId"));
+		param.put("currentPage", req.getParameter("currentPage"));
+		param.put("listCnt", req.getParameter("listCnt"));
+		
+		String url = "/rest/ezPortal/portlets/connect/list";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = null;
+		if (status.equals("ok")) {
+			data = (JSONObject) resultBody.get("data");
+		}
+		
+		logger.debug("getConnectList End");
+		return data;
+	}
+	
+
+	@ResponseBody
+	@RequestMapping(value = "/rest/testConnectPortletJSON.do", method=RequestMethod.POST)
+	public JSONObject testConnectPortletJSON(HttpServletRequest req, @RequestBody Map<String, Object> jsonData) throws Exception {
+		logger.debug("testConnectPortletJSON Start");
+		
+		JSONObject json = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		
+		int listCnt = Integer.parseInt(jsonData.get("listCnt").toString());
+		int startRow = Integer.parseInt(jsonData.get("startRow").toString());
+		
+		for (int i = startRow; i < startRow + listCnt && i < 30; i++) {
+			JSONObject jsonVO = new JSONObject();
+			jsonVO.put("title", i + "번째 글");
+			jsonVO.put("writeDate", "2024-08-19 01:12:00");
+			jsonVO.put("writeName", i + "번째 사람");
+			jsonVO.put("linkUrl", "http://localhost:8080/test" + i);
+			jsonVO.put("mobileLinkUrl", "http://localhost:8001/test" + i);
+			
+			jsonArray.add(jsonVO);
+		}
+		
+		json.put("data", jsonArray);
+		json.put("totalCnt", 30);
+		
+		logger.debug("testConnectPortletJSON End");
+		return json;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/rest/testConnectPortletJSONtoXML.do", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public String testConnectPortletJSONtoXML(HttpServletRequest req, @RequestBody Map<String, Object> jsonData) throws Exception {
+		logger.debug("testConnectPortletJSON Start");
+		
+		String xml = "";
+		
+		int listCnt = Integer.parseInt(jsonData.get("listCnt").toString());
+		int startRow = Integer.parseInt(jsonData.get("startRow").toString());
+		xml += "<DATA>";
+		xml += "<ROWS>";
+		for (int i = startRow; i < startRow + listCnt && i < 30; i++) {
+			xml += "<ROW>";
+			xml += "<TITLE>" + i + "번째 글" + "</TITLE>";
+			xml += "<WRITEDATE>" + "2024-08-19 01:12:00" + "</WRITEDATE>";
+			xml += "<WRITENAME>" + i + "번째 사람" + "</WRITENAME>";
+			xml += "<LINKURL>" + "http://localhost:8080/test" + i + "</LINKURL>";
+			xml += "<MOBILELINKURL>" + "http://localhost:8001/test" + i + "</MOBILELINKURL>";
+			xml += "</ROW>";
+		}
+		xml += "</ROWS>";
+		xml += "<TOTALCNT>30</TOTALCNT>";
+		xml += "</DATA>";
+		
+		logger.debug("testConnectPortletJSON End");
+		return xml;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/rest/testConnectPortletXMLtoXML.do", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public String testConnectPortletXMLtoXML(HttpServletRequest req, @RequestBody String xmlData) throws Exception {
+		logger.debug("testConnectPortletJSON Start");
+		
+		String xml = "";
+		
+		Document doc = commonUtil.convertStringToDocument(xmlData);
+		int listCnt = Integer.parseInt(doc.getElementsByTagName("listCnt").item(0).getTextContent());
+		int startRow = Integer.parseInt(doc.getElementsByTagName("startRow").item(0).getTextContent());
+		
+		xml += "<DATA>";
+		xml += "<ROWS>";
+		for (int i = startRow; i < startRow + listCnt && i < 30; i++) {
+			xml += "<ROW>";
+			xml += "<TITLE>" + i + "번째 글" + "</TITLE>";
+			xml += "<WRITEDATE>" + "2024-08-19 01:12:00" + "</WRITEDATE>";
+			xml += "<WRITENAME>" + i + "번째 사람" + "</WRITENAME>";
+			xml += "<LINKURL>" + "http://localhost:8080/test" + i + "</LINKURL>";
+			xml += "<MOBILELINKURL>" + "http://localhost:8001/test" + i + "</MOBILELINKURL>";
+			xml += "</ROW>";
+		}
+		xml += "</ROWS>";
+		xml += "<TOTALCNT>30</TOTALCNT>";
+		xml += "</DATA>";
+		
+		logger.debug("testConnectPortletJSON End");
+		return xml;
 	}
 }

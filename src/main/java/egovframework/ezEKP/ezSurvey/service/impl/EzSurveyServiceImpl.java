@@ -670,23 +670,27 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			
 			sendMailList.addAll(userList);
 			sendMailList.addAll(subDeptList);
-			String receipientIds = "";
-			String separator = ";;";
-			for (int i = 0; i < userList.size(); i++) {
-				SurveyParticipantVO userinfo = userList.get(i);
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+			Set<String> sendNotiSet = new HashSet<String> ();
+			for (int i = 0; i < sendMailList.size(); i++) {
+				SurveyParticipantVO userinfo = sendMailList.get(i);
 				String userAccount = userinfo.getEmail();
 				String receiveId = userAccount.split("@")[0];
-				receipientIds += receiveId;
-				if (i != userList.size() - 1) {
-					receipientIds += separator;
-				}
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", userInfo.getCompanyID());
+				recipientMap.put("cn", receiveId);
 				
+				if (!sendNotiSet.contains(receiveId)) {
+					notiRecipientList.add(recipientMap);
+					sendNotiSet.add(receiveId);
+				}
 			}
 			
 			if (mode == "NEW") {
 				String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId;
-		    	String linkUrlMobile = "";
-		    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), receipientIds, "SURVEY", mode, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+		    	String linkUrlMobile = "/mobile/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId + "&mode=all";
+		    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "SURVEY", mode, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 			}
 			
 			//Send notice mail
@@ -964,8 +968,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		List<AttachVO> surveyAttach         = ezSurveyDAO.getSurveyAttachList(map);
 		
 		//Clone attach files
+		/* 2023-08-04 한태훈 : 첨부파일 다운로드 시 보안문제로 원본 파일 복사 후 복사된 파일을 다운로드 받을 수 있게 하는 코드이지만, 전자설문 페이지  
+		 열 때마다 파일이 복사되는 문제가 있음.
 		cloneAttachFiles(surveyAttach, realPath, getSurveyDirPath(tenantId));
-		
+		*/
 		survey.setAttachList(surveyAttach);
 		survey.setUserList(listUsers);
 		survey.setResultViewTarget(listResultUsers);
@@ -1053,7 +1059,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			List<AttachVO> attachs     = ezSurveyDAO.getAllAttachForQsAndOpt(map);
 			
 			//Clone list of attach
+			/* 2023-08-04 한태훈 : 첨부파일 다운로드 시 보안문제로 원본 파일 복사 후 복사된 파일을 다운로드 받을 수 있게 하는 코드이지만, 전자설문 페이지  
+			 열 때마다 파일이 복사되는 문제가 있음.
 			cloneAttachFiles(attachs, realPath, getSurveyDirPath(tenantId));
+			*/
 			
 			//long startTime = System.nanoTime();
 			
@@ -1263,6 +1272,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return setQuestionIds;
 	}
 	
+	/* 2023-08-04 한태훈 - 첨부파일 다운로드 시 원본 파일의 접근을 막기 위해 원본 파일을 복사하는 작업을 하는 코드인듯 하나,, 
+	 첨부파일이 첨부된 전자설문페이지를 열때마다 파일 복사가 일어나 용량이 커지는 문제 생김.
+	
 	private void cloneAttachFiles(List<AttachVO> attachs, String realPath, String dirPath) throws Exception {
 		for (AttachVO attach : attachs) {
 			if (attach.getFurl() != null) {
@@ -1286,6 +1298,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			}
 		}
 	}
+	*/
 	
 	@SuppressWarnings("unchecked")
 	@Override

@@ -137,7 +137,7 @@ function InitializeTab(strTabNum) {
 }
 
 function InitExtraInfo() {
-    InsValueIntoTD(tdExeDate, SelectSingleNodeValue(g_EInfoXml, "EXECUTEDATE").substring(0,10)); // 날짜만 출력하는 것으로 변경, DB바꾸는 것보다 script 소스 수정
+    InsValueIntoTD(tdExeDate, SelectSingleNodeValue(g_EInfoXml, "EXECUTEDATE")); // 날짜만 출력하는 것으로 변경, DB바꾸는 것보다 script 소스 수정
     InsValueIntoTD(tdReceipt, SelectSingleNodeValue(g_EInfoXml, "RECEIPTMEMBER"));
     InsValueIntoTD(tdDeliveryNo, SelectSingleNodeValue(g_EInfoXml, "DELIVERYNO"));
     InsValueIntoTD(tdProdRegNo, SelectSingleNodeValue(g_EInfoXml, "PRODUCEDEPTSN"));

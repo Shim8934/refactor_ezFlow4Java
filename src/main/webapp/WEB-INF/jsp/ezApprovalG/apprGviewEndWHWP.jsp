@@ -549,7 +549,7 @@
 		        parameter[0] = "sol2";
 		        parameter[1] = "A01000";
 		        
-		        url = "/ezApprovalG/getFormCont.do";
+		        url = "/ezApprovalG/getFormCont.do?fileType=HWP&reuseFlag=Y";
 		        
 		        if (CrossYN()) {
 		            getformcont_cross_dialogArguments[0] = parameter;
