@@ -8,11 +8,11 @@
 </head>
 <body class="body_bg1">
 	<article class="box_shadow">
-		<div class="layDIV" id="helpDiv" style="">
-			<span class="leftImg"><img src="/images/ezNewPortal/bannerImg_left.png"></span>
-			<dl class="bannerText sortablePortlet">
-				<dt class="bText"><span><spring:message code='ezNewPortal.t040' /></span></dt>
-				<dt class="sText">
+		<div class="layDIV sortablePortlet" id="helpDiv" style="">
+			<span class="leftImg"><img class="sortablePortlet" src="/images/ezNewPortal/bannerImg_left.png"></span>
+			<dl class="bannerText">
+				<dt class="bText"><span class="sortablePortlet"><spring:message code='ezNewPortal.t040' /></span></dt>
+				<dt class="sText sortablePortlet">
 					<spring:message code='ezNewPortal.t041' /><br><spring:message code='ezNewPortal.t042' />
 				</dt>
 				<dd class="bannerBtn" id="helpDetail">
