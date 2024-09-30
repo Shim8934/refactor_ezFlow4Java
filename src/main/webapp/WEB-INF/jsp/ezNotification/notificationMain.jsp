@@ -170,6 +170,10 @@
 	}
 	
 	function makeNotiList(result, mode) {
+		if (!notiListFlag) {
+			return;
+		}
+		
 		if (mode == "first") {
 			var notiListElement = document.getElementById('notiList'); 
 			while (notiListElement.firstChild) {
