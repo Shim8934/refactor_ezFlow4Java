@@ -2923,7 +2923,7 @@ function openAaprDocAttachUI() {
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
             
             if(approvalFlag == "G") {
-            	DivPopUpShow(1050, 520, url);
+            	DivPopUpShow(1050, 560, url);
             } else {
             	DivPopUpShow(1050, 560, url);
             }

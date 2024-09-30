@@ -2648,7 +2648,7 @@ function openAaprDocAttachUI() {
 		aprcabinetattach_cross_dialogArguments[0] = parameter;
 		aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_complete;
       
-		DivPopUpShow(1050, 520, url);
+		DivPopUpShow(1050, 560, url);
 	} catch(e) {
 		alert("openAaprDocAttachUI() :: " + e);
 	}
