@@ -18901,8 +18901,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					setHwpText(signDateField, signDateMD, hwpFile);
 				}
 				
-				setHwpText(signField, signContent, hwpFile);
-				HWPWriter.toFile(hwpFile, realPath + docHref);
+				if (findHwpField(signField, hwpFile)) {
+					setHwpText(signField, signContent, hwpFile);
+				}
+				
+				// 서명일자, 서명칸 필드가 양식상에 존재하는 경우에만 파일 수정 및 저장 진행
+				if (findHwpField(signDateField, hwpFile) || findHwpField(signField, hwpFile)) {
+					HWPWriter.toFile(hwpFile, realPath + docHref);
+				}
 			}
 			// MHT
 			else {
@@ -18916,22 +18922,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					doc.getElementById(signDateField).html(signDateMD);
 				}
 				
-				doc.getElementById(signField).html(signContent);
+				if (doc.getElementById(signField) != null) {
+					doc.getElementById(signField).html(signContent);
+				}
 				
-				String tempHtml = doc.outerHtml();
-				
-				try (OutputStream outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref))); 
-						OutputStreamWriter output = new OutputStreamWriter(outputStream);) {
-					String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+				// 서명일자, 서명칸 필드가 양식상에 존재하는 경우에만 파일 수정 및 저장 진행
+				if (doc.getElementById(signDateField) != null || doc.getElementById(signField) != null) {
+					String tempHtml = doc.outerHtml();
 					
-					output.write(convertedMHT);
-				} catch (FileNotFoundException fnfe) {
-					logger.debug("fnfe: {}", fnfe);
-				} catch (IOException ioe) {
-					logger.debug("ioe: {}", ioe);
-				} catch (Exception e) {
-					logger.debug("e: {}", e);
-				}  
+					try (OutputStream outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref))); 
+							OutputStreamWriter output = new OutputStreamWriter(outputStream);) {
+						String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+						
+						output.write(convertedMHT);
+					} catch (FileNotFoundException fnfe) {
+						logger.debug("fnfe: {}", fnfe);
+					} catch (IOException ioe) {
+						logger.debug("ioe: {}", ioe);
+					} catch (Exception e) {
+						logger.debug("e: {}", e);
+					}
+				}
 			}
 		}
 		
