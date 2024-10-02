@@ -373,7 +373,7 @@
 	        
 	        window.onload = function () {
 	            try {
-					if (opener != null) {
+					if (opener != null && opener.getformcont_cross_dialogArguments != null) {
 						parameters = opener.getformcont_cross_dialogArguments[0];
 					}
 

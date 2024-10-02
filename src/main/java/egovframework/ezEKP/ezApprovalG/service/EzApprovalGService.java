@@ -195,7 +195,7 @@ public interface EzApprovalGService {
 
     public void saveRecReadHist(String readRecXML, int tenantID) throws Exception;
     
-	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN, String passAprLine) throws Exception;
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN, String passAprLine, String sendNotiFlag) throws Exception;
 
     public String receiverChk(String deptID, String companyID, int tenantID) throws Exception;
 
@@ -287,7 +287,7 @@ public interface EzApprovalGService {
 
     public String getAprType_AprState(String docID, String userID, String strDocState, String companyID, int tenantID) throws Exception;
 
-    public String doCallBack(String docID, String userID, String companyID, int tenantID) throws Exception;
+    public String doCallBack(String docID, String userID, String companyID, int tenantID, String sendNotiFlag) throws Exception;
 
     public String getFormConnFlag(String docID, String companyID, int tenantID) throws Exception;
 
@@ -507,9 +507,9 @@ public interface EzApprovalGService {
 
     public String setCabinetHesong(String docID, String deptID, String deptName, String deptName2, String userName, String userName2, String dirpath, String docSN, String companyID, String lang, int tenantId, String offset, Locale locale) throws Exception;
 
-    public String doBansong(String docID, String childDocID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo, String curDocNum) throws Exception;
+    public String doBansong(String docID, String childDocID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo, String curDocNum, String sendNotiFlag) throws Exception;
 
-    public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID, String userName) throws Exception;
+    public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID, String userName, String sendNotiFlag) throws Exception;
 
     public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
     
