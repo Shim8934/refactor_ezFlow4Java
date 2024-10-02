@@ -23419,7 +23419,7 @@
 	    		ATTACHFILESN , 
 	    		VIEWORDER , 
 	    		ATTACHFILENAME , 
-	    		ATTACHFILEHREF , 
+                #tmpHref# ,
 	    		ATTACHFILESIZE , 
 	    		ATTACHUSERID , 
 	    		ATTACHUSERNAME , 
@@ -23440,11 +23440,13 @@
 	      FROM 
 	      		TBL_APRATTACHINFO 
 	      WHERE  
-	      		DOCID = #v_DOCID# 
+	      		DOCID = #orgDoc#
 		  AND 	
 		   		TENANT_ID = #v_TENANTID#
 		  AND
-		  		COMPANYID = #companyID#)
+		  		COMPANYID = #companyID#
+            AND
+             A.ATTACHFILESN = #attachfileSn#)
    </insert>
    
    <insert id="EzApprovalG.insertTmpExpAprLine" parameterClass="Map"> 

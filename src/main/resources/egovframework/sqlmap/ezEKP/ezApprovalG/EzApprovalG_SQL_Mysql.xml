@@ -23261,7 +23261,7 @@
 			A.ATTACHFILESN ,
 			A.VIEWORDER , 
 			A.ATTACHFILENAME ,
-			A.ATTACHFILEHREF ,
+			#tmpHref# ,
 			A.ATTACHFILESIZE ,
 			A.ATTACHUSERID ,
 			A.ATTACHUSERNAME ,
@@ -23297,11 +23297,13 @@
 				A.companyid = B.companyid
 		</isEqual>
 		WHERE
-			A.DOCID = #v_DOCID#
+			A.DOCID = #orgDoc#
 		AND
 			A.TENANT_ID = #v_TENANTID#
 		AND
-			A.COMPANYID = #companyID#)
+			A.COMPANYID = #companyID#
+		AND
+            A.ATTACHFILESN = #attachfileSn#)
    </insert>
    
    <insert id="EzApprovalG.insertTmpExpAprLine" parameterClass="Map"> 

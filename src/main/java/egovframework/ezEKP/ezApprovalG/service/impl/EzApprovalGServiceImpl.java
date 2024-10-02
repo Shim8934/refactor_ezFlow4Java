@@ -14265,6 +14265,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String makeTmpDocInfo(String userID, String docID, String updateFlag, String companyID, String lang, int tenantID, String oldDocID) throws Exception {
 		logger.debug("makeTmpDocInfo started.");
 		logger.debug("updateFlag = " + updateFlag + " || docID = " + docID);
+        
+        // 임시저장 첨부파일의 경우 복사해서 따로 저장.
+        String strLangFile = getCode2Name("L01", "001", companyID, lang, tenantID);
+        String strLangDocument = getCode2Name("L01", "002", companyID, lang, tenantID);
+        String sep = commonUtil.separator;
+        List<ApprGAttachInfoVO> listAprAttach = getListAprAttach(oldDocID, "APR", commonUtil.getMultiData(lang, tenantID), strLangFile, strLangDocument, "", companyID, tenantID);
+        String docYear = getDocHrefYear(docID, companyID, tenantID);
+
+        for (ApprGAttachInfoVO aprAttach : listAprAttach) {
+            String beforeHref = aprAttach.getAttachHref();
+            String afterHref = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + sep + companyID + sep + "uploadFile" + sep + docYear + sep +
+                    getDocDir(docID) + sep + docID.trim() + getNDigitNum(aprAttach.getAttachSN(), 4) + aprAttach.getAttachName();
+            FileUtils.copyFile(new File(servletContext.getRealPath("") + beforeHref), new File(servletContext.getRealPath("") + afterHref));
+            aprAttach.setAttachHref(afterHref);
+        }
 		
 		String sn = "";
 		if (updateFlag.equals("UPDATE")) {
@@ -14291,11 +14306,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertTmpReceiptPointInfo(map);
 			ezApprovalGDAO.insertTmpAprOpinionInfo(map);
 			ezApprovalGDAO.insertTmpAprDocAttachInfo(map);
-			ezApprovalGDAO.insertTmpAttachInfo(map);
 			ezApprovalGDAO.insertTmpExpAprLine(map);
 			ezApprovalGDAO.insertTmpAprLineInfo(map);
 			ezApprovalGDAO.insertTmpExpAprDocInfo(map);
 			ezApprovalGDAO.insertTmpAprDocInfo(map);
+
+            for (ApprGAttachInfoVO aprAttach : listAprAttach) {
+                map.put("orgDoc", oldDocID);
+                map.put("attachfileSn", aprAttach.getAttachSN());
+                map.put("tmpHref", aprAttach.getAttachHref());
+                ezApprovalGDAO.insertTmpAttachInfo(map);
+            }
 			
 		} else {
 			sn = getMaxTMPDocSN(userID, companyID, lang, tenantID);
@@ -14321,7 +14342,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertTmpReceiptPointInfo(map);
 			ezApprovalGDAO.insertTmpAprOpinionInfo(map);
 			ezApprovalGDAO.insertTmpAprDocAttachInfo(map);
-			ezApprovalGDAO.insertTmpAttachInfo(map);
 			ezApprovalGDAO.insertTmpExpAprLine(map);
 			ezApprovalGDAO.insertTmpAprLineInfo(map);
 			
@@ -14337,6 +14357,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	            ezApprovalGDAO.aprMakeTmp2Ing13(map);
 	            ezApprovalGDAO.aprMakeTmp2Ing14(map);
 	        }
+
+            for (ApprGAttachInfoVO aprAttach : listAprAttach) {
+                map.put("orgDoc", oldDocID);
+                map.put("attachfileSn", aprAttach.getAttachSN());
+                map.put("tmpHref", aprAttach.getAttachHref());
+                ezApprovalGDAO.insertTmpAttachInfo(map);
+            }
 		}
 		
 		logger.debug("makeTmpDocInfo ended.");
@@ -38583,5 +38610,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         queryParam.set("orgCompanyID", userInfo.getCompanyID());
 
         return commonUtil.makeUrl(path, queryParam);
+    }
+
+    private List<ApprGAttachInfoVO> getListAprAttach(String docID, String flag, String strLang, String strLangFile, String strLangDocument, String orderOption1, String companyID, int tenantID) throws Exception{
+        logger.debug("getListAprAttach started. Param : v_DOCID=" + docID +" v_MODE=" + flag + " v_STRLANG=" + strLang + " v_LANGFILE=" +strLangFile + " v_LANGDOCUMENT =" + strLangDocument + " v_ORDERBY=" + orderOption1 + " v_TENANTID=" + tenantID + " COMPANYID = " + companyID);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("v_MODE", flag);
+        map.put("v_STRLANG", strLang);
+        map.put("v_LANGFILE", strLangFile);
+        map.put("v_LANGDOCUMENT", strLangDocument);
+        map.put("v_ORDERBY", orderOption1);
+        map.put("v_ORDERBYLENGTH", orderOption1.length());
+
+        if (!orderOption1.isEmpty()) {
+            map.put("v_ORDERBYVALUE", orderOption1.substring(0, 10).toLowerCase());
+        }
+
+        map.put("v_TENANTID", tenantID);
+        map.put("companyID", companyID);
+
+        return ezApprovalGDAO.getAttachInfoDB(map);
     }
 }
