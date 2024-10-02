@@ -134,6 +134,8 @@ function setStartPage(event) {
 		</tr>
 		<c:forEach items="${menuList}" var="menu">
 		<c:choose>
+			<c:when test="${menu.menuId eq '-1'}">
+			</c:when>
 			<c:when test="${menu.menuId eq menuId }">
 				<tr id="M${menu.menuId }">
 					<td></td>
