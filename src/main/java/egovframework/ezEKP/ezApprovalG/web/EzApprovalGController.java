@@ -13520,4 +13520,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		return docList;
 	}
+	
+	/* 2024-10-04 홍승비 - 전자결재 버전 플래그(ApprovalFlag) 테넌트 컨피그값을 가져오는 AJAX 호출용 메서드 추가 */
+	@RequestMapping(value = "/ezApprovalG/getApprovalFlag.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getApprovalFlag(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("getApprovalFlag started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
+		logger.debug("getApprovalFlag ended");
+		return approvalFlag;
+	}
 }

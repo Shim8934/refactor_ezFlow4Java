@@ -45,6 +45,27 @@ function getAllAprSignDataXML(pDocID, pOrgCompanyID) {
 	return resultXML;
 }
 
+/* 2024-10-04 홍승비 - 전자결재 버전 플래그(ApprovalFlag) 테넌트 컨피그값을 가져오는 AJAX 함수 추가 */
+function getApprovalFlag() {
+	var resultFlag = "";
+	
+	$.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getApprovalFlag.do",
+		success : function(result) {
+			resultFlag = result;
+		},
+		error : function(e) {
+			console.log(e);
+		}
+	});
+	
+	return resultFlag;
+}
+
+
 ///////////////////////////////////////////////////// MHT 함수 /////////////////////////////////////////////////////
 /* MHT - 결재서명 재맵핑 전체 제어 함수 (각 함수들을 호출하는 최상위 함수) */
 function startRemapAllAprSign_MHT(pDocID, pOrgCompanyID) {
@@ -123,6 +144,14 @@ function redrawAllAprSign_MHT(pSignDataXML) {
 /* WHWP - 결재서명 재맵핑 전체 제어 함수 (각 함수들을 호출하는 최상위 함수) */
 function startRemapAllAprSign_WHWP(pDocID, pOrgCompanyID) {
 	try {
+		/* 2024-09-30 홍승비 - 웹한글 양식 사용 시, 결재서명 재맵핑 함수 동작은 G버전에서만 동작하도록 임시 수정 (2024-09-30 기준으로 일반버전 웹한글 기능에는 대응하지 않음) */
+		// 차후 일반버전 웹한글 기능에도 대응되도록 수정 가능 (수정 후 아래 pApprovalFlag == "G" 체크 분기와 pApprovalFlag 파라미터 관련 호출을 제거할 것)
+		var pApprovalFlag = getApprovalFlag();
+		
+	    if (pApprovalFlag != "G") {
+	    	return;
+	    }
+		
 		// 1) 결재서명 데이터 XML로 리턴
 		var signDataXML = getAllAprSignDataXML(pDocID, pOrgCompanyID);
 		
