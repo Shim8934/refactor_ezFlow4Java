@@ -200,9 +200,8 @@ function AprrovMappingSign(ret)
 			signCnt = signCnt + 1;
 		}
 	}
-	
-	// 전자결재 일반버전 웹한글 대응 분기 (상단 else~if문에 붙어있던 기존 else문은 S버전이 아닌 G버전 대응 분기이므로, 현재 if문의 하단으로 내려감)
-    if (ret == "BANSONG" && KuyjeType == "001" && approvalFlag == "S") {
+	/* 2024-10-04 홍승비 - 웹한글 S버전 대응 > 합의결재와 일반적인 내부결재를 분기처리하는 if~else문의 오류 수정 (합의결재 대응 코드가 if문, 그 이외의 결재 케이스가 else문) */
+	else if(ret == "BANSONG" && KuyjeType == "001" && approvalFlag == "S") {
         var pAprMemberSignSN = pAprMemberSN;
         var signID;
         var seumyungID;
