@@ -687,6 +687,16 @@
 			A.ENDDATE,
 			A.TITLE,
 			A.ATTACHMENTS,
+			CASE
+				WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+				WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+				ELSE 'MANY'
+			END FILENAME,
+			CASE
+				WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+				WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+				ELSE 'MANY'
+				END FILEPATH,
 			A.IMPORTANCE,
 			B.BOARDID,
 			CASE WHEN (
@@ -716,6 +726,12 @@
    			A.TENANT_ID = B.TENANT_ID
    		AND
    			A.BOARDID = B.BOARDID
+		LEFT OUTER JOIN
+			TBL_BOARD_ITEM_ATTACHMENTS F
+		ON
+			A.ITEMID = F.ITEMID
+		AND
+			A.TENANT_ID = F.TENANT_ID
    		WHERE
    			A.TENANT_ID = #v_TENANTID#
    		AND
@@ -724,6 +740,8 @@
    			A.WRITERID = #v_PUSERID#
    		AND
    			A.STARTDATE > #nowDate#
+		GROUP BY
+			A.ITEMID, A.TITLE
    		ORDER BY
 		<isNotEmpty property="v_ORDERCOL">
 			<isEqual property="v_ORDERCOL" compareValue="A.Attachments">A.Attachments</isEqual>
@@ -1201,6 +1219,16 @@
 				A.IMPORTANCE,
 				A.TITLE,
 				A.ATTACHMENTS,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+					ELSE 'MANY'
+				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
 				A.READCOUNT,
 				A.ITEMLEVEL,
 				A.ABSTRACT,
@@ -1286,6 +1314,14 @@
 						 	S.USERID = #v_PUSERID#
 						 AND 
 						 	S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
+			LEFT OUTER JOIN
+				TBL_BOARD_ITEM_ATTACHMENTS F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
+			GROUP BY
+				A.ITEMID, A.TITLE
      	]]>
      		ORDER BY
 	     	<isEqual property="iv_PORDERBYCOL1" compareValue="BOARDNAME"> B.BOARDNAME </isEqual>
@@ -1321,6 +1357,16 @@
    				A.TITLE,
    				A.READCOUNT,
    				A.ATTACHMENTS,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+					ELSE 'MANY'
+				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
    				A.ITEMLEVEL,
    				A.ABSTRACT,
    				A.EXTENSIONATTRIBUTE5,
@@ -1388,6 +1434,12 @@
 					A.ITEMID = D.ITEMID
 		  	]]>
 	  	</isEqual>
+			LEFT OUTER JOIN
+				TBL_BOARD_ITEM_ATTACHMENTS F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -1421,6 +1473,8 @@
 				  		A.ENDDATE < #nowDate# 
 				]]>
 			  </isEqual>
+			GROUP BY
+				A.ITEMID, A.TITLE
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -1462,6 +1516,16 @@
   				A.TITLE,
   				A.READCOUNT,
   				A.ATTACHMENTS,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+					ELSE 'MANY'
+				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
   				A.ITEMLEVEL,
   				A.ABSTRACT,
   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -1533,6 +1597,12 @@
  					A.TENANT_ID = D.TENANT_ID
  				AND
  					A.ITEMID = D.ITEMID
+				LEFT OUTER JOIN
+					TBL_BOARD_ITEM_ATTACHMENTS F
+				ON
+					A.ITEMID = F.ITEMID
+				AND
+					A.TENANT_ID = F.TENANT_ID
  				WHERE
  					A.TENANT_ID = #v_TENANTID#
  				AND
@@ -1569,6 +1639,8 @@
 				  		ENDDATE < #nowDate#
 				]]>
 		  	</isEqual>
+			GROUP BY
+				A.ITEMID, A.TITLE
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -1609,6 +1681,16 @@
                 A.TITLE ,
                 A.READCOUNT ,
                 A.ATTACHMENTS ,
+            	CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+					ELSE 'MANY'
+				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
                 A.ITEMLEVEL ,
                 A.ABSTRACT ,
                 '0' READFLAG  ,
@@ -1671,10 +1753,16 @@
         	    A.PUBLICFLAG
               FROM 
               	TBL_Board_Item A
+			LEFT OUTER JOIN
+				TBL_BOARD_ITEM_ATTACHMENTS F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
               WHERE  
-              	TENANT_ID = #v_TENANTID#
+              	A.TENANT_ID = #v_TENANTID#
               AND
-              	BOARDID = #v_PBOARDID#
+              	A.BOARDID = #v_PBOARDID#
               AND 
               	STARTDATE <= #nowDate#
               AND 
@@ -1692,6 +1780,8 @@
               AND 
               	APPRFLAG = 'Y' 
              </isNotEmpty>
+			GROUP BY
+				A.ITEMID, A.TITLE
      		ORDER BY
      			A.NotiNo ASC,
      			A.ParentWriteDate DESC,
@@ -1718,6 +1808,16 @@
                     A.TITLE ,
                     A.READCOUNT ,
                     A.ATTACHMENTS ,
+					CASE
+						WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+						WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+						ELSE 'MANY'
+					END EXT,
+					CASE
+						WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+						WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+						ELSE 'MANY'
+					END FILEPATH,
                     A.ITEMLEVEL ,
                     A.ABSTRACT ,
                     '0' READFLAG  ,
@@ -1746,6 +1846,12 @@
 					A.TENANT_ID = B.TENANT_ID
 				AND
 					A.BoardID = B.BoardID
+                LEFT OUTER JOIN
+                    TBL_BOARD_ITEM_ATTACHMENTS F
+                ON
+                    A.ITEMID = F.ITEMID
+                AND
+                    A.TENANT_ID = F.TENANT_ID
 				WHERE
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -1762,6 +1868,8 @@
 					extensionAttribute2 = '1'
 				AND
      			  	(A.APPRFLAG = 'Y' OR A.APPRFLAG IS NULL)
+                GROUP BY
+  				  	A.ITEMID, A.TITLE
 				ORDER BY
 					A.WriteDate DESC
 				LIMIT
@@ -1784,6 +1892,16 @@
                     A.TITLE ,
                     A.READCOUNT ,
                     A.ATTACHMENTS ,
+                  	CASE
+						WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+						WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+						ELSE 'MANY'
+					END EXT,
+					CASE
+						WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+						WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+						ELSE 'MANY'
+					END FILEPATH,
                     A.ITEMLEVEL ,
                     A.ABSTRACT ,
                     '0' READFLAG  ,
@@ -1820,6 +1938,12 @@
                 	A.TENANT_ID = B.TENANT_ID
                 AND
                 	A.BoardID = B.BoardID
+            	LEFT OUTER JOIN
+					TBL_BOARD_ITEM_ATTACHMENTS F
+				ON
+					A.ITEMID = F.ITEMID
+				AND
+					A.TENANT_ID = F.TENANT_ID
              	WHERE  
              		A.TENANT_ID = #v_TENANTID#
              	AND
@@ -1832,6 +1956,8 @@
                 	extensionAttribute1 = '0'
                 AND 
                 	extensionAttribute2 = '1'
+				GROUP BY
+  				  	A.ITEMID, A.TITLE
               	ORDER BY 
               		A.WriteDate DESC
 			]]>
@@ -1854,6 +1980,16 @@
    				A.TITLE,
    				A.READCOUNT,
    				A.ATTACHMENTS,
+   				CASE
+   					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+   					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+   					ELSE 'MANY'
+   				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
    				A.ITEMLEVEL,
    				A.ABSTRACT,
    				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -1910,6 +2046,12 @@
 				A.TENANT_ID = D.TENANT_ID
 			AND
 				A.ITEMID = D.ITEMID
+            LEFT OUTER JOIN
+                TBL_BOARD_ITEM_ATTACHMENTS F
+            ON
+                A.ITEMID = F.ITEMID
+            AND
+                A.TENANT_ID = F.TENANT_ID
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -1922,6 +2064,8 @@
 				STARTDATE <= #nowDate#
 			AND
 				ENDDATE > #nowDate#
+			GROUP BY
+				A.ITEMID, A.TITLE
 		]]>
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
@@ -1963,6 +2107,16 @@
    				A.TITLE,
    				A.READCOUNT,
    				A.ATTACHMENTS,
+   				CASE
+   					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+   					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+   					ELSE 'MANY'
+   				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
    				A.ITEMLEVEL,
    				A.ABSTRACT,
    				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -2017,12 +2171,20 @@
 				A.TENANT_ID = D.TENANT_ID
 			AND
 				A.ITEMID = D.ITEMID
+            LEFT OUTER JOIN
+                TBL_BOARD_ITEM_ATTACHMENTS F
+            ON
+                A.ITEMID = F.ITEMID
+            AND
+                A.TENANT_ID = F.TENANT_ID
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
 				(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 			AND
 				WRITERID = #v_PUSERID#
+			GROUP BY
+				A.ITEMID, A.TITLE
 		]]>
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
@@ -2065,6 +2227,16 @@
 				A.TITLE,
 				A.READCOUNT,
 				A.ATTACHMENTS,
+                CASE
+                    WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+                    WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+                    ELSE 'MANY'
+                END EXT,
+                CASE
+                    WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+                    WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+                    ELSE 'MANY'
+                END FILEPATH,
 				A.ITEMLEVEL,
 				A.ABSTRACT,
 				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -2122,6 +2294,12 @@
 				TBL_BOARD_APPRLIST APPR
 			ON
 				A.BOARDID = APPR.BOARDID
+            LEFT OUTER JOIN
+                TBL_BOARD_ITEM_ATTACHMENTS F
+            ON
+                A.ITEMID = F.ITEMID
+            AND
+                A.TENANT_ID = F.TENANT_ID
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -2134,6 +2312,8 @@
 				A.APPRFLAG = 'N'
 			AND
 				APPR.APPRUSERID = #v_PUSERID#
+			GROUP BY
+				A.ITEMID, A.TITLE
 		]]>
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>

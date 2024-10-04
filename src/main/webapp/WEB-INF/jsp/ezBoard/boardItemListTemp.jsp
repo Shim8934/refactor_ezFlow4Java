@@ -83,6 +83,9 @@
 		        var pNoneActiveX = "YES";
 		        var strListInfo = "";
 		        var g_bPrevShow = false;
+		        // 2024-10-04 조수빈 - 마이게시판, 게시물 승인 화면의 경우 게시판 id가 없어 오류가 발생하여 추가
+            	var pBoardID = "";
+            	var Read_FG = 'true';
 		        window.onunload = Window_onunload;
 		        var window_onunload_Event = false;
 		        window.onresize = function () {
