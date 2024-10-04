@@ -361,7 +361,7 @@ function MakeListInfoHTML(ConentObject) {
                             	p_Subject = strLang97;
                             }
                             if (p_SecureMail == 1) {
-                            	p_Subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"12\" />" + p_Subject;
+                            	p_Subject = "<span class='security_icon'></span>" + p_Subject;
                             }
                             
                             var p_Title  = SelectSingleNodeValue(XmlRows[Cnt], "subject");
