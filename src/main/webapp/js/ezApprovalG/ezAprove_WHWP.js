@@ -99,12 +99,12 @@ function AprrovMappingSign(ret)
 	var OpinionText = "";
 	var PositionText = "";
 	// 4 : 전결, 16 : 대결
-	if( LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+	if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		OpinionText = getSignDate() + "\15";
 	}
 	
 	// 8 : 개인순차협조, 9 : 개인병렬협조, 11 : 부서순차협조, 12 : 부서병렬협조
-	if(pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) { 
+	if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) { 
   		var phabyuisign;
   		var phabyuidate;
   		var phabyuijikwee;
@@ -204,7 +204,8 @@ function AprrovMappingSign(ret)
 			signCnt = signCnt + 1;
 		}
 	}
-    if(ret == "BANSONG" && KuyjeType == "001" && approvalFlag == "S") {
+	/* 2024-10-04 홍승비 - 웹한글 S버전 대응 > 합의결재와 일반적인 내부결재를 분기처리하는 if~else문의 오류 수정 (합의결재 대응 코드가 if문, 그 이외의 결재 케이스가 else문) */
+	else if(ret == "BANSONG" && KuyjeType == "001" && approvalFlag == "S") {
         var pAprMemberSignSN = pAprMemberSN;
         var signID;
         var seumyungID;
@@ -400,7 +401,7 @@ function AprrovMappingSign(ret)
         }
         //TODO: junGyulFlag 2,3 일때 처리
     }
-	else { 
+	else {
 		var pAprMemberSignSN = pAprMemberSN;
 		var signID;
 		var seumyungID;
@@ -428,6 +429,7 @@ function AprrovMappingSign(ret)
                 }
             }
         }
+        
 		if(pDraftFlag == "SUSIN")
 		{
 			signID = pSusinSN + "sign" + pAprMemberSignSN;
