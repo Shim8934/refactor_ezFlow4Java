@@ -397,11 +397,13 @@
 				switch (e) {
 					case "up" : {
 						destIdx = curIdx - 1;
+
 						break;
 					}
 
 					case "down" : {
 						destIdx = curIdx + 1;
+
 						break;
 					}
 				}
@@ -411,11 +413,6 @@
 
 			function moveRow(listView, curIdx, destIdx) {
 				let attachedList = listView.GetDataRows();
-				
-				if (destIdx < 0 || destIdx >= attachedList.length) {
-					return;
-				}
-				
 				let tbody = document.getElementById(listView.GetID()).querySelector("tbody");
 				let tmp1 = attachedList[curIdx];
 				let tmp2 = attachedList[destIdx];
