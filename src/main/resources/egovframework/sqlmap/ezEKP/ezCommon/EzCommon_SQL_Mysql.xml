@@ -1869,25 +1869,25 @@
 	<insert id="EzCommonDAO.insertPortletAuthInit" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_PORTLET_AUTH
-			(portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn) 
+			(portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted) 
 		VALUES 
-    		(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(5, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(6, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(7, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(8, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(9, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(10, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(11, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(12, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(14, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(26, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(34, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(36, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(47, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(49, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+    		(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(5, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(6, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(7, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(8, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(9, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(10, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(11, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(12, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(14, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(26, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(34, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(36, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(47, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(49, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
 	]]>
 	</insert>
 	
