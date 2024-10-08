@@ -2893,4 +2893,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createJmochaMailBlocked");
 		}
 	}
+	
+	public void insertModuleEditor(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkModuleEditor", map);
+
+		if (propertyValue == null) {
+			logger.debug("ModuleEditor tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertModuleEditor", map);
+		}
+	}
 }

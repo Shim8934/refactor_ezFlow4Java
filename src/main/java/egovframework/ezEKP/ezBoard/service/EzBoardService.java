@@ -281,7 +281,7 @@ public interface EzBoardService {
 
 	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception;
 
-	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode) throws Exception;
+	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode, boolean hwpFile) throws Exception;
 
 	public String copyItem(String orgItemIDList, String orgBoardID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception;
 
@@ -454,4 +454,6 @@ public interface EzBoardService {
 	public int getAllBoardItemListCount(LoginVO userInfo) throws Exception;
 
 	public List<HashMap<String, Object>> getAllBoardItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
+	
+	public String getContentlocation(String boardID, String itemID, int tenantId) throws Exception;
 }

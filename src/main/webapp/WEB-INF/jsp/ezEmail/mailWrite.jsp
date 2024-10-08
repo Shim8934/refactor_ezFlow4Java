@@ -222,6 +222,9 @@
 		/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		var useHWP = "<c:out value='${useHWP}'/>";
+		
+		var moduleEditor = "<c:out value='${moduleEditor}'/>";
+		
 		<% // 승인메일 %>
 		<c:if test="${useApprMail eq 'YES'}">
 		var g_apprMail = false;

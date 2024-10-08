@@ -42,6 +42,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -3143,8 +3145,26 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("tenantID", boardItemVO.getTenantID());
 		
 		List<BoardAttachVO> boardAttachVOs = ezBoardDAO.brdGetItemAttachmentInfo(map);
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", boardItemVO.getTenantID());
+		String conLocation = boardItemVO.getConLocation();
+		String ext = conLocation.substring(conLocation.length() - 3, conLocation.length());
 		
 		resultXML.append("<NODES>");
+		
+		if (useEditor.equals("HWP") && ext.toUpperCase().equals("HWP")) {
+			map.put("tempString", boardItemVO.getItemID());
+			BoardListVO boardContent = ezBoardDAO.getItemInfo(map);
+			File file = new File(boardItemVO.getFilePath() + commonUtil.detectPathTraversal(boardContent.getContentLocation()));
+			long fileSize = file.length();
+			resultXML.append("<NODE>");
+			resultXML.append("<ItemID>" + boardContent.getItemID() + "</ItemID>");
+			resultXML.append("<GUID>0</GUID>");
+			resultXML.append("<FilePath>" + commonUtil.cleanValue(boardContent.getContentLocation()) + "</FilePath>");
+			resultXML.append("<FileSize>" + getProperSizeDisplay(fileSize) + "</FileSize>");
+			resultXML.append("<FileSize2>" + fileSize + "</FileSize2>");
+			resultXML.append("<FileName>" + boardContent.getTitle() + "</FileName>");
+			resultXML.append("</NODE>");
+		}
 		
 		for (int k = 0; k < boardAttachVOs.size(); k++) {
 			resultXML.append("<NODE>");
@@ -3885,6 +3905,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			//게시판아이디는 itemID로 가져오자
 			orgBoardID = boardListVO.getBoardID();
 			
+			boolean hwpFile = false;
+			if (boardListVO.getContentLocation().indexOf(".hwp") > -1) {
+				hwpFile = true;
+			}
+			
 			//MHT 파일위치 변경
 			boardListVO.setContentLocation(boardListVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
 			boardListVO.setStartDate("");
@@ -3919,8 +3944,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			/* 2021-06-02 홍승비 - 파일 이동 시 move가 아닌 copy로 변경, 모든 DB 데이터 변경작업이 정상적으로 끝난 이후 한꺼번에 기존 위치의 MHT파일을 삭제하도록 수정 */
-			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "copy");
-			deleteMHTStr.add(realPath + uploadFilePath + commonUtil.separator + orgBoardID + commonUtil.separator + "doc" + commonUtil.separator + orgItemID + ".mht");
+			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "copy", hwpFile);
+			if (hwpFile) {
+				deleteMHTStr.add(realPath + uploadFilePath + commonUtil.separator + orgBoardID + commonUtil.separator + "doc" + commonUtil.separator + orgItemID + ".hwp");
+			} else {
+				deleteMHTStr.add(realPath + uploadFilePath + commonUtil.separator + orgBoardID + commonUtil.separator + "doc" + commonUtil.separator + orgItemID + ".mht");
+			}
 			
 			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
 			
@@ -4061,7 +4090,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		BoardListVO boardListVO = new BoardListVO();
 		
-		boolean saveMHTResult = false;
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
+		
+		boolean saveResult = false;
 		boardListVO.setFilePath(commonUtil.detectPathTraversal(doc.getElementsByTagName("FILEPATH").item(0).getTextContent()));
 		boardListVO.setItemID(commonUtil.detectPathTraversal(doc.getElementsByTagName("ITEMID").item(0).getTextContent()));
 		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
@@ -4085,10 +4116,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setContent(commonUtil.htmlUnescape(doc.getElementsByTagName("DOCCONTENT").item(0).getTextContent()));
 		}
 
-		if (pMode.equals("copy") || pMode.equals("move")) {
-			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
+		if (!editor.equals("HWP")) {
+			if (pMode.equals("copy") || pMode.equals("move")) {
+				boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
+			} else {
+				boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
+			}
 		} else {
-			boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
+			if (pMode.equals("copy") || pMode.equals("move")) {
+				boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
+			} else {
+				boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".hwp");
+			}
 		}
 		
 		/* 2020-03-19 홍승비 - 예약게시물 수정 시 WRITEDATE, STARTDATE 업데이트 추가 */
@@ -4181,10 +4220,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setExtensionAttribute10("");
 		}
 		
-		if (!pMode.equals("copy") && !pMode.equals("move")) {
-			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
-			if (saveMHTResult == false) {
-				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
+		if (!editor.equals("HWP")) {
+			if (!pMode.equals("copy") && !pMode.equals("move")) {
+				saveResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
+				if (saveResult == false) {
+					return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
+				}
+			}
+		} else {
+			if (!pMode.equals("copy") && !pMode.equals("move")) {
+				saveResult = saveHWP(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
+				if (saveResult == false) {
+					return egovMessageSource.getMessage("ezBoard.kwc01", userInfo.getLocale());
+				}
 			}
 		}
 		
@@ -4267,14 +4315,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return "OK";
 	}
 	
-	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode) throws Exception {
+	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode, boolean hwpFile) throws Exception {
 		logger.debug("copyFiles started");
 
 		String orgFilePath = "";
 		String destFilePath = "";
 		
-		orgFilePath = path + commonUtil.separator + commonUtil.detectPathTraversal(orgBoardID) + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.detectPathTraversal(orgItemID) + ".mht";
-		destFilePath = path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.detectPathTraversal(destItemID) + ".mht";
+		if (hwpFile) {
+			orgFilePath = path + commonUtil.separator + commonUtil.detectPathTraversal(orgBoardID) + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.detectPathTraversal(orgItemID) + ".hwp";
+			destFilePath = path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.detectPathTraversal(destItemID) + ".hwp";
+		} else {
+			orgFilePath = path + commonUtil.separator + commonUtil.detectPathTraversal(orgBoardID) + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.detectPathTraversal(orgItemID) + ".mht";
+			destFilePath = path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.detectPathTraversal(destItemID) + ".mht";
+		}
 		
 		File file = new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID));
 		
@@ -4323,6 +4376,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			BoardListVO boardLisitVO = getCopyItem(orgItemID, userInfo.getTenantId());
 			
 			orgBoardID = boardLisitVO.getBoardID();
+			
+			boolean hwpFile = false;
+			if (boardLisitVO.getContentLocation().indexOf(".hwp") > -1) {
+				hwpFile = true;
+			}
+			
 			//MHT 파일위치 변경
 			boardLisitVO.setContentLocation(boardLisitVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
 			boardLisitVO.setStartDate("");
@@ -4356,7 +4415,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				boardLisitVO.setDocPassword("");
 			}
 			
-			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "copy");
+			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "copy", hwpFile);
 			
 			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
 			String attachments = "";
@@ -5748,5 +5807,82 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("getAllBoardItemList ended");
 		return ezBoardDAO.getAllBoardItemList(map);
+	}
+	
+	public boolean saveHWP(String strHTML, String strFilename, String strBoardID, String strFilePath, String strType, String realPath) throws Exception {
+		logger.debug("saveHWP started");
+
+		String docPath = "";
+		String FilePath = "";
+		boolean ret = true;
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		docPath = commonUtil.detectPathTraversal(strFilePath + commonUtil.separator + strBoardID);
+		FilePath = commonUtil.detectPathTraversal(strFilename + ".hwp");
+		
+		String stordFilePathReal = docPath + commonUtil.separator + "doc";
+		
+		File file = new File(realPath + stordFilePathReal);
+		
+		if (!file.exists()) {
+			boolean _flag = file.mkdirs();
+			file = new File(realPath + docPath + commonUtil.separator + "uploadFile");
+			file.mkdirs();
+			
+			if (!_flag) {
+				throw new IOException("Directory creation Failed ");
+			}
+		}
+		
+		String finalFilePath = realPath + stordFilePathReal + commonUtil.separator + FilePath;
+		
+		try {
+			stream = new ByteArrayInputStream(Base64.decodeBase64(strHTML));
+			bos = new FileOutputStream(finalFilePath);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+			
+			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+		}
+		catch (RuntimeException e) {
+			throw e;
+		}
+		catch (Exception e) {
+			ret = false;
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+		}
+		
+		logger.debug("saveHWP ended");
+		return ret;
+	}
+	
+	@Override
+	public String getContentlocation(String boardID, String itemID, int tenantId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantId);
+		map.put("itemID", itemID);
+		
+		return ezBoardDAO.getContentlocation(map);
 	}
 }

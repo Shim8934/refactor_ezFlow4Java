@@ -1486,7 +1486,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", loginInfo.getTenantId()));
 		model.addAttribute("useApprMail", StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("useApprMail", loginInfo.getTenantId()), "NO"));
-
+		model.addAttribute("moduleEditor", ezCommonService.getTenantConfig("MODULEEDITOR", loginInfo.getTenantId()));
+		
 		response.setHeader("X-XSS-Protection", "0");
 		
 		logger.debug("mailWrite ended.");

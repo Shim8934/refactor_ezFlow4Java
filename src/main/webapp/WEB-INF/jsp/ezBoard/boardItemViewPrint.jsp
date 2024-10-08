@@ -77,27 +77,34 @@
 		    var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
 		
 		    var myVar;
+		    var pUseEditor = "${use_Editor}";
+	    	var html = "";
+	    	
 		    window.onload = function () {
-		    	var html = "";
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCommon/mhtToHTMLContent.do",
-					data : { type   : "BOARDCONTENT", 
-							 itemID 	 : pItemID,
-							 href   : strContentLocation 
-						   },
-					success: function(result){
-						html = result;
-					}        			
-				});	
-		        var doc = document.getElementById('message').contentWindow.document;
-				doc.open();
-				doc.write(html);
-				doc.close();
-				
-		        if (eOneline == "Y") {
+		    	if (pUseEditor != "HWP") {
+		    		$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : { type   : "BOARDCONTENT", 
+								 itemID 	 : pItemID,
+								 href   : strContentLocation 
+							   },
+						success: function(result){
+							html = result;
+						}        			
+					});	
+			        var doc = document.getElementById('message').contentWindow.document;
+					doc.open();
+					doc.write(html);
+					doc.close();
+					beforePrint();
+		    	}
+		    };
+		    
+		    function beforePrint() {
+		    	if (eOneline == "Y") {
 		            document.getElementById('onelineView').style.display = "";
 		        }
 		        
@@ -124,7 +131,7 @@
 		                extentionAttrDiv.innerText = peoplePickerDisplay(extentionAttrDiv.innerText, userLang);
 		            }
 		        }
-		    };
+		    }
 		
 		    function DocumentComplate() {
 		        if (CrossYN()) {
@@ -258,6 +265,22 @@
 		  	    str = ReplaceText(str, "&amp;", "&");
 		        return str;
 		    }
+		    
+			function Editor_Complete() {
+	        	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(strContentLocation);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+	        }
+	        
+	        function FieldsAvailable(isTrue) {
+	        	if (isTrue) {
+	        		message.GetTextFile("HTML", "", function (data) {
+	        			html = data;
+	        			document.getElementById("txtContent").innerHTML = html;
+	        			beforePrint();
+	        		});
+	        	}
+	        }
 		    
 		</script>
 	</head>
@@ -444,7 +467,12 @@
 		  <table class="layout" style="margin-top:5px;">
 		  <tr>
 		    <td class="pad1" style="display:none;">
-		        <iframe id="message" name="message" style="height:100%; width:100%" onload ="displaytable()"></iframe>
+		        <c:if test="${use_Editor ne 'HWP'}">
+		        	<iframe id="message" name="message" style="height:100%; width:100%" onload ="displaytable()"></iframe>
+		        </c:if>
+		        <c:if test="${use_Editor eq 'HWP'}">
+	        		<iframe id="message" name="message" src="/ezBoard/WHWPEditor.do" style="height:100%; width:100%"></iframe>
+		        </c:if>
 		    </td>
 		  </tr>
 		    <tr>

@@ -57,30 +57,36 @@
 			var pReservedItem = "<c:out value = '${pReservedItem}' />";
 			
 			var g_progresswin;
+			var myVar;
+			var pUseEditor = "${use_Editor}";
+			var html = "";
 			
 			window.onload = function ()
 			{
 // 				var fullPath = "/ezCommon/downloadAttach.do?filepath=" + encodeURIComponent(strContentLocation);
-				
-				var html = "";
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCommon/mhtToHTMLContent.do",
-					data : { type	:	"COMMUNITYCONTENT", 
-							 href	:	strContentLocation,
-							 itemID	:	pItemID
-						   },
-					success: function(result){
-						html = result;
-					}        			
-				});
-				var doc = document.getElementById('message').contentWindow.document;
-				doc.open();
-				doc.write(html);
-				doc.close();
-				
+				if (pUseEditor != "HWP") {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : { type	:	"COMMUNITYCONTENT", 
+								 href	:	strContentLocation,
+								 itemID	:	pItemID
+							   },
+						success: function(result){
+							html = result;
+						}        			
+					});
+					var doc = document.getElementById('message').contentWindow.document;
+					doc.open();
+					doc.write(html);
+					doc.close();
+					readyPrint();
+				}
+			}
+			
+			function readyPrint() {
 				$("#message").contents().find("body").css("word-wrap", "break-word");
 				
 			    SetAttachmentInfo();
@@ -91,6 +97,8 @@
 			    if (g_progresswin) {
 			    	g_progresswin.close();
 			    }
+			    
+			    myVar = setInterval(function () { beforePrint(); }, 2000);
 			}
 			
 			function btnClose_onclick() {
@@ -209,7 +217,13 @@
 			}
 			
 			function beforePrint() {
-			    window.print();
+				if (CrossYN()) {
+		            window.print();
+		        } else {
+		            preview_print();
+		        }
+		
+		        clearInterval(myVar);
 			}
 			
 			// window onload 시 message 프레임에 본문을 로딩한 다음, 화면에 표출하기 위한 contenttable 영역에 본문 html을 복사하는 함수
@@ -217,6 +231,22 @@
 			function displaytable() {
 				document.getElementById("contenttable").innerHTML = message.document.body.innerHTML;
 			}
+			
+			function Editor_Complete() {
+	        	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(strContentLocation);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+	        }
+			
+			function FieldsAvailable(isTrue) {
+	        	if (isTrue) {
+	        		message.GetTextFile("HTML", "", function (data) {
+	        			html = data;
+	        			document.getElementById("contenttable").innerHTML = html;
+	        			readyPrint();
+	        		});
+	        	}
+	        }
 		</script>
 	</head>
 	
@@ -325,8 +355,13 @@
 		  	<table class="layout">
 		  	<tr>
 		    	<td class="pad1" id="ItemOverflow" style="display:none;"  >
-		    		<iframe id="message" class="viewbox" name="message" style="display:none; border:1px solid #ddd;"  onload ="displaytable()">
-		    	</iframe></td> 
+		    		<c:if test="${use_Editor ne 'HWP'}">
+			    		<iframe id="message" class="viewbox" name="message" style="display:none; border:1px solid #ddd;"  onload ="displaytable()"></iframe>
+		    		</c:if>
+		    		<c:if test="${use_Editor eq 'HWP'}">
+		        		<iframe id="message" name="message" src="/ezCommunity/WHWPEditor.do" style="display:none;"></iframe>
+			        </c:if>
+		    	</td> 
 		  	</tr>
 		    <tr>
 		    	<td class="pad1" style="height: 100%;">

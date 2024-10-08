@@ -180,62 +180,65 @@
 		    window.onload = function () {
 		    	makeEmoticonPanel();
 		        try {
-		        	// 수정 수아 재은
-		        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer; margin-bottom: 5px;' />"
-						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-bottom: 5px;' />";
-						html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>";
+		        	if (pUse_Editor != "HWP") {
+		        		// 수정 수아 재은
+			        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer; margin-bottom: 5px;' />"
+							html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-bottom: 5px;' />";
+							html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>";
+							
+						$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezCommon/mhtToHTMLContent.do",
+							data : { type   : "BOARDCONTENT", 
+									 itemID : pItemID,
+									 href   : strContentLocation 
+								   },
+							success: function(result){
+								html += "<div class='contentDiv' id='txtContent'>" + result + "<div>";
+							}        			
+						});
 						
-					$.ajax({
-						type : "POST",
-						dataType : "text",
-						async : false,
-						url : "/ezCommon/mhtToHTMLContent.do",
-						data : { type   : "BOARDCONTENT", 
-								 itemID : pItemID,
-								 href   : strContentLocation 
-							   },
-						success: function(result){
-							html += "<div class='contentDiv' id='txtContent'>" + result + "<div>";
-						}        			
-					});
-					
-					var doc = document.getElementById('message').contentWindow.document;
-					doc.open();
-					doc.write('<!doctype html>');
-					doc.write(html);
-					doc.close();
-					
-					// 수정 수아 재은
-					doc.getElementById('smaller').onclick = function () {
-						Smaller(doc);
-					}
-					doc.getElementById('bigger').onclick = function () {
-						Bigger(doc);
-					}
-					
-					/* 2020-07-10 홍승비 - 게시물 본문 내부에도 기본적인 css가 적용되도록 수정 */
-					var cssLink = document.createElement("link");
-					cssLink.href = "${util.addVer('ezBoard.i1', 'msg')}";
-					cssLink.rel = "stylesheet";
-					cssLink.type = "text/css";
-					
-					/* 2021-09-02 홍승비 - 게시물 본문 내부의 헤딩 태그(h1, h2...)의 스타일은 default.css가 아닌 기본적인 브라우저의 user-agent 속성을 사용하도록 수정 (글자 자체의 인라인 속성이 있다면 해당 속성이 우선 적용됨) */
-					// chrome의 경우 각 속성 revert로 간단히 처리가 가능하나, IE에서 해당 속성을 지원하지 않아 각 폰트 사이즈와 마진을 명시함
-					var cssHeading = "<style type='text/css'>.contentDiv h1, .contentDiv h2, .contentDiv h3, .contentDiv h4, .contentDiv h5, .contentDiv h6 {margin-left:0px; margin-right:0px; color:#000000;}";
-					cssHeading += " .contentDiv h1 {font-size:2em; margin-top:0.67em; margin-bottom:0.67em;}";
-					cssHeading += " .contentDiv h2 {font-size:1.5em; margin-top:0.83em; margin-bottom:0.83em;}";
-					cssHeading += " .contentDiv h3 {font-size:1.17em; margin-top:1em; margin-bottom:1em;}";
-					cssHeading += " .contentDiv h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}";
-					cssHeading += " .contentDiv h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}";
-					cssHeading += " .contentDiv h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}";
-					cssHeading += "</style>";
-					
-					$("#message").contents().find("head").append(cssLink).append(cssHeading);
-					$("#message").contents().find("body").css("word-wrap", "break-word");
-					
-					rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
-					
-		            AddLinkTarget();
+						var doc = document.getElementById('message').contentWindow.document;
+						doc.open();
+						doc.write('<!doctype html>');
+						doc.write(html);
+						doc.close();
+						
+						// 수정 수아 재은
+						doc.getElementById('smaller').onclick = function () {
+							Smaller(doc);
+						}
+						doc.getElementById('bigger').onclick = function () {
+							Bigger(doc);
+						}
+						
+						/* 2020-07-10 홍승비 - 게시물 본문 내부에도 기본적인 css가 적용되도록 수정 */
+						var cssLink = document.createElement("link");
+						cssLink.href = "${util.addVer('ezBoard.i1', 'msg')}";
+						cssLink.rel = "stylesheet";
+						cssLink.type = "text/css";
+						
+						/* 2021-09-02 홍승비 - 게시물 본문 내부의 헤딩 태그(h1, h2...)의 스타일은 default.css가 아닌 기본적인 브라우저의 user-agent 속성을 사용하도록 수정 (글자 자체의 인라인 속성이 있다면 해당 속성이 우선 적용됨) */
+						// chrome의 경우 각 속성 revert로 간단히 처리가 가능하나, IE에서 해당 속성을 지원하지 않아 각 폰트 사이즈와 마진을 명시함
+						var cssHeading = "<style type='text/css'>.contentDiv h1, .contentDiv h2, .contentDiv h3, .contentDiv h4, .contentDiv h5, .contentDiv h6 {margin-left:0px; margin-right:0px; color:#000000;}";
+						cssHeading += " .contentDiv h1 {font-size:2em; margin-top:0.67em; margin-bottom:0.67em;}";
+						cssHeading += " .contentDiv h2 {font-size:1.5em; margin-top:0.83em; margin-bottom:0.83em;}";
+						cssHeading += " .contentDiv h3 {font-size:1.17em; margin-top:1em; margin-bottom:1em;}";
+						cssHeading += " .contentDiv h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}";
+						cssHeading += " .contentDiv h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}";
+						cssHeading += " .contentDiv h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}";
+						cssHeading += "</style>";
+						
+						$("#message").contents().find("head").append(cssLink).append(cssHeading);
+						$("#message").contents().find("body").css("word-wrap", "break-word");
+						
+						rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+						
+			            AddLinkTarget();
+		        	}
+		        	
 		            SetAttachmentInfo();
 			        
 		            //추가항목 창 사이즈 조절
@@ -389,6 +392,12 @@
 	            } else {
 	            	document.getElementById("mailPanel").style.height = (window.innerHeight) + "px";
 	            }
+	            
+	            if (pUse_Editor == "HWP") {
+	            	var mHeight = document.getElementById("pad1").clientHeight - 164 + "px";
+	            	message.Resize(mHeight);
+	            }
+		    	
 		    };
 		    
 		    /* 2019-04-12 홍승비 - 댓글 갯수 갱신 시 게시물리스트 갱신 */
@@ -1700,8 +1709,25 @@
 			    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
 			    	}
 		    	}
-		    };
+		    }
 		    
+	        function Editor_Complete() {
+	        	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(strContentLocation);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+	        }
+	        
+	        function FieldsAvailable(isTrue) {
+	        	if (isTrue) {
+	        		message.EditMode(0);
+	        		message.ShowToolBar(false);
+	        		message.ShowRibbon(false);
+					message.SetViewProperties(2, 100);
+		            message.ScrollPosInfo(0, 0);
+		            window.onresize();
+	        	}
+	        }
+	        
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">
@@ -2010,8 +2036,13 @@
 			    </td>
 		  </tr>
 		  <tr>
-		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px; padding-top:0px;">
+		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
+		    <c:if test="${useEditor ne 'HWP'}">
 		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:calc(100% - 2px); height:495px; overflow:auto; border:1px solid #ddd"></iframe>
+		    </c:if>
+		    <c:if test="${useEditor eq 'HWP'}">
+		    	<iframe id="message" class="viewbox"  src="/ezBoard/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:495px; width:calc(100% - 2px); overflow:auto; border:1px solid #ddd"></iframe>
+		    </c:if>
 				
 				<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
 				<div style="display: flex; justify-content: center;">

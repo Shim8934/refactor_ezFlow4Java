@@ -48,9 +48,16 @@
 			var writerFakeName = "<c:out value='${writerFakeName}'/>";
 			var dirPath = "<c:out value='${dirPath}'/>";
 			var defaultFontAndSize  = "${defaultFontAndSize}";
+			var useEditor = "<c:out value='${useEditor}'/>";
+			var pAttachFileList ="";
 			
 			window.onresize = function () {
-			    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 140 + "PX";
+				if (useEditor != "HWP") {
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 140 + "PX";
+				} else {
+				    var mHeight = document.getElementById("EdtorSize").clientHeight - 5 + "PX";
+				    message.Resize(mHeight);
+				}
 			}
 			
 			window.onload = function() {
@@ -92,9 +99,8 @@
 			}
 			
 			function mhtml_encodecomplete( ntype ) {
-				var pAttachFileList ="";
 
-				if ( ntype == 0 ) {
+				if (ntype == 0) {
 					idstate.style.display = "none";
 					
                     if (pMode == "write" && pNo != "") {
@@ -111,61 +117,20 @@
 					if (pBname == "tbl_c_clubpds" || pBname == "tbl_c_clubpds1") {
 						pAttachFileList = AttachFileList();
 					}
-					
-					 /* 2019-04-02 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
-					 var messageMHT = "";
-			        try {
-						messageMHT =  message.ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(message.GetEditorContent()) + "</BODY>" + "</HTML>");
-			        } catch (e) {
-			        	alert("<spring:message code='ezCommunity.lhj04'/>");
-	      				return;
-			        }
-			        
-					$.ajax({
-	 					type : "POST",
-	 					dataType : "text",
-	 					async : false,
-	 					url : "/ezCommunity/bbsEditOk.do",
-	 					data : {attachList	:	pAttachFileList,
-	 							content	:	messageMHT,
-	 							title	:	title.value,
-	 							textContent	:	message.GetEditorContent(),
-	 							mode	:	pMode,
-	 							no	:	pNo,
-	 							sRadio	:	pSradio,
-	 							keyword	:	pKeyword,
-	 							id	:	pID,
-	 							goToPage	:	pGoToPage,
-	 							nowBlock	: pNowBlock,
-	 							ref	:	pRef,
-	 							step	:	pStep,
-	 							level	:	pLevel,
-	 							code	:	pCode,
-	 							bName	:	pBname,
-	 							userNM	:	pUserNM,
-	 							userNM2	:	pUserNM2,
-								companyID : "<c:out value='${companyID}'/>"
-	 						   },
-	 					success : function(result){
-	 						if (result != "OK") {
-	 	 						alert("<spring:message code = 'ezCommunity.t152'/>");
-	 	 					} else {
-	 	 						alert("<spring:message code = 'ezCommunity.t153'/>");
-	 						    
-	 	 					    if (window.opener.parent.left != undefined) {
-	 	 					        window.opener.parent.left.getBoardList();
-	 	 					    }
-	 						    
-	 	 					  window.opener.location.reload(false);
-	 	 					  window.close();
-	 	 					}
-	 					},
-	 					error : function(xhr, status, error) {
-							if (status != 200) {
-								alert("<spring:message code = 'ezCommunity.t152'/>");
-							}
-	 					}
-	 				});
+					if (useEditor != "HWP") {
+						 /* 2019-04-02 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
+						 var messageMHT = "";
+				        try {
+							messageMHT =  message.ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(message.GetEditorContent()) + "</BODY>" + "</HTML>");
+				        } catch (e) {
+				        	alert("<spring:message code='ezCommunity.lhj04'/>");
+		      				return;
+				        }
+				        
+				        saveFile(messageMHT);
+					} else {
+						GetHTML(saveFile);
+					}
 				}
 			}
 			
@@ -218,25 +183,37 @@
 			
 			var isComplete = false;
 			function Editor_Complete() {
-			    if(pNo != "") {
+		    	if(pNo != "") {
 			        GetFileURL();
-			        var fullPath = strContentLocation;
-			        var htmlData = message.GetEditorContentURL(fullPath);
 			        
-			        /* 2019-10-28 홍승비 - 커뮤니티 공지사항 답변 작성 시 p 태그와 기본 폰트 스타일 추가 */
-			        if(pMode == "write" && pNo != "") {
-			            //htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + ConvMakeXMLString(pTitle) + "<br><br>" + htmlData;
-			            var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-			            replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code = 'ezCommunity.t1161'/></B>-----</p>";
-						replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code = 'ezCommunity.t1162'/></B>" + wDate + "</p> ";
-						replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code = 'ezCommunity.t885'/></B><c:out value='${cBoard.title}'/></p>";
-						replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-						htmlData = (replyHeader + htmlData);
-			            message.SetEditorContent(htmlData);
+			        var fullPath = strContentLocation;
+			        
+					if (useEditor != "HWP") {
+						var htmlData = message.GetEditorContentURL(fullPath);
+				        
+				        /* 2019-10-28 홍승비 - 커뮤니티 공지사항 답변 작성 시 p 태그와 기본 폰트 스타일 추가 */
+				        if(pMode == "write" && pNo != "") {
+				            //htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + ConvMakeXMLString(pTitle) + "<br><br>" + htmlData;
+				            var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+				            replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code = 'ezCommunity.t1161'/></B>-----</p>";
+							replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code = 'ezCommunity.t1162'/></B>" + wDate + "</p> ";
+							replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code = 'ezCommunity.t885'/></B><c:out value='${cBoard.title}'/></p>";
+							replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+							htmlData = (replyHeader + htmlData);
+				            message.SetEditorContent(htmlData);
+				        } else {
+				            message.SetEditorContentURL(fullPath);
+				        }
 			        } else {
-			            message.SetEditorContentURL(fullPath);
+			        	var URL;
+		                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(fullPath);
+		                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 			        }
-			    } 
+			    } else {
+			    	var URL;
+	                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=";
+	                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+			    }
 			}
 			
 			function ConvMakeXMLString(str) {
@@ -248,6 +225,95 @@
                 str = ReplaceText(str, "&#039;", "\'");
                 return str;
             }
+			
+			function FieldsAvailable(isTrue) {
+				if (isTrue) {
+					if (pMode == "write" && pNo == "") {
+            			message.SetMargin(3000);
+            		} else if (pMode != "edit" && pNo != "") {
+            			var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+            			replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code = 'ezCommunity.t1161'/></B>-----</p>";
+            			replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code = 'ezCommunity.t1162'/></B>" + wDate + "</p> ";
+            			replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code = 'ezCommunity.t885'/></B><c:out value='${cBoard.title}'/></p>";
+            			replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+            			
+            			message.moveTopOfFile();
+            			message.createField("reply");
+            			message.AppendFieldText("reply", replyHeader, "", "HTML", "", function() {
+	            			message.moveEndOfFile();
+            			});
+            			
+            		}
+            		message.EditMode(1);
+            		message.SetViewProperties(2, 100);
+		            message.ScrollPosInfo(0, 0);
+		            message.ShowToolBar(true);
+		            message.ShowRibbon(true);
+		            message.FoldRibbon(true);
+		            window.onresize();
+				}
+			}
+			
+			function saveFile(content) {
+				var textContent = "";
+				if (useEditor != "HWP") {
+					textContent = message.GetEditorContent();
+				} else {
+					textContent = content;
+				}
+				
+				$.ajax({
+ 					type : "POST",
+ 					dataType : "text",
+ 					async : false,
+ 					url : "/ezCommunity/bbsEditOk.do",
+ 					data : {attachList	:	pAttachFileList,
+ 							content	:	content,
+ 							title	:	title.value,
+ 							textContent	:	textContent,
+ 							mode	:	pMode,
+ 							no	:	pNo,
+ 							sRadio	:	pSradio,
+ 							keyword	:	pKeyword,
+ 							id	:	pID,
+ 							goToPage	:	pGoToPage,
+ 							nowBlock	: pNowBlock,
+ 							ref	:	pRef,
+ 							step	:	pStep,
+ 							level	:	pLevel,
+ 							code	:	pCode,
+ 							bName	:	pBname,
+ 							userNM	:	pUserNM,
+ 							userNM2	:	pUserNM2,
+							companyID : "<c:out value='${companyID}'/>"
+ 						   },
+ 					success : function(result){
+ 						if (result != "OK") {
+ 	 						alert("<spring:message code = 'ezCommunity.t152'/>");
+ 	 					} else {
+ 	 						alert("<spring:message code = 'ezCommunity.t153'/>");
+ 						    
+ 	 					    if (window.opener.parent.left != undefined) {
+ 	 					        window.opener.parent.left.getBoardList();
+ 	 					    }
+ 						    
+ 	 					  window.opener.location.reload(false);
+ 	 					  window.close();
+ 	 					}
+ 					},
+ 					error : function(xhr, status, error) {
+						if (status != 200) {
+							alert("<spring:message code = 'ezCommunity.t152'/>");
+						}
+ 					}
+ 				});
+			}
+			
+			function GetHTML(callback) {
+                ingFlag = true;
+			    message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
+			}
+			
 		</script>
 		
 <!-- 		사용안함 -->
@@ -302,6 +368,7 @@
 			}
 			</script>
 		</c:if> --%>
+		
 	</head>
 	<body class = "popup" style = "height:97%">
 		<table class="layout">
@@ -343,7 +410,12 @@
 					<table style="width:100%;height:100%;margin-top:-1px;">
 		                <tr> 
 							<td style="vertical-align:top;height:100%" id="EdtorSize">
-					        	<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;border-top:0px"></iframe>
+								<c:if test="${useEditor ne 'HWP'}">
+					        		<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;border-top:0px"></iframe>
+								</c:if>
+								<c:if test="${useEditor eq 'HWP'}">
+									<iframe id="message" class="viewbox"  name="message" src="/ezCommunity/WHWPEditor.do" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;border-top:0px"></iframe>
+								</c:if>
 							</td>
 		                </tr> 
 		            </table>

@@ -965,4 +965,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getAllBoardItemList", map);
 	}
 
+	public String getContentlocation(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.getContentlocation", map);
+	}
 }

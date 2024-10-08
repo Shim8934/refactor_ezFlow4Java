@@ -177,8 +177,12 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (maxPeriod == null || maxPeriod.equals("")) {
 			maxPeriod = "999";
 		}
+		
+		String editor = ezSurveyService.checkTenantConfig("MODULEEDITOR", user.getTenantId());
+		
 		model.addAttribute("maxPeriod", maxPeriod);
 		model.addAttribute("companyId", user.getCompanyID());
+		model.addAttribute("editor", editor);
 
 		logger.debug("jspGetCreateSurveyPage ended");
 
@@ -225,6 +229,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		}
 		model.addAttribute("maxPeriod", maxPeriod);
 		model.addAttribute("companyId", user.getCompanyID());
+		model.addAttribute("editor", ezSurveyService.checkTenantConfig("MODULEEDITOR", user.getTenantId()));
 
 		logger.debug("jspGetReuseSurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
@@ -262,6 +267,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("reasonMessage", messageCode);
 			return "ezSurvey/surveyAccessDenied";
 		}
+		model.addAttribute("editor", ezSurveyService.checkTenantConfig("MODULEEDITOR", user.getTenantId()));
 		
 		model.addAttribute("companyId", user.getCompanyID());
 		

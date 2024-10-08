@@ -2,10 +2,13 @@ package egovframework.ezEKP.ezCommunity.service.impl;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -3159,7 +3162,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
     	String offset = userInfo.getOffset();
-		boolean saveMHTResult = false;
+		boolean saveResult = false;
+		
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		
 		String dateStr = commonUtil.getTodayUTCTime("");
 		
@@ -3184,7 +3189,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (pMode.equals("copy")) {
 			pContentLocation = xmlData.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent();
 		} else {
-			pContentLocation = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + item.getItemID() + ".mht";
+			if (!editor.equals("HWP")) {
+				pContentLocation = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + item.getItemID() + ".mht";
+			} else {
+				pContentLocation = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + item.getItemID() + ".hwp";
+			}
 		}
 		
 		item.setContentLocation(pContentLocation);
@@ -3247,10 +3256,17 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		if (!pMode.equals("copy")) {
-			saveMHTResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
-			
-			if (saveMHTResult == false) {
-				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
+			if (!editor.equals("HWP")) {
+				saveResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
+				
+				if (saveResult == false) {
+					return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
+				}
+			} else {
+				saveResult = saveHWP(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
+				if (saveResult == false) {
+					return egovMessageSource.getMessage("ezBoard.kwc01", userInfo.getLocale());
+				}
 			}
 		}
 		
@@ -3316,7 +3332,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String getItemAttachmentXML(String itemID, int tenantID) throws Exception {
+	public String getItemAttachmentXML(String itemID, int tenantID, String realPath, String pMode) throws Exception {
 		logger.debug("getItemAttachmentXML started.");
 		
 		StringBuilder sb = new StringBuilder();
@@ -3325,8 +3341,29 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", tenantID);
 		
 		List<CommunityBoardItemAttachmentVO> list = ezCommunityDAO.getItemAttachmentXML(map);
-
+		
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", tenantID);
+		
 		sb.append("<NODES>");
+		
+		if (useEditor.equals("HWP") && pMode.equals("mail")) {
+			CommunityBoardItemVO item = ezCommunityDAO.getItemXML(map);
+			String contentLocation = item.getContentLocation();
+			String ext = contentLocation.substring(contentLocation.length() - 3, contentLocation.length());
+			if (ext.toUpperCase().equals("HWP")) {
+				File file = new File(realPath + commonUtil.detectPathTraversal(item.getContentLocation()));
+				long fileSize = file.length();
+				sb.append("<NODE>");
+				sb.append("<ItemID>" + item.getItemID() + "</ItemID>");
+				sb.append("<GUID>0</GUID>");
+				sb.append("<FileName>" + commonUtil.cleanValue(item.getTitle()) + "." + ext + "</FileName>");
+				sb.append("<FilePath>" + commonUtil.cleanValue(contentLocation) + "</FilePath>");
+				sb.append("<FileSize>" + getProperSizeDisplay(fileSize) + "</FileSize>");
+				sb.append("<FileSize2>" + fileSize + "</FileSize2>");
+				sb.append("<HwpItem>Y</HwpItem>");
+				sb.append("</NODE>");
+			}
+		}
 		
 		for (CommunityBoardItemAttachmentVO attach : list) {
 			sb.append("<NODE>");
@@ -3334,7 +3371,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<GUID>" + attach.getGuID() + "</GUID>");
 			sb.append("<FileName>" + commonUtil.cleanValue(attach.getFileName()) + "</FileName>");
 			sb.append("<FilePath>" + commonUtil.cleanValue(attach.getFilePath()) + "</FilePath>");
-			sb.append("<FileSize>" + getProperSizeDisplay(Integer.parseInt(attach.getFileSize())) + "</FileSize>");
+			sb.append("<FileSize>" + getProperSizeDisplay(Long.parseLong(attach.getFileSize())) + "</FileSize>");
 			sb.append("<FileSize2>" + attach.getFileSize() + "</FileSize2>");
 			sb.append("</NODE>");
 		}
@@ -3662,13 +3699,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String bbsEditOk(LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("bbsEditOk started.");
 		
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		int myRef = 0, myStep = 0, myLevel = 0, adminCheck = 0;
 		String mode = request.getParameter("mode");
 		String code = request.getParameter("code");
 		String bName = request.getParameter("bName");
 		String no = request.getParameter("no");
 		String textContent = request.getParameter("textContent");
-		String MHTcontent = request.getParameter("content");
+		String content = request.getParameter("content");
 		String title = request.getParameter("title");
 		String attachList = request.getParameter("attachList"); // 2024-07-11 기준 전달되지 않는 파라미터로 확인
 		String userNm = request.getParameter("userNM");
@@ -3706,32 +3744,71 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	                strPath = commonUtil.detectPathTraversal(strPath);
 	                //logger.debug("strPath ==== " + strPath);
 
-	                try (PrintWriter pw = new PrintWriter(new File(strPath))) {
-		    		    //pw = new PrintWriter(new File(strPath));
-			    		pw.print(commonUtil.stripScriptTags(MHTcontent));
-			    		pw.flush();
-			    		pw.close();
-	                } catch (FileNotFoundException fnfe) {
-	    				logger.debug("fnfe: {}", fnfe);
-	    			} catch (Exception e) {
-	    				logger.debug("e: {}", e);
-	    			} /*finally {
-	    			    if (os != null) {
-	    					try {
-	    					    os.close();
-	    					} catch (Exception ignore) {
-	    						logger.debug("IGNORED: {}", ignore.getMessage());
-	    					}
-	    			    }
-	    			    
-	    			    if (is != null) {
-	    					try {
-	    					    is.close();
-	    					} catch (Exception ignore) {
-	    						logger.debug("IGNORED: {}", ignore.getMessage());
-	    					}
-	    			    }
-	                }*/
+	                if (!editor.equals("HWP")) {
+	                	try (PrintWriter pw = new PrintWriter(new File(strPath))) {
+			    		    //pw = new PrintWriter(new File(strPath));
+				    		pw.print(commonUtil.stripScriptTags(content));
+				    		pw.flush();
+				    		pw.close();
+		                } catch (FileNotFoundException fnfe) {
+		    				logger.debug("fnfe: {}", fnfe);
+		    			} catch (Exception e) {
+		    				logger.debug("e: {}", e);
+		    			} /*finally {
+		    			    if (os != null) {
+		    					try {
+		    					    os.close();
+		    					} catch (Exception ignore) {
+		    						logger.debug("IGNORED: {}", ignore.getMessage());
+		    					}
+		    			    }
+		    			    
+		    			    if (is != null) {
+		    					try {
+		    					    is.close();
+		    					} catch (Exception ignore) {
+		    						logger.debug("IGNORED: {}", ignore.getMessage());
+		    					}
+		    			    }
+		                }*/
+	                } else {
+	                	InputStream stream = null;
+	            		OutputStream bos = null;
+	            		
+	            		try {
+	            			stream = new ByteArrayInputStream(Base64.decodeBase64(content));
+	            			bos = new FileOutputStream(strPath);
+	            			
+	            			int bytesRead = 0;
+	            			byte[] buffer = new byte[2048];
+	            			
+	            			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+	            				bos.write(buffer, 0, bytesRead);
+	            			}
+	            		}
+	            		catch (RuntimeException e) {
+	            			throw e;
+	            		}
+	            		catch (Exception e) {
+	            			logger.debug("e: {}", e);
+	            		} finally {
+	            			if (bos != null) {
+	            				try {
+	            					bos.close();
+	            				} catch (Exception ignore) {
+	            						logger.debug("IGNORED: {}", ignore.getMessage());
+	            				}
+	            			}
+	            			
+	            			if (stream != null) {
+	            				try {
+	            					stream.close();
+	            				} catch (Exception ignore) {
+	            					logger.debug("IGNORED: {}", ignore.getMessage());
+	            				}
+	            			}
+	            		}
+	                }
 	        	}
         	}
         } else {
@@ -3766,11 +3843,20 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	
         	if (strMaxNum == 0){
                 if (code.equals("")) {
-                    fileName = "0000000001.mht";
+                	fileName = "0000000001";
+                	if (!editor.equals("HWP")) {
+                		fileName = fileName + ".mht";
+                	} else {
+                		fileName = fileName + ".hwp"; 
+                	}
                 } else {
-                    fileName = "0000000001" + "(" + code + ").mht";
+                    fileName = "0000000001" + "(" + code + ")";
+                    if (!editor.equals("HWP")) {
+                		fileName = fileName + ".mht";
+                	} else {
+                		fileName = fileName + ".hwp"; 
+                	}
                 }
-                
                 dirPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
                 strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator +fileName;
             } else {
@@ -3783,7 +3869,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                     strName = strName + "(" + code + ")";
                 }
                 
-                fileName = strName + ".mht";
+                if (!editor.equals("HWP")) {
+                	fileName = strName + ".mht";
+                } else {
+                	fileName = strName + ".hwp";
+                }
                 dirPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
                 strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + fileName;
             }
@@ -3799,38 +3889,77 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 			bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, companyID, userInfo.getId(), userNm, userNm2, title, maxIdFieldName, no, userInfo.getTenantId());
         	
-        	try (PrintWriter pw = new PrintWriter(new File(strPath))) {
-        		//File dir = new File(commonUtil.detectPathTraversal(dirPath));
-        		
-        		if (!dir.exists()) {
-        			dir.mkdirs();
-        		}
-        		
-	    		//pw = new PrintWriter(new File(strPath));
-	    		pw.print(commonUtil.stripScriptTags(MHTcontent));
-	    		pw.flush();
-	    		pw.close();
-            } catch (FileNotFoundException fnfe) {
- 				logger.debug("fnfe: {}", fnfe);
- 			} catch (Exception e) {
- 				logger.debug("e: {}", e);
- 			} /*finally {
- 			    if (os != null) {
- 					try {
- 					    os.close();
- 					} catch (Exception ignore) {
- 						logger.debug("IGNORED: {}", ignore.getMessage());
- 					}
- 			    }
- 			    
- 			    if (is != null) {
- 					try {
- 					    is.close();
- 					} catch (Exception ignore) {
- 						logger.debug("IGNORED: {}", ignore.getMessage());
- 					}
- 			    }
-        	}*/
+			if (!editor.equals("HWP")) {
+				try (PrintWriter pw = new PrintWriter(new File(strPath))) {
+	        		//File dir = new File(commonUtil.detectPathTraversal(dirPath));
+	        		
+	        		if (!dir.exists()) {
+	        			dir.mkdirs();
+	        		}
+	        		
+		    		//pw = new PrintWriter(new File(strPath));
+		    		pw.print(commonUtil.stripScriptTags(content));
+		    		pw.flush();
+		    		pw.close();
+	            } catch (FileNotFoundException fnfe) {
+	 				logger.debug("fnfe: {}", fnfe);
+	 			} catch (Exception e) {
+	 				logger.debug("e: {}", e);
+	 			} /*finally {
+	 			    if (os != null) {
+	 					try {
+	 					    os.close();
+	 					} catch (Exception ignore) {
+	 						logger.debug("IGNORED: {}", ignore.getMessage());
+	 					}
+	 			    }
+	 			    
+	 			    if (is != null) {
+	 					try {
+	 					    is.close();
+	 					} catch (Exception ignore) {
+	 						logger.debug("IGNORED: {}", ignore.getMessage());
+	 					}
+	 			    }
+	        	}*/
+			} else {
+				InputStream stream = null;
+        		OutputStream bos = null;
+				
+        		try {
+					stream = new ByteArrayInputStream(Base64.decodeBase64(content));
+					bos = new FileOutputStream(strPath);
+					
+					int bytesRead = 0;
+					byte[] buffer = new byte[2048];
+					
+					while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+						bos.write(buffer, 0, bytesRead);
+					}
+				}
+				catch (RuntimeException e) {
+					throw e;
+				}
+				catch (Exception e) {
+					logger.debug("e: {}", e);
+				} finally {
+					if (bos != null) {
+						try {
+							bos.close();
+						} catch (Exception ignore) {
+								logger.debug("IGNORED: {}", ignore.getMessage());
+						}
+					}
+					
+					if (stream != null) {
+						try {
+							stream.close();
+						} catch (Exception ignore) {
+							logger.debug("IGNORED: {}", ignore.getMessage());
+						}
+					}
+				}
+			}
         }
 		
 		logger.debug("bbsEditOk ended.");
@@ -6603,13 +6732,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return sb.toString();
 	}
 	
-	public String getProperSizeDisplay(int pSize) throws Exception {
+	public String getProperSizeDisplay(long pSize) throws Exception {
 		if (pSize > 1048576) {
-			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
+			return String.valueOf((double) pSize / 1024 / 102.4 / 10) + " MB";
 		} else if (pSize > 1024) {
-			return Integer.toString((int) (pSize / 102.4) / 10) + " KB";
+			return String.valueOf(pSize / 102.4 / 10) + " KB";
 		} else {
-			return Integer.toString(pSize) + " Byte";
+			return String.valueOf(pSize) + " Byte";
 		}
 	}
 	
@@ -8110,4 +8239,67 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return rtnVal.toString();
 	}
     
+	@Override
+	public boolean saveHWP(String strHTML, String strFileName, String strBoardID, String strFilePath, String realPath) throws Exception {
+		
+		String docPath = "";
+		String filePath = "";
+		boolean ret = true;
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+			docPath = realPath + strFilePath;
+			docPath = commonUtil.detectPathTraversal(docPath);
+			strBoardID = commonUtil.detectPathTraversal(strBoardID);
+			
+			if (!new File(docPath + strBoardID).exists()) {
+				File dir1 = new File(docPath + strBoardID + commonUtil.separator + "uploadFile");
+				File dir2 = new File(docPath + strBoardID + commonUtil.separator + "doc");
+				dir1.mkdirs();
+				dir2.mkdirs();
+			}
+			
+			filePath = docPath + strBoardID + commonUtil.separator + "doc" + commonUtil.separator + strFileName + ".hwp";
+			filePath = commonUtil.detectPathTraversal(filePath);
+			
+			if(new File(filePath).exists()) {
+				new File(filePath).delete();
+			}
+			
+			stream = new ByteArrayInputStream(Base64.decodeBase64(strHTML));
+			bos = new FileOutputStream(filePath);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+			
+			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+			
+		} catch (RuntimeException e) {
+			throw e;
+		}
+		catch (Exception e) {
+			ret = false;
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+		}
+		
+		return ret;
+	}
 }

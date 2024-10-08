@@ -31,36 +31,42 @@
 			var fileName = "<c:out value='${fileName}'/>";
 			var defaultFont  = "${defaultFont}";
 			var defaultSize  = "${defaultSize}";
+			var useEditor  = "<c:out value='${useEditor}'/>";
+			var contentLocation = "<c:out value='${strContentLocation}'/>";
+			var realPath = "<c:out value='${realPath}'/>";
+			var pathMiddle = "";
 			
 			window.onload = function () {
 		        GetFileURL();
-		      
-				var html = "";
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCommon/mhtToHTMLContent.do",
-					data : { type	:	"COMMUNITYNOTI", 
-							 href	:	"<c:out value='${strContentLocation}'/>",
-							 itemID	:	encodeURIComponent(no)
-						   },
-					success: function(result){
-						html = result;
-					}        			
-				});
-				
-				/* 2019-10-28 홍승비 - 커뮤니티 공지사항에 기본 폰트와 사이즈 적용 */
-				var defaultStyleTag = "<HTML><META content='text/html; charset=utf-8' http-equiv='Content-Type'><STYLE>";
-				defaultStyleTag += "P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px; font-family:" + defaultFont + "; font-size:" + defaultSize + "}";
-				defaultStyleTag += "DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;}</STYLE>";
-				
-				html = (defaultStyleTag + html.replace("<HTML>", ""));
-				
-				var doc = document.getElementById('message').contentWindow.document;
-				doc.open();
-				doc.write(html);
-				doc.close();
+		      	
+		        if (useEditor != "HWP") {
+		        	var html = "";
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : { type	:	"COMMUNITYNOTI", 
+								 href	:	contentLocation,
+								 itemID	:	encodeURIComponent(no)
+							   },
+						success: function(result){
+							html = result;
+						}        			
+					});
+					
+					/* 2019-10-28 홍승비 - 커뮤니티 공지사항에 기본 폰트와 사이즈 적용 */
+					var defaultStyleTag = "<HTML><META content='text/html; charset=utf-8' http-equiv='Content-Type'><STYLE>";
+					defaultStyleTag += "P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px; font-family:" + defaultFont + "; font-size:" + defaultSize + "}";
+					defaultStyleTag += "DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;}</STYLE>";
+					
+					html = (defaultStyleTag + html.replace("<HTML>", ""));
+					
+					var doc = document.getElementById('message').contentWindow.document;
+					doc.open();
+					doc.write(html);
+					doc.close();
+		        }
 		        
 				$("#message").contents().find("body").css("word-wrap", "break-word");
 		    }
@@ -214,8 +220,35 @@
 		                strReturn = "mainboard";
 		                break;
 		        }
+		        pathMiddle = strReturn;
 		        strContentLocation = "/upload_community/filedata/" + strReturn + "/" + fileName;
 		    }
+		    
+		    function Editor_Complete() {
+		    	var URL;
+		    	var completePath = realPath + "/" + pathMiddle + "/" + contentLocation;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(completePath);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+		    }
+		    
+		    function FieldsAvailable(isTrue) {
+		    	if (isTrue) {
+		    		message.EditMode(0);
+	        		message.ShowToolBar(false);
+	        		message.ShowRibbon(false);
+					message.SetViewProperties(2, 100);
+		            message.ScrollPosInfo(0, 0);
+		            window.onresize();
+		    	}
+		    }
+		    
+		    window.onresize = function () {
+		    	if (useEditor == "HWP") {
+	            	var mHeight = document.getElementById("ItemOverflow").clientHeight - 16 + "px";
+	            	message.Resize(mHeight);
+	            }
+		    };
+		    
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -266,7 +299,13 @@
   			</tr>
   			<tr>
 				<td style="padding-top:10px;height:580px" id="ItemOverflow">
-					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
+					<c:if test="${useEditor ne 'HWP'}">
+						<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
+					</c:if>
+					<c:if test="${useEditor eq 'HWP'}">
+						<iframe id="message" class="viewbox" src="/ezCommunity/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
+					</c:if>
+					
     			</td>
   			</tr>
   			<!-- 2018-05-04 홍승비 - 그룹게시판 다음글, 이전글 테이블 삭제 -->			

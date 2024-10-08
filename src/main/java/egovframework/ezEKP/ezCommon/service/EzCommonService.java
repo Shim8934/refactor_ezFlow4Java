@@ -486,4 +486,6 @@ public interface EzCommonService {
 
     // 2024-11-14 김승연 메일 열람 차단 테이블 추가
     public void createJmochaMailBlocked() throws Exception;
+	
+	public void insertModuleEditor() throws Exception;
 }
