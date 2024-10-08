@@ -22,10 +22,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webappLib>${basedir}/src/main/webapp/WEB-INF/lib</webappLib>
 	</properties>
-    
+
 	<repositories>
 		<repository>
-			<id>mvn2</id>
+			<id>mvn2s</id>
 			<url>https://repo1.maven.org/maven2/</url>
 			<releases>
 				<enabled>true</enabled>
@@ -36,7 +36,7 @@
 		</repository>
 		<repository>
 			<id>egovframe</id>
-			<url>https://www.egovframe.go.kr/maven/</url>
+			<url>https://maven.egovframe.go.kr/maven/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -44,16 +44,6 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-                <repository>
-                        <id>egovframe2</id>
-                        <url>http://maven.egovframe.kr:8080/maven/</url>
-                        <releases>
-                                <enabled>true</enabled>
-                        </releases>
-                        <snapshots>
-                                <enabled>false</enabled>
-                        </snapshots>
-                </repository>
 	</repositories>
 
 	<dependencies>

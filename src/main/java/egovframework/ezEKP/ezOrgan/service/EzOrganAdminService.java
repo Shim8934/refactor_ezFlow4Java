@@ -109,6 +109,8 @@ public interface EzOrganAdminService {
 	
 	public int getUserCount(int tenantID, String keycode, String keyword, boolean[] searchFor, String companyId) throws Exception;
 	
+	public String createExcelTotalUsers(String realPath, String dirPath, List<OrganUserVO> exportUserlist, String primary, Locale locale) throws Exception;
+	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
 	
 	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
@@ -217,7 +219,7 @@ public interface EzOrganAdminService {
 
 	Optional<String> getJobIdForFirstUser(String userId, int tenantId) throws Exception;
 
-	List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary) throws Exception;
+	List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary, String deptId, String jobId) throws Exception;
 	
 	// 2024-05-27 관리자 > 조직도 > 겸직 사용자 상세정보 내용 호출 함수
 	public String getEntryAddJobInfo(String cn, String deptId, String jobId, String language, int tenantID, String prop) throws Exception;

@@ -2,7 +2,7 @@
 <label for="ListCompany" style="display: none;"></label>
 <select class="companySelect" id="ListCompany"></select>
 <script>
-    // 선택된 회사값 :selectedCompany
+    // 선택된 회사값 :companySelectID
     // 변경시 함수 : changeCompany(회사id) 함수로 선언하면 select 변경시 실행
     var companySelectID = '' ;
     (function () {
@@ -12,11 +12,13 @@
         request.onload = function () {
             if (request.status >= 200 && request.status < 400) {
                 var result = JSON.parse(request.responseText);
-                console.log(result);
 
                 var userCompany = '${param.companySelectID}' || result.userCompany;
                 var companyList = result.list;
                 var select = document.getElementById("ListCompany");
+                if (!result.isMaster) {
+                    select.style.display = "none";
+                }
 
                 companyList.forEach(function (item) {
                     var optionElement = document.createElement("option");
@@ -29,6 +31,10 @@
                     select.appendChild(optionElement);
                 });
 
+                if (!companySelectID) {
+                    companySelectID = select.value;
+                }
+                
                 select.onchange = function () {
                     companySelectID = select.options[select.selectedIndex].value;
 

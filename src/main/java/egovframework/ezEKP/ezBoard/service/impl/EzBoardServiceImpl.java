@@ -5279,4 +5279,39 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("confirmBoardItemDeletion ends");
 		return ezBoardDAO.confirmBoardItemDeletion(map);
 	}
+	
+	@Override
+	public List<HashMap<String, Object>> getNoticePostItemList(String boardID, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception {
+		logger.debug("getNoticePostItem2 started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int start = 0;
+		int end = 0;
+		start = startRow;
+		end = endRow;
+		
+		BoardMyFavoriteVO boardMyFavoriteVO = new BoardMyFavoriteVO();
+		boardMyFavoriteVO.setBoardId(boardID);
+		boardMyFavoriteVO.setTenantID(tenantID);
+		
+		String tempString = ezBoardDAO.getBoardApprJoinItem(boardMyFavoriteVO);
+		
+		if (tempString != null && ! tempString.equals("")) {
+			map.put("v_TEMP", "1");
+		} else {
+			map.put("v_TEMP", "");
+		}
+		
+		map.put("v_PBOARDID", boardID);
+		map.put("v_START", start);
+		map.put("v_END", end);
+		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", end - (start - 1));
+		map.put("limit", start - 1);
+
+		logger.debug("getNoticePostItem2 ended");
+		return ezBoardDAO.getNoticePostItem(map);
+	}
 }

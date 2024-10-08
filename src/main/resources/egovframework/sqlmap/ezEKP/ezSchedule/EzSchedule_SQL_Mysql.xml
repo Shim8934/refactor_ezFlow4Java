@@ -824,21 +824,27 @@
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getPublicScheduleCumuler" parameterClass="map" resultMap="scheduleCumulerVO">		
-		<![CDATA[			       	      
-			select 
-				deptid,
-             	case #v_LANG#
-					when '1' then b.displayname
-					when '2' then b.displayname2   
-				end title  
-        	from 
-        		tbl_addjobmaster a join tbl_deptmaster b on a.deptid = b.cn and a.tenant_id = b.tenant_id
-       		where  
-       			a.cn = #v_CN#
-       		and
-       			a.tenant_id = #v_TENANTID#
-       		and
-       			b.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+		<![CDATA[
+		SELECT DEPARTMENT AS DEPTID,
+			   case #v_LANG#
+				   when '1' then U.DESCRIPTION
+				   when '2' then U.DESCRIPTION2
+				   end title
+		FROM TBL_USERMASTER U
+		WHERE U.CN = #v_CN#
+		  AND U.TENANT_ID = #v_TENANTID#
+		  AND PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+		UNION ALL
+		select deptid,
+			   case #v_LANG#
+				   when '1' then b.displayname
+				   when '2' then b.displayname2
+				   end title
+		from tbl_addjobmaster a
+				 join tbl_deptmaster b on a.deptid = b.cn and a.tenant_id = b.tenant_id
+		where a.cn = #v_CN#
+		  and a.tenant_id = #v_TENANTID#
+		  and b.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 		]]>			
 	</select>
 	<!-- checked -->
@@ -2194,7 +2200,9 @@
 		DATETYPE = #v_DATETYPE#,
 		</isNotEmpty>
 		REPETITION = IFNULL(#v_REPETITION#, ''),
+		<isNotEmpty property="v_TITLE">
 		TITLE = #v_TITLE#,
+		</isNotEmpty>
 		REMINDERSTATUS = #v_REMINDERSTATUS#
 	WHERE
 		SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#
@@ -2575,4 +2583,47 @@
 				TENANT_ID = #v_TENANTID#
 		]]>
 	</update>
+
+	<select id="EzScheduleDAO.checkExecutiveType" parameterClass="Map" resultClass="String">
+		select
+			case
+				when executive > 0 and secreatry > 0 then 'a'
+				when executive > 0 then 'u'
+				when secreatry > 0 then 's'
+				else 'none'
+				end as result
+		from
+			(
+				select
+					(
+						select
+							COUNT(*)
+						from
+							tbl_executive
+						where
+							cn = #v_USERID#
+						  and COMPANYID = #v_COMPANYID#
+						  and TENANT_ID = #v_TENANTID#) as executive,
+					(
+						select
+							COUNT(*)
+						from
+							tbl_secretary
+						where
+							SECRETARYID = #v_USERID#
+						  and COMPANYID = #v_COMPANYID#
+						  and TENANT_ID = #v_TENANTID#) as secreatry
+			) counts
+	</select>
+
+	<select id="EzScheduleDAO.checkExecutiveUsage" parameterClass="Map" resultClass="String">
+		SELECT
+			`usage`
+		FROM
+			tbl_executive
+		WHERE
+			COMPANYID = #v_COMPANYID#
+		  AND TENANT_ID = #v_TENANTID#
+		  AND CN = #v_USERID#
+	</select>
 </sqlMap>

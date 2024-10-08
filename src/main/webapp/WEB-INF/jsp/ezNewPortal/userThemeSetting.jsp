@@ -120,20 +120,22 @@ function updateUserThemeSetting(event) {
 	<div id="themeList">
 		<ul>
 			<c:forEach items="${themeList }" var="theme">
-				<li data-flip-title="${theme.themeName }" id="T${theme.themeId }">
-					<div class="themeImage">
-						<img src="/images/ezNewPortal/themeImg/${imgFolder }/Theme${theme.themeId }.png" class="themeImg">
-						<c:choose>
-							<c:when test="${theme.themeId eq usedTheme }">
-								<div id="usedTheme"><span>"<spring:message code='ezNewPortal.t036' />"</span></div>	
-							</c:when>
-							<c:otherwise>
-								<div class="btnpositionJsp"><a class="imgbtn"><span><spring:message code='ezNewPortal.t037' /></span></a></div>
-							</c:otherwise>
-						</c:choose>
-					</div>
-					<p class="themeContent">${theme.themeContent}</p>
-				</li>
+				<c:if test="${theme.themeId ne 4}">
+					<li data-flip-title="${theme.themeName }" id="T${theme.themeId }">
+						<div class="themeImage">
+							<img src="/images/ezNewPortal/themeImg/${imgFolder }/Theme${theme.themeId }.png" class="themeImg">
+							<c:choose>
+								<c:when test="${theme.themeId eq usedTheme }">
+									<div id="usedTheme"><span>"<spring:message code='ezNewPortal.t036' />"</span></div>	
+								</c:when>
+								<c:otherwise>
+									<div class="btnpositionJsp"><a class="imgbtn"><span><spring:message code='ezNewPortal.t037' /></span></a></div>
+								</c:otherwise>
+							</c:choose>
+						</div>
+						<p class="themeContent">${theme.themeContent}</p>
+					</li>
+				</c:if>
 			</c:forEach>
 		</ul>
 	</div>

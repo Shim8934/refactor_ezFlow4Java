@@ -5,6 +5,7 @@
 	<typeAlias  alias="ScheduleShareVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleShareVO"/>
 	<typeAlias  alias="ScheduleGroupListVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO"/>
 	<typeAlias  alias="ScheduleGroupVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO"/>
+	<typeAlias  alias="ScheduleExecutiveVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleExecutiveVO"/>
 	
 	<resultMap class="ScheduleShareVO" id="scheduleShareVO">
 		<result property="rowIndex"			column="ROWINDEX"			columnIndex="1"/>
@@ -37,6 +38,17 @@
 		<result property="modifydate"		column="MODIFYDATE"		columnIndex="10"/>
 		<result property="groupColor"		column="GROUPCOLOR"		columnIndex="13"/>
 		<result property="transferDate"		column="TRANSFERDATE"		columnIndex="14"/>
+	</resultMap>
+
+	<resultMap class="ScheduleExecutiveVO" id="ScheduleExecutiveVO">
+		<result property="cn"				column="CN"					columnIndex="1"/>
+		<result property="displayName"		column="DISPLAYNAME"		columnIndex="2"/>
+		<result property="deptName"			column="DESCRIPTION"		columnIndex="3"/>
+		<result property="priority"			column="PRIORITY"			columnIndex="4"/>
+		<result property="usage"			column="USAGE"				columnIndex="5"/>
+		<result property="createUser"		column="CREATEUSER"			columnIndex="6"/>
+		<result property="createUserName"   column="CREATEUSERNAME"		columnIndex="7"/>
+		<result property="lastUpdate"		column="LASTUPDATE"			columnIndex="8"/>
 	</resultMap>
 	
 	<select id="EzScheduleAdminDAO.getMyGroupMemberListCnt" parameterClass="map" resultClass="int">
@@ -456,6 +468,103 @@
 			AND
 				TENANT_ID = #v_TENANTID#
 		]]>			
+	</delete>
+
+	<select id="EzScheduleAdminDAO.scheduleGetExecutiveList" parameterClass="map" resultMap="ScheduleExecutiveVO">
+		select distinct 
+			a.PRIORITY,
+			a.cn,
+			case #v_LANG#
+				when '1' then b.DISPLAYNAME
+				when '2' then b.DISPLAYNAME2
+				else b.DISPLAYNAME2
+			end DISPLAYNAME,
+			case #v_LANG#
+				when '1' then b.DESCRIPTION
+				when '2' then b.DESCRIPTION2
+				else b.DESCRIPTION2
+			end DESCRIPTION,
+			a.USAGE,
+			a.CREATEUSER,
+			case #v_LANG#
+				when '1' then c.DISPLAYNAME
+				when '2' then c.DISPLAYNAME2
+				else c.DISPLAYNAME2
+			end CREATEUSERNAME,
+			a.LASTUPDATE
+		from
+			tbl_executive a
+				inner join tbl_usermaster b
+							on a.cn = b.cn
+							and a.COMPANYID = b.PHYSICALDELIVERYOFFICENAME
+				inner join tbl_usermaster c
+							on a.CREATEUSER = c.CN
+							and a.COMPANYID = c.PHYSICALDELIVERYOFFICENAME
+		where
+			a.COMPANYID = #v_COMPANYID#
+			and a.tenant_id = #v_TENANTID#
+		<isNotEmpty property="v_COMPANYNAME">
+			<isEqual property="v_LANG" compareValue="1">
+				and b.company = #v_COMPANYNAME#
+				and c.company = #v_COMPANYNAME#
+			</isEqual>
+			<isNotEqual property="v_LANG" compareValue="1">
+				and b.company2 = #v_COMPANYNAME#
+				and c.company2 = #v_COMPANYNAME#
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty property="cn">
+			and a.cn = #cn#
+		</isNotEmpty>
+		<isEmpty property="cn">
+			<isNotEmpty property="v_KEYWORD">
+				and b.DISPLAYNAME like '%' || #v_KEYWORD# || '%'
+			</isNotEmpty>
+		</isEmpty>
+	</select>
+
+	<insert id="EzScheduleAdminDAO.scheduleSaveExecutive" parameterClass="map">
+		<![CDATA[
+		insert into tbl_executive
+			(CN, PRIORITY, USAGE, CREATEUSER, LASTUPDATE, COMPANYID, TENANT_ID)
+		values
+			(#v_USERID#, #v_PRIORITY#, #v_USAGE#, #v_CREATEUSER#, to_date(#v_SYSDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_COMPANYID#, #v_TENANTID#)
+		]]>
+	</insert>
+
+	<update id="EzScheduleAdminDAO.scheduleUpdateExecutive" parameterClass="map">
+		<![CDATA[
+		update
+			tbl_executive
+		set
+			PRIORITY = #v_PRIORITY#
+		]]>
+		<isNotEmpty property="v_USAGE" prepend=",">
+			USAGE = #v_USAGE#,
+			CREATEUSER = #v_CREATEUSER#,
+			LASTUPDATE = to_date(#v_SYSDATE#, 'YYYY-MM-DD HH24:MI:SS')
+		</isNotEmpty>
+		<![CDATA[
+		where
+			CN = #v_USERID#
+		  and
+			COMPANYID = #v_COMPANYID#
+		  and
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
+
+	<delete id="EzScheduleAdminDAO.scheduleDelExecutive" parameterClass="map">
+		<![CDATA[
+		delete from
+			tbl_executive
+		where
+			CN = #v_USERID#
+		  AND
+			COMPANYID = #v_COMPANYID#
+		  and
+			TENANT_ID = #v_TENANTID#
+		]]>				
 	</delete>
 
 </sqlMap>

@@ -26,7 +26,7 @@
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal">
-			    		<span id="selectDeptNM" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">[<span style="color:#017BEC;">${memberList.size()}</span>명]</span>
+			    		<span id="selectDeptNM" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">[<span class="txt_color">${memberList.size()}</span>명]</span>
 			    		<span style="float:right;">
                        </span>
 			        </th>

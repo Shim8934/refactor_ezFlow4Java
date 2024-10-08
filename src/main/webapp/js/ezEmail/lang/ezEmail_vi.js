@@ -348,6 +348,8 @@ var strLangHSG02 = "Báo cáo rác không được xử lý thành công.";
 // 2024.04.29 한슬기 : 메일 관련 메시지
 var strLangHSG03 = "Trường chủ đề trống.";
 
+var strLangKDH01 = "Đọc thông tin";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";

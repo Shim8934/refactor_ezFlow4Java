@@ -64,4 +64,13 @@ public interface EzSurveyService {
 	String checkTenantConfig(String propertyName, int tenantID) throws Exception;
 	
 	void setPreviewFlag(String prevMode, String userId, String companyId, int tenantId) throws Exception;
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 저장
+    public void saveSurveyResultViewTarget(LoginVO userInfo, Long survey_id, JSONArray resultViewTarget) throws Exception;
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 리스트 조회
+	public JSONArray getSurveyResultViewTarget(LoginVO userInfo, Long survey_id) throws Exception;
+
+	// 2024-07-12 전인하 - 설문 > 사용자가 결과조회 가능한 설문 id 조회
+	public List<Long> getUserReceivedSurveyResultList(LoginVO userInfo, long surveyId) throws Exception;
 }

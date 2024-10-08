@@ -945,6 +945,11 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				logger.debug("tbl_theme_auth data doesn't exist. insert the data of " + map.get("companyId") + "...");
 				insert("EzCommonDAO.insertThemeAuthInit", map);
 			}
+			// 2024-07-12 황인경 - 모바일 포탈 > 회사별 테마 권한 init 추가
+			if ((int)select("EzCommonDAO.checkMobileThemeInitAuth", map) < 1) {
+				logger.debug("tbl_theme_auth MobileFrameInitAuth doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertMobileThemeInitAuth", map);
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -1925,7 +1930,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.getPortletNameCompanyList", map);
 	}
 
-    /* 2023-11-22 조소정 - 포탈 > ㅣ기본 포틀릿명 중국어 버전 추가 */
+    /* 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 */
 	public void insertPortletNameChinese(Map<String, Object> map2) {
 		try {
 			String checkNameChinese = (String) select("EzCommonDAO.checkPortletNameChinese", map2);
@@ -2329,7 +2334,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	public void alterUserThemePagination() throws Exception {
 		try {
-			select(("EzCommonDAO.checkUserThemePagination"));
+			select("EzCommonDAO.checkUserThemePagination");
 		} catch (Exception e) {
 			logger.debug("In TBL_PORTAL_THEME_USER doesn't exist usePaging column. creating the column...");
 
@@ -2369,6 +2374,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterTblScheduleForShowtop");
 		}
 	}
+	
 
 	public void insertGongRamListOption(Map<String, Object> map) throws Exception {
 		map.put("listOption", "014"); // APR
@@ -2482,6 +2488,255 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		for (String code : codeList) {
 			map.put("CODE1",code);
 			update("EzCommonDAO.updateInProcessJpCodeName3",map);
+		}
+	}
+
+	public void createTblDistributeinfo() {
+		try {
+			select("EzCommonDAO.checkTblDistributeinfo");
+		} catch (Exception e) {
+			logger.debug("TBL_DISTRIBUTEINFO table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblDistributeinfo");
+		}
+	}
+
+	// 2024-08-06 이유정 - 임원일정 > 테이블 추가
+	public void createExecutiveTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkExecutiveTable");
+		} catch (Exception e) {
+			logger.debug("tbl_executive doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createExecutiveTable");
+		}
+	}
+
+	// 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 테이블 추가
+	public void createServeyResultviewPermTbl() {
+		try {
+			select("EzCommonDAO.checkServeyResultviewPermTbl");
+		} catch (Exception e) {
+			logger.debug("TBL_SERVEY_RESULTVIEWPERMISSION doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createServeyResultviewPermTbl");
+		}
+	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
+	public void addTblFormContainerSN() {
+		try {
+			select("EzCommonDAO.checkTblFormContainerSN");
+		} catch (Exception e) {
+			logger.debug("tbl_formcontainer SN column doesn't exist. creating the column...");
+			update("EzCommonDAO.addTblFormContainerSN");
+		}
+
+	}
+	
+	public void insertMobileTheme() throws Exception {
+		if ((int)select("EzCommonDAO.checkMobileTheme") < 1) {
+			logger.debug("insertMobileTheme mobile Theme doesn't exist. insert data...");
+			insert("EzCommonDAO.insertMobileTheme");
+		}
+	}
+	
+	public void insertMobileFrame() throws Exception {
+		if ((int)select("EzCommonDAO.checkMobileFrame") < 1) {
+			logger.debug("insertMobileFrame mobile Frame doesn't exist. insert data...");
+			insert("EzCommonDAO.insertMobileFrame");
+		}
+	}
+	
+	public void insertMobileFrameComp(Map<String, Object> map) throws Exception {
+		logger.debug("insertMobileFrameComp started.");
+		try {
+			insert("EzCommonDAO.insertMobileFrameComp", map);
+			logger.debug("insertMobileFrameComp ended.");
+		} catch (Exception e) {
+			logger.debug("insertMobileFrameComp failed.");
+		}
+	}
+	
+	public void insertMobileThemeComp(Map<String, Object> map) throws Exception {
+		if ((int)select("EzCommonDAO.checkMobileThemeInitComp", map) < 1) {
+			logger.debug("insertMobileThemeComp mobile ThemeCompany doesn't exist. insert data...");
+			insert("EzCommonDAO.insertMobileThemeInitComp", map);
+		}
+	}
+	
+	public void resetMobileUser() throws Exception {
+		logger.debug("resetMobileUser started.");
+		try {
+			update("EzCommonDAO.resetMobileUser");
+			logger.debug("resetMobileUser ended.");
+		} catch (Exception e) {
+			logger.debug("resetMobileUser failed.");
+		}
+	}
+	
+	public void alterMenuOpenType() throws Exception {
+		try {
+			select("EzCommonDAO.checkMenuOpenType");
+		} catch (Exception e) {
+			logger.debug("In TBL_PORTAL_MENU_COMP doesn't exist openType column. creating the column...");
+			
+			update("EzCommonDAO.alterMenuOpenType");
+		}
+	}
+	
+	public void createTblSystemConfig() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblSystemConfig");
+		} catch (Exception e) {
+			logger.debug("TBL_SYSTEMCONFIG table doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblSystemConfig");
+		}		
+	}
+	
+	public void createTblSystemConfigType() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblSystemConfigType");
+		} catch (Exception e) {
+			logger.debug("TBL_SYSTEMCONFIG_TYPE table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblSystemConfigType");
+		}		
+	}
+	
+	public void addConnectionIDtoTblPortalPortletComp() throws Exception {
+		try {
+			select("EzCommonDAO.checkConnectionId");
+		} catch (Exception e) {
+			logger.debug("TBL_PORTAL_PORTLET_COMP table doesn't have connection_id column. altering table...");
+			update("EzCommonDAO.createConnectionIdOnTblPortalPortletComp");
+		}
+	}
+	
+	public String checkConnectionMenu() throws Exception {
+		return (String) select("EzCommonDAO.checkConnectionMenu");
+	}
+	
+	public void insertConnectionMenu() throws Exception {
+		try {
+			insert("EzCommonDAO.insertConnectionMenu");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}		
+	}
+	
+	public void insertConnectMenuInfo(Map<String, Object> map) throws Exception {
+		try {
+			insert("EzCommonDAO.insertConnectionMenuComp", map);
+			insert("EzCommonDAO.insertConnectionMenuAuth", map);
+			insert("EzCommonDAO.insertConnectionMenuName", map);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	public void insertStandardSystemConfigData(Map<String, Object> map) {
+		int totalConfigCnt = (Integer) select("EzCommonDAO.selectSystemConfigTotalCnt", map);
+		if (totalConfigCnt <= 0) {
+			int portletSystemConfigCnt = (Integer) select("EzCommonDAO.chkPortletSystemConfigType", map);
+			
+			if (portletSystemConfigCnt <= 0) {
+				insert("EzCommonDAO.insertPortletSystemConfigType", map);
+			}
+			
+			insert("EzCommonDAO.insertStandardSystemConfigData", map);
+		}
+		
+	}
+	
+	public void createTblNotiEmergencyCompany() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblNotiEmergencyCompany");
+		} catch (Exception e) {
+			logger.debug("TBL_NOTI_EMERGENCY_COMPANY table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblNotiEmergencyCompany");
+		}	
+	}
+	
+	public void createTblNotiEmergencyItem() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblNotiEmergencyItem");
+		} catch (Exception e) {
+			logger.debug("TBL_NOTI_EMERGENCY_ITEM table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblNotiEmergencyItem");
+		}	
+	}
+	
+	public void createTblNotiEmergencyPermission() throws Exception {
+		try {
+			select("EzCommonDAO.chkTblNotiEmergencyPermission");
+		} catch (Exception e) {
+			logger.debug("TBL_NOTI_EMERGENCY_PERMISSION table doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblNotiEmergencyPermission");
+		}	
+	}
+	
+	public boolean hasMobileMenus() throws Exception {
+		try {
+			
+			if ((int) select("EzCommonDAO.chkMobileMenus") > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public int getNewMenuId() throws Exception {
+		return (int) select("EzCommonDAO.getNewMenuId");
+	}
+	
+	public void insertMobileMenus(int menuId) throws Exception {
+		insert("EzCommonDAO.insertMobileMenus", menuId);
+	}
+	
+	public void insertCompanyMobileMenus(Map<String, Object> param) {
+		insert("EzCommonDAO.insertCompanyMobileMenus", param);
+	}
+	
+	public void insertCompanyMobileMenuNames(Map<String, Object> param) {
+		insert("EzCommonDAO.insertCompanyMobileMenuNames", param);
+	}
+	
+	public void insertMobileMenusAuth(Map<String, Object> param) {
+		insert("EzCommonDAO.insertMobileMenusAuth", param);
+	}
+	
+	public void alterUseColor() {
+		try {
+			select("EzCommonDAO.checkUseColor");
+		} catch (Exception e) {
+			logger.debug("In TBL_PORTAL_TOP_USER doesn't exist useColor column. creating the column...");
+			
+			update("EzCommonDAO.alterUseColor");
+		}
+	}
+
+	public void updateThemeData() {
+		try {
+			if ((int) select("EzCommonDAO.chkThemeName") > 1) {
+				update("EzCommonDAO.updateTheme1");
+				update("EzCommonDAO.updateTheme2");
+				update("EzCommonDAO.updateTheme3");
+			}
+		} catch (Exception e) {
+			logger.debug("An error occurred while updating the theme data.");
+		}
+	}
+
+	public void createRsScheduleDeptIdColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkRsScheduleDeptIdColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_RS_SCHEDULE DEPTID column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.createRsScheduleDeptIdColumn");
 		}
 	}
 }

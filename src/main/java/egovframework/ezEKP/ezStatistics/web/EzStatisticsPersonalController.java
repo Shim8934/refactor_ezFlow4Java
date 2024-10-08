@@ -57,7 +57,7 @@ public class EzStatisticsPersonalController {
 		}		
 			
 		try {
-			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 
 			model.addAttribute("list", adminCompanyList);
 			model.addAttribute("userCompany", userInfo.getCompanyID());
@@ -104,7 +104,7 @@ public class EzStatisticsPersonalController {
 		}		
 				
 		try {
-			List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+			List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 			
 			model.addAttribute("list", resultList);
 			model.addAttribute("userCompany", userInfo.getCompanyID());
@@ -153,7 +153,7 @@ public class EzStatisticsPersonalController {
 		}		
 				
 		try {
-			List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
+			List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 			
 			model.addAttribute("list", resultList);
 			model.addAttribute("userCompany", userInfo.getCompanyID());

@@ -15,8 +15,7 @@
 					<dt class="portletText">
 						<c:out value='${portletName }'/>
 					</dt>
-					<dd class="portletPlus" onclick="Appmore_btnClick('${portletId}')">
-						<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
+					<dd class="portletPlus plus" onclick="Appmore_btnClick('${portletId}')">
 					</dd>
 				</dl>
             	<ul id ="ApprList${portletId}" class="portlet_list"></ul>

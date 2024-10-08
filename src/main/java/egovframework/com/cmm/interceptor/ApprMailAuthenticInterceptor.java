@@ -43,7 +43,11 @@ public class ApprMailAuthenticInterceptor extends WebContentInterceptor {
 			if (loginCookie == null) { return false; }
 			
 			boolean isAdminPage = request.getRequestURI().contains("/admin/ezEmail/appr/");
-			
+
+			// 승인자 리스트 출력 및 검색은 일반사용자와 관리자가 같은 url을 호출하기 때문에 관리자 체크 대상에서 제외한다.
+			boolean isExcludeCheckAdmin = request.getRequestURI().contains("/getApproverList.do")
+					|| request.getRequestURI().contains("/getApproverSearchList.do");
+
 			boolean returnValue = true;
 			String errPage = "";
 		
@@ -54,7 +58,7 @@ public class ApprMailAuthenticInterceptor extends WebContentInterceptor {
 
 			if (!commonUtil.checkTenantConfigBool(tenantID, "useApprMail", "false")) {
 				returnValue = false;
-			} else if (isAdminPage && commonUtil.checkAdmin(loginCookie.getValue()) == null) {
+			} else if (isAdminPage && commonUtil.checkAdmin(loginCookie.getValue()) == null && !isExcludeCheckAdmin) {
 				returnValue = false;
 				errPage = "/admin/adminDenied.do"; 
 			}

@@ -291,6 +291,9 @@ function save_schedule(pageFrom)
 	        case "8": //겸직일정
 	            patternType = "8";
 	            break;
+			case "10": // 임원일정
+				patternType = "10";
+				break;
 	    }
 	    setNodeText(xmlDom.getElementsByTagName("SCHEDULETYPE")[0], patternType)
 	}
@@ -475,6 +478,19 @@ function save_schedule(pageFrom)
 	    } else{
 	    	try { window.opener.RefreshView() } catch (e) { }
 	    }
+	    
+	    try { // 바로가기 테마 새로고침
+            if (parent.opener != null && parent.opener.getScheduleList_Top != undefined) {
+            	var selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.select div');
+            	if (!selectedTd) {
+            		selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.main_today div');
+            	}
+            	var selectedDate = selectedTd.getAttribute('dispdate');
+            	parent.opener.getScheduleList_Top(selectedDate, 'P');
+            	parent.opener.openerCalendarMiniView("CalendarMini_Top");	    		
+            	parent.opener.openerCalendarMiniDataSource("Top");
+            }
+        } catch (e) {console.log(e);}
 	    
 	    window.close();
 	}
@@ -1332,21 +1348,31 @@ function ListOwnerID_Change()
 	        }
     	}
     }
-	
+
 	if (pListOwnerID != "1") {
 	    receiverlist.innerHTML = "";
 	    document.getElementById("publicSelect").disabled = true;
 	    document.getElementById("publicSelect").value = "Y";
 	    g_attendant = null;
 	}
-	else {
-	    document.getElementById("publicSelect").disabled = false;
-	    document.getElementById("publicSelect").value = "N";
+	else { // chkPublic이 OFF일 경우 비공개가 기본값임.
+		if (chkPublic == "OFF") {
+			document.getElementById("publicSelect").disabled = true;
+			document.getElementById("publicSelect").value = "N";
+		} else {
+			document.getElementById("publicSelect").disabled = false;
+			document.getElementById("publicSelect").value = "N";
+		}
 	}
     //6 : 비서(대리인) 비서일 경우 참석자 초대 가능
 	if (pListOwnerID == "1" || pListOwnerID == "6") {
-	    document.getElementById("publicSelect").value = "N";
-	    document.getElementById("publicSelect").disabled = false;
+		if (chkPublic == "OFF") {
+			document.getElementById("publicSelect").value = "N";
+			document.getElementById("publicSelect").disabled = true;
+		} else {
+			document.getElementById("publicSelect").value = "N";
+			document.getElementById("publicSelect").disabled = false;
+		}
 	    document.getElementById("receiverinput").disabled = false;
 	    document.getElementById("imgbutton").disabled = false;
 	    document.getElementById("imgbutton").style.display = "";

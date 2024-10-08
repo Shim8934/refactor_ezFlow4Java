@@ -57,7 +57,7 @@ function CalendarMiniView(pTagetID) {
 	        var mImg = document.createElement("IMG");
 	        mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
 	        mImg.setAttribute("border", "0");
-	        mImg.setAttribute("onclick", "preMonth()");
+			mSpan.setAttribute("onclick", "preMonth()");
 	        mSpan.appendChild(mImg);
 	        mTd.appendChild(mSpan);
 	        mTr.appendChild(mTd);
@@ -140,7 +140,7 @@ function CalendarMiniView(pTagetID) {
 	        var mImg = document.createElement("IMG");
 	        mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
 	        mImg.setAttribute("border", "0");
-	        mImg.setAttribute("onclick", "nextMonth()");
+			mSpan.setAttribute("onclick", "nextMonth()");
 	        mSpan.appendChild(mImg);
 	        mTd.appendChild(mSpan);
 	        mTr.appendChild(mTd);
@@ -179,12 +179,10 @@ function CalendarMiniView(pTagetID) {
 	        mTd.className = "btn_prev"
 	        var mSpan = document.createElement("SPAN");
 	        mSpan.style.cursor = "pointer";
-	        //mSpan.style.marginLeft = "6px";
-	        //mSpan.style.marginTop = "4px";
+	        mSpan.setAttribute("onclick", "preMonthTop()");
 	        var mImg = document.createElement("IMG");
 	        mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
 	        mImg.setAttribute("border", "0");
-	        mImg.setAttribute("onclick", "preMonthTop()");
 	        mSpan.appendChild(mImg);
 	        mTd.appendChild(mSpan);
 	        mTr.appendChild(mTd);
@@ -261,12 +259,10 @@ function CalendarMiniView(pTagetID) {
 	        mTd.className = "btn_next"
 	        var mSpan = document.createElement("SPAN");
 	        mSpan.style.cursor = "pointer";
-	        //mSpan.style.marginRight = "6px";
-	        //mSpan.style.marginTop = "4px";
+	        mSpan.setAttribute("onclick", "nextMonthTop()");
 	        var mImg = document.createElement("IMG");
 	        mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
 	        mImg.setAttribute("border", "0");
-	        mImg.setAttribute("onclick", "nextMonthTop()");
 	        mSpan.appendChild(mImg);
 	        mTd.appendChild(mSpan);
 	        mTr.appendChild(mTd);
@@ -307,7 +303,7 @@ function GetTableMiniBodyObj() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;
@@ -410,7 +406,7 @@ function GetTableMiniBodyObjTop() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;

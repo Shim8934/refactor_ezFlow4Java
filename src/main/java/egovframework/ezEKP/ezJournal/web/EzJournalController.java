@@ -154,8 +154,10 @@ public class EzJournalController extends EgovFileMngUtil {
 		String listType = request.getParameter("listType");
 		String typeId = request.getParameter("typeId");
 		String userDept = userInfo.getDeptID();
+		String userCompany = userInfo.getCompanyID();
 
-		HashMap<String, Object> param = new HashMap<String, Object>();
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("userCompany", userCompany);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/" + userInfo.getId() + "/author-depts", param, request,"get",null);
 		String status = resultBody.get("status").toString();
@@ -1916,10 +1918,18 @@ public class EzJournalController extends EgovFileMngUtil {
 			}
 			
 			if (!disableNotiPlatformList.contains(4L)) {
-				String recipientIdList = ((String)journalMailInfo.get("mail")).split("@")[0];
 				String linkUrl = "/ezJournal/journalDetail.do?journalId=" + journalId + "&pPreviewShow_HOW=D";
 				String linkUrlMobile = "";
-				ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), recipientIdList, "JOURNAL", "COMMENT", journalTitle, "popup", "750", "760", linkUrl, linkUrlMobile, "");
+				
+				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", userInfo.getCompanyID());
+				recipientMap.put("cn", ((String)journalMailInfo.get("mail")).split("@")[0]);
+				notiRecipientList.add(recipientMap);
+				
+				ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "JOURNAL", "COMMENT", journalTitle, "popup", "1000", "950", linkUrl, linkUrlMobile, "");
 			}
 		}
 		
@@ -1952,8 +1962,8 @@ public class EzJournalController extends EgovFileMngUtil {
 		ArrayList<InternetAddress> toArrList = new ArrayList<InternetAddress>(); 
 		if (recvIds != null && !recvIds.equals("")) {
 			String[] receiverID = recvIds.split(", ");
-			String recipientIdList = "";
-			String separator = ";;";
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+			
 			for (int i = 0; i < receiverID.length; i++) {
 				String recvId = receiverID[i];
 				
@@ -1977,7 +1987,11 @@ public class EzJournalController extends EgovFileMngUtil {
 					}
 					
 					if (!disableNotiPlatformList.contains(4L)) {
-						recipientIdList += ((String)journalMailInfo.get("mail")).split("@")[0] + separator;
+						Map<String, Object> recipientMap = new HashMap<String, Object>();
+						recipientMap.put("userType", "PERSON");
+						recipientMap.put("companyId", userInfo.getCompanyID());
+						recipientMap.put("cn", ((String)journalMailInfo.get("mail")).split("@")[0]);
+						notiRecipientList.add(recipientMap);
 					}
 				}
 			}
@@ -2005,13 +2019,12 @@ public class EzJournalController extends EgovFileMngUtil {
 				logger.error(e.getMessage(), e);
 			}
 			
-			if (recipientIdList != null && !recipientIdList.equals("")) {
-				recipientIdList = recipientIdList.substring(0, recipientIdList.length() - separator.length());
+			if (notiRecipientList != null && notiRecipientList.size() > 0) {
+				String linkUrl = "/ezJournal/journalDetail.do?journalId=" + journalId + "&pPreviewShow_HOW=D";
+				String linkUrlMobile = "";
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "JOURNAL", "RECV", journalTitle, "popup", "1000", "950", linkUrl, linkUrlMobile, "");
+				logger.debug("sendJournalRecvMail noti status : " + notiStatus);
 			}
-			
-			String linkUrl = "/ezJournal/journalDetail.do?journalId=" + journalId + "&pPreviewShow_HOW=D";
-			String linkUrlMobile = "";
-			ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), recipientIdList, "JOURNAL", "RECV", journalTitle, "popup", "750", "760", linkUrl, linkUrlMobile, "");
 			
 		}
 		

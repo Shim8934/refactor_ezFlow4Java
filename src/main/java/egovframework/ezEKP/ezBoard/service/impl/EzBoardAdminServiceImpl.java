@@ -1398,13 +1398,13 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		try {
 			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(primary, tenantID);
 
-			OrganAuth organAuth = commonUtil.makeOrganAuth(userID, tenantID);
+			/*OrganAuth organAuth = commonUtil.makeOrganAuth(userID, tenantID);
 
 			if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER, "")) {
 				list.removeIf(vo
 						-> !organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn())
 						&& !organAuth.isAuth(AdminAuth.BOARD_MANAGER, vo.getCn()));
-			}
+			}*/
 
 			return list;
 		} catch (Exception e) {

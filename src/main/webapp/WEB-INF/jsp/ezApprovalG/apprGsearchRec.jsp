@@ -63,6 +63,14 @@
 		        g_DeptName = RetValue[2];
 		        opnOption = RetValue[3];
 		        g_Listtype = RetValue[4];
+				
+				if(g_Listtype === "m01"){
+					document.getElementById("trFormID").style.display = "";
+					document.getElementById("trOrgDocNum").style.display = "";
+					document.getElementById("trDrafterDept").style.display = "";
+					document.getElementById("trDocNum").style.display = "";
+				}
+				
 		        g_Roleinfo = RetValue[5];
 		        rtnVal[0] = "FALSE";
 
@@ -227,7 +235,11 @@
 		        createNodeAndInsertText(oXml, oData, "EREGDATE", GetRegEDate());
 		        createNodeAndInsertText(oXml, oData, "CHARGER", g_SelChargerID);
 		        createNodeAndInsertText(oXml, oData, "SC", txtSC.value);
-		        if (chkTransExp.checked) {
+				createNodeAndInsertText(oXml, oData, "FORMID", document.getElementsByName("formID")[0].id);
+				createNodeAndInsertText(oXml, oData, "ORGDOCNUM", document.getElementsByName("txtOrgDocNum")[0].value);
+				createNodeAndInsertText(oXml, oData, "DRAFTERDEPT", document.getElementsByName("txtDrafterDept")[0].value);
+				createNodeAndInsertText(oXml, oData, "DOCNUM", document.getElementsByName("txtDocNum")[0].value);
+				if (chkTransExp.checked) {
 		            createNodeAndInsertText(oXml, oData, "TRANSEXPIRE", "TRUE");
 		        }
 		        else {
@@ -279,6 +291,23 @@
 		            }
 		        }
 			}
+
+			var getformcont_cross_dialogArguments = new Array();
+			function btn_FormSelect_onclick() {
+				var parameter = new Array();
+				parameter[0] = "<c:out value = '${userInfo.deptID}' />";
+				parameter[1] = "999";
+				getformcont_cross_dialogArguments[0] = parameter;
+				getformcont_cross_dialogArguments[1] = btn_FormSelect_onclick_Complete;
+				var retVal = window.open("/ezApprovalG/getFormCont.do", "", GetOpenWindowfeature(715, 580));
+			}
+
+			function btn_FormSelect_onclick_Complete(retVal) {
+				if (typeof (retVal) != "undefined" && retVal[0] != "cancel") {
+					document.getElementsByName("formID")[0].id = retVal[2];
+					document.getElementsByName("formID")[0].value = retVal[3];
+				}
+			}
 		</script>
 	</head>
 	<body class="popup">
@@ -295,6 +324,23 @@
 		      <input class="text" name="txtDeptName" id=txtDeptName disabled>
 		      <a class="imgbtn imgbck" style="height: 23px;margin-bottom: 0px;"><span onClick="return SelectDept_OnClick()" id="btnSelDept"  style="width:24px;text-align:center;line-height: 22px;"><spring:message code='ezApprovalG.t105'/></span></a>
 		     </td>
+		  </tr>
+		  <tr id = "trFormID" style="display: none">
+			  <th ><spring:message code='ezApprovalG.t442'/></th>
+			  <td style=" WIDTH:270px" >
+				  <input class="text" name="formID" id=""  style=" WIDTH:270px" disabled>
+				  <a  class="imgbtn imgbck" style="height: 23px;margin-bottom: 0px;"><span onClick="return btn_FormSelect_onclick()" id="formNameBox"  style="width:55px;text-align:center;line-height: 22px;"><spring:message code='ezApprovalG.t152'/></span></a>
+			  </td>
+		  </tr>
+		  <tr id = "trDocNum" style="display: none">
+				<th style="WIDTH:80px"><spring:message code='ezApprovalG.F0005'/></th>
+				<td style=" WIDTH:270px">
+					<input class="text" style=" WIDTH: 100%;height: 25px; -moz-box-sizing:border-box;box-sizing:border-box;" name="txtDocNum" id=txtDocNum>    </td>
+		  </tr>
+		  <tr id = "trOrgDocNum" style="display: none">
+				<th style="WIDTH:80px"><spring:message code='ezApprovalG.kmh07'/></th>
+				<td style=" WIDTH:270px">
+					<input class="text" style=" WIDTH: 100%;height: 25px; -moz-box-sizing:border-box;box-sizing:border-box;" name="txtOrgDocNum" id=txtOrgDocNum>    </td>
 		  </tr>
 		  <tr > 
 		    <th style="WIDTH:80px"> <spring:message code='ezApprovalG.t1092'/></th>
@@ -329,6 +375,11 @@
 		    <th style="WIDTH:80px"> <spring:message code='ezApprovalG.t445'/></th>
 		    <td style=" WIDTH:270px"> 
 		      <input class="text" style=" WIDTH:100%;height:25px; -moz-box-sizing:border-box;box-sizing:border-box;" name="txtDrafter" id=txtDrafter>    </td>
+		  </tr>
+		  <tr id = "trDrafterDept" style="display: none">
+				<th style="WIDTH:80px"> <spring:message code='ezApprovalG.t1331'/></th>
+				<td style=" WIDTH:270px">
+					<input class="text" style=" WIDTH:100%;height:25px; -moz-box-sizing:border-box;box-sizing:border-box;" name="txtDrafterDept" id=txtDrafterDept>    </td>
 		  </tr>
 		  <tr > 
 		    <th style="WIDTH:80px"><spring:message code='ezApprovalG.t94'/></th>

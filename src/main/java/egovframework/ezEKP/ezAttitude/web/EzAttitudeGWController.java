@@ -827,7 +827,7 @@ public class EzAttitudeGWController {
 			
 			//테넌트별 회사리스트
 //			List<AttitudeDeptVO> list = ezAttitudeService.getCompanyList(info.getPrimary(), info.getTenantId(), userId);
-			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, info.getTenantId(), info.getPrimary());
+			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, info.getTenantId(), info.getPrimary(), info.getDeptId(), info.getJobId());
 			data.put("list", adminCompanyList);
 			//로그인한 관리자의 회사
 			data.put("adminCompany", info.getCompanyId());

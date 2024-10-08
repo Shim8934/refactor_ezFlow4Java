@@ -35,7 +35,7 @@
 		    var NextOpinionFlag = true;
 		    var doctitle = "";
 		    var pOrgAttach = "";
-		    var pendDir = "${endDir}'/>";
+		    var pendDir = "${endDir}";
 		    var xmlhttp = createXMLHttpRequest();
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
@@ -91,6 +91,7 @@
 			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
+			var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 
 		    $(function () {
 		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
@@ -702,6 +703,12 @@
 		    var getformcont_cross_dialogArguments = new Array();
 		    var editable = "";
 		    function btnReuse_onclick(type) {
+		    	if (nonElecRec != "") {
+		    		var pAlertContent = strLangKWC01;
+					OpenAlertUI(pAlertContent);
+					return;
+		    	}
+		    	
 				$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -720,12 +727,18 @@
 						if (xml.getElementsByTagName("FORMCONNFLAG").length > 0) {
 			                form.connflag = xml.getElementsByTagName("FORMCONNFLAG").item(0).textContent;
 						}
+						
+						if (typeof form.currVersion === "undefined" && docFormVersion == "") {
+							var pAlertContent = strLangKWC02;
+							OpenAlertUI(pAlertContent);
+							return;
+						}
 
-						if(form.currVersion != docFormVersion) {
+						if (form.currVersion != docFormVersion) {
 							var pAlertContent = strLang975;
 							OpenAlertUI(pAlertContent);
 							return;
-						} else if(form.connflag == 'Y') {
+						} else if (form.connflag == 'Y') {
 							var pAlertContent = strLang1150;
 		                    OpenAlertUI(pAlertContent);
 							return;
@@ -1059,8 +1072,11 @@
 		          <c:if test="${useBoard == 'YES' }">
 				  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 				  </c:if>
-				  <c:if test="${approvalFlag != 'G' and orgCompanyID eq userInfo.companyID and formID != '2018000000' and docAprEnd != 'APR'}">
+				  <c:if test="${approvalFlag eq 'S' and orgCompanyID eq userInfo.companyID and formID != '2018000000' and docAprEnd != 'APR'}">
 		          	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+				  </c:if>
+				  <c:if test="${approvalFlag eq 'G' and formID != '2018000000' and docAprEnd ne 'APR'}">
+				  	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 				  <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>
 				  <c:if test="${useExternalMailServer == 'NO'}">

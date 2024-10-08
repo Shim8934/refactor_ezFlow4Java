@@ -499,14 +499,6 @@
 	     	U.CN = #userId#
 	    AND
 	       	U.TENANT_ID = #tenantId#
-	    AND 
-	       (
-				((substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 0
-			AND 
-	       		D.extensionattribute2 = U.PHYSICALDELIVERYOFFICENAME))
-			OR
-				(substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 1)
-	       )
 		]]>
 		AND
 	     	NOT((D.EXTENSIONATTRIBUTE1 IS NULL OR D.EXTENSIONATTRIBUTE1 = '') AND D.CN <![CDATA[<>]]> D.EXTENSIONATTRIBUTE2)

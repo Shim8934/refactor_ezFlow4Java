@@ -8,6 +8,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import net.minidev.json.JSONArray;
@@ -58,7 +59,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
     @Autowired
     private Properties config;
-    
+
+	@Autowired
+	private LoginService loginService;
+	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
 
@@ -860,15 +864,15 @@ public class EzOrganServiceImpl implements EzOrganService {
                 if (i == 0) {
                 	if (checkSearchField(searchInfo[0])) {
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParam[0].toString().equals("/")) {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "')";
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "')";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
                             		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -879,11 +883,11 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 } else {
                     if (checkSearchField(searchInfo[0])) {
-                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
+                        strSQL = strSQL + " AND ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
                         		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -897,9 +901,14 @@ public class EzOrganServiceImpl implements EzOrganService {
         }        
         
         if (pClass.equals("user") || pClass.equals("all")){
-            strSQL = strSQL.replace("cn", "a.cn");
-            strSQL = strSQL.replace("title", "a.title");
-                        
+            //strSQL = strSQL.replace("cn", "a.cn");
+            //strSQL = strSQL.replace("title", "a.title");
+        	
+        	// 2024.06.27 한슬기 : 검색하려는 단어에 cn, userLoginId, title이 포함되어있으면 검색이 되지 않아 앞뒤로 공백추가
+    		strSQL = strSQL.replace(" cn ", " a.cn ");
+    		strSQL = strSQL.replace(" title ", " a.title ");
+    		strSQL = strSQL.replace(" title2 ", " a.title2 ");
+    		
             type = "U";
         }else{
         	type = "G";
@@ -907,8 +916,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 		String strSQLForAddJob = strSQL;
 		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
-			strSQLForAddJob = strSQLForAddJob.replace("extensionattribute1", "A.roll_info");
-			strSQLForAddJob = strSQLForAddJob.replace("department", "deptID");
+			strSQLForAddJob = strSQLForAddJob.replace(" extensionattribute1 ", " A.roll_info ");
+			strSQLForAddJob = strSQLForAddJob.replace(" department ", " deptID ");
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1155,14 +1164,14 @@ public class EzOrganServiceImpl implements EzOrganService {
         			if (i == 0) {
         				if (checkSearchField(searchInfo[0])) {
         					if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParm[0].toString().equals(":")) {
-        						strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + "=UPPER('" + searchParm[i] + "') OR " + searchInfo[0].toLowerCase() + "2 = UPPER('" + searchParm[i] + "'))";
+        						strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " =UPPER('" + searchParm[i] + "') OR " + searchInfo[0].toLowerCase() + "2 = UPPER('" + searchParm[i] + "'))";
         						searchParm[0] = searchParm[0].substring(0, searchParm[0].length() - 1);
         					} else {
-        						strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
+        						strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
         					}
         				} else {
         					if (searchInfo[0].indexOf("EXACT_") == 0) {
-        						strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "=UPPER('" + searchParm[i] + "') ";
+        						strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + " =UPPER('" + searchParm[i] + "') ";
         					} else if (searchInfo[0].indexOf("LEFT_") == 0) {
         						strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
         					} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -1173,10 +1182,10 @@ public class EzOrganServiceImpl implements EzOrganService {
         				}
         			} else {
         				if (checkSearchField(searchInfo[0])) {
-        					strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString +")";
+        					strSQL = strSQL + " AND ( " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString +")";
         				} else {
         					if (searchInfo[0].indexOf("EXACT_") == 0) {
-        						strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "=UPPER('" + searchParm[i] + "') ";
+        						strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + " =UPPER('" + searchParm[i] + "') ";
         					} else if (searchInfo[0].indexOf("LEFT_") == 0) {
         						strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
         					} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -1190,8 +1199,13 @@ public class EzOrganServiceImpl implements EzOrganService {
         	}
 
         	if (pClass.equals("user") || pClass.equals("all")) {
-        		strSQL = strSQL.replace("cn", "a.cn");
-        		strSQL = strSQL.replace("title", "a.title");
+           		//strSQL = strSQL.replace("cn", "a.cn");
+        		//strSQL = strSQL.replace("title", "a.title");
+        		
+        		// 2024.06.27 한슬기 : 검색하려는 단어에 cn, userLoginId, title이 포함되어있으면 검색이 되지 않아 앞뒤로 공백추가 
+        		strSQL = strSQL.replace(" cn ", " a.cn ");
+        		strSQL = strSQL.replace(" title ", " a.title ");
+        		strSQL = strSQL.replace(" title2 ", " a.title2 ");
 
         		type = "U";
         	} else {
@@ -2270,14 +2284,14 @@ public class EzOrganServiceImpl implements EzOrganService {
                 if (i == 0) {
                     if (checkSearchField(searchInfo[0])) {
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParam[0].toString().equals("/")) {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i]+ "')";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i]+ "')";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + " )";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+                            strSQL = strSQL + " WHERE ( " + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + " )";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -2288,10 +2302,10 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 } else {
                     if (checkSearchField(searchInfo[0])) {
-                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
+                        strSQL = strSQL + " AND ( " + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
-                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
                             strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
@@ -2305,8 +2319,13 @@ public class EzOrganServiceImpl implements EzOrganService {
         }        
         
         if (pClass.equals("user") || pClass.equals("all")){
-            strSQL = strSQL.replace("cn", "a.cn");
-            strSQL = strSQL.replace("title", "a.title");
+            //strSQL = strSQL.replace("cn", "a.cn");
+            //strSQL = strSQL.replace("title", "a.title");
+        	
+        	// 2024.06.27 한슬기 : 검색하려는 단어에 cn, userLoginId, title이 포함되어있으면 검색이 되지 않아 앞뒤로 공백추가
+    		strSQL = strSQL.replace(" cn ", " a.cn ");
+    		strSQL = strSQL.replace(" title ", " a.title ");
+    		strSQL = strSQL.replace(" title2 ", " a.title2 ");
                         
             type = "U";
         }else{
@@ -2330,8 +2349,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		strSQLForAddJob = strSQL;
 		// 2023-08-23 전인하 - 권한 겸직/사용자 기준 설정 기능 대응, 해당 옵션 사용 시 권한 설정 컬럼을 addJobMaster의 추가컬럼에서 찾게 함
 		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
-			strSQLForAddJob = strSQLForAddJob.replace("extensionattribute1", "A.roll_info");
-			strSQLForAddJob = strSQLForAddJob.replace("department", "deptID");
+			strSQLForAddJob = strSQLForAddJob.replace(" extensionattribute1 ", " A.roll_info ");
+			strSQLForAddJob = strSQLForAddJob.replace(" department ", " deptID ");
 		}
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -2855,15 +2874,26 @@ public class EzOrganServiceImpl implements EzOrganService {
     @Override
 	public String changeCookie(String loginCookie, String deptId, String companyId, int tenantId, String jobId) throws Exception {
 		logger.debug("changeCookie => deptId = " + deptId + ", companyId = " + companyId + ", tenantId = " + tenantId + ", jobId = " + jobId);
-        String decData = egovFileScrty.decryptAES(loginCookie);
+
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+		String ezSessionId = loginCookie; // useDbSession가 true인 경우에만 사용
+		
+        String decData = commonUtil.getDecryptedLoginCookie(loginCookie);
 		String[] decDataArray = decData.split("///", -1);
 		decDataArray[8] = String.valueOf(tenantId);
 		decDataArray[9] = deptId;
 		decDataArray[10] = companyId;
 		decDataArray[11] = jobId;
         String newCookieStr = String.join("///", decDataArray);
+		loginCookie = egovFileScrty.encryptAES(newCookieStr);
 
-        return egovFileScrty.encryptAES(newCookieStr);
+		if (useDbSession && ezSessionId.length() == 36) {
+			loginService.updateSession(ezSessionId, loginCookie);
+
+			loginCookie = ezSessionId;
+		}
+
+        return loginCookie;
     }
 
 	@Override

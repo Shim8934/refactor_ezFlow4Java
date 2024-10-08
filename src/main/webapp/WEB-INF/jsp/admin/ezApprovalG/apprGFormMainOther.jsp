@@ -1558,7 +1558,7 @@
                         <img style="cursor:pointer;margin-bottom:50px;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()">
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
-                        <h2><spring:message code='ezApproval.t61'/><c:if test="${useReceiveInfoName == '1' }"><a class="imgbtn imgbck" style="float: right; margin-bottom: 0px;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a></c:if></h2>
+                        <h2><spring:message code='ezApproval.t61'/><a class="imgbtn imgbck" style="float: right; margin-bottom: 0px;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a></h2>
                         <div class="div_scroll" style="border:none; height:775px;">
                             <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%;overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>

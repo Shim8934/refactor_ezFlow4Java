@@ -318,7 +318,11 @@
 			    if (ret[0] != "cancel" && ret[3] != "cancel") {
 			        IsSkipDrafter = "FALSE";
 			        btnSendDraft.Enable = "true";
-			        GetDraftAprLineInfo(ret);
+			        if (approvalFlag == "S") {
+                        SGetDraftAprLineInfo(ret);
+                    } else {
+                        GetDraftAprLineInfo(ret);
+                    }
 			    }
 			    else {
 			        if (ret[2] == "cancel") {
@@ -382,7 +386,10 @@
 		    function CheckAprLine(Ans) {
 		        DivPopUpHidden();
 		        if (Ans) {
-		        	btnApprovalInfo("15");
+		            if(approvalFlag == "G")
+		        	    btnApprovalInfo("15");
+                    else
+		        	    btnApprovalInfo("9");
 		            return;
 		        }
 		        else {
@@ -755,22 +762,22 @@
 			}
 	
 			function SetDocOption(tempSecurityValue) {
-			    if (HwpCtrl.CheckFieldExist("keepperiod"))
-			        HwpCtrl.SetFieldText("keepperiod", tempKeep);
+			    if (message.FieldExist("keepperiod"))
+			        message.PutFieldText("keepperiod", tempKeep);
 			
-			    if (HwpCtrl.CheckFieldExist("securitylevel"))
-			        HwpCtrl.SetFieldText("securitylevel", tempSecurityValue);
+			    if (message.FieldExist("securitylevel"))
+			        message.PutFieldText("securitylevel", tempSecurityValue);
 			
-			    if (HwpCtrl.CheckFieldExist("publication")) {
+			    if (message.FieldExist("publication")) {
 			        if (tempPublic == "N")
-			            HwpCtrl.SetFieldText("publication", "<spring:message code='ezApprovalG.t46'/>");
+			            message.PutFieldText("publication", "<spring:message code='ezApprovalG.t46'/>");
 					else
-					    HwpCtrl.SetFieldText("publication", "<spring:message code='ezApprovalG.t47'/>");
+					    message.PutFieldText("publication", "<spring:message code='ezApprovalG.t47'/>");
 			    }
-			    if (HwpCtrl.CheckFieldExist("docnumber") && tempItemCode != "") {
-			        var tempdocnumber = HwpCtrl.GetFieldText("docnumber");
+			    if (message.FieldExist("docnumber") && tempItemCode != "") {
+			        var tempdocnumber = message.GetFieldText("docnumber");
 			        tempdocnumber = tempdocnumber.replace(tempdocnumcode, tempItemCode);
-			        HwpCtrl.SetFieldText("docnumber", tempdocnumber);
+			        message.PutFieldText("docnumber", tempdocnumber);
 			    }
 			}
 	
@@ -844,6 +851,16 @@
 		        	parameter[45] = "";
 		        	parameter[46] = "";
 		        }
+
+                if (approvalFlag == "G") {
+                    parameter[52] = basis;
+                    parameter[53] = reason;
+                    parameter[54] = listOpenFlag;
+                    parameter[55] = fileOpenFlagList;
+                    parameter[56] = limitDate;
+                }
+
+                parameter[61] = tempKeyword;
 			
 			    if (tempItemCode != "")
 			        tempdocnumcode = tempItemCode;
@@ -876,26 +893,56 @@
 			
 			                IsSkipDrafter = "FALSE";
 			                btnSendDraftEnable = "true";
-			                GetDraftAprLineInfo(ret);
-			
-			                if (ret[4] != undefined) {
-				                var g_SelCabXml = ret[4];
-				                var xmlCab = createXmlDom();
-				                xmlCab = loadXMLString(g_SelCabXml);
-				                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-				                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
-			                }
+			                if (approvalFlag == "S") {
+                                SGetDraftAprLineInfo(ret);
+                            } else {
+                                GetDraftAprLineInfo(ret);
+                            }
 
-							tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
-				            tempSecurity = ret[7];
-			                tempUrgent = ret[8];
-			                pSummery = ret[9];
-			                tempSecurityDate = ret[14];
-			                pPublicityCode = ret[11];
-			                pPublicityYN = ret[21];
-		                	pPageNum = ret[13];
-		                	pLimitRange = ret[12];
-		                	pSpecialRecordCode = ret[10];
+			                if (approvalFlag == "S") {
+                                if (ret[4] != undefined) {
+                                    var g_SelCabXml = ret[4];
+                                    var xmlCab = createXmlDom();
+                                    xmlCab = loadXMLString(g_SelCabXml);
+                                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+                                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+                                }
+
+                                tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
+                                tempSecurity = ret[7];
+                                tempUrgent = ret[8];
+                                pSummery = ret[9];
+                                tempSecurityDate = ret[14];
+                                pPublicityCode = ret[11];
+
+                                tempKeep = ret[16];
+                                tempItemName = ret[17];
+                                tempItemName2 = ret[18];
+                                pPageNum = "1";
+                                pLimitRange = "1";
+                                pSpecialRecordCode = "1";
+                                tempPublic = ret[11];
+                                SetDocOption(ret[20]);
+                            }else{
+                                if (ret[4] != undefined) {
+                                    var g_SelCabXml = ret[4];
+                                    var xmlCab = createXmlDom();
+                                    xmlCab = loadXMLString(g_SelCabXml);
+                                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+                                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+                                }
+
+                                tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
+                                tempSecurity = ret[7];
+                                tempUrgent = ret[8];
+                                pSummery = ret[9];
+                                tempSecurityDate = ret[14];
+                                pPublicityCode = ret[11];
+                                pPublicityYN = ret[21];
+                                pPageNum = ret[13];
+                                pLimitRange = ret[12];
+                                pSpecialRecordCode = ret[10];
+                            }
 			            }
 			        } catch (e) {
 			            alert("저장시 오류 발생");
@@ -1019,7 +1066,7 @@
 	                <div id="menu">
 						<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
 				        <ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
-	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo('15')"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        <li id="btntotaldocinfo"><span onclick=<c:if test="${approvalFlag == 'G'}">"return btnApprovalInfo('15')"</c:if><c:if test="${approvalFlag != 'G'}">"return btnApprovalInfo('9')"</c:if>><spring:message code='ezApprovalG.t1742'/></span></li>
 	                        <li id="btnSetAprLine" style="display: none"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
 	                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 	                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>

@@ -368,8 +368,12 @@
 									  and d.EXTENSIONATTRIBUTE2 = a.company_id)
 				where 
 					(b.dept_id = #deptId# or b.dept_id is null)
+			]]>
+			<isNotEqual property="typeId" compareValue="basic">	  
 				and
 					a.type_id = #typeId#
+			</isNotEqual>
+			<![CDATA[	  
 				and
 					a.tenant_id = #tenantId#
 				and
@@ -548,6 +552,8 @@
 			a.user_id = #userId#
 		and 
 			a.tenant_id = #tenantId#
+		and 
+		    d.EXTENSIONATTRIBUTE2 = #userCompany#
 		union
 		select
 			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS dept_name,
@@ -561,6 +567,8 @@
 			u.CN = #userId#
 		and 
 			u.TENANT_ID = #tenantId#
+		and 
+		    d.EXTENSIONATTRIBUTE2 = #userCompany#
 		union
 		select
 			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS dept_name,
@@ -574,6 +582,8 @@
 			a.CN = #userId#
 		and 
 			a.TENANT_ID = #tenantId#
+		and 
+		    d.EXTENSIONATTRIBUTE2 = #userCompany#
 		order by dept_name
 	</select>
 

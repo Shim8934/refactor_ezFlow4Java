@@ -499,7 +499,9 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = request.getParameter("lang") != null ? commonUtil.getMultiData(request.getParameter("lang"), info.getTenantId()) : commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(info.getTenantId(), userId, lang);
+			String userCompany = request.getParameter("userCompany") != null ? request.getParameter("userCompany") : "";
+			
+			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(info.getTenantId(), userId, lang, userCompany);
 	
 			result.put("status", "ok");
 			result.put("code", 0);

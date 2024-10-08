@@ -20,6 +20,8 @@ public class SurveyItemSearchVO {
 	private String searchOption;
 	private String today;
 	private List<Long> surveyIds;
+	/** 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 */
+	private List<Long> surveyResultIds;
 	private int userMode;
 	
 	public SurveyItemSearchVO() {}
@@ -183,5 +185,13 @@ public class SurveyItemSearchVO {
 
 	public void setUserMode(int userMode) {
 		this.userMode = userMode;
+	}
+
+	public List<Long> getSurveyResultIds() {
+		return surveyResultIds;
+	}
+
+	public void setSurveyResultIds(List<Long> surveyResultIds) {
+		this.surveyResultIds = surveyResultIds;
 	}
 }

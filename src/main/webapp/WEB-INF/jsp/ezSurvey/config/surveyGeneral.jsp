@@ -72,6 +72,7 @@
 		
 		<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg'           )}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 			(function() {
 				init();

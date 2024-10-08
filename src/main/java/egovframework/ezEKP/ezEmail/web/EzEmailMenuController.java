@@ -24,6 +24,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -2223,8 +2224,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				
 				ezEmailService.setMailboxProgress(userkey, userId, "EXPORT", tenantId, 0);
 				for (Message message : messages) {
-					String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".eml";
+					String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message);
 					fileName = commonUtil.getUniqueFileName(fileName, fileNameMap);
+					
+					// fileName이 너무길면 entry name too long 오류 발생으로 150글자 이상이면 150글자까지만 남기고 뒤에 문자열은 삭제
+					fileName = fileName.chars()
+							.limit(150)
+							.mapToObj(c -> String.valueOf((char) c))
+							.collect(Collectors.joining()) + ".eml";
 					
 					ZipEntry zipEntry = new ZipEntry(fileName);
 					zos.putNextEntry(zipEntry);

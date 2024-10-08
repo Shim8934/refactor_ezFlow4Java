@@ -1,6 +1,7 @@
 target/
 output/
 src/main/webapp/fileroot
+bin/
 .idea
 *.iml
 #Eclipse Setting
@@ -9,3 +10,4 @@ src/main/webapp/fileroot
 .vscode
 .DS_Store
 .updateSource
+.smarttomcat

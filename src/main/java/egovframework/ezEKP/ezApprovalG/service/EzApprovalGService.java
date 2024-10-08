@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
+import egovframework.ezEKP.ezApprovalG.vo.PortletAprInfoVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
@@ -27,6 +28,7 @@ import org.json.simple.JSONObject;
 import org.jsoup.nodes.Element;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -973,4 +975,19 @@ public interface EzApprovalGService {
 	
 	// 2024-06-10 조수빈 - config.useOpenGov = YES일 때 일괄 접수 처리에서는 createDate만 업데이트하기 위한 메소드
 	public void updateCreateDateOfOpenGovDocInfo(String docID, int tenant_id, String companyID);
+
+    /* 2024-07-08 임정은 - 전자결재G > 기록물배부대장 > 배부정보  > 문서 기본정보 가져오기 */
+    public ApprGDeliveryListVO getDistributeInfo(String docId, String companyId, int tenantId) throws Exception;
+
+    /* 2024-07-09 임정은 - 전자결재G > 기록물배부대장 > 배부정보 > 문서 배부정보 가져오기 */
+    public List<ApprGDeliveryListVO> getDistributeInfo2(String docId, String deliverySN, String deptId, String companyID, int tenantId, String offset) throws Exception;
+	
+	// 2024-09-11 이가은 - 사이트용 포탈 포틀릿 결재 진행문서 리스트
+	public List<ApprGDocListVO> portletAprDocList(PortletAprInfoVO portletAprInfoVO) throws Exception;
+
+	// 2024-09-11 이가은 - 사이트용 포탈 포틀릿 결재 완료문서 리스트
+	public List<ApprGDocListVO> portletEndAprDocList(PortletAprInfoVO portletAprInfoVO) throws Exception;
+    
+	// 2024-09-11 이가은 - 사이트용 포탈 포틀릿 결재문서 url 링크 반환
+    public String getRedirectUrl(String docID, String mode, LoginVO userInfo);
 }

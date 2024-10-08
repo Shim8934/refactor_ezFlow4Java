@@ -27,9 +27,6 @@
 				overflow: hidden;
 				display: inline-block;
 			}
-			.countColor {
-				color:#017BEC;
-			}
 
 			.checkDept {
 				height: 16px !important;
@@ -371,7 +368,7 @@
 	            PagingHTML += strtext;
 	            //totalPage = parseInt(document.getElementById("MailList").getAttribute("MaxPage"));
 	            pageNum = page;
-	            //document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
+	            //document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span class='txt_color'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span class='txt_color'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
 	            if (totalPage > 1 && pageNum != 1) {
 	                PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\" ></span>";
 	            }
@@ -834,9 +831,9 @@
 							
 							/* 2018-09-03 홍승비 - strLang 터지는 부분 수정 */
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -1240,9 +1237,9 @@
 	            var UserListHTML = "";
 	            /* if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {	            	
 	                if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang91001 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang91001 + "</span>]";
 	        		} else {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang91001 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang91001 + "</span>]";
 	        		}
 	                
 	                SelectDeptNM.setAttribute("countinfo", "1")
@@ -1253,7 +1250,7 @@
 	                document.getElementById("txtlist_table").style.display = "none";
 	                document.getElementById("Search_txtlist_table").style.display = "none";
 	                if (pSeach) {
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px;\" >" + strLang_1 + "" + " : [<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang91005;
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px;\" >" + strLang_1 + "" + " : [<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang91005;
 						
 						if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) == 1){
 							document.getElementById("SelectDeptNM").innerHTML = document.getElementById("SelectDeptNM").innerHTML + strLang91006 + "</span>]";
@@ -1275,7 +1272,7 @@
 	                else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px;\" >" + strLang_1 + "" + " : [<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang91005;
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px;\" >" + strLang_1 + "" + " : [<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang91005;
 
 						if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) == 1){
 							document.getElementById("SelectDeptNM").innerHTML = document.getElementById("SelectDeptNM").innerHTML + strLang91006 + "</span>]";
@@ -1864,25 +1861,25 @@
 	            PagingHTML2 += strtext2;
 	            var pageNum2 = CurPage;
 	            if (totalPage2 > 1 && pageNum2 != 1) {
-	                strtext2 = "<span class='btnimg' onclick= 'return goToPageByNum2(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+	                strtext2 = "<span class='btnimg first' onclick= 'return goToPageByNum2(1)'></span>";
 	                PagingHTML2 += strtext2;
 	            }
 	            else {
-	                strtext2 = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+	                strtext2 = "<span class='btnimg first disabled'></span>";
 	                PagingHTML2 += strtext2;
 	            }
 	            if (totalPage2 > BlockSize2) {
 	                if (pageNum2 > BlockSize2) {
-	                    strtext2 = "<span class='btnimg' onclick= 'return selbeforeBlock2()'><img src='/images/sub/btn_prev.gif' ></span>";
+	                    strtext2 = "<span class='btnimg prev' onclick= 'return selbeforeBlock2()'></span>";
 	                    PagingHTML2 += strtext2;
 	                }
 	                else {
-	                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	                    strtext2 = "<span class='btnimg prev disabled'></span>";
 	                    PagingHTML2 += strtext2;
 	                }
 	            }
 	            else {
-	                strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	                strtext2 = "<span class='btnimg prev disabled'></span>";
 	                PagingHTML2 += strtext2;
 	            }
 	            var MaxNum2;
@@ -1910,26 +1907,26 @@
 	            if (totalPage2 > BlockSize2) {
 	                if (totalPage2 >= parseInt(((parseInt((pageNum2 - 1) / BlockSize2) + 1) * BlockSize2) + 1)) {
 	                    strtext2 = "";
-	                    strtext2 = strtext2 + "<span class='btnimg' onclick='return selafterBlock2()'><img src='/images/sub/btn_next.gif' ></span>";
+	                    strtext2 = strtext2 + "<span class='btnimg next' onclick='return selafterBlock2()'></span>";
 	                    PagingHTML2 += strtext2;
 	                }
 	                else {
 	                    strtext2 = "";
-	                    strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                    strtext2 = strtext2 + "<span class='btnimg next disabled'></span>";
 	                    PagingHTML2 += strtext2;
 	                }
 	            }
 	            else {
 	                strtext2 = "";
-	                strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                strtext2 = strtext2 + "<span class='btnimg next disabled'></span>";
 	                PagingHTML2 += strtext2;
 	            }
 	            if (totalPage2 > 1 && totalPage2 != 1 && (totalPage2 != pageNum2)) {
-	                strtext2 = "<span class='btnimg' onclick='return goToPageByNum2(" + totalPage2 + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+	                strtext2 = "<span class='btnimg last' onclick='return goToPageByNum2(" + totalPage2 + ")'></span>";
 	                PagingHTML2 += strtext2;
 	            }
 	            else {
-	                strtext2 = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+	                strtext2 = "<span class='btnimg last disabled'></span>";
 	                PagingHTML2 += strtext2;
 	            }
 	            PagingHTML2 += "</div>";
@@ -2207,7 +2204,7 @@
 						document.getElementById("SelectDeptNM").innerHTML 
 							= "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 			            	+ "<span id='spn_deptName' title='" + jobName + "'>" + jobName + "</span>"
-			            	+ "<span id='countInfo'>&nbsp;<span class='countColor'> " + totalCnt + "</span></span>";
+			            	+ "<span id='countInfo'>&nbsp;<span class='txt_color'> " + totalCnt + "</span></span>";
 						
 		                pSeach = false;
 		                DisplayUserImageList();
@@ -2719,7 +2716,7 @@
 	                                </td>	                                
 	                                <td>
 	                                    <div style="vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 20px; padding-top: 3px; padding-left: 5px;padding-bottom:2px">
-	                                    	<img align="absmiddle" hspace="2" style="cursor: pointer"/><span id="addressFolderName"></span>&nbsp;&nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
+	                                    	<img align="absmiddle" hspace="2" style="cursor: pointer"/><span id="addressFolderName"></span>&nbsp;&nbsp;<span id="addressFolderCnt" class='txt_color'></span>
 	                            		</div>
 	                                    <div id="AddressListView" style="BORDER: #ddd 1px solid; OVERFLOW: auto; WIDTH: 446px; HEIGHT: 436px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
 	                                    <div id="tblPageRayer"  style="border:#ddd 1px solid;border-top:0px;width:auto !important"></div>

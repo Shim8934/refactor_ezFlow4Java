@@ -582,15 +582,15 @@
 	    	}
 	    	
 	    	if (pCurPage > 1) {
-	    		_html += "<span class='btnimg' onclick='return goToPageNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+	    		_html += "<span class='btnimg first' onclick='return goToPageNum(1)'></span>";
 	    	} else {
-	    		_html += "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+	    		_html += "<span class='btnimg first disabled'></span>";
 	    	}
 	    	
 	    	if (parseInt((pCurPage - 1) / pBlockSize) > 0) {
-	    		_html += "<span class='btnimg' onclick='return goToPrevBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+	    		_html += "<span class='btnimg prev' onclick='return goToPrevBlock()'></span>";
 	    	} else {
-	    		_html += "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+	    		_html += "<span class='btnimg prev disabled'></span>";
 	    	}
 	    	
 	    	if (pTotalCnt > 0) {
@@ -606,15 +606,15 @@
 	    	}
 	    	
 	    	if (pTotalPage >= parseInt(((parseInt((pCurPage - 1) / pBlockSize) + 1) * pBlockSize) + 1)) {
-	    		_html += "<span class='btnimg' onclick='return goToNextBlock()'><img src='/images/sub/btn_next.gif'></span>";
+	    		_html += "<span class='btnimg next' onclick='return goToNextBlock()'></span>";
 	    	} else {
-	    		_html += "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+	    		_html += "<span class='btnimg next disabled'></span>";
 	    	}
 	    	
 	    	if (pCurPage < pTotalPage) {
-	    		_html += "<span class='btnimg' onclick='return goToPageNum(" + pTotalPage + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+	    		_html += "<span class='btnimg last' onclick='return goToPageNum(" + pTotalPage + ")'></span>";
 	    	} else {
-	    		_html += "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+	    		_html += "<span class='btnimg last disabled'></span>";
 	    	}
 	    	
 	    	_html += "</div>";
@@ -659,7 +659,7 @@
 <body class="mainbody" style="overflow: hidden;">
 	<h1>
 		<spring:message code='ezOrgan.csj01' />
-		<span>&nbsp;<span class="countColor" id="title_info"></span></span>
+		<span>&nbsp;<span class="txt_color" id="title_info"></span></span>
 		<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		<select class="companySelect" id="ListCompany" onChange="companyChange()">
 			<c:forEach var="item" items="${list}">

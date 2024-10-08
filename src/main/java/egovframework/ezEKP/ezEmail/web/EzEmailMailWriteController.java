@@ -4514,12 +4514,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            	
 			            	// 보안메일 처리
 			            	if (useSecureMail.equals("YES") && isSecureMail) {
+
+								// 개별발신 헤더추가
+								if (isEachMailB) {
+									message.setHeader("X-JMocha-Each-Mail", "true");
+								}
+								
 								// 승인메일일 경우
 								if (apprmail) {
-									// 개별발신 헤더추가
-									if (isEachMailB) {
-										message.setHeader("X-JMocha-Each-Mail", "true");
-									}
 
 									message.setHeader("X-JMocha-Secure-Mail", "true");
 									message.setHeader("X-JMocha-Secure-Mail-Password", securePassword);

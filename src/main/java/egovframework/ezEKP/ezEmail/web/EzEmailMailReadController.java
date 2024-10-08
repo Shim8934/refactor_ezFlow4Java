@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Spliterator;
 import java.util.TimeZone;
@@ -260,6 +261,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		String sentDateMsg = ""; // 전달, 회신 시 보낸 시간
 		boolean mailWritePreview = false; // 메일 작성 > 미리보기 
+		String mailBox = "";
 		
 		// 읽기 화면에서 리스트 출력 위한 데이터
 		String countryName = "";
@@ -529,6 +531,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				} else {
 					tags = tagsStr.split("\\|");
 				}
+
+				mailBox = Optional.ofNullable(mailInfo.get("MAIL_ID"))
+						.map(id -> id.split("/")[0])
+						.orElse("");
+				
 			} else {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -840,132 +847,134 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									} else {
 										ccHiddenStr += " , " + getReceiverHTML(name, addressFound ? ((InternetAddress)arrRecipientsCC[i]).getAddress() : null, false);
 									}
-									//	}
-								}
-							}
-
-							// BCC
-							arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
-
-							if (arrRecipientsBCC != null) {
-								String name = null;
-
-								for (int i = 0; i < arrRecipientsBCC.length; i++) {
-									name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
-
-									if (name == null) {
-										name = ((InternetAddress)arrRecipientsBCC[i]).getAddress();
-									} else {
-										name = MimeUtility.decodeText(name);
-										name = commonUtil.trimDoubleQuotes(name);
-									}
-
-									if (name != null) {
-										// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
-										// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
-										name = name.replace("\\\"", "");
-									}
-
-									logger.debug("BCC=" + name + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
-
-									if (i != 0) {
-										bccStr += ", ";
-									}
-
-									bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress(), false);
-								}
-							}
-
-							if (ccStr == null || ccStr.equals("")) {
-								pIsCCFg = "N";
-							}
-
-							// received date
-							date = message.getReceivedDate();
-							if (date != null) {
-								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-								sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-								String receivedDateStr = sdf.format(date);
-
-								dateStr = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
-							}
-							logger.debug("dateStr=" + dateStr);
-
-							// subject
-							subject = ezEmailUtil.getSubject(message);
-							if((subject == null || subject.trim().equals("")) && !contentClass.equalsIgnoreCase("PREVIEW")){
-								subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
-							}
-
-							subject = commonUtil.cleanValue(subject);
-							if(contentClass.equalsIgnoreCase("PREVIEW")){
-								title = egovMessageSource.getMessage("ezEmail.t487", locale) + " -" + subject;
-							} else {
-								title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
-							}
-
-							logger.debug("subject=" + subject);
-
-							if (ezEmailUtil.hasSecureMailFlag(message)) {
-								isSecureMail = true;
-							}
-
-							if (message.getFolder().getFullName().equals(ezEmailUtil.getSentFolderId(locale))) {
-								isSentItems = true;
-							}
-
-							if (message.getFolder().getFullName().equals(ezEmailUtil.getTrashFolderId(locale))) {
-								isDelete = "BDELETE";
-							}
-
-							if (!message.isSet(Flag.SEEN)) {
-								pReadFlag = "N";
-								message.setFlag(Flag.SEEN, true);
-								logger.debug("Message's seen flag changed to true.");
+							//	}
 							}
 						}
-
-						if (contentClass.equals("")) {
-							if (message.isSet(Flags.Flag.ANSWERED)) {
-								contentClass = "REPLY";
+		
+						// BCC
+						arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
+						
+						if (arrRecipientsBCC != null) {
+							String name = null;
+							
+							for (int i = 0; i < arrRecipientsBCC.length; i++) {
+								name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
+								
+								if (name == null) {
+									name = ((InternetAddress)arrRecipientsBCC[i]).getAddress();
+								} else {
+									name = MimeUtility.decodeText(name);
+									name = commonUtil.trimDoubleQuotes(name);
+								}
+								
+								if (name != null) {
+									// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+									// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+									name = name.replace("\\\"", "");
+								}
+								
+								logger.debug("BCC=" + name + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+								
+								if (i != 0) {
+									bccStr += ", ";
+								}
+								
+								bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress(), false);
+							}
+						}
+						
+						if (ccStr == null || ccStr.equals("")) {
+							pIsCCFg = "N";
+						}
+						
+						// received date
+						date = message.getReceivedDate();
+						if (date != null) {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+							sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+							String receivedDateStr = sdf.format(date);
+							
+							dateStr = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
+						}
+						logger.debug("dateStr=" + dateStr);
+						
+						// subject
+						subject = ezEmailUtil.getSubject(message);
+						if((subject == null || subject.trim().equals("")) && !contentClass.equalsIgnoreCase("PREVIEW")){
+							subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+						}
+						
+						subject = commonUtil.cleanValue(subject);
+						if(contentClass.equalsIgnoreCase("PREVIEW")){
+							title = egovMessageSource.getMessage("ezEmail.t487", locale) + " -" + subject;
+						} else {
+							title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
+						}
+						
+						logger.debug("subject=" + subject);
+						
+						if (ezEmailUtil.hasSecureMailFlag(message)) {
+							isSecureMail = true;
+						}
+						
+						if (message.getFolder().getFullName().equals(ezEmailUtil.getSentFolderId(locale))) {
+							isSentItems = true;
+						}
+						
+						if (message.getFolder().getFullName().equals(ezEmailUtil.getTrashFolderId(locale))) {
+							isDelete = "BDELETE";
+						}
+						
+						if (!message.isSet(Flag.SEEN)) {
+							pReadFlag = "N";
+							message.setFlag(Flag.SEEN, true);
+							logger.debug("Message's seen flag changed to true.");
+						}
+						
+						mailBox = message.getFolder().getFullName();
+					}
+					
+					if (contentClass.equals("")) {
+						if (message.isSet(Flags.Flag.ANSWERED)) {
+							contentClass = "REPLY";
+						}
+						else {
+							boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
+							
+							if (isForwarded) {
+								contentClass = "FORWARD";
 							}
 							else {
-								boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
-
-								if (isForwarded) {
-									contentClass = "FORWARD";
-								}
-								else {
-									contentClass = "IPM.NOTE";
-								}
+								contentClass = "IPM.NOTE";
 							}
 						}
-
-						// 전달, 회신 시 보낸 시간
-						if (contentClass.equals("REPLY") || contentClass.equals("FORWARD")) {
-							if (ezEmailUtil.hasSentDateFlag(message)) {
-								String sentDateFlag = ezEmailUtil.getSentDateFlag(message);
-								sentDateFlag = sentDateFlag.split("-")[1];
-								logger.debug("sentDateFlag=" + sentDateFlag);
-
-								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-								sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-								String receivedDateStr = sdf.format(new Date(Long.parseLong(sentDateFlag)));
-								String sentDate = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
-								logger.debug("receivedDateStr=" + receivedDateStr);
-
-								String msg = contentClass.equals("REPLY") ? "ezEmail.ksa01" : "ezEmail.ksa02";
-								String sentDateStr = egovMessageSource.getMessage(msg, locale);
-								sentDateMsg = String.format(sentDateStr, sentDate);
-								logger.debug("sentDateMsg=" + sentDateMsg);
-							}
-						} else if (contentClass.equalsIgnoreCase("PREVIEW")) {
-							mailWritePreview = true;
-							dateStr = "";
-							logger.debug("mailWritePreview=" + mailWritePreview + ", dateStr=" + dateStr);
+					}
+					
+					// 전달, 회신 시 보낸 시간
+					if (contentClass.equals("REPLY") || contentClass.equals("FORWARD")) {
+						if (ezEmailUtil.hasSentDateFlag(message)) {
+							String sentDateFlag = ezEmailUtil.getSentDateFlag(message);
+							sentDateFlag = sentDateFlag.split("-")[1];
+							logger.debug("sentDateFlag=" + sentDateFlag);
+							
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+							sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+							String receivedDateStr = sdf.format(new Date(Long.parseLong(sentDateFlag)));
+							String sentDate = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
+							logger.debug("receivedDateStr=" + receivedDateStr);
+							
+							String msg = contentClass.equals("REPLY") ? "ezEmail.ksa01" : "ezEmail.ksa02";
+							String sentDateStr = egovMessageSource.getMessage(msg, locale);
+							sentDateMsg = String.format(sentDateStr, sentDate);
+							logger.debug("sentDateMsg=" + sentDateMsg);
 						}
-
-						f.close(true);
+					} else if (contentClass.equalsIgnoreCase("PREVIEW")) {
+						mailWritePreview = true;
+						dateStr = "";
+						logger.debug("mailWritePreview=" + mailWritePreview + ", dateStr=" + dateStr);
+					}
+					
+					f.close(true);
 
 						try {
 							JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
@@ -1043,6 +1052,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("useShowSystemCountry", useShowSystemCountry); 
 		model.addAttribute("useMailToCommunity", useMailToCommunity); 
 		model.addAttribute("tags", tags);
+		model.addAttribute("mailBox", mailBox);
 
 		// 메일 태그를 사용중인지 확인 (미리보기 모드라면 무조건 false)
 		boolean useMailTag = !mailWritePreview && "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", loginInfo.getTenantId()));
@@ -4584,6 +4594,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		Address[] arrFroms = null;
 		Address[] arrRecipientsTo = null;
 		Address[] arrRecipientsCC = null;
+		Address[] arrRecipientsBCC = null;
 		Date date = null;
 		String fromStr = null;
 		String fromEmail = null;
@@ -4681,250 +4692,305 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userAccount, jspw, egovMessageSource, locale, ezEmailUtil);
-
-			if (ia != null){
-				Folder f = ia.getFolder(folderPath);
-
-				if (f == null || !f.exists()) {
-					logger.error("Folder not found. folderPath=" + folderPath);
+			Folder f = ia.getFolder(folderPath);
+			
+			if (f == null || !f.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				f.open(Folder.READ_WRITE);
+				Message message = ((IMAPFolder)f).getMessageByUID(uid);
+				
+				if (message == null) {
+					logger.error("Message not found. uid=" + uid);
 				} else {
-					f.open(Folder.READ_WRITE);
-					Message message = ((IMAPFolder)f).getMessageByUID(uid);
-
-					if (message == null) {
-						logger.error("Message not found. uid=" + uid);
+					Multipart multipart = (Multipart)message.getContent();
+					MimeBodyPart part = (MimeBodyPart)multipart.getBodyPart(2);
+					
+					String realPath = commonUtil.getRealPath(request);
+					String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "tempFileUpload";
+		        	
+					File file = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
+					fos = new FileOutputStream(file);
+					part.saveFile(file);
+					
+					File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
+					egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
+					
+					// 임시파일 삭제
+					if (file.delete()) {
+						logger.debug("file is deleted. fileName=" + file.getName());
+					}
+					
+					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+							secureInfo.getUserAccount(), jspw);
+					
+					fis = new FileInputStream(decryptedFile);
+					message = sa.readMimeMessage(fis);
+					
+					// 개별발송 header
+					String eachMailstr = message.getHeader("X-JMocha-Each-Mail") == null ? "": message.getHeader("X-JMocha-Each-Mail")[0];
+					boolean eachMail ="true".equalsIgnoreCase(eachMailstr);
+					
+					// From
+					arrFroms = message.getFrom();
+					if (arrFroms != null) {
+						fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+						fromStr = commonUtil.trimDoubleQuotes(fromStr);
+						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
 					} else {
-						Multipart multipart = (Multipart)message.getContent();
-						MimeBodyPart part = (MimeBodyPart)multipart.getBodyPart(2);
-
-						String realPath = commonUtil.getRealPath(request);
-						String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "tempFileUpload";
-
-						File file = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
-						fos = new FileOutputStream(file);
-						part.saveFile(file);
-
-						File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
-						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
-
-						// 임시파일 삭제
-						if (file.delete()) {
-							logger.debug("file is deleted. fileName=" + file.getName());
+						String[] fromHeaders = message.getHeader("From");
+						if (fromHeaders != null) {
+							fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
 						}
-
-						SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-								secureInfo.getUserAccount(), jspw);
-
-						fis = new FileInputStream(decryptedFile);
-						message = sa.readMimeMessage(fis);
-
-						// From
-						arrFroms = message.getFrom();
-						if (arrFroms != null) {
-							fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
-							fromStr = commonUtil.trimDoubleQuotes(fromStr);
-							fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-						} else {
-							String[] fromHeaders = message.getHeader("From");
-							if (fromHeaders != null) {
-								fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
+					}
+					logger.debug("From=" + fromStr);
+					
+					// TO
+					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
+					if(arrRecipientsTo != null){
+						boolean toListme = false;
+						
+						for(int i=0; i<arrRecipientsTo.length; i++){
+							if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userAccount)){
+								toListme = true;
+								break;
 							}
 						}
-						logger.debug("From=" + fromStr);
-
-						// TO
-						arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
-						if(arrRecipientsTo != null){
-							boolean toListme = false;
-
-							for(int i=0; i<arrRecipientsTo.length; i++){
+						
+						String toHeader = message.getHeader("To")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
+						String name = null;
+						
+						for(int i=0; i<arrRecipientsTo.length; i++){
+							name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
+							
+							if(name == null){
+								name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
+							}
+							else{
+								if (!isAscii) {
+									byte[] rawBytes = name.getBytes("iso-8859-1");
+									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+								}
+								else {
+									name = MimeUtility.decodeText(name);
+								}
+								name = commonUtil.trimDoubleQuotes(name);
+							}
+							
+							logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
+							
+							//개별발신일때는 reader만 to에 보이게 설정
+							if (eachMail && reader.equalsIgnoreCase(((InternetAddress) arrRecipientsTo[i]).getAddress())) {
+								toStr = getReceiverHTML(name, ((InternetAddress) arrRecipientsTo[i]).getAddress(), true);
+								break;
+							}
+							
+							if(toListme){
 								if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userAccount)){
-									toListme = true;
-									break;
-								}
-							}
-
-							String toHeader = message.getHeader("To")[0];
-							boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
-							String name = null;
-
-							for(int i=0; i<arrRecipientsTo.length; i++){
-								name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
-
-								if(name == null){
-									name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
-								}
-								else{
-									if (!isAscii) {
-										byte[] rawBytes = name.getBytes("iso-8859-1");
-										name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
-									}
-									else {
-										name = MimeUtility.decodeText(name);
-									}
-									name = commonUtil.trimDoubleQuotes(name);
-								}
-
-								logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
-
-								if(toListme){
-									if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userAccount)){
-										if(arrRecipientsTo.length > 1){
-											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
-										} else {
-											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
-										}
-									}
-									if(toHiddenStr == null){
-										toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
-									} else{
-										toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
-									}
-								} else {
-									if(i == 0){
-										if(arrRecipientsTo.length > 1){
-											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
-										} else {
-											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
-										}
-									}
-									if(toHiddenStr == null){
-										toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
+									if(arrRecipientsTo.length > 1){
+										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
 									} else {
-										toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
+										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
 									}
+								}
+								if(toHiddenStr == null){
+									toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
+								} else{
+									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
+								}
+							} else {
+								if(i == 0){
+									if(arrRecipientsTo.length > 1){
+										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+									} else {
+										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
+									}
+								}
+								if(toHiddenStr == null){
+									toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
+								} else {
+									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), true);
 								}
 							}
 						}
-
-						// CC
-						arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
-						if(arrRecipientsCC != null){
-							boolean ccListme = false;
-							for(int i=0; i<arrRecipientsCC.length; i++){
-								if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userAccount)){
-									ccListme = true;
-									break;
+					}
+					
+					// CC
+					arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
+					if(arrRecipientsCC != null){
+						boolean ccListme = false;
+						for(int i=0; i<arrRecipientsCC.length; i++){
+							if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userAccount)){
+								ccListme = true;
+								break;
+							}
+						}
+						
+						String ccHeader = message.getHeader("Cc")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);												
+						String name = null;
+						
+						for(int i=0; i<arrRecipientsCC.length; i++){
+							name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
+							if(name == null) {
+								name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
+							} else {
+								if (!isAscii) {
+									byte[] rawBytes = name.getBytes("iso-8859-1");
+									
+									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
 								}
+								else {								
+									name = MimeUtility.decodeText(name);
+								}
+								
+								name = commonUtil.trimDoubleQuotes(name);
 							}
 
-							String ccHeader = message.getHeader("Cc")[0];
-							boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);
-							String name = null;
+							logger.debug("CC=" + name + ((InternetAddress) arrRecipientsCC[i]).getAddress());
 
-							for(int i=0; i<arrRecipientsCC.length; i++){
-								name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
-								if(name == null) {
-									name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
-								} else {
-									if (!isAscii) {
-										byte[] rawBytes = name.getBytes("iso-8859-1");
-
-										name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
-									}
-									else {
-										name = MimeUtility.decodeText(name);
-									}
-
-									name = commonUtil.trimDoubleQuotes(name);
+							//개별발신일때 자신이 참조자로 들어갔으면 TO자리에 자신을 넣어주는 작업
+							if (eachMail) {
+								String ccAddress = ((InternetAddress) arrRecipientsCC[i]).getAddress();
+								if (reader.equalsIgnoreCase(ccAddress)) {
+									toStr = getReceiverHTML(name, ccAddress, true);
+									break;
 								}
-
-								logger.debug("CC=" + name + ((InternetAddress)arrRecipientsCC[i]).getAddress());
-
+							} else {
 								if (ccListme) {
-									if (((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userAccount)) {
+									if (((InternetAddress) arrRecipientsCC[i]).getAddress().equals(userAccount)) {
 										if (arrRecipientsCC.length > 1) {
-											ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), true) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+											ccStr = getReceiverHTML(name, ((InternetAddress) arrRecipientsCC[i]).getAddress(), true) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
 										} else {
-											ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), true);
+											ccStr = getReceiverHTML(name, ((InternetAddress) arrRecipientsCC[i]).getAddress(), true);
 										}
 									}
 									if (ccHiddenStr == null) {
-										ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), true);
+										ccHiddenStr = getReceiverHTML(name, ((InternetAddress) arrRecipientsCC[i]).getAddress(), true);
 									} else {
-										ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), true);
+										ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress) arrRecipientsCC[i]).getAddress(), true);
 									}
 								} else {
 									if (i == 0) {
 										if (arrRecipientsCC.length > 1) {
-											ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), true) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+											ccStr = getReceiverHTML(name, ((InternetAddress) arrRecipientsCC[i]).getAddress(), true) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
 										} else {
-											ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), true);
+											ccStr = getReceiverHTML(name, ((InternetAddress) arrRecipientsCC[i]).getAddress(), true);
 										}
 									}
 									if (ccHiddenStr == null) {
-										ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), true);
+										ccHiddenStr = getReceiverHTML(name, ((InternetAddress) arrRecipientsCC[i]).getAddress(), true);
 									} else {
-										ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), true);
+										ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress) arrRecipientsCC[i]).getAddress(), true);
 									}
 								}
 							}
 						}
-
-						if (ccStr == null || ccStr.equals("")) {
-							pIsCCFg = "N";
-						}
-
-						// sent date
-						date = message.getSentDate();
-						if (date != null) {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm (z)");
-							dateStr = sdf.format(date);
-						}
-						logger.debug("dateStr=" + dateStr);
-
-						// subject
-						subject = ezEmailUtil.getSubject(message);
-						if(subject == null || subject.trim().equals("")){
-							subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
-						}
-
-						subject = commonUtil.cleanValue(subject);
-						title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
-						logger.debug("subject=" + subject);
-
-						// readCountStr
-						if (maxReadCount == 0) {
-							readCountStr = egovMessageSource.getMessage("ezEmail.lhm67", locale);
-						} else {
-							readCountStr = maxReadCount + egovMessageSource.getMessage("ezEmail.lhm55", locale)
-									+ " <span style=\"color:red\">" + (maxReadCount - readCount - 1) + egovMessageSource.getMessage("ezEmail.lhm56", locale) + "</span>";
-						}
-
-						// readDateStr
-						if (maxReadDate == null) {
-							readDateStr = egovMessageSource.getMessage("ezEmail.lhm67", locale);
-						} else {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-							sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-							date = sdf.parse(maxReadDate);
-							sdf.applyPattern("yyyy-MM-dd HH:mm (z)");
-							sdf.setTimeZone(TimeZone.getDefault());
-							maxReadDate = sdf.format(date);
-
-							readDateStr = "<span style=\"color:red\">" + maxReadDate + "</span> " + egovMessageSource.getMessage("ezEmail.lhm37", locale);
-						}
-
-						// 임시파일 삭제
-						if (decryptedFile.delete()) {
-							logger.debug("decryptedFile is deleted. fileName=" + decryptedFile.getName());
-						}
-
-						model.addAttribute("c1", egovMessageSource.getMessage("ezEmail.c1", locale));
-						model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
-						model.addAttribute("t63", egovMessageSource.getMessage("ezEmail.t63", locale));
-						model.addAttribute("t161", egovMessageSource.getMessage("ezEmail.t161", locale));
-						model.addAttribute("t704", egovMessageSource.getMessage("ezEmail.t704", locale));
-						model.addAttribute("t66", egovMessageSource.getMessage("ezEmail.t66", locale));
-						model.addAttribute("lhm65", egovMessageSource.getMessage("ezEmail.lhm65", locale));
-						model.addAttribute("t555", egovMessageSource.getMessage("ezEmail.t555", locale));
-						model.addAttribute("t556", egovMessageSource.getMessage("ezEmail.t556", locale));
-						model.addAttribute("lhm66", egovMessageSource.getMessage("ezEmail.lhm66", locale));
 					}
+	
+					if (ccStr == null || ccStr.equals("")) {
+						pIsCCFg = "N";
+					}
+
+					// BCC : 숨은참조일때는 
+					arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
+					if(arrRecipientsBCC != null) {
+						boolean bccListme = false;
+						for (int i = 0; i < arrRecipientsBCC.length; i++) {
+							if (((InternetAddress) arrRecipientsBCC[i]).getAddress().equals(userAccount)) {
+								bccListme = true;
+								break;
+							}
+						}
+
+						String bccHeader = message.getHeader("BCc")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(bccHeader);
+						String name = null;
+
+						for (int i = 0; i < arrRecipientsBCC.length; i++) {
+							name = ((InternetAddress) arrRecipientsBCC[i]).getPersonal();
+							if (name == null) {
+								name = ((InternetAddress) arrRecipientsBCC[i]).getAddress();
+							} else {
+								if (!isAscii) {
+									byte[] rawBytes = name.getBytes("iso-8859-1");
+
+									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+								} else {
+									name = MimeUtility.decodeText(name);
+								}
+
+								name = commonUtil.trimDoubleQuotes(name);
+							}
+
+							logger.debug("BCC=" + name + ((InternetAddress) arrRecipientsBCC[i]).getAddress());
+
+							//개별발신일때 자신이 숨은참조자로 들어갔으면 TO자리에 자신을 넣어주는 작업
+							if (eachMail && reader.equalsIgnoreCase(((InternetAddress) arrRecipientsBCC[i]).getAddress())) {
+								toStr = getReceiverHTML(name, ((InternetAddress) arrRecipientsBCC[i]).getAddress(), true);
+								break;
+							}
+						}
+					}
+					
+					// sent date
+					date = message.getSentDate();
+					if (date != null) {
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm (z)");
+						dateStr = sdf.format(date);
+					}
+					logger.debug("dateStr=" + dateStr);
+					
+					// subject
+					subject = ezEmailUtil.getSubject(message);
+					if(subject == null || subject.trim().equals("")){
+						subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+					}
+					
+					subject = commonUtil.cleanValue(subject);
+					title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
+					logger.debug("subject=" + subject);
+					
+					// readCountStr
+					if (maxReadCount == 0) {
+						readCountStr = egovMessageSource.getMessage("ezEmail.lhm67", locale);
+					} else {
+						readCountStr = maxReadCount + egovMessageSource.getMessage("ezEmail.lhm55", locale) 
+							+ " <span style=\"color:red\">" + (maxReadCount - readCount - 1) + egovMessageSource.getMessage("ezEmail.lhm56", locale) + "</span>";
+					}
+					
+					// readDateStr
+					if (maxReadDate == null) {
+						readDateStr = egovMessageSource.getMessage("ezEmail.lhm67", locale);
+					} else {
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+						date = sdf.parse(maxReadDate);
+						sdf.applyPattern("yyyy-MM-dd HH:mm (z)");
+						sdf.setTimeZone(TimeZone.getDefault());
+						maxReadDate = sdf.format(date);
+						
+						readDateStr = "<span style=\"color:red\">" + maxReadDate + "</span> " + egovMessageSource.getMessage("ezEmail.lhm37", locale);
+					}
+					
+					// 임시파일 삭제
+					if (decryptedFile.delete()) {
+						logger.debug("decryptedFile is deleted. fileName=" + decryptedFile.getName());
+					}
+					
+					model.addAttribute("c1", egovMessageSource.getMessage("ezEmail.c1", locale));
+					model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
+					model.addAttribute("t63", egovMessageSource.getMessage("ezEmail.t63", locale));
+					model.addAttribute("t161", egovMessageSource.getMessage("ezEmail.t161", locale));
+					model.addAttribute("t704", egovMessageSource.getMessage("ezEmail.t704", locale));
+					model.addAttribute("t66", egovMessageSource.getMessage("ezEmail.t66", locale));
+					model.addAttribute("lhm65", egovMessageSource.getMessage("ezEmail.lhm65", locale));
+					model.addAttribute("t555", egovMessageSource.getMessage("ezEmail.t555", locale));
+					model.addAttribute("t556", egovMessageSource.getMessage("ezEmail.t556", locale));
+					model.addAttribute("lhm66", egovMessageSource.getMessage("ezEmail.lhm66", locale));
 				}
 			}
-		} catch (PatternSyntaxException e) {
-			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {

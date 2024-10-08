@@ -281,4 +281,14 @@ public interface EzApprovalGAdminService {
 	public int getTaskListCount(String deptCode, String companyID, int tenantID, String title, String code, String flag) throws Exception;
 
 	public List<String> getIronListYear(String companyID, int tenantID) throws Exception;
+	
+	/* 2024-07-16 기민혁 - 전자결재 > 양식함 이동 */
+	public String contMove(String companyID, String contID, String selContID, String parentContID, int tenantID) throws Exception;
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 리스트 호출  */
+	public List<ApprGFormVO> getSNFContList(String contID, String companyID, int tenantID) throws Exception;
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 실행 함수  */
+	public String moveContSN(String contID, String groupList, String companyID, int tenantID) throws Exception;
+	
 }

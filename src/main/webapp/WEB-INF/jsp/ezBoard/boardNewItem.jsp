@@ -162,6 +162,8 @@
 
 			/* 2024-05-20 김유진 - 일정에서 게시판 게시를 위한 변수 */
 			var scheduleId = "<c:out value='${scheduleId}'/>";
+			/* 2024-08-26 김유진 - 확장컬럼 사용 여부 */
+			var pAttributeYN = "${boardInfo.attributeYN}";
 
 		    window.onload = function () {
 		    	
@@ -385,7 +387,10 @@
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		        }
-		      
+				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
+				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
+					document.getElementById("EdtorSize").style.height = parseInt(document.getElementById("EdtorSize").style.height, 10) + ("${boardInfo.guBun}" == "2" ? 90 : 60) - document.getElementById("tab01").parentElement.clientHeight + "PX";
+				}
 		        var editorW = (document.documentElement.clientWidth - 20) + "PX";
 		        document.getElementById("tab02").style.width = editorW;
 	            document.getElementById("message").style.width = editorW;
@@ -1955,7 +1960,10 @@
 		                    }
 		                }
 		        }
-		        
+				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
+				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
+					document.getElementById("EdtorSize").style.height = parseInt(document.getElementById("EdtorSize").style.height, 10) + ("${boardInfo.guBun}" == "2" ? 90 : 60) - document.getElementById("tab01").parentElement.clientHeight + "PX";
+				}
                 var editorW = (document.documentElement.clientWidth - 20) + "PX";
 		       	document.getElementById("tab02").style.width = editorW;
 	            document.getElementById("message").style.width = editorW;
@@ -3109,5 +3117,11 @@
 	    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 	    }
+		/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
+		if (pAttributeYN == "Y" && document.getElementById("tab01")) {
+			var tabHeight = "${boardInfo.guBun}" == "2" ? 90 : 60;
+			var editorHeight = parseInt(document.getElementById("EdtorSize").style.height, 10) + tabHeight - document.getElementById("tab01").parentElement.clientHeight;
+			document.getElementById("EdtorSize").style.height = (editorHeight > 200 ? editorHeight : 200 ) + "PX";
+		}
 	</script>
 </html>

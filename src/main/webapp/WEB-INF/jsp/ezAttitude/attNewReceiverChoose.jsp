@@ -461,7 +461,7 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            SelectDeptNM.innerHTML += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
+		            SelectDeptNM.innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        if (pListType == "IMG") {
@@ -471,7 +471,7 @@
 		            document.getElementById("txtlist_table").style.display = "none";
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -486,7 +486,7 @@
 		            else {
 		                document.getElementById("Search_txtlist_table").style.display = "";
 		                document.getElementById("txtlist_table").style.display = "none";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -850,25 +850,25 @@
                 PagingHTML2 += strtext2;
                 var pageNum2 = CurPage;
                 if (totalPage2 > 1 && pageNum2 != 1) {
-                    strtext2 = "<span class='btnimg' onclick= 'return goToPageByNum2(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+                    strtext2 = "<span class='btnimg first' onclick= 'return goToPageByNum2(1)'></span>";
                     PagingHTML2 += strtext2;
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+                    strtext2 = "<span class='btnimg first disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 if (totalPage2 > BlockSize2) {
                     if (pageNum2 > BlockSize2) {
-                        strtext2 = "<span class='btnimg' onclick= 'return selbeforeBlock2()'><img src='/images/sub/btn_prev.gif' ></span>";
+                        strtext2 = "<span class='btnimg prev' onclick= 'return selbeforeBlock2()'></span>";
                         PagingHTML2 += strtext2;
                     }
                     else {
-                        strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                        strtext2 = "<span class='btnimg prev disabled'</span>";
                         PagingHTML2 += strtext2;
                     }
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                    strtext2 = "<span class='btnimg prev disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 var MaxNum2;
@@ -893,26 +893,26 @@
                 if (totalPage2 > BlockSize2) {
                     if (totalPage2 >= parseInt(((parseInt((pageNum2 - 1) / BlockSize2) + 1) * BlockSize2) + 1)) {
                         strtext2 = "";
-                        strtext2 = strtext2 + "<span class='btnimg' onclick='return selafterBlock2()'><img src='/images/sub/btn_next.gif'></span>";
+                        strtext2 = strtext2 + "<span class='btnimg next' onclick='return selafterBlock2()'></span>";
                         PagingHTML2 += strtext2;
                     }
                     else {
                         strtext2 = "";
-                        strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                        strtext2 = strtext2 + "<span class='btnimg next disabled'></span>";
                         PagingHTML2 += strtext2;
                     }
                 }
                 else {
                     strtext2 = "";
-                    strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                    strtext2 = strtext2 + "<span class='btnimg next disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 if (totalPage2 > 1 && totalPage2 != 1 && (totalPage2 != pageNum2)) {
-                    strtext2 = "<span class='btnimg' onclick='return goToPageByNum2(" + totalPage2 + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+                    strtext2 = "<span class='btnimg last' onclick='return goToPageByNum2(" + totalPage2 + ")'></span>";
                     PagingHTML2 += strtext2;
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+                    strtext2 = "<span class='btnimg last disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 PagingHTML2 += "</div>";

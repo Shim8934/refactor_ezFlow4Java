@@ -33,6 +33,10 @@ public class PortletInfoVO {
 	private String portletCode;
 	private String menuCode;
 	private String classSize = "one_by_one";	// 포틀릿 사이즈
+	
+	private String portletConnectionId; // 포틀릿 연계(SystemConfig) id
+	private String connectionName; // 포틀릿 연계 포틀릿 코드 이름
+	
 	private List<String> listPortletSize = new ArrayList<>(Collections.singletonList("one_by_one"));
 
 	public boolean isFixBoard() {
@@ -219,7 +223,23 @@ public class PortletInfoVO {
 	public void setBoardGubun(int boardGubun) {
 		this.boardGubun = boardGubun;
 	}
-
+	
+	public String getPortletConnectionId() {
+		return portletConnectionId;
+	}
+	
+	public void setPortletConnectionId(String portletConnectionId) {
+		this.portletConnectionId = portletConnectionId;
+	}
+	
+	public String getConnectionName() {
+		return connectionName;
+	}
+	
+	public void setConnectionName(String connectionName) {
+		this.connectionName = connectionName;
+	}
+	
 	@Override
 	public String toString() {
 		return "[portletId=" + portletId + " portletName=" + portletName + "]"; // 로그정리

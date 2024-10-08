@@ -75,9 +75,11 @@ CREATE TABLE `james_mail_blob` (
   `HEADER_BYTES` mediumblob NOT NULL,
   `MAILBOX_ID` bigint(20) DEFAULT NULL,
   `MAIL_UID` bigint(20) DEFAULT NULL,
+  `DISK_ID` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`MAIL_BLOB_ID`),
   KEY `INDEX_MESSAGE_BLOB_MSG_ID` (`MAIL_BLOB_ID`),
-  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`)
+  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
+  KEY `james_mail_blob_DISK_ID_IDX` (`DISK_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -10929,6 +10931,7 @@ CREATE TABLE `tbl_rs_schedule` (
   `RETURNFLAG` varchar(2) DEFAULT '0',
   `SCHEDULEID` varchar(1000) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `DEPTID` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`OWNERID`,`NUM`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -14858,6 +14861,14 @@ BEGIN
     END IF;
 END; //
 
+CREATE OR REPLACE TRIGGER trigger_mail_deleted_id
+AFTER DELETE ON james_mail
+FOR EACH ROW
+BEGIN
+    INSERT INTO james_mail_deleted_id (MAILBOX_ID, MAIL_UID)
+    VALUES (OLD.MAILBOX_ID, OLD.MAIL_UID);
+END; //
+
 DELIMITER ;
 
 -- ezEKP <-> ezTalk 간 인사연동 뷰 테이블(V_USERMASTER, V_DEPTMASTER, V_ADDJOBMASTER)
@@ -15346,6 +15357,24 @@ CREATE TABLE `TBL_PORTAL_TOP_USER`
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `TBL_PORTAL_TOP_USER`
+--
+
+DROP TABLE IF EXISTS `TBL_PORTAL_TOP_COMPANY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+
+CREATE TABLE TBL_PORTAL_TOP_COMPANY
+		(
+			COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
+			TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입 0:탑, 1:좌측메뉴',
+			TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
+			PRIMARY KEY (COMPANY_ID, TENANT_ID)
+		)
+			COMMENT '회사별 탑 메뉴 프레임 타입';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_realtime_notification`
 --
 
@@ -15357,7 +15386,7 @@ CREATE TABLE `tbl_realtime_notification` (
 		  `USERID` varchar(80) NOT NULL,
 		  `MAINTYPE` varchar(20) NOT NULL,
 		  `SUBTYPE` varchar(20) DEFAULT NULL,
-		  `NOTICONTENT` varchar(3000) DEFAULT NULL,
+		  `NOTICONTENT` varchar(2000) DEFAULT NULL,
 		  `SENDERID` varchar(80) DEFAULT NULL,
 		  `SENDERNAME` varchar(100) DEFAULT NULL,
 		  `REGDATE` datetime DEFAULT NULL,
@@ -15366,8 +15395,8 @@ CREATE TABLE `tbl_realtime_notification` (
 		  `ETCDATA` varchar(400) DEFAULT NULL,
 		  `ISDELETE` char(1) DEFAULT 'N',
 		  `DELETEDATE` datetime DEFAULT NULL,
-		  `LINKURL` varchar(4000) DEFAULT NULL,
-		  `LINKURL_MOBILE` varchar(4000) DEFAULT NULL,
+		  `LINKURL` varchar(2000) DEFAULT NULL,
+		  `LINKURL_MOBILE` varchar(2000) DEFAULT NULL,
 		  `VIEWTYPE` varchar(10) DEFAULT NULL,
 		  `VIEWWIDTH` int(11) DEFAULT NULL,
 		  `VIEWHEIGHT` int(11) DEFAULT NULL,
@@ -15375,3 +15404,145 @@ CREATE TABLE `tbl_realtime_notification` (
 		  `COMPANYID` varchar(200) DEFAULT NULL,
 		  PRIMARY KEY (`NOTISEQ`,`TENANT_ID`)
 		) ENGINE=InnoDB AUTO_INCREMENT=736 DEFAULT CHARSET=utf8mb4;
+
+
+--
+-- Table structure for table `tbl_distributeinfo`
+--
+
+DROP TABLE IF EXISTS `TBL_DISTRIBUTEINFO`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_DISTRIBUTEINFO`
+(
+  `SN` bigint(10) NOT NULL,
+  `DOCID` varchar(80) NOT NULL,
+  `RECEIPTDATE` datetime DEFAULT NULL,
+  `ORGANID` varchar(400) NOT NULL,
+  `ORGAN` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGANUSERNAME` varchar(100) DEFAULT NULL,
+  `DOCNUMBER` varchar(200) DEFAULT NULL,
+  `MANAGEDEPTID` varchar(400) DEFAULT NULL,
+  `MANAGEDEPT` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGDOCNUMCODE` varchar(200) DEFAULT NULL,
+  `DOCTITLE` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `MANAGEDEPT2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGAN2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGANUSERNAME2` varchar(100) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(20) NOT NULL,
+  `PARENTDOCID` varchar(80) NULL,
+  `ORGDOCID` varchar(80) NOT NULL,
+  `DELIVERYSN` bigint(10) DEFAULT NULL,
+  `TYPE` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SN`,`DOCID`,`ORGANID`(255))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='배부이력 정보';
+
+--
+-- Table structure for table `tbl_executive`
+--
+
+DROP TABLE IF EXISTS `tbl_executive`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_executive` (
+          `CN` VARCHAR(50) NOT NULL,
+          `PRIORITY` INT(11) NOT NULL,
+          `USAGE` CHAR(1) NOT NULL,
+          `CREATEUSER` VARCHAR(50) NOT NULL,
+          `LASTUPDATE` DATETIME NOT NULL,
+          `COMPANYID` VARCHAR(50) NOT NULL,
+          `TENANT_ID` MEDIUMINT DEFAULT 0 NOT NULL,
+          PRIMARY KEY (`CN`, `COMPANYID`, `TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '임원 테이블';
+
+DROP TABLE IF EXISTS TBL_SURVEY_RESULTVIEWPERMISSION;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE TBL_SURVEY_RESULTVIEWPERMISSION (
+    SURVEY_ID 			INT(11) 		NOT NULL,
+    COMPANY_ID 			VARCHAR(100) 	NOT NULL,
+    TENANT_ID 			INT(9) 			NOT NULL,
+    CN 					VARCHAR(100) 	NOT NULL 	COMMENT '권한자 아이디',
+    USER_TYPE 			VARCHAR(30) 				COMMENT '권한자 타입',
+    SUBDEPT_PERMITTED 	VARCHAR(30) 	DEFAULT 'N' COMMENT 'Y(하위 가능), N(하위 불가)',
+    CNNAME 				VARCHAR(120) 				COMMENT '권한자 이름',
+    CNNAME2 			VARCHAR(120) 				COMMENT '권한자 이름',
+    PRIMARY KEY (SURVEY_ID, COMPANY_ID, TENANT_ID, CN)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '설문 지정공개대상자 정보 테이블';
+
+DROP TABLE IF EXISTS `TBL_SYSTEMCONFIG`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_SYSTEMCONFIG` (
+  `CODE` varchar(50) NOT NULL,
+  `CODEVALUE` varchar(2000) NOT NULL,
+  `DESCRIPTION` varchar(1000) DEFAULT NULL,
+  `WRITERID` varchar(50) DEFAULT NULL,
+  `WRITERNAME` varchar(100) DEFAULT NULL,
+  `WRITEDATE` datetime DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TYPECODE` varchar(80) DEFAULT NULL,
+  PRIMARY KEY (`CODE`,`TENANT_ID`,`COMPANY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_SYSTEMCONFIG_TYPE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_SYSTEMCONFIG_TYPE` (
+  `TYPECODE` varchar(50) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TYPENAME` varchar(1000) DEFAULT NULL,
+  `TYPENAME2` varchar(1000) DEFAULT NULL,
+  `DESCRIPTION` varchar(3000) DEFAULT NULL,
+  `WRITERID` varchar(50) DEFAULT NULL,
+  `WRITERNAME` varchar(100) DEFAULT NULL,
+  `WRITERNAME2` varchar(100) DEFAULT NULL,
+  `WRITEDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`TYPECODE`,`TENANT_ID`,`COMPANY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_NOTI_EMERGENCY_COMPANY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_NOTI_EMERGENCY_COMPANY` (
+  `COMPANY_ID` varchar(200) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL,
+  `EMERGENCY_CONTENT` varchar(200) DEFAULT NULL,
+  `WRITERID` varchar(80) NOT NULL,
+  `WRITEDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_NOTI_EMERGENCY_ITEM`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_NOTI_EMERGENCY_ITEM` (
+  `NOTIID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `WRITERID` varchar(80) NOT NULL,
+  `COMPANY_ID` varchar(200) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL,
+  `NOTITITLE` varchar(2000) DEFAULT NULL,
+  `NOTIBODY` varchar(2000) DEFAULT NULL,
+  `WRITEDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`NOTIID`,`TENANT_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_NOTI_EMERGENCY_PERMISSION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_NOTI_EMERGENCY_PERMISSION` (
+  `PERMISSION_CODE` bigint(20) NOT NULL AUTO_INCREMENT,
+  `CN` varchar(80) NOT NULL,
+  `DEPTID` varchar(80) DEFAULT NULL,
+  `JOBID` varchar(80) DEFAULT NULL,
+  `ROLEID` varchar(80) DEFAULT NULL,
+  `USER_TYPE` varchar(50) DEFAULT NULL,
+  `COMPANY_ID` varchar(200) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL,
+  `REGDATE` datetime DEFAULT NULL,
+  `SUBDEPTYN` char(1) DEFAULT NULL,
+  PRIMARY KEY (`PERMISSION_CODE`, `TENANT_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;

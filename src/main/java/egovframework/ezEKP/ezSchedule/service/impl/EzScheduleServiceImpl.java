@@ -2442,8 +2442,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		from.setAddress(ezOrganService.getPropertyValue(beforeSche.getCreatorId(), "mail", loginVO.getTenantId()));
 		
 		List<InternetAddress> toList = new ArrayList<>();
-		String notiRecipientIdList = "";
-		String separator = ";;";
+		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 		for (int i = 0; i < attendantId.getLength(); i++) {						
 			String v_attendantId = attendantId.item(i).getTextContent();				
 			String v_attendantName = attendantName.item(i).getTextContent();
@@ -2454,7 +2453,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					to.setPersonal(v_attendantName.trim(), "UTF-8");
 					to.setAddress(ezOrganService.getPropertyValue(v_attendantId, "mail", loginVO.getTenantId()));
 					toList.add(to);
-					notiRecipientIdList += v_attendantId + separator;
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+	        		recipientMap.put("userType", "PERSON");
+	        		recipientMap.put("companyId", loginVO.getCompanyID());
+	        		recipientMap.put("cn", v_attendantId);
+	        		notiRecipientList.add(recipientMap);
 				}
 			}
 		}
@@ -2479,8 +2482,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		String content_ = commonUtil.createNotiMailContent(bodyContent.toString(), loginVO.getTenantId(), loginVO.getLocale());
 		ezEmailService.sendMail(loginCookie, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, content_, false);
 		
-		notiRecipientIdList.substring(0, notiRecipientIdList.length() - separator.length());
-		
 		String linkUrl = "";
 		String linkUrlMobile = "";
 		if (Integer.parseInt(repeatCount) > 0) {
@@ -2492,7 +2493,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	    }
 		
 		
-		ezNotificationService.sendNoti(request, beforeSche.getCreatorId(), creatorName, notiRecipientIdList, "SCHEDULE", "MOD", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+		ezNotificationService.sendNoti(request, beforeSche.getCreatorId(), creatorName, notiRecipientList, "SCHEDULE", "MOD", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 		logger.debug("sendInviteModNoti ended");
 				
 	}
@@ -2714,8 +2715,9 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		from.setAddress(ezOrganService.getPropertyValue(scheduleInfo.getCreatorId(), "mail", loginVO.getTenantId()));
 		
 		List<InternetAddress> toList = new ArrayList<>();
-		String notiRecipientIdList = "";
-		String separator = ";;";
+		
+		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+		
 		for (AttendantListVO attendant : attendantList) {
 			String attendantName = "";
 			if (commonUtil.getPrimaryData(loginVO.getLang(), loginVO.getTenantId()).equals("1")) {
@@ -2731,7 +2733,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					to.setPersonal(attendantName.trim(), "UTF-8");
 					to.setAddress(ezOrganService.getPropertyValue(attendant.getAttendantId(), "mail", loginVO.getTenantId()));
 					toList.add(to);
-					notiRecipientIdList += attendant.getAttendantId() + separator;
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+	        		recipientMap.put("userType", "PERSON");
+	        		recipientMap.put("companyId", loginVO.getCompanyID());
+	        		recipientMap.put("cn", attendant.getAttendantId());
+	        		notiRecipientList.add(recipientMap);
 				}
 			}
 		}
@@ -2764,13 +2770,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		String content_ = commonUtil.createNotiMailContent(bodyContent.toString(), loginVO.getTenantId(), loginVO.getLocale());
 		ezEmailService.sendMail(loginCookie, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, content_, false);
 		
-		notiRecipientIdList.substring(0, notiRecipientIdList.length() - separator.length());
-
 		String linkUrl = "";
 							
 		String linkUrlMobile = "";
 				
-		ezNotificationService.sendNoti(request, scheduleInfo.getCreatorId(), creatorName, notiRecipientIdList, "SCHEDULE", "DELETE", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+		ezNotificationService.sendNoti(request, scheduleInfo.getCreatorId(), creatorName, notiRecipientList, "SCHEDULE", "DELETE", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 		
 		logger.debug("sendInviteScheDelNoti ended");
 	}
@@ -2804,7 +2808,13 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		to.setPersonal(creatorName, "UTF-8");
 		
 		toList.add(to);
-		String notiRecipientIdList = creatorId;
+		
+		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+		Map<String, Object> recipientMap = new HashMap<String, Object>();
+		recipientMap.put("userType", "PERSON");
+		recipientMap.put("companyId", userInfo.getCompanyId());
+		recipientMap.put("cn", creatorId);
+		notiRecipientList.add(recipientMap);
 		
 		if (toList.size() <= 0) {
 			return;
@@ -2840,7 +2850,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			
 		String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleId + "&startDate=" + startDate + "&endDate=" + endDate + "&date=" + startDate + "&type=monthList" + "&purpose=scheduleInfoDetail";
 			
-		ezNotificationService.sendNoti(request, userInfo.getUserId(), creatorName, notiRecipientIdList, "schedule", notiSubType, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+		ezNotificationService.sendNoti(request, userInfo.getUserId(), creatorName, notiRecipientList, "schedule", notiSubType, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 		
 		logger.debug("sendScheduleNotiForMobile ended");
 	}
@@ -2867,8 +2877,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		from.setAddress(ezOrganService.getPropertyValue(ownerId, "mail", tenantId));
 		from.setPersonal(ownerName, "UTF-8");
 		
-		String notiRecipientIdList = "";
-		String separator = ";;";
+		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+		
 		for (AttendantListVO attendant : attendantList) {
 			String attendanceStatus = attendant.getStatus();
 			if (attendanceStatus != null && attendanceStatus.equals("1")) {
@@ -2878,7 +2888,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					to.setAddress(ezOrganService.getPropertyValue(attendant.getAttendantId(), "mail", tenantId));
 					to.setPersonal(userInfo.getPrimary().equals(userInfo.getLang()) ? attendant.getAttendantName() : attendant.getAttendantName2(), "UTF-8");
 					toList.add(to);
-					notiRecipientIdList += attendant.getAttendantId() + separator;
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+	        		recipientMap.put("userType", "PERSON");
+	        		recipientMap.put("companyId", userInfo.getCompanyId());
+	        		recipientMap.put("cn", attendant.getAttendantId());
+	        		notiRecipientList.add(recipientMap);
 				}
 			}
 		}
@@ -2933,13 +2947,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(bodyContent.toString(), tenantId, locale), false, EmailImportance.NORMAL);
 		
-		notiRecipientIdList.substring(0, notiRecipientIdList.length() - separator.length());
-		
 		String linkUrl = "/ezSchedule/scheduleRead.do?id=" + scheduleId + "&isReceive=Y";
 			
 		String linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + scheduleId + "&startDate=" + startdate + "&endDate=" + enddate + "&date=" + startdate + "&type=monthList" + "&purpose=scheduleInfoDetail";
 			
-		ezNotificationService.sendNoti(request, beforeSche.getCreatorId(), ownerName, notiRecipientIdList, "SCHEDULE", "MOD", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+		ezNotificationService.sendNoti(request, beforeSche.getCreatorId(), ownerName, notiRecipientList, "SCHEDULE", "MOD", title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
 		
 		logger.debug("sendInviteModNotiForMoblie ended");
 	}
@@ -2974,8 +2986,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		from.setPersonal(creatorName, "UTF-8");
 		from.setAddress(ezOrganService.getPropertyValue(scheduleInfo.getCreatorId(), "mail", info.getTenantId()));
 		
-		String notiRecipientIdList = "";
-		String separator = ";;";
+		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 		
 		List<InternetAddress> toList = new ArrayList<>();
 		for (AttendantListVO attendant : attendantList) {
@@ -2993,7 +3004,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					to.setPersonal(attendantName.trim(), "UTF-8");
 					to.setAddress(ezOrganService.getPropertyValue(attendant.getAttendantId(), "mail", info.getTenantId()));
 					toList.add(to);
-					notiRecipientIdList += attendant.getAttendantId() + separator;
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+	        		recipientMap.put("userType", "PERSON");
+	        		recipientMap.put("companyId", info.getCompanyId());
+	        		recipientMap.put("cn", attendant.getAttendantId());
+	        		notiRecipientList.add(recipientMap);
 				}
 			}
 		}
@@ -3020,13 +3035,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(bodyContent.toString(), info.getTenantId(), locale), false, EmailImportance.NORMAL);
 		
-		notiRecipientIdList.substring(0, notiRecipientIdList.length() - separator.length());
-
 		String linkUrl = "";
 				
 		String linkUrlMobile = "";
 				
-		ezNotificationService.sendNoti(request, scheduleInfo.getCreatorId(), creatorName, notiRecipientIdList, "SCHEDULE", "DELETE", title, "popup", "730", "370", linkUrl, linkUrlMobile, "");
+		ezNotificationService.sendNoti(request, scheduleInfo.getCreatorId(), creatorName, notiRecipientList, "SCHEDULE", "DELETE", title, "popup", "730", "370", linkUrl, linkUrlMobile, "");
 		
 		logger.debug("sendInviteScheDelNotiForMobile ended");
 	}
@@ -4124,7 +4137,14 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + reminderSche.getScheduleId() + "&startDate=" + startdate + "&endDate=" + enddate + "&date=" + date + "&type=monthList" + "&purpose=scheduleInfoDetail";
 		}
 		
-		ezNotificationService.sendNoti(reminderSche.getCreatorId(), fromName, reminderSche.getOwnerId(), "SCHEDULE", "REMINDER", title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting", reminderSche.getTenantId(), reminderSche.getCompanyId());
+		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+		Map<String, Object> recipientMap = new HashMap<String, Object>();
+		recipientMap.put("userType", "PERSON");
+		recipientMap.put("companyId", reminderSche.getCompanyId());
+		recipientMap.put("cn", reminderSche.getOwnerId());
+		notiRecipientList.add(recipientMap);
+		
+		ezNotificationService.sendNoti(reminderSche.getCreatorId(), fromName, notiRecipientList, "SCHEDULE", "REMINDER", title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting");
 	}
 	
 	// 2023-09-15 한태훈 - 일정관리 > 일정그룹 정보 가져오기
@@ -4175,6 +4195,36 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		}
 
 		logger.debug("updateScheduleWritePermission ended");
+	}
+	
+	@Override
+	public String checkExecutiveType(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("checkExecutiveType started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		String userType = ezScheduleDAO.checkExecutiveType(map);
+
+		logger.debug("checkExecutiveType ended. result = " + userType);
+		return userType;
+	}
+
+	@Override
+	public String checkExecutiveUsage(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("checkExecutiveUsage started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		String usage = ezScheduleDAO.checkExecutiveUsage(map);
+
+		logger.debug("checkExecutiveUsage ended. result = " + usage);
+		return usage;
 	}
 }
 

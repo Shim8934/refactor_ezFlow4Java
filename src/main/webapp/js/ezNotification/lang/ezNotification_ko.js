@@ -9,6 +9,7 @@ var mainType = {
 	community : "커뮤니티",
 	webfolder : "웹폴더",
 	journal : "업무일지",
+	noti : "공지알림",
 	etc : "기타"
 }
 
@@ -49,9 +50,7 @@ var subType = {
 		cancel : "승인취소",
 		reject : "승인거부"
 	},
-	survey : {
-		modify : "수정알림"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "생성승인",
@@ -74,6 +73,9 @@ var subType = {
 	journal : {
 		comment : "댓글등록",
 		recv : "수신알림"
+	},
+	noti : {
+		emergency : "긴급공지"
 	}
 }
 
@@ -87,5 +89,7 @@ subType["poll"]["new"] = "신규등록";
 subType["community"]["new"] = "신규게시";
 
 var notiMessages = {
-	strLang1 : '"데이터가 없습니다."'
+	strLang1 : '"데이터가 없습니다."',
 }
+
+var notiDayNames = ["일", "월", "화", "수", "목", "금", "토"];

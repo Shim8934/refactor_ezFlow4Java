@@ -13,6 +13,7 @@
 	<typeAlias alias="ParticipantVO"      type="egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO" />
 	<typeAlias alias="ResponseVO"         type="egovframework.ezEKP.ezSurvey.vo.ResponseVO" />
 	<typeAlias alias="RespondentVO"       type="egovframework.ezEKP.ezSurvey.vo.RespondentVO" />
+	<typeAlias alias="ResultViewPermissionVO"       type="egovframework.ezEKP.ezSurvey.vo.ResultViewPermissionVO" />
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="SurveySimpleDeptVO">
@@ -236,25 +237,67 @@
 					survey_id not in ( select survey_id from tbl_survey where draft_flag = 1 and user_id != #userId# and tenant_id = #tenantId# )
 				)
 			</isEqual>
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
-			<isNotEmpty property="surveyIds" prepend=" and ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
-			</isNotEmpty>
+			AND
+			(
+				(
+				<isEmpty property="surveyIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+				<isNotEmpty property="surveyIds">
+					survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>
+				</isNotEmpty>
+				)
+				OR
+				(
+					RESULT_PUBLIC_FLAG = 2
+				AND
+				<isEmpty property="surveyResultIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+				<isNotEmpty property="surveyResultIds">
+					survey_id in <iterate property="surveyResultIds" open="(" close=")" conjunction=",">#surveyResultIds[]#</iterate>
+				</isNotEmpty>
+				)
+			)
 		</isEqual>
 		<isEqual property="pageMode" compareValue="processing" prepend=" and ">
 			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
-			<isNotEmpty property="surveyIds" prepend=" and ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
-			</isNotEmpty>
+			AND
+			(
+				(
+				<isEmpty property="surveyIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+				<isNotEmpty property="surveyIds">
+					survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>
+				</isNotEmpty>
+				)
+				OR
+				(
+					RESULT_PUBLIC_FLAG = 2
+				AND
+				<isEmpty property="surveyResultIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+				<isNotEmpty property="surveyResultIds">
+					survey_id in <iterate property="surveyResultIds" open="(" close=")" conjunction=",">#surveyResultIds[]#</iterate>
+				</isNotEmpty>
+				)
+			)
 			and draft_flag = 0
 		</isEqual>
 		<isEqual property="pageMode" compareValue="finish" prepend=" and ">
 			<![CDATA[(end_date < #today#)]]>
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
-			<isNotEmpty property="surveyIds" prepend=" and ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
-			</isNotEmpty>
+			AND
+			(
+				(
+				<isEmpty property="surveyIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+				<isNotEmpty property="surveyIds">
+					survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>
+				</isNotEmpty>
+				)
+				OR
+				(
+					RESULT_PUBLIC_FLAG = 2
+				AND
+				<isEmpty property="surveyResultIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+				<isNotEmpty property="surveyResultIds">
+					survey_id in <iterate property="surveyResultIds" open="(" close=")" conjunction=",">#surveyResultIds[]#</iterate>
+				</isNotEmpty>
+				)
+			)
 			and draft_flag = 0
 		</isEqual>
 		<isEqual property="pageMode" compareValue="my" prepend=" and ">
@@ -1511,11 +1554,24 @@
 			modify_flag = 0
 		<isEqual property="mode" compareValue="popup" prepend=" AND ">
 			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
-			
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
-			<isNotEmpty property="surveyIds" prepend=" AND ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
-			</isNotEmpty>
+			AND
+			(
+				(
+				<isEmpty property="surveyIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+				<isNotEmpty property="surveyIds">
+					survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>
+				</isNotEmpty>
+				)
+				OR
+				(
+					RESULT_PUBLIC_FLAG = 2
+				AND
+				<isEmpty property="surveyResultIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+				<isNotEmpty property="surveyResultIds">
+					survey_id in <iterate property="surveyResultIds" open="(" close=")" conjunction=",">#surveyResultIds[]#</iterate>
+				</isNotEmpty>
+				)
+			)
 			AND 
 				draft_flag = 0
 			AND
@@ -1577,5 +1633,138 @@
 		USE_STATUS = 0
 	AND
 		DELETE_USER IS NOT NULL
+	</select>
+	
+	<!-- 2024-07-11 전인하 - 설문 > 지정공개 대상자 저장 -->
+	<insert id="EzSurveyDAO.saveSurveyResultViewTarget" parameterClass="Map">
+		INSERT INTO
+			TBL_SURVEY_RESULTVIEWPERMISSION(SURVEY_ID, COMPANY_ID, TENANT_ID, CN, USER_TYPE, SUBDEPT_PERMITTED, CNNAME, CNNAME2)
+		VALUES
+			(#survey_id#, #company_id#, #tenant_id#, #cn#, #user_type#, #subdept_permitted#, #cnName#, #cnName2#)
+	</insert>
+
+	<!-- 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 조회 -->
+	<select id="EzSurveyDAO.selectResultViewPermission" parameterClass="Map" resultClass="ResultViewPermissionVO">
+		SELECT
+			survey_id,
+			company_id,
+			tenant_id,
+			cn,
+			user_type,
+			subdept_permitted,
+			cnName,
+			cnName2
+		FROM
+			TBL_SURVEY_RESULTVIEWPERMISSION
+		WHERE
+			survey_id = #survey_id#
+		AND
+			company_id = #company_id#
+		AND
+			tenant_id = #tenant_id#
+	</select>
+
+	<!-- 2024-07-11 전인하 - 설문 > 지정공개 대상자 삭제 -->
+	<delete id="EzSurveyDAO.deleteResultViewPermission" parameterClass="Map">
+		DELETE FROM
+			TBL_SURVEY_RESULTVIEWPERMISSION
+		WHERE
+			SURVEY_ID = #survey_id#
+		AND
+			COMPANY_ID = #company_id#
+		AND
+			TENANT_ID = #tenant_id#
+	</delete>
+
+	<!-- 2024-07-11 전인하 - 설문 > 사용자가 결과조회 가능한 설문 조회-->
+	<select id="EzSurveyDAO.getReceivedSurveyResultList" resultClass="Long">
+		SELECT
+			DISTINCT(survey_id)
+		FROM
+			TBL_SURVEY_RESULTVIEWPERMISSION a
+		join
+			tbl_usermaster b
+		on
+			a.tenant_id = b.tenant_id
+		and
+			a.company_id = b.PHYSICALDELIVERYOFFICENAME
+		and
+			b.cn = #userId#
+		WHERE
+		(
+			(a.cn = #userId# AND user_type = 'user')
+			OR
+				(	
+					(
+					a.cn IN
+					<iterate property="deptList" open="(" close=")" conjunction=",">
+						#deptList[]#
+					</iterate> 
+					AND 
+						(user_type = 'dept' OR user_type = 'comp')
+					)
+					OR
+					(
+					a.cn IN
+					<iterate property="allDeptList" open="(" close=")" conjunction=",">
+						#allDeptList[]#
+					</iterate>
+					and 
+						(user_type = 'dept' OR user_type = 'comp')
+					AND
+						SUBDEPT_PERMITTED = 'Y'
+					)
+				)
+			OR
+				(a.user_type = 'jikchek' and (b.extensionattribute8 = a.cn
+				or a.cn in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+			OR
+				(a.user_type = 'jikwi' and (b.extensionattribute7 = a.cn
+				or a.cn in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) )   )
+			OR
+				(user_type = 'group' and a.cn  in
+					(
+					select
+						distinct c.group_id
+					from
+						tbl_permissiongroupinfo c
+					join
+						tbl_usermaster d
+					on
+						d.tenant_id = c.tenant_id
+					and
+						d.tenant_id = #tenantId#
+					AND
+						c.company_id = #companyId#
+					and
+						d.cn = #userId#
+					where
+						c.group_id = a.cn
+					and
+					(
+							(c.member_type = 'JIKCHEK' and (d.extensionattribute8 = c.member_id
+						or
+							c.member_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+					or
+						(c.member_type = 'JIKWI' and (d.extensionattribute7 = c.member_id
+					or
+						c.member_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+					or
+						(c.member_type = 'ORGAN' and d.physicaldeliveryofficename = c.member_id)
+					or
+						(c.member_type = 'USER' and d.CN = c.member_id)
+					or
+						(c.member_type = 'DEPT' and (d.department = c.member_id
+					or
+						c.member_id in (select deptid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+					)
+				)
+			)
+		)
+		AND
+			a.tenant_id = #tenantId#
+		AND
+			a.company_id = #companyId#
+		<isNotEmpty property="surveyId" prepend=" and ">survey_id = #surveyId#</isNotEmpty>
 	</select>
 </sqlMap>

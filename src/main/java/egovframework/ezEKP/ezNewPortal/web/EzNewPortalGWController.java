@@ -1,8 +1,11 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -22,6 +25,7 @@ import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezNewPortal.vo.ConnectPortletDTO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
@@ -34,6 +38,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +51,7 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.PortletAprInfoVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
@@ -95,6 +101,9 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -102,6 +111,7 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.rest.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -199,6 +209,9 @@ public class EzNewPortalGWController {
 	
 	@Autowired
 	private EzScheduleGoogleService googleService;
+	
+	@Autowired
+	private EzSystemAdminService ezSystemAdminService;
 
 	// ///사용자///////
 	/**
@@ -874,10 +887,20 @@ public class EzNewPortalGWController {
 			/**
 			 * 1) 로고
 			 */
+			int themeColor = ezNewPortalService.getUserColor(userId, companyId, tenantId);
+			
+			if (themeColor == 3) { // 다크모드
+				logoType = "D";
+			}
+			
 			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
 			
 			if (logoUrl == null || logoUrl.equals("")) {
-				logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+				if (themeColor == 3) {
+					logoUrl = "/images/ezNewPortal/skin/dark/logo_white.png";
+				} else {
+					logoUrl = "/files/upload_portal/Top/Logo/logo.gif";	
+				}
 			} else {
 				logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + logoUrl;
 			}
@@ -1074,8 +1097,10 @@ public class EzNewPortalGWController {
 			String roleInfo = "user";
 			
 			// 전체관리자, 회사관리자, 웹폴더관리자면 관리자 버튼이 나타나도록 추가 -> 관리자 안에서 웹폴더관리자는 웹폴더 관리만 나타나도록 수정
-			OrganAuth organAuth = commonUtil.makeOrganAuth(userId, tenantId);
-			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER) || organAuth.isAuth(AdminAuth.WEB_FOLDER_MANAGER)) {
+			OrganAuth organAuth = commonUtil.makeOrganAuth(userId, tenantId, deptId, jobId);
+			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER) 
+					|| organAuth.isAuth(AdminAuth.COMPANY_MANAGER, companyId) 
+					|| organAuth.isAuth(AdminAuth.WEB_FOLDER_MANAGER, companyId)) {
 				roleInfo = "admin";
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
 				data.put("utilAdminUrl", "/admin/main.do");
@@ -1122,6 +1147,12 @@ public class EzNewPortalGWController {
 			Optional<TopFrameType> topFrameInfo = ezNewPortalService.getPortalTopFrameInfo(userId, companyId, tenantId);
 			
 			data.put("menuDisplayMode", topFrameInfo.orElse(TopFrameType.TOP).getCode());
+			
+			/**
+			 * 6) 사용자별 선택 색상(모드) 조회
+			 */
+			data.put("useColor", ezNewPortalService.getUserColor(userId, companyId, tenantId));
+			
 			//end
 
 			//logger.debug("TopMenu Data : " + data.toJSONString()); // 로그정리 : EzNewPortalController 에서 중복으로 로깅
@@ -1488,8 +1519,8 @@ public class EzNewPortalGWController {
 			int limit = 6; // 한 페이지에 뿌려지는 리스트 개수 // 다르게 처리할 수 있는 방법 찾아보기
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
-			String deptId = info.getDeptId();
 			String userId = request.getParameter("userId");
+			String deptId = request.getParameter("deptId");
 
 			// 2024-05-17 김유진 - 퀵링크 list, cnt 가져오기
 			Map<String, Object> map = ezNewPortalService.getQuickLinkList(companyId, tenantId, page, limit, userId, deptId);
@@ -1772,7 +1803,16 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
-			int frameDefault = Integer.parseInt(request.getParameter("frameDefault"));
+			int frameDefault = 0;
+			
+			if (themeId == 1) {
+				frameDefault = 1;
+			} else if (themeId == 2) {
+				frameDefault = 5;
+			} else if (themeId == 3) {
+				frameDefault = 8;
+			}
+			
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			logger.debug("usedTheme : " + themeId + "usedFrame : " + frameDefault);
 			
@@ -2108,6 +2148,8 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String deptId = request.getParameter("deptId");
+			String jobId = Optional.ofNullable(request.getParameter("jobId")).orElse("");
 
 			String primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 			int tenantId = userInfo.getTenantId();
@@ -2121,7 +2163,7 @@ public class EzNewPortalGWController {
 			result.put("userCompany", userInfo.getCompanyID());
 			result.put("lang",lang);
 
-			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, userInfo.getTenantId(), userInfo.getLang());
+			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, userInfo.getTenantId(), userInfo.getLang(), deptId, jobId);
 			
 			result.put("data", adminCompanyList);
 			result.put("primary", primary);
@@ -2289,11 +2331,12 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
 			String menuLang = userInfo.getLang();
-			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId(), menuLang);
+			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId(), menuLang, type);
 			
 			//tenant config가 NO인 경우 관리자 메뉴 관리에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -2546,61 +2589,18 @@ public class EzNewPortalGWController {
 			if (menuNamesCount > 2) {
 				List<MenuNameVO> menuNamesWithOrder = new ArrayList<MenuNameVO>();
 				
-				if (menuNamesCount > 3 && menuNamesCount < 5) {
-					int[] langOrder = new int[4];
-					
-					if (primaryLang.equals("2")) {
-						langOrder[0] = 2;
-						langOrder[1] = 1;
-						langOrder[2] = 3;
-						langOrder[3] = 4;
-					} else if (primaryLang.equals("3")){
-						langOrder[0] = 3;
-						langOrder[1] = 1;
-						langOrder[2] = 2;
-						langOrder[3] = 4;
-					} else {
-						langOrder[0] = 1;
-						langOrder[1] = 2;
-						langOrder[2] = 3;
-						langOrder[3] = 4;
+				// 사용 언어가 가장 먼저 위치하도록 순서 조정.
+				menuNamesWithOrder.add(menuNames.get(Integer.parseInt(primaryLang) - 1));
+				
+				for (MenuNameVO vo : menuNames) {
+					if (!vo.getMenuLang().equals(primaryLang)) {
+						menuNamesWithOrder.add(vo);
 					}
-					
-					for (int i = 0; i < langOrder.length; i++) {
-						int langIndex = langOrder[i] - 1;
-						
-						menuNamesWithOrder.add(menuNames.get(langIndex));
-					}
-					
-					data.put("menuNames", menuNamesWithOrder);
-				} else if (menuNamesCount > 2 && menuNamesCount < 4) {
-					int[] langOrder = new int[3];
-					
-					if (primaryLang.equals("2")) {
-						langOrder[0] = 2;
-						langOrder[1] = 1;
-						langOrder[2] = 3;
-					} else if (primaryLang.equals("3")){
-						langOrder[0] = 3;
-						langOrder[1] = 1;
-						langOrder[2] = 2;
-					} else {
-						langOrder[0] = 1;
-						langOrder[1] = 2;
-						langOrder[2] = 3;
-					}
-					
-					for (int i = 0; i < langOrder.length; i++) {
-						int langIndex = langOrder[i] - 1;
-						
-						menuNamesWithOrder.add(menuNames.get(langIndex));
-					}
-					data.put("menuNames", menuNamesWithOrder);
 				}
-			}
-			else {
-				data.put("menuNames", menuNames);
-			}
+				
+				data.put("menuNames", menuNamesWithOrder);
+			} 
+			data.put("menuNames", menuNames);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2797,8 +2797,9 @@ public class EzNewPortalGWController {
 			String lang = info.getLang();
 			
 			JSONObject data = new JSONObject();
+			String webType = request.getParameter("type");
 
-			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
+			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang), webType);
 			
 			//1. tenant config가 NO인 경우 관리자 포틀릿 관리에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -3082,11 +3083,19 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
+			String webType = "";
+			if (jsonParam.get("type").toString() != null) {
+				webType = jsonParam.get("type").toString();
+			}
+			
 			JSONObject portletInfo = new JSONObject();
 			portletInfo.put("boardId", jsonParam.get("boardId"));
 			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
 			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
 			portletInfo.put("menuId", jsonParam.get("menuId"));
+			portletInfo.put("type", webType);
+			portletInfo.put("portletCode", jsonParam.get("portletCode"));
+			portletInfo.put("connectionId", jsonParam.get("connectionId"));
 			
 			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
 			
@@ -3158,6 +3167,8 @@ public class EzNewPortalGWController {
 			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
 			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
 			portletInfo.put("menuId", jsonParam.get("menuId"));
+			portletInfo.put("portletCode", jsonParam.get("portletCode"));
+			portletInfo.put("connectionId", jsonParam.get("connectionId"));
 			
 			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
 			ezNewPortalService.updateCompanyPortletInfo(portletInfo, portletNames, companyId, tenantId);
@@ -3259,13 +3270,16 @@ public class EzNewPortalGWController {
 
 			String loginLogoUrl = "";
 			String portalLogoUrl = "";
+			String darkLogoUrl = "";
 			boolean loginLogoUrlDefault = true;
 			boolean portalLogoUrlDefault = true;
+			boolean darkLogoUrlDefault = true;
 			
 			//로그인 가져오기
 			if (companyId != null) {
 				loginLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "L");
 				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
+				darkLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "D");
 			}
 			
 			if (loginLogoUrl == null || loginLogoUrl.equals("")) {
@@ -3284,6 +3298,14 @@ public class EzNewPortalGWController {
 				portalLogoUrlDefault = false;
 			}
 			
+			if (darkLogoUrl == null || darkLogoUrl.equals("")) {
+				darkLogoUrl = "/images/ezNewPortal/skin/dark/logo_white.png";
+				darkLogoUrlDefault = true;
+			} else {
+				darkLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + darkLogoUrl;
+				darkLogoUrlDefault = false;
+			}
+			
 			List<PortalLogoVO> logoList = new ArrayList<PortalLogoVO>();
 			
 			PortalLogoVO loginLogo = new PortalLogoVO();
@@ -3299,6 +3321,13 @@ public class EzNewPortalGWController {
 			portalLogo.setLogoDefault(portalLogoUrlDefault);
 			
 			logoList.add(portalLogo);
+
+			PortalLogoVO darkLogo = new PortalLogoVO();
+			darkLogo.setLogoType("D");
+			darkLogo.setLogoUrl(darkLogoUrl);
+			darkLogo.setLogoDefault(darkLogoUrlDefault);
+
+			logoList.add(darkLogo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -3749,9 +3778,11 @@ public class EzNewPortalGWController {
 						String subject =  mailInfo.get("SUBJECT");
 						subject = (subject != null) ? subject : "";
 
-						if ("1".equals(mailInfo.get("MAIL_IS_SECURED"))) {
-							subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
-						}
+//						if ("1".equals(mailInfo.get("MAIL_IS_SECURED"))) {
+//							subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+//						}
+
+						String securedMail = String.valueOf("1".equals(mailInfo.get("MAIL_IS_SECURED")));
 
 						int readFlag = "1".equals(mailInfo.get("MAIL_IS_SEEN")) ? 1 : 0;
 						String readClass = "";
@@ -3768,6 +3799,7 @@ public class EzNewPortalGWController {
 						mailMap.put("sender", sender);
 						mailMap.put("subject", subject);
 						mailMap.put("readClass", readClass);
+						mailMap.put("securedMail", securedMail);
 
 						mailList.add(mailMap);
 					}
@@ -4043,11 +4075,11 @@ public class EzNewPortalGWController {
 					totalCnt = ezBoardService.getBrdTotalItemCount(brdVo);
 					// 권한이 true이면 boardList불러오기
 					List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
+					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize, portletId);
 					
 					if (currentPage > 1 && noticeList.size() < 1) {
 						currentPage--;
-						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
+						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize, portletId);
 					}
 					
 					int noticeCount = noticeList.size();
@@ -4102,6 +4134,13 @@ public class EzNewPortalGWController {
 			
 			PersonalLightPollVO pollInfo = new PersonalLightPollVO();
 			pollInfo = ezNewPortalService.getPollPortlet(companyId, tenantId, request.getParameter("userId"), offset);
+			
+			if (pollInfo == null) {
+				result.put("status", "empty");
+				result.put("code", 0);
+				result.put("data", "");
+				return result;
+			}
 			
 			// 2023-07-28 황인경 - 포탈 > 빠른 설문 포틑릿 > 설문제목 다국어 지원 추가 
 			if (!lang.equals("")) {
@@ -4176,9 +4215,11 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
-			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId(), info.getDeptID());
+			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, companyId, info.getTenantId(), deptId);
 			
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int listCount = list.size();
@@ -4584,8 +4625,14 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
+			String deptId = request.getParameter("deptId");
+			String jobId = request.getParameter("jobId");
+			String lang = request.getParameter("lang");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			OrganUserVO userInfo = ezOrganService.getUserInfo(info.getTenantId(), userId, companyId, deptId, jobId, lang).orElseThrow(NoSuchFieldException::new);
+			
 			
 			String userName = "";
 			String userTitle = "";
@@ -4593,16 +4640,9 @@ public class EzNewPortalGWController {
 			String userPhoto = "";
 			String userEmail = "";
 
-			// 회원정보 불러오기
-			if (info.getPrimary().equals("1")) {
-				userName = info.getUserName();
-				userTitle = info.getTitle();
-				deptName = info.getDeptName();
-			} else {
-				userName = info.getUserName2();
-				userTitle = info.getTitle2();
-				deptName = info.getDeptName2();
-			}
+			userName = userInfo.getDisplayName();
+			userTitle = userInfo.getTitle();
+			deptName = userInfo.getDescription();
 			userEmail = info.getEmail();
 			
 			// 유저이미지
@@ -5284,11 +5324,11 @@ public class EzNewPortalGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
 			String lang = userInfo.getLang();
-			
+			String webType = "";
 			List<PortletInfoVO> themePortletList = ezNewPortalService.getThemePortletList(themeId, tenantId, companyId, lang);
 			
 			if (themePortletList == null || themePortletList.isEmpty()) {
-				themePortletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
+				themePortletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang), webType);
 			}
 			
 			//1. tenant config가 NO인 경우 관리자 포틀릿 관리에서도 나오면 안됨
@@ -5464,10 +5504,11 @@ public class EzNewPortalGWController {
 
 			JSONArray themePortletList = (JSONArray)jsonParam.get("themePortletList");
 			JSONArray sizeList = (JSONArray)jsonParam.get("sizeList");
+			String webType = jsonParam.get("webType").toString();
 
 			ezNewPortalService.updateThemePortletUsed(themeId, tenantId, companyId, themePortletList);
 
-			if (usePortletSize) {
+			if (!webType.equals("mobile") && usePortletSize) {
 				ezNewPortalService.updateThemePortletSize(themeId, tenantId, companyId, sizeList);
 			}
 
@@ -6200,7 +6241,7 @@ public class EzNewPortalGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezPortal/setMenuDisplayMode/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezPortal/setMenuDisplayMode/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject setUserMenuDisplayMode(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		logger.debug("ezPortal G/W setUserMenuDisplayMode started.");
 
@@ -6214,6 +6255,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			ezNewPortalService.insertPortalTopFrameInfo(userId, companyId, tenantId, TopFrameType.fromCode(menuDisplayMode));
 			
+			result.put("code", 0);
+			result.put("status", "ok");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result.put("code", 1);
@@ -6225,4 +6268,558 @@ public class EzNewPortalGWController {
 		return result;
 	}
 	
+	/**
+	 * 포탈 G/W [GET] 포틀릿 - 연계 포틀릿 정보 조회
+	 */
+	@RequestMapping(value = "/rest/ezPortal/portlets/connect/list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getConnectPortlet(HttpServletRequest request) throws Exception {
+		logger.debug("ezNewPortal G/W getConnectPortlet started.");
+
+		String serverName = request.getHeader("x-user-host");
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String deptId = request.getParameter("deptId");
+		int currentPage = Integer.parseInt((String)request.getParameter("currentPage"));
+		int listCnt = Integer.parseInt(request.getParameter("listCnt"));
+		MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+		int tenantId = info.getTenantId();
+		int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
+		if (deptId == null || deptId.equals("")) {
+			deptId = info.getDeptId();
+		}
+		
+		SystemConfigVO systemConfig = ezNewPortalService.getSystemConfig(portletId, companyId, tenantId);
+		ConnectPortletDTO connectPortletDTO = new ConnectPortletDTO();
+		connectPortletDTO.setUserId(userId);
+		connectPortletDTO.setDeptId(deptId);
+		connectPortletDTO.setCompanyId(companyId);
+		connectPortletDTO.setSystemConfig(systemConfig);
+		connectPortletDTO.setRequest(request);
+		connectPortletDTO.setCurrentPage(currentPage);
+		connectPortletDTO.setListCnt(listCnt);
+		connectPortletDTO.setTenantId(tenantId);
+		connectPortletDTO.setPortletId(portletId);
+		JSONObject resultData = ezNewPortalService.getConnectPortletData(connectPortletDTO);
+		
+		logger.debug("ezNewPortal G/W getConnectPortlet ended.");
+
+		return resultData;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/admin/ezPortal/company/systemconfig", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject setUserMenuDisplayMode(HttpServletRequest request) throws Exception {
+		logger.debug("ezPortal G/W setUserMenuDisplayMode started.");
+
+		JSONObject result = new JSONObject();
+		try {
+			String companyId = request.getParameter("companyId");
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			List<SystemConfigTypeVO> configTypeList = ezSystemAdminService.getSystemConfigTypeListNotXml("", commonUtil.getMinuteUTC(info.getOffSet()), 0, 0, "ALL", companyId, info.getTenantId());
+			
+			result.put("code", 0);
+			result.put("status", "ok");
+			result.put("data", configTypeList);
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		logger.debug("ezPortal G/W setUserMenuDisplayMode ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezPortal/colorMode/{useColor}/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	public JSONObject setUserColorMode(HttpServletRequest request,@PathVariable int useColor, @PathVariable String userId) throws Exception {
+		logger.debug("ezPortal G/W setUserColorMode started.");
+
+		JSONObject result = new JSONObject();
+		try {
+			String companyId = request.getParameter("companyId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezNewPortalService.setUserColorMode(userId, tenantId, companyId, useColor);
+			
+			result.put("code", 0);
+			result.put("status", "ok");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		logger.debug("ezPortal G/W setUserColorMode ended.");
+		return result;
+	}
+		
+	/*
+	 * 사이트용 포탈 전자결재 카운트 연계 API
+	 */
+	@CrossOrigin(origins = "*")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPortal/portlets/approvalCount", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public Result getPortalApprovalCount(HttpServletRequest request, Locale locale) throws Exception {
+		logger.debug("ezNewPortal G/W getPortalApprovalCount started.");
+
+		Result result;
+
+		try {
+
+			String host = request.getHeader("host");
+			String serverName = "";
+			if ( host.contains(":") ) {
+				serverName = host.split(":")[0];
+			} else {
+				serverName = host;
+			}
+
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+
+			String companyId = info.getCompanyID();
+			int tenantId = info.getTenantId();
+			String portletLang = info.getLang();
+			String deptId = Optional.ofNullable(request.getParameter("deptId")).map(String::toString).orElse(info.getDeptID());
+			deptId = deptId.toLowerCase();
+
+			String offset = info.getOffset();
+			Calendar cal = Calendar.getInstance();
+
+			SimpleDateFormat adf = new SimpleDateFormat("yyyy-MM-dd");
+			String nowDate = adf.format(cal.getTime());
+			String offsetMin = commonUtil.getMinuteUTC(info.getOffset());
+			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
+			String password = jspw;
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+
+			JSONObject data = new JSONObject();
+
+
+			String approvalCountStr = "";
+			String approvalProgressingCountStr = "";
+			String approvalDeptSusinCountStr = "";
+			String approvalGongRamCountStr = "";
+			String approvalMobileCountStr = "";
+			String approvalBalsongDaegiCountStr = "";
+
+			String susinAdmin = "user";
+			String nowDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, true);
+
+			if (info.getRollInfo() != null && info.getRollInfo().indexOf("a=1") > -1 || ezOrganService.isProxyUser(info.getTenantId(), userId, nowDateTime).equals("1")) {
+				susinAdmin = "admin";
+			}
+			String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offset);
+			logger.debug("approvalTotalCount : " + approvalTotalCount);
+
+			Document docXML = commonUtil.convertStringToDocument(approvalTotalCount);
+
+			for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+				if (k==0) {
+					approvalCountStr = docXML.getElementsByTagName("COUNT1").item(0).getTextContent();
+				} else if (k==1) {
+					approvalProgressingCountStr = docXML.getElementsByTagName("COUNT2").item(0).getTextContent();
+				} else if (k==2) {
+					approvalDeptSusinCountStr = docXML.getElementsByTagName("COUNT4").item(0).getTextContent();
+				} else if (k==3) { //쿼리 변경으로 추가함
+					approvalGongRamCountStr = docXML.getElementsByTagName("COUNT99").item(0).getTextContent();
+				} else if (k>5) {
+					break;
+				}
+			}
+			logger.debug("approvalCountStr : " + approvalCountStr + " / approvalProgressingCountStr : " + approvalProgressingCountStr + " / approvalDeptSusinCountStr : " + approvalDeptSusinCountStr + " / approvalGongRamCountStr : " + approvalGongRamCountStr);
+			// 2020-12-03 이혁진 포틀릿에 있는 결재할 문서 숫자 대결자로 지정되었을때 숫자 반영하게 변경
+			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
+			String lang = portletLang;
+			//int approvalCount = ezNewPortalService.getApprovalDoingListCount(userId, companyId, tenantId, info.getOffSet(), approvalFlag, lang);
+			int approvalCount = Integer.parseInt(approvalCountStr);
+			int approvalProgressingCount = Integer.parseInt(approvalProgressingCountStr);
+			int approvalDeptSusinCount = Integer.parseInt(approvalDeptSusinCountStr);
+			int approvalGongRamCount = Integer.parseInt(approvalGongRamCountStr);
+
+			data.put("approvalCount", approvalCount); // 미결
+			data.put("approvalProgressingCount", approvalProgressingCount); //진행
+			data.put("approvalDeptSusinCount", approvalDeptSusinCount); //접수
+			data.put("approvalGongRamCount", approvalGongRamCount); //공람
+
+			result = Result.success(data);
+		} catch (Exception e) {
+			result = Result.failure();
+			e.printStackTrace();
+		}
+		logger.debug("ezNewPortal G/W getPortalApprovalCount ended.");
+		return result;
+	}
+	
+	/**
+	 * 사이트용 포탈 전자결재 리스트 연계 API(결재할 문서, 결재진행 문서, 결재완료 문서)
+	 */
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "/rest/ezPortal/portlets/approvalLists", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public Result getPortalApprovalList(HttpServletRequest request) throws Exception {
+		logger.debug("ezNewPortal G/W getPortalApprovalList started.");
+		Result result;
+
+		try {
+			String host = request.getHeader("host");
+			String serverName = "";
+			if ( host.contains(":") ) {
+				serverName = host.split(":")[0];
+			} else {
+				serverName = host;
+			}
+
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+
+			String type = request.getParameter("type");
+			String deptId = Optional.ofNullable(request.getParameter("deptId")).map(String::toString).orElse(info.getDeptID());
+			deptId = deptId.toLowerCase();
+			info.setDeptID(deptId);
+			info.setServerName(serverName);
+
+			PortletAprInfoVO portletAprInfoVO = new PortletAprInfoVO();
+			portletAprInfoVO.setListType(type);
+			portletAprInfoVO.setDeptID(deptId);
+			portletAprInfoVO.setUserInfo(info);
+			portletAprInfoVO.setUrl(serverName);
+
+			JSONArray portalApprovalList = ezNewPortalService.getPortalApprovalList(portletAprInfoVO);
+
+			result = Result.success(portalApprovalList);
+		} catch (Exception e) {
+			result = Result.failure();
+			e.printStackTrace();
+		}
+		logger.debug("ezNewPortal G/W getPortalApprovalList ended.");
+		return result;
+	}
+	
+	/**
+	 * 사이트용 포탈 게시물 리스트 연계 API
+	 */
+	@SuppressWarnings("unchecked")
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "/rest/ezBoard/boardItemList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public Result getBoardItemList(HttpServletRequest request) throws Exception {
+		logger.debug("rest getBoardItemList started.");
+		Result result;
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String bId = request.getParameter("bId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String offset = info.getOffSet();
+			
+			bId = new String(Base64.getDecoder().decode(bId));
+			String itemIDEncode = "";
+			String boardIDEncode = "";
+			
+			List<HashMap<String, Object>> boardTopItemList = ezBoardService.getNoticePostItemList(bId, userId, 1, 10, 0, "", "", "1", 0);			
+			List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(bId, userId, 1, 10, 0, "", "", new HashMap<String, String>(), "1", 0);
+
+			JSONArray ja = new JSONArray();			
+			int added = 0;
+			JSONObject jo = null;
+			
+			if ( 0 < boardTopItemList.size() ) {
+				
+				BigInteger readFlagDate = new BigInteger("202305161830");
+				
+				for ( int i = 0; i < boardTopItemList.size(); i++ ) {
+					HashMap<String, Object> item = boardTopItemList.get(i);					
+					jo = new JSONObject();
+					jo.put("Top", 1);
+					
+					jo.put("title", (String) item.get("TITLE"));
+					jo.put("writerName", (String) item.get("WRITERNAME"));
+
+					String writeDate = commonUtil.getDateStringInUTC((String) item.get("WRITEDATE"), offset, false);
+					jo.put("writeDate", writeDate);
+					
+					String itemID = item.get("ITEMID").toString();
+					itemIDEncode = URLEncoder.encode(itemID, "utf-8");
+					boardIDEncode = URLEncoder.encode(bId, "utf-8");
+					
+					String url = "/ezBoard/boardItemView.do?itemID=" + itemIDEncode + "&boardID=" + boardIDEncode + "&location=GENERAL";
+					String urlSSO = commonUtil.makeSSOUrl(url, 0);
+					jo.put("boardItemUrl", urlSSO);
+					jo.put("itemId", (String) item.get("ITEMID"));
+
+					if (null != writeDate) {
+						String writeYMDHM = writeDate.replaceAll(" ", "").replaceAll("-", "").replaceAll(":", "")
+								.substring(0, 12);
+						if (0 <= new BigInteger(writeYMDHM).compareTo(readFlagDate)) {
+							jo.put("readFlag", item.get("READFLAG").toString());
+						} else {
+							jo.put("readFlag", "1");
+						}
+					} else {
+						jo.put("readFlag", "1");
+					}
+
+					ja.add(jo);
+					
+					added += 1;
+				}
+			}
+			
+			if ( 0 < boardItemList.size() ) {
+				
+				for ( int i = 0; i < boardItemList.size(); i++ ) {
+					if (added >= 10) {
+						break;
+					}
+					
+					HashMap<String, Object> item = boardItemList.get(i);					
+
+					jo = new JSONObject();						
+						
+					jo.put("Top", 0);
+
+					jo.put("title", (String) item.get("TITLE"));
+					jo.put("writerName", (String) item.get("WRITERNAME"));
+
+					String writeDate = commonUtil.getDateStringInUTC((String) item.get("WRITEDATE"), offset, false);
+					jo.put("writeDate", writeDate);
+
+					String itemID = item.get("ITEMID").toString();
+					itemIDEncode = URLEncoder.encode(itemID, "utf-8");
+					boardIDEncode = URLEncoder.encode(bId, "utf-8");
+					
+					String url = "/ezBoard/boardItemView.do?itemID=" + itemIDEncode + "&boardID=" + boardIDEncode + "&location=GENERAL";
+					String urlSSO = commonUtil.makeSSOUrl(url, 0);
+					jo.put("boardItemUrl", urlSSO);
+					jo.put("itemId", (String) item.get("ITEMID"));
+
+					ja.add(jo);
+					added += 1;					
+				}
+			}
+			result = Result.success(ja);
+		} catch (Exception e) {
+			result = Result.failure();
+			e.printStackTrace();
+		}
+		
+		logger.debug("rest getBoardItemList ended.");
+		return result;
+	}
+	
+	/**
+	 * 사이트용 - 포탈개인화 G/W [GET] 포틀릿 - 일정관리 리스트
+	 */
+	@CrossOrigin(origins = "*")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/portlets/ezSchedule/scheduleList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getPortletScheduleList(HttpServletRequest request) throws Exception {
+		logger.debug("ezNewPortal G/W getPortletScheduleList started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String offset = info.getOffSet();
+			String offSetMin = commonUtil.getMinuteUTC(offset);
+			
+			String startDate = request.getParameter("selectDate");
+			String endDate = request.getParameter("selectDate");
+			String idList = (request.getParameter("IDLIST") == null || request.getParameter("IDLIST").equals("")) ? "T" : request.getParameter("IDLIST");
+			String deptId = Optional.ofNullable(request.getParameter("deptId")).orElse(info.getDeptId());
+			String companyId = info.getCompanyId();
+			
+			String indiList = "";
+			String pidList = "";
+			String pidListSub = "";
+			String indiListSub = "";
+			
+			if(startDate != null && !startDate.equals("")) {
+				String[] sDate = startDate.split("-");
+				String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+				String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+				
+				startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
+			}
+			
+			if(endDate != null && !endDate.equals("")) {
+				String[] eDate = endDate.split("-");		
+				String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+				String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+				
+				endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+			}
+			
+			String utcStartTime = commonUtil.getDateStringInUTC(startDate, offset, true);
+			String utcEndTime = commonUtil.getDateStringInUTC(endDate, offset, true);
+			
+			String lang = info.getPrimary();
+			int tenantId = info.getTenantId();
+			//2020-02-24 김정언
+			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
+			
+			List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userId, lang, tenantId ,companyId);
+			List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userId, lang, tenantId ,companyId);
+			List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userId, lang, tenantId, companyId);
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId() ,companyId);
+			
+			if (idList == null) {
+				idList = "";
+			}
+			
+			//2018-06-08 구해안 T인 경우를 제외하고 나머지는 id값 그대로 가공해서 넘기기
+			if (idList.equals("T") || idList.equals("")) {
+				indiList = "'" + userId + "'";
+				
+				if(tList != null && tList.size()>0){
+					for (int i = 0; i < tList.size(); i++) {
+						if (i == 0) {
+							indiListSub += ",";
+						}			
+						ScheduleSecretaryVO data = tList.get(i);			
+						indiListSub += "\'" + data.getSecId()+ "\',";			
+					}				
+				}
+				
+				pidList = "'" + deptId + "'," + "'" + companyId + "'";
+				
+				
+				if(dList != null && dList.size()>0){
+					for (int i = 0; i < dList.size(); i++) {
+						if(tList == null || tList.size()<=0){
+							if (i == 0) {
+								pidListSub += ",";
+							}	
+						}
+						ScheduleDeptVO data = dList.get(i);			
+						pidListSub += "\'" + data.getDeptId()+ "\',";				
+					}				
+				}
+				
+				if(cList != null && cList.size()>0 ){
+					for (int i = 0; i < cList.size(); i++) {							
+						if(dList == null || dList.size()<=0){
+							if (i == 0) {
+								pidListSub += ",";
+							}	
+						}
+						ScheduleCumulerVO data = cList.get(i);			
+						pidListSub += "\'" + data.getDeptId()+ "\',";				
+					}				
+				}
+				
+				for (int i = 0; i < gList.size(); i++) {
+					if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+						if (i == 0) {
+							pidListSub += ",";
+						}
+					}
+						ScheduleGroupListVO data = gList.get(i);			
+						pidListSub += "\'" + data.getGroupId() + "\',";
+					}
+				
+				if(indiListSub == null || indiListSub.equals("")){
+					indiListSub = ",\'\'";
+				}else{				
+					indiListSub = indiListSub.substring(0, indiListSub.length()-1);
+				}
+				
+				indiList += indiListSub;
+				
+				if(pidListSub == null || pidListSub.equals("")){
+					pidListSub = ",\'\'";
+				}else{				
+					pidListSub = pidListSub.substring(0, pidListSub.length()-1);
+				}
+				
+				if (pidList != null && pidListSub != null && pidListSub.substring(0,1) != ",") {
+					pidList += ",\'\'";
+				}
+				
+				pidList += pidListSub;
+				
+			} else if(idList.equals("chkAllFalse")) {
+				indiList = "";
+				pidList = "\'\'";
+			} else if (idList.equals("P")) {
+				indiList = "'" + userId + "'";
+				pidList = "";
+			}else {
+				pidList = idList;
+			}		
+			
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, offSetMin, "", "", "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);		
+			
+			// 구글연동 일정 가져오기(포탈 일정포틀릿)
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", userInfo.getTenantId());
+			if(useGoogleCalendar.equals("YES")) {
+				List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+				sList.addAll(googleList);
+			}
+			
+			Collections.sort(sList, new EzScheduleCompareUtil());
+			
+			JSONArray jsonArray = new JSONArray();
+			String scheduletType = "";
+			String scheduleDate = "";
+			for (ScheduleInfoVO scheduleInfoVO : sList) {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("createrName", scheduleInfoVO.getCreatorName());
+				jsonObject.put("title", scheduleInfoVO.getTitle());
+				jsonObject.put("startDate", scheduleInfoVO.getStartDate());
+				jsonObject.put("endDate", scheduleInfoVO.getEndDate());
+				
+				switch (scheduleInfoVO.getScheduleType()) {
+				case "1":
+					scheduletType = "개인일정";
+					break;
+				case "2":
+					scheduletType = "부서일정";
+					break;
+				case "3":
+					scheduletType = "회사일정";
+					break;
+				case "7":
+					scheduletType = "그룹일정";
+					break;
+				default:
+					scheduletType = "일정";
+					break;
+				}
+				
+				jsonObject.put("type", scheduletType);
+				scheduleDate = (scheduleInfoVO.getStartDate()).split(" ")[0];
+				
+				String url = "/ezSchedule/scheduleRead.do?id=" + scheduleInfoVO.getScheduleId() + "&type=" + scheduleInfoVO.getScheduleType() + 
+						"&datetype=" + scheduleInfoVO.getDateType() + "&repeatcount=" + scheduleInfoVO.getRepeatCount() + "&date=" + scheduleDate + "&pattern=0";
+				String urlSSO = commonUtil.makeSSOUrl(url, 0);
+				jsonObject.put("scheduleUrl", urlSSO);
+				
+				jsonArray.add(jsonObject);
+			}
+			
+			logger.debug("sList : " + jsonArray);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", jsonArray);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		logger.debug("ezNewPortal G/W getPortletScheduleList ended.");
+		return result;
+	}
 }

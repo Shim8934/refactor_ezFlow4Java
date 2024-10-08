@@ -978,8 +978,6 @@
                 ReadCount = ReadCount + 1
             WHERE
                 TENANT_ID = #v_TENANTID#
-            AND
-            	WRITERCOMPANYID = #v_COMPANYID#
             AND  
                 ItemID = #v_pItemID#
         ]]>

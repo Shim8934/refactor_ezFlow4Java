@@ -888,7 +888,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				portalTopVO.setTenantID(tenantID);
 				portalTopVO.setType(0);
 				ezNewPortalDAO.insertTopMenuDisplayModeForCompany(portalTopVO); // 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
-				
+				ezOrganAdminDao.insertConnectMenuForNewCompany(map1);
+				ezOrganAdminDao.insertMobileMenuForNewCompany(map1);	// 2024-08-12 조수빈 - 모바일 기본 메뉴 생성
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
@@ -1645,6 +1646,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
 		params.put("retired", searchFor[1]);
 		params.put("stopped", searchFor[2]);
+		// 2024-09-06 김승연 공유사서함 조회 플래그 추가
+		if (searchFor.length == 4 ) {
+			params.put("sharedMailBox", searchFor[3]);
+		}
 		
 		String orderByData = "";
 		if(!sortColumn.equals("")){
@@ -1687,13 +1692,144 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("retired", searchFor[1]);
 		params.put("stopped", searchFor[2]);
 		
+		// 2024-09-06 김승연 공유사서함 조회 플래그 추가
+		if (searchFor.length == 4 ) {
+			params.put("sharedMailBox", searchFor[3]);
+		}
+
 		int userCount = (!searchFor[0] && !searchFor[1] && !searchFor[2])? 0 : ezOrganAdminDao.getUserCount(params);
 		
 		logger.debug("getUserCount ended. userCount=" + userCount);
     	
 		return userCount;
     }	
-    
+    // 사용자 관리 액셀 생성
+	@Override
+	public String createExcelTotalUsers(String realPath, String dirPath, List<OrganUserVO> exportUserlist, String primary, Locale locale) throws Exception {
+		logger.debug("createExcelTotalUsers started.");
+
+		Date date                  = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String fileName            = egovMessageSource.getMessage("ezOrgan.ksy02", locale).trim() + "_" + formatter.format(date) + ".xlsx";
+		String filePath            = dirPath + fileName;
+		File file                  = new File(dirPath);
+		File file2                 = new File(filePath);
+
+		// temp 폴더가 없는 경우: 만들거나(mkdir), 폴더 안을 깨끗히 비운다.
+		if (file == null || !file.exists()) {
+			file.mkdirs();
+		}
+		else {
+			FileUtils.cleanDirectory(file);
+		}
+
+		// 같은 이름의 파일이 있을 경우: "파일(2).xlsx"으로 만든다.
+		if (file2.exists()) {
+			int pos         = fileName.lastIndexOf('.');
+			String extend   = fileName.substring(pos + 1);
+			String mainName = fileName.substring(0, pos);
+			int k           = 1;
+			fileName        = mainName + "(" + Integer.toString(k) + ")." + extend;
+			filePath        = dirPath + fileName;
+			file2           = new File(filePath);
+
+			while (file2.exists()) {
+				fileName = mainName + "(" + Integer.toString(++k) + ")." + extend;
+				filePath = dirPath + fileName;
+			}
+		}
+
+		// 엑셀 파일 생성(workbook). 시트 이름은(sheet1): "ezOrgan.ksy02"
+		FileOutputStream fileOut = null;
+		Workbook workbook = new XSSFWorkbook();
+
+		Sheet sheet1 = workbook.createSheet(egovMessageSource.getMessage("ezOrgan.ksy02", locale).trim());
+		sheet1.setDefaultRowHeight((short)500);
+		
+		//Set style
+		CellStyle centerStyle = workbook.createCellStyle();
+		centerStyle.setWrapText(false);
+		centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		centerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		CellStyle centerStyle2 = workbook.createCellStyle();
+		centerStyle2.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		CellStyle centerStyle3 = workbook.createCellStyle();
+		centerStyle3.setAlignment(CellStyle.ALIGN_LEFT);
+		centerStyle3.setIndention((short)3);
+		centerStyle3.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		//sheet1.setColumnWidth(0, 8 * 256);
+
+		//Process first row
+		Row rowhead1 = sheet1.createRow(0);
+		rowhead1.createCell(0).setCellValue(egovMessageSource.getMessage("main.t252",locale) + " " + exportUserlist.size() +
+				egovMessageSource.getMessage("ezSystem.kyj2",locale));
+
+		Row rowhead = sheet1.createRow(1);
+
+		rowhead.createCell(0).setCellValue(egovMessageSource.getMessage("ezSystem.kyj1",locale));
+		rowhead.createCell(1).setCellValue(egovMessageSource.getMessage("ezEmail.lsd04",locale));
+		rowhead.createCell(2).setCellValue(egovMessageSource.getMessage("ezOrgan.t68",locale));
+		rowhead.createCell(3).setCellValue(egovMessageSource.getMessage("ezOrgan.t69", locale).trim());
+		rowhead.createCell(4).setCellValue(egovMessageSource.getMessage("ezOrgan.t1500", locale).trim());
+		rowhead.createCell(5).setCellValue(egovMessageSource.getMessage("ezOrgan.t96", locale).trim());
+		rowhead.createCell(6).setCellValue(egovMessageSource.getMessage("ezOrgan.t95", locale).trim());
+		
+		int i = 2;
+
+		// 액셀 라이브러리가 지원하는 row수: 65536건
+		for (OrganUserVO exportUser : exportUserlist) {
+			Row newRow1 = sheet1.createRow(i);
+
+			newRow1.createCell(0).setCellValue(i -1);
+			newRow1.createCell(1).setCellValue(exportUser.getDisplayName() + "(" + exportUser.getCn() + ")");
+			newRow1.createCell(2).setCellValue(exportUser.getDescription());
+			newRow1.createCell(3).setCellValue(exportUser.getTitle());
+			newRow1.createCell(4).setCellValue(exportUser.getExtensionAttribute10());
+			newRow1.createCell(5).setCellValue(exportUser.getMobile());
+			newRow1.createCell(6).setCellValue(exportUser.getTelephoneNumber());
+
+			newRow1.getCell(0).setCellStyle(centerStyle2);
+			newRow1.getCell(1).setCellStyle(centerStyle2);
+			newRow1.getCell(2).setCellStyle(centerStyle2);
+			newRow1.getCell(3).setCellStyle(centerStyle2);
+			newRow1.getCell(4).setCellStyle(centerStyle2);
+			newRow1.getCell(5).setCellStyle(centerStyle2);
+			newRow1.getCell(6).setCellStyle(centerStyle2);
+
+			i++;
+		}
+
+		sheet1.setColumnWidth(0, ((int)(5 * 1.14388)) * 256);
+		sheet1.setColumnWidth(1, ((int)(20 * 1.14388)) * 256);
+		sheet1.setColumnWidth(2, ((int)(25 * 1.14388)) * 256);
+		sheet1.setColumnWidth(3, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(4, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(5, ((int)(25 * 1.14388)) * 256);
+		sheet1.setColumnWidth(6, ((int)(25 * 1.14388)) * 256);
+
+//		sheet1.autoSizeColumn(0);
+
+		try {
+			fileOut = new FileOutputStream(filePath);
+			workbook.write(fileOut);
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+			//fileOut.close();
+			IOUtils.closeQuietly(fileOut);
+			workbook.close();
+		}
+		logger.debug("createExcelTotalUsers end");
+		
+		return fileName;
+	}
+
 	@Override
 	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception {
 		logger.debug("setTitle started.");
@@ -3559,10 +3695,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	 * @return 전체관리자 - 모든 회사 리스트 / 회사관리자 - 권한이 있는 회사리스트
 	 * @throws Exception if an error occurs while retrieving the company list
 	 */
-	public List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary) throws Exception {
+	public List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary, String deptId, String jobId) throws Exception {
 		List<OrganDeptVO> list = getCompanyList(primary, tenantID);
 
-		OrganAuth organAuth = commonUtil.makeOrganAuth(id, tenantID);
+		OrganAuth organAuth = commonUtil.makeOrganAuth(id, tenantID, deptId, jobId);
 
         if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER, "")) {
             list.removeIf(vo -> !organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn()));

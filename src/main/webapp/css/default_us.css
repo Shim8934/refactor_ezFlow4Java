@@ -1393,7 +1393,7 @@ form{display:inline;margin:0}
 } */
 
 .pagenavi span:hover, .pagenavi span.on, .pageGo .pageGoBtn:hover
-{border: 1px solid #388CE5; color: #388CE5 !important;}
+{border: 1px solid #388CE5; color: #388CE5;}
 /* point-background */
 .pagenavi span:hover, .pagenavi span.on, .pageGo .pageGoBtn:hover
 {background:#fff;}
@@ -1403,12 +1403,20 @@ form{display:inline;margin:0}
 #tblPageRayer {width:100% !important}
 .popup_pagenavi {border-top:1px solid #c8c8c8;}
 .pagenavi {float:none; margin: 0px; padding: 10px 0; line-height: normal; text-align: center; overflow:hidden;font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana'}
-.pagenavi span {display: inline-block; height: 27px; line-height: 26px; margin: 0px 2px; padding: 0px 9px 0px 9px; border: 1px solid #c8c8c8; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; box-sizing:border-box; font-size: 12px; text-align: center; font-weight: bold; color: #333; cursor: pointer;}
-.pagenavi span:hover {color: #ffffff;}
-.pagenavi span.on {color: #ffffff;}
-.pagenavi span.btnimg {vertical-align: top; margin: 0px 2px; border: 0px solid #cccccc; padding: 0px; }
-.pagenavi span:hover.btnimg {border:0 none; background:none;}
-.pagenavi span.ptxt { display: inline-block; cursor: pointer; border: 0px solid #cccccc; height: 19px; padding: 0px 3px; font-weight: normal; white-space: nowrap; width: auto; line-height: 18px; }
+.pagenavi span{display:inline-block; min-width:27px; height:27px; line-height:25px; margin:0px 2px; padding:0px 5px; border:1px solid #c8c8c8; border-radius:3px; box-sizing:border-box; font-size: 12px; text-align: center; color: #333; cursor: pointer; background-color:#fff; vertical-align:top;}
+.pagenavi span:hover{background-color:#EEF4FE; border-color:#388CE5; color:#388CE5;}
+.pagenavi span.on{border-color:#388CE5; color:#388CE5;}
+.pagenavi span.btnimg{background-repeat:no-repeat; background-position:center;}
+.pagenavi span.btnimg.disabled{border:1px solid #C8C8C8 !important; background-color:#fff !important; cursor:default !important;}
+.pagenavi span.btnimg.first{background-image:url(../../images/kr/cm/btn_p_prev.svg);}
+.pagenavi span.btnimg.prev{background-image:url(../../images/kr/cm/btn_prev.svg);}
+.pagenavi span.btnimg.next{background-image:url(../../images/kr/cm/btn_next.svg);}
+.pagenavi span.btnimg.last{background-image:url(../../images/kr/cm/btn_n_next.svg);}
+
+.pagenavi span.btnimg.first.disabled{background-image:url(../../images/kr/cm/btn_p_prev01.svg);}
+.pagenavi span.btnimg.prev.disabled{background-image:url(../../images/kr/cm/btn_prev01.svg);}
+.pagenavi span.btnimg.next.disabled{background-image:url(../../images/kr/cm/btn_next01.svg);}
+.pagenavi span.btnimg.last.disabled{background-image:url(../../images/kr/cm/btn_n_next01.svg);}
 
 .popup_noti {
 	/* width:330px; */ 
@@ -2360,7 +2368,7 @@ div#txtContent table {margin:auto;}
     line-height: 25px;
     border-radius: 2px;}
 /* .lnb h2 span.tree_manage:hover .Personal_Documentation_tooltip{display: block;} */
-.mCSB_container{overflow: visible !important;}
+.mCSB_container{overflow: visible !important; padding-bottom: 20px;}
 
 
 .lnb h2 .h2Title {float:none; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
@@ -2740,7 +2748,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_categoryTab{float:left; width:199px; height:440px; border-right:1px solid #e7e7e7; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .contents_tabCategory{height:44px; margin:0px; padding:0px; color:#333333; font-size:14px; font-weight:bold; border-bottom:1px solid #e7e7e7; background: #F8F9FB;}
 .contents_tabCategory dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
-.contents_listCategory{overflow:hidden; list-style:none; margin:0px; padding:0; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
+.contents_listCategory{overflow:auto; height:395px; list-style:none; margin:0px; padding:0; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .contents_listCategory li{margin:0px; padding: 6px 0 6px 15px; line-height:26px; color:#555555; font-size:13px; cursor:pointer; border-bottom: 1px solid #E5E5E5;}
 .contents_listCategory li span{display:inline-block; margin:0px; padding:0px;}
 .contents_listCategory li span.icon img{vertical-align:middle; margin:-3px 6px 0px 0px;}
@@ -3928,9 +3936,9 @@ select{min-height: 24px !important;}
 #usePer { font-size: 12px;}
 .mail_spaceText { font-size: 12px !important;}
 
-#left .adminListBox h2{white-space:normal; word-break:keep-all; height:auto !important; line-height:1.5 !important;}
-#left .adminListBox h2 span{font-size:15px !important; white-space:normal;}
-#left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}
+/* #left .adminListBox h2{white-space:normal; word-break:keep-all; height:auto !important; line-height:1.5 !important;} */
+/* #left .adminListBox h2 span{font-size:15px !important; white-space:normal;} */
+/* #left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;} */
 
 .inf-spanTxt input{margin-top:-3px;}
 
@@ -3994,3 +4002,17 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 }
 
 .resetBtn {line-height: 0px;}
+
+/* 20240517 메일보기 상단바 디자인수정 */
+.popup #menu ul li span.view_more{ display: inline-block; height: 29px; border-radius: 20px; padding: 0px 6px;} 
+.popup #menu ul li span.view_more:hover{background: #F8F9FB;}
+.popup #menu ul li span.view_more.on{ display: inline-block; height: 29px; border-radius: 20px; padding: 0px 6px; background: #F8F9FB;}
+
+.popup #menu ul.layer_select{border: 1px solid #D3D3D3; border-radius: 3px; background: #fff; padding: 5px 0px; z-index: 10; position: relative;}
+.popup #menu ul.layer_select li{float: none; margin: 0px;}
+.popup #menu ul.layer_select li:hover span{background: #F8F9FB; color: #0470E4;}
+.popup #menu ul.layer_select li span{border: none; display: block;}
+.popup #menu ul.layer_select{margin-left: -33px; top: 6px;}
+/* //20240517 메일보기 상단바 디자인수정 */
+#ownerInput.us{width:calc(100% - 80px) !important;}
+.textUser{width: 22%}

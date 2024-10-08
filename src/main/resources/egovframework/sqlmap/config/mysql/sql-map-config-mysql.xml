@@ -114,6 +114,8 @@
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezOrgan/EzOrganMobile_SQL_Mysql.xml"/>
     <!-- 하이브리드 앱 노티 발송용 -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezTalk/EzTalkMobile_SQL_Mysql.xml" />
+	<!-- 전자설문 -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezSurvey/EzSurveyMobile_SQL_Mysql.xml" />
     
     <!-- 근태관리 모듈관련 SQL쿼리 XML -->
     

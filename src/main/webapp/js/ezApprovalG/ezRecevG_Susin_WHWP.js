@@ -247,9 +247,34 @@ function SendDraftMappingSign(ret)
 	
 	var OpinionText = "";
 	var PositionText = "";
-	
-	if( LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16 ) {
-		OpinionText = getSignDate() + "\15";
+
+    if (approvalFlag == "S") {
+        if (LastSignSN == 1) {
+            for (i = 1; i < 20; i++) {
+                if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
+                else signID = "sign" + i
+
+                if (message.FieldExist(signID)) {
+                    LastSignNo = i;
+                }
+            }
+            sn = LastSignNo;
+        } else if (DraftLastFlag) {
+            putJunkyulSign("sign" + sn);
+            for (i = 1; i < 20; i++) {
+                if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
+                else signID = "sign" + i
+
+                if (message.FieldExist(signID)) {
+                    LastSignNo = i;
+                }
+            }
+            sn = LastSignNo;
+        }
+    } else {
+        if( LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16 ) {
+            OpinionText = getSignDate() + "\15";
+        }
 	}
 	
 	signCnt = 0;
@@ -796,7 +821,7 @@ function setRecevInfo(ret) {
     if (xmldom.documentElement.length == 0) return;
     var rows = xmldom.documentElement.childNodes
     for (var i = rows.length - 1; i >= 0; i--) {
-        var row = rows(i)
+        var row = rows(i);
         if (recipflag) {
             if (getNodeText(rows(i).childNodes(3)) == "Y") {
                 precipent = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
@@ -818,7 +843,7 @@ function setRecevInfo(ret) {
 
         }
         else {
-            precipent = strLang92;
+            precipent = approvalFlag == "G" ? strLang92 : strLangS68;
 
             if (getNodeText(rows(i).childNodes(3)) == "Y")
                 precipents = precipents + "," + getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
@@ -949,7 +974,11 @@ function SaveDraftDocInfo_susin() {
 	createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", "002");
 	createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(objNodes[6]));
 	createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
-	createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNo);
+	if (approvalFlag == 'G') {
+        createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNo);
+    } else {
+        createNodeAndInsertText(xmlpara, objNode, "DOCNO",  message.GetFieldText("docnumber"));
+    }
 
 	if (pHasAttachYN == "") {
 	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", getNodeText(objNodes[9]));
@@ -1661,6 +1690,10 @@ function setBtnEnable() {
 			btnAssign.style.display = "";
 			btnDistribute.style.display = "";
 			btnReqReSend.style.display = "";
+			if (pAprState === "014") {
+				btnReqReSend.style.display = "none";
+				btnReDistribute.style.display = "";
+			}
 		} else { //일반부서
 			if (pAprState === "012") {
 				btnAssign.style.display = "";

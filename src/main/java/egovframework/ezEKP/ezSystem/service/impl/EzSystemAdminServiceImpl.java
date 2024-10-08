@@ -35,6 +35,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
@@ -53,6 +54,8 @@ import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1461,6 +1464,367 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		ezSystemAdminDAO.deletePortletSizeAllUser();
 
 		logger.debug("resetPortletAllUser ended.");
+	}
+	
+	@Override
+	public int getSystemConfigListCount(String searchValue, String typeCode, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("searchValue", searchValue);
+		map.put("companyID", companyID);
+		map.put("typeCode", typeCode);
+		
+		return ezSystemAdminDAO.getSystemConfigListCount(map);
+	}
+	
+	@Override
+	public int getSystemConfigListCountPopup(String searchValue, String typeCode, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("searchValue", searchValue);
+		map.put("companyID", companyID);
+		map.put("typeCode", typeCode);
+		
+		return ezSystemAdminDAO.getSystemConfigListCountPopup(map);
+	}
+	
+	@Override
+	public List<SystemConfigVO> getSystemConfigList(String searchValue, String typeCode, String offset, int startRow, int pageCount, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("searchValue", searchValue);
+		map.put("typeCode", typeCode);
+		map.put("offset", offset);
+		map.put("v_STARTNUM", startRow);
+		map.put("v_COUNT", pageCount);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		
+		return (List<SystemConfigVO>) ezSystemAdminDAO.getSystemConfigList(map);
+	}
+	
+	@Override
+	public List<SystemConfigVO> getSystemConfigListPopup(String searchValue, String typeCode, String offSet, int startRow, int pageCount, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("searchValue", searchValue);
+		map.put("typeCode", typeCode);
+		map.put("offSet", offSet);
+        map.put("v_STARTNUM", startRow);
+        map.put("v_COUNT", pageCount);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		
+		return (List<SystemConfigVO>) ezSystemAdminDAO.getSystemConfigListPopup(map);
+	}
+	
+	@Override
+	public SystemConfigVO getSystemConfig(String CODE, String offset, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("CODE", CODE);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		map.put("offset", offset);
+		
+		return (SystemConfigVO) ezSystemAdminDAO.getSystemConfig(map);
+	}
+	
+	@Override
+	public void deletesyStemConfig(String sCode, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("CODE", sCode);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		
+		ezSystemAdminDAO.deletesyStemConfig(map);
+	}
+	
+	@Override
+	public String insertStemConfig(Document doc, String WRITERID, String WRITERNAME, int tenantID) throws Exception {
+		logger.debug("insertStemConfig started");
+		
+		String CODE = doc.getElementsByTagName("CODE").item(0).getTextContent();
+		String CODEVALUE = doc.getElementsByTagName("CODEVALUE").item(0).getTextContent();
+		String DESCRIPTION = doc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String typeCode = doc.getElementsByTagName("TYPECODE").item(0).getTextContent();
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("CODE", CODE);
+		map.put("CODEVALUE", CODEVALUE);
+		map.put("DESCRIPTION", DESCRIPTION);
+		map.put("WRITERID", WRITERID);
+		map.put("WRITERNAME", WRITERNAME);
+		map.put("WRITEDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		map.put("typeCode", typeCode);
+		try {
+			ezSystemAdminDAO.insertStemConfig(map);
+
+			logger.debug("insertStemConfig ended");
+			return "OK";
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "ERROR : " + e.getMessage();
+		}
+	}
+	
+	@Override
+	public String updateStemConfig(Document doc, String WRITERID, String WRITERNAME, int tenantID) throws Exception {
+		logger.debug("updateStemConfig started");
+		
+		String CODE = doc.getElementsByTagName("CODE").item(0).getTextContent();
+		String CODEVALUE = doc.getElementsByTagName("CODEVALUE").item(0).getTextContent();
+		String DESCRIPTION = doc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String typeCode = doc.getElementsByTagName("TYPECODE").item(0).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("CODE", CODE);
+		map.put("CODEVALUE", CODEVALUE);
+		map.put("DESCRIPTION", DESCRIPTION);
+		map.put("WRITERID", WRITERID);
+		map.put("WRITERNAME", WRITERNAME);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		map.put("WRITEDATE", commonUtil.getTodayUTCTime(""));
+		map.put("typeCode", typeCode);
+	
+		try {
+			ezSystemAdminDAO.updateStemConfig(map);
+
+			logger.debug("updateStemConfig ended");
+			return "OK";
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "ERROR : " + e.getMessage();
+		}
+	}
+
+	@Override
+	public String getSystemConfigTypeList(String searchValue, String offset, int startRow, int pageSize, String searchMode, String primary, String companyID, int tenantId) throws Exception {
+		logger.debug("getSystemConfigTypeList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("searchValue", searchValue);
+		map.put("startRow", startRow);
+		map.put("pageSize", pageSize);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("offset", offset);
+		map.put("searchMode", searchMode);
+		
+		int cnt = getSystemConfigTypeListCount(searchValue, companyID, tenantId);
+		List<SystemConfigTypeVO> configTypeList = ezSystemAdminDAO.getSystemConfigTypeList(map);
+		
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		result.append("<ROWS>");
+		result.append("<TOTALCNT>");
+		result.append(cnt);
+		result.append("</TOTALCNT>");
+		
+		for (int i = 0; i < configTypeList.size(); i++) {
+        	SystemConfigTypeVO vo = configTypeList.get(i);
+        	result.append("<ROW>");
+        	result.append("<CELL>");
+        	result.append("<VALUE>" + commonUtil.cleanValue(vo.getTypeCode()) + "</VALUE>");
+        	result.append("<DATA1>" + commonUtil.cleanValue(vo.getTypeCode()) + "</DATA1>");
+            result.append("<DATA2>" + commonUtil.cleanValue(vo.getTypeName()) + "</DATA2>");
+            result.append("<DATA3>" + commonUtil.cleanValue(vo.getTypeName2()) + "</DATA3>");
+            result.append("<DATA4>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA4>");
+            if (primary.equals("1")) {
+            	result.append("<DATA5>" + commonUtil.cleanValue(vo.getWriterName()) + "</DATA5>");
+            } else {
+            	result.append("<DATA5>" + commonUtil.cleanValue(vo.getWriterName2()) + "</DATA5>");
+            }
+            result.append("<DATA6>" + commonUtil.cleanValue(vo.getWriteDate()) + "</DATA6>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getTypeName()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getTypeName2()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getDescription()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getWriterName()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getWriteDate().substring(0,10)) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("</ROW>");
+        }
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+		
+		logger.debug("getSystemConfigTypeList ended");
+		return result.toString();
+	}
+	
+	@Override
+	public List<SystemConfigTypeVO> getSystemConfigTypeListNotXml(String searchValue, String offset, int startRow, int pageSize, String searchMode, String companyID, int tenantId) throws Exception {
+		logger.debug("getSystemConfigTypeListNotXml started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("searchValue", searchValue);
+		map.put("startRow", startRow);
+		map.put("pageSize", pageSize);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("offset", offset);
+		map.put("searchMode", searchMode);
+		List<SystemConfigTypeVO> configTypeList = ezSystemAdminDAO.getSystemConfigTypeList(map);
+		
+		logger.debug("getSystemConfigTypeListNotXml ended");
+		return configTypeList;
+	}
+
+	@Override
+	public int getSystemConfigTypeListCount(String searchValue, String companyID, int tenantId) throws Exception {
+		logger.debug("getSystemConfigTypeListCount started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("serarchValue", searchValue);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		
+		int cnt = ezSystemAdminDAO.getSystemConfigTypeListCount(map);
+		logger.debug("getSystemConfigTypeListCount ended");
+		return cnt;
+	}
+
+	@Override
+	public void deleteSystemConfigType(String typeCode, String companyID, int tenantId) throws Exception {
+		logger.debug("deleteSystemConfigType started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("typeCode", typeCode);
+		ezSystemAdminDAO.deleteSystemConfigByTypeCode(map);
+		ezSystemAdminDAO.deleteSystemConfigType(map);
+		logger.debug("deleteSystemConfigType ended");
+	}
+
+	@Override
+	public String checkDuplicateCode(String code, int tenantId, String companyID) throws Exception {
+		logger.debug("checkDuplicateCode started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("code", code);
+		
+		int codeCnt = ezSystemAdminDAO.checkDuplicateCode(map);
+		String result = "";
+		
+		if (codeCnt >= 1) {
+			result = "DUPLICATE";
+		} else {
+			result = "AVAILABLE";
+		}
+		logger.debug("checkDuplicateCode ended");
+		return result;
+	}
+
+	@Override
+	public SystemConfigTypeVO getSystemConfigType(String typeCode, String offset, String companyID, int tenantId) throws Exception {
+		logger.debug("getSystemConfigType started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("offset", offset);
+		map.put("typeCode", typeCode);
+		
+		SystemConfigTypeVO result = ezSystemAdminDAO.getSystemConfigType(map);
+		logger.debug("getSystemConfigType ended");
+		return result;
+	}
+
+	@Override
+	public String checkDuplicateTypeCode(String typeCode, int tenantId, String companyID) throws Exception {
+		logger.debug("checkDuplicateTypeCode started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("typeCode", typeCode);
+		
+		int codeCnt = ezSystemAdminDAO.checkDuplicateTypeCode(map);
+		String result = "";
+		
+		if (codeCnt >= 1) {
+			result = "DUPLICATE";
+		} else {
+			result = "AVAILABLE";
+		}
+		logger.debug("checkDuplicateTypeCode ended");
+		return result;
+	}
+
+	@Override
+	public void insertSystemConfigType(String typeCode, String typeName, String typeName2, String description, String writerId, String writerName, String writerName2, int tenantId, String companyId) throws Exception {
+		logger.debug("insertSystemConfigType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("typeCode", typeCode);
+		map.put("typeName", typeName);
+		map.put("typeName2", typeName2);
+		map.put("description", description);
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
+		map.put("writerId", writerId);
+		map.put("writerName", writerName);
+		map.put("writerName2", writerName2);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezSystemAdminDAO.insertSystemConfigType(map);
+
+		logger.debug("insertSystemConfigType ended");
+	}
+
+	@Override
+	public void updateSystemConfigType(String typeCode, String typeName, String typeName2, String description, String writerId, String writerName, String writerName2, int tenantId, String companyId) throws Exception {
+		logger.debug("updateSystemConfigType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("typeCode", typeCode);
+		map.put("typeName", typeName);
+		map.put("typeName2", typeName2);
+		map.put("description", description);
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
+		map.put("writerId", writerId);
+		map.put("writerName", writerName);
+		map.put("writerName2", writerName2);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezSystemAdminDAO.updateSystemConfigType(map);
+		
+		logger.debug("updateSystemConfigType ended");
+	}
+
+	@Override
+	public void disableDeleteSystemConfig(String sCode, String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("code", sCode);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyID);
+		
+		ezSystemAdminDAO.disableDeleteSystemConfig(map);
 	}
 
 }

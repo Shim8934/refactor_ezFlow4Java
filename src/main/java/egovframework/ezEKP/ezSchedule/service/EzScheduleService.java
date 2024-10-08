@@ -159,6 +159,10 @@ public interface EzScheduleService {
 
 	/* 2023-10-10 기민혁 - 사용자일정 검색시 스케쥴 list 호출 메서드 */
 	public List<ScheduleInfoVO> getUserSearchScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID, String deptId, String useAnnualScheduleYN) throws Exception;
+	
+	public String checkExecutiveType(String userID, String companyID, int tenantID) throws Exception;
+
+	public String checkExecutiveUsage(String userID, String companyID, int tenantID) throws Exception;
 
 	/* 2023-09-22 한태훈 - 일정관리 > 초대 일정 참석 여부 반환 메서드 */
 	public String selectAttendanceStatus(String scheduleid, String v_attendantId, int tenantId) throws Exception;

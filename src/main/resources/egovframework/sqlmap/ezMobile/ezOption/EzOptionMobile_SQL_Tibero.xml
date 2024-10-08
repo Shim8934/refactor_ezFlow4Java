@@ -25,6 +25,10 @@
       <result property="rollInfo"          	column="rollinfo"                       	columnIndex="15"/>
       <result property="userFileUrl"       	column="userFileUrl"   						columnIndex="16"/>
       <result property="email"       		column="email"   							columnIndex="17"/>
+	  <result property="phone"       		column="telephonenumber"   					columnIndex="18"/>
+	  <result property="lastLogin"     		column="lastLogin"      					columnIndex="19"/>
+	  <result property="jobId"     			column="extensionattribute7"                columnIndex="20"/>
+	  <result property="roleId"     		column="extensionattribute8"      			columnIndex="21"/>
     </resultMap>
     
     <resultMap class="MOptionVO" id="MOptionVO">
@@ -57,7 +61,10 @@
                 b.extensionattribute1 as rollinfo,
                 b.extensionattribute2 as userFileUrl,
                 b.mail as email,
-                b.telephonenumber
+                b.telephonenumber,
+				TO_CHAR(b.lastlogin, 'YYYY-MM-DD HH24:MI:SS') AS lastLogin,
+				b.extensionattribute7,
+				b.extensionattribute8
 			FROM
 				TBL_USERMOBILEINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE
@@ -302,7 +309,11 @@
 			    b.title2,
                 b.extensionattribute1 as rollinfo,
                 b.extensionattribute2 as userFileUrl,
-                b.mail as email
+                b.mail as email,
+				b.telephonenumber,
+				TO_CHAR(b.lastlogin, 'YYYY-MM-DD HH24:MI:SS') AS lastLogin,
+				b.extensionattribute7,
+				b.extensionattribute8
 			FROM
 				TBL_USERLOCALINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE

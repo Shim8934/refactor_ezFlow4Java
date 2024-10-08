@@ -92,6 +92,14 @@ public class ApprGRecordListVO {
 	private String displayReason;
 	private String sepTitle;
 	
+	private String formID;
+	
+	private String drafterDept;
+	
+	private String orgDocNum;
+	
+	private String docNum;
+	
 	public int getTenantID() {
 		return tenantID;
 	}
@@ -398,4 +406,20 @@ public class ApprGRecordListVO {
 	public void setSepTitle(String sepTitle) {
 		this.sepTitle = sepTitle;
 	}
+	
+	public String getFormID() { return formID; }
+
+	public void setFormID(String formID) { this.formID = formID; }
+
+	public String getDrafterDept() { return drafterDept; }
+
+	public void setDrafterDept(String drafterDept) { this.drafterDept = drafterDept; }
+
+	public String getOrgDocNum() { return orgDocNum; }
+
+	public void setOrgDocNum(String orgDocNum) { this.orgDocNum = orgDocNum; }
+
+	public String getDocNum() { return docNum; }
+
+	public void setDocNum(String docNum) { this.docNum = docNum; }
 }
