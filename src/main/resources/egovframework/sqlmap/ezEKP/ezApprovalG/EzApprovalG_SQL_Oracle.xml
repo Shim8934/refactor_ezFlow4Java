@@ -5930,9 +5930,7 @@
                         , TBL_EXPENDAPRDOCINFO.FORMNAME
                   </isNotEqual>
 				  </isEqual>  
-						$extraSelectClause$,
-                        TBL_CABINETCLASS.TITLE,
-                        ENDDOCNO.DOCNO SIHANGNO
+						$extraSelectClause$
 				   FROM 
 				   		TBL_RECORD 
 				   Inner Join 
@@ -5991,12 +5989,20 @@
 				   		TBL_ENDAPRDOCINFO
                     ON
                         TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
+                    AND
+			        	TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+					AND
+			        	TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
                     LEFT JOIN
 				   		TBL_ENDAPRDOCINFO ENDDOCNO
                     ON
                         TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
                     AND
                         TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD.DOCID
+					AND
+			        	TBL_ENDAPRDOCINFO.TENANT_ID = ENDDOCNO.TENANT_ID
+					AND
+			        	TBL_ENDAPRDOCINFO.COMPANYID = ENDDOCNO.COMPANYID
               <isEqual property="listType" compareValue="012">
 				   Left Join
 				   		TBL_RECROLEINFO R
@@ -13589,25 +13595,25 @@
 				DISTINCT TBL_RECORD.RecordID,
 				TBL_SEPERATEATTACH.SeperateAttachNo
 			FROM 
-		   		TBL_RECORD 
-		   Left Join 
-		   		TBL_ENDAPRDOCINFO 
-		   On 
-		   		TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID 
-		   AND 
-		   		TBL_RECORD.DocID = TBL_ENDAPRDOCINFO.DocID
-		   AND
-		   		TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
-           LEFT JOIN
-                TBL_ENDAPRDOCINFO
-           ON
-                TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
-           LEFT JOIN
-                TBL_ENDAPRDOCINFO ENDDOCNO
-           ON
-                TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
-           AND
-                TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD.DOCID		    
+		   		TBL_RECORD
+			LEFT JOIN
+				TBL_ENDAPRDOCINFO
+			ON
+			    TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
+			AND
+				TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+			AND
+				TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+			LEFT JOIN
+				TBL_ENDAPRDOCINFO ENDDOCNO
+			ON
+				TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
+			AND
+				TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD.DOCID
+			AND
+				TBL_ENDAPRDOCINFO.TENANT_ID = ENDDOCNO.TENANT_ID
+			AND
+				TBL_ENDAPRDOCINFO.COMPANYID = ENDDOCNO.COMPANYID
 		   Inner Join 
 		   		TBL_SEPERATEATTACH 
 		   On 
