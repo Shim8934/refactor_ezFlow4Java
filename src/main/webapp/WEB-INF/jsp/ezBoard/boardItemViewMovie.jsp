@@ -123,6 +123,8 @@
                 var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // myBoardScrapFlag 테넌트컨피그값 (NONE, TYPE1_(마이게시판하위), TYPE2(스크랩함))
 		        var isScrap = "<c:out value='${isScrap}'/>"; // 이미 스크랩되었는지의 여부 (type1일때)
                 var scrapContID = "<c:out value='${scrapContID}'/>"; // 개인스크랩함 ID (TYPE2, 스크랩함에서 게시물 조회했을 때 값이 들어옴)
+				var starRatingFlag = "<c:out value='${boardInfo.starRatingFlag}'/>";
+                var rating = "${itemStarRating.rating}";
 
 				/* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
 				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
@@ -1302,6 +1304,28 @@
 						</td>
 					</tr>
 				</c:if>
+				
+				<%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
+                <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
+                    <tr>
+                        <td style="text-align:center; padding-bottom:8px;" colspan="3">
+                            <div id="ratingContainer" onclick="clickRatingButton()">
+                                <div>
+                                    <span id="avgScore">${itemStarRating.averageScore}</span>
+                                    <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
+                                </div>
+                                <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
+                                <c:forEach var="i" begin="1" end="5">
+                                    <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
+                                    <input type="radio" name="reviewStar" value="${i}" id="rate${i}" checked = "${srcIconFlag}"/>
+                                    <label for="rate${i}"><img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/></label>
+                                </c:forEach>
+                                </span>
+                                <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
+                            </div>
+                        </td>
+                    </tr>
+                </c:if>
 		        </table>
 		    </td>
 		  </tr>

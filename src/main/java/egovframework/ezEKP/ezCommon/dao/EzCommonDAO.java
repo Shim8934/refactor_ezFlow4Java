@@ -3264,4 +3264,33 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addMemberDeptIdScheduleGatherMember");
 		}
 	}
+
+	public void createTblBoardStarRating() throws Exception {
+		// 게시판 > 별점 평가하기 여부 저장 테이블 추가
+		try {
+			select("EzCommonDAO.checkTblBoardStarRatingItem");
+		} catch (Exception e) {
+			logger.debug("tbl_board_item_rating doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblBoardStarRatingItem");
+		}
+
+		// 게시판 > 게시물 별 총점, 평균 저장 테이블 추가
+		try {
+			select("EzCommonDAO.checkTblBoardStarRatingSummary");
+		} catch (Exception e) {
+			logger.debug("tbl_board_item_rating_summary doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblBoardStarRatingSummary");
+		}
+
+		// 게시판 > 별점 평가하기 사용여부 옵션 칼럼 추가
+		try {
+			select("EzCommonDAO.checkTblBoardInfoStarRatingFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info starRatingFlag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardStarRatingFlag");
+		}
+	}
 }

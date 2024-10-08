@@ -7133,4 +7133,65 @@
 		ADD
 			MEMBERDEPTID NVARCHAR2(50) DEFAULT NULL
 	</update>
+
+	<select id="EzCommonDAO.checkTblBoardStarRatingItem" resultClass="String">
+		<![CDATA[
+			SELECT
+				ITEMID
+			FROM
+				TBL_BOARD_ITEM_RATING
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblBoardStarRatingItem">
+		CREATE TABLE tbl_board_item_rating (
+		ITEMID varchar2(76) NOT NULL,
+		USERID nvarchar2(80) NOT NULL,
+		RATING varchar2(2) NOT NULL,
+		RATINGDATE nvarchar2(40) NOT NULL,
+		TENANT_ID number(5,0) NOT NULL,
+		COMPANYID varchar2(80) DEFAULT NULL,
+		CONSTRAINT TBL_BOARD_ITEM_RATING_PK PRIMARY KEY (ITEMID, USERID,TENANT_ID)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardStarRatingSummary" resultClass="String">
+		<![CDATA[
+			SELECT
+				ITEMID
+			FROM
+				TBL_BOARD_ITEM_RATING_SUMMARY
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblBoardStarRatingSummary">
+		CREATE TABLE tbl_board_item_rating_summary (
+		ITEMID varchar2(76) NOT NULL,
+		TOTALRATERS varchar2(10) NOT NULL,
+		TOTALSCORE varchar2(6) NOT NULL,
+		AVERAGESCORE varchar2(5) NOT NULL,
+		TENANT_ID number(5,0) NOT NULL,
+		COMPANYID varchar2(80) DEFAULT NULL,
+		CONSTRAINT TBL_BOARD_ITEM_RATING_SUMMARY_PK PRIMARY KEY (ITEMID,TENANT_ID)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardInfoStarRatingFlag" resultClass="String">
+		<![CDATA[
+			SELECT
+				STARRATINGFLAG
+			FROM
+				TBL_BOARD_BOARDINFO
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.addBoardStarRatingFlag">
+		ALTER TABLE
+		TBL_BOARD_BOARDINFO
+		ADD
+		STARRATINGFLAG VARCHAR(1) DEFAULT NULL
+	</statement>
 </sqlMap>

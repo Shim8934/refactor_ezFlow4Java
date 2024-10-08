@@ -126,6 +126,8 @@
             var attachLimit = "${boardInfo.attachSizeLimit}"; // 개별 첨부파일 limit
             var attachFileNameMaxLength = Number("${attachFileNameMaxLength}"); // 첨부파일명 글자수 제한 limit
             var totalFileSize = 0; // 현재 총 첨부파일 사이즈
+            var starRatingFlag = "<c:out value='${boardInfo.starRatingFlag}'/>"; // 별점 평가하기 기능 사용여부
+			var rating = "${itemStarRating.rating}"; // 별점 평가하기 기능 > 별점
 
 		    window.onresize = window_resize;
 		    window.onload = function () {
@@ -1216,6 +1218,28 @@
 						  				</span>
 									</div>
 							   </c:if>
+							   
+                           <%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
+                            <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
+                                <tr>
+                                    <td style="text-align:center; padding-bottom:8px;" colspan="3">
+                                       <div id="ratingContainer" onclick="clickRatingButton()">
+                                            <div>
+                                                <span id="avgScore">${itemStarRating.averageScore}</span>
+                                                <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
+                                            </div>
+                                            <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
+                                            <c:forEach var="i" begin="1" end="5">
+                                                <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
+                                                <input type="radio" name="reviewStar" value="${i}" id="rate${i}" checked = "${srcIconFlag}"/>
+                                                <label for="rate${i}"><img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/></label>
+                                            </c:forEach>
+                                            </span>
+                                            <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
+                                       </div>
+                                    </td>
+                                </tr>
+                            </c:if>
                			   </div>
 					    </td>
 			    	</tr>

@@ -43,6 +43,7 @@
 			var attachmentFlag = $.trim("<c:out value='${model.attachmentFlag}'/>");
 			var useAllNewBoard = $.trim("<c:out value='${model.allNewBoardFlag}'/>");
 			var writerFlag = $.trim("<c:out value='${model.writerFlag}'/>"); 
+			var starRatingFlag = "<c:out value='${model.starRatingFlag}'/>";
 			
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -78,6 +79,12 @@
 				if (useKeyword == "Y") {
 				    $("#keyWord").prop("checked", true);
 				}
+				
+				/* 2024-10-02 이혜림 - 게시판에 별점 평가하기 기능 추가 */
+                if (starRatingFlag == "Y") {
+                    $("#chkStarRating").prop("checked", true);
+                }
+                
 	            if (pAdminType == "y") {
 	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";
 	            }
@@ -192,6 +199,7 @@
 	                    $("#chkBoardLike").prop("disabled", true);
 	                    $("#chkBoardReplyReact").prop("disabled", true);
 	                    $("#chkBoardDisLike").prop("disabled", true);
+	                    $("#chkStarRating").prop("disabled", true);
 	                    
 	                    $("#chkNotify").prop("checked", false);
 	                    $("#chkMailFG_Post").prop("checked", false);
@@ -203,6 +211,7 @@
 	                    $("#chkBoardLike").prop("checked", false);
 						$("#chkBoardReplyReact").prop("checked", false);
 	                    $("#chkBoardDisLike").prop("checked", false);
+						$("#chkStarRating").prop("checked", false);
 	                    
 						/* 2020-05-27 홍승비 - URL 게시판인 경우, 댓글 disabled 처리 */
 						$("#chkOneLineBottom").prop("disabled", true);
@@ -344,6 +353,12 @@
                     useKeyword = "Y";
                 } else {
                     useKeyword = "N";
+                }
+	            
+				if ($("#chkStarRating").is(":checked")) {
+                    starRatingFlag = "Y";
+                } else {
+                    starRatingFlag = "N";
                 }
 	            
 	            // 게시만료일 /* 2019-03-04 홍승비 - 게시판그룹인 경우 게시만료일 체크 분기 타지 않도록 수정 */
@@ -514,7 +529,8 @@
 						mailFG_Post : mailFG_Post, mailFG_Mod : mailFG_Mod, mailFG_Comment : mailFG_Comment,
 						reactFlag:useBoardReplyReact, useKeyword:useKeyword, publicFlag:publicFlag,
 						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3, 
-						attachmentFlag:attachmentFlag, allNewBoardFlag:useAllNewBoard, writerFlag : writerFlag
+						attachmentFlag:attachmentFlag, allNewBoardFlag:useAllNewBoard, writerFlag : writerFlag,
+						starRatingFlag:starRatingFlag
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
@@ -707,6 +723,7 @@
 					$("#chkBoardLike").prop("disabled", true);
 					$("#chkBoardReplyReact").prop("disabled", true);
 					$("#chkBoardDisLike").prop("disabled", true);
+					$("#chkStarRating").prop("disabled", true);
 					/* 2020-05-27 홍승비 - URL 게시판인 경우, 댓글 사용안함 고정 + disabled 처리 */
 					$("#chkOneLineBottom").prop("disabled", true);
 					$("#chkOneLineLayer").prop("disabled", true);
@@ -733,6 +750,7 @@
                     document.getElementById("chkBoardLike").checked = false;
                     document.getElementById("chkBoardReplyReact").checked = false;
                     document.getElementById("chkBoardDisLike").checked = false;
+                    document.getElementById("chkStarRating").checked = false;
                    // document.getElementById("chkOneLine").checked = false;
                     document.getElementById("chkOneLineBottom").checked = false;
                     document.getElementById("chkOneLineLayer").checked = false;
@@ -784,6 +802,7 @@
                     } else {
                         $("#chkBoardLike").prop("disabled", false);
                         $("#chkBoardDisLike").prop("disabled", false);
+                        $("#chkStarRating").prop("disabled", false);
                         if ($("#chkOneLineNone").is(":checked")) {
                             $("#chkBoardReplyReact").prop("checked", false);
                             $("#chkBoardReplyReact").prop("disabled", true);
@@ -1366,6 +1385,7 @@
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011_1" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkform" onclick="checkboardtype()" /><spring:message code="ezBoard.t999027" />&nbsp;</span>
 	        	    <span style="display:inline-block;"><input type="checkbox" id="keyWord" onclick="checkboardtype()" /><spring:message code="ezApprovalG.t1200" />&nbsp;</span>
+	        	    <span style="display:inline-block;"><input type="checkbox" id="chkStarRating" onclick="checkboardtype()" /><spring:message code="ezBoard.lhr001" />&nbsp;</span>
 	        	</td>
 	        </tr>
 	        

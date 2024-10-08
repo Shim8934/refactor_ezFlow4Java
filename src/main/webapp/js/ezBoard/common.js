@@ -1565,3 +1565,85 @@ function makeBoardCommentAttachString(mode) {
         return "";
     }
 }
+
+// 별점 평가하기 시작
+function clickRatingButton() {
+	document.querySelectorAll('#ratingContainer label img').forEach((img) => {
+		img.src = '/images/ImgIcon/view-flag.gif';
+	});
+
+	document.querySelectorAll('#ratingContainer input[type=radio]').forEach((radio, index, radios) => {
+		if (radio.checked) {
+			for (let i = 0; i <= index; i++) {
+				let label = radios[i].nextElementSibling;
+				if (label && label.querySelector('img')) {
+					label.querySelector('img').src = '/images/ImgIcon/icon-flag.gif';
+				}
+			}
+		}
+	});
+}
+
+function clickSaveRatingButton() {
+	const selectedRating = document.querySelector('#ratingContainer input[type=radio]:checked');
+	
+	if (!selectedRating) {
+		alert(strLangLHR001);
+		return;
+	}
+
+	const ratingValue = selectedRating.value;
+	
+	if (selectedRating.value === rating) {
+		alert(strLangLHR002);
+		return;
+	}
+	
+	saveRating(ratingValue);
+}
+
+function saveRating(selectedRating) {
+	var isReRated = rating !== '0' ? "Y" : "N"; // 재평가 여부
+	
+	$.ajax({
+		type : "GET",
+		url : "/ezBoard/saveItemStarRating.do",
+		data : {
+			itemID : pItemID,
+			updateRating : selectedRating,
+			isReRated : isReRated
+		},
+		success : function(result) {
+			if (result.status === "success") {
+				alert(strLangLHR003);
+				// 총점 및 평균 점수를 UI에 업데이트
+				$("#totalRaters").text(result.totalRaters);
+				$("#avgScore").text(result.averageScore);
+				rating = selectedRating; // 성공적으로 업데이트된 별점을 현재 상태로 업데이트
+			} else {
+				alert("<spring:message code = 'ezBoard.t181'/>");
+				restoreRating();
+			}
+		},
+		error : function(e) {
+			alert("<spring:message code = 'ezBoard.t181'/>");
+			console.log(e);
+			restoreRating();
+		}
+	});
+}
+
+function restoreRating() {
+	// 현재 별점 상태를 기준으로 별점 UI 복원
+	const allStars = document.querySelectorAll('#ratingContainer input[type=radio]');
+	allStars.forEach(star => {
+		if (star.value <= rating) {
+			star.checked = true;
+			star.nextElementSibling.firstElementChild.src = "/images/ImgIcon/icon-flag.gif";
+		} else {
+			star.checked = false;
+			star.nextElementSibling.firstElementChild.src = "/images/ImgIcon/view-flag.gif";
+		}
+	});
+}
+// 별점 평가하기 끝

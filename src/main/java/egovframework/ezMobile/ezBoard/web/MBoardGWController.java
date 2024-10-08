@@ -39,6 +39,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -380,6 +381,9 @@ public class MBoardGWController {
 	    	
 			String mhtContent = mBoardService.getMhtContent(realPath, domain, info, boardItem.getContentLocation(), locale, scheme);
 			
+			// 2025-01-23 게시판 > 게시물 미리보기 > 게시물 평가하기 기능 추가
+			Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(contentId, info.getUserId(), info.getTenantId());
+			
 			//새게시물 눌렀을때, read테이블에 들어가게함.
 			mBoardService.setAsRead(info, boardId, contentId);
 			
@@ -407,6 +411,7 @@ public class MBoardGWController {
 			data.put("acScrap", acScrap);
 			data.put("myBoardScrapFlag", myBoardScrapFlag);
 			data.put("isScrap", isScrap);
+			data.put("itemStarRating", itemStarRating);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -490,6 +495,9 @@ public class MBoardGWController {
 				commentCount = ezBoardService.getOneLineReplyCount(boardId, contentId, info.getTenantId());
 			}
 			
+			// 2025-01-23 게시판 > 게시물 미리보기 > 게시물 평가하기 기능 추가
+			Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(contentId, info.getUserId(), info.getTenantId());
+			
 			List<MBoardAttachVO> photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
 			
 			List<String> keywords = new ArrayList<>();
@@ -521,6 +529,7 @@ public class MBoardGWController {
 			data.put("myBoardScrapFlag", myBoardScrapFlag);
 			data.put("isScrap", isScrap);
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
+			data.put("itemStarRating", itemStarRating);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1375,6 +1384,9 @@ public class MBoardGWController {
 				commentCount = ezBoardService.getOneLineReplyCount(boardId, contentId, info.getTenantId());
 			}
 			
+			// 2025-01-23 게시판 > 게시물 미리보기 > 게시물 평가하기 기능 추가
+			Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(contentId, info.getUserId(), info.getTenantId());
+			
 			List<MBoardAttachVO> movieAttachVO = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
 
 			List<String> keywords = new ArrayList<>();
@@ -1402,6 +1414,7 @@ public class MBoardGWController {
 			data.put("myBoardScrapFlag", myBoardScrapFlag);
 			data.put("isScrap", isScrap);
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
+			data.put("itemStarRating", itemStarRating);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -2538,6 +2551,35 @@ public class MBoardGWController {
 
 		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/scrap/{userId}] ended.");
 
+		return result;
+	}
+	@Transactional
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/rate", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public Map<String, Object> saveItemStarRating(@PathVariable String boardId, @PathVariable String contentId, HttpServletRequest request) throws Exception {
+		logger.debug("saveItemStarRating started");
+		
+		String userId = request.getParameter("userId");
+		String serverName = request.getHeader("x-user-host");
+		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+		
+		int updateRating = Integer.parseInt(request.getParameter("updateRating"));
+		String isReRated = request.getParameter("isReRated");
+
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+			Map<String, Object> resultData = ezBoardService.saveItemStarRating(contentId, isReRated, updateRating, userInfo);
+			result.put("status", "success");
+			result.put("totalRaters", resultData.get("totalRaters"));
+			result.put("averageScore", resultData.get("averageScore"));
+		} catch (Exception e) {
+			result.put("status", "error");
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("saveItemStarRating ended");
+		
 		return result;
 	}
 }

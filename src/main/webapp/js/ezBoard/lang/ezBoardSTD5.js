@@ -100,3 +100,8 @@ var strLangAttachJIH04 = "에러가 발생하였습니다.";
 
 // 2024-06-28 민지수 - 게시판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
 var strLangMJS01 = "Bạn có thể kéo và thả để thêm tệp và thay đổi thứ tự của các tệp đã thêm.";
+
+// 2024-10-02 이혜림 추가
+var strLangLHR001 = "0점은 평가할 수 없습니다.";
+var strLangLHR002 = "기존과 동일한 점수로는 평가하기를 할 수 없습니다.";
+var strLangLHR003 = "별점이 성공적으로 저장되었습니다.";

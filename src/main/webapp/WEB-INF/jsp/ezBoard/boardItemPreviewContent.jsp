@@ -96,6 +96,8 @@
 		 	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 사용 여부
 	        var useBoardFilePrvw = "<c:out value='${useBoardFilePrvw}'/>";
 			var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
+            var starRatingFlag = "<c:out value='${boardInfo.starRatingFlag}'/>"; // 별점 평가하기 기능 사용여부
+			var rating = "${itemStarRating.rating}"; // 별점 평가하기 기능 > 별점
 			
 			/* 2023-04-12 이가은 - 답글 기능을 위한 변수 추가 */
 	        var userInfoName = "${displayName}";
@@ -691,6 +693,24 @@
 					</span>
 				</div>
 			</c:if>
+			
+            <%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
+            <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
+                <div id="ratingContainer" onclick="clickRatingButton()">
+                    <div>
+                        <span id="avgScore">${itemStarRating.averageScore}</span>
+                        <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
+                    </div>
+                    <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
+                    <c:forEach var="i" begin="1" end="5">
+                        <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
+                        <input type="radio" name="reviewStar" value="${i}" id="rate${i}" checked = "${srcIconFlag}"/>
+                        <label for="rate${i}"><img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/></label>
+                    </c:forEach>
+                    </span>
+                    <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
+                </div>
+            </c:if>
 		</div>
 			
 		<%-- 2019-11-06 홍승비 - 하단댓글 영역 추가 --%>

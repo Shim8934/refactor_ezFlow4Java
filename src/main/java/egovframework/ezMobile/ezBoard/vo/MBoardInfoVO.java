@@ -141,6 +141,8 @@ public class MBoardInfoVO {
 	private String publicFlag = "N";
 	/** 2024-10-22 정지은 - 최근게시물 사용여부**/
 	private String allNewBoardFlag;
+	/** 게시판 > 평가하기 기능 사용여부 플래그 (Y/N) */
+	private String starRatingFlag;
 	
 	@Override
 	public String toString() {
@@ -598,5 +600,11 @@ public class MBoardInfoVO {
 	}
 	public void setAllNewBoardFlag(String allNewBoardFlag) {
 		this.allNewBoardFlag = allNewBoardFlag;
+	}
+	public String getStarRatingFlag() {
+		return starRatingFlag;
+	}
+	public void setStarRatingFlag(String starRatingFlag) {
+		this.starRatingFlag = starRatingFlag;
 	}
 }

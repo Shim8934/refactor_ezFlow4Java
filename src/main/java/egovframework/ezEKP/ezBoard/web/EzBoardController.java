@@ -136,6 +136,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 /** 
  * @Description [Controller] 사용자 - 게시판 
@@ -1326,6 +1327,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setAttachmentFlag(strProp.getAttachmentFlag()); // 첨부파일 플래그 추가
             boardInfo.setPublicFlag(strProp.getPublicFlag()); // 게시물 공개여부 선택
 			boardInfo.setWriterFlag(strProp.getWriterFlag());
+			boardInfo.setStarRatingFlag(strProp.getStarRatingFlag()); // 별점 사용여부 플래그 추가
 
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();
@@ -4283,6 +4285,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2023-05-03 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */
 		String isScrap = ezBoardService.getScrapItemCount(userInfo.getId(), itemID, boardID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		// 2024-10-07 이혜림 - 게시판 > 별점 평가하기 조회
+		Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(itemID, userInfo.getId(), userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
@@ -4316,6 +4321,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 		model.addAttribute("scrapContID", scrapContID);
 		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
+		model.addAttribute("itemStarRating", itemStarRating);
 		
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -6469,6 +6475,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
 			keywordList = ezBoardService.selectBoardKeywordByBoardItem(boardItem.getItemID(), boardItem.getBoardID(), userInfo.getTenantId());
 		}
+
+		Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(itemID, userInfo.getId(), userInfo.getTenantId());
 		
 		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
@@ -6492,7 +6500,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 		model.addAttribute("scrapContID", scrapContID);
 		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
-		
+		model.addAttribute("itemStarRating", itemStarRating);
+
 		logger.debug("boardItemViewPhoto ended");
 		return "ezBoard/boardItemViewPhoto";
 	}
@@ -7940,6 +7949,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2022-04-06 기민혁 - 해당 게시물에 대해 사용자가 싫어요를 표시했는지 체크 */
 		String isDisLikeChecked = ezBoardService.disLikeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		
+		// 2025-01-23 게시판 > 게시물 미리보기 > 게시물 평가하기 기능 추가
+		Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(itemID, userInfo.getId(), userInfo.getTenantId());
+				 
 		model.addAttribute("OneLineReplyFlag", OneLineReplyFlag);
 		model.addAttribute("gubun", boardInfo.getGuBun());
 		model.addAttribute("itemID", itemID);
@@ -7957,6 +7969,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("itemLocation", itemLocation);
 		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
+		model.addAttribute("itemStarRating", itemStarRating);
 		
 		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";
@@ -9205,6 +9218,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		/* 2023-04-06 기민혁 - 해당 게시물에 대해 사용자가 싫어요를 표시했는지 체크 */
 		String isDisLikeChecked = ezBoardService.disLikeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+		
+		// 2025-01-23 전인하 - 게시판 > 게시물 미리보기 > 게시물 평가하기 기능 추가
+		Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(itemID, userInfo.getId(), userInfo.getTenantId());
+		
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("mode", mode);
@@ -9216,6 +9233,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("disLikeCount", disLikeCount);
 		model.addAttribute("isDisLikeChecked", isDisLikeChecked);
 		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
+		model.addAttribute("itemStarRating", itemStarRating);
 				
 		logger.debug("boardItemPreViewPhotoContent ended");
 		
@@ -10613,6 +10631,9 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		/* 2023-05-03 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */ 
 		String isScrap = ezBoardService.getScrapItemCount(userInfo.getId(), itemID, boardID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(itemID, userInfo.getId(), userInfo.getTenantId());
+		
 		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);
@@ -10636,6 +10657,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
 		model.addAttribute("addThumbnail", thumbnailInfo.get(0).getAddThumbnail());
 		model.addAttribute("thumbnailExt", thumbnailInfo.get(0).getThumbnailExt());
+		model.addAttribute("itemStarRating", itemStarRating);
 
 		logger.debug("boardItemViewMovie ended");
 		return "ezBoard/boardItemViewMovie";
@@ -10783,6 +10805,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2023-04-06 기민혁 - 해당 게시물에 대해 사용자가 싫어요를 표시했는지 체크 */
 		String isDisLikeChecked = ezBoardService.disLikeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		
+		// 2025-01-23 게시판 > 게시물 미리보기 > 게시물 평가하기 기능 추가
+		Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(itemID, userInfo.getId(), userInfo.getTenantId());
+		
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("mode", mode);
@@ -10794,6 +10819,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("disLikeCount", disLikeCount);
 		model.addAttribute("isDisLikeChecked", isDisLikeChecked);
 		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
+		model.addAttribute("itemStarRating", itemStarRating);
 				
 		logger.debug("boardItemPreViewMovieContent ended");
 		
@@ -13135,5 +13161,32 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("getAllNewItemList ended");
 		return resultXML.toString();
+	}
+	
+	@Transactional
+	@RequestMapping(value = "/ezBoard/saveItemStarRating.do", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> saveItemStarRating(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("saveItemStarRating started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String itemID = request.getParameter("itemID");
+		int updateRating = Integer.parseInt(request.getParameter("updateRating"));
+		String isReRated = request.getParameter("isReRated");
+
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+			Map<String, Object> resultData = ezBoardService.saveItemStarRating(itemID, isReRated, updateRating, userInfo);
+			result.put("status", "success");
+			result.put("totalRaters", resultData.get("totalRaters"));
+			result.put("averageScore", resultData.get("averageScore"));
+		} catch (Exception e) {
+			result.put("status", "error");
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("saveItemStarRating ended");
+		return result;
 	}
 }

@@ -569,4 +569,6 @@ public interface EzCommonService {
 	public void addMemberDeptIdScheduleGroupMember() throws Exception;
 	
 	public void addMemberDeptIdScheduleGatherMember() throws Exception;
+	
+	public void createTblBoardStarRating() throws Exception;
 }

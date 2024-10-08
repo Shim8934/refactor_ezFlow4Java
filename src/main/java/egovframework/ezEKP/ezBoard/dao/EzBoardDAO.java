@@ -1181,4 +1181,41 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public List<BoardAttachVO> brdGetPhotoItemAttachmentInfo(Map<String, Object> map) throws Exception{
 		return (List<BoardAttachVO>) list("EzBoardDAO.brdGetPhotoItemAttachmentInfo", map);
 	}
+
+	/* 2024-10-02 이혜림 - 별점 추가하는 쿼리 */
+	public void insertItemStarRating(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertItemStarRating", map);
+	}
+
+	/* 2024-10-02 이혜림 - 별점 총점, 평균 추가하는 쿼리 */
+	public void insertItemStarRatingSummary(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertItemStarRatingSummary", map);
+	}
+
+	/* 2024-10-02 이혜림 - 별점 업데이트하는 쿼리 */
+	public void updateItemStarRating(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateItemStarRating", map);
+	}
+
+	/* 2024-10-02 이혜림 - 별점 총점, 평균 업데이트하는 쿼리 */
+	public void updateItemStarRatingSummary(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateItemStarRatingSummary", map);
+	}
+	
+	/* 2024-10-02 이혜림 - 게시물의 별점을 모두 삭제하는 쿼리 */
+	public void deleteStarRating(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteStarRating", map);
+	}
+
+	/* 2024-10-02 이혜림 - 게시물의 총점,평균을 삭제하는 쿼리 */
+	public void deleteStarRatingSummary(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteStarRatingSummary", map);
+	}
+
+	/* 2024-10-02 이혜림 - 게시물에 대한 사용자의 별점, 총점, 평균 HashMap dm로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public HashMap<String, Object> getItemStarRating(Map<String, Object> map) throws Exception {
+		return (HashMap<String, Object>) select("EzBoardDAO.getItemStarRating", map);
+	}
+
 }

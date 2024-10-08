@@ -553,4 +553,20 @@ public interface EzBoardService {
 			int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantId, String boardType) throws Exception;
 
 	public List<BoardAttachVO> brdGetPhotoItemAttachmentInfo(String pItemID, int tenantID) throws Exception;
+
+	public void insertItemStarRating(String itemID, String userID, String rating, int tenantID, String companyID, String ratingDate) throws Exception;
+	
+	public void insertItemStarRatingSummary(String itemID, String totalRaters, String totalScore, String averageScore, int tenantID, String companyID) throws Exception;
+	
+	public void updateItemStarRating(String itemID, String userID, String rating, int tenantID, String companyID, String ratingDate) throws Exception;
+	
+	public void updateItemStarRatingSummary(String itemID, String totalRaters, String totalScore, String averageScore, int tenantID, String companyID) throws Exception;
+	
+	public void deleteStarRating(String itemID, int tenantID) throws Exception;
+	
+	public void deleteStarRatingSummary(String itemID, int tenantID) throws Exception;
+	
+	public Map<String, Object> getItemStarRating(String itemID, String userID, int tenantID) throws Exception;
+	
+	public Map<String, Object> saveItemStarRating(String itemID, String isReRated, int updateRating, LoginVO userInfo) throws Exception;
 }

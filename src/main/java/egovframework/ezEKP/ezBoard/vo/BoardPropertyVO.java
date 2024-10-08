@@ -167,6 +167,8 @@ public class BoardPropertyVO {
 	private String allNewBoardFlag;
 	/** 2025-01-21 임정은 - 게시자명선택 사용여부 플래그 **/
 	private String writerFlag;
+	/** 2024-09-30 이혜림 - 게시판 별점 기능 플래그 추가**/
+	private String starRatingFlag;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -659,5 +661,12 @@ public class BoardPropertyVO {
 	}
 	public void setWriterFlag(String writerFlag) {
 		this.writerFlag = writerFlag;
+	}
+	public String getStarRatingFlag() {
+		return starRatingFlag;
+	}
+
+	public void setStarRatingFlag(String starRatingFlag) {
+		this.starRatingFlag = starRatingFlag;
 	}
 }

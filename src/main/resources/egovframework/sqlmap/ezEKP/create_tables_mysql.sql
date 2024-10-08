@@ -3730,6 +3730,7 @@ CREATE TABLE `tbl_board_boardinfo` (
   `PUBLICFLAG` char(1) DEFAULT 'N',
   `ALLNEWBOARDFLAG` char(1) DEFAULT 'Y',
   `WRITERFLAG` varchar(2) DEFAULT 'N',
+  `STARRATINGFLAG` varchar(1) DEFAULT NULL
   PRIMARY KEY (`BOARDID`(255),`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -15950,3 +15951,29 @@ CREATE TABLE `tbl_schedulegathermember` (
     `TENANT_ID` mediumint(5) NOT NULL,
     PRIMARY KEY (`GROUPID`,`MEMBERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `tbl_board_item_rating`
+--
+CREATE TABLE tbl_board_item_rating (
+    ITEMID varchar(76) NOT NULL COMMENT '게시물 아이디',
+    USERID varchar(80) NOT NULL COMMENT '사용자 아이디',
+    RATING varchar(2) NOT NULL COMMENT '별점',
+    RATINGDATE varchar(40) NOT NULL COMMENT '별점 부여 날짜',
+    TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+    COMPANYID varchar(80) DEFAULT NULL COMMENT '회사 아이디',
+    PRIMARY KEY (ITEMID, USERID, TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Table structure for table `tbl_board_item_rating_summary`
+--
+CREATE TABLE tbl_board_item_rating_summary (
+    ITEMID varchar(76) NOT NULL COMMENT '게시물 아이디',
+    TOTALRATERS varchar(10) NOT NULL COMMENT '총 평가자 수',
+    TOTALSCORE varchar(6) NOT NULL COMMENT '총 점수',
+    AVERAGESCORE varchar(5) NOT NULL COMMENT '평균 점수',
+    TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+    COMPANYID varchar(80) DEFAULT NULL COMMENT '회사 아이디',
+    PRIMARY KEY (ITEMID, TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

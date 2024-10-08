@@ -8229,7 +8229,7 @@
 		AND
 			TENANT_ID = #tenantID#
 	</select>
-	
+
 	<select id="EzBoardDAO.getDisLikeCount" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT
@@ -9966,6 +9966,113 @@
 			  WHERE RNUM <= #v_PENDROW# ) T2
 		WHERE
 			RNUM >= #v_PSTARTROW#
+		]]>
+	</select>
+	<!-- 2024-10-02 이혜림 - 별점 추가하는 쿼리 -->
+	<insert id="EzBoardDAO.insertItemStarRating" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_ITEM_RATING(
+				ITEMID, 	USERID, 	RATING,		RATINGDATE,		TENANT_ID,	 	COMPANYID
+			)
+			VALUES(
+				#v_ITEMID#, #v_USERID#, #v_RATING#, #v_RATINGDATE#, #v_TENANTID#, #v_COMPANYID#
+			)
+		]]>
+	</insert>
+
+	<!-- 2024-10-02 이혜림 - 별점 총점, 평균 추가하는 쿼리 -->
+	<insert id="EzBoardDAO.insertItemStarRatingSummary" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_ITEM_RATING_SUMMARY(
+				ITEMID, 	TOTALRATERS,    TOTALSCORE, 	AVERAGESCORE,		TENANT_ID,	 	COMPANYID
+			)
+			VALUES(
+				#v_ITEMID#, #v_TOTALRATERS#, #v_TOTALSCORE#, #v_AVERAGESCORE#, #v_TENANTID#, #v_COMPANYID#
+			)
+		]]>
+	</insert>
+
+	<update id="EzBoardDAO.updateItemStarRating" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_ITEM_RATING
+			SET 
+	            RATING = #v_RATING#,
+	            RATINGDATE = #v_RATINGDATE#
+	        WHERE
+	        	ITEMID = #v_ITEMID#
+			AND
+	        	USERID = #v_USERID#
+			AND
+	        	TENANT_ID = #v_TENANTID#
+	        AND
+	        	COMPANYID = #v_COMPANYID#
+		]]>
+	</update>
+
+	<update id="EzBoardDAO.updateItemStarRatingSummary" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_ITEM_RATING_SUMMARY
+			SET 
+	            TOTALRATERS = #v_TOTALRATERS#,
+	            TOTALSCORE = #v_TOTALSCORE#,
+	            AVERAGESCORE = #v_AVERAGESCORE#
+	        WHERE
+	        	ITEMID = #v_ITEMID#
+			AND
+	        	TENANT_ID = #v_TENANTID#
+	        AND
+	        	COMPANYID = #v_COMPANYID#
+		]]>
+	</update>
+
+	<!-- 2024-10-02 이혜림 - 게시물의 별점을 모두 삭제하는 쿼리 -->
+	<delete id="EzBoardDAO.deleteStarRating" parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_BOARD_ITEM_RATING
+			WHERE
+				ITEMID = #v_ITEMID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</delete>
+
+	<!-- 2024-10-02 이혜림 - 게시물의 총점,평균을 삭제하는 쿼리 -->
+	<delete id="EzBoardDAO.deleteStarRatingSummary" parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_BOARD_ITEM_RATING_SUMMARY
+			WHERE
+				ITEMID = #v_ITEMID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</delete>
+
+	<!-- 2024-10-02 이혜림 - 게시물에 대한 사용자의 별점, 총점, 평균 HashMap dm로 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.getItemStarRating" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				R.RATING,
+				S.TOTALSCORE,
+				S.AVERAGESCORE,
+				S.TOTALRATERS
+			FROM
+				TBL_BOARD_ITEM_RATING_SUMMARY S
+			LEFT JOIN
+				TBL_BOARD_ITEM_RATING R
+			ON 
+				R.ITEMID = S.ITEMID
+			AND 
+				R.TENANT_ID = S.TENANT_ID
+			AND 
+				R.USERID = #v_USERID#
+			WHERE 
+				S.ITEMID = #v_ITEMID#
+			AND 
+				S.TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
 </sqlMap>

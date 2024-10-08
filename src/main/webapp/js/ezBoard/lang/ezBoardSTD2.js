@@ -100,3 +100,9 @@ var strLangAttachJIH04 = "An error has occurred.";
 
 // 2024-06-28 민지수 - 게시판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
 var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";
+
+
+// 2024-10-02 이혜림 추가
+var strLangLHR001 = "You cannot evaluate with a score of 0";
+var strLangLHR002 = "You can't rate with the same score as before";
+var strLangLHR003 = "The score was successfully saved.";

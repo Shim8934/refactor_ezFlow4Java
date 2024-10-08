@@ -3807,6 +3807,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					deleteTempItem(tempItem, boardID, realPath, userInfo.getTenantId());
 				} else {
 					deleteItem(mode, tempItem, boardID, realPath, userInfo.getTenantId());
+                    deleteStarRating(tempItem, userInfo.getTenantId());
+					deleteStarRatingSummary(tempItem, userInfo.getTenantId());
 				}
 			}
 			
@@ -7037,5 +7039,194 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getPhotoBoardListItem ended");
 		
 		return ezBoardDAO.getBoardListItem(map);
+	}
+
+	@Override
+	public void insertItemStarRating(String itemID, String userID, String rating, int tenantID, String companyID, String ratingDate) throws Exception {
+		logger.debug("insertItemStarRating started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_USERID", userID);
+		map.put("v_RATING", rating);
+		map.put("v_RATINGDATE", ratingDate);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		logger.debug("insertItemStarRating ended");
+		ezBoardDAO.insertItemStarRating(map);
+	}
+
+	@Override
+	public void insertItemStarRatingSummary(String itemID, String totalRaters, String totalScore, String averageScore, int tenantID, String companyID) throws Exception {
+		logger.debug("insertItemStarRatingSummary started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_TOTALRATERS", totalRaters);
+		map.put("v_TOTALSCORE", totalScore);
+		map.put("v_AVERAGESCORE", averageScore);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		logger.debug("insertItemStarRatingSummary ended");
+		ezBoardDAO.insertItemStarRatingSummary(map);
+	}
+
+	@Override
+	public void updateItemStarRating(String itemID, String userID, String rating, int tenantID, String companyID, String ratingDate) throws Exception {
+		logger.debug("updateItemStarRating started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_USERID", userID);
+		map.put("v_RATING", rating);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_RATINGDATE", ratingDate);
+
+		logger.debug("updateItemStarRating ended");
+		ezBoardDAO.updateItemStarRating(map);
+	}
+
+	@Override
+	public void updateItemStarRatingSummary(String itemID, String totalRaters, String totalScore, String averageScore, int tenantID, String companyID) throws Exception {
+		logger.debug("updateItemStarRatingSummary started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_TOTALRATERS", totalRaters);
+		map.put("v_TOTALSCORE", totalScore);
+		map.put("v_AVERAGESCORE", averageScore);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		logger.debug("updateItemStarRatingSummary ended");
+		ezBoardDAO.updateItemStarRatingSummary(map);
+	}
+	@Override
+	public void deleteStarRating(String itemID, int tenantID) throws Exception {
+		logger.debug("deleteStarRating started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("deleteStarRating ended");
+		ezBoardDAO.deleteStarRating(map);
+	}
+
+
+	@Override
+	public void deleteStarRatingSummary(String itemID, int tenantID) throws Exception {
+		logger.debug("deleteStarRatingSummary started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("deleteStarRatingSummary ended");
+		ezBoardDAO.deleteStarRatingSummary(map);
+	}
+
+	@Override
+	public Map<String, Object> getItemStarRating(String itemID, String userID, int tenantID) throws Exception {
+		logger.debug("getItemStarRating started");
+	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+
+		Map<String, Object> map2 = ezBoardDAO.getItemStarRating(map);
+		int rating = 0;
+		int totalScore = 0;
+		String averageScore = "0";
+		int totalRaters = 0;
+
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			if (map2 != null) {
+				rating = map2.get("RATING") == null ? 0 : Integer.parseInt((String) map2.get("RATING"));
+				totalScore = map2.get("TOTALSCORE") == null ? 0 : Integer.parseInt((String) map2.get("TOTALSCORE"));
+				averageScore = map2.get("AVERAGESCORE") == null ? "0" : (String) map2.get("AVERAGESCORE");
+				totalRaters = map2.get("TOTALRATERS") == null ? 0 : Integer.parseInt((String) map2.get("TOTALRATERS"));
+			}
+			
+			resultMap.put("rating", rating);
+			resultMap.put("totalScore", totalScore);
+			resultMap.put("averageScore", averageScore);
+			resultMap.put("totalRaters", totalRaters);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("getItemStarRating ended");
+		return resultMap;
+	}
+	
+	// 게시판 > 별점 평가하기 > 별점 저장 로직
+	@Override
+	public Map<String, Object> saveItemStarRating(String itemID, String isReRated, int updateRating, LoginVO userInfo) throws Exception {
+		
+		String userID = userInfo.getId();
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+		String ratingDate = commonUtil.getTodayUTCTime("");
+		
+		Map<String, Object> map = getItemStarRating(itemID, userID, tenantID);
+		int totalScore = (int) map.get("totalScore");
+		int totalRaters = (int) map.get("totalRaters");
+
+		int updateTotalScore = 0;
+		String updateAverageScore = "";
+		double average = 0;
+
+		//처음 평가하는 사용자 : N / 재평가하는 사용자 : Y
+		if (isReRated.equals("N")) {
+			//총점 : 현재 총점 + 사용자의 점수
+			//평가자 수 : 현재 평가자 수 + 사용자(1명)
+			//평균 : 총점 / 평가자 수
+			updateTotalScore = totalScore + updateRating;
+			totalRaters = totalRaters + 1;
+			average = (double) updateTotalScore / totalRaters;
+			updateAverageScore = (average % 1 == 0) ? String.valueOf((int) average) : String.format("%.1f", average);
+
+			String updateRatingStr = String.valueOf(updateRating);
+			String totalRatersStr = String.valueOf(totalRaters);
+			String updateTotalScoreStr = String.valueOf(updateTotalScore);
+
+			insertItemStarRating(itemID, userID, updateRatingStr, tenantID, companyID, ratingDate);
+
+			if (totalScore == 0) {
+				insertItemStarRatingSummary(itemID, totalRatersStr, updateTotalScoreStr, updateAverageScore, tenantID, companyID);
+			} else {
+				updateItemStarRatingSummary(itemID, totalRatersStr, updateTotalScoreStr, updateAverageScore, tenantID, companyID);
+			}
+
+		} else if (isReRated.equals("Y")) {
+			//총점 : 현재 총점 - 기존 점수 + 사용자의 점수
+			//평가자 수 : 재평가라서 변화없음
+			//평균 : 새 총점 / 평가자 수
+			int currentRating = (int) map.get("rating");
+
+			updateTotalScore = totalScore - currentRating + updateRating;
+			average = (double) updateTotalScore / totalRaters;
+			updateAverageScore = (average % 1 == 0) ? String.valueOf((int) average) : String.format("%.1f", average);
+
+			String updateRatingStr = String.valueOf(updateRating);
+			String totalRatersStr = String.valueOf(totalRaters);
+			String updateTotalScoreStr = String.valueOf(updateTotalScore);
+
+			updateItemStarRating(itemID, userID, updateRatingStr, tenantID, companyID, ratingDate);
+			updateItemStarRatingSummary(itemID, totalRatersStr, updateTotalScoreStr, updateAverageScore, tenantID, companyID);
+		}
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("status", "success");
+		result.put("totalRaters", totalRaters);
+		result.put("averageScore", updateAverageScore);
+		
+		return result;
 	}
 }
