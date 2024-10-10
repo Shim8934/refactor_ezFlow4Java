@@ -113,7 +113,7 @@
 		<div class="lnb">
 			<ul id="mainMenuListLeft">
 			</ul>
-			<div class="lnb_menu_all" id="menuAllContainer" style="left:-1080px;">
+			<div class="lnb_menu_all" id="menuAllContainer">
 	            <div class="lnb_menu_setting" id="menuSettingElem">
 	                <div class="menu_set" id="editBtn">
 	                    <p><spring:message code="ezNewPortal.topMenu.hth09" /></p>
@@ -1837,13 +1837,9 @@
 			var mainFrame = window.parent.document.getElementById("mainFrame");
 			if (mode == "on" || (mode == null && !menuAllContainer.hasClass('on'))) {
 				subMenuClickEvent('off');
-				menuAllContainer.animate({
-                    left:"0px"
-                },200);
 				dimLayerControl('open');
 				menuAllContainer.addClass('on');
             } else {
-            	menuAllContainer.css("left", menuAllContainer[0].offsetWidth * (-1) + "px");
             	dimLayerControl('close');
             	menuAllContainer.removeClass('on');
             }
