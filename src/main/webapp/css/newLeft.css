@@ -873,6 +873,7 @@ form{display:inline;margin:0}
 .listview {background-color:#fff;border:1px solid #ddd;}
 .listview th, .listview td, .listview table{padding:2px;margin:0;border:1px solid #ddd;}
 .listview, .popuplist .listview  table, .popuplist .listview th, .popuplist .listview td,  .content .listview table, .content .listview th, .content .listview td{border:1px solid #ddd;}
+.listview label {-webkit-user-select: none; -moz-user-select: none;-ms-user-select: none; user-select: none;}
 #listview, div .listview {background-color:#fff;border:1px solid #ddd;}
 #listview th, #listview td, #listview table{padding:2px;margin:0;border:1px solid #ddd;}
 #listview, .popuplist #listview  table, .popuplist #listview th, .popuplist #listview td,  .content #listview table, .content #listview th, .content #listview td{border:1px solid #ddd;}
