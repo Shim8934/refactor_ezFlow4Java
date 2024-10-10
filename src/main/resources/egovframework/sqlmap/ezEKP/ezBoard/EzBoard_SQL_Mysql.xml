@@ -8836,6 +8836,16 @@
 				A.TITLE,
 				A.READCOUNT,
 				A.ATTACHMENTS,
+   				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+					ELSE 'MANY'
+				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
 				A.ITEMLEVEL,
 				A.ABSTRACT,
 				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -8921,6 +8931,12 @@
 			<isEmpty property="scrapContBoardListView_FG">
 				AND 1 = 0
 			</isEmpty>
+            LEFT OUTER JOIN
+                TBL_BOARD_ITEM_ATTACHMENTS F
+            ON
+                A.ITEMID = F.ITEMID
+            AND
+                A.TENANT_ID = F.TENANT_ID
             GROUP BY
                 A.ITEMID, A.TITLE
 			ORDER BY
