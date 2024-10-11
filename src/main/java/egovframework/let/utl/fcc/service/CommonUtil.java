@@ -594,10 +594,31 @@ public class CommonUtil {
 			return new LoginVO();
 		}
 	}
+
+	public LoginVO checkAdminOld(String loginCookie){
+		try{
+			LoginVO user = userInfo(loginCookie);
+
+			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+				return null;
+			}else{
+				return user;
+			}
+		}catch(Exception e){
+			return null;
+		}
+	}
 	
 	public LoginVO checkAdmin(String loginCookie){
 		try{
 			LoginVO user = userInfo(loginCookie);
+			
+			// ezSyncServer가 ezFlow를 호출하는 경우엔 loginCookie에 부서 아이디가 없어
+			// 이 경우엔 이전 방식으로 관리자 권한을 체크하도록 함
+			if (user.getDeptID() == null) {
+				return checkAdminOld(loginCookie);
+			}
+			
 			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
 	
 			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
