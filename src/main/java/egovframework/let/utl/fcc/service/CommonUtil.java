@@ -615,7 +615,7 @@ public class CommonUtil {
 			
 			// ezSyncServer가 ezFlow를 호출하는 경우엔 loginCookie에 부서 아이디가 없어
 			// 이 경우엔 이전 방식으로 관리자 권한을 체크하도록 함
-			if (user.getDeptID() == null) {
+			if (user.getDeptID() == null || user.getDeptID().isEmpty()) {
 				return checkAdminOld(loginCookie);
 			}
 			
