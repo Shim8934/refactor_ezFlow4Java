@@ -88,10 +88,8 @@ function AprrovMappingSign(ret)
 	var SingFlag = true;
 	var DekyulFlag = false;
 	var habyui
-	var signCnt;
+	var signCnt = 0;
 	
-	signCnt = 0;
-
 	var RtnVal = getGyulJeDate();
 	var CurrentDate = RtnVal.split(".");
 	var s = CurrentDate[1] + "." + CurrentDate[2]; 
@@ -104,76 +102,27 @@ function AprrovMappingSign(ret)
 	}
 	
 	// 8 : 개인순차협조, 9 : 개인병렬협조, 11 : 부서순차협조, 12 : 부서병렬협조
-	if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) { 
+	if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
   		var phabyuisign;
   		var phabyuidate;
   		var phabyuijikwee;
   		var phabyuidept;
-  	
-  		if(pDraftFlag == "SUSIN") {
+  		
+  		if (pDraftFlag == "SUSIN") {
   			phabyuisign = pSusinSN + "habyuisign";
   			phabyuidate = pSusinSN + "habyuidate";
   			phabyuijikwee = pSusinSN + "habyuipositon";
   			phabyuidept = pSusinSN + "habyui";
-  		} else { 
+  		} else {
   			phabyuisign   = "habyuisign";
   			phabyuidate   = "habyuidate";
   			phabyuijikwee = "habyuipositon";
   			phabyuidept   = "habyui";
   		}
-  	
-		var habyui = phabyuisign + pAprMemberSN;
-		if (message.FieldExist(habyui)) {
-			if(ret != "NAME" && ret != "") { // 서명이 이미지인 경우 
-				message.PutFieldText(habyui, "");
-
-				if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-					message.AppendFieldText(habyui, strLang8, true);
-
-				signInfo[signCnt] = habyui;
-				SignName[signCnt] = habyui;
-                newSignInfo.push(habyui);
-				if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-				{
-					SignType[signCnt] = "IMAGE";
-					SignContent[signCnt] = ret+"::"+strLang8;
-				}
-				else
-				{
-					SignType[signCnt] = "IMAGE";
-					SignContent[signCnt] = ret;
-				}
-				
-				message.InsertPicture(habyui, hostURL + escape(ret), AprrovMappingSign_after);
-				
-				signCnt = signCnt + 1
-				SingFlag = true;
-			}
-			else
-			{
-				if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-				{
-					message.PutFieldText(habyui, strLang8 + arr_userinfo[2]);	
-					SignContent[signCnt] = strLang8 + arr_userinfo[2];
-				}
-				else
-				{
-					message.PutFieldText(habyui, arr_userinfo[2]);	
-					SignContent[signCnt] = arr_userinfo[2];
-				}				
-	
-				signInfo[signCnt] = habyui
-				SignType[signCnt] = "TEXT";
-				SignName[signCnt] = habyui;
-				signCnt = signCnt + 1
-				SingFlag = false; 
-				newSignInfo.push(habyui);
-			}
-		}
-	  
+  		
+  		// 합의일자와 합의직위가 이미지 서명보다 나중에 삽입되는 경우, 양식상에 제대로 삽입되지 않는 경우가 있어 상단으로 코드 이동 (웹한글 비동기 관련)
 		var habyuidateID = phabyuidate + pAprMemberSN;
-		if (message.FieldExist(habyuidateID))
-		{
+		if (message.FieldExist(habyuidateID)) {
 			message.PutFieldText(habyuidateID, s);		
 			signInfo[signCnt] = habyuidateID;
 			SignType[signCnt] = "TEXT";
@@ -184,15 +133,62 @@ function AprrovMappingSign(ret)
 		}
 		
 		var phabyuijikweeID = phabyuijikwee + pAprMemberSN;
-		if (message.FieldExist(phabyuijikweeID))		
-		{
+		if (message.FieldExist(phabyuijikweeID)) {
 			message.PutFieldText(phabyuijikweeID, message.GetFieldText(phabyuijikweeID) + PositionText);
 		}
+		
+		var habyui = phabyuisign + pAprMemberSN;
+		if (message.FieldExist(habyui)) {
+			if (ret != "NAME" && ret != "") { // 서명이 이미지인 경우 
+				message.PutFieldText(habyui, "");
+				
+				// 대리결재 시, 代 문자를 이미지 서명 위에 붙임
+				if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+					message.PrependFieldText(habyui, strLang8 + "\15");
+				}
+				
+				signInfo[signCnt] = habyui;
+				SignName[signCnt] = habyui;
+                newSignInfo.push(habyui);
+                
+				if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+					SignType[signCnt] = "IMAGE";
+					SignContent[signCnt] = ret + "::" + strLang8;
+				}
+				else {
+					SignType[signCnt] = "IMAGE";
+					SignContent[signCnt] = ret;
+				}
+				
+				message.InsertPicture(habyui, hostURL + escape(ret), AprrovMappingSign_after);
+				
+				signCnt = signCnt + 1
+				SingFlag = true;
+			}
+			else {
+				// 대리결재 시, 代 문자를 문자서명 좌측에 붙임
+				if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+					message.PutFieldText(habyui, strLang8 + arr_userinfo[2]);
+					SignContent[signCnt] = strLang8 + arr_userinfo[2];
+				}
+				else {
+					message.PutFieldText(habyui, arr_userinfo[2]);
+					SignContent[signCnt] = arr_userinfo[2];
+				}
+				
+				signInfo[signCnt] = habyui
+				SignType[signCnt] = "TEXT";
+				SignName[signCnt] = habyui;
+				signCnt = signCnt + 1
+				SingFlag = false; 
+				newSignInfo.push(habyui);
+			}
+		}
 	}
-	else if(pAprLineType == strAprType2 || pAprLineType == strAprType7) {   // 2 : 확인, 7 : 참조
+	else if (pAprLineType == strAprType2 || pAprLineType == strAprType7) {   // 2 : 확인, 7 : 참조
 	
 	}
-	else if(pAprLineType == strAprType15) { // 15 : 후열
+	else if (pAprLineType == strAprType15) { // 15 : 후열
 		signID = "gamsasign1" 
 		if (message.FieldExist(signID)) {
 			message.PutFieldText(signID, arr_userinfo[2] + "\15" + s);
@@ -407,6 +403,7 @@ function AprrovMappingSign(ret)
 		var seumyungID;
 		var seumyungdateID;
 		
+		// 전자결재 일반버전 웹한글 대응 분기 (서명칸 정렬 수정)
         if (approvalFlag == "S") {
             if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
                 for (i = 1; i <= 20; i++) {
@@ -430,12 +427,11 @@ function AprrovMappingSign(ret)
             }
         }
         
-		if(pDraftFlag == "SUSIN")
-		{
+		if (pDraftFlag == "SUSIN") {
 			signID = pSusinSN + "sign" + pAprMemberSignSN;
 			seumyungID = pSusinSN + "jikwe" + pAprMemberSignSN;
 			seumyungdateID = pSusinSN + "seumyungdate" + pAprMemberSignSN;
-		}else{
+		} else {
 			signID = "sign" + pAprMemberSignSN;
 			seumyungID = "jikwe" + pAprMemberSignSN;
    			seumyungdateID = "seumyungdate" + pAprMemberSignSN;
@@ -444,50 +440,58 @@ function AprrovMappingSign(ret)
 		if (message.FieldExist(seumyungdateID)) {
 			message.PutFieldText(seumyungdateID, s);
             newSignInfo.push(seumyungdateID);
+            
+            /* 2023-10-05 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+    		signInfo[signCnt] = seumyungdateID;
+    		SignName[signCnt] = seumyungdateID;
+    		SignType[signCnt] = "TEXT";
+    		SignContent[signCnt] = s;
+    		signCnt = signCnt + 1;
 		}
-
+		
 		if (message.FieldExist(seumyungID)) {
 			message.PutFieldText(seumyungID, message.GetFieldText(seumyungID) + PositionText);
 		}
-				
-		if(pAprLineType == strAprType16) {			// 대결
+		
+		if (pAprLineType == strAprType16) {	// 대결
 			if (message.FieldExist(signID)) {
-	  			if(ret != "NAME") {
+				// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+				if (message.FieldExist(seumyungdateID)) {
+				    OpinionText = "\15";
+				}
+				
+	  			if (ret != "NAME") {
 	  				message.PutFieldText(signID, "");
-                    var content ="";
-					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-					{
-						message.PrependFieldText(signID, strLang8);
-						content = strLang8;
+                    var content = "";
+                    
+                    // 대리결재 시, 代 문자를 이미지 서명 위에 붙임 (대결 및 서명일자 표기보다는 아래에 위치)
+					if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+						message.PrependFieldText(signID, strLang8 + "\15");
+						content = strLang8 + "\15";
 					}
-	  			
+					
 	  				message.PrependFieldText(signID, strLang7 + OpinionText);
-	  				content = strLang7 + OpinionText;
-	  				
 	  				message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
-
+	  				
 	  				signInfo[signCnt] = signID;
 			        SignName[signCnt] = signID;
 			        SignType[signCnt] = "IMAGE";
-			        SignContent[signCnt] = ret +"::"+ arr_userinfo[2] + "\15" + s;
+			        SignContent[signCnt] = ret + "::" + strLang7 + OpinionText + content;
 			        newSignInfo.push(signID);
-			
+			        
 	  				signCnt = signCnt + 1
 	  				SingFlag = true;
 	  			}
 	  			else {
-	  			    var content ="";
+	  			    var content = "";
+	  			    
+	  			    // 대리결재 시, 代 문자를 문자서명 좌측에 붙임
 					if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
-						message.PutFieldText(signID, strLang8 + arr_userinfo[2]);
-	  			        content = strLang8 + arr_userinfo[2];
+						message.PutFieldText(signID, OpinionText + strLang8 + arr_userinfo[2]);
+	  			        content = OpinionText + strLang8 + arr_userinfo[2];
 					} else {
-						message.PutFieldText(signID, arr_userinfo[2]);
-						content = arr_userinfo[2];
-					}
-					
-					if (!message.FieldExist(seumyungdateID)) {
-						message.PrependFieldText(signID, OpinionText);
-						content = OpinionText + content;
+						message.PutFieldText(signID, OpinionText + arr_userinfo[2]);
+						content = OpinionText + arr_userinfo[2];
 					}
 					
 					message.PrependFieldText(signID, strLang7);
@@ -501,10 +505,10 @@ function AprrovMappingSign(ret)
 	  				SingFlag = false;
 	  				newSignInfo.push(signID);
 	  			}
-	  		
+	  			
 	  			DekyulFlag = true;
 	  			pAprMemberSignSN = pAprMemberSignSN + 1;
-				if(pDraftFlag == "SUSIN") {
+				if (pDraftFlag == "SUSIN") {
 					signID = pSusinSN + "sign" + pAprMemberSignSN;
 					seumyungID = pSusinSN + "jikwe" + pAprMemberSignSN;
 					seumyungdateID = pSusinSN + "seumyungdate" + pAprMemberSignSN;
@@ -514,83 +518,82 @@ function AprrovMappingSign(ret)
    					seumyungdateID = "seumyungdate" + pAprMemberSignSN;
 				}
 			}
-		}		
+		}
 		
-		if (message.FieldExist(signID)) {  	
-			if (DekyulFlag && pAprLineB4type == strAprType4) { // 4: 전결 (대결자 이후 최종결재자로 전결자가 존재하는 경우, 즉 위임전결사항의 대결 처리)
+		// 상단 분기에서 + 1 처리된 서명 필드에 접근 (다음 결재자의 서명 필드)
+		if (message.FieldExist(signID)) {
+			// 4 : 전결 (대결자 이후 최종결재자로 전결자가 존재하는 경우, 즉 위임전결사항의 대결 처리)
+			if (DekyulFlag && pAprLineB4type == strAprType4) {
 				message.PutFieldText(signID, strLang6);
+				
 	  			signInfo[signCnt] = signID;
 		        SignName[signCnt] = signID;
 		        SignType[signCnt] = "TEXT";
 		        SignContent[signCnt] = strLang6;
 		        newSignInfo.push(signID);
-			        
+		        
 	  			signCnt = signCnt + 1
 			} else if (DekyulFlag) {
-				
 			}
 			else {
 			    var contents = "";
-	  			if(ret != "NAME") {
-	  				var strimg;
+			    // 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+				if (message.FieldExist(seumyungdateID)) {
+				    OpinionText = "\15";
+				}
+				
+	  			if (ret != "NAME") { // 이미지서명
 	  				message.PutFieldText(signID, "");
 	  				
-					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
-						message.PrependFieldText(signID, strLang8);
-						contents = strLang8;
+					if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+						// 이미지 서명의 경우, 代 문자를 이미지 서명 위에 붙임 (대결/전결, 서명일자 표기보다는 아래에 위치)
+						contents = strLang8 + "\15";
 					}
-
-					if (!message.FieldExist(seumyungdateID)) {
-						message.PrependFieldText(signID, OpinionText);
-					    contents = contents + OpinionText;
+					
+					if (pAprLineType == strAprType4) { // 전결
+						OpinionText = strLang6 + OpinionText;
+	  				}
+					
+					// OpinionText에 대결/전결/서명일자 표기 없이 개행문자만 존재하는 경우, 공백으로 치환
+					if (OpinionText == "\15") {
+						OpinionText = "";
 					}
-
-					if(pAprLineType == strAprType4) {
-						message.PrependFieldText(signID, strLang6);
-	  					contents = strLang6 + contents;
-	  				}
-
-					if(pAprLineType == strAprType16) {
-						message.PrependFieldText(signID, strLang7);
-	  					contents = strLang7 + contents;
-	  				}
-	  				
+					
+					contents = OpinionText + contents;
+					
+					message.PrependFieldText(signID, contents);
 	  				message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
-	      
+	  				
 	  				signInfo[signCnt] = signID;
 		            SignName[signCnt] = signID;
 		            SignType[signCnt] = "IMAGE";
-		            SignContent[signCnt] = ret+"::"+contents;
+		            SignContent[signCnt] = ret + "::" + contents;
 		            newSignInfo.push(signID);
-		        
+		            
 	  				signCnt = signCnt + 1
 	  				SingFlag = true;
 	  			}
-	  			else {
-					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
-						message.PutFieldText(signID, strLang8 + "\15" + arr_userinfo[2]);
-						contents = strLang8 + "\15" + arr_userinfo[2];	
+	  			else { // 문자서명
+					if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) { // 대리결재
+						contents = strLang8 + arr_userinfo[2]; // 문자서명 시, 代 문자와 결재자명 사이에는 개행 없음
 					}
 					else {
-						message.PutFieldText(signID, arr_userinfo[2]);
 						contents = arr_userinfo[2];		
 					}
-
-					if (!message.FieldExist(seumyungdateID)) {
-						message.PrependFieldText(signID, OpinionText);
-					    contents = OpinionText + contents;
+					
+					if (pAprLineType == strAprType4) {
+						OpinionText = strLang6 + OpinionText;
+	  				}
+					
+					// OpinionText에 대결/전결/서명일자 표기 없이 개행문자만 존재하는 경우, 공백으로 치환
+					if (OpinionText == "\15") {
+						OpinionText = "";
 					}
-
-					if(pAprLineType == strAprType4) {
-						message.PrependFieldText(signID, strLang6);
-						contents = strLang6 + contents;
-	  				}
-
-					if(pAprLineType == strAprType16) {
-						message.PrependFieldText(signID, strLang7);
-						contents = strLang7 + contents;
-	  				}
-
+					
+					contents = OpinionText + contents;
+					
+					message.PutFieldText(signID, contents);
+					
 	  				signInfo[signCnt] = signID;
 		            SignName[signCnt] = signID;
 		            SignType[signCnt] = "TEXT";
@@ -603,7 +606,7 @@ function AprrovMappingSign(ret)
 		}
 	}
 	//return signInfo;   
-	if(ret == "NAME") {
+	if (ret == "NAME") {
 		GetHTML(Before_SaveApproveInfo);
 	}
 }

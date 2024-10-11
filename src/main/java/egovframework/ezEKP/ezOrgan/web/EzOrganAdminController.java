@@ -260,6 +260,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertApprSatViewerConfig(); // 2021-06-15 심기영 - 전자결재 첨부파일 SAT 뷰어 사용 컨피그 추가
 	    	ezCommonService.insertHWPSecurityConfig(); // 2023-05-31 김우철 - 한글 배포용 문서 저장 관련 테넌트 컨피그 2건 추가
 	    	ezCommonService.insertPrvwConfig(); // 2023-10-27 조수빈 - 전자결재 / 게시판 모듈 미리보기 테넌트 컨피그 2건 추가
+	    	ezCommonService.insertApprSignRemapApplyTime(); // 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가
 			ezCommonService.insertPermissionBasisDeptYN_Config(); // 2023-08-16 전인하 - PermissionBasisDeptYN 테넌트 컨피그 추가
 			ezCommonService.insertTenantConfigLangTertiary(); // 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가
 			ezCommonService.insertTenantConfigLangQuaternary(); // 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가

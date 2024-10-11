@@ -304,7 +304,10 @@ public interface EzCommonService {
 	public void addTblBoardItemTempNoti() throws Exception;
 	
 	public void insertPrvwConfig() throws Exception;
-
+	
+	/* 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 */
+	public void insertApprSignRemapApplyTime() throws Exception;
+	
 	public void insertPermissionBasisDeptYN_Config() throws Exception;
 	
 	void createTblDbLog();

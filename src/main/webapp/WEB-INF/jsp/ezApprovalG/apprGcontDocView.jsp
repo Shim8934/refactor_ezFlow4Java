@@ -300,11 +300,20 @@
 		            }
 		        }
 		        
-		        if ("<c:out value ='${uFlag}'/>" == "m03")
+		        if ("<c:out value ='${uFlag}'/>" == "m03") {
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
-		        else
+		        } else {
 		            setAttachInfo(pDocID, "END", lstAttachLink);
-		
+		        }
+		        
+				/* 2023-12-05 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+		        message.startRemapAllAprSign_MHT(pDocID, orgCompanyID);
+		        
+		        // 현재 문서가 수신문이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+		        if (docState == "011" && porgDocID != null && typeof(porgDocID) != "undefined" && porgDocID != "") {
+		        	message.startRemapAllAprSign_MHT(porgDocID, orgCompanyID);
+		        }
+		        
 		        hasOpinion = CheckOpinionInfo();
 		        if (hasOpinion) {
 		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" +"<spring:message code='ezApprovalG.t170'/>";
@@ -870,28 +879,31 @@
 		                    return RtnVal;
 		                }
 
-		                if (RtnVal != "NAME") {
+		                if (RtnVal != "NAME") { // 서명이 이미지인 경우 
 		                    try {
 		                        var signWidth = 50;
-		                        //var signHeight = 28;
-		                        var signHeight = 50;
+		                        var signHeight = 50; // 후결승인은 대리결재가 불가능하므로 代 문자의 삽입 없음 (이미지 서명의 높이가 50으로 고정됨)
 		                        var strimg;
-		                        //strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?filepath=" + escape(RtnVal) + "' border=0  embedding='1' ";
 		                        strimg = "<img src='" + escape(RtnVal) + "' border=0 embedding='1' ";
 		                        strimg = strimg + " width=" + signWidth;
 		                        
-		                        
-		                        if (signImageType = "NAME") {
-	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >" + "<br>" + arr_userinfo[2];
+		                        if (signImageType == "NAME") {
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'>" + "<br>" + arr_userinfo[2];
 	                            } else {
-	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >";
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'>";
 	                            }
 
 		                        field.innerHTML = strimg;
+		                        
+		                        /* 2024-09-11 홍승비 - 후결승인 시 서명 데이터 DB 저장 형식 수정 */
+		                        var content = RtnVal;
+		                        if (signImageType == "NAME") {
+		                        	content = content + "::" + arr_userinfo[2];
+		                        }
 
 		                        SignType[signCnt] = "IMAGE";
 		                        SignName[signCnt] = signID;
-		                        SignContent[signCnt] = RtnVal;
+		                        SignContent[signCnt] = content;
 
 		                        signCnt = signCnt + 1;
 		                    }
@@ -900,7 +912,7 @@
 		                else {
 		                    strimg = "<p style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</p>";
 		                    field.innerHTML = strimg;
-		                    SignType[signCnt] = "TEXT";
+		                    SignType[signCnt] = "HTML";
 		                    SignName[signCnt] = signID;
 		                    SignContent[signCnt] = strimg;
 		                    signCnt = signCnt + 1;

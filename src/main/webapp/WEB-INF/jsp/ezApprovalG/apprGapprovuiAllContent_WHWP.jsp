@@ -23,6 +23,10 @@
 		<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+    	
+    	<%-- 2023-12-07 홍승비 - 결재 서명 데이터를 DB(TBL_SIGNINFO)에서 가져와, 문서 상에 다시 그려주는(재맵핑) 함수 적용 --%>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprSignRedraw.js')}"></script>
+		
 	    <script language="javascript" type="text/javascript">
 	    	var HwpCtrl;
 	    	var useWebHWP = parent.useWebHWP;
@@ -239,6 +243,11 @@
 				        parent.pGubun = "6";
 				    }
 				    else { */
+				    
+			    	/* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+				    // 일괄기안 웹한글문서는 내부결재가 완료되면 각 안 별로 분리되며, 부서수신함의 수신문도 단일 문서로 접근하게 된다.
+			        startRemapAllAprSign_WHWP(parent.pDocIDAry[frameNum], orgCompanyID);
+				    
 			        pSuSinFlag = "N";
 			        
 			        var RtnVal = FieldExist("recipient");
