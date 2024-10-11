@@ -34,8 +34,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
+import egovframework.let.utl.fcc.service.KlibUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -126,6 +128,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Resource(name = "jspw")
 	private String jspw;
+	
+    @Autowired
+    private KlibUtil klibUtil;
 
 	@Override
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception {
@@ -7609,5 +7614,23 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 
 		logger.debug("actionMailMoveTrash ended.");
+	}
+
+	public String encryptSecureValue(String encryptValue, boolean useKlibEncrypt) throws Exception {
+		if (useKlibEncrypt) {
+			byte[] encrypt = klibUtil.encrypt(encryptValue.getBytes());
+			return new String(Base64.encodeBase64(encrypt));
+		} else {
+			return egovFileScrty.encryptAES(encryptValue);
+		}
+	}
+
+	public String decryptSecureValue(String decryptValue, boolean useKlibEncrypt) throws Exception {
+		if (useKlibEncrypt) {
+			byte[] decrypt = Base64.decodeBase64(decryptValue.getBytes());
+			return new String(klibUtil.decrypt(decrypt));
+		} else {
+			return egovFileScrty.decryptAES(decryptValue);
+		}
 	}
 }

@@ -4533,7 +4533,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		try {
 			secureKey = request.getParameter("secureKey");
-			secureKey = egovFileScrty.decryptAES(secureKey);
+			boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
+			secureKey = ezEmailService.decryptSecureValue(secureKey,useKlibEncrypt);
 			securePassword = request.getParameter("securePassword");
 			logger.debug("secureKey=" + secureKey + ",password=" + securePassword);
 			
@@ -4542,12 +4543,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			String secureId = secureArr[1];
 			String sender = secureArr[2];
 			logger.debug("reader=" + reader + ",secureId=" + secureId + ",sender=" + sender);
-			
-			// secureKey는 메일 본문내용 호출에 쓰이기 때문에 secureKey를 다시 암호화한다.
-			secureKey = egovFileScrty.encryptAES(secureKey);
-			
-			// securePassword는 암호 체크와 메일 본문내용 호출에 쓰이기 때문에 securePassword를 다시 암호화한다.
-			securePassword = egovFileScrty.encryptAES(securePassword);
+
+			// secureKey, securePassword는 메일 본문내용 호출에 쓰이기 때문에 다시 암호화 사용
+			secureKey = request.getParameter("secureKey");
+			securePassword = ezEmailService.encryptSecureValue(securePassword, useKlibEncrypt);
 			
 			int result = ezEmailService.checkSecureMailPassword(secureId, reader, securePassword);
 			logger.debug("result=" + result);
@@ -4627,7 +4626,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					part.saveFile(file);
 					
 					File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
-					egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
+					if (!useKlibEncrypt) {
+						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
+					} else {
+						byte[] bytes = commonUtil.readBytesFromFile(file.toPath());
+						commonUtil.writeBytesToFile(decryptedFile.toPath(),klibUtil.decrypt(bytes));
+					}
 					
 					// 임시파일 삭제
 					if (file.delete()) {
@@ -4952,7 +4956,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		try {
 			String secureKey = request.getParameter("secureKey");
-			secureKey = egovFileScrty.decryptAES(secureKey);
+			boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
+			secureKey = ezEmailService.decryptSecureValue(secureKey,useKlibEncrypt);
 			String securePassword = request.getParameter("securePassword");
 			String indexStr = request.getParameter("index");
 			String filename = request.getParameter("filename");
@@ -5012,8 +5017,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 						fos = new FileOutputStream(file);
 						originalPart.saveFile(file);
-						
-						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
+
+						if (!useKlibEncrypt) {
+							egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
+						} else {
+							byte[] bytes = commonUtil.readBytesFromFile(file.toPath());
+							commonUtil.writeBytesToFile(decryptedFile.toPath(),klibUtil.decrypt(bytes));
+						}
 						
 						// 임시파일 삭제
 						if (file.delete()) {
@@ -5115,7 +5125,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		try {
 			String secureKey = request.getParameter("secureKey");
-			secureKey = egovFileScrty.decryptAES(secureKey);
+			boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
+			secureKey = ezEmailService.decryptSecureValue(secureKey,useKlibEncrypt);
 			String securePassword = request.getParameter("securePassword");
 			String contentId = request.getParameter("contentId");
 			logger.debug("secureKey=" + secureKey + ",securePassword=" + securePassword + ",contentId=" + contentId);
@@ -5169,8 +5180,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 						fos = new FileOutputStream(file);
 						originalPart.saveFile(file);
-						
-						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
+
+						if (!useKlibEncrypt) {
+							egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
+						} else {
+							byte[] bytes = commonUtil.readBytesFromFile(file.toPath());
+							commonUtil.writeBytesToFile(decryptedFile.toPath(),klibUtil.decrypt(bytes));
+						}
 						
 						// 임시파일 삭제
 						if (file.delete()) {
@@ -5264,7 +5280,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		try {
 			String secureKey = request.getParameter("secureKey");
-			secureKey = egovFileScrty.decryptAES(secureKey);
+			boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
+			secureKey = ezEmailService.decryptSecureValue(secureKey,useKlibEncrypt);
+			
 			String securePassword = request.getParameter("securePassword");
 			logger.debug("secureKey=" + secureKey + ",securePassword=" + securePassword);
 			
@@ -5273,7 +5291,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			logger.debug("reader=" + reader + ",secureId=" + secureId);
 			
 			// secureKey는 메일 인라인이미지, 첨부파일 다운로드 호출에 쓰이기 때문에 secureKey를 다시 암호화한다.
-			secureKey = egovFileScrty.encryptAES(secureKey);
+			secureKey = request.getParameter("secureKey");
 			
 			int result = ezEmailService.checkSecureMailPassword(secureId, reader, securePassword);
 			logger.debug("result=" + result);
@@ -5318,7 +5336,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						part.saveFile(file);
 						
 						File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
-						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
+						
+						if (!useKlibEncrypt) {
+							egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
+						} else {
+							byte[] bytes = commonUtil.readBytesFromFile(file.toPath());
+							commonUtil.writeBytesToFile(decryptedFile.toPath(),klibUtil.decrypt(bytes));
+						}
 						
 						// 임시파일 삭제
 						if (file.delete()) {
@@ -5426,7 +5450,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		// securePassword 복호화
 		String securePassword = secureInfo.getPassword();
-		securePassword = egovFileScrty.decryptAES(securePassword);
+		boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
+		securePassword = ezEmailService.decryptSecureValue(securePassword, useKlibEncrypt);
 		secureInfo.setPassword(securePassword);
 		
 		String maxReadDate = secureInfo.getMaxReadDate();
