@@ -173,6 +173,7 @@
 		var userLang = '<c:out value="${lang}"/>';
 		var userPrimary = '<c:out value="${primary}"/>';
 		var userPhotoSrc = '<c:out value="${userPhoto}"/>';
+		var primaryLang = '<c:out value="${primaryLang}"/>';
 		
 		var newPortalTopMenu = {
 			menuListArr: [],           // 메뉴 리스트 배열에 저장
@@ -468,7 +469,11 @@
 				    str += '<img src="/images/ezNewPortal/info_pic_none.png"></span>';
 			    }
 			    
-			    str += '<div class="profile_div util_div_menu" id="profileContainer"><div class="btn_tab"><span class="set" id="util_set"><spring:message code="ezNewPortal.t006" /></span><span class="help" onclick="openHelp();"><spring:message code="main.t00037" /></span><span class="logout" id="util_logout"><spring:message code="ezNewPortal.t008" /></span></div></div></li>';
+			    str += '<div class="profile_div util_div_menu" id="profileContainer"><div class="btn_tab"><span class="set" id="util_set"><spring:message code="ezNewPortal.t006" /></span>';
+				if(primaryLang == 1) {
+					str	+= '<span class="help" onclick="openHelp();"><spring:message code="main.t00037" /></span>' ;
+				}
+				str	+= '<span class="logout" id="util_logout"><spring:message code="ezNewPortal.t008" /></span></div></div></li>';
 				str += '</ul>';
 			
 			return str;

@@ -285,6 +285,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useActiveX", data.get("useActiveX"));
 			model.addAttribute("lang",userInfo.getLang());
 			model.addAttribute("primary", userInfo.getPrimary());
+			model.addAttribute("primaryLang", ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()));
 			if (data.get("roleInfo").toString().equalsIgnoreCase("admin")) {
 				model.addAttribute("utilAdminUrl", data.get("utilAdminUrl"));
 			}
