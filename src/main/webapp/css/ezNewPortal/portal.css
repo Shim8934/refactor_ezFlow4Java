@@ -2447,3 +2447,6 @@ div.orbit img{border-radius:5px;}
 .notEmptySlider.noSliderUrl {cursor: auto;}
 
 .webFolder_portlet .fileListWrapper.empty{padding-top:0px;}
+
+.security_icon{display:inline-block; width:16px; height:16px; background:url(/images/email/secureMail/security_icon.svg) no-repeat center / 16px 16px; !important;} 
+.portlet_list li .txt .security_icon{vertical-align:top; margin:2px 5px 0 0; !important;}

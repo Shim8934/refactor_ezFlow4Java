@@ -8395,8 +8395,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			logger.debug("tenantId={}", tenantId);
-			
 			String mailURL = request.getParameter("mailURL");
+			mailURL = URLDecoder.decode(mailURL, "UTF-8");
+			logger.debug("mailUrl={}", mailURL);
 			
 			// tenantConfig
 			String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);

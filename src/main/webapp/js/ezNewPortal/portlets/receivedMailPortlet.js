@@ -97,7 +97,7 @@ function getMailList(currPage) {
 					listHTML2 += "<li class="+readClass+" onclick='open_mail(&#39;" + href + "&#39;)'>";
 					listHTML2 += "<span class='txt'>";
 					if (mailList[i].securedMail === "true") {
-						listHTML2 += "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"20px\" />";
+						listHTML2 += "<span class='security_icon'></span>";
 					}
 					listHTML2 += MakeXMLString(subject) + "</span>";
 					listHTML2 += "<span class='date'>"+MakeXMLString(receivedDateStr).replace(/-/g, ".")+"</span>";		
