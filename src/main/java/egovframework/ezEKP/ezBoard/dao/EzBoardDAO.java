@@ -874,4 +874,24 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public boolean confirmBoardItemDeletion(Map<String, Object> map) throws Exception {
 		return (boolean) select("EzBoardDAO.confirmBoardItemDeletion", map);
 	}
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 답글을 저장하는 쿼리 */
+	public void saveOneLineChildReply(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.saveOneLineChildReply", map);
+	}
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글, 답글 수정되었을 경우 업데이트하는 쿼리 */
+	public void updateOneLineReply(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateOneLineReply", map);
+	}
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 쿼리 */
+	public int getChildReplyCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getChildReplyCnt", map);
+	}
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식있는 부모댓글 삭제할 경우 해당 댓글 값 NULL로 변경하는 쿼리 */
+	public void updateDelParentReply(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateDelParentReply", map);
+	}
 }

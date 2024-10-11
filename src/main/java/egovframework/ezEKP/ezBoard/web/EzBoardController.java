@@ -5859,6 +5859,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String replyID = request.getParameter("replyID");
 		String itemID = request.getParameter("itemID");
 		String replyFlag = request.getParameter("replyFlag");
+		String clickFlag = request.getParameter("clickFlag"); // 삭제버튼 선택 시 delete, 수정버튼 선택 시 modify
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
@@ -5866,6 +5867,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
+		model.addAttribute("clickFlag", clickFlag);
 
 		logger.debug("checkPassWord ended");
 		
@@ -7422,7 +7424,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("useBoardFilePrvw", useBoardFilePrvw);
-		
+		model.addAttribute("displayName", userInfo.getDisplayName1());
+
 		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";
 	}
@@ -7560,7 +7563,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = commonUtil.stripScriptTags(request.getParameter("boardID"));
 		String content = commonUtil.stripScriptTags(request.getParameter("content"));
 		String password = commonUtil.stripScriptTags(request.getParameter("password"));
-		
+		int replyLevel = Integer.parseInt(request.getParameter("replyLevel"));
+		String parentReplyID = "";
+		String parentWriterName = "";
+		String emoticonContent = commonUtil.stripScriptTags(request.getParameter("emoticonContent"));
+
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		
 		String rpwd = EgovFileScrty.decryptRsa(pk, password);
@@ -7576,8 +7583,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		content = content.replace("'", "''");
 		
-		ezBoardService.saveOneLineReply(itemID, replyID, boardID, userInfo, content, password);
+		if (replyLevel == 1) {	// 부모댓글 저장
+			ezBoardService.saveOneLineReply(itemID, replyID, boardID, userInfo, content, password, replyLevel, emoticonContent);
+		} else { // 자식댓글 저장
+			parentReplyID = commonUtil.stripScriptTags(request.getParameter("parentReplyId"));
+			parentWriterName = request.getParameter("parentWriterName");
 
+			ezBoardService.saveOneLineChildReply(itemID, replyID, boardID, userInfo, content, password, parentReplyID, replyLevel, parentWriterName, emoticonContent);
+		}
 		logger.debug("saveOneLineReply ended");
 	}
 	
@@ -7593,6 +7606,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String guBun = request.getParameter("guBun");
 		String replyID = request.getParameter("replyID");
+
+		// 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > null로 update했던 부모 댓글을 delete하는 경우 flag가 true (부모댓글이 삭제된 뒤 자식댓글이 모두 삭제되는 경우)
+		String flag = request.getParameter("flag");
+
+		if ("true".equals(flag)) {
+			userInfo.setId("");
+		}
 		
 		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;n;k")) {
 			guBun = "2";
@@ -8846,6 +8866,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, gubun, userInfo.getCompanyID(), userInfo.getTenantId());
     	for (BoardLineReplyVO reply : boardLineReplyVOList) {
     		reply.setWriteDate(commonUtil.getDateStringInUTC(reply.getWriteDate(), userInfo.getOffset(), false));
+    		reply.setUpdateDate(commonUtil.getDateStringInUTC(reply.getUpdateDate(), userInfo.getOffset(), false));
     	}
     	
     	String totalCommentCount = String.valueOf(boardLineReplyVOList.size());
@@ -11045,12 +11066,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	public void allReactDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception {
 		logger.debug("allReactDelete started.");
 
+		userInfo = commonUtil.userInfo(loginCookie);
 		String itemID = request.getParameter("itemID");
 		String delReplyID = request.getParameter("delReplyID");
-		userInfo = commonUtil.userInfo(loginCookie);
 		int tenantID = userInfo.getTenantId();
 
 		ezBoardService.allReactDelete(itemID, delReplyID, tenantID);
+
 		logger.debug("allReactDelete ended.");
 	}
 
@@ -11157,5 +11179,63 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("personalPopupUser ended");
 		return "/ezBoard/boardSelectUser";
+	}
+
+	/**
+	 * 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 또는 답글 수정되었을 경우 업데이트하는 메서드
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ezBoard/updateOneLineReply.do", method = RequestMethod.POST)
+	public void updateOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception {
+		logger.debug("updateOneLineReply started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		String itemID = request.getParameter("itemID");
+		String boardID = request.getParameter("boardID");
+		String replyID = request.getParameter("replyID");
+		String content = request.getParameter("content");
+		int tenantID = userInfo.getTenantId();
+		String updateDate = commonUtil.getTodayUTCTime("");
+		String imageContent = request.getParameter("imageContent");
+
+		ezBoardService.updateOneLineReply(itemID, boardID, replyID, content, updateDate, tenantID, imageContent);
+		logger.debug("updateOneLineReply ended");
+	}
+
+	/**
+	 * 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 메서드
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ezBoard/getChildReplyCnt.do", method = RequestMethod.GET)
+	public int getChildReplyCnt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception {
+		logger.debug("getChildReplyCnt started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		String itemID = request.getParameter("itemID");
+		String boardID = request.getParameter("boardID");
+		String replyID = request.getParameter("replyID");
+		int tenantID = userInfo.getTenantId();
+
+		logger.debug("getChildReplyCnt ended");
+		return ezBoardService.getChildReplyCnt(itemID, boardID, replyID, tenantID);
+	}
+
+	/**
+	 * 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식이 존재하는 부모댓글 삭제할 경우 해당 댓글 정보를 NULL로 변경해주는 메서드
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ezBoard/updateDelParentReply.do", method = RequestMethod.GET)
+	public void updateDelParentReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception {
+		logger.debug("updateDelParentReply started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		String itemID = request.getParameter("itemID");
+		String boardID = request.getParameter("boardID");
+		String replyID = request.getParameter("replyID");
+		int tenantID = userInfo.getTenantId();
+
+		ezBoardService.updateDelParentReply(replyID, itemID, boardID, tenantID);
+
+		logger.debug("updateDelParentReply ended");
 	}
 }

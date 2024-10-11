@@ -1,4 +1,4 @@
-﻿﻿// \ ezBoardSTD \ admin \ OrganAdmin \ SelectTarget.aspx1.js
+﻿// \ ezBoardSTD \ admin \ OrganAdmin \ SelectTarget.aspx1.js
 // \ ezBoardSTD \ admin \ BoardACL.aspx1.js
 // \ ezBoardSTD \ js \ AttachItem.js
 var strLang1 = "附件名称";
@@ -86,6 +86,15 @@ var strLang189 = "请输入";
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
 
 // 2023-03-08 이가은 추가
-var strLangLGE188 = "본인의 댓글에는 '좋아요'를 하실 수 없습니다.";
-var strLangLGE189 = "본인의 댓글에는 '싫어요'를 하실 수 없습니다.";
-var strLangLGE190 = "이미 삭제된 댓글입니다.";
+var strLangLGE188 = "您不能对自己的评论点赞。";
+var strLangLGE189 = "您不能对自己的评论点踩。";
+var strLangLGE190 = "该评论已被删除。";
+
+// 2023-03-30 이가은 추가
+var strLangLGE01 = "写回复";
+var strLangLGE02 = "收起回复";
+var strLangLGE03 = "注册";
+var strLangLGE04 = "取消";
+var strLangLGE05 = "发布密码";
+var strLangLGE06 = "匿名";
+var strLangLGE07 = "已被作者删除的评论。";

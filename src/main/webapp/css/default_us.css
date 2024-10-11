@@ -4016,3 +4016,54 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 /* //20240517 메일보기 상단바 디자인수정 */
 #ownerInput.us{width:calc(100% - 80px) !important;}
 .textUser{width: 22%}
+
+/* 2023-11-07 전인하 게시판 댓글 이모티콘 삽입 */
+.emoticon {    
+    background-size: 85px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-clip: border-box;
+    transition: background-size 0.2s;
+    -webkit-transition: background-size 0.2s;
+    transition-timing-function: cubic-bezier(.07,1.41,.82,1.41);
+    display: inline-block;
+    width: 105px;
+    height: 105px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.emoticon:hover {
+    background-size: 100px;
+}
+.emoticonPanel{display:none; width:440px; height:356.5px; left: 0px; background-color: #fff; border:1px solid #ddd; z-index:333; white-space: normal;}
+.emoticonPanel.open{display:block;}
+.emoticonPanel.up{top:0px; transform:translateY(-100%); position:absolute}
+.emoticonPanel.down{bottom:0px; transform:translateY(100%); position:absolute}
+#previousEmoticon, #nextEmoticon{width:30px; height:40px; padding-top:3px;}
+
+.uploadedFile {display:none; border:1px solid #ddd; width: 100px; height:100px; float:right; right: 0px; background-color: #4B4B4B;z-index: 222}
+.uploadedFile.open{display:block;}
+.uploadedFile.up{top:0px; transform:translateY(-100%); position:absolute}
+.uploadedFile.down{bottom:0px; transform:translateY(100%); position:absolute}
+.uploadedFile .cancelImg{ position:absolute; top:0px; right:0px; display: block; cursor: pointer; z-index: 2000; height:20px; width:20px;}
+.uploadedFile .previewImage{display: block; position:absolute; max-height:60px; max-width:60px; min-width: 30px; min-width: 30px; top:50%; left:50%; transform: translate(-50%, -50%);}
+
+.emoticonLayerStaticPosition{position:relative}
+.boardComment {position: relative}
+
+._addEmoticon {padding-left: 5px; padding-right: 5px; cursor: pointer;}
+#_addEmoticonRereply {position:absolute; top:10px; margin-left:-34px;}
+#_addEmoticon {margin-bottom: 23px;}
+
+/* 2023-12-27 전인하 - 삭제된 댓글 스타일 생성 */
+.deletedComment {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    vertical-align: middle;
+    font-size: 15px;
+    color: #999;
+    font-weight: 500;
+    text-align: center;
+}

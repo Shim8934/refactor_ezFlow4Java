@@ -6013,4 +6013,43 @@
 			TBL_RS_SCHEDULE
 			ADD DEPTID NVARCHAR2(80) DEFAULT NULL
 	</statement>
+	<select id="EzCommonDAO.checkTblBoardOneLineChildReply">
+		<![CDATA[
+			SELECT
+				REPLYLEVEL
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.alterTblBoardOneLineChildReply">
+		ALTER TABLE
+			TBL_BOARD_ONELINEREPLY
+		ADD (
+			REPLYLEVEL NUMBER(10,0),
+			PARENTREPLYID NVARCHAR2(100),
+			PARENTWRITERNAME NVARCHAR2(50),
+			UPDATEDATE DATE
+		)
+	</statement>
+	<select id="EzCommonDAO.checkTblBoardOneReplyImageContentColumn">
+		<![CDATA[
+			SELECT
+				IMAGECONTENT
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.insertTblBoardOneReplyImageContentColumn">
+		<![CDATA[
+		ALTER TABLE
+			TBL_BOARD_ONELINEREPLY
+		ADD
+			IMAGECONTENT NVARCHAR2(600) DEFAULT NULL
+		]]>
+	</statement>
+	
 </sqlMap>

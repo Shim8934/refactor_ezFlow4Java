@@ -88,6 +88,17 @@
 		        var rsa = new RSAKey();
 		        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 				var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
+				/* 2023-04-12 이가은 - 답글 기능을 위한 변수 추가 */
+		        var userInfoName = "${userInfo.displayName1}";
+				var replyOpenFlag = 0;
+				var replyModifyFlag = 0;
+				var replyModifyId = "";
+				var replyTextarea = "";
+				var delParentReply = 0;
+				var delChildReply = 0;
+				var delReplyLevel = "";
+				var parentReplyID = "";
+				var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
 
 				/* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
 				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
@@ -95,6 +106,7 @@
 		        window.onload = function () {
 		        	imageViewInit();
 		            rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+		            makeEmoticonPanel();
 		            
 		            if (g_progresswin) {
 		            	g_progresswin.close();
@@ -926,17 +938,21 @@
 		<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
         <c:if test="${oneLineReplyFlag == '2'}">
         	<div style='height:auto;'>
-				<table class="mainlist" style="width:100%; min-width:745px; margin-top:8px;" >
+				<table class="mainlist emoticonLayerStaticPosition" style="width:100%; min-width:745px; margin-top:8px;" >
 					<tr>
 						<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
-							<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+                            <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
+                            <div class="emoticonRelative">								    
+                                <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
+                                <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="600"></textarea>
+                            </div>
 						</th>
-						<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
-							<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+						<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;width:15%;">
+							<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 						</th>
 					</tr>
 				</table>
-				<table id="commentList" style="width:100%; min-width:745px; margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+				<table id="commentList" style="width:100%; min-width:745px; margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 			</div>
         </c:if>
         <%-- 본문하단 댓글영역 끝 --%>
@@ -985,5 +1001,31 @@
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
+	    
+	    <div id = "basePanel">
+            <%-- 2023-11-01 전인하 - 이모티콘 선택 팝업--%>
+            <div id ="_stickerArea">					
+                <div id="emoticonPanel" class="emoticonPanel">
+                    <div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
+                        <div style="float:left; display:block;">
+                            <img id="previousEmoticon" src="/images/previous1.png" onclick="showNextGroupSticker(this);">
+                        </div>
+                        <div id="_ePresentors" style="float:left; display:block; ">
+                        </div>
+                        <div style="float: right; display:block;">
+                            <img id="nextEmoticon" src="/images/next1.png" onclick="showNextGroupSticker(this);">
+                        </div>
+                    </div>						
+                    <div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
+                    </div>
+                </div>					
+            </div>
+            
+            <%-- 2023-11-01 전인하 - 선택된 이모티콘 조회 팝업 --%>
+            <div id="uploadedFile" class="uploadedFile">
+                <img id="cancelImg" class="cancelImg" src="/images/close.png" onclick="closeEmoticonPreview();">
+                <img id="previewImage" class="previewImage">
+            </div>            
+        </div>
 	</body>
 </html>

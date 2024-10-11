@@ -1122,7 +1122,9 @@
 	   				 WHERE  
 	   					TENANT_ID = A.TENANT_ID
 	   				 AND
-	   					ITEMID = A.ItemID) ONELINECNT,
+	   					ITEMID = A.ItemID
+	   				 AND
+					(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
      				A.UPPERITEMIDTREE,
      				A.DOCNO,
      				'' AS NOTICE,
@@ -1326,6 +1328,16 @@
   				A.WRITERNAME2,
   				A.WRITERDEPTNAME2,
   				A.WRITERCOMPANYNAME2,
+  				( SELECT 
+  					COUNT(*)
+				  FROM 
+				  	TBL_Board_OneLineReply
+				  WHERE  
+				  	TENANT_ID = A.TENANT_ID
+				  AND
+				  	ITEMID = A.ITEMID
+				  AND
+				    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) as ONELINECNT,
   				A.UPPERITEMIDTREE,
   				A.DOCNO,
   			    '' AS NOTICE,
@@ -1428,6 +1440,16 @@
                 A.WRITERNAME2 ,
                 A.WRITERDEPTNAME2 ,
                 A.WRITERCOMPANYNAME2 ,
+                (SELECT 
+                	COUNT(*)  
+    				FROM 
+    					TBL_Board_OneLineReply 
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ITEMID
+   				AND
+   				    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT  ,
                 A.UPPERITEMIDTREE ,
                 A.DOCNO ,
                 A.EXTENSIONATTRIBUTE2 NOTICE  ,
@@ -1578,7 +1600,9 @@
     				WHERE  
     					TENANT_ID = A.TENANT_ID
     				AND
-    					ITEMID = A.ItemID) ONELINECNT  ,
+    					ITEMID = A.ItemID
+    				AND
+    					(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT ,
                     A.UPPERITEMIDTREE ,
                     A.DOCNO ,
                     A.EXTENSIONATTRIBUTE2 NOTICE  ,
@@ -1641,7 +1665,9 @@
    				WHERE  
    					TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) ONELINECNT  ,
+   					ITEMID = A.ItemID
+				AND
+					(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
    				A.UPPERITEMIDTREE,
    				A.DOCNO,
    				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
@@ -1727,7 +1753,9 @@
    				WHERE  
    					TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) ONELINECNT  ,
+   					ITEMID = A.ItemID
+				AND
+					(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
    				A.UPPERITEMIDTREE,
    				A.DOCNO,
    				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
@@ -1905,7 +1933,9 @@
    				WHERE  
    					TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) ONELINECNT  ,
+   					ITEMID = A.ItemID
+   				AND
+   				    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
    				A.DOCNO,
    				A.MAINCONTENT,
    				B.FILEPATH,
@@ -2002,7 +2032,9 @@
    				WHERE  
    					TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) ONELINECNT,
+   					ITEMID = A.ItemID
+   				AND
+	   				(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
    				A.DOCNO,
    				A.MAINCONTENT,
    				B.FILEPATH,
@@ -3777,9 +3809,20 @@
 					A.WRITEDATE,
 					DEPTID,
 				    COUNT(CASE WHEN R.REACTFLAG = 'Y' THEN '1' END) AS RE_LIKE,
-				    COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE
+				    COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE,
+				    A.PARENTREPLYID,
+					A.PARENTWRITERNAME,
+				    IF(A.PARENTREPLYID IS NOT NULL, A.PARENTREPLYID, A.REPLYID) AS GROUPID,
+					IF(A.PARENTREPLYID IS NOT NULL, D.WRITEDATE, A.WRITEDATE) AS GROUPDATE,
+					IFNULL(A.REPLYLEVEL, 1) AS REPLYLEVEL,
+					A.UPDATEDATE,
+				    A.IMAGECONTENT
 		        FROM
 		        	TBL_BOARD_ONELINEREPLY A
+		        LEFT OUTER JOIN
+		        	TBL_BOARD_ONELINEREPLY D
+		        ON
+		            A.PARENTREPLYID = D.REPLYID
 		        LEFT OUTER JOIN
 					TBL_BOARD_REPLY_REACT R
 				ON
@@ -3844,9 +3887,9 @@
 				AND 
 					A.ITEMID = #v_ItemID#
 				GROUP BY
-					A.USERID, A.REPLYID
+					A.USERID, A.REPLYID, GROUPID
 				ORDER BY 
-					writedate ASC
+					GROUPDATE, GROUPID, A.WRITEDATE
 			]]>
 		</isNotEqual>
 		<!-- 2018-10-19 홍승비 - 익명댓글 표출 분기 추가 -->
@@ -3854,14 +3897,25 @@
 			<![CDATA[
 				SELECT
 					A.REPLYID,
-					$v_UserName$ AS USERNAME,
+					A.$v_UserName$ AS USERNAME,
 					A.USERID,
 					A.CONTENT,
 					A.WRITEDATE,
 					COUNT(CASE WHEN R.REACTFLAG = 'Y' THEN '1' END) AS RE_LIKE,
-					COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE
+					COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE,
+					A.PARENTREPLYID,
+					A.PARENTWRITERNAME,
+					IF(A.PARENTREPLYID IS NOT NULL, A.PARENTREPLYID, A.REPLYID) AS GROUPID,
+					IF(A.PARENTREPLYID IS NOT NULL, D.WRITEDATE, A.WRITEDATE) AS GROUPDATE,
+					IFNULL(A.REPLYLEVEL, 1) AS REPLYLEVEL,
+					A.UPDATEDATE,
+				    A.IMAGECONTENT
 				FROM
 					TBL_BOARD_ONELINEREPLY A
+				LEFT OUTER JOIN
+					TBL_BOARD_ONELINEREPLY D
+				ON
+					A.PARENTREPLYID = D.REPLYID
 				LEFT OUTER JOIN
 					TBL_BOARD_REPLY_REACT R
 				ON
@@ -3877,9 +3931,9 @@
 				AND 
 					A.ITEMID = #v_ItemID#
 				GROUP BY
-					A.REPLYID
+					A.REPLYID, GROUPID
 				ORDER BY 
-					WRITEDATE  ASC
+					GROUPDATE, GROUPID, A.WRITEDATE
 			]]>
 		</isEqual>
 	</select>
@@ -4854,13 +4908,14 @@
 		]]>
 	</insert>
 	
+	<!-- 2023-11-07 전인하 - 이모티콘 삽입 시 분기 추가 -->
 	<insert id="EzBoardDAO.saveOneLineReply" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_ONELINEREPLY (
-				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   content, 		password, 	  tenant_id, companyid
+				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   content, 		password, 	  tenant_id, companyid, IMAGECONTENT
 			)
         	VALUES (
-        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, #nowDate#,	  #PCONTENT#,	#PPASSWORD# , #TENANTID#, #COMPANYID#
+        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, #nowDate#,	  #PCONTENT#,	#PPASSWORD# , #TENANTID#, #COMPANYID#, #v_EMOTICON#
         	)
 		]]>
 	</insert>
@@ -5201,6 +5256,8 @@
        			boardID = #boardID#
             AND 
             	ItemID = #itemID#
+			AND
+       		    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)
 		]]>
   </select>
  
@@ -6043,6 +6100,8 @@
 				ITEMID = #v_itemID# 
 			AND 
 				TENANT_ID = #v_TENANTID#
+			AND
+			    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)
 		]]>
 	</select>
 	
@@ -6369,5 +6428,76 @@
 		AND
 			TENANT_ID = #tenantID#
 	</select>
+
+	<!-- 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 답글을 저장하는 쿼리 -->
+	<insert id="EzBoardDAO.saveOneLineChildReply" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_ONELINEREPLY (
+				itemid, replyid, boardid, userid, username, username2, writedate, content, password, parentreplyid, parentwritername, replylevel, tenant_id, companyid, IMAGECONTENT
+			)
+			VALUES (
+				#v_ITEMID#, #v_REPLYID#, #v_BOARDID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_NOWDATE#, #v_CONTENT#, #v_PASSWORD#, #v_PARENTREPLYID#, #v_PARENTWRITERNAME#, #v_REPLYLEVEL#, #v_TENANTID#, #v_COMPANYID#, #v_EMOTICON#
+			)
+		]]>
+	</insert>
+
+	<!-- 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글, 답글 수정되었을 경우 업데이트하는 쿼리 -->
+	<update id="EzBoardDAO.updateOneLineReply" parameterClass="map">
+		<![CDATA[
+			UPDATE
+			    TBL_BOARD_ONELINEREPLY
+			SET
+			    CONTENT = #v_CONTENT#,
+			    UPDATEDATE = #v_UPDATEDATE#,
+			    IMAGECONTENT = #v_EMOTICON#
+			WHERE
+			    ITEMID = #v_ITEMID#
+			AND
+			    BOARDID = #v_BOARDID#
+			AND
+			    REPLYID = #v_REPLYID#
+		]]>
+	</update>
+
+	<!-- 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.getChildReplyCnt" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			WHERE
+				ITEMID = #v_ITEMID#
+			AND
+				BOARDID = #v_BOARDID#
+			AND
+				PARENTREPLYID = #v_REPLYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<!-- 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식있는 부모댓글 삭제할 경우 해당 댓글 값 NULL로 변경하는 쿼리 -->
+	<update id="EzBoardDAO.updateDelParentReply" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_BOARD_ONELINEREPLY
+			SET
+				USERID = NULL,
+				USERNAME = NULL,
+				USERNAME2 = NULL,
+				CONTENT = NULL,
+				UPDATEDATE = NULL,
+				IMAGECONTENT = NULL
+			WHERE
+				REPLYID = #v_REPLYID#
+			AND
+				ITEMID = #v_ITEMID#
+			AND
+				BOARDID = #v_BOARDID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
 
 </sqlMap>

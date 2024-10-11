@@ -98,6 +98,17 @@
 	        var MozNowZoom = 1;
 	        var MozMaxZoom = 2;
 	        var MozMinZoom = 0.8;
+			/* 2023-04-12 이가은 - 답글 기능을 위한 변수 추가 */
+	        var userInfoName = "${userInfo.displayName1}";
+			var replyOpenFlag = 0;
+			var replyModifyFlag = 0;
+			var replyModifyId = "";
+			var replyTextarea = "";
+			var delParentReply = 0;
+			var delChildReply = 0;
+			var delReplyLevel = "";
+			var parentReplyID = "";
+			var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
 	        
 	        function Bigger(doc) {     
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -148,6 +159,7 @@
 	        }
 	        
 		    window.onload = function () {
+		    	makeEmoticonPanel();
 		        try {
 		        	// 수정 수아 재은
 		        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer; margin-bottom: 5px;' />"
@@ -1641,7 +1653,7 @@
 		    </td>
 		    </tr>
 		    <tr>
-				<td style="vertical-align: top; height: 10px;">
+				<td style="vertical-align: top; height: 10px; padding-bottom:10px;">
 				<table class="content2" style="width:100%;">
 					<!-- 게시자  -->
 					<tr>
@@ -1807,7 +1819,7 @@
 			    </td>
 		  </tr>
 		  <tr>
-		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
+		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px; padding-top:0px;">
 		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:calc(100% - 2px); height:495px; overflow:auto; border:1px solid #ddd"></iframe>
 				
 				<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
@@ -1830,19 +1842,27 @@
 				<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 		        <c:if test="${boardPropertyVO.oneLineReply == '2'}">
 		        	<div style='height:auto;'>
-						<table class="mainlist" style="width:100%" >
+						<table class="mainlist emoticonLayerStaticPosition" style="width:100%" >
 							<c:choose>
 								<c:when test="${guBun == 2}">
-									<tr>
-										<th colspan="2" style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
+								    <tr>
+										<th colspan="2" style="text-align:center; width: 100%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
 												 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
-											<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+										    <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
+                                            <div class="emoticonRelative">								    
+                                               <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
+                                               <textarea id="onelinereply" rows="3" style = "resize:none; width: calc(100% - 45px);" maxlength="600"></textarea>
+                                            </div>
 										</th>
 								</c:when>
 								<c:otherwise>
-									<tr>
-										<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
-											<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+								    <tr>
+										<th style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+											<%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
+                                            <div class="emoticonRelative">								    
+                                                <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
+                                                <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="600"></textarea>
+                                            </div>
 										</th>
 								</c:otherwise>	
 							</c:choose>
@@ -1851,8 +1871,8 @@
 									</tr>
 								</c:when>
 								<c:otherwise>
-										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
-											<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;width:15%;">
+											<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 										</th>
 									</tr>
 								</c:otherwise>
@@ -1864,12 +1884,12 @@
 											border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle ">
 										<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
 										<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
-										<a class='imgbtn' style="vertical-align: middle; margin-bottom: 3px;"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+										<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 									</th>
 								</tr>
 							</c:if>
 						</table>
-						<table id="commentList" style="width:100%;margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+						<table id="commentList" style="width:100%;margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 					</div>
 		        </c:if>
 		        <%-- 본문하단 댓글영역 끝 --%>
@@ -1939,5 +1959,31 @@
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel2">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer2"></iframe>
 	    </div>
+	    
+	    <div id = "basePanel">
+            <%-- 2023-11-01 전인하 - 이모티콘 선택 팝업--%>
+            <div id ="_stickerArea">					
+                <div id="emoticonPanel" class="emoticonPanel">
+                    <div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
+                        <div style="float:left; display:block;">
+                            <img id="previousEmoticon" src="/images/previous1.png" onclick="showNextGroupSticker(this);">
+                        </div>
+                        <div id="_ePresentors" style="float:left; display:block; ">
+                        </div>
+                        <div style="float: right; display:block;">
+                            <img id="nextEmoticon" src="/images/next1.png" onclick="showNextGroupSticker(this);">
+                        </div>
+                    </div>						
+                    <div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
+                    </div>
+                </div>					
+            </div>
+            
+            <%-- 2023-11-01 전인하 - 선택된 이모티콘 조회 팝업 --%>
+            <div id="uploadedFile" class="uploadedFile">
+                <img id="cancelImg" class="cancelImg" src="/images/close.png" onclick="closeEmoticonPreview();">
+                <img id="previewImage" class="previewImage">
+            </div>            
+        </div>
 	</body>
 </html>

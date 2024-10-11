@@ -452,4 +452,10 @@ public interface EzCommonService {
 	public void updateThemeData() throws Exception;
 	
 	void createRsScheduleDeptIdColumn() throws Exception;
+
+	/* 2023-03-30 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가 */
+	public void alterTblBoardOneLineChildReply() throws Exception;
+
+	// 2023-11-07 전인하 - 댓글 이모티콘 관련 컬럼 추가
+	public void insertBoardReplyCommentEmoticon() throws Exception;
 }

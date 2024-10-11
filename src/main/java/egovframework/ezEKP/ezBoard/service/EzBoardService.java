@@ -201,7 +201,8 @@ public interface EzBoardService {
 	
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception;
 
-	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception;
+	// 2023-11-07 전인하 - 게시판 > 댓글저장 메소드 동작 시 이모티콘 파라미터 추가
+	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, int replyLevel, String imageContent) throws Exception;
 	
 	public void setBoardList_Config(BoardConfigVO boardConfigVO) throws Exception;
 
@@ -414,4 +415,16 @@ public interface EzBoardService {
 	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception;
 	
 	public List<HashMap<String, Object>> getNoticePostItemList(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception;
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글에 대한 답글 저장하는 메서드 */
+	public void saveOneLineChildReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, String parentReplyID, int replyLevel, String parentWriterName, String imageContent) throws Exception;
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 또는 답글 수정되었을 경우 업데이트하는 메서드 */
+	public void updateOneLineReply(String itemID, String boardID, String replyID, String content, String updateDate, int tenantID, String imageContent) throws Exception;
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 메서드 */
+	public int getChildReplyCnt(String itemID, String boardID, String replyID, int tenantID) throws Exception;
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식이 존재하는 부모댓글 삭제할 경우 해당 댓글 정보를 NULL로 변경해주는 메서드 */
+	public void updateDelParentReply(String replyID, String itemID, String boardID, int tenantID) throws Exception;
 }

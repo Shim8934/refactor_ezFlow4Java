@@ -4175,6 +4175,11 @@ CREATE TABLE `tbl_board_onelinereply` (
   `PASSWORD` varchar(1368) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(80) DEFAULT NULL,
+  `REPLYLEVEL` bigint(10) DEFAULT NULL,
+  `PARENTREPLYID` varchar(100) DEFAULT NULL,
+  `PARENTWRITERNAME` varchar(100) DEFAULT NULL,
+  `UPDATEDATE` varchar(40) DEFAULT NULL,
+  `IMAGECONTENT` varchar(600) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`,`REPLYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

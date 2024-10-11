@@ -73,6 +73,15 @@ var strLang189 = "Please enter ";
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
 
 // 2023-03-08 이가은 추가
-var strLangLGE188 = "You cannot 'Like' your own comments.";
-var strLangLGE189 = "You cannot 'Dislike' your own comments.";
-var strLangLGE190 = "This comment has already been deleted.";
+var strLangLGE188 = "Bạn không thể thích bình luận của chính mình.";
+var strLangLGE189 = "Bạn không thể không thích bình luận của chính mình.";
+var strLangLGE190 = "Bình luận này đã bị xóa.";
+
+// 2023-03-30 이가은 추가
+var strLangLGE01 = "Viết phản hồi";
+var strLangLGE02 = "Thu gọn phản hồi";
+var strLangLGE03 = "Đăng";
+var strLangLGE04 = "Hủy";
+var strLangLGE05 = "Mật khẩu đăng bài";
+var strLangLGE06 = "Ẩn danh";
+var strLangLGE07 = "Bình luận này đã bị tác giả xóa.";
