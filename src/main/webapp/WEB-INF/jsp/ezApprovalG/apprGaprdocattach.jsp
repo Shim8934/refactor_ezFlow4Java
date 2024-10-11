@@ -391,28 +391,17 @@
 			}
 
 			function relocateAttachedList(listView, e) {
-				let attrData2 = parseInt(listView.GetSelectedRows()[0].getAttribute("data2"));
-				let curIdx;
+				let curIdx = parseInt(listView.GetSelectedIndexes());
 				let destIdx;
-
-				if (isNaN(attrData2)) {
-					let nodeID = listView.GetSelectedRows()[0].id;
-
-					attrData2 = nodeID.substring(nodeID.length - 1);
-				}
-
-				curIdx = attrData2 - 1;
 
 				switch (e) {
 					case "up" : {
 						destIdx = curIdx - 1;
-
 						break;
 					}
 
 					case "down" : {
 						destIdx = curIdx + 1;
-
 						break;
 					}
 				}
@@ -422,6 +411,11 @@
 
 			function moveRow(listView, curIdx, destIdx) {
 				let attachedList = listView.GetDataRows();
+				
+				if (destIdx < 0 || destIdx >= attachedList.length) {
+					return;
+				}
+				
 				let tbody = document.getElementById(listView.GetID()).querySelector("tbody");
 				let tmp1 = attachedList[curIdx];
 				let tmp2 = attachedList[destIdx];

@@ -31,6 +31,9 @@
 	    		overflow-x:hidden;
 	    		overflow-y:auto;
 	    	}
+			.admin_menu {
+				width:100px;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

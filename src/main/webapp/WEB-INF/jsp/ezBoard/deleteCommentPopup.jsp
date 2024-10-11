@@ -23,7 +23,8 @@
 		    var ReturnFunction;
 		    var rsa = new RSAKey();
 		    var delpReplyID = pReplyID;
-			
+		    var clickFlag = "${clickFlag}";
+
 		    $(document).ready(function() {
 			    
 			    rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
@@ -60,10 +61,15 @@
 						rtnVal = result;
 						if(rtnVal == "OK") {
 							closePopup2();
-							parent.delete_onelinereply_Complete(rtnVal);
+							if (clickFlag == "delete") {
+								parent.delete_onelinereply_Complete(rtnVal);
+							} else if (clickFlag == "modify") {
+								parent.modify_onelinereply_Complete(rtnVal);
+							}
 						} else {
 							alert("<spring:message code='ezBoard.t267'/>");
 							$('#inpPassword').val("");
+							$('#inpPassword').focus();
 							return;
 						}
 					}        			
@@ -71,12 +77,19 @@
 		        
 		    }
 		    function btn_OpinionCANCEL_onclick() {
-		        if (ReturnFunction != null) {
-		            rtnVal = "cancel";
-		        } else {
-		            window.returnValue = "cancel";
-		        }
-		        closePopup2();
+		    	if (clickFlag == "delete") {
+		    		if (ReturnFunction != null) {
+			            rtnVal = "cancel";
+			        } else {
+			            window.returnValue = "cancel";
+			        }
+			        closePopup2();
+		    	} else {
+		    		rtnVal = "cancel";
+		    		closePopup2();
+		    		parent.replyModifyFlag = 0;
+			        parent.getBoardComment();
+		    	}
 		    }
 		</script>
 	</head>

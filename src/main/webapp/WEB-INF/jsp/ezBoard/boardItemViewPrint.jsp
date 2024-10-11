@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<style>
 	        .viewbox {
@@ -68,6 +69,7 @@
 			var OneLineReplyFlag = "${oneLineReplyFlag}";
 		    var gubun = "${boardInfo.guBun}";
 		    var AtttributeCount = "${boardAttrCount}";
+		    var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>";
 		
 		    var myVar;
 		    window.onload = function () {
@@ -215,22 +217,25 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 		    }
 		    function getOneLineReply() {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&gubun=" + gubun, false);
-		        xmlhttp.send();
-		        var xmldom = createXmlDom();
-		        xmldom = loadXMLString(xmlhttp.responseText);
-		        xmlhttp = null;
-		        var strHTML = "";
-		        var temp;
-		        for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
-		            temp = i + 1;
-		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)).substr(0, 16) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + "<br>";
-		        }
-
-		        if (i == 0)
-		            strHTML = "<spring:message code='ezBoard.t312'/>";
-		        document.getElementById('onelinereplylist').innerHTML = strHTML;
+		        var commentPanel = $('#comment_list_display');
+                	$.ajax({
+                		type : "POST",
+                		async : false,
+                		url : "/ezBoard/getBoardComment.do",
+                		dataType : "json",
+                		data : {
+                			itemID : pItemID,
+                			boardID : pBoardID,
+                			gubun : gubun
+                		},
+                		success : function(result) {
+                			var boardCommentList = makeBoardCommentHtml(result, "print");
+                			$("#onelinereplylist").append(boardCommentList); //새 댓글리스트 삽입
+                		},
+                		error : function(jqXHR, textStatus, errorThrown) {
+                			
+                		}
+                	});
 		    }
 		    function displaytable() {
 		        if(message.document.body.innerHTML != "")
@@ -335,6 +340,21 @@
 	                  <th><spring:message code='ezBoard.t291'/></th>
 	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6"><c:out value="${boardItem.title}"/></td>
 		            </tr>
+		            <%-- 키워드 --%>
+                     <c:if test='${boardInfo.useKeyword eq "Y"}'>
+                         <tr>
+                             <th><spring:message code="ezApprovalG.t1200" /></th>
+                             <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+                                <div style="WIDTH: 100%; vertical-align: middle">
+                                    <c:if test='${not empty keywordList}'>
+                                        <c:forEach var="keyword" items="${keywordList}">
+                                            <span class="keywordSpanView" id="${keyword.keywordName}">#${keyword.keywordName}</span>
+                                        </c:forEach>
+                                    </c:if>
+                                </div>
+                             </td>
+                         </tr>
+                     </c:if>
 		      </table>
 <!-- 		<table class="layout">  -->
 <!-- 		  <tr>  -->
@@ -408,10 +428,12 @@
 		  <table class="layout" style="margin-top:5px;">
 		      <tr id="onelineView" style="display:none;">
 		        <td style="height:30px">
-		          <table class="file2" style="height:100%;">
+		          <table style="height:100%;">
 		            <tr>
 		              <th class="boardItemViewPrint_cssThEn" style="height:100%; "><spring:message code='ezBoard.jjh06'/></th>
-		              <td class="boardItemViewPrint_cssTdEn" style="height:100%; width:100%; "><div id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
+		              <td class="boardItemViewPrint_cssTdEn" style="height:100%; width:100%; ">
+		                <div id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left"></div>
+		              </td>
 		            </tr>
 		          </table>
 		        </td>

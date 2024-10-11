@@ -243,4 +243,19 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public void saveOneLineReply(Map<String, Object> map) throws Exception {
 		insert("MBoardDAO.saveOneLineReply", map);
 	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 댓글 수정 */
+	public void updateOneLineReply(Map<String, Object> map) throws Exception{
+		update("MBoardDAO.updateOneLineReply", map);
+	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 대댓글 저장 */
+	public void saveOneLineReReply(Map<String, Object> map) {
+		insert("MBoardDAO.saveOneLineReReply", map);
+	}
+
+	/* 2023-11-13 전인하 - 댓글이 삭제되었는지의 여부 출력(존재하면 1, 삭제되었을 경우 0) */
+	public int checkThisReplyExist(Map<String, Object> map) {
+		return (int) select("MBoardDAO.checkThisReplyExist", map);
+	}
 }

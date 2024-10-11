@@ -153,6 +153,10 @@ public class BoardPropertyVO {
 	private String mailFG_Comment;
 	/** 2023-07-13 임정은 - 게시판 댓글 좋아요, 싫어요 기능 플래그 추가 */
 	private String reactFlag;
+	/** 2023-04-06 기민혁 - 게시판 싫어요 기능 플래그 추가 */
+	private String disLikeFlag;
+	/** 키워드 기능 사용여부 */
+	private String useKeyword; 
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -597,12 +601,23 @@ public class BoardPropertyVO {
 	public void setMailFG_Comment(String mailFG_Comment) {
 		this.mailFG_Comment = mailFG_Comment;
 	}
-
 	public String getReactFlag() {
 		return reactFlag;
 	}
 	public void setReactFlag(String reactFlag) {
 		this.reactFlag = reactFlag;
 	}
+	public String getDisLikeFlag() {
+		return disLikeFlag;
+	}
+	public void setDisLikeFlag(String disLikeFlag) {
+		this.disLikeFlag = disLikeFlag;
+	}
 	
+	public String getUseKeyword() {
+		return useKeyword;
+	}
+	public void setUseKeyword(String useKeyword) {
+		this.useKeyword = useKeyword;
+	}
 }

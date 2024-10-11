@@ -32,6 +32,17 @@
 				background-color:#f1f8ff;
 				border:1px solid #6793d8;
 			}
+			.disLikeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.disLikeButton:hover {
+				background-color:#ffd9ec;
+				border:1px solid #f44336;
+			}
 		</style>
 		<script  type="text/javascript">
 		    window.offscreenBuffering = true;
@@ -89,6 +100,12 @@
 			var strUpperItemIDTree = "<c:out value='${boardItem.upperItemIDTree}'/>";
 			var strParentWriteDate = "<c:out value='${boardItem.parentWriteDate}'/>"; // 답변게시물 판별용 부모게시물 NO(PARENTWRITEDATE)
 			var strDocNo = "<c:out value='${boardItem.docNo}'/>"; // 답변게시물 판별용 현재게시물 NO(DOCNO)
+			var useKeyword = "<c:out value='${boardInfo.useKeyword}'/>"; // 키워드 기능 사용 여부 (Y/N)
+		    
+			var isDisLikeChecked = "<c:out value='${isDisLikeChecked}'/>";
+			var disLikeFlag = "<c:out value='${boardInfo.disLikeFlag}'/>";
+			var disLikeCount = "${boardItem.disLikeCount}";
+			var disLikeCountAfter = 0;
 
 		    // 수정 수아 재은	    
 		    var nowZoom = 100;
@@ -98,6 +115,17 @@
 	        var MozNowZoom = 1;
 	        var MozMaxZoom = 2;
 	        var MozMinZoom = 0.8;
+			/* 2023-04-12 이가은 - 답글 기능을 위한 변수 추가 */
+	        var userInfoName = "${userInfo.displayName1}";
+			var replyOpenFlag = 0;
+			var replyModifyFlag = 0;
+			var replyModifyId = "";
+			var replyTextarea = "";
+			var delParentReply = 0;
+			var delChildReply = 0;
+			var delReplyLevel = "";
+			var parentReplyID = "";
+			var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
 	        
 	        function Bigger(doc) {     
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -148,6 +176,7 @@
 	        }
 	        
 		    window.onload = function () {
+		    	makeEmoticonPanel();
 		        try {
 		        	// 수정 수아 재은
 		        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer; margin-bottom: 5px;' />"
@@ -243,6 +272,14 @@
 		            if (likeFlag != null && likeFlag == "Y") {
 						if (OneLineReplyFlag != "2") {
 							document.getElementById("likeDiv").style.padding = "5px 0px 0px 0px";
+							document.getElementById("attachTD").style.padding = "0px";
+						}
+		            }
+		            
+		            /* 2023-03-20 기민혁 - 싫어요 버튼 사용+하단댓글 미사용 시, 싫어요+첨부파일 영역 패딩 상하 조절 */
+		            if (disLikeFlag != null && disLikeFlag == "Y") {
+						if (OneLineReplyFlag != "2") {
+							document.getElementById("disLikeDiv").style.padding = "5px 0px 0px 0px";
 							document.getElementById("attachTD").style.padding = "0px";
 						}
 		            }
@@ -358,6 +395,7 @@
 				if (refreshFlag == "Y") {
 					window.opener.getBoardList();
 				}
+			    opener.isOpenWindow = undefined;
 		    };
 		    
 		    /* 2018-12-26 홍승비 - 저해상도 대응을 위해 리사이즈 함수 분리 */
@@ -394,6 +432,9 @@
 		        	if (likeFlag != null && likeFlag == "Y") {
 						contentHeight = contentHeight - 28;
 		        	}
+		        	if (disLikeFlag != null && disLikeFlag == "Y") {
+						contentHeight = contentHeight - 28;
+		        	}	
 		            document.getElementById("message").style.height = contentHeight + "PX";
 		            document.getElementById("pad1").style.height = contentHeight + "PX";
 		        } else {
@@ -404,6 +445,9 @@
 		                contentHeight = document.documentElement.clientHeight - 268 + replyOffsetH;
 		            }
 		        	if (likeFlag != null && likeFlag == "Y") {
+						contentHeight = contentHeight - 28;
+		        	}
+		        	if (disLikeFlag != null && disLikeFlag == "Y") {
 						contentHeight = contentHeight - 28;
 		        	}
 		            document.getElementById("message").style.height = contentHeight + "PX";
@@ -1410,9 +1454,32 @@
 		    }
 		    
 		    /* 2019-04-05 홍승비 - 좋아요 버튼 클릭 동작 */
+		    /* 2023-04-06 기민혁 - 좋아요 버튼 클릭 동작 (수정) */
 		    function clickLikeButton() {
 		    	var mod = "";
-		    	if (isLikeChecked == "Y") {
+		    	
+		    	if (isDisLikeChecked == "Y"){
+		    		mod = "DELETE";
+		    		$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/clickDisLikeMod.do",
+						data : {
+							mod: mod,
+							itemID : pItemID
+						},
+						success: function(result){
+							isDisLikeChecked = result;
+
+							if($("#disLikeDiv").length > 0){
+								updateDisLikeCountImg(isDisLikeChecked);
+							}
+						}
+					});
+		    	}
+		    	
+		    	if (isLikeChecked == "Y" && isDisLikeChecked != "Y") {
 		    		mod = "DELETE";
 		    	} else {
 		    		mod = "INSERT";
@@ -1457,6 +1524,8 @@
 				    	} else {
 				    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
 				    	}
+						try {opener.refreshLikeAndDisLike(result,isLikeChecked,"like");}catch (e) {}
+
 					}
 				});
 			}
@@ -1470,7 +1539,7 @@
 		    	var opnenerHref = window.opener.location.href;
 		    	
 		    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
-		    	if (((likeCount != likeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+		    	if (((likeCount != likeCountAfter) || (disLikeCount != disLikeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
 		    		refreshFlag = "Y";
 		    	} else {
 		    		refreshFlag = "N";
@@ -1532,6 +1601,111 @@
 					}
 				});
 	        }
+		    
+		    /* 2023-04-06 기민혁 - 싫어요 버튼 클릭 동작 */
+		    function clickDisLikeButton() {
+		    	var mod = "";
+		    	
+		    	if(isLikeChecked == "Y"){
+		    		mod = "delect";
+		    		$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/clickLikeMod.do",
+						data : {
+							mod: mod,
+							itemID : pItemID
+						},
+						success: function(result){
+							isLikeChecked = result;
+
+							if($("#likeDiv").length > 0){
+								updateLikeCountImg(isLikeChecked);
+							}
+						}
+					});
+		    	}
+		    		
+		    	if (isDisLikeChecked == "Y" && isLikeChecked != "Y") {
+		    		mod = "DELETE";
+		    	} else {
+		    		mod = "INSERT";
+		    	}
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/clickDisLikeMod.do",
+					data : {
+						mod: mod,
+						itemID : pItemID
+					},
+					success: function(result){
+						isDisLikeChecked = result;
+						updateDisLikeCountImg(isDisLikeChecked);
+					}
+				});
+		    }
+		    
+		    /* 2023-04-06 기민혁 - 싫어요 버튼 이미지 및 싫어요 갯수 업데이트 */
+		    function updateDisLikeCountImg(isDisLikeChecked) {
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					cache : false,
+					url : "/ezBoard/getDisLikeCount.do",
+					data : {
+						itemID : pItemID
+					},
+					success: function(result){
+						disLikeCountAfter = result;
+						if (parseInt(result) > 0) {
+							document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("disLikeCountSpan").innerText = "";
+						}
+						if (isDisLikeChecked == "Y") {
+				    		document.getElementById("disLikeButtonImg").src = "/images/disLike_on.png";
+				    	} else {
+				    		document.getElementById("disLikeButtonImg").src = "/images/disLike_off.png";
+				    	}
+						try {opener.refreshLikeAndDisLike(result,isDisLikeChecked,"disLike");}catch (e) {}
+
+					}
+				});
+			}
+		    
+		    /* 2023-04-06 기민혁 - 미리보기 에서  좋아요/싫어요 버튼 클릭시  이미지 및  개수 업데이트 */
+		    function refreshLikeAndDisLikeOpen(result,checked,gubun){
+		    	if(gubun === "disLike"){
+		    		isDisLikeChecked = checked ;
+			    	if (parseInt(result) > 0) {
+						document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+					} else {
+						document.getElementById("disLikeCountSpan").innerText = "";
+					}
+					if (isDisLikeChecked == "Y") {
+			    		document.getElementById("disLikeButtonImg").src = "/images/disLike_on.png";
+			    	} else {
+			    		document.getElementById("disLikeButtonImg").src = "/images/disLike_off.png";
+			    	}
+		    	}else if(gubun === "like"){
+		    		isLikeChecked = checked;
+		    		if (parseInt(result) > 0) {
+						document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+					} else {
+						document.getElementById("likeCountSpan").innerText = "";
+					}
+					if (isLikeChecked == "Y") {
+			    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+			    	} else {
+			    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+			    	}
+		    	}
+		    };
 		    
 		</script>
 	</head>
@@ -1641,7 +1815,7 @@
 		    </td>
 		    </tr>
 		    <tr>
-				<td style="vertical-align: top; height: 10px;">
+				<td style="vertical-align: top; height: 10px; padding-bottom:10px;">
 				<table class="content2" style="width:100%;">
 					<!-- 게시자  -->
 					<tr>
@@ -1803,46 +1977,88 @@
 			             </td>
 			        </tr>
 			        <!-- 제목 end -->
+			        <c:if test='${boardInfo.useKeyword eq "Y"}'>
+                         <tr>
+                             <th><spring:message code="ezApprovalG.t1200" /></th>
+                             <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+                                <div style="WIDTH: 100%; vertical-align: middle">
+                                    <c:if test='${not empty keywordList}'>
+                                        <c:forEach var="keyword" items="${keywordList}">
+                                            <span class="keywordSpan" id="${keyword.keywordName}" onclick="onclickKeyword(event)">#${keyword.keywordName}</span>
+                                        </c:forEach>
+                                    </c:if>
+                                </div>
+                             </td>
+                         </tr>
+                     </c:if>
 			      </table>
 			    </td>
 		  </tr>
 		  <tr>
-		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
+		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px; padding-top:0px;">
 		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:calc(100% - 2px); height:495px; overflow:auto; border:1px solid #ddd"></iframe>
 				
 				<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
-				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
-					<div id="likeDiv" style="text-align:center; padding:5px 0px 7px 0px;">	
-					  	<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
-						  	<c:choose>
-						  		<c:when test="${isLikeChecked == 'Y'}">
-						  			<img id="likeButtonImg" src="/images/like_on.png"/>
-						  		</c:when>
-						  		<c:otherwise>
-						  			<img id="likeButtonImg" src="/images/like_off.png"/>
-						  		</c:otherwise>
-						  	</c:choose>
-						  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
-					  	</span>
-					</div>
-				</c:if>
+				<div style="display: flex; justify-content: center;">
+					<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+						<div id="likeDiv" style="text-align:center; padding:5px 0px 7px 0px; margin-right: 5px;">	
+						  	<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>" style="height:20px">
+							  	<c:choose>
+							  		<c:when test="${isLikeChecked == 'Y'}">
+							  			<img id="likeButtonImg" src="/images/like_on.png"/>
+							  		</c:when>
+							  		<c:otherwise>
+							  			<img id="likeButtonImg" src="/images/like_off.png"/>
+							  		</c:otherwise>
+							  	</c:choose>
+							  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
+						  	</span>
+						</div>
+					</c:if>
+					
+						
+					<%-- 2023-04-06 기민혁 - 본문 하단, 첨부파일/한줄댓글 상단에 싫어요 버튼 추가 --%>
+					<c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
+						<div id="disLikeDiv" style="text-align:center; padding:5px 0px 7px 0px;">	
+						  	<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" style="height:20px">
+							  	<c:choose>
+							  		<c:when test="${isDisLikeChecked == 'Y'}">
+							  			<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
+							  		</c:when>
+							  		<c:otherwise>
+							  			<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
+							  		</c:otherwise>
+							  	</c:choose>
+							  	<span id="disLikeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.disLikeCount > 0}"> (<c:out value="${boardItem.disLikeCount}"/>)</c:if></span>
+						  	</span>
+						</div>
+					</c:if>
+                </div>
 				
 				<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 		        <c:if test="${boardPropertyVO.oneLineReply == '2'}">
 		        	<div style='height:auto;'>
-						<table class="mainlist" style="width:100%" >
+						<table class="mainlist emoticonLayerStaticPosition" style="width:100%" >
 							<c:choose>
 								<c:when test="${guBun == 2}">
-									<tr>
-										<th colspan="2" style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
+								    <tr>
+										<th colspan="2" style="text-align:center; width: 100%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
 												 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
-											<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+										    <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
+                                            <div class="emoticonRelative">								    
+                                               <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
+                                               <textarea id="onelinereply" rows="3" style = "resize:none; width: calc(100% - 45px);" maxlength="600"></textarea>
+                                            </div>
 										</th>
 								</c:when>
 								<c:otherwise>
-									<tr>
-										<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
-											<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+								    <tr>
+										<th style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+											<%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
+                                            <div class="emoticonRelative">								    
+                                                <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
+                                                <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="600"></textarea>
+                                            </div>
 										</th>
 								</c:otherwise>	
 							</c:choose>
@@ -1851,8 +2067,8 @@
 									</tr>
 								</c:when>
 								<c:otherwise>
-										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
-											<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;width:15%;">
+											<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 										</th>
 									</tr>
 								</c:otherwise>
@@ -1864,12 +2080,12 @@
 											border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle ">
 										<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
 										<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
-										<a class='imgbtn' style="vertical-align: middle; margin-bottom: 3px;"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+										<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 									</th>
 								</tr>
 							</c:if>
 						</table>
-						<table id="commentList" style="width:100%;margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+						<table id="commentList" style="width:100%;margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 					</div>
 		        </c:if>
 		        <%-- 본문하단 댓글영역 끝 --%>
@@ -1939,5 +2155,31 @@
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel2">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer2"></iframe>
 	    </div>
+	    
+	    <div id = "basePanel">
+            <%-- 2023-11-01 전인하 - 이모티콘 선택 팝업--%>
+            <div id ="_stickerArea">					
+                <div id="emoticonPanel" class="emoticonPanel">
+                    <div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
+                        <div style="float:left; display:block;">
+                            <img id="previousEmoticon" src="/images/previous1.png" onclick="showNextGroupSticker(this);">
+                        </div>
+                        <div id="_ePresentors" style="float:left; display:block; ">
+                        </div>
+                        <div style="float: right; display:block;">
+                            <img id="nextEmoticon" src="/images/next1.png" onclick="showNextGroupSticker(this);">
+                        </div>
+                    </div>						
+                    <div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
+                    </div>
+                </div>					
+            </div>
+            
+            <%-- 2023-11-01 전인하 - 선택된 이모티콘 조회 팝업 --%>
+            <div id="uploadedFile" class="uploadedFile">
+                <img id="cancelImg" class="cancelImg" src="/images/close.png" onclick="closeEmoticonPreview();">
+                <img id="previewImage" class="previewImage">
+            </div>            
+        </div>
 	</body>
 </html>

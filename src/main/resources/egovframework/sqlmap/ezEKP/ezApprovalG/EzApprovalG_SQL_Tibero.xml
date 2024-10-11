@@ -674,7 +674,7 @@
 		               				AND 
 					      				TENANT_ID = #v_TENANTID# 
               ]]>					AND
-              							COMPANYID = #companyID#
+                                        COMPANYID = #companyID#
 			               	<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      		 		AND 
 				      		 			$v_SPSUBQUERY$
@@ -4499,7 +4499,7 @@
 	                         TBL_FormContainer.FormContOwnDepID ,
 	                         TBL_FormContainer.FormContParents ,
 	                         TBL_FormContainer.FormContdescription ,
-	                         TBL_FormContainer.SN 
+                             TBL_FORMCONTAINER.SN
 	        FROM 
 	           		TBL_FormContainer 
 	        LEFT JOIN 
@@ -5930,9 +5930,7 @@
                         , TBL_EXPENDAPRDOCINFO.FORMNAME
                   </isNotEqual>
 				  </isEqual>  
-						$extraSelectClause$,
-                        TBL_CABINETCLASS.TITLE,
-                        ENDDOCNO.DOCNO SIHANGNO
+						$extraSelectClause$
 				   FROM 
 				   		TBL_RECORD 
 				   Inner Join 
@@ -5991,12 +5989,20 @@
 				   		TBL_ENDAPRDOCINFO
                     ON
                         TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
+                    AND
+			        	TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+					AND
+			        	TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
                     LEFT JOIN
 				   		TBL_ENDAPRDOCINFO ENDDOCNO
                     ON
                         TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
                     AND
                         TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD.DOCID
+					AND
+			        	TBL_ENDAPRDOCINFO.TENANT_ID = ENDDOCNO.TENANT_ID
+					AND
+			        	TBL_ENDAPRDOCINFO.COMPANYID = ENDDOCNO.COMPANYID
               <isEqual property="listType" compareValue="012">
 				   Left Join
 				   		TBL_RECROLEINFO R
@@ -6249,7 +6255,7 @@
                 </isNotEmpty>
                 <isNotEmpty property="docNum" prepend="AND">
                         TBL_ENDAPRDOCINFO.DOCNO Like CONCAT(CONCAT('%', #docNum#), '%') ESCAPE '\'
-                </isNotEmpty>
+                </isNotEmpty>   
 <!-- 				<![CDATA[ -->
 <!-- 					 AND    -->
 <!-- 					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->
@@ -9427,8 +9433,8 @@
 							   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 								</isNotEmpty>
 								<isEmpty property="v_CONTID">
-						   		AND
-									TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+                                    AND
+                                        TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 								</isEmpty>
 							   	<isEqual property="approvalFlag" compareValue="S">
 							   	  INNER JOIN 
@@ -9463,8 +9469,8 @@
 							   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 								</isNotEmpty>
 								<isEmpty property="v_CONTID">
-						   		AND
-									TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+                                    AND
+                                        TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 								</isEmpty>
 							   	<isEqual property="approvalFlag" compareValue="S">
 							   	   AND  C.CODE1 ='SA02'
@@ -13282,7 +13288,7 @@
 					AND
 						tenant_id = #v_TENANTID#
 					AND
-            COMPANYID = #companyID#)
+                        COMPANYID = #companyID#)
 				AND
 					NVL(GRP.TABSN, 1) = 1
 				) LIST3
@@ -13448,7 +13454,7 @@
 					AND
 						TENANT_ID = #v_TENANTID#
 					AND
-						COMPANYID = #companyID#
+                        COMPANYID = #companyID#
 					UNION ALL
 					
 					SELECT 
@@ -13598,25 +13604,25 @@
 				DISTINCT TBL_RECORD.RecordID,
 				TBL_SEPERATEATTACH.SeperateAttachNo
 			FROM 
-		   		TBL_RECORD 
-		   Left Join 
-		   		TBL_ENDAPRDOCINFO 
-		   On 
-		   		TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID 
-		   AND 
-		   		TBL_RECORD.DocID = TBL_ENDAPRDOCINFO.DocID
-		   AND
-		   		TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
-           LEFT JOIN
-                TBL_ENDAPRDOCINFO
-           ON
-                TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
-           LEFT JOIN
-                TBL_ENDAPRDOCINFO ENDDOCNO
-           ON
-                TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
-           AND
-                TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD.DOCID		    
+		   		TBL_RECORD
+			LEFT JOIN
+				TBL_ENDAPRDOCINFO
+			ON
+			    TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
+			AND
+				TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+			AND
+				TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+			LEFT JOIN
+				TBL_ENDAPRDOCINFO ENDDOCNO
+			ON
+				TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
+			AND
+				TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD.DOCID
+			AND
+				TBL_ENDAPRDOCINFO.TENANT_ID = ENDDOCNO.TENANT_ID
+			AND
+				TBL_ENDAPRDOCINFO.COMPANYID = ENDDOCNO.COMPANYID
 		   Inner Join 
 		   		TBL_SEPERATEATTACH 
 		   On 
@@ -15125,38 +15131,8 @@
 	   			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 	   		AND 
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-	   		<isNotEmpty property="v_CONTID">
-				AND
-		   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
-			</isNotEmpty>
-			<isEmpty property="v_CONTID">
-	   		AND
-				TBL_ENDAPRDOCINFO.COMPANYID IN (
-						SELECT 
-							EXTENSIONATTRIBUTE2 
-						FROM 
-							TBL_DEPTMASTER 
-						INNER JOIN 
-							TBL_ADDJOBMASTER 
-						ON
-							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-						WHERE 
-							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-						AND 
-							TBL_ADDJOBMASTER.CN = #v_USERID#
-						UNION ALL
-						SELECT 
-							PHYSICALDELIVERYOFFICENAME
-						FROM
-							TBL_USERMASTER
-						WHERE
-							CN = #v_USERID#
-						AND
-							TENANT_ID = #v_TENANTID# 
-						)
-			</isEmpty>
+            AND
+                TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 			<isEqual property="approvalFlag" compareValue="S">
 			 AND  
 			 		C.CODE1 ='SA02'
@@ -15298,31 +15274,7 @@
 								              AND
 													TENANT_ID = #v_TENANTID#
 											  AND
-								      				COMPANYID IN (
-															SELECT 
-																EXTENSIONATTRIBUTE2 
-															FROM 
-																TBL_DEPTMASTER 
-															INNER JOIN 
-																TBL_ADDJOBMASTER 
-															ON
-																(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-																AND 
-																TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-															WHERE 
-																TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-															AND 
-																TBL_ADDJOBMASTER.CN = #v_USERID#
-															UNION ALL
-															SELECT 
-																PHYSICALDELIVERYOFFICENAME
-															FROM
-																TBL_USERMASTER
-															WHERE
-																CN = #v_USERID#
-															AND
-																TENANT_ID = #v_TENANTID# 
-															)
+								      				COMPANYID = #companyID#
 								      				) = 'Y')
 								   		]]>
 								   	</isEqual>
@@ -32817,7 +32769,7 @@
 			]]>
 				AND 
 					D.TENANT_ID = #v_TENANTID#
-                AND
+			    AND
                     D.COMPANYID = #companyID#
 			GROUP BY
 					L.APRSTATE,
@@ -32985,6 +32937,8 @@
             ]]>
             AND
                 D.TENANT_ID = #v_TENANTID#
+            AND
+                D.COMPANYID = #companyID#
             GROUP BY
                 L.APRSTATE,
                 D.FUNCTIONTYPE,
@@ -33066,6 +33020,8 @@
             ]]>
             AND
                 D.TENANT_ID = #v_TENANTID#
+            AND 
+                D.COMPANYID = #companyID#
             GROUP BY
                 L.APRSTATE,
                 D.FUNCTIONTYPE,
@@ -33202,7 +33158,7 @@
 	   		AND	
 	   			D.TENANT_ID = #v_TENANTID#
 	   		AND
-				D.COMPANYID = #companyID#
+				D.COMPANYID  = #companyID#
 				AND
 					NVL(GRP.TABSN, 1) = 1
         ]]>)) AS "count3", <!--기안한 문서-->
@@ -33290,6 +33246,8 @@
 	   		 		PROCESSDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
 	   		 	AND	
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+		   		AND
+		   		    TBL_APRDOCINFO.COMPANYID = #companyID#
 	  		]]>
 			)) AS "count4", <!---부서 수신함 -->
 			SUM((
@@ -33390,6 +33348,8 @@
 	                <![CDATA[TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')]]> 
 	            AND 
 	                TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+	            AND
+	                TBL_APRDOCINFO.COMPANYID = #companyID#
             )) AS "count5", <!-- 유통 수신함 -->
 			SUM((
 				<![CDATA[
@@ -33417,6 +33377,8 @@
 	   		 		PROCESSDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
 	   		 	AND	
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+	   			AND
+	   			    TBL_APRDOCINFO.COMPANYID = #companyID#
 	   		]]>
 			)) AS "count6", <!-- 유통발송함 혹은 발송의뢰문서함 -->
 			SUM((
@@ -33456,7 +33418,7 @@
 		   		AND	
 		   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
 		   		AND
-					TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+					TBL_ENDAPRDOCINFO.COMPANYID  = #companyID#
 	   		]]>			
 			)) AS "count7", <!-- 직인 의뢰함 -->
 			SUM((
@@ -33516,6 +33478,8 @@
 			]]>
 				AND
 					D.TENANT_ID = #v_TENANTID#
+				AND
+				    D.COMPANYID = #companyID#
 				GROUP BY
 						L.APRSTATE,
 						D.FUNCTIONTYPE,
@@ -33581,6 +33545,8 @@
 			]]>
 				AND
 					D.TENANT_ID = #v_TENANTID#
+		        AND
+		            D.COMPANYID = #companyID#
 			GROUP BY
 					L.APRSTATE,
 					D.FUNCTIONTYPE,
@@ -33618,6 +33584,8 @@
 	                TBL_APRLINEINFO.AprState = '010'
 	             AND
 	                TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
+	            AND
+	                 TBL_APRDOCINFO.COMPANYID = #companyID#
 			)) AS "count10", <!-- 공람한 문서 -->
 			SUM((
 			<![CDATA[
@@ -33710,6 +33678,8 @@
 			]]>
 				AND
 					D.TENANT_ID = #v_TENANTID#
+			    AND
+			        D.COMPANYID = #companyID#
 			GROUP BY
 					L.APRSTATE,
 					D.FUNCTIONTYPE,
@@ -33782,6 +33752,8 @@
 			]]>
 				AND
 					D.TENANT_ID = #v_TENANTID#
+		        AND
+		            D.COMPANYID = #companyID#
 			GROUP BY
 					L.APRSTATE,
 					D.FUNCTIONTYPE,
@@ -33831,6 +33803,8 @@
 			   	]]>
 			   		AND	
 			   			D.TENANT_ID = #v_TENANTID#
+					AND
+					    D.COMPANYID = #companyID#
 			   		UNION ALL
 			   		SELECT
 						COUNT(D.DOCID) AS COUNT
@@ -33870,6 +33844,8 @@
 			   	]]>
 			   		AND	
 			   			D.TENANT_ID = #v_TENANTID#
+					AND
+					    D.COMPANYID = #companyID#
 		   		) A
 			)) AS "count11"
 		</isEqual> <!-- 공유결재 -->

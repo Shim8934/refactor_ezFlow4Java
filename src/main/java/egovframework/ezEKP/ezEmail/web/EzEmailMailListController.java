@@ -2416,6 +2416,23 @@ public class EzEmailMailListController {
 		
 		return returnData;				
 	}
+
+	/**
+	 * 해킹 메일 신고 내용 작성 팝업
+	 */
+	@RequestMapping(value="/ezEmail/hackingMailReportMessage.do", method=RequestMethod.GET)
+	public String hackingMailReportMessage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+
+		logger.debug("hackingMailReportMessage started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("hackingMailReportMessage ended");
+
+		return "ezEmail/hackingMailReportMessage";
+	}	
 	
 	/**
 	 * 해킹 메일 신고 기능
@@ -2435,10 +2452,10 @@ public class EzEmailMailListController {
 		try {
 			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 			String password = userIdAndPassword.get(1);
-			
 			Document doc = commonUtil.convertStringToDocument(bodyData);
 			String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();
 			String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
+			String reportMessage = doc.getElementsByTagName("MESSAGE").item(0).getTextContent();
 			
 			String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
 			
@@ -2472,14 +2489,22 @@ public class EzEmailMailListController {
 			String adminID = ezCommonService.getTenantConfig("HackingAdminID",
 					userInfo.getTenantId());
 
-			OrganUserVO adminVo = ezOrganService.getUserInfo(adminID,
-					userInfo.getLang(), userInfo.getTenantId());
+			OrganUserVO adminVo = null;
 
 			// To
 			InternetAddress to = new InternetAddress();
-	    	to.setPersonal(adminVo.getDisplayName(), "UTF-8");
-	    	to.setAddress(adminVo.getMail());
 			
+			if(adminID.contains("@")){
+				to.setPersonal(adminID, "UTF-8");
+				to.setAddress(adminID);
+			}else{
+				adminVo = ezOrganService.getUserInfo(adminID, userInfo.getLang(), userInfo.getTenantId());
+				if(adminVo != null){
+					to.setPersonal(adminVo.getDisplayName(), "UTF-8");
+					to.setAddress(adminVo.getMail());
+				}
+			}
+
 			for (int i = 0; i < uids.length; i++) {
 				Message message = sourceFolder.getMessageByUID(uids[i]);
 
@@ -2507,12 +2532,31 @@ public class EzEmailMailListController {
 				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
 				
 				// 내용
-				String content = "";
-		    	content += "<span>" + egovMessageSource.getMessage("ezEmail.t707", locale) + " : " + message.getSubject() + "</span><br>";
-		    	content += "<span>" + egovMessageSource.getMessage("ezEmail.t656", locale) + " : " + fromStr + "</span><br>";
-		    	content += "<span>" + egovMessageSource.getMessage("ezEmail.t657", locale) + " : " + receivedDateStr + "</span><br>";
-		    	content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + content + "</td></tr></table>";
-		    	
+				String content = " <table cellpadding='0' cellspacing='0' style='width:100%;margin:0;padding:0;border-bottom: 1px solid #f3f3f3; padding-bottom: 10px;'>"
+						+ "		<tbody>";
+				content += "<tr><td width='70' style='padding-bottom:9px;font-size:14px;color:#696969; vertical-align: top;'>"
+						+ egovMessageSource.getMessage("ezEmail.t707", locale)
+						+ "</td>"
+						+ "<td style='padding-bottom:9px;font-size:14px; color:#000;'>"
+						+ message.getSubject()
+						+ "</td></tr>";
+				content += " <tr><td width='70' style='padding-bottom:9px;font-size:14px; color:#696969; vertical-align: top;'>"
+						+ egovMessageSource.getMessage("ezEmail.t656", locale)
+						+ "</td>"
+						+ "<td style='padding-bottom:9px;font-size:14px;color:#000;'>"
+						+ fromStr
+						+ "</td></tr>";
+				content += "<tr><td width='70' style='padding-bottom:9px;font-size:14px; color:#696969; vertical-align: top;'>"
+						+ egovMessageSource.getMessage("ezEmail.t657", locale)
+						+ "</td>"
+						+ "<td style='padding-bottom:9px;font-size:14px;color:#000;vertical-align:top'>"
+						+ receivedDateStr
+						+ "</td></tr>";
+				content += "</tbody></table>";
+				content += "<div class='mail_txtArea' style='margin-top: 15px; font-size: 14px;'>"
+						+ reportMessage
+						+ "</div>";
+				
 		    	// 첨부파일
 		    	String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".eml";
 				//fileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), fileName);

@@ -36,6 +36,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/ConvertSaveImage.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 	    <c:if test="${!isCrossBrowser}">
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain.js')}"></script>
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem.js')}"></script>
@@ -138,6 +139,9 @@
 		    var orgCompanyID = "${orgCompanyID}";
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    var mailShareId = "${mailShareId}";
+		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
+		    var keywordArr = []; // 키워드 배열
+
 		    
 		    /* 2023-05-16 김우철 - hwp결재문서를 배포용 문서로 저장하기 위한 변수 */
 		    var HwpCtrl;
@@ -334,6 +338,14 @@
 				/* 2023-09-25 민지수 - 게시물 로드시 정보 불러오도록 추가 */
 				NotiPost_onclick();
 				Noti_setTime();
+				
+				// 2024-08-23 전인하 - 게시판 > 게시글 수정/임시저장게시글 작성 > 게시물일 경우 입력되어있던 키워드 정보 삽입
+				if ((pMode == "modify" || pMode == "temp") && useKeywordFlag == "Y") {
+				    var keywordSpanArr = document.querySelectorAll(".keywordSpanView");
+				    for (let i=0; i<keywordSpanArr.length; i++) {
+				        keywordArr.push(keywordSpanArr[i].id);
+				    }
+				}
 
 			    FirstFlag = false;
 			    try {
@@ -1076,6 +1088,12 @@
 					}
 				}
 
+				if (useKeywordFlag != null && useKeywordFlag == 'Y') {
+				    for (var keyword of keywordArr) {
+				        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "KEYWORD", keyword);
+				    }
+				}
+
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
 		        xmlhttp.send(xmlDom);
 				if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
@@ -1694,7 +1712,7 @@
 		        xmlhttp_boardinfo = null;
 		    }
 		    function InitializeSettings() {
-		        document.getElementById('BoardSpan').innerHTML = pBoardName;
+		        document.getElementById('BoardSpan').innerText = pBoardName;
 		        if (ExpireDays == "-1") {
 		            document.getElementById('ChkPermanence').checked = true;
 		            document.getElementById('Makedate').style.visibility = "hidden";
@@ -2015,7 +2033,7 @@
 		                        return;
 		                    }
 		                }
-		                document.getElementById("BoardSpan").innerHTML = ret[1];
+		                document.getElementById("BoardSpan").innerText = ret[1];
 		                InitializeSettings();
 		                ChkPermanent();
 						NotiPost_onclick();
@@ -2079,7 +2097,7 @@
 	                    }
 	                }
 	                pBoardID = ret[0];
-	                document.getElementById("BoardSpan").innerHTML = ret[1];
+	                document.getElementById("BoardSpan").innerText = ret[1];
 	                InitializeSettings();
 	                ChkPermanent();
 					NotiPost_onclick();
@@ -2642,13 +2660,14 @@
                 OpenWin.focus();
             }
             
-            function characterCheck(obj) {
+            function characterCheckForExtAttr(obj) {
                 var regExp = /[\\'\"<>]/gi;
                 if (regExp.test(obj.value)) {
                     alert("<spring:message code='ezBoard.extensionAttr.JIH04' />");
                     obj.value = obj.value.replace(regExp, '');
                 }
             }
+ 			
 	        
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
@@ -2720,7 +2739,7 @@
 	                        	<c:choose>
 	                        		<c:when test="${boardType != 'SELECT'}">
 			                            <span id="BoardSpan">
-			                                ${boardName}
+			                                <c:out value='${boardName}' />
 			                            </span>
 	                        		</c:when>
 	                        		<c:otherwise>
@@ -2848,13 +2867,32 @@
                                     <c:when test="${boardAttributeVO.colType == 'textArea'}">
                                         <td colspan="3">
                                             <span id='icon_textArea'></span>
-                                            <textarea maxlength="450" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' type="textArea" onkeyup="characterCheck(this)" onkeydown="characterCheck(this)" style="width: 100%; height: 150px; box-sizing: border-box; "></textarea>
+                                            <textarea maxlength="450" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' type="textArea" onkeyup="characterCheckForExtAttr(this)" onkeydown="characterCheckForExtAttr(this)" style="width: 100%; height: 150px; box-sizing: border-box; "></textarea>
                                         </td>
                                     </c:when>
              					</c:choose>
              				</tr>
              			</c:forEach>
 	         			<!-- 추가 항목이 있을 경우 끝-->
+	         			<!-- 키워드 시작 -->
+	         			<c:if test="${not empty useKeyword && useKeyword eq 'Y'}">
+                            <tr>
+                                <th><spring:message code="ezApprovalG.t1200" /></th>
+                                <td colspan="3" id="keyWordResult">
+                                    <c:if test="${not empty useKeyword && useKeyword eq 'Y' && (mode eq 'modify' || mode eq 'temp')}">
+                                        <c:forEach var="keyword" items="${keywordListForModify}">
+                                            <span id="${keyword.keywordName}" class="keywordSpanView">
+                                                #${keyword.keywordName}<img src="/images/icon/oneline_delete.gif" class="keywordDeleteBtn" onclick="removeKeyword(event)">
+                                            </span>
+                                        </c:forEach>
+                                    </c:if>
+                                    <c:if test="${fn:length(keywordListForModify) < 10}">
+                                        <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeyup="keyword_onkeyUp(event)" >
+                                    </c:if>
+                                </td>
+                            </tr>
+                        </c:if>
+                        <!-- 키워드 끝 -->
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
 	                        <td colspan="3">

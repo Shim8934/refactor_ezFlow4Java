@@ -1869,25 +1869,25 @@
 	<insert id="EzCommonDAO.insertPortletAuthInit" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_PORTLET_AUTH
-			(portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn) 
+			(portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted) 
 		VALUES 
-    		(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(5, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(6, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(7, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(8, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(9, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(10, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(11, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(12, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(14, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(26, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(34, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(36, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(47, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(49, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+    		(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(5, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(6, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(7, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(8, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(9, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(10, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(11, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(12, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(14, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(26, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(34, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(36, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(47, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(49, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
 	]]>
 	</insert>
 	
@@ -5606,5 +5606,125 @@
 		ALTER TABLE
 			TBL_RS_SCHEDULE
 			ADD DEPTID varchar(80) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardOneLineChildReply">
+		<![CDATA[
+			SELECT
+				REPLYLEVEL
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.alterTblBoardOneLineChildReply">
+		ALTER TABLE
+			TBL_BOARD_ONELINEREPLY
+		ADD
+		(
+			REPLYLEVEL BIGINT(10) NULL,
+		    PARENTREPLYID VARCHAR(100) NULL,
+		    PARENTWRITERNAME VARCHAR(100) NULL,
+		    UPDATEDATE VARCHAR(40) NULL
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardOneReplyImageContentColumn">
+		<![CDATA[
+			SELECT
+				IMAGECONTENT
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.insertTblBoardOneReplyImageContentColumn">
+		<![CDATA[
+		ALTER TABLE
+			TBL_BOARD_ONELINEREPLY
+		ADD
+			IMAGECONTENT varchar(600) NULL
+		]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardInfoDisLikeFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				DISLIKEFLAG
+			FROM 
+				TBL_BOARD_BOARDINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addBoardDisLikeFlag"> 
+		ALTER TABLE 
+			TBL_BOARD_BOARDINFO
+		ADD 
+			DISLIKEFLAG VARCHAR(2) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardDisLike" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARD_DISLIKE
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardDisLike"> 
+		CREATE TABLE `tbl_board_dislike` (
+		  `ITEMID` varchar(80) NOT NULL,
+		  `USERID` varchar(80) NOT NULL,
+		  `DISLIKEDATE` varchar(40) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  PRIMARY KEY (`ITEMID`,`USERID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+    
+	<select id="EzCommonDAO.checkBoardKeywordTable">
+		<![CDATA[
+			SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_KEYWORD
+			LIMIT 1
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkBoardItemKeywordTable">
+		<![CDATA[
+			SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_BOARDITEM_KEYWORD
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createBoardKeywordTable">
+		<![CDATA[
+		CREATE TABLE TBL_BOARD_KEYWORD (
+			KEYWORDID bigint(20) NOT NULL AUTO_INCREMENT,
+			KEYWORDNAME varchar(100) NOT NULL UNIQUE,
+			TENANT_ID mediumint(5) NOT NULL,
+			PRIMARY KEY (KEYWORDID, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+		]]>
+	</statement>
+
+	<statement id="EzCommonDAO.createBoardItemKeywordTable">
+		<![CDATA[
+		CREATE TABLE TBL_BOARD_BOARDITEM_KEYWORD (
+			KEYWORDID bigint(20) NOT NULL,
+			BOARDID varchar(40) NOT NULL,
+			ITEMID varchar(40) NOT NULL,
+			TENANT_ID mediumint(5) NOT NULL,
+			SN tinyint(3) NOT NULL,
+			PRIMARY KEY (KEYWORDID, ITEMID, SN, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+		]]>
 	</statement>
 </sqlMap>

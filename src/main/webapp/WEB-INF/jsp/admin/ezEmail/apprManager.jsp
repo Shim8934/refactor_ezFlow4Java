@@ -172,7 +172,7 @@
 	    addAllowedDomain_arg.save = saveDomain;
 	    addAllowedDomain_arg.ok = makeAllowedDomainList;
 	
-	    GetOpenWindow("/admin/ezEmail/appr/allowDomainPopUp.do", "", 470, 165, "no");
+	    GetOpenWindow("/admin/ezEmail/appr/allowDomainPopUp.do", "", 560, 165, "no");
 	}
 	
 	// 도메인 추가

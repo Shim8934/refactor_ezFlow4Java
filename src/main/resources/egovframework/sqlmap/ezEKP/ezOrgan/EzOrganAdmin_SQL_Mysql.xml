@@ -135,6 +135,18 @@
 					<isEqual property="search_keycode" compareValue="quota">
 						((MAILBOXUSAGE / MAILBOXQUOTA) * 100) >= #search_keyword#
 					</isEqual>
+					<isEqual property="search_keycode" compareValue="title">
+						(TITLE LIKE CONCAT('%', #search_keyword#,'%') || TITLE2 LIKE CONCAT('%', #search_keyword#,'%'))
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="extensionAttribute10">
+						(EXTENSIONATTRIBUTE10 LIKE CONCAT('%', #search_keyword#,'%') || EXTENSIONATTRIBUTE102 LIKE CONCAT('%', #search_keyword#,'%'))
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="telephonenumber">
+						TELEPHONENUMBER LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="mobile">
+						MOBILE LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="searchStartDate" prepend="AND">
@@ -160,6 +172,12 @@
 			CN <isEqual property="stopped" compareValue="false"> NOT </isEqual> IN 
 				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
 		</isNotEqual>
+		<!-- 2024-09-06 김승연 공유사서함 조회 플래그 추가 -->
+		<isNotEmpty property="sharedMailBox" prepend="AND">
+			<isEqual property="sharedMailBox" compareValue="false">
+				DEPARTMENT NOT LIKE 'shared_mailbox_%'
+			</isEqual>
+		</isNotEmpty>
 	</sql>
 	
 	<sql id="EzOrganAdminDAO.searchQueryForLoginStop">
@@ -4408,7 +4426,18 @@
 			CAST(mailboxquota AS UNSIGNED) as mailboxquota,
 			CAST(mailboxusage AS UNSIGNED) as mailboxusage,
 			displayName2,
-			description2
+			description2,
+			title,
+			title2,
+			EXTENSIONATTRIBUTE1,
+			EXTENSIONATTRIBUTE2,
+			EXTENSIONATTRIBUTE3,
+			EXTENSIONATTRIBUTE10,
+			EXTENSIONATTRIBUTE102,
+			TELEPHONENUMBER,
+			MOBILE,
+			COMPANY,
+			COMPANY2
 		FROM 
 	    	TBL_USERMASTER	
         WHERE 

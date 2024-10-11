@@ -3754,3 +3754,10 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .popup #menu ul.layer_select{margin-left: -33px; top: 6px;}
 /* //20240517 메일보기 상단바 디자인수정 */
 .textUser{width: 22%}
+
+
+/* 2024-08-06 전인하 - 게시판 > 키워드 디자인 추가 */
+.keywordSpan { color: #388CE5; padding: 0px 7px 0px 0px; font-size : 15px;}
+.keywordSpanView { color: #388CE5; padding: 0px 7px 0px 0px; font-size : 15px;}
+.keywordSpan:hover {text-decoration: underline; cursor: pointer;}
+.keywordDeleteBtn { padding-left: 2px; cursor: pointer;}

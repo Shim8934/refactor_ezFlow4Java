@@ -2516,7 +2516,7 @@ public class EzScheduleController extends EgovFileMngUtil {
      					ezScheduleService.scheduleSendMail(result, v_attendantId, v_attendantName, title, periodConetent, "add", loginVO, loginCookie, startdate, enddate);
      				}
 
-     				String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do";
+     				String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do?from=mail";
      				String linkUrlMobile = "/mobile/ezSchedule/mScheduleReceiveAttendant.do";
      				
      				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
@@ -3196,7 +3196,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 
 			/* 2024-04-12 한태훈 일정관리 통합알림 발송 추가 */
-			String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do";
+			String linkUrl = "/ezSchedule/scheduleReceiveAttendant.do?from=mail";
 			String linkUrlMobile = "/mobile/ezSchedule/mScheduleReceiveAttendant.do";
 			
 			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
@@ -201,7 +202,8 @@ public interface EzBoardService {
 	
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception;
 
-	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception;
+	// 2023-11-07 전인하 - 게시판 > 댓글저장 메소드 동작 시 이모티콘 파라미터 추가
+	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, int replyLevel, String imageContent) throws Exception;
 	
 	public void setBoardList_Config(BoardConfigVO boardConfigVO) throws Exception;
 
@@ -299,10 +301,10 @@ public interface EzBoardService {
 	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
 
 	//2018-06-07 김혜정
-	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, String keywordClick) throws Exception;
 
 	//2018-06-08 김혜정
-	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, String keywordClick) throws Exception;
 	
 	//2018-06-11 홍승비
 	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception;
@@ -414,4 +416,37 @@ public interface EzBoardService {
 	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception;
 	
 	public List<HashMap<String, Object>> getNoticePostItemList(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception;
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글에 대한 답글 저장하는 메서드 */
+	public void saveOneLineChildReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, String parentReplyID, int replyLevel, String parentWriterName, String imageContent) throws Exception;
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 또는 답글 수정되었을 경우 업데이트하는 메서드 */
+	public void updateOneLineReply(String itemID, String boardID, String replyID, String content, String updateDate, int tenantID, String imageContent) throws Exception;
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 메서드 */
+	public int getChildReplyCnt(String itemID, String boardID, String replyID, int tenantID) throws Exception;
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식이 존재하는 부모댓글 삭제할 경우 해당 댓글 정보를 NULL로 변경해주는 메서드 */
+	public void updateDelParentReply(String replyID, String itemID, String boardID, int tenantID) throws Exception;
+
+	/* 2023-04-06 기민혁 - 싫어요 삽입 */
+	public void disLikeInsert(String userID, String itemID, int tenantID) throws Exception;
+	
+	/* 2023-04-06 기민혁 - 싫어요 삭제 */
+	public void disLikeDelete(String userID, String itemID, int tenantID) throws Exception;
+	
+	/* 2023-04-06 기민혁 - 싫어요 여부 체크 */
+	public String disLikeCheck(String userID, String itemID, int tenantID) throws Exception;
+	
+	/* 2023-04-06 기민혁 - 싫어요 갯수 가져오기 */
+	public int getDisLikeCount(String itemID, int tenantID) throws Exception;
+
+	/* 2023-04-06 기민혁 - 좋아요/싫어요 명단 호출 메서드 */
+	public String boardLikeAndDisLikeList(LoginVO userInfo, String pBoardID, String[] itemIDs) throws Exception;
+ 
+	/* 2024-08-23 전인하 - 게시판 > 게시글 작성 > 키워드 저장 메소드 */
+	public void saveKeyword(List<String> keywords, String boardID, String itemID, int tenantID) throws Exception;
+
+	/* 2024-08-23 전인하 - 게시판 > 게시물ID로 해당 게시물에 속한 키워드 반환 메소드 */
+	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(String itemID, String boardID, int tenantId) throws Exception;
 }

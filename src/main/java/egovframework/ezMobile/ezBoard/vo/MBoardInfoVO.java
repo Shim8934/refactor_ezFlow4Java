@@ -131,6 +131,8 @@ public class MBoardInfoVO {
 	private String mailFG_Post; // 게시알림
 	private String mailFG_Mod; // 수정알림
 	private String mailFG_Comment; // 댓글알림
+	/** 키워드 기능 사용여부 */
+	private String useKeyword;
 	
 	@Override
 	public String toString() {
@@ -561,5 +563,10 @@ public class MBoardInfoVO {
 	public void setMailFG_Comment(String mailFG_Comment) {
 		this.mailFG_Comment = mailFG_Comment;
 	}
-	
+	public String getUseKeyword() {
+		return useKeyword;
+	}
+	public void setUseKeyword(String useKeywords) {
+		this.useKeyword = useKeywords;
+	}
 }

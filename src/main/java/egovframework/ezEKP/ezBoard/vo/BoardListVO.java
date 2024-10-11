@@ -153,6 +153,8 @@ public class BoardListVO {
 	/** 2023-09-25 민지수 - 공지사항 기간설정 종료날짜 */
 	private String notiEnd;
 	private String thumbnail;
+	/** 2023-04-06 기민혁 - 게시판 싫어요 기능 카운트 추가 */
+	private int disLikeCount;
 
 	public int getrNum() {
 		return rNum;
@@ -609,5 +611,11 @@ public class BoardListVO {
 	}
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
+	}
+	public int getDisLikeCount() {
+		return disLikeCount;
+	}
+	public void setDisLikeCount(int disLikeCount) {
+		this.disLikeCount = disLikeCount;
 	}
 }

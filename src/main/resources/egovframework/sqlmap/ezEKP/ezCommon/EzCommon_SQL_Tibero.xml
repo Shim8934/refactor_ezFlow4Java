@@ -1822,40 +1822,40 @@
 	<insert id="EzCommonDAO.insertPortletAuthInit" parameterClass="Map">
 	<![CDATA[
 		INSERT ALL
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (1, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (2, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (4, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (5, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (6, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (7, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (8, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (9, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (10, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (11, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (12, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (14, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (26, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (34, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (36, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (47, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
-  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
-	    	VALUES (49, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (1, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (2, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (4, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (5, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (6, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (7, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (8, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (9, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (10, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (11, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (12, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (14, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (26, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (34, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (36, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (47, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED) 
+	    	VALUES (49, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
 	    SELECT
 	    	*
 	    FROM DUAL
@@ -6018,5 +6018,144 @@
 		ALTER TABLE
 			TBL_RS_SCHEDULE
 			ADD DEPTID NVARCHAR2(80) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardOneLineChildReply">
+		<![CDATA[
+			SELECT
+				REPLYLEVEL
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.alterTblBoardOneLineChildReply">
+		ALTER TABLE
+			TBL_BOARD_ONELINEREPLY
+		ADD (
+			REPLYLEVEL NUMBER(10,0),
+			PARENTREPLYID NVARCHAR2(100),
+			PARENTWRITERNAME NVARCHAR2(50),
+			UPDATEDATE DATE
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardOneReplyImageContentColumn">
+		<![CDATA[
+			SELECT
+				IMAGECONTENT
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.insertTblBoardOneReplyImageContentColumn">
+		<![CDATA[
+		ALTER TABLE
+			TBL_BOARD_ONELINEREPLY
+		ADD
+			IMAGECONTENT NVARCHAR2(600) DEFAULT NULL
+		]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardInfoDisLikeFlag" resultClass="String">
+		<![CDATA[
+		SELECT
+			DISLIKEFLAG
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			rownum = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addBoardDisLikeFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			DISLIKEFLAG NCHAR(1) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardDisLike" resultClass="String">
+		<![CDATA[
+		SELECT
+			ITEMID
+		FROM
+			TBL_BOARD_DISLIKE
+		WHERE
+			rownum = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblBoardDisLike">
+		CREATE TABLE "EZEKP2017"."TBL_BOARD_DISLIKE" (
+			 "ITEMID" NVARCHAR2(40) NOT NULL ENABLE,
+			 "USERID" NVARCHAR2(20) NOT NULL ENABLE,
+			 "DISLIKEDATE" NVARCHAR2(20),
+			 "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+			 CONSTRAINT "TBL_BOARD_DISLIKE_PK" PRIMARY KEY ("ITEMID", "USERID", "TENANT_ID")
+		)
+	</statement>
+
+
+	<select id="EzCommonDAO.checkBoardKeywordTable">
+		<![CDATA[
+			SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_KEYWORD
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkBoardItemKeywordTable">
+		<![CDATA[
+			SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_BOARDITEM_KEYWORD
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createBoardKeywordTable">
+		<![CDATA[
+		CREATE TABLE "TBL_BOARD_KEYWORD" (
+			"KEYWORDID" NUMBER(5) NOT NULL,
+			"KEYWORDNAME" NVARCHAR2(100) NOT NULL UNIQUE,
+			"TENANT_ID" NUMBER(5) NOT NULL,
+			CONSTRAINT "PK_TBL_BOARD_KEYWORD" PRIMARY KEY ("KEYWORDID", "TENANT_ID")
+		) 
+		]]>
+	</statement>
+
+	<statement id="EzCommonDAO.createBoardItemKeywordTable">
+		<![CDATA[
+		CREATE TABLE "TBL_BOARD_BOARDITEM_KEYWORD" (
+			"KEYWORDID" NUMBER(5) NOT NULL,
+			"BOARDID" NVARCHAR2(40) NOT NULL,
+			"ITEMID" NVARCHAR2(40) NOT NULL,
+			"TENANT_ID" NUMBER(5) NOT NULL,
+			"SN" NUMBER(3) NOT NULL,
+			CONSTRAINT "PK_TBL_BOARD_BOARDITEM_KEYWORD" PRIMARY KEY ("KEYWORDID", "ITEMID", "SN", "TENANT_ID")
+		) 
+		]]>
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardKeywordSequence" resultClass="int">
+		SELECT
+			COUNT(SEQUENCE_NAME)
+		FROM
+			USER_SEQUENCES
+		WHERE
+			SEQUENCE_NAME = 'TBL_BOARD_KEYWORD_SEQ'
+	</select>
+
+	<statement id="EzCommonDAO.createBoardKeywordSequence">
+		CREATE SEQUENCE "TBL_BOARD_KEYWORD_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER NOCYCLE
 	</statement>
 </sqlMap>
