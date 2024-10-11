@@ -2111,21 +2111,19 @@ function SendDraftMappingSign(ret) {
         var s = CurrentDate[1] + "." + CurrentDate[2];
 
         var field = message.GetListItem(fields, psigncell);
-        var signWidth = field.offsetWidth
-        var signHeight = field.offsetHeight
-
-        if (signWidth > signHeight) {
-            signHeight = signHeight - 15;
-            signWidth = signHeight;
-        } else {
-            signWidth = signWidth - 15;
-            sighHeight = signWidth
-        }
+        var signWidth = 50;
+        var signHeight = 50;
+        
         var field = message.GetListItem(fields, pseumyungdatecell);
         if (field) {
             setNodeText(field , s);
-            signWidth = 50;
-            signHeight = 50;
+            
+            /* 2023-10-06 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+    		signInfo[signCnt] = pseumyungdatecell;
+    		SignName[signCnt] = pseumyungdatecell;
+    		SignType[signCnt] = "TEXT";
+    		SignContent[signCnt] = s;
+    		signCnt = signCnt + 1;
         } else {
         	signWidth = 50;
             signHeight = 28;

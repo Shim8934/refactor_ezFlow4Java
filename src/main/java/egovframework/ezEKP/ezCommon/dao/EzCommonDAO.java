@@ -1886,6 +1886,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertUseBoardFilePrvwConfig");
 		}
 	}
+	
+	/* 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 */
+	public void insertApprSignRemapApplyTime(Map<String, Object> map) {
+		String apprSignRemapApplyTime = (String) select("EzCommonDAO.getTenantConfig", map);
+		
+		if (apprSignRemapApplyTime == null) {
+			logger.debug("apprSignRemapApplyTime tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertApprSignRemapApplyTime", map);
+		}
+	}
+	
 	public void insertPermissionBasisDeptYN_Config()  throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkPermissionBasisDeptYN_Config");
 		if (propertyValue == null) {

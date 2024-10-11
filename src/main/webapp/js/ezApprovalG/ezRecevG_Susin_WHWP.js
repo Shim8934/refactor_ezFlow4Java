@@ -235,9 +235,8 @@ function setClearSusinCellInfo()
   }
 }
 
-function SendDraftMappingSign(ret)
-{
-  try{
+function SendDraftMappingSign(ret) {
+  try {
 	var psigncell;
 	var pseumyungcell;
 	var pseumyungdatecell;
@@ -247,6 +246,10 @@ function SendDraftMappingSign(ret)
 	
 	var OpinionText = "";
 	var PositionText = "";
+	
+	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) {
+		OpinionText = getSignDate() + "\15";
+	}
 
     if (approvalFlag == "S") {
         if (LastSignSN == 1) {
@@ -271,14 +274,10 @@ function SendDraftMappingSign(ret)
             }
             sn = LastSignNo;
         }
-    } else {
-        if( LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16 ) {
-            OpinionText = getSignDate() + "\15";
-        }
-	}
+    }
 	
 	signCnt = 0;
-	if(pDraftFlag == "SUSIN" ||  pDocState == "011") { 
+	if (pDraftFlag == "SUSIN" || pDocState == "011") { 
 	  	psigncell = pSusinSN + "sign" + sn;
 	  	pseumyungcell = pSusinSN + "jikwe" + sn;
 	  	pseumyungdatecell = pSusinSN + "seumyungdate" + sn;
@@ -288,56 +287,65 @@ function SendDraftMappingSign(ret)
 	  	pseumyungdatecell = "seumyungdate" + sn;
 	}
 	
-	 
 	var RtnVal = getGyulJeDate();
 	var CurrentDate = RtnVal.split(".");
 	var s = CurrentDate[1] + "." + CurrentDate[2]; 
 	var strimg;
 	var SingFlag = true;
 	var DekyulFlag = false;
+	
+	// 2023-11-24 홍승비 - 웹한글 접수기안 > 서명 이미지 삽입 시 포트번호 추가
+	var portNum = document.location.port == "" ? "" : ":" + document.location.port;
 
-	if (message.FieldExist(pseumyungcell))
+	if (message.FieldExist(pseumyungcell)) {
 	    message.PutFieldText(pseumyungcell, message.GetFieldText(pseumyungcell) + PositionText);
-
+	}
+	
 	if (message.FieldExist(pseumyungdatecell)) {
 	    message.PutFieldText(pseumyungdatecell, s);
         rtnSignInfo.push(pseumyungdatecell);
+        
+        /* 2023-10-06 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+		signInfo[signCnt] = pseumyungdatecell;
+		SignName[signCnt] = pseumyungdatecell;
+		SignType[signCnt] = "TEXT";
+		SignContent[signCnt] = s;
+		signCnt = signCnt + 1;
     }
-		
-	if(CurAprType == strAprType16 )
-	{			
-		if (message.FieldExist(psigncell))
-		{
+    
+	if (CurAprType == strAprType16) {
+		if (message.FieldExist(psigncell)) {
+			// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+			if (message.FieldExist(pseumyungdatecell)) {
+			    OpinionText = "\15";
+			}
 			
-			if(ret != "NAME")
-			{
+			/* 2023-11-24 홍승비 - 웹한글문서 접수기안 시 이미지 맵핑 관련 함수 호출 일부 변경 */
+			if (ret != "NAME") {
 				message.PutFieldText(psigncell, "");	
-				message.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname +  ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
-				message.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
-
+				//message.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname +  ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
+				message.PrependFieldText(psigncell, strLang7 + OpinionText);
+				message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
 			  	
 			  	signInfo[signCnt] = psigncell;
-			  	
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + strLang7 + OpinionText;
                 rtnSignInfo.push(psigncell);
-							  	
+                
+                // 연동정보 저장 함수로, 웹한글문서 접수기안 시 이미지 서명 사용 중에 오류를 발생시킨다. 추후 확인 예정
 			  	SetDocumentElement(psigncell, ret);
 			  	signCnt = signCnt + 1
 			  	SingFlag = true;
 			}
-			else
-			{
+			else {
 				message.PutFieldText(psigncell, arr_userinfo[2]);	
-				
-				message.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
+				message.PrependFieldText(psigncell, strLang7 + OpinionText, true);
 		  		
 		  		signInfo[signCnt] = psigncell;
-		  		
 				SignType[signCnt] = "TEXT";
 				SignName[signCnt] = psigncell;
-				SignContent[signCnt] = arr_userinfo[2] + strLang7 + OpinionText;
+				SignContent[signCnt] = strLang7 + OpinionText + arr_userinfo[2];
                 rtnSignInfo.push(psigncell);
 				
 		  		signCnt = signCnt + 1
@@ -346,26 +354,23 @@ function SendDraftMappingSign(ret)
 		}	
 		DekyulFlag = true;
 		sn = sn + 1;
-		if(pDraftFlag == "SUSIN" ||  pDocState == "011")  
-		{ 
+		
+		if (pDraftFlag == "SUSIN" ||  pDocState == "011") { 
 		  	psigncell = pSusinSN + "sign" + sn;
 		  	pseumyungcell = pSusinSN + "jikwe" + sn;
 		  	pseumyungdatecell = pSusinSN + "seumyungdate" + sn;
-		}else{
+		} else {
 		  	psigncell = "sign" + sn;
 		  	pseumyungcell = "jikwe" + sn;
 		  	pseumyungdatecell = "seumyungdate" + sn;
 		}
 	}
 	
-	if (DekyulFlag && NextAprType == strAprType4)
-	{
-		if (message.FieldExist(psigncell))
-		{
+	if (DekyulFlag && NextAprType == strAprType4) {
+		if (message.FieldExist(psigncell)) {
 			message.PutFieldText(psigncell, strLang6);	
 			
 			signInfo[signCnt] = psigncell;
-			
 			SignType[signCnt] = "TEXT";
 			SignName[signCnt] = psigncell;
 			SignContent[signCnt] = strLang6;
@@ -375,59 +380,58 @@ function SendDraftMappingSign(ret)
 			SingFlag = false; 
 		}
 	}
-	else if (DekyulFlag)
-	{
+	else if (DekyulFlag) {
 	}
-	else
-	{
-		if (message.FieldExist(psigncell))
-		{
+	else {
+		if (message.FieldExist(psigncell)) {
+			// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+			if (message.FieldExist(pseumyungdatecell)) {
+			    OpinionText = "\15";
+			}
 			
-			if(ret != "NAME")
-			{
-				message.PutFieldText(psigncell, "");	
-				message.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
-			
-				if (message.FieldExist(pseumyungdatecell))
-				    OpinionText = "";
-
+			if (ret != "NAME") {
+				message.PutFieldText(psigncell, "");
+				
 				if (CurAprType == strAprType4) {
-					OpinionText = strLang6 + OpinionText;
-					message.AppendFieldText(psigncell, strLang6 + "\15" + OpinionText, true);
-				} else {
-					message.AppendFieldText(psigncell, OpinionText, true);
+                    OpinionText = strLangAprType4 + OpinionText;
 				}
-			  	
+				
+				// OpinionText에 대결/전결/서명일자 표기 없이 개행문자만 존재하는 경우, 공백으로 치환
+				if (OpinionText == "\15") {
+					OpinionText = "";
+				}
+				
+				message.PrependFieldText(psigncell, OpinionText);
+                message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
+                
 			  	signInfo[signCnt] = psigncell;
-			  	
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + OpinionText;
                 rtnSignInfo.push(psigncell);
 				
+                // 연동정보 저장 함수로, 웹한글문서 접수기안 시 이미지 서명 사용 중에 오류를 발생시킨다. 추후 확인 예정
 			  	SetDocumentElement(psigncell, ret);
 			  	signCnt = signCnt + 1
 			  	SingFlag = true;
 			}
-			else
-			{
-			    if (message.FieldExist(pseumyungdatecell))
-			        OpinionText = "";
-			  	
-				message.PutFieldText(psigncell, arr_userinfo[2]);
-				
-				if (CurAprType == strAprType4 )	{
-					OpinionText = strLang6 + OpinionText;
-					message.AppendFieldText(psigncell, strLang6 + "\15" + OpinionText, true);
-				} else {
-					message.AppendFieldText(psigncell, OpinionText, true);
+			else {
+				if (CurAprType == strAprType4) {
+			    	OpinionText = strLangAprType4 + OpinionText;
+			    }
+			    
+			    // OpinionText에 대결/전결/서명일자 표기 없이 개행문자만 존재하는 경우, 공백으로 치환
+				if (OpinionText == "\15") {
+					OpinionText = "";
 				}
+				
+				message.PutFieldText(psigncell, arr_userinfo[2]);	
+			    message.PrependFieldText(psigncell, OpinionText);
 			  	
 			  	signInfo[signCnt] = psigncell;
-			  	
 		        SignType[signCnt] = "TEXT";
 		        SignName[signCnt] = psigncell;
-		        SignContent[signCnt] = arr_userinfo[2] + OpinionText;
+		        SignContent[signCnt] = OpinionText + arr_userinfo[2];
                 rtnSignInfo.push(psigncell);
 		        
 			  	signCnt = signCnt + 1
@@ -436,7 +440,7 @@ function SendDraftMappingSign(ret)
 		}
 	}	
     return signInfo;
-  }catch(e){
+  } catch(e) {
     alert("SendDraftMappingSign(ret)" + e.description);
   }
 }
