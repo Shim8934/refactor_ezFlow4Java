@@ -4329,10 +4329,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("tenantId", tenantVo.getTenantId());
             map.put("propertyName", "MyBoardScrapFlag");
-            map.put("propertyValue", "YES");
-            map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
-            map.put("configName", "게시판 왼쪽 메뉴 마이게시판 탭에서 나의 스크랩 사용여부");
-            map.put("configType", "기타모듈");
+            map.put("propertyValue", "TYPE1");
+            map.put("description", "NONE: 사용안함 / TYPE1: 마이게시판 하위 스크랩함 / TYPE2: 게시판 트리 하위 개인화 스크랩함 (default: TYPE1)");
+            map.put("configName", "게시판 스크랩 기능 사용 여부");
+            map.put("configType", "게시판");
             map.put("regdate", "2023-06-14 00:00:00");
 
             ezCommonDAO.insertScrapTenantConfig(map);
@@ -4354,23 +4354,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void createTblBoardScrap() throws Exception {
 		ezCommonDAO.createTblBoardScrap();
-	}
-	
-	@Override
-	public void insertScrapContTenantConfig() throws Exception {
-        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
-        for (TenantVO tenantVo : tenantIdList) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("tenantId", tenantVo.getTenantId());
-            map.put("propertyName", "MyScrapContFlag");
-            map.put("propertyValue", "YES");
-            map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
-            map.put("configName", "게시판 왼쪽 메뉴 나의 스크랩 사용여부");
-            map.put("configType", "기타모듈");
-            map.put("regdate", "2023-06-14 00:00:00");
-
-            ezCommonDAO.insertScrapContTenantConfig(map);
-        }
 	}
 	
 	@Override

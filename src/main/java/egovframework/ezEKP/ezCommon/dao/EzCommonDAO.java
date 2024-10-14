@@ -2768,15 +2768,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void insertScrapContTenantConfig(Map<String, Object> map) throws Exception{
-		String propertyValue = (String) select("EzCommonDAO.checkScrapContTenantConfig",map);
-		
-		if (propertyValue == null) {
-			logger.debug("ScrapCont tenant config doesn't exist. insert data...");
-			insert("EzCommonDAO.insertScrapContTenantConfig",map);
-		}
-	}
-	
 	public void createTblUserScrapCont() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblUserScrapCont");

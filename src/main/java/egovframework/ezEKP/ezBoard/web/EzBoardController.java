@@ -59,6 +59,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -379,8 +380,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("useLeftCnt", useLeftCnt);
         modelMap.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", tenantID));
         modelMap.addAttribute("userScrapCont", userScrapCont);
-		modelMap.addAttribute("MyScrapContFlag", ezCommonService.getTenantConfig("MyScrapContFlag", userInfo.getTenantId()));
-
+        
 		logger.debug("boardLeft ended");
 
 		return "ezBoard/boardLeft";
@@ -1058,7 +1058,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
 		model.addAttribute("isMyBoard", isMyBoard);
 		model.addAttribute("endDateOption", endDateOption);
-		model.addAttribute("MyScrapContFlag", ezCommonService.getTenantConfig("MyScrapContFlag", userInfo.getTenantId()));
+		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 
 		logger.debug("boardItemList ended");
 		//logger.debug("requestURL : " + requestURL);
@@ -6435,7 +6435,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardViewForm", boardViewForm);
 		model.addAttribute("isMyBoard", isMyBoard);
 		model.addAttribute("endDateOption", endDateOption);
-		model.addAttribute("MyScrapContFlag", ezCommonService.getTenantConfig("MyScrapContFlag", userInfo.getTenantId()));
+		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 
 		logger.debug("boardItemListThumbnail ended");
 		return "ezBoard/boardItemListThumbnail";
@@ -9810,7 +9810,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isMyBoard", isMyBoard);
 		model.addAttribute("endDateOption", endDateOption);
-		model.addAttribute("MyScrapContFlag", ezCommonService.getTenantConfig("MyScrapContFlag", userInfo.getTenantId()));
+		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 
 		logger.debug("boardItemListMovie ended");
 		return "ezBoard/boardItemListMovie";
@@ -11738,4 +11738,49 @@ public class EzBoardController extends EgovFileMngUtil{
 		return "ezBoard/boardAlert";
 	}
 
+	/**
+	 * 2024-10-10 전인하 - 게시판 > 마이게시판 하위 스크랩 > 스크랩 추가 다중선택 동작
+	 * 이미 인서트되어있는 스크랩은 패스하고, 없는 것만 인서트한 뒤 성공 수, 실패 수를 따로 반환
+	 */
+	@RequestMapping(value = "/ezBoard/setScrapItemAll.do", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject setScrapItemAll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("setScrapItem started");
+
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+		String userID = userInfo.getId();
+		String itemID = request.getParameter("itemIDList");
+		String[] itemIDList = itemID.split(";");
+		String boardID = request.getParameter("boardID");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+		
+		JSONObject result = new JSONObject();
+		
+		String resultCode = "true";
+		int successCount = 0;
+		if (itemID.length() > 0) {
+			for (String id : itemIDList) {
+				resultCode = ezBoardService.getScrapItemCount(userID, id, boardID, companyID, tenantID);
+
+				if ("true".equals(resultCode)) {
+					resultCode = ezBoardService.setScrapItem(userID, id, boardID, companyID, tenantID);
+					successCount += 1;
+				} else if ("error".equals(resultCode)) {
+					break;
+				}
+			}
+		}
+		
+		if ("error".equals(resultCode)) {
+			result.put("status", "error");
+		} else {
+			result.put("status", "success");
+			result.put("failCount", itemIDList.length - successCount);
+		}
+
+		logger.debug("setScrapItem ended");
+		return result;
+	}
 }

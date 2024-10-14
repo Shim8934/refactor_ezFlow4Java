@@ -6089,24 +6089,6 @@
 		)
 	</statement>
 
-	<select id="EzCommonDAO.checkScrapContTenantConfig" resultClass="String" parameterClass="Map">
-		SELECT
-			property_value
-		FROM
-			tbl_tenant_config
-		WHERE
-			property_name = 'MyScrapContFlag'
-		AND
-			tenant_id = #tenantId#
-	</select>
-
-	<insert id="EzCommonDAO.insertScrapContTenantConfig" parameterClass="Map">
-		INSERT INTO TBL_TENANT_CONFIG
-			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
-		VALUES
-			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, SYSDATE, #configType#)
-	</insert>
-
 	<select id="EzCommonDAO.checkTblUserScrapCont" resultClass="String">
 		<![CDATA[
 			SELECT

@@ -5385,6 +5385,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		try {
 			ezBoardDAO.setScrapItem(map);
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "error";
 		}
@@ -5416,6 +5417,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				result = "true";
 			}
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "error";
 		}

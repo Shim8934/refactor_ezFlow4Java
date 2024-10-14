@@ -46,7 +46,7 @@
 	        var rightFrame = "";
 	        var useLeftCnt = "<c:out value='${useLeftCnt}'/>";
 			var realIndexID = "<c:out value='${realIndexID}'/>";
-	        var MyScrapContFlag = "<c:out value='${MyScrapContFlag}'/>";
+	        var MyBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>";
 	        
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
@@ -74,7 +74,7 @@
 		        }
 		        
 		        /*2023-05-22 기민혁  나의 스크랩함 트리 표출  */
-		        if(MyScrapContFlag != "NO"){
+		        if(MyBoardScrapFlag == "TYPE2"){
 			        Tree_setconfig();
 		            var xmlDom2 = createXmlDom();
 		            xmlDom2 = loadXMLString("${userScrapCont}");
@@ -1332,7 +1332,7 @@
 				        	<li><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
 							<li><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
 							<li><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
-							<c:if test="${MyBoardScrapFlag != 'NO'}">
+							<c:if test="${MyBoardScrapFlag eq 'TYPE1'}">
 								<li><span class="list_text" onclick="ScrapBoard()"><spring:message code="ezBoard.kmh12" /></span></li>
 							</c:if>
 						</ul>
@@ -1340,7 +1340,7 @@
 			        <div id='TopBoardsList'>
 			        	<script type="text/javascript">
 			        		parser = new DOMParser();
-		        		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
+                            xmlDoc = parser.parseFromString("${resultXML}","text/xml");
 		        			var i = 0;
 		        			$(xmlDoc).find("NODE").each(function(i) {
 		       			        document.write("<h2 class='off'>");
@@ -1375,12 +1375,12 @@
                            	<li><span class="sub_iconLNB tree_board_my"></span><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
                            	<li><span class="sub_iconLNB tree_board_reservation"></span><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
                            	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
-				        	<c:if test="${MyBoardScrapFlag != 'NO'}">
+				        	<c:if test="${MyBoardScrapFlag == 'TYPE1'}">
 								<li><span class="sub_iconLNB tree_task_repeat"></span><span class="list_text" onclick="ScrapBoard()"><spring:message code="ezBoard.kmh12" /></span></li>
 				        	</c:if>
 				        </ul>
 				    </c:if>
-					<c:if test="${MyScrapContFlag != 'NO'}">
+					<c:if test="${MyBoardScrapFlag == 'TYPE2'}">
 						<h2 class="off" id="scrapH2">
 							<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
 							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openScrapFolder('scrap')"><spring:message code="ezBoard.kmh12" /></span>

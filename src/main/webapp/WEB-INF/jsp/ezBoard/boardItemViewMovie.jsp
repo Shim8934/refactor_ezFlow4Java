@@ -88,8 +88,10 @@
 		        var rsa = new RSAKey();
 		        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 				var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
-		        var isScrap = "<c:out value='${isScrap}'/>";
-				var acScrap = "<c:out value='${acScrap}'/>";
+				
+                var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // myBoardScrapFlag 테넌트컨피그값 (NONE, TYPE1_(마이게시판하위), TYPE2(스크랩함))
+		        var isScrap = "<c:out value='${isScrap}'/>"; // 이미 스크랩되었는지의 여부 (type1일때)
+		        var acScrap = "<c:out value='${acScrap}'/>"; // 스크랩함에서 접근했는지의 여부 (스크랩함에서 접근했으면 'SCRAP')
 
 				/* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
 				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
@@ -753,7 +755,7 @@
 				}
 			    
 			    /* 2023-05-03 기민혁 -  스크랩 추가 클릭시 data insert */
-			    function addScrap(){
+			    function addScrapType1() {
 			    	$.ajax({
 						type : "GET",
 						dataType : "text",
@@ -776,6 +778,22 @@
 						}
 					});
 				}
+				
+                function addScrapType2() {
+                    var url = "/ezBoard/selUserScrapCont.do";
+                    ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+                    try { ContOpen.focus() } catch (e) { }
+                }
+                
+                function addScrap() {
+                    if (myBoardScrapFlag == "TYPE1") {
+                        addScrapType1();
+                    } else if (myBoardScrapFlag == "TYPE2") {
+                        addScrapType2();
+                    } else {
+                        alert("오류발생");
+                    }
+                }
 			    
 			    /* 2023-05-03 기민혁 -  스크랩 해제 클릭시 data delete */
 			    function delScrap(){
@@ -840,13 +858,13 @@
 		                    <li ID='btn_down' ><a id="movieDownload"><span><spring:message code='ezQuestion.t180'/><spring:message code='ezQuestion.t567'/></span></a></li>
 		        		</c:otherwise>
 		        	</c:choose>
-					<c:if test="${MyBoardScrapFlag != 'NO' && acScrap != 'SCRAP' && apprFlag != 'N'}">
+                    <c:if test="${MyBoardScrapFlag != 'NONE' && acScrap != 'SCRAP' && apprFlag != 'N'}">
 		        		<c:choose>
-							<c:when test="${isScrap == 'true'}">
-								<li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>
+                            <c:when test="${MyBoardScrapFlag eq 'TYPE1' && isScrap ne 'true'}">
+                                <li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>
 							</c:when>
 							<c:otherwise>
-								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>
+                                <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
 							</c:otherwise>
 						</c:choose>
 					</c:if>

@@ -458,8 +458,6 @@ public interface EzCommonService {
 	public void insertScrapTableHeader() throws Exception;
 	
 	public void createTblBoardScrap() throws Exception;
-
-	public void insertScrapContTenantConfig() throws Exception;
 	
 	public void createTblUserScrapCont() throws Exception;
 	
