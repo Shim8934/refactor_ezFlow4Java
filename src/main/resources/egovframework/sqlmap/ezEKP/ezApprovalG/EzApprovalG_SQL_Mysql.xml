@@ -10033,6 +10033,12 @@
                                 <isNotEmpty property="v_KEYWORD" prepend="AND">
                                     KEYWORD LIKE CONCAT(CONCAT('%', #v_KEYWORD#), '%')
                                 </isNotEmpty>
+                                <isNotEmpty property="v_containerFormName" prepend="AND">
+                                    TBL_EXPENDAPRDOCINFO.FORMNAME = #v_containerFormName#
+                                </isNotEmpty>
+                                <isNotEmpty property="v_containerTaskCode" prepend="AND">
+                                    TBL_EXPENDAPRDOCINFO.TASKCODE = #v_containerTaskCode#
+                                </isNotEmpty>
 							   	<isNotEmpty property="v_DOCSTATE" prepend="AND">
 							   		DOCSTATE = #v_DOCSTATE#
 							   	</isNotEmpty>
@@ -14768,6 +14774,12 @@
 		<isNotEmpty property="v_KEYWORD" prepend="AND">
 		    KEYWORD LIKE CONCAT(CONCAT('%', #v_KEYWORD#), '%')
 		</isNotEmpty>
+		<isNotEmpty property="v_containerFormName" prepend="AND">
+		    TBL_EXPENDAPRDOCINFO.FORMNAME = #v_containerFormName#
+		</isNotEmpty>
+		<isNotEmpty property="v_containerTaskCode" prepend="AND">
+            TBL_EXPENDAPRDOCINFO.TASKCODE = #v_containerTaskCode#
+        </isNotEmpty>
    		<isNotEmpty property="v_DOCSTATE" prepend="AND">
    			DOCSTATE = #v_DOCSTATE#
    		</isNotEmpty>

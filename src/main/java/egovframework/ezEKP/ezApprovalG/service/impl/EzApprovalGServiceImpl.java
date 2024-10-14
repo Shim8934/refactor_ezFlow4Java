@@ -27623,6 +27623,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         map.put("v_ITEMCODE", itemCode);
 		map.put("v_EAPRTYPE", endAprType);
 		map.put("v_ENDAPRSTATE", endAprState);
+		// 양식별 문서함에 필요한 subQuery 수정
+		if (subQuery.toUpperCase().contains("TBL_EXPENDAPRDOCINFO.FORMNAME")) {
+			String containerFormName = subQuery.split("'")[1].split("'")[0];
+			map.put("v_containerFormName", containerFormName);
+		}
+		
+		// 분류코드 문서함에 필요한 subQuery 수정
+		if (subQuery.toUpperCase().contains("TBL_EXPENDAPRDOCINFO.TASKCODE")) {
+			String containerTaskCode = subQuery.split("'")[1].split("'")[0];
+			map.put("v_containerTaskCode", containerTaskCode);
+		}
 		
 		int totalCount = ezApprovalGDAO.getSearchDocListCount(map);
 		
