@@ -4214,6 +4214,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("copyItem started");
 
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pOrgItemID", pOrgItemID);
 		map.put("v_pOrgBoardID", pOrgBoardID);
@@ -4236,7 +4238,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String pUploadFilePath = realPath + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
-		copyFiles(pOrgItemID, pOrgBoardID, pDestItemID, pDestBoardID, pUploadFilePath);
+		copyFiles(pOrgItemID, pOrgBoardID, pDestItemID, pDestBoardID, pUploadFilePath, editor);
 		
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		map2.put("v_pOrgItemID", pOrgItemID);
@@ -7561,9 +7563,18 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("adminLogoOkUpdate2 ended.");
 		}*/
 
-	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception {
-        String orgFilePath = commonUtil.detectPathTraversal(pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht");
-        String destFilePath = commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht");
+	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef, String editor) throws Exception {
+        
+		String orgFilePath = "";
+        String destFilePath = "";
+		
+		if (!editor.equals("HWP")) {
+			orgFilePath = commonUtil.detectPathTraversal(pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht");
+			destFilePath = commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht");
+		} else {
+			orgFilePath = commonUtil.detectPathTraversal(pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".hwp");
+			destFilePath = commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".hwp");
+		}
 
         File destdir = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID));
         if (!destdir.exists()) {
