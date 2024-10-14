@@ -660,13 +660,10 @@
     			<c:if test="${approveFlag ne 2 }">
     				<li id="myApprovlist"><span onClick="btnMyApprov_list();"><spring:message code='ezResource.kmsr34'/></span></li>
     			</c:if>
-<<<<<<< HEAD
     			<c:if test="${adminCKFlag eq 'Y'}" >
     				<li id="occupancylist"><span onClick="btnOccupancy_list();"><spring:message code='ezResource.kwc03'/></span></li>
     			</c:if>
-=======
     			<li id="fav_manage" onClick="fvManageWindowOpen();"><span><spring:message code='ezResource.resFav.ygs02'/></span></li>
->>>>>>> 56a002a87b (* voc.kaoni.com(#138626) 자원> 즐겨찾기 관련 기능)
             </ul>
 		</div>
 		<div class="calendar_pagenav" style='left: max(50%, 550px);'>
