@@ -5727,4 +5727,38 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 		]]>
 	</statement>
+	
+	<select id="EzCommonDAO.checkTblRsFavCat">
+		SELECT CAT_ID FROM TBL_RS_FAV_CAT LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblRsFavCat">
+		CREATE TABLE `TBL_RS_FAV_CAT` (
+		  `CAT_ID` varchar(80) NOT NULL,
+		  `TOP_ID` varchar(80) DEFAULT NULL,
+		  `USER_ID` varchar(100) NOT NULL,
+		  `CAT_NAME` varchar(200) NOT NULL,
+		  `UPDATEDATE` datetime NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  `BRDYN` varchar(10) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+		  PRIMARY KEY (`CAT_ID`, `TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblRsCatBrd">
+		SELECT CAT_ID FROM TBL_RS_CAT_BRD LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblRsCatBrd">
+		CREATE TABLE `TBL_RS_CAT_BRD` (
+		  `CAT_ID` varchar(100) NOT NULL,
+		  `BRD_ID` varchar(80) NOT NULL,
+		  `USER_ID` varchar(80) NOT NULL,
+		  `COMPANYID` varchar(80) NOT NULL,
+		  `UPDATEDATE` datetime NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+		  PRIMARY KEY (`CAT_ID`,`BRD_ID`,`USER_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+	</statement>
 </sqlMap>

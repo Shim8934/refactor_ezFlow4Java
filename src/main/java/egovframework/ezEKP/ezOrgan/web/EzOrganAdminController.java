@@ -331,7 +331,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.alterTblBoardOneLineChildReply(); // 2023-03-31 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가
 			ezCommonService.insertBoardReplyCommentEmoticon(); // 2023-11-07 전인하 - 게시판 > 댓글로 이모티콘 삽입 가능 관련 테이블 컬럼 추가
 			ezCommonService.createBoardKeywordTable(); // 2024-08-23 전인하 - 게시판 > 키워드 기능 개발
-        } catch (Exception e) {
+			ezCommonService.createResourceFavoriteTables(); // 2024-08-07 유길상 - 자원관리 즐겨찾기 테이블 추가
+		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
     	logger.debug("init ended.");
@@ -2026,7 +2027,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String result = "";
 		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 		// 전체관리자가 또는 회사관리자가 아닌데 관리자 권한을 설정하려는 경우엔 CHECKPERMISSION을 반환한다.
-        if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER) && !organAuth.isAuth(AdminAuth.COMPANY_MANAGER)) {
+		// ezSyncServer가 ezFlow를 호출하는 경우엔 loginCookie에 부서 아이디가 없어 부서아아디 체크를 추가함
+        if (userInfo.getDeptID() != null && !userInfo.getDeptID().isEmpty() &&
+				!organAuth.isAuth(AdminAuth.ADMIN_MASTER) && !organAuth.isAuth(AdminAuth.COMPANY_MANAGER)) {
             result = "CHECKPERMISSION";		
 		// 기존 사용자를 수정하는 경우엔 parentCn의 값이 null 혹은 empty string 이다.
         } else if (vo.getParentCn() == null || vo.getParentCn().equals("")) {

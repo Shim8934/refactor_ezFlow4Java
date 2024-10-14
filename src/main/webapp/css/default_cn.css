@@ -3749,6 +3749,8 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 
 .lnbUL li .list_text2 {padding-left: 23px;text-overflow: ellipsis;overflow: hidden; white-space:pre}
 
+#TreeView, #TreeView2, #TreeView3, #TreeViewCC {padding: 6px 8px; box-sizing: border-box;}
+
 .resetBtn {line-height: 0px;}
 
 /* 20240517 메일보기 상단바 디자인수정 */
@@ -3761,7 +3763,27 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .popup #menu ul.layer_select li:hover span{background: #F8F9FB; color: #0470E4;}
 .popup #menu ul.layer_select li span{border: none; display: block;}
 .popup #menu ul.layer_select{margin-left: -33px; top: 6px;}
-/* //20240517 메일보기 상단바 디자인수정 */ 
+/* //20240517 메일보기 상단바 디자인수정 */
+
+.mt0{margin-top:0px !important;}
+.mt5{margin-top:5px !important;}
+.mt10{margin-top:10px !important;}
+.mt15{margin-top:15px !important;}
+.mt30{margin-top:30px !important;}
+.mr0{margin-right:0px !important;}
+.mr5{margin-right:5px !important;}
+.mr10{margin-right:10px !important;}
+.mr15{margin-right:15px !important;}
+.ml5{margin-left:5px !important;}
+.ml10{margin-left:10px !important;}
+.mb0{margin-bottom:0 !important;}
+.mb5{margin-bottom:5px !important;}
+.mb10{margin-bottom:10px !important;}
+.pd0{padding:0 !important;}
+.pd15{padding:15px !important;}
+.pd30{padding:30px !important;}
+.plr20{padding:0 20px;}
+.c_blue{color:#017BEC !important;}
 .textUser{width: 31%}
 
 /* 2023-11-07 전인하 게시판 댓글 이모티콘 삽입 */
@@ -3813,4 +3835,9 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
     color: #999;
     font-weight: 500;
     text-align: center;
+}
+
+#TreeCtrl_MyFavTree_ul > .lnbUL {
+	padding-top: 0px;
+	padding-left: 20px;
 }

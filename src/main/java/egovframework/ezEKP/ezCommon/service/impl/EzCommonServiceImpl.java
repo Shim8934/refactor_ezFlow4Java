@@ -4366,4 +4366,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addBoardDisLikeFlag() throws Exception{
 		ezCommonDAO.addBoardDisLikeFlag();
 	}
+	
+    // 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 테이블 추가
+    @Override
+    public void createResourceFavoriteTables() throws Exception {
+    	ezCommonDAO.createTblRsFavCat();
+    	ezCommonDAO.createTblRsCatBrd();
+    }
 }
