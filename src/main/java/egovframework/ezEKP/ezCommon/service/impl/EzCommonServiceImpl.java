@@ -2802,7 +2802,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
 		list.add(new HashMap<String, String>(){{ put("name","ExpirePassPeriod"); put("value","0"); }});
 		list.add(new HashMap<String, String>(){{ put("name","MaxAllowedCountOfLoginFail"); put("value","0"); }});
-		list.add(new HashMap<String, String>(){{ put("name","UsePasswordPatternPolicy"); put("value","NO"); }});
+		// 2024.10.14 한슬기 : 암호정책 디폴트값 설정 (암호패턴 사용, 영문 대/소문자 패턴구분안함, 3개패턴 사용, 8글자 이상)
+		list.add(new HashMap<String, String>(){{ put("name","UsePasswordPatternPolicy"); put("value","YES"); }});
 		// 2021-11-09 이사라 : 가장 최근 사용한 암호 재사용
 		list.add(new HashMap<String, String>(){{ put("name","useChkPrevPwd"); put("value","NO"); }});
 		     

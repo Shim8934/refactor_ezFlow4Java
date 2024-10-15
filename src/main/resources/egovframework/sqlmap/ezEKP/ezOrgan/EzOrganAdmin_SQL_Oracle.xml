@@ -6983,6 +6983,24 @@
 		AND 
 			TENANT_ID = #v_TENANT_ID#
      </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D38" parameterClass="Map">
+		DELETE FROM  
+			TBL_PASSWORD_POLICY 
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+     </delete>
+
+     <delete id="EzOrganAdminDAO.deleteCompany_D39" parameterClass="Map">
+		DELETE FROM  
+			TBL_PASSWORD_POLICY_PATTERN
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+     </delete>   
 
  	<delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
         DELETE FROM

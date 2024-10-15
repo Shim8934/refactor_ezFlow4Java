@@ -1338,7 +1338,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        // 시스템 > 시스템 컨피그 값 삭제
 	        ezOrganAdminDao.deleteCompany_D36(map);
 	        ezOrganAdminDao.deleteCompany_D37(map);
-	        // 
+	        
+	        // 시스템 > 암호정책관리 설정 값 삭제
+	        ezOrganAdminDao.deleteCompany_D38(map); // TBL_PASSWORD_POLICY
+	        ezOrganAdminDao.deleteCompany_D39(map); // TBL_PASSWORD_POLICY_PATTERN
+	        
+	        
 		    /**
 		     * Active Directory
 		     * - 부서 정보 삭제

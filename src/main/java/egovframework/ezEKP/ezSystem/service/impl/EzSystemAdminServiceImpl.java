@@ -896,6 +896,48 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		return 0;
 	}
 	
+	// 2024.10.14 한슬기 : 회사생성시 암호정책 디폴트값 설정 (암호패턴 사용, 영문 대/소문자 패턴구분안함, 3개패턴 사용, 8글자 이상)
+	@Override
+	public String insertDefaultPwPolicy(int tenantID, String companyID) throws Exception {
+		String result = "ERROR";
+		PasswordPolicyVO pwPolicyVO = new PasswordPolicyVO();
+		pwPolicyVO.setTenantId(tenantID);
+		pwPolicyVO.setCompanyId(companyID);
+		pwPolicyVO.setEngCharType("N");
+		pwPolicyVO.setUseCapitalLetter("Y");
+		pwPolicyVO.setUseSmallLetter("Y");
+		pwPolicyVO.setUseNumber("Y");
+		pwPolicyVO.setUseSpecial("Y");
+		
+		logger.debug("insertPwPolicy. pwPolicyVO={}", pwPolicyVO);
+		ezSystemAdminDAO.insertPwPolicy(pwPolicyVO);
+		
+		// 패턴 -> 영문 대/소문자, 숫자, 특수문자
+		int patternNumber = 0; // 패턴사용시 글자수 제한(사용안함)
+		int settingNumber = 8; // 패턴사용시 글자수 제한(8글자 이상)
+		int pattrernCount = 3; // 사용패턴갯수
+		
+		Map<String, Object> patternMap = new HashMap<>();
+		for (int i = 1; i <= pattrernCount; i++) {
+			if (i == pattrernCount) {
+				patternNumber = settingNumber;
+			}
+			// tbl_password_policy_pattern
+			patternMap.put("tenantId", tenantID);
+			patternMap.put("companyId", companyID);
+			patternMap.put("settingCnt", i); // number_of_char
+			patternMap.put("settingNumber", patternNumber); // use_pattern_count
+			
+			logger.debug("insertPwPolicyPattern. patternMap=" + patternMap.toString());
+			ezSystemAdminDAO.insertPwPolicyPattern(patternMap);
+			
+		}
+		
+		result = "OK";
+		
+		return result;
+	}
+	
 	// companyConfig 저장
 	@Override
 	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception {
@@ -1914,4 +1956,5 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 		logger.debug("deleteFidoIPBand ended.");
 	}
+
 }

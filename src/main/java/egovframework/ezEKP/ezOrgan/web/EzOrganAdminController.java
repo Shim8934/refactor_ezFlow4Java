@@ -696,6 +696,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								ezCommonService.insertCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
 							} 
 							
+							// 2024.10.14 한슬기 : 암호정책 디폴트값 설정 (암호패턴 사용, 영문 대/소문자 패턴구분안함, 3개패턴 사용, 8글자 이상)
+							String defaultPwPolicyResult = ezSystemAdminService.insertDefaultPwPolicy(tenantID, cn);
+							if (!"OK".equals(defaultPwPolicyResult)) {
+								result = "PWPOLICY_ERROR";
+							}
+							
+							
 							int reasonCode = ezEmailService.saveCompanyMultiDomain(tenantID, cn, selectDomain, selectDomain);
 							logger.debug("reasonCode=" + reasonCode);
 							
