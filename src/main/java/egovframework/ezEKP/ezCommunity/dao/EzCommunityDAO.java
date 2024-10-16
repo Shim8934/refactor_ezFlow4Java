@@ -1192,4 +1192,13 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (int) select("EzCommunityDAO.checkUserInCommunity", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<String> myCommunityPopGet(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzCommunityDAO.myCommunityPopGet", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityMyCommunityVO> myCommunityPopItemGet(Map<String, Object> map) throws Exception {
+		return (List<CommunityMyCommunityVO>) list("EzCommunityDAO.myCommunityPopItemGet", map);
+	}
 }

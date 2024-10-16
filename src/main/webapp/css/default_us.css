@@ -2726,6 +2726,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_tabCommunity dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
 .contents_tabCommunity dd{float:right; height:44px; margin:0px; padding:0px;}
 .contents_tabCommunity dd.btn_more{width:42px; background:url(../images/kr/community/communityPortlet_btnmore.png) center no-repeat; cursor:pointer;}
+.contents_tabCommunity .boardNewPop{cursor: pointer;}
 .contents_listCommunity{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .contents_listCommunity li{overflow:hidden; margin:0px; padding:0px; line-height:34px; color:#555555; font-size:13px; cursor:pointer;}
 .contents_listCommunity li span{display:inline-block; margin:0px; padding:0px 0px 0px 0px;}

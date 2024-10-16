@@ -2710,6 +2710,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_tabCommunity dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
 .contents_tabCommunity dd{float:right; height:44px; margin:0px; padding:0px;}
 .contents_tabCommunity dd.btn_more{width:42px; background:url(../images/kr/community/communityPortlet_btnmore.gif) center no-repeat; border-left:1px solid #e7e7e7; cursor:pointer;}
+.contents_tabCommunity .boardNewPop{cursor: pointer;}
 .contents_listCommunity{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
 .contents_listCommunity li{overflow:hidden; margin:0px; padding:0px; line-height:34px; color:#555555; font-size:13px; background:url(../images/kr/community/communityPortlet_listpoint.gif) left center no-repeat; cursor:pointer;}
 .contents_listCommunity li span{display:inline-block; margin:0px; padding:0px 0px 0px 6px;}

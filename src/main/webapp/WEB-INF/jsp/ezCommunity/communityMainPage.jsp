@@ -429,44 +429,61 @@
 						data : { page   : CurPage
 						},
 						success: function(result){
-							event_get_myCommunity(result);
+							event_get_myCommunity(result, 'new');
 							//commuTitleWidth(); //타이틀 너비 조정
 						}
 				});
 	        }
 	        
 	        // 커뮤니티 새글
-	        function event_get_myCommunity(result) {
+	        function event_get_myCommunity(result, type) {
                 var xmldom = loadXMLString(result);
                 var table;
                 
+				if (type == 'new') {
+					document.getElementById("listCommunity2").style.display = "";
+					document.getElementById("listCommunityPop").style.display = "none";
+				} else {
+					document.getElementById("listCommunityPop").style.display = "";
+					document.getElementById("listCommunity2").style.display = "none";
+				}
+				
                 if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
-                	
-                	var ul = document.getElementById("listCommunity2");
-                	
-                	var dl = document.createElement("DL");
-                	dl.className = "nodata_sIcon";
-                	
-					var dt = document.createElement("DT");
-					 
-		            var img = document.createElement("IMG");
-		            img.src = "/images/kr/main/noData_sIcon.png";
-		             
-		            var dd = document.createElement("DD");
-		            dd.innerHTML = strLang535;
-		             
-		             dt.appendChild(img);
-		             dl.appendChild(dt);
-		             dl.appendChild(dd);
+					if (type == 'new') {
+						var ul = document.getElementById("listCommunity2");
+					} else {
+						var ul = document.getElementById("listCommunityPop");
+					}
 
-		             ul.appendChild(dl);
-		             
+					if (!document.querySelector('.nodata_sIcon')) {
+						var dl = document.createElement("DL");
+						dl.className = "nodata_sIcon";
+						
+						var dt = document.createElement("DT");
+						 
+						var img = document.createElement("IMG");
+						img.src = "/images/kr/main/noData_sIcon.png";
+						 
+						var dd = document.createElement("DD");
+						dd.innerHTML = strLang535;
+						 
+						 dt.appendChild(img);
+						 dl.appendChild(dt);
+						 dl.appendChild(dd);
+
+						 ul.appendChild(dl);
+					}
                 	return;
                 }
                 
                 var j = 0;
-                
-                document.getElementById("listCommunity2").innerHTML = "";
+
+				if (type == 'new') {
+					document.getElementById("listCommunity2").innerHTML = "";
+				} else {
+					document.getElementById("listCommunityPop").innerHTML = "";
+				}
+               
                 
                 for(var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
 	                var li = document.createElement("LI");
@@ -514,8 +531,12 @@
 	                li.appendChild(span2);
 	                li.appendChild(span3);
 	                li.appendChild(span4);
-	                
-	                document.getElementById("listCommunity2").appendChild(li);
+
+					if (type == 'new') {
+						document.getElementById("listCommunity2").appendChild(li);
+					} else {
+						document.getElementById("listCommunityPop").appendChild(li);
+					}
 					
                 }
 	        }
@@ -1615,19 +1636,68 @@
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 720) / 2;
 	            var pLeft = (pwidth - 765) / 2;
+				var type = val.parentNode.id;
 
-	            if (gubun == "3") {
-	                if (CrossYN()) {
-	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	                } else {
-	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	                }
+				if (gubun == "3") {
+					if (type == 'listCommunityPop') {
+						$.ajax({
+							type : "GET",
+							dataType : "text",
+							url : "/ezCommunity/boardItemViewPhoto.do",
+							data : {	
+								showAdjacent : 1,
+								itemID : pItemID,
+								boardID : pItemBoardID,
+								type : "pop"
+							},
+							success: function(result){
+								try {
+									var resultObj = JSON.parse(result);
+									if (resultObj.result == false) {
+										GetOpenWindow("/ezCommunity/communityMainPopBoardAlert.do","", 370, 190);
+									}
+								} catch (e) {
+									GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+								}
+							}
+						});
+					} else {
+						if (CrossYN()) {
+							window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+						} else {
+							window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+						}
+					}
 	            } else {
-	                if (CrossYN()) {
-	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
-	                } else {
-	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
-	                }
+					if (type == 'listCommunityPop') {
+						$.ajax({
+							type : "GET",
+							dataType : "text",
+							url : "/ezCommunity/boardItemView.do",
+							data : {
+								showAdjacent : 1,
+								itemID : pItemID,
+								boardID : pItemBoardID,
+								type : "pop"
+							},
+							success: function(result){
+								try {
+									var resultObj = JSON.parse(result);
+									if (resultObj.result == false) {
+										GetOpenWindow("/ezCommunity/communityMainPopBoardAlert.do","", 370, 190);
+									} 
+								} catch (e) {
+									GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1 + "&type=pop", "", 750, 721);
+								}
+							}
+						});
+					} else {
+						if (CrossYN()) {
+							GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
+						} else {
+							GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
+						}
+					}
 	            }
 	        }
 
@@ -1846,6 +1916,20 @@
 	            feature = feature + GetOpenPosition(760, 720);
 	            window.open("/ezCommunity/board/bbsViewNew.do?mode=content&no=" + sURL + "&bName=" + ttt, "", feature);
 			}
+			
+			/* 2024-10-08 황인경 - 커뮤니티 > 인기글 조회 */
+			function getPopBoard() {
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezCommunity/popularBoardItem.do",
+					success: function(result){
+						event_get_myCommunity(result, 'pop');
+					}
+				});
+			}
+			
 		</script>
 	</head>
 	<body class="mainbody" style="margin:10px 0 0; min-width:1040px; padding:0 10px 10px;">
@@ -1904,9 +1988,12 @@
 		        </div>
 		        <div class="contents_boardCommunity">
 		        	<dl class="contents_tabCommunity">
-		                <dt><spring:message code='ezCommunity.kmsc02'/></dt>
+		                <dt class="boardNewPop" id="newPost" onclick="get_myCommunity()"><spring:message code='ezCommunity.kmsc02'/></dt>
+		                <dt class="boardNewPop" id="popularPost" onclick="getPopBoard()"><spring:message code='ezCommunity.popularPosts01'/></dt>
 		            </dl>
 		            <ul id="listCommunity2" class="contents_listCommunity">
+		            </ul>
+		            <ul id="listCommunityPop" style="display: none" class="contents_listCommunity">
 		            </ul>
 		        </div>
 		    </div>

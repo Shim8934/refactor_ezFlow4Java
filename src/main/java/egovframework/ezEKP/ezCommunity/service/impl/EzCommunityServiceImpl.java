@@ -2548,14 +2548,17 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception {
+	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo, String type) throws Exception {
 		logger.debug("communityConnCHK started.");
 		//logger.debug("rollInfo = " + rollInfo);
 		String rtnValue = "";
 		boolean result = false;
 
 		if (!commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c")) {
-			rtnValue = getClubCHK(id, clubID, boardID, userInfo.getTenantId());
+			rtnValue = getClubCHK(id, clubID, boardID, userInfo.getTenantId(), type);
+			if (rtnValue.equals("4")) {
+				return result;
+			}
 		} else {
 			rtnValue = "1";
 		}
@@ -2573,7 +2576,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 
-	private String getClubCHK(String id, String clubID, String boardID, int tenantID) throws Exception{
+	private String getClubCHK(String id, String clubID, String boardID, int tenantID, String type) throws Exception{
 		logger.debug("getClubCHK started.");
 		//logger.debug("id : " + id + ", clubID : " + clubID + ", boardID : " + boardID + ", tenantID : " + tenantID);
 		
@@ -2590,6 +2593,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (temp != 0) {
 			result = "1";
 		} else {
+			if (type != null && type.equals("pop") && temp == 0) {
+				result = "4"; // 공개글이나 가입되지 않은 사람
+				return result;
+			}
 			temp = ezCommunityDAO.getClubCHKGet2(map);
 			
 			if (temp != 0) {
@@ -8054,4 +8061,53 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	 
 	    return result;
 	}
+
+	public List<String> myCommunityAndPublicGet(String id, String companyID, int tenantID) throws Exception {
+		logger.debug("myCommunityAndPublicGet started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", id);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		List<String> list = ezCommunityDAO.myCommunityPopGet(map);
+
+		logger.debug("myCommunityAndPublicGet ended.");
+		return list;
+	}
+
+	@Override
+	public String popularBoardItem(LoginVO userInfo) throws Exception {
+		logger.debug("popularBoardItem started.");
+		
+		StringBuilder rtnVal = new StringBuilder();
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		int tenantId = userInfo.getTenantId();
+		
+		List<String> clubNoList = myCommunityAndPublicGet(userId, companyId, tenantId);
+		
+		rtnVal.append("<ITEM><DATA>");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_copNo", clubNoList);
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", tenantId);
+		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
+
+		if(clubNoList.size() > 0) {
+			List<CommunityMyCommunityVO> myCommunityList = ezCommunityDAO.myCommunityPopItemGet(map);
+
+			for(CommunityMyCommunityVO myCommunity : myCommunityList) {
+				rtnVal.append(commonUtil.getQueryResult(myCommunity));
+			}
+		}
+		
+		rtnVal.append("</DATA></ITEM>");
+
+		logger.debug("popularBoardItem ended.");
+		return rtnVal.toString();
+	}
+    
 }
