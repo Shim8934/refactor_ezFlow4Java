@@ -10,7 +10,7 @@
 	<article class="box_shadow">
 		<div class="layDIV sortablePortlet" id="helpDiv" style="">
 			<span class="leftImg"><img class="sortablePortlet" src="/images/ezNewPortal/bannerImg_left.png"></span>
-			<dl class="bannerText">
+			<dl class="bannerText sortablePortlet">
 				<dt class="bText"><span class="sortablePortlet"><spring:message code='ezNewPortal.t040' /></span></dt>
 				<dt class="sText sortablePortlet">
 					<spring:message code='ezNewPortal.t041' /><br><spring:message code='ezNewPortal.t042' />
