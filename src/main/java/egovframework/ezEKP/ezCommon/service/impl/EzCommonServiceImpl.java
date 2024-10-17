@@ -3619,7 +3619,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		for (TenantVO tenantVO : tenantIdList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("tenantID", tenantVO.getTenantId());
-			map.put("property", "apprSignRemapApplyTime");
+			// 2024-10-17 홍승비 - 컨피그 비교 시에만 대문자로 비교하도록 수정 (삽입 시에는 apprSignRemapApplyTime 사용)
+			map.put("property", "APPRSIGNREMAPAPPLYTIME");
 			
 			ezCommonDAO.insertApprSignRemapApplyTime(map);
 		}

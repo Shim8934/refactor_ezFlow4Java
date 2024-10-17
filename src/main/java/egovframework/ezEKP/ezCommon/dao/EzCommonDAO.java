@@ -1893,6 +1893,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		
 		if (apprSignRemapApplyTime == null) {
 			logger.debug("apprSignRemapApplyTime tenant config doesn't exist. insert data...");
+			
+			map.put("property", "apprSignRemapApplyTime");
 			insert("EzCommonDAO.insertApprSignRemapApplyTime", map);
 		}
 	}
