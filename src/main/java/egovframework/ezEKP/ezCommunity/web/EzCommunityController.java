@@ -10,10 +10,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.charset.Charset;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -50,6 +54,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
@@ -5403,5 +5408,86 @@ public class EzCommunityController extends EgovFileMngUtil{
         ezCommunityService.modifyGuestOneLineReply(replyNo, content, userInfo.getTenantId());
         logger.debug("modifyGuestOneLineReply ended.");
     }
+    
+	@RequestMapping(value = "/ezCommunity/communitySearchResult.do", method = RequestMethod.POST)
+	public String getSearchResult(@CookieValue("loginCookie") String loginCookie, String code, String searchWord, String sortBy, String pageNum, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("getSearchResult started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String[] beforeSearchTypeArray = request.getParameterValues("beforeSearchType");
+		String[] beforeKeywordArray = request.getParameterValues("beforeKeyword");
+		String refineInResult = request.getParameter("refineInResult");
+		String searchType = request.getParameter("searchType");
+		List<String> beforeSearchType = beforeSearchTypeArray != null ? new ArrayList<>(Arrays.asList(beforeSearchTypeArray)) : new ArrayList<>();
+		List<String> beforeKeyword = beforeKeywordArray != null ? new ArrayList<>(Arrays.asList(beforeKeywordArray)) : new ArrayList<>();
+		List<Map<String,String>> searchMaps = new ArrayList<Map<String,String>>();
+		
+		if (null != refineInResult && "on".equals(refineInResult)) {
+			beforeSearchType.add(searchType);
+			beforeKeyword.add(searchWord);
+			refineInResult = "checked";
+			
+			for (int i = 0; i < beforeSearchType.size(); i++) {
+				HashMap<String, String> searchMap = new HashMap<>();
+				searchMap.put("searchType", beforeSearchType.get(i));
+				searchMap.put("searchWord", beforeKeyword.get(i));
+				
+				searchMaps.add(searchMap);
+			}
+		} else {
+			beforeSearchType.clear();
+			beforeKeyword.clear();
+			
+			HashMap<String, String> searchMap = new HashMap<>();
+			searchMap.put("searchType", searchType);
+			searchMap.put("searchWord", searchWord);
+			
+			searchMaps.add(searchMap);
+		}
+		
+		String resList = ezCommunityService.commBoardTotalSearchList(searchMaps, userInfo, sortBy, pageNum, code);
+		int totalCount = ezCommunityService.commuTotalSearchCount(searchMaps, userInfo, sortBy, pageNum, code);
+		String pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
+		
+		model.addAttribute("searchWord", searchWord);
+		model.addAttribute("beforeSearchType", beforeSearchType);
+		model.addAttribute("beforeKeyword", beforeKeyword);
+		model.addAttribute("refineInResult", refineInResult);
+		model.addAttribute("searchType", searchType);
+		model.addAttribute("resList", resList);
+		model.addAttribute("pastDate", pastDate);
+		model.addAttribute("code", code);
+		model.addAttribute("pSortBy", sortBy);
+		model.addAttribute("pageNum", pageNum == null || "".equals(pageNum) ? 1 : pageNum);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalPage", totalCount % 10 == 0 ? totalCount / 10 : totalCount / 10 + 1);
+		
+		logger.debug("getSearchResult ended.");
+		
+		return "/ezCommunity/communitySearchResult";
+	}
+	
+	@RequestMapping(value = "/ezCommunity/selectToDownloadFiles.do", method = RequestMethod.GET)
+	public String selectToDownloadFiles(@CookieValue("loginCookie") String loginCookie, String itemID, String boardID, String code, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("selectToDownloadFiles started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String readFlag = "false";
+		
+		readFlag = ezCommunityService.getReadFlag(boardID, userInfo);
+		
+		if (!readFlag.equalsIgnoreCase("true")) {
+			return "main/warning";
+		}
+		
+		model.addAttribute("attachList", ezCommunityService.getItemAttachmentInfo(itemID, userInfo.getTenantId()));
+		logger.debug("selectToDownloadFiles ended.");
+		
+		return "/ezCommunity/selectToDownloadFiles";
+	}
 }
 

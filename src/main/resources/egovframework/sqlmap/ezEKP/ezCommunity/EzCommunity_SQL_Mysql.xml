@@ -792,6 +792,8 @@
    				AND
    					ITEMID = A.ItemID) ONELINECNT,
   				A.attachments,
+				F.EXT,
+				F.FILEPATH,
   				A.itemlevel,
   				A.abstract,
   				CASE WHEN D.totalcount IS NULL THEN 0 ELSE 1 END READFLAG
@@ -818,6 +820,26 @@
 				A.itemid = D.itemid
 			AND
 				A.tenant_id = D.tenant_id
+			LEFT OUTER JOIN (
+				SELECT
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(FILENAME)
+							ELSE 'MANY'
+						END AS EXT,
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(FILEPATH)
+							ELSE 'MANY'
+						END AS FILEPATH,
+						TENANT_ID,
+						itemid
+				FROM TBL_COMM_ITEM_ATTACHMENTS
+				GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+				AND A.TENANT_ID = F.TENANT_ID
  			WHERE 
 				boardid = #v_PBOARDID#
 			AND
@@ -8134,4 +8156,332 @@
             tenant_id = #tenantID#
         ]]>
 	</update>
+
+	<select id="EzCommunityDAO.commuTotalSearchList"				parameterClass="Map"		resultClass="CommunityBoardListVO" remapResults="true">
+		<![CDATA[
+			SELECT
+					A.itemid,
+					A.writerid,
+					CASE
+						WHEN #primary# = '1' THEN A.writername
+						ELSE A.writername2
+					END AS writername,
+					CASE
+						WHEN #primary# = '1' THEN A.writerdeptname
+						ELSE A.writerdeptname2
+					END AS writerdeptname,
+					CASE
+						WHEN #primary# = '1' THEN A.writercompanyname
+						ELSE A.writercompanyname2
+					END AS writercompanyname,
+					A.writerDeptID,
+					A.writedate,
+					A.BoardID,
+					B.BoardName,
+					A.importance,
+					A.title,
+					A.readcount,
+					(
+						SELECT
+							COUNT(*)
+						FROM
+							tbl_comm_onelinereply
+						WHERE
+							TENANT_ID = A.TENANT_ID
+						AND
+							ITEMID = A.ItemID
+					) ONELINECNT,
+					A.attachments,
+					F.EXT,
+					F.FILEPATH,
+					A.itemlevel,
+					A.abstract,
+					M.read_fg,
+					CASE
+						WHEN D.totalcount IS NULL THEN 0
+						ELSE 1
+					END READFLAG
+			FROM
+					TBL_COMM_ITEM A
+			LEFT OUTER JOIN (
+					SELECT
+							IFNULL(COUNT(userid), 0) AS TOTALCOUNT,
+							itemid,
+							tenant_id
+					FROM
+							TBL_COMM_ITEM_READ
+					WHERE
+							userid = #v_PUSERID#
+					AND
+							tenant_id = 0
+					GROUP BY
+							itemid,
+							tenant_id
+			) D ON
+					A.itemid = D.itemid
+				AND A.tenant_id = D.tenant_id
+			JOIN TBL_COMM_BOARDINFO B ON
+					A.TENANT_ID = B.TENANT_ID
+				AND A.BOARDID = B.BOARDID
+			JOIN (
+					SELECT
+							a.BOARDID,
+							boardname,
+							accessid,
+							accessname,
+							boardadmin_fg,
+							listview_fg,
+							read_fg,
+							write_fg,
+							ROW_NUMBER() OVER (
+					            PARTITION BY a.BOARDID ORDER BY
+									CASE
+										WHEN a.ACCESSID = #v_PUSERID# THEN 1
+										WHEN a.ACCESSID = #v_pDeptID# THEN 2
+										WHEN a.ACCESSID = #v_pCompanyID# THEN 3
+										WHEN a.ACCESSID = 'everyone' THEN 4
+									END
+							) AS board_rn
+					FROM
+							TBL_COMM_BOARDMANAGE a
+					JOIN TBL_COMM_BOARDINFO B ON
+						A.TENANT_ID = B.TENANT_ID
+						AND A.BOARDID = B.BOARDID
+					WHERE
+							a.ACCESSID IN (#v_PUSERID#, #v_pDeptID#, #v_pCompanyID#, 'everyone')
+							AND a.LISTVIEW_FG = 'true'
+							AND B.C_CLUBNO = #code#
+			) M ON
+					M.BOARDID = A.BOARDID
+			LEFT OUTER JOIN (
+				SELECT
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(FILENAME)
+							ELSE 'MANY'
+						END AS EXT,
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(FILEPATH)
+							ELSE 'MANY'
+						END AS FILEPATH,
+						TENANT_ID,
+						itemid
+				FROM TBL_COMM_ITEM_ATTACHMENTS
+				GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+				AND A.TENANT_ID = F.TENANT_ID
+				WHERE
+					startdate <= #v_pNow#
+					AND enddate > #v_pNow#
+					AND A.tenant_id = #tenantID#
+					AND M.board_rn = 1
+		]]>
+		<iterate property="searchMaps">
+			<isEqual  property="searchMaps[].searchType" compareValue="title">
+					AND A.TITLE LIKE CONCAT('%', #searchMaps[].searchWord#, '%')
+			</isEqual>
+			<isEqual  property="searchMaps[].searchType" compareValue="writer">
+					AND
+						(CASE WHEN #primary# = '1'
+							THEN A.writername
+							ELSE A.writername2
+						END) LIKE CONCAT('%', #searchMaps[].searchWord#, '%')
+			</isEqual>
+		</iterate>
+		<isEqual property="v_PSORTBY" compareValue="">
+			<![CDATA[
+			ORDER BY
+					A.parentwritedate DESC,
+					A.upperitemidtree,
+					A.itemlevel
+			]]>
+		</isEqual>
+		<isNotEqual property="v_PSORTBY" compareValue="">
+			ORDER BY
+			<isEqual property="v_orderCell" compareValue="BOARDNAME">BOARDNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.TITLE">A.TITLE</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERCOMPANYNAME">A.WRITERCOMPANYNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERDEPTNAME">A.WRITERDEPTNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERNAME">A.WRITERNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITEDATE">A.WRITEDATE</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.ATTACHMENTS">A.ATTACHMENTS</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.READCOUNT">A.READCOUNT</isEqual>
+			<isEqual property="v_orderSort" compareValue="DESC">DESC</isEqual>
+		</isNotEqual>
+		<![CDATA[
+			LIMIT #startRow#, #endRow#
+		]]>
+	</select>
+    
+	<select id="EzCommunityDAO.commuTotalSearchCount"	parameterClass="Map"	resultClass="Integer">
+		<![CDATA[
+		SELECT
+				count(*)
+		FROM	(
+				SELECT
+						A.itemid,
+						A.writerid,
+						CASE
+							WHEN #primary# = '1' THEN A.writername
+							ELSE A.writername2
+						END AS writername,
+						CASE
+							WHEN #primary# = '1' THEN A.writerdeptname
+							ELSE A.writerdeptname2
+						END AS writerdeptname,
+						CASE
+							WHEN #primary# = '1' THEN A.writercompanyname
+							ELSE A.writercompanyname2
+						END AS writercompanyname,
+						A.writerDeptID,
+						A.writedate,
+						A.BoardID,
+						B.BoardName,
+						A.importance,
+						A.title,
+						A.readcount,
+						(
+							SELECT
+								COUNT(*)
+							FROM
+								tbl_comm_onelinereply
+							WHERE
+								TENANT_ID = A.TENANT_ID
+							AND
+								ITEMID = A.ItemID
+						) ONELINECNT,
+						A.attachments,
+						F.EXT,
+						F.FILEPATH,
+						A.itemlevel,
+						A.abstract,
+						M.read_fg,
+						CASE
+							WHEN D.totalcount IS NULL THEN 0
+							ELSE 1
+						END READFLAG
+				FROM
+						TBL_COMM_ITEM A
+				LEFT OUTER JOIN (
+						SELECT
+								IFNULL(COUNT(userid), 0) AS TOTALCOUNT,
+								itemid,
+								tenant_id
+						FROM
+								TBL_COMM_ITEM_READ
+						WHERE
+								userid = #v_PUSERID#
+						AND
+								tenant_id = 0
+						GROUP BY
+								itemid,
+								tenant_id
+				) D ON
+						A.itemid = D.itemid
+					AND A.tenant_id = D.tenant_id
+				JOIN TBL_COMM_BOARDINFO B ON
+						A.TENANT_ID = B.TENANT_ID
+					AND A.BOARDID = B.BOARDID
+				JOIN (
+						SELECT
+								a.BOARDID,
+								boardname,
+								accessid,
+								accessname,
+								boardadmin_fg,
+								listview_fg,
+								read_fg,
+								write_fg,
+								ROW_NUMBER() OVER (
+						            PARTITION BY a.BOARDID ORDER BY
+										CASE
+											WHEN a.ACCESSID = #v_PUSERID# THEN 1
+											WHEN a.ACCESSID = #v_pDeptID# THEN 2
+											WHEN a.ACCESSID = #v_pCompanyID# THEN 3
+											WHEN a.ACCESSID = 'everyone' THEN 4
+										END
+								) AS board_rn
+						FROM
+								TBL_COMM_BOARDMANAGE a
+						JOIN TBL_COMM_BOARDINFO B ON
+							A.TENANT_ID = B.TENANT_ID
+							AND A.BOARDID = B.BOARDID
+						WHERE
+								a.ACCESSID IN (#v_PUSERID#, #v_pDeptID#, #v_pCompanyID#, 'everyone')
+								AND a.LISTVIEW_FG = 'true'
+								AND B.C_CLUBNO = #code#
+				) M ON
+						M.BOARDID = A.BOARDID
+				LEFT OUTER JOIN (
+					SELECT
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(FILENAME)
+								ELSE 'MANY'
+							END AS EXT,
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(FILEPATH)
+								ELSE 'MANY'
+							END AS FILEPATH,
+							TENANT_ID,
+							itemid
+					FROM TBL_COMM_ITEM_ATTACHMENTS
+					GROUP BY
+							ITEMID,
+							TENANT_ID ) F ON
+						A.ITEMID = F.ITEMID
+					AND A.TENANT_ID = F.TENANT_ID
+					WHERE
+						startdate <= #v_pNow#
+						AND enddate > #v_pNow#
+						AND A.tenant_id = #tenantID#
+						AND M.board_rn = 1
+			]]>
+			<iterate property="searchMaps">
+				<isEqual  property="searchMaps[].searchType" compareValue="title">
+						AND A.TITLE LIKE CONCAT('%', #searchMaps[].searchWord#, '%')
+				</isEqual>
+				<isEqual  property="searchMaps[].searchType" compareValue="writer">
+						AND
+							(CASE WHEN #primary# = '1'
+								THEN A.writername
+								ELSE A.writername2
+							END) LIKE CONCAT('%', #searchMaps[].searchWord#, '%')
+				</isEqual>
+			</iterate>
+		) as countTable
+	</select>
+	
+	<select id="EzCommunityDAO.getReadFlag" parameterClass="Map" resultClass="String">
+		SELECT
+				READ_FG
+		FROM	(
+					SELECT
+							READ_FG,
+							ROW_NUMBER() OVER (
+								PARTITION BY BOARDID
+									ORDER BY
+										CASE
+											WHEN ACCESSID = #userID# THEN 1
+											WHEN ACCESSID = #deptID# THEN 2
+											WHEN ACCESSID = #companyID# THEN 3
+											WHEN ACCESSID = 'everyone' THEN 4
+										END
+							) AS BOARD_RN
+					FROM
+						TBL_COMM_BOARDMANAGE
+					WHERE
+						ACCESSID IN (#userID#, #deptID#, #companyID#, 'everyone')
+					AND
+						TENANT_ID = #tenantID#
+					AND
+						BOARDID = #boardID#
+		) as readFlagTable
+		WHERE
+			BOARD_RN = 1
+	</select>
 </sqlMap>

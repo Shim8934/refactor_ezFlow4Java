@@ -1235,4 +1235,17 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void modifyGuestOneLineReply(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.modifyGuestOneLineReply", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardListVO> commuTotalSearchList(Map<String, Object> map) {
+		return (List<CommunityBoardListVO>) list("EzCommunityDAO.commuTotalSearchList", map);
+	}
+
+	public int commuTotalSearchCount(Map<String, Object> map) {
+		return (int) select("EzCommunityDAO.commuTotalSearchCount", map);
+	}
+
+	public String getReadFlag(Map<String, Object> map) {
+		return (String) select("EzCommunityDAO.getReadFlag", map);
+	}
 }
