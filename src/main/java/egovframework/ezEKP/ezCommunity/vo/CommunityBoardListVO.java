@@ -56,6 +56,10 @@ public class CommunityBoardListVO {
 	int oneLineCnt;
 	/** 2018-07-18 홍승비 - 게시자 부서ID 추가 */
 	String writerDeptID;
+	// 2024-10-15 조수빈 - 커뮤니티 통합 검색 화면 생성에 따른 변수 추가
+	String read_fg;
+	String ext;
+	String filePath;
 
 	public String getC_ClubGubun() {
 		return c_ClubGubun;
@@ -263,6 +267,30 @@ public class CommunityBoardListVO {
 
 	public void setWriterDeptID(String writerDeptID) {
 		this.writerDeptID = writerDeptID;
+	}
+
+	public String getRead_fg() {
+		return read_fg;
+	}
+
+	public void setRead_fg(String read_fg) {
+		this.read_fg = read_fg;
+	}
+
+	public String getExt() {
+		return ext;
+	}
+
+	public void setExt(String ext) {
+		this.ext = ext;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 	
 }
