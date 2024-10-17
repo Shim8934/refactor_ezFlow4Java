@@ -2669,7 +2669,7 @@ div#txtContent table {margin:auto;}
 .previewmailDL dd.pretext .pretextUL{ margin:0px; padding:0px; list-style:none;}
 .previewmailDL dd.pretext .pretextUL li{ margin:0px; padding:0px; line-height:24px; color:#393939; overflow:hidden; font-size:13px;}
 .previewmailDL dd.pretext .pretextUL li.preSubject{ margin:0px; padding:0px;}
-.previewmailDL dd.pretext .pretextUL li.preSubject .subjectText{padding-right: 3px;font-size:16px; color:#000; font-weight:bold; letter-spacing:-0.5px; float:left;}
+.previewmailDL dd.pretext .pretextUL li.preSubject .subjectText{padding-right: 3px;font-size:16px; color:#000; font-weight:bold; letter-spacing:-0.5px;}
 .previewmailDL dd.pretext .pretextUL li.preSubject .popup_open{ display:inline-block; float:none; cursor:pointer; padding:0px 7px 0px 0px;}
 .previewmailDL dd.pretext .pretextUL li.preT_list{ clear:both; overflow:hidden; margin-top:2px; padding-right:5px;}
 .previewmailDL dd.pretext .pretextUL li.preT_list .t_left{ float:left;}
@@ -4090,6 +4090,32 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 
 .portlet_list li .txt .security_icon{vertical-align:top; margin:2px 5px 0 0;}
 
+
 #TreeCtrl_MyFavTree_ul > .lnbUL {
 	padding-top: 0px;
 }
+
+/* 태그 리스트 작업 */
+.input_select{position:relative;display: inline-block;}
+.input_select:after{content:""; display:block; clear:both;}
+.input_select .layer_select{position:absolute; top:calc(100% + 2px); left:0; border: 1px solid #D3D3D3; border-radius: 3px; background: #fff; z-index: 10; padding:0; max-width:100%; box-sizing:border-box; display:none; overflow: scroll; max-height: 300px; width: 170px; overflow-x: hidden; overflow-y: auto;}
+.input_select .layer_select li{float: none; margin: 0px; list-style-type: none; padding:0 10px; line-height:32px; font-size:13px; cursor:pointer; color:#333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.input_select .layer_select li:hover{background: #F8F9FB; color: #000;}
+.input_select .layer_select li span{border: none; display: block;}
+.input_select #layer_select_w{max-height: 200px;}
+
+.input_select .input_wrap{position:relative; float:left; margin-right:5px;}
+.input_select .input_wrap input{padding-right:20px; width: 170px}
+.input_select .input_wrap .input_select_arrow{position:absolute; width:10px; height:10px; right:10px; top:40%;  background-image: url(/images/view-sortdown.gif); background-repeat: no-repeat; background-size: contain }
+.input_select .input_wrap input.on + .input_select_arrow{display:block;}
+
+.input_select .input_wrap.on .input_select_arrow{background-image: url(/images/view-sortup.gif); background-repeat: no-repeat;}
+.input_select .input_wrap.on + a + ul{display:block;}
+
+.previewmail .previewmail_info{overflow:visible;}
+.previewmailDL{overflow:visible; marging:0; padding:15px 20px;}
+.previewmailDL:after{content:""; display:block; clear:both;}
+.previewmailDL dd.pretext{overflow:visible; float:left; width:calc(100% - 55px); box-sizing:border-box;}
+.previewmailDL dd.pretext .pretextUL li.preT_list{overflow:visible;}
+.previewmailDL dd.pretext .pretextUL li.preT_list:after{content:""; display:block; clear:both;}
+/* 태그 리스트 작업 */

@@ -36,6 +36,13 @@
 				        divsToHide[i].style.display = "none";
 				    }
 				}
+
+				document.addEventListener('click', function (e) {
+					if (window.parent.hiddenMoreMenu) {
+						parent.hiddenMoreMenu();
+					}
+				})
+				
 		    }
 		    
 	        $(document).ready(function() {
