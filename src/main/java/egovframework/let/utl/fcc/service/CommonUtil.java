@@ -3421,8 +3421,11 @@ public class CommonUtil {
 		OrganAuth organAuth = new OrganAuth();
 		
 		// 현재 권한만 체크하도록 변경
+		// jobid가 null이거나, 공백인 경우가 있어 같이 공백 or null 이거나 string equal 인 조건으로 변경 
 		for (OrganUserVO user : allUserinfo) {
-			if (user.getDepartment().equalsIgnoreCase(deptId) && user.getJobID().equalsIgnoreCase(jobId)) {
+			if (user.getDepartment().equalsIgnoreCase(deptId) &&
+					((StringUtils.isBlank(user.getJobID()) && StringUtils.isBlank(jobId)) ||
+					user.getJobID().equalsIgnoreCase(jobId))) {
 				organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
 				break;
 			}
