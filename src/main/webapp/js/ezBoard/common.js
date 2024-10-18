@@ -68,7 +68,8 @@ function getBoardComment() {
 		data : {
 			itemID : pItemID,
 			boardID : pBoardID,
-			gubun : gubun
+			gubun : gubun,
+			sort : commentSort
 		},
 		success : function(result) {
 			var boardCommentList = makeBoardCommentHtml(result, "view");			
@@ -101,7 +102,6 @@ function makeBoardCommentHtml(result, mode) {
 
     list.forEach(function(vo, index) {
         var replyDelFlag = 0;
-
         if (!vo.userID) {
             if (gubun == "2" && (!!vo.content || !!vo.imageContent)) {  // 빈 댓글 조회 기준 변경
                 vo.userName = strLangLGE06;
@@ -117,18 +117,15 @@ function makeBoardCommentHtml(result, mode) {
         if (!vo.content) { // 댓글 본문없이 이모티콘만 존재할 경우 빈문자열 삽입하여 빈댓글 취급
             vo.content = "";
         }
+        var commentBgColorText = commentBgColor == 1 ? "#ffffff" : "#fafafa";
+        var trBorderStyleText = replyDelFlag == 1 ? "border-bottom: 1px solid #e2e2e2" : "";
 
         // 하나의 댓글은 2개의 tr로 구성, 각각의 tr은 3개의 td로 구성
         // 첫번째 tr - 댓글 작성자 td, 댓글 내용 td, 댓글 작성일시(수정일시) td로 구성
-        if (commentBgColor === 1) {
-            boardCommentList += "<tr class='boardComment' replyLevel='" + vo.replyLevel + "' boardUserID='" + vo.userID + "' memberID='"
-                + vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" 
-                + 1 + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:white;'>";
-        } else {
-            boardCommentList += "<tr class='boardComment' replyLevel='" + vo.replyLevel + "' boardUserID='" + vo.userID + "' memberID='"
-                + vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" 
-                + 1 + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
-        }
+        boardCommentList += "<tr class='boardComment' replyLevel='" + vo.replyLevel + "' boardUserID='" + vo.userID + "' memberID='"
+            + vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" 
+            + 1 + "' style='height:40px;text-align:left;" + trBorderStyleText + "; background-color:" + commentBgColorText + ";'>";
+        
         // 댓글 작성자 td
         if (gubun == "2") {
             if (vo.replyLevel >= 2) {
@@ -202,19 +199,12 @@ function makeBoardCommentHtml(result, mode) {
         /* 2023-03-07 이가은 - 댓글 좋아요/싫어요 버튼 및 우측 숫자 표출 */
         if (replyDelFlag != 1) {
             if (mode == "view") {
-                if (commentBgColor === 1) {
-                    if (vo.replyLevel >= 2) {
-                        boardCommentList += "<tr class='commentReact" + index + "' parentreplyid=" + vo.parentReplyID + " style='text-align:left;border:1px solid #e2e2e2;background-color:white;'>";
-                    } else {
-                        boardCommentList += "<tr class='commentReact" + index + "' style='height:20px; text-align:left; border:1px solid #e2e2e2; background-color:white;'>";
-                    }
+                if (vo.replyLevel >= 2) {
+                    boardCommentList += "<tr class='commentReact" + index + "' parentreplyid=" + vo.parentReplyID + " style='text-align:left;border:1px solid #e2e2e2;background-color:" + commentBgColorText + ";'>";
                 } else {
-                    if (vo.replyLevel >= 2) {
-                        boardCommentList += "<tr class='commentReact" + index + "' parentreplyid=" + vo.parentReplyID + " style='text-align:left;border:1px solid #e2e2e2;background-color:#fafafa;'>";
-                    } else {
-                        boardCommentList += "<tr class='commentReact" + index + "' style='height:20px; text-align:left; border:1px solid #e2e2e2; background-color:#fafafa;'>";
-                    }
+                    boardCommentList += "<tr class='commentReact" + index + "' style='height:20px; text-align:left; border:1px solid #e2e2e2; background-color:" + commentBgColorText + ";'>";
                 }
+               
                 // 답글쓰기 버튼 td
                 if (vo.replyLevel >= 2) {
                     boardCommentList += "<td style='border-top:hidden;padding-left:58px;'>";
@@ -683,8 +673,8 @@ function replyOnclick(reply, replyID, userName){
 		commentList += "<td colspan='3' style='padding:3px 0px 3px 63px; position:relative; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;'>";
 		commentList += "<p style='width : 14%; float: left; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;'><span>" + userInfoName + "</span></p>";
 		commentList += "<img id='_addEmoticonRereply' class='_addEmoticon' src='/images/poll/add_emo_vote.png' onclick='addSticker(this)'>";
-		commentList += "<textarea id='reReply' rows='3' style='resize:none; width: 71.5%; float: left; overflow: hidden;' maxlength='600' oninput='editAutoGrow(this)'></textarea>";
-		commentList += "<a class='imgbtn' style='vertical-align: middle; position:absolute; top:50%; transform:translate(24%,-55%);'><span id='childReplySaveBtn' replyLevel=" + (parseInt(replyLevel) + 1) + " onclick='Save_OneLineReply(this)'>" + strLangLGE03 + "</span></a></td>";
+		commentList += "<textarea id='reReply' rows='3' style='resize:none; width:calc(86% - 120px); float: left; overflow: hidden;' maxlength='600' oninput='editAutoGrow(this)'></textarea>";
+		commentList += "<a class='imgbtn' style='vertical-align: middle; position:absolute; right:14px; top:50%; transform:translate(0,-55%);'><span id='childReplySaveBtn' replyLevel=" + (parseInt(replyLevel) + 1) + " onclick='Save_OneLineReply(this)'>" + strLangLGE03 + "</span></a></td>";
 		commentList += "</tr>";
 	} else {
 		if (OneLineReplyFlag == 1) {
@@ -1265,4 +1255,21 @@ function onclickKeyword(event) {
     var key = event.target.id;
     var url =  "/ezBoard/boardSearchView.do?type=KEYWORDCLICK&data=" + encodeURIComponent(key);
     GetOpenWindow(url, "_blank", 1000, 550, "yes");
+}
+
+/* 2024-10-17 전인하 - 게시판 댓글 정렬 기준 클릭 메소드 */
+function boardCommentSort() {
+    var sortBtn = event.target;
+    var sortBtnList = document.querySelector(".commentSort").children;
+    
+    for (let i=0; i<sortBtnList.length; i++) {
+        var tmpBtn = sortBtnList[i];
+        if (tmpBtn.id == sortBtn.id) {
+            tmpBtn.classList.add("checked");
+            commentSort = sortBtn.id;
+        } else {
+            tmpBtn.classList.remove("checked");
+        }
+    }
+    getBoardComment();
 }

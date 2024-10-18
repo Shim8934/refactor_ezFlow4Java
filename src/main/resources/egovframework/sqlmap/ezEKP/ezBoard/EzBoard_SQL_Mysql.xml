@@ -4711,8 +4711,14 @@
 				A.ITEMID = #v_ItemID#
 			GROUP BY
 				A.USERID, A.REPLYID, GROUPID
+			<isEqual property="v_SORT" compareValue="earliest">
 			ORDER BY
 				GROUPDATE, GROUPID, A.WRITEDATE
+			</isEqual>
+			<isEqual property="v_SORT" compareValue="latest">
+				ORDER BY
+					GROUPDATE DESC, GROUPID ASC, A.WRITEDATE ASC
+			</isEqual>
 		</isNotEqual>
 		<!-- 2018-10-19 홍승비 - 익명댓글 표출 분기 추가 -->
 		<isEqual property="v_GUBUN" compareValue="2">
@@ -4755,8 +4761,14 @@
 				A.ITEMID = #v_ItemID#
 			GROUP BY
 				A.REPLYID, GROUPID
+			<isEqual property="v_SORT" compareValue="earliest">
 			ORDER BY
 				GROUPDATE, GROUPID, A.WRITEDATE
+			</isEqual>
+			<isEqual property="v_SORT" compareValue="latest">
+				ORDER BY
+					GROUPDATE DESC, GROUPID ASC, A.WRITEDATE ASC
+			</isEqual>
 		</isEqual>
 	</select>
 		

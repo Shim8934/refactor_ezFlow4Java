@@ -2359,7 +2359,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	/* 2018-11-22 홍승비 - 그룹사게시판에서는 댓글 작성자의 deptID를 가져오지 않도록 수정 */
 	@Override
-	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String lang, String gubun, String companyID, int tenantID) throws Exception {
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String lang, String gubun, String companyID, int tenantID, String sort) throws Exception {
 		logger.debug("readOneLineReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2370,6 +2370,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_GUBUN", gubun);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_SORT", sort);
 		
 		BoardPropertyVO boardProp = getBoardProperty(boardID, tenantID);
 		

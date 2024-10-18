@@ -3838,7 +3838,7 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 .boardComment {position: relative}
 
 ._addEmoticon {padding-left: 5px; padding-right: 5px; cursor: pointer;}
-#_addEmoticonRereply {position:absolute; top:10px; margin-left:-34px;}
+#_addEmoticonRereply {float: left;}
 #_addEmoticon {margin-bottom: 23px;}
 
 /* 2023-12-27 전인하 - 삭제된 댓글 스타일 생성 */
@@ -3859,3 +3859,11 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 .keywordSpanView { color: #388CE5; padding: 0px 7px 0px 0px; font-size : 15px;}
 .keywordSpan:hover {text-decoration: underline; cursor: pointer;}
 .keywordDeleteBtn { padding-left: 2px; cursor: pointer;}
+
+/* 2024-10-17 전인하 - 게시판 > 댓글 정렬 기준 버튼 추가 */
+.commentSort {float: left;}
+.commentSort span { padding: 10px 0px; display: inline-block; }
+.commentSort span.checked { font-weight: 700; text-decoration: underline; }
+.commentSort span:hover { font-weight: 700; cursor: pointer; text-decoration: underline; }
+.commentSort #latest { padding: 10px 0px 10px 10px; }
+.commentSort #earliest:after { display: inline-block; content: ""; width: 1px; height: 12px; background-color: black; margin-left: 10px; }

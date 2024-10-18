@@ -120,6 +120,7 @@
                 
 				/* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
 				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
+				var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
 				
 		        window.onload = function () {
 		        	imageViewInit();
@@ -1141,6 +1142,10 @@
 						</th>
 					</tr>
 				</table>
+                <div class="commentSort">
+                    <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+                    <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+                </div>
 				<table id="commentList" style="width:100%; min-width:745px; margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 			</div>
         </c:if>

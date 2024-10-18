@@ -31,6 +31,10 @@
 			#txtContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
 			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
 			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
+			th.boardItemViewPrint_cssThEn{border-right:none;}
+			td.boardItemViewPrint_cssTdEn{border:1px solid #d2d2d2;}
+			td.boardItemViewPrint_cssTdEn > table .boardComment{border-bottom:1px solid #d2d2d2;}
+			td.boardItemViewPrint_cssTdEn > table .boardComment:last-child{border-bottom:none;}
     	</style>
 		<script>
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -70,6 +74,7 @@
 		    var gubun = "${boardInfo.guBun}";
 		    var AtttributeCount = "${boardAttrCount}";
 		    var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>";
+		    var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
 		
 		    var myVar;
 		    window.onload = function () {
@@ -218,24 +223,25 @@
 		    }
 		    function getOneLineReply() {
 		        var commentPanel = $('#comment_list_display');
-                	$.ajax({
-                		type : "POST",
-                		async : false,
-                		url : "/ezBoard/getBoardComment.do",
-                		dataType : "json",
-                		data : {
-                			itemID : pItemID,
-                			boardID : pBoardID,
-                			gubun : gubun
-                		},
-                		success : function(result) {
-                			var boardCommentList = makeBoardCommentHtml(result, "print");
-                			$("#onelinereplylist").append(boardCommentList); //새 댓글리스트 삽입
-                		},
-                		error : function(jqXHR, textStatus, errorThrown) {
-                			
-                		}
-                	});
+                $.ajax({
+                    type : "POST",
+                    async : false,
+                    url : "/ezBoard/getBoardComment.do",
+                    dataType : "json",
+                    data : {
+                        itemID : pItemID,
+                        boardID : pBoardID,
+                        gubun : gubun,
+                        sort : commentSort
+                    },
+                    success : function(result) {
+                        var boardCommentList = makeBoardCommentHtml(result, "print");
+                        $("#onelinereplylist").append(boardCommentList); //새 댓글리스트 삽입
+                    },
+                    error : function(jqXHR, textStatus, errorThrown) {
+                        
+                    }
+                });
 		    }
 		    function displaytable() {
 		        if(message.document.body.innerHTML != "")
@@ -421,7 +427,7 @@
 		  </tr>
 		    <tr>
 		    <td class="pad1" style="height:100%;">
-		        <div id ="txtContent" class ="viewbox" style="border:1px solid #ddd; margin-left:0px; margin-right:0px;"></div>
+		        <div id ="txtContent" class ="viewbox" style="border:1px solid #d2d2d2; margin-left:0px; margin-right:0px;"></div>
 		    </td> 
 		  </tr>
 		  </table>
@@ -432,7 +438,7 @@
 		            <tr>
 		              <th class="boardItemViewPrint_cssThEn" style="height:100%; "><spring:message code='ezBoard.jjh06'/></th>
 		              <td class="boardItemViewPrint_cssTdEn" style="height:100%; width:100%; ">
-		                <div id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left"></div>
+		                <table id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left; width:100%;"></table>
 		              </td>
 		            </tr>
 		          </table>

@@ -7770,7 +7770,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 한줄댓글리스트 표출 Method
+	 * 게시판 한줄댓글리스트 표출(XML) Method
+	 * 2024-10-18 기준으로 해당 컨트롤러 사용하지 않음 (구 로직 중 일부에서만 사용하였으며 해당 일에 사용부 전부 제거함)
 	 */
 	@RequestMapping(value = "/ezBoard/readOneLineReply.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
@@ -7783,10 +7784,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemID = request.getParameter("itemID");
 		String gubun = request.getParameter("gubun");
 		String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		String sort = request.getParameter("sort");
+		sort = StringUtils.isBlank(sort) ? "earliest" : sort;
 		
 		/* 2018-10-19 홍승비 - 익명게시물의 댓글 표출조건 gubun값 추가 */
 		/* 2018-06-29 홍승비 -댓글쓴 사원정보 확인 시 겸직부서 대응하여 정보 보여주도록 수정 */
-		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, lang, gubun, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, lang, gubun, userInfo.getCompanyID(), userInfo.getTenantId(), sort);
 		
 		StringBuffer sb = new StringBuffer();
 		
@@ -8955,9 +8958,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String publicModulus = egovFileScrty.getPbm();
         String publicExponent = "10001";
 		
-		/* 2018-07-02 홍승비 - 댓글 확인 시 조회자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
-		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, lang, gubun, userInfo.getCompanyID(), userInfo.getTenantId());
-		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
     	model.addAttribute("boardInfo", boardInfo);
@@ -8968,7 +8968,6 @@ public class EzBoardController extends EgovFileMngUtil{
     	model.addAttribute("gubun", gubun);
     	model.addAttribute("boardItemVo", boardItemVO);
     	model.addAttribute("userInfo", userInfo);
-    	model.addAttribute("boardLineReplyVOList", boardLineReplyVOList);
     	
     	logger.debug("boardCommentPopup ended.");
     	
@@ -8988,8 +8987,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemID = commonUtil.stripScriptTags(boardItemVO.getItemID());
 		String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		String gubun = commonUtil.stripScriptTags(request.getParameter("gubun"));
+		String sort = request.getParameter("sort");
+		sort = StringUtils.isBlank(sort) ? "earliest" : sort;
 		
-    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, lang, gubun, userInfo.getCompanyID(), userInfo.getTenantId());
+    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, lang, gubun, userInfo.getCompanyID(), userInfo.getTenantId(), sort);
     	
     	for (BoardLineReplyVO reply : boardLineReplyVOList) {
     		reply.setWriteDate(commonUtil.getDateStringInUTC(reply.getWriteDate(), userInfo.getOffset(), false));

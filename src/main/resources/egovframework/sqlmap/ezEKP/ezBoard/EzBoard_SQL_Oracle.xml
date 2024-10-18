@@ -5018,8 +5018,14 @@
 			</isNotEqual>
 				A.USERID, A.CONTENT, A.WRITEDATE, DEPTID,
 				A.PARENTREPLYID, A.REPLYLEVEL, A.PARENTWRITERNAME, A.UPDATEDATE, D.WRITEDATE, A.IMAGECONTENT
+			<isEqual property="v_SORT" compareValue="earliest">
 			ORDER BY
 				GROUPDATE, GROUPID, A.WRITEDATE
+			</isEqual>
+			<isEqual property="v_SORT" compareValue="latest">
+				ORDER BY
+					GROUPDATE DESC, GROUPID ASC, A.WRITEDATE ASC
+			</isEqual>
 		</isNotEqual>
 		<isEqual property="v_GUBUN" compareValue="2">
 			SELECT
@@ -5067,8 +5073,14 @@
 			</isNotEqual>
 				A.USERID, A.CONTENT, A.WRITEDATE,
 				A.PARENTREPLYID, A.REPLYLEVEL, A.PARENTWRITERNAME, A.UPDATEDATE, D.WRITEDATE, A.IMAGECONTENT
+			<isEqual property="v_SORT" compareValue="earliest">
 			ORDER BY 
 				GROUPDATE, GROUPID, A.WRITEDATE
+			</isEqual>
+			<isEqual property="v_SORT" compareValue="latest">
+				ORDER BY
+					GROUPDATE DESC, GROUPID ASC, A.WRITEDATE ASC
+			</isEqual>
 		</isEqual>
 	</select>
 	

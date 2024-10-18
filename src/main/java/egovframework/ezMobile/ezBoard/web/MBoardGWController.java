@@ -1935,12 +1935,14 @@ public class MBoardGWController {
 			String userName = "";
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+			String sort = request.getParameter("sort");
+			sort = StringUtils.isBlank(sort) ? "earliest" : sort;
 			
 			logger.debug("serverName = " + serverName + " | userId = " + userID);
 			
 			userName = "USERNAME" + commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-	    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardId, contentId, userName, gubun, info.getCompanyId(), info.getTenantId());
+	    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardId, contentId, userName, gubun, info.getCompanyId(), info.getTenantId(), sort);
 	    	
 	    	// 댓글의 작성일자 UTC시간 계산하여 각 VO에 설정
 	    	for (BoardLineReplyVO reply : boardLineReplyVOList) {

@@ -138,6 +138,7 @@
 				var disLikeFlag = "<c:out value='${boardInfo.disLikeFlag}'/>";
 				var disLikeCount = "${boardItem.disLikeCount}";
 				var disLikeCountAfter = 0;
+				var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
 				
 		        window.onload = function () {
 		            imageViewInit();
@@ -2074,6 +2075,10 @@
 							</th>
 						</tr>
 					</table>
+                    <div class="commentSort">
+                        <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+                        <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+                    </div>
 					<table id="commentList" style="width:100%; min-width:745px; margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 				</div>
 	        </c:if>
