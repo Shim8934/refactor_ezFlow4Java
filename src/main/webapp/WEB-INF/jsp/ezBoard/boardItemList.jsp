@@ -75,6 +75,7 @@
 		    var Write_FG = "${boardInfo.write_FG}";
 		    var Reply_FG = "${boardInfo.reply_FG}";
 		    var Delete_FG = "${boardInfo.delete_FG}";
+		    var Edit_FG = "${boardInfo.edit_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pSortBy = "<c:out value='${boardInfo.sortBy}'/>";
@@ -1042,7 +1043,7 @@
 		            return;
 		        }
 		
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && (Edit_FG != "true" || CheckOwnerShip() == false)) {
 		            alert("<spring:message code='ezBoard.t202' />");
 		            return;
 		        }
@@ -1096,7 +1097,8 @@
 		            alert("<spring:message code='ezBoard.t497' />");
 		            return;
 		        }
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
+				
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && (Edit_FG != "true" || CheckOwnerShip() == false)) {
 		            alert("<spring:message code='ezBoard.t202' />");
 		            return;
 		        }

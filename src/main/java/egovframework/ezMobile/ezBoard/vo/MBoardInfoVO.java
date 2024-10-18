@@ -89,6 +89,8 @@ public class MBoardInfoVO {
 	private String	reply_FG;
 	/** 게시물을 삭제할 수 있는지 여부(true/false)*/
 	private String	delete_FG;
+	/** 작성자가 게시물을 수정/이동 할 수 있는지 여부(true/false) 현재는 delete_FG에 종속 됨*/
+	private String	edit_FG;
 	/** 권한을 하위로 상속할 것인지 여부(true/false)*/
 	private String	inherit_FG;
 	/** 게시를 알릴 것인지 여부(true/false)(사용안함)*/
@@ -393,6 +395,10 @@ public class MBoardInfoVO {
 	}
 	public void setDelete_FG(String delete_FG) {
 		this.delete_FG = delete_FG;
+		this.edit_FG = delete_FG;
+	}
+	public String getEdit_FG() {
+		return delete_FG;
 	}
 	public String getInherit_FG() {
 		return inherit_FG;
