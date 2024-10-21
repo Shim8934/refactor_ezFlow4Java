@@ -4405,4 +4405,29 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addBoardAttachmentFlag() throws Exception {
         ezCommonDAO.addBoardAttachmentFlag();
     }
+
+    /* 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트헤더 추가 */
+    @Override
+    public void insertAllBoardListOption() throws Exception{
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertAllBoardListOption(map);
+        }
+    }
+    
+    /* 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가 */
+    @Override
+    public void insertAllBoardInfo() throws Exception{
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertAllBoardInfo(map);
+        }
+    }
+    
 }

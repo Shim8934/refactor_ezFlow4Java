@@ -411,8 +411,9 @@
 							} else {
 				                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 									rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
-				                }
-				                else {
+								} else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") {
+									rightFrame.src = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=E";
+								} else {
 				                	rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				                }
 				            }
@@ -432,8 +433,9 @@
 							} else {
 			                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
-			                    }
-			                    else {
+                                } else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") {
+                                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=E";
+                                } else {
 			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 			                    }
 			                }
@@ -531,8 +533,9 @@
 						} else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 								rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
-			                }
-			                else {
+							} else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") {
+								rightFrame.src = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=E";
+							} else {
 			                	rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			                }
 			            }
@@ -551,8 +554,9 @@
 						} else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
-			                }
-			                else{
+							} else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") {
+								window.parent.frames["right"].location.href = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=E";
+							} else{
 			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			                }
 			           }
@@ -1128,6 +1132,14 @@
 	            $("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");
 			}
 			
+			function AllBoard(h2) {
+				if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") + "&boardName=" + encodeURIComponent("<spring:message code="ezBoard.allboard.hth01" />") + "&boardType=E&buttonHidden=N";
+				} else {
+					window.parent.frames["right"].location.href = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") + "&boardName=" + encodeURIComponent("<spring:message code="ezBoard.allboard.hth01" />") + "&boardType=E&buttonHidden=N";
+				}
+				h2Selected(h2);
+			}
 	    </script>
 	</head>
 	<body class="newLeft">
@@ -1157,6 +1169,9 @@
 							<li><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
 				        </ul>
 			        </c:if>
+					<h2 class="off">
+						<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="allBoardList" onclick="AllBoard('allBoardList')"><spring:message code="ezBoard.allboard.hth01" /></span>
+					</h2>
 			        <div id='TopBoardsList'>
 			        	<script type="text/javascript">
 			        		parser = new DOMParser();

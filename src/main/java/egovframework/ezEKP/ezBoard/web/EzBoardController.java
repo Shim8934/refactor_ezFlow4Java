@@ -938,7 +938,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 일반,포토,새 게시판리스트 호출 Method
 	 */
-	@RequestMapping(value= {"/ezBoard/boardItemList_new.do", "/ezBoard/boardItemList.do", "/ezBoard/boardItemListPhoto.do"}, method = RequestMethod.GET)
+	@RequestMapping(value= {"/ezBoard/boardItemList_new.do", "/ezBoard/boardItemList_all.do", "/ezBoard/boardItemList.do", "/ezBoard/boardItemListPhoto.do"}, method = RequestMethod.GET)
 	public String boardItemList(HttpServletRequest request, LoginVO userInfo, BoardPropertyVO boardPropertyVO, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("boardItemList started");
 
@@ -1300,7 +1300,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || pBoardID.equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
 			boardInfo.setAccess_("1");
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
@@ -1396,6 +1396,8 @@ public class EzBoardController extends EgovFileMngUtil{
     		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새게시물
     			boardVO.setBoardType("N");
     			resultXML = getNewItemList(boardVO, userInfo);
+    		} else if (boardID.equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
+    			resultXML = getAllItemList(boardVO, userInfo);
     		} else { // 일반게시판
     			resultXML = getBoardListItem(boardVO, userInfo, type);
     		}
@@ -1405,7 +1407,7 @@ public class EzBoardController extends EgovFileMngUtil{
         return resultXML.toString();
     }
     
-    /**
+	/**
 	 * 게시판 승인게시판 표출 Method
 	 */
     public String getApprboardList(BoardVO boardVO, LoginVO userInfo, String mode, String type) throws Exception {
@@ -7523,6 +7525,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
+		if (boardID == null || boardID.equals("") || !boardInfo.getRead_FG().equals("true")) {
+			model.addAttribute("pPreviewShow_HOW", "W");
+        	return "main/warning";
+        }
 		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
 		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		
@@ -11712,5 +11718,180 @@ public class EzBoardController extends EgovFileMngUtil{
 		ezBoardService.updateDelParentReply(replyID, itemID, boardID, tenantID);
 
 		logger.debug("updateDelParentReply ended");
+	}
+	
+	/**
+	 * 게시판 전체게시물 리스트 표출 Method
+	 */
+	public String getAllItemList(BoardVO boardVO, LoginVO userInfo) throws Exception {
+		logger.debug("getAllItemList started");
+
+		String orderOption1 = "";
+		String orderOption2 = "";
+		String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
+		String anonyMsg = "";
+		
+		BoardListVO boardListVO = new BoardListVO();
+		boardVO.setBoardType("E");
+		boardVO.setLang(userInfo.getLang());
+		boardVO.setTenantID(userInfo.getTenantId());
+		
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(userInfo, boardVO);
+
+		int i = 0;
+		int hlength = headerList.size();
+		Map<String, String> orderByMap = new HashMap<String, String>();
+		
+		for (i = 0; i < hlength; i++) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
+				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
+					if (headerList.get(i).getName().indexOf("BOARDNAME") > -1) {
+						orderOption1 = headerList.get(i).getColName().replace("BOARDNAME", "B.BOARDNAME") + " ";
+					} else {
+						orderOption1 = headerList.get(i).getColName() + " ";
+					}
+				} else {
+					orderByMap.put("orderByColDesc", "Y");
+					if (headerList.get(i).getColName().indexOf("BOARDNAME") > -1) {
+						orderOption1 = headerList.get(i).getColName().replace("BOARDNAME", "B.BOARDNAME") + " DESC ";
+					} else {
+						orderOption1 = headerList.get(i).getColName() + " DESC ";
+					}
+				}
+			}
+		}
+
+		String fieldName = "";
+		String fieldValue = "";
+
+		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
+
+		// 새게시물 카운트 시 companyID 조건 추가
+		int boardCount = ezBoardService.getAllBoardItemListCount(userInfo);
+		int startRow = 1;
+		int endRow = 0;
+		int personalCount_ = boardConfigVO.getListCount();
+
+		boardConfigVO.setPageCnt(boardCount);
+		boardConfigVO.setTotalCnt(boardCount);
+
+		startRow = (personalCount_ * (boardVO.getPageNum() - 1)) + 1;
+		endRow = (personalCount_ * boardVO.getPageNum());
+
+		boardListVO.setUserID(userInfo.getId());
+		boardListVO.setWriterCompanyID(userInfo.getCompanyID());
+		boardListVO.setTenantID(userInfo.getTenantId());
+		boardListVO.setStartRow(startRow);
+		boardListVO.setEndRow(endRow);
+		boardListVO.setTotalCount(boardCount);
+		boardListVO.setOrderBySub(orderOption1);
+		boardListVO.setOrderByMain(orderOption2);
+
+		// 새게시물 표출 시 companyID 조건 추가
+		List<HashMap<String, Object>> boardList = ezBoardService.getAllBoardItemList(boardListVO, orderByMap);
+
+		int dlength = boardList.size();
+		StringBuffer resultXML = new StringBuffer();
+
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+		resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+		resultXML.append("<PERSONALCNT>" + personalCount_ + "</PERSONALCNT>");
+		resultXML.append("<PREVIEWTYPE>" + boardConfigVO.getPreview() + "</PREVIEWTYPE>");
+		resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+		resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+		resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+		resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+
+		for (BoardListHeaderVO vo:headerList) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+			resultXML.append("</HEADER>");
+		}
+
+		resultXML.append("</HEADERS>");
+		resultXML.append("<ROWS>");
+
+		/* 2018-11-28 홍승비 - 새게시물 리스트의 익명게시물 부서칼럼 '익명'으로 표출 */
+		anonyMsg = egovMessageSource.getMessage("ezBoard.t249", userInfo.getLocale()).split(";")[0];
+
+		for (int j = 0; j < dlength; j++) {
+			resultXML.append("<ROW>");
+
+			/* 2019-08-02 홍승비 - 다국어 환경에서 부서명 '익명'처리되지 않는 오류 수정 */
+			if (String.valueOf(boardList.get(j).get("GUBUN")).equals("2")) {
+				boardList.get(j).replace("WRITERDEPTNAME", anonyMsg);
+				boardList.get(j).replace("WRITERDEPTNAME2", anonyMsg);
+			}
+
+			for (i = 0; i < hlength; i++) {
+				resultXML.append("<CELL>");
+				fieldName = headerList.get(i).getColName().toUpperCase();
+
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("BOARDNAME")) {
+					fieldName = fieldName + strMultiData;
+				}
+				if (fieldName.equals("WRITEDATE")) {
+					fieldValue = commonUtil.getDateStringInUTC((String)boardList.get(j).get(fieldName), userInfo.getOffset(), false);
+					fieldValue = fieldValue.substring(0, fieldValue.length()-3);
+				} else {
+					fieldValue = commonUtil.cleanValue(String.valueOf(boardList.get(j).get(fieldName)));
+				}
+
+				resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
+
+				if (i == 0) {
+					resultXML.append("<DATA1>" + boardList.get(j).get("BOARDID") + "</DATA1>");
+					resultXML.append("<DATA2>" + boardList.get(j).get("ITEMID") + "</DATA2>");
+					resultXML.append("<DATA3>" + boardList.get(j).get("WRITERID") + "</DATA3>");
+					resultXML.append("<DATA4>" + boardList.get(j).get("IMPORTANCE") + "</DATA4>");
+					resultXML.append("<DATA5>1</DATA5>");
+					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardList.get(j).get("ABSTRACT")) + "</DATA6>");
+					resultXML.append("<DATA7>N</DATA7>");
+					resultXML.append("<DATA8>" + boardList.get(j).get("ITEMLEVEL") + "</DATA8>");
+					resultXML.append("<DATA9>" + boardList.get(j).get("NOTICE") + "</DATA9>");
+					resultXML.append("<DATA10>" + boardList.get(j).get("GUBUN") + "</DATA10>");
+					resultXML.append("<DATA11>" + boardList.get(j).get("ONELINECNT") + "</DATA11>");
+					resultXML.append("<EXT>" + commonUtil.cleanValue((String) boardList.get(j).get("EXT")) + "</EXT>");
+					resultXML.append("<FILEPATH>" + commonUtil.cleanValue((String) boardList.get(j).get("FILEPATH")) + "</FILEPATH>");
+
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("MAINCONTENT")) + "</DATA12>");
+					}
+
+					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardList.get(j).get("TITLE")) + "</TITLE>");
+					/* 2019-07-04 홍승비 - 게시판 미독건수 읽음표시 처리용 boardGroupID 추가 */
+					resultXML.append("<BOARDGROUPID>" + boardList.get(j).get("BOARDGROUPID") + "</BOARDGROUPID>");
+				}
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+
+		logger.debug("getAllItemList ended");
+		return resultXML.toString();
+	}
+	@RequestMapping(value = "/ezBoard/boardItemWarnPage.do", method = RequestMethod.GET)
+	public String getBoardWarningPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("getBoardWarningPage started");
+		String pPreviewShow_HOW = request.getParameter("pPreviewShow_HOW");
+		
+		model.addAttribute("pPreviewShow_HOW", pPreviewShow_HOW);
+		
+		logger.debug("getBoardWarningPage ended");
+		return "main/warning";
 	}
 }
