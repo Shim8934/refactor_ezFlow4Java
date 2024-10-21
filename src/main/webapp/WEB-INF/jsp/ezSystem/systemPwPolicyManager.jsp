@@ -355,6 +355,7 @@
 		
         document.getElementById("MaxLoginFailCount").disabled = disabledChk;
         document.getElementById("MaxLoginFailCount").style.backgroundColor = disabledColor;
+        document.getElementById("LoginLockedDuration").disabled = disabledChk;
         document.getElementById("LoginLockedDuration").style.backgroundColor = disabledColor;
         if (disabledChk) {
 	        document.getElementById("MaxLoginFailCount").value = "";
