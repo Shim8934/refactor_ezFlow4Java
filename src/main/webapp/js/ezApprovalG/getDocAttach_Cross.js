@@ -84,7 +84,8 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     	currIdx = currentTabIdx;
     }
     // 일괄기안 자식페이지에서 접근
-    else if (tempHref.indexOf("ezApprovalG/draftContentAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvContentAll_WHWP.do") > -1) {
+    else if (tempHref.indexOf("ezApprovalG/draftContentAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvContentAll_WHWP.do") > -1
+                || parent.location.href.indexOf("ezApprovalG/draftuiAll_WHWP.do") > -1 || parent.location.href.indexOf("ezApprovalG/approvuiAll_WHWP.do") > -1) {
     	isDraftAllPage = "Y";
     	attachTag = parent.document.getElementById(attachTag.id);
     	docAttachTag = parent.document.getElementById(attachTag.id + "Doc");

@@ -7,8 +7,23 @@
 	    <title></title>
 	    <script  type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberGAll_WHWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/signSplit_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AutoAprLine_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draft_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraftAll_WHWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprGContent.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
+		
+		<%-- 2023-12-05 홍승비 - 결재 서명 데이터를 DB(TBL_SIGNINFO)에서 가져와, 문서 상에 다시 그려주는(재맵핑) 함수 적용 --%>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprSignRedraw.js')}"></script>
+		
 		<style>
 			P { margin-top: 0px;margin-bottom: 0px; } 
 			.viewbox {
@@ -63,13 +78,40 @@
 	        var isConDoc = false;
 	        var isEditor = false;
 	        var isReform = parent.reformFlag === "Y";
-	        
+            var frameNum = "${frameNum}"; // 프레임 번호
+            var docID = "${docID}"; // 재기안시 문서 id
+            var docHref = "${docHref}"; // 문서경로
+            var formID = "${formID}"; // 양식 ID
+	    	var pUserID = parent.pUserID;
+	    	var nonElecRec = "N";
+	    	var approvalFlag = "";
+		    var junGyulFlag = "<c:out value ='${junGyulFlag}'/>";
+		    var draftJunGyulFlag = "<c:out value ='${draftJunGyulFlag}'/>";
+		    var isSplit = "<c:out value ='${isSplit}'/>";
+            var pFormHref = "";
+            var pDraftFlag = parent.pDraftFlag;
+            var ListType = parent.ListType;
+            var pDocState = parent.pDocState;
+            var pSusinSN = parent.pSusinSN;
+            var arr_userinfo = parent.arr_userinfo;
+            var orgCompanyID = parent.orgCompanyID;
+            var pDocType = "";
+            var SignInfoFlag = "";
+            var DeptSymbol = parent.DeptSymbol;
+            var pModeForAllDocInfo = "";
+            var pModeForAllAttachInfo = "";
+            var xmluserInfo;
+            var message = this;
+            var isUsed = parent.isUsed;
+	    	var useOpenGov = parent.useOpenGov;
+	    	var isHWP = "N";
+
 	        window.onload = function () {
 	        	var officeFlag = "<c:out value='${officeFlag}'/>";
 	        	console.log(officeFlag);
 	        	$('#officeVal').val(officeFlag);
 	            try {
-	                parent.DocumentComplete();
+	                parent.DocumentComplete(this);
 	                document.execCommand("AutoUrlDetect", false, false);
 	                document.querySelector("div").addEventListener("paste", function(e) {
 						if (e.target.tagName === "TEXTAREA") {
@@ -338,7 +380,8 @@
 	                    }
 	                    
 	                    // 2018.10.15 필드도 free 속성일 시에 수정 가능하도록 수정
-	                    parent.FieldsAvailable();
+	                    var tmpAddFlag = typeof parent.addFlag != "undefined" ? parent.addFlag : false;
+	                    parent.FieldsAvailable(this);
 	
 	                    if (parent.pDraftFlag != "REDRAFT" || parent.pFormID !== "") {
 		                    $.ajax({
@@ -353,7 +396,7 @@
 			                });
 	                    }
 	                    
-	                    if (parent.pDraftFlag != "REDRAFT") {
+	                    if (parent.pDraftFlag != "REDRAFT" || tmpAddFlag) {
 	                    	BodyTagsEnabled(document.getElementById('div_Content'));
   							var Body_innerHTML = "";
 	                        if (document.getElementById("body") != null) {
@@ -973,7 +1016,411 @@
 				
 				return xmlDom;
 			}
-	        
+
+            function GetFieldList(option1, option2){
+                var list = GetFieldsList();
+                list.forEach(function(item, i){list[i] = item.id});
+                return list;
+            }
+
+            function FieldExist(name){
+                var list = GetFieldsList();
+                var result = false;
+                list.forEach(function(item, i){
+                    if(item.id == name){
+                        result = true;
+                        return;
+                     }
+                });
+               return result;
+            }
+
+            function GetFieldText(name){
+                var list = GetFieldsList();
+                var result = "";
+                list.forEach(function(item, i){
+                    if(item.id == name){
+                        result = item.textContent;
+                        return;
+                     }
+                });
+               return result;
+            }
+
+            function PutFieldText(name, text){
+                var elem;
+                var isHtml = text.indexOf("\15") > -1 || text.indexOf("\r") > -1;
+                text = text.replaceAll("\15", "<br>").replaceAll("\r", "<br>").replaceAll("\11", "&nbsp;&nbsp;");
+                if(name == "doctitle" && document.getElementById("frame_doctitle") != null){
+                    name = "frame_doctitle";
+                }else if(name == "body"){
+                    Set_EditorBodyHTML(text);
+                    return;
+                }
+
+                elem = document.getElementById(name);
+                if(isHtml || text.indexOf("<br>") > -1)
+                    elem.innerHTML = text;
+                else
+                    elem.textContent = text;
+            }
+
+            function SetDocumentElementForDraftAll(pCharName, pValue) {}
+
+            function setMenuBar(id, flag) {
+                var display_Value = flag ? "" : "none";
+
+                if (parent.document.getElementById(id) != null) {
+                    parent.document.getElementById(id).style.display = display_Value;
+                }
+            }
+
+            function process_AfterOpen(frameNum) {
+                try {
+                    if (frameNum == "1") {
+                        parent.winOnload();
+                    }
+
+                    pFormHref = parent.pFormHrefAry[frameNum];
+                    pDraftFlag = parent.pDraftFlag;
+                    pDocType = parent.pDocTypeAry[frameNum];
+
+                    pSusinSN = parent.pSusinSN;
+                    pDocState = parent.pDocState;
+                    SignInfoFlag = parent.SignInfoFlag;
+                    DeptSymbol = parent.DeptSymbol;
+                    approvalFlag = parent.approvalFlag;
+
+                    pModeForAllDocInfo = parent.pModeForAllDocInfo;
+                    pModeForAllAttachInfo = parent.pModeForAllAttachInfo;
+                    xmluserInfo = parent.xmluserInfo;
+
+                    parent.ShowMailProgress(); // 문서 로딩중 이미지 표출
+
+                    // 임시저장된 문서의 결재정보는 새로운 docId를 생성 후에 가져오는 방식으로 수정
+                    if (frameNum == "1" && parent.ListType == "21") {
+                        parent.getLineModeAll(parent.pDocIDAry[1]); // 결재진행중/완료여부 체크
+                        parent.getDocInfoAll(parent.pDocIDAry); // 결재문서 기본 정보
+                        parent.getAttachInfoAll(parent.pDocIDAry); // 첨부파일 정보
+                    }
+                    var ifCond = (pDraftFlag == "REDRAFT" && parent.addFlag == false);
+                    if (pDraftFlag == "REDRAFT" && parent.addFlag == false) { // 재기안이면서 최초 1안 추가가 시작되지 않은 경우 (기존 문서들을 로딩중인 경우)
+                        var len;
+                        var pInformationContent;
+                        var Ans;
+
+                        if (docID == "") {
+                            len = docHref.lastIndexOf("/");
+                            pDocID = docHref.substr(len + 1, 20);
+                        } else {
+                            pDocID = docID;
+                        }
+
+                        GetAprDocFormID();
+                        parent.pFormIDAry[frameNum] = pFormID;
+
+                        /* 2023-04-21 홍승비 - 일괄기안 문서 재기안 시, 기존 첨부파일 정보를 각 안마다 가져오는 부분을 부모 페이지로 이동하여 한번에 가져옴 */
+                        setAttachInfoAll(pDocID, pModeForAllAttachInfo, parent.document.getElementById("lstAttachLink")); // 각 안 별 첨부파일 플래그 세팅
+                        getDocInfo(frameNum); // 현재 페이지에 새롭게 선언한 함수로 변경
+                    }
+                    // 1안 이후에 추가된 경우, 기존 원문공개와 결재선 정보를 가져온다.
+                    else {
+                        pDraftFlag = "DRAFT";
+
+                        if (pFormHref != "PC") {
+                            var len;
+                            len = pFormHref.lastIndexOf("/");
+                            pFormID = pFormHref.substring(len + 1, pFormHref.lastIndexOf("."));
+
+                            parent.pFormIDAry[frameNum] = pFormID;
+                        }
+
+                        if (parent.pDocIDAry[frameNum] == null) {
+                            if (parent.pReadPC) {
+                                ClearDocCellInfo();
+                            }
+
+                            setClearSusinCellInfo();
+
+                            pDocID = parent.createNewDoc();
+                        }
+
+                        parent.pDocIDAry[frameNum] = pDocID;
+
+                        if (parent.listOpenFlag != undefined && parent.listOpenFlag != "") {
+                            $.ajax({
+                                type : "POST",
+                                dataType : "text",
+                                async : false,
+                                url : "/ezApprovalG/openGovInfoSave.do",
+                                data : {
+                                        openGovListFlag : parent.listOpenFlag,
+                                        fileOpenFlagList : parent.fileOpenFlagListArr[1],
+                                        basis : parent.basis,
+                                        reason : parent.reason,
+                                        publicity : parent.pPublicityCode,
+                                        docID : pDocID,
+                                        limitDate : parent.limitDate
+                                }
+                            });
+
+                            $.ajax({
+                                type : "POST",
+                                dataType : "text",
+                                async : false,
+                                url : "/ezApprovalG/copyOpenGovAttachInfo.do",
+                                data : {
+                                        docID : pDocID,
+                                        parentDocID : parent.pDocIDAry[1]
+                                }
+                            });
+                        }
+                    }
+                } catch (e) {
+                    console.log(e);
+                    alert("apprGdraftuiAllContent_WHWP.jsp > process_AfterOpen()  ::  " + e.description);
+                }
+            }
+
+            function CopyAndPasteContent(isTrue) {
+                try {
+                    var ifrm1 = parent.document.getElementById("ifrm1");
+
+                    if (isTrue) {
+                        if (parent.contentOptionFlag == true) {
+                            if(ifrm1.src.indexOf("draftContentAll_WHWP") < 0){
+                                var html = ifrm1.contentWindow.GetBodyHTML();
+                                if(html){
+                                    if(GetBodyHTML())
+                                        Set_EditorBodyHTML(html);
+                                    else
+                                        body.innerHTML = html;
+                                }else{
+                                    html = ifrm1.contentWindow.Get_EditorBodyHTML();
+                                    var parser = new DOMParser();
+                                    var doc = parser.parseFromString(html, 'text/html');
+                                    html = doc.getElementById("body").innerHTML;
+                                    if(GetBodyHTML())
+                                        Set_EditorBodyHTML(html);
+                                    else
+                                        body.innerHTML = html;
+                                }
+                            }else{
+                               ifrm1.contentWindow.GetCloneData("body", "HTML", function(data){
+                                    if(GetBodyHTML())
+                                        Set_EditorBodyHTML(data);
+                                    else
+                                        body.innerHTML = data;
+                                });
+                            }
+                        }
+                    } else {
+                        var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
+                        OpenAlertUI(pAlertContent);
+                        Clear();
+                    }
+                } catch (e) {
+                    alert("CopyAndPasteContent ::" + e);
+                }
+            }
+
+            function copyDoc() {
+                var ifrm1 = parent.document.getElementById("ifrm1");
+
+                copyAprLine(); // 결재선정보 복사
+
+                 if (parent.titleOptionFlag == true) { // 제목
+                    var mainDocTitle = ifrm1.contentWindow.GetFieldText("doctitle");
+                    PutFieldText("doctitle", mainDocTitle);
+                }
+
+                /* if (parent.seperateAttachOptionFlag == true) { // 분리첨부
+                    // 단, 해당 분리첨부 내용이 공백이 아닌 경우에만 복사함
+                    var ifrm1SepXML = ifrm1.contentWindow.GetDocumentElementForDraftAll("sepattachlvxml", true);
+                    if (ifrm1SepXML != "") {
+                        SetDocumentElementForDraftAll("sepattachlvxml", ifrm1.contentWindow.GetDocumentElementForDraftAll("sepattachlvxml", true));
+                    }
+                } */
+
+                // 1안에 대해 일반첨부, 문서첨부가 없는 경우 플래그 조정 (첨부파일 복사 필요없음)
+                if (parent.pHasAttachYNAry[1] != "Y") {
+                    parent.attachOptionFlag = false;
+                    parent.pHasAttachYN = "N";
+                    parent.pHasAttachYNAry[frameNum] = "N";
+                }
+                if (parent.pHasDocAttachYNAry[1] != "Y") {
+                    parent.docAttachOptionFlag = false;
+                    parent.pHasDocAttachYN = "N";
+                    parent.pHasDocAttachYNAry[frameNum] = "N";
+                }
+
+                // 1안의 의견은 복사하지 않는다.
+/* 	    		if (parent.pHasOpinionYNAry[0] != "Y") { // 의견이없는 경우 플래그 조정
+                    parent.opinionOptionFlag = false;
+                } */
+                // 의견 복사하지 않으므로 N으로 고정
+                parent.pHasOpinionYN = "N";
+                parent.pHasOpinionYNAry[frameNum] = "N";
+
+                // 일반첨부, 문서첨부 데이터 복사
+                if (parent.attachOptionFlag == true || parent.docAttachOptionFlag == true) {
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        data : {
+                            attachFlag : parent.attachOptionFlag,
+                            docAttachFlag : parent.docAttachOptionFlag,
+                            seperateAttachFlag : parent.seperateAttachOptionFlag,
+                            //opinionFlag : parent.opinionOptionFlag,
+                            mainDocID  : parent.pDocIDAry[1],
+                            currentDocID : pDocID
+                        },
+                        url : "/ezApprovalG/copyDocAttachHwp.do",
+                        success: function(result) {
+                            // 첨부파일 복사 후, 부모창과 해당 안의 플래그 변경
+                            if (parent.attachOptionFlag == true) {
+                                parent.pHasAttachYN = "Y";
+                                parent.pHasAttachYNAry[frameNum] = "Y"
+                            }
+                            if (parent.docAttachOptionFlag == true) {
+                                parent.pHasDocAttachYN = "Y";
+                                parent.pHasDocAttachYNAry[frameNum] = "Y";
+                            }
+                        }
+                    });
+
+                    // 하단 첨부파일 영역에 정보 셋팅 (일단 숨김처리한 상태)
+                    if (parent.attachOptionFlag == true || parent.docAttachOptionFlag == true) {
+                        setAttachInfo(pDocID, "APR", parent.lstAttachLink);
+                    }
+                }
+            }
+
+	        // 1안의 결재선 복사 (컨트롤러단에서 전부 처리함. 리턴값 없음)
+	        function copyAprLine() {
+	    		$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		data : {
+		    			mainDocID  : parent.pDocIDAry[1], // 1안의 문서ID를 메인으로 사용
+		    			currentDocID : pDocID
+		    		},
+		    		url : "/ezApprovalG/copyAprLine.do",
+		    		success: function(result) {}
+		    	});
+	    	}
+
+	    	function GetDocumentElementForDraftAll(){}
+	    	function Resize(){}
+
+            // 재기안 > 결재올림 시, 각 안의 문서번호 재설정 함수를 호출하는 함수
+            function UpdateDocNum() {
+                if (!FieldExist("docnumber")) {
+                    console.log("hwpContent hasn't a docnumber field");
+                    return false;
+                }
+
+                // ajax로 현재 문서의 docnumber 형식을 리턴
+                var numberFormat = "";
+                numberFormat = getDocNumFormatByFormID(parent.pFormIDAry[frameNum], parent.orgCompanyID);
+
+                PutFieldText("docnumber", getDocNumByFormat(numberFormat));
+            }
+
+            function AppendFieldText(field, text) {
+                var iText = GetFieldText(field) + text;
+                PutFieldText(field, iText);
+            }
+
+            function PrependFieldText(field, text) {
+                var iText = text + GetFieldText(field);
+                PutFieldText(field, iText);
+            }
+
+            function InsertPicture(psigncell, src, callback){
+                var fields = GetFieldsList();
+                var pseumyungdatecell = "seumyungdate" + psigncell.substring(4);
+                var field = message.GetListItem(fields, pseumyungdatecell);
+                var signWidth = 50;
+                var signHeight = field ? 50 : 28;
+
+                var ret = src.substring(src.indexOf("filePath=") + 9);
+                var strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
+                strimg = strimg + " width=" + signWidth + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+
+                /* if (signImageType == "NAME") {
+                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                } else {
+                } */
+                field = GetListItem(fields, psigncell);
+                field.innerHTML = (trim(field.textContent) == "" ? "" : field.innerHTML) + strimg;
+                callback();
+            }
+
+            function GetTextFile(hwp, blank, callback){
+                var mhtBody = "";
+                mhtBody = Get_EditorBodyHTML();
+                EmbedContentIntoXML(mhtBody);
+                mhtBody = ConvertHTMLtoMHT(mhtBody);
+                ingFlag = false;
+                callback(mhtBody);
+            }
+
+            // 각 안에 맞는 배열 인덱스에 데이터를 삽입하기 위한 함수 분리
+            function getDocInfo(currIdx) {
+                var xmldoc = loadXMLString(parent.pDocInfoAry[currIdx]);
+                var objNodes = xmldoc.documentElement.childNodes;
+
+                if (objNodes) {
+                    if (SelectSingleNodeValueNew(xmldoc, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(xmldoc, "DATA/HASOPINIONYN") == "O") {
+                        parent.pHasOpinionYNAry[currIdx] = "Y";
+                    } else {
+                        parent.pHasOpinionYNAry[currIdx] = "N";
+                    }
+
+                    parent.tempSecurity = SelectSingleNodeValueNew(xmldoc, "DATA/SECURITYCODE");
+                    parent.tempKeep = SelectSingleNodeValueNew(xmldoc, "DATA/STORAGEPERIOD");
+                    parent.tempUrgent= SelectSingleNodeValueNew(xmldoc, "DATA/URGENTAPPROVAL");
+                    parent.tempPublic = SelectSingleNodeValueNew(xmldoc, "DATA/ISPUBLIC");
+                    parent.tempKeyword = SelectSingleNodeValueNew(xmldoc, "DATA/KEYWORD");
+                    parent.tempItemCode = SelectSingleNodeValueNew(xmldoc, "DATA/ITEMCODE");
+                    parent.tempItemName = SelectSingleNodeValueNew(xmldoc, "DATA/ITEMNAME");
+                    parent.pSummery = SelectSingleNodeValueNew(xmldoc, "DATA/SUMMARY");
+                    parent.pSpecialRecordCode = SelectSingleNodeValueNew(xmldoc, "DATA/SPECIALRECORDCODE");
+                    parent.pPublicityCode = SelectSingleNodeValueNew(xmldoc, "DATA/PUBLICITYCODE");
+                    parent.pPublicityYN = SelectSingleNodeValueNew(xmldoc, "DATA/PUBLICITYYN");
+                    parent.pLimitRange = SelectSingleNodeValueNew(xmldoc, "DATA/LIMITRANGE");
+                    parent.pPageNum = SelectSingleNodeValueNew(xmldoc, "DATA/PAGENUM");
+                    parent.cabinetID = SelectSingleNodeValueNew(xmldoc, "DATA/CABINETID");
+                    parent.TaskCode = SelectSingleNodeValueNew(xmldoc, "DATA/TASKCODE");
+                    parent.tempSecurityDate = SelectSingleNodeValueNew(xmldoc, "DATA/SECURITYAPPROVAL");
+
+                    if (useOpenGov == "YES") {
+                        parent.basis = SelectSingleNodeValueNew(xmldoc, "DATA/BASIS");
+                        parent.reason = SelectSingleNodeValueNew(xmldoc, "DATA/REASON");
+                        parent.listOpenFlag = SelectSingleNodeValueNew(xmldoc, "DATA/LISTOPENFLAG");
+                        parent.fileOpenFlagList = SelectSingleNodeValueNew(xmldoc, "DATA/FILEOPENFLAGLIST");
+                        parent.fileOpenFlagListArr[currIdx] = SelectSingleNodeValueNew(xmldoc, "DATA/FILEOPENFLAGLIST");
+                        parent.limitDate = SelectSingleNodeValueNew(xmldoc, "DATA/LIMITDATE");
+                    }
+                }
+            }
+
+            function SetFieldBackImage(psigncell, src){
+                var fields = GetFieldsList();
+                var field = message.GetListItem(fields, psigncell);
+                var signWidth = 50;
+                var signHeight = 50;
+
+                var ret = src == "" ? "" : src.substring(src.indexOf("filePath=") + 9);
+                var strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
+                strimg = strimg + " width=" + signWidth + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+
+                field = GetListItem(fields, psigncell);
+                field.innerHTML = (trim(field.textContent) == "" ? "" : field.innerHTML) + (src == "" ? "" : strimg);
+            }
 	    </script>
 	</head>
 	<body>

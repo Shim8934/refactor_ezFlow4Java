@@ -52,6 +52,12 @@
 					DivPopUpShow(330, 205, pUrl);
 		            return;
 		        }
+				/* 2023-11-03 민지수 - 카테고리게시판 > 게시물 등록 불가 */
+				if (SelectedBoardType == "10") {
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.MJSCAT02' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.MJSCAT02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+					return;
+				}
 		
 		        if (CheckIfCanWrite(SelectedBoardID) == false) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t354' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t354'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");

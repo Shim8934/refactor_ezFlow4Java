@@ -67,6 +67,8 @@ public interface EzCommonService {
 	public int updateUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
 	
 	public void insertUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
+
+	public void deleteUserConfigInfo(int tenantID, String userID, String propertyName) throws Exception;
 	
 	public void createTblCompanyConfig() throws Exception;
 	
@@ -302,7 +304,10 @@ public interface EzCommonService {
 	public void addTblBoardItemTempNoti() throws Exception;
 	
 	public void insertPrvwConfig() throws Exception;
-
+	
+	/* 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 */
+	public void insertApprSignRemapApplyTime() throws Exception;
+	
 	public void insertPermissionBasisDeptYN_Config() throws Exception;
 	
 	void createTblDbLog();
@@ -399,4 +404,73 @@ public interface EzCommonService {
     public void alterTblScheduleForShowtop() throws Exception;
 	
 	public void addUserDeptHideFlag() throws Exception;
+	
+	public void insertGongRamListOption() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테이블 추가 */
+	public void createTblScheduleReminderScheduler() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 시간 컬럼 추가 */
+	public void addReminderTimeAtTblScheduleConfig() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테넌트 컨피그 추가 */
+	public void insertReminderTenantConfig() throws Exception;
+
+	// 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+	public void alterSaveFlagForCbShare() throws Exception;
+	
+	public void alterBoardExtentionAttrByteSize() throws Exception;
+
+	// 2024-08-21 유길상 닷넷 통합알림 컨피그
+	public void insertDotNetTotalNotificationConfig() throws Exception;
+	
+	public void updateInProcessJpCodeName3() throws Exception;
+
+	public void createTblDistributeinfo() throws Exception;
+	
+	public void createExecutiveTable() throws Exception;
+ 
+	public void createServeyResultviewPermTbl() throws Exception;
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
+	public void addTblFormContainerSN() throws Exception;
+	
+	public void insertInitMobileTheme() throws Exception;
+	
+	public void alterMenuOpenType() throws Exception;
+	
+	public void createSystemConfig() throws Exception;
+	
+	public void createConnectionMenu() throws Exception;
+	
+	public void insertStandardSystemConfigData() throws Exception;
+	
+	public void createEmergencyNotiTable() throws Exception;
+	
+	// 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
+	public void insertMobileToggleMenus() throws Exception;
+	
+	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
+	public void alterUseColor() throws Exception;
+	
+	// 2024-09-02 조수빈 - 테마 변경에 따른 테마 데이터 update
+	public void updateThemeData() throws Exception;
+	
+	void createRsScheduleDeptIdColumn() throws Exception;
+
+	/* 2023-03-30 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가 */
+	public void alterTblBoardOneLineChildReply() throws Exception;
+
+	// 2023-11-07 전인하 - 댓글 이모티콘 관련 컬럼 추가
+	public void insertBoardReplyCommentEmoticon() throws Exception;
+		
+	public void createTblBoardDisLike() throws Exception;
+	
+	public void addBoardDisLikeFlag() throws Exception;
+	
+
+	public void createBoardKeywordTable() throws Exception;
+	
+	// 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 테이블 추가
+	public void createResourceFavoriteTables() throws Exception;
 }

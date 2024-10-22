@@ -151,7 +151,7 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     
     /* 2023-06-19 조소정 - 공람할문서 메뉴(99) 복수 체크박스 추가 */
-    if(pListTypeValue == "1" || pListTypeValue == "99" || pListTypeValue == "24") { // 2020-04-29 : 결재할문서 복수체크박스 추가
+    if(pListTypeValue == "1" || pListTypeValue == "4" || pListTypeValue == "99" || pListTypeValue == "24") { // 2020-04-29 : 결재할문서 복수체크박스 추가
     	DocList.SetCheckBoxFlag(true);
     }
 
@@ -349,7 +349,13 @@ function getReceivedDocList_after(xml) {
                 getSimsaDocList();
             return;
         }
-
+        
+        // 리스트를 닫기 전에 미리 선택한 row가 있을 때를 확인
+        var preDocList = new ListView();
+        var docListID = "DocList";
+        preDocList.LoadFromID(docListID);
+       	var preSelectedRow = preDocList.GetSelectedRows();
+        
         makePageSelPage();
 
         var xmlDoc;
@@ -368,15 +374,33 @@ function getReceivedDocList_after(xml) {
 
         if (document.getElementById("lvDocList").innerHTML != "") document.getElementById("lvDocList").innerHTML = "";
         var DocList = new ListView();
-        DocList.SetID("DocList");
+        DocList.SetID(docListID);
         DocList.SetMulSelectable(false);
         DocList.SetHeaderOnClick("lvDocList_HeaderClick");
         DocList.SetRowOnClick("lvDocList_SelChange");
         DocList.SetRowOnDblClick("lvDocList_DBSelChange");
         DocList.SetTitleIdx(0);
         DocList.SetUrgentFlag(false);
+        if (pListTypeValue == "4")  //2023-04-12 이가은 - 부서수신함 복수체크박스 추가
+            DocList.SetCheckBoxFlag(true);
         DocList.DataSource(xmlDoc);
         DocList.DataBind("lvDocList");
+        
+        // 2024-05-29 조수빈 - 부서수신함에서 이전 선택한 row를 유지하는 부분이 누락되어 추가
+        // 리스트를 닫기 전에 미리 선택한 row로 재선택
+        if (selRowChangeFlag && preSelectedRow.length > 0) {
+        	// 탭 이동 시에도 전 탭에서 선택된 row를 선택되는 오류 개선
+        	selRowChangeFlag = false;
+        	var docListLength = DocList.GetRowCount() - 1;
+        	// 마지막 row의 결재가 완료된 후 리스트로 돌아오면 로우가 선택되어 있지 않는 오류 개선
+            var beforeSelectedId = preSelectedRow[0].getAttribute('id');
+            if (docListLength < beforeSelectedId.split("_")[2]) {
+        		DocList.SetSelectedIndex(docListLength);
+        	} else {
+                tr_select(beforeSelectedId, docListID, true);
+        	}
+        }  
+        
         DocList = null;
 
         HiddenMailProgress();
@@ -859,11 +883,17 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     }
   
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
-    	openLocation = "/ezApprovalG/draftui.do?formURL=";
-        openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-        openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-        openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
-        
+        var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
+
+        if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+            openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        } else {
+            openLocation = "/ezApprovalG/draftui.do?formURL=";
+            openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        }
+            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
+
 //        // FormBuilder
 //        if (window.reformflag == null) {
 //        	// reformflag null 값이라면
@@ -960,7 +990,11 @@ function openApprovUI(allFlag) {
         		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         	}
         } else {
-            openLocation = "/ezApprovalG/approvui.do?docID=";
+            var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
+            if (isGroupDoc == "Y") // 일괄기안 문서를 여는 경우
+                openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=";
+            else
+                openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2")) + "&aprMemberSN=" + pArgument[4];
@@ -1085,7 +1119,6 @@ function openViewDocInfo(type) {
     var formURL = GetAttribute(tr, "DATA3");
     var DocID = GetAttribute(tr, "DATA1");
     var orgCompanyID = GetAttribute(tr, "orgCompanyID");
-    var formID = GetAttribute(tr, "DATA17");
 
     pArgument[0] = DocID;
     pArgument[1] = formURL;
@@ -1110,7 +1143,6 @@ function openViewDocInfo(type) {
         }
         
         pArgument[7] = pListTypeValue;
-        pArgument[8] = formID;
     }
 
     var openLocation;
@@ -1160,7 +1192,13 @@ function openViewDocInfo(type) {
         	}
         }
         else {
-        	openLocation = "/ezApprovalG/aprDocView.do";
+            var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
+
+            if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+                openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
+            } else {
+        	    openLocation = "/ezApprovalG/aprDocView.do";
+        	}
         }
         openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&docHref=" + encodeURI(pArgument[1]);
         openLocation = openLocation + "&opinionFlag=" + encodeURI(pArgument[2]) + "&docState=" + encodeURI(pArgument[3]) + "&listSusin=" + encodeURI(pArgument[4]) + "&oDoc=" + encodeURI(pArgument[5]);
@@ -1169,7 +1207,6 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
         openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
         openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
-        openLocation = openLocation + "&formID=" + encodeURI(pArgument[8]);
         if (shareUser = "shareUser") {
         	openLocation += "&pageType=admin";
         }
@@ -1899,7 +1936,7 @@ function makePageSelPage() {
     	period = getDatePeriod(userLang, document.getElementById("sel_year").value, 1, 1, document.getElementById("sel_year").value, 12, 31);
     }
     //document.getElementById("presentcell").innerHTML = " - " + localValue;
-    document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
+    document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
     try {
     	if (ViewLeftCount == "YES" && ($("#sel_status option:selected").val() == "ALL" || $("#sel_status option:selected").val() == undefined)) {
@@ -1948,29 +1985,34 @@ function makePageSelPage() {
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
     if (totalPage > 1 && pageNum != 1) {
-        strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        // strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
         PagingHTML += strtext;
     } else {
-        strtext = "<span class='btnimg'><a >";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        // strtext = "<span class='btnimg'><a >";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        strtext = "<span class='btnimg first disabled'></span>";
         PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            // strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            // strtext = "<span class='btnimg'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            strtext = "<span class='btnimg prev disabled'></span>";
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+        strtext = "<span class='btnimg prev disabled'></span>";
         PagingHTML += strtext;
     }
     var MaxNum;
@@ -1998,30 +2040,35 @@ function makePageSelPage() {
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            // strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            strtext = "<span class='btnimg next' onclick='return selafterBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+            // strtext = "<span class='btnimg'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+            strtext = "<span class='btnimg next disabled'></span>";
 
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+        strtext = "<span class='btnimg next disabled'></span>";
         PagingHTML += strtext;
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif'/></span>";
+        // strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif'/></span>";
+        strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        strtext = "<span class='btnimg last disabled'></span>";
         PagingHTML += strtext;
     }
     PagingHTML += "</div>";
@@ -2068,6 +2115,12 @@ function setbuttonenable() {
     
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
+        document.getElementById("tbtnReceiptAll").style.display = "none";
+        document.getElementById("tbtnRJunkyulAll").style.display = "none";
+    } else if (pListTypeValue == "4") {
+    	document.getElementById("tbtnApproveALL").style.display = "none";
+    	document.getElementById("tbtnReceiptAll").style.display = "";
+    	document.getElementById("tbtnRJunkyulAll").style.display = "";
     }
     else {
     	// apprGManage.jsp에서 공람버튼의 기본 스타일을 display = "none"으로 수정 (공람할문서 메뉴에서만 표출)
@@ -2075,6 +2128,8 @@ function setbuttonenable() {
 
         document.getElementById("tbtnApprove2").style.display = "none";
         document.getElementById("tbtnApproveALL").style.display = "none";
+        document.getElementById("tbtnReceiptAll").style.display = "none";
+        document.getElementById("tbtnRJunkyulAll").style.display = "none";
     }
 
     /*if (pListTypeValue == "8")
@@ -2365,8 +2420,10 @@ function setbuttonenable() {
 
     if (approvalFlag == "S") {
 	    if (pListTypeValue == "4") {
-	        document.getElementById("tbtnViewDoc").style.display = "none";
+//	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
+	        document.getElementById("tbtnReceiptAll").style.display = "";
+	        document.getElementById("tbtnRJunkyulAll").style.display = "";
 	        
 	        if (pFunctionType == "015") {
 	            // 회송된 문서일 경우 접수버튼 display none 처리
@@ -2872,7 +2929,12 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     var openLocation = "";
     
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
-    	openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        var isGroupDoc = checkIsGroupDoc(pDocSN, "");
+        if (isGroupDoc == "Y") { // 임시저장된 일괄기안 문서를 여는 경우
+            openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        } else {
+    	    openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        }
     	openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
     	
@@ -3178,6 +3240,15 @@ function OpenAlertUI_Close() {
         DivPopUpHidden();
         parent.frames["left"].getAprCount();
         getDocList();
+    }catch(e){}
+}
+
+function OpenAlertUI_Close_Complete() {
+    try{
+        DivPopUpHidden();
+        parent.frames["left"].getAprCount();
+        getDocList();
+        OpenPopupWin.close();
     }catch(e){}
 }
 

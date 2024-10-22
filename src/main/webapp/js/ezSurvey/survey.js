@@ -89,6 +89,11 @@ var SurveyCreate     = function() {
 			if (reuseSurvey["paritipateFlag"] == 1) {setSurveyUsers(reuseSurvey["userList"]);}
 			if (reuseSurvey["attachFlag"] == 1) {surveyFile.render(reuseSurvey["attachList"]);}
 			if (reuseSurvey["purpose"]) {surveyObj["infor"]["purpose"] = reuseSurvey["purpose"];}
+            // 설문 수정/재사용 > 설문결과 > 지정공개 대상자 정보 삽입
+            if (reuseSurvey["resultPublicFlag"] == 2) {
+                setSurveyResultUsers(reuseSurvey["resultViewTarget"]);
+                $("#rspdtList2").addClass('on');
+            }
 			getReuseQuestions();
 		}
 		
@@ -107,8 +112,11 @@ var SurveyCreate     = function() {
 		
 		var fileUploadBttn      = document.getElementById("fileBttn");
 		fileUploadBttn.onchange = function(e) {surveyFile.upload();};
-		var userMoreElmt        = document.querySelector("span[class='user-more']");
-		if (userMoreElmt) {userMoreElmt.onclick = function(e) {toggleUserPreview();};}
+		// 설문 작성 > 설문대상 지정자, 설문결과 지정공개 대상자 조회팝업 호출 버튼 이벤트 삽입
+		var userMoreElmt        = document.querySelector("#cf-userdiv span[class='user-more']");
+		if (userMoreElmt) {userMoreElmt.onclick = function(e) {toggleUserPreview('survey');};}
+        var userMoreResultElmt        = document.querySelector("#public-cfdiv span[class='user-more']");
+        if (userMoreResultElmt) {userMoreElmt.onclick = function(e) {toggleUserPreview('result');};}
 		var draftBttn           = document.getElementById("draftBttn");
 		if (draftBttn) {draftBttn.onclick = function(e) {saveDraftSurvey();};}
 		
@@ -158,8 +166,11 @@ var SurveyCreate     = function() {
 			cancelSv[i].addEventListener("click", cancelThisSurvey, false);
 		}
 		
-		document.getElementById("targetBttn"    ).addEventListener("click" , showSelectPopUp  , false);
-		document.getElementById("closeUserPanel").addEventListener("click",  toggleUserPreview, false);
+		// 설문 작성 > 설문대상 지정자, 설문결과 지정공개 대상자 선택 팝업 호출
+		document.getElementById("targetBttn"    ).addEventListener("click" , () => {showSelectPopUp('survey')} , false);
+		document.getElementById("selectResultTargetBtn"    ).addEventListener("click" , () => {showSelectPopUp('result')} , false);
+		// 설문 작성 > 설문대상 지정자, 설문결과 지정공개 대상자 리스트 조회 팝업창 닫기
+		document.getElementById("closeUserPanel").addEventListener("click",  () => {toggleUserPreview('close')}, false);		
 		document.getElementById("saveSurvey"    ).addEventListener("click",  saveSurvey       , false);
 		
 		if (!surveyItem) {
@@ -222,6 +233,11 @@ var SurveyCreate     = function() {
 			changeSurveyState();
 			window.parent.frames["left"].surveyId = -1;
 			window.parent.frames["left"].isInCreateSurvey = false; // 신규 설문 생성 취소
+			var ingSurveyLi = window.parent.frames["left"].document.getElementById("processingSurvey");
+			if (ingSurveyLi.querySelector(".list_text") && ingSurveyLi.tagName == "LI") {
+				window.parent.frames["left"].$(".node_selected").attr("class", "list_text");
+				ingSurveyLi.querySelector(".list_text").setAttribute("class", "list_text node_selected");
+			}
 			window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
 		}
 	}
@@ -495,6 +511,7 @@ var SurveyCreate     = function() {
 		var popupFlag   = parseInt(document.querySelector('input[name="popupSpan"]:checked').value);
 		
 		var userList   = surveyObj["infor"]["users"];
+		var userResultList = surveyObj["infor"]["resultViewTarget"]; // 설문결과 지정조회 대상자
 //		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
 		ppContent      = replaceAll(ppContent, '<p style="font-size:13px;font-family:맑은 고딕"><br></p>', '');
 		var ttlValue   = replaceAll(surveyTtl.value, " ", "");
@@ -513,6 +530,7 @@ var SurveyCreate     = function() {
 		}
 		
 		if (userFlag == 1 && !userList) {returnObj["error"] = SurveyMessages.strUser1; return returnObj;}
+		if (publicFlag == 2 && !userResultList) {returnObj["error"] = SurveyMessages.strUser1; return returnObj;}
 		
 		//Check attach file progress
 		var divFileList = document.getElementById("fileDiv");
@@ -671,22 +689,42 @@ var SurveyCreate     = function() {
 		return feature;
 	}
 	
+	// 설문 > 설문결과 타입 선택 라디오박스 동작
 	function toggleDaysInput(inputElmt) {
-		var slxIdx    = inputElmt.getAttribute("value");
-		var inputElmt = document.querySelector("input[class='date-input']");
-		
-		if (slxIdx == 0) {
-			inputElmt.value    = "";
-			inputElmt.disabled = true;
-		}
-		else {
-			inputElmt.value    = "0";
-			inputElmt.disabled = false;
-		}
+        var slxIdx    = inputElmt.getAttribute("value");
+        var inputElmt = document.querySelector("input[class='date-input']");
+        
+        if (slxIdx == 1) {
+            $(inputElmt).attr('disabled', false);
+            $(inputElmt).val("0");
+            $('#userResultList_div').text("");
+            $("#rspdtList2").removeClass("on"); 
+            surveyObj["infor"]["resultViewTarget"] = null;
+        } else if (slxIdx == 2) {
+            $(inputElmt).attr('disabled', true);
+            $(inputElmt).val("");
+            $("#rspdtList2").addClass("on");
+        } else {
+            $(inputElmt).attr('disabled', true);
+            $(inputElmt).val("");
+            $('#userResultList_div').text("");
+            $("#rspdtList2").removeClass("on");
+            surveyObj["infor"]["resultViewTarget"] = null;
+        }
 	}
 	
-	function toggleUserPreview() {
+	// 설문 > 설문대상 지정자, 설문결과 지정공개 대상자 리스트 조회 팝업 호출
+	// mode: survey : 설문대상 / result: 설문결과 / close: 창 닫기
+	function toggleUserPreview(mode) {
 		var userPanel = document.getElementById("userPanel");
+		if (mode == 'survey') {
+		    $('#user-tblmain').show();
+		    $('#userResult-tblmain').hide();
+		} else if (mode == 'result') {
+		    $('#user-tblmain').hide();
+        	$('#userResult-tblmain').show();
+		}
+		
 		if (userPanel.className == "userPanel off") {
 			addFogPanel(toggleUserPreview);
 			var position          = getPosition(466, 210);
@@ -706,8 +744,8 @@ var SurveyCreate     = function() {
 		fogPanel.className            = "rfogPanel";
 		var leftFogPanel              = document.createElement("div");
 		leftFogPanel.className        = "blockLeft";
-		fogPanel.onclick              = function(e) {togglePanel();};
-		leftFogPanel.onclick          = function(e) {togglePanel();};
+		fogPanel.onclick              = function(e) {togglePanel('close');};
+		leftFogPanel.onclick          = function(e) {togglePanel('close');};
 		var leftFrameBody             = window.parent.frames["left"].document.body;
 		var rightFrameBody            = window.parent.frames["right"].document.body;
 		leftFrameBody.style.overflow  = "hidden";
@@ -769,24 +807,32 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	function showUserList() {
-		var userArr = surveyObj["infor"]["users"];
-		var divElmt = document.getElementById("userListDiv");
+	// 설문대상 지정자, 설문결과 지정공개 대상자 리스트 간단표출
+	function showUserList(mode) {
+		var userTempArr;
+		var divElmt;
+		if (mode == 'survey') {
+		   userTempArr = surveyObj["infor"]["users"];
+		   divElmt = document.getElementById("userListDiv");
+		} else if (mode == 'result') {
+		    userTempArr = surveyObj["infor"]["resultViewTarget"];
+		    divElmt = document.getElementById("userResultList_div");
+		} 
 		
 		while (divElmt.firstElementChild) {
 			divElmt.removeChild(divElmt.firstElementChild);
 		}
 		
-		for (var i = 0, len = userArr.length; i < len; i++) {
+		for (var i = 0, len = userTempArr.length; i < len; i++) {
 			var spanElmt = document.createElement("span");
 			var uElmt    = document.createElement("u");
 			var imgElmt  = document.createElement("img");
 			var divideSpan = document.createElement("span");
-			uElmt.setAttribute("role", userArr[i]["userId"]);
-			uElmt.setAttribute("type", userArr[i]["userType"]);
-			uElmt.textContent    = userArr[i]["userName"];
-			uElmt.onclick        = (function(userId, userType, userName, deptId){return function() {showUserInfoFromId(userId, userType, userName, deptId);};})(userArr[i]["userId"], userArr[i]["userType"], userArr[i]["userName"], userArr[i]["deptId"]);
-			imgElmt.onclick      = (function(userId, userType){return function() {removeUser(this, userId, userType);};})(userArr[i]["userId"], userArr[i]["userType"]);
+			uElmt.setAttribute("role", userTempArr[i]["userId"]);
+			uElmt.setAttribute("type", userTempArr[i]["userType"]);
+			uElmt.textContent    = userTempArr[i]["userName"];
+			uElmt.onclick        = (function(userId, userType, userName, deptId){return function() {showUserInfoFromId(userId, userType, userName, deptId);};})(userTempArr[i]["userId"], userTempArr[i]["userType"], userTempArr[i]["userName"], userTempArr[i]["deptId"]);
+			imgElmt.onclick      = (function(userId, userType){return function() {removeUser(this, userId, userType);};})(userTempArr[i]["userId"], userTempArr[i]["userType"]);
 			spanElmt.className   = "rlSpanBnk";
 			divideSpan.textContent = ";";
 			imgElmt.src          = "/images/icon/oneline_delete.gif";
@@ -797,14 +843,26 @@ var SurveyCreate     = function() {
 		}
 	}
 	
+	// 설문대상 지정자, 설문결과 지정공개 대상자 리스트 간단삭제
 	function removeUser(imgElmt, userId, userType) {
-		var userArr = surveyObj["infor"]["users"];
+		var id = imgElmt.closest("div").id;
+		var userArr;
+		if (id == 'userListDiv') {
+		    userArr = surveyObj["infor"]["users"];
+		} else if (id == 'userResultList_div') {
+		    userArr = surveyObj["infor"]["resultViewTarget"];
+		}
 		
 		for (var i = 0 ; i < userArr.length; i++) {
 			if (userArr[i]["userId"] == userId && userArr[i]["userType"] == userType) {userArr.splice(i, 1);}
 		}
 		
-		surveyObj["infor"]["users"] = userArr;
+        if (id == 'userList_div') {
+            surveyObj["infor"]["users"] = userArr;
+        } else if (id == 'userResultList_div') {
+            surveyObj["infor"]["resultViewTarget"] = userArr;
+        }
+        
 		var spanElmt = imgElmt.parentElement;
 		spanElmt.parentElement.removeChild(spanElmt);
 	}
@@ -1215,11 +1273,13 @@ var SurveyCreate     = function() {
 		return elements;
 	}
 	
-	function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(964, 645));}
+	function showSelectPopUp(mode) {selectPopup = window.open("/ezSurvey/selectUsers.do?mode=" + mode, "selectUser", getOpenWindowfeature(964, 645));}
 	function getSurveyQuestions() {return surveyObj["questions"];}
 	function setSurveyQuestions(question) {surveyObj["questions"].push(question);}
 	function getSurveyUsers() {return surveyObj["infor"]["users"];}
-	function setSurveyUsers(userList) {surveyObj["infor"]["users"] = JSON.parse(JSON.stringify(userList)); showUserList();}
+	function getSurveyResultUsers() {return surveyObj["infor"]["resultViewTarget"] ;}
+	function setSurveyUsers(userList) {surveyObj["infor"]["users"] = JSON.parse(JSON.stringify(userList)); showUserList('survey');}
+	function setSurveyResultUsers(userList) {surveyObj["infor"]["resultViewTarget"] = JSON.parse(JSON.stringify(userList)); showUserList('result');}
 	function getSurveyInfo() {return surveyObj["infor"];}
 	function isValid(value) {if (!isNaN(value) && parseFloat(value) >= 0 && value % 1 === 0) {return true;} else {return false;}}
 	
@@ -2524,7 +2584,7 @@ var SurveyCreate     = function() {
 					  question["option"] = rankingObj.option;
 					  body = mkRankingQstn(question); break;
 			case 9  : var dropDownObj = mkRankingDropDownObj("dropdown", qstnForm);
-					  if (dropDownObj.error) {alert(SurveyMessages[rankingObj.error]); return;}
+					  if (dropDownObj.error) {alert(SurveyMessages[dropDownObj.error]); return;}
 					  question["option"] = dropDownObj.option;
 					  body = mkDropDownQstn(question); break;
 			default : alert(SurveyMessages.strError); return;
@@ -2760,19 +2820,22 @@ var SurveyCreate     = function() {
 		var optList   = qstnForm.find("." + type + "-select");
 		var optCnt    = optList.length;
 		var option    = [];
+		var optSet    = new Set(); // 중복값 확인.
 		
 		for (var i = 0; i < optCnt; i++) {
 			var optObj   = {};
-			var optValue = replaceAll(optList[i].querySelector("input[class='textInput']").value, "(<(\/?)(script|applet|object)>)", "");
+			var optValue = replaceAll(optList[i].querySelector("input[class='textInput']").value, "(<(\/?)(script|applet|object)>)", "").trim();
 			
 			if (optValue) {
 				optObj["content"] = optValue;
 				optObj["level"]   = i;
 				option.push(optObj);
+				optSet.add(optValue);
 			}
 		}
 		
 		if (option.length < 2) {returnObj['error'] = "strOptErr"; return returnObj;}
+		if (optSet.size != option.length) {returnObj['error'] = "strOptErr1"; return returnObj;}
 		
 		returnObj["option"] = option;
 		return returnObj;
@@ -2871,39 +2934,45 @@ var SurveyCreate     = function() {
 		
 		if (rows) {
 			var row = [];
+			var rowSet = new Set(); // 행 데이터 중복 체크
 			
 			for (var i = 0, len = rows.length; i < len; i++) {
 				var rowObj = {};
-				var rowVal = replaceAll(rows[i].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "");
+				var rowVal = replaceAll(rows[i].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "").trim();
 				
 				if (rowVal) {
 					rowObj["colLevel"] = -1;
 					rowObj["rowLevel"] = row.length;
 					rowObj["content"]  = rowVal;
 					row.push(rowObj);
+					rowSet.add(rowVal);
 				}
 			}
 			
 			if (row.length == 0) {mtrObj["error"] = "strMaxtrix1"; return mtrObj;}
+			if (rowSet.size != row.length) {mtrObj["error"] = "strMaxtrix3"; return mtrObj;}
 			Array.prototype.push.apply(option, row);
 		}
 		
 		if (cols) {
 			var col = [];
+			var colSet = new Set();
 			
 			for (var i = 0, len = cols.length; i < len; i++) {
 				var colObj = {};
-				var colVal = replaceAll(cols[i].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "");
+				var colVal = replaceAll(cols[i].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "").trim();
 				
 				if (colVal) {
 					colObj["colLevel"] = col.length;
 					colObj["rowLevel"] = -1;
 					colObj["content"]  = colVal;
 					col.push(colObj);
+					colSet.add(colVal);
 				}
 			}
 			
 			if (col.length == 0) {mtrObj["error"] = "strMaxtrix2"; return mtrObj;}
+			if (colSet.size != row.length) {mtrObj["error"] = "strMaxtrix4"; return mtrObj;}
 			Array.prototype.push.apply(option, col);
 		}
 		
@@ -3793,87 +3862,28 @@ var SurveyCreate     = function() {
 		document.getElementById("cf-mail").textContent   = qstInf["mail"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
 		document.getElementById("cf-popup").textContent   = qstInf["popup"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
 		
-		var surveyUserElmt = document.getElementById("cf-userdiv");
-		
+		// 설문 최종확인 시 설문결과 타입 표출
 		if (qstInf["public"] == 1) {
 			document.getElementById("public-cfdiv").innerHTML = SurveyMessages.strPublic1;
 			document.getElementById("public-days").innerHTML  = SurveyMessages.strPublic4 + " " + qstInf["publicDays"] + " " + SurveyMessages.strPublic5;
-		}
-		else {
+		} else if (qstInf["public"] == 2) {
+        	document.getElementById("public-days").innerHTML  = "";
+        	var resultUserList = qstInf["resultViewTarget"];
+		    if (resultUserList.length != 0) {
+		        openPreviewUserListPopup(resultUserList, 'result')
+		    }
+		} else {
 			document.getElementById("public-cfdiv").innerHTML = SurveyMessages.strPublic2;
 			document.getElementById("public-days").innerHTML  = "";
 		}
 		
-		surveyUserElmt.innerHTML = "";
-		
+		// 설문 최종확인 시 설문 대상자 표출
 		if (qstInf["userflag"] == 0) {
-			surveyUserElmt.innerHTML = "<span class='inf-survey'> " + SurveyMessages.strUser2 + "</span>";
+			document.getElementById("cf-userdiv").innerHTML = "<span class='inf-survey'> " + SurveyMessages.strUser2 + "</span>";
 		}
 		else {
 			var userList = qstInf["users"];
-			if (userList.length < 1) {
-				for (var i = 0 ; i < userList.length; i++) {
-					var spanElmt = document.createElement("span");
-					spanElmt.textContent = userList[i]["userName"];
-					spanElmt.className   = "user-inf";
-					spanElmt.onclick     = (function(userId, userType, userName, deptId) {
-						return function() {SurveyCreate.showUser(userId, userType, userName, deptId);};
-					})(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"], userList[i]["deptId"]);
-					
-					surveyUserElmt.appendChild(spanElmt);
-					
-					if (i != userList.length - 1) {
-						var divideSpan         = document.createElement("span");
-						divideSpan.textContent = "; ";
-						surveyUserElmt.appendChild(divideSpan);
-					}
-				}
-				
-				var spanElmt2         = document.createElement("span");
-				spanElmt2.className   = "total-user";
-				spanElmt2.textContent = "[" + SurveyMessages.strTotal + " " + userList.length + " " + SurveyMessages.strUser3 + "]";
-				surveyUserElmt.appendChild(spanElmt2);
-			}
-			else {
-				var spanElmt1 = document.createElement("span");
-				var spanElmt2 = document.createElement("span");
-				var spanElmt3 = document.createElement("span");
-				
-				spanElmt1.className   = "user-inf";
-				spanElmt1.textContent = userList[0]["userName"];
-				spanElmt2.className   = "total-user";
-				spanElmt2.textContent = "[" + SurveyMessages.strTotal + " " + userList.length + " " + SurveyMessages.strUser3 + "]";
-				spanElmt3.className   = "user-more";
-				spanElmt3.onclick     = function(e) {SurveyCreate.userMore()};
-				spanElmt1.onclick     = function(e) {SurveyCreate.showUser(userList[0]["userId"], userList[0]["userType"], userList[0]["userName"], userList[0]["deptId"]);};
-
-				surveyUserElmt.appendChild(spanElmt1);
-				surveyUserElmt.appendChild(spanElmt2);
-				surveyUserElmt.appendChild(spanElmt3);
-				
-				//Set user for user panel
-				var userTableElmt       = document.getElementById("user-tblmain");
-				userTableElmt.innerHTML = "";
-				
-				for (var i = 0 ; i < userList.length; i++) {
-					var trElmt      = document.createElement("tr");
-					var tdElmt1     = document.createElement("td");
-					var tdElmt2     = document.createElement("td");
-					tdElmt1.onclick = (function(userId, userType, userName, deptId) {
-						return function() {SurveyCreate.showUser(userId, userType, userName, deptId);};
-					})(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"], userList[0]["deptId"]);
-					
-					tdElmt1.textContent = userList[i]["userName"];
-					tdElmt2.textContent = getUserType(userList[i]["userType"]);
-					tdElmt1.className   = "user-field";
-					tdElmt2.className   = "center-field";
-					trElmt.appendChild(tdElmt1);
-					trElmt.appendChild(tdElmt2);
-					userTableElmt.appendChild(trElmt);
-				}
-				
-				document.getElementById("th-usertype").className  = userList.length == 5 ? "center-field" : "center-field right-field";
-			}
+		    openPreviewUserListPopup(userList, 'survey');
 		}
 		
 		//attach list
@@ -3921,18 +3931,6 @@ var SurveyCreate     = function() {
 		else {
 			document.getElementById("surveyAttConfirm").className = "attach-zone off"; //hide attach list
 		}
-	}
-	
-	function getUserType(userType) {
-		var stUserType = "";
-		switch(userType) {
-			case "user" : stUserType = SurveyMessages.strUser4; break;
-			case "dept" : stUserType = SurveyMessages.strUser5; break;
-			case "comp" : stUserType = SurveyMessages.strUser6; break;
-			default     : stUserType = SurveyMessages.strUser4; break;
-		}
-		
-		return stUserType;
 	}
 	
 	function checkUrl(str) {var pattern = new RegExp("^(http|https)://", "i"); return pattern.test(str);}
@@ -4019,11 +4017,110 @@ var SurveyCreate     = function() {
 		return purpose;
 	}
 	
+	// 설문작성 > 최종확인 > 설문결과, 대상자 정보 표출
+    function openPreviewUserListPopup(userList, mode) {
+        var divId;
+        var surveyUserElmt;
+        var userTableElmt;
+        if (mode == 'survey') {
+            divId = 'cf-userdiv';
+            surveyUserElmt = document.getElementById(divId);
+            userTableElmt = document.getElementById("user-tblmain");
+            surveyUserElmt.innerHTML = "";
+        } else if (mode == "result") {
+            divId = 'public-cfdiv';
+            surveyUserElmt = document.getElementById(divId);
+            userTableElmt = document.getElementById("userResult-tblmain");
+            surveyUserElmt.innerHTML = SurveyMessages.strPublic3 + "  /  ";
+        }
+        
+        if (userList.length < 1) {
+            for (var i = 0 ; i < userList.length; i++) {
+                var spanElmt = document.createElement("span");
+                spanElmt.textContent = userList[i]["userName"];
+                spanElmt.className   = "user-inf";
+                spanElmt.onclick     = (function(userId, userType, userName, deptId) {
+                    return function() {SurveyCreate.showUser(userId, userType, userName, deptId);};
+                })(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"], userList[i]["deptId"]);
+                
+                surveyUserElmt.appendChild(spanElmt);
+                
+                if (i != userList.length - 1) {
+                    var divideSpan         = document.createElement("span");
+                    divideSpan.textContent = "; ";
+                    surveyUserElmt.appendChild(divideSpan);
+                }
+            }
+            
+            var spanElmt2         = document.createElement("span");
+            spanElmt2.className   = "total-user";
+            spanElmt2.textContent = "[" + SurveyMessages.strTotal + " " + userList.length + " " + SurveyMessages.strUser3 + "]";
+            surveyUserElmt.appendChild(spanElmt2);
+        } else {
+            var spanElmt1 = document.createElement("span");
+            var spanElmt2 = document.createElement("span");
+            var spanElmt3 = document.createElement("span");
+            
+            spanElmt1.className   = "user-inf";
+            spanElmt1.textContent = userList[0]["userName"];
+            spanElmt2.className   = "total-user";
+            spanElmt2.textContent = "[" + SurveyMessages.strTotal + " " + userList.length + " " + SurveyMessages.strUser3 + "]";
+            spanElmt3.className   = "user-more";
+            spanElmt3.onclick     = function(e) {SurveyCreate.userMore(mode)};
+            spanElmt3.style.display       = "inline-block"
+            spanElmt3.style.verticalAlign = "middle"
+            
+            spanElmt1.onclick     = function(e) {SurveyCreate.showUser(userList[0]["userId"], userList[0]["userType"], userList[0]["userName"], userList[0]["deptId"]);};
+        
+            surveyUserElmt.appendChild(spanElmt1);
+            surveyUserElmt.appendChild(spanElmt2);
+            surveyUserElmt.appendChild(spanElmt3);
+            
+            //Set user for user panel
+            userTableElmt.innerHTML = "";
+            
+            for (var i = 0 ; i < userList.length; i++) {
+                var trElmt      = document.createElement("tr");
+                var tdElmt1     = document.createElement("td");
+                var tdElmt2     = document.createElement("td");
+                tdElmt1.onclick = (function(userId, userType, userName, deptId) {
+                    return function() {SurveyCreate.showUser(userId, userType, userName, deptId);};
+                })(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"], userList[0]["deptId"]);
+                
+                tdElmt1.textContent = userList[i]["userName"];
+                tdElmt2.textContent = getUserType(userList[i]["userType"]);
+                tdElmt1.className   = "user-field";
+                tdElmt2.className   = "center-field";
+                trElmt.appendChild(tdElmt1);
+                trElmt.appendChild(tdElmt2);
+                userTableElmt.appendChild(trElmt);
+            }
+            document.getElementById("th-usertype").className  = userList.length < 4 ? "center-field" : "center-field right-field";
+        }
+    }
+    
+    // 유저 타입 텍스트 반환
+    function getUserType(userType) {
+        var stUserType = "";
+        switch(userType) {
+            case "user" : stUserType = SurveyMessages.strUser4; break;
+            case "dept" : stUserType = SurveyMessages.strUser5; break;
+            case "comp" : stUserType = SurveyMessages.strUser6; break;
+            case "jikwi" : stUserType = SurveyMessages.strUser9; break;
+            case "jikchek" : stUserType = SurveyMessages.strUser10; break;
+            case "group" : stUserType = SurveyMessages.strUser11; break;
+            default     : stUserType = SurveyMessages.strUser4; break;
+        }
+        return stUserType;
+    }
+	
 	function changeDownloadMode(flag) {downloadMode = flag;}
 	
 	return {
 		getUsers   : getSurveyUsers,
 		setUsers   : setSurveyUsers,
+		getResultUsers : getSurveyResultUsers,
+		setResultUsers : setSurveyResultUsers,
 		getQs      : getSurveyQuestions,
 		setQs      : setSurveyQuestions,
 		getInfo    : getSurveyInfo,

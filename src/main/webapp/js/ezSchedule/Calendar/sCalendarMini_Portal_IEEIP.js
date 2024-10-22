@@ -57,7 +57,7 @@ function CalendarMiniView(pTagetID) {
 	        var mImg = document.createElement("IMG");
 	        mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
 	        mImg.setAttribute("border", "0");
-	        mImg.setAttribute("onclick", "preMonth()");
+			mSpan.setAttribute("onclick", "preMonth()");
 	        mSpan.appendChild(mImg);
 	        mTd.appendChild(mSpan);
 	        mTr.appendChild(mTd);
@@ -140,7 +140,7 @@ function CalendarMiniView(pTagetID) {
 	        var mImg = document.createElement("IMG");
 	        mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
 	        mImg.setAttribute("border", "0");
-	        mImg.setAttribute("onclick", "nextMonth()");
+			mSpan.setAttribute("onclick", "nextMonth()");
 	        mSpan.appendChild(mImg);
 	        mTd.appendChild(mSpan);
 	        mTr.appendChild(mTd);
@@ -184,7 +184,7 @@ function CalendarMiniView(pTagetID) {
 	        var mImg = document.createElement("IMG");
 	        mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
 	        mImg.setAttribute("border", "0");
-	        mImg.setAttribute("onclick", "preMonthTop()");
+			mSpan.setAttribute("onclick", "preMonthTop()");
 	        mSpan.appendChild(mImg);
 	        mTd.appendChild(mSpan);
 	        mTr.appendChild(mTd);
@@ -266,7 +266,7 @@ function CalendarMiniView(pTagetID) {
 	        var mImg = document.createElement("IMG");
 	        mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
 	        mImg.setAttribute("border", "0");
-	        mImg.setAttribute("onclick", "nextMonthTop()");
+			mSpan.setAttribute("onclick", "nextMonthTop()");
 	        mSpan.appendChild(mImg);
 	        mTd.appendChild(mSpan);
 	        mTr.appendChild(mTd);
@@ -307,7 +307,7 @@ function GetTableMiniBodyObj() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;
@@ -409,7 +409,7 @@ function GetTableMiniBodyObjTop() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;

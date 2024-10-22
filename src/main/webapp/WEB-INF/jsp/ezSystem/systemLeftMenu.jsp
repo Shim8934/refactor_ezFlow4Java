@@ -93,16 +93,11 @@
 				fileExtensionViewType = 0;
 				parent.frames[1].location.href = "/admin/ezSystem/systemFileExtension.do";
 				break;
-			case "NOTISETTING":
-				parent.frames[1].location.href = "/admin/ezSystem/notiSetting.do";
+			case "SYSTEMCONFIG":
+				parent.frames[1].location.href = "/admin/ezSystem/systemConfigList.do";
 				break;
 	    }
 	    
-	    $("#left .adminListBox h2 span").click(function(){
-			$("#left .adminListBox h2").removeClass("on");
-			$(this).parent().addClass("on");
-		})
-				
     }
 
 //     function goPage(idx)
@@ -123,13 +118,18 @@
 	        $(".adminListBox").mCustomScrollbar({
 	    		theme : "dark"
 	    	});
+	        
+	        $("#left .adminListBox h2 span").click(function(){
+				$("#left .adminListBox h2").removeClass("on");
+				$(this).parent().addClass("on");
+			});
 		});
         
-        function leftResize(){
-        	$(".adminListBox").height(window.innerHeight-58);
+        function leftResize() {
+        	$(".adminListBox").height(window.innerHeight - 58);
         }
         
-        $( window ).resize(function() {
+        $(window).resize(function() {
         	leftResize();
     	});
 
@@ -169,7 +169,7 @@
 	            	<h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh21' /></span></h2>
 	            </c:if>
 				<h2><span id="FILEEXTENSION" style="display:inline-block;width:100%;" onClick="menu_change('FILEEXTENSION')" ><spring:message code='ezSystem.x0009' /></span></h2>
-				<h2><span id="NOTISETTING" style="display:inline-block;width:100%;" onClick="menu_change('NOTISETTING')" ><spring:message code='ezNotification.hth21' /></span></h2>
+		        <h2><span id="SYSTEMCONFIG" style="display:inline-block;width:100%;" onClick="menu_change('SYSTEMCONFIG')" >SYSTEM CONFIG</span></h2>
 			</div>
       	</div>
     </body>

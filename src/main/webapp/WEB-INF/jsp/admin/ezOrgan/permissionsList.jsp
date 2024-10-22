@@ -373,29 +373,29 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalCnt + "</span>";
+		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span class='txt_color'>" + totalCnt + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' /></span>";
+		            strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' /></span>";
+		            strtext = "<span class='btnimg first disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' /></span>";
+		                strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' /></span>";
+		                strtext = "<span class='btnimg prev disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' /></span>";
+		            strtext = "<span class='btnimg prev disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -427,24 +427,24 @@
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' /></span>";
+		                strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 		                PagingHTML += strtext;
 		            } else {
 		                strtext = "";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' /></span>";
+		                strtext = strtext + "<span class='btnimg next disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
 		            strtext = "";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' /></span>";
+		            strtext = strtext + "<span class='btnimg next disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' /></span>";
+		            strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' /></span>";
+		            strtext = "<span class='btnimg last disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -872,7 +872,7 @@
 		                <p id="Permission_sub11"><span divname="f" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
 		                </c:if>
 		                <p id="Permission_sub12" <c:if test="${use_attitude != 'YES'}">style="display:none;"</c:if>><span divname="e" id="1tab12"><spring:message code='ezOrgan.kbm01' /></span></p>
-		                
+		                <p id="Permission_sub13"><span divname="v" id="1tab13"><spring:message code='ezOrgan.lhr01' /></span></p>
 		                <%--2023-02-10 홍승비 - 표준모듈 기준으로 일상감사, 준법지원인 기능 사용하지 않음 --%>
 		                <%-- <p id="Permission_sub13" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="s" id="1tab13"><spring:message code='ezOrgan.t9904' /></span></p> --%>
 	                </c:if>

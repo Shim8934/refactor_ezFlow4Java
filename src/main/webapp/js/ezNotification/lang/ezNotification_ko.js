@@ -9,6 +9,7 @@ var mainType = {
 	community : "커뮤니티",
 	webfolder : "웹폴더",
 	journal : "업무일지",
+	noti : "공지알림",
 	etc : "기타"
 }
 
@@ -37,8 +38,11 @@ var subType = {
 	},
 	schedule : {
 		add : "일정초대",
+		cancel : "초대취소",
 		accept : "초대승인",
-		reject : "초대거부"
+		reject : "초대거부",
+		mod : "일정수정",
+		reminder : "미리알림"
 	},
 	resource : {
 		reserve : "자원예약",
@@ -46,9 +50,7 @@ var subType = {
 		cancel : "승인취소",
 		reject : "승인거부"
 	},
-	survey : {
-		modify : "수정알림"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "생성승인",
@@ -71,6 +73,9 @@ var subType = {
 	journal : {
 		comment : "댓글등록",
 		recv : "수신알림"
+	},
+	noti : {
+		emergency : "긴급공지"
 	}
 }
 
@@ -78,11 +83,13 @@ subType["approval"]["return"] = "문서회수";
 subType["approval"]["default"] = "결재노티";
 subType["board"]["new"] = "신규게시";
 subType["board"]["return"] = "승인반려";
-subType["schedule"]["delete"] = "초대취소";
+subType["schedule"]["delete"] = "일정삭제";
 subType["survey"]["new"] = "신규등록";
 subType["poll"]["new"] = "신규등록";
 subType["community"]["new"] = "신규게시";
 
 var notiMessages = {
-	strLang1 : '"데이터가 없습니다."'
+	strLang1 : '"데이터가 없습니다."',
 }
+
+var notiDayNames = ["일", "월", "화", "수", "목", "금", "토"];

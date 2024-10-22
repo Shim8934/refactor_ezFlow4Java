@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezWebFolder.web;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -897,8 +898,7 @@ public class EzWebFolderController_m {
 						InternetAddress[] toArr = new InternetAddress[webfolderAdminListCnt];
 						
 						int nowi = 0;
-						String notiRecipientParam = "";
-			        	String separator = ";;";
+						List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 						for (OrganUserVO vo : webfolderAdminList) {
 							String voMail = vo.getMail();
 							String voCn = vo.getCn();
@@ -910,14 +910,18 @@ public class EzWebFolderController_m {
 							
 							toArr[nowi] = addrTemp;
 							nowi++;
-							notiRecipientParam += voCn + separator;
+
+							Map<String, Object> recipientMap = new HashMap<String, Object>();
+							recipientMap.put("userType", "PERSON");
+							recipientMap.put("companyId", companyId);
+							recipientMap.put("cn", voCn);
+							notiRecipientList.add(recipientMap);
 						}
 						
-						if (notiRecipientParam.length() > 0) {
-							notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
+						if (notiRecipientList != null && notiRecipientList.size() > 0) {
 							String notiSubType = "OPEN_APPLY";
 							String linkUrl = "/admin/ezWebFolder/applicationHistoryMain.do";
-							String notiStatus = ezNotificationService.sendNoti(request, user.getId(), user.getDisplayName(), notiRecipientParam, "WEBFOLDER", notiSubType, folderName, "popup", "1300", "1000", linkUrl, "", "notChkSetting");
+							String notiStatus = ezNotificationService.sendNoti(request, user.getId(), user.getDisplayName(), notiRecipientList, "WEBFOLDER", notiSubType, folderName, "popup", "1300", "1000", linkUrl, "", "notChkSetting");
 							logger.debug("webfolder " +  notiSubType + " noti status : " + notiStatus);
 						}
 						

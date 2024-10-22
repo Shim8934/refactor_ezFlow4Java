@@ -28,6 +28,7 @@
 .portlet_tabpart01_top p span{display: block; float: left; height:29px; line-height:27px; padding:0px 20px; margin:0px 1px 0px 0px; border:1px solid #d1d1d1; border-bottom:0 none; font-weight:bold; color:#999; cursor:pointer;}
 .portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index:100;}
 .portlet_tabpart01_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index:100;}
+.portlet_tabpart01_top p span.txt_color{color:#017BEC;}
 
 .portlet_tabpart02{position:relative; margin:15px 0px 0px 0px; clear: both; overflow:hidden; z-index:100;}
 /* .portlet_tabpart02_top{height:30px; list-style:none; margin:0px; padding:0px; border-bottom:1px solid rgb(0, 72, 149)} */
@@ -80,6 +81,7 @@
 .portlet_tabpart03_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #dedede; background:white; color:#333; z-index:100;}
 .portlet_tabnew01{position:relative; margin:15px 0px 0px 0px; clear:both; z-index:100; font-size:12px; font-family:'malgun gothic', 'arial', 'verdana';}
 .portlet_tabnew01_top{height:48px; list-style:none; margin:0px; padding:0px; border-bottom:1px solid #e2e3e6;}
+.portlet_tabnew01_top.noLine{border-bottom:none;}
 .portlet_tabnew01_top p{float:left; margin:10px 0px 0px 0px; padding:0px;}
 .portlet_tabnew01_top p span{float:left; display:block; height:26px; line-height:24px; margin:0px 5px 0px 0px; padding:0px 12px 0px 22px; background:url(/images/ImgIcon/tabnew_bg.png) #f5f5f5 12px center no-repeat; border:1px solid #e2e3e6; color:#787878; border-radius:30px;-webkit-border-radius:30px;-moz-border-radius:30px; cursor:pointer;}
 .portlet_tabnew01_top p span.tabover{position:relative; border:1px solid #3d8fea; background:url(/images/ImgIcon/tabnew_bg_hover.png) #fff 12px center no-repeat; color:#0470e4; z-index:100;}

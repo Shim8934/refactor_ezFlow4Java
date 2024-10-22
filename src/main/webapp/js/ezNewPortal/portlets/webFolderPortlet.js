@@ -59,11 +59,11 @@ function getWebFolderFileList(currentPage) {
 			
 			var fileList = result.data.fileList;
 			var fileLength = fileList.length;
-            
 			$(ulEl).empty();
             
 			/* 2023-06-01 홍승비 - 홈 > 웹폴더 포틀릿 > 디자인 개선을 위해 파일은 최대 4개까지만 표출하도록 수정 */
 			if (fileLength != 0) {
+				document.querySelector(".fileListWrapper").classList.remove('empty')
 				fileList.forEach(function(file, index) {
 					if (index >= 0 ) {
 						var liEl = document.createElement('li');
@@ -101,6 +101,7 @@ function getWebFolderFileList(currentPage) {
 					}
 				});
 			} else {
+				document.querySelector(".fileListWrapper").classList.add('empty');
 				var dlEl = document.createElement('dl');
 				dlEl.className = 'nodata';
 				
@@ -242,10 +243,10 @@ function loadCapacity(webFolderId) {
 			var newSize = getFileSize(usedCapacity);
 			
 			var html = "";
-			html += newSize + "<span>/" + totalCapacity + "G</span>"
+			html += newSize + "<span class='sortablePortlet'>/" + totalCapacity + "G</span>"
 			
 			$("#usingCpacity").html(html);
-
+			
 			$("#usedRate").css("backgroundColor", progressColor);
 			$("#usedRate").stop().animate({width: usedRate + "%"},{duration: 500});
 			

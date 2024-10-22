@@ -981,7 +981,7 @@ function ListView() {
                     }
                     else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ISPUBLIC" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "IsPublic") {
                         objTd.style.textAlign = "center";
-                        if (SelectSingleNodeValue(oCells[j], "ISPUBLIC") != "Y") {
+                        if (SelectSingleNodeValue(oCells[j], "ISPUBLIC") == "N") {
                             var _img = document.createElement("img");
                             _img.src = "/images/icon_lock.png";
                             objTd.appendChild(_img);
@@ -1953,9 +1953,11 @@ function checkboxBtnShowCtl() {
     		if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
 				document.getElementById("tbtnApprove1").style.display = "none";
     			// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안 가능 (현재 체크박스가 결재할문서에만 존재하므로, 부서수신함 등의 다른 문서함은 고려하지 않음)
-    			if (GetAttribute(oArrRows[i], "DATA9") == "0" && pDocState != "011" && pDocState != "012") {
-    				isDelShow = isDelShow == true ? true : false;
-    			} else {
+				// 2024-04-18 조수빈 - 부서수신함의 삭제버튼 제어 (일괄접수 / 일괄접수자전결로 체크박스 추가됨) 
+    			if ((GetAttribute(oArrRows[i], "DATA9") == "0" && pDocState != "011" && pDocState != "012") 
+    					|| (pListTypeValue == '4' && pDocState != "011" && pDocState != "012")) {
+					isDelShow = isDelShow == true ? true : false;
+				} else {
     				isDelShow = false;
     			}
     			isRedraftShow = oArrRows.length == 1 ? true : false;
@@ -1971,12 +1973,16 @@ function checkboxBtnShowCtl() {
     		document.getElementById("tbtnRemoveDoc").style.display = "none";
     	}
     	if (isRedraftShow == true) {
-    		document.getElementById("tbtnRedraft").style.display = "";
+    		if (pListTypeValue != 4) {
+    			document.getElementById("tbtnRedraft").style.display = "";
+    		}
     	} else {
     		document.getElementById("tbtnRedraft").style.display = "none";
     	}
     	
     	document.getElementById("tbtnApprove").style.display = "none";
+    	document.getElementById("tbtnReceipt").style.display = "none";
+    	document.getElementById("tbtnNonElecRec").style.display = "none";
 		//document.getElementById("tbtnApprove1").style.display = "";
     	document.getElementById("tbtnGongRam").style.display = "none";
     	
@@ -1984,13 +1990,24 @@ function checkboxBtnShowCtl() {
     		document.getElementById("tbtnViewDoc").style.display = "";
         	document.getElementById("tbtnTotalSave").style.display = "";
         	if (isDelShow == false && isRedraftShow == false) {
-        		document.getElementById("tbtnApprove").style.display = "";
+        		if (pListTypeValue != "4") {
+        			document.getElementById("tbtnApprove").style.display = "";
+        		} else if (pListTypeValue == "4") {
+        			document.getElementById("tbtnReceipt").style.display = "";
+        			
+        			if (approvalFlag == "G"){
+        				document.getElementById("tbtnNonElecRec").style.display = "";
+        			}
+        		}
 //				document.getElementById("tbtnApprove1").style.display = "";
         		document.getElementById("tbtnGongRam").style.display = "";
         		
+        		// 2024-05-29 조수빈 - js는 첫 번째 참인 조건의 식만 수행하기 때문에 분리
         		if (pListTypeValue != "1") {
         			document.getElementById("tbtnApprove").style.display = "none";
-        		} else if (pListTypeValue != "99") {
+        		}
+
+        		if (pListTypeValue != "99") {
         			document.getElementById("tbtnGongRam").style.display = "none";
         		}
         	}

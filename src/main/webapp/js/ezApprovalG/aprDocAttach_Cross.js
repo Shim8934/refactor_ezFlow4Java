@@ -182,7 +182,7 @@ function DocMove() {
                 SDocID = GetAttribute(selRow, "DATA1");
                 objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
                 objNode = createNodeAndAppandNode(xmlpara, objRoot, objNode, "CELL");
-                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "VALUE", "【" + GetAttribute(selRow, "DATA99") + "】" + getNodeText(selRow.cells[1]));
+                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "VALUE", "【" + GetAttribute(selRow, "DATA99") + "】" + getNodeText(selRow.cells[2]));
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA1", GetAttribute(selRow, "DATA2"));
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA2", "");
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA3", pDocID);
@@ -192,7 +192,7 @@ function DocMove() {
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA7", arr_userinfo[15]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA8", arr_userinfo[11]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA9", "N");
-                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA10", "【" + GetAttribute(selRow, "DATA99") + "】" + getNodeText(selRow.cells[1]));
+                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA10", "【" + GetAttribute(selRow, "DATA99") + "】" + getNodeText(selRow.cells[2]));
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA11", arr_userinfo[12]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA12", arr_userinfo[14]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA13", arr_userinfo[16]);
@@ -514,3 +514,42 @@ function OpenAlertUI_Complete() {
     DivPopUpHidden();
 }
 // END
+
+function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
+    try {
+        var heigth = window.screen.availHeight;
+        var width = window.screen.availWidth;
+
+        var left = 0;
+        var top = 0;
+
+        if (window.screen.width > 800) {
+            var pleftpos;
+
+            pleftpos = parseInt(width) - 967;
+            heigth = parseInt(heigth) - 30;
+            if (CrossYN())
+                heigth = parseInt(heigth) - 25;
+
+            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+                heigth = parseInt(heigth) - 40;
+            width = parseInt(width) - pleftpos;
+            left = pleftpos / 2;
+        }
+        else {
+            heigth = parseInt(heigth) - 30;
+            if (CrossYN())
+                heigth = parseInt(heigth) - 25;
+
+            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+                heigth = parseInt(heigth) - 40;
+            width = parseInt(width) - 10;
+        }
+
+        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+
+    }
+    catch (e) {
+        alert("openwindow :: " + e.description);
+    }
+}

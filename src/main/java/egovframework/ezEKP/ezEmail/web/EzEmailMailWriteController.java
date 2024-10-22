@@ -3302,6 +3302,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String securePassword = null;
 		String secureReadCount = null;
 		String secureReadDate = null;
+		String securePasswordHint = "";
 		int secureId = 0;
 		/* String connUrl = "";
 		String author = "";
@@ -3492,12 +3493,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			tempNode = root.getElementsByTagName("SECUREMAIL").item(0);
 			if (tempNode != null && tempNode.getTextContent() != null && tempNode.getTextContent().equalsIgnoreCase("TRUE")) {
 				isSecureMail = true;
-				
+
 				if (root.getElementsByTagName("SECUREPASSWORD") != null) {
 					tempNode = root.getElementsByTagName("SECUREPASSWORD").item(0);
 					if (tempNode != null) {
 						securePassword = tempNode.getTextContent();
-						
+
 					}
 				}
 				if (root.getElementsByTagName("SECUREREADCOUNT") != null) {
@@ -3510,6 +3511,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					tempNode = root.getElementsByTagName("SECUREREADDATE").item(0);
 					if (tempNode != null) {
 						secureReadDate = tempNode.getTextContent();
+					}
+				}
+				if (root.getElementsByTagName("SECUREPASSWORDHINT") != null) {
+					tempNode = root.getElementsByTagName("SECUREPASSWORDHINT").item(0);
+					if (tempNode != null) {
+						securePasswordHint = tempNode.getTextContent();
+
 					}
 				}
 			}
@@ -4360,6 +4368,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    		        	message.setHeader("X-JMocha-Secure-Mail-Password", securePassword);
 	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadCount", secureReadCount);
 	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadDate", secureReadDate);
+							message.setHeader("X-JMocha-Secure-Mail-PasswordHint", securePasswordHint);
 	    		        	
 	    		        	// set serverName
 	    		    		String serverName = userInfo.getServerName();
@@ -4408,17 +4417,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            	
 			            	// 보안메일 처리
 			            	if (useSecureMail.equals("YES") && isSecureMail) {
+
+								// 개별발신 헤더추가
+								if (isEachMailB) {
+									message.setHeader("X-JMocha-Each-Mail", "true");
+								}
+								
 								// 승인메일일 경우
 								if (apprmail) {
-									// 개별발신 헤더추가
-									if (isEachMailB) {
-										message.setHeader("X-JMocha-Each-Mail", "true");
-									}
 
 									message.setHeader("X-JMocha-Secure-Mail", "true");
 									message.setHeader("X-JMocha-Secure-Mail-Password", securePassword);
 									message.setHeader("X-JMocha-Secure-Mail-ReadCount", secureReadCount);
 									message.setHeader("X-JMocha-Secure-Mail-ReadDate", secureReadDate);
+									message.setHeader("X-JMocha-Secure-Mail-PasswordHint", securePasswordHint);
 
 									// set serverName
 									String serverName = userInfo.getServerName();
@@ -4453,7 +4465,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 									securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
 
 									// securePassword 암호화
-									securePassword = egovFileScrty.encryptAES(securePassword);
+									// securePassword 암호화
+									boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
+									logger.debug("useKlibEncrypt : {}",useKlibEncrypt );
+									securePassword = ezEmailService.encryptSecureValue(securePassword, useKlibEncrypt);
 
 									// save secure mail info and get secureId
 									secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), mailId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
@@ -4520,9 +4535,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 									String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
 
 									String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
-									secureMailKey = egovFileScrty.encryptAES(secureMailKey);
+									secureMailKey = ezEmailService.encryptSecureValue(secureMailKey, useKlibEncrypt);
+									secureAttachHtml = secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey);
+									secureAttachHtml = secureAttachHtml.replace("${passwordHint}", securePasswordHint);
 
-									secureAttachPart.setContent(secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
+									secureAttachPart.setContent(secureAttachHtml, "text/html; charset=utf-8");
 									secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 									secureMixedPart.addBodyPart(secureAttachPart);
 									// make secureAttachPart and add to secureMixedPart - end
@@ -4554,7 +4571,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 									}
 
 									encryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
-									egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
+									
+                                    if (!useKlibEncrypt) {
+                                        egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
+                                    } else {
+                                        byte[] bytes = commonUtil.readBytesFromFile(originalFile.toPath());
+                                        commonUtil.writeBytesToFile(encryptedFile.toPath(),klibUtil.encrypt(bytes));
+                                    }
 
 									// 보안메일 관련 임시파일 삭제
 									if (originalFile.delete()) {

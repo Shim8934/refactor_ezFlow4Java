@@ -352,6 +352,11 @@ var strLangAppr05 = "Mail to the entire company must be approved by the administ
 var strLangHSG01 = "Spam report cannot be made as email address is not found.";
 var strLangHSG02 = "Spam report was not processed successfully.";
 
+// 2024.04.29 한슬기 : 메일 관련 메시지
+var strLangHSG03 = "Subject field is empty.";
+
+var strLangKDH01 = "Read info";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";

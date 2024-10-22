@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezResource.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -7,12 +8,16 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
+import egovframework.ezEKP.ezResource.vo.ResFavoriteCategoryVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
+import egovframework.ezEKP.ezResource.vo.ResOccuVO;
+import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzResourceService {
 	
@@ -95,9 +100,40 @@ public interface EzResourceService {
 	
 	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID, String deptID) throws Exception;
 
-	public List<ResBrdVO> getResourcePortlet(String loginCookie, String date) throws Exception;
+	public List<ResBrdVO> getResourcePortlet(LoginVO userInfo, String date) throws Exception;
 
 	public String saveResourcePortlet(String loginCookie, String resources) throws Exception;
 	
 	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception;	
+	
+	public ResScheduleRepetitionVO resStruct(ResGetScheduleRepetitionVO vo) throws Exception;
+	
+	public List<Date[]> getRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception;
+	
+	public List<String> getDeletedRepScheduleDate(int pNum, String companyID, String ownerID, int tenantID) throws Exception;
+
+	public List<ResBrdVO> getUserResourceList(String userId, String companyId, String deptId, int tenantId) throws Exception;
+
+	public List<ResBrdVO> getResourceScheduleList(String brdId, String date, int currentPage, int listCnt, int tenantId, String companyId, String offset, String lang) throws Exception;
+	
+	public List<ResOccuVO> getResOccuList(String companyID, int tenantID, String startTime, String endTime, String offset) throws Exception;
+	
+	// 2024-08-23 유길상 - 자원관리 즐겨찾기 기능 추가
+	public void addFavoriteCategory(String catName, String catId, String userID, String companyID, int teanatId) throws Exception;
+
+	public List<ResFavoriteCategoryVO> getFavoriteCategoryList(String catId, String userID) throws Exception;
+
+	public void modFavoriteCategory(String catName, String catId) throws Exception;
+
+	public void delFavoriteCategory(String catId, String userID, String companyID, int tenantID) throws Exception;
+
+	public String addBrdFavoriteCategory(String brdId, String catId, String userID, String companyID, int tenantID) throws Exception;
+
+	public List<ResBrdVO> getFavoriteBrdList(String catId, String companyId, int tenantId) throws Exception;
+
+	public String moveCategory(String userID, String companyID, int tenantID, String catId, String topId) throws Exception;
+
+	public String moveResource(String userID, String companyID, int tenantID, String catId, String brdId, String topId) throws Exception;
+
+	public void delBrdFavoriteCategory(String userId, int tenantId, String companyId, String delBrdId, String delTopId) throws Exception;	
 }

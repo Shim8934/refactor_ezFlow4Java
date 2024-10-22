@@ -680,8 +680,15 @@
 		    function process_AfterOpen()
 		    {
 		        getCurApproverAprLine("<c:out value ='${isUsed}'/>");
-		
 		        pGubun = "8";
+		        
+		        /* 2023-12-05 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+		        message.startRemapAllAprSign_MHT(pDocID, orgCompanyID);
+		        
+		        // 현재 문서가 수신문이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+		        if (pDraftFlag == "SUSIN" && pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+		        	message.startRemapAllAprSign_MHT(pOrgDocID, orgCompanyID);
+		        }
 		        
 		        if (approvalFlag == "S") {
 			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)  {
@@ -707,7 +714,9 @@
 			        }
 		        } else {
 			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
-			            setMenuBar("btntotaldocinfo", false);
+			            if (pAprLineType != strAprType8 && pAprLineType != strAprType9) {
+							setMenuBar("btntotaldocinfo", false);
+						}
 			            setMenuBar("btnJunKyul", false);
 			            setMenuBar("btnModAprLine", false);
 			            setMenuBar("btnEdit", false);
@@ -775,6 +784,11 @@
 		        if (pDraftFlag == "HABYUI") {
 		            setMenuBar("btntotaldocinfo", false);
 		        }
+
+				// 2024-06-27 임정은 - 협조자도 공람자 지정할 수 있도록 변경
+				if (approvalFlag == "G" && pGubun == "6" && (pAprLineType == strAprType8 || pAprLineType == strAprType9)) {
+					pGubun = "14";
+				}
 
 		    }
 		    function btnApprove_onclick()
@@ -1164,7 +1178,7 @@
 		        
 		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-		        	parent.opener.getApprovalList("doing");
+		        	parent.opener.clearAbsence(true);
 		        }
 		    }
 		
@@ -1786,7 +1800,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1942,6 +1956,14 @@
                                 reason = ret[30];
                                 limitDate = ret[31];
                             }
+				            
+				         	// 2023-05-23 임정은 - 공람 추가
+				            if (ret[22] == "noItem") {
+				            	delAprLineInfoCC();
+				            } else if (ret[22] == "sameItem") {
+				            } else {
+				            	SaveAprLineInfoCC(ret[22]);
+				            }
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

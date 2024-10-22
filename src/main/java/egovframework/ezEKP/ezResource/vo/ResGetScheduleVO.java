@@ -62,6 +62,10 @@ public class ResGetScheduleVO {
 	/** 영문직급*/
 	private String jobTitle2;
 	
+	private String useApprove;
+	private String useReturn;
+	private String nowDate;
+	
 	public int getNum() {
 		return num;
 	}
@@ -242,23 +246,38 @@ public class ResGetScheduleVO {
 	public void setJobTitle2(String jobTitle2) {
 		this.jobTitle2 = jobTitle2;
 	}
-	@Override
-	public String toString() {
-		return "ResGetScheduleVO [ownerID=" + ownerID + ", num=" + num
-				+ ", pNum=" + pNum + ", companyID=" + companyID + ", writerID="
-				+ writerID + ", title=" + title + ", location=" + location
-				+ ", timeDisplay=" + timeDisplay + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", allDay=" + allDay
-				+ ", alertTime=" + alertTime + ", content=" + content
-				+ ", importance=" + importance + ", reFlag=" + reFlag
-				+ ", gresFlag=" + gresFlag + ", writeDay=" + writeDay
-				+ ", entryList=" + entryList + ", characterID=" + characterID
-				+ ", attachFlag=" + attachFlag + ", publicFlag=" + publicFlag
-				+ ", approveFlag=" + approveFlag + ", scheduleID=" + scheduleID
-				+ ", deptNm=" + deptNm + ", deptNm2=" + deptNm2 + ", ownerNm="
-				+ ownerNm + ", ownerNm2=" + ownerNm2 + ", jobTitle=" + jobTitle
-				+ ", jobTitle2=" + jobTitle2 + "]";
+	public String getUseApprove() {
+		return useApprove;
+	}
+	public void setUseApprove(String useApprove) {
+		this.useApprove = useApprove;
+	}
+	public String getUseReturn() {
+		return useReturn;
+	}
+	public void setUseReturn(String useReturn) {
+		this.useReturn = useReturn;
 	}
 	
+	public String getNowDate() {
+		return nowDate;
+	}
+	public void setNowDate(String nowDate) {
+		this.nowDate = nowDate;
+	}
+	
+	@Override
+	public String toString() {
+		return "ResGetScheduleVO [ownerID=" + ownerID + ", num=" + num + ", pNum=" + pNum + ", companyID=" + companyID
+				+ ", writerID=" + writerID + ", title=" + title + ", location=" + location + ", timeDisplay="
+				+ timeDisplay + ", startDate=" + startDate + ", endDate=" + endDate + ", allDay=" + allDay
+				+ ", alertTime=" + alertTime + ", content=" + content + ", importance=" + importance + ", reFlag="
+				+ reFlag + ", gresFlag=" + gresFlag + ", writeDay=" + writeDay + ", entryList=" + entryList
+				+ ", characterID=" + characterID + ", attachFlag=" + attachFlag + ", publicFlag=" + publicFlag
+				+ ", approveFlag=" + approveFlag + ", returnFlag=" + returnFlag + ", scheduleID=" + scheduleID
+				+ ", deptNm=" + deptNm + ", deptNm2=" + deptNm2 + ", ownerNm=" + ownerNm + ", ownerNm2=" + ownerNm2
+				+ ", jobTitle=" + jobTitle + ", jobTitle2=" + jobTitle2 + ", useApprove=" + useApprove + ", useReturn="
+				+ useReturn + ", nowDate=" + nowDate + "]";
+	}
 	
 }

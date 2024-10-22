@@ -172,7 +172,7 @@
 	    addAllowedDomain_arg.save = saveDomain;
 	    addAllowedDomain_arg.ok = makeAllowedDomainList;
 	
-	    GetOpenWindow("/admin/ezEmail/appr/allowDomainPopUp.do", "", 470, 165, "no");
+	    GetOpenWindow("/admin/ezEmail/appr/allowDomainPopUp.do", "", 560, 165, "no");
 	}
 	
 	// 도메인 추가
@@ -301,7 +301,7 @@
 	
 	    var popUrl = "/admin/ezEmail/appr/addApproverPopUp.do?companyId=" + COMPANYID;
 	
-	    GetOpenWindow(popUrl, "", 1100, 630, "no");
+	    GetOpenWindow(popUrl, "", 1100, 730, "no");
 	}
 	
 	// 승인자 추가

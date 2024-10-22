@@ -40,6 +40,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.ParseException;
@@ -61,6 +65,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -118,10 +123,12 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
@@ -490,9 +497,7 @@ public class CommonUtil {
 		String decData = "";
 
 		try {
-			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
-
-			if (useDbSession) {
+			if (loginCookie.length() == 36) {
 				String ezSessionId = loginCookie;
 				SessionVO resultVO = loginService.getSession(ezSessionId);
 
@@ -589,11 +594,32 @@ public class CommonUtil {
 			return new LoginVO();
 		}
 	}
+
+	public LoginVO checkAdminOld(String loginCookie){
+		try{
+			LoginVO user = userInfo(loginCookie);
+
+			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+				return null;
+			}else{
+				return user;
+			}
+		}catch(Exception e){
+			return null;
+		}
+	}
 	
 	public LoginVO checkAdmin(String loginCookie){
 		try{
 			LoginVO user = userInfo(loginCookie);
-			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId());
+			
+			// ezSyncServer가 ezFlow를 호출하는 경우엔 loginCookie에 부서 아이디가 없어
+			// 이 경우엔 이전 방식으로 관리자 권한을 체크하도록 함
+			if (user.getDeptID() == null || user.getDeptID().isEmpty()) {
+				return checkAdminOld(loginCookie);
+			}
+			
+			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
 	
 			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 				return user;
@@ -824,6 +850,11 @@ public class CommonUtil {
 		try {
 			String ip = ClientUtil.getClientIP(request);
 			String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());
+
+			// 2024-09-02 - db 세션 사용 시에는 ip check 생략 함
+			if ("YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"))) {
+				return checkDeptId(decryptedLoginCookie);
+			}
 
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
 			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
@@ -2223,18 +2254,34 @@ public class CommonUtil {
 			boolean useChkPrevPwd = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"));
 
 			if (checkPrevPassword && useChkPrevPwd && StringUtils.isNotBlank(userId)) {
-
+				// 2024-07-17 김대현 : 가장 최근 암호 사용금지 -> 기억할 암호 수에 따른 사용금지 변경
 				String encryptedNewPassword = EgovFileScrty.encryptPassword(pwStr, userId);
-				String prevPassword = ezCommonService.getPrevPwd(tenantId, userId);
+				String[] prevPasswords = ezCommonService.getPrevPwd(tenantId, userId).split(":");
 
-				if (encryptedNewPassword.equals(prevPassword)) {
-					logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
-					eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
-					break process;
+				String rememberPWCountConfig = ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount");
+				int rememberPWCount = rememberPWCountConfig == null || "".equalsIgnoreCase(rememberPWCountConfig) ? 0 : Integer.parseInt(rememberPWCountConfig);
+				int startIdx = Math.max(0, prevPasswords.length - rememberPWCount);
+
+				for (int i = prevPasswords.length - 1; i >= startIdx; i--) {
+					String prevPassword = prevPasswords[i];
+					
+					if (encryptedNewPassword.equals(prevPassword)) {
+						logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
+						eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
+						break process;
+					}
 				}
+//				for (String prevPassword : prevPasswords) {
+//					if (encryptedNewPassword.equals(prevPassword)) {
+//						logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
+//						eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
+//						break process;
+//					}
+//				}
 			}
 
 			// 0-2. 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
+
 			boolean checkPasswordNumber = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("checkPasswordNumber", tenantId));
 
 			if (checkPasswordNumber) {
@@ -3254,25 +3301,163 @@ public class CommonUtil {
 		return adminCount > 0;
 	}
 
+	private static final String CHARPOOL = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789";
+	public String getTempPassword (int length) throws Exception {
+		Random random = new SecureRandom();
+		StringBuilder rs;
+		do {
+			rs = new StringBuilder();
+			for (int i = 0; i < length; i++) {
+				int index = random.nextInt(CHARPOOL.length());
+				rs.append(CHARPOOL.charAt(index));
+			}
+		} while (!hasConsecutiveCharsAndValidFormat(rs.toString(), 3));
+		return rs.toString();
+	}
+
+	private boolean hasConsecutiveCharsAndValidFormat(String source, int sequenceLength) {
+		// 연속된문자 체크 및 대소문자숫자 포함여부
+		boolean hasConsecutiveChars = source.matches("(.)\\1{" + (sequenceLength - 1) + "}");
+		boolean hasUpperCase = source.matches(".*[A-Z].*");
+		boolean hasLowerCase = source.matches(".*[a-z].*");
+		boolean hasDigit = source.matches(".*\\d.*");
+
+		return !(hasConsecutiveChars || !hasUpperCase || !hasLowerCase || !hasDigit);
+	}
+
+	private static final String INSERTSMS = "insert into em_tran(tran_phone, tran_callback, tran_status, tran_date, tran_msg , tran_type) values(?, ?, '1', GETDATE(), ? ,4)";
+
+	/**
+	 * 2024-07-03 김대현
+	 * 	sendSMS 메소드는 SMS로 인증번호와 임시비밀번호를 전송할때 커스터마이징 하기위해 만들어짐.
+	 * 	각 프로젝트에서 해당 메소드 바디 부분을 수정하여 사용하면 됨.
+	 * @param mobileNo 이동전화 번호
+	 * @param randomValue 랜덤값
+	 * @param type 인증번호, 임시비밀번호 타입
+	 * @return
+	 * @throws Exception
+	 */
+	public Boolean sendSMS (String mobileNo, String randomValue, String type) throws Exception {
+		logger.debug("sendSMS Started:mobileNo={},randomValue={},type={}",mobileNo,randomValue,type);
+		boolean result = false;
+//		String tran_msg = "";
+//		String tran_phone = mobileNo; // 받는전화
+//		String tran_callback = ""; // 보낸전화
+//		String tran_status = "1"; // 1
+//		String tran_date = ""; // 발송시간
+//
+//		if ("authCode".equals(type)) {
+//			// 인증번호
+//			tran_msg = "인증번호:[" + randomValue + "]'\n그룹웨어에서 보낸 인증번호 입니다.";
+//		} else {
+//			// 임시 비밀번호
+//			tran_msg = "임시비밀번호:[" + randomValue + "]'\n그룹웨어에서 보낸 임시비밀번호 입니다.";
+//		}
+//
+//		tran_callback = "02-000-0000";
+//
+//		logger.debug("sendSMS Started:randomValue={},tran_phone={},tran_callback{}",randomValue,tran_phone,tran_callback);
+//
+//		if (StringUtils.isBlank(randomValue) || StringUtils.isBlank(tran_phone) || StringUtils.isBlank(tran_callback) ) {
+//			result = false;
+//		} else {
+//			String smsDriverClassName = globals.getProperty("Globals.SMSDriverClassName");
+//			String smsUrl = globals.getProperty("Globals.SMSUrl");
+//			String smsUserName = globals.getProperty("Globals.SMSUserName");
+//			String smsPassword = globals.getProperty("Globals.SMSPassword");
+//
+//
+//			Connection conn = null;
+//			PreparedStatement pstmt = null;
+//
+//			String sqlQuery = INSERTSMS;
+//
+//			try {
+//				Class.forName(smsDriverClassName);
+//				conn = DriverManager.getConnection(smsUrl,smsUserName,smsPassword);
+//
+//				pstmt = conn.prepareStatement(sqlQuery);
+//				pstmt.setObject(1, tran_phone);
+//				pstmt.setObject(2, tran_callback);
+//				pstmt.setObject(3, tran_msg);
+//				int count = pstmt.executeUpdate();
+//
+//				if (count != 0) {
+//					result = true;
+//				}
+//
+//			} catch (Exception e){
+//				logger.error(e.getMessage(), e);
+//
+//			} finally {
+//				closeQuietly(pstmt, conn);
+//			}
+//		}
+		result = true;
+		logger.debug("sendSMS ended={}",result);
+		return result;
+	}
+
+	public static void closeQuietly(AutoCloseable... closeables) {
+		for (AutoCloseable closeable : closeables) {
+			if (closeable == null) {
+				continue;
+			}
+
+			try {
+				closeable.close();
+			} catch (Exception ignore) {}
+		}
+	}
+
 	/**
 	 * 테넌트 컨피그 boolean 설정 값 확인용
 	 */
 	public boolean checkTenantConfigBool(int tenantId, String propertyName, String defaultValue) throws Exception {
 		return BooleanUtils.toBoolean(StringUtils.defaultIfBlank(ezCommonService.getTenantConfig(propertyName, tenantId), defaultValue));
 	}
-	public OrganAuth makeOrganAuth(String userId, int tenantId) throws Exception {
+	public OrganAuth makeOrganAuth(String userId, int tenantId, String deptId, String jobId) throws Exception {
 		List<OrganUserVO> allUserinfo = ezOrganService.getAllUserinfo(userId, tenantId);
 		OrganAuth organAuth = new OrganAuth();
-		boolean permissionBasisDeptYN = "Y".equalsIgnoreCase(ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantId));
-
-		if (permissionBasisDeptYN) {
-			for (OrganUserVO user : allUserinfo) {
+		
+		// 현재 권한만 체크하도록 변경
+		// jobid가 null이거나, 공백인 경우가 있어 같이 공백 or null 이거나 string equal 인 조건으로 변경 
+		for (OrganUserVO user : allUserinfo) {
+			if (user.getDepartment().equalsIgnoreCase(deptId) &&
+					((StringUtils.isBlank(user.getJobID()) && StringUtils.isBlank(jobId)) ||
+					user.getJobID().equalsIgnoreCase(jobId))) {
 				organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
+				break;
 			}
-		} else {
-            OrganUserVO user = allUserinfo.get(0);
-            organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
-        }
+		}
+		
         return organAuth;
+	}
+	
+	public String makeLocalDateToUTCDate(int minusYear, boolean isFrom, String offset) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime nowMinusOneYear = now.minusYears(minusYear);
+		String timeStr = isFrom ? " 00:00:00" : " 23:59:59";
+		String utcDate = getDateStringInUTC(nowMinusOneYear.format(formatter) + timeStr, offset, false);
+
+		return utcDate;
+	}
+
+	public String makeUrl(String path, MultiValueMap queryParam) throws Exception {
+		UriComponents uriComponents = UriComponentsBuilder.newInstance()
+				.path(path)
+				.queryParams(queryParam)
+				.build();
+
+		return uriComponents.toUriString();
+	}
+
+	public String makeSSOUrl(String url, int tenantId) throws Exception {
+		if (!"".equals(url) && url != null) {
+			String serverUrl = ezCommonService.getTenantConfig("serverName", tenantId);
+			url = serverUrl + url;
+		}
+		return url;
 	}
 }

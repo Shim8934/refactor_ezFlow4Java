@@ -71,6 +71,7 @@
 		    var systemCountryCode = "${systemCountryCode}";
 		    var useCountryIP = "${useCountryIP}";
 		    var useShowSystemCountry = "${useShowSystemCountry}";
+			var mailBox = "${mailBox}";
 		    
 		    window.onresize = window_onresize;
 		    
@@ -243,7 +244,17 @@
 				<c:if test="${useMailTag}">
 				resizeHeight -= document.getElementById("tag_td").clientHeight;
 				</c:if>
-				document.getElementById("message").style.height = resizeHeight + "px";
+
+				if(sentItems.toUpperCase() == "TRUE") {
+					document.getElementById("message").style.height = resizeHeight + "px";
+					var messeageValue = document.getElementById("message");
+					var messeageHeight = messeageValue.style.height
+					messeageHeight = parseFloat(messeageHeight) - parseFloat("14");
+					messeageValue.style.setProperty('height', messeageHeight + 'px', 'important');
+				} else {
+					document.getElementById("message").style.height = resizeHeight + parseFloat("14") + "px";
+				}
+				
 		        mailPrevSentDateChk();
 		    }	
 			
@@ -703,7 +714,7 @@
 									<c:if test="${useCabinet == 'YES'}">
 										<li><span id="addCabinet" onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 									</c:if>
-									<c:if test="${isSecureMail == true}">
+									<c:if test="${isSecureMail == true && mailBox == 'Sent'}">
 										<li><span id="btnSecureInfo" onClick="secureInfo_onClick()"><spring:message code="ezEmail.lhm44" /></span></li>
 									</c:if>
 									<li id="btnViewOriginText"><span onclick="view_OriginalEML()"><spring:message code='ezEmail.kdh03' /></span></li>

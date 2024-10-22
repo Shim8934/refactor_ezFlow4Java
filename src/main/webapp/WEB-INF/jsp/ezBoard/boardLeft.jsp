@@ -406,7 +406,9 @@
 				            	rightFrame.src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				            } else if (gubun == 8) {
 				            	rightFrame.src = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
-				            } else {
+				            } else if (gubun == 10) {
+								return;
+							} else {
 				                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 									rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
 				                }
@@ -425,7 +427,9 @@
 			                	window.parent.frames["right"].location.href = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				            } else if (gubun == 8) {
 			                	window.parent.frames["right"].location.href = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
-				            } else {
+				            } else if (gubun == 10) {
+								return;
+							} else {
 			                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
 			                    }
@@ -522,7 +526,9 @@
 			            	rightFrame.src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else if (chkPhotoBrd == 8) {
 			            	rightFrame.src = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
-			            } else {
+			            } else if (chkPhotoBrd == 10) { // 카테고리 게시판인 경우 동작하지 않음.
+							return;
+						} else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 								rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
 			                }
@@ -540,7 +546,9 @@
 		                	window.parent.frames["right"].location.href = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else if (chkPhotoBrd == 8) {
 		                	window.parent.frames["right"].location.href = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
-			            } else {
+			            } else if (chkPhotoBrd == 10) {
+                            return;
+						} else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
 			                }
@@ -896,10 +904,13 @@
 		    
 	    	/* 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '즐겨찾기' LNB 이미지 수정 */
 		    function favoriteList() {
-		    	var openSpan = $(event.target);
-
 	    		$("h2.on").attr("class", "off");
-		    	openSpan.parent().addClass("on");	
+				if (event) {
+					var openSpan = $(event.target);
+					openSpan.parent().addClass("on");
+				} else {
+					$("#favoriteList").addClass("on");
+				}
 		    	$(".list_text.node_selected").removeClass("node_selected");
 	            $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 		    	$("#TopBoardsList .lnbUL").attr("class", "lnbUL off");
@@ -1159,7 +1170,7 @@
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 		        <div class="lnb_lay">
-			        <h2 onclick="favoriteList()">
+			        <h2 id="favoriteList" onclick="favoriteList()">
 			            <span class="sub_iconLNB tree_plus"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
 			        </h2>
 			        <c:if test="${MyBoardTopFlag != 'NO'}">
@@ -1221,7 +1232,7 @@
 <%--                       	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></li> --%>
                     	<c:if test="${applyFlag == 'OK'}">
 	                    	<h2 class="off">	
-	                           	<span class="sub_iconLNB tree_plus"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount" style="color: #0470e4; position: absolute;">(${applyCount})</span>
+	                           	<span class="sub_iconLNB tree_plus"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount">(${applyCount})</span>
 	                        </h2>
                     	</c:if>
 			        </ul>

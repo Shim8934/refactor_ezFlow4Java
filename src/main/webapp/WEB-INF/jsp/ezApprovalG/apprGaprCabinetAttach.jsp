@@ -59,6 +59,7 @@
 			var selRowChangeFlag = false;
 			var cabinetAttachPage = true; // 문서 첨부 검색 페이지에서 의견 아이콘 삭제하기 위해 추가
 			var orgResultxml;
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
 	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
@@ -176,6 +177,10 @@
 			            	OpenAlertUI("<spring:message code='ezApprovalG.garm04'/>");
 			            	return;
 			            }
+						if (GetAttribute(pCurSel[count1], "DATA16") == "B") {
+							OpenAlertUI("<spring:message code='ezApprovalG.kmh06'/>");
+							return;
+						}
 			            //2018-10-12 김보미 - 문서첨부시 보안문서일 경우 보안날짜가 지나기 전엔 첨부할 수 없도록 변경
 			            if (GetAttribute(pCurSel[count1], "DATA14") != null && GetAttribute(pCurSel[count1], "DATA14") != "") {
 			            	date = GetAttribute(pCurSel[count1], "DATA14");
@@ -285,6 +290,83 @@
 			}
 			function btnSearch_onclick() {
 			    btnSearchRec_onclick("1");
+			}
+
+			function showDocView_onclick() {
+				var listview = new ListView();
+				listview.LoadFromID("DocList");
+				var selRow = listview.GetSelectedRows()[0];
+				
+				if (selRow.length <= 0) {
+					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
+					return;
+				}
+
+				/* 2024-07-31 김유진 - 문서첨부>문서보기 시 보안결재 문서 체크 */
+				var securityApprovalFlag = GetAttribute(selRow, "DATA14");
+				if (securityApprovalFlag != "null" && securityApprovalFlag != "" && securityApprovalFlag >= GetTodayDate()) {
+					if (CheckAprLine(selRow.getAttribute("DATA1")) == "TRUE" || GetUserRole() != "User" ) {
+						chk_Passwd(UserID, showDocView_onclick_Complete);
+					} else {
+						OpenAlertUI(strLang580);
+						return;
+					}
+				} else {
+					showDocView_onclick_Complete("True");
+				}
+			}
+
+
+			function showDocView_onclick_Complete() {
+				var listview = new ListView();
+				listview.LoadFromID("DocList");
+				var selRow = listview.GetSelectedRows()[0];
+				var DocID = GetAttribute(selRow, "DATA1");
+				var pURL = GetAttribute(selRow, "DATA2");
+				
+				if (trim_Cross(pURL) == "") {
+					var para2 = new Array();
+					para2[0] = GetAttribute(selRow, "DATA6");
+					para2[1] = GetAttribute(selRow, "DATA8");
+
+					var url = "/ezApprovalG/contDocView_NoDoc.do?docID=" + encodeURI(DocID) + "&g_RecID=" + encodeURI(para2[0]) + "&g_SepAttNo=" + encodeURI(para2[1]);
+					var left = 0;
+					var top = 0;
+					var wWidth = 600;
+					var wHeigth = 300;
+
+					left = window.outerWidth / 2 + window.screenX - (wWidth / 2);
+					top = window.outerHeight / 2 + window.screenY - (wHeigth / 2);
+
+					window.open(url, strLang1135, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeigth + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+				} else {
+					var para = new Array();
+					var tempUrl = pURL;
+					var openLocation = "";
+
+					if (tempUrl.substr(tempUrl.length - 4, tempUrl.length).toLowerCase() == ".ezd") {
+						tempUrl = tempUrl.substr(0, tempUrl.length - 4);
+					}
+
+					if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp") {
+						if(useWebHWP == "NO") {
+							if (isIE()) {
+								openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+							} else {
+								var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+								alert(pAlertContent);
+								return;
+							}
+						} else {
+							openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
+						}
+					} else {
+						openLocation = "/ezApprovalG/contDocView.do";
+					}
+					openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
+					openwindow(openLocation, "", 880, 570);
+				}
 			}
 
 			function moveDataRow(e) {
@@ -410,6 +492,7 @@
 					</li>
 				</c:if>	
 	            <li><span onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
+				<li><span onclick="return showDocView_onclick()"><spring:message code='ezApprovalG.t367'/></span></li>
 	        </ul>
 	    </div>
 	    <div id="close">

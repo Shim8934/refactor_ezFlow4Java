@@ -603,6 +603,12 @@ public class EzOrganController {
 
 		PasswordCheckPolicyResult result = commonUtil.checkPwPolicy(pwStr, companyId, tenantId, userId, useLoginCookie, propParams);
 		chkPwPolicy = result.succeeded() ? "OK" : result.getMessage();
+		
+		if ("PREVERROR". equals(chkPwPolicy)) {
+			String rememberPWCountConfig = ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount");
+			int rememberPWCount = rememberPWCountConfig == null || "".equalsIgnoreCase(rememberPWCountConfig) ? 0 : Integer.parseInt(rememberPWCountConfig);
+			chkPwPolicy += "|"+rememberPWCount;
+		}
  		
  		logger.debug("checkPasswordPolicy ended. chkPwPolicy=" + chkPwPolicy);
  		return chkPwPolicy;

@@ -78,6 +78,16 @@
 			var chkPublic = "<c:out value='${chkSchedulePublic}'/>"; // 개인일정 작성시 공개/비공개값 설정가능 여부
 		    var showtop = "<c:out value='${showtop}'/>";
 
+		    /* 20203-09-22 한태훈 - 초대 일정 수정시 참석자에게 메일 보내는 용도 */
+			var modAttendIdList = [];
+			var modAttendName1List = [];
+			var modAttendName2List = [];
+		    
+		    /* 20203-09-22 한태훈 - 초대 일정 수정시 참석자에게 메일 보내는 용도 */
+			var modAttendIdList = [];
+			var modAttendName1List = [];
+			var modAttendName2List = [];
+		    
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";
@@ -137,7 +147,13 @@
                     	if(document.getElementById("HolderEdit2") != null){
 							document.getElementById("HolderEdit2").style.display = "none";
 						}
-                    }
+                    } else {
+						// chkPublic이 OFF일 경우 비공개가 기본값임.
+						if (chkPublic == "OFF") {
+							document.getElementById("publicSelect").disabled = true;
+							document.getElementById("publicSelect").value = "N";
+						}
+					}
 
 	                /* if (scheduletype == "7") {
 		                //document.getElementById("HolderEdit2").style.display = "none";
@@ -179,7 +195,7 @@
 		        }
 
 		        document.getElementById("publicSelect").disabled = true;
-		        if (scheduletype == "1" || scheduletype == "6")
+		        if ((scheduletype == "1" && chkPublic == "ON") || scheduletype == "6")
 		            document.getElementById("publicSelect").disabled = false;
 
 		        if (scheduleid == "")
@@ -189,9 +205,9 @@
 		            setAttachFileInfo("${strAttach}");
 		        }
 
-		        if(ispublic != "") {
+		        /*if(ispublic != "") {
 		        	document.getElementById("publicSelect").value = ispublic;
-		        }
+		        }*/
 
 		        try{
 		            if (document.getElementById("TextTitle").value == "")
@@ -240,13 +256,15 @@
 		        try {
 		    		window.opener.openerCalendarMiniView("CalendarMini");	    		
 		    		window.opener.openerCalendarMiniDataSource();
+		        } catch (e) { console.log(e) }
+		        
+		        var date = window.opener.selDate;
+	    		if(date == "") date = window.opener.nowDay;
+		        try {
 		    		// 정주환 포틀릿 일정추가후 불변요청
-		    		var date = window.opener.selDate;
-		    		if(date == "") date = window.opener.nowDay;
 		            window.opener.getScheduleList(date, "P");
-		    		window.opener.openerCalendarMiniView("CalendarMini_Top");	    		
-		    		window.opener.openerCalendarMiniDataSource("Top");
-		        } catch (e) { }
+		        } catch (e) { console.log(e)}
+		        
 		    }
 
 		    $(function () {
@@ -666,7 +684,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3" id="LabelOwner">
                                                 ${strLabelOwner}
-                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck">상단표시</label>
+                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
                                             </td>
                                         </tr>
                                         </c:if>
@@ -674,7 +692,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3">
                                             	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;">${strOwnerID}</select>
-                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck">상단표시</label>
+                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
                                             </td>
                                         </tr>
 	                                    <tr>
@@ -740,8 +758,13 @@
                                         <tr id="HolderEdit2">
                                             <th><spring:message code='ezSchedule.t163'/></th>
                                             <td colspan="2">
-                                            	<div style="overflow-y: auto; height: 20px;" id="LabelAttendant">                                                
-													<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
+                                            	<div style="overflow-y: auto; height: 14px; padding-top: 2px" id="LabelAttendant">                                                
+													<c:forEach var="item" items="${attendantList}" varStatus="status">
+														<script>
+															modAttendIdList.push('${item.attendantId}');
+															modAttendName1List.push('${item.attendantName}');
+															modAttendName2List.push('${item.attendantName2}');
+														</script>                                		  		
 			                                	 		<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
 			                                	 			<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
 			                                	 			<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>

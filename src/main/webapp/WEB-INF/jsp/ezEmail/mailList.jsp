@@ -647,7 +647,12 @@
 		        ContextMenuHidden();
 		    	searchMode = true;
 		        var inputkeyword = document.getElementsByName('keyword').item(0);
-		        
+
+		        if(inputkeyword.value.length == 1) {
+		            alert("<spring:message code='ezSystem.yja01' />");
+		            return;
+		        }
+
 		        if (inputkeyword.value.indexOf("%") != -1) {
 		            alert("'%'" + strLang148);
 		            return;
@@ -665,7 +670,7 @@
 		        var searchField = document.getElementById("searchCheck");
 		        SearchKeyword = searchField.value + "=" + inputkeyword.value;
 		        
-		        if (inputkeyword.value != null){
+		        if (inputkeyword.value){
 		      		searchCArray.push(TrimText(searchField.value));
 		  			searchKArray.push(TrimText(inputkeyword.value));
 	    		}
@@ -1502,54 +1507,74 @@
 					document.getElementById("file").value = null;
 				}
 			}
-			
+
 			// 20200407 조진호 - 한국고용정보원에서 개발된 해킹의심메일 신고 기능 표준 적용
 			var xmlhttp_HackinMail;
+			var hacking_mail_report_message_cross_dialogArguments = new Array();
 			function moveHackingMail() {
-				
+
 				if (listContentArry.length < 1) {
 					alert("<spring:message code='ezEmail.zno001' />");
 					return;
 				}
-				
-				var szItemID = "";
-		        for (var i = 0; i < listContentArry.length; i++) {
-		            szItemID += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
-		        }
-				
-				var xmlpara = createXmlDom();
-			    var objNode;
-			    xmlhttp_HackinMail = createXMLHttpRequest();
-			    createNodeInsert(xmlpara, objNode, "DATA");
-			    createNodeAndInsertText(xmlpara, objNode, "CMD", "MOVE");
-			    createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", szItemID);
-			    
-			    var requestUrl = "/ezEmail/hackingMailMoveAndSend.do";
 
-			    xmlhttp_HackinMail.open("POST", requestUrl, true);
-			    xmlhttp_HackinMail.onreadystatechange = moveHackingMail_complete;
-			    xmlhttp_HackinMail.send(xmlpara);
+				var szItemID = "";
+				var message = new Array;
+				for (var i = 0; i < listContentArry.length; i++) {
+					szItemID += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
+				}
+
+				message['message'] = "";
+				message['szItemID'] = szItemID;
+
+				hacking_mail_report_message_cross_dialogArguments[0] = message;
+				hacking_mail_report_message_cross_dialogArguments[1] = reportHackingMessage_complete;
+				hacking_mail_report_message_cross_dialogArguments[2] = DivPopUpHidden_sub;
+
+				DivPopUpShow_sub(450, 320, "/ezEmail/hackingMailReportMessage.do");
+				$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;'></div>").appendTo(parent.frames["left"].document.body);
+
 			}
-			
+
+			function reportHackingMessage_complete(rtn) {
+				console.log(rtn)
+				$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+				var message = rtn['message'];
+				var szItemID = rtn['szItemID'];
+				var xmlpara = createXmlDom();
+				var objNode;
+				xmlhttp_HackinMail = createXMLHttpRequest();
+				createNodeInsert(xmlpara, objNode, "DATA");
+				createNodeAndInsertText(xmlpara, objNode, "CMD", "MOVE");
+				createNodeAndInsertText(xmlpara, objNode, "MESSAGE", message);
+				createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", szItemID);
+
+				var requestUrl = "/ezEmail/hackingMailMoveAndSend.do";
+
+				xmlhttp_HackinMail.open("POST", requestUrl, true);
+				xmlhttp_HackinMail.onreadystatechange = moveHackingMail_complete;
+				xmlhttp_HackinMail.send(xmlpara);
+			}
+
 			function moveHackingMail_complete() {
-			    if (xmlhttp_HackinMail != null && xmlhttp_HackinMail.readyState == 4) {
-			        if (xmlhttp_HackinMail.status >= 200 && xmlhttp_HackinMail.status < 300) {
-			        	pRtnMessage = xmlhttp_HackinMail.responseText;
-			        	
-			        	if (pRtnMessage.indexOf("NO COPY processing failed.") > -1) {
-			        		alert(strLang241);
-			        	} else if ("OK") {
-				        	MailListRefresh();
-				            prevShow_Clear();
-				            alert("<spring:message code='ezEmail.zno003' />");
-			        	} else {
-			        		alert(strLang5);
-			        	}
-			        }
-			        else {
-			            alert(strLang5);
-			        }
-			    }
+				if (xmlhttp_HackinMail != null && xmlhttp_HackinMail.readyState == 4) {
+					if (xmlhttp_HackinMail.status >= 200 && xmlhttp_HackinMail.status < 300) {
+						pRtnMessage = xmlhttp_HackinMail.responseText;
+
+						if (pRtnMessage.indexOf("NO COPY processing failed.") > -1) {
+							alert(strLang241);
+						} else if ("OK") {
+							MailListRefresh();
+							prevShow_Clear();
+							alert("<spring:message code='ezEmail.zno003' />");
+						} else {
+							alert(strLang5);
+						}
+					}
+					else {
+						alert(strLang5);
+					}
+				}
 			}
 			function addSearch() {
 				if($("#moreSearch").css("display") == "none"){   
@@ -1815,7 +1840,7 @@
 								<li class="content_layout_center">
 									<span id="datepickerData">
 										<input type="text" id="Sdatepicker" style="height:30px;" disabled="" readonly size="10" readonly> ~ 
-			    						<input type="text" id="Edatepicker" style="height:30px;" size="10" disabled="" readonly></span>
+			    						<input type="text" id="Edatepicker" style="height:30px;" size="10" disabled="" readonly>
 									</span>
 								</li>
 							</ul>
@@ -1906,7 +1931,7 @@
 	                    </select>
 	                </td>
                   </tr>
-                  <tr>
+                  <tr id="selectViewList">
                     <th><spring:message code="ezEmail.t99000035" /></th>
                     <td>
                     	<select name="select" id="select" onChange="on_changeViewList(this.value)" style="height:20px;width:120px;">       
@@ -1922,6 +1947,7 @@
                     		<option VALUE="SECUREMAIL"><spring:message code="ezEmail.yja001" /></option>
                    		</c:if>
                     		<option VALUE="IMPORTANT"><spring:message code="ezEmail.kes047" /></option>
+                    		<option VALUE="ATTACH"><spring:message code="ezEmail.t557"/> </option>
                     	</select>
 	                </td>
                   </tr>
@@ -2157,8 +2183,12 @@
 	        <input type="file" name="file1" id="file1" accept=".zip" onchange="mailbox_attach_import()" style="display: none"/>
 	    </form>
 	    <div class="layerpopup"  style="z-index: 10000; position: absolute;display: none;" id="iFramePanel">
-	    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
+		<div class="layerpopup"  style="z-index:2000; position:absolute; display:none; overflow:hidden;" id="iFramePanel_sub">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
+		</div>
 	    <div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>
@@ -2206,7 +2236,12 @@
 		} else {
 			this.usepostDate = true;
 		}
-    	
+
+    	if (TrimText(prekeywordDetail1.value).length == 1 || TrimText(prekeywordDetail2.value).length == 1 || TrimText(prekeywordDetail3.value).length == 1) {
+    	    alert("<spring:message code='ezSystem.yja01' />");
+    	    return;
+    	}
+
    		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) && !this.usepostDate ) {
     		alert(strLang254);
             return;

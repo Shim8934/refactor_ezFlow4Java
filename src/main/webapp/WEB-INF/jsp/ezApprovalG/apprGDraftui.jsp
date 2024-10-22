@@ -483,12 +483,17 @@
 		                    GetExchInfo();
 		                    getDocInfo();
 		                    
+		                    /* 2023-12-05 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+		                    // 수신문서 > 수신부서 결재 중 반송 > 재기안인 경우에는 수신문서 접수 페이지로 열리므로, 내부기안 페이지에서는 해당 분기 처리하지 않음
+					        message.startRemapAllAprSign_MHT(pDocID, orgCompanyID);
+		                    
 		                    if (pHasOpinionYN == "Y") {
-		                        if (AprState == "<spring:message code='ezApprovalG.t49'/>")
+		                        if (AprState == "<spring:message code='ezApprovalG.t49'/>") {
 		                            pInformationContent = "<spring:message code='ezApprovalG.t124'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
-		                        else
+		                        } else {
 		                            pInformationContent = "<spring:message code='ezApprovalG.t126'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
-		
+								}
+								
 		                        OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 		                    }
 		                }
@@ -1133,7 +1138,7 @@
 		        draftFlag = true;
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) { 
-		        	parent.opener.getApprovalList("reject");
+		        	parent.opener.clearAbsence(true);
 		        }
 		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가
 		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
@@ -1156,7 +1161,7 @@
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		      if(pConnKey == "") {
 		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) {
-		        	parent.opener.getApprovalList("reject");
+		        	parent.opener.clearAbsence(true);
 		        }
 		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가--아직 개발중
 		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
@@ -1515,7 +1520,7 @@
 		        var PublicType = pPublicityYN.substring(0, 1);
 
 		        var PublicText = "";
-		        if (PublicType == "Y")
+		        if (PublicType == "Y" || PublicType == "B")
 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
 		        else if (PublicType == "N")
 		            PublicText = "<spring:message code='ezApprovalG.t46'/>";
@@ -1850,7 +1855,7 @@
 		        if (isUsed == "reuse") {
 		        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
 		        }
-		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1963,7 +1968,9 @@
 			                	tempPublic = "N";
 			                } else if (ret[21].substring(0,1) == "Y") {
 			                	tempPublic = "Y";
-			                }
+			                } else if (ret[21].substring(0,1) == "B") {
+								tempPublic = "B";
+							}
  			                setPublicFlag();
  			                setKeepPeriod();
 			                // setPublicFlag2();
@@ -1999,6 +2006,14 @@
                                 limitDate = ret[31];
                                 // passAprLine = ret[32];
                             }
+                            
+                         	// 2023-05-23 임정은 - 공람 추가
+		                	if (ret[22] == "noItem") {
+		                		delAprLineInfoCC();
+		                	} else if (ret[22] == "sameItem") {
+		                	} else {
+		                		SaveAprLineInfoCC(ret[22]);
+		                	}
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

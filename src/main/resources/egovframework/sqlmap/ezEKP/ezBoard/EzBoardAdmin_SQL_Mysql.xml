@@ -2450,12 +2450,14 @@
 		          	BACKGROUND = #v_PBACKGROUND#,
 		          	FORMFLAG = #v_PFORM#,
 		          	APPRFLAG = #v_PAPPRFLAG#,
+		          	DISLIKEFLAG = #v_DISLIKEFLAG#,
 		          	APPRMAILFLAG = #v_PAPPRMAILFLAG#,
 		          	LIKEFLAG = #v_LIKEFLAG#,
 		          	MAILFG_POST = #v_MAILFG_POST#,
 		          	MAILFG_MOD = #v_MAILFG_MOD#,
 		          	MAILFG_COMMENT = #v_MAILFG_COMMENT#,
-	      			REACTFLAG = #v_REACTFLAG#
+	      			REACTFLAG = #v_REACTFLAG#,
+	      			USEKEYWORD = #v_USEKEYWORD#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND
@@ -2924,5 +2926,38 @@
 			BOARDID = #boardID#
 		  AND
 			TENANT_ID = #tenantID#
+	</select>
+
+	<delete id="EzBoardAdminDAO.deleteMyBoardsOnCategoryChange" parameterClass="map">
+		<![CDATA[
+			DELETE FROM TBL_BOARD_MYBOARDS
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				BOARDID = #boardID#
+		]]>
+	</delete>
+
+	<delete id="EzBoardAdminDAO.deleteMyBoardTreeOnCategoryChange" parameterClass="map">
+		<![CDATA[
+			DELETE FROM TBL_Board_MyTree
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				TREEBOARDID = #boardID#
+		]]>
+	</delete>
+	
+	<select id="EzBoardAdminDAO.getBoardItemCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_BOARD_ITEM
+			WHERE
+				BOARDID = #boardID#
+			AND
+				TENANT_ID = #tenantID#
+ 		]]>
 	</select>
 </sqlMap>

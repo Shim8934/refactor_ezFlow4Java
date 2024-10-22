@@ -443,7 +443,9 @@
                 extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun,
                 password_updatedt,
-                extensionattribute5
+                extensionattribute5,
+                extensionattribute7 as JOBID,
+                '' ROLEID
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -484,7 +486,9 @@
                 extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun,
                 password_updatedt,
-                extensionattribute5
+                extensionattribute5,                
+                EXTENSIONATTRIBUTE7 as JOBID,
+                EXTENSIONATTRIBUTE8  as roleId
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -524,7 +528,9 @@
                 extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun,
                 password_updatedt,
-                extensionattribute5
+                extensionattribute5,
+                extensionattribute7 as JOBID,
+                '' ROLEID
             FROM 
                 TBL_USERMASTER a
             WHERE 

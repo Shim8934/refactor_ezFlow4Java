@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezSchedule.dao;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezSchedule.vo.ScheduleExecutiveVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
@@ -76,8 +77,20 @@ public class EzScheduleAdminDAO extends EgovAbstractDAO {
 		return (int) select("EzScheduleAdminDAO.scheduleShareCheck", map);		
 	}
 
-	
+	public List<ScheduleExecutiveVO> scheduleGetExecutiveList(Map<String, Object> map) throws Exception {
+		return (List<ScheduleExecutiveVO>) list("EzScheduleAdminDAO.scheduleGetExecutiveList", map);
+	}
 
-	
+	public void scheduleSaveExecutive(Map<String, Object> map) throws Exception {
+		insert("EzScheduleAdminDAO.scheduleSaveExecutive", map);
+	}
+
+	public void scheduleUpdateExecutive(Map<String, Object> map) throws Exception {
+		update("EzScheduleAdminDAO.scheduleUpdateExecutive", map);
+	}
+
+	public void scheduleDelExecutive(Map<String, Object> map) throws Exception {
+		delete("EzScheduleAdminDAO.scheduleDelExecutive", map);
+	}
 }
 

@@ -28,6 +28,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "<c:out value = '${docID}'/>";
@@ -150,10 +151,12 @@
 			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
-			
+
 			// 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
 			var useReceiptDeptFileAttach = "<c:out value ='${useReceiptDeptFileAttach}'/>";
-			
+
+			var type = "ING"; // 2023-07-24 임정은 - 공람 추가
+
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
 					$(".approvalS").show();
@@ -239,7 +242,15 @@
 		                    GetAprDocFormID();
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
-		
+		                    
+		                    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+					        message.startRemapAllAprSign_MHT(pDocID, orgCompanyID);
+		                    
+							// 현재 문서가 수신문이므로 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+					        if (pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+					        	message.startRemapAllAprSign_MHT(pOrgDocID, orgCompanyID);
+					        }
+					        
 							if (pHasOpinionYN == "Y") {
 		                        if (pAprState == "006")
 		                            pInformationContent = "<spring:message code='ezApprovalG.t124'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
@@ -256,7 +267,15 @@
 		                    GetAprDocFormID();
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
-		
+		                    
+		                    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+					        message.startRemapAllAprSign_MHT(pDocID, orgCompanyID);
+		                    
+					     	// 현재 문서가 수신문이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+					        if (pDraftFlag == "SUSIN" && pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+					        	message.startRemapAllAprSign_MHT(pOrgDocID, orgCompanyID);
+					        }
+					     	
 		                    if (g_DraftFlag == "REDRAFT") {
 // 		                        setMenuBar("btnAssign", false);
 // 		                        setMenuBar("btnDistribute", false);
@@ -756,7 +775,7 @@
 		                    if (LastSignSN == 1) {
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1697'/>";
 		                      	//2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 접수자 전결
-		                        if (CurAprType == "<spring:message code='ezApprovalG.t25'/>" && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		                        if (CurAprType == strAprType4 && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
 			    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-script').getAttribute("code");
 			    		        	var script = document.createElement("script");
 			    					script.type = "text/javascript";
@@ -1356,7 +1375,7 @@
 	                        }
 	    		            passAprLine = "N";
 	    		            btnSendDraftEnable = "true";
-	    		            CurAprType = "<spring:message code='ezApprovalG.t25'/>";
+	    		            CurAprType = strAprType4; // 결재유형을 '전결' 문자가 아닌 코드(004)로 수정
 	    		            LastSignSN = "1";
 	    		            btnSendDraft_onclick();
             			} else {
@@ -1664,7 +1683,7 @@
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 		        	try { OpenWin.focus(); } catch (e) { }
 		        }
 
@@ -1780,6 +1799,14 @@
                                 basis = ret[29];
                                 reason = ret[30];
                                 limitDate = ret[31];
+							}
+
+							// 2023-07-24 임정은 - 공람 추가
+							if (ret[22] == "noItem") {
+								delAprLineInfoCC();
+							} else if (ret[22] == "sameItem") {
+							} else {
+								SaveAprLineInfoCC(ret[22]);
 							}
 		                } else {
 		                	tempKeep = ret[16];

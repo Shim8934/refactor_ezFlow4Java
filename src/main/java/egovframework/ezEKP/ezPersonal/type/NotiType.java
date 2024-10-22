@@ -32,11 +32,17 @@ public enum NotiType {
 	// 일정 초대 알림
 	SCHEDULE_ADD(4, 1),
 	// 일정 초대 취소
-	SCHEDULE_DELETE(4, 2),
+	SCHEDULE_CANCEl(4, 2),
 	// 일정 초대 승인
 	SCHEDULE_ACCEPT(4, 3),
 	// 일정 초대 거부
 	SCHEDULE_REJECT(4, 4),
+	// 초대 일정 수정
+	SCHEDULE_MOD(4, 5),
+	// 초대 일정 삭제
+	SCHEDULE_DELETE(4, 6),
+	// 일정 미리알림
+	SCHEDULE_REMINDER(4, 7),
 	
 	// 자원관리 자원 승인
 	RESOURCE_APPROVE(5, 1),
@@ -47,8 +53,6 @@ public enum NotiType {
 	
 	// 전자설문 신규등록
 	SURVEY_NEW(6, 1),
-	// 전자설문 수정알림
-	SURVEY_MODIFY(6, 2),
 	
 	// 투표 신규등록
 	POLL_NEW(7, 1),

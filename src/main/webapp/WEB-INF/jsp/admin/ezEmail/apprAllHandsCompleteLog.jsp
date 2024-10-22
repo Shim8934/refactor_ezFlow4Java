@@ -47,7 +47,7 @@
 			<ul class="">
 				<li><span onclick="deleteApprLog()"><spring:message code='email.appr.delete' /></span></li> <% // 삭제 %>
 				<div id="right">
-					<span class="totalcountDIV"><span id="totalcount" style="color:#017BEC;"></span><spring:message code='common.count.unit' /></span>
+					<span class="totalcountDIV"><span id="totalcount" class="txt_color"></span><spring:message code='common.count.unit' /></span>
 					<span class="icon16 icon16_refresh" onclick="reloadPage()"></span>
 	            </div>
 			</ul>

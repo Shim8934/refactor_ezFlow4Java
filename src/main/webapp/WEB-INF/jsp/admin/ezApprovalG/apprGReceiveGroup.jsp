@@ -832,13 +832,11 @@
                 	</div>
             	</td>
         	</tr>
-        	<c:if test="${useReceiveInfoName == '1' }">
-	        	<tr>
-	        		<td colspan="3">
-	        			<a class="imgbtn imgbck" style="float: right;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
-	        		</td>
-	        	</tr>
-        	</c:if>
+			<tr>
+				<td colspan="3">
+					<a class="imgbtn imgbck" style="float: right;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
+				</td>
+			</tr>
     	</table>
     	<br/>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

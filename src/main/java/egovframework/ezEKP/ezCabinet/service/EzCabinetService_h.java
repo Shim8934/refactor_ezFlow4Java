@@ -11,7 +11,7 @@ import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCabinetService_h {
-	List<SimpleUserVO> getShareUserList(String cabinetId, String userId, String primary, String sqlQuery, String searchValue, int tenantId) throws Exception;
+	List<SimpleUserVO> getShareUserList(String cabinetId, String userId, String primary, String sqlQuery, String searchValue, int tenantId, String searchFlag) throws Exception;
 	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int startPoint, int listCount, int tenantId) throws Exception;
 	int getTotalDeptMembers(String deptId, int tenantId) throws Exception;
 	List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int i, String srchOption, String srchValue, int tenantId) throws Exception;

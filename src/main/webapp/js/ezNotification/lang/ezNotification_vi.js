@@ -9,6 +9,7 @@ var mainType = {
 	community : "cộng đồng",
 	webfolder : "thư mục web",
 	journal : "Nhật ký công việc",
+	noti : "Thông báo",
 	etc : "vân vân"
 }
 
@@ -37,8 +38,11 @@ var subType = {
 	},
 	schedule : {
 		add : "Lên lịch mời",
+		cancel : "hủy lời mời",
 		accept : "Lời mời đã được phê duyệt",
-		reject : "Từ chối lời mời"
+		reject : "Từ chối lời mời",
+		mod : "Sửa đổi lịch trình",
+		reminder : "Nhắc nhở"
 	},
 	resource : {
 		reserve : "Dự trữ tài nguyên",
@@ -46,9 +50,7 @@ var subType = {
 		cancel : "Hủy phê duyệt",
 		reject : "Phê duyệt bị từ chối"
 	},
-	survey : {
-		modify : "Thông báo sửa đổi"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "Phê duyệt sáng tạo",
@@ -71,6 +73,9 @@ var subType = {
 	journal : {
 		comment : "Đăng bình luận",
 		recv : "Thông báo nhận"
+	},
+	noti : {
+		emergency : "Thông báo khẩn cấp"
 	}
 }
 
@@ -78,7 +83,7 @@ subType["approval"]["return"] = "Thu hồi chứng từ thanh toán";
 subType["approval"]["default"] = "Thông báo thanh toán";
 subType["board"]["new"] = "bài đăng mới";
 subType["board"]["return"] = "Từ chối phê duyệt";
-subType["schedule"]["delete"] = "hủy lời mời";
+subType["schedule"]["delete"] = "Xóa sự kiện";
 subType["survey"]["new"] = "Đăng kí mới";
 subType["poll"]["new"] = "Đăng kí mới";
 subType["community"]["new"] = "Đăng kí mới";
@@ -86,3 +91,5 @@ subType["community"]["new"] = "Đăng kí mới";
 var notiMessages = {
 	strLang1 : "Dữ liệu bị thiếu"
 }
+
+var notiDayNames = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];

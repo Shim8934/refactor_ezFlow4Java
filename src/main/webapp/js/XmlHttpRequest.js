@@ -700,7 +700,12 @@ function ConvertMHTtoHTML(pURL) {
 			rtnVal = result;
 		}        			
 	});
-    return rtnVal;
+    /* 2024-05-08 양지혜 - 공개문서에서 파라미터 조작으로 접근 취약점 보완. 권한 없을 시 권한없음 페이지 노출 */
+    if (rtnVal == "NoAccess") {
+        window.parent.location.replace('/ezApprovalG/accessWarning.do');
+    } else {
+        return rtnVal;
+    }
 }
 
 function ConvertHTMLtoMHT(pContent) {
@@ -1712,32 +1717,32 @@ function makePageSelPageBrd() {
     var PagingHTML = "";
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pAdminType != "y")
-        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + " </span>";
+        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + pTotalCnt + " </span>";
     else
-        parent.document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + " </span>";
+        parent.document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + pTotalCnt + " </span>";
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
     var pageNum = CurPage;
     if (totalPage > 1 && pageNum != 1) {
-        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>"
+        strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>"
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>"
+        strtext = "<span class='btnimg first disabled'></span>"
         PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+            strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+            strtext = "<span class='btnimg prev disabled'></span>";
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+        strtext = "<span class='btnimg prev disabled'></span>";
         PagingHTML += strtext;
     }
     var MaxNum;
@@ -1766,26 +1771,26 @@ function makePageSelPageBrd() {
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
             strtext = "";
-            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+            strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
             strtext = "";
-            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+            strtext = strtext + "<span class='btnimg next disabled'></span>";
             PagingHTML += strtext;
         }
     }
     else {
         strtext = "";
-        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+        strtext = strtext + "<span class='btnimg next disabled'></span>";
         PagingHTML += strtext;
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+        strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+        strtext = "<span class='btnimg last disabled'></span>";
         PagingHTML += strtext;
     }
     
@@ -2109,41 +2114,39 @@ function mkPageSelPage() {
     const nextImg_disable = "/images/kr/cm/btn_next01.gif";
     
     // 사용 요소
-    var imgSPAN_IMG = document.createElement("img");
     var imgSPAN = document.createElement("span");
     	imgSPAN.classList.add("btnimg");
-    	imgSPAN.appendChild(imgSPAN_IMG);
     	
     var pprevEle = imgSPAN.cloneNode(true);
     if (totalPage > 1 && pageNum != 1) {
     	pprevEle.setAttribute("onClick", "goToPageByNum(1)");
-    	pprevEle.querySelector("img").src = pprevImg_able;
+    	pprevEle.classList.add("first");
     } else {
-    	pprevEle.querySelector("img").src = pprevImg_disable;
+    	pprevEle.classList.add("first", "disabled");
     }
     	
     var prevEle = imgSPAN.cloneNode(true);
     if (totalPage > BlockSize && pageNum > BlockSize) {
     	prevEle.setAttribute("onClick", "selbeforeBlock()");
-    	prevEle.querySelector("img").src = prevImg_able;
+    	prevEle.classList.add("prev");
     } else {
-    	prevEle.querySelector("img").src = prevImg_disable;
+    	prevEle.classList.add("prev", "disabled");
     }
 
     var nnextEle = imgSPAN.cloneNode(true);
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
     	nnextEle.setAttribute("onClick", "goToPageByNum("+totalPage+")");
-    	nnextEle.querySelector("img").src = nnextImg_able;
+    	nnextEle.classList.add("last");
     } else {
-    	nnextEle.querySelector("img").src = nnextImg_disable;
+    	nnextEle.classList.add("last", "disabled");
     }
 
     var nextEle = imgSPAN.cloneNode(true);
     if (totalPage > BlockSize && totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
     	nextEle.setAttribute("onClick", "selafterBlock()");
-    	nextEle.querySelector("img").src = nextImg_able;
+    	nextEle.classList.add("next");
     } else {
-    	nextEle.querySelector("img").src = nextImg_disable;
+    	nextEle.classList.add("next", "disabled");
     }
     
     // pagenavi
@@ -2179,3 +2182,82 @@ function mkPageSelPage() {
     pageRayer.innerHTML = "";
     pageRayer.appendChild(pagenaviDIV);
 }
+
+function escapeForJson(inputString) {
+    return inputString.replace(/[\b\f\n\r\t\"\\]/g, function (char) {
+        switch (char) {
+            case '\b':
+                return '\\b';
+            case '\f':
+                return '\\f';
+            case '\n':
+                return '\\n';
+            case '\r':
+                return '\\r';
+            case '\t':
+                return '\\t';
+            default:
+                return char;
+        }
+    });
+}
+
+function unescapeForJson(inputString) {
+    return inputString.replace(/\\[bfnrt\"\\]/g, function (char) {
+        switch (char) {
+            case '\\b':
+                return '\b';
+            case '\\f':
+                return '\f';
+            case '\\n':
+                return '\n';
+            case '\\r':
+                return '\r';
+            case '\\t':
+                return '\t';
+            default:
+                return char;
+        }
+    });
+}
+
+function getCookie(name) {
+    const cookies = document.cookie.split('; ');
+    
+    for (const cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.split('=');
+        if (cookieName === name) {
+            return decodeURIComponent(cookieValue);
+        }
+    }
+    
+    return null;
+}
+
+function setColorMode() {
+	
+	if (window.location.href.indexOf('admin') > 0) {
+		return;
+	}
+	
+	var useColor = getCookie('useColor');
+	if (useColor) {
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.id = "skinCss";
+
+		if (useColor == 1) {
+			link.href = '/css/ezPortal/skin_blue.css';
+		} else if (useColor == 2) {
+			link.href = '/css/ezPortal/skin_red.css';
+		} else if (useColor == 3) {
+			link.href = '/css/ezPortal/skin_dark.css';
+		}
+
+		document.head.appendChild(link);
+	}
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    setColorMode();
+});

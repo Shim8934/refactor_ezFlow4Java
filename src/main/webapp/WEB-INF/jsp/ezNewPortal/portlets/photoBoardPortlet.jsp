@@ -18,9 +18,7 @@
 						<dt class="portletText" data1="${boardId }">
 							<c:out value="${portletName }" />
 						</dt>
-					<dd class="portletPlus" id="photoBoardPlus">
-						<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png">
-					</dd>
+					<dd class="portletPlus plus" id="photoBoardPlus"></dd>
 						<!-- 
 						<c:if test="${not empty photoBoardList}">
 							<dd class="portletPlus  nextBtn">

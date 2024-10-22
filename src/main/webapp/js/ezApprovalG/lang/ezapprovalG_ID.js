@@ -1164,3 +1164,18 @@ var strLang975 = "The form version is different and cannot be reused.";
 var strLangJIH01 = "You cannot preview a security document.";
 var strLangJIH02 = "/blank_id.htm"
 var strLangJIH03 = "Preview is possible after the first reading of the document."
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "Pendaftaran telah selesai.";
+var strLangLGEAR02 = "Terjadi kesalahan saat menerima paket.<br>";
+var strLangLGEAR03 = "Pendaftaran telah selesai.";
+var strLangLGEAR04 = "Terjadi kesalahan selama penentuan penerima paket.<br>";
+
+// 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "Apakah Anda ingin melanjutkan pengiriman secara berkelompok? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian, dan dokumen dengan lampiran pemisahan dikecualikan dari target.";
+var strLangJSBAP03 = "Apakah Anda ingin melanjutkan pengiriman secara berkelompok dan persetujuan akhir? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian, dan dokumen dengan lampiran pemisahan dikecualikan dari target.";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."
+
+var strLangKWC01 = "비전자문서는 재사용 할 수 없습니다.";
+var strLangKWC02 = "양식이 삭제되어 재사용 할 수 없습니다.";

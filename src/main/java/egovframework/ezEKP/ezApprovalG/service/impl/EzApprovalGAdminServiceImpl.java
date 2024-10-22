@@ -792,10 +792,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		for (ApprGTaskVO vo : list) {
 			switch (vo.getCategoryType()) {
 				case "1":
-					isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getCategoryCode(), companyID, tenantID, approvalFlag);
+					isLeaf = getTaskCategoryNodeCnt(vo.getCategoryType(), vo.getCategoryCode(), companyID, tenantID, approvalFlag);
 					break;
 				case "2":
-					isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getMcategoryCode(), companyID, tenantID, approvalFlag);
+					isLeaf = getTaskCategoryNodeCnt(vo.getCategoryType(), vo.getMcategoryCode(), companyID, tenantID, approvalFlag);
 					break;
 				case "3":
 //						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getSubCategoryCode(), companyID, tenantID, approvalFlag);
@@ -961,7 +961,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		int count = ezApprovalGAdminDAO.getTaskCategoryNodeExist(map);
+		int count = ezApprovalGAdminDAO.getTaskCategoryNodeExist(map); // 분류코드 및 하위노드가 존재하는지 조회
 		
 		if (count > 0) {
 			result = "TRUE";
@@ -969,6 +969,32 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		logger.debug("getTaskCategoryNodeExist ended. result=" + result);
 		
+		return result;
+	}
+
+	@Override
+	public String getTaskCategoryNodeCnt(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception {
+		logger.debug("getTaskCategoryNodeCnt started.");
+		logger.debug("categoryType=" + categoryType);
+		logger.debug("categoryCode=" + categoryCode);
+
+		String result = "FALSE";
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CATETYPE", categoryType);
+		map.put("v_CATECODE", categoryCode);
+		map.put("approvalFlag", approvalFlag);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		int count = ezApprovalGAdminDAO.getTaskCategoryNodeCnt(map); // 하위 노드가 존재하는지 조회
+
+		if (count > 0) {
+			result = "TRUE";
+		}
+
+		logger.debug("getTaskCategoryNodeCnt ended. result=" + result);
+
 		return result;
 	}
 
@@ -2460,19 +2486,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				
 				if (approvalFlag.equals("S")) {
 					if (j == 0) {
-						sb.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getDeptID(), "displayName" + multiData, tenantID)) + "</VALUE>");
+						sb.append("<VALUE>" + commonUtil.cleanValue(bodyVo.getDeptName()) + "</VALUE>");
 						sb.append("<DATA1>" + bodyVo.getDeptID() + "</DATA1>");
 						sb.append("<DATA2>" + bodyVo.getUserID() + "</DATA2>");
 					} else {
 						sb.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getUserID(), "displayName" + multiData, tenantID)) + "</VALUE>");
 					}
 				} else {
-					if (useReceiveInfoName.equals("1")) {
-						sb.append("<VALUE>" + commonUtil.cleanValue(bodyVo.getDeptName()) + "</VALUE>");
-					} else {
-						sb.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getDeptID(), "displayName" + multiData, tenantID)) + "</VALUE>");
-					}
-
+					sb.append("<VALUE>" + commonUtil.cleanValue(bodyVo.getDeptName()) + "</VALUE>");
+					
 					if (j == 0) {
 						sb.append("<DATA1>" + bodyVo.getDeptID() + "</DATA1>");
 					} else {
@@ -2580,6 +2602,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
 		}
+		String formDraftAllFlag = doc.getElementsByTagName("draftAllFlag").item(0).getTextContent();
 		formAprOption = doc.getElementsByTagName("APPROPTION").item(0).getTextContent();
 		
 		passAprLineFlag = doc.getElementsByTagName("passAprLineFlag").item(0).getTextContent();
@@ -2643,6 +2666,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		// 양식 상세옵션
 		map.put("v_formAprOption", formAprOption);
 		map.put("v_FORMSIHANGTYPE", formSihangType);
+		map.put("v_PFORMDRAFTALLFLAG", formDraftAllFlag);
 
 		if (formID.equals("")) {
 			formID = generateNextFormId(companyID, userInfo.getTenantId());
@@ -3121,10 +3145,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} else {
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
-			
-			/* 2022-01-07 홍승비 - 전자결재G 일괄결재 옵션 추가 */
-			formDraftAllFlag = doc.getElementsByTagName("draftAllFlag").item(0).getTextContent();
 		}
+		
+		/* 2022-01-07 홍승비 - 전자결재G 일괄결재 옵션 추가 */
+		/* 2024-09-26 이가은 - S버전 일괄결재 옵션 포함 */
+		formDraftAllFlag = doc.getElementsByTagName("draftAllFlag").item(0).getTextContent();
 		formAprOption = doc.getElementsByTagName("APPROPTION").item(0).getTextContent();
 
 		passAprLineFlag = doc.getElementsByTagName("passAprLineFlag").item(0).getTextContent();
@@ -5962,5 +5987,91 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public ArrayList<String> getIronListYear(String companyID, int tenantID) throws Exception {
 		return ezApprovalGAdminDAO.getIronListYear(companyID, tenantID);
+	}
+
+	/* 2024-07-16 기민혁 - 전자결재 > 양식함 이동 */
+	@Override
+	public String contMove(String companyID, String contID, String selContID, String parentContID, int tenantID) throws Exception {
+
+		boolean Loop = true;
+		ArrayList<String> checkList = new ArrayList<String>();
+		ArrayList<String> resultCheckList = new ArrayList<String>();
+		checkList.add(contID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("contID", contID);
+		map.put("selContID", selContID);
+		map.put("parentContID", parentContID);
+		map.put("tenantID", tenantID);
+		map.put("checkList", checkList);
+
+		logger.debug("contMove started. contID = " + contID + " || selContID = " + selContID + " || parentContID = " + parentContID);
+
+		while (Loop) {
+			List<String> list = ezApprovalGAdminDAO.checkContList(map);
+
+			if (list.size() > 0) {
+				checkList.clear();
+				for (String re : list) {
+					checkList.add(re);
+					resultCheckList.add(re);
+				}
+				map.put("checkList", checkList);
+			}else{
+				Loop = false;
+			}
+		}
+		
+		if(resultCheckList.contains(selContID)){
+			return "CHILD";
+		} else {
+			ezApprovalGAdminDAO.contMove(map);	
+		}
+		
+		return "OK";
+	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 리스트 호출  */
+	@Override
+	public List<ApprGFormVO> getSNFContList(String contID, String companyID, int tenantID) throws Exception {
+		logger.debug("getSNFContList started");
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("contID", contID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprGFormVO> contList = ezApprovalGAdminDAO.getSNFContList(map);
+
+		logger.debug("getSNFContList ended");
+		return contList;
+	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 실행 함수  */
+	@Override
+	public String moveContSN(String contID, String groupList, String companyID, int tenantID) throws Exception {
+		logger.debug("moveContSN started.");
+
+		int index = 0;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("contID", contID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		for (String targetContID : groupList.split(";")) {
+			map.put("targetContID", targetContID);
+			map.put("order", ++index);
+
+			logger.debug("index=" + index);
+
+			ezApprovalGAdminDAO.setContSN(map);
+		}
+
+		logger.debug("moveContSN ended.");
+
+		return "OK";
+
 	}
 }

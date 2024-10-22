@@ -49,6 +49,10 @@
 		            TreeView.update();
 					changeCompany(pCompanyID);
 		        }
+		        
+		        if (document.getElementsByClassName("title_bar")[0] !== "undefined") {
+		            document.getElementsByClassName("title_bar")[0].style="display: none;"
+		        }
 		    }
 
 			function changeTree() {
@@ -56,13 +60,13 @@
 			}
 
 			function changeCompany(selCompany) {
-				pCompanyID = selCompany;
+				pCompanyID = selCompany || document.getElementById('ListCompany').value;
 				if (pAdminYN == "YES")
 					cAdmin = "ADMIN"
 				else
 					cAdmin = "BOARDADMIN"
 
-				initTreeInfo(pUserID, selCompany);
+				initTreeInfo(pUserID, pCompanyID);
 			}
 
 		    function searchValue() {
@@ -168,10 +172,11 @@
 	</head>
 	<body class="newLeft">	
 		<div id="left" class="lnb" style="overflow: auto">
+            <jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp">
+                <jsp:param name="companySelectID" value="${selectedCompany}" />
+            </jsp:include>
   			<div class="admin_left_title"><spring:message code="ezResource.t17" />
-				<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp">
-					<jsp:param name="companySelectID" value="${selectedCompany}" />
-				</jsp:include>
+				
 			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<div><h1 id="ToTitle" class="receiver_tltype01" style="background: #f8f9fb; padding: 10px 0px 10px 23px; font-size: 16px;"><spring:message code="ezResource.t71" /></h1></div>
@@ -185,6 +190,7 @@
 				<h2><span onClick="brdlistsInit();NavigateBrdAdmin_Res('STEP')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t25" /></span></h2>
 				<h2><span onClick="NavigateBrdAdmin_Res('MOV')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t26" /></span></h2>
 				<h2><span onClick="NavigateBrdAdmin_Res('DEL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t27" /></span></h2>
+				<h2><span onClick="NavigateBrdAdmin_Res('STATUS')" style="display:inline-block;width:100%;"><spring:message code="ezResource.kwc01" /></span></h2>
 				<div class="point" style="margin-top:10px; margin-left:5px" >
 					<%-- <spring:message code="ezResource.t28" /> --%>
 					<select id="SCompID" name="SCompID" onChange="changeTree()" style="width: 145px; display: none;"></select>

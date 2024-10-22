@@ -85,6 +85,7 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.ServletContext;
 import javax.xml.bind.DatatypeConverter;
 
+import egovframework.let.utl.fcc.service.KlibUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -203,6 +204,9 @@ public class EzEmailUtil {
 
 	@Autowired
 	Rest rest;
+
+	@Autowired
+	protected KlibUtil klibUtil;
 
 	public String getMailHeaderPath(long mailboxId, long mailUid) {
 		String realPath = commonUtil.getRealPath(servletContext);
@@ -1669,6 +1673,9 @@ public class EzEmailUtil {
 			
 			// style 태그가 1536개인 메일(홈플러스 메일)의 경우 IE에서 로딩이 오래 걸리는 문제가 발생하여 추가함.
 			htmlBody = stripTooManyStyleTags(htmlBody);
+			
+			// 본문안에 따로 style태그가 들어가는 경우 sytle class= 를 찾아서 삭제하는 로직추가
+			htmlBody = styleClassTagsReplace(htmlBody);
 			
 			// XSS(Cross Site Scripting)을 방지하기 위한 처리
 			htmlBody = stripScriptTags(htmlBody);
@@ -3159,12 +3166,14 @@ public class EzEmailUtil {
 		String mailInnerDomainParam = "&inexternalFilter=&mailInnerDomainStr=";
 		String isSecureMail = "&isSecureMail=";
 		String tagNameParam = "&tagName=" + URLEncoder.encode(tagName, "utf-8");
+		String isAttachMail = "&isAttachMail=";
 
 		if(extraMap != null){
 			logger.debug("extraMAP is not null.extraMap:" + extraMap);
 			andorStatus += extraMap.get("andorStatus") == "" ? "and" : extraMap.get("andorStatus");
 			attachStatus += extraMap.get("attachStatus") == "" ? "all" :  extraMap.get("attachStatus");
 			isSecureMail += extraMap.get("useSecureMailFilter");
+			isAttachMail += extraMap.get("useAttachFileFilter");
 
 			//2020-07-16 김은실 - (사조그룹)내부·외부필터 상태값 및 내부기준 도메인
 			if (extraMap.get("inexternalFilter") != null && extraMap.get("mailInnerDomainStr") != null) {
@@ -3197,7 +3206,7 @@ public class EzEmailUtil {
 				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
 				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
-				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam + mailInnerDomainParam + isSecureMail + tagNameParam;
+				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam + mailInnerDomainParam + isSecureMail + tagNameParam + isAttachMail;
 		
 		logger.debug("inputParams=" + inputParams);
 
@@ -5018,7 +5027,7 @@ public class EzEmailUtil {
     	sb.append("    <body style=\"margin:0;height:100%;\">\n");
     	sb.append("        <div class=\"security_layerpopup\">\n");
     	sb.append("            <p class=\"popup_img\"><img src=\"" + protocol + "://" + serverName + "/images/email/secureMail/layer_img.gif\"></p>\n");
-    	sb.append("            <p class=\"popup_txt\">" + egovMessageSource.getMessage("ezEmail.lhm57", locale) + "<br /><span>" + egovMessageSource.getMessage("ezEmail.lhm40", locale) + "</span></p>\n");
+		sb.append("            <p class=\"popup_txt\">" + egovMessageSource.getMessage("ezEmail.lhm57", locale) + "<br /><span>" + egovMessageSource.getMessage("ezEmail.lhm40", locale) + "</span><br /><span>" + egovMessageSource.getMessage("ezEmail.kdh04", locale) + ": ${passwordHint} </span></p>\n");
     	sb.append("            <form name=\"secureForm\" method=\"post\" action=\"" + protocol + "://" + serverName + "/ezEmail/readSecureMail.do\">\n");
     	sb.append("                <fieldset>\n");
     	sb.append("                    <p class=\"password\"><input name=\"securePassword\" type=\"password\" id=\"TextPassword\" class=\"input_text\" placeholder=\"" + egovMessageSource.getMessage("ezEmail.lhm42", locale) + "\" /></p>\n");
@@ -5094,6 +5103,20 @@ public class EzEmailUtil {
 				
 		return src;		
 	}
+
+	/**
+	 * 본문안에 따로 style태그가 들어가는 경우 sytle class= 를 찾아서 삭제하는 로직추가
+	 */
+	private String styleClassTagsReplace(String str) {
+
+		Pattern p = Pattern.compile("<style\\s+class=[\"'][^\"']*[\"'][\\s\\S]*?</style>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(str);
+		
+		str = m.replaceAll("");
+		
+		return str;
+	}
+	
 	
 	/** 
 	 * strip <object>,<applet>,<script> tags
@@ -6199,7 +6222,7 @@ public class EzEmailUtil {
 				sb.append("</table>");
 				// 본문
 				sb.append("<div class='gw_ical_desc'>");
-					sb.append(descBody);
+					sb.append(descBody.replaceAll("\n", "<br />"));
 				sb.append("</div>");
 			sb.append("</div>"); // gw_ical_contents div END.
 		sb.append("</div>");
@@ -6664,21 +6687,26 @@ public class EzEmailUtil {
 				String secureReadCount = message.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
 				String secureReadDate = message.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
 				String serverName = message.getHeader("X-JMocha-Secure-Mail-ServerName")[0];
+				String securePasswordHint = message.getHeader("X-JMocha-Secure-Mail-PasswordHint")[0];
 				
 				// 암호화되어있는 securePassword 복호화
     			String prm = egovFileScrty.getPrm();
             	String pre = egovFileScrty.getPre();
             	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
             	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
-				logger.debug("securePassword={}, secureReadCount={}, secureReadDate={}, serverName={}"
-						,securePassword, secureReadCount, secureReadDate, serverName);
+
+				boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
+				
+				logger.debug("securePassword={}, secureReadCount={}, secureReadDate={}, serverName={}, useKlibEncrypt={}"
+						,securePassword, secureReadCount, secureReadDate, serverName, useKlibEncrypt);
 				
 				// remove header
 				message.removeHeader("X-JMocha-Secure-Mail-Password");
 				message.removeHeader("X-JMocha-Secure-Mail-ReadCount");
 				message.removeHeader("X-JMocha-Secure-Mail-ReadDate");
 				message.removeHeader("X-JMocha-Secure-Mail-ServerName");
-				message.removeHeader("X-JMocha-Secure-Mail");
+				message.removeHeader("X-JMocha-Secure-Mail-PasswordHint");
+
 				
 				// timezone 처리 확인
 				if (!secureReadDate.equals("")) {
@@ -6688,7 +6716,7 @@ public class EzEmailUtil {
 				}
 				
 				// securePassword 암호화
-        		securePassword = egovFileScrty.encryptAES(securePassword);
+				securePassword = ezEmailService.encryptSecureValue(securePassword, useKlibEncrypt);
 				
 				// save secure mail info and get secureId
         		int secureId = ezEmailService.setMailSecure(tenantId, userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
@@ -6742,9 +6770,12 @@ public class EzEmailUtil {
 	        	String secureAttachHtml = this.getSecureAttachHtml(serverName, locale, useHttps);
 	        	
 	        	String secureMailKey = applicantEmail + "/" + secureId + "/" + applicantEmail;
-	        	secureMailKey = egovFileScrty.encryptAES(secureMailKey);
-	        	
-	        	secureAttachPart.setContent(secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
+				secureMailKey = ezEmailService.encryptSecureValue(secureMailKey, useKlibEncrypt);
+
+				secureAttachHtml = secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey);
+				secureAttachHtml = secureAttachHtml.replace("${passwordHint}", securePasswordHint);
+
+				secureAttachPart.setContent(secureAttachHtml, "text/html; charset=utf-8");
 	        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 	        	secureMixedPart.addBodyPart(secureAttachPart);
 	        	// make secureAttachPart and add to secureMixedPart - end
@@ -6774,7 +6805,13 @@ public class EzEmailUtil {
 				}
 	        	
 	        	encryptedFile = new File(tempPath + commonUtil.separator + UUID.randomUUID().toString());
-	        	egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
+
+				if (!useKlibEncrypt) {
+					egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
+				} else {
+					byte[] bytes = commonUtil.readBytesFromFile(originalFile.toPath());
+					commonUtil.writeBytesToFile(encryptedFile.toPath(),klibUtil.encrypt(bytes));
+				}
 	        	
 	        	if (originalFile.delete()) {
 	        		logger.debug("originalFile is deleted. fileName=" + originalFile.getName());

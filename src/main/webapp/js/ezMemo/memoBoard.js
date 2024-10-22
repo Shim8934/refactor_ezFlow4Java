@@ -353,7 +353,7 @@ function getMemoList(type) {
  * @param memoCount
  */
 function setMemoCount(memoCount) {
-	var str = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + memoCount + "</span>";
+	var str = "&nbsp;&nbsp;<span class='txt_color'>" + memoCount + "</span>";
 	$("#mailBoxInfo").html(str);
 }
 

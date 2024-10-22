@@ -2,35 +2,21 @@
 var emailFlag=false;
 function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
-    var msgDiv = document.getElementById('MsgToGot');
+    var newElem = PrepareMailTag(0, "email", g_myname, g_myemail, "");
+    var existMe = ItypeOfMailReceiverInUse(newElem);
 
     if (checked) {
-        var existMe = false;
-        for (var i = 0; i < msgDiv.childNodes.length; i++) {
-            if (msgDiv.childNodes[i].childNodes[0].getAttribute("email") && msgDiv.childNodes[i].childNodes[0].getAttribute("email") == g_myemail) {
-                existMe = true;
-            }
-        }
         if (!existMe) {
         	if (!increaseReceiverCount()) {
         		return;
         	}
         	
-            var newElem = PrepareMailTag(0, "email", g_myname, g_myemail, "");
             MsgToGot.appendChild(newElem);
         }
     } else {
-        for (var i = 0; i < msgDiv.childNodes.length; i++) {
-            if (msgDiv.childNodes[i].childNodes[0].getAttribute("email") && msgDiv.childNodes[i].childNodes[0].getAttribute("email") == g_myemail) {
-            	decreaseReceiverCount();
-            	
-            	while (msgDiv.childNodes[i].hasChildNodes()) {
-                    msgDiv.childNodes[i].removeChild(msgDiv.childNodes[i].lastChild);
-                }
-                msgDiv.removeChild(msgDiv.childNodes[i]);
-                i--;
-            }
-        }
+//      if (existMe) {
+            deleteMailUser(g_myemail, existMe);    // existMe = itype
+//      }
     }
 }
 
@@ -694,7 +680,7 @@ function attach_click(para) {
 
 function Send_onClick() {
     if (eSubject.value.trim() == "") {
-        alert(strLang92);
+        alert(strLangHSG03); // 2024.04.29 한슬기 : 제목란이 비어있습니다.
         eSubject.focus();
         return;
     }
@@ -755,6 +741,7 @@ function Send_onClick_Complete(ReturnValue) {
             	secureMailParams["securePassword"] = securePassword;
             	secureMailParams["secureReadCount"] = secureReadCount;
             	secureMailParams["secureReadDate"] = secureReadDate;
+                secureMailParams["securePasswordHint"] = securePasswordHint;
             	
             	secureMail_dialogArguments[0] = secureMailParams;
             	secureMail_dialogArguments[1] = secureMail_Complete;
@@ -974,6 +961,7 @@ function Save_onClick_Complete(ReturnValue) {
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORD", secureMailParams["securePassword"]);
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADCOUNT", secureMailParams["secureReadCount"]);
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADDATE", secureMailParams["secureReadDate"]);
+                createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORDHINT", secureMailParams["securePasswordHint"]);
             }
             
             ConvertEmbedPath(xmlDoc, xmlDoc);
@@ -1635,38 +1623,52 @@ function GetMailAddresses(name) {
 }
 
 function CheckMailReceiver(newElem) {
+    return Boolean(ItypeOfMailReceiverInUse(newElem));   // itype : '0','1','2' = 문자열 있음 = true.
+}
+function ItypeOfMailReceiverInUse(newElem) {
     var rtnValue = false;
+
+    if (newElem.childNodes[0].getAttribute("email") == g_myemail) {
+        document.getElementById('toMe').checked = true;
+    }
+
     for (co = 0; co < MsgToGot.childNodes.length; co++) {
-        if (MsgToGot.childNodes[co].childNodes[0].nodeName == "#text")
+        var nodeTo = MsgToGot.childNodes[co].childNodes[0];
+
+        if (nodeTo.nodeName == "#text")
             continue;
-        if (newElem.childNodes[0].getAttribute("email") == MsgToGot.childNodes[co].childNodes[0].getAttribute("email") && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
-            return true;
-        else if (newElem.childNodes[0].getAttribute("href") != null && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
-        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgToGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
-        		return true;
+        if (newElem.childNodes[0].getAttribute("email") == nodeTo.getAttribute("email") && nodeTo.getAttribute("type") != "mailgroup")
+            rtnValue = nodeTo.getAttribute("itype");
+        else if (newElem.childNodes[0].getAttribute("href") != null && nodeTo.getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == nodeTo.getAttribute("href").split("|!|")[0]) {
+        		rtnValue = nodeTo.getAttribute("itype");
         	}
         }
         
     }
     for (co = 0; co < MsgCCGot.childNodes.length; co++) {
-        if (MsgCCGot.childNodes[co].childNodes[0].nodeName == "#text")
+        var nodeCC = MsgCCGot.childNodes[co].childNodes[0];
+
+        if (nodeCC.nodeName == "#text")
             continue;
-        if (newElem.childNodes[0].getAttribute("email") == MsgCCGot.childNodes[co].childNodes[0].getAttribute("email") && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
-            return true;
-        else if (newElem.childNodes[0].getAttribute("href") != null && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
-        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgCCGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
-        		return true;
+        if (newElem.childNodes[0].getAttribute("email") == nodeCC.getAttribute("email") && nodeCC.getAttribute("type") != "mailgroup")
+            rtnValue = nodeCC.getAttribute("itype");
+        else if (newElem.childNodes[0].getAttribute("href") != null && nodeCC.getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == nodeCC.getAttribute("href").split("|!|")[0]) {
+        		rtnValue = nodeCC.getAttribute("itype");
         	}
         }
     }
     for (co = 0; co < MsgBCCGot.childNodes.length; co++) {
-        if (MsgBCCGot.childNodes[co].childNodes[0].nodeName == "#text")
+        var nodeBCC = MsgBCCGot.childNodes[co].childNodes[0];
+
+        if (nodeBCC.nodeName == "#text")
             continue;
-        if (newElem.childNodes[0].getAttribute("email") == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("email") && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
-            return true;
-        else if (newElem.childNodes[0].getAttribute("href") != null && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
-        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
-        		return true;
+        if (newElem.childNodes[0].getAttribute("email") == nodeBCC.getAttribute("email") && nodeBCC.getAttribute("type") != "mailgroup")
+            rtnValue = nodeBCC.getAttribute("itype");
+        else if (newElem.childNodes[0].getAttribute("href") != null && nodeBCC.getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == nodeBCC.getAttribute("href").split("|!|")[0]) {
+        		rtnValue = nodeBCC.getAttribute("itype");
         	}
         }
     }
@@ -3254,6 +3256,7 @@ function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListVi
         MsgCCGot.innerHTML = "";
         MsgBCCGot.innerHTML = "";
         receiverCount = 0;
+        document.getElementById('toMe').checked = false;
         
         if (pListViewMsgBCC.getElementsByTagName("TR").length > 1) {
             document.getElementById("BccViewer").childNodes.item(1).src = GroupminImg;
@@ -3309,6 +3312,7 @@ function addReceiver(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
     MsgCCGot.innerHTML = "";
     MsgBCCGot.innerHTML = "";
     receiverCount = 0;
+    document.getElementById('toMe').checked = false;
     
     if (pListViewMsgBCC.getElementsByTagName("TR").length > 1) {
         document.getElementById("BccViewer").childNodes.item(1).src = GroupminImg;
@@ -3705,6 +3709,10 @@ function addReceiverOneListView(iWhich, pListView) {
                 MsgBCCGot.appendChild(newElem);
                 break;
         }
+
+        if (pListView.getElementsByTagName("TR")[nCnt1].getAttribute("DATA2") == g_myemail) {
+            document.getElementById('toMe').checked = true;
+        }
     }
 }
 
@@ -3746,6 +3754,10 @@ function addReceiverFromList(iWhich, receiverlist) {
             case 2:
                 MsgBCCGot.appendChild(newElem);
                 break;
+        }
+
+        if (receiverlist["email"][nCnt1] == g_myemail) {
+            document.getElementById('toMe').checked = true;
         }
     }
 }
@@ -4007,6 +4019,10 @@ function deleteMailUser(email, iWhich, href) {
 
     if(!CrossYN())
         window.event.cancelBubble = true;
+
+    if(g_myemail == email) {
+        document.getElementById('toMe').checked = false;
+    }
 
     switch (iWhich) {
         case "0":

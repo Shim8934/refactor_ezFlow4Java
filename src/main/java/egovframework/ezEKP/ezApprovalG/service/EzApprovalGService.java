@@ -19,18 +19,22 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
+import egovframework.ezEKP.ezApprovalG.vo.PortletAprInfoVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import org.json.simple.JSONObject;
+import org.jsoup.nodes.Element;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +72,7 @@ public interface EzApprovalGService {
 
     public String getListField(String fieldName, String fieldValue, String companyID, String userLang, int tenantID, String offSet) throws Exception;
 
-    public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
+    public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag, String deptID) throws Exception;
 
     public String getLineInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 
@@ -880,10 +884,13 @@ public interface EzApprovalGService {
 
     /* 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 보안결재여부와 지정된 날짜를 체크하는 메소드 */
     public String checkSecurityApprovalDate(String docID, String companyID, int tenantID, String linemode) throws Exception;
-
-    // 2023-09-25 전인하 - 전자결재G > 배부대장 미리보기 > 진행문서 열람권한 조회
-    public String getAccessYNGforAPR(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
-
+    
+	// 2023-09-25 전인하 - 전자결재G > 배부대장 미리보기 > 진행문서 열람권한 조회
+    public String getAccessYNGforAPR(String docID, String mode, String approvalFlag, LoginVO userInfo) throws Exception;
+    
+    /* 2023-11-30 홍승비 - 전자결재 > 서명 재맵핑 > TBL_SIGNINFO 테이블의 결재서명 데이터를 XML(문자열) 형식으로 가져오는 메서드 */
+	public String getAllAprSignDataXML(String docID, String companyID, int tenantID) throws Exception;
+	
 	/* 2023-03-20 한태훈 - 전자결재 > 기록물등록대장, 완료문서조회 > 다중 선택 문서 통합PC저장 메서드 */
 	public String totalSaveDownloadAll(String[] docIDArr, LoginVO userInfo, String type, String approvalFlag, String accessInfo, String realPath, String opinionTxtFileName, String opinionWriterMark, String opinionContentMark, String attMark) throws Exception;
 
@@ -941,4 +948,43 @@ public interface EzApprovalGService {
 
     /* 2024-06-11 조소정 - 공람할문서 또는 공람완료문서 재사용 시 원문서 ID 가져오기 */
 	public String getOrgDocIDfromGongram(String beforeDocID, String companyID, int tenantId) throws Exception;
+
+	/* 2023-05-16 임정은 - 전자결재G > 기록물등록대장 > 공람정보 > 공람회수  */
+	public String gongRamCancel(String docID, int count, int aprMemberSN, String companyID, int tenantId) throws Exception;
+    
+    // 2024-04-24 조수빈 - hwp 문서 접수 처리 
+    public String receiptAll_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN, Document strXML, String orgDocID, String loginCookie) throws Exception;
+
+    // 2024-04-24 조수빈 - mht 문서 접수 처리 
+    public String receiptAll_MHT(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN, Document strXML, String orgDocID, String loginCookie) throws Exception;
+    
+    // 2024-04-24 조수빈 - hwp 서명란 세는 메소드
+    public int getHwpSignCount(String href, String key, HttpServletRequest request, LoginVO userInfo) throws Exception;
+
+    // 2024-04-24 조수빈 - 일괄 수신 처리 중 에러 발생할 경우 수신 상태를 원래대로 돌려놓는 메소드
+	public void resetSusinDoc(String orgDocID, String docID, String deptID, String userID, String companyID, int tenantID) throws Exception;
+	
+	// 2024-04-23 조수빈 - 요소의 스타일 속성을 map으로 반환
+	public Map<String, String> getElemStyleMap(Element elem) throws Exception;
+	
+	// 2024-04-23 조수빈 - map을 html style 문자열로 반환
+	public String convStyleMap2String(Map<String, String> styleMap) throws Exception;
+	
+	// 2024-06-10 조수빈 - config.useOpenGov = YES일 때 일괄 접수 처리에서는 createDate만 업데이트하기 위한 메소드
+	public void updateCreateDateOfOpenGovDocInfo(String docID, int tenant_id, String companyID);
+
+    /* 2024-07-08 임정은 - 전자결재G > 기록물배부대장 > 배부정보  > 문서 기본정보 가져오기 */
+    public ApprGDeliveryListVO getDistributeInfo(String docId, String companyId, int tenantId) throws Exception;
+
+    /* 2024-07-09 임정은 - 전자결재G > 기록물배부대장 > 배부정보 > 문서 배부정보 가져오기 */
+    public List<ApprGDeliveryListVO> getDistributeInfo2(String docId, String deliverySN, String deptId, String companyID, int tenantId, String offset) throws Exception;
+	
+	// 2024-09-11 이가은 - 사이트용 포탈 포틀릿 결재 진행문서 리스트
+	public List<ApprGDocListVO> portletAprDocList(PortletAprInfoVO portletAprInfoVO) throws Exception;
+
+	// 2024-09-11 이가은 - 사이트용 포탈 포틀릿 결재 완료문서 리스트
+	public List<ApprGDocListVO> portletEndAprDocList(PortletAprInfoVO portletAprInfoVO) throws Exception;
+    
+	// 2024-09-11 이가은 - 사이트용 포탈 포틀릿 결재문서 url 링크 반환
+    public String getRedirectUrl(String docID, String mode, LoginVO userInfo);
 }

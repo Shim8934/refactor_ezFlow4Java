@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AutoAprLine_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 		<script type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "<c:out value = '${docID}'/>";
@@ -153,6 +154,12 @@
 			// 문서보기 Flag
 			var viewDoc = "<c:out value = '${viewDocFlag}'/>";
 
+			var type = "ING"; // 2023-07-24 임정은 - 공람 추가
+			
+			var junGyulFlag = "<c:out value = '${junGyulFlag}'/>";
+            var passAprLine = "";
+            var wAprMemberSN = "1";
+
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -172,13 +179,22 @@
 		                    GetAprDocFormID();
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
-		
+		                    
+		                    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+					        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+		                    
+							// 현재 문서가 수신문이므로 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+					        if (pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+					        	message.startRemapAllAprSign_WHWP(pOrgDocID, orgCompanyID);
+					        }
+							
 		                    if (pHasOpinionYN == "Y") {
-		                        if (pAprState == "006")
+		                        if (pAprState == "006") {
 		                            pInformationContent = "<spring:message code='ezApprovalG.t124'/><br> <spring:message code='ezApprovalG.t10'/>";
-		                        else
+		                        } else {
 		                            pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t10'/>";
-		
+		                        }
+		                        
 		                        OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 		                    }
 		
@@ -190,7 +206,15 @@
 		                    GetAprDocFormID();
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
-		
+		                    
+		                    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+					        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+		                    
+					     	// 현재 문서가 수신문이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+					        if (pDraftFlag == "SUSIN" && pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+					        	message.startRemapAllAprSign_WHWP(pOrgDocID, orgCompanyID);
+					        }
+					        
 		                    if (g_DraftFlag == "REDRAFT") {
 // 		                        setMenuBar("btnAssign", false);
 // 		                        setMenuBar("btnDistribute", false);
@@ -452,10 +476,13 @@
 						connInit();
 
 						if (SignCount < 1) { // 수신사인칸이 없음
-							pGubun = "12";
-							btntotaldocinfo.style.display = "none";
-							btnSendDraft.style.display = "none";
-							setNodeText(btnRJunkyul.childNodes[0], "<spring:message code='ezApprovalG.t1406'/>");
+						    if (approvalFlag == "G") {
+                                pGubun = "12";
+                                btntotaldocinfo.style.display = "none";
+                                btnSendDraft.style.display = "none";
+                                setNodeText(btnRJunkyul.childNodes[0], "<spring:message code='ezApprovalG.t1406'/>");
+                            }else
+			                    setNodeText(btnRJunkyul.childNodes[0], "<spring:message code='ezApprovalG.csj001'/>");
 
 							setBtnEnable();
 						} else {
@@ -523,7 +550,11 @@
 			        btnSendDraftEnable = "true"
 			        IsSkipDrafter = "FALSE";
 			        btnSendDraft.Enable = "true";
-			        GetDraftAprLineInfo(ret);
+		            if (approvalFlag == "S") {
+	                    SGetDraftAprLineInfo(ret);
+                    } else {
+	                    GetDraftAprLineInfo(ret);
+                    }
 			    }
 			    else {
 			        if (ret[2] == "cancel") {
@@ -566,6 +597,12 @@
 				}	
 			
 			    try {
+		        	if (isReDraft == "Y" && checkAprState()) {
+		        		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		    			window.close();
+		    			return;
+			    	}
+
 			        if (btnSendDraftEnable == "false") {
 			            var pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
 			            OpenAlertUI(pAlertContent, check_btnSendDraft);
@@ -687,7 +724,8 @@
 			 function saveSuSinDocInfo(html) {
 		     	pOrgHtml = html;
 	          	var rtnval = true;
-                rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+	          	if (approvalFlag == "G")
+                    rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
                 if (!rtnval) {
                     UndoSignInfo(rtnSignInfo);
                     
@@ -988,6 +1026,12 @@
 			  }
 		
 			  function btnOpinion_onclick() {
+                if (isReDraft == "Y" && checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    window.close();
+                    return;
+                }
+
 			      //var ret = openOpinionUI("N");
 				  openOpinionUI_New("");
 			  }
@@ -1046,7 +1090,13 @@
 			  	  } else if (deptCheckFlag == "2") {
 				  	  alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					  return;
-				  }  
+				  }
+
+                    if (isReDraft == "Y" && checkAprState()) {
+                        alert("<spring:message code='ezApprovalG.bhs23'/>");
+                        window.close();
+                        return;
+                    }
 			  
 			      var parameter = new Array();
 			      parameter[0] = pDocID;
@@ -1087,7 +1137,13 @@
 				  } else if (deptCheckFlag == "4") {
 					  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					  return;
-				  }  
+				  }
+
+                    if (isReDraft == "Y" && checkAprState()) {
+                        alert("<spring:message code='ezApprovalG.bhs23'/>");
+                        window.close();
+                        return;
+                    }
 			  
 			      var parameter = new Array();
 			      parameter[0] = pDocID;
@@ -1130,7 +1186,13 @@
 				} else if (deptCheckFlag == "2") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
-				}	
+				}
+
+				if (isReDraft == "Y" && checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    window.close();
+                    return;
+                }
 			
 			    if (message.FieldExist("receiptnumber")) {
 			        var fieldValue = trim(message.GetFieldText("receiptnumber"));
@@ -1166,6 +1228,11 @@
 			
 			function btnReturn_onclick_Complete(ret) {
 				DivPopUpHidden();
+				if (isReDraft == "Y" && checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    window.close();
+                    return;
+                }
 				
 			    var hesongok = true;
 				if (ret != "cancel" && ret != undefined) {
@@ -1237,7 +1304,13 @@
 				} else if (deptCheckFlag == "2") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
-				}	
+				}
+
+				if (isReDraft == "Y" && checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    window.close();
+                    return;
+                }
 			
 			    var Resultxml;
 			    var UserID = "<c:out value = '${userInfo.id}'/>";
@@ -1309,8 +1382,9 @@
 	                        } else {
 	    	                    GetDraftAprLineInfo(retvalue);
 	                        }
+	                        passAprLine = "N";
 	    		            btnSendDraftEnable = "true";
-	    		            CurAprType = "<spring:message code='ezApprovalG.t25'/>";
+	    		            CurAprType = strAprType4; // 결재유형을 '전결' 문자가 아닌 코드(004)로 수정
 	    		            LastSignSN = "1";
 	    		            btnSendDraft_onclick();
             			} else {
@@ -1336,6 +1410,7 @@
 			var tempKeyword = "";
 			var tempItemCode = "";
 			var tempItemName = "";
+            var tempItemName2 = "";
 			var tempdocnumcode = "<spring:message code='ezApprovalG.t45'/>";
 			var tempSecurityDate = "";
 
@@ -1523,7 +1598,13 @@
 				} else if (deptCheckFlag == "4") {
 					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					return;
-				}	
+				}
+
+				if (isReDraft == "Y" && checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    window.close();
+                    return;
+                }
 			
 			    var onlydocinfiview = false;
 			    var parameter = new Array();
@@ -1584,6 +1665,17 @@
 			        parameter[50] = g_szSCListXml; // 특수목록
 			        parameter[51] = sepAttachCheckYN; // 분첨 확인여부
 		        }
+
+                if (approvalFlag == "S") {
+                    parameter[19] = "ING";
+                    parameter[20] = tempKeep;
+                    parameter[23] = tempPublic;
+                    parameter[25] = tempItemCode;
+                    parameter[29] = TaskCode;
+                    parameter[33] = pSummery;
+                    parameter[41] = tempItemName;
+                    parameter[42] = tempItemName2;
+                }
 			    
 			    if (useOpenGov == "YES") {
 			        parameter[52] = basis;
@@ -1596,7 +1688,8 @@
 			    if (tempItemCode != "") {
 			        tempdocnumcode = tempItemCode;
 			    }
-			    
+
+			    parameter[60] = passAprLine;
 			    parameter[61] = tempKeyword;
 			    
 		        ezapprovalinfo_dialogArguments[0] = parameter;
@@ -1606,7 +1699,7 @@
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 		        	try { OpenWin.focus(); } catch (e) { }
 					  
 		        }
@@ -1722,6 +1815,14 @@
 	                            reason = ret[30];
 	                            limitDate = ret[31];
 							}
+
+							// 2023-07-24 임정은 - 공람 추가
+							if (ret[22] == "noItem") {
+								delAprLineInfoCC();
+							} else if (ret[22] == "sameItem") {
+							} else {
+								SaveAprLineInfoCC(ret[22]);
+							}
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
@@ -1732,7 +1833,7 @@
 		                	tempPublic = ret[11];
 		                	SetDocOption(ret[20]);
 		                }
-		                
+		                passAprLine = ret[32];
 		                
 		                SummaryFlag = true;
 		                message.EditMode(3);
@@ -1976,6 +2077,38 @@
 
 				return rtnVal;
 			}
+			
+			//S전용
+            function SetDocOption(pkeeperiodvaltemp, tempSecurityValue) {
+                putText(["keepperiod"], pkeeperiodvaltemp, "");
+                putText(["securitylevel"], tempSecurityValue, "");
+                putText(["publication"], tempPublic == "N" ? "비공개" : "공개", "");
+            }
+
+            function checkAprState() {
+                var result = "";
+
+                if (approvalFlag == "S") {
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : "/ezApprovalG/checkAprState.do",
+                        data : {
+                            docID : pDocID,
+                            docState : pDocState,
+                            userID : '',
+                            aprMemberSN : wAprMemberSN,
+                            orgCompanyID : orgCompanyID
+                        },
+                        success : function(text) {
+                            result = text;
+                        }
+                    });
+                }
+
+                return result == "FALSE" ? true : false;
+            }
 		</script>
 	</head>
 	
@@ -2070,7 +2203,7 @@
 								<div id="lstAttachLinkDoc" style="height:70px;"></div>
 							</td>
 							<td class="pos2" style="width:8%; background:#fffcfa;">
-								<a class="imgbtn imgbck" style="width:70px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+-								<a class="imgbtn imgbck" style="width:70px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
 								<a class="imgbtn imgbck" style="width:70px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
 							</td>
 	                    </tr>

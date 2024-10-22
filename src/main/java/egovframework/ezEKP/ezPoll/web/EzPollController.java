@@ -769,18 +769,22 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
 		getAllUserForQuestion(loginVO, pollQuestionVO.getQstId(), setOfUserIds);
-		String notiReceipientIds = "";
-		String separator = ";;";
+		
+		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+		
 		for (LoginVO user : setOfUserIds) {
-			notiReceipientIds += user.getId() + separator;
-		}
-		if (notiReceipientIds != null && !notiReceipientIds.equals("")) {
-			notiReceipientIds = notiReceipientIds.substring(0, notiReceipientIds.length() - separator.length());
+			Map<String, Object> recipientMap = new HashMap<String, Object>();
+			recipientMap.put("userType", "PERSON");
+			recipientMap.put("companyId", loginVO.getCompanyID());
+			recipientMap.put("cn", user.getId());
+			notiRecipientList.add(recipientMap);
 		}
 		
-		String linkUrl = "/ezPoll/pollVote.do?brdId=6&qstId=" + pollAnswerVO.getQstId();
-    	String linkUrlMobile = "";
-    	ezNotificationService.sendNoti(req, loginVO.getId(), loginVO.getDisplayName(), notiReceipientIds, "POLL", "NEW", pollQuestionVO.getTitle(), "popup", "900", "750", linkUrl, linkUrlMobile, "");
+		if (notiRecipientList != null && notiRecipientList.size() > 0) {
+			String linkUrl = "/ezPoll/pollVote.do?brdId=6&qstId=" + pollAnswerVO.getQstId();
+			String linkUrlMobile = "";
+			ezNotificationService.sendNoti(req, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "POLL", "NEW", pollQuestionVO.getTitle(), "popup", "900", "750", linkUrl, linkUrlMobile, "");
+		}
 		
     	// Send posting notification mail
     	// 메일 발송 체크되어 있고, 투표 등록이나 재사용일 경우 => true

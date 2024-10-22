@@ -9,6 +9,7 @@ var mainType = {
 	community : "masyarakat",
 	webfolder : "folder web",
 	journal : "Jurnal Kerja",
+	noti : "Pemberitahuan",
 	etc : "dll."
 }
 
@@ -37,8 +38,11 @@ var subType = {
 	},
 	schedule : {
 		add : "Jadwalkan undangan",
+		cancel : "membatalkan undangan",
 		accept : "Undangan disetujui",
-		reject : "Penolakan undangan"
+		reject : "Penolakan undangan",
+		mod : "Ubah jadwal",
+		reminder : "Pengingat"
 	},
 	resource : {
 		reserve : "Reservasi sumber daya",
@@ -46,9 +50,7 @@ var subType = {
 		cancel : "Batalkan persetujuan",
 		reject : "Persetujuan ditolak"
 	},
-	survey : {
-		modify : "Pemberitahuan modifikasi"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "Persetujuan penciptaan",
@@ -71,6 +73,9 @@ var subType = {
 	journal : {
 		comment : "Tulis komentar",
 		recv : "Pemberitahuan Penerimaan"
+	},
+	noti : {
+		emergency : "Pemberitahuan Darurat"
 	}
 }
 
@@ -78,7 +83,7 @@ subType["approval"]["return"] = "Pemulihan dokumen";
 subType["approval"]["default"] = "Notifikasi Persetujuan";
 subType["board"]["new"] = "Postingan baru";
 subType["board"]["return"] = "Tolak persetujuan";
-subType["schedule"]["delete"] = "membatalkan undangan";
+subType["schedule"]["delete"] = "Hapus acara";
 subType["survey"]["new"] = "Pendaftaran baru";
 subType["poll"]["new"] = "Pendaftaran baru";
 subType["community"]["new"] = "Pendaftaran baru";
@@ -86,3 +91,5 @@ subType["community"]["new"] = "Pendaftaran baru";
 var notiMessages = {
 	strLang1 : '"No data."'
 }
+
+var notiDayNames = ["Mg", "Sn", "Sl", "Rb", "Km", "Jm", "Sb"];

@@ -822,7 +822,7 @@
 	                          
 	              		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 	              		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
-	              		        	parent.opener.getApprovalList("reject");
+	              		        	parent.opener.clearAbsence(true);
 	              		        }
 	                            
 	                            window.close();
@@ -1067,7 +1067,7 @@
 		        if (!HwpCtrl.CheckFieldExist("publication")) return;
 		        var PublicType = pPublicityYN.substring(0, 1);
 
-		        if (PublicType == "Y")
+		        if (PublicType == "Y" || PublicType == "B")
 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
 		        else if (PublicType == "N")
 		            PublicText = "<spring:message code='ezApprovalG.t46'/>";
@@ -1347,7 +1347,9 @@
 			                tempPublic = "N";
 			            } else if (ret[21].substring(0,1) == "Y") {
 		                	tempPublic = "Y";
-		                }
+		                } else if (ret[21].substring(0,1) == "B") {
+							tempPublic = "B";
+						}
 			            setPublicFlag();
 			            SummaryFlag = true;
 			            

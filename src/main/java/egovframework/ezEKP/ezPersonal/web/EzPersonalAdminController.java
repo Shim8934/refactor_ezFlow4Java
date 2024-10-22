@@ -343,7 +343,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getParameter("companyId") != null) {
 			companyId = request.getParameter("companyId");
 		} else {
-			companyId = auth.getCompanyID();
+			companyId = "";
 		}
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(auth.getPrimary(), auth.getTenantId());
@@ -519,22 +519,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-
-		String companyId = userInfo.getCompanyID();
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
-		
-		model.addAttribute("list", resultList);
-		model.addAttribute("companyId", companyId);
 
 		logger.debug("managePoll ended");
 		return "admin/ezPersonal/personalManagePoll";
@@ -822,20 +806,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		String noneActiveX = config.getProperty("NONEACTIVEX");
 		String useEditor = config.getProperty("EDITOR");
-		String companyId = userInfo.getCompanyID();
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
-		
-		model.addAttribute("companyId", companyId);
-		model.addAttribute("list", resultList);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useEditor", useEditor);
 
@@ -1184,6 +1155,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		String term = request.getParameter("term");
 		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+		String jobName = request.getParameter("jobName"); // 같은 부서에 겸직이 되어있는경우 오류가 발생하여 직위 조건 추가
 		
 		if (request.getParameter("userID") != null) {
 			userID = request.getParameter("userID");
@@ -1193,7 +1165,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		try {
-			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, companyID, userInfo.getTenantId());
+			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, companyID, userInfo.getTenantId(), jobName);
 			logger.debug("setEmployeeMonth ended");
 			return "OK";
 		} catch (Exception e) {

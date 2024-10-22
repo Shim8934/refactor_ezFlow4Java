@@ -264,7 +264,9 @@
 	    	var hapyuiCountAry = new Array();
 	    	var SignCountAry = new Array();
 	    	var gamsaCountAry = new Array();
-	    	
+
+	    	var extAry = new Array();
+
 	    	// 결재정보는 모든 안에서 공유하므로, 굳이 배열을 쓰지 않아도 된다. (첨부파일 공개리스트 등은 개별로 유지)
 	    	var btnReceivLineEnableAry = new Array(); // 수신처 존재 여부 (별도 유지)
 			var SummaryOuterReceiverListAry = new Array(); // 외부수신자 리스트 (별도 유지)
@@ -345,13 +347,15 @@
 					pDocIDAry.push("");
 					pFormHrefAry.push("");
 					pDocTypeAry.push("");
-	        		
+					extAry.push("");
+
 	        		// 임시저장 또는 반송 후 재기안 문서 (안 번호는 ASC 정렬된 상태로 1안부터 전달됨)
                 	<c:forEach items="${groupDocInfoList}" var="item">
                 		DocSNAry.push("${item.docID}");
                 		pDocIDAry.push("${item.docID}");
 	        			pFormHrefAry.push("${item.docHref}"); // 문서경로
 	        			pDocTypeAry.push("${item.docType}");
+	        			extAry.push("${item.docHref}".substring("${item.docHref}".lastIndexOf(".") + 1)); // 확장자
 	        		</c:forEach>
 	        		
 	        		reDraftFlag = true;
@@ -562,7 +566,33 @@
 	        	var strBytes = parseInt(getByteLength(strClone));
 		    	var rtnAttachXML = loadXMLString(sendDraftResultAry[currIdx]);
                 var attachTotalSize = getNodeText(rtnAttachXML.getElementsByTagName("TOTALSIZE").item(0));
-                
+
+                if (pDraftFlag == "REDRAFT" && approvalFlag == "S" && ListType != "21" && currIdx == 1) {
+                    var result = "";
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : "/ezApprovalG/checkAprState.do",
+                        data : {
+                            docID : pDocIDAry[1],
+                            docState : DocState,
+                            userID : '',
+                            aprMemberSN : 1,
+                            orgCompanyID : orgCompanyID
+                        },
+                        success : function(text) {
+                            result = text;
+                        }
+                    });
+                    if (result == "FALSE") {
+                        alert("<spring:message code='ezApprovalG.bhs23'/>");
+                        window.returnValue = "CLOSE";
+                        window.close();
+                        return;
+                    }
+                }
+
                 // 1안의 첨부정보가 안추가 시 외부시행문으로 복사되더라도, 해당 알러트에서 체크해준다.
                 // 외부시행문이 외부 수신처를 가지는 경우에만 체크한다. (수신자가 회사 내부 조직도만 존재한다면 첨부용량을 따지지 않는다.)
                 if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
@@ -652,7 +682,7 @@
                 
                 // 기록물철은 모든 안 공통이므로, 그냥 공통 알러트 메세지 사용
                 if (cabinetID == "") {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t1397'/>";
+                    var pAlertContent = approvalFlag == "G" ? "<spring:message code='ezApprovalG.t1397'/>" : "<spring:message code='ezApprovalG.t137'/>";;
                     HiddenMailProgress();
                     OpenInformationUI(pAlertContent, check_btnSendDraft3);
                     return;
@@ -847,7 +877,7 @@
 		        draftFlag = true;
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) { 
-		        	parent.opener.getApprovalList("reject");
+		        	parent.opener.clearAbsence(true);
 		        }
 		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가
 /* 		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
@@ -876,7 +906,7 @@
 		        // 리프레시 동작은 한번만 진행하면 된다.
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) {
-		        	parent.opener.getApprovalList("reject");
+		        	parent.opener.clearAbsence(true);
 		        }
 		        window.close();
 		    }
@@ -1244,7 +1274,9 @@
 			        parameter[12] = "DRAFT";
 			        parameter[17] = AprLineArea;
 			        parameter[18] = HapyuiArea;
+                    parameter[20] = tempKeep;
 			        parameter[28] = onlydocinfiview
+			        parameter[29] = TaskCode;
 			        parameter[30] = cabinetID;
 			        
 			        parameter[31] = tempSecurity;
@@ -1291,7 +1323,7 @@
 	                ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			
 	                var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID + "&draftAllFlag=Y";
-			        var ret = window.open(url, '', 'height=750,width=1194,scrollbars=no' + GetOpenPosition(1194, 750));
+			        var ret = window.open(url, '', 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e);
 			    }
@@ -1321,12 +1353,33 @@
 		                var ifrms = $(".tab_container").find("iframe");
 		                for (var i = 0; i < ifrms.length; i++) {
 		                	// 자식창 내부에서 결재선 확인 및 부모창의 LastSignSN, lastKyulName 값 등을 변경함 (모든 안 공통이므로)
-		                	ifrms[i].contentWindow.GetDraftAprLineInfo(ret);
+		                	if(approvalFlag == "S")
+		                	    ifrms[i].contentWindow.SGetDraftAprLineInfo(ret);
+		                	else
+		                	    ifrms[i].contentWindow.GetDraftAprLineInfo(ret);
 						}
+						TempsaveAprlineinfo = ret[1];
 		            }
 		            
 		            // 수신처는 개별 안에만 적용하므로, 루프를 돌리지 않는다.
 		            if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
+
+                        if ($(currIfrm).find("#autoLine") != null) {
+                            var oDIV = document.createElement("DIV");
+                            oDIV.className = "FIELD";
+                            oDIV.id = "RecvautoAprLine";
+
+                            if ($(currIfrm).contents().find("#RecvautoAprLine").length <= 0) {
+                                $(currIfrm).contents().find("#autoLine").append(oDIV);
+                            } else {
+                                //수신문 회송받아서 재기안할 때, 수신사인칸 초기화작업
+                                if (pDraftFlag == "REDRAFT") {
+                                    $(currIfrm).contents().find("#RecvautoAprLine").remove();
+                                    $(currIfrm).contents().find("#autoLine").append(oDIV);
+                                }
+                            }
+                        }
+
 		            	$.ajax({
                     		type : "POST",
                     		dataType : "text",
@@ -1338,8 +1391,10 @@
                     	});
 		            	
 		                btnReceivLineEnable = false;
-		                SummaryOuterReceiverList = ret[15];
-		                SummaryOuterReceiverListAry[currentTabIdx] = ret[15];
+		                if (approvalFlag == "G"){
+                            SummaryOuterReceiverList = ret[15];
+                            SummaryOuterReceiverListAry[currentTabIdx] = ret[15];
+		                }
 		                currIfrm.contentWindow.setRecevInfo(ret[3]); // 현재 선택한 안에 대해서만 수신자를 지정
 		                btnReceivLineEnableAry[currentTabIdx] = true; // 일괄기안 데이터 배열의 수신처가 존재한다는 플래그 변경
 		            } else if (pSuSinFlag == "Y" && ret[2] == "") {
@@ -1347,66 +1402,99 @@
 		                currIfrm.contentWindow.setRecevInfo("");
 		            }
 		
+		            var g_SelCabXml = ret[4];
+		            var xmlCab = loadXMLString(g_SelCabXml);
 		            // 기록물철과 단위업무 코드 설정
 		            if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
 		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		            }
-		            
-		            var g_SelCabXml = ret[4];
-		            var xmlCab = loadXMLString(g_SelCabXml);
-		            
+
+
 	            	cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 	            	tempKeyword = ret[6];
 		            tempSecurity = ret[7];
 		            tempUrgent = ret[8];
 		            pSummery = ret[9];
-		            pSpecialRecordCode = ret[10];
 		            pPublicityCode = ret[11];
-		            pLimitRange = ret[12];
-		            pPageNum = ret[13];
 		            tempSecurityDate = ret[14];
 		            pPublicityYN = ret[21];
 		            
 		            if (pPublicityYN.substring(0,1) == "N") {
-	                	tempPublic = "N";
-	                } else if (pPublicityYN.substring(0,1) == "Y") {
-	                	tempPublic = "Y";
-	                }
-		            
+                        tempPublic = "N";
+                    } else if (pPublicityYN.substring(0,1) == "Y") {
+                        tempPublic = "Y";
+                    } else if (pPublicityYN.substring(0,1) == "B") {
+                        tempPublic = "B";
+                    }
+
+		            if (approvalFlag == "G") {
+                        pSpecialRecordCode = ret[10];
+                        pLimitRange = ret[12];
+                        pPageNum = ret[13];
+
+                        setPublicFlag();
+                        setKeepPeriod();
+
+/*                        if (nonElecRec == "Y") {
+                            nonElecRecInfoXml = ret[23];
+                            nonSepAttachLVXml = ret[24];
+                            sepAttachCheckYN = ret[26];
+                            setNonElecRecInfo_mht(nonElecRecInfoXml);
+                        } */
+
+					    // 모든 문서에 대해 동일한 원문공개정보 삽입 (각 안별 첨부파일 공개여부는 별도로 관리)
+                        if (useOpenGov == "YES") {
+                            listOpenFlag = ret[27];
+                            fileOpenFlagList = ret[28];
+                            basis = ret[29];
+                            reason = ret[30];
+                            limitDate = ret[31];
+
+                            $.ajax({
+                                type : "POST",
+                                dataType : "text",
+                                async : false,
+                                url : "/ezApprovalG/openGovInfoSaveAll.do",
+                                data : {
+                                    openGovListFlag : listOpenFlag,
+                                    fileOpenFlagList : fileOpenFlagList,
+                                    basis : basis,
+                                    reason :  reason,
+                                    publicity : pPublicityCode,
+                                    docID : pDocID,
+                                    limitDate : limitDate,
+                                    // 일괄기안용 추가 파라미터
+                                    pDocIDAry : pDocIDAry,
+                                    fileOpenFlagListAry : fileOpenFlagList // 배열로 전달됨
+                                }
+                            });
+                            // 일괄기안일경우 현재 선택한 탭의 fileOpenFlag 변경 (첨부파일은 각 안별로 취급하므로, 공통이 아님)
+                            fileOpenFlagListArr[currentTabIdx] = fileOpenFlagList;
+                        }
+                    } else {
+                        //회람
+                        /* if (ret[22] == "noItem") {
+                            delAprLineInfoCC();
+                        } else if (ret[22] == "sameItem") {
+                            // ret[22] 값이 "sameItem"일 경우 동작 없음
+                        } else {
+                            //회람 저장
+                             SaveAprLineInfoCC(ret[22]);
+                        } */
+
+                        tempKeep = ret[16];
+                        tempItemName = ret[17];
+                        tempItemName2 = ret[18];
+                        tempSecurityValue = ret[19];
+                        pPageNum = "1";
+                        pLimitRange = "1";
+                        pSpecialRecordCode = "1";
+                        tempPublic = ret[11];
+                        SetDocOption(ret[20]);
+                    }
+
 		            passAprLine = ret[32]; // "N"만 들어갈듯
 
-					// 모든 문서에 대해 동일한 원문공개정보 삽입 (각 안별 첨부파일 공개여부는 별도로 관리)
-		            if (useOpenGov == "YES") {
-						listOpenFlag = ret[27];
-                        fileOpenFlagList = ret[28];
-                        basis = ret[29];
-                        reason = ret[30];
-                        limitDate = ret[31];
-	                        
-                        $.ajax({
-                            type : "POST",
-                            dataType : "text",
-                            async : false,
-                            url : "/ezApprovalG/openGovInfoSaveAll.do",
-                            data : {
-                                openGovListFlag : listOpenFlag,
-                                fileOpenFlagList : fileOpenFlagList,
-                                basis : basis,
-                                reason :  reason,
-                                publicity : pPublicityCode,
-                                docID : pDocID,
-                                limitDate : limitDate,
-                                // 일괄기안용 추가 파라미터
-                                pDocIDAry : pDocIDAry,
-                				fileOpenFlagListAry : fileOpenFlagList // 배열로 전달됨
-                            }
-                        });
-                        
-						// 일괄기안일경우 현재 선택한 탭의 fileOpenFlag 변경 (첨부파일은 각 안별로 취급하므로, 공통이 아님)
-                        fileOpenFlagListArr[currentTabIdx] = fileOpenFlagList;
-					}
-		            
-		            setPublicFlag();
 		            SummaryFlag = true;
 		            setTabInfo();
 		        }
@@ -1877,6 +1965,7 @@
 	            var formid = "";
 	            var formdoctype = "";
 	            var formFileLocation = "";
+	            var formExt = "";
 	            viewTabNum = $("dl.tab_menu dt").length;
 	            
 	            // 양식 선택하지 않고 안을 추가하는 경우 알러트
@@ -1888,6 +1977,7 @@
 	                formid = selFormID.split("|")[0];
 	                formdoctype = selFormID.split("|")[1];
 	                formFileLocation = selFormID.split("|")[2];
+	                formExt = formFileLocation.substring(formFileLocation.lastIndexOf(".") + 1);
 	            }
 	            
 	            // 탭은 10개까지 허용 (최대 허용 안의 갯수는 이후 테넌트 컨피그로 분리 예정)
@@ -1925,7 +2015,8 @@
 	                pFormIDAry[newTabIdx] = formid; // 양식ID 
 	                pDocType  = formdoctype; // 양식 타입 (내부결재, 수신문, 시행문...)
 	                pDocTypeAry[newTabIdx] = formdoctype; 
-	                
+	                extAry[newTabIdx] = formExt;
+
 	            	 // 문서정보를 부모 페이지의 배열에 복사 (결재정보를 지정하지 않은 경우, 해당 값들은 대부분 공백으로 부여된다.)
 	            	 // undefined2EmptyString 함수를 사용하지 않는 이유?  => 하단에서 동작할 setTabInfo 함수에서 undefined 체크 후 특정한 디폴트 값을 부여하기 위함
 	            	 // 결재정보 중 안마다 별도로 관리해야 하는 부분은 원문공개사용 시 첨부파일의 공개여부
@@ -1943,7 +2034,7 @@
 	                    addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:black;\"> ";
 	                }
 	                
-	                var iframeURL = "/ezApprovalG/draftContentAll_WHWP.do?frameNum=" + newTabIdx + "&formID=" + encodeURI(pFormIDAry[newTabIdx]) + "&docHref=" + encodeURI(pFormHrefAry[newTabIdx]) + "&docID=" + encodeURI(pDocIDAry[newTabIdx]);
+	                var iframeURL = (formExt == "mht" ? "/ezApprovalG/draftContent.do" : "/ezApprovalG/draftContentAll_WHWP.do") + "?frameNum=" + newTabIdx + "&formID=" + encodeURI(pFormIDAry[newTabIdx]) + "&docHref=" + encodeURI(pFormHrefAry[newTabIdx]) + "&docID=" + encodeURI(pDocIDAry[newTabIdx]);
 					addString = addString + "<iframe name=\"ifrm" + newTabIdx + "\" id=\"ifrm" + newTabIdx + "\" style=\"width:100%; height:" + wh + "px; border:0px\" onload=\"getReSize()\" src=\"" + iframeURL + "\"></iframe></div>";
 							
 	                $("div.tab_container").append(addString);
@@ -2036,14 +2127,14 @@
 	                    var addString = "";
 	                    if (viewNewTabCnt == 1) {
 	                        $("dl.tab_menu").append("<dt class=\"on\" id=\"dt" + newTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + newTabIdx + "')\"  id=\"sp" + newTabIdx + "\">" + newTabIdx + " " + strLangHSBRDa01 + "</span></dt>");
-	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:black;\">";
+	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:block;\">";
 	                    }
 	                    else {
 	                        $("dl.tab_menu").append("<dt id=\"dt" + newTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + newTabIdx + "')\"  id=\"sp" + newTabIdx + "\">" + newTabIdx + " " + strLangHSBRDa01 + "</span></dt>");
-	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:none;\">";
+	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:block;\">";
 	                    }
 	                    
-	                    var iframeURL = "/ezApprovalG/draftContentAll_WHWP.do?frameNum=" + newTabIdx + "&docHref=" + encodeURI(pFormHrefAry[newTabIdx]) + "&docID=" + encodeURI(pDocIDAry[newTabIdx]);
+	                    var iframeURL = (extAry[i] == "mht" ? "/ezApprovalG/draftContent.do" : "/ezApprovalG/draftContentAll_WHWP.do") + "?frameNum=" + newTabIdx + "&docHref=" + encodeURI(pFormHrefAry[newTabIdx]) + "&docID=" + encodeURI(pDocIDAry[newTabIdx]);
                         addString = addString + "<iframe name=\"ifrm" + newTabIdx + "\" id=\"ifrm" + newTabIdx + "\" onload=\"getReSize()\" style=\"width:100%; height:" + wh + "PX; border:0px\" src=\"" + iframeURL + "\"></iframe></div>";
 	                    
 	                    $("div.tab_container").append(addString);
@@ -2081,7 +2172,7 @@
 	                    }
 
  						// formID는 자식 프레임에서 process_AfterOpen() > GetAprDocFormID()로 알아서 가져오게 된다. 안 넘겨줘도 됨
- 						var iframeURL = "/ezApprovalG/draftContentAll_WHWP.do?frameNum=" + newTabIdx + "&docHref=" + encodeURI(pFormHrefAry[newTabIdx]) + "&docID=" + encodeURI(pDocIDAry[newTabIdx]);
+ 						var iframeURL = (extAry[i] == "mht" ? "/ezApprovalG/draftContent.do" : "/ezApprovalG/draftContentAll_WHWP.do") + "?frameNum=" + newTabIdx + "&docHref=" + encodeURI(pFormHrefAry[newTabIdx]) + "&docID=" + encodeURI(pDocIDAry[newTabIdx]);
  						addString = addString + "<iframe name=\"ifrm" + newTabIdx + "\" id=\"ifrm" + newTabIdx + "\" style=\"width:100%; height:" + wh + "px; border:0px\" onload=\"getReSize()\" src=\"" + iframeURL + "\"></iframe></div>";
  						
 	                    $("div.tab_container").append(addString);
@@ -2224,6 +2315,7 @@
 	        	// 결재정보 > 문서정보들 중 안별 관리 정보
 				btnReceivLineEnableAry = btnReceivLineEnableAry.slice(0, idx).concat(btnReceivLineEnableAry.slice(idx + 1)); // 수신처 존재 여부
 				SummaryOuterReceiverListAry = SummaryOuterReceiverListAry.slice(0, idx).concat(SummaryOuterReceiverListAry.slice(idx + 1)); // 외부수신자 리스트
+				extAry = extAry.slice(0, idx).concat(extAry.slice(idx + 1)); // 확장자 리스트
 				fileOpenFlagListArr = fileOpenFlagListArr.slice(0, idx).concat(fileOpenFlagListArr.slice(idx + 1)); // 첨부파일 공개여부 플래그
 	        }
 	        
@@ -2238,18 +2330,21 @@
 	        
 	        // 결재정보 호출 전, 모든 안의 양식을 체크하여 결재서명칸/합의서명칸의 갯수 중 가장 작은 값을 설정한다.
 	        function setLowerSignCount() {
-	        	lowerSignCnt = SignCountAry[1];
+	            // mht 자동결재선 용으로 20으로 먼저 설정
+	        	lowerSignCnt = 20;
 	        	lowerSignTab = 1;
-	        	lowerHapyuiCnt = hapyuiCountAry[1];
+	        	lowerHapyuiCnt = 20;
 	        	lowerHapyuiTab = 1;
 	        	
-	        	for (var i = 1; i <= pDocIDAry.length; i++) {
-	        		if (SignCountAry[i] < lowerSignCnt) {
+	        	for (var i = 1; i < pDocIDAry.length; i++) {
+	        	    var isHWP = extAry[i] == "hwp";
+	        	    var isAuto = document.getElementById("ifrm" + i).contentDocument.getElementById("autoLine");
+	        		if (SignCountAry[i] < lowerSignCnt && (isHWP || !isAuto)) {
 	        			lowerSignCnt = SignCountAry[i];
 	        			lowerSignTab = i;
 	        		}
 	        		
-	        		if (hapyuiCountAry[i] < lowerSignCnt) {
+	        		if (hapyuiCountAry[i] < lowerHapyuiCnt && (isHWP || !isAuto)) {
 	        			lowerHapyuiCnt = hapyuiCountAry[i];
 	        			lowerHapyuiTab = i;
 	        		}
@@ -2343,7 +2438,240 @@
 					console.log(e);
 				}
 			}
-			
+
+			function DocumentComplete(frame) {
+                try {
+                    if (ListType == "21") {
+                        btnSendDraftEnable = "true";
+                        SummaryFlag = true;
+                    }
+                    var frameName = frame.name;
+                    var frameNum = frameName.substring(4);
+                    pFormID = pFormIDAry[frameNum];
+                    setInitLoadDocCellInfo(document.getElementById(frameName).contentWindow);
+                    if (!pFormID && DraftFlag == "REDRAFT" && !pDocIDAry[frameNum]) {
+                        var pAlertContent = "잘못된 양식 문서입니다.";
+                        OpenAlertUI(pAlertContent);
+                    }
+                    frame.Set_EditorContentURL(pFormHrefAry[frameNum]);
+                }
+                catch (e) {
+                    OpenAlertUI("DocumentComplete : " + e.description);
+                }
+            }
+
+            function setInitLoadDocCellInfo(message) {
+                try {
+                    var i;
+                    var j;
+                    var k;
+                    var fieldsign;
+                    var fieldTmpsign;
+                    var fieldseumyung;
+                    var fieldTmpseumyung;
+                    var fieldseumyungdate;
+                    var fieldTmpseumyungdate;
+                    var field;
+                    var RtnVal;
+                    var SignArray = new Array();
+                    var SignArrayLen;
+
+                    SignArray[0] = "sign";
+                    SignArray[1] = "habyuisign";
+
+                    var fieldSN = 1;
+                    var fieldNum = 1;
+                    var fields = message.GetFieldsList();
+
+                    SignArrayLen = SignArray.length;
+
+                    if (!fields) return;
+
+                    for (k = 0 ; k < SignArrayLen ; k++) {
+                        for (i = 0 ; i < fieldNum ; i++) {
+                            if (i == "0") {
+                                fieldsign = SignArray[k];
+                                fieldseumyung = "seumyung";
+                                fieldseumyungdate = "seumyungdate";
+                            } else {
+                                fieldsign = i + SignArray[k];
+                                fieldseumyung = i + "seumyung";
+                                fieldseumyungdate = i + "seumyungdate";
+                            }
+                            fieldTmpsign = fieldsign + 1;
+                            field = message.GetListItem(fields, fieldTmpsign);
+                            if (field) {
+                                for (j = 0 ; j < fieldSN ; j++) {
+                                    fieldTmpsign = fieldsign + (parseInt(j) + 1);
+                                    fieldTmpseumyung = fieldseumyung + (parseInt(j) + 1);
+                                    fieldTmpseumyungdate = fieldseumyungdate + (parseInt(j) + 1);
+
+                                    field = message.GetListItem(fields, fieldTmpsign);
+
+                                    if (field) {
+                                        field.textContent = "";
+                                        field = message.GetListItem(fields, fieldTmpseumyung);
+                                        if (field) {
+                                            field.textContent = "";
+                                        }
+
+                                        field = message.GetListItem(fields, fieldTmpseumyungdate);
+                                        if (field) {
+                                            field.textContent = "";
+                                        }
+
+                                        fieldSN = parseInt(fieldSN) + 1;
+
+                                    } else {
+                                        fieldNum = parseInt(fieldNum) + 1;
+                                        break;
+                                    }
+                                }
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    alert("setInitLoadDocCellInfo()" + e.description);
+                }
+            }
+
+            function FieldsAvailable(frame) {
+                try {
+                    var frameName = frame.name;
+                    var frameNum = frameName.substring(4);
+                    // 기안자 정보 xmluserInfo 변수는 onload 시 부모 페이지에서 가져온 값을 그대로 사용 (하단의 SetAutoPropertyValue에서 사용됨)
+                    frame.SetAutoPropertyValue(frameNum);
+
+                    frame.process_AfterOpen(frameNum);
+                    // 현재 안 탭의 정보를 부모페이지에도 저장
+                    setTabInfo(frameNum);
+
+                    // 반송문서가 아닌 임시저장 문서의 경우, 안 추가 시 초기 고정수신처 세팅 진행
+                    if (pDraftFlag != "REDRAFT" || (ListType == "21" && addFlag == true)) {
+                        frame.setFirstDrafter(); // 기본 결재선 설정 및 고정수신처 설정 등을 진행 (ezDraftAll_WHWP.js > GetDraftAprLineInfo)
+                        if(frameNum != 1 && TempsaveAprlineinfo != undefined){
+                            var ret = new Array()
+                            ret[0] = TempsaveAprlineinfo;
+                            if(approvalFlag == "S")
+                                frame.SGetDraftAprLineInfo(ret);
+                            else
+                                frame.GetDraftAprLineInfo(ret);
+                        }
+                    } else {
+                        // 반송문서 재기안 또는 임시저장문서를 초기에 가져오는 분기 -> 이미 결재선 및 수신처가 지정된 상태이므로, 수신처가 존재하는지만 간단하게 확인해서 부모의 btnReceivLineEnableAry배열에 값을 넣는다.
+                        if (ListType == "21") { // 임시저장된 문서
+                            btnReceivLineEnableAry[frameNum] = frame.getReceiptExists(DocSNAry[frameNum], "TMP");
+                        } else { // 반송된 문서 재기안
+                            btnReceivLineEnableAry[frameNum] = frame.getReceiptExists(pDocIDAry[frameNum], "APR");
+                        }
+                    }
+
+                    // 1안 이후에 추가된 안에는 1안의 정보를 복사해준다.
+                    // 반송문서 또는 임시저장문서 재기안 시, 전체 문서 로딩 완료 이후 안 추가시에만 1안의 정보를 복사해준다.
+                     if (addFlag == true) {
+                         frame.CopyAndPasteContent(true);
+                         frame.copyDoc();
+                    }
+
+                    //  모든 안이 순차적으로 로딩 완료되지 않으므로(비동기), 로딩 완료 카운트를 하나씩 증가시켜서 부모창의 파라미터에 부여한다.
+                    // 재기안 상태이면서 addFlag가 아직 변경되지 않은 경우 (초기 로딩 상태 진행 중임)
+                    if (pDraftFlag == "REDRAFT" && addFlag == false) {
+                        if(extAry[frameNum] == "mht")
+                            frame.SetEditable(true);
+
+                        docLoadCompleteCnt ++;
+
+                        // 로딩된 문서의 전체 갯수가 재기안 시작 시 가져온 전체 안의 갯수와 일치한다면, addFlag 등을 변경시킨다.
+                        if (docLoadCompleteCnt == (pDocIDAry.length - 1)) {
+                            titleOptionFlag = true;
+                            contentOptionFlag = true;
+                            attachOptionFlag = true;
+                            docAttachOptionFlag = true;
+                            seperateAttachOptionFlag = true;
+                            opinionOptionFlag = true;
+                            addFlag = true;
+
+                            selTab(1); // 각 안을 전부 로딩한 뒤, 기본으로 1안을 선택하도록 한다.
+                            HiddenMailProgress(); // 전부 완료 시 로딩중 이미지 제거
+                            CheckOpinionYN(1); // 1안 기준으로 의견이 존재한다면 레이어팝업 표출
+                        }
+                    } else { // 한개씩 안추가하는 경우, 완료 후 바로 이미지 제거
+                        HiddenMailProgress(); // 문서 로딩중 이미지 제거 (현재 iframe이 ready될때 호출된 ShowMailProgress를 문서 호출 완료하고 닫는 동작
+                    }
+                } catch (e) {
+                    console.log(e);
+                    alert("apprGdraftuiAllContent_WHWP.FieldsAvailable()  ::  " + e.description);
+                }
+            }
+
+            function setKeepPeriod() {
+                try {
+                    viewTabNum = $("dl.tab_menu dt").length;
+                    for (var i = 1; i < viewTabNum; i++) { // 1안부터 시작
+                        var ifrm = document.getElementById("ifrm" + i);
+                        if (!ifrm.contentWindow.FieldExist("keepperiod")) { // 보존연한 필드가 양식에 없다면 다음 루프로 이동
+                            continue;
+                        }
+                        var keepperiodText = "";
+
+                        switch (keepperiod) {
+                            case '01':
+                                keepperiodText = "1년";
+                                break;
+                            case '03':
+                                keepperiodText = "3년";
+                                break;
+                            case '05':
+                                keepperiodText = "5년";
+                                break;
+                            case '10':
+                                keepperiodText = "10년";
+                                break;
+                            case '20':
+                                keepperiodText = "30년";
+                                break;
+                            case '30':
+                                keepperiodText = "준영구";
+                                break;
+                            case '40':
+                                keepperiodText = "영구";
+                                break;
+                        }
+                        ifrm.contentWindow.PutFieldText("keepperiod", keepperiodText);
+                    }
+                } catch (e) {
+                    alert("ezdraftuiAll.setKeepPeriod()  ::  " + e);
+                }
+            }
+
+            //S전용
+            function SetDocOption(pkeeperiodvaltemp) {
+                try {
+                    viewTabNum = $("dl.tab_menu dt").length;
+                    for (var i = 1; i < viewTabNum; i++) { // 1안부터 시작
+                        var ifrm = document.getElementById("ifrm" + i);
+                        if (ifrm.contentWindow.FieldExist("keepperiod")) {
+                            ifrm.contentWindow.PutFieldText("keepperiod", pkeeperiodvaltemp);
+                        }
+                        if (ifrm.contentWindow.FieldExist("securitylevel")) {
+                            ifrm.contentWindow.PutFieldText("securitylevel", tempSecurityValue);
+                        }
+                        if (ifrm.contentWindow.FieldExist("publication")) {
+                            ifrm.contentWindow.PutFieldText("publication", tempPublic == "N" ? "<spring:message code='ezApproval.t49'/>" : "<spring:message code='ezApproval.t50'/>");
+                        }
+                        if (ifrm.contentWindow.FieldExist("docnumber") && tempItemCode != "") {
+                            var tempdocnumber = ifrm.contentWindow.GetFieldText("docnumber")
+                            tempdocnumber = tempdocnumber.replace(tempdocnumcode, tempItemCode);
+                            ifrm.contentWindow.PutFieldText("docnumber", tempdocnumber);
+                        }
+                    }
+                } catch (e) {
+                    alert("ezdraftuiAll.setKeepPeriod()  ::  " + e);
+                }
+            }
 	    </script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -2358,7 +2686,7 @@
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnFileAttach"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 	                        <li id="btnAprDocAttach"><span onclick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
-	                        <li id="btnAddSepAttach"><span onclick="btnAddSepAttach_onclick()"><spring:message code='ezApprovalG.t58'/></span></li>
+	                        <li id="btnAddSepAttach"<c:if test="${approvalFlag == 'S'}"> style="display:none"</c:if>><span onclick="btnAddSepAttach_onclick()"><spring:message code='ezApprovalG.t58'/></span></li>
 	                        <li id="btnSaveServer"><span onclick="return btnSaveServer_onclick()"><spring:message code='ezApprovalG.t4000'/></span></li>
 	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
 	                        

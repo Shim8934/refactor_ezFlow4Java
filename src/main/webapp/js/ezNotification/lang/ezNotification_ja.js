@@ -9,6 +9,7 @@ var mainType = {
 	community : "コミュニティ",
 	webfolder : "Webフォルダ",
 	journal : "業務日誌",
+	noti : "お知らせ",
 	etc : "その他"
 }
 
@@ -37,8 +38,11 @@ var subType = {
 	},
 	schedule : {
 		add : "スケジュール招待",
+		cancel : "招待キャンセル",
 		accept : "招待承認",
-		reject : "招待拒否"
+		reject : "招待拒否",
+		mod : "スケジュールを編集",
+		reminder : "リマインダー"
 	},
 	resource : {
 		reserve : "リソース予約",
@@ -46,9 +50,7 @@ var subType = {
 		cancel : "承認キャンセル",
 		reject : "承認拒否"
 	},
-	survey : {
-		modify : "修正通知"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "生成承認",
@@ -71,6 +73,9 @@ var subType = {
 	journal : {
 		comment : "コメント登録",
 		recv : "受信通知"
+	},
+	noti : {
+		emergency : "緊急通知"
 	}
 }
 
@@ -78,7 +83,7 @@ subType["approval"]["return"] = "文書の回収";
 subType["approval"]["default"] = "決済通知";
 subType["board"]["new"] = "新規公開";
 subType["board"]["return"] = "承認の返済";
-subType["schedule"]["delete"] = "招待キャンセル";
+subType["schedule"]["delete"] = "予定を削除";
 subType["survey"]["new"] = "新規登録";
 subType["poll"]["new"] = "新規登録";
 subType["community"]["new"] = "新規登録";
@@ -86,3 +91,5 @@ subType["community"]["new"] = "新規登録";
 var notiMessages = {
 	strLang1 : '"没有数据."'
 }
+
+var notiDayNames = ["日", "月", "火", "水", "木", "金", "土"];

@@ -1,9 +1,12 @@
 package egovframework.ezEKP.ezNotification.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +22,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezNotification.service.EzNotificationService;
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiItemVO;
+import egovframework.ezEKP.ezNotification.vo.EmergencyNotiPermissionVO;
+import egovframework.ezEKP.ezNotification.vo.NotiRecipientVO;
 import egovframework.ezEKP.ezNotification.vo.NotificationVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
 import egovframework.ezEKP.ezPersonal.type.NotiType;
@@ -70,10 +78,16 @@ public class EzNotificationGWController {
     private LoginService loginService;
 	
 	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
 	private Properties config;
 	
 	// 2024-03-28 한태훈 - 통합알림 > 알림 전송 
-	@RequestMapping(value = "/rest/ezNotification/notiSend/{senderId}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/notiSend/{senderId:.+}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject notiSend(@PathVariable String senderId, HttpServletRequest request, @RequestBody NotificationVO notiVO) throws Exception {
 		logger.debug("G/W EzNotification [POST /rest/ezNotification/notiSend/{senderId}] started.");
 		
@@ -83,11 +97,10 @@ public class EzNotificationGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, senderId);
 			String regDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-			String recipientIdList = notiVO.getRecipientIdList();
 			String senderName = notiVO.getSenderName();
 			String notiContent = notiVO.getNotiContent();
-			
-			if (notiVO.getRecipientIdList() == null || notiVO.getRecipientIdList().equals("")) {
+			List<Map<String, Object>> recipient = notiVO.getRecipient();
+			if (recipient == null) {
 				logger.debug("realtime noti status : error, recipientIdList is empty.");
 				logger.debug("G/W EzNotification [POST /rest/ezNotification/notiSend/{senderId}] ended.");
 			}
@@ -106,7 +119,7 @@ public class EzNotificationGWController {
 			String viewWidth = notiVO.getViewWidth();
 			String viewHeight = notiVO.getViewHeight();
 			
-			logger.debug("mainType : {}, subType : {}, recipientIdList : {}, etcData : {}", mainType, subType, recipientIdList, etcData);
+			logger.debug("mainType : {}, subType : {}, etcData : {}", mainType, subType, etcData);
 			
 			/* 링크 주소 유효성 검증 시 필요
 			if (!checkValidLink(linkUrl, linkUrlMobile)) {
@@ -120,15 +133,16 @@ public class EzNotificationGWController {
 			}
 			*/
 			
-			// 자바 결재 모듈을 사용할 땨 true, 아닐 때 false (결재 모바일 푸시 알림은 따로 보내고 있기 때문에 자바 모듈로 결재 알림 발송 시에 모바일 알림은 제외함.) 
+			// 자바 결재 모듈을 사용할 때 true, 아닐 때 false (결재 모바일 푸시 알림은 따로 보내고 있기 때문에 자바 모듈로 결재 알림 발송 시에 모바일 알림은 제외함.) 
 			boolean useJavaApproval = ezNotificationService.isJavaApprovalUse(info.getCompanyId(), info.getTenantId());
 			
 			String notiName = "";
 			
 			if (subType != null && mainType.equals("APPROVAL") && useJavaApproval &&
-				(subType.equals("ARRIVE") || subType.equals("BORYU") || subType.equals("BALSONG")
-				|| subType.equals("SUSIN") || subType.equals("JIJUNG") || subType.equals("BEBU")
-				|| subType.equals("REJIJUNG") || subType.equals("REBEBU") || subType.equals("DEFAULT"))) {
+				(subType.equals("ARRIVE") || subType.equals("GONGRAM") || subType.equals("CIRCULATION")
+				|| subType.equals("BORYU") || subType.equals("BALSONG") || subType.equals("SUSIN")
+				|| subType.equals("JIJUNG") || subType.equals("BEBU") || subType.equals("REJIJUNG")
+				|| subType.equals("REBEBU")	|| subType.equals("DEFAULT"))) {
 				notiName = mainType + "_" + "ARRIVE";
 			} else if (subType != null && !subType.equals("")) {
 				notiName = mainType + "_" + subType;
@@ -144,51 +158,58 @@ public class EzNotificationGWController {
 				subTypeForMobilePush = subType != "" ? notiType.subType() + "" : "0";
 			}
 			
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(primaryLang));
+			
 			String mainTypeForMobilePush = "";
 			String pushNotiContent = StringEscapeUtils.unescapeHtml4(notiContent);
 			switch (mainType) {
 			case "APPROVAL":
-				pushNotiContent = "[" + "결재" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth01", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "2";
 				break;
 			case "BOARD":
-				pushNotiContent = "[" + "게시판" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth02", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "51";
 				break;
 			case "SCHEDULE":
-				pushNotiContent = "[" + "일정" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth03", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "6011";
 				break;
 			case "RESOURCE":
-				pushNotiContent = "[" + "자원관리" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth04", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "6021";
 				break;
 			case "SURVEY":
-				pushNotiContent = "[" + "전자설문" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth05", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "6031";
 				break;
 			case "POLL":
-				pushNotiContent = "[" + "투표" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth06", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "6041";
 				break;
 			case "COMMUNITY":
-				pushNotiContent = "[" + "커뮤니티" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth07", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "6051";
 				break;
 			case "WEBFOLDER":
-				pushNotiContent = "[" + "웹폴더" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth08", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "6061";
 				break;
 			case "JOURNAL":
-				pushNotiContent = "[" + "업무일지" + "] " + pushNotiContent;
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth09", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "6071";
+				break;
+			case "NOTI":
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth10", locale) + "] " + pushNotiContent;
+				mainTypeForMobilePush = "6001";
 				break;
 			default:
 				mainTypeForMobilePush = "6001";
 				break;
 			}
 			
-			String[] recipientIdArr = recipientIdList.split(";;");
+			Set<NotiRecipientVO> recipientList = ezNotificationService.getNotiRecipientList(recipient, info.getTenantId());
 			
 			String useEzTalkNotification = ezCommonService.getTenantConfig("useEzTalkNotification", info.getTenantId());
 			
@@ -197,8 +218,10 @@ public class EzNotificationGWController {
 				useMobilePushCompany = false; // 결재는 푸시 알림 기능이 존재.
 			}
 			
-			for (String recipientId : recipientIdArr) {
+			for (NotiRecipientVO recipientVO : recipientList) {
 				try {
+					String recipientId = recipientVO.getCn();
+					String companyId = recipientVO.getCompanyId();
 					logger.debug("recipientId : " + recipientId);
 					
 					resultStr += recipientId + ":";
@@ -220,7 +243,7 @@ public class EzNotificationGWController {
 					}
 					
 					if (useTotalNoti) {
-						ezNotificationService.addRealTimeNoti(recipientId, senderId, senderName, mainType, subType, notiContent, regDate, etcData, linkUrl, linkUrlMobile, viewType, viewWidth, viewHeight, info.getTenantId(), info.getCompanyId());
+						ezNotificationService.addRealTimeNoti(recipientId, senderId, senderName, mainType, subType, notiContent, regDate, etcData, linkUrl, linkUrlMobile, viewType, viewWidth, viewHeight, info.getTenantId(), companyId);
 						resultStr += "{total:ok,";
 					} else {
 						resultStr += "{total:notUse,";
@@ -264,59 +287,8 @@ public class EzNotificationGWController {
 		}
 	}
 	
-	// 2024-03-28 한태훈 - 통합알림 > 알림 리스트 가져오기
-	@RequestMapping(value = "/rest/ezNotification/{userId}/myNotiList", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getMyNotiList(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/myNotiList] started.");
-		JSONObject result = new JSONObject();
-		try {
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			int curPageNum = request.getParameter("curPageNum") == null ? 1 : Integer.parseInt(request.getParameter("curPageNum"));
-			int notiListCnt = Integer.parseInt(request.getParameter("notiListCnt"));
-			String companyId = info.getCompanyId();
-			int tenantId = info.getTenantId();
-			String mode = "ALL";
-			int totalListCnt = ezNotificationService.getTotalNotiListCnt(userId, mode, companyId, tenantId);
-			mode = "NOTREAD";
-			int notReadListCnt = ezNotificationService.getTotalNotiListCnt(userId, mode, companyId, tenantId);
-
-			int limit = 0;
-			if (curPageNum < Integer.MAX_VALUE && notiListCnt < Integer.MAX_VALUE) {
-				limit = (curPageNum - 1) * notiListCnt;
-			}
-			
-			int rowCount = notiListCnt;
-			int lastPageNum = (int) Math.ceil((double) totalListCnt / notiListCnt);
-			List<NotificationVO> myNotiList = ezNotificationService.getMyNotiList(userId, limit, rowCount, tenantId, companyId, commonUtil.getMinuteUTC(info.getOffSet()));
-			Map<String, Object> resultMap = new HashMap<String, Object> ();
-			resultMap.put("notiList", myNotiList);
-			resultMap.put("totalListCnt", totalListCnt);
-			resultMap.put("notReadListCnt", notReadListCnt);
-			resultMap.put("notReadTotalListCnt", notReadListCnt);
-			resultMap.put("lastPageNum", lastPageNum);
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", resultMap);
-
-			logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/myNotiList] ended.");
-			
-			return result;
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-			
-			logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/myNotiList] ended.");
-
-			return result;
-		}
-		
-	}
-	
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 개별 알림 읽음 또는 삭제
-	@RequestMapping(value = "/rest/ezNotification/updateNoti/{notiSeq}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/updateNoti/{notiSeq:.+}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject updateNoti(@PathVariable String notiSeq, HttpServletRequest request) throws Exception {
 		logger.debug("G/W EzNotification [POST /rest/ezNotification/updateNoti/{notiSeq}] started.");
 		JSONObject result = new JSONObject();
@@ -341,7 +313,7 @@ public class EzNotificationGWController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 전체 알림 읽음 또는 삭제
-	@RequestMapping(value = "/rest/ezNotification/{userId}/updateNotiAll", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/{userId:.+}/updateNotiAll", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject updateNotiAll(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("G/W EzNotification [POST /rest/ezNotification/{userId}/updateNotiAll] started.");
 		JSONObject result = new JSONObject();
@@ -365,18 +337,18 @@ public class EzNotificationGWController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 사용자 알림 검색
-	@RequestMapping(value = "/rest/ezNotification/{userId}/searchNoti", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/{userId:.+}/searchNoti", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject searchNoti(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/searchNoti] started.");
 		JSONObject result = new JSONObject();
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			int curPageNum = request.getParameter("curPageNum") == null ? 1 : Integer.parseInt(request.getParameter("curPageNum"));
 			int notiListCnt = Integer.parseInt(request.getParameter("notiListCnt"));
 			String isRead = request.getParameter("isRead");
 			String notiFilter = request.getParameter("notiFilter");
 			String keyWord = request.getParameter("keyWord");
+			Integer lastNotiSeq = request.getParameter("lastNotiSeq").isEmpty() ? null : Integer.parseInt(request.getParameter("lastNotiSeq"));
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String mode = "ALL";
@@ -386,20 +358,13 @@ public class EzNotificationGWController {
 			mode = "NOTREAD";
 			int notReadTotalListCnt = ezNotificationService.getTotalNotiListCnt(userId, mode, companyId, tenantId);
 			
-			int limit = 0;
-			if (curPageNum < Integer.MAX_VALUE && notiListCnt < Integer.MAX_VALUE) {
-				limit = (curPageNum - 1) * notiListCnt;
-			}
-
 			int rowCount = notiListCnt;
-			int lastPageNum = (int) Math.ceil((double) totalListCnt / notiListCnt);
 			
-			List<NotificationVO> searchList = ezNotificationService.getSearchNotiList(userId, limit, rowCount, isRead, notiFilter, keyWord, tenantId, companyId, commonUtil.getMinuteUTC(info.getOffSet()));
+			List<NotificationVO> searchList = ezNotificationService.getSearchNotiList(userId, lastNotiSeq, rowCount, isRead, notiFilter, keyWord, tenantId, companyId, commonUtil.getMinuteUTC(info.getOffSet()));
 			Map<String, Object> resultMap = new HashMap<String, Object> ();
 			resultMap.put("notiList", searchList);
 			resultMap.put("totalListCnt", totalListCnt);
 			resultMap.put("notReadListCnt", notReadListCnt);
-			resultMap.put("lastPageNum", lastPageNum);
 			resultMap.put("notReadTotalListCnt", notReadTotalListCnt);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -419,7 +384,7 @@ public class EzNotificationGWController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 읽지 않은 알림 개수 구하기
-	@RequestMapping(value = "/rest/ezNotification/{userId}/unreadNotiCnt", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/{userId:.+}/unreadNotiCnt", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject unreadNotiCnt(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/unreadNotiCnt] started.");
 		JSONObject result = new JSONObject();
@@ -448,7 +413,7 @@ public class EzNotificationGWController {
 	}
 	
 	// 2024-03-28 한태훈 - 통합알림 > 새로운 알림 카운트 개수 구하기
-	@RequestMapping(value = "/rest/ezNotification/{userId}/newNotiCnt", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezNotification/{userId:.+}/newNotiCnt", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getNewNotiCnt(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("G/W EzNotification [GET /rest/ezNotification/{userId}/newNotiCnt] started.");
 		JSONObject result = new JSONObject();
@@ -499,8 +464,8 @@ public class EzNotificationGWController {
 			String isRead = request.getParameter("isRead");
 			String notiFilter = request.getParameter("notiFilter");
 			String keyWord = request.getParameter("keyWord");
-			int lastNotiSeq = Integer.parseInt(request.getParameter("lastNotiSeq"));
-			int rowCount = 50;
+			Integer lastNotiSeq = request.getParameter("lastNotiSeq").isEmpty() ? null : Integer.parseInt(request.getParameter("lastNotiSeq"));
+			int rowCount = Integer.parseInt(request.getParameter("notiListCnt"));
 			String mode = "ALL";
 			int totalListCnt = ezNotificationService.getTotalSearchNotiListCnt(userId, mode, isRead, notiFilter, keyWord, info.getCompanyId(), info.getTenantId());
 			mode = "NOTREAD";
@@ -594,5 +559,270 @@ public class EzNotificationGWController {
 		return startWith;
 	}
 	*/
+	
+	// 2024-07-24 한태훈 - 통합알림 > 긴급공지 권한 리스트 가져오기
+	@RequestMapping(value = "/rest/ezNotification/company/list/emergency/permission/{userId:.+}", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getEmergencyPermissionList(HttpServletRequest request, @PathVariable String userId) throws Exception {
+		logger.debug("G/W EzNotification [GET /rest/ezNotification/company/list/emergency/permission] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
+			
+			String permissionListXml = ezNotificationService.getEmergencyPermissionList(commonUtil.getPrimaryData(info.getLang(), tenantId), locale, companyId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", permissionListXml);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/company/list/emergency/permission] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/company/list/emergency/permission] ended.");
+			return result;
+		}
+	}
+	
+	@RequestMapping(value = "/rest/ezNotification/emergency/add/permissions/{userId:.+}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject addEmergencyPermission(HttpServletRequest request, @PathVariable String userId, @RequestBody List<EmergencyNotiPermissionVO> permissionList) throws Exception {
+		logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/add/permissions/{userId}] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezNotificationService.addEmergencyPermission(permissionList, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/add/permissions/{userId}] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/add/permissions/{userId}] ended.");
+			return result;
+		}
+	}
+	
+	@RequestMapping(value = "/rest/ezNotification/emergency/delete/permissions/{userId:.+}", method=RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteEmergencyPermission(HttpServletRequest request, @PathVariable String userId, @RequestBody List<EmergencyNotiPermissionVO> permissionList) throws Exception {
+		logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/delete/permissions/{userId}] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezNotificationService.deleteEmergencyPermission(permissionList, companyId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/delete/permissions/{userId}] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/delete/permissions/{userId}] ended.");
+			return result;
+		}
+	}
+	
+	@RequestMapping(value = "/rest/ezNotification/company/get/emergency/content", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getEmergencyContent(HttpServletRequest request) throws Exception {
+		logger.debug("G/W EzNotification [GET /rest/ezNotification/company/get/emergency/content] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			String emergencyContent	= ezNotificationService.getEmergencyContent(companyId, tenantId);		
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", emergencyContent);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/company/get/emergency/content] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/company/get/emergency/content] ended.");
+			return result;
+		}
+	}
+	
+	@RequestMapping(value = "/rest/ezNotification/company/add/emergency/content", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject addEmergencyCompanyContent(HttpServletRequest request) throws Exception {
+		logger.debug("G/W EzNotification [POST /rest/ezNotification/company/add/emergency/content] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String companyId = request.getParameter("companyId");
+			String emergencyContent = request.getParameter("emergencyContent");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezNotificationService.addEmergencyCompanyContent(userId, emergencyContent, companyId, tenantId);		
+			result.put("status", "ok");
+			result.put("code", 0);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/company/add/emergency/content] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/company/add/emergency/content] ended.");
+			return result;
+		}
+	}
+	
+	@RequestMapping(value = "/rest/ezNotification/emergency/permission/check", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject checkEmergencyPermission(HttpServletRequest request) throws Exception {
+		logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/permission/check] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			String deptId = request.getParameter("deptId") == null ? info.getDeptId() : request.getParameter("deptId");
+			String roleInfo = request.getParameter("roleInfo") == null ? info.getRollInfo() : request.getParameter("roleInfo");
+			String jobId = request.getParameter("jobId") == null ? info.getJobId() : request.getParameter("jobId");
+			String roleId = request.getParameter("roleId") == null ? info.getRoleId() : request.getParameter("roleId");
+			String companyId = request.getParameter("companyId") == null ? info.getCompanyId() : request.getParameter("companyId");
+			String deptPath = request.getParameter("deptPath") == null ? ezOrganService.getDeptPath(deptId, tenantId) : request.getParameter("deptPath");
+			
+			String adminFlag = ezNotificationService.checkEmergencyPermission(roleInfo, userId, deptId, deptPath, jobId, roleId, companyId, tenantId);		
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", adminFlag);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/permission/check] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/emergency/permission/check] ended.");
+			return result;
+		}
+	}
+	
+	@RequestMapping(value = "/rest/ezNotification/emergency/notiItem/{userId:.+}", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject addEmergencyNotiContent(HttpServletRequest request, @PathVariable String userId, @RequestBody NotificationVO notiContent) throws Exception {
+		logger.debug("G/W EzNotification [POST /rest/ezNotification/emergency/notiItem/] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String companyId = notiContent.getCompanyId();
+			String notiTitle = notiContent.getNotiContent();
+			String notiBody = notiContent.getNotiBody();
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			int notiId = ezNotificationService.addEmergencyNotiItem(userId, notiTitle, notiBody, companyId, tenantId);		
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", notiId);
+			logger.debug("G/W EzNotification [POST /rest/ezNotification/emergency/notiItem/] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			logger.debug("G/W EzNotification [POST /rest/ezNotification/emergency/notiItem/] ended.");
+			return result;
+		}
+	}
+	
+	@RequestMapping(value = "/rest/ezNotification/user/get/emergency/item", method=RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getEmergencyNotiItem(HttpServletRequest request) throws Exception {
+		logger.debug("G/W EzNotification [GET /rest/ezNotification/user/get/emergency/item] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String emergencyItemId = request.getParameter("emergencyItemId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			JSONObject data = new JSONObject();
+			
+			EmergencyNotiItemVO emergencyNotiItem = ezNotificationService.getEmergencyNotiItem(emergencyItemId, commonUtil.getMinuteUTC(info.getOffSet()), tenantId);
+			
+			if (emergencyNotiItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);
+				result.put("data", "");
+				return result;
+			}
+			data.put("emergencyNotiItem", emergencyNotiItem);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/user/get/emergency/item] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			logger.debug("G/W EzNotification [GET /rest/ezNotification/user/get/emergency/item] ended.");
+			return result;
+		}
+	}
+	
+	@RequestMapping(value = "/rest/ezNotification/user/delete/emergency/item", method=RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteEmergencyNoti(HttpServletRequest request) throws Exception {
+		logger.debug("G/W EzNotification [DELETE /rest/ezNotification/user/delete/emergency/item] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String notiId = request.getParameter("emergencyItemId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezNotificationService.deleteEmergencyNoti(notiId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			logger.debug("G/W EzNotification [DELETE /rest/ezNotification/user/delete/emergency/item] ended.");
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			logger.debug("G/W EzNotification [DELETE /rest/ezNotification/user/delete/emergency/item] ended.");
+			return result;
+		}
+	}
+	
 }
 

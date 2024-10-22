@@ -9,6 +9,7 @@ var mainType = {
 	community : "Community",
 	webfolder : "Web folder",
 	journal : "Work Journal",
+	noti : "Notice",
 	etc : "Etc"
 }
 
@@ -37,8 +38,11 @@ var subType = {
 	},
 	schedule : {
 		add : "Schedule invitation",
+		cancel : "Cancel invitation",
 		accept : "Invitation approved",
-		reject : "Refusal of invitation"
+		reject : "Refusal of invitation",
+		mod : "Modify schedule",
+		reminder : "Reminder"
 	},
 	resource : {
 		reserve : "Resource reservation",
@@ -46,9 +50,7 @@ var subType = {
 		cancel : "Cancel approval",
 		reject : "Approval denied"
 	},
-	survey : {
-		modify : "Modification notice"
-	},
+	survey:{},
 	poll : {},
 	community : {
 		create_admit : "Creation approval",
@@ -71,6 +73,9 @@ var subType = {
 	journal : {
 		comment : "New comment",
 		recv : "Received Journal"
+	},
+	noti : {
+		emergency : "Emergency Notice"
 	}
 }
 
@@ -78,7 +83,7 @@ subType["approval"]["return"] = "Document withdraw";
 subType["approval"]["default"] = "Approval Noti";
 subType["board"]["new"] = "New posting";
 subType["board"]["return"] = "Reject approval";
-subType["schedule"]["delete"] = "cancel invitation";
+subType["schedule"]["delete"] = "Delete Schedule";
 subType["survey"]["new"] = "New registration";
 subType["poll"]["new"] = "New registration";
 subType["community"]["new"] = "New registration";
@@ -86,3 +91,5 @@ subType["community"]["new"] = "New registration";
 var notiMessages = {
 	strLang1 : '"No data."'
 }
+
+var notiDayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

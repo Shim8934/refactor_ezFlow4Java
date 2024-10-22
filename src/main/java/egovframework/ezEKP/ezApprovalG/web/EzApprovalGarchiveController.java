@@ -237,7 +237,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		}
 		
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
-		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 		
 		if (pass.equals("<RESULT>TRUE</RESULT>")) {
 			String readRecXML = "<PARAMETER><DOCID>" + commonUtil.cleanValue(docID) +
@@ -307,11 +307,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
-	    String regY = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,4);
-	    String regM = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5,7);
-	    String regD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(8,10);
-	    String regH = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(11,13);
-	    String regMi = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(14,16);
 	    String apprTotalAttachLimit = ezCommonService.getTenantConfig("ApprTotalAttachLimit", userInfo.getTenantId());
 		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
  		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
@@ -323,16 +318,61 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
  		} else {
  			useAprFilePrvw = "0";
  		}
+		 
+		/* 2024-08-09 김유진 - 파일첨부(aprAttach.do)창의 noti 문구와 동잃하게 표출하기 위한 설정 */
+		String spanDisplayStyle = "inline-block";
+		String apprAttachLimit = ezCommonService.getTenantConfig("ApprAttachLimit", userInfo.getTenantId()); // 일반 첨부파일의 총 크기제한 = 일반 첨부파일 -> 대용량으로 변경되는 기준 크기
+		String bigSizeAttachLimitCount = ezCommonService.getTenantConfig("ApprBigSizeAttachLimitCount", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 개수제한
+		String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("ApprBigSizeAttachDownloadLimitCount", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 다운로드 횟수제한
+		String bigSizeApprAttachLimit = ezCommonService.getTenantConfig("BigSizeApprAttachLimit", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 크기제한
+		int pBigAttachLimitCount = bigSizeAttachLimitCount == null || bigSizeAttachLimitCount.equals("") ? 0 : Integer.parseInt(bigSizeAttachLimitCount);
+		int pBigAttachDownloadLimitCount = bigSizeAttachDownloadLimitCount == null || bigSizeAttachDownloadLimitCount.equals("") ? 0 : Integer.parseInt(bigSizeAttachDownloadLimitCount);
+
+		// 전자결재 첨부파일은 메일과 다르게 "총 첨부용량제한"값이 존재하므로, 알림 메세지의 첫번째 문구로 추가한다. (apprTotalAttachLimit)
+		String pAttachWarning0 = messageSource.getMessage("ezSystem.HSBAppr02", userInfo.getLocale()) + apprTotalAttachLimit + messageSource.getMessage("ezSystem.HSBAppr03", userInfo.getLocale()); // 전체 첨부파일의 파일크기 합은 ~MB까지 가능합니다.
+		String pAttachWarning1 = messageSource.getMessage("ezEmail.lhm18", userInfo.getLocale()) + apprAttachLimit + messageSource.getMessage("ezEmail.lhm19", userInfo.getLocale())
+				+ bigSizeApprAttachLimit + messageSource.getMessage("ezSystem.HSBAppr03", userInfo.getLocale()); // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능합니다.
+
+		if (pBigAttachLimitCount > 0) {
+			pAttachWarning1 += messageSource.getMessage("ezSystem.HSBAppr08", userInfo.getLocale()) + messageSource.getMessageExtend("ezEmail.hdp03", new Object[] {pBigAttachLimitCount}, userInfo.getLocale()); // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부)
+		}
+
+		if (pBigAttachLimitCount > 0 && pBigAttachDownloadLimitCount > 0) {
+			pAttachWarning1 += ", ";
+		}
+
+		if (pBigAttachDownloadLimitCount > 0) {
+			// 여는 괄호 기호가 없는 경우에만 추가
+			if (pAttachWarning1.indexOf(messageSource.getMessage("ezSystem.HSBAppr08", userInfo.getLocale())) < 0) {
+				pAttachWarning1 += messageSource.getMessage("ezSystem.HSBAppr08", userInfo.getLocale());
+			}
+			pAttachWarning1 += messageSource.getMessageExtend("ezEmail.hdp04", new Object[] {pBigAttachDownloadLimitCount}, userInfo.getLocale()); // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부, 1회까지 다운로드 가능)
+		}
+
+		// 괄호 내부 옵션이 존재했을 경우에만 닫는괄호 표출
+		if (pBigAttachLimitCount > 0 || pBigAttachDownloadLimitCount > 0) {
+			pAttachWarning1 += messageSource.getMessage("ezSystem.HSBAppr09", userInfo.getLocale());
+		}
+		// 전자결재 첨부파일 총용량제한 기능을 사용하지 않는 경우(apprTotalAttachLimit값이 0), 총용량제한 문구는 표출하지 않는다.
+		if (apprTotalAttachLimit.equals("0")) {
+			pAttachWarning0 = pAttachWarning1;
+			spanDisplayStyle = "none";
+		}
+
+		// 대용량 첨부기능을 사용하지 않는 경우, 일반 첨부만 사용하므로 "일반첨부파일은 총 ~MB까지 가능" 문구만 표출한다.
+		if (bigSizeApprAttachLimit.equals("0")) {
+			pAttachWarning0 = messageSource.getMessage("ezSystem.HSBAppr04", userInfo.getLocale()) + apprAttachLimit + messageSource.getMessage("ezSystem.HSBAppr03", userInfo.getLocale());
+			spanDisplayStyle = "none";
+		}
+		// 파일첨부 noti 설정 끝
  		
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("useEditor", useEditor);
-	    model.addAttribute("regY", regY);
-	    model.addAttribute("regM", regM);
-	    model.addAttribute("regD", regD);
-	    model.addAttribute("regH", regH);
-	    model.addAttribute("regMi", regMi);
 	    model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
 	    model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		model.addAttribute("pAttachWarning0", commonUtil.stripScriptTagsAndFunctions(pAttachWarning0));
+		model.addAttribute("pAttachWarning1", commonUtil.stripScriptTagsAndFunctions(pAttachWarning1));
+		model.addAttribute("spanDisplayStyle", commonUtil.stripScriptTagsAndFunctions(spanDisplayStyle)); // 첨부파일 알림 메세지 스타일
 
 		logger.debug("regRecord ended");
 
@@ -577,11 +617,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         } else {
             deptcode = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(0).getTextContent().trim();
             deptcode2 = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(1).getTextContent().trim();
-			if (dbType.equals("mysql")) {
-				title = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\\\\\");
-			} else {
-				title = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\");
-			}
+			title = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
             sregdate = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(3).getTextContent();
             eregdate = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(4).getTextContent();
             debenturer = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(5).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
@@ -2132,6 +2168,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String docID = request.getParameter("pDocID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String orgCompanyID = request.getParameter("orgCompanyID");
+
+		String draftAllFlag = request.getParameter("draftAllFlag") != null ? request.getParameter("draftAllFlag") : "N";
+		String anNo = request.getParameter("anNo") != null ? request.getParameter("anNo") : "0";
         
         if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -2192,6 +2231,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("delAttachByOthers", delAttachByOthers);
+		model.addAttribute("draftAllFlag", draftAllFlag);
+		model.addAttribute("anNo", anNo);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("aprDocAttach ended");
 		

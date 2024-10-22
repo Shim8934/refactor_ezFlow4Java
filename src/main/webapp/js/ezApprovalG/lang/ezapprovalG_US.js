@@ -1164,3 +1164,18 @@ var strLang974 = "Please select a receiving group.";
 
 /* 2023-08-11 민지수 - 전자결재 > 양식버전 다를 시 오류 메세지 추가 */
 var strLang975 = "The form version is different and cannot be reused.";
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "The batch has been accepted.";
+var strLangLGEAR02 = "An error occurred during batch reception.<br>";
+var strLangLGEAR03 = "The batch recipient has been transferred.";
+var strLangLGEAR04 = "An error occurred during the batch recipient's pre-decision.<br>";
+
+//2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "Would you like to proceed with batch submission? <br>Documents with forwarding status, implementation statements and agreements, and documents with separate attachments are excluded.";
+var strLangJSBAP03 = "Would you like to proceed with batch submission and final approval? <br>Documents with forwarding status, implementation statements and agreements, and documents with separate attachments are excluded.";
+
+var strJangJIH04 = "Please specify a start date faster than the end date."
+
+var strLangKWC01 = "비전자문서는 재사용 할 수 없습니다.";
+var strLangKWC02 = "양식이 삭제되어 재사용 할 수 없습니다.";

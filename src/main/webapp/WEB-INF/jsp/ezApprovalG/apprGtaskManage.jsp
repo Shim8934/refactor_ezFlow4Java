@@ -154,7 +154,7 @@
 		    <spring:message code='ezApprovalG.t717'/>
 		    <span id='TitleInfo' style='color: #666; font-weight:normal;'>
 		     &nbsp;
-		     <span id='listcount' style='color:#017BEC; font-weight:bold;'></span>
+		     <span id='listcount' class='txt_color' style='font-weight:bold;'></span>
 		    </span>
 		</h1>
 		<div id="mainmenu">

@@ -71,10 +71,13 @@
 
 			// 배부대장 문서 진행/완료 여부 플래그 (APR/END)
 			var docAprEnd = "<c:out value ='${docAprEnd}'/>";
-
+			
+			/* 2023-12-07 홍승비 - 전자결재 서명데이터 재맵핑에 필요한 docState 파라미터 추가 */
+			var pDocState = "<c:out value ='${docState}'/>";
+			
 			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
 			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
-
+			
 	        window.onresize = function () {
 	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
 	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
@@ -427,10 +430,18 @@
 	        	if (docHref != "") {
                     var URL;
                     URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(docHref);
-                    message.Open(URL, "", "", function (res) { 
+                    message.Open(URL, "", "", function (res) {
                     	if (res.result) {
     	                    setAttachInfo(pDocID, "END", lstAttachLink);
-    	
+    	                    
+    	                    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+    	    		        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+    	    		        
+    	    		        // 현재 문서가 수신문이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+    	    		        if (pDocState == "011" && porgDocID != null && typeof(porgDocID) != "undefined" && porgDocID != "") {
+    	    		        	message.startRemapAllAprSign_WHWP(porgDocID, orgCompanyID);
+    	    		        }
+    	    		        
     	                    var Rtnval = CheckOpinionInfo();
     	                    if (Rtnval) {
     	                        var pInformationContent = "<spring:message code='ezApprovalG.t9'/><br> <spring:message code='ezApprovalG.t170'/>";
@@ -538,7 +549,7 @@
 		        parameter[0] = "sol2";
 		        parameter[1] = "A01000";
 		        
-		        url = "/ezApprovalG/getFormCont.do";
+		        url = "/ezApprovalG/getFormCont.do?fileType=HWP&reuseFlag=Y";
 		        
 		        if (CrossYN()) {
 		            getformcont_cross_dialogArguments[0] = parameter;
@@ -674,7 +685,7 @@
 	                        <c:if test="${useBoard == 'YES' }">
 	                        <li id="btnBoard"><span onclick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 	                        </c:if>
-	                        <c:if test="${formID != '2018000000'}">
+	                        <c:if test="${formID != '2018000000' && docAprEnd != 'APR'}"> <%-- 2024-08-19 조소정 - 배부대장의 경우 apr(진행중) 문서인 경우 버튼 숨김처리 --%>
 	                        <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 	                        </c:if>
 	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>

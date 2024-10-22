@@ -291,6 +291,9 @@ function save_schedule(pageFrom)
 	        case "8": //겸직일정
 	            patternType = "8";
 	            break;
+			case "10": // 임원일정
+				patternType = "10";
+				break;
 	    }
 	    setNodeText(xmlDom.getElementsByTagName("SCHEDULETYPE")[0], patternType)
 	}
@@ -416,6 +419,15 @@ function save_schedule(pageFrom)
 		}
 	}
 	
+	/* 2023-09-22 한태훈 수정 시 참석자에게 메일 보내기 용.*/
+	if (modAttendIdList.length > 0) {
+		for (var k = 0; k<modAttendIdList.length; k++) {
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTID", modAttendIdList[k]);
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME1", modAttendName1List[k]);
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME2", modAttendName2List[k]);
+		}
+	}
+	
 	/* 2021-11-25 홍승비 - 일정 수정 시, 일정 완료여부 파라미터 전달 */
 	if (scheduleid != "") {
 		if (document.getElementById("completeFG_one").checked == true || document.getElementById("completeFG_repOne").checked == true) { // 단일 일정, 현재 반복일정
@@ -466,6 +478,19 @@ function save_schedule(pageFrom)
 	    } else{
 	    	try { window.opener.RefreshView() } catch (e) { }
 	    }
+	    
+	    try { // 바로가기 테마 새로고침
+            if (parent.opener != null && parent.opener.getScheduleList_Top != undefined) {
+            	var selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.select div');
+            	if (!selectedTd) {
+            		selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.main_today div');
+            	}
+            	var selectedDate = selectedTd.getAttribute('dispdate');
+            	parent.opener.getScheduleList_Top(selectedDate, 'P');
+            	parent.opener.openerCalendarMiniView("CalendarMini_Top");	    		
+            	parent.opener.openerCalendarMiniDataSource("Top");
+            }
+        } catch (e) {console.log(e);}
 	    
 	    window.close();
 	}
@@ -1323,21 +1348,31 @@ function ListOwnerID_Change()
 	        }
     	}
     }
-	
+
 	if (pListOwnerID != "1") {
 	    receiverlist.innerHTML = "";
 	    document.getElementById("publicSelect").disabled = true;
 	    document.getElementById("publicSelect").value = "Y";
 	    g_attendant = null;
 	}
-	else {
-	    document.getElementById("publicSelect").disabled = false;
-	    document.getElementById("publicSelect").value = "N";
+	else { // chkPublic이 OFF일 경우 비공개가 기본값임.
+		if (chkPublic == "OFF") {
+			document.getElementById("publicSelect").disabled = true;
+			document.getElementById("publicSelect").value = "N";
+		} else {
+			document.getElementById("publicSelect").disabled = false;
+			document.getElementById("publicSelect").value = "N";
+		}
 	}
     //6 : 비서(대리인) 비서일 경우 참석자 초대 가능
 	if (pListOwnerID == "1" || pListOwnerID == "6") {
-	    document.getElementById("publicSelect").value = "N";
-	    document.getElementById("publicSelect").disabled = false;
+		if (chkPublic == "OFF") {
+			document.getElementById("publicSelect").value = "N";
+			document.getElementById("publicSelect").disabled = true;
+		} else {
+			document.getElementById("publicSelect").value = "N";
+			document.getElementById("publicSelect").disabled = false;
+		}
 	    document.getElementById("receiverinput").disabled = false;
 	    document.getElementById("imgbutton").disabled = false;
 	    document.getElementById("imgbutton").style.display = "";

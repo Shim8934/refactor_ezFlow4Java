@@ -75,7 +75,8 @@
 				COMPANYID,
 				MAILFG_POST,
 				MAILFG_MOD,
-				MAILFG_COMMENT
+				MAILFG_COMMENT,
+				USEKEYWORD
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  
@@ -157,7 +158,10 @@
 					WHERE  
 						tenant_id = A.tenant_id
 					AND
-						itemid = A.itemid) onelinecnt,
+						itemid = A.itemid
+					AND
+						( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
+						) onelinecnt,
 						TO_CHAR(A.upperitemidtree) as upperitemidtree,
 						A.docno,
 						'' AS notice,
@@ -292,7 +296,10 @@
 	                WHERE  
 	                    tenant_id = A.tenant_id
 	                AND
-	                    itemid = A.itemid) onelinecnt,
+	                   	itemid = A.itemid
+					AND
+						( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
+						) onelinecnt,
 	                    TO_CHAR(A.upperitemidtree) as upperitemidtree,
 	                    A.docno,
 	                    '' AS notice,
@@ -418,7 +425,10 @@
 						WHERE
 							tenant_id = A.tenant_id
 						AND
-							itemid = A.ITEMID) onelinecnt,
+							itemid = A.itemid
+						AND
+							( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
+						) onelinecnt,
 						A.upperitemidtree,
 						A.docno,
 						A.extensionattribute2 notice,
@@ -656,7 +666,10 @@
 	               WHERE  
 	               		TENANT_ID = A.TENANT_ID
 	               AND
-	                	ITEMID = A.ItemID) ONELINECNT,
+						itemid = A.itemid
+					AND
+						( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
+					) onelinecnt,
 	              A.UPPERITEMIDTREE,
 	              A.DOCNO,
 	              '' AS NOTICE,
@@ -968,8 +981,6 @@
                 ReadCount = ReadCount + 1
             WHERE
                 TENANT_ID = #v_TENANTID#
-            AND
-            	WRITERCOMPANYID = #v_COMPANYID#
             AND  
                 ItemID = #v_pItemID#
         ]]>
@@ -1617,7 +1628,7 @@
 					WHERE
 						UM.TENANT_ID = #tenantID# ))
                AND 
-                  BoardID = IFNULL(( SELECT 
+                  BoardID = NVL(( SELECT 
 	                                      BoardGroupID 
 	                                   FROM 
 	                                      TBL_Board_BoardInfo 
@@ -2237,7 +2248,10 @@
 					WHERE  
 						tenant_id = A.tenant_id
 					AND
-						itemid = A.itemid) onelinecnt,
+						itemid = A.itemid
+					AND
+						( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
+						) onelinecnt,
 						TO_CHAR(A.upperitemidtree) as upperitemidtree,
 						A.docno,
 						'' AS notice,
@@ -2352,7 +2366,10 @@
 	                WHERE  
 	                    tenant_id = A.tenant_id
 	                AND
-	                    itemid = A.itemid) onelinecnt,
+	                    itemid = A.itemid
+					AND
+						( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
+						) onelinecnt,
 	                    TO_CHAR(A.upperitemidtree) as upperitemidtree,
 	                    A.docno,
 	                    '' AS notice,
@@ -2441,12 +2458,71 @@
 	<insert id="MBoardDAO.saveOneLineReply" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_ONELINEREPLY (
-				ITEMID, REPLYID, BOARDID, USERID, USERNAME, USERNAME2, WRITEDATE, CONTENT, PASSWORD, TENANT_ID, COMPANYID
+				ITEMID, REPLYID, BOARDID, USERID, USERNAME, USERNAME2, WRITEDATE, CONTENT, PASSWORD, TENANT_ID, COMPANYID, IMAGECONTENT
 			)
         	VALUES (
-        	 	#ITEMID#,  #REPLYID#, #BOARDID#, #USERID#, #USERNAME#, #USERNAME2#, TO_DATE(#WRITEDATE#, 'YYYY-MM-DD HH24:MI:SS'), #CONTENT#,	#PASSWORD#, #TENANTID#, #COMPANYID#
+        	 	#ITEMID#,  #REPLYID#, #BOARDID#, #USERID#, #USERNAME#, #USERNAME2#, TO_DATE(#WRITEDATE#, 'YYYY-MM-DD HH24:MI:SS'), #CONTENT#,	#PASSWORD#, #TENANTID#, #COMPANYID#, #IMAGECONTENT#
         	)
 		]]>
 	</insert>
+  
+	<!-- 2023-11-13 전인하 - 모바일 게시판 댓글 수정 -->
+	<update id="MBoardDAO.updateOneLineReply" parameterClass="Map">
+		<![CDATA[
+            UPDATE 
+            	TBL_BOARD_ONELINEREPLY
+            SET 
+                CONTENT = #CONTENT#, IMAGECONTENT = #IMAGECONTENT#
+            WHERE
+                TENANT_ID = #TENANTID#
+            AND
+            	ITEMID = #CONTENTID#
+            AND  
+                REPLYID = #REPLYID#
+        ]]>
+	</update>
+
+	<!-- 2023-11-13 전인하 - 모바일 대댓글 저장 -->
+	<insert id="MBoardDAO.saveOneLineReReply" parameterClass="map">
+		<![CDATA[
+		INSERT INTO TBL_BOARD_ONELINEREPLY (
+			itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   content, 		password,	parentreplyid, parentwritername,	replylevel,	tenant_id, companyid, imageContent
+		)
+		SELECT
+		   #PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),	  #PCONTENT#,	#PPASSWORD# , #PARENTREPLYID#, USERNAME, (NVL(replylevel, 1) + 1), #TENANTID#, #COMPANYID#, #IMAGECONTENT#
+		FROM
+			TBL_BOARD_ONELINEREPLY
+		WHERE
+			REPLYID = #PARENTREPLYID#
+		AND
+			ITEMID = #PITEMID#
+		AND
+			TENANT_ID = #TENANTID#			
+		]]>
+	</insert>
+
+	<!-- 2023-11-13 전인하 - 부모댓글인지 체크 (자식댓글 갯수 반환) -->
+	<select id="MBoardDAO.checkThisReplyExist" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_BOARD_ONELINEREPLY
+		WHERE
+			REPLYID = #REPLYID#
+		AND
+			TENANT_ID = #TENANTID#
+		AND
+			ITEMID = #PITEMID#
+		AND
+			USERNAME IS NOT NULL;
+	</select>
 	
+	<select id="MBoardDAO.getGubun" parameterClass="String" resultClass="String">
+		SELECT
+			GUBUN
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			BOARDID = #BOARDID#
+	</select>
 </sqlMap>

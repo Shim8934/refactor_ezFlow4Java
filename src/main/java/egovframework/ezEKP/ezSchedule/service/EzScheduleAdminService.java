@@ -36,4 +36,14 @@ public interface EzScheduleAdminService {
 	public List<ScheduleGroupVO> getMyGroupList2 (String offset, String userId, int tenantId ,String companyID, String searchType2, String searchValue, String startDate, String endDate, int startRow, int maxItemPerPage, String primaryData) throws Exception;
 	
 	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId ,String companyID) throws Exception;
+	
+	public String scheduleGetExecutiveList(String cn, String companyID, int tenantId, String offset, String keyword, String lang, String companyName) throws Exception;
+	
+	public void scheduleSaveExecutive(String userID, int priority, String usage, String createUser, String companyID, int tenantID) throws Exception;
+	
+	public void scheduleUpdateExecutive(String userID, int priority, String usage, String createUser, String companyID, int tenantID) throws Exception;
+
+	public void scheduleDelExecutive(String userID, String companyID, int tenantId) throws Exception;
+
+	public void scheduleNumUpdateExecutive(String userID, int priority, String companyID, int tenantID) throws Exception;
 }

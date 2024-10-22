@@ -61,7 +61,11 @@
 			<span><spring:message code="${survey.paritipateFlag == 1 ? 'ezSurvey.t54' : 'ezSurvey.t53'}"/></span>
 		</li>
 		<li><span class="srvyInfo srvyInfo03"></span><span><spring:message code="ezSurvey.t41" /> : </span>
-			<span><spring:message code="${survey.resultPublicFlag == 1 ? 'ezSurvey.t42' : 'ezSurvey.t43'}"/></span>
+			<span>
+			    <c:if test="${survey.resultPublicFlag == 0}"><spring:message code="ezSurvey.t43"/></c:if>
+			    <c:if test="${survey.resultPublicFlag == 1}"><spring:message code="ezSurvey.t42"/></c:if>
+			    <c:if test="${survey.resultPublicFlag == 2}"><spring:message code="ezSurvey.jih01"/></c:if>
+			</span>
 		</li>
 		<c:if test="${survey.resultPublicFlag == 1}">
 			<li><span class="srvyInfo srvyInfo04"></span><span><spring:message code="ezSurvey.t96" /> : </span>
@@ -713,6 +717,8 @@
 						
 					}
 					if (responseResult == 'fail') {
+					    // 응답 획득에 실패할 경우, 응답 배열을 초기화 함
+						resposeObj.responses = [];
 						return;
 					}
 				}

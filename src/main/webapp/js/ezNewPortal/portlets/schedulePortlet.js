@@ -72,6 +72,8 @@ function getScheduleList_after(resultList, mode, date) {
 					classNameForTheme = "company";
 				} else if (SCHEDULETYPE == 7) {
 					classNameForTheme = "group";
+				} else if (SCHEDULETYPE == 10) {
+					classNameForTheme = "executive";
 				}
 				
 				strLangArrForTheme[0] = strLang125_2; // 개인
@@ -80,10 +82,15 @@ function getScheduleList_after(resultList, mode, date) {
 				strLangArrForTheme[3] = strLang130_2; // 그룹
 				strLangArrForTheme[4] = strLang131_2; // 협업
 				strLangArrForTheme[5] = strLang141_2; // 구글
+				strLangArrForTheme[6] = strLang151_2; // 임원
 				
 				// 2020-02-25 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
 				if (DATETYPE == "4") {
 					listHTML += "<li class='scheduleLi " + classNameForTheme + "' onClick=\"open_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
+					listHTML += "<p class='scheduleType'>";
+				} else if (SCHEDULETYPE == 4) {
+					// 2024-09-04 조수빈 - 협업은 onclick 연결되는 부분 다르게 연결해야해서 제거함
+					listHTML += "<li class='scheduleLi Tcollaborate'>";
 					listHTML += "<p class='scheduleType'>";
 				} else if (SCHEDULETYPE == "9") {
 					listHTML += "<li class='scheduleLi " + classNameForTheme + "' onClick=\"open_google_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + ENDDATE + "')\">";
@@ -120,6 +127,9 @@ function getScheduleList_after(resultList, mode, date) {
 				} else if (SCHEDULETYPE == 9) {
 					timeClass = "Tindividual";
 					listHTML += "<span class='Tindividual'>" + strLangArrForTheme[5] + "</span>";
+				} else if (SCHEDULETYPE == 10) {
+					timeClass = "Texecutive";
+					listHTML += "<span class='Texecutive'>" + strLangArrForTheme[6] + "</span>";
 				} else {
 					listHTML += "";
 				}
@@ -283,19 +293,21 @@ function getWorkspaceAppPath() {
 
 function getThisSchedule(selectedDate) {
 	selectedDate = selectedDate.replace(/\./gi, '-');
-	var selectedTDId = 'TDMINI_' + selectedDate + '_Day'
-	var selectedTD = $('#' + selectedTDId);   
 	
+	document.getElementById("iYear").value = new Date(selectedDate).getFullYear();
+	document.getElementById("iMon").value = new Date(selectedDate).getMonth() + 1;
+	changeMonth();
+	
+	var selectedTDId = 'TDMINI_' + selectedDate + '_Day'
+	var selectedTD = $('#' + selectedTDId);
+
+	var $selTD = $("#"+g_selTDID);
 	if (usedTheme == 3) {
-    	$("#"+g_selTDID).parent().removeClass('schedule');
+    	$selTD.parent().removeClass('schedule');
     	$("#"+g_selTRID).parent().removeClass('schedule');
     } else {
-    	if ($("#"+g_selTDID)) {
-    		$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
-    	}
-    	
-    	if ($("#"+g_selTRID)) {
-    		$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    	if ($selTD.length > 0) {
+    		$selTD.parent().removeClass('select');
     	}
     }
 	
@@ -306,16 +318,16 @@ function getThisSchedule(selectedDate) {
     	} else {
     		selectedTD.parent().addClass('schedule');
     	}
-    } else {
-    	if (selectedTD.parent().attr('class').indexOf('sun') > -1) {
-    		selectedTD.parent().css("background","#f0f6ff").css("border-radius","20px").css("color","red");
-    	} else {
-    		selectedTD.parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
-    	}
     }
 		
 	g_selTRID = document.querySelector('#' + selectedTDId).parentNode.parentNode.getAttribute("id");
     g_selTDID = 'TDMINI_' + selectedDate + '_Day';
+
+	if (usedTheme != 3) {
+		if ($("#" + g_selTDID).length > 0) {
+			$("#" + g_selTDID).parent().addClass('select');
+		}
+	}
 
     date = selectedDate;
     getScheduleList(date, "P");
@@ -362,6 +374,11 @@ function settingScheduleCalendar() {
 
 	var scheduleSdatepicker = new Date();
 	$("#scheduleSdatepicker").datepicker('setDate', scheduleSdatepicker);
+}
+
+function refreshSchedulePortlet() {
+	var selectedDate = $('#scheduleSdatepicker').val();
+	getThisSchedule(selectedDate);
 }
 
 

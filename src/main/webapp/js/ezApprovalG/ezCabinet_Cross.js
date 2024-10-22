@@ -1335,7 +1335,9 @@ function ViewDoc_onclick_Complete(Rtn) {
         if (tr.length > 0) {
             var selRow = tr[0];
             if (DocList_Flag == "RECORD") {
-                if (AdminYN != "TRUE" && (!g_bRecAdmin)) {
+               // 2024-09-19 전인하 - 결재선에 존재하였던 유저의 경우 기록물대장에서 비공개문서라도 열람이 가능
+               var checkAprLineFlag = CheckAprLine(trim_Cross(selRow.getAttribute("DATA1")));
+               if (AdminYN != "TRUE" && (!g_bRecAdmin) && checkAprLineFlag !== "TRUE") {
                     if (!HasRecReadRight(trim_Cross(selRow.getAttribute("DATA6")), trim_Cross(selRow.getAttribute("DATA8")), UserID)) {
                         OpenAlertUI(strLang580);
                         return "";
@@ -1842,6 +1844,7 @@ function openergetDocInfo() {
         // 선택한 row 유지를 위한 Flag 설정
         selRowChangeFlag = true;
         GetRecordList();
+        listLoading(false);
     }
     else {
         GetDocDeliveryList(g_DeliverySearchParamXml);
@@ -1885,9 +1888,9 @@ function makePageSelPage(pTotalCnt) {
         }
 
         if (!isPeriodYear)
-            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>";
         else
-            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
         if (g_sFlag === "UNTREATED") {
             parent.frames["left"].document.getElementById("COUNTUNTREATED").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
@@ -1900,30 +1903,30 @@ function makePageSelPage(pTotalCnt) {
     totalPage = Math.ceil(new Number(pTotalCnt / PageSize));
     var pageNum = curpage;
     if (totalPage > 1 && pageNum != 1) {
-        strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        strtext = "<span class='btnimg first'><a onclick= 'return goToPageByNum(1)'>";
+        strtext = strtext + "</a></span>";
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'><a >";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        strtext = "<span class='btnimg first disabled'><a >";
+        strtext = strtext + "</a></span>";
         PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'>";
+            strtext = strtext + "</span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            strtext = "<span class='btnimg prev disabled'>";
+            strtext = strtext + "</span>";
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'/></span>";
+        strtext = "<span class='btnimg prev disabled'>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     var MaxNum;
@@ -1951,30 +1954,30 @@ function makePageSelPage(pTotalCnt) {
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            strtext = "<span class='btnimg next' onclick='return selafterBlock()'>";
+            strtext = strtext + "</span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+            strtext = "<span class='btnimg next disabled'>";
+            strtext = strtext + "</span>";
 
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' /></span>";
+        strtext = "<span class='btnimg next disabled'>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
+        strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        strtext = "<span class='btnimg last disabled'>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     PagingHTML += "</div>";

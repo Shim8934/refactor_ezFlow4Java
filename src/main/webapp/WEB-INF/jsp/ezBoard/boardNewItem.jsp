@@ -19,6 +19,16 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <style>
+            .peopleSelectBtn {
+                border-radius: 3px;
+                line-height: 23px;
+                border: 1px solid #ccc;
+                cursor: pointer;
+                padding: 2px 5px;
+                margin-right: 10px;
+            }
+	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/datepicker.htc.js')}"></script>
@@ -26,6 +36,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/ConvertSaveImage.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 	    <c:if test="${!isCrossBrowser}">
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain.js')}"></script>
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem.js')}"></script>
@@ -128,6 +139,9 @@
 		    var orgCompanyID = "${orgCompanyID}";
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    var mailShareId = "${mailShareId}";
+		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
+		    var keywordArr = []; // 키워드 배열
+
 		    
 		    /* 2023-05-16 김우철 - hwp결재문서를 배포용 문서로 저장하기 위한 변수 */
 		    var HwpCtrl;
@@ -135,6 +149,7 @@
 			var HwpSecurityNum = "<c:out value='${HwpSecurityNum}'/>";
 			var isHwpCtrlOpen = false;
 		    var startCheck = false;
+		    var authList = [];
 		    
 			/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
@@ -151,6 +166,8 @@
 
 			/* 2024-05-20 김유진 - 일정에서 게시판 게시를 위한 변수 */
 			var scheduleId = "<c:out value='${scheduleId}'/>";
+			/* 2024-08-26 김유진 - 확장컬럼 사용 여부 */
+			var pAttributeYN = "${boardInfo.attributeYN}";
 
 		    window.onload = function () {
 		    	
@@ -241,6 +258,35 @@
 										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
 									} else if (colType[i] == "select") {
 										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
+									} else if (colType[i] == "textArea") {
+									    document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]).replace(/<br\s*\/?>/gi, '\n');
+									} else if (colType[i] == "people") {
+									    // 2024-07-31 전인하 - 게시판 > 확장컬럼 > 게시물 수정 시 peoplePicker 타입 출력값 가공
+									    var authListObjTemp = {};
+									    var tempData = [];
+									    var displayUserListText = "";
+                                        var tempAuthListArr = getExtensionValue(tableCol[i]).split(";");
+                                        for (let i = 0 ; i < tempAuthListArr.length; i++) {
+                                            if (tempAuthListArr[i] == "") {
+                                                break;
+                                            }
+                                            var authInfoJson = {};
+                                            var tempAuthObj = tempAuthListArr[i].split("/");
+                                            authInfoJson.userId = tempAuthObj[0];
+                                            authInfoJson.userName = "${userInfo.lang}" == "1" ? tempAuthObj[1] : tempAuthObj[2];
+                                            authInfoJson.userName1 = tempAuthObj[1];
+                                            authInfoJson.userName2 = tempAuthObj[2];
+                                            authInfoJson.userType = tempAuthObj[3];
+                                            if (i != 0) {
+                                                displayUserListText += ", "
+                                            }
+                                            displayUserListText += "${userInfo.lang}" == "1" ? tempAuthObj[1] : tempAuthObj[2];
+                                            tempData.push(authInfoJson);
+                                        }
+                                        authListObjTemp.columnName = tableCol[i];
+                                        authListObjTemp.data = tempData;
+                                        authList.push(authListObjTemp);
+                                        document.getElementById(tableCol[i]).innerText = displayUserListText;
 									}
 			    				}
 			            	}
@@ -292,6 +338,14 @@
 				/* 2023-09-25 민지수 - 게시물 로드시 정보 불러오도록 추가 */
 				NotiPost_onclick();
 				Noti_setTime();
+				
+				// 2024-08-23 전인하 - 게시판 > 게시글 수정/임시저장게시글 작성 > 게시물일 경우 입력되어있던 키워드 정보 삽입
+				if ((pMode == "modify" || pMode == "temp") && useKeywordFlag == "Y") {
+				    var keywordSpanArr = document.querySelectorAll(".keywordSpanView");
+				    for (let i=0; i<keywordSpanArr.length; i++) {
+				        keywordArr.push(keywordSpanArr[i].id);
+				    }
+				}
 
 			    FirstFlag = false;
 			    try {
@@ -345,7 +399,10 @@
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		        }
-		      
+				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
+				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
+					document.getElementById("EdtorSize").style.height = parseInt(document.getElementById("EdtorSize").style.height, 10) + ("${boardInfo.guBun}" == "2" ? 90 : 60) - document.getElementById("tab01").parentElement.clientHeight + "PX";
+				}
 		        var editorW = (document.documentElement.clientWidth - 20) + "PX";
 		        document.getElementById("tab02").style.width = editorW;
 	            document.getElementById("message").style.width = editorW;
@@ -614,25 +671,33 @@
 											 .replace(/&lt;/gi, "<")
 											 .replace(/&gt;/gi, ">");
 					
-					if(must[i] == "Y"){
+					if (must[i] == "Y") {
 		        		if (colType[i] == "radio") {
 		        			if (GetRadioVal(tableCol[i]) == "") {
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(strLang188 + colName + strLang179);
 	                            return;
 		        			}
-		        		} else if(colType[i] == "text") {
-		        			if(document.getElementById(tableCol[i]).value == ""){
+		        		} else if (colType[i] == "text" || colType[i] == "textArea") {
+		        			if (document.getElementById(tableCol[i]).value.trim() == "") {
+		        			    document.getElementById(tableCol[i]).value = "";
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(strLang189 + colName + strLang187);
 	                            return;
 		        			}
-		        		} else if(colType[i] == "check") {
+		        		} else if (colType[i] == "check") {
 		        			if(GetCheckVal(tableCol[i]) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(strLang188 + colName + strLang179);
 	                            return;
 		        			}
+		        		} else if (colType[i] == "people") {
+		        		    var tempPeopleList = document.getElementById(tableCol[i]).innerHTML;
+		        		    if (tempPeopleList.trim() == "") {
+                                Tab1_MouseClick(document.getElementById("1tab1"));
+                                alert(strLang188 + colName + strLang179);
+                                return;
+                            }
 		        		}
 		        	}	
 				}
@@ -998,7 +1063,35 @@
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
 					} else if(colType[i] == "select") {
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
+					} else if (colType[i] == "people") {
+					    // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 저장 시 문자열 형태로 입력값 가공
+					    // 각 유저는 구분자 ; 를 통해 구별함. 
+					    // 유저 상세정보는 /를 구분자로 사용하며 값의 의미는 순서대로 id값/이름1/이름2/타입(부서 직위 직책 등).
+					    var peoplePickerString = "";
+					    var authListColumn = authList.filter((e) => e.columnName == tableCol[i]);
+                        if (authListColumn.length > 0) {
+                            var authListData = authListColumn[0].data;
+                            for (var j = 0; j < authListData.length; j++) {
+                                var userId = authListData[j].userId;
+                                var userName1 = authListData[j].userName1;
+                                var userName2 = authListData[j].userName2;
+                                var userType = authListData[j].userType;
+                                peoplePickerString += userId + "/";
+                                peoplePickerString += userName1 + "/";
+                                peoplePickerString += userName2 + "/";
+                                peoplePickerString += userType + ";";
+                            }   
+                        }
+					    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(escapeForJson(peoplePickerString)));
+					} else if (colType[i] == "textArea") {
+					    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value).replace(/(?:\r\n|\r|\n)/g, '<br/>'));
 					}
+				}
+
+				if (useKeywordFlag != null && useKeywordFlag == 'Y') {
+				    for (var keyword of keywordArr) {
+				        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "KEYWORD", keyword);
+				    }
 				}
 
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
@@ -1619,7 +1712,7 @@
 		        xmlhttp_boardinfo = null;
 		    }
 		    function InitializeSettings() {
-		        document.getElementById('BoardSpan').innerHTML = pBoardName;
+		        document.getElementById('BoardSpan').innerText = pBoardName;
 		        if (ExpireDays == "-1") {
 		            document.getElementById('ChkPermanence').checked = true;
 		            document.getElementById('Makedate').style.visibility = "hidden";
@@ -1885,7 +1978,10 @@
 		                    }
 		                }
 		        }
-		        
+				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
+				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
+					document.getElementById("EdtorSize").style.height = parseInt(document.getElementById("EdtorSize").style.height, 10) + ("${boardInfo.guBun}" == "2" ? 90 : 60) - document.getElementById("tab01").parentElement.clientHeight + "PX";
+				}
                 var editorW = (document.documentElement.clientWidth - 20) + "PX";
 		       	document.getElementById("tab02").style.width = editorW;
 	            document.getElementById("message").style.width = editorW;
@@ -1937,7 +2033,7 @@
 		                        return;
 		                    }
 		                }
-		                document.getElementById("BoardSpan").innerHTML = ret[1];
+		                document.getElementById("BoardSpan").innerText = ret[1];
 		                InitializeSettings();
 		                ChkPermanent();
 						NotiPost_onclick();
@@ -2001,7 +2097,7 @@
 	                    }
 	                }
 	                pBoardID = ret[0];
-	                document.getElementById("BoardSpan").innerHTML = ret[1];
+	                document.getElementById("BoardSpan").innerText = ret[1];
 	                InitializeSettings();
 	                ChkPermanent();
 					NotiPost_onclick();
@@ -2558,6 +2654,20 @@
 				}
 				attachxml = strRet;
 			}
+			function openPopupAuth(e) {
+			    var columnName = e.target.getAttribute("columnName");
+                var OpenWin = window.open("/ezBoard/boardSelectUser.do?companyId=" + SSCompanyID + "&columnName=" + columnName, "", GetOpenWindowfeature(970, 670));
+                OpenWin.focus();
+            }
+            
+            function characterCheckForExtAttr(obj) {
+                var regExp = /[\\'\"<>]/gi;
+                if (regExp.test(obj.value)) {
+                    alert("<spring:message code='ezBoard.extensionAttr.JIH04' />");
+                    obj.value = obj.value.replace(regExp, '');
+                }
+            }
+ 			
 	        
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
@@ -2629,7 +2739,7 @@
 	                        	<c:choose>
 	                        		<c:when test="${boardType != 'SELECT'}">
 			                            <span id="BoardSpan">
-			                                ${boardInfo.boardName} 
+			                                <c:out value='${boardName}' />
 			                            </span>
 	                        		</c:when>
 	                        		<c:otherwise>
@@ -2748,10 +2858,41 @@
 											</select>
 										</td>
 									</c:when>
+									<c:when test="${boardAttributeVO.colType == 'people'}">
+                                        <td colspan="3">
+                                            <span id="peopleSelectBtn" class="peopleSelectBtn" columnName='${boardAttributeVO.tableCol}' style="" onclick ='openPopupAuth(event)'><spring:message code='ezWebFolder.t516' /></span>
+                                            <span id ='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' type="people" class='authList_div peoplePickerData ${boardAttributeVO.tableCol}'></span>
+                                        </td>
+                                    </c:when>
+                                    <c:when test="${boardAttributeVO.colType == 'textArea'}">
+                                        <td colspan="3">
+                                            <span id='icon_textArea'></span>
+                                            <textarea maxlength="450" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' type="textArea" onkeyup="characterCheckForExtAttr(this)" onkeydown="characterCheckForExtAttr(this)" style="width: 100%; height: 150px; box-sizing: border-box; "></textarea>
+                                        </td>
+                                    </c:when>
              					</c:choose>
              				</tr>
              			</c:forEach>
 	         			<!-- 추가 항목이 있을 경우 끝-->
+	         			<!-- 키워드 시작 -->
+	         			<c:if test="${not empty useKeyword && useKeyword eq 'Y'}">
+                            <tr>
+                                <th><spring:message code="ezApprovalG.t1200" /></th>
+                                <td colspan="3" id="keyWordResult">
+                                    <c:if test="${not empty useKeyword && useKeyword eq 'Y' && (mode eq 'modify' || mode eq 'temp')}">
+                                        <c:forEach var="keyword" items="${keywordListForModify}">
+                                            <span id="${keyword.keywordName}" class="keywordSpanView">
+                                                #${keyword.keywordName}<img src="/images/icon/oneline_delete.gif" class="keywordDeleteBtn" onclick="removeKeyword(event)">
+                                            </span>
+                                        </c:forEach>
+                                    </c:if>
+                                    <c:if test="${fn:length(keywordListForModify) < 10}">
+                                        <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeyup="keyword_onkeyUp(event)" >
+                                    </c:if>
+                                </td>
+                            </tr>
+                        </c:if>
+                        <!-- 키워드 끝 -->
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
 	                        <td colspan="3">
@@ -2844,7 +2985,7 @@
 	                <table class="content">
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t111' /></th>
-	                        <td id="tdBoardName" style="width: 100%" colspan="2">${boardInfo.boardName}</td>
+	                        <td id="tdBoardName" style="width: 100%" colspan="2">${boardName}</td>
 	                    </tr>
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
@@ -3004,18 +3145,6 @@
 		<div id="hwpctrl"/>
 	</body>
 	<script type="text/javascript">
-	//사용안되는듯 2017-01-11 파악
-// 	    function SelectBoard2() {
-// 	        var url = "BoardSelect2.aspx";
-// 	        var feature = "status:no;dialogWidth:352px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
-// 	        feature = feature + GetShowModalPosition(352, 700);
-// 	        var ret = window.showModalDialog(url, "", feature);
-	
-// 	        if (typeof (ret) == "undefined") return "";
-// 	        return ret;
-// 	    }
-	</script>
-	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");
 	</script>
 	<script type="text/javascript">
@@ -3026,5 +3155,11 @@
 	    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 	    }
+		/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
+		if (pAttributeYN == "Y" && document.getElementById("tab01")) {
+			var tabHeight = "${boardInfo.guBun}" == "2" ? 90 : 60;
+			var editorHeight = parseInt(document.getElementById("EdtorSize").style.height, 10) + tabHeight - document.getElementById("tab01").parentElement.clientHeight;
+			document.getElementById("EdtorSize").style.height = (editorHeight > 200 ? editorHeight : 200 ) + "PX";
+		}
 	</script>
 </html>

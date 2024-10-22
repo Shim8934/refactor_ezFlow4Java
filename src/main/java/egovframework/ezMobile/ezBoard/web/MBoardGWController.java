@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -21,11 +22,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
+import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -114,6 +119,9 @@ public class MBoardGWController {
 	
 	@Resource(name = "jspw")
 	private String jspw;
+
+	@Resource(name = "MBoardDAO")
+	private MBoardDAO mBoardDAO;
 	
 	/**
 	 * 모바일 G/W 게시판 [GET] 새게시물 리스트
@@ -305,6 +313,14 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			
+			if (boardItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);			
+				result.put("data", "");
+				return result;
+			}
+			
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			boardItem.setNotiStart(commonUtil.getDateStringInUTC(boardItem.getNotiStart(), info.getOffSet(),false));
 			boardItem.setNotiEnd(commonUtil.getDateStringInUTC(boardItem.getNotiEnd(), info.getOffSet(),false));
@@ -359,7 +375,12 @@ public class MBoardGWController {
 			
 			// 20180824 조진호 - 모바일 viewerflag 값 추가
         	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
-        	
+			
+			List<String> keywords = new ArrayList<>();
+			if (boardInfo.getUseKeyword()!= null && boardInfo.getUseKeyword().equals("Y")) {
+				List<BoardKeywordVO> keywordsObj = ezBoardService.selectBoardKeywordByBoardItem(contentId, boardId, info.getTenantId());
+				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
+			}
         	logger.debug("realPath = " + realPath + " | domain = " + domain + " | scheme = " + scheme + " | useMobileViewer = " + useMobileViewer);
         	
         	data.put("useMobileViewer", useMobileViewer);
@@ -368,6 +389,7 @@ public class MBoardGWController {
 			data.put("boardInfo", boardInfo);
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
 			data.put("commentCount", commentCount);
+			data.put("keywords", keywords);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -403,6 +425,13 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			
+			if (boardItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);			
+				result.put("data", "");
+				return result;
+			}
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			
 			//boardInfo
@@ -441,6 +470,11 @@ public class MBoardGWController {
 			
 			List<MBoardAttachVO> photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
 			
+			List<String> keywords = new ArrayList<>();
+			if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+				List<BoardKeywordVO> keywordsObj = ezBoardService.selectBoardKeywordByBoardItem(contentId, boardId, info.getTenantId());
+				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
+			}
 			for (MBoardAttachVO photo : photoList) {
 				photo.setFilePath(photo.getFilePath());
 			}
@@ -453,6 +487,7 @@ public class MBoardGWController {
 			data.put("boardInfo", boardInfo);
 			data.put("photoList", photoList);
 			data.put("commentCount", commentCount);
+			data.put("keywords", keywords);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -683,6 +718,12 @@ public class MBoardGWController {
 			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
 			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 새게시물 카운트 표시 시 companyID 조건 추가 */
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
+
+			// rootBoardId의 guBun 값 전달 > 카테고리게시판인 경우 동작을 막기위함
+			if (!rootBoardID.equals("top")) {
+				String guBun = mBoardService.getGubun(rootBoardID);
+				result.put("guBun",guBun);
+			}
 			
 			data.put("list", list);
 			data.put("listCount", listCount);
@@ -991,7 +1032,6 @@ public class MBoardGWController {
 	/**
      * 첨부파일을 서버에 저장한다.
      *
-     * @param file
      * @param newName
      * @param stordFilePath
      * @throws Exception
@@ -1222,6 +1262,14 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			
+			if (boardItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);			
+				result.put("data", "");
+				return result;
+			}
+			
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
@@ -1258,6 +1306,12 @@ public class MBoardGWController {
 			}
 			
 			List<MBoardAttachVO> movieAttachVO = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
+
+			List<String> keywords = new ArrayList<>();
+			if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+				List<BoardKeywordVO> keywordsObj = ezBoardService.selectBoardKeywordByBoardItem(contentId, boardId, info.getTenantId());
+				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
+			}
 			
 			logger.debug("movieAttachVO : " + movieAttachVO.get(0));
 			
@@ -1267,6 +1321,7 @@ public class MBoardGWController {
 			data.put("boardInfo", boardInfo);
 			data.put("movieAttachVO", movieAttachVO.get(0));
 			data.put("commentCount", commentCount);
+			data.put("keywords", keywords);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1344,12 +1399,16 @@ public class MBoardGWController {
 	        InternetAddress[] toArray = new InternetAddress[1]; // 한번에 한 사람에게만 발송
 	        List<BoardAccessVO> list = ezBoardService.getPostNotiMailUserList(boardId, primary, mobileInfo.getTenantId());
 	        
-	        String separator = ";;";
-	        String notiRecipientParam = "";
+	        List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 	        logger.debug("Sending mail starts");
 
 	        for (BoardAccessVO vo : list) {
-	        	notiRecipientParam += vo.getAccessID() + separator;
+	        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", info.getCompanyId());
+				recipientMap.put("cn", vo.getAccessID());
+				notiRecipientList.add(recipientMap);
+				
 	        	try {
 	        		InternetAddress from = new InternetAddress();
 
@@ -1402,7 +1461,7 @@ public class MBoardGWController {
 	        
 	        logger.debug("Sending mail ends");
 
-	        if (notiRecipientParam.length() <= 0) {
+	        if (notiRecipientList == null || notiRecipientList.size() == 0) {
 				result.put("status", "ok");
 				result.put("code", 0);
 				result.put("data", null);
@@ -1410,8 +1469,6 @@ public class MBoardGWController {
 			}
 
 	        // 2024-03-29 한태훈 - 모바일 > 게시판 > 관리자 신규 게시 통합알림 추가
- 			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
-
  			String boardStatus = "";
 			String boardType = boardInfo.getGuBun();
 			String linkUrl = "";
@@ -1447,7 +1504,7 @@ public class MBoardGWController {
 			}
 
  			Map<String, Object> data = new HashMap<String, Object>();
- 			data.put("notiRecipientParam", notiRecipientParam);
+ 			data.put("notiRecipientParam", notiRecipientList);
  			data.put("notiContent", notiContent);
  			data.put("linkUrl", linkUrl);
  			data.put("linkUrlMobile",linkUrlMobile);
@@ -1494,8 +1551,7 @@ public class MBoardGWController {
 			String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String userEmail = userID + "@" + domainName;
 			String password = jspw;
-			String notiRecipientParam = "";
-			String separator = ";;";
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 			boolean disableMail = false;
 
 			// 게시판 옵션에서 메일알림을 사용하는 경우에만 발송한다.
@@ -1523,7 +1579,11 @@ public class MBoardGWController {
 
 					if (!notiRecipientIds.contains(writerID)) {
 						notiRecipientIds.add(writerID);
-						notiRecipientParam += writerID + ";;";
+						Map<String, Object> recipientMap = new HashMap<String, Object>();
+						recipientMap.put("userType", "PERSON");
+						recipientMap.put("companyId", info.getCompanyId());
+						recipientMap.put("cn", writerID);
+						notiRecipientList.add(recipientMap);
 					}
 				}
 			} else if (mode.equals("comment") && boardInfo.getMailFG_Comment() != null && boardInfo.getMailFG_Comment().equals("Y")) {
@@ -1541,7 +1601,11 @@ public class MBoardGWController {
 					}
 
 					notiRecipientIds.add(writerID);
-					notiRecipientParam += writerID + ";;";
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+					recipientMap.put("userType", "PERSON");
+					recipientMap.put("companyId", info.getCompanyId());
+					recipientMap.put("cn", writerID);
+					notiRecipientList.add(recipientMap);
 				}
 			}
 			// 메일발송 하지 않는 경우, 바로 리턴
@@ -1651,7 +1715,6 @@ public class MBoardGWController {
 				return result;
 			}
 			
-			notiRecipientParam = notiRecipientParam.substring(0, notiRecipientParam.length() - separator.length());
 			String notiContent = boardInfo.getBoardName() + " - " + boardItem.getTitle();
 			
 			// 게시물 링크, 게시일 정보 등 생성
@@ -1691,7 +1754,7 @@ public class MBoardGWController {
 			}
 
 			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("notiRecipientParam", notiRecipientParam);
+			data.put("notiRecipientParam", notiRecipientList );
 			data.put("notiContent", notiContent);
 			data.put("linkUrl", linkUrl);
 			data.put("linkUrlMobile",linkUrlMobile);
@@ -1912,6 +1975,7 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String content = request.getParameter("content");
+			String imageContent = request.getParameter("imageContent"); // 2023-11-16 전인하 - 모바일 > 게시판 > 이모티콘 삽입 > 이모티콘 정보 추가
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
 			
@@ -1919,7 +1983,7 @@ public class MBoardGWController {
 			
 			content = content.replace("'", "''");
 			
-			mBoardService.saveOneLineReply(contentId, replyID, boardId, userID, info.getUserName(), info.getUserName2(), info.getTenantId(), info.getCompanyId(), content);
+			mBoardService.saveOneLineReply(contentId, replyID, boardId, userID, info.getUserName(), info.getUserName2(), info.getTenantId(), info.getCompanyId(), content, imageContent);
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -1983,6 +2047,8 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String gubun = request.getParameter("gubun");
+			String replyLevel = request.getParameter("replyLevel");
+			String parentReplyID = request.getParameter("parentReplyID");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
 			
@@ -1993,9 +2059,25 @@ public class MBoardGWController {
 			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1 || info.getRollInfo().indexOf("n=1") > -1) {
 				gubun = "2";
 			}
-			*/
+			*/				
 			
-			String resStr = ezBoardService.deleteOneLineReply(userID, replyID, gubun, info.getTenantId());
+			String resStr = "";
+			if (Integer.parseInt(replyLevel) != 1) { // 최상위부모댓글이 아닌 경우
+				resStr = ezBoardService.deleteOneLineReply(userID, replyID, gubun, info.getTenantId()); // 무조건 삭제
+				int sibilingsCnt = ezBoardService.getChildReplyCnt(contentId, boardId, parentReplyID, info.getTenantId()); // 형제댓글 갯수
+				int parentReplyExistFlag = mBoardService.checkThisReplyExist(parentReplyID, contentId, info.getTenantId()); // 부모댓글 실존여부 (존재할경우 1, 아니면 0)
+				if (sibilingsCnt == 0 && parentReplyExistFlag == 0) { // 형제댓글이 존재하지 않고, 부모댓글은 이미 지워진 상태일 때 null 삽입되어있던 부모댓글을 지운다.
+					ezBoardService.deleteOneLineReply("", parentReplyID, gubun, info.getTenantId());
+				}
+			} else { // 최상위 부모댓글인 경우 자식 댓글이 존재한다면 null 삽입, 자식댓글이 없다면 일반 삭제.
+				int childCnt = ezBoardService.getChildReplyCnt(contentId, boardId, replyID, info.getTenantId());
+				if (childCnt == 0) {
+					resStr = ezBoardService.deleteOneLineReply(userID, replyID, gubun, info.getTenantId());
+				} else {
+					ezBoardService.updateDelParentReply(replyID, contentId, boardId, info.getTenantId());
+					resStr = "OK_DELETED";
+				}
+			}
 			
 	        result.put("status", resStr);
 			result.put("code", 0);			
@@ -2022,6 +2104,88 @@ public class MBoardGWController {
                          .replaceAll("\\%28", "(")
                          .replaceAll("\\%29", ")")
                          .replaceAll("\\%7E", "~");
+	    return result;
+	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 댓글 수정 */
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateBoardComment(@PathVariable String boardId, @PathVariable String contentId, @PathVariable String replyID, HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userID = request.getParameter("userID");
+			String content = request.getParameter("content");
+			String imageContent = request.getParameter("imageContent"); // 2023-11-16 전인하 - 모바일 > 게시판 > 이모티콘 삽입 > 이모티콘 정보 추가
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+
+			logger.debug("serverName = " + serverName + " | userId = " + userID);
+
+			content = content.replace("'", "''");
+			
+			mBoardService.updateOneLineReply(contentId, replyID, content, info.getTenantId(), imageContent);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}] ended.");
+
+		return result;
+	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 대댓글 작성 */
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject insertReplyBoardComment(@PathVariable String boardId, @PathVariable String contentId, @PathVariable String replyID, HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userID = request.getParameter("userID");
+			String content = request.getParameter("content");
+			String parentReplyID = request.getParameter("parentReplyID");
+			String imageContent = request.getParameter("imageContent"); // 2023-11-16 전인하 - 모바일 > 게시판 > 이모티콘 삽입 > 이모티콘 정보 추가
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+
+			logger.debug("serverName = " + serverName + " | userId = " + userID);
+
+			content = content.replace("'", "''");
+
+			// 패스워드 삽입 로직
+			// 추후 모바일 익명게시판에서 댓글 지원할 때 아래 password 변수에 "" 대신 사용자가 입력한 비밀번호를 삽입하면 됨
+			// 현시점에서는 모바일 익명게시판에서 댓글 지원하지 않으므로 단순 null에러 방지 목적으로 삽입함
+			String password = "";
+			String prm = egovFileScrty.getPrm();
+			String pre = egovFileScrty.getPre();
+			PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+
+			String rpwd = EgovFileScrty.decryptRsa(pk, "");
+			password = EgovFileScrty.encryptPassword(rpwd, "unknown");
+			
+			mBoardService.saveOneLineReReply(contentId, boardId, replyID, parentReplyID, content, password, info, imageContent);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1); 
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}] ended.");
+
 	    return result;
 	}
 	

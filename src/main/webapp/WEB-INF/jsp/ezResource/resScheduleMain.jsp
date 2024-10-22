@@ -132,11 +132,11 @@
 	                    var repetition = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYREPEAT")[0].textContent;	                    
 	                    
 	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
-	                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+	                        memorialDays.push(new memorialDay(escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent), escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent),
 	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
 	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
 	                    } else {                   	
-	                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+	                        yearmemorialDays.push(new yearmemorialDay(escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent), escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent),
 	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
 	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
 	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
@@ -593,6 +593,48 @@
             feature = feature + GetOpenPosition(420, 450);
             window.open("/ezCommon/showPersonInfo.do?id=" + userID + "&dept=" + deptID, "", feature);
         }
+
+		function escapeHtml(text) {
+			var map = {
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#039;'
+			};
+
+			return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+		}
+		
+		function btnOccupancy_list() {
+			parent.frames["left"].document.body.style.overflow = "hidden";
+    		var url = "/ezResource/resourceOccupancy.do";
+    		DivPopUpShow(800, 540, url);
+    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);
+		}
+		function resClose_onclick() {
+			DivPopUpHidden();
+			$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+		}
+		// 2024-08-20 유길상 - 자원관리 즐겨찾기 관리 팝업
+		var fvMangeWindow;
+		function fvManageWindowOpen() {
+			event.stopPropagation();
+			if (fvMangeWindow) {
+				fvMangeWindow.focus();
+			} else {
+				fvMangeWindow = window.open("/ezResource/resFavoriteManage.do?brdId=${resID}", "config", GetOpenWindowfeature(600, 425));
+				fvMangeWindow.focus();
+				var winTimer;
+				winTimer = setInterval(function() {
+		            if (fvMangeWindow.closed !== false) {
+		                clearInterval(winTimer);
+		                fvMangeWindow = null;
+		                parent.frames['left'].location.reload();
+		            }
+		        }, 500);
+			}
+		}
     </script>
 	
 	</head>
@@ -601,7 +643,7 @@
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px;padding-right: 6px; ovverflow-x: scroll; min-width: 950px;" id="BodyTop">
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="${brdNm}"><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none; overflow: hidden;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
@@ -618,6 +660,10 @@
     			<c:if test="${approveFlag ne 2 }">
     				<li id="myApprovlist"><span onClick="btnMyApprov_list();"><spring:message code='ezResource.kmsr34'/></span></li>
     			</c:if>
+    			<c:if test="${adminCKFlag eq 'Y'}" >
+    				<li id="occupancylist"><span onClick="btnOccupancy_list();"><spring:message code='ezResource.kwc03'/></span></li>
+    			</c:if>
+    			<li id="fav_manage" onClick="fvManageWindowOpen();"><span><spring:message code='ezResource.resFav.ygs02'/></span></li>
             </ul>
 		</div>
 		<div class="calendar_pagenav" style='left: max(50%, 550px);'>

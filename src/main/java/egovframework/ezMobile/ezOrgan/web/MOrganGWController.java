@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezOrgan.web;
 
+import java.net.URLDecoder;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -273,6 +274,9 @@ public class MOrganGWController {
 			String companyId = request.getParameter("companyId");
 			String userSearch = request.getParameter("userSearch");
 
+			// 2024.09.25 한슬기 : deptId가 한글로 들어올 경우 한글 꺠짐 현상이 있어 url 인코딩하여 전달받음.
+			String decodedDeptId = URLDecoder.decode(deptID, "UTF-8");
+			
 			logger.debug("serverName : " + serverName);
 			logger.debug("userId : " + userId);
 			logger.debug("selectType : " + selectType);
@@ -283,7 +287,7 @@ public class MOrganGWController {
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID.trim(), searchFlag, selectType, optionInfo.getLang(), userInfo.getTenantId(), companyId, userSearch);
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(decodedDeptId.trim(), searchFlag, selectType, optionInfo.getLang(), userInfo.getTenantId(), companyId, userSearch);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

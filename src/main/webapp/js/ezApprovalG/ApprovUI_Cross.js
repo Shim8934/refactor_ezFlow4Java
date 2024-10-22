@@ -123,22 +123,25 @@ function ApprovMappingSign(ret) {
         var isHabyuiDate = message.GetListItem(fields, phabyuidate + pAprMemberSN);
         if (field) {
             if (ret != "NAME" && ret != "") { // 서명이 이미지인 경우 
-                var signWidth = parseInt(field.offsetWidth) - 4 - 15;
-                var signHeight = parseInt(field.offsetHeight) - 4;
-                signWidth = 50;
+                var signWidth = 50;
+                var signHeight = 50;
                 
-                if (isHabyuiDate) {
+                // 서명일자 칸이 없고 개인협조(합의)자가 최종결재자인 경우에 대응하기 위한 처리이나, 2023-10-18 기준으로 합의서명칸에 서명일자를 삽입하는 로직은 존재하지 않는다. (합의서명일자칸이 없으면 별다른 처리 없이 넘어감)
+            	// 서명일자 칸이 없는 경우, 합의유형이 아닌 일반적인 결재유형의 최종결재자에게만 서명일자를 삽입하는 스펙으로 확정함
+             /*   if (isHabyuiDate) {
                 	signHeight = 50;
                 } else {
                 	signHeight = 28;
+                }*/
+                
+                var strimg = "";
+                
+                if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) { // 대리결재
+                	signHeight = 28;
+                	strimg = strLang8 + "<br>"; // 대리결재 시, 代 문자를 이미지 서명 위에 붙임
                 }
                 
-                if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
-                	signHeight = 28;
-                }
-
-                var strimg;
-                strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
+                strimg = strimg + "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                 strimg = strimg + " width=" + signWidth;
                 
                 if (signImageType == "NAME") {
@@ -146,13 +149,17 @@ function ApprovMappingSign(ret) {
 				} else {
 				    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 				}
-                if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-                    strimg = strLang8 + strimg;
-
+                
                 field.innerHTML = strimg; // field에 이미지 정보 출력
+                
                 var content = ret;
-                if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-                    content = ret + "::" + strLang8;
+                if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                    content = ret + "::" + strLang8 + "<br>";
+                }
+                
+                if (signImageType == "NAME") {
+                	content = content + "::" + arr_userinfo[2];
+                }
                 
                 signInfo[signCnt] = habyui;
                 SignType[signCnt] = "IMAGE";
@@ -164,7 +171,7 @@ function ApprovMappingSign(ret) {
             } else {
             	/**
             	 * '환경설정->결재환경설정->부재자설정'을 통한 대리결재 설정
-            	 * 두 유저 ID가 다른 경우 -> 대결, 대결 표시 출력
+            	 * 두 유저 ID가 다른 경우 -> 대리결재 표시(代) 출력
             	 * */
                 if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
                     field.innerHTML = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
@@ -280,6 +287,7 @@ function ApprovMappingSign(ret) {
     		pSusinSN2 = pSusinSN;
     	}
         
+    	// 전결 처리 타입 1(default) : 전결자 이후 결재자들도 사인칸에 등록. 전결자가 결재하면 전결자 사인칸에 전결표시하고, 최종결재자 사인칸에 전결자 서명을 입력한다.
         if (junGyulFlag == "1") {
             //전결자, 결재안함 결재칸에 전결String
            /* for (var i = pAprMemberSignSN; i < LastKyulSN; i++) {
@@ -300,7 +308,7 @@ function ApprovMappingSign(ret) {
             }
             
             //최종결재자 인덱스 구하기
-            for (var i=0; i<20; i++) {
+            for (var i = 0; i < 20; i++) {
             	signID = pSusinSN2 + "sign" + i;
             	var field = message.GetListItem(fields, signID);
             	
@@ -317,6 +325,13 @@ function ApprovMappingSign(ret) {
             var field = message.GetListItem(fields, seumyungdateID);
             if (field) {
                 setNodeText(field , s);
+                
+                /* 2023-10-05 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+                signInfo[signCnt] = seumyungdateID;
+        		SignName[signCnt] = seumyungdateID;
+        		SignType[signCnt] = "TEXT";
+        		SignContent[signCnt] = s;
+        		signCnt = signCnt + 1;
             }
 
             field = message.GetListItem(fields, seumyungID);
@@ -339,50 +354,67 @@ function ApprovMappingSign(ret) {
 //                else if (DekyulFlag) {
 //                }
 //                else {
+            	
+            	// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+    			if (message.GetListItem(fields, seumyungdateID)) {
+    			    OpinionText = "";
+    			}
+    			
                     if (ret != "NAME") { //이미지 서명
-                    	
                         signWidth = 50;
                         signHeight = 50;
 
                         var strimg;
+                        var contents = "";
                         var FilePath = encodeURI(ret);
-                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                        
+                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase()) {
                             strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
-                        else {
+                        } else {
                         	strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
                         	signHeight = 28;
+                        	
+                        	// 대리결재 시, 代 문자를 이미지 서명 위에 붙임 (대결/전결 및 서명일자 표기보다는 아래에 위치)
+                        	contents = strLang8 + "<br>";
                         }
-
+                        
                         strimg = strimg + " width=" + signWidth;
+                        
+                        // 서명일자칸이 없는 경우, 서명칸에 서명일자를 함께 표출하기 위해 이미지 서명의 높이 조정
+                        if (!message.GetListItem(fields, seumyungdateID)) {
+                        	signHeight = 28;
+                        }
                         
                         if (signImageType == "NAME") {
                         	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
 						} else {
 						    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 						}
-                        var contents = "";
+                        
                         if (!message.GetListItem(fields, seumyungdateID)) {
                             strimg = OpinionText + strimg;
-                            contents = OpinionText;
                         }
-
-                        var contents = OpinionText;
+                        
+                        if (signImageType == "NAME") {
+                        	content = content + "::" + arr_userinfo[2];
+                        }
                         
                         field.innerHTML = strimg;
                         signInfo[signCnt] = signID;
                         SignName[signCnt] = signID;
                         SignType[signCnt] = "IMAGE";
-                        SignContent[signCnt] = ret + "::" + contents;
+                        SignContent[signCnt] = ret + "::" + OpinionText + contents;
                         
                         signCnt = signCnt + 1;
                         SingFlag = true;
                     }
                     else { //문자 서명
-                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase()) {
                             strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
-                        else
+                        } else {
                             strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
-
+                        }
+                        
                         if (!message.GetListItem(fields, seumyungdateID)) {
                             strimg = OpinionText + strimg;
                         }
@@ -397,7 +429,9 @@ function ApprovMappingSign(ret) {
                     }
 //                }
             }
-    	} else if (junGyulFlag == "4") {
+    	}
+        // 전결 처리 타입 4 : 전결자 이후 결재자들은 사인칸에 미등록. 전결자가 결재하면 전결자 사인칸에 전결자 서명을 입력한다.
+        else if (junGyulFlag == "4") {
     		signID = pSusinSN2 + "sign" + pAprMemberSignSN;
             seumyungID = pSusinSN2 + "jikwe" + pAprMemberSignSN;
             seumyungdateID = pSusinSN2 + "seumyungdate" + pAprMemberSignSN;
@@ -405,6 +439,13 @@ function ApprovMappingSign(ret) {
             var field = message.GetListItem(fields, seumyungdateID);
             if (field) {
                 setNodeText(field , s);
+                
+                /* 2023-10-05 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+                signInfo[signCnt] = seumyungdateID;
+        		SignName[signCnt] = seumyungdateID;
+        		SignType[signCnt] = "TEXT";
+        		SignContent[signCnt] = s;
+        		signCnt = signCnt + 1;
             }
 
             field = message.GetListItem(fields, seumyungID);
@@ -427,39 +468,43 @@ function ApprovMappingSign(ret) {
 //                else if (DekyulFlag) {
 //                }
 //                else {
+            	
+            	// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+    			if (message.GetListItem(fields, seumyungdateID)) {
+    			    OpinionText = "";
+    			}
+    			
                     if (ret != "NAME") { //이미지 서명
-                    	
                         signWidth = 50;
                         signHeight = 28;
 
                         var strimg;
+                        var contents = "";
                         var FilePath = encodeURI(ret);
-                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                        
+                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase()) {
                             strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
-                        else {
+                        } else {
                         	strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        	
+                        	// 대리결재 시, 代 문자를 이미지 서명 위에 붙임 (대결/전결 및 서명일자 표기보다는 아래에 위치)
+                        	contents = strLang8 + "<br>";
                         }
 
                         strimg = strimg + " width=" + signWidth;
                         strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
-
-                        var contents = "";
+                        
                         if (!message.GetListItem(fields, seumyungdateID)) {
                             strimg = OpinionText + strimg;
-                            contents = OpinionText;
                         }
-
-                        var contents = OpinionText;
                         
                         strimg = strLang6 + strimg;
-                        contents = strLang6 + contents;
-
+                        
                         field.innerHTML = strimg;
                         signInfo[signCnt] = signID;
                         SignName[signCnt] = signID;
                         SignType[signCnt] = "IMAGE";
-                        SignContent[signCnt] = ret + "::" + contents;
-
+                        SignContent[signCnt] = ret + "::" + strLang6 + OpinionText + contents;
                         
                         signCnt = signCnt + 1;
                         SingFlag = true;
@@ -467,11 +512,12 @@ function ApprovMappingSign(ret) {
                     else { // 문자 서명
                     	var strimg;
                     	
-                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase()) {
                             strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
-                        else
+                        } else {
                             strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
-
+                        }
+                        
                         if (!message.GetListItem(fields, seumyungdateID)) {
                             strimg = OpinionText + strimg;
                         }
@@ -501,12 +547,13 @@ function ApprovMappingSign(ret) {
     	if (approvalFlag == "S") {
     		if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
     			for (i = 1; i <= 20; i++) {
-    				if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N"))
+    				if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N")) {
     					signID = pSusinSN + "sign" + i
-    					else
-    						signID = "sign" + i
-    						
-    						field = message.GetListItem(fields, signID);
+    				} else {
+    					signID = "sign" + i
+    				}
+    				
+    				field = message.GetListItem(fields, signID);
     				if (field) {
     					LastSignNo = i;
     				}
@@ -535,6 +582,13 @@ function ApprovMappingSign(ret) {
         var field = message.GetListItem(fields, seumyungdateID); 
         if (field) {
             setNodeText(field , s); // '서명날짜'에 출력
+            
+            /* 2023-10-05 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+            signInfo[signCnt] = seumyungdateID;
+    		SignName[signCnt] = seumyungdateID;
+    		SignType[signCnt] = "TEXT";
+    		SignContent[signCnt] = s;
+    		signCnt = signCnt + 1;
         }
 
         field = message.GetListItem(fields, seumyungID);
@@ -549,19 +603,28 @@ function ApprovMappingSign(ret) {
         if (pAprLineType == strAprType16) {
             var field = message.GetListItem(fields, signID);
             if (field) {
+            	// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+    			if (message.GetListItem(fields, seumyungdateID)) {
+    			    OpinionText = "<br>";
+    			}
+    			
                 if (ret != "NAME") {
                     signWidth = 50;
                     signHeight = 28;
-
+                    
                     var strimg;
-
+                    var contents = "";
                     var FilePath = encodeURI(ret);
+                    
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase()) {
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
-                    } else {
-                        strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
                     }
-
+                    // 대리결재 시, 代 문자를 이미지 서명 위에 붙임 (대결 및 서명일자 표기보다는 아래에 위치)
+                    else {
+                        strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        contents = strLang8 + "<br>";
+                    }
+                    
                     strimg = strimg + " width=" + signWidth;
                     
                     if (signImageType == "NAME") {
@@ -570,22 +633,15 @@ function ApprovMappingSign(ret) {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
                     
-                    //대결 시 서명 데이트 입력란 없으면 날짜 표시
-					if (!message.GetListItem(fields, seumyungdateID)) {
-						strimg = OpinionText + strimg;
-					} else {
-						strimg = "<br>" + strimg;
-					}
 					// 서명 정보에 strLang7 = '대결' 출력
-                    strimg = strLang7 + strimg;
-
+                    strimg = strLang7 + OpinionText + strimg;
                     field.innerHTML = strimg;
+                    
+                    if (signImageType == "NAME") {
+                    	content = content + "::" + arr_userinfo[2];
+                    }
+                    
                     signInfo[signCnt] = signID;
-
-                    var contents = "";
-                    if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-                        contents = strLang8;
-
                     SignName[signCnt] = signID;
                     SignType[signCnt] = "IMAGE";
                     SignContent[signCnt] = ret + "::" + strLang7 + OpinionText + contents;
@@ -594,20 +650,21 @@ function ApprovMappingSign(ret) {
                     SingFlag = true;
                 }
                 else {
-                    if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                    if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase()) {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
-                    else
+                    }
+                    // 대리결재 시, 代 문자를 문자서명 좌측에 붙임
+                    else {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
-
-                    strimg = OpinionText + strimg;
-                    strimg = strLang7 + strimg;
-
-                    field.innerHTML = strimg;
+                    }
+                    
+                    field.innerHTML = strLang7 + OpinionText + strimg;
+                    
                     signInfo[signCnt] = signID;
                     SignName[signCnt] = signID;
                     SignType[signCnt] = "HTML";
-                    SignContent[signCnt] = strimg;
-
+                    SignContent[signCnt] = strLang7 + OpinionText + strimg;
+                    
                     signCnt = signCnt + 1;
                     SingFlag = false;
                 }
@@ -642,28 +699,30 @@ function ApprovMappingSign(ret) {
             }
             else {
                 if (ret != "NAME") { // 서명이 이름이 아닌 경우 (즉, 이미지)
-                    var signWidth = field.offsetWidth;
-                    var signHeight = field.offsetHeight;
-                    if (signWidth > signHeight) {
-                        signHeight = signHeight - 15;
-                        signWidth = signHeight;
-                    } else {
-                        signWidth = signWidth - 15;
-                        sighHeight = signWidth;
-                    }
-                    signWidth = 50;
+                    var signWidth = 50;
+                    var signHeight = 50;
                     
                     if (!message.GetListItem(fields, seumyungdateID)) {
-                    	signHeight = 28;
+                    	// 서명일자칸이 존재하지 않는 경우, 서명칸에 서명일자를 함께 표출하기 위해 이미지 서명의 높이를 조정 (최종결재일때만 서명칸에 서명일자를 표출)
+                    	if (LastKyulSN == pAprMemberSN) {
+                        	signHeight = 28;
+                        }
                     } else {
                     	signHeight = 50;
                     }
-
+                    
+                    // 대결/전결 메세지는 서명칸에 표출하므로 이미지 서명의 높이를 조정
+                	if (pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+                		signHeight = 28;
+                	}
+                	
                     var strimg;
+                    var contents = "";
                     var FilePath = encodeURI(ret);
-                    if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                    
+                    if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase()) {
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
-                    else {
+                    } else {
                     	signHeight = 28;
                     	strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
                     }
@@ -675,29 +734,56 @@ function ApprovMappingSign(ret) {
 					} else {
 					    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 					}
-                    var contents = "";
+                    
                     if (!message.GetListItem(fields, seumyungdateID)) {
                         strimg = OpinionText + strimg;
-                        contents = OpinionText;
+                        contents = OpinionText + contents;
                     }
-
-                    var contents = OpinionText;
+                    
                     if (pAprLineType == strAprType4) {
-                        strimg = strLang6 + strimg;
+                    	// strimg HTML의 맨 앞 부분이 OpinionText로 시작하지 않는 경우(서명칸에 서명일자+개행태그가 함께 들어가지 않는 경우), 대결/전결 문자 직후에 개행 태그를 삽입
+                    	if (!strimg.startsWith(OpinionText)) {
+                    		strimg = "<br>" + strimg;
+                    	}
+                    	
+                    	strimg = strLang6 + strimg;
                         contents = strLang6 + contents;
                     }
-
+                    
                     if (pAprLineType == strAprType16) {
+                    	if (!strimg.startsWith(OpinionText)) {
+                    		strimg = "<br>" + strimg;
+                    	}
+                    	
                         strimg = strLang7 + strimg;
                         contents = strLang7 + contents;
                     }
-
-                    field.innerHTML = strimg;           // 서명 field에 값 넣기
+                    
+                    // 대리결재 시, 代 문자를 이미지 서명 위에 붙임 (대결 및 서명일자 표기보다는 아래에 위치)
+                    if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                    	// 代 문자 이전의 내용이 개행 태그로 끝나는 경우
+                    	if (contents.endsWith("<br>") || contents.endsWith("<br/>")) {
+                    		contents = contents + strLang8 + "<br>";
+                    	}
+                    	// 代 문자 이전의 내용이 개행 태그로 끝나지 않으며, 공백이 아닌 내용이 존재하는 경우
+                    	else if (contents != "") {
+                    		contents = contents + "<br>" + strLang8 + "<br>";
+                    	}
+                    	// 代 문자 이전의 내용이 공백인 경우
+                    	else {
+                    		contents = strLang8 + "<br>";
+                    	}
+                    }
+                    
+                    if (signImageType == "NAME") {
+                    	content = content + "::" + arr_userinfo[2];
+                    }
+                    
+                    field.innerHTML = strimg; // 서명 field에 값 넣기
                     signInfo[signCnt] = signID;
                     SignName[signCnt] = signID;
                     SignType[signCnt] = "IMAGE";
                     SignContent[signCnt] = ret + "::" + contents;
-
                     
                     signCnt = signCnt + 1;
                     SingFlag = true;
@@ -722,7 +808,7 @@ function ApprovMappingSign(ret) {
                     if (pAprLineType == strAprType16) { // 대결 + strimg
                         strimg = strLang7 + strimg;
                     }
-
+                    
                     field.innerHTML = strimg;
                     signInfo[signCnt] = signID;
                     SignName[signCnt] = signID;
@@ -1491,10 +1577,8 @@ function getCurApproverAprLine(type) {
         var pCurrentAprState = getNodeText(dataNodes[12]);
         if ((getNodeText(dataNodes[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5) || (pCurrentAprState == strAprState0))) {
             pAprLineType = getNodeText(dataNodes[11]);
-            if (ext == "mht") {
-            	wAprMemberSN = getNodeText(dataNodes[19]);
-            }
-            
+            wAprMemberSN = getNodeText(dataNodes[19]);
+
             if (approvalFlag == "S") {
             	if (pAprLineType == strAprType4)
                     var pTmpAprLineType = strAprType1;
@@ -2458,7 +2542,7 @@ function SReAprLineSingMapping(ret) {
             field = message.GetListItem(fields, fieldname);
             if (field) {
             	// 합의자 사인 필드만 존재, 합의자명 필드 없음
-            	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+            	if (message.GetListItem(fields, ("habyuisign" + hidx)) != null && message.GetListItem(fields, ("habyuija" + hidx)) == null) {
             		setNodeText(field , OrderName[i]);
             	}
                 //setNodeText(field , OrderName[i]);
@@ -3354,7 +3438,7 @@ function openAaprDocAttachUI() {
         aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
         
         if(approvalFlag == "G") {
-        	DivPopUpShow(1050, 520, "/ezApprovalG/aprCabinetAttach.do");
+        	DivPopUpShow(1050, 560, "/ezApprovalG/aprCabinetAttach.do");
         } else {
         	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID+"&pDocID="+pDocID);
         }
@@ -3594,7 +3678,7 @@ function setPublicFlag2() {
 	var PublicText = "";
 	
 	
-	if (PublicType == "Y")
+	if (PublicType == "Y" || PublicType == "B")
 		PublicText = strLang82;
 	else if (PublicType == "N")
 		PublicText = strLang84

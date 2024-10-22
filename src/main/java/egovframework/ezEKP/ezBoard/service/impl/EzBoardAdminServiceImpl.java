@@ -707,11 +707,13 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PAPPRFLAG", boardPropertyVO.getApprFlag());
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
 		map.put("v_LIKEFLAG", boardPropertyVO.getLikeFlag());
+		map.put("v_DISLIKEFLAG", boardPropertyVO.getDisLikeFlag());
 		map.put("v_MAILFG_POST", boardPropertyVO.getMailFG_Post());
 		map.put("v_MAILFG_MOD", boardPropertyVO.getMailFG_Mod());
 		map.put("v_MAILFG_COMMENT", boardPropertyVO.getMailFG_Comment());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		map.put("v_REACTFLAG", boardPropertyVO.getReactFlag());
+		map.put("v_USEKEYWORD", boardPropertyVO.getUseKeyword());
 		
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 		if (boardPropertyVO.getParentBoardID().equals("top")) {
@@ -1411,17 +1413,48 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		try {
 			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(primary, tenantID);
 
-			OrganAuth organAuth = commonUtil.makeOrganAuth(userID, tenantID);
+			/*OrganAuth organAuth = commonUtil.makeOrganAuth(userID, tenantID);
 
 			if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER, "")) {
 				list.removeIf(vo
 						-> !organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn())
 						&& !organAuth.isAuth(AdminAuth.BOARD_MANAGER, vo.getCn()));
-			}
+			}*/
 
 			return list;
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
+	}
+	
+	@Override
+	public void deleteMyBoardData(String type, String boardID, int tenantID) throws Exception {
+	    logger.debug("deleteMyBoardData started");
+
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("boardID", boardID);
+	    map.put("tenantID", tenantID);
+
+	    if ("MyBoards".equals(type)) {
+	        ezBoardAdminDAO.deleteMyBoardsOnCategoryChange(map);
+	    } else if ("MyBoardTree".equals(type)) {
+	        ezBoardAdminDAO.deleteMyBoardTreeOnCategoryChange(map);
+	    }
+
+	    logger.debug("deleteMyBoardData ended");
+	}
+
+	@Override
+	public int getBoardItemCnt(String boardID, int tenantId) throws Exception {
+	    logger.debug("getBoardItemCnt started");
+
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("boardID", boardID);
+	    map.put("tenantID", tenantId);
+
+	    int result = ezBoardAdminDAO.getBoardItemCnt(map);
+	    
+	    logger.debug("getBoardItemCnt ended");
+	    return result;
 	}
 }

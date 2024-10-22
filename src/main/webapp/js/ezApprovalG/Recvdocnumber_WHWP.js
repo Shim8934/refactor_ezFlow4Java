@@ -90,105 +90,115 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
         var result = "";
         
         name = "receiptnumber";
-        
-        if (LastSignSN == 1 || useReceiveDocNo != 'NO' || pDraftFlag == "HAPYUI") {
-        	$.ajax({
-        		type : "POST",
-        		dataType : "text",
-        		async : false,
-        		url : "/ezApprovalG/getCabinetSN.do",
-        		data : {
-        			docID : pDocID,
-        			deptID : pDeptID,
-        			orgCompanyID : orgCompanyID
-        		},
-        		success: function(xml){
-        			result = loadXMLString(xml);
-        		}
-        	});
-        	
-        	if (!message.FieldExist(name)) {
-            	var DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
-                var SN = getNodeText(GetChildNodes(result)[0]);
-                
-                //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정이 안먹혀서 주석
-                //pDocNo = DeptSymbol + "-" + SN; 
-                
-                var tempNumString = SN;
-                var templen = tempNumString.length;
-                
-                for (var i = 0; i < 6 - templen; i++) {
-                    tempNumString = "0" + tempNumString;
-                }
-                
-                pDocNumCode = pDeptID + tempNumString;
-                
-                //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정한 값만큼 앞에 0을 붙여주는 로직 추가
-                tempNumString = SN;
-				if (tempNumString < Math.pow(10, docNumZeroCnt)) {
-        			for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
-        				tempNumString = "0" + tempNumString;
-        			}
-        			pDocNo = DeptSymbol + "-" + tempNumString;
-        		} else {
-        			pDocNo = DeptSymbol + "-" + tempNumString;
-        		}
-                
-                SaveFile();
-                
-                return true;
-            } else {
-            	var rtnVal = setDocNumFormat();
-                
-                if (!rtnVal) {
-                	return true;
-                }
-                
-                fractionsymbol = trim(message.GetFieldText(name));
-                
-                var SN = getNodeText(GetChildNodes(result)[0]);
-                
-                if (SN == "") {
-                    pDocNumCode = "";
-                    pDocNo = "";
-                    message.PutFieldText(name, "");
-                    
-                    return false;
-                } else {
+
+        if (approvalFlag =='G') {
+            if (LastSignSN == 1 || useReceiveDocNo != 'NO' || pDraftFlag == "HAPYUI") {
+                $.ajax({
+                    type : "POST",
+                    dataType : "text",
+                    async : false,
+                    url : "/ezApprovalG/getCabinetSN.do",
+                    data : {
+                        docID : pDocID,
+                        deptID : pDeptID,
+                        orgCompanyID : orgCompanyID
+                    },
+                    success: function(xml){
+                        result = loadXMLString(xml);
+                    }
+                });
+
+                if (!message.FieldExist(name)) {
+                    var DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+                    var SN = getNodeText(GetChildNodes(result)[0]);
+
+                    //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정이 안먹혀서 주석
+                    //pDocNo = DeptSymbol + "-" + SN;
+
                     var tempNumString = SN;
                     var templen = tempNumString.length;
-                    
+
                     for (var i = 0; i < 6 - templen; i++) {
                         tempNumString = "0" + tempNumString;
                     }
-                    
+
                     pDocNumCode = pDeptID + tempNumString;
-                    
+
                     //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정한 값만큼 앞에 0을 붙여주는 로직 추가
                     tempNumString = SN;
-    				if (tempNumString < Math.pow(10, docNumZeroCnt)) {
-            			for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
-            				tempNumString = "0" + tempNumString;
-            			}
-            			message.PutFieldText(name, fractionsymbol + tempNumString);
-            			pDocNo = fractionsymbol + tempNumString;
-            		} else {
-            			message.PutFieldText(name, fractionsymbol + tempNumString);
-            			pDocNo = fractionsymbol + tempNumString;
-            		}
+                    if (tempNumString < Math.pow(10, docNumZeroCnt)) {
+                        for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
+                            tempNumString = "0" + tempNumString;
+                        }
+                        pDocNo = DeptSymbol + "-" + tempNumString;
+                    } else {
+                        pDocNo = DeptSymbol + "-" + tempNumString;
+                    }
 
-                    docNumSn = SN;
-    				
                     SaveFile();
-                    
+
                     return true;
+                } else {
+                    var rtnVal = setDocNumFormat();
+
+                    if (!rtnVal) {
+                        return true;
+                    }
+
+                    fractionsymbol = trim(message.GetFieldText(name));
+
+                    var SN = getNodeText(GetChildNodes(result)[0]);
+
+                    if (SN == "") {
+                        pDocNumCode = "";
+                        pDocNo = "";
+                        message.PutFieldText(name, "");
+
+                        return false;
+                    } else {
+                        var tempNumString = SN;
+                        var templen = tempNumString.length;
+
+                        for (var i = 0; i < 6 - templen; i++) {
+                            tempNumString = "0" + tempNumString;
+                        }
+
+                        pDocNumCode = pDeptID + tempNumString;
+
+                        //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정한 값만큼 앞에 0을 붙여주는 로직 추가
+                        tempNumString = SN;
+                        if (tempNumString < Math.pow(10, docNumZeroCnt)) {
+                            for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
+                                tempNumString = "0" + tempNumString;
+                            }
+                            message.PutFieldText(name, fractionsymbol + tempNumString);
+                            pDocNo = fractionsymbol + tempNumString;
+                        } else {
+                            message.PutFieldText(name, fractionsymbol + tempNumString);
+                            pDocNo = fractionsymbol + tempNumString;
+                        }
+
+                        docNumSn = SN;
+
+                        SaveFile();
+
+                        return true;
+                    }
                 }
+            } else {
+                var rtnVal = setDocNumFormat();
+                fractionsymbol = trim(message.GetFieldText(name));
+                pDocNo = fractionsymbol;
+                return true;
             }
-        } else {
-        	var rtnVal = setDocNumFormat();
-        	fractionsymbol = trim(message.GetFieldText(name));
-        	pDocNo = fractionsymbol;
-    		return true;
+        }else{
+            var rtnVal = setDocNumFormat();
+
+            if (!rtnVal) {
+                return true;
+            }
+
+            fractionsymbol = trim(message.GetFieldText(name));
         }
     } catch (e) {
         if (SN != "") {

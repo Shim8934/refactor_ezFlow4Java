@@ -11,7 +11,9 @@
 	<typeAlias alias="PermissionInfoVO" type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO"/>
 	<typeAlias alias="UserChangeInfoVO"	type="egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO"/>
 	<typeAlias alias="DeptChangeInfoVO" type="egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO"/>
-
+	<typeAlias alias="SystemConfigVO"	type="egovframework.ezEKP.ezSystem.vo.SystemConfigVO" />
+	<typeAlias alias="SystemConfigTypeVO"	type="egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO" />
+	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
 			SELECT 
@@ -1477,5 +1479,460 @@
 		DELETE FROM TBL_PORTAL_PORTLET_USER_SIZE
 		]]>
 	</delete>
+	
+	<select id="EzSystemAdminDAO.getSystemConfigListCount" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(CODE)
+		FROM
+			TBL_SYSTEMCONFIG
+		WHERE
+			CODE IS NOT NULL
+		<isNotEqual property="typeCode" compareValue="ALL">
+		AND
+			TYPECODE = #typeCode#
+		</isNotEqual>
+		<isNotEmpty property="searchValue">
+			<![CDATA[
+			AND
+				(CODE LIKE '%' || #searchValue# || '%'
+			OR
+				CODEVALUE LIKE '%' || #searchValue# || '%'
+			OR
+				DESCRIPTION LIKE '%' || #searchValue# || '%')
+			]]>
+		</isNotEmpty>
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			COMPANY_ID = #companyID#
+	</select>
+	
+	<select id="EzSystemAdminDAO.getSystemConfigListCountPopup" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(CODE)
+		FROM
+			TBL_SYSTEMCONFIG
+		WHERE
+			CODE IS NOT NULL
+		<isNotEqual property="typeCode" compareValue="ALL">
+		AND
+			TYPECODE = #typeCode#
+		</isNotEqual>
+		<isNotEmpty property="searchValue">
+			<![CDATA[
+			AND
+				(CODE LIKE '%' || #searchValue# || '%'
+			OR
+				CODEVALUE LIKE '%' || #searchValue# || '%'
+			OR
+				DESCRIPTION LIKE '%' || #searchValue# || '%')
+			]]>
+		</isNotEmpty>
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			COMPANY_ID = #companyID#
+	</select>
+	
+	<select id="EzSystemAdminDAO.getSystemConfigList" parameterClass="Map" resultClass="SystemConfigVO">
+		<![CDATA[
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROWNUM AS RNUM,
+				C.*
+			FROM (
+				SELECT
+					A.CODE,
+					A.CODEVALUE,
+					A.DESCRIPTION,
+					A.WRITERID,
+					A.WRITERNAME,
+					TO_CHAR((A.WRITEDATE + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+					A.TYPECODE,
+					B.TYPENAME,
+					B.TYPENAME2,
+					A.ISDELETEBLOCK AS isDeleteBlock
+				FROM
+					TBL_SYSTEMCONFIG A
+				INNER JOIN
+					TBL_SYSTEMCONFIG_TYPE B
+				ON
+				  	A.TYPECODE = B.TYPECODE
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				AND
+					A.COMPANY_ID = B.COMPANY_ID
+				WHERE
+					A.CODE IS NOT NULL
+				]]>
+				<isNotEqual property="typeCode" compareValue="ALL">
+				AND
+					A.TYPECODE = #typeCode#
+				</isNotEqual>
+				<isNotEmpty property="searchValue">
+				<![CDATA[
+				AND
+					(A.CODE LIKE '%' || #searchValue# || '%'
+				OR
+					A.CODEVALUE LIKE '%' || #searchValue# || '%'
+				OR
+					A.DESCRIPTION LIKE '%' || #searchValue# || '%')
+				]]>
+				</isNotEmpty>
+				AND
+					A.TENANT_ID = #v_TENANT_ID#
+				AND
+					A.COMPANY_ID = #companyID#
+				<![CDATA[
+				ORDER BY
+					A.WRITEDATE DESC
+				) C
+				WHERE
+					ROWNUM <= #v_STARTNUM# + #v_COUNT#
+			) WHERE
+				RNUM > #v_STARTNUM#
+		]]>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getSystemConfigListPopup" parameterClass="Map" resultClass="SystemConfigVO">
+		<![CDATA[
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROWNUM AS RNUM,
+				C.*
+			FROM (
+				SELECT
+					A.CODE,
+					A.CODEVALUE,
+					A.DESCRIPTION,
+					A.WRITERID,
+					A.WRITERNAME,
+					TO_CHAR((A.WRITEDATE + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+					A.TYPECODE,
+					B.TYPENAME,
+					B.TYPENAME2
+				FROM
+					TBL_SYSTEMCONFIG A
+				INNER JOIN
+					TBL_SYSTEMCONFIG_TYPE B
+				ON
+					A.TYPECODE = B.TYPECODE
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				AND
+					A.COMPANY_ID = B.COMPANY_ID 
+				WHERE
+					A.CODE IS NOT NULL
+			]]>
+			<isNotEqual property="typeCode" compareValue="ALL">
+				AND
+					A.TYPECODE = #typeCode#
+			</isNotEqual>
+			<isNotEmpty property="searchValue">
+				<![CDATA[
+				AND
+					(A.CODE LIKE '%'||#searchValue#||'%'
+				OR
+					A.CODEVALUE LIKE '%'||#searchValue#||'%'
+				OR
+					A.DESCRIPTION LIKE '%'||#searchValue#||'%')
+				]]>
+			</isNotEmpty>
+				<![CDATA[
+				AND
+					A.TENANT_ID = #v_TENANT_ID#
+				AND
+					A.COMPANY_ID = #companyID#
+				ORDER BY
+					A.WRITEDATE DESC
+				) C
+				WHERE
+					ROWNUM <= #v_STARTNUM# + #v_COUNT#
+			)
+			WHERE
+				RNUM > #v_STARTNUM#
+		]]>
+		
+	</select>
+	
+	<select id="EzSystemAdminDAO.getSystemConfig" parameterClass="Map" resultClass="SystemConfigVO">
+		<![CDATA[
+			SELECT
+				A.CODE,
+				A.CODEVALUE,
+				A.DESCRIPTION, 
+				A.WRITERID,
+				A.WRITERNAME,
+				TO_CHAR((A.WRITEDATE + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+				A.TYPECODE,
+				B.TYPENAME,
+				B.TYPENAME2
+			FROM
+				TBL_SYSTEMCONFIG A
+			INNER JOIN
+				TBL_SYSTEMCONFIG_TYPE B
+			ON
+				A.TYPECODE = B.TYPECODE
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.COMPANY_ID = B.COMPANY_ID			
+			WHERE
+				A.CODE IS NOT NULL
+		]]>
+		<isNotEmpty property="CODE">
+			<![CDATA[
+			AND
+				A.CODE = #CODE#
+			]]>
+		</isNotEmpty>
+			AND
+				A.TENANT_ID = #v_TENANT_ID#
+			AND
+				A.COMPANY_ID = #companyID#	
+	</select>
+	
+	<delete id="EzSystemAdminDAO.deletesyStemConfig" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SYSTEMCONFIG
+            WHERE
+            	CODE = #CODE#
+            AND
+            	TENANT_ID = #v_TENANT_ID#
+            AND
+				COMPANY_ID = #companyID#
+			AND
+				ISDELETEBLOCK <> 'Y'
+		]]>
+	</delete>
+	
+	<insert id="EzSystemAdminDAO.insertStemConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_SYSTEMCONFIG (CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
+			VALUES(#CODE#, #CODEVALUE#, #DESCRIPTION#, #WRITERID#, #WRITERNAME#, TO_DATE(#WRITEDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANT_ID#, #companyID#, #typeCode#) 
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateStemConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_SYSTEMCONFIG 
+			SET 
+				CODEVALUE = #CODEVALUE#,
+				DESCRIPTION = #DESCRIPTION#, 
+				WRITERID = #WRITERID#,
+				WRITERNAME = #WRITERNAME#,
+				WRITEDATE = TO_DATE(#WRITEDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			WHERE 
+				CODE = #CODE#
+			AND
+            	TENANT_ID = #v_TENANT_ID#
+            AND
+				COMPANY_ID = #companyID#
+		]]>
+	</update>
+	
+	<select id="EzSystemAdminDAO.getSystemConfigTypeList" parameterClass="Map" resultClass="SystemConfigTypeVO">
+		<isNotEqual property="searchMode" compareValue="ALL">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROWNUM AS RNUM,
+				C.*
+			FROM (
+		</isNotEqual>
+			<![CDATA[
+				SELECT
+					DISTINCT TYPECODE AS TYPECODE,
+					TYPENAME,
+					TYPENAME2,
+					DESCRIPTION,
+					WRITERID,
+					WRITERNAME,
+					WRITERNAME2,
+					TO_CHAR((WRITEDATE + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+					TENANT_ID,
+					COMPANY_ID
+				FROM
+					TBL_SYSTEMCONFIG_TYPE
+				WHERE
+					TENANT_ID = #v_TENANT_ID#
+				AND
+					COMPANY_ID = #companyID#
+				]]>
+				<isNotEqual property="searchMode" compareValue="ALL">
+					<isNotEmpty property="searchValue">
+						<![CDATA[
+						AND
+							(TYPECODE LIKE '%'||#searchValue#||'%'
+						OR
+							TYPENAME LIKE '%'||#searchValue#||'%'
+						OR
+							TYPENAME2 LIKE '%'||#searchValue#||'%'	
+						OR
+							DESCRIPTION LIKE '%'||#searchValue#||'%')
+						]]>
+					</isNotEmpty>
+				</isNotEqual>
+				ORDER BY WRITEDATE DESC
+		<isNotEqual property="searchMode" compareValue="ALL">
+			<![CDATA[
+			) C
+				WHERE
+					ROWNUM <= #startRow# + #pageSize#
+			)
+			WHERE
+				RNUM > #startRow#
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getSystemConfigTypeListCount" parameterClass="Map" resultClass="int">
+		SELECT
+			DISTINCT COUNT(*)
+		FROM
+			TBL_SYSTEMCONFIG_TYPE
+		WHERE
+			TENANT_ID = #v_TENANT_ID#
+		<isNotEmpty property="searchValue">
+			<![CDATA[
+			AND
+				(TYPECODE LIKE '%'||#searchValue#||'%'
+			OR
+				TYPENAME LIKE '%'||#searchValue#||'%'
+			OR
+				TYPENAME2 LIKE '%'||#searchValue#||'%'	
+			OR
+				DESCRIPTION LIKE '%'||#searchValue#||'%')
+			]]>
+		</isNotEmpty>
+		AND
+			COMPANY_ID = #companyID#
+	</select>
+	
+	<delete id="EzSystemAdminDAO.deleteSystemConfigType" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SYSTEMCONFIG_TYPE
+            WHERE
+            	TYPECODE = #typeCode#
+            AND
+            	TENANT_ID = #v_TENANT_ID#
+            AND
+				COMPANY_ID = #companyID#
+		]]>
+	</delete>
+	
+	<select id="EzSystemAdminDAO.checkDuplicateCode" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_SYSTEMCONFIG
+		WHERE
+			CODE = #code#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			COMPANY_ID = #companyID#
+	</select>
+	
+	<delete id="EzSystemAdminDAO.deleteSystemConfigByTypeCode" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SYSTEMCONFIG
+            WHERE
+            	TYPECODE = #typeCode#
+            AND
+            	TENANT_ID = #v_TENANT_ID#
+            AND
+				COMPANY_ID = #companyID#
+		]]>
+	</delete>
+	
+	<select id="EzSystemAdminDAO.getSystemConfigType" parameterClass="Map" resultClass="SystemConfigTypeVO">
+		SELECT
+			TYPECODE,
+			TYPENAME,
+			TYPENAME2,
+			DESCRIPTION,
+			WRITERID,
+			WRITERNAME,
+			WRITERNAME2,
+			TO_CHAR((WRITEDATE + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+			TENANT_ID,
+			COMPANY_ID
+		FROM
+			TBL_SYSTEMCONFIG_TYPE
+		WHERE
+			TYPECODE = #typeCode#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			COMPANY_ID = #companyID#
+	</select>
+	
+	<select id="EzSystemAdminDAO.checkDuplicateTypeCode" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_SYSTEMCONFIG_TYPE
+		WHERE
+			TYPECODE = #typeCode#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			COMPANY_ID = #companyID#
+	</select>
+	
+	<insert id="EzSystemAdminDAO.insertSystemConfigType" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_SYSTEMCONFIG_TYPE (TYPECODE, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE, TENANT_ID, COMPANY_ID)
+			VALUES(#typeCode#, #typeName#, #typeName2#, #description#, #writerId#, #writerName#, #writerName2#, TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantId#, #companyId#) 
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateSystemConfigType" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_SYSTEMCONFIG_TYPE
+			SET 
+				TYPENAME = #typeName#,
+				TYPENAME2 = #typeName2#,
+				DESCRIPTION = #description#, 
+				WRITERID = #writerId#,
+				WRITERNAME = #writerName#,
+				WRITERNAME2 = #writerName2#,
+				WRITEDATE = TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS')
+			WHERE 
+				TYPECODE = #typeCode#
+			AND
+            	TENANT_ID = #tenantId#
+            AND
+				COMPANY_ID = #companyId#
+		]]>
+	</update>
+	
+	<update id="EzSystemAdminDAO.disableDeleteSystemConfig" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_SYSTEMCONFIG
+			SET
+				 ISDELETEBLOCK = 'Y'
+			WHERE 
+				CODE = #code#
+			AND
+            	TENANT_ID = #tenantId#
+            AND
+				COMPANY_ID = #companyId#
+		]]>
+	</update>
 
 </sqlMap>

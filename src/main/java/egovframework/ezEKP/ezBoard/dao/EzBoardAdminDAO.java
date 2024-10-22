@@ -381,4 +381,16 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 
 		return (String)select("EzBoardAdminDAO.getUseFormFlag", map);
 	}
+	
+	public void deleteMyBoardsOnCategoryChange(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteMyBoardsOnCategoryChange", map);
+	}
+
+	public void deleteMyBoardTreeOnCategoryChange(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteMyBoardTreeOnCategoryChange", map);
+	}
+
+	public int getBoardItemCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardAdminDAO.getBoardItemCnt", map);
+	}
 }

@@ -58,18 +58,18 @@ var pagination = (function() {
 		startButtonPage = 1 + buttonOverCount * pageButtonSize;
 		endButtonPage = Math.min(totalPage, startButtonPage + pageButtonSize - 1);
 		
-		document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span id='countSpan' style='color:#017BEC;'>" + itemAmount + "</span>";
+		document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span id='countSpan' class='txt_color'>" + itemAmount + "</span>";
 		
 		if (currentPage == 1) {
-			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+			pagingHTML += "<span class='btnimg first disabled'></span>";
 		} else {
-			pagingHTML += "<span class='btnimg' onclick='return pagination.setPage(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+			pagingHTML += "<span class='btnimg first' onclick='return pagination.setPage(1)'></span>";
 		}
 		
 		if (startButtonPage === 1) {
-			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>"
+			pagingHTML += "<span class='btnimg prev disabled'></span>"
 		} else {
-			pagingHTML += "<span class='btnimg' onclick='return pagination.previousBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+			pagingHTML += "<span class='btnimg prev' onclick='return pagination.previousBlock()'></span>";
 		}
 		
 		pagingHTML += "";
@@ -86,15 +86,15 @@ var pagination = (function() {
 		}
 		
 		if (endButtonPage < totalPage) {
-			pagingHTML += "<span class='btnimg' onclick='return pagination.nextBlock()'><img src='/images/sub/btn_next.gif'></span>";
+			pagingHTML += "<span class='btnimg next' onclick='return pagination.nextBlock()'></span>";
 		} else {
-			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+			pagingHTML += "<span class='btnimg next disabled'></span>";
 		}
 		
 		if (currentPage == totalPage) {
-			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+			pagingHTML += "<span class='btnimg last disabled'></span>";
 		} else {
-			pagingHTML += "<span class='btnimg' onclick='pagination.setPage(" + totalPage + ");'><img src='/images/sub/btn_n_next.gif'></span>";
+			pagingHTML += "<span class='btnimg last' onclick='pagination.setPage(" + totalPage + ");'></span>";
 		}
 		
 		pagingHTML += "</div>";
@@ -147,18 +147,18 @@ function makePageSelPage(){
 	var pageNum = currentPage == 0 ? 1 : currentPage;
 	
 	document.getElementById("tblPageRayer").innerHTML = "";
-	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span id='countSpan' style='color:#017BEC;'>" + totalRows + "</span>";
+	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span id='countSpan' class='txt_color'>" + totalRows + "</span>";
 	
 	if (totalPages > 1 && pageNum != 1) {
-		pagingHTML += "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+		pagingHTML += "<span class='btnimg first' onClick= 'return goToPageByNum(1)'></span>";
 	} else {
-		pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+		pagingHTML += "<span class='btnimg first disabled'></span>";
 	}
 	
 	if (totalPages > blockSize && pageNum > blockSize) {
-		pagingHTML += "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+		pagingHTML += "<span class='btnimg prev' onClick= 'return selbeforeBlock()'></span>";
 	} else {
-		pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+		pagingHTML += "<span class='btnimg prev disabled'></span>";
 	}
 	
 	var maxNum;
@@ -183,16 +183,16 @@ function makePageSelPage(){
 	
 	if (totalPages > blockSize && totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
 		pagingHTML += ""
-					+ "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
+					+ "<span class='btnimg next' onClick='return selafterBlock()'></span>";
 	} else {
 		pagingHTML += ""
-					+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+					+ "<span class='btnimg next disabled'></span>";
 	}
 	
 	if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
-		pagingHTML += "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+		pagingHTML += "<span class='btnimg last' onClick='return goToPageByNum(" + totalPages + ")'></span>";
 	} else {
-		pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+		pagingHTML += "<span class='btnimg last disabled'></span>";
 	}
 	
 	pagingHTML += "</div>";

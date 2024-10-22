@@ -31,6 +31,9 @@
 	    		overflow-x:hidden;
 	    		overflow-y:auto;
 	    	}
+			.admin_menu {
+				width:100px;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -954,7 +957,7 @@
 		                </div>
 		                
 		                <c:if test="${checkSysop }">
-		                	<div class="admin_menu" style="height:auto; width:75px;"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
+		                	<div class="admin_menu" style="height:auto;"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
 		                </c:if>
 		                
 		            </div>

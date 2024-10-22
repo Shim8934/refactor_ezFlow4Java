@@ -12,6 +12,7 @@ public class CabinetShareVO {
 	private String shareDate;
 	private int    childPermission;
 	private int    useStatus;
+	private int    saveFlag; // 저장 구분 Flag (검색시 저장 : 0, 최종 저장 : 1)
 	private String companyId;
 	private int    tenantId;
 	
@@ -100,6 +101,14 @@ public class CabinetShareVO {
 	
 	public void setUseStatus(int useStatus) {
 		this.useStatus = useStatus;
+	}
+
+	public int getSaveFlag() {
+		return saveFlag;
+	}
+
+	public void setSaveFlag(int saveFlag) {
+		this.saveFlag = saveFlag;
 	}
 	
 	public String getCompanyId() {

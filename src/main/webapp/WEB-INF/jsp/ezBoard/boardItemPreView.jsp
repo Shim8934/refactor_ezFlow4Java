@@ -25,6 +25,7 @@
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<script type="text/javascript">
 		
 		var curFontSize = 1;
@@ -158,8 +159,10 @@
 		                    for (var j = 0; j < paremtElement.length; j++) {
 		                        if ((paremtElement[j].type == "radio" || paremtElement[j].type == "checkbox") && paremtElement[j].checked) { // 라디오버튼 또는 체크박스
 		                            WriterValue += paremtElement[j].value + ",";
-		                        } else if (paremtElement[j].type == "text") { // 텍스트
+		                        } else if (paremtElement[j].type == "text" || paremtElement[j].getAttribute('type') == "textArea") { // 텍스트
 		                        	WriterValue = paremtElement[j].value;
+		                        } else if (paremtElement[j].getAttribute('type') == "people") {
+		                            WriterValue = paremtElement[j].innerText;
 		                        }
 		                    }
 			                
@@ -168,6 +171,16 @@
 		                	}
 		                    document.getElementById("extensionAttribute" + (i + 6)).innerText = WriterValue;
 		                }
+		            }
+		        }
+		        
+		        // 2024-08-23 전인하 - 게시판 > 미리보기 시 키워드 값 삽입
+		        var keywords = window.opener.keywordArr;
+		        if (keywords.length > 0) {
+		            document.querySelector('#cKeywordTr').style.display = '';
+		            for (let i = 0; i < keywords.length; i++) {
+		                var keywordObj = makeKeywordSpanObj(keywords[i], "print");
+                        document.querySelector('#cKeyword').append(keywordObj);
 		            }
 		        }
 		    };
@@ -311,6 +324,18 @@
 					                <td colspan="5" id="${boardAttributeVO.tableCol}">
 					                </td>
 	       						</c:when>
+	       						<c:when test="${boardAttributeVO.colType == 'people'}">
+                                    <td colspan="5" id="${boardAttributeVO.tableCol}">
+                                    </td>
+                                </c:when>
+                                <c:when test="${boardAttributeVO.colType == 'textArea'}">
+                                    <td colspan="5" id="${boardAttributeVO.tableCol}">
+                                    </td>
+                                </c:when>
+								<c:when test="${boardAttributeVO.colType == 'cal'}">
+									<td colspan="5" id="${boardAttributeVO.tableCol}">
+									</td>
+								</c:when>
 	       					</c:choose>
 	       				</tr>
 	       			</c:forEach>
@@ -319,6 +344,12 @@
 		          <th><spring:message code='ezBoard.t291'/></th>
 		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align: middle"></div></td>
 		        </tr>
+		         <!-- 키워드 -->
+                 <tr id="cKeywordTr" style="display:none">
+                     <th><spring:message code="ezApprovalG.t1200" /></th>
+                     <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+                     </td>
+                 </tr>
 			      </table>
 		      </td>
 		  </tr>

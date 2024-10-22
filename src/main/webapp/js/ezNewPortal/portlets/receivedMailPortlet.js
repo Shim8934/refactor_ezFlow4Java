@@ -68,10 +68,10 @@ function getMailList(currPage) {
 				mailListCount = 21;
 			}
 			
-			listHTML += "<p class='mGraph'><span id='mGraphSpan'></span></p>";
-			listHTML += "<span class='mGraph_text' id='UseMailBox'>";
+			listHTML += "<p class='mGraph sortablePortlet'><span id='mGraphSpan'></span></p>";
+			listHTML += "<span class='mGraph_text sortablePortlet' id='UseMailBox'>";
 			listHTML += mailboxDetail;
-			listHTML += "<span>/"+mailboxQuotaStr+"</span>";
+			listHTML += "<span class='sortablePortlet'>/"+mailboxQuotaStr+"</span>";
 			listHTML += "</span>";
 			
 			document.getElementById("mailGraph").innerHTML = listHTML;
@@ -95,7 +95,11 @@ function getMailList(currPage) {
 					receivedDateStr = mailList[i].receivedDateStr;
 					sender = mailList[i].sender;
 					listHTML2 += "<li class="+readClass+" onclick='open_mail(&#39;" + href + "&#39;)'>";
-					listHTML2 += "<span class='txt'>"+ MakeXMLString(subject) +"</span>";		
+					listHTML2 += "<span class='txt'>";
+					if (mailList[i].securedMail === "true") {
+						listHTML2 += "<span class='security_icon'></span>";
+					}
+					listHTML2 += MakeXMLString(subject) + "</span>";
 					listHTML2 += "<span class='date'>"+MakeXMLString(receivedDateStr).replace(/-/g, ".")+"</span>";		
 					listHTML2 += "<span class='name'>"+MakeXMLString(sender)+"</span>";	
 					listHTML2 += "</li>";	

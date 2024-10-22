@@ -19,17 +19,14 @@
 	<div class="notification" onclick="hideFilter()">
         <div class="noti_header">
             <h3><spring:message code="ezNotification.hth01"/></h3>
-            <span class="noti_refresh" title="<spring:message code="ezNotification.hth02"/>" onclick="notiRefresh_onclick()"></span>
+			<ul class="noti_btn_list">
+				<li class="noti_refresh" title="<spring:message code="ezNotification.hth02"/>" onclick="notiRefresh_onclick()"></li>
+				<li id="emergency_write_btn" onclick="moveToEmergencyNoti()" class="noti_write"></li>
+				<li class="noti_filter" id="notFillterPopBtn" onclick="popUpNotiFillter();"></li>
+			</ul>
+            
         </div>
 
-        <div class="noti_search">
-            <div class="noti_search_input">
-                <input type="text" id="searchNotiContent" onkeypress="searchInput()" placeholder="<spring:message code='ezNotification.hth30'/>" onselectstart="event.cancelBubble=true;event.returnValue=true" maxlength="100" autocomplete="off">
-                <span onclick="searchOnClick()"></span>
-            </div>
-            <span id="notFillterPopBtn" class="noti_filter" onclick="popUpNotFillter()"></span>
-        </div>
-        
         <div class="filter_pop" id="notFillterPop" onclick="stopPropa()" style="display: none;">
             <div class="check_list">
                 <h2><spring:message code="ezNotification.hth03"/></h2>
@@ -38,13 +35,13 @@
                     <ul class="check_ul">
                         <li>
                             <div class="input_check">
-                                <input type="checkbox" id="filter_read" onchange="searchNoti('search')" type="checkbox" name="readfilter" maintype="n" value="read" checked="checked">
+                                <input type="checkbox" id="filter_read" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="read" checked="checked">
                                 <label for="filter_read"><spring:message code="ezNotification.hth05"/></label>
                             </div>
                         </li>
                         <li>
                             <div class="input_check">
-                                <input type="checkbox" id="filter_unread" onchange="searchNoti('search')" type="checkbox" name="readfilter" maintype="n" value="unread" checked="checked">
+                                <input type="checkbox" id="filter_unread" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="unread" checked="checked">
                                 <label for="filter_unread"><spring:message code="ezNotification.hth06"/></label>
                             </div>
                         </li>
@@ -60,13 +57,16 @@
                     </ul>
                 </div>
             </div>
-            <div class="reset"><span onclick="filterAllSelect_onclick()"><spring:message code="ezNotification.hth09"/></span></div>
+            <div class="noti_bot_btn">
+                <span onclick="filterAllSelect_onclick()"><spring:message code="ezNotification.hth09"/></span>
+                <span onclick="popUpNotiFillter()" class="close"><spring:message code="main.t3"/></span>
+            </div>
         </div>
-        
+
         <div class="noti_info">
             <div class="noti_view">
-                <span><spring:message code="ezNotification.hth08"/><em id="notiTotalCount"></em></span>
-                <span><spring:message code="ezNotification.hth06"/><em id="notiUnreadCount"></em></span>
+                <span id="allFilter" class="easyFilter on" onclick="showNoti('ALL')"><spring:message code="ezNotification.hth08"/><em id="notiTotalCount"></em></span>
+                <span id="notReadFilter" class="easyFilter" onclick="showNoti('NOTREAD')"><spring:message code="ezNotification.hth06"/><em id="notiUnreadCount"></em></span>
             </div>
             <div class="noti_btn">
                 <span onclick="updateNotiAll('read')"><spring:message code="ezNotification.hth10"/></span>
@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        <div class="noti_list_wrap">
+        <div class="noti_list_wrap" id="notiwrap">
             <ul class="noti_list" id="notiList" >
                 
             </ul>
@@ -82,27 +82,77 @@
 
         <div class="noti_paging">
             <span class="prev" onclick="moveNotiPage('down')"></span>
-            <span class="page_num">
+            <span class="page_num notiPage">
                 <input type="text" id="notiCurrentPage" autocomplete="off" value="1" onkeypress="return moveInputPage()">&nbsp;/&nbsp;<span  id="notiTotalPage"></span>
             </span>
             <span class="next" onclick="moveNotiPage('up')"></span>
         </div>
         <div id="notiListProgress" style="position: relative; width: 100%; height: 639px; top: -640px; left: 0px; background-color: rgb(210, 210, 210); opacity: 0.4; z-index: 100; display: none;">
                <div style="top: 300px; left: 80px" id="MailProgress"></div>
-           </div>   
+		</div>   
     </div>
 	<span class="loadingLayer" style="z-index:6000;position:absolute;display:none;" id="loadingLayer"><span class="right"><img src="/images/email/progress_img.gif" width="150" height="30" ></span></span></span>
        	
 <script>
 	var userDeptId = "<c:out value = '${deptID}'/>"
 	var userId = "<c:out value = '${userID}'/>"
-	var notiListCnt = 10;
-	var curPageNum = 1;
+	var notiListCnt = 50;
 	var searchTitle = "";
 	var proxyInfo = "<c:out value = '${proxyInfo}'/>";
+	var lastNotiSeq = "";
+	var notiListFlag = true;
+	var isNotiLoading = false; 
+	var notiDateEndPoint = "";
 	window.onload = function () {
+		checkSkin();
+		checkEmergencyPermission();
+		notiListFlag = true;
+		document.getElementById('notiwrap').addEventListener("scroll", notiScroll);
 		makeMainTypeList();
-		getNotiList(1);
+		searchNoti('first');
+	}
+	
+	function checkSkin() {
+		var skinColor = window.parent.document.getElementById("topFrame").contentWindow.useColor;
+		var skinId = ''
+		if (skinColor) {
+			
+			if (skinColor == 1) {
+				skinId = 'blue';
+			} else if (skinColor == 2) {
+				skinId = 'red';
+			} else if (skinColor == 3) {
+				skinId = 'dark';
+			}
+		}
+		
+		var notiSkinCss = document.getElementById("notiSkinCss");
+		
+		if (notiSkinCss) {
+			notiSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+		} else {
+			skinLink = document.createElement("link");
+			skinLink.id = "notiSkinCss";
+			skinLink.rel = "stylesheet";
+			skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+			document.head.appendChild(skinLink);
+		}
+	}
+	
+	function notiScroll() {
+		if (isNotiLoading) {
+			return;
+		}
+		
+		var notiScrollArea = document.getElementById('notiwrap');
+		var scrollTop = notiScrollArea.scrollTop;
+		var scrollHeight = notiScrollArea.scrollHeight;
+		var clientHeight = notiScrollArea.clientHeight;
+
+	    if (scrollHeight - scrollTop - clientHeight < 100 && notiListFlag) {
+	    	searchNoti('scroll');
+	    }
+
 	}
 	
 	function makeMainTypeList() {
@@ -119,68 +169,81 @@
 		notiTypeElem.insertAdjacentHTML('beforeend', str);
 	}
 	
-	function getNotiList(pageNum) {
-		$.ajax({
-			type: "GET",
-			url: "/ezNotification/getNotiList.do",
-			dataType: "JSON",
-			data:{
-				curPageNum : pageNum,
-				notiListCnt : notiListCnt			
-			},
-			async: true,
-			success: function(result) {
-				makeNotiList(result);
-			},
-			error: function (xhr, status, e){
-				
+	function makeNotiList(result, mode) {
+		if (!notiListFlag) {
+			return;
+		}
+		
+		if (mode == "first") {
+			var notiListElement = document.getElementById('notiList'); 
+			while (notiListElement.firstChild) {
+				notiListElement.removeChild(notiListElement.firstChild);
 			}
-		});
-	}
-	
-	function makeNotiList(result) {
+		}
+		
 		var notiListElement = document.getElementById('notiList');
 		try {
 			document.getElementById('notiTotalCount').textContent = result.totalListCnt;
 			document.getElementById('notiUnreadCount').textContent = result.notReadListCnt;
-			document.getElementById('notiTotalPage').textContent = parseInt(result.lastPageNum) > 0 ? result.lastPageNum : 1;
 			var notiList = result.notiList;
-			while (notiListElement.firstChild) {
-				notiListElement.removeChild(notiListElement.firstChild);
-			}
 			
 			var str = "";
 			if (notiList == "") {
-				str += '<div class="notiZero">'
-				str	+= '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + notiMessages.strLang1 + '</dd></dl>'
-				str += '</div>';
-				curPageNum = 1;
+				if (lastNotiSeq == "") {
+					str += '<div class="notiZero">'
+					str	+= '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + notiMessages.strLang1 + '</dd></dl>'
+					str += '</div>';	
+				} else {
+					str += '<div class="noti_list_date"></div>'
+				}
+				notiListFlag = false;
+				notiDateEndPoint = "";
 			} else {
 				for (var i = 0; i < notiList.length; i++) {
 					var noti = notiList[i];
-					var linkUrl = noti.linkUrl ? noti.linkUrl : "";
+					if (notiDateEndPoint == "") {
+						str += '<div class="noti_list_date"><span>' + makeNotiDateFormat(noti.regDate.substring(0, 10)) + '</span></div>'
+						notiDateEndPoint = noti.regDate.substring(0, 10);
+					} else {
+						if (notiDateEndPoint != noti.regDate.substring(0, 10)) {
+							str += '<div class="noti_list_date"><span>' + makeNotiDateFormat(noti.regDate.substring(0, 10)) + '</span></div>'
+							notiDateEndPoint = noti.regDate.substring(0, 10);
+						}
+						
+					}
+					
+					if (i == notiList.length - 1) {
+						lastNotiSeq = noti.notiSeq;
+					}
+					var linkUrl = noti.linkUrl ? noti.linkUrl : '';
 					str += noti.isRead == "Y" ? '<li class = \"read\" ' : '<li class = \"\" ';
 					str += 'onclick=\"updateNoti(\'read\'); openLink();\" ';
 					str += 'notiseq=\"' + noti.notiSeq +'\" viewtype=\"' + noti.viewType + '\" viewwidth=\"' + noti.viewWidth + '\" viewheight=\"' + noti.viewHeight + '\" ';
 					str += 'linkurl=\"' + linkUrl + '\" isread=\"' + noti.isRead + '\" mainType=\"' +noti.mainType.toLowerCase() + '\">'
-					str += '<i class=\"icon_' + noti.mainType.toLowerCase();
-					str += noti.isRead == "Y" ? ' read\"></i>' : '\"></i>';
+					str += '<dl><dt><i class=\"icon_' + noti.mainType.toLowerCase() + '\"></i>' + mainType[noti.mainType.toLowerCase()];
+					// str += noti.isRead == "Y" ? ' read\"></i>' : '\"></i>';
+                    str += '</dt><dd><span class=\"name\">' + noti.senderName + '</span>';
+                    str += '<span class=\"date\">' + noti.regDate.substring(11, 19) + '</span>';
+                    str += '</dd></dl>'
 					str += '<div class=\"list_info\">'
-					str += '<p class=\"title ellipsis2\">'
-					if (noti.mainType.toLowerCase() != "etc") {
-						str += '<em>[' + mainType[noti.mainType.toLowerCase()] + ']</em>';
-						str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : ' ';
+					str += '<span class=\"read_point\"></span>'
+					str += '<p class=\"title ellipsis2\" title=\"' + ConvertCharToEntityReference(noti.notiContent) +'">'
+					if (noti.mainType.toLowerCase() == "noti" && noti.subType.toLowerCase() == "emergency") {
+						str += '<span class="emergency">' + '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] +'] </span>';
+					} else if (noti.mainType.toLowerCase() != "etc") {
+					 	str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : '';
 					}
 					str += ConvertCharToEntityReference(noti.notiContent) + '</p>';
-					
-					str += '<p class=\"desc\"><span>' + noti.senderName + '&nbsp;</span><span class=\"date\">' + noti.regDate.substring(0, 19) + '</span></p></div>';
-					str += '<span class=\"list_del blind\" onclick="updateNoti(\'delete\')"></span></li>';
-					
+                    str += '<span class=\"list_del blind\" onclick="updateNoti(\'delete\')"></span>';
+                    str += '</div></li>';
 				}
 		
 			}
-			document.getElementById('notiCurrentPage').value = curPageNum;
 			notiListElement.insertAdjacentHTML('beforeend', str);
+			
+			if (document.querySelectorAll('#notiList li').length < notiListCnt && document.querySelectorAll('#notiList li').length > 0 && notiListFlag) {
+				searchNoti('scroll'); // 알림 개수가 notiListCnt보다 작은 경우 마지막 날짜 경계선 만들어주기 위해 한 번 더 호출.
+			}
 			
 			setTimeout(function() {
 				var notiElem = null;
@@ -210,17 +273,33 @@
 				
 			}, 3000);
 		} catch (error) {
+			while (notiListElement.firstChild) {
+				notiListElement.removeChild(notiListElement.firstChild);
+			}
 			var errorStr = '<br/><div class="notiError"><span><spring:message code="ezNotification.hth13"/></span></div>'
 			notiListElement.insertAdjacentHTML('beforeend', errorStr);
-			document.getElementById('notiCurrentPage').value = 1;
+			lastNotiSeq = "";
+			notiListFlag = false;
 		}
 	}
 	
-	function notiRefresh_onclick() {
-		searchNoti('pageMove');
+	function makeNotiDateFormat(targetDate) {
+		var year = targetDate.substring(0, 4);
+		var month = targetDate.substring(5, 7);
+		var date = targetDate.substring(8);
+		var dateStr = year + "." + month + "." + date + " ";
+		
+		var tempDate = new Date(year, (parseInt(month, 10) - 1), date);
+		dateStr += "(" + notiDayNames[tempDate.getDay()] + ")";
+		
+		return dateStr;
 	}
 	
-	function popUpNotFillter() {
+	function notiRefresh_onclick() {
+		searchNoti('first');
+	}
+	
+	function popUpNotiFillter() {
 		 if (document.getElementById('notFillterPop').style.display == "none") {
 			 document.getElementById('notFillterPop').style.display = "block";
 		 } else {
@@ -228,68 +307,12 @@
 		 }
 	 }
 	
-	function moveInputPage() {
-		if (event.keyCode >= 48 && event.keyCode <= 57) {
-			return true;
-		} else if(event.keyCode == 13) {
-			var notiCurrentPageVal = document.getElementById("notiCurrentPage").value;
-			if (notiCurrentPageVal == "" || isNaN(notiCurrentPageVal)) {
-				return false;
-			}
-			
-			var pageNum = parseInt(document.getElementById("notiCurrentPage").value);
-			
-			var lastPageNum = parseInt(document.getElementById("notiTotalPage").textContent);
-			if (pageNum < 1 || pageNum > lastPageNum) {
-				alert('<spring:message code="ezNotification.hth14"/>');
-				document.getElementById("notiCurrentPage").value = curPageNum;
-				return false;
-			}
-			document.getElementById("notiCurrentPage").value = pageNum;
-			curPageNum = pageNum;
-			searchNoti('pageMove');
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
-	
-	function moveNotiPage(mode) {
-		var lastPageNum = parseInt(document.getElementById("notiTotalPage").textContent);
-		if (mode == 'up') {
-			var pageNum = curPageNum + 1; 
-			if (pageNum > lastPageNum) {
-				alert('<spring:message code="ezNotification.hth15"/>');
-				return;
-			}
-			
-		} else if (mode == 'down') {
-			var pageNum = curPageNum - 1; 
-			if (pageNum < 1) {
-				alert('<spring:message code="ezNotification.hth16"/>');
-				return;
-			}
-		}
-		curPageNum = pageNum;
-		document.getElementById("notiCurrentPage").value = curPageNum;
-		searchNoti('pageMove');
-	}
-	
 	function updateNoti(mode) {
 		stopPropa();
 		
 		if (mode == "delete") {
 			if (!confirm('<spring:message code="ezNotification.hth17"/>')) {
 				return;	
-			}
-			var lastPageNum = parseInt(document.getElementById("notiTotalPage").textContent);
-			if (curPageNum == lastPageNum && document.querySelectorAll('#notiList li').length == 1) {
-				if (lastPageNum == 1) {
-					curPageNum = 1;
-				} else {
-					curPageNum = lastPageNum - 1;
-				}
 			}
 		}
 		
@@ -305,12 +328,53 @@
 			},
 			async: true,
 			success: function(result) {
+				var readYN = notiLiElem[0].getAttribute("isread");
+
+				if (mode == 'read') {
+					notiLiElem[0].setAttribute("isread", "Y");
+					notiLiElem[0].querySelector('.read_point').style.display = "none";
+				} else if (mode == 'delete') {
+					var previousSibling = notiLiElem[0].previousElementSibling;
+					var nextSibling = notiLiElem[0].nextElementSibling;
+
+				    if (previousSibling && previousSibling.classList.contains("noti_list_date") && nextSibling && nextSibling.classList.contains("noti_list_date")) {
+				        previousSibling.remove();
+				    }
+					notiLiElem[0].remove();
+					document.getElementById('notiTotalCount').textContent = document.getElementById('notiTotalCount').textContent - 1;
+					
+					if (document.querySelectorAll('#notiList li').length == 3 && notiListFlag) {
+						// 삭제 시 리스트가 비는 현상 방지.  
+						searchNoti('scroll');
+					}
+				}
+				
+				if (readYN == 'N') {
+					var notiUnreadCount = document.getElementById("notiUnreadCount").textContent - 1;
+					document.getElementById("notiUnreadCount").textContent = notiUnreadCount;
+				}
+				
+				if (document.getElementById("notiUnreadCount").textContent == 0) {
+					var notiElem = null;
+		            var topFrame = window.parent.frames["topFrame"];
+		            if (!topFrame) return;
+		            if (navigator.userAgent.indexOf("MSIE") !== -1 || navigator.userAgent.indexOf("Trident") !== -1) {
+						notiElem = topFrame.document.querySelector('#util_noti > span #notiin');
+					} else {
+						notiElem = topFrame.contentWindow.document.querySelector('#util_noti > span #notiin');
+					}
+		            
+		            if (!!notiElem) {
+		            	notiElem.style.display = "none";
+		            }
+				}
+				
+				if (document.getElementById('notiTotalCount').textContent == 0) {
+					searchNoti('first');
+				}
 			},
 			error: function (xhr, status, e) {
 				alert('<spring:message code="ezNotification.hth34"/>');
-			},
-			complete: function() {
-				searchNoti('pageMove');
 			}
 		});
 	}
@@ -338,11 +402,9 @@
 			async: true,
 			success: function(result) {
 				if (mode == "delete") {
-					curPageNum = 1;
-					document.getElementById("notiCurrentPage").value = 1;
 					filterAllSelect_onclick();
 				} else if (mode == "read") {
-					searchNoti('pageMove');
+					searchNoti('first');
 				}
 			},
 			error: function (xhr, status, e){
@@ -376,7 +438,7 @@
 	 		}
 		 }
 		 
-		 searchNoti('search');
+		 searchNoti('first');
 	}
 	
 	function filterAllSelect_onclick() {
@@ -389,7 +451,7 @@
 		for (var i = 0; i < readFilterElems.length; i++) {
 			readFilterElems[i].checked = true;
 		}
-		searchNoti('search');
+		searchNoti('first');
 	}
 	
 	function hideFilter() {
@@ -407,13 +469,10 @@
 	}
 	
 	function searchNoti(mode) {
+		isNotiLoading = true;
 		document.getElementById("loadingLayer").style.display = "";
 		document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) - (document.getElementById("loadingLayer").offsetHeight / 2) + "px";
 		document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - (document.getElementById("loadingLayer").offsetWidth / 2) + "px";
-		
-		if (mode == "search") {
-			curPageNum = 1;
-		}
 		
 		var readFlag = document.getElementById("filter_read").checked;
 		var unReadFlag = document.getElementById("filter_unread").checked;
@@ -428,7 +487,25 @@
 			alert('<spring:message code="ezNotification.hth20"/>');
 			event.target.checked = true;
 			document.getElementById("loadingLayer").style.display = "none";
+			isNotiLoading = false;
 			return;
+		}
+		
+		if (mode == "first") {
+			lastNotiSeq = "";
+			notiListFlag = true;
+			notiDateEndPoint = "";
+		}
+		
+		var easyFilterBtn = document.querySelectorAll('.easyFilter');
+		for (var i = 0; i < easyFilterBtn.length; i++) {
+			easyFilterBtn[i].classList.remove('on');
+		}
+		
+		if (isRead == 'N') {
+			document.querySelector('#notReadFilter').classList.add('on');
+		} else {
+			document.querySelector('#allFilter').classList.add('on');
 		}
 		
 		var notiFilterElems = document.querySelectorAll('[name="notitypefilter"]');
@@ -455,33 +532,23 @@
 				isRead : isRead,
 				notiFilter: notiFilter,
 				keyWord : searchTitle,
-				curPageNum : curPageNum,
+				lastNotiSeq : lastNotiSeq,
 				notiListCnt : notiListCnt
 			},
 			async: true,
 			success: function(result) {
-				makeNotiList(result);
+				makeNotiList(result, mode);
 			},
 			error: function (xhr, status, e){
-				
+				notiListFlag = false;
+				lastNotiSeq = "";
 			},
 			complete: function() {
+				isNotiLoading = false;
 				document.getElementById("loadingLayer").style.display = "none";
 			}
 		});
 		
-	}
-	
-	function searchOnClick() {
-		searchTitle = MakeXMLString(document.getElementById('searchNotiContent').value.trim());
-		searchNoti('search');
-	}
-	
-	function searchInput() {
-		if (event.keyCode == 13) {
-			searchTitle = MakeXMLString(document.getElementById('searchNotiContent').value.trim());
-			searchNoti('search');
-		}
 	}
 	
 	function openLink() {
@@ -507,7 +574,7 @@
 	    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + popupHeight + ",width=" + popupWidth + ",top=" + pTop + ",left=" + pLeft;
 	    
 	    if (linkUrl == "") {
-	    	alert("링크가 존재하지 않습니다.");
+	    	alert('<spring:message code="ezNotification.hth85"/>');
 	    	return;
 	    }
 	    
@@ -529,15 +596,22 @@
 	    }
 	    
 	    if (linkUrl == null || linkUrl == "") {// 결재 링크 생성 에러 발생 시 동작안하도록 추가 
-	    	alert("링크가 없습니다.");
+	    	alert('<spring:message code="ezNotification.hth85"/>');
 	    	return;
 	    }
 	    
-	    var newWindow = window.open(linkUrl, windowName, feature, "");
-	    
-	    if (/MSIE|Trident/.test(window.navigator.userAgent)) {
-	        newWindow.moveTo(pLeft, pTop);
+	    if (viewType == "layer") {
+	    	var noticeLayer = parent.document.getElementById('noticeLayer');
+	    	noticeLayer.style.display = "block";
+	    	noticeLayer.querySelector('#noticeLayerFrame').setAttribute('src', linkUrl); 
+	    } else {
+			var newWindow = window.open(linkUrl, windowName, feature, "");
+		    
+		    if (/MSIE|Trident/.test(window.navigator.userAgent)) {
+		        newWindow.moveTo(pLeft, pTop);
+		    }
 	    }
+	    
 	}
 	
 	function extractParam(linkUrl) {
@@ -584,7 +658,7 @@
 			async: false,
 			success: function(result) {
 				if (result.status != "ok") {
-					alert("에러가 발생했습니다.");
+					alert('<spring:message code="ezNotification.hth34"/>');
 					return null;
 				}
 				
@@ -603,7 +677,7 @@
 				functionType = result.data.functionType;
 			},
 			error: function (xhr, status, e) {
-				alert("에러가 발생했습니다.");
+				alert('<spring:message code="ezNotification.hth34"/>');
 				return;
 			}
 		});
@@ -689,7 +763,7 @@
 		var aprMemberSN = "";
 		var docInfo = null;
 		if (p_userDeptId != userDeptId) {
-			alert("결재부서와 현 부서가 다릅니다.");
+			alert('<spring:message code="ezNotification.hth86"/>');
 			return;
 		}
 		
@@ -706,7 +780,7 @@
 			async: false,
 			success: function(result) {
 				if (result.status != "ok") {
-					alert("에러가 발생했습니다.");
+					alert('<spring:message code="ezNotification.hth34"/>');
 					return null;
 				}
 				
@@ -726,7 +800,7 @@
 		        useWebHWP = result.useWebHWP;
 			},
 			error: function (xhr, status, e) {
-				alert("에러가 발생했습니다.");
+				alert('<spring:message code="ezNotification.hth34"/>');
 				return;
 			}
 		});
@@ -816,7 +890,7 @@
 			async: false,
 			success: function(result) {
 				if (result.status != "ok") {
-					alert("에러가 발생했습니다.");
+					alert('<spring:message code="ezNotification.hth34"/>');
 					return null;
 				}
 								
@@ -852,7 +926,7 @@
 			    }
 			},
 			error: function (xhr, status, e) {
-				alert("에러가 발생했습니다.");
+				alert('<spring:message code="ezNotification.hth34"/>');
 				return;
 			}
 		});
@@ -946,7 +1020,7 @@
 				
 			},
 			error: function (xhr, status, e) {
-				alert("에러가 발생했습니다.");
+				alert('<spring:message code="ezNotification.hth34"/>');
 				return;
 			}
 		});
@@ -992,7 +1066,7 @@
 				
 			},
 			error: function (xhr, status, e) {
-				alert("에러가 발생했습니다.");
+				alert('<spring:message code="ezNotification.hth34"/>');
 				return;
 			}
 		});
@@ -1085,6 +1159,44 @@
         openLocation = openLocation + "?docID=" + encodeURI(docID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&containerState=" + encodeURI(containerState) + "&orgCompanyID=" + encodeURI(orgCompanyID);
         
         return openLocation;
+	}
+	
+	function checkEmergencyPermission() {
+		$.ajax({
+			type: "GET",
+			url: "/ezNotification/checkEmergencyPermission.do",
+			dataType:"text",
+			async: false,
+			success: function(result) {
+				if (result != null && result == "emergencyAdmin") {
+					document.getElementById('emergency_write_btn').style.display = "block";
+				} else {
+					document.getElementById('emergency_write_btn').style.display = "none";
+				}
+				
+			},
+			error: function (xhr, status, e) {
+				console.log(e);
+				return;
+			}
+		});
+	}
+	
+	function moveToEmergencyNoti() {
+		var notiFrame = window.parent.frames["iframeNoti"];
+		notiFrame.setAttribute("src", "/ezNotification/emergencyNoti.do");
+	}
+	
+	function showNoti(mode) {
+		if (mode == 'ALL') {
+			document.querySelector('#filter_read').checked = true;
+			document.querySelector('#filter_unread').checked = true;
+		} else {
+			document.querySelector('#filter_read').checked = false;
+			document.querySelector('#filter_unread').checked = true;
+		}
+		
+		searchNoti('first');
 	}
 	
 </script>

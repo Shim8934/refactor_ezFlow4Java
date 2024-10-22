@@ -1217,7 +1217,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteCompany_D34(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompany_D34", map);
 	}
-
+	
+	public void deleteCompany_D35(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D35", map);
+	}
+	
+	public void deleteCompany_D36(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D36", map);
+	}
+	
+	public void deleteCompany_D37(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D37", map);
+	}
+	
 	public void deleteCompanyInfo_IKMS7(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS7", map);
 	}
@@ -2388,5 +2400,20 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void updateAddJobInfo(Map<String, Object> map) throws Exception {
 		update("EzOrganAdminDAO.updateAddJobInfo", map);
+	}
+	
+	// 2024-07-23 한태훈 > 회사 추가시 연계메뉴 및 기본 시스템 컨피그 추가
+	public void insertConnectMenuForNewCompany(Map<String, Object> map) {
+		insert("EzOrganAdminDAO.insertConnectMenuForCompany", map);
+		insert("EzOrganAdminDAO.insertConnectMenuAuthForCompany", map);
+		insert("EzOrganAdminDAO.insertConnectionMenuNameForCompany", map);
+		insert("EzOrganAdminDAO.insertSystemConfigTypeForCompany", map);
+		insert("EzOrganAdminDAO.insertDefaultSystemConfigForCompany", map);
+	}
+
+	public void insertMobileMenuForNewCompany(Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.insertMobileMenuForNewComp", map);
+		insert("EzOrganAdminDAO.insertMobileMenuAuthForNewComp", map);
+		insert("EzOrganAdminDAO.insertMobileMenuNameForNewComp", map);
 	}
 }

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -323,6 +324,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
 	            	if (!url.equals("")) {
+						ezEmailService.actionTrashMailAllDelete(ia, url);
 	            		int result = ia.deleteFolder(url);
 	            		
 	            		if (result == 0) {
@@ -336,15 +338,9 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
 	            	if (!url.equals("")) {
-	            		Folder folder = ia.getFolder(url);
-	            		if (folder.exists()) {
-	            			folder.open(Folder.READ_WRITE);
-	            			Message[] messages = folder.getMessages();
-	        				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
-	            			folder.close(true);
-	            			logger.debug(url + " folder is clean.");
-	            			returnValue = "OK";
-	            		}
+						ezEmailService.actionTrashMailAllDelete(ia, url);
+						logger.debug(url + " folder is clean.");
+						returnValue = "OK";
 	            	}
 	            	
 	                break;
@@ -370,8 +366,11 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
             				
             				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
             				
-            				if (useImapMoveCommand.equals("YES")) {            				
-	            				folder.moveMessages(messages, trashFolder);
+            				if (useImapMoveCommand.equals("YES")) {
+								for (int i = 0; i < messages.length; i += 100) {
+									int end = Math.min(i + 100, messages.length);
+									folder.moveMessages(Arrays.copyOfRange(messages, i, end), trashFolder);
+								}
             				} else {            				
                 				// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
                 				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userAccount, domainName, ia);
