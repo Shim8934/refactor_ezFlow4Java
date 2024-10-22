@@ -2661,6 +2661,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            OR
+            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+        </isNotEmpty>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
 					<![CDATA[
@@ -2781,6 +2786,16 @@
 				A.TITLE,
 				A.READCOUNT,
 				A.ATTACHMENTS,
+                CASE
+                    WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+                    WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+                    ELSE 'MANY'
+                END EXT,
+                CASE
+                    WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+                    WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+                    ELSE 'MANY'
+                END FILEPATH,
 				A.ITEMLEVEL,
 				A.ABSTRACT,
 				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -2862,6 +2877,12 @@
 				A.TENANT_ID = I.TENANT_ID
 			AND
 				A.BOARDID = I.BOARDID
+            LEFT OUTER JOIN
+				TBL_BOARD_ITEM_ATTACHMENTS F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
 			WHERE
 		]]>
 		<isEqual property="v_PSUBFLAG" compareValue="Y">
@@ -2907,6 +2928,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            OR
+            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+        </isNotEmpty>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -2932,6 +2958,8 @@
 					]]>
 			</isNotEmpty>
 		</isEqual>
+			GROUP BY
+				A.ITEMID, A.TITLE
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -2980,6 +3008,16 @@
 				A.TITLE,
 				A.READCOUNT,
 				A.ATTACHMENTS,
+   				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+					ELSE 'MANY'
+				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
 				A.ITEMLEVEL,
 				A.ABSTRACT,
 				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3032,6 +3070,12 @@
 			  	A.TENANT_ID = I.TENANT_ID
 			AND
 			  	A.BOARDID = I.BOARDID
+			LEFT OUTER JOIN
+				TBL_BOARD_ITEM_ATTACHMENTS F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
 			WHERE
 			  	A.TENANT_ID = #v_TENANTID#
 			AND
@@ -3072,6 +3116,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            	OR
+            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 			AND
@@ -3097,6 +3146,8 @@
 			)
 			]]>
 		</isNotEmpty>
+            GROUP BY
+	            A.ITEMID, A.TITLE
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -3144,6 +3195,16 @@
 				A.TITLE,
 				A.READCOUNT,
 				A.ATTACHMENTS,
+   				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+					ELSE 'MANY'
+				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
 				A.ITEMLEVEL,
 				A.ABSTRACT,
 				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3196,6 +3257,12 @@
 				A.TENANT_ID = I.TENANT_ID
 			AND
 				A.BOARDID = I.BOARDID
+			LEFT OUTER JOIN
+				TBL_BOARD_ITEM_ATTACHMENTS F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -3225,6 +3292,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            OR
+            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 				AND 
@@ -3250,6 +3322,8 @@
 				)
 			]]>
 		</isNotEmpty>
+			GROUP BY
+				A.ITEMID, A.TITLE
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -3291,6 +3365,16 @@
    				A.TITLE,
    				A.READCOUNT,
    				A.ATTACHMENTS,
+   				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+					ELSE 'MANY'
+				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
    				A.ITEMLEVEL,
    				A.ABSTRACT,
    				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3347,6 +3431,12 @@
 				TBL_BOARD_APPRLIST APPR
 			ON
 				A.BOARDID = APPR.BOARDID
+			LEFT OUTER JOIN
+				TBL_BOARD_ITEM_ATTACHMENTS F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -3382,6 +3472,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            OR
+            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 				AND
@@ -3407,6 +3502,8 @@
 				)
 			]]>
 		</isNotEmpty>
+            GROUP BY
+                A.ITEMID, A.TITLE
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -4343,6 +4440,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            OR
+            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+        </isNotEmpty>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -4451,6 +4553,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            OR
+            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 		<![CDATA[
 			AND (
@@ -4515,6 +4622,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            OR
+            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 			AND (
@@ -5281,6 +5393,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            OR
+            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 					AND
@@ -6681,8 +6798,61 @@
 				A.ITEMID = F.ITEMID
 			AND
 				A.TENANT_ID = F.TENANT_ID
+			]]>
+			<isNotEmpty property="v_SEARCH_CONTENT">
+			INNER JOIN
+				TBL_Photo_ImageItem B
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.ItemID = B.ItemID
+			JOIN(
+				SELECT *
+				FROM (
+					SELECT
+						A.ITEMID,
+						A.TENANT_ID,
+						A.BOARDID,
+						MAIN_FLAG,
+						B.FILEPATH,
+						CONTENT,
+						FILECONTENT,
+						MAINCONTENT,
+						ROW_NUMBER() OVER (
+							PARTITION BY A.ITEMID
+							ORDER BY
+							CASE
+								WHEN B.MAIN_FLAG = 'Y' THEN 1
+								WHEN GUID IS NOT NULL THEN GUID + 1
+							ELSE 100
+							END
+						) AS SN
+					FROM
+						TBL_BOARD_ITEM_ATTACHMENTS BIT
+					RIGHT JOIN
+						TBL_BOARD_ITEM A
+					ON
+						BIT.ITEMID = A.ITEMID
+					AND
+						BIT.TENANT_ID = A.TENANT_ID
+					LEFT OUTER JOIN
+						TBL_PHOTO_IMAGEITEM B
+					ON
+						A.TENANT_ID = B.TENANT_ID
+					AND
+						A.ITEMID = B.ITEMID
+					) A2
+				WHERE
+					SN = 1
+				) PART
+			ON
+				PART.ITEMID = A.ITEMID
+			AND
+				PART.TENANT_ID = A.TENANT_ID
+			AND
+				B.MAIN_FLAG = PART.MAIN_FLAG
+		</isNotEmpty>
 			WHERE
-		]]>
 		<isEqual property="v_PSUBFLAG" compareValue="A">
 			(1=1)
 		</isEqual>
@@ -6737,7 +6907,13 @@
 			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-		 	AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+		 	AND (
+				UPPER(A.CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
+				OR
+				UPPER(PART.FILECONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
+				OR
+				UPPER(PART.MAINCONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
+			)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
 		 	AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
@@ -6754,6 +6930,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 		 	AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            OR
+            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 				AND (
@@ -6825,6 +7006,59 @@
 			(I.COMPANYID = #v_pCompanyID# OR TRIM(I.COMPANYID) = '' OR I.COMPANYID IS NULL)
 		AND
 			A.BOARDID = I.BOARDID
+        <isNotEmpty property="v_SEARCH_CONTENT">
+            INNER JOIN
+                TBL_Photo_ImageItem B
+            ON
+                A.TENANT_ID = B.TENANT_ID
+            AND
+                A.ItemID = B.ItemID
+            JOIN(
+                SELECT *
+                FROM (
+                    SELECT
+                    A.ITEMID,
+                    A.TENANT_ID,
+                    A.BOARDID,
+                    MAIN_FLAG,
+                    B.FILEPATH,
+                    CONTENT,
+                    FILECONTENT,
+                    MAINCONTENT,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY A.ITEMID
+                        ORDER BY
+                        CASE
+                            WHEN B.MAIN_FLAG = 'Y' THEN 1
+                            WHEN GUID IS NOT NULL THEN GUID + 1
+                        ELSE 100
+                        END
+                    ) AS SN
+                FROM
+                    TBL_BOARD_ITEM_ATTACHMENTS BIT
+                RIGHT JOIN
+                    TBL_BOARD_ITEM A
+                ON
+                    BIT.ITEMID = A.ITEMID
+                AND
+                    BIT.TENANT_ID = A.TENANT_ID
+                LEFT OUTER JOIN
+                    TBL_PHOTO_IMAGEITEM B
+                ON
+                    A.TENANT_ID = B.TENANT_ID
+                AND
+                    A.ITEMID = B.ITEMID
+                ) A2
+            WHERE
+                SN = 1
+            ) PART
+        ON
+            PART.ITEMID = A.ITEMID
+        AND
+            PART.TENANT_ID = A.TENANT_ID
+        AND
+            B.MAIN_FLAG = PART.MAIN_FLAG
+        </isNotEmpty>
 		WHERE
 		<isEqual property="v_PSUBFLAG" compareValue="A">
 			(1=1)
@@ -6881,7 +7115,12 @@
 			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND (
+			UPPER(A.CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
+			OR
+			UPPER(PART.FILECONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
+			OR
+			UPPER(PART.MAINCONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%')))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
 			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
@@ -8555,6 +8794,11 @@
                 </isEqual>
                 )
             </isNotEmpty>
+            <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+                OR
+                CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            </isNotEmpty>
 	</select>
 
 	<select id="EzBoardDAO.getSearchMyBoardItemListScrap" parameterClass="Map" resultClass="HashMap">
@@ -8573,6 +8817,16 @@
 				A.TITLE,
 				A.READCOUNT,
 				A.ATTACHMENTS,
+   				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+					ELSE 'MANY'
+				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
 				A.ITEMLEVEL,
 				A.ABSTRACT,
 				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -8633,7 +8887,13 @@
   				  	A.TENANT_ID = I.TENANT_ID
   				AND
   				  	A.BOARDID = I.BOARDID 					
-  				WHERE 
+				LEFT OUTER JOIN
+					TBL_BOARD_ITEM_ATTACHMENTS F
+				ON
+					A.ITEMID = F.ITEMID
+				AND
+					A.TENANT_ID = F.TENANT_ID
+  				WHERE
   				  	A.TENANT_ID = #v_TENANTID#
 				AND
 					S.USERID = #v_PUSERID#
@@ -9298,6 +9558,16 @@
 				A.TITLE,
 				A.READCOUNT,
 				A.ATTACHMENTS,
+   				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
+					ELSE 'MANY'
+				END EXT,
+				CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
+					ELSE 'MANY'
+				END FILEPATH,
 				A.ITEMLEVEL,
 				A.ABSTRACT,
 				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -9358,6 +9628,12 @@
 				A.TENANT_ID = I.TENANT_ID
 			AND
 				A.BOARDID = I.BOARDID
+            LEFT OUTER JOIN
+                TBL_BOARD_ITEM_ATTACHMENTS F
+            ON
+                A.ITEMID = F.ITEMID
+            AND
+                A.TENANT_ID = F.TENANT_ID
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND

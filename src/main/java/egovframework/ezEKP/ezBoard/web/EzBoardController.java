@@ -2676,6 +2676,11 @@ public class EzBoardController extends EgovFileMngUtil{
 			searchMap.put("v_SEARCH_ABSTRACT", boardVO.getABSTRACT());
 		}
 		
+		if (boardVO.getSearchQuery().indexOf("TNC;") != -1) {
+			boardVO.setTitleAndCont(searchQueryDoc.getElementsByTagName("TNC").item(0).getTextContent());
+			searchMap.put("v_SEARCH_TITLE_AND_CONTENT", boardVO.getTitleAndCont());
+		}
+		
 		String keywordClick = "";
 		// 2024-08-26 전인하 - 게시판 > 검색 > 키워드 값 세팅
 		if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
@@ -2901,6 +2906,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardSearchList.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10>" + boardSearchList.get(j).get("GUBUN") + "</DATA10>");
 					resultXML.append("<DATA11>" + boardSearchList.get(j).get("ONELINECNT") + "</DATA11>");
+					resultXML.append("<EXT>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("EXT"))) + "</EXT>");
+					resultXML.append("<FILEPATH>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("FILEPATH"))) + "</FILEPATH>");
 
 					if("scrap".equals(mode) && boardVO.getScrapContID() == null) {
                         if (scrapBoardListRead_FG.contains(boardSearchList.get(j).get("BOARDID"))) {
@@ -3270,6 +3277,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					} else {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("MAINCONTENT")) + "</DATA12>");
 					}
+						
+					resultXML.append("<EXT>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("EXT"))) + "</EXT>");
+					resultXML.append("<FILEPATH>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("FILEPATH"))) + "</FILEPATH>");
 					
 					resultXML.append("<PUBLICFLAG>" + boardSearchList.get(j).get("PUBLICFLAG") + "</PUBLICFLAG>");
 				}
@@ -10043,6 +10053,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardSearchList.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10>" + boardSearchList.get(j).get("GUBUN") + "</DATA10>");
 					resultXML.append("<DATA11>" + boardSearchList.get(j).get("ONELINECNT") + "</DATA11>");
+					resultXML.append("<EXT>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("EXT"))) + "</EXT>");
+					resultXML.append("<FILEPATH>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("FILEPATH"))) + "</FILEPATH>");
+
 				}
 				
 				resultXML.append("</CELL>");
