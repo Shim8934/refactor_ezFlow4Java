@@ -32538,7 +32538,7 @@
 			LISTOPENFLAG = #openGovListFlag#,
 			BASIS = #basis#,
 			REASON = #reason#,
-			OPENLIMITDATE = #limitDate#,
+			OPENLIMITDATE = TO_DATE(#limitDate#, 'YYYY-MM-DD'),
 			SENDFLAG = 'N',
 			UPDATEDATE = SYSDATE
 		WHERE
