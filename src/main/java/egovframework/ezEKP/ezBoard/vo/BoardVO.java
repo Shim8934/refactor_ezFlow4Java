@@ -66,6 +66,8 @@ public class BoardVO {
 	private String scrapContID;
 	/** 2023-05-22 기민혁 - 게시판 스크랩함 이름 */
 	private String scrapContTitle;
+    /** 제목 + 내용 검색인 경우 표기용 */
+    private String titleAndCont;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -260,4 +262,11 @@ public class BoardVO {
 	public void setUseKeyword(String useKeyword) {
 		this.useKeyword = useKeyword;
 	}
+	public String getTitleAndCont() {
+		return titleAndCont;
+	}
+	public void setTitleAndCont(String titleAndCont) {
+		this.titleAndCont = titleAndCont;
+	}
+	
 }
