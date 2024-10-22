@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
+import egovframework.ezEKP.ezCommon.vo.TblColumnsInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -43,6 +44,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.mariadb.jdbc.internal.com.read.dao.ColumnNameMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3883,6 +3885,26 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterDocAttachNameCol() throws Exception {
         ezCommonDAO.alterDocAttachNameCol();
     }
+
+	@Override
+	public void addColumnsRetireTblCompareWithUserTbl() throws Exception {
+		logger.debug("addColumnsRetireTblCompareWithUserTbl started");
+		List<TblColumnsInfoVO> columnsList = ezCommonDAO.selectColumnsOnlyExistTblUsermaster();
+		if (!columnsList.isEmpty()) {
+			for (TblColumnsInfoVO columns : columnsList) {
+
+				Map<String, Object> map = new HashMap<>();
+
+				map.put("TABLE","TBL_USERMASTER_RETIRE");
+				map.put("COLUMN", columns.getColumnNm());
+				map.put("TYPE_MYSQL", columns.getColumnType());
+				map.put("TYPE_ORACLE", columns.getColumnType());
+				map.put("AFTER", columns.getIsNullAble() + columns.getColumnDefault() == null ? "" : " DEFAULT " + columns.getColumnDefault());
+
+				ezCommonDAO.alterTableAddColumns(map);
+			}
+		}
+	}
 
     public void insertNonUseDocAttachYN() throws Exception {
         List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();

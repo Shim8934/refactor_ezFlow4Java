@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
+import egovframework.ezEKP.ezCommon.vo.TblColumnsInfoVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
@@ -2221,6 +2222,11 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<TblColumnsInfoVO> selectColumnsOnlyExistTblUsermaster () {
+		return (List<TblColumnsInfoVO>) list("EzCommonDAO.selectColumnsOnlyExistTblUsermaster");
+	}
+	
 	public void alterDocAttachNameCol() throws Exception {
 		try {
 			select(("EzCommonDAO.checkDocAttachNameCol"));

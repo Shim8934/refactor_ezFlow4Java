@@ -161,6 +161,9 @@ public class OrganUserVO {
 	/** 조직도 사용 여부*/
 	private String userTreeFlag;
 
+	/** 퇴직자 여부 */
+	private int isRetire;
+
 	public String getUserTreeFlag() {
 		return userTreeFlag;
 	}
@@ -753,5 +756,13 @@ public class OrganUserVO {
 
 	public void setAuth(OrganAuth auth) {
 		this.auth = auth;
+	}
+
+	public int getIsRetire() {
+		return isRetire;
+	}
+
+	public void setIsRetire(int isRetire) {
+		this.isRetire = isRetire;
 	}
 }
