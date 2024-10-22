@@ -13173,7 +13173,8 @@ AFTER UPDATE ON tbl_deptmaster
 FOR EACH ROW
 WHEN (NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2)
 BEGIN
-    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
+    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2
+    WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D') AND TENANT_ID = :NEW.TENANT_ID;
 END;
 /
 
@@ -13182,7 +13183,8 @@ AFTER UPDATE ON tbl_usermaster
 FOR EACH ROW
 WHEN (NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2)
 BEGIN
-    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
+    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 
+    WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('U') AND TENANT_ID = :NEW.TENANT_ID;
 END;
 /
 
