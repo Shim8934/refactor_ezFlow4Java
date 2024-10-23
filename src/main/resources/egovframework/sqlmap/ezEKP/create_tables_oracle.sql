@@ -3179,7 +3179,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 --------------------------------------------------------
 
   CREATE TABLE "TBL_COMM_ITEM_ATTACHMENTS" 
-   (	"ITEMID" NCHAR(38), 
+   (	"ITEMID" NVARCHAR2(38), 
 	"GUID" NVARCHAR2(38), 
 	"FILEPATH" NVARCHAR2(400), 
 	"FILESIZE" NVARCHAR2(10), 

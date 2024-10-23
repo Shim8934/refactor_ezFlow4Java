@@ -6054,10 +6054,9 @@
 				THUMBNAILEXT
 			FROM
 				TBL_Photo_ImageItem
-			LIMIT 1
 		]]>
 	</select>
-
+	
 	<statement id="EzCommonDAO.alterAddThumbnailForTPI">
 		<![CDATA[
 			ALTER TABLE
@@ -6066,6 +6065,25 @@
 				ADDTHUMBNAIL VARCHAR(20) DEFAULT NULL,
 				THUMBNAILEXT VARCHAR(20) DEFAULT NULL
 				)
+		]]>
+	</statement>
+		
+	<select id="EzCommonDAO.checkAttachmentsForCBoard" resultClass="String">
+		<![CDATA[
+			SELECT
+				ATTACHMENTS
+			FROM
+				TBL_C_BOARD
+			LIMIT 1
+		]]>
+	</select>
+				
+	<statement id="EzCommonDAO.alterAttachmentsForCBoard">
+		<![CDATA[
+			ALTER TABLE
+				TBL_C_BOARD
+			ADD
+				ATTACHMENTS VARCHAR(20) DEFAULT NULL
 		]]>
     </statement>
 </sqlMap>

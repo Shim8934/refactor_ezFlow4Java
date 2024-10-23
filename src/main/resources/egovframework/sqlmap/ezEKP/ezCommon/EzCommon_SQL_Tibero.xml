@@ -6477,7 +6477,6 @@
 			 CONSTRAINT "TBL_USERSCRAPCONTLIST_FK" FOREIGN KEY ("TENANT_ID", "COMPANYID", "USERSCRAPCONTID") REFERENCES "TBL_USERSCRAPCONT" ("TENANT_ID", "COMPANYID", "USERSCRAPCONTID") ON DELETE CASCADE
 		)
 	</statement>
-
 	
 	<select id="EzCommonDAO.chkTblBoardCommentAttachExist">
 		SELECT
@@ -6521,6 +6520,26 @@
 				ADDTHUMBNAIL NVARCHAR2(10) DEFAULT NULL,
 				THUMBNAILEXT NVARCHAR2(10) DEFAULT NULL
 				)
+		]]>
+    </select>
+
+	<select id="EzCommonDAO.checkAttachmentsForCBoard" resultClass="String">
+		<![CDATA[
+			SELECT
+				ATTACHMENTS
+			FROM
+				TBL_C_BOARD
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterAttachmentsForCBoard">
+		<![CDATA[
+			ALTER TABLE
+				TBL_C_BOARD
+			ADD
+				ATTACHMENTS NVARCHAR2(10) DEFAULT NULL
 		]]>
     </statement>
 </sqlMap>

@@ -546,6 +546,7 @@
 
 	        var suffix = 0;
 	        function downloadAll(checks) {
+	        	checks = checks.getElementsByTagName("input");
 	            if (checks.item(suffix)) {
 	                if (checks.item(suffix).checked) {
 	                    location.href = checks.item(suffix++).getAttribute("filehref");

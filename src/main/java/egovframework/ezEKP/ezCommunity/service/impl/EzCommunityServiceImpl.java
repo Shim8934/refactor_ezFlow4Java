@@ -3318,7 +3318,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		ezCommunityDAO.newItemDel(map);
-		
+
 		if (item.getAttachments().length() > 0) {
 			if (saveAttachmentsInfo(item, pUploadFilePath, realPath, userInfo.getTenantId()) == false) {
 				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
@@ -3326,6 +3326,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			pHasAttach = "1";
 		} else {
 			pHasAttach = "0";
+			List<CommunityBoardItemAttachmentVO> orgFileList = ezCommunityDAO.getItemAttachmentXML(map);
+			if (orgFileList.size() > 0) {
+				String folder = realPath + pUploadFilePath;
+				for (CommunityBoardItemAttachmentVO itemAttachment : orgFileList) {
+					String strFile = folder + itemAttachment.getFilePath();
+					File file = new File(commonUtil.detectPathTraversal(strFile));
+					
+					if (file.exists()) {
+						file.delete();
+					}
+				}
+			}
+			ezCommunityDAO.newItemDel(map);
 		}
 		
 		return "OK";
@@ -3352,7 +3365,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String ext = contentLocation.substring(contentLocation.length() - 3, contentLocation.length());
 			if (ext.toUpperCase().equals("HWP")) {
 				File file = new File(realPath + commonUtil.detectPathTraversal(item.getContentLocation()));
-				long fileSize = file.length();
+				int fileSize = (int) file.length();
 				sb.append("<NODE>");
 				sb.append("<ItemID>" + item.getItemID() + "</ItemID>");
 				sb.append("<GUID>0</GUID>");
@@ -3371,7 +3384,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<GUID>" + attach.getGuID() + "</GUID>");
 			sb.append("<FileName>" + commonUtil.cleanValue(attach.getFileName()) + "</FileName>");
 			sb.append("<FilePath>" + commonUtil.cleanValue(attach.getFilePath()) + "</FilePath>");
-			sb.append("<FileSize>" + getProperSizeDisplay(Long.parseLong(attach.getFileSize())) + "</FileSize>");
+			sb.append("<FileSize>" + getProperSizeDisplay(Integer.parseInt(attach.getFileSize())) + "</FileSize>");
 			sb.append("<FileSize2>" + attach.getFileSize() + "</FileSize2>");
 			sb.append("</NODE>");
 		}
@@ -3712,6 +3725,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String userNm = request.getParameter("userNM");
 		String userNm2 = request.getParameter("userNM2");
 		String realPath = commonUtil.getRealPath(request);
+		String boardID = request.getParameter("boardID");
+		int cNo = 0;
 
 		if (!request.getParameter("ref").equals("")) {
             myRef = Integer.parseInt(request.getParameter("ref"));
@@ -3824,6 +3839,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	}
         	
         	number = maxNum + 1;
+        	cNo = number;
         	
         	if (no.equals("")) {
         		myRef = number;
@@ -3962,6 +3978,53 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
         }
 		
+		String pHasAttach = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		CommunityBoardItemVO item = new CommunityBoardItemVO();
+		map.put("tenantID", userInfo.getTenantId());
+		if (mode.equals("edit")) {
+			item.setItemID(no);
+			map.put("v_pItemID", no);
+		} else {
+			map.put("v_cNo", cNo);
+			int recNo = ezCommunityDAO.getRecentNo(map);
+			item.setItemID(String.valueOf(recNo));
+			map.put("v_pItemID", String.valueOf(recNo));
+		}
+		
+		String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
+		if (attachList.length() > 0) {
+			item.setAttachments(URLDecoder.decode(attachList, "utf-8"));
+			item.setExtensionAttribute5("");
+			item.setBoardID(boardID);
+			
+			if (saveAttachmentsInfo(item, uploadFilePath, realPath, userInfo.getTenantId()) == false) {
+				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
+			}
+			pHasAttach = "1";
+		} else {
+			pHasAttach = "0";
+			List<CommunityBoardItemAttachmentVO> orgFileList = ezCommunityDAO.getItemAttachmentXML(map);
+			if (orgFileList.size() > 0) {
+				String folder = realPath + uploadFilePath;
+				for (CommunityBoardItemAttachmentVO itemAttachment : orgFileList) {
+					String strFile = folder + itemAttachment.getFilePath();
+					File file = new File(commonUtil.detectPathTraversal(strFile));
+					
+					if (file.exists()) {
+						file.delete();
+					}
+				}
+			}
+			ezCommunityDAO.newItemDel(map);
+		}
+		
+		map.put("pHasAttach", pHasAttach);
+		
+		ezCommunityDAO.updateAttachments(map);
+		
 		logger.debug("bbsEditOk ended.");
 		return "OK";
 	}
@@ -3992,6 +4055,25 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					
 					for (int i = 0; i <= strAttachFile.length; i++) {
 						strFile = folder + strAttachFile[i];
+						File file = new File(commonUtil.detectPathTraversal(strFile));
+						
+						if (file.exists()) {
+							file.delete();
+						}
+					}
+				}
+			} else if (bName.equals("tbl_c_board")) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tenantID", tenantID);
+				map.put("v_pOrgItemID", itemNo);
+				List<CommunityBoardItemAttachmentVO> orgAttachList = ezCommunityDAO.copyItemGet2(map);
+				
+				if (orgAttachList.size() > 0) {
+					String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+					folder = commonUtil.getRealPath(request) + uploadFilePath;
+					
+					for (CommunityBoardItemAttachmentVO itemAttachment : orgAttachList) {
+						strFile = folder + itemAttachment.getFilePath();
 						File file = new File(commonUtil.detectPathTraversal(strFile));
 						
 						if (file.exists()) {
@@ -6734,13 +6816,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return sb.toString();
 	}
 	
-	public String getProperSizeDisplay(long pSize) throws Exception {
+	public String getProperSizeDisplay(int pSize) throws Exception {
 		if (pSize > 1048576) {
-			return String.valueOf((double) pSize / 1024 / 102.4 / 10) + " MB";
+			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
 		} else if (pSize > 1024) {
-			return String.valueOf(pSize / 102.4 / 10) + " KB";
+			return Integer.toString((int) (pSize / 102.4) / 10) + " KB";
 		} else {
-			return String.valueOf(pSize) + " Byte";
+			return Integer.toString(pSize) + " Byte";
 		}
 	}
 	
@@ -6950,6 +7032,34 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			//String[] attachmentsArr = attachments.split(";");
 			String[] attachmentsArr = attachments.split("\\|"); //baonk added
 			
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("v_pItemID", itemID);
+			map2.put("tenantID", tenantID);
+			List<CommunityBoardItemAttachmentVO> orgFileList = ezCommunityDAO.getItemAttachmentXML(map2);
+			if (orgFileList.size() > 0) {
+				String folder = realPath + pUploadFilePath;
+				for (CommunityBoardItemAttachmentVO itemAttachment : orgFileList) {
+					boolean match = false;
+					
+					for (String attach : attachmentsArr) {
+						if (itemAttachment.getFilePath().equals(attach)) {
+							match = true;
+							break;
+						}
+					}
+					if (!match) {
+						String strFile = folder + itemAttachment.getFilePath();
+						File file = new File(commonUtil.detectPathTraversal(strFile));
+						
+						if (file.exists()) {
+							file.delete();
+						}
+					}
+				}
+			}
+			
+			ezCommunityDAO.newItemDel(map2);
+			
 			for (int i = 0; i < attachmentsArr.length; i++) {
 				map = new HashMap<String, Object>();
 				map.put("tenantID", tenantID);
@@ -6970,7 +7080,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					map.put("itemID", itemID);
 					
 					if (thumbPath.indexOf("tempUploadFile") > -1) {
-						String destThumbFilePath = commonUtil.detectPathTraversal(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + thumbPath.split(";")[i].replace("tempUploadFile", ""));
+						String destThumbFilePath = commonUtil.detectPathTraversal(realPath + pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + thumbPath.split(";")[i].replace("tempUploadFile", ""));
 						File destThumbFile = new File(destThumbFilePath);
 						FileUtils.moveFile(thumbnailFile, destThumbFile);
 						map.put("filePath", boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("tempUploadFile", ""));
@@ -7115,6 +7225,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("bbsDelOkDel started.");
 		
 		ezCommunityDAO.bbsDelOkDel(map);
+		ezCommunityDAO.bbsDelOkDelAttach(map);
 	}
 	
 	public void commMakeOkInsert2(int clubNo, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String thumb, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID, int tenantID) throws Exception {

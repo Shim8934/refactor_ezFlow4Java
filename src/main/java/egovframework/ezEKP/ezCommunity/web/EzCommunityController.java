@@ -1904,6 +1904,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mode", mode);
 		model.addAttribute("no", no);
@@ -1925,6 +1927,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("useEditor", ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()));
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 
 		logger.debug("bbsEditNew ended.");
 		

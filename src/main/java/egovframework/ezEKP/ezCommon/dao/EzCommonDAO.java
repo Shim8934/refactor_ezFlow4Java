@@ -2845,6 +2845,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblRsCatBrd");
 		}
 	}
+ 	
+	public void alterCommItemPhotoItemContent() {
+		try {
+			select("EzCommonDAO.checkCommItemPhotoItemContent");
+		} catch (Exception e) {
+			logger.debug("TBL_COMM_ITEM PHOTOITEMCONTENT column doesn't exist. creating the column...");
+	
+			update("EzCommonDAO.alterCommItemPhotoItemContent");
+		}
+	}
 
 	public void addBoardAttachmentFlag() {
 		try {
@@ -2977,6 +2987,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		} catch (Exception e) {
 			logger.debug("tbl_photo_imageitem addThumbnail column doesn't exist. creating the column...");
 			update("EzCommonDAO.alterAddThumbnailForTPI");
+		}
+	}
+		
+	public void alterAttachmentsForCBoard() throws Exception {
+		try {
+			select(("EzCommonDAO.checkAttachmentsForCBoard"));
+		} catch (Exception e) {
+			logger.debug("tbl_c_board attachments column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterAttachmentsForCBoard");
 		}
 	}
 }
