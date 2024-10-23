@@ -170,6 +170,7 @@ async function makeApproverList(search) {
 			const tmpClone_TR = tmpClone.querySelector("tr");
 			tmpClone_TR.setAttribute("data-userId", e.userId);
 			tmpClone_TR.setAttribute("data-userName", e.userName);
+			tmpClone_TR.style.cursor = "pointer";
 
 			const tmpClone_userName = tmpClone.querySelector(".tmp-approverList-name");
 			tmpClone_userName.textContent = e.userName;
