@@ -185,22 +185,31 @@ function getBoardList_NewBoardSTD() {
 	    	
 	        if (RowCnt > 0) {
 	            for (var i = 0; i < RowCnt; i++) {
-	            title = favList[i].title;
-	           	startDate = favList[i].startDate;
-	           	writerName = favList[i].writerName;
-	           	boardType = favList[i].gubun;
-	           	boardId = favList[i].boardId;
-	           	itemId = favList[i].itemId;
-	            	
-	             listHTML += "<li onclick=\"openDoc_section4_Type('" + itemId + "','" + boardType + "', '" + boardId + "')\" >";			                        
-	             
+					title = favList[i].title;
+					startDate = favList[i].startDate;
+					writerName = favList[i].writerName;
+					boardType = favList[i].gubun;
+					boardId = favList[i].boardId;
+					itemId = favList[i].itemId;
+					var publicFlag = favList[i].publicFlag;
+				
+					if (publicFlag === 'N' && boardType === '2') {
+							listHTML += "<li onclick=\"openAnonymousModal('" + favoriteObj.portletId + "','" + itemId + "','" + boardType + "', '" + boardId + "',openDoc_section4_Type)\" >";
+					} else {
+						listHTML += "<li onclick=\"openDoc_section4_Type('" + itemId + "','" + boardType + "', '" + boardId + "')\" >";
+					}
+
 	             var writeDate = new Date(startDate);
 	     		
 	     		 if (today < writeDate) {
 	     			listHTML += "<span class='boardNew'>N</span>";
 	     		 }
 	             
-	             listHTML += "<span class='txt'>" + ConvertCharToEntityReference(title) + "</span>";
+	             listHTML += "<span class='txt'>" + ConvertCharToEntityReference(title);
+				  if (publicFlag === 'N') {
+	             	listHTML += " <div class='board_private'></div>";
+				  }
+				  listHTML += "</span>";
 	             listHTML += "<span class='date'>" + startDate.substring(5,16).replace(/-/g, ".") + "</span>";
 	             listHTML += "<span class='name'>" + writerName + "</span>";
 	             listHTML += "</li>";
@@ -232,7 +241,7 @@ function getBoardList_NewBoardSTD() {
     });
 }
 
-function openDoc_section4_Type(pItemID, pType, oBoardID) {
+function openDoc_section4_Type(pItemID, pType, oBoardID, password) {
     var pheight = window.screen.availHeight;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - 720) / 2;
@@ -254,13 +263,32 @@ function openDoc_section4_Type(pItemID, pType, oBoardID) {
 	   pTop = (pheight - 679) / 2;
 	   pLeft = (pwidth - 764) / 2;
 
-      window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+		window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
    } else {
-       if (CrossYN()) {
-           window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-       } else {
-           window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-       }
+		var height = 679;
+		pTop = (pheight - 679) / 2;
+		pLeft = (pwidth - 764) / 2;
+		var parser = new DOMParser();
+		
+		$.ajax({
+			url: "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
+			headers: !!password ? {
+				'Authorization': 'Basic ' + btoa(password)
+			} : {},
+			success: function(response) {
+				var returnDom = parser.parseFromString(response, "text/xml")
+				if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+					alert(!!password ? strWrongPassword : strLang1132);
+					return;
+				}
+				var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft);
+				newWindow.document.write(response);
+				newWindow.document.close();
+			},
+			error: function(xhr, status, error) {
+				console.error('Error:', error);
+			}
+		});
    }
 }
 

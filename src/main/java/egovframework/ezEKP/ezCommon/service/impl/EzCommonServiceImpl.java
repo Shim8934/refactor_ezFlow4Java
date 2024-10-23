@@ -4411,6 +4411,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.addBoardAttachmentFlag();
     }
 
+    @Override
+    public void addTblBoardInfoPublicFlag() {
+        ezCommonDAO.addTblBoardInfoPublicFlag();
+    }
+
     /* 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트헤더 추가 */
     @Override
     public void insertAllBoardListOption() throws Exception{

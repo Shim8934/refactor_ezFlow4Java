@@ -4100,6 +4100,10 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .keywordSpan:hover {text-decoration: underline; cursor: pointer;}
 .keywordDeleteBtn { padding-left: 2px; cursor: pointer;}
 
+/* 게시판 공개 비공개 */
+.board_private{background:url(/images/lock_icon.png) no-repeat center; background-size:contain; width: 16px;height: 16px; display: inline-block;vertical-align: text-bottom;}
+/* 게시판 공개 비공개 */
+
 .security_icon{display:inline-block; width:16px; height:16px; background:url(/images/email/secureMail/security_icon.svg) no-repeat center / 16px 16px;}
 
 .portlet_list li .txt .security_icon{vertical-align:top; margin:2px 5px 0 0;}

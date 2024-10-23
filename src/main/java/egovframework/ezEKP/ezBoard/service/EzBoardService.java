@@ -457,6 +457,8 @@ public interface EzBoardService {
 	/* 2024-08-23 전인하 - 게시판 > 게시물ID로 해당 게시물에 속한 키워드 반환 메소드 */
 	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(String itemID, String boardID, int tenantId) throws Exception;
 
+    boolean chkPasswordAnonymous(String itemID, String password, int tenantID);
+
 	public int getAllBoardItemListCount(LoginVO userInfo) throws Exception;
 
 	public List<HashMap<String, Object>> getAllBoardItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;

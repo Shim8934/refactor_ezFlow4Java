@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
+import egovframework.let.user.login.vo.LoginVO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -39,10 +40,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -315,6 +318,10 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getPrimaryData(info.getLang(), info.getTenantId()), info.getTenantId());
+
+			String authorization = request.getHeader("Authorization");
+			String password = StringUtils.isNotBlank(authorization) ? new String(java.util.Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic "))) : "";
+			
 			
 			if (boardItem == null) {
 				result.put("status", "empty");
@@ -346,7 +353,7 @@ public class MBoardGWController {
 			boardInfo.setType("boardItem");
 			
 			// 해당 게시물 읽기권한 없다면 리턴
-			if (!accessCheck(boardId, contentId, deptPathCode, info)) {
+			if (!accessCheck(boardId, contentId, deptPathCode, info, password)) {
 				result.put("status", "no");
 				return result;
 			}
@@ -436,6 +443,9 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+
+			String authorization = request.getHeader("Authorization");
+			String password = StringUtils.isNotBlank(authorization) ? new String(Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic "))) : "";
 			
 			if (boardItem == null) {
 				result.put("status", "empty");
@@ -463,7 +473,7 @@ public class MBoardGWController {
 			boardInfo.setType("photoBoardItem");
 			
 			// 해당 게시물 읽기권한 없다면 리턴
-			if (!accessCheck(boardId, contentId, deptPathCode, info)) {
+			if (!accessCheck(boardId, contentId, deptPathCode, info, password)) {
 				result.put("status", "no");
 				return result;
 			}
@@ -1122,11 +1132,12 @@ public class MBoardGWController {
     /**
 	 * 게시판 게시판권한체크 표출 Method(EzBoardController 참고)
 	 */
-	public boolean accessCheck(String boardID, String contentID, String deptPath, MCommonVO info) throws Exception {
+	public boolean accessCheck(String boardID, String contentID, String deptPath, MCommonVO info, String password) throws Exception {
 		logger.debug("accessCheck started");
 		
 		String rollInfo = info.getRollInfo();
 		BoardPropertyVO boardProp = ezBoardService.getBoardProperty(boardID, info.getTenantId());
+		MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentID, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 		String boardGroupID = "";
 		String isAllGroupBoard = "N";
 		
@@ -1273,6 +1284,16 @@ public class MBoardGWController {
 				rtv = true;
 			}
 		} // 개인, 직위/직책, 부서권한 전부 존재하지 않는다면 false 리턴 (rtv는 디폴트 값이 false임)
+
+		// 2024-11-19 비공개 게시판의경우 관리자와 글쓴이만 접근 가능 - 관리자일경우는 return true 됨
+		if (rtv && "N".equals(boardItem.getPublicFlag())) {
+			// 익명일 경우 비번 체크
+			if ("2".equals(boardProp.getGuBun())) {
+				rtv = ezBoardService.chkPasswordAnonymous(boardItem.getItemID(), password, info.getTenantId());
+			} else {
+				rtv = boardItem.getWriterID().equalsIgnoreCase(info.getUserId());
+			}
+		}
 		
 		logger.debug("rtv = " + rtv);
 		logger.debug("accessCheck ended2");
@@ -1299,6 +1320,9 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+
+			String authorization = request.getHeader("Authorization");
+			String password = StringUtils.isNotBlank(authorization) ? new String(Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic "))) : "";
 			
 			if (boardItem == null) {
 				result.put("status", "empty");
@@ -1326,7 +1350,7 @@ public class MBoardGWController {
 			boardInfo.setType("movieBoardItem");
 			
 			// 해당 게시물 읽기권한 없다면 리턴
-			if (!accessCheck(boardId, contentId, deptPathCode, info)) {
+			if (!accessCheck(boardId, contentId, deptPathCode, info, password)) {
 				result.put("status", "no");
 				return result;
 			}
@@ -2234,6 +2258,23 @@ public class MBoardGWController {
 		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}] ended.");
 
 	    return result;
+	}
+
+	/**
+	 * 익명게시판 비번체크
+	 */
+	@RequestMapping(value = "/mobile/ezboard/boards/private", method = RequestMethod.GET ,produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String chkPasswordAnonymous(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String itemID = request.getParameter("itemID");
+			String password = request.getParameter("pw");
+			return ezBoardService.chkPasswordAnonymous(itemID, password, userInfo.getTenantId()) ? "Y" : "N";
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "N";
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

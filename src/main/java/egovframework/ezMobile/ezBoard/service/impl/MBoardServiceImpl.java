@@ -751,6 +751,8 @@ public class MBoardServiceImpl implements MBoardService {
 		} else {
 			map.put("hasAttach", "0");
 		}
+
+		map.put("publicFlag", boardListVO.get("publicFlag"));
 		
 		String tempString = mBoardDAO.getApprFlag(map);
 		
@@ -878,6 +880,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
 		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
 		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
+		map.put("publicFlag", boardListVO.get("publicFlag"));
 		map.put("tenantID", info.getTenantId());
 		map.put("itemID", boardListVO.get("itemID"));
 		/* 2018-07-04 홍승비 - content 칼럼 데이터 저장을 위한 처리 추가 */

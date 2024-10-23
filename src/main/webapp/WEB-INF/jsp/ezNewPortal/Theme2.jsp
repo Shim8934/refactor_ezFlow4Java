@@ -392,6 +392,9 @@
 	var userID = "<c:out value='${userId}'/>";
 	var apprPortletIDs = [];
 	var apprPortletTypes = [];
+	var strBoardPassword =  "<spring:message code='ezBoard.private.pgb05' />";
+	var strBoardOk =  "<spring:message code='ezBoard.private.pgb06' />";
+	var strWrongPassword =  "<spring:message code='ezBoard.t267' />";
 	
  	var quickLinkPage = {
  		current: 1,

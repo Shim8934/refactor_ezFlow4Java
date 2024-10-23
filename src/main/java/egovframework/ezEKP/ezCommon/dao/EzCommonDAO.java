@@ -2855,6 +2855,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardAttachmentFlag");
 		}
 	}
+    
+	public void addTblBoardInfoPublicFlag() {
+		try {
+			select("EzCommonDAO.checkTblBoardInfoPublicFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info publicFlag doesn't exist. creating the column...");
+			update("EzCommonDAO.addTblBoardInfoPublicFlag");
+			update("EzCommonDAO.addTblBoardItemPublicFlag");
+			update("EzCommonDAO.addTblBoardItemTempPublicFlag");
+		}
+	}
 	
 	/* 2024-10-21 한태훈 - 게시판 > 최근게시물 리스트헤더 추가 */
 	public void insertAllBoardListOption(Map<String, Object> map) {

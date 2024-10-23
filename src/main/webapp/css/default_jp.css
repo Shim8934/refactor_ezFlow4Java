@@ -4080,6 +4080,10 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 .keywordSpan:hover {text-decoration: underline; cursor: pointer;}
 .keywordDeleteBtn { padding-left: 2px; cursor: pointer;}
 
+/* 게시판 공개 비공개 */
+.board_private{background:url(/images/lock_icon.png) no-repeat center; background-size:contain; width: 16px;height: 16px; display: inline-block;vertical-align: text-bottom;}
+/* 게시판 공개 비공개 */
+
 #TreeCtrl_MyFavTree_ul > .lnbUL {
 	padding-top: 0px;
 	padding-left: 20px;

@@ -46,6 +46,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -1643,8 +1644,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 					data.put("boardListTotalCnt", 0);
 					data.put("currentPage", 1);
 				} else {
-					BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
-					String guBun = boardPropertyVO.getGuBun();
+					MBoardInfoVO boardInfo = mBoardService.getBoardProperty(boardId, commonUtil.getPrimaryData(info.getLang(), info.getTenantId()), info.getTenantId(), userId);
+					boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPath, mOptionService.commonInfo(serverName, userId));
+					String guBun = boardInfo.getGuBun();
 					// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 					boolean isQnANormal = "5".equals(guBun);
 					if (isQnANormal) {
@@ -1677,6 +1679,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					
 					data.put("access", "true");
 					data.put("boardList", boardList);
+					data.put("boardInfo", boardInfo);
 					data.put("boardListTotalCnt", boardListTotalCnt);
 					data.put("currentPage", currentPage);
 				}

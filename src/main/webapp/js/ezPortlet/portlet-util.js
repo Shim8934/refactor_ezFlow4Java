@@ -79,11 +79,7 @@ var portletOption = Object.freeze({
             }
         }
 
-        if (handleClassChk) {
-            return false;
-        }
-
-        return true;
+        return !handleClassChk;
     },
 });
 
@@ -803,6 +799,80 @@ function ellipsisTitle(portletName, portletId) {
             }
         })
     }
+}
+
+// 포틀릿 모달창
+function makeInputModal(domArea, placeHold, btnMsg, returnFunction) {
+    var layer = document.createElement("div");
+    layer.className = 'portlet_modal_layer';
+    var wrap = document.createElement("div");
+    wrap.className = 'portlet_modal_wrap';
+    var input = document.createElement("input");
+    input.className = 'portlet_modal_input';
+    input.type = 'password';
+    input.placeholder = placeHold;
+    var btn = document.createElement("div");
+    btn.className = 'portlet_modal_btn';
+    btn.innerText = btnMsg;
+    domArea.append(layer);
+    layer.append(wrap);
+    wrap.append(input);
+    wrap.append(btn);
+    
+    input.focus();
+
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            returnFunction(input.value);
+            domArea.removeChild(layer);
+        }
+        else if (e.key === 'Escape') {
+            domArea.removeChild(layer);
+        }
+    });
+
+    layer.addEventListener("click", (function (e) {
+        if (e.target === layer) {
+            domArea.removeChild(layer);
+        } else {
+            return false;
+        }
+    }));
+    
+    btn.addEventListener("click", (function () {
+        returnFunction(input.value);
+        domArea.removeChild(layer);
+    }));
+}
+
+function openAnonymousModal(portletId, pItemID, pType, oBoardID, openFunc) {
+    var parser = new DOMParser();
+    var pheight = window.screen.availHeight;
+    var pwidth = window.screen.availWidth;
+    var pTop = (pheight - 720) / 2;
+    var pLeft = (pwidth - 765) / 2;
+
+    $.ajax({
+        url: "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
+        success: function(response) {
+            var returnDom = parser.parseFromString(response, "text/xml")
+            if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+                makeInputModal($('#' + portletId + 'Portlet')[0], strBoardPassword, strBoardOk, (function (password) {
+                    openFunc(pItemID, pType, oBoardID, password);
+                }));
+            } else {
+                var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft);
+                newWindow.document.write(response);
+                newWindow.document.close();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            makeInputModal($('#' + portletId + 'Portlet')[0], strBoardPassword, strBoardOk, (function (password) {
+                openFunc(pItemID, pType, oBoardID, password);
+            }));
+        }
+    });
 }
 
 // 툴팁 추가 - 즐겨찾기게시판, 탭게시판 포틀릿

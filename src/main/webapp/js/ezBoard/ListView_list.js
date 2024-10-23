@@ -919,12 +919,14 @@ function ListView() {
                     	}
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('TITLE') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
                     	/* 2018-12-27 홍승비 - 새게시물, 답변아이콘, 댓글 제목에 붙는 위치 변경 (IE에서의 말줄임표 오류 수정) */
+                        var publicFlagImg = SelectSingleNodeValue(oCells[0], "PUBLICFLAG") == "N" ? " <div class='board_private'></div>" : "";
                     	if (getNodeText(oDatas[10]) != "0") {
-                    		objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span style='display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;'>" + MakeXMLString(strValue) + "</span>" + titleOneLineCnt + "</div> ";
+                    		objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span style='display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;'>" 
+                                + MakeXMLString(strValue) + "</span>" + titleOneLineCnt + publicFlagImg + "</div> ";
                         } else if (getNodeText(oDatas[6]) == "Y") {
-                        	objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + "</div> ";
+                        	objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + publicFlagImg + "</div> ";
                         } else {
-                        	objTd.innerHTML = titleImage + MakeXMLString(strValue);
+                        	objTd.innerHTML = titleImage + MakeXMLString(strValue) + publicFlagImg;
                         }
                     } else {
                         if (getNodeText(oDatas[10]) != "0"){

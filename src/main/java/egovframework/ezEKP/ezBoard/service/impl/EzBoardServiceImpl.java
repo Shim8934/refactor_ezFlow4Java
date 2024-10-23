@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -4158,6 +4159,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
 		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
 		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
+		if (doc.getElementsByTagName("PUBLICFLAG").getLength() > 0 ) {
+			boardListVO.setPublicFlag(doc.getElementsByTagName("PUBLICFLAG").item(0).getTextContent());
+		}
 		boardListVO.setRealPath(realPath);
 		boardListVO.setTenantID(userInfo.getTenantId());
 		
@@ -5810,6 +5814,23 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("saveKeyword ended.");
 		return keywordList;
 	}
+
+    @Override
+    public boolean chkPasswordAnonymous(String itemID, String password, int tenantID) {
+        try {
+            String correctPassword = getDocPassWord(itemID, tenantID).trim();
+
+            if (StringUtils.isBlank(password)) {
+                return false;
+            }
+
+            String encryptPassword = EgovFileScrty.encryptPassword(password, "unknown");
+            return encryptPassword.equals(correctPassword);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return false;
+        }
+    }
 
 	@Override
 	public int getAllBoardItemListCount(LoginVO userInfo) throws Exception {

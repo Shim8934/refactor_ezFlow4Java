@@ -137,6 +137,8 @@ public class MBoardInfoVO {
 	private String useKeyword;
 	/** 2024-10-23 정지은 - 첨부파일 사용여부**/
 	private String attachmentFlag;
+	/** 2024-11-12 박기범 - 게시판 공개/비공개 */
+	private String publicFlag = "N";
 	
 	@Override
 	public String toString() {
@@ -582,5 +584,11 @@ public class MBoardInfoVO {
 	}
 	public void setAttachmentFlag(String attachmentFlag) {
 		this.attachmentFlag = attachmentFlag;
+	}
+	public String getPublicFlag() {
+		return publicFlag;
+	}
+	public void setPublicFlag(String publicFlag) {
+		this.publicFlag = publicFlag;
 	}
 }

@@ -682,7 +682,6 @@
 				</c:forEach>
 				
 				for (var i = 0; i < colType.length;i++){
-					// 2021-06-24 김은실 - 대체 어디서 변경하는 지를 모르겠는데(핸들러??), model에서 jsp로 넘어올때 특수문자가 변경됨. &'"<> → &amp;&#039;&#034;&lt;&gt;
 					var colName = colName1[i].replace(/\n/gi, "\\n").replace(/\\\\/gi, "\\")
 											 .replace(/&amp;/gi, "&")
 											 .replace(/&#039;/gi, "'")
@@ -1073,6 +1072,9 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
 		        }
 		        
+				// 2024-10-21 박기범 - 게시물 공개 여부
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PUBLICFLAG", !document.getElementById("publicFlag") || document.getElementById("publicFlag").checked ? "Y" : "N");
+				
 				var colType = new Array();
 				var tableCol = new Array();
 				
@@ -3157,6 +3159,19 @@
 	                                   &nbsp;<a class="imgbtn imgbck" style= "height:22px; margin-top:2px !important"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
 	                            </span>
 	                    </tr>
+						<c:if test="${boardInfo.publicFlag eq 'Y'}">
+							<tr>
+								<th><spring:message code='ezBoard.private.pgb02'/></th>
+								<td>
+									<span style="line-height: 20px; height: 20px; display: inline-block;">
+										<input type="checkbox" id="publicFlag" name="publicFlag" ${boardListVO.publicFlag == "Y" ? "checked" : "" } style="margin-top:3px;" value="Y">
+									</span>
+									<label for="publicFlag" style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;">
+										<spring:message code='ezBoard.private.pgb04'/>
+									</label>
+								</td>
+							</tr>
+						</c:if>
 	                    <tr id="tdEndDate">
 	                        <th><spring:message code='ezBoard.t156' /></th>
 	                        <td>

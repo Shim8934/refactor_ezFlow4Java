@@ -5787,6 +5787,29 @@
 		ADD
 			ATTACHMENTFLAG CHAR(1) DEFAULT 'Y'
 	</statement>
+
+    <select id="EzCommonDAO.checkTblBoardInfoPublicFlag">
+        SELECT
+            PUBLICFLAG
+        FROM
+            TBL_BOARD_BOARDINFO
+            LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.addTblBoardInfoPublicFlag">
+        ALTER TABLE TBL_BOARD_BOARDINFO
+            ADD PUBLICFLAG char(1) default 'N'
+    </statement>
+
+    <statement id="EzCommonDAO.addTblBoardItemPublicFlag">
+        ALTER TABLE TBL_BOARD_ITEM
+            ADD PUBLICFLAG char(1)  default 'Y'
+    </statement>
+
+    <statement id="EzCommonDAO.addTblBoardItemTempPublicFlag">
+        ALTER TABLE TBL_BOARD_ITEM_TEMP
+            ADD PUBLICFLAG char(1) default 'Y'
+    </statement>
 		
     <select id="EzCommonDAO.checkAllBoardListOption" parameterClass="Map" resultClass="String">
         <![CDATA[

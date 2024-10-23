@@ -90,7 +90,15 @@ function getBoardList(data, portletId) {
 	if (boardCount > 0) {
 		for (var i = 0; i < boardCount; i++) {
 			var item = boardList[i];
-			boardHTML += "<li onclick='openDoc_section3_Type(\"" + item.itemID + "\", \"" + item.guBun + "\", \"" + item.boardID + "\")'>";
+			var publicFlag = item.publicFlag;
+			var boardType = item.guBun;
+			
+			if (publicFlag === 'N' && boardType === '2') {
+				boardHTML += "<li onclick='openAnonymousModal(\"" + portletId + "\", \"" + item.itemID + "\", \"" + item.guBun + "\", \"" + item.boardID + "\",openDoc_section3_Type)'>";
+			}else{
+				boardHTML += "<li onclick='openDoc_section3_Type(\"" + item.itemID + "\", \"" + item.guBun + "\", \"" + item.boardID + "\")'>";
+			}
+			
 			var startDate = item.startDate;
 			startDate = startDate.replace("-","/");
 			var writeDate = new Date(startDate);
@@ -99,7 +107,11 @@ function getBoardList(data, portletId) {
 				boardHTML += "<span class='boardNew'>N</span>";
 			}
 
-			boardHTML += "<span class='txt'>" + MakeXMLString(item.title) + "</span>";
+			boardHTML += "<span class='txt'>" + MakeXMLString(item.title);
+			if (publicFlag == 'N') {
+				boardHTML += " <div class='board_private'></div>";
+			}
+			boardHTML += "</span>";
 			boardHTML += "<span class='date'>" + startDate.substring(5, 16).replace("-",".") + "</span>";
 			boardHTML += "<span class='name'>" + item.writerName + "</span>";
 			boardHTML += "</li>";
@@ -129,6 +141,7 @@ function getBoardListAType(data, portletId) {
 			var boardID = item.boardID;
 			var SPLIT_DATE = ".";
 			var DEFAULT_THUMBNAIL = '/images/portal/noti_nodata.png';
+			var publicFlag = item.publicFlag;
 
 			var listEle = document.createElement('li');
 			(function(id, guBun, boardID) {
@@ -150,6 +163,11 @@ function getBoardListAType(data, portletId) {
 			dd.appendChild(spanTitle);
 			textNode = document.createTextNode(item.title);
 			spanTitle.appendChild(textNode);
+			if (publicFlag === 'N') {
+				var privateIcon = document.createElement('span');
+				privateIcon.className = 'board_private'
+				spanTitle.append(privateIcon);
+			}
 			var spanCont = document.createElement('span');
 			spanCont.classList.add('cont');
 			dd.appendChild(spanCont);
@@ -219,6 +237,7 @@ function getBoardListBType(data, portletId) {
 			var guBun = item.guBun;
 			var boardID = item.boardID;
 			var SPLIT_DATE = ".";
+			var publicFlag = item.publicFlag;
 
 			var listEle = document.createElement('li');
 			listEle.className = 'notiLI';
@@ -247,6 +266,11 @@ function getBoardListBType(data, portletId) {
 			dd.appendChild(spanTitle);
 			textNode = document.createTextNode(item.title);
 			spanTitle.appendChild(textNode);
+			if (publicFlag === 'N') {
+				var privateIcon = document.createElement('span');
+				privateIcon.className = 'board_private'
+				spanTitle.append(privateIcon);
+			}
 			var spanCont = document.createElement('span');
 			spanCont.classList.add('cont');
 			dd.appendChild(spanCont);
@@ -322,7 +346,7 @@ function getBoardListBType(data, portletId) {
 	}
 }
 
-function openDoc_section3_Type(pItemID, pType, oBoardID) {
+function openDoc_section3_Type(pItemID, pType, oBoardID, password) {
     var pheight = window.screen.availHeight;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - 720) / 2;
@@ -347,11 +371,27 @@ function openDoc_section3_Type(pItemID, pType, oBoardID) {
 
       window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
    } else {
-       if (CrossYN()) {
-           window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-       } else {
-           window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-       }
+		var parser = new DOMParser();
+
+		$.ajax({
+			url: "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
+			headers: !!password ? {
+				'Authorization': 'Basic ' + btoa(password)
+			} : {},
+			success: function(response) {
+				var returnDom = parser.parseFromString(response, "text/xml")
+				if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+					alert(!!password ? strWrongPassword : strLang1132);
+					return;
+				}
+				var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft);
+				newWindow.document.write(response);
+				newWindow.document.close();
+			},
+			error: function(xhr, status, error) {
+				console.error('Error:', error);
+			}
+		});
    }
 }
 
