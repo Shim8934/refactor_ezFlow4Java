@@ -2970,9 +2970,9 @@
 			FROM
 				TBL_COMM_ITEM_ATTACHMENTS
 			WHERE
-				itemid = #v_pItemID#
+				ITEMID = #v_pItemID#
 			AND
-				tenant_id = #tenantID#
+				TENANT_ID = #tenantID#
 		]]>
 	</select>
 	
@@ -8170,5 +8170,41 @@
 			    ROWNUM <= 5
 		]]>
 	</select>
+
+	<select id="EzCommunityDAO.getRecentNo" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				no
+      		FROM
+      			TBL_C_BOARD
+      		WHERE
+      			tenant_id = #tenantID#
+      		AND
+      			c_no = #v_cNo#
+		]]>
+	</select>
 	
+	<update id="EzCommunityDAO.updateAttachments" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_BOARD
+			SET
+				attachments = #pHasAttach#
+			WHERE
+				no = #v_pItemID#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+	
+	<delete id="EzCommunityDAO.bbsDelOkDelAttach" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_COMM_ITEM_ATTACHMENTS
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				itemid = #v_NO#
+		]]>
+	</delete>
 </sqlMap>

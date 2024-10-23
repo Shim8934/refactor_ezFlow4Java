@@ -4514,4 +4514,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterAddThumbnailForTPI() throws Exception {
     	ezCommonDAO.alterAddThumbnailForTPI();
     }
+    
+    @Override
+    public void alterAttachmentsForCBoard() throws Exception {
+    	ezCommonDAO.alterAttachmentsForCBoard();
+    }
 }

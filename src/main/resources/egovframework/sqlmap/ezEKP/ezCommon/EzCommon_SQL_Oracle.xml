@@ -6513,7 +6513,7 @@
 				ROWNUM <= 1
 		]]>
 	</select>
-
+	
 	<statement id="EzCommonDAO.alterAddThumbnailForTPI">
 		<![CDATA[
 			ALTER TABLE
@@ -6522,6 +6522,26 @@
 				ADDTHUMBNAIL NVARCHAR2(10) DEFAULT NULL,
 				THUMBNAILEXT NVARCHAR2(10) DEFAULT NULL
 				)
+		]]>
+    </select>
+	
+	<select id="EzCommonDAO.checkAttachmentsForCBoard" resultClass="String">
+		<![CDATA[
+			SELECT
+				ATTACHMENTS
+			FROM
+				TBL_C_BOARD
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterAttachmentsForCBoard">
+		<![CDATA[
+			ALTER TABLE
+				TBL_C_BOARD
+			ADD
+				ATTACHMENTS NVARCHAR2(10) DEFAULT NULL
 		]]>
     </statement>
 </sqlMap>
