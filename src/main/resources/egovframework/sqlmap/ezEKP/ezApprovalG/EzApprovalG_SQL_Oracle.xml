@@ -36301,6 +36301,7 @@
             DUAL
     </select>
 
+	<!-- 2024-10-24 홍승비 - 전자결재 (일반, G) > 지정반송의 대상자(반송위치)는 결재(001), 기안(018), 검토(019) 결재유형으로 제한 -->
     <select id ="EzApprovalG.getReturnUserList" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
         SELECT
             *
@@ -36315,7 +36316,7 @@
         AND
             APRSTATE = '003'
         AND
-            APRTYPE IN ('018','019')
+            APRTYPE IN ('001', '018', '019')
     </select>
 
     <update id="EzApprovalG.updateReturnByDesignation" parameterClass="Map">
