@@ -124,7 +124,7 @@
 					
 					listXML += "<TR>";
 					listXML += "<TD class='"+ urgency + " " + bClass + "' title ='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "</td>";
-					listXML += "<TD title =\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title") + "\" class='"+ urgency + " " + bClass + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
+					listXML += "<TD title =\"" + Replace2HTML(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title")) + "\" class='"+ urgency + " " + bClass + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
 						+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID").trim()
 						+ "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName").trim()
 						+ "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim()
