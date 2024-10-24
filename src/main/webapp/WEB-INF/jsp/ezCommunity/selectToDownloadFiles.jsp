@@ -156,5 +156,9 @@
 			return;
 		}
    	}
+    
+    function window_close() {
+        window.close();
+    }
     </script>
 </html>
