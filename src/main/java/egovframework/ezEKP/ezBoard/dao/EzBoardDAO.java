@@ -1177,4 +1177,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public List<HashMap<String, Object>> getAllNewItemList(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getAllNewItemList", map);
 	}
+	
+	public List<BoardAttachVO> brdGetPhotoItemAttachmentInfo(Map<String, Object> map) throws Exception{
+		return (List<BoardAttachVO>) list("EzBoardDAO.brdGetPhotoItemAttachmentInfo", map);
+	}
 }

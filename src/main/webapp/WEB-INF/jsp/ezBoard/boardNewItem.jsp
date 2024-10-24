@@ -129,6 +129,7 @@
 		    var NewGuid = "${newGuid}";
 			var mgubun = "";
 			var attachxml = "";
+			var realFileNames = "";
 			var pBoardType = "${boardType}";
 		    var saveItemBoardId = "";
 		    var SelBoard = false;
@@ -227,6 +228,7 @@
 							/* 2019-01-22 홍승비 - 게시물 수정, 임시저장 시 첨부파일의 경로 전체가 특문 치환되는 오류 수정 */
 				            for (var i = 0; i < objAttachNodes.length; i++) {
 								 attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
+								 realFileNames += getNodeText(SelectNodes(objAttachNodes[0], "realFileNM")[i]) + "|";
 				            }
 			            }
 			        }
@@ -931,6 +933,8 @@
 		        } else {
 	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", AttachFileList2());
 		        }
+		        
+            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "REALFILENAMES", realFileNames);
 
 		        /* 2021-02-16 홍승비 - 익명게시판에 TOPWRITERID 저장하지 않도록 수정 */
 		        if (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {

@@ -1348,11 +1348,22 @@
    				A.TITLE,
    				A.READCOUNT,
    				A.ATTACHMENTS,
+		]]>
+		<isNotEqual property="bType" compareValue="3">
 				CASE
 					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
 					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
 					ELSE 'MANY'
 				END EXT,
+		</isNotEqual>
+		<isEqual property="bType" compareValue="3">
+            	CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.IMAGENAME)
+					ELSE 'MANY'
+				END EXT,
+		</isEqual>
+        <![CDATA[
 				CASE
 					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
 					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
@@ -1427,12 +1438,22 @@
 					A.ITEMID = D.ITEMID
 		  	]]>
 	  	</isEqual>
+		<isNotEqual property="bType" compareValue="3">
 			LEFT OUTER JOIN
 				TBL_BOARD_ITEM_ATTACHMENTS F
 			ON
 				A.ITEMID = F.ITEMID
 			AND
 				A.TENANT_ID = F.TENANT_ID
+		</isNotEqual>
+		<isEqual property="bType" compareValue="3">
+			LEFT OUTER JOIN
+				TBL_PHOTO_IMAGEITEM	F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
+		</isEqual>
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -1674,11 +1695,22 @@
                 A.TITLE ,
                 A.READCOUNT ,
                 A.ATTACHMENTS ,
+		]]>
+		<isNotEqual property="bType" compareValue="3">
             	CASE
 					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
 					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILENAME)
 					ELSE 'MANY'
 				END EXT,
+		</isNotEqual>
+		<isEqual property="bType" compareValue="3">
+            	CASE
+					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
+					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.IMAGENAME)
+					ELSE 'MANY'
+				END EXT,
+		</isEqual>
+        <![CDATA[
 				CASE
 					WHEN COUNT(F.FILEPATH) = 0 THEN 'NONE'
 					WHEN COUNT(F.FILEPATH) = 1 THEN MAX(F.FILEPATH)
@@ -1748,12 +1780,24 @@
         	    IFNULL(A.WRITERNAMETYPE, '') as WRITERNAMETYPE
               FROM 
               	TBL_Board_Item A
+		]]>
+		<isNotEqual property="bType" compareValue="3">
 			LEFT OUTER JOIN
 				TBL_BOARD_ITEM_ATTACHMENTS F
 			ON
 				A.ITEMID = F.ITEMID
 			AND
 				A.TENANT_ID = F.TENANT_ID
+		</isNotEqual>
+		<isEqual property="bType" compareValue="3">
+			LEFT OUTER JOIN
+				TBL_PHOTO_IMAGEITEM	F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
+		</isEqual>
+		<![CDATA[
               WHERE  
               	A.TENANT_ID = #v_TENANTID#
               AND
@@ -4672,6 +4716,22 @@
 	       		itemid = #itemID#
 	       	ORDER BY
 	       		GUID * 1
+       	]]>
+	</select>
+	
+	<select id="EzBoardDAO.brdGetPhotoItemAttachmentInfo" parameterClass="Map" resultClass="BoardAttachVO">
+		<![CDATA[
+			SELECT
+				IMAGENAME AS FILENAME,
+				FILEPATH
+	        FROM
+	        	TBL_PHOTO_IMAGEITEM
+	       	WHERE
+	       		tenant_id = #tenantID#
+	       	AND
+	       		itemid = #itemID#
+	       	ORDER BY
+				IMAGEID ASC
        	]]>
 	</select>
 	
