@@ -5468,6 +5468,9 @@
 					, ENDDATE DESC
 				</isEqual>
 			</isNotEmpty>
+			<isEmpty property="v_ORDERCOL">
+				ENDDATE DESC
+			</isEmpty>
 		   	<![CDATA[
 		   	) A
 		   		WHERE 
