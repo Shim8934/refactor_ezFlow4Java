@@ -8579,7 +8579,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<BoardID>" + commonUtil.cleanValue(boardList.getBoardID()) + "</BoardID>");
 			sb.append("<BoardName>" + commonUtil.cleanValue(boardList.getBoardName()) + "</BoardName>");
 			sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
-			sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
+			sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()).replace("\\", "\\\\") + "</Title>");
 			sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
 			sb.append("<OneLineCnt>" + boardList.getOneLineCnt() + "</OneLineCnt>");
 			sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
