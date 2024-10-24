@@ -34580,6 +34580,7 @@
             A.SUBID
     </select>
     
+    <!-- 2024-10-24 홍승비 - processDate 값 삽입 시 불필요한 .0 초 단위 제거, 날짜 변환 함수 추가 -->
     <insert id="EzApprovalG.insertDisbandGroupReceipt" parameterClass="Map">
         INSERT INTO TBL_RECEIPTPOINTINFO (DOCID, RECEIPTPOINTID, RECEIPTPOINTNAME, EXTRECEPTYN, PROCESSYN, PROCESSSN, CANEDITYN, EXTRECEPTEMAIL, RECEIPTMEMBERID, RECEIPTMEMBERNAME, PROCESSDATE, RECEIPTMEMBERJOBTITLE, DEPTMEMBERSN, RECEIPTPOINTNAME2, RECEIPTMEMBERJOBTITLE2, RECEIPTMEMBERNAME2, ROUTEYN, TENANT_ID, COMPANYID)
         <iterate property="v_NEWRECEIPTS" conjunction="UNION ALL">
@@ -34594,7 +34595,7 @@
                 #v_NEWRECEIPTS[].extRecepteMail#,
                 #v_NEWRECEIPTS[].receiptMemberID#,
                 #v_NEWRECEIPTS[].receiptMemberName#,
-                #v_NEWRECEIPTS[].processDate#,
+                TO_DATE(SUBSTR(#v_NEWRECEIPTS[].processDate#, 0, 19),'YYYY-MM-DD HH24:MI:SS'),
                 #v_NEWRECEIPTS[].receiptMemberJobTitle#,
                 #v_NEWRECEIPTS[].deptMemberSN#,
                 #v_NEWRECEIPTS[].receiptPointName2#,
