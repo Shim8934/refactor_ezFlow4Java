@@ -175,5 +175,13 @@ var SurveyMessages = {
 	srtLangHSBEx02 : "アップロードが制限されている拡張子ファイルが存在します。",
 	/* 2024-03-26 양지혜 - 게시기간 메시지 추가 */
 	strLangYJH01 : "掲示は最大",
-	strLangYJH02 : "日まで可能です。"
+	strLangYJH02 : "日まで可能です。",
+	strScheduleOne : "일정(단일선택)",
+	strScheduleMtp : "일정(다중선택)",
+	strScheduleOneDay : "하루일정",
+	strScheduleMtpDay : "기간일정",
+	strScheduleTxt : "텍스트 입력",
+	strScheduleOpt : "옵션은 최대 20개 까지 추가 가능합니다.",
+	strDateFormatValidation : "날짜는 yyyy-mm-dd(년도 네자리-월 두자리-일 두자리)형태의 유효한 날짜로 입력해주세요.",
+	strDateTimeValidation : "시작 날짜는 끝 날짜보다 이전 날짜여야 합니다."
 }

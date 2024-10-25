@@ -1103,7 +1103,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				while (respIter.hasNext()) {
 					ResponseVO response = respIter.next();
 					int qstType     = response.getQuestionType();
-					String checkKey = (qstType == 1 || qstType == 2 || qstType == 9) ? "opt" + response.getOptionId() : "qst" + response.getQuestionLevel();
+					String checkKey = (qstType == 1 || qstType == 2 || qstType == 9 || qstType == 10 || qstType == 11) ? "opt" + response.getOptionId() : "qst" + response.getQuestionLevel();
 					
 					if (mapResponses.containsKey(checkKey)) {
 						mapResponses.get(checkKey).add(response);
@@ -1142,7 +1142,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				//Add responses
 				if (logicCheck == 2) {
 					int qstType = option.getQuestionType();
-					if (qstType == 1 || qstType == 2 || qstType == 9) {
+					if (qstType == 1 || qstType == 2 || qstType == 9 || qstType == 10 || qstType == 11) {
 						String optKey = "opt" + option.getOptionId();
 						if (mapResponses.containsKey(optKey)) {
 							option.setResponses(mapResponses.get(optKey));
@@ -1172,7 +1172,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				//Add responses
 				if (logicCheck == 2) {
 					int qstType = question.getType();
-					if (qstType != 1 && qstType != 2 && qstType != 9) {
+					if (qstType != 1 && qstType != 2 && qstType != 9 && qstType != 10 && qstType != 11) {
 						String qstKey = "qst" + question.getLevel();
 						if (mapResponses.containsKey(qstKey)) {
 							question.setResponses(mapResponses.get(qstKey));
@@ -1463,6 +1463,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					case 1:
 					case 2:
 					case 9:
+					case 10:
+					case 11:
 						long optionId = (Long) answerObject.get("optionId");
 						
 						if (answerObject.get("otherFlag") != null && ((Long) answerObject.get("otherFlag")).intValue() == 1) {

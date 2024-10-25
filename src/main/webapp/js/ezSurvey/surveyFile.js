@@ -114,14 +114,16 @@ var SurveyFile = function() {
 			var canvasElmt    = document.createElement("canvas");
 			var canvasSize    = fileElmt ? 80 : 40;
 			
-			canvasElmt.setAttribute("width" , canvasSize);
-			canvasElmt.setAttribute("height", canvasSize);
 			divChildElmt1.className = "attImgAva";
 			divChildElmt1.appendChild(canvasElmt);
 			divMainElmt.className   = "attDivFile";
 			divMainElmt.appendChild(divChildElmt1);
 			
 			if (fileElmt) {
+				if (fileElmt.classList.contains('imgQuestionFile')) {
+					liElmt.setAttribute("mode", "question");
+				}
+				
 				ulElmt = fileElmt.parentElement.firstElementChild;
 				
 				if (!isImage(fileName)["isImage"]) {

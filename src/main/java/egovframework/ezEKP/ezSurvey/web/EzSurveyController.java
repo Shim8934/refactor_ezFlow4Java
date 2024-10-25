@@ -1005,6 +1005,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 					case 1: // 단일선택 질문
 					case 2: // 다중선택 질문
 					case 9: // 드롭다운 질문
+					case 10: //일정단일 선택 질문
+					case 11: //일정 다중 선택 질문
 						resultTot = 0;
 	
 						// 질문 응답 전체 참여자

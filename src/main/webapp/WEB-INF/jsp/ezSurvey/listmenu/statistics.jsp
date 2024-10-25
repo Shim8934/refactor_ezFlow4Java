@@ -201,7 +201,9 @@
 					switch(questionType) {
 						case 1:
 						case 2:
-						case 9: 
+						case 9:
+						case 10:
+						case 11:
 							createQuestionPie(question, divElmt);
 							break;
 						case 3:
@@ -289,7 +291,7 @@
 				var questionType = question["type"];
 				var options      = question["option"];
 				
-				if (questionType == 1 || questionType == 2 || questionType == 9) {
+				if (questionType == 1 || questionType == 2 || questionType == 9 || questionType == 10 || questionType == 11) {
 					for (var i = 0; i < options.length; i++) {
 						if (options[i]["responses"] && options[i]["responses"].length > 0) {
 							getUserFromResponses(options[i]["responses"], userList);
