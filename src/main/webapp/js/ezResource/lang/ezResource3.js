@@ -290,3 +290,9 @@ var strLangFvYGS16 = "削除しました。";
 var strLangFvYGS17 = "お気に入りのグループがありません。";
 var strLangFvYGS18 = "リソースには下位を追加できません。";
 var strLangFvYGS19 = "カテゴリを削除すると、下位のすべてのリソースおよびカテゴリが削除されます。\n本当に削除しますか？";
+
+// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
+var strLangMaxYGS01 = "최대 예약 가능 기간을 초과하였습니다.";
+var strLangMaxYGS02 = "정원";
+var strLangMaxYGS03 = "명";
+var strLangMaxYGS04 = "정원을 입력하세요.";

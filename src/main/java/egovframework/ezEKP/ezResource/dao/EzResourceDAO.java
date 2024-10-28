@@ -481,4 +481,9 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	public void delResDataForm(Map<String, Object> map) throws Exception {
 		delete("EzResourceDAO.delResDataForm", map);
 	}
+	
+	// 2024-08-26 유길상 - 최대 예약 가능 기간 조회
+	public String selectResMaxDate(Map<String, Object> map) throws Exception {
+		return (String) select("EzResourceDAO.selectResMaxDate", map);
+	}
 }

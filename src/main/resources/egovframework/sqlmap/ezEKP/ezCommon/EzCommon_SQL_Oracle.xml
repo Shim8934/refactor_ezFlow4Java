@@ -6534,7 +6534,39 @@
            "COMPANYID" VARCHAR2(20) NOT NULL ENABLE,
 			CONSTRAINT "TBL_USERSCRAPCONTLIST_PK" PRIMARY KEY ("USERSCRAPCONTID", "TENANT_ID", "COMPANYID", "ITEMID", "BOARDID", "USERID"),
 			CONSTRAINT "TBL_USERSCRAPCONTLIST_FK" FOREIGN KEY ("TENANT_ID", "COMPANYID", "USERSCRAPCONTID") REFERENCES "TBL_USERSCRAPCONT" ("TENANT_ID", "COMPANYID", "USERSCRAPCONTID") ON DELETE CASCADE
-	    )	
+	    )
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblRsBrdResMaxDate">
+		SELECT
+			RES_MAX_DATE
+		FROM
+			TBL_RS_BRD
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.alterTblRsBrdResMaxDate">
+		ALTER TABLE
+			TBL_RS_BRD
+		ADD
+			RES_MAX_DATE varchar2(100)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblRsBrdResMaxUserCnt">
+		SELECT
+			RES_MAX_USER_CNT
+		FROM
+			TBL_RS_BRD
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.alterTblRsBrdResMaxUserCnt">
+		ALTER TABLE
+			TBL_RS_BRD
+		ADD 
+			RES_MAX_USER_CNT varchar2(100) DEFAULT '0' NOT NULL
 	</statement>
 
 	<select id="EzCommonDAO.checkJmochaCompanyQuota">

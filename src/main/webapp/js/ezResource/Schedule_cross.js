@@ -1,4 +1,4 @@
-﻿// 자원사용 중복체크 (true:중복체크, false:중복체크안함)
+﻿﻿// 자원사용 중복체크 (true:중복체크, false:중복체크안함)
 var bDupCheck = true;
 
 // 자원예약시간 제한, 설정한 날짜 이내에만 예약가능
@@ -289,7 +289,7 @@ function Schedule_Repetition_onclick()
 	schedule_repetition_cross_dialogArguments[0] = g_data;
 	schedule_repetition_cross_dialogArguments[1] = Schedule_Repetition_onclick_Complete;
 
-	DivPopUpShow(450, 550, "/ezResource/scheduleRepetition.do");
+	DivPopUpShow(450, 550, "/ezResource/scheduleRepetition.do?resMaxDate=" + resMaxDate);
 }
 
 function Schedule_Repetition_onclick_Complete(retVal) {

@@ -7732,4 +7732,34 @@
 					PORTLETCODE = 'mSchedule'
 			)
 	</update>
+	
+	<select id="EzCommonDAO.checkTblRsBrdResMaxDate">
+		SELECT
+			RES_MAX_DATE
+		FROM
+			TBL_RS_BRD
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.alterTblRsBrdResMaxDate">
+		ALTER TABLE
+			TBL_RS_BRD
+		ADD
+			RES_MAX_DATE varchar(100)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblRsBrdResMaxUserCnt">
+		SELECT
+			RES_MAX_USER_CNT
+		FROM
+			TBL_RS_BRD
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.alterTblRsBrdResMaxUserCnt">
+		ALTER TABLE
+			TBL_RS_BRD
+		ADD
+			RES_MAX_USER_CNT varchar(100) DEFAULT '0' NOT NULL
+	</statement>
 </sqlMap>

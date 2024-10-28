@@ -10939,6 +10939,8 @@ CREATE TABLE `tbl_rs_brd` (
   `RETURNFLAG` varchar(2) DEFAULT '0',
   `REPEATFLAG` varchar(2) DEFAULT '1',
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `RES_MAX_DATE` varchar(100) DEFAULT NULL,
+  `RES_MAX_USER_CNT` varchar(100) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`BRD_ID`,`BRD_COMPANY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

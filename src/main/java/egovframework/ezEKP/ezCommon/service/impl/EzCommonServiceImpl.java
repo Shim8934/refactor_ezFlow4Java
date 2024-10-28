@@ -8629,4 +8629,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void updateMobilePortletMenuId() throws Exception {
         ezCommonDAO.updateMobilePortletMenuId();
     }
+    
+    // 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추가
+    @Override
+    public void alterTblRsBrdResMaxDate() throws Exception {
+    	ezCommonDAO.alterTblRsBrdResMaxDate();
+    }
+    
+    // 2024-08-27 유길상 - 자원관리 > 자원등록 > 정원 컬럼 추가
+    @Override
+    public void alterTblRsBrdResMaxUserCnt() throws Exception {
+    	ezCommonDAO.alterTblRsBrdResMaxUserCnt();
+    }
 }
