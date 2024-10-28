@@ -27291,8 +27291,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getSearchDocListS(String containerID, String userID, 	String subQuery, String docNumber, String docTitle, String drafter,	String formID,String formName, String draftfrom, String draftto, String apprfrom,
-			String apprto, String mypapprfrom, String mypapprto, String draftDeptName, String docState, String AprFlag, String deptId, String pageSize, String pageNum, String orderCell, String orderOption,String searchStatus, String companyID, String lang, String pApprovUser, int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception {
+	public String getSearchDocListS(String containerID, String userID, 	String subQuery, String docNumber, String docTitle, String drafter,	String formID, String formName, String draftfrom, String draftto, String apprfrom,
+			String apprto, String mypapprfrom, String mypapprto, String draftDeptName, String docState, String AprFlag, String itemCode, String endAprType, String endAprState, String deptId, String pageSize, String pageNum,
+			String orderCell, String orderOption,String searchStatus, String companyID, String lang, String pApprovUser, int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 
 		String OrderOption1 = "";
@@ -27436,6 +27437,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             String tmpKeyword = subQuery.split("'%")[1].split("%'")[0];
             map.put("v_KEYWORD", tmpKeyword);
         }
+		
+		/* 2024-10-28 홍승비 - SQL Injection 제거 > 전자결재 일반 > 서브쿼리 문자열 대신 각 검색조건에 대응하도록 별도 파라미터 분리 (itemCode, endAprType, endAprState) */
+        map.put("v_ITEMCODE", itemCode);
+		map.put("v_EAPRTYPE", endAprType);
+		map.put("v_ENDAPRSTATE", endAprState);
 		
 		int totalCount = ezApprovalGDAO.getSearchDocListCount(map);
 		

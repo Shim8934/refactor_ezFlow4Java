@@ -8101,6 +8101,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String pageNum = "";
 		String pageSize = "";
 		String docState = "";
+		String itemCode = "";
+		String endAprType = "";
+		String endAprState = "";
 		                       
 		String subQuery = "";
 		String orderCell = "";
@@ -8132,12 +8135,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
         Document xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(23).getTextContent());
         String TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
         String shareDeptId = "";
-        if(xmlDom.getDocumentElement().getChildNodes().getLength() >= 25 && xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent() !=null && !xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent().equals("")){
+        if (xmlDom.getDocumentElement().getChildNodes().getLength() >= 25 && xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent() != null && !xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent().equals("")) {
         	shareDeptId = "share/" + xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
         }
         
         // 2021-03-16 박기범 - 키워드 검색 추가
-        if(TempQuery.indexOf("KAPR;") != -1) {
+        if (TempQuery.indexOf("KAPR;") != -1) {
         	ReturnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + xmldomsub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
         }
 
@@ -8145,32 +8148,37 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%" + xmldomsub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
         }
 
-        if (TempQuery.indexOf("CAPR;") != -1)
-        {
-            ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent() + "' ";
-        }
-        if (TempQuery.indexOf("CEND;") != -1)
-        {
-            ReturnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent() + "' ";
+        /* 2024-10-28 홍승비 - SQL Injection 제거 > 전자결재 일반 > 서브쿼리 문자열 대신 각 검색조건에 대응하도록 별도 파라미터 분리 (itemCode, endAprType, endAprState) */
+        if (TempQuery.indexOf("CAPR;") != -1 || TempQuery.indexOf("CEND;") != -1) {
+        	// itemCode는 전자결재 일반버전에서 사용하지 않는 검색조건이나, 일단 기존 코드를 유지하여 명시함
+        	itemCode = xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent();
         }
         
-        if (TempQuery.indexOf("EAPRTYPE;") != -1)
-        {
-            ReturnQuery += " AND TBL_ENDAPRLINEINFO.AprType = '" + xmldomsub.getElementsByTagName("ENDAPRTYPE").item(0).getChildNodes().item(0).getTextContent()  + "' ";
+        // 좌측메뉴에서 후결문서함 접근 시 및 후결문서함 내부 간단검색에서 사용하는 SearchQuery 형식
+        if (TempQuery.indexOf("EAPRTYPE;") != -1) {
+        	endAprType = xmldomsub.getElementsByTagName("ENDAPRTYPE").item(0).getChildNodes().item(0).getTextContent();
         }
-        if (TempQuery.indexOf("EAPRSTATE;") != -1)
-        {
-            ReturnQuery += " AND TBL_ENDAPRLINEINFO.AprState = '" + xmldomsub.getElementsByTagName("ENDAPRSTATE").item(0).getChildNodes().item(0).getTextContent() + "' ";
+        if (TempQuery.indexOf("EAPRSTATE;") != -1) {
+        	endAprState = xmldomsub.getElementsByTagName("ENDAPRSTATE").item(0).getChildNodes().item(0).getTextContent();
         }
+        
         subQuery = ReturnQuery;
         
-        if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 22)
-        {
-            if (!xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim().equals(""))
+        if (xmlDom.getDocumentElement().getChildNodes().getLength() > 22) {
+            if (!xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim().equals("")) {
                 subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
+                
+                /* 2024-10-28 홍승비 - SQL Injection 제거 > 전자결재 일반 > 후결문서함을 표출하기 위한 서브쿼리 분리 */
+                // 후결문서함 내부 상세검색에서 사용하는 pSubQuery 형식
+                if (subQuery.toUpperCase().replace(" ", "").contains("TBL_ENDAPRLINEINFO.APRTYPE='040'") && subQuery.toUpperCase().replace(" ", "").contains("TBL_ENDAPRLINEINFO.APRSTATE='002'")) {
+                	endAprType = "040";
+                	endAprState = "002";
+                }
+            }
         }
-         result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, formName, draftfrom, draftto, apprfrom,
-                papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", shareDeptId, pageSize, pageNum, orderCell, orderOption, searchStatus,
+        
+        result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, formName, draftfrom, draftto, apprfrom,
+        		papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", itemCode, endAprType, endAprState, shareDeptId, pageSize, pageNum, orderCell, orderOption, searchStatus,
                 userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 		
          logger.debug("getFormSearchDocListS ended");
@@ -8783,7 +8791,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, "",P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
 			  //  excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21,"", P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
 			} else {
-				excelValue = ezApprovalGService.getSearchDocListS(P12, userInfo.getId(), subQuery, P0, P1, P2, P9,"", P3, P4, P5, P6, P7, P8, P11, "", allFG, "", pageSize, pageNum, orderCell, orderOption,  "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+				/* 2024-10-28 홍승비 - SQL Injection 제거 > 전자결재 일반 > 서브쿼리 문자열 대신 각 검색조건에 대응하도록 별도 파라미터 분리 (itemCode, endAprType, endAprState), 엑셀 출력 기능에서는 해당 검색조건을 사용하지 않으므로 공백으로 전달함 */
+				excelValue = ezApprovalGService.getSearchDocListS(P12, userInfo.getId(), subQuery, P0, P1, P2, P9, "", P3, P4, P5, P6, P7, P8, P11, "", allFG, "", "", "", "", pageSize, pageNum, orderCell, orderOption, "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 			}
 		}
 		

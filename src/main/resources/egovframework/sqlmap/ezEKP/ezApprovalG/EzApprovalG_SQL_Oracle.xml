@@ -9816,7 +9816,9 @@
 					              AND 
 					                 	TBL_ENDAPRDOCINFO.COMPANYID = D.COMPANYID 
 					              LEFT OUTER JOIN  
-					              		TBL_ENDRECEIPTPOINTINFO E ON TBL_ENDAPRDOCINFO.DOCID = E.DocID 
+					              		TBL_ENDRECEIPTPOINTINFO E
+					              ON
+					              		TBL_ENDAPRDOCINFO.DOCID = E.DocID 
 								  AND 
 								  		TBL_ENDAPRDOCINFO.TENANT_ID = E.TENANT_ID
                                   AND 
@@ -10010,21 +10012,31 @@
 							      	TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
 							   	</isNotEmpty>	
 							   	<isNotEmpty property="v_PROCESSYN">
-			                    <isEqual property="v_PROCESSYN" compareValue="Y">
-						   		<![CDATA[
-						   		AND 
-						   		(	PROCESSYN <> 'H'
-						   		AND 
-						   			PROCESSYN <> 'I'	
-						   		AND
-						   			PROCESSYN <> 'N'
-						   		OR
-						   			PROCESSYN IS NULL)
-						   		]]>
-						   		</isEqual>
-					   		   	<isNotEqual property="v_PROCESSYN" compareValue="Y" prepend="AND">
-						   			PROCESSYN = #v_PROCESSYN#
-						   		</isNotEqual>
+				                    <isEqual property="v_PROCESSYN" compareValue="Y">
+							   		<![CDATA[
+							   		AND
+							   		(	PROCESSYN <> 'H'
+							   		AND
+							   			PROCESSYN <> 'I'
+							   		AND
+							   			PROCESSYN <> 'N'
+							   		OR
+							   			PROCESSYN IS NULL)
+							   		]]>
+							   		</isEqual>
+						   		   	<isNotEqual property="v_PROCESSYN" compareValue="Y" prepend="AND">
+							   			PROCESSYN = #v_PROCESSYN#
+							   		</isNotEqual>
+						   		</isNotEmpty>
+						   		<!-- 2024-10-28 홍승비 - 전자결재 일반 > ITEMCODE(일반버전에서는 사용되지 않으나 일단 명시), ENDAPRTYPE, ENDAPRSTATE 검색조건을 위한 서브쿼리 분기 추가 -->
+						   		<isNotEmpty property="v_ITEMCODE" prepend="AND">
+						   			ITEMCODE = #v_ITEMCODE#
+						   		</isNotEmpty>
+						   		<isNotEmpty property="v_EAPRTYPE" prepend="AND">
+						   			TBL_ENDAPRLINEINFO.APRTYPE = #v_EAPRTYPE#
+						   		</isNotEmpty>
+						   		<isNotEmpty property="v_ENDAPRSTATE" prepend="AND">
+						   			TBL_ENDAPRLINEINFO.APRSTATE = #v_ENDAPRSTATE#
 						   		</isNotEmpty>
 						   		<!-- 2024-05-17 홍승비 - 잘못된 정렬조건 일부 수정, ENDDATE 정렬조건은 모든 정렬에 반드시 포함되어야 함 (기본값은 DESC) -->
 						   		ORDER BY
@@ -14541,7 +14553,9 @@
 			AND 
             	TBL_ENDAPRDOCINFO.COMPANYID = D.COMPANYID 
 			LEFT OUTER JOIN 
-         		TBL_ENDRECEIPTPOINTINFO E ON TBL_ENDAPRDOCINFO.DOCID = E.DocID 
+         		TBL_ENDRECEIPTPOINTINFO E
+         	ON
+         		TBL_ENDAPRDOCINFO.DOCID = E.DocID 
 			AND 
 				TBL_ENDAPRDOCINFO.TENANT_ID = E.TENANT_ID
 			AND 
@@ -14604,10 +14618,10 @@
 	  		<![CDATA[ ENDDATE <= TO_DATE(#v_ENDDATE2#, 'YYYY-MM-DD HH24:MI:SS') ]]>
 	  		</isNotEmpty>
 	   		<isNotEmpty property="v_PROCESSDATE1" prepend="AND"> 
-	   		<![CDATA[ PROCESSDATE >= TO_DATE(#v_PROCESSDATE1#, 'YYYY-MM-DD HH24:MI:SS') ]]>
+	   		<![CDATA[ TBL_ENDAPRLINEINFO.PROCESSDATE >= TO_DATE(#v_PROCESSDATE1#, 'YYYY-MM-DD HH24:MI:SS') ]]>
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_PROCESSDATE2" prepend="AND"> 
-	   		<![CDATA[ PROCESSDATE <= TO_DATE(#v_PROCESSDATE2#, 'YYYY-MM-DD HH24:MI:SS') ]]>
+	   		<![CDATA[ TBL_ENDAPRLINEINFO.PROCESSDATE <= TO_DATE(#v_PROCESSDATE2#, 'YYYY-MM-DD HH24:MI:SS') ]]>
 	   		</isNotEmpty>
 	   		<isEmpty property="v_CONTID" prepend="AND"> 
 	      		TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#    
@@ -14718,6 +14732,16 @@
 	   		<!-- 2024-05-27 기준 결재자명 검색조건 v_APPROVUSER 파라미터는 항상 공백("")으로 전달됨 (현재 사용자단에서는 사용되지 않음, G버전 관리자단에서 사용함) -->
 	    	<isNotEmpty property="v_APPROVUSER" prepend="AND"> 
 	   			TBL_ENDAPRLINEINFO.APRMEMBERNAME = #v_APPROVUSER#
+	   		</isNotEmpty>
+		   	<!-- 2024-10-28 홍승비 - 전자결재 일반 > ITEMCODE(일반버전에서는 사용되지 않으나 일단 명시), ENDAPRTYPE, ENDAPRSTATE 검색조건을 위한 서브쿼리 분기 추가 -->
+	   		<isNotEmpty property="v_ITEMCODE" prepend="AND">
+	   			ITEMCODE = #v_ITEMCODE#
+	   		</isNotEmpty>
+	   		<isNotEmpty property="v_EAPRTYPE" prepend="AND">
+	   			TBL_ENDAPRLINEINFO.APRTYPE = #v_EAPRTYPE#
+	   		</isNotEmpty>
+	   		<isNotEmpty property="v_ENDAPRSTATE" prepend="AND">
+	   			TBL_ENDAPRLINEINFO.APRSTATE = #v_ENDAPRSTATE#
 	   		</isNotEmpty>
 	   		)
 	</select>
