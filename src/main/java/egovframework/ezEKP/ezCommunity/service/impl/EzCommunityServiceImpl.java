@@ -2971,7 +2971,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
 				sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(boardList.getWriteDate(), offset, false) + "</WriteDate>");
 				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
-				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
+				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()).replace("\\", "\\\\") + "</Title>");
 				
 				if (boardList.getAttachments().equals("")) {
 					sb.append("<Attachments></Attachments>");
