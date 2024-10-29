@@ -365,6 +365,8 @@ function MakeListInfoHTML(ConentObject) {
                             }
                             
                             var p_Title  = SelectSingleNodeValue(XmlRows[Cnt], "subject");
+                            // 2024-10-29 김대현 두줄보기할때 title에 태그 들어가는 현상 수정
+                            p_Title = p_Title.replace(/<[^>]*>/g, '');
                             _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
 
                             if (useMailNewWindow == "YES") {
