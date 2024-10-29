@@ -5652,6 +5652,9 @@
 					, ENDDATE DESC
 				</isEqual>
 			</isNotEmpty>
+			<isEmpty property="v_ORDERCOL">
+				ENDDATE DESC
+			</isEmpty>
 			LIMIT #v_PAGESIZE# ) A
 		ORDER BY
 		<isNotEmpty property="v_ORDERCOL">
