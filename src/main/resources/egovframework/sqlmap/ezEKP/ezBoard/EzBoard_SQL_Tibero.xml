@@ -2879,6 +2879,7 @@
 				* 
 			FROM
 				(SELECT
+					distinct A.ITEMID,
 					Row_Number() OVER (
 						ORDER BY
 						<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
@@ -2895,7 +2896,6 @@
 						<isEqual property="iv_PORDERBYCOL2" compareValue="UPPERITEMIDTREE">, TO_CHAR(A.UPPERITEMIDTREE) <isEqual property="iv_PORDERBYCOL2DESC" compareValue="Y">DESC</isEqual></isEqual>
 					) AS RNUM,
 					A.BOARDID,
-					A.ITEMID,
 					A.WRITERID,
 					A.WRITERNAME,
 					A.WRITERDEPTNAME,
@@ -2915,8 +2915,13 @@
 					AND
 						ITEMID = A.ItemID) ONELINECNT,
 					A.DOCNO,
-					A.MAINCONTENT,
-					B.FILEPATH,
+					TO_CHAR(A.MAINCONTENT) AS MAINCONTENT,
+					<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+   						PART.FILEPATH,
+   					</isNotEmpty>
+					<isEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+						B.FILEPATH,
+   					</isEmpty>
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
 					NVL(LIKECOUNT, 0) as LIKECOUNT,
 					NVL(DISLIKECOUNT, 0) as DISLIKECOUNT
@@ -2986,6 +2991,51 @@
 					A.TENANT_ID = M.TENANT_ID
 				AND
 					A.ITEMID = M.ITEMID
+				<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+					JOIN(
+						SELECT *
+						FROM (
+							SELECT
+								A.ITEMID,
+								A.TENANT_ID,
+								A.BOARDID,
+								MAIN_FLAG,
+								B.FILEPATH,
+								CONTENT,
+								FILECONTENT,
+								MAINCONTENT,
+								ROW_NUMBER() OVER ( PARTITION BY A.ITEMID
+							ORDER BY
+							CASE
+								WHEN B.MAIN_FLAG = 'Y' THEN 1
+								WHEN GUID IS NOT NULL THEN GUID + 1
+								ELSE 100
+							END ) AS SN
+							FROM
+								TBL_BOARD_ITEM_ATTACHMENTS BIT
+							JOIN TBL_BOARD_ITEM A ON
+								BIT.ITEMID = A.ITEMID
+								AND BIT.TENANT_ID = A.TENANT_ID
+							LEFT OUTER JOIN TBL_PHOTO_IMAGEITEM B ON
+								A.TENANT_ID = B.TENANT_ID
+							AND A.ITEMID = B.ITEMID
+							WHERE (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+							OR
+							UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+							OR
+							UPPER(FILECONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+							OR
+							UPPER(A.MAINCONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+							)A
+							WHERE SN = 1
+						) PART
+					ON
+						PART.ITEMID = A.ITEMID
+					AND
+						PART.TENANT_ID = A.TENANT_ID
+					AND
+						B.MAIN_FLAG = PART.MAIN_FLAG
+				</isNotEmpty>
 				WHERE  
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -3007,13 +3057,13 @@
 				AND A.APPRFLAG = 'Y'
 			</isEqual> 
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND TITLE like ('%' || #v_SEARCH_TITLE# || '%')
+				AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_CONTENT">
-				AND CONTENT like ('%' || #v_SEARCH_CONTENT# || '%')
+				AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like ('%' || #v_SEARCH_WRITERNAME# || '%') OR A.WRITERNAME2 like ('%' || #v_SEARCH_WRITERNAME# || '%'))
+				AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_STARTDATE">
 				<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -3022,16 +3072,11 @@
 				<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_ABSTRACT">
-				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
+				AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
 				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
-            <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-                AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
-                OR
-                CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
-            </isNotEmpty>
 			<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
 					<![CDATA[
@@ -3315,6 +3360,21 @@
 						A.ITEMID = M1.ITEMID
 					AND
 						A.TENANT_ID = M1.TENANT_ID
+                <isEqual property="boardType" compareValue="3">
+                    LEFT OUTER JOIN (
+						SELECT	
+							DISTINCT ITEMID,
+							BOARDID,
+							TO_CHAR(FILECONTENT) AS FC,
+							TENANT_ID
+						FROM TBL_PHOTO_IMAGEITEM ) PI
+                    ON
+                    	PI.TENANT_ID = A.TENANT_ID
+                    AND
+                    	PI.ITEMID = A.ITEMID
+                    AND
+                    	PI.BOARDID = A.BOARDID
+                </isEqual>
 				WHERE 
 				<isEqual property="v_PSUBFLAG" compareValue="Y">
 					(A.BOARDID = #v_PBOARDID# OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PBOARDID#))
@@ -3344,13 +3404,13 @@
 				(M1.ITEMID IS NULL OR M1.RN = 1)
 			</isNotEqual>
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND TITLE like ('%' || #v_SEARCH_TITLE# || '%')
+				AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_CONTENT">
-				AND CONTENT like ('%' || #v_SEARCH_CONTENT# || '%')
+				AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like ('%' || #v_SEARCH_WRITERNAME# || '%') OR A.WRITERNAME2 like ('%' || #v_SEARCH_WRITERNAME# || '%'))
+				AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_STARTDATE">
 				<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -3359,15 +3419,22 @@
 				<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_ABSTRACT">
-				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
+				AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
 				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
             <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-                AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
                 OR
-                CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+                UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                <isEqual property="boardType" compareValue="3">
+                    OR
+                    UPPER(FC) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                    OR
+                    UPPER(A.MAINCONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                </isEqual>
+                )
             </isNotEmpty>
 			<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
@@ -4982,6 +5049,59 @@
 			COUNT(ITEMID)
 		FROM
 			TBL_BOARD_ITEM A
+		<isNotEqual property="boardType" compareValue="0">
+			<isNotEqual property="boardType" compareValue="2">
+				<isNotEqual property="boardType" compareValue="5">
+					<isNotEqual property="boardType" compareValue="8">
+						<isNotEqual property="boardType" compareValue="10">
+							<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+							JOIN(
+								SELECT *
+								FROM (
+								SELECT
+										A.ITEMID,
+										A.TENANT_ID,
+										A.BOARDID,
+										MAIN_FLAG,
+										B.FILEPATH,
+										CONTENT,
+										FILECONTENT,
+										MAINCONTENT,
+										ROW_NUMBER() OVER ( PARTITION BY A.ITEMID
+									ORDER BY
+										CASE
+											WHEN B.MAIN_FLAG = 'Y' THEN 1
+											WHEN GUID IS NOT NULL THEN GUID + 1
+											ELSE 100
+										END ) AS SN
+									FROM
+										TBL_BOARD_ITEM_ATTACHMENTS BIT
+									JOIN TBL_BOARD_ITEM A ON
+										BIT.ITEMID = A.ITEMID
+										AND BIT.TENANT_ID = A.TENANT_ID
+									LEFT OUTER JOIN TBL_PHOTO_IMAGEITEM B ON
+										A.TENANT_ID = B.TENANT_ID
+										AND A.ITEMID = B.ITEMID
+									WHERE (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+									OR
+										UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+									OR
+										UPPER(FILECONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+									OR
+										UPPER(A.MAINCONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+								)A
+								WHERE SN = 1
+							) PART
+							ON
+								PART.ITEMID = A.ITEMID
+							AND
+								PART.TENANT_ID = A.TENANT_ID
+							</isNotEmpty>
+						</isNotEqual>
+					</isNotEqual>
+				</isNotEqual>
+			</isNotEqual>
+		</isNotEqual>
 		LEFT OUTER JOIN
 				(
 					SELECT
@@ -5029,13 +5149,13 @@
 			(M1.ITEMID IS NULL OR M1.RN = 1)
 		</isNotEqual>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+			AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -5044,16 +5164,22 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+			AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
-        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
-            OR
-            CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
-        </isNotEmpty>
+		<isNotEqual property="boardType" compareValue="3">
+			<isNotEqual property="boardType" compareValue="4">
+				<isNotEqual property="boardType" compareValue="7">
+					<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+					AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+						OR
+						UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+					</isNotEmpty>
+				</isNotEqual>
+			</isNotEqual>
+		</isNotEqual>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[

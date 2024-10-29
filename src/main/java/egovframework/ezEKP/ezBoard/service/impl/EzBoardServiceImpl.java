@@ -1149,6 +1149,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
 		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("boardType", boardVO.getBoardType());
 		
 		if (orderByMap.get("orderByCol") != null) {
 			map.put("iv_PORDERBYCOL1", orderByMap.get("orderByCol"));
@@ -1820,6 +1821,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_useKeywordFlag", boardVO.getUseKeyword());
 		map.put("v_KEYWORD", boardVO.getKeyword());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("boardType", boardVO.getBoardType());
 		
 		String useVersion = getUseVersionFlag(boardVO.getBoardId(), boardVO.getTenantID());
 		map.put("useVersion", useVersion);

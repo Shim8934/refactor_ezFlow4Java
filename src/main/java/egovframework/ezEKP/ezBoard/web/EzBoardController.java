@@ -2630,6 +2630,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String mode = boardVO.getMode();
 		BoardPropertyVO boardInfo = getBoardInfo(boardVO.getBoardId(), userInfo);
+		
+		boardVO.setBoardType(boardInfo.getGuBun());
 		boardVO.setSubFlag("N");
 		
 		Document searchQueryDoc = commonUtil.convertStringToDocument(boardVO.getSearchQuery());

@@ -2631,8 +2631,8 @@
 	<select id="EzBoardDAO.getSearchThumbnailList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 			SELECT
+   				distinct A.ITEMID,
    				A.BOARDID,
-   				A.ITEMID,
    				A.WRITERID,
    				A.WRITERNAME,
    				A.WRITERDEPTNAME,
@@ -2655,7 +2655,14 @@
 	   				(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
    				A.DOCNO,
    				A.MAINCONTENT,
-   				B.FILEPATH,
+   				]]>
+				<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+  					PART.FILEPATH,
+  				</isNotEmpty>
+				<isEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+	  				B.FILEPATH,
+  				</isEmpty>
+		<![CDATA[
    				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
 				(SELECT
 					 IFNULL(COUNT(*), 0)
@@ -2709,19 +2716,66 @@
 				A.TENANT_ID = D.TENANT_ID
 			AND
 				A.ITEMID = D.ITEMID
+		]]>
+		<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+			JOIN(
+				SELECT *
+				FROM (
+				SELECT
+						A.ITEMID,
+						A.TENANT_ID,
+						A.BOARDID,
+						MAIN_FLAG,
+						B.FILEPATH,
+						CONTENT,
+						FILECONTENT,
+						MAINCONTENT,
+						ROW_NUMBER() OVER ( PARTITION BY A.ITEMID
+					ORDER BY
+						CASE
+							WHEN B.MAIN_FLAG = 'Y' THEN 1
+							WHEN GUID IS NOT NULL THEN GUID + 1
+							ELSE 100
+						END ) AS SN
+					FROM
+						TBL_BOARD_ITEM_ATTACHMENTS BIT
+					RIGHT JOIN TBL_BOARD_ITEM A ON
+						BIT.ITEMID = A.ITEMID
+						AND BIT.TENANT_ID = A.TENANT_ID
+					LEFT OUTER JOIN TBL_PHOTO_IMAGEITEM B ON
+						A.TENANT_ID = B.TENANT_ID
+						AND A.ITEMID = B.ITEMID
+					WHERE (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+					OR
+						UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+					OR
+						UPPER(FILECONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+					OR
+						UPPER(A.MAINCONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')))
+				)A
+				WHERE SN = 1
+			) PART
+			ON
+				PART.ITEMID = A.ITEMID
+			AND
+				PART.TENANT_ID = A.TENANT_ID
+			AND
+				B.MAIN_FLAG = PART.MAIN_FLAG
+		</isNotEmpty>
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
-		]]>
    		<isEqual property="v_PSUBFLAG" compareValue="Y">
 			(A.BOARDID = #v_PBOARDID# OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PBOARDID#))
 		</isEqual>
 		<isNotEqual property="v_PSUBFLAG" compareValue="Y">
 			A.BOARDID = #v_PBOARDID#
 		</isNotEqual>
-		<![CDATA[
+		<isEmpty property="v_SEARCH_TITLE_AND_CONTENT">
 			AND
 				B.MAIN_FLAG = 'Y'
+		</isEmpty>
+		<![CDATA[
 			AND
 				STARTDATE <= #nowDate#
 			AND
@@ -2731,13 +2785,17 @@
 			AND A.APPRFLAG = 'Y'
 		</isEqual> 
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+			AND (
+				UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				OR
+				UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -2746,16 +2804,11 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
-        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
-            OR
-            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
-        </isNotEmpty>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
 					<![CDATA[
@@ -2992,6 +3045,20 @@
 				A.ITEMID = M1.ITEMID
 			AND
 				A.TENANT_ID = M1.TENANT_ID
+		<isEqual property="boardType" compareValue="3">
+		LEFT OUTER JOIN (
+			SELECT	DISTINCT ITEMID,
+					BOARDID,
+					FILECONTENT,
+					TENANT_ID
+			FROM TBL_PHOTO_IMAGEITEM ) PI
+			ON
+				PI.TENANT_ID = A.TENANT_ID
+			AND
+				PI.ITEMID = A.ITEMID
+			AND
+				PI.BOARDID = A.BOARDID
+		</isEqual>
 			WHERE
 		<isEqual property="v_PSUBFLAG" compareValue="Y">
 			(A.BOARDID = #v_PBOARDID# OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PBOARDID#))
@@ -3022,13 +3089,17 @@
 		</isNotEqual>
 		<!-- 20240215 : 김진홍 : CSAP 인증 처리 Mapper 수정 : v_PSUBQUERY 대체 쿼리 제작 -->
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+			AND (
+				UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				OR
+				UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -3037,15 +3108,22 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
             OR
-            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+				UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            <isEqual property="boardType" compareValue="3">
+                OR
+                	UPPER(FILECONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+                OR
+                	UPPER(A.MAINCONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            </isEqual>
+            )
         </isNotEmpty>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 			<isNotEmpty property="v_KEYWORD">
@@ -3210,13 +3288,17 @@
 		]]>
 		<!-- 20240215 : 김진홍 : CSAP 인증 처리 Mapper 수정 : v_PSUBQUERY 대체 쿼리 제작 -->
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+			AND (
+				UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				OR
+				UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -3225,15 +3307,16 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
             	OR
-            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            	UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+				)
         </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -3386,13 +3469,17 @@
 		]]>
 		<!--20240215 : 김진홍 : CSAP 인증 처리 Mapper 수정 : v_PSUBQUERY 대체 쿼리 제작 -->
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+			AND (
+				UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				OR
+				UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -3401,15 +3488,22 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
             OR
-            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            <isEqual property="boardType" compareValue="3">
+                OR
+                UPPER(FILECONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+                OR
+                UPPER(A.MAINCONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            </isEqual>
+            )
         </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -3566,13 +3660,17 @@
 		]]>
 		<!--20240215 : 김진홍 : CSAP 인증 처리 Mapper 수정 : v_PSUBQUERY 대체 쿼리 제작 -->
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+			AND (
+				UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				OR
+				UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -3581,15 +3679,22 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
             OR
-            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            <isEqual property="boardType" compareValue="3">
+                OR
+                UPPER(FILECONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+                OR
+                UPPER(A.MAINCONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            </isEqual>
+            )
         </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -4637,6 +4742,49 @@
 			COUNT(ITEMID)
 		FROM
 			TBL_BOARD_ITEM A
+		<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+			JOIN(
+				SELECT *
+				FROM (
+				SELECT
+						A.ITEMID,
+						A.TENANT_ID,
+						A.BOARDID,
+						MAIN_FLAG,
+						B.FILEPATH,
+						CONTENT,
+						FILECONTENT,
+						MAINCONTENT,
+						ROW_NUMBER() OVER ( PARTITION BY A.ITEMID
+					ORDER BY
+						CASE
+							WHEN B.MAIN_FLAG = 'Y' THEN 1
+							WHEN GUID IS NOT NULL THEN GUID + 1
+							ELSE 100
+						END ) AS SN
+					FROM
+						TBL_BOARD_ITEM_ATTACHMENTS BIT
+					RIGHT OUTER JOIN TBL_BOARD_ITEM A ON
+						BIT.ITEMID = A.ITEMID
+						AND BIT.TENANT_ID = A.TENANT_ID
+					LEFT OUTER JOIN TBL_PHOTO_IMAGEITEM B ON
+						A.TENANT_ID = B.TENANT_ID
+						AND A.ITEMID = B.ITEMID
+					WHERE (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+					OR
+						UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+					OR
+						UPPER(FILECONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+					OR
+						UPPER(A.MAINCONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')))
+				)A
+				WHERE SN = 1
+			) PART
+			ON
+				PART.ITEMID = A.ITEMID
+			AND
+				PART.TENANT_ID = A.TENANT_ID
+		</isNotEmpty>
 			LEFT OUTER JOIN
 				(
 					SELECT
@@ -4684,13 +4832,13 @@
 			(M1.ITEMID IS NULL OR M1.RN = 1)
 		</isNotEqual>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like CONCAT('%', #v_SEARCH_TITLE#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND UPPER(CONTENT) like CONCAT('%', #v_SEARCH_CONTENT#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+			AND (UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')) OR UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -4699,16 +4847,11 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
-        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
-            OR
-            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
-        </isNotEmpty>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -4797,13 +4940,16 @@
    				ENDDATE > #nowDate#
 		]]>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+			AND (
+				UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')) 
+				OR UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -4812,15 +4958,15 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
             OR
-            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')))
         </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 		<![CDATA[
@@ -5637,13 +5783,16 @@
    				A.enddate > #nowDate#
 		]]>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+			AND (
+				UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')) 
+				OR UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -5652,15 +5801,15 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
             OR
-            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')))
         </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -7237,7 +7386,7 @@
 					)
 		]]>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
 		 	AND (
@@ -7249,7 +7398,10 @@
 			)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-		 	AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+		 	AND (
+				UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')) 
+				OR UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 		 <![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -7258,15 +7410,16 @@
 		 <![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-		 	AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+		 	AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 		 	AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
             OR
-            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            	UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+			)
         </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -7474,7 +7627,7 @@
 		]]>
 		<!--20240215 : 김진홍 : CSAP 인증 처리 Mapper 수정 : v_PSUBQUERY 대체 쿼리 제작 -->
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
 			AND (
@@ -7485,7 +7638,11 @@
 			UPPER(PART.MAINCONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%')))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+			AND (
+				UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				OR
+				UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -7494,7 +7651,7 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
@@ -7526,6 +7683,18 @@
 						AND
 							BK.TENANT_ID = #v_TENANTID#
 					)
+				)
+        </isNotEmpty>
+		<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+			AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+				OR
+					UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+				<isEqual property="boardType" compareValue="3">
+				OR
+					UPPER(FILECONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+				OR
+					UPPER(A.MAINCONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+				</isEqual>
 				)
 		</isNotEmpty>
 		AND
@@ -9214,11 +9383,6 @@
                     UPPER(A.MAINCONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
                 </isEqual>
                 )
-            </isNotEmpty>
-            <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-                AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
-                OR
-                CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
             </isNotEmpty>
 	</select>
 
