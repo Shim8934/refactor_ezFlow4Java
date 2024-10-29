@@ -970,30 +970,26 @@ function SendDraftMappingSign(ret) {
             pseumyungdatecell = "seumyungdate" + sn;
             papprodeptcell = "approdept" + sn;
         }
-
-         
+        
         var RtnVal = getGyulJeDate();
         var CurrentDate = RtnVal.split(".");
         var s = CurrentDate[1] + "." + CurrentDate[2];
 
         var field = message.GetListItem(fields, psigncell);
-        var signWidth = field.offsetWidth;
-        var signHeight = field.offsetHeight;
-
-        if (signWidth > signHeight) {
-            signHeight = signHeight - 15;
-            signWidth = signHeight;
-        } else {
-            signWidth = signWidth - 15;
-            sighHeight = signWidth;
-        }
+        var signWidth = 50;
+        var signHeight = 50;
         
         var field = message.GetListItem(fields, pseumyungdatecell);
-
+        
         if (field) {
             setNodeText(field , s);
-            signWidth = 50;
-            signHeight = 50;
+            
+            /* 2023-10-06 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+    		signInfo[signCnt] = pseumyungdatecell;
+    		SignName[signCnt] = pseumyungdatecell;
+    		SignType[signCnt] = "TEXT";
+    		SignContent[signCnt] = s;
+    		signCnt = signCnt + 1;
         } else {  
 	        signWidth = 50;
 	        signHeight = 28;
@@ -1037,13 +1033,17 @@ function SendDraftMappingSign(ret) {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
                     
-                    //대결 시 서명 데이트 입력란 없으면 날짜 표시
+                    // 대결 시 서명일자칸 없으면 날짜 표시
 					if (!message.GetListItem(fields, pseumyungdatecell)) {
 						 field.innerHTML  = strLang7 + OpinionText + strimg;
 					} else {
 						 field.innerHTML  = strLang7 + strimg;
 					}
-
+					
+					if (signImageType == "NAME") {
+						OpinionText = OpinionText + "::" + arr_userinfo[2];
+			        }
+			        
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";
                     SignName[signCnt] = psigncell;
@@ -1106,15 +1106,21 @@ function SendDraftMappingSign(ret) {
                     } else {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
-
-                    if (message.GetListItem(fields, pseumyungdatecell))
-                        OpinionText = "";
                     
-                    if (CurAprType == strAprType4)
+                    if (message.GetListItem(fields, pseumyungdatecell)) {
+                        OpinionText = "";
+					}
+					
+                    if (CurAprType == strAprType4) {
                         OpinionText = strLangAprType4 + OpinionText;
-
+					}
+					
                     field.innerHTML = OpinionText + strimg;
-
+                    
+                    if (signImageType == "NAME") {
+            			OpinionText = OpinionText + "::" + arr_userinfo[2];
+                    }
+                    
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";
                     SignName[signCnt] = psigncell;
@@ -2642,7 +2648,7 @@ function openAaprDocAttachUI() {
 		aprcabinetattach_cross_dialogArguments[0] = parameter;
 		aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_complete;
       
-		DivPopUpShow(1050, 520, url);
+		DivPopUpShow(1050, 560, url);
 	} catch(e) {
 		alert("openAaprDocAttachUI() :: " + e);
 	}

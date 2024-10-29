@@ -31,8 +31,11 @@
     		
 	    	window.onload = function() {				
 	    		window.resizeTo(450 + (window.outerWidth - window.innerWidth), 275 + (window.outerHeight - window.innerHeight));
-	    		
-	    		document.getElementById("title").value = "<c:out value='${title}'/>";
+
+				var temp = document.createElement('span');
+				temp.innerHTML = "<c:out value='${title}'/>";
+				document.getElementById("title").value = temp.innerText;
+				
 	    		if(lang == "1") {
 	    			document.getElementById("receiverlist").innerHTML = "<c:out value='${userName}'/>";
 	    		}

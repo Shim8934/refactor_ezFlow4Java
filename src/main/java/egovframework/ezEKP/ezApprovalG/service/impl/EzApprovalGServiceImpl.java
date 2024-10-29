@@ -6466,7 +6466,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		hwpFile.getBinData().addNewEmbeddedBinaryData(streamName, fileBinary, compressMethod);
 		addBinDataInDocInfo(hwpFile, streamIdx, compressMethod, imageFileExt);
 		
-		
 		logger.debug("insertingImageHWP ended");
 	}
 	
@@ -6548,6 +6547,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         String signInfo2 = "";
         String signText2 = "";
         boolean signSaveFlag = false;
+        
+        /* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
+        String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), userInfo.getOffset(), false);
         
 		try {
 			// 부재자 설정인 경우 proxySign = '代'
@@ -6770,8 +6772,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         signInfo = strSign;
 						signText = proxySign + displayName;
                         signInfo2 = strSeumyungDate;
-                        signText2 = commonUtil.getTodayUTCTime("");
-                        
+                        signText2 = signDateMD;
 					} else if (aprType.equals("008") || aprType.equals("009")) {
 						int tmps = signCnt - habResult;
 						String habSign = signAdd + "habyuisign" + tmps;
@@ -6780,7 +6781,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         signInfo = habSign;
 						signText = proxySign + displayName;
                         signInfo2 = habSem;
-                        signText2 = commonUtil.getTodayUTCTime("");
+                        signText2 = signDateMD;
 						
 						setHwpText(habSign, signText, hwpFile);
 						setHwpText(habSem, signText, hwpFile);
@@ -6802,7 +6803,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             signInfo = tempSign;
 							signText = proxySign + displayName;
                             signInfo2 = tempSeumyungDate;
-                            signText2 = commonUtil.getTodayUTCTime("");
+                            signText2 = signDateMD;
 						} else if (junGyulFlag.equals("4")) {
 							int tmps = signCnt - refResult;
                             String tempSign = signAdd + "sign" + lastSignNum;
@@ -6814,7 +6815,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             signInfo = tempSign;
 							signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + commonUtil.CRLF + proxySign + displayName;
                             signInfo2 = tempSeumyungDate;
-                            signText2 = commonUtil.getTodayUTCTime("");
+                            signText2 = signDateMD;
 						}
 					}
 				} else { // 전자결재 G
@@ -6826,7 +6827,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						// 대결자의 서명 부여
 						setHwpText(hwpFile, tempSign, signAry);
 						
-						// 대결자 이후 전결자가 존재하는 경우, 전결자의 서명 부여 (웹과 동일하게 "전결" 문자 하나만 사용)
+						// 대결자 이후 전결자가 존재하는 경우, 전결자의 서명 부여 (웹과 동일하게 "전결" 문자 하나만 사용, 서명일자 표출 없음)
 						int jeonKyul = getDocInfoJeonKyul(docID, orgUID, aprState, companyID, userInfo.getTenantId());
 						
 						if (jeonKyul > 0) {
@@ -6879,6 +6880,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
                         signInfo = strSign;
 						signText = lastCnt + proxySign + displayName;
+						signInfo2 = strSeumyungDate;
+                        signText2 = signDateMD;
 					} else if (aprType.equals("008") || aprType.equals("009")) { // 개인순차협조 || 개인병렬협조
 						int tmps = signCnt - habResult;
 						String habSign = signAdd + "habyuisign" + tmps;
@@ -6887,7 +6890,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         signInfo = habSign;
 						signText = proxySign + displayName;
                         signInfo2 = habSem;
-                        signText2 = commonUtil.getTodayUTCTime("");
+                        signText2 = signDateMD;
 						
 						String[] signAry = {signText};
 						
@@ -6917,6 +6920,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
                         signInfo = tempSign;
 						signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
+						signInfo2 = tempSignDate;
+			            signText2 = signDateMD;
 					} else if (aprType.equals("015")) { // 후열
 						gongRamUpdate(docID, userID, companyID, strLang, userInfo.getTenantId());
 						
@@ -7138,7 +7143,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             StringBuilder resultXML = new StringBuilder();
             resultXML.append("<SIGNINFOS>");
             
-            if (!signInfo.isEmpty()) {
+            if (!signInfo.isEmpty()) { // 서명
                 resultXML.append("<SIGNINFO>");
                 resultXML.append("<DOCID>" + docID + "</DOCID>");
                 resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
@@ -7146,7 +7151,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 resultXML.append("<CONTENT>" + signText + "</CONTENT>");
                 resultXML.append("</SIGNINFO>");
             }
-            if (!signInfo2.isEmpty()) {
+            if (!signInfo2.isEmpty()) { // 서명일자
                 resultXML.append("<SIGNINFO>");
                 resultXML.append("<DOCID>" + docID + "</DOCID>");
                 resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
@@ -7530,6 +7535,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		boolean isJKAprTypeAfterDK = false; // 전자결재 G > 대결자(016) 이후의 전결자(004)가 존재하는 경우, 해당 플래그를 true로 한다.
 		
+		/* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
+        String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), userInfo.getOffset(), false);
+        
 		// 부재자 설정인 경우 proxySign = '代'
 		if (!userID.equals(orgUID)) {
             if (!strLang.equals("2")) {
@@ -7769,7 +7777,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signInfo = strSign;
 					signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
 					signInfo2 = strSeumyungDate;
-					signText2 = commonUtil.getTodayUTCTime("");
+					signText2 = signDateMD;
 				} else if (aprType.equals("008") || aprType.equals("009")) {
 					int tmps = signCnt - habResult;
 					String habSign = signAdd + "habyuisign" + tmps;
@@ -7778,7 +7786,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signInfo = habSign;
 					signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
 					signInfo2 = habSem;
-					signText2 = commonUtil.getTodayUTCTime("");
+					signText2 = signDateMD;
 					
 					doc.getElementById(habSign).html(signText);
 					if(doc.getElementById(habSem) != null) {
@@ -7802,7 +7810,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						signInfo = tempSign;
 						signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
 						signInfo2 = tempSeumyungDate;
-						signText2 = commonUtil.getTodayUTCTime("");
+						signText2 = signDateMD;
 					} else if (junGyulFlag.equals("4")) {
 						int tmps = signCnt - refResult;
 						String tempSign = signAdd + "sign" + tmps;
@@ -7814,7 +7822,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						signInfo = tempSign;
 						signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
 						signInfo2 = tempSeumyungDate;
-						signText2 = commonUtil.getTodayUTCTime("");
+						signText2 = signDateMD;
 					}
 				}
 			} else { // 전자결재 G
@@ -7882,6 +7890,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					signInfo = strSign;
 					signText = lastCnt + "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
+					signInfo2 = strSeumyungDate;
+					signText2 = signDateMD;
 				} else if (aprType.equals("008") || aprType.equals("009")) { // 개인순차협조 || 개인병렬협조
 					int tmps = signCnt - habResult;
 					String habSign = signAdd + "habyuisign" + tmps;
@@ -7890,7 +7900,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signInfo = habSign;
 					signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
 					signInfo2 = habSem;
-					signText2 = commonUtil.getTodayUTCTime("");
+					signText2 = signDateMD;
 					
 					doc.getElementById(habSign).html(signText);
 					if(doc.getElementById(habSem) != null) {
@@ -8170,7 +8180,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<SIGNINFOS>");
 		
 //		if ((aprType.equals("008") || aprType.equals("009")) && result.equals("A")) {
-		if (!signInfo.isEmpty()) {
+		if (!signInfo.isEmpty()) { // 서명
 		    resultXML.append("<SIGNINFO>");
 		    resultXML.append("<DOCID>" + docID + "</DOCID>");
 		    resultXML.append("<SIGNTYPE>" + "HTML" + "</SIGNTYPE>");
@@ -8178,7 +8188,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		    resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText) + "</CONTENT>");
 		    resultXML.append("</SIGNINFO>");
 		}
-		if (!signInfo2.isEmpty()) {
+		if (!signInfo2.isEmpty()) { // 서명일자
 		    resultXML.append("<SIGNINFO>");
 		    resultXML.append("<DOCID>" + docID + "</DOCID>");
 		    resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
@@ -11889,8 +11899,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (tempContent != null && tempSignName.indexOf("date") > -1 && tempContent.length() > 18) {
 				resultXML.append("<CONTENT>" + makeXMLString(commonUtil.getDateStringInUTC(tempContent, offset, false).substring(5, 10).replace("-", ".")) + "</CONTENT>");
 			} else {
+				/* 2023-11-30 홍승비 - 부재자설정 중 자동결재(결재통과) 시, TBL_SIGNINFO 테이블에 부재사유를 코드(b1~b12)가 아닌 메세지로 저장하도록 수정하였으므로 참고삼아 주석을 기재함. */
 				if (tempContent.equals("b1") || tempContent.equals("b2") || tempContent.equals("b3") || tempContent.equals("b4") || tempContent.equals("b5") || tempContent.equals("b6") || tempContent.equals("b7") || tempContent.equals("b8") || tempContent.equals("b9") || tempContent.equals("b10") || tempContent.equals("b11") || tempContent.equals("b12")) {
-					
 					resultXML.append("<CONTENT>" + messageSource.getMessage("ezApprovalG." + tempContent, locale) + "</CONTENT>");
 				} else {
 					resultXML.append("<CONTENT>" + makeXMLString(tempContent) + "</CONTENT>");
@@ -14838,7 +14848,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 case "019":
                     absentReason = getBujaeInfo(docXML.getElementsByTagName("APRMEMBERID").item(0).getTextContent(), docXML.getElementsByTagName("APRMEMBERDEPTID").item(0).getTextContent(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID());
                 if (!absentReason.trim().equals("") && !curAprType.equals(staATChamJo)) {
-                    subSQL = setBujaeInfo(docID, docXML.getElementsByTagName("APRMEMBERID").item(0).getTextContent(), docXML.getElementsByTagName("APRMEMBERDEPTID").item(0).getTextContent(), absentReason, signType, companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+                    subSQL = setBujaeInfo(docID, docXML.getElementsByTagName("APRMEMBERID").item(0).getTextContent(), docXML.getElementsByTagName("APRMEMBERDEPTID").item(0).getTextContent(), absentReason, signType, companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath(), userInfo.getOffset());
                     if (!subSQL.toUpperCase().equals("FALSE")) {
                         map3.put("v_APRSTATE", staASSungIn);
                         map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
@@ -14871,7 +14881,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							//병렬협조 반송한사람들 중 부재사유가 있는 부재자가 있을 경우, 부재사유 기입 및 승인처리
 							absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(i).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(i).getTextContent(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID());
 							if (!absentReason.trim().equals("")) {
-								subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(i).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(i).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+								subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(i).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(i).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath(), userInfo.getOffset());
 								if (!subSQL.toUpperCase().equals("FALSE")) {
 									map3.put("v_APRSTATE", staASSungIn);
 									map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
@@ -14889,10 +14899,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else if (curAprType.equals(staATChamJo)) {
 			    int i = 0;
 			    do {
-                    map3.put("v_APRMEMBERSN", apprGAprLineVOList2.get(i).getAprMemberSN());
+                    map3.put("v_APRMEMBERSN", apprGAprLineVOList.get(i).getAprMemberSN());
                     ezApprovalGDAO.updateAprLineInfo(map3);
                     i++;
-                } while (staATChamJo.equals(apprGAprLineVOList2.get(i - 1).getAprType()));
+                } while (staATChamJo.equals(apprGAprLineVOList.get(i - 1).getAprType()));
             }
 			
 			ezApprovalGDAO.setAprLineStateBanSongToStay(map);
@@ -14923,7 +14933,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							sendNoti(docID, "", "", nextMemberId, nextMemberName, nextMemberDeptId, "ING", companyID, lang, userInfo.getTenantId());
 							whileFlag = false;
 						} else {
-							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "APR", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "APR", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath(), userInfo.getOffset());
 							
 							if (subSQL.toUpperCase().equals("FALSE")) {
 								rtnVal = false;
@@ -14956,7 +14966,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							sendNoti(docID, "", "", nextMemberId, nextMemberName, nextMemberDeptId, "ING", companyID, lang, userInfo.getTenantId());
 							whileFlag = false;
 						} else {
-							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "APR", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "APR", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath(), userInfo.getOffset());
 							
 							if (subSQL.toUpperCase().equals("FALSE")) {
 								rtnVal = false;
@@ -15098,7 +15108,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 												nextMemberDeptId = docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent();
 												sendNoti(docID, "", "", nextMemberId, nextMemberName, nextMemberDeptId, "ING", companyID, lang, userInfo.getTenantId());
 											} else {
-												subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+												subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath(), userInfo.getOffset());
 												
 												if (subSQL.toUpperCase().equals("FALSE")) {
 													rtnVal = false;
@@ -15186,7 +15196,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							sendNoti(docID, "", "", nextMemberId, nextMemberName, nextMemberDeptId, "ING", companyID, lang, userInfo.getTenantId());
 							whileFlag = false;
 						} else {
-							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath(), userInfo.getOffset());
 							
 							if (subSQL.toUpperCase().equals("FALSE")) {
 								rtnVal = false;
@@ -15232,7 +15242,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 									nextMemberDeptId = docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent();
 									sendNoti(docID, "", "", nextMemberId, nextMemberName, nextMemberDeptId, "ING", companyID, lang, userInfo.getTenantId());
 								} else {
-									subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+									subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath(), userInfo.getOffset());
 									
 									if (subSQL.toUpperCase().equals("FALSE")) {
 										rtnVal = false;
@@ -15426,7 +15436,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							whileFlag = false;
 							
 						} else {
-							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "APR", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "APR", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath(), userInfo.getOffset());
 							
 							if (subSQL.toUpperCase().equals("FALSE")) {
 								rtnVal = false;
@@ -16267,7 +16277,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				String[] tempSignCont = signCont.split("::");
 				
-				if (tempSignCont[1] != null && tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1) {
+				/* 2023-11-01 홍승비 - 이미지 서명 확인 시, ::문자 split한 이후의 데이터가 존재하는지 체크하도록 수정 */
+				if (tempSignCont.length > 1 && tempSignCont[1] != null && tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1) {
 					if (signImageType.equals("NAME")) {
 						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'><br>" + userInfo.getDisplayName();
 					} else {
@@ -16420,6 +16431,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String signName = "";
 		String cabinetSN = "";
 		
+		/* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
+        String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), userInfo.getOffset(), false);
+        
+        /* 2023-11-07 홍승비 - 합의결재 완료 시 이미지 서명을 원문서에 맵핑하는 경우, DB의 tbl_signinfo 테이블에는 이미지 서명 파일의 경로(+ 대결,전결 + 컨피그에 따라 결재자명까지)를 저장 */
+        String imgSignCont = ""; // MHT에서 사용, 이미지 서명과 기타 데이터를 HTML로 맵핑하기 위해 사용
+        
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
@@ -16429,7 +16446,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (mode.toUpperCase().equals("H")) {
 			signCont = messageSource.getMessage("ezApprovalG.t1434", userInfo.getLocale());
 		} else {
-			// 해당 문서의 마지막 서명 정보 가져오기
+			// 해당 합의문서의 마지막 서명 정보 가져오기
 			List<ApprGSignInfoVO> apprGSignInfoVOList = ezApprovalGDAO.updateHabyuiResultSignInfo(map);
 			
 			if (apprGSignInfoVOList.size() > 0) {
@@ -16504,7 +16521,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String formURL = userInfo.getRealPath() + docHref;
 		String ext = getExtendedFileName(formURL);
 		
-		if("mht".equals(ext)) {
+		if ("mht".equals(ext)) {
 			String loadMht = ezCommonService.loadMHTFile(formURL); // 결재문서 가져오기
 			// HTML -> MHT
 			String content = ezCommonService.startMHT2HTML(userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), userInfo.getRealPath(), userInfo.getLocale(), "", "");
@@ -16523,18 +16540,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (signType.equals("IMAGE")) {
 				String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
-				
 				String[] tempSignCont = signCont.split("::");
+				imgSignCont = tempSignCont[0];
 				
-				if (tempSignCont[1] != null && tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1) {
+				/* 2023-11-01 홍승비 - 합의문의 이미지 서명 확인 시, ::문자 split한 이후의 데이터가 존재하는지 체크하도록 수정 (대리결재(代), 대결, 전결 문자) */
+				if (tempSignCont.length > 1 && tempSignCont[1] != null && 
+						(tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1 || tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale())) > -1
+						|| tempSignCont[1].indexOf(messageSource.getMessage("ezApproval.t498", userInfo.getLocale())) > -1)) {
+					
+					/* 2023-11-15 홍승비 - 합의자의 대리결재(代) 문자, '대결/전결' 문자를 이미지 서명 위에 함께 표출하도록 수정 (문자서명과 동일 스펙) */
+					signCont = tempSignCont[1];
+					imgSignCont += "::" + tempSignCont[1];
+					
 					if (signImageType.equals("NAME")) {
-						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'><br>" + userInfo.getDisplayName();
+						signCont += "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'><br>" + userInfo.getDisplayName();
+						imgSignCont += "::" + userInfo.getDisplayName();
 					} else {
-						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'>";
+						signCont += "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'>";
 					}
 				} else {
 					if (signImageType.equals("NAME")) {
 						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=50 spath='" + tempSignCont[0] + "'><br>" + userInfo.getDisplayName();
+						imgSignCont += "::::" + userInfo.getDisplayName();
 					} else {
 						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=50 spath='" + tempSignCont[0] + "'>";
 					}
@@ -16545,6 +16572,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (!isHesong) {
 				int lastHabyuiCnt = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
 				String orgDeptID = getOrgDraftDeptID(orgDocID, userInfo.getTenantId(), userInfo.getCompanyID());
+				
 				if (lastHabyuiCnt > 0) {
 					map.put("v_habDocID", docID);
 					List<ApprGDocListVO> docState = ezApprovalGDAO.getLastHabYuiDocState(map);
@@ -16619,14 +16647,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			HWPFile loadHwp = HWPReader.fromFile(formURL);
 			
 			if (findHwpField(susinSN + "habyuipositon" + aprSN, loadHwp)) {
-				if(isHesong) {
+				if (isHesong) {
 					setHwpText(susinSN + "habyuipositon" + aprSN, userInfo.getTitle(), loadHwp);
 				} else {
 					setHwpText(susinSN + "habyuipositon" + aprSN, signTitle, loadHwp);
 				}
 			}
 			
-			// 사인이 이미지인 경우 작업 필요
+			// 사인이 이미지인 경우 작업 필요 (서버단에서 HWP 문서에 이미지 삽입하는 로직 미구현)
 //			if (signType.equals("IMAGE")) {
 //				String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 //				
@@ -16647,7 +16675,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //				}
 //			}
 			
-			//부서 합의 일 경우 원문서 문서번호 채번
+			/* 2023-11-15 홍승비 - HWP 파일이면서 이미지 서명인 경우, 원문서에 맵핑되는 정보는 TEXT 유형의 서명으로 고정한다. (현재 결재자명을 문자서명으로 사용) */
+			if (signType.equals("IMAGE")) {
+				String[] tempSignCont = signCont.split("::");
+				signCont = userInfo.getDisplayName();
+				
+				/* 2023-11-01 홍승비 - 합의문의 이미지 서명 확인 시, ::문자 split한 이후의 데이터가 존재하는지 체크하도록 수정 (대리결재(代), 대결, 전결 문자) */
+				if (tempSignCont.length > 1 && tempSignCont[1] != null && 
+						(tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1 || tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale())) > -1
+						|| tempSignCont[1].indexOf(messageSource.getMessage("ezApproval.t498", userInfo.getLocale())) > -1)) {
+					/* 2023-11-15 홍승비 - 합의자의 대리결재(代) 문자, '대결/전결' 문자를 문자 서명 위에 함께 표출하도록 수정  (문자서명과 동일 스펙) */
+					signCont = tempSignCont[1] + signCont;
+				}
+			}
+			
+			// 부서 합의인 경우 원문서 문서번호 채번
 			if (!isHesong) {
 				int lastHabyuiCnt = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
 				String orgDeptID = getOrgDraftDeptID(orgDocID, userInfo.getTenantId(), userInfo.getCompanyID());
@@ -16704,15 +16746,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</SIGNINFO>");
 		resultXML.append("<SIGNINFO>");
 		resultXML.append("<DOCID>" + orgDocID + "</DOCID>");
-		resultXML.append("<SIGNTYPE>" + signType + "</SIGNTYPE>");
 		resultXML.append("<SIGNNAME>" + susinSN + "habyuisign" + aprSN + "</SIGNNAME>");
-		resultXML.append("<CONTENT>" + commonUtil.cleanValue(signCont) + "</CONTENT>");
+		
+		/* 2023-11-07 홍승비 - 합의결재 완료 시 이미지 서명을 원문서에 맵핑하는 경우, DB의 tbl_signinfo 테이블에는 이미지 서명 파일의 경로(+ 대결/전결 문자 + 컨피그에 따라 결재자명까지)를 저장 */
+		if ("mht".equals(ext)) {
+			resultXML.append("<SIGNTYPE>" + signType + "</SIGNTYPE>");
+			
+			if (signType.equals("IMAGE")) { // MHT 이미지서명
+				resultXML.append("<CONTENT>" + commonUtil.cleanValue(imgSignCont) + "</CONTENT>");
+			} else { // MHT 문자서명 (HTML)
+				resultXML.append("<CONTENT>" + commonUtil.cleanValue(signCont) + "</CONTENT>");
+			}
+		}
+		// 2023-11-07 기준, 한글문서의 경우 합의결재 완료시 원문서 서명이 텍스트(TEXT) 타입으로 고정함
+		else {
+			resultXML.append("<SIGNTYPE>TEXT</SIGNTYPE>");
+			resultXML.append("<CONTENT>" + commonUtil.cleanValue(signCont) + "</CONTENT>");
+		}
+		
 		resultXML.append("</SIGNINFO>");
 		resultXML.append("<SIGNINFO>");
 		resultXML.append("<DOCID>" + orgDocID + "</DOCID>");
 		resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 		resultXML.append("<SIGNNAME>" + susinSN + "habyuidate" + aprSN + "</SIGNNAME>");
-		resultXML.append("<CONTENT>" + commonUtil.getTodayUTCTime("") + "</CONTENT>");
+		resultXML.append("<CONTENT>" + signDateMD + "</CONTENT>");
 		resultXML.append("</SIGNINFO>");
 		resultXML.append("</SIGNINFOS>");
 		
@@ -18839,7 +18896,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return "TRUE";
 	}
 
-	public String setBujaeInfo(String docID, String aprMemberID, String aprMemberDeptID, String absentReason, String aprType, String companyID, String lang, int tenantID, Locale locale, String realPath) throws Exception {
+	// 부재자 자동결재(결재통과) 시 서명 데이터 삽입 메서드
+	public String setBujaeInfo(String docID, String aprMemberID, String aprMemberDeptID, String absentReason, String aprType, String companyID, String lang, int tenantID, Locale locale, String realPath, String offset) throws Exception {
 		logger.debug("setBujaeInfo started");
 
 		String strSQL = "";
@@ -18847,7 +18905,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String susinSN = getSusinSNInside(docID, companyID, tenantID);
 		int cnt = 1;
 		String aprSN = "";
-		String signField = "";
+		String signField = ""; // 서명칸ID
+		String signDateField = ""; // 서명일자칸ID
+		String signContent = messageSource.getMessage("ezApprovalG." + absentReason, locale); // 서명칸에 삽입할 부재사유 텍스트
+		
+		/* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
+		String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), offset, false);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -18887,68 +18950,96 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (aprType.toUpperCase().equals("APR")) {
 			signField = susinSN + "sign" + aprSN;
+			signDateField = susinSN + "seumyungdate" + aprSN;
 		} else {
 			signField = susinSN + "habyuisign" + aprSN;
+			signDateField = susinSN + "habyuidate" + aprSN;
 		}
 		
 		if (docHref != null) {
+			// HWP
 			if (docHref.indexOf(".hwp") > -1) {
 				HWPFile hwpFile = HWPReader.fromFile(realPath + docHref);
-				setHwpText(signField, messageSource.getMessage("ezApprovalG." + absentReason, locale), hwpFile);
-				HWPWriter.toFile(hwpFile, realPath + docHref);
-			} else {//mht 구현
+				
+				/* 2023-11-28 홍승비 - 부재사유 지정으로 자동 결재 시, 서명일자칸에 자동결재된 날짜를 표출하도록 수정 */
+				// 서명일자 필드가 양식상에 존재하지 않으면서 최종결재인 경우 서명칸에 서명일자를 함께 표출하나, 최종결재자의 부재자 자동결재는 불가능하므로 서명칸에는 부재사유만 표출
+				if (findHwpField(signDateField, hwpFile)) {
+					setHwpText(signDateField, signDateMD, hwpFile);
+				}
+				
+				if (findHwpField(signField, hwpFile)) {
+					setHwpText(signField, signContent, hwpFile);
+				}
+				
+				// 서명일자, 서명칸 필드가 양식상에 존재하는 경우에만 파일 수정 및 저장 진행
+				if (findHwpField(signDateField, hwpFile) || findHwpField(signField, hwpFile)) {
+					HWPWriter.toFile(hwpFile, realPath + docHref);
+				}
+			}
+			// MHT
+			else {
 				String loadMht = ezCommonService.loadMHTFile(realPath + docHref); // 결재문서 가져오기
 				// HTML -> MHT
 				String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, locale, "", "");
 				//HTML 파싱 document 클래스 겹쳐서 임포트 못함
 				org.jsoup.nodes.Document doc = Jsoup.parse(content);
 				
-				doc.getElementById(signField).html(messageSource.getMessage("ezApprovalG." + absentReason, locale));
+				if (doc.getElementById(signDateField) != null) {
+					doc.getElementById(signDateField).html(signDateMD);
+				}
 				
-				String tempHtml = doc.outerHtml();
+				if (doc.getElementById(signField) != null) {
+					doc.getElementById(signField).html(signContent);
+				}
 				
-				try (OutputStream outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref))); 
-						OutputStreamWriter output = new OutputStreamWriter(outputStream);) {
-					String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+				// 서명일자, 서명칸 필드가 양식상에 존재하는 경우에만 파일 수정 및 저장 진행
+				if (doc.getElementById(signDateField) != null || doc.getElementById(signField) != null) {
+					String tempHtml = doc.outerHtml();
 					
-					output.write(convertedMHT);
-				} catch (FileNotFoundException fnfe) {
-					logger.debug("fnfe: {}", fnfe);
-				} catch (IOException ioe) {
-					logger.debug("ioe: {}", ioe);
-				} catch (Exception e) {
-					logger.debug("e: {}", e);
-				}  
+					try (OutputStream outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref))); 
+							OutputStreamWriter output = new OutputStreamWriter(outputStream);) {
+						String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+						
+						output.write(convertedMHT);
+					} catch (FileNotFoundException fnfe) {
+						logger.debug("fnfe: {}", fnfe);
+					} catch (IOException ioe) {
+						logger.debug("ioe: {}", ioe);
+					} catch (Exception e) {
+						logger.debug("e: {}", e);
+					}
+				}
 			}
 		}
 		
 		resultXML.append("<SIGNINFOS>");
 		
+		/* 2023-11-28 홍승비 - 부재자 자동결재(결재통과)로 서명 데이터를 DB에 저장하는 경우, 부재사유 코드(b1~b12...)가 아닌 부재사유 메세지를 저장하도록 수정 */
 		if (aprType.toUpperCase().equals("APR")) {
 			resultXML.append("<SIGNINFO>");
 			resultXML.append("<DOCID>" + docID + "</DOCID>");
 			resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 			resultXML.append("<SIGNNAME>" + susinSN + "sign" + aprSN + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + absentReason + "</CONTENT>");
+			resultXML.append("<CONTENT><![CDATA[" + signContent + "]]></CONTENT>");
 			resultXML.append("</SIGNINFO>");
 			resultXML.append("<SIGNINFO>");
 			resultXML.append("<DOCID>" + docID + "</DOCID>");
 			resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 			resultXML.append("<SIGNNAME>" + susinSN + "seumyungdate" + aprSN + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + commonUtil.getTodayUTCTime("") + "</CONTENT>");
+			resultXML.append("<CONTENT>" + signDateMD + "</CONTENT>");
 			resultXML.append("</SIGNINFO>");
 		} else {
 			resultXML.append("<SIGNINFO>");
 			resultXML.append("<DOCID>" + docID + "</DOCID>");
 			resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 			resultXML.append("<SIGNNAME>" + susinSN + "habyuisign" + aprSN + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + absentReason + "</CONTENT>");
+			resultXML.append("<CONTENT><![CDATA[" + signContent + "]]></CONTENT>");
 			resultXML.append("</SIGNINFO>");
 			resultXML.append("<SIGNINFO>");
 			resultXML.append("<DOCID>" + docID + "</DOCID>");
 			resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 			resultXML.append("<SIGNNAME>" + susinSN + "habyuidate" + aprSN + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + commonUtil.getTodayUTCTime("") + "</CONTENT>");
+			resultXML.append("<CONTENT>" + signDateMD + "</CONTENT>");
 			resultXML.append("</SIGNINFO>");
 		}
 		
@@ -35355,9 +35446,83 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         }
         
         logger.debug("getAccessYNGforAPR ended.");
-        return rtnVal ? "<RESULT>TRUE</RESULT>" : "<RESULT>FALSE</RESULT>";
+		return rtnVal ? "<RESULT>TRUE</RESULT>" : "<RESULT>FALSE</RESULT>";
     }
-
+    
+	/* 2023-11-30 홍승비 - 전자결재 > 서명 재맵핑 > TBL_SIGNINFO 테이블의 결재서명 데이터를 XML(문자열) 형식으로 가져오는 메서드 */
+	public String getAllAprSignDataXML(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getAllAprSignDataXML started, docID = " + docID + " / companyID = " + companyID + " / tenantID = " + tenantID);
+		
+		String resultXML = "";
+		String matchStr = "[0-9]*sign[0-9]*|[0-9]*approdept[0-9]*|[0-9]*jikwe[0-9]*|[0-9]*seumyung[0-9]*|[0-9]*seumyungdate[0-9]*|";
+		matchStr += "[0-9]*habyuisign[0-9]*|[0-9]*habyui[0-9]*|[0-9]*habyuipositon[0-9]*|[0-9]*habyuija[0-9]*|[0-9]*habyuidate[0-9]*";
+		
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+	        map.put("v_DOCID", docID);
+	        map.put("v_TENANTID", tenantID);
+	        map.put("v_COMPANYID", companyID);
+	        map.put("v_apprSignRemapApplyTime", ezCommonService.getTenantConfig("apprSignRemapApplyTime", tenantID));
+	        
+	        // 결재서명 전체를 재맵핑하기 위해, TBL_SIGNINFO에 '정상적인 서명 데이터'가 확정 삽입되는 시점 이후에 기안된 문서인지 체크
+	        int cnt = ezApprovalGDAO.getSignRemapApplyDocCnt(map);
+	        
+	        // 정상적인 서명 데이터를 보장할 수 없는 시점이라면 빈 값을 리턴하여 결재서명 재맵핑 진행하지 않음
+	        if (cnt <= 0) {
+	        	logger.debug("getAllAprSignDataXML ended, getSignRemapApplyDocCnt is 0...");
+	    		return "<DATA></DATA>";
+	        }
+	        
+	        List<ApprGSignInfoVO> apprGSignInfoVOList = ezApprovalGDAO.getAllSignInfo(map);
+	        
+	        StringBuffer sb = new StringBuffer();
+			sb.append("<DATA>");
+			
+			// 서명 재맵핑 시 사용하기 위한 값만 XML로 가공 (동일한 SIGNNAME이 존재하는 경우, 가장 나중에 부여된 최신 서명을 사용하도록 페이지단에서 처리)
+			if (apprGSignInfoVOList != null && apprGSignInfoVOList.size() > 0) {
+				for (int i = 0; i < apprGSignInfoVOList.size(); i++) {
+					String fieldID = commonUtil.makeListField(String.valueOf(apprGSignInfoVOList.get(i).getSignName()));
+					
+					// 필드 ID를 체크하여 내부결재, 수신결재, 합의결재 관련 필드만 가져옴 (공람, 감사 등은 제외)
+					if (fieldID.matches(matchStr)) {
+						sb.append("<SIGNDATA>");
+						
+						// 결재한 순번 (오름차순)
+						sb.append("<APRSN><![CDATA[");
+						sb.append(commonUtil.makeListField(String.valueOf(apprGSignInfoVOList.get(i).getAprSN())));
+						sb.append("]]></APRSN>");
+						
+						// 서명 유형 (TEXT, HTML, IMAGE)
+						sb.append("<SIGNTYPE><![CDATA[");
+						sb.append(commonUtil.makeListField(String.valueOf(apprGSignInfoVOList.get(i).getSignType())));
+						sb.append("]]></SIGNTYPE>");
+						
+						// 서명필드의 ID (sign1, seumyungdate1...)
+						sb.append("<SIGNNAME><![CDATA[");
+						sb.append(commonUtil.makeListField(String.valueOf(apprGSignInfoVOList.get(i).getSignName())));
+						sb.append("]]></SIGNNAME>");
+						
+						// 서명 데이터 (내부 텍스트, HTML, 이미지 경로)
+						sb.append("<CONTENT><![CDATA[");
+						sb.append(commonUtil.makeListField(String.valueOf(apprGSignInfoVOList.get(i).getContent())));
+						sb.append("]]></CONTENT>");
+						
+						sb.append("</SIGNDATA>");
+					}
+				}
+			}
+			
+			sb.append("</DATA>");
+			resultXML = sb.toString();
+		} catch (Exception e) {
+			resultXML = "<DATA></DATA>";
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("getAllAprSignDataXML ended.");
+		return resultXML;
+	}
+	
 	/* 2023-03-22 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 통합 PC 저장시 문서 하나의 완료 의견 정보 가져오는 메소드 */
 	public List<ApprGOpinionVO> getDocOpinionList(String docID, LoginVO userInfo) throws Exception {
 		logger.debug("getDocOpinionList started.");

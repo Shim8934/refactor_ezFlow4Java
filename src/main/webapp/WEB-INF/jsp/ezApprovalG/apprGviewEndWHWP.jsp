@@ -71,10 +71,13 @@
 
 			// 배부대장 문서 진행/완료 여부 플래그 (APR/END)
 			var docAprEnd = "<c:out value ='${docAprEnd}'/>";
-
+			
+			/* 2023-12-07 홍승비 - 전자결재 서명데이터 재맵핑에 필요한 docState 파라미터 추가 */
+			var pDocState = "<c:out value ='${docState}'/>";
+			
 			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
 			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
-
+			
 	        window.onresize = function () {
 	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
 	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
@@ -427,10 +430,18 @@
 	        	if (docHref != "") {
                     var URL;
                     URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(docHref);
-                    message.Open(URL, "", "", function (res) { 
+                    message.Open(URL, "", "", function (res) {
                     	if (res.result) {
     	                    setAttachInfo(pDocID, "END", lstAttachLink);
-    	
+    	                    
+    	                    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+    	    		        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+    	    		        
+    	    		        // 현재 문서가 수신문이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+    	    		        if (pDocState == "011" && porgDocID != null && typeof(porgDocID) != "undefined" && porgDocID != "") {
+    	    		        	message.startRemapAllAprSign_WHWP(porgDocID, orgCompanyID);
+    	    		        }
+    	    		        
     	                    var Rtnval = CheckOpinionInfo();
     	                    if (Rtnval) {
     	                        var pInformationContent = "<spring:message code='ezApprovalG.t9'/><br> <spring:message code='ezApprovalG.t170'/>";

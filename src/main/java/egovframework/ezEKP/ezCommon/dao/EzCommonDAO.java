@@ -1758,6 +1758,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblSerialNoRollback");
 		}
 	}
+
+	public void createTblBoardDisLike() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardDisLike");
+		} catch (Exception e) {
+			logger.debug("tbl_board_dislike doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblBoardDisLike");
+		}
+	}
 	
 	public void insertHWPSecurityConfig() throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkHWPDownSecurityConfig");
@@ -1876,6 +1886,19 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertUseBoardFilePrvwConfig");
 		}
 	}
+	
+	/* 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 */
+	public void insertApprSignRemapApplyTime(Map<String, Object> map) {
+		String apprSignRemapApplyTime = (String) select("EzCommonDAO.getTenantConfig", map);
+		
+		if (apprSignRemapApplyTime == null) {
+			logger.debug("apprSignRemapApplyTime tenant config doesn't exist. insert data...");
+			
+			map.put("property", "apprSignRemapApplyTime");
+			insert("EzCommonDAO.insertApprSignRemapApplyTime", map);
+		}
+	}
+	
 	public void insertPermissionBasisDeptYN_Config()  throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkPermissionBasisDeptYN_Config");
 		if (propertyValue == null) {
@@ -2739,4 +2762,82 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createRsScheduleDeptIdColumn");
 		}
 	}
+
+	/* 2023-03-30 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가 */
+	public void alterTblBoardOneLineChildReply() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardOneLineChildReply");
+		} catch (Exception e) {
+			logger.debug("tbl_board_onelinereply replylevel doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterTblBoardOneLineChildReply");
+		}
+	}
+
+	/* 2023-11-07 전인하 - 댓글 이모티콘 삽입 칼럼 추가 */
+	public void insertBoardReplyCommentEmoticon() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardOneReplyImageContentColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_board_onelinereply imageContent doesn't exit. creatin the column...");
+
+			update("EzCommonDAO.insertTblBoardOneReplyImageContentColumn");
+		}
+	}
+	public void addBoardDisLikeFlag() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardInfoDisLikeFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info dislikeFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardDisLikeFlag");
+		}
+	}
+
+	public void createBoardKeywordTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkBoardKeywordTable");
+		} catch (Exception e) {
+			logger.debug("tbl_board_keyword doesn't exist. creating the table...");
+			update("EzCommonDAO.createBoardKeywordTable");
+		}
+		
+		try {
+			select("EzCommonDAO.checkBoardItemKeywordTable");
+		} catch (Exception e) {
+			logger.debug("tbl_board_boardItem_keyword doesn't exist. creating the table...");
+			update("EzCommonDAO.createBoardItemKeywordTable");
+		}
+		
+		if (dbType.equalsIgnoreCase("oracle") || dbType.equalsIgnoreCase("tibero")) {
+			int cnt = (int) select("EzCommonDAO.checkBoardKeywordSequence");
+			if (cnt < 1) {
+				logger.debug("tbl_board_keyword Sequence doesn't exist. creating the Sequence...");
+				update("EzCommonDAO.createBoardKeywordSequence");
+			}
+		}
+	}
+	
+    // 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 테이블 추가
+    public void createTblRsFavCat() {
+		try {
+			select("EzCommonDAO.checkTblRsFavCat");
+		} catch (Exception e) {
+			logger.debug("tbl_rs_fav_cat doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblRsFavCat");
+		}
+	}
+    
+    // 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 자원 정보 테이블
+	public void createTblRsCatBrd() {
+		try {
+			select("EzCommonDAO.checkTblRsCatBrd");
+		} catch (Exception e) {
+			
+			logger.debug("tbl_rs_cat_brd doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblRsCatBrd");
+		}
+	}
+
 }

@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
@@ -33,6 +32,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.StringJoiner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -40,6 +40,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -47,6 +48,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.FileCopyUtils;
@@ -61,7 +63,9 @@ import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -81,6 +85,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.w3c.dom.NodeList;
 
 @Service("EzBoardService")
 public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoardService {
@@ -108,6 +113,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+
+	@Value("#{globals['Globals.DbType']}")
+	private String dbType;
 	
 	@Autowired
 	private KlibUtil klibUtil;
@@ -300,6 +308,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			likeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.hsb10", userInfo.getLocale()));
 			likeAddListHeaderVO.setWidth("50");
 			listHeaderListVO.add(likeAddListHeaderVO);
+		}
+		
+		/* 2023-04-06 기민혁 - 싫어요 사용 게시판의 경우 임의로 헤더 조정 */
+		if (ezBoardVO.getDisLikeFlag() != null && ezBoardVO.getDisLikeFlag().equals("Y")) {
+			BoardListHeaderVO disLikeAddListHeaderVO = new BoardListHeaderVO();
+			disLikeAddListHeaderVO.setColName("DISLIKECOUNT");
+			disLikeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.kmh07", userInfo.getLocale()));
+			disLikeAddListHeaderVO.setWidth("50");
+			listHeaderListVO.add(disLikeAddListHeaderVO);
 		}
 
 		logger.debug("getListHeader ended");
@@ -811,6 +828,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			listHeaderListVO.add(likeAddListHeaderVO);
 		}
 		
+		/* 2023-04-06 기민혁 - 싫어요 사용 게시판의 경우 임의로 헤더 조정 */
+		if (ezBoardVO.getDisLikeFlag() != null && ezBoardVO.getDisLikeFlag().equals("Y")) {
+			BoardListHeaderVO disLikeAddListHeaderVO = new BoardListHeaderVO();
+			disLikeAddListHeaderVO.setColName("DISLIKECOUNT");
+			disLikeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.kmh07", userInfo.getLocale()));
+			disLikeAddListHeaderVO.setWidth("50");
+			listHeaderListVO.add(disLikeAddListHeaderVO);
+		}
+		
 		return listHeaderListVO;
 	}
 
@@ -1071,11 +1097,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-
-		//20240216 : 김진홍 : CSAP 인증 처리 : searchQuery 를 파라미터로 변경
+		map.put("v_KEYWORD", boardVO.getKeyword());
+		map.put("v_useKeywordFlag", boardVO.getUseKeyword());
+		
+		// 20240216 : 김진홍 : CSAP 인증 처리 : searchQuery 를 파라미터로 변경
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
 		}
+		
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 		
 		myFavoriteVO.setBoardId(boardVO.getBoardId());
@@ -1169,6 +1198,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
+		map.put("v_useKeywordFlag", boardVO.getUseKeyword());
+		map.put("v_KEYWORD", boardVO.getKeyword());
 		
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
@@ -1342,7 +1373,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-
+		map.put("v_KEYWORD", boardVO.getKeyword());
+		
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
 		}
@@ -1382,10 +1414,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_COMPANYID", boardListVO.getWriterCompanyID());
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-
+		map.put("v_KEYWORD", boardVO.getKeyword());
+		
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
 		}
+		
 		logger.debug("getSearchMyBoardItemListTemp ended");
 		return ezBoardDAO.getSearchMyBoardItemListTemp(map);
 	}
@@ -1709,12 +1743,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PBOARDID", boardVO.getBoardId());
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_useKeywordFlag", boardVO.getUseKeyword());
+		map.put("v_KEYWORD", boardVO.getKeyword());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
 		}
-
+		
 		logger.debug("getSearchBoardItemCount ended");
 		return ezBoardDAO.getSearchBoardItemCount(map); 
 	}
@@ -1794,10 +1830,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-
+		map.put("v_KEYWORD", boardVO.getKeyword());
+		
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
 		}
+		
 		logger.debug("getSearchMyBoardItemCount ended");
 		return ezBoardDAO.getSearchMyBoardItemCount(map);
 	}
@@ -1816,10 +1854,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
-
+		map.put("v_KEYWORD", boardVO.getKeyword());
+		
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
 		}
+		
 		logger.debug("getSearchMyBoardItemCountTemp ended");
 		return ezBoardDAO.getSearchMyBoardItemCountTemp(map);
 	}
@@ -2059,6 +2099,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
 			sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
 			sb.append("<LikeCount>" + itemInfo.getLikeCount() + "</LikeCount>");
+			sb.append("<DisLikeCount>" + itemInfo.getDisLikeCount() + "</DisLikeCount>");
 			
 			/* 2018-12-03 홍승비 - 게시물 정보에 사원이미지 추가 */
 			if (itemInfo.getUserImageFile() != null && !itemInfo.getUserImageFile().equals("")) {
@@ -2219,9 +2260,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", tenantID);
 		
 		try {
-			int totalCount = ezBoardDAO.getBoardOneLineReply(map);
-			
-			if (totalCount > 0) {
+			int totalCount = 0;
+
+			// null로 update했던 부모 댓글을 delete하는 경우 userID값이 공백이므로 댓글을 찾을 수 없음 (부모댓글이 삭제된 뒤 자식댓글이 모두 삭제되는 경우)
+			if (!"".equals(userID)) {
+				totalCount = ezBoardDAO.getBoardOneLineReply(map);
+			}
+
+			if (totalCount > 0 || "".equals(userID)) {
 				ezBoardDAO.deleteOneLineReply(map);
 				
 				rtnValue = "OK_DELETED";
@@ -2562,7 +2608,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 댓글 저장 시 회사ID 삽입하도록 수정 */
 	@Override
-	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception {
+	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, int replyLevel, String imageContent) throws Exception {
 		logger.debug("saveOneLineReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2575,9 +2621,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("USERNAME2", userInfo.getDisplayName2());
 		map.put("PCONTENT", content);
 		map.put("PPASSWORD", password);
+		map.put("REPLYLEVEL", replyLevel);
 		map.put("TENANTID", userInfo.getTenantId());
 		map.put("COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		map.put("v_EMOTICON", imageContent);
 		
 		ezBoardDAO.saveOneLineReply(map);
 
@@ -3395,7 +3443,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			} else {
 				boardListVO.setHasAttach("0");
 			}
-			
+
+			// 키워드 저장
+			List<String> keywords = new ArrayList<>();
+			NodeList keywordNodeList = doc.getElementsByTagName("KEYWORD");
+			if (keywordNodeList != null && keywordNodeList.getLength() > 0) {
+				for (int i = 0; i < keywordNodeList.getLength(); i++) {
+					keywords.add(keywordNodeList.item(i).getTextContent());
+				}
+				
+				if (keywords.size() > 0) {
+					saveKeyword(keywords, boardListVO.getBoardID(), boardListVO.getItemID(), userInfo.getTenantId());
+				}
+			}
+
 			result = "OK";
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
@@ -3657,6 +3718,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				if (boardListTempVO != null) {
 					logger.debug("deleteItem itemID = " + boardListTempVO.getItemID() + " / title = " + boardListTempVO.getTitle());
 				}
+
+				// 2024-08-27 전인하 - 게시물 삭제할 때 키워드도 함께 삭제함
+				saveKeyword(null, boardID, tempItem, userInfo.getTenantId());
 				
 				if (mode != null && mode.equals("temp")) {
 					deleteTempItem(tempItem, boardID, realPath, userInfo.getTenantId());
@@ -3870,6 +3934,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			//2018-05-09 강민수92 댓글도 이동
 			moveOneLineReply(orgBoardID, orgItemID, destBoardID, destItemID); 
 			
+			List<BoardKeywordVO> keywordList = selectBoardKeywordByBoardItem(orgItemID, orgBoardID, userInfo.getTenantId());
+			
 			StringBuilder sb = new StringBuilder();
 
 	        sb.append("<NODES>");
@@ -3917,6 +3983,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			/* 2024-02-19 민지수 - 게시물 이동 시 공지사항 등록기간 유지 */
 			sb.append("<NTSTARTDATE>" + boardListVO.getNotiStart() + "</NTSTARTDATE>");
 			sb.append("<NTENDDATE>" + boardListVO.getNotiEnd() + "</NTENDDATE>");
+
+			/* 2024-09-03 전인하 - 게시판 > 이동 > 키워드 정보 함께 이동 */
+			if (keywordList != null && keywordList.size() > 0 && destBoardProp.getUseKeyword() != null && destBoardProp.getUseKeyword().equals("Y")) {
+				sb.append("<KEYWORDS>");
+				for (BoardKeywordVO keyword : keywordList) {
+					sb.append("<KEYWORD>" + keyword.getKeywordName() + "</KEYWORD>");
+				}
+				sb.append("</KEYWORDS>");
+			}
+			
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -4168,6 +4244,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setHasAttach("0");
 		}
 
+		// 키워드 저장
+		List<String> keywords = new ArrayList<>();
+		NodeList keywordNodeList = doc.getElementsByTagName("KEYWORD");
+		if (keywordNodeList != null && keywordNodeList.getLength() > 0) {
+			for (int i = 0; i < keywordNodeList.getLength(); i++) {
+				keywords.add(keywordNodeList.item(i).getTextContent());
+			}
+		}
+		
+		if (keywords.size() > 0) {
+			saveKeyword(keywords, boardListVO.getBoardID(), boardListVO.getItemID(), userInfo.getTenantId());
+		}
+		
 		logger.debug("insertNewItem ended");
 		return "OK";
 	}
@@ -4270,6 +4359,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "copy", userInfo.getTenantId());
 			}
 			
+			List<BoardKeywordVO> keywordList = selectBoardKeywordByBoardItem(orgItemID, orgBoardID, userInfo.getTenantId());
+			
 			StringBuilder sb = new StringBuilder();
 
 	        sb.append("<NODES>");
@@ -4317,6 +4408,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			/* 2024-02-19 민지수 - 게시물 복사 시 공지사항 등록기간 유지 */
 			sb.append("<NTSTARTDATE>" + boardLisitVO.getNotiStart() + "</NTSTARTDATE>");
 			sb.append("<NTENDDATE>" + boardLisitVO.getNotiEnd() + "</NTENDDATE>");
+
+			/* 2024-09-03 전인하 - 게시판 > 복사 > 키워드 정보 함께 복사 */
+			if (keywordList != null && keywordList.size() > 0 && destBoardProp.getUseKeyword() != null && destBoardProp.getUseKeyword().equals("Y")) {
+				sb.append("<KEYWORDS>");
+				for (BoardKeywordVO keyword : keywordList) {
+					sb.append("<KEYWORD>" + keyword.getKeywordName() + "</KEYWORD>");
+				}
+				sb.append("</KEYWORDS>");
+			}
+			
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -4406,7 +4507,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception{
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap, Map<String, String> orderByMap, String keywordClick) throws Exception{
 		logger.debug("getSearchAllBoardItemList started");
 
 		String orderByCol2 = "";
@@ -4449,7 +4550,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_MODE", pMode); 
 		map.put("v_listviewList", listviewTrueList);
 		map.put("v_qnaItemList", qnaItemList);
-
+		map.put("v_KEYWORD", boardVO.getKeyword());
+		map.put("v_KEYWORDCLICK", keywordClick);
+		
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
 		}
@@ -4476,7 +4579,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2018-07-06 홍승비 - 게시물 전체검색 시 comapanyID 조건 추가 */
 	@Override
-	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap) throws Exception {
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap, String keywordClick) throws Exception {
 		logger.debug("getSearchAllBoardItemCount started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -4495,7 +4598,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_MODE", pMode); 
 		map.put("v_listviewList", listviewTrueList);
 		map.put("v_qnaItemList", qnaItemList);
-
+		map.put("v_KEYWORD", boardVO.getKeyword());
+		map.put("v_KEYWORDCLICK", keywordClick);
+		
 		// 20240216 : 김진홍 : CSAP 인증 처리 : searchQuery 를 파라미터로 변경
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
@@ -4520,6 +4625,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("v_KEYWORD", boardVO.getKeyword());
 
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
@@ -4558,6 +4664,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
+		map.put("v_KEYWORD", boardVO.getKeyword());
 
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
@@ -5313,5 +5420,279 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("getNoticePostItem2 ended");
 		return ezBoardDAO.getNoticePostItem(map);
+	}
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글에 대한 답글 저장하는 메서드 */
+	@Override
+	public void saveOneLineChildReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, String parentReplyID, int replyLevel, String parentWriterName, String imageContent) throws Exception {
+		logger.debug("saveOneLineChildReply started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_BOARDID", boardID);
+		map.put("v_USERID", userInfo.getId());
+		map.put("v_USERNAME", userInfo.getDisplayName1());
+		map.put("v_USERNAME2", userInfo.getDisplayName2());
+		map.put("v_CONTENT", content);
+		map.put("v_PASSWORD", password);
+		map.put("v_PARENTREPLYID", parentReplyID);
+		map.put("v_REPLYLEVEL", replyLevel);
+		map.put("v_PARENTWRITERNAME", parentWriterName);
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_NOWDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		map.put("v_EMOTICON", imageContent);
+
+		logger.debug("saveOneLineChildReply ended");
+		ezBoardDAO.saveOneLineChildReply(map);
+	}
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 또는 답글 수정되었을 경우 업데이트하는 메서드 */
+	@Override
+	public void updateOneLineReply(String itemID, String boardID, String replyID, String content, String updateDate, int tenantID, String imageContent) throws Exception {
+		logger.debug("updateOneLineReply started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_BOARDID", boardID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_CONTENT", content);
+		map.put("v_UPDATEDATE", updateDate);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_EMOTICON", imageContent);
+
+		logger.debug("updateOneLineReply ended");
+		ezBoardDAO.updateOneLineReply(map);
+	}
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 메서드 */
+	@Override
+	public int getChildReplyCnt(String itemID, String boardID, String replyID, int tenantID) throws Exception {
+		logger.debug("getChildReplyCnt started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_BOARDID", boardID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getChildReplyCnt ended");
+		return ezBoardDAO.getChildReplyCnt(map);
+	}
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식이 존재하는 부모댓글 삭제할 경우 해당 댓글 정보를 NULL로 변경해주는 메서드 */
+	@Override
+	public void updateDelParentReply(String replyID, String itemID, String boardID, int tenantID) throws Exception {
+		logger.debug("updateDelParentReply started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_REPLYID", replyID);
+		map.put("v_ITEMID", itemID);
+		map.put("v_BOARDID", boardID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("updateDelParentReply ended");
+		ezBoardDAO.updateDelParentReply(map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 버튼 클릭시 정보 insert 메서드 */
+	@Override
+	public void disLikeInsert(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("disLikeInsert started.");
+
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+		map.put("v_disLikeDate",commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+
+		ezBoardDAO.disLikeInsert(map);
+		logger.debug("disLikeInsert ended.");
+
+	}
+
+	/* 2023-04-06 기민혁 - 싫어요 버튼 클릭시 정보 delete 메서드 */
+	@Override
+	public void disLikeDelete(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("disLikeDelete started.");
+
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+
+		ezBoardDAO.disLikeDelete(map);
+		logger.debug("disLikeDelete ended.");
+
+	}
+
+	/* 2023-04-06 기민혁 - 싫어요 버튼을 클릭했는데 체크 메소드 */
+	@Override
+	public String disLikeCheck(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("dislikeCheck started.");
+
+		String isDisLikeChecked = "";
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+
+		isDisLikeChecked = ezBoardDAO.disLikeCheck(map);
+
+		if (isDisLikeChecked != null && !isDisLikeChecked.equals("")) {
+			isDisLikeChecked = "Y";
+		} else {
+			isDisLikeChecked = "N";
+		}
+
+		logger.debug("dislikeCheck ended.");
+		return isDisLikeChecked;
+	}
+
+	/* 2023-04-06 기민혁 - 싫어요를 누른 사용자 count 메서드 */
+	@Override
+	public int getDisLikeCount(String itemID, int tenantID) throws Exception {
+		logger.debug("getDisLikeCount started.");
+
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+
+		logger.debug("getDisLikeCount ended.");
+		return ezBoardDAO.getDisLikeCount(map);
+	}
+	
+	/* 2023-04-06 기민혁 - 좋아요/싫어요 를 누른 명단 list 호출 메서드 */
+	@Override
+	public String boardLikeAndDisLikeList(LoginVO userInfo, String pBoardID, String[] itemIDs) throws Exception {
+		logger.debug("boardLikeAndDisLikeList started.");
+
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		for (String itemID : itemIDs) {
+			Map<String, String> map = new HashMap<>();
+			map.put("itemID", itemID);
+			sb.append("<ROW>");
+			sb.append("<ITEMINFO>");
+
+			List<BoardItemVO> itemInfo = ezBoardDAO.getItemInfoList(map);// 해당 boardItem 정보
+
+			for (BoardItemVO itemInfoList : itemInfo) {
+				sb.append("<ITEMID>" + itemInfoList.getItemID() + "</ITEMID>");
+				sb.append("<TITLE>" + commonUtil.cleanValue(itemInfoList.getTitle()) + "</TITLE>");
+				sb.append("<TENANTID>" + itemInfoList.getTenantID() + "</TENANTID>");
+				sb.append("<BOARDID>" + itemInfoList.getBoardID() + "</BOARDID>");
+			}
+
+			sb.append("</ITEMINFO>");
+			sb.append("<LIKELIST>");
+
+			List<BoardLikeListVO> likeListData = ezBoardDAO.getLikeList(map); // 선택한 리스트의 좋아요 체크한 정보
+
+			for (BoardLikeListVO BoardLikeList : likeListData) {
+				sb.append("<ITEMID>" + BoardLikeList.getItemID() + "</ITEMID>");
+				sb.append("<USERID>" + BoardLikeList.getUserID() + "</USERID>");
+				sb.append("<LIKEDATE>" + commonUtil.getDateStringInUTC(BoardLikeList.getLikeDate(), userInfo.getOffset(), false) + "</LIKEDATE>");
+				sb.append("<TENANTID>" + BoardLikeList.getTenantID() + "</TENANTID>");
+				if(userInfo.getLang().equals("1")){
+					sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(BoardLikeList.getDisplayName()) + "</DISPLAYNAME>");
+				}else{
+					sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(BoardLikeList.getDisplayName2()) + "</DISPLAYNAME>");
+				}
+				sb.append("<WRITER>" + BoardLikeList.getWriterID() + "</WRITER>");
+				sb.append("<TITLE>" + commonUtil.cleanValue(BoardLikeList.getTitle()) + "</TITLE>");
+				sb.append("<LIKELISTCOUNT>" + BoardLikeList.getLikeListCount() + "</LIKELISTCOUNT>");
+
+			}
+			sb.append("</LIKELIST>");
+			sb.append("<DISLIKELIST>");
+
+			List<BoardDisLikeListVO> disLikeListData = ezBoardDAO.getDisLikeList(map);// 선택한 리스트의 싫어요 체크한 정보
+
+			for (BoardDisLikeListVO BoardDisLikeList : disLikeListData) {
+				sb.append("<D_ITEMID>" + BoardDisLikeList.getItemID() + "</D_ITEMID>");
+				sb.append("<D_USERID>" + BoardDisLikeList.getUserID() + "</D_USERID>");
+				sb.append("<D_DISLIKEDATE>" + commonUtil.getDateStringInUTC(BoardDisLikeList.getDisLikeDate(), userInfo.getOffset(), false) + "</D_DISLIKEDATE>");
+				sb.append("<D_TENANTID>" + BoardDisLikeList.getTenantID() + "</D_TENANTID>");
+				if(userInfo.getLang().equals("1")){
+					sb.append("<D_DISPLAYNAME>" + commonUtil.cleanValue(BoardDisLikeList.getDisplayName()) + "</D_DISPLAYNAME>");
+				}else{
+					sb.append("<D_DISPLAYNAME>" + commonUtil.cleanValue(BoardDisLikeList.getDisplayName2()) + "</D_DISPLAYNAME>");
+				}
+				sb.append("<D_WRITER>" + BoardDisLikeList.getWriterID() + "</D_WRITER>");
+				sb.append("<D_TITLE>" + commonUtil.cleanValue(BoardDisLikeList.getTitle()) + "</D_TITLE>");
+				sb.append("<DISLIKELISTCOUNT>" + BoardDisLikeList.getDisLikeListCount() + "</DISLIKELISTCOUNT>");
+			}
+			sb.append("</DISLIKELIST>");
+			sb.append("</ROW>");
+		}
+
+		sb.append("</DATA>");
+
+		logger.debug("boardLikeAndDisLikeList ended.");
+
+		return sb.toString();
+	}
+
+	/* 2024-08-23 전인하 - 게시판 > 게시글 작성 > 키워드 저장 메소드 */	
+	@Override
+	public void saveKeyword(List<String> keywords, String boardID, String itemID, int tenantID) throws Exception {
+		logger.debug("saveKeyword started.");
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("v_keywords", keywords);
+		map.put("v_boardID", boardID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+
+		if (keywords != null && keywords.size() > 0) {
+			if (dbType.equalsIgnoreCase("oracle") || dbType.equalsIgnoreCase("tibero")) {
+				for (int i=0; i<keywords.size(); i++) {
+					map.put("v_keyword", keywords.get(i));
+					ezBoardDAO.insertKeyword(map);
+				}
+			} else if (dbType.equalsIgnoreCase("mysql")) {
+				ezBoardDAO.insertKeyword(map);
+			}
+		}
+		ezBoardDAO.deleteBoardItemKeyword(map);
+		
+		if (keywords != null && keywords.size() > 0) {
+			List<BoardKeywordVO> tempKeywordsObj = ezBoardDAO.selectBoardKeywordByKeywordName(map);
+			List<BoardKeywordVO> newKeywordsObj = new ArrayList<>();
+			for (int i = 0; i < keywords.size(); i++) {
+				int sn = i;
+				BoardKeywordVO key = tempKeywordsObj.stream()
+						.filter(o -> o.getKeywordName().equals(keywords.get(sn)))
+						.map(o -> new BoardKeywordVO(o.getKeywordId(), o.getKeywordName(), boardID, itemID, tenantID, sn))
+						.findAny().orElse(null);
+				if (key != null) {
+					newKeywordsObj.add(key);
+				}
+			}
+			ezBoardDAO.insertBoardItemKeyword(newKeywordsObj);
+		}
+		
+		logger.debug("saveKeyword ended.");
+	}
+
+	/* 2024-08-23 전인하 - 게시판 > 게시물ID로 해당 게시물에 속한 키워드 반환 메소드 */
+	@Override
+	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(String itemID, String boardID, int tenantId) throws Exception {
+		logger.debug("saveKeyword started.");
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("v_boardID", boardID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantId);
+		List<BoardKeywordVO> keywordList = ezBoardDAO.selectBoardKeywordByBoardItem(map);
+
+		logger.debug("saveKeyword ended.");
+		return keywordList;
 	}
 }

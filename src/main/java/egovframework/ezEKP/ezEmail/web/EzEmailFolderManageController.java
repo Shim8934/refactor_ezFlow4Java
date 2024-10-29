@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -328,6 +329,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
 	            	if (url != null && !url.equals("") && ia != null) {
+						ezEmailService.actionTrashMailAllDelete(ia, url);
 	            		int result = ia.deleteFolder(url);
 	            		
 	            		if (result == 0) {
@@ -355,46 +357,47 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	
 	            	if (!url.equals("") && ia != null) {
 	            		String trashFolderName = ezEmailUtil.getTrashFolderId(locale);
-            			Folder trashFolder = ia.getFolder(trashFolderName != null ? trashFolderName : "");
-						if (trashFolder != null){
-							IMAPFolder folder = (IMAPFolder)ia.getFolder(url);
+            			Folder trashFolder = ia.getFolder(trashFolderName);
+            			IMAPFolder folder = (IMAPFolder)ia.getFolder(url);
+            			
+	            		if (folder.exists() && trashFolder.exists()) {
+            				folder.open(Folder.READ_WRITE);
+            				Message[] messages = folder.getMessages();
+            				logger.debug("messageCount:" + messages.length );
+            				if (messages.length == 0){
+            					returnValue = "MAIL_NOT_EXISTS";
+            					break;
+            				}
+            				
+            				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+            				
+            				if (useImapMoveCommand.equals("YES")) {
+								for (int i = 0; i < messages.length; i += 100) {
+									int end = Math.min(i + 100, messages.length);
+									folder.moveMessages(Arrays.copyOfRange(messages, i, end), trashFolder);
+								}
+            				} else {            				
+                				// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+                				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userAccount, domainName, ia);
+                				
+                				if (adjustQuotaData[0] != null) {
+                					isNewUserQuotaNeeded = true;
+                					
+                					userQuota = adjustQuotaData[0];
+                					userWarn = adjustQuotaData[1];
+                				}
 
-							if (folder.exists() && trashFolder.exists()) {
-								folder.open(Folder.READ_WRITE);
-								Message[] messages = folder.getMessages();
-								logger.debug("messageCount:" + messages.length );
-								if (messages.length == 0){
-									returnValue = "MAIL_NOT_EXISTS";
-									break;
+								if (adjustQuotaData[2] != null) {
+									isThereUserLevelQuota = true;
 								}
 
-								String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
-
-								if (useImapMoveCommand.equals("YES")) {
-									folder.moveMessages(messages, trashFolder);
-								} else {
-									// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
-									Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userAccount, domainName, ia);
-
-									if (adjustQuotaData[0] != null) {
-										isNewUserQuotaNeeded = true;
-
-										userQuota = adjustQuotaData[0];
-										userWarn = adjustQuotaData[1];
-									}
-
-									if (adjustQuotaData[2] != null) {
-										isThereUserLevelQuota = true;
-									}
-
-									folder.copyMessages(messages, trashFolder);
-									folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
-								}
-
-								folder.close(true);
-								logger.debug(url + " folder's message is moved to " + trashFolderName + ".");
-								returnValue = "OK";
+								folder.copyMessages(messages, trashFolder);
+								folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
 							}
+
+							folder.close(true);
+							logger.debug(url + " folder's message is moved to " + trashFolderName + ".");
+							returnValue = "OK";
 						}
 	            	}
 	            	

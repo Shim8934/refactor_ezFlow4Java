@@ -4175,6 +4175,11 @@ CREATE TABLE `tbl_board_onelinereply` (
   `PASSWORD` varchar(1368) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(80) DEFAULT NULL,
+  `REPLYLEVEL` bigint(10) DEFAULT NULL,
+  `PARENTREPLYID` varchar(100) DEFAULT NULL,
+  `PARENTWRITERNAME` varchar(100) DEFAULT NULL,
+  `UPDATEDATE` varchar(40) DEFAULT NULL,
+  `IMAGECONTENT` varchar(600) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`,`REPLYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -15561,3 +15566,63 @@ CREATE TABLE `TBL_NOTI_EMERGENCY_PERMISSION` (
   `SUBDEPTYN` char(1) DEFAULT NULL,
   PRIMARY KEY (`PERMISSION_CODE`, `TENANT_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Table structure for table `TBL_BOARD_KEYWORD`
+--
+CREATE TABLE TBL_BOARD_KEYWORD (
+    KEYWORDID bigint(20) NOT NULL AUTO_INCREMENT COMMENT '키워드 아이디',
+    KEYWORDNAME varchar(100) NOT NULL UNIQUE COMMENT '키워드 이름',
+    TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+    PRIMARY KEY (KEYWORDID, TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Table structure for table `TBL_BOARD_BOARDITEM_KEYWORD`
+--
+CREATE TABLE TBL_BOARD_BOARDITEM_KEYWORD (
+    KEYWORDID bigint(20) NOT NULL COMMENT '키워드 아이디',
+    BOARDID varchar(40) NOT NULL COMMENT '게시판 아이디',
+    ITEMID varchar(40) NOT NULL COMMENT '게시물 아이디',
+    TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+    SN tinyint(3) NOT NULL COMMENT '키워드 순번',
+    PRIMARY KEY (KEYWORDID, ITEMID, SN, TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Table structure for table `tbl_rs_fav_cat`
+--
+
+DROP TABLE IF EXISTS `tbl_rs_fav_cat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_rs_fav_cat` (
+		  `CAT_ID` varchar(80) NOT NULL,
+		  `TOP_ID` varchar(80) DEFAULT NULL,
+		  `USER_ID` varchar(100) NOT NULL,
+		  `CAT_NAME` varchar(200) NOT NULL,
+		  `UPDATEDATE` datetime NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  `BRDYN` varchar(10) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+		  PRIMARY KEY (`CAT_ID`, 'TENANT_ID')
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+		
+--
+-- Table structure for table `tbl_rs_cat_brd`
+--
+
+DROP TABLE IF EXISTS `tbl_rs_cat_brd`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_rs_cat_brd` (
+		  `CAT_ID` varchar(100) NOT NULL,
+		  `BRD_ID` varchar(80) NOT NULL,
+		  `USER_ID` varchar(80) NOT NULL,
+		  `COMPANYID` varchar(80) NOT NULL,
+		  `UPDATEDATE` datetime NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+		  PRIMARY KEY (`CAT_ID`,`BRD_ID`,`USER_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+		

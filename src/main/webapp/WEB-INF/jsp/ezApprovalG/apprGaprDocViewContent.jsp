@@ -8,6 +8,10 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/diff.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
+	    
+	    <%-- 2023-12-05 홍승비 - 결재 서명 데이터를 DB(TBL_SIGNINFO)에서 가져와, 문서 상에 다시 그려주는(재맵핑) 함수 적용 --%>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprSignRedraw.js')}"></script>
+		
 	    <style type="text/css">
 	    	 P { margin-top: 0px;margin-bottom: 0px; }
 	        .viewbox {

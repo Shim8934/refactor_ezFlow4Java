@@ -604,10 +604,31 @@ public class CommonUtil {
 			return new LoginVO();
 		}
 	}
+
+	public LoginVO checkAdminOld(String loginCookie){
+		try{
+			LoginVO user = userInfo(loginCookie);
+
+			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+				return null;
+			}else{
+				return user;
+			}
+		}catch(Exception e){
+			return null;
+		}
+	}
 	
 	public LoginVO checkAdmin(String loginCookie){
 		try{
 			LoginVO user = userInfo(loginCookie);
+			
+			// ezSyncServer가 ezFlow를 호출하는 경우엔 loginCookie에 부서 아이디가 없어
+			// 이 경우엔 이전 방식으로 관리자 권한을 체크하도록 함
+			if (user.getDeptID() == null || user.getDeptID().isEmpty()) {
+				return checkAdminOld(loginCookie);
+			}
+			
 			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
 	
 			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
@@ -3405,8 +3426,11 @@ public class CommonUtil {
 		OrganAuth organAuth = new OrganAuth();
 		
 		// 현재 권한만 체크하도록 변경
+		// jobid가 null이거나, 공백인 경우가 있어 같이 공백 or null 이거나 string equal 인 조건으로 변경 
 		for (OrganUserVO user : allUserinfo) {
-			if (user.getDepartment().equalsIgnoreCase(deptId) && user.getJobID().equalsIgnoreCase(jobId)) {
+			if (user.getDepartment().equalsIgnoreCase(deptId) &&
+					((StringUtils.isBlank(user.getJobID()) && StringUtils.isBlank(jobId)) ||
+					user.getJobID().equalsIgnoreCase(jobId))) {
 				organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
 				break;
 			}

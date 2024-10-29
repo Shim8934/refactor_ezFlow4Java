@@ -717,6 +717,8 @@
 						
 					}
 					if (responseResult == 'fail') {
+					    // 응답 획득에 실패할 경우, 응답 배열을 초기화 함
+						resposeObj.responses = [];
 						return;
 					}
 				}

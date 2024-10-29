@@ -3884,6 +3884,17 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public String checkSecurityApprovalDate(Map<String, Object> map)  throws Exception {
 		return (String) select("EzApprovalG.checkSecurityApprovalDate", map);
     }
+    
+    /* 2023-11-30 홍승비 - 전자결재 > 서명 재맵핑 > DOCID를 조건으로 TBL_SIGNINFO 테이블의 결재서명 데이터를 전부 가져오는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<ApprGSignInfoVO> getAllSignInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGSignInfoVO>) list("EzApprovalG.getAllSignInfo", map);
+	}
+	
+	/* 2023-12-05 홍승비 - 전자결재 > 서명 재맵핑 > 결재서명 전체를 재맵핑하기 위해, TBL_SIGNINFO에 '정상적인 서명 데이터'가 확정 삽입되는 시점 이후 기안된 문서인지 카운트하는 쿼리 */
+	public int getSignRemapApplyDocCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getSignRemapApplyDocCnt", map);
+	}
 	
 	/* 2023-03-24 한태훈 - 전자결재G > 통합PC저장 다운로드(gubun 값 : D) 이력 남기기 (차후 다운로드 이력 외 다른 이력 삽입 가능) */
 	public void insertTotalSaveHistory(Map<String, Object> map) throws Exception {

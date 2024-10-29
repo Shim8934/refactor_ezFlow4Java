@@ -1265,6 +1265,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        
 	        //웹폴더 데이터 삭제 
 	        ezOrganAdminDao.deleteCompany_D34(map);
+	        
+	        // 포탈 > 메뉴 설정 값 삭제 (상단 표출, 좌측 표출)
+	        ezOrganAdminDao.deleteCompany_D35(map);
+	        
+	        // 시스템 > 시스템 컨피그 값 삭제
+	        ezOrganAdminDao.deleteCompany_D36(map);
+	        ezOrganAdminDao.deleteCompany_D37(map);
+	        // 
 		    /**
 		     * Active Directory
 		     * - 부서 정보 삭제

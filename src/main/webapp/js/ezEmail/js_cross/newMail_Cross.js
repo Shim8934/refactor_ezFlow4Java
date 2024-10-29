@@ -741,6 +741,7 @@ function Send_onClick_Complete(ReturnValue) {
             	secureMailParams["securePassword"] = securePassword;
             	secureMailParams["secureReadCount"] = secureReadCount;
             	secureMailParams["secureReadDate"] = secureReadDate;
+                secureMailParams["securePasswordHint"] = securePasswordHint;
             	
             	secureMail_dialogArguments[0] = secureMailParams;
             	secureMail_dialogArguments[1] = secureMail_Complete;
@@ -961,6 +962,7 @@ function Save_onClick_Complete(ReturnValue) {
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORD", secureMailParams["securePassword"]);
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADCOUNT", secureMailParams["secureReadCount"]);
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADDATE", secureMailParams["secureReadDate"]);
+                createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORDHINT", secureMailParams["securePasswordHint"]);
             }
             
             ConvertEmbedPath(xmlDoc, xmlDoc);

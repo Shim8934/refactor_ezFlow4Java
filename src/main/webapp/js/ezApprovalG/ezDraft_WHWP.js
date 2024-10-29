@@ -852,14 +852,25 @@ function SendDraftMappingSign(ret) {
 	
 	var OpinionText = "";
 	var PositionText = "";
-
+	
+	// 기안자가 최종결재자인 경우, 서명일자를 서명칸에 표출할지 여부를 처리
+	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) {
+		OpinionText = getSignDate() + "\15";
+	}
+	
 	if (approvalFlag == "S") {
         if (LastSignSN == 1 || DraftLastFlag) {
-            if(DraftLastFlag)
+            if (DraftLastFlag) {
                 putJunkyulSign("sign" + sn);
+            }
+            
             for (i = 1; i <= 20; i++) {
-                if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
-                else signID = "sign" + i
+                if (pDraftFlag == "SUSIN") {
+                	signID = pSusinSN + "sign" + i;
+                }
+                else {
+                	signID = "sign" + i;
+                }
 
                 if (message.FieldExist(signID)) {
                     LastSignNo = i;
@@ -867,17 +878,12 @@ function SendDraftMappingSign(ret) {
             }
             sn = LastSignNo;
         }
-    } else {
-        if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) {
-            OpinionText = getSignDate() + "\15";
-        }
     }
-
+    
 	psigncell = "sign" + sn;
 	pseumyungcell = "jikwe" + sn;
 	pseumyungdatecell = "seumyungdate" + sn;
 	
-	 
 	var RtnVal = getGyulJeDate();
 	var CurrentDate = RtnVal.split(".");
 	var s = CurrentDate[1] + "." + CurrentDate[2]; 
@@ -887,24 +893,37 @@ function SendDraftMappingSign(ret) {
 	// 2021-03-25 박기범 - 서명 이미지 삽입시 포트번호 추가.
   	var portNum = document.location.port == "" ? "" : ":" + document.location.port;
 
-	if (message.FieldExist(pseumyungcell))
+	if (message.FieldExist(pseumyungcell)) {
 		message.PutFieldText(pseumyungcell, message.GetFieldText(pseumyungcell) + PositionText);
-
+	}
+	
 	if (message.FieldExist(pseumyungdatecell)) {
 		message.PutFieldText(pseumyungdatecell, s);
         rtnSignInfo.push(pseumyungdatecell);
+        
+        /* 2023-10-05 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+    	signInfo[signCnt] = pseumyungdatecell;
+    	SignName[signCnt] = pseumyungdatecell;
+    	SignType[signCnt] = "TEXT";
+    	SignContent[signCnt] = s;
+    	signCnt = signCnt + 1;
     }
-		
-	if(CurAprType == strAprType16) {			
+    
+	if (CurAprType == strAprType16) {
 		if (message.FieldExist(psigncell)) {
-			if(ret != "NAME") {
-				message.PutFieldText(psigncell, "");					
+			// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+			if (message.FieldExist(pseumyungdatecell)) {
+			    OpinionText = "\15";
+			}
+			
+			if (ret != "NAME") {
+				message.PutFieldText(psigncell, "");
 				message.PrependFieldText(psigncell, strLang7 + OpinionText);
+				
 				//HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
 				message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
 				
 			  	signInfo[signCnt] = psigncell;
-			  	
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + strLang7 + OpinionText;
@@ -914,16 +933,13 @@ function SendDraftMappingSign(ret) {
 			  	signCnt = signCnt + 1
 			  	SingFlag = true;
 			} else {
-				message.PutFieldText(psigncell, arr_userinfo[2]);	
-				
-				//HwpCtrl.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
+				message.PutFieldText(psigncell, arr_userinfo[2]);
 				message.PrependFieldText(psigncell, strLang7 + OpinionText);
 				
 		  		signInfo[signCnt] = psigncell;
-		  		
 				SignType[signCnt] = "TEXT";
 				SignName[signCnt] = psigncell;
-				SignContent[signCnt] = arr_userinfo[2] + strLang7 + OpinionText;
+				SignContent[signCnt] = strLang7 + OpinionText + arr_userinfo[2];
                 rtnSignInfo.push(psigncell);
 		  		
 		  		signCnt = signCnt + 1
@@ -955,22 +971,28 @@ function SendDraftMappingSign(ret) {
 	
 	} else {	
 		if (message.FieldExist(psigncell)) {
-			if(ret != "NAME") {
+			// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+			if (message.FieldExist(pseumyungdatecell)) {
+			    OpinionText = "\15";
+			}
+			
+			if (ret != "NAME") {
 				message.PutFieldText(psigncell, "");	
 				//HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
-
-				if (message.FieldExist(pseumyungdatecell)) {
-				    OpinionText = "";
-				}
-
-				if (CurAprType == strAprType4)
+				
+				if (CurAprType == strAprType4) {
                     OpinionText = strLangAprType4 + OpinionText;
-
+				}
+				
+				// OpinionText에 대결/전결/서명일자 표기 없이 개행문자만 존재하는 경우, 공백으로 치환
+				if (OpinionText == "\15") {
+					OpinionText = "";
+				}
+				
                 message.PrependFieldText(psigncell, OpinionText);
                 message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
                 
 			  	signInfo[signCnt] = psigncell;
-			  	
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + OpinionText;
@@ -981,21 +1003,22 @@ function SendDraftMappingSign(ret) {
 			  	SingFlag = true;
 			}
 			else {
-			    if (message.FieldExist(pseumyungdatecell)) {
-			        OpinionText = "";
+			    if (CurAprType == strAprType4) {
+			    	OpinionText = strLangAprType4 + OpinionText;
 			    }
 			    
-			    if (CurAprType == strAprType4)
-			    	OpinionText = strLangAprType4 + OpinionText;
-
+			    // OpinionText에 대결/전결/서명일자 표기 없이 개행문자만 존재하는 경우, 공백으로 치환
+				if (OpinionText == "\15") {
+					OpinionText = "";
+				}
+			    
 			    message.PutFieldText(psigncell, arr_userinfo[2]);	
 			    message.PrependFieldText(psigncell, OpinionText);
 			  	
 			  	signInfo[signCnt] = psigncell;
-			  	
 		        SignType[signCnt] = "TEXT";
 		        SignName[signCnt] = psigncell;
-		        SignContent[signCnt] = arr_userinfo[2] + OpinionText;
+		        SignContent[signCnt] = OpinionText + arr_userinfo[2];
                 rtnSignInfo.push(psigncell);
 			        
 			  	signCnt = signCnt + 1
@@ -1659,7 +1682,7 @@ function openAaprDocAttachUI() {
   try{
 	  var parameter = pDocID;
 	  var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag;
-      if(approvalFlag == "S") {
+      if (approvalFlag == "S") {
         url = "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID;
       }
 	  /* var feature	= "status:no;dialogWidth:1050px;dialogHeight:520px;edge:sunken;scroll:no;help:no"; 

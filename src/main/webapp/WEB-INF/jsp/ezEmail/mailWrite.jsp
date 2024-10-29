@@ -171,6 +171,7 @@
 	    var secureReadDate = "";
 	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
 	    var folderPath = "${drafts}";
+		var securePasswordHint = "";
 
 	    //업무일지 아이디
 	    var journalId = '<c:out value="${journalId}"/>';

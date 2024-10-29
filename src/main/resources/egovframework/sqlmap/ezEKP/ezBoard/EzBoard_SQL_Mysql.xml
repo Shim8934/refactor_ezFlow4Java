@@ -17,7 +17,11 @@
 	<typeAlias  alias="BoardDeleteItemVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO"/>
 	<typeAlias  alias="BoardPollConfigVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO"/> <!-- baonk added -->
 	<typeAlias  alias="OrganUserVO" 				type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
-
+	<typeAlias  alias="BoardLikeListVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardLikeListVO"/> 
+	<typeAlias  alias="BoardDisLikeListVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO"/> 
+	<typeAlias  alias="BoardItemVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardItemVO"/> 
+	<typeAlias  alias="BoardKeywordVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardKeywordVO"/>
+	
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
 	</resultMap>
@@ -87,6 +91,7 @@
         <result property="oneLineReply" 			column="ONELINEREPLY" 			columnIndex="37"/>
 		<result property="notiStart" 				column="NTSTARTDATE" 			columnIndex="38"/>
 		<result property="notiEnd" 					column="NTENDDATE" 				columnIndex="39"/>
+		<result property="disLikeCount" 			column="DISLIKECOUNT" 			columnIndex="40"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -136,6 +141,31 @@
 		<result property="targetDepts" 				column="TARGET_DEPTS" 			columnIndex="4"/>
 		<result property="targetUsers" 				column="TARGET_USERS" 			columnIndex="5"/>
 		<result property="tenantId" 				column="TENANT_ID" 				columnIndex="6"/>
+	</resultMap> 
+	
+	<resultMap id="likeList" class="BoardLikeListVO">
+		<result property="itemID" 					column="ITEMID" 				columnIndex="1"/>
+		<result property="userID" 		            column="USERID" 			    columnIndex="2"/>
+		<result property="likeDate"      			column="LIKEDATE" 		        columnIndex="3"/>
+		<result property="tenantID" 				column="TENANT_ID" 				columnIndex="4"/>
+		<result property="displayName" 				column="DISPLAYNAME" 			columnIndex="5"/>
+		<result property="writerID" 				column="WRITERID"			    columnIndex="6"/>
+		<result property="title" 					column="TITLE"			  	    columnIndex="7"/>
+		<result property="likeListCount" 			column="LIKELISTCOUNT"			columnIndex="8"/>
+		<result property="displayName2" 			column="DISPLAYNAME2"			columnIndex="9"/>
+	</resultMap> 
+	
+	
+	<resultMap id="disLikeList" class="BoardDisLikeListVO">
+		<result property="itemID" 					column="ITEMID" 				columnIndex="1"/>
+		<result property="userID" 		            column="USERID" 			    columnIndex="2"/>
+		<result property="disLikeDate"      		column="DISLIKEDATE" 		    columnIndex="3"/>
+		<result property="tenantID" 				column="TENANT_ID"			    columnIndex="4"/>
+		<result property="displayName" 				column="DISPLAYNAME"			columnIndex="5"/>
+		<result property="writerID" 				column="WRITERID"			    columnIndex="6"/>
+		<result property="title" 					column="TITLE"			    	columnIndex="7"/>
+		<result property="disLikeListCount" 		column="DISLIKELISTCOUNT"		columnIndex="8"/>
+		<result property="displayName2" 			column="DISPLAYNAME2"			columnIndex="9"/>
 	</resultMap> 
 	<!-- end -->
 	
@@ -1166,7 +1196,9 @@
 				WHERE
 					TENANT_ID = A.TENANT_ID
 				AND
-					ITEMID = A.ItemID) ONELINECNT,
+					ITEMID = A.ItemID
+				AND
+					(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
 				A.UPPERITEMIDTREE,
 				A.DOCNO,
 				'' AS NOTICE,
@@ -1287,11 +1319,27 @@
 				(SELECT
                 	IFNULL(COUNT(*), 0)
     			FROM
-    				TBL_Board_Like
+    				TBL_Board_Like L
+    			INNER JOIN
+    				TBL_usermaster H
+    			ON
+                  	L.USERID = H.CN
    				WHERE
-   					TENANT_ID = A.TENANT_ID
+   					H.TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) as LIKECOUNT,
+   					L.ITEMID = A.ItemID) as LIKECOUNT,
+   				(SELECT
+                	IFNULL(COUNT(*), 0)
+    			FROM
+    				TBL_Board_DisLike M
+    			INNER JOIN
+    				TBL_usermaster H
+    			ON
+                  	M.USERID = H.CN
+   				WHERE
+   					H.TENANT_ID = A.TENANT_ID
+   				AND
+   					M.ITEMID = A.ItemID) as DISLIKECOUNT,
                 B.GUBUN
 			FROM
 			  	TBL_BOARD_ITEM A INNER JOIN TBL_BOARD_BOARDINFO B ON B.BOARDID = A.BOARDID
@@ -1400,6 +1448,16 @@
   				A.WRITERNAME2,
   				A.WRITERDEPTNAME2,
   				A.WRITERCOMPANYNAME2,
+  				(SELECT
+  					COUNT(*)
+				  FROM
+				  	TBL_Board_OneLineReply
+				  WHERE
+				  	TENANT_ID = A.TENANT_ID
+				  AND
+				  	ITEMID = A.ITEMID
+				  AND
+				    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) as ONELINECNT,
   				A.UPPERITEMIDTREE,
   				A.DOCNO,
   			    '' AS NOTICE,
@@ -1408,39 +1466,55 @@
   				A.EXTENSIONATTRIBUTE8,
   				A.EXTENSIONATTRIBUTE9,
   				A.EXTENSIONATTRIBUTE10,
-  				(SELECT 
-                	IFNULL(COUNT(*), 0)  
-    			FROM 
-    				TBL_Board_Like
-   				WHERE  
-   					TENANT_ID = A.TENANT_ID
+  				(SELECT
+                	IFNULL(COUNT(*), 0)
+    			FROM
+    				TBL_Board_Like L
+    			INNER JOIN
+    				TBL_usermaster H
+    			ON
+                  	L.USERID = H.CN
+   				WHERE
+   					H.TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) as LIKECOUNT
-			FROM
-				TBL_BOARD_ITEM A
-			LEFT OUTER JOIN
-				(SELECT
-					COUNT(USERID) AS TOTALCOUNT,
-					ITEMID ,
-					TENANT_ID
-				  FROM
-				  	TBL_BOARD_ITEM_READ
-				  WHERE
-				  	TENANT_ID = #v_TENANTID#
-				  AND
-				  	USERID = #v_PUSERID#
-				  AND
-				  	BOARDID = #v_PBOARDID#
-				  GROUP BY
-				  	ITEMID, TENANT_ID) D
-			ON
-				A.TENANT_ID = D.TENANT_ID
-			AND
-				A.ITEMID = D.ITEMID
-			WHERE
-				A.TENANT_ID = #v_TENANTID#
-			AND
-				BOARDID = #v_PBOARDID#
+   					L.ITEMID = A.ItemID) as LIKECOUNT,
+   				(SELECT
+                	IFNULL(COUNT(*), 0)
+    			FROM
+    				TBL_Board_DisLike M
+    			INNER JOIN
+    				TBL_usermaster H
+    			ON
+                  	M.USERID = H.CN
+   				WHERE
+   					H.TENANT_ID = A.TENANT_ID
+   				AND
+   					M.ITEMID = A.ItemID) as DISLIKECOUNT
+ 				FROM
+ 					TBL_BOARD_ITEM A
+ 				LEFT OUTER JOIN
+ 					(SELECT
+ 						COUNT(USERID) AS TOTALCOUNT,
+ 						ITEMID ,
+ 						TENANT_ID
+ 					  FROM
+ 					  	TBL_BOARD_ITEM_READ
+ 					  WHERE
+ 					  	TENANT_ID = #v_TENANTID#
+ 					  AND
+ 					  	USERID = #v_PUSERID#
+ 					  AND
+ 					  	BOARDID = #v_PBOARDID#
+ 					  GROUP BY
+ 					  	ITEMID, TENANT_ID) D
+ 				ON
+ 					A.TENANT_ID = D.TENANT_ID
+ 				AND
+ 					A.ITEMID = D.ITEMID
+ 				WHERE
+ 					A.TENANT_ID = #v_TENANTID#
+ 				AND
+ 					BOARDID = #v_PBOARDID#
 		]]>
 			<isEqual property="adminType" compareValue="false" prepend="AND">
 				(TOPWRITERID = #v_PUSERID#
@@ -1520,6 +1594,16 @@
                 A.WRITERNAME2 ,
                 A.WRITERDEPTNAME2 ,
                 A.WRITERCOMPANYNAME2 ,
+                (SELECT
+                	COUNT(*)
+    			FROM
+    				TBL_Board_OneLineReply
+   				WHERE
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ITEMID
+   				AND
+   				    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT  ,
                 A.UPPERITEMIDTREE ,
                 A.DOCNO ,
                 A.EXTENSIONATTRIBUTE2 NOTICE  ,
@@ -1541,11 +1625,27 @@
 				(SELECT 
                 	IFNULL(COUNT(*), 0)  
     			FROM 
-    				TBL_Board_Like
+    				TBL_Board_Like L
+    			INNER JOIN
+    				TBL_usermaster H
+    			ON
+                  	L.USERID = H.CN
    				WHERE  
-   					TENANT_ID = A.TENANT_ID
+   					H.TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) as LIKECOUNT
+   					L.ITEMID = A.ItemID) as LIKECOUNT,
+   				(SELECT 
+                	IFNULL(COUNT(*), 0)
+    			FROM
+    				TBL_Board_DisLike M
+    			INNER JOIN
+    				TBL_usermaster H
+    			ON
+                  	M.USERID = H.CN
+   				WHERE
+   					H.TENANT_ID = A.TENANT_ID
+   				AND
+   					M.ITEMID = A.ItemID) as DISLIKECOUNT
               FROM 
               	TBL_Board_Item A
               WHERE  
@@ -1674,7 +1774,9 @@
     				WHERE  
     					TENANT_ID = A.TENANT_ID
     				AND
-    					ITEMID = A.ItemID) ONELINECNT ,
+    					ITEMID = A.ItemID
+    				AND
+    					(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
                     A.UPPERITEMIDTREE ,
                     A.DOCNO ,
                     A.EXTENSIONATTRIBUTE2 NOTICE ,
@@ -1742,7 +1844,9 @@
    				WHERE  
    					TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) ONELINECNT,
+   					ITEMID = A.ItemID
+				AND
+					(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
    				A.UPPERITEMIDTREE,
    				A.DOCNO,
    				CASE WHEN (
@@ -1847,7 +1951,9 @@
    				WHERE
    					TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) ONELINECNT,
+   					ITEMID = A.ItemID
+				AND
+					(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
    				A.UPPERITEMIDTREE,
    				A.DOCNO,
    				CASE WHEN (
@@ -2072,19 +2178,37 @@
    				WHERE  
    					TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) ONELINECNT,
+					ITEMID = A.ItemID
+   				AND
+   				    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
    				A.DOCNO,
    				A.MAINCONTENT,
    				B.FILEPATH,
    				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+				(SELECT
+                	IFNULL(COUNT(*), 0)
+    			FROM
+    				TBL_Board_Like L
+    			INNER JOIN
+    				TBL_usermaster H
+    			ON
+                  	L.USERID = H.CN
+   				WHERE
+   					H.TENANT_ID = A.TENANT_ID
+   				AND
+   					L.ITEMID = A.ItemID) as LIKECOUNT,
    				(SELECT 
                 	IFNULL(COUNT(*), 0)  
     			FROM 
-    				TBL_Board_Like
+    				TBL_Board_DisLike M
+    			INNER JOIN
+    				TBL_usermaster H
+    			ON
+                  	M.USERID = H.CN
    				WHERE  
-   					TENANT_ID = A.TENANT_ID
+   					H.TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) as LIKECOUNT
+   					M.ITEMID = A.ItemID) as DISLIKECOUNT
 			FROM
 				TBL_BOARD_ITEM A
 			INNER JOIN
@@ -2180,19 +2304,37 @@
    				WHERE
    					TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) ONELINECNT,
+   					ITEMID = A.ItemID
+   				AND
+	   				(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
    				A.DOCNO,
    				A.MAINCONTENT,
    				B.FILEPATH,
    				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
 				(SELECT
-					IFNULL(COUNT(*), 0)
-	   			FROM
-	   				TBL_Board_Like
-				WHERE
-					TENANT_ID = A.TENANT_ID
-				AND
-					ITEMID = A.ItemID) as LIKECOUNT
+					 IFNULL(COUNT(*), 0)
+				 FROM
+					 TBL_Board_Like L
+				 INNER JOIN
+					 TBL_usermaster H
+				 ON
+					 L.USERID = H.CN
+				 WHERE
+					 H.TENANT_ID = A.TENANT_ID
+			   	 AND
+					 L.ITEMID = A.ItemID) as LIKECOUNT,
+				(SELECT
+					 IFNULL(COUNT(*), 0)
+				 FROM
+					 TBL_Board_DisLike M
+				 INNER JOIN
+					 TBL_usermaster H
+				 ON
+					 M.USERID = H.CN
+				 WHERE
+					 H.TENANT_ID = A.TENANT_ID
+			   	 AND
+					 M.ITEMID = A.ItemID) as DISLIKECOUNT
 			FROM
 				TBL_BOARD_ITEM A
 			INNER JOIN
@@ -2263,6 +2405,31 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
 		</isNotEmpty>
+		<isEqual property="v_useKeywordFlag" compareValue="Y">
+				<isNotEmpty property="v_KEYWORD">
+					<![CDATA[
+					AND
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							AND
+								BK.BOARDID = #v_PBOARDID#
+							AND
+								BK.TENANT_ID = #v_TENANTID#
+						)
+					]]>
+				</isNotEmpty>
+			</isEqual>
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -2388,14 +2555,30 @@
 					ELSE (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END)
 				END BOARDNAME,
 		    	I.GUBUN,
-		    	(SELECT
-		         	IFNULL(COUNT(*), 0)
+				(SELECT
+					IFNULL(COUNT(*), 0)
 				FROM
-					TBL_Board_Like
+					TBL_Board_Like L
+				INNER JOIN
+					TBL_usermaster H
+				ON
+					L.USERID = H.CN
 				WHERE
-					TENANT_ID = A.TENANT_ID
+					H.TENANT_ID = A.TENANT_ID
 				AND
-					ITEMID = A.ItemID) as LIKECOUNT
+					L.ITEMID = A.ItemID) as LIKECOUNT,
+				(SELECT
+					IFNULL(COUNT(*), 0)
+				FROM
+					TBL_Board_DisLike M
+				INNER JOIN
+					TBL_usermaster H
+				ON
+					M.USERID = H.CN
+				WHERE
+					H.TENANT_ID = A.TENANT_ID
+				AND
+					M.ITEMID = A.ItemID) as DISLIKECOUNT
 			FROM
 				TBL_BOARD_ITEM A
 			LEFT OUTER JOIN
@@ -2467,6 +2650,31 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
 		</isNotEmpty>
+		<isEqual property="v_useKeywordFlag" compareValue="Y">
+			<isNotEmpty property="v_KEYWORD">
+				<![CDATA[
+				AND
+					A.ITEMID in (
+						SELECT DISTINCT
+							ITEMID
+						FROM
+							tbl_board_boarditem_keyword BK
+						INNER JOIN
+							TBL_BOARD_KEYWORD K
+						ON
+							BK.KEYWORDID = K.KEYWORDID
+						AND
+							BK.TENANT_ID = K.TENANT_ID
+						WHERE
+							K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						AND
+							BK.BOARDID = #v_PBOARDID#
+						AND
+							BK.TENANT_ID = #v_TENANTID#
+					)
+					]]>
+			</isNotEmpty>
+		</isEqual>
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -2606,6 +2814,31 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
 		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+			AND
+			(
+			 	I.USEKEYWORD = 'Y'
+			 AND
+				A.ITEMID in (
+					SELECT DISTINCT
+						ITEMID
+					FROM
+						tbl_board_boarditem_keyword BK
+					INNER JOIN
+						TBL_BOARD_KEYWORD K
+					ON
+						BK.KEYWORDID = K.KEYWORDID
+					AND
+						BK.TENANT_ID = K.TENANT_ID
+					WHERE
+						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+					AND
+						BK.TENANT_ID = #v_TENANTID#
+				)
+			)
+			]]>
+		</isNotEmpty>
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -2732,6 +2965,31 @@
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+				AND 
+				(
+					I.USEKEYWORD = 'Y'
+				 AND
+					A.ITEMID in (
+						SELECT DISTINCT
+							ITEMID
+						FROM
+							tbl_board_boarditem_keyword BK
+						INNER JOIN
+							TBL_BOARD_KEYWORD K
+						ON
+							BK.KEYWORDID = K.KEYWORDID
+						AND
+							BK.TENANT_ID = K.TENANT_ID
+						WHERE
+							K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						AND
+							BK.TENANT_ID = #v_TENANTID#
+					)
+				)
+			]]>
 		</isNotEmpty>
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
@@ -2864,6 +3122,31 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
 		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+				AND
+				(
+					B.USEKEYWORD = 'Y'
+				 AND
+					A.ITEMID in (
+						SELECT DISTINCT
+							ITEMID
+						FROM
+							tbl_board_boarditem_keyword BK
+						INNER JOIN
+							TBL_BOARD_KEYWORD K
+						ON
+							BK.KEYWORDID = K.KEYWORDID
+						AND
+							BK.TENANT_ID = K.TENANT_ID
+						WHERE
+							K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						AND
+							BK.TENANT_ID = #v_TENANTID#
+					)
+				)
+			]]>
+		</isNotEmpty>
 			ORDER BY
 			<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -2982,13 +3265,29 @@
 				NTENDDATE,
 				(SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE,
 				(SELECT
-                	IFNULL(COUNT(*), 0)
-    			FROM
-    				TBL_Board_Like
-   				WHERE
-   					TENANT_ID = A.TENANT_ID
-   				AND
-   					ITEMID = A.ItemID) as LIKECOUNT,
+					 IFNULL(COUNT(*), 0)
+				 FROM
+					 TBL_Board_Like L
+				 INNER JOIN
+					 TBL_usermaster H
+				 ON
+					 L.USERID = H.CN
+				 WHERE
+					 H.TENANT_ID = A.TENANT_ID
+			   	 AND
+					 L.ITEMID = A.ItemID) as LIKECOUNT,
+				(SELECT
+					 IFNULL(COUNT(*), 0)
+				 FROM
+					 TBL_Board_DisLike M
+				 INNER JOIN
+					 TBL_usermaster H
+				 ON
+					 M.USERID = H.CN
+				 WHERE
+					 H.TENANT_ID = A.TENANT_ID
+			   	 AND
+					 M.ITEMID = A.ItemID) as DISLIKECOUNT,
 	            B.ONELINEREPLY
 	        FROM
 	        	TBL_Board_Item A
@@ -3728,7 +4027,7 @@
 		</isNotEqual>
 		<![CDATA[
    			AND
-   				TENANT_ID = #v_TENANTID#
+   				A.TENANT_ID = #v_TENANTID#
    			AND (
 				(A.APPRFLAG <> 'C'
 				AND
@@ -3762,6 +4061,31 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
 		</isNotEmpty>
+		<isEqual property="v_useKeywordFlag" compareValue="Y">
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+			AND
+				A.ITEMID in (
+					SELECT DISTINCT
+						ITEMID
+					FROM
+						tbl_board_boarditem_keyword BK
+					INNER JOIN
+						TBL_BOARD_KEYWORD K
+					ON
+						BK.KEYWORDID = K.KEYWORDID
+					AND
+						BK.TENANT_ID = K.TENANT_ID
+					WHERE
+						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+					AND
+						BK.BOARDID = #v_pBoardID#
+					AND
+						BK.TENANT_ID = #v_TENANTID#
+				)
+			]]>
+		</isNotEmpty>
+		</isEqual>
 	</select>
 	
 	<select id="EzBoardDAO.getMyNoticePostItemCount" parameterClass="Map" resultClass="Integer">
@@ -3845,6 +4169,30 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
 		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+		<![CDATA[
+			AND (
+				B.USEKEYWORD = 'Y'
+			AND
+				A.ITEMID in (
+					SELECT DISTINCT
+						ITEMID
+					FROM
+						tbl_board_boarditem_keyword BK
+					INNER JOIN
+						TBL_BOARD_KEYWORD K
+					ON
+						BK.KEYWORDID = K.KEYWORDID
+					AND
+						BK.TENANT_ID = K.TENANT_ID
+					WHERE
+						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+					AND
+						BK.TENANT_ID = #v_TENANTID#
+				)
+			)
+		]]>
+		</isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getSearchMyBoardItemCountTemp" parameterClass="Map" resultClass="Integer">
@@ -3884,6 +4232,30 @@
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+			AND (
+				B.USEKEYWORD = 'Y'
+			AND
+				A.ITEMID in (
+					SELECT DISTINCT
+						ITEMID
+					FROM
+						tbl_board_boarditem_keyword BK
+					INNER JOIN
+						TBL_BOARD_KEYWORD K
+					ON
+						BK.KEYWORDID = K.KEYWORDID
+					AND
+						BK.TENANT_ID = K.TENANT_ID
+					WHERE
+						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+					AND
+						BK.TENANT_ID = #v_TENANTID#
+				)
+			)
+		]]>
 		</isNotEmpty>
 	</select>
 	
@@ -4262,9 +4634,20 @@
 				A.WRITEDATE,
 				DEPTID,
 			    COUNT(CASE WHEN R.REACTFLAG = 'Y' THEN '1' END) AS RE_LIKE,
-			    COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE
+			    COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE,
+			    A.PARENTREPLYID,
+				A.PARENTWRITERNAME,
+				IF(A.PARENTREPLYID IS NOT NULL, A.PARENTREPLYID, A.REPLYID) AS GROUPID,
+				IF(A.PARENTREPLYID IS NOT NULL, D.WRITEDATE, A.WRITEDATE) AS GROUPDATE,
+				IFNULL(A.REPLYLEVEL, 1) AS REPLYLEVEL,
+				A.UPDATEDATE,
+				A.IMAGECONTENT
 	        FROM
 	        	TBL_BOARD_ONELINEREPLY A
+	        LEFT OUTER JOIN
+		        TBL_BOARD_ONELINEREPLY D
+		    ON
+		    	A.PARENTREPLYID = D.REPLYID
 	        LEFT OUTER JOIN
 				TBL_BOARD_REPLY_REACT R
 			ON
@@ -4325,9 +4708,9 @@
 			AND
 				A.ITEMID = #v_ItemID#
 			GROUP BY
-				A.USERID, A.REPLYID
+				A.USERID, A.REPLYID, GROUPID
 			ORDER BY
-				writedate ASC
+				GROUPDATE, GROUPID, A.WRITEDATE
 		</isNotEqual>
 		<!-- 2018-10-19 홍승비 - 익명댓글 표출 분기 추가 -->
 		<isEqual property="v_GUBUN" compareValue="2">
@@ -4338,9 +4721,20 @@
 				A.CONTENT,
 				A.WRITEDATE,
 				COUNT(CASE WHEN R.REACTFLAG = 'Y' THEN '1' END) AS RE_LIKE,
-				COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE
+				COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE,
+				A.PARENTREPLYID,
+				A.PARENTWRITERNAME,
+				IF(A.PARENTREPLYID IS NOT NULL, A.PARENTREPLYID, A.REPLYID) AS GROUPID,
+				IF(A.PARENTREPLYID IS NOT NULL, D.WRITEDATE, A.WRITEDATE) AS GROUPDATE,
+				IFNULL(A.REPLYLEVEL, 1) AS REPLYLEVEL,
+				A.UPDATEDATE,
+				A.IMAGECONTENT
 			FROM
 				TBL_BOARD_ONELINEREPLY A
+			LEFT OUTER JOIN
+				TBL_BOARD_ONELINEREPLY D
+			ON
+				A.PARENTREPLYID = D.REPLYID
 			LEFT OUTER JOIN
 				TBL_BOARD_REPLY_REACT R
 			ON
@@ -4356,9 +4750,9 @@
 			AND
 				A.ITEMID = #v_ItemID#
 			GROUP BY
-				A.REPLYID
+				A.REPLYID, GROUPID
 			ORDER BY
-				WRITEDATE  ASC
+				GROUPDATE, GROUPID, A.WRITEDATE
 		</isEqual>
 	</select>
 		
@@ -4546,6 +4940,31 @@
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+					AND
+					(
+						C.USEKEYWORD = 'Y'
+					 AND
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							AND
+								BK.TENANT_ID = #v_TENANTID#
+						)
+					)
+			]]>
 		</isNotEmpty>
 	</select>
 	
@@ -5353,13 +5772,14 @@
 		]]>
 	</insert>
 	
+	<!-- 2023-11-07 전인하 - 이모티콘 삽입 시 분기 추가 -->
 	<insert id="EzBoardDAO.saveOneLineReply" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_ONELINEREPLY (
-				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   content, 		password, 	  tenant_id, companyid
+				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   content, 		password, 	  tenant_id, companyid, IMAGECONTENT
 			)
         	VALUES (
-        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, #nowDate#,	  #PCONTENT#,	#PPASSWORD# , #TENANTID#, #COMPANYID#
+        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, #nowDate#,	  #PCONTENT#,	#PPASSWORD# , #TENANTID#, #COMPANYID#, #v_EMOTICON#
         	)
 		]]>
 	</insert>
@@ -5700,6 +6120,8 @@
        			boardID = #boardID#
             AND 
             	ItemID = #itemID#
+			AND
+       		    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)
 		]]>
   </select>
  
@@ -5910,6 +6332,35 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 		 	AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
 		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+				AND (
+					I.USEKEYWORD = 'Y'
+				AND
+					A.ITEMID in (
+						SELECT DISTINCT
+							ITEMID
+						FROM
+							tbl_board_boarditem_keyword BK
+						INNER JOIN
+							TBL_BOARD_KEYWORD K
+						ON
+							BK.KEYWORDID = K.KEYWORDID
+						AND
+							BK.TENANT_ID = K.TENANT_ID
+						WHERE
+			]]>
+					<isNotEmpty property="v_KEYWORDCLICK">
+						K.KEYWORDNAME = #v_KEYWORDCLICK#
+					</isNotEmpty>
+					<isEmpty property="v_KEYWORDCLICK">
+						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+					</isEmpty>
+						AND
+							BK.TENANT_ID = #v_TENANTID#
+					)
+				)
+		</isNotEmpty>
 		ORDER BY
 		<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 		<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
@@ -6021,6 +6472,35 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
 		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			<![CDATA[
+				AND (
+					I.USEKEYWORD = 'Y'
+				AND
+					A.ITEMID in (
+						SELECT DISTINCT
+							ITEMID
+						FROM
+							tbl_board_boarditem_keyword BK
+						INNER JOIN
+							TBL_BOARD_KEYWORD K
+						ON
+							BK.KEYWORDID = K.KEYWORDID
+						AND
+							BK.TENANT_ID = K.TENANT_ID
+						WHERE
+			]]>
+						<isNotEmpty property="v_KEYWORDCLICK">
+							K.KEYWORDNAME = #v_KEYWORDCLICK#
+						</isNotEmpty>
+						<isEmpty property="v_KEYWORDCLICK">
+							K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						</isEmpty>
+						AND
+							BK.TENANT_ID = #v_TENANTID#
+					)
+				)
+		</isNotEmpty>
 	</select>
 	
 	<update id="EzBoardDAO.modUpdateDate" parameterClass="Map">
@@ -6040,11 +6520,17 @@
 			SELECT
 				IFNULL(COUNT(*), 0)
 			FROM
-				TBL_Board_Like
+				TBL_Board_Like A
+			INNER JOIN 
+				TBL_USERMASTER B
+		    ON 
+		        A.USERID = B.CN
+		    AND 
+		        A.TENANT_ID = B.TENANT_ID
 			WHERE
-	       		TENANT_ID = #v_tenantID#
+	       		A.TENANT_ID = #v_tenantID#
 	       	AND
-	       		ITEMID = #v_itemID#
+	       		A.ITEMID = #v_itemID#
        	]]>
 	</select>
 	
@@ -6607,6 +7093,8 @@
 				ITEMID = #v_itemID# 
 			AND 
 				TENANT_ID = #v_TENANTID#
+			AND
+			    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)
 		]]>
 	</select>
 	
@@ -6936,5 +7424,269 @@
 		AND
 			TENANT_ID = #tenantID#
 	</select>
+	
+	<select id="EzBoardDAO.getDisLikeCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				IFNULL(COUNT(*), 0)
+			FROM
+				TBL_Board_disLike A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				A.USERID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				A.TENANT_ID = #v_tenantID#
+		  	AND
+				A.ITEMID = #v_itemID#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.disLikeCheck" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM
+				TBL_Board_disLike
+			WHERE
+	       		TENANT_ID = #v_tenantID#
+	       	AND  
+	       		USERID = #v_userID#
+	       	AND
+	       		ITEMID = #v_itemID#
+       	]]>
+	</select>
+	
+	<delete id="EzBoardDAO.disLikeDelete" parameterClass="Map">
+  		<![CDATA[
+  			DELETE FROM TBL_Board_disLike
+  			WHERE
+  				TENANT_ID = #v_tenantID#
+  			AND
+  				USERID = #v_userID#
+  			AND
+  				ITEMID = #v_itemID#
+		]]>
+   </delete>
+  
+	<insert id="EzBoardDAO.disLikeInsert" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_disLike ( 
+				ITEMID, USERID, DISLIKEDATE, TENANT_ID
+			)
+        	VALUES ( 
+        		#v_itemID#, #v_userID#, #v_disLikeDate#, #v_tenantID#
+        	)
+		]]>
+	</insert>
+	
+	<select id="EzBoardDAO.getLikeList" parameterClass="Map" resultMap="likeList">
+		<![CDATA[
+			SELECT A.ITEMID,
+				   A.USERID,
+				   A.LIKEDATE,
+				   A.TENANT_ID,
+				   B.DISPLAYNAME,
+				   C.WRITERID,
+				   C.TITLE,
+				   B.DISPLAYNAME2,
+				   (SELECT COUNT(*) LIKELISTCOUNT
+					  FROM TBL_BOARD_LIKE D
+					  INNER JOIN TBL_USERMASTER E
+					  ON D.USERID = E.CN
+					  AND D.TENANT_ID = E.TENANT_ID
+					  WHERE ITEMID = #itemID#) AS LIKELISTCOUNT
+			FROM 
+				(TBL_BOARD_LIKE A
+			INNER JOIN TBL_USERMASTER B 
+			ON A.USERID=B.CN
+			AND A.TENANT_ID = B.TENANT_ID)		
+			INNER JOIN TBL_BOARD_ITEM C 
+			ON A.ITEMID=C.ITEMID
+			WHERE 
+				A.ITEMID = #itemID#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getDisLikeList" parameterClass="Map" resultMap="disLikeList">
+		<![CDATA[
+			SELECT 
+				A.ITEMID,
+				A.USERID,
+				A.DISLIKEDATE,
+				A.TENANT_ID,
+				B.DISPLAYNAME,
+				C.WRITERID,
+				C.TITLE,
+				B.DISPLAYNAME2,
+				(SELECT COUNT(*) DISLIKELISTCOUNT
+					FROM TBL_BOARD_DISLIKE D
+				    INNER JOIN TBL_USERMASTER E
+					ON D.USERID = E.CN
+					AND D.TENANT_ID = E.TENANT_ID
+					WHERE ITEMID = #itemID#) AS DISLIKELISTCOUNT
+			FROM 
+				(TBL_BOARD_DISLIKE A
+			INNER JOIN TBL_USERMASTER B 
+			ON A.USERID = B.CN
+			AND A.TENANT_ID = B.TENANT_ID)		
+			INNER JOIN TBL_BOARD_ITEM C 
+			ON A.ITEMID=C.ITEMID
+			WHERE 
+				A.ITEMID = #itemID#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getItemInfoList" parameterClass="Map" resultClass="BoardItemVO">
+		<![CDATA[
+			SELECT
+			  	*
+			FROM 
+				TBL_BOARD_ITEM
+			WHERE 
+				ITEMID = #itemID#
+		]]>
+	</select>
+	
+	<!-- 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 답글을 저장하는 쿼리 -->
+	<insert id="EzBoardDAO.saveOneLineChildReply" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_ONELINEREPLY (
+				itemid, replyid, boardid, userid, username, username2, writedate, content, password, parentreplyid, parentwritername, replylevel, tenant_id, companyid, IMAGECONTENT
+			)
+			VALUES (
+				#v_ITEMID#, #v_REPLYID#, #v_BOARDID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_NOWDATE#, #v_CONTENT#, #v_PASSWORD#, #v_PARENTREPLYID#, #v_PARENTWRITERNAME#, #v_REPLYLEVEL#, #v_TENANTID#, #v_COMPANYID#, #v_EMOTICON#
+			)
+		]]>
+	</insert>
 
+	<!-- 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글, 답글 수정되었을 경우 업데이트하는 쿼리 -->
+	<update id="EzBoardDAO.updateOneLineReply" parameterClass="map">
+		<![CDATA[
+			UPDATE
+			    TBL_BOARD_ONELINEREPLY
+			SET
+			    CONTENT = #v_CONTENT#,
+			    UPDATEDATE = #v_UPDATEDATE#,
+			    IMAGECONTENT = #v_EMOTICON#
+			WHERE
+			    ITEMID = #v_ITEMID#
+			AND
+			    BOARDID = #v_BOARDID#
+			AND
+			    REPLYID = #v_REPLYID#
+		]]>
+	</update>
+
+	<!-- 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.getChildReplyCnt" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			WHERE
+				ITEMID = #v_ITEMID#
+			AND
+				BOARDID = #v_BOARDID#
+			AND
+				PARENTREPLYID = #v_REPLYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<!-- 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식있는 부모댓글 삭제할 경우 해당 댓글 값 NULL로 변경하는 쿼리 -->
+	<update id="EzBoardDAO.updateDelParentReply" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_BOARD_ONELINEREPLY
+			SET
+				USERID = NULL,
+				USERNAME = NULL,
+				USERNAME2 = NULL,
+				CONTENT = NULL,
+				UPDATEDATE = NULL,
+				IMAGECONTENT = NULL
+			WHERE
+				REPLYID = #v_REPLYID#
+			AND
+				ITEMID = #v_ITEMID#
+			AND
+				BOARDID = #v_BOARDID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
+
+	<insert id="EzBoardDAO.insertKeyword" parameterClass="Map">
+		INSERT IGNORE INTO TBL_BOARD_KEYWORD (
+			KEYWORDNAME, TENANT_ID
+		)
+		<iterate property="v_keywords" prepend="VALUES" conjunction=",">
+			( #v_keywords[]#, #v_tenantID# )
+		</iterate>
+	</insert>
+	
+	<insert id="EzBoardDAO.insertBoardItemKeyword" parameterClass="list">
+		INSERT INTO TBL_BOARD_BOARDITEM_KEYWORD (
+			KEYWORDID, BOARDID, ITEMID, TENANT_ID, SN
+		)
+		<iterate prepend="VALUES" conjunction=",">
+			( #[].keywordId#, #[].boardId#, #[].itemId#, #[].tenant_id#, #[].sn#)
+		</iterate>
+	</insert>
+	
+	<delete id="EzBoardDAO.deleteBoardItemKeyword" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				FROM TBL_BOARD_BOARDITEM_KEYWORD
+            WHERE
+            	BOARDID = #v_boardID#
+            AND  
+            	ITEMID = #v_itemID#
+		]]>
+	</delete>
+
+	<select id="EzBoardDAO.selectBoardKeywordByKeywordName" parameterClass="Map" resultClass="BoardKeywordVO">
+		SELECT
+			*,
+			#v_boardID# as BOARDID,
+			#v_itemID# as ITEMID
+		FROM
+			TBL_BOARD_KEYWORD
+		WHERE
+			KEYWORDNAME IN <iterate property="v_keywords" open="(" close=")" conjunction=","> #v_keywords[]# </iterate>
+		AND
+			TENANT_ID = #v_tenantID#
+	</select>
+
+	<select id="EzBoardDAO.selectBoardKeywordByBoardItem" parameterClass="Map" resultClass="BoardKeywordVO">
+		SELECT
+			K.*
+		FROM
+			TBL_BOARD_KEYWORD K
+		INNER JOIN
+			TBL_BOARD_BOARDITEM_KEYWORD BK
+		ON
+			K.KEYWORDID = BK.KEYWORDID
+		AND
+			K.TENANT_ID = BK.TENANT_ID
+		WHERE
+			1 = 1
+		<isNotEmpty property="v_itemID">
+			AND
+				BK.ITEMID = #v_itemID#
+		</isNotEmpty>
+		<isNotEmpty property="v_boardID">
+			AND
+				BK.BOARDID = #v_boardID#
+		</isNotEmpty>
+		AND
+			K.TENANT_ID = #v_tenantID#
+		ORDER BY
+			SN
+	</select>
 </sqlMap>

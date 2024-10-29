@@ -395,136 +395,139 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 
 					Message[] messages = f.search(searchTerm);
 
-                    logger.debug("messages length=" + messages.length);
-
-                    f.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
-                    f.close(true);
-                }
+					logger.debug("messages length=" + messages.length);
+					
+					f.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+					f.close(true);
+				}
             } catch (MessagingException e) {
                 logger.error(e.getMessage(), e);
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-            } finally {
-                if (ia != null) {
-                    ia.close();
-                }
-            }
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+			
+		}
+		
+		logger.debug("autoDelete scheduler ended.");
+	}
+	
+	/**
+	 * 메일 예약발송 스케줄러
+	 */
+	@Scheduled(cron = "${config.cron.reservedMailSend}")
+	public void reservedMailSend() throws Exception{
+		logger.debug("reservedMailSend scheduler started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("reservedMailSend scheduler ended.");
+			return;
+		}
+		
+		//choose scheduler running server
+		if (!preScheduler("reservedMailSend")) {
+			logger.debug("reservedMailSend scheduler ended.");
+			return;
+		}
+		
+		List<MailReservationVO> list = ezEmailService.getMailReserved2();
+		List<String> invalidAddressList = new ArrayList<>();
+		boolean retryFlag = false;
+		
+		for (int i = 0; i < list.size(); i++) {
+			MailReservationVO vo = list.get(i);
+			
+			logger.debug("messageId=" + vo.getMessageId());
+			logger.debug("userAccount=" + vo.getConnUrl());
+			
+			IMAPAccess ia = null;
+			FileInputStream fis = null;
+			File f = null;
+			File encryptedFile = null; // 보안메일 관련 파일 변수
+			String userAccount = vo.getConnUrl();
+			MimeMessage message = null;
+			Locale locale = null;
+			String offset = null;
+			
+			try {
+				
+				String password = jspw;
+	
+				String realPath = commonUtil.getRealPath(servletContext);
+				
+				String userId = userAccount.split("@")[0];
+				String domainName = userAccount.split("@")[1];
+				
+				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
+				locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
+				offset = ezCommonService.selectUserGetTimeZone(userId, tenantId);
+				String sentMailStoredInSentBox = config.getProperty("SentMailStoredInSentbox", "YES");
+				logger.debug("locale=" + locale + ",offset=" + offset + ",sentMailStoredInSentBox=" + sentMailStoredInSentBox);
+				
+				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
+				pDirPath = realPath + pDirPath;
+	
+				f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
+				logger.debug("filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
+								
+				if (f.exists()) {
+					fis = new FileInputStream(f);
+	
+					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+							userAccount, password);
+	
+					message = sa.readMimeMessage(fis);
+					
+					//SentDate 재설정
+			        message.setSentDate(Calendar.getInstance().getTime());
+					logger.debug("Reset sentDate. sentDate=" + message.getSentDate().toString());
+			        
+					String[] eachMailHeaders = message.getHeader("X-JMocha-Each-Mail");
+					String eachMailHeader = eachMailHeaders != null ? eachMailHeaders[0] : null;		
+					
+					if (eachMailHeader != null) {
+						message.removeHeader("X-JMocha-Each-Mail");
+					}
+					
+					String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", tenantId);
+			        logger.debug("useSecureMail=" + useSecureMail);
+					
+					String[] secureMailHeaders = message.getHeader("X-JMocha-Secure-Mail");
+					String secureMailHeader = secureMailHeaders != null ? secureMailHeaders[0] : null;		
+					
+					// 보안메일 처리
+					if (useSecureMail.equals("YES") && secureMailHeader != null && secureMailHeader.equals("true")) {
+						
+						// get Info from secureMail header
+						secureMailHeader = MimeUtility.decodeText(secureMailHeader);
+						String securePassword = message.getHeader("X-JMocha-Secure-Mail-Password")[0];
+						String secureReadCount = message.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
+						String secureReadDate = message.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
+						String serverName = message.getHeader("X-JMocha-Secure-Mail-ServerName")[0];
+						String securePasswordHint = message.getHeader("X-JMocha-Secure-Mail-PasswordHint")[0];
+						
+						// 암호화되어있는 securePassword 복호화
+		    			String prm = egovFileScrty.getPrm();
+		            	String pre = egovFileScrty.getPre();
+		            	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		            	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
 
-        }
-
-        logger.debug("autoDelete scheduler ended.");
-    }
-
-    /**
-     * 메일 예약발송 스케줄러
-     */
-    @Scheduled(cron = "${config.cron.reservedMailSend}")
-    public void reservedMailSend() throws Exception {
-        logger.debug("reservedMailSend scheduler started.");
-
-        String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
-        if (useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
-            logger.debug("reservedMailSend scheduler ended.");
-            return;
-        }
-
-        //choose scheduler running server
-        if (!preScheduler("reservedMailSend")) {
-            logger.debug("reservedMailSend scheduler ended.");
-            return;
-        }
-
-        List<MailReservationVO> list = ezEmailService.getMailReserved2();
-        List<String> invalidAddressList = new ArrayList<>();
-        boolean retryFlag = false;
-
-        for (int i = 0; i < list.size(); i++) {
-            MailReservationVO vo = list.get(i);
-
-            logger.debug("messageId=" + vo.getMessageId());
-            logger.debug("userAccount=" + vo.getConnUrl());
-
-            IMAPAccess ia = null;
-            FileInputStream fis = null;
-            File f = null;
-            File encryptedFile = null; // 보안메일 관련 파일 변수
-            String userAccount = vo.getConnUrl();
-            MimeMessage message = null;
-            Locale locale = null;
-            String offset = null;
-
-            try {
-
-                String password = jspw;
-
-                String realPath = commonUtil.getRealPath(servletContext);
-
-                String userId = userAccount.split("@")[0];
-                String domainName = userAccount.split("@")[1];
-
-                int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
-                String lang = ezCommonService.selectUserGetLang(userId, tenantId);
-                locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
-                offset = ezCommonService.selectUserGetTimeZone(userId, tenantId);
-                String sentMailStoredInSentBox = config.getProperty("SentMailStoredInSentbox", "YES");
-                logger.debug("locale=" + locale + ",offset=" + offset + ",sentMailStoredInSentBox=" + sentMailStoredInSentBox);
-
-                String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
-                pDirPath = realPath + pDirPath;
-
-                f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
-                logger.debug("filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
-
-                if (f.exists()) {
-                    fis = new FileInputStream(f);
-
-                    SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-                            userAccount, password);
-
-                    message = sa.readMimeMessage(fis);
-
-                    //SentDate 재설정
-                    message.setSentDate(Calendar.getInstance().getTime());
-                    logger.debug("Reset sentDate. sentDate=" + message.getSentDate().toString());
-
-                    String[] eachMailHeaders = message.getHeader("X-JMocha-Each-Mail");
-                    String eachMailHeader = eachMailHeaders != null ? eachMailHeaders[0] : null;
-
-                    if (eachMailHeader != null) {
-                        message.removeHeader("X-JMocha-Each-Mail");
-                    }
-
-                    String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", tenantId);
-                    logger.debug("useSecureMail=" + useSecureMail);
-
-                    String[] secureMailHeaders = message.getHeader("X-JMocha-Secure-Mail");
-                    String secureMailHeader = secureMailHeaders != null ? secureMailHeaders[0] : null;
-
-                    // 보안메일 처리
-                    if (useSecureMail.equals("YES") && secureMailHeader != null && secureMailHeader.equals("true")) {
-
-                        // get Info from secureMail header
-                        secureMailHeader = MimeUtility.decodeText(secureMailHeader);
-                        String securePassword = message.getHeader("X-JMocha-Secure-Mail-Password")[0];
-                        String secureReadCount = message.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
-                        String secureReadDate = message.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
-                        String serverName = message.getHeader("X-JMocha-Secure-Mail-ServerName")[0];
-
-                        // 암호화되어있는 securePassword 복호화
-                        String prm = egovFileScrty.getPrm();
-                        String pre = egovFileScrty.getPre();
-                        PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
-                        securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
-
+                        boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
+                        
                         logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount
-                                + ",secureReadDate=" + secureReadDate + ",serverName=" + serverName);
+                                + ",secureReadDate=" + secureReadDate + ",serverName=" + serverName + ",useKlibEncrypt=" + useKlibEncrypt);
 
                         // remove header
                         message.removeHeader("X-JMocha-Secure-Mail-Password");
                         message.removeHeader("X-JMocha-Secure-Mail-ReadCount");
                         message.removeHeader("X-JMocha-Secure-Mail-ReadDate");
                         message.removeHeader("X-JMocha-Secure-Mail-ServerName");
-                        message.removeHeader("X-JMocha-Secure-Mail");
+                        message.removeHeader("X-JMocha-Secure-Mail-PasswordHint");
 
                         // timezone 처리 확인
                         if (!secureReadDate.equals("")) {
@@ -534,7 +537,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                         }
 
                         // securePassword 암호화
-                        securePassword = egovFileScrty.encryptAES(securePassword);
+                        securePassword = ezEmailService.encryptSecureValue(securePassword, useKlibEncrypt);
 
                         // save secure mail info and get secureId
                         int secureId = ezEmailService.setMailSecure(tenantId, userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
@@ -590,34 +593,37 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                         String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
 
                         String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
-                        secureMailKey = egovFileScrty.encryptAES(secureMailKey);
+                        secureMailKey = ezEmailService.encryptSecureValue(secureMailKey, useKlibEncrypt);
 
-                        secureAttachPart.setContent(secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
-                        secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
-                        secureMixedPart.addBodyPart(secureAttachPart);
-                        // make secureAttachPart and add to secureMixedPart - end
+                        secureAttachHtml = secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey);
+                        secureAttachHtml = secureAttachHtml.replace("${passwordHint}", securePasswordHint);
 
-                        // make encryptedOriginalPart and add to secureMixedPart
-                        MimeBodyPart encryptedOriginalPart = new MimeBodyPart();
-
-                        String tempPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "tempFileUpload";
-
-                        File file = new File(tempPath);
-                        if (!file.exists()) {
-                            file.mkdirs();
-                        }
-
-                        File originalFile = new File(tempPath + commonUtil.separator + UUID.randomUUID().toString());
-                        FileOutputStream fos = null;
-
-                        try {
-                            fos = new FileOutputStream(originalFile);
-                            message.writeTo(fos);
+						secureAttachPart.setContent(secureAttachHtml, "text/html; charset=utf-8");
+    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
+    		        	secureMixedPart.addBodyPart(secureAttachPart);
+    		        	// make secureAttachPart and add to secureMixedPart - end
+    		        	
+    		        	// make encryptedOriginalPart and add to secureMixedPart
+    		        	MimeBodyPart encryptedOriginalPart = new MimeBodyPart();
+    		        	
+    		        	String tempPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "tempFileUpload";
+    		        	
+    		        	File file = new File(tempPath);
+    		        	if (!file.exists()) {
+    		        		file.mkdirs();
+    		        	}
+    			        
+    		        	File originalFile = new File(tempPath + commonUtil.separator + UUID.randomUUID().toString());
+    		        	FileOutputStream fos = null;
+    		        	
+    		        	try {
+    		        		fos = new FileOutputStream(originalFile);
+    		        		message.writeTo(fos);
                         } catch (FileNotFoundException e) {
                             logger.error(e.getMessage(), e);
-                        } catch (Exception e) {
-                            logger.error(e.getMessage(), e);
-                        } finally {
+    		        	} catch (Exception e) {
+    		        		logger.error(e.getMessage(), e);
+    		        	} finally {
                             if (fos != null) {
                                 try {
                                     fos.close();
@@ -625,108 +631,114 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                                     logger.debug("e.message=" + e.getMessage());
                                 }
                             }
-                        }
-
-                        encryptedFile = new File(tempPath + commonUtil.separator + UUID.randomUUID().toString());
-                        egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
-
-                        if (originalFile.delete()) {
-                            logger.debug("originalFile is deleted. fileName=" + originalFile.getName());
-                        }
-
-                        encryptedOriginalPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"originalMail.eml\"");
-                        encryptedOriginalPart.setHeader("Content-Type", "message/rfc822");
-                        source = new FileDataSource(encryptedFile);
-                        encryptedOriginalPart.setDataHandler(new DataHandler(source));
-                        secureMixedPart.addBodyPart(encryptedOriginalPart);
-                        // make encryptedOriginalPart and add to secureMixedPart - end
-
-                        secureMessage.setContent(secureMixedPart);
-
-                        ezEmailUtil.setSecureMailFlag(secureMessage, true);
-                        secureMessage.setFlag(Flags.Flag.SEEN, true);
-
-                        //보낸편지함에 저장
-                        ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                                userAccount, password, egovMessageSource, locale, ezEmailUtil);
-                        Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
-
-                        message.setFlag(Flags.Flag.SEEN, true);
-                        folder.open(Folder.READ_WRITE);
-
-                        AppendUID[] uids = ((IMAPFolder) folder).appendUIDMessages(new Message[]{secureMessage});
-                        long sentFolderMessageUID = 0;
-                        if (uids != null && uids[0] != null) {
-                            sentFolderMessageUID = uids[0].uid;
-                        }
-
-                        folder.close(true);
-                        logger.debug("Succeed in saving a message in sent folder.");
-
-                        // 보낸편지함에 저장한 메일의 uid를 저장한다.
-                        String result = ezEmailService.updateMailSecure(tenantId, userId, secureId, folder.getFullName() + "/" + sentFolderMessageUID);
-
-                        if (!result.equals("OK")) {
-                            throw new Exception("UPDATESECUREMAILFAIL");
-                        }
-
-                        // 메일을 발송할 때에는 보낸사람의 secureMailKey를 다시 ${X-JMocha-Secure-Mail-Key}로 되돌려놓는다.
-                        secureMixedPart.removeBodyPart(secureAttachPart);
-                        secureAttachPart.setContent(secureAttachHtml, "text/html; charset=utf-8");
-                        secureMixedPart.addBodyPart(secureAttachPart);
-
-                        // 메일을 발송할 때에는 원본메일을 삭제한다.
-                        secureMixedPart.removeBodyPart(encryptedOriginalPart);
-
-                        // 서버에서 보안메일을 처리할 수 있도록 헤더를 추가한다.
-                        secureMessage.setHeader("X-JMocha-Secure-Mail-ID", String.valueOf(secureId));
-
-                        message = secureMessage;
-                    } else {
-                        if (!retryFlag && sentMailStoredInSentBox.equalsIgnoreCase("YES")) {
-                            //보낸편지함에 저장
-                            ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                                    userAccount, password, egovMessageSource, locale, ezEmailUtil);
-                            Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
-
-                            if (folder.exists()) {
-                                message.setFlag(Flags.Flag.SEEN, true);
-                                folder.open(Folder.READ_WRITE);
-                                folder.appendMessages(new Message[]{message});
-                                folder.close(true);
-                                logger.debug("Succeed in saving a message in sent folder.");
-                            }
-                        }
-                    }
-
-                    // 개별발신
-                    if (eachMailHeader != null) {
-                        logger.debug("sending each recipient mail");
-
-                        Address[] allRecipients = message.getAllRecipients();
-
-                        message.removeHeader("TO");
-                        message.removeHeader("CC");
-                        message.removeHeader("BCC");
-
-                        invalidAddressList.clear();
-
-                        String useAdvancedEachMail = ezCommonService.getTenantConfig("useAdvancedEachMail", tenantId);
-                        if (useAdvancedEachMail.equals("YES")) {
-                            try {
-                                message.setRecipients(RecipientType.TO, allRecipients);
-
-                                message.setHeader("X-JMocha-Each-Mail", "true");
-                                Transport.send(message);
-
-                            } catch (MessagingException e1) {
-                                logger.error(e1.getMessage(), e1);
-                                String errorMessage = e1.getMessage();
-                                logger.debug("remove Invalid address. and retry");
-
-                                if (errorMessage.contains("Invalid Addresses")) {
-                                    String cause = e1.getCause().toString();
-                                    findInvalidAddresses(cause, invalidAddressList);
+    					}
+    		        	
+    		        	encryptedFile = new File(tempPath + commonUtil.separator + UUID.randomUUID().toString());
+						
+						if (!useKlibEncrypt) {
+							egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
+						} else {
+							byte[] bytes = commonUtil.readBytesFromFile(originalFile.toPath());
+							commonUtil.writeBytesToFile(encryptedFile.toPath(),klibUtil.encrypt(bytes));
+						}
+    		        	
+    		        	if (originalFile.delete()) {
+    		        		logger.debug("originalFile is deleted. fileName=" + originalFile.getName());
+    		        	}
+    		        	
+    		        	encryptedOriginalPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"originalMail.eml\"");
+    		        	encryptedOriginalPart.setHeader("Content-Type", "message/rfc822");
+    		        	source = new FileDataSource(encryptedFile);
+    		        	encryptedOriginalPart.setDataHandler(new DataHandler(source));
+    		        	secureMixedPart.addBodyPart(encryptedOriginalPart);
+    		        	// make encryptedOriginalPart and add to secureMixedPart - end
+    		        	
+    		        	secureMessage.setContent(secureMixedPart);
+    		        	
+    		        	ezEmailUtil.setSecureMailFlag(secureMessage, true);
+    		        	secureMessage.setFlag(Flags.Flag.SEEN, true);
+	                    
+    		        	//보낸편지함에 저장
+						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+								userAccount, password, egovMessageSource, locale, ezEmailUtil);
+						Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
+						
+						message.setFlag(Flags.Flag.SEEN, true);
+						folder.open(Folder.READ_WRITE);
+						
+						AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{secureMessage});
+	                    long sentFolderMessageUID = 0;
+	                    if (uids != null && uids[0] != null) {
+	                        sentFolderMessageUID = uids[0].uid;
+	                    }
+	                    
+						folder.close(true);
+						logger.debug("Succeed in saving a message in sent folder.");
+	                    
+	            		// 보낸편지함에 저장한 메일의 uid를 저장한다.
+		            	String result = ezEmailService.updateMailSecure(tenantId, userId, secureId, folder.getFullName() + "/" + sentFolderMessageUID);
+			        	
+			        	if (!result.equals("OK")) {
+			        		throw new Exception("UPDATESECUREMAILFAIL");
+			        	}
+			            
+			        	// 메일을 발송할 때에는 보낸사람의 secureMailKey를 다시 ${X-JMocha-Secure-Mail-Key}로 되돌려놓는다.
+			        	secureMixedPart.removeBodyPart(secureAttachPart);
+			        	secureAttachPart.setContent(secureAttachHtml, "text/html; charset=utf-8");
+			        	secureMixedPart.addBodyPart(secureAttachPart);
+			        	
+			        	// 메일을 발송할 때에는 원본메일을 삭제한다.
+			            secureMixedPart.removeBodyPart(encryptedOriginalPart);
+			            
+			            // 서버에서 보안메일을 처리할 수 있도록 헤더를 추가한다.
+			            secureMessage.setHeader("X-JMocha-Secure-Mail-ID", String.valueOf(secureId));
+			            
+			            message = secureMessage;
+					} else {
+						if (!retryFlag && sentMailStoredInSentBox.equalsIgnoreCase("YES")) {
+							//보낸편지함에 저장
+							ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+									userAccount, password, egovMessageSource, locale, ezEmailUtil);
+							Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
+							
+							if (folder.exists()) {
+								message.setFlag(Flags.Flag.SEEN, true);
+								folder.open(Folder.READ_WRITE);
+								folder.appendMessages(new Message[]{message});
+								folder.close(true);
+								logger.debug("Succeed in saving a message in sent folder.");
+							}
+						}
+					}
+					
+					// 개별발신
+					if (eachMailHeader != null) {
+		            	logger.debug("sending each recipient mail");
+		            	
+		            	Address[] allRecipients = message.getAllRecipients();
+		            	
+		            	message.removeHeader("TO");
+		        		message.removeHeader("CC");
+		        		message.removeHeader("BCC");
+		        		
+		        		invalidAddressList.clear();
+		        		
+		        		String useAdvancedEachMail = ezCommonService.getTenantConfig("useAdvancedEachMail", tenantId);
+		        		if (useAdvancedEachMail.equals("YES")) {		
+		        			try {
+		        				message.setRecipients(RecipientType.TO, allRecipients);
+		        				
+		        				message.setHeader("X-JMocha-Each-Mail", "true");
+		        				Transport.send(message);
+		        				
+		        			} catch (MessagingException e1) {
+		        				logger.error(e1.getMessage(), e1);
+		        				String errorMessage = e1.getMessage();
+		        				logger.debug("remove Invalid address. and retry");
+		        				
+		        				if (errorMessage.contains("Invalid Addresses")) {
+		        					String cause = e1.getCause().toString();
+		        					findInvalidAddresses(cause, invalidAddressList);
 
                                     List<Address> allRecipientList = new ArrayList<Address>();
                                     for (int x = 0; x < allRecipients.length; x++) {

@@ -1,6 +1,7 @@
 ﻿
 function GetAprLineTempletList()
 {
+    debugger;
 	if(ConnectFlag)
 	{
 		var result = "";
@@ -38,8 +39,7 @@ function AprLineTempletNameCheck(p_AprLineTempletName) {
     for (i = 0 ; i < p_NodeListLen ; i++) {
         var NodeList;
         NodeList = GetChildNodes(p_NodeList[i]);
-
-        if (p_AprLineTempletName == getNodeText(NodeList[0]) && (g_TemplateSN == "" || g_TemplateSN != i+1)) {
+        if (p_AprLineTempletName == getNodeText(NodeList[0])) {
                 p_AprLineTempleNameFlag = false;
                 break;
         }

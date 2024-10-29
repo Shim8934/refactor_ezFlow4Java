@@ -174,11 +174,11 @@
 		        if (CrossYN()) {		        	
 		            schedule_group_write_dialogArguments[0] = "";
 		            schedule_group_write_dialogArguments[1] = add_group_Complete;
-		            var OpenWin = window.open("/ezSchedule/scheduleGroupWrite.do?type=group", "schedule_group_write", GetOpenWindowfeature(980, 670));
+		            var OpenWin = window.open("/ezSchedule/scheduleGroupWrite.do?type=group", "schedule_group_write", GetOpenWindowfeature(980, 685));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var feature = GetShowModalPosition(950, 680);
+		            var feature = GetShowModalPosition(950, 685);
 		            var rtn = window.showModalDialog("scheduleGroupWrite.do?type=group", "", "dialogHeight:670px; dialogWidth:980px; status:no; scroll:no; help:no; edge:sunken" + feature);
 		            if (typeof (rtn) != "undefined")
 		                getGroupList();

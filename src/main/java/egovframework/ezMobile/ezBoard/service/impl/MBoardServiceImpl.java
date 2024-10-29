@@ -389,6 +389,9 @@ public class MBoardServiceImpl implements MBoardService {
 		} else {
 			mBoardInfoVO.setIsAllGroupBoard("N");
 		}
+		if (orgBoardProp.getUseKeyword() != null) {
+			mBoardInfoVO.setUseKeyword(orgBoardProp.getUseKeyword());
+		}
 		
 	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 	    	mBoardInfoVO.setAccess_("1");
@@ -500,6 +503,11 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
 		
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
+		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
 		if (apprFlag != null && apprFlag.equals("Y")) {
@@ -580,6 +588,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("tenantID", tenantID);
+
+
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
@@ -1795,6 +1809,11 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		map.put("v_PADMINTYPE", mBoardInfoVO.getBoardAdmin_FG());
 		
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
+		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
 		if (apprFlag != null && apprFlag.equals("Y")) {
@@ -1825,6 +1844,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
 		map.put("v_PADMINTYPE", mBoardInfoVO.getBoardAdmin_FG());
+
+
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
@@ -1841,7 +1866,7 @@ public class MBoardServiceImpl implements MBoardService {
 	
 	/* 2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 */
 	@Override
-	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content) throws Exception {
+	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content, String imageContent) throws Exception {
 		logger.debug("saveOneLineReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1857,10 +1882,70 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("TENANTID", tenantID);
 		map.put("COMPANYID", companyID);
 		map.put("WRITEDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		map.put("IMAGECONTENT", imageContent);
 		
 		mBoardDAO.saveOneLineReply(map);
 
 		logger.debug("saveOneLineReply ended");
 	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 댓글 수정 */
+	public void updateOneLineReply(String contentId, String replyID, String content, int tenantId, String imageContent) throws Exception {
+		logger.debug("updateOneLineReply/Mobile started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CONTENTID", contentId);
+		map.put("REPLYID", replyID);
+		map.put("CONTENT", content);
+		map.put("TENANTID", tenantId);
+		map.put("IMAGECONTENT", imageContent);
+
+		mBoardDAO.updateOneLineReply(map);
+
+		logger.debug("updateOneLineReply/Mobile ended");
+	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 대댓글 삽입 */
+	@Override
+	public void saveOneLineReReply(String contentId, String boardId, String replyID, String parentReplyID, String content, String password, MCommonVO info, String imageContent) throws Exception {
+		logger.debug("insertOneLineReReply/Mobile started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("PITEMID", contentId);
+		map.put("PREPLYID", replyID);
+		map.put("PBOARDID", boardId);
+		map.put("USERID", info.getUserId());
+		map.put("USERNAME", info.getUserName());
+		map.put("USERNAME2", info.getUserName2());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("PCONTENT", content);
+		map.put("PPASSWORD", password);
+		map.put("PARENTREPLYID", parentReplyID);
+		map.put("TENANTID", info.getTenantId());
+		map.put("COMPANYID", info.getCompanyId());
+		map.put("IMAGECONTENT", imageContent);
+		
+		mBoardDAO.saveOneLineReReply(map);
+
+		logger.debug("insertOneLineReReply/Mobile ended");
+
+	}
+	@Override
+	public int checkThisReplyExist(String replyId, String itemId, int tenantId) throws Exception {
+		logger.debug("checkThisReplyExist started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("REPLYID", replyId);
+		map.put("PITEMID", itemId);
+		map.put("TENANTID", tenantId);
+
+		logger.debug("checkThisReplyExist ended");
+		
+		return mBoardDAO.checkThisReplyExist(map);
+	}
 	
+	public String getGubun(String BoardID) throws Exception {
+		String gubun = mBoardDAO.getGubun(BoardID);
+		return gubun;
+	}
 }

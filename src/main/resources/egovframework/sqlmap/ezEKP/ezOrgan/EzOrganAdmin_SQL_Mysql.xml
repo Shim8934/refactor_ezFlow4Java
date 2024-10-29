@@ -4931,6 +4931,33 @@
 			TENANT_ID = #v_TENANT_ID#
      </delete>
      
+     <delete id="EzOrganAdminDAO.deleteCompany_D35" parameterClass="Map">
+		DELETE FROM  
+			TBL_PORTAL_TOP_COMPANY 
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D36" parameterClass="Map">
+		DELETE FROM  
+			TBL_SYSTEMCONFIG 
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D37" parameterClass="Map">
+		DELETE FROM  
+			TBL_SYSTEMCONFIG_TYPE 
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
      <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
         DELETE FROM
             TBL_BOARD_MYBOARDS    

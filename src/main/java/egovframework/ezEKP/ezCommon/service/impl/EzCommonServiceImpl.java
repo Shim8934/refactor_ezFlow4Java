@@ -2709,6 +2709,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("TYPE_MYSQL", "INT(11)"); put("TYPE_ORACLE", "NUMBER(11, 0)");
 			put("AFTER", "DEFAULT '0'");
 		}});
+        test.add(new HashMap<String, Object>(){{ // 2024-08-01 전인하 - 게시판 > 키워드 기능
+            put("TABLE","TBL_BOARD_BOARDINFO");
+            put("COLUMN", "USEKEYWORD"); // 게시판 키워드 기능 사용여부(Y/N)
+            put("TYPE_MYSQL", "VARCHAR(11)"); put("TYPE_ORACLE", "NVARCHAR2(2)");
+        }});
 
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
@@ -3608,12 +3613,27 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertPrvwConfig() throws Exception {
 		ezCommonDAO.insertPrvwConfig();
 	}
-
+	
+	/* 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 */
+	@Override
+	public void insertApprSignRemapApplyTime() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVO : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantID", tenantVO.getTenantId());
+			// 2024-10-17 홍승비 - 컨피그 비교 시에만 대문자로 비교하도록 수정 (삽입 시에는 apprSignRemapApplyTime 사용)
+			map.put("property", "APPRSIGNREMAPAPPLYTIME");
+			
+			ezCommonDAO.insertApprSignRemapApplyTime(map);
+		}
+	}
+    
     @Override
     public void insertPermissionBasisDeptYN_Config() throws Exception {
         ezCommonDAO.insertPermissionBasisDeptYN_Config();
     }
-
+    
     @Override
     public void createTblDbLog() {
         ezCommonDAO.createTblDbLog();
@@ -4117,7 +4137,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
  			map.put("tenantID", tenantVo.getTenantId());
  			ezCommonDAO.insertDotNetTotalNotificationConfig(map);
  		}
-    	
+    }
+    
+    @Override
+    public void createBoardKeywordTable() throws Exception {
+        ezCommonDAO.createBoardKeywordTable();
     }
     
     @Override
@@ -4324,4 +4348,33 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createRsScheduleDeptIdColumn() throws Exception {
         ezCommonDAO.createRsScheduleDeptIdColumn();
     } 
+
+    /* 2023-03-30 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가 */
+	@Override
+	public void alterTblBoardOneLineChildReply() throws Exception {
+		ezCommonDAO.alterTblBoardOneLineChildReply();
+	}
+    
+    // 2023-11-07 전인하 - 댓글 이모티콘 관련 컬럼 추가    
+    @Override
+    public void insertBoardReplyCommentEmoticon() throws Exception {
+        ezCommonDAO.insertBoardReplyCommentEmoticon();
+    }
+	
+	@Override
+	public void createTblBoardDisLike() throws Exception{
+		ezCommonDAO.createTblBoardDisLike();
+	}
+	
+	@Override
+	public void addBoardDisLikeFlag() throws Exception{
+		ezCommonDAO.addBoardDisLikeFlag();
+	}
+	
+    // 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 테이블 추가
+    @Override
+    public void createResourceFavoriteTables() throws Exception {
+    	ezCommonDAO.createTblRsFavCat();
+    	ezCommonDAO.createTblRsCatBrd();
+    }
 }

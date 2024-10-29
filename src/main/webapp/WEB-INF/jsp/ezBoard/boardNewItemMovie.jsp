@@ -24,6 +24,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 	    <script type="text/javascript">
 	        var pMode = "NEW";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
@@ -53,6 +54,8 @@
 	        var saveItemBoardId = "";
 	        var SelBoard = false;
 	        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
+		    var keywordArr = []; // 키워드 배열
 	        
 	        function window_onload() {
 	            try{
@@ -252,6 +255,16 @@
 	            
 	            /* 2018-11-06 홍승비 - 게시판 체크용 구분값 추가 */
 	            strXML += "<GUBUN>" + gubun + "</GUBUN>";
+	            
+	            /* 2024-08-13 전인하 - 키워드 추가 */
+                if (useKeywordFlag != null && useKeywordFlag == 'Y') {
+                    strXML += "<KEYWORDS>";
+                    for (var keyword of keywordArr) {
+                        // createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "KEYWORD", keyword);
+                        strXML += "<KEYWORD>" + keyword + "</KEYWORD>";
+                    }
+                    strXML += "</KEYWORDS>";
+                }
 			    strXML += "</NODE>";
 			    strXML += "</NODES>";
 			    
@@ -629,6 +642,16 @@
 	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t223'/></th>
 	          <td style="width:120px; text-align:center">${userID}</td>
 	        </tr>
+            <!-- 키워드 시작 -->
+            <c:if test="${not empty useKeyword && useKeyword eq 'Y'}">
+                <tr>
+                    <th><spring:message code="ezApprovalG.t1200" /></th>
+                    <td colspan="3" id="keyWordResult">
+                        <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeyup="keyword_onkeyUp(event)" >
+                    </td>
+                </tr>
+            </c:if>
+            <!-- 키워드 끝 -->
 	        <tr>
 	          <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>
 	          <td colspan="3" style="width:100%; vertical-align:middle; padding:0px 5px 0px 3px; margin:0;"><INPUT type="text" id="txtTitle" style="WIDTH:100%;word-wrap:break-word;word-break:break-all; border:1px solid #ddd; margin:0px; padding:2px 0px 2px 0px;" value="" maxlength="100" /></td>

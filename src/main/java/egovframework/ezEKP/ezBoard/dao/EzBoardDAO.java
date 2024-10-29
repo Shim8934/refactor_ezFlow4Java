@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -873,5 +877,82 @@ public class EzBoardDAO extends EgovAbstractDAO{
 
 	public boolean confirmBoardItemDeletion(Map<String, Object> map) throws Exception {
 		return (boolean) select("EzBoardDAO.confirmBoardItemDeletion", map);
+	}
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 답글을 저장하는 쿼리 */
+	public void saveOneLineChildReply(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.saveOneLineChildReply", map);
+	}
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글, 답글 수정되었을 경우 업데이트하는 쿼리 */
+	public void updateOneLineReply(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateOneLineReply", map);
+	}
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 쿼리 */
+	public int getChildReplyCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getChildReplyCnt", map);
+	}
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식있는 부모댓글 삭제할 경우 해당 댓글 값 NULL로 변경하는 쿼리 */
+	public void updateDelParentReply(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateDelParentReply", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 삽입 쿼리*/
+	public void disLikeInsert(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.disLikeInsert", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 삭제 쿼리*/
+	public void disLikeDelete(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.disLikeDelete", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 체크 여부 확인 쿼리 */
+	public String disLikeCheck(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.disLikeCheck", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 갯수 count 쿼리 */
+	public int getDisLikeCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getDisLikeCount", map);
+	}
+	/* 2023-04-06 기민혁 - 좋아요 리스트 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardLikeListVO> getLikeList(Map<String, String> map) throws Exception {
+		return (List<BoardLikeListVO>) list("EzBoardDAO.getLikeList",map);
+	}
+
+	/* 2023-04-06 기민혁 - 싫어요 리스트 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardDisLikeListVO> getDisLikeList(Map<String, String> map) throws Exception {
+		return (List<BoardDisLikeListVO>) list("EzBoardDAO.getDisLikeList",map);
+	}
+	
+	/* 2023-04-06 기민혁 - 좋아요/싫어요 정보 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardItemVO> getItemInfoList(Map<String, String> map) throws Exception {
+		return (List<BoardItemVO>) list("EzBoardDAO.getItemInfoList",map);
+	}
+
+	public void insertKeyword(HashMap<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertKeyword", map);
+	}
+
+	public void deleteBoardItemKeyword(HashMap<String, Object> map) throws Exception {
+		insert("EzBoardDAO.deleteBoardItemKeyword", map);
+	}
+
+	public void insertBoardItemKeyword(List<BoardKeywordVO> list) throws Exception {
+		insert("EzBoardDAO.insertBoardItemKeyword", list);
+	}
+	
+	public List<BoardKeywordVO> selectBoardKeywordByKeywordName(HashMap<String, Object> map) throws Exception {
+		return (List<BoardKeywordVO>) list("EzBoardDAO.selectBoardKeywordByKeywordName", map);
+	}
+
+	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(HashMap<String, Object> map) throws Exception {
+		return (List<BoardKeywordVO>) list("EzBoardDAO.selectBoardKeywordByBoardItem", map);
 	}
 }

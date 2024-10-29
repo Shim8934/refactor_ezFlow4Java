@@ -204,7 +204,7 @@
 					var themesHTML = "";
 					
 					themes.forEach(function (item, index) {
-						if (index != 3) { // 모바일 테마 제외
+						if (item.themeId != 4) { // 모바일 테마 제외
 							themesHTML += "<li>";
 							themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
 							
