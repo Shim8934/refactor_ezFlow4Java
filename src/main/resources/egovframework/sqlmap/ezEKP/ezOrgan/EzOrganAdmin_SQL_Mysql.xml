@@ -4633,7 +4633,7 @@
                    SIPURI ,
                    PASSWORD ,
                    TENANT_ID
-               FROM TBL_USERMASTER 
+               FROM TBL_USERMASTER_RETIRE
                WHERE  CN = #v_CN#
                AND TENANT_ID = #v_TENANT_ID#
                 )
