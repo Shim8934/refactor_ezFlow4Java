@@ -1329,7 +1329,7 @@
 		<![CDATA[
 			INSERT INTO TBL_USERMASTER_RETIRE
               ( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, DESCRIPTION, DESCRIPTION2, DESCRIPTION3, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, INFO, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE12, EXTENSIONATTRIBUTE13, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, UPDATEDT, MOBILE_ENABLE, MOBILE_NOTUSE, MOBILE_PIN, SIPURI,PASSWORD,
-                       TENANT_ID )
+                       CREATEDT, TENANT_ID, MAILBOXQUOTA, MAILBOXUSAGE )
               ( SELECT
               		CN ,
                     DisplayName ,
@@ -1376,7 +1376,10 @@
                     MOBILE_PIN ,
                     SIPURI ,
                     PASSWORD ,
-                    TENANT_ID
+                    CREATEDT ,
+                    TENANT_ID ,
+                    MAILBOXQUOTA ,
+                    MAILBOXUSAGE
                 FROM TBL_USERMASTER 
                 WHERE  CN = #v_CN#
                 AND TENANT_ID = #v_TENANT_ID#
@@ -6139,7 +6142,7 @@
 		<![CDATA[
 			 INSERT INTO
 			 	TBL_USERMASTER
-           		( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, TENANT_ID )
+				( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, CREATEDT, TENANT_ID )
            		( 	SELECT
            				CN ,
                     	DISPLAYNAME ,
@@ -6163,6 +6166,17 @@
 	                    POSTALCODE ,
 	                    STREETADDRESS ,
 	                    INFO ,
+	                    ]]>
+						<isNotEmpty property="initPermission">
+							#initPermission# AS EXTENSIONATTRIBUTE1 ,
+						</isNotEmpty>
+						<isEmpty property="initPermission">
+							(SELECT REPLACE(REPLACE(REPLACE(EXTENSIONATTRIBUTE1, 'g=1', 'g=0'), 'a=1',
+							'a=0'), 'm=1', 'm=0')
+							FROM TBL_USERMASTER WHERE CN = #v_CN# AND TENANT_ID = #v_TENANT_ID#) AS
+							EXTENSIONATTRIBUTE1 ,
+						</isEmpty>
+	                    <![CDATA[
 	                    EXTENSIONATTRIBUTE1 ,
 	                    EXTENSIONATTRIBUTE2 ,
 	                    EXTENSIONATTRIBUTE3 ,
@@ -6180,13 +6194,16 @@
 	                    EXTENSIONATTRIBUTE14 ,
 	                    EXTENSIONATTRIBUTE15 ,
 	                    ADSPATH ,
-	                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') AS UPDATEDT,
+	                    to_date(#timeUTC#, 'yyyy-MM-dd HH24:MI:SS') AS UPDATEDT,
 	                    MOBILE_ENABLE ,
 	                    MOBILE_NOTUSE ,
 	                    MOBILE_PIN ,
 	                    SIPURI,
 	                    PASSWORD,
-	                    TENANT_ID
+	                    CREATEDT,
+	                    TENANT_ID,
+	                    MAILBOXQUOTA ,
+	                    MAILBOXUSAGE
               			FROM
               				TBL_USERMASTER_RETIRE 
               			WHERE
@@ -6975,14 +6992,15 @@
      
  	<select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
  		SELECT
-			CN,
+ 			CN,
 			displayName,
 			department,
 			description,
-			to_number(mailboxquota) as mailboxquota,
-			to_number(mailboxusage) as mailboxusage,
+			mailboxquota,
+			mailboxusage,
 			displayName2,
 			description2,
+			isRetire,
 			title,
 			title2,
 			EXTENSIONATTRIBUTE1,
@@ -6994,10 +7012,74 @@
 			MOBILE,
 			COMPANY,
 			COMPANY2
-		FROM
-			TBL_USERMASTER
-		WHERE
-			tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+ 		FROM
+ 			(
+ 			<isEqual property="useUserMaster" compareValue="true">
+ 			SELECT
+ 				CN,
+ 				displayName,
+ 				department,
+ 				description,
+				to_number(mailboxquota) as mailboxquota,
+				to_number(mailboxusage) as mailboxusage,
+				displayName2,
+				description2,
+				0 as isRetire,
+				title,
+				title2,
+				EXTENSIONATTRIBUTE1,
+				EXTENSIONATTRIBUTE2,
+				EXTENSIONATTRIBUTE3,
+				EXTENSIONATTRIBUTE10,
+				EXTENSIONATTRIBUTE102,
+				TELEPHONENUMBER,
+				MOBILE,
+				COMPANY,
+				COMPANY2
+ 			FROM
+ 				TBL_USERMASTER
+ 			WHERE
+ 				tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+				<include refid="EzOrganAdminDAO.searchQuery"/>
+				<include refid="EzOrganAdminDAO.searchForQuery"/>	
+ 				<isEqual property="incumbent" compareValue="false">
+				AND CN IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+				</isEqual>
+				<isEqual property="stopped" compareValue="false">
+					AND CN NOT IN
+					(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+				</isEqual>
+			</isEqual>
+			<isEqual property="retired" compareValue="true">
+			<isEqual property="useUserMaster" compareValue="true">
+				UNION
+			</isEqual>
+			SELECT
+				CN,
+				displayName,
+				department,
+				description,
+				CAST(mailboxquota AS UNSIGNED) as mailboxquota,
+				CAST(mailboxusage AS UNSIGNED) as mailboxusage,
+				displayName2,
+				description2,
+				1 as isRetire,
+				title,
+				title2,
+				EXTENSIONATTRIBUTE1,
+				EXTENSIONATTRIBUTE2,
+				EXTENSIONATTRIBUTE3,
+				EXTENSIONATTRIBUTE10,
+				EXTENSIONATTRIBUTE102,
+				TELEPHONENUMBER,
+				MOBILE,
+				COMPANY,
+				COMPANY2
+			FROM 
+		    	TBL_USERMASTER_RETIRE
+	        WHERE 
+	            tenant_id = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#
 			<include refid="EzOrganAdminDAO.searchQuery"/>
 			<include refid="EzOrganAdminDAO.searchForQuery"/>
 		ORDER BY
@@ -7042,13 +7124,30 @@
  	</select>
  	
  	<select id="EzOrganAdminDAO.getUserCount" parameterClass="map" resultClass="int">
-		SELECT 	
-			COUNT(CN) 
-		FROM 
-            TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
-  		<include refid="EzOrganAdminDAO.searchQuery"/>
-  		<include refid="EzOrganAdminDAO.searchForQuery"/>
+		SELECT SUM(COUNT) AS TOTAL_COUNT
+		FROM (
+		<isEqual property="useUserMaster" compareValue="true">
+			SELECT COUNT(CN) AS COUNT 
+			FROM TBL_USERMASTER 
+			WHERE tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId# 
+		<include refid="EzOrganAdminDAO.searchQuery"/>
+		<include refid="EzOrganAdminDAO.searchForQuery"/>
+			<isEqual property="incumbent" compareValue="false">
+				AND CN IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+			</isEqual>
+			<isEqual property="stopped" compareValue="false">
+				AND CN NOT IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+			</isEqual>
+		</isEqual>
+		<isEqual property="retired" compareValue="true">
+			<isEqual property="useUserMaster" compareValue="true"> UNION </isEqual>
+				SELECT COUNT(CN) AS COUNT FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId# 
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+			<include refid="EzOrganAdminDAO.searchForQuery"/>
+		</isEqual>
+		) COUNT_TABLE
 	</select>
 	
 	<insert id="EzOrganAdminDAO.insertDelUserDBData_I" parameterClass="Map">
@@ -7103,7 +7202,7 @@
                    SIPURI ,
                    PASSWORD ,
                    TENANT_ID
-               FROM TBL_USERMASTER 
+               FROM TBL_USERMASTER_RETIRE
                WHERE  CN = #v_CN#
                AND TENANT_ID = #v_TENANT_ID#
                 )

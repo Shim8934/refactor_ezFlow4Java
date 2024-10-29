@@ -447,6 +447,17 @@
 					return false;
 				}
 			});
+
+			$(document).mouseup(function (e) {
+				var clickedElementClass = e.target.className;
+				if (!clickedElementClass.includes('view_more')) {
+					hiddenMoreMenu();
+				}
+			});
+
+			$(window.frames['tbContentElement']).mouseup(function (e) {
+				hiddenMoreMenu(e);
+			});
 		}
 	    
 		var isAutoSave = false;
@@ -2425,6 +2436,28 @@
 	    function mailTemplateSaveBtn() {
 	    	DivPopUpShow(483, 145, "/ezEmail/saveUserMailTemplateMain.do");
 	    }
+
+		function toggleMoreMenu() {
+			document.getElementById("view_more").classList.toggle('on');
+			var element = document.getElementById("layer_menu");
+			if (element) {
+				if (element.style.display === 'none') {
+					element.style.display = '';
+				} else {
+					element.style.display = 'none';
+				}
+			}
+		}
+
+		function hiddenMoreMenu() {
+			var element = document.getElementById("layer_menu");
+			if (element) {
+				if (element.style.display !== 'none') {
+					document.getElementById("view_more").classList.remove('on');
+					element.style.display = 'none';
+				}
+			}
+		}
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -2441,13 +2474,9 @@
 	        <tr>
 	            <td style="">
 	                <div id="menu">
-	                    <ul>
+						<ul>
 	                        <li><span id="spanT674"><spring:message code='ezEmail.t674' /></span></li>
 	                        <li><span id="spanT48"><spring:message code='ezEmail.t48' /></span></li>
-	                        <!-- 재은 수정(편지지) -->
-	                        <c:if test="${useLetter == 'YES'}">
-	                        <li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
-	                        </c:if>
 	                        <li  style="display:none"><span onclick="Print_onClick()">
 	                            <spring:message code='ezEmail.t546' /></span></li>
 	                        <!-- <li><span onclick="LoadFormat_onClick()">
@@ -2458,10 +2487,17 @@
 	                            <spring:message code='ezEmail.t353' /></span></li>
 	                        <li><span onclick="mailWritePreview()">
 	                            <spring:message code='ezEmail.t487' /></span></li>
-	                        <li><span onclick="mailTemplateLoadBtn()">
-	                            <spring:message code='ezEmail.kasMailTemplate01' /></span></li>
-	                        <li><span onclick="mailTemplateSaveBtn()">
-	                            <spring:message code='ezEmail.kasMailTemplate02' /></span></li>
+							<li class="view_more" onclick="toggleMoreMenu()"><span class="view_more" id="view_more" style="border: none;"><img class="view_more" src="/images/ImgIcon/view_more.png"></span>
+								<ul class="layer_select" id="layer_menu" style="display: none">
+									<c:if test="${useLetter == 'YES'}">
+										<li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
+									</c:if>
+									<li><span onclick="mailTemplateLoadBtn()">
+										<spring:message code='ezEmail.kasMailTemplate01' /></span></li>
+									<li><span onclick="mailTemplateSaveBtn()">
+										<spring:message code='ezEmail.kasMailTemplate02' /></span></li>
+								</ul>
+							</li>
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
 	                    	<%-- <li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">

@@ -4698,6 +4698,16 @@
 		VALUES (#v_TENANTID#, 'NonUseDocAttachYN', 'Y', '비전자문서 본문첨부 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '본문첨부 기능 사용여부', TO_DATE('2024-07-02 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
 	</insert>
 
+	<select id="EzCommonDAO.selectColumnsOnlyExistTblUsermaster" resultClass="TblColumnsInfoVO">
+		SELECT COLUMN_NAME AS columnNm, DATA_DEFAULT AS columnDefault, CASE WHEN NULLABLE = 'Y' THEN 'NULL' ELSE 'NOT NULL' END isNullAble,
+			CASE WHEN DATA_TYPE = 'NVARCHAR2' THEN DATA_TYPE || '(' || DATA_LENGTH/2 || ')'
+				WHEN DATA_TYPE = 'DATE' THEN DATA_TYPE
+				WHEN DATA_TYPE = 'NUMBER' THEN DATA_TYPE || '(' || DATA_PRECISION || ')'
+				WHEN DATA_TYPE = 'VARCHAR2' THEN DATA_TYPE || '(' || CHAR_LENGTH || ')'
+				ELSE DATA_TYPE || '(' || DATA_LENGTH || ')' END columnType
+		FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'TBL_USERMASTER' AND COLUMN_NAME NOT IN (SELECT COLUMN_NAME FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'TBL_USERMASTER_RETIRE')
+	</select>
+
 	<select id="EzCommonDAO.checkReadingRecordHeader" parameterClass="map" resultClass="int">
 		SELECT
 			COUNT(*)

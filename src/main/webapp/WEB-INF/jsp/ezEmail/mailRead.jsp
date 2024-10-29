@@ -84,12 +84,13 @@
 			    if (useReSend == "YES" && sentItems.toUpperCase() == "TRUE") {
 		    		$('#liReSend').css('display', 'block');
 		   		}
-
-				document.addEventListener('click', function (e) {
-					var clickedElementClass = e.target.className;
-					if (!clickedElementClass.includes('view_more')) {
-						hiddenMoreMenu();
-					}
+				
+				$(parent.document).mouseup(function () {
+					hiddenMoreMenu();
+				});
+				
+				$(document).mouseup(function () {
+					hiddenMoreMenu();
 				});
 			    
 			    if (g_notiSSO == "1")
@@ -177,7 +178,7 @@
 					tagAddInput.addEventListener("keydown", function(e) {
 						if (e.keyCode == 13) onEnterPreviewTagInput();
 					});
-					document.querySelector("#tag_add + .imgbtn").addEventListener("click", function(e) { onEnterPreviewTagInput(); });
+					document.querySelector(".input_wrap + .imgbtn").addEventListener("click", function(e) { onEnterPreviewTagInput(); });
 					// 태그 X 버튼 클릭시 삭제
 					$("#tag_view > img").on("click", function() { removeTag(this.previousElementSibling); });
 
@@ -206,7 +207,16 @@
 						},
 						minLength: 2,
 						selectFirst: true,
-						autoFocus: true,
+						// autoFocus: true,
+					});
+
+					tagAddInput.addEventListener("input", function() {
+						var inputWrap = document.getElementById("input_wrap");
+	
+						// 클래스에 "on"이 있으면 제거
+						if (inputWrap.classList.contains("on")) {
+							inputWrap.classList.remove("on");
+						}
 					});
 				</c:if>
 			}
@@ -667,7 +677,62 @@
 						element.style.display = 'none';
 					}
 				}
+				var tagLayerElement = document.getElementById("layer_select");
+				tagLayerElement.scroll({top:0});
+				if (tagLayerElement) {
+					var tagLayerStyle = getComputedStyle(tagLayerElement);
+					if (tagLayerStyle.display !== 'none') {
+						document.getElementById("input_wrap").classList.remove("on");
+					}
+				}
 			}
+
+			function getTagList() {
+				var ulTag = document.getElementById("layer_select");
+				while (ulTag.firstChild) {
+					ulTag.removeChild(ulTag.firstChild);
+				}
+				// if (ulTag.children.length <= 0) {
+					$.ajax({
+						cache: false,
+						async: false,
+						data: { shareId: shareId },
+						url: "/ezEmail/getUserTagList.do",
+						success: function (result) {
+							if (result.status == "error") {
+								alert(strLang321);
+								return;
+							}
+
+							var tags = result.data;
+							window.cacheTags = $.map(tags, function (ul, item) {
+								return ul.name;
+							});
+
+							for (var i = 0; i < window.cacheTags.length; i++) {
+								var li = document.createElement('li');
+								li.textContent = window.cacheTags[i];
+								li.addEventListener('click', function() {
+									document.getElementById("tag_add").value = this.textContent;
+									onEnterPreviewTagInput();
+									
+									var inputWrap = document.getElementById("input_wrap");
+
+									// 클래스에 "on"이 있으면 제거
+									if (inputWrap.classList.contains("on")) {
+										inputWrap.classList.remove("on");
+									}
+									
+									document.getElementById("tag_add").value = "";
+								});
+								ulTag.appendChild(li);
+							}
+							
+						}
+					}); //ajax
+				// } //if
+			}
+			
 	    </script>
 		    
 		<%-- 웹폴더 첨부 레이어팝업을 위한 스크립트 추가--%>
@@ -826,8 +891,17 @@
 							<tr>
 								<th><spring:message code='ezEmail.tag' /></th>
 								<td id="tag_td" colspan="4">
-									<input id="tag_add" type="text" maxlength="100" />
-									<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+									<div class="input_select">
+										<div class="input_wrap" id="input_wrap">
+											<input id="tag_add" type="text" maxlength="100"/>
+											<span class="input_select_arrow" onclick="$('.input_wrap').toggleClass('on');getTagList()"></span>
+										</div>
+										<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+										<ul class="layer_select" id="layer_select">
+
+										</ul>
+									</div>
+									
 									<div id="tag_view">
 										<c:forEach items="${tags}" var="name">
 											<span>${name}</span><img src="/images/icon/oneline_delete.gif" />

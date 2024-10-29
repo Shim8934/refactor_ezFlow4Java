@@ -2231,6 +2231,10 @@ function MailOptionHiddenOutside(e) {
 			MailOptionHidden();
 		}
 	}
+    var clickedElementClass = e.target.className;
+    if (!clickedElementClass.includes('input_select_arrow')) {
+        hiddenMoreMenu();
+    }
 }
 function mailOpenPopup(btn, event) {
 	event.stopPropagation();
@@ -2376,4 +2380,16 @@ function onChangeTagList() {
 	if (window.leftMenu) {
 		leftMenu.reloadTags();
 	}
+}
+
+function hiddenMoreMenu() {
+    var pageType = pPreviewShow_HOW == "H" ? "_h" : "_w";
+    var tagLayerElement = document.getElementById("layer_select"+pageType);
+    tagLayerElement.scroll({top:0});
+    if (tagLayerElement) {
+        var tagLayerStyle = getComputedStyle(tagLayerElement);
+        if (tagLayerStyle.display !== 'none') {
+            document.getElementById("input_wrap"+pageType).classList.remove("on");
+        }
+    }
 }

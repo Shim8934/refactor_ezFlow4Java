@@ -500,10 +500,18 @@
 					},
 					minLength: 2,
 					selectFirst: true,
-					autoFocus: false,
+					//autoFocus: false,
+				}).on("input", function(e) {
+					var pageType = pPreviewShow_HOW == "H" ? "_h" : "_w";
+					var inputWrap = document.getElementById("input_wrap"+pageType);
+
+					// 클래스에 "on"이 있으면 제거
+					if (inputWrap.classList.contains("on")) {
+						inputWrap.classList.remove("on");
+					}
 				});
 
-				$("#pre_h_tag_add + .imgbtn, #pre_w_tag_add + .imgbtn").on("click", onEnterPreviewTagInput);
+				$("#input_wrap_h + .imgbtn, #input_wrap_w + .imgbtn").on("click", onEnterPreviewTagInput);
 		    }
 		    
 		    $(document).ready(function() {
@@ -546,7 +554,6 @@
 				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
 				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
 				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-		    	
 		    });
 		    
 		    function ReSendWithURLOnly(pURL) {
@@ -1678,7 +1685,55 @@
 	    			data : {"userKey" : userKey}
 		    	});
 		    }
-		    
+
+			function getTagList(type) {
+				var ulTag = document.getElementById("layer_select_"+type);
+				while (ulTag.firstChild) {
+					ulTag.removeChild(ulTag.firstChild);
+				}
+				// if (ulTag.children.length <= 0) {
+				$.ajax({
+					cache: false,
+					async: false,
+					data: { shareId: shareId },
+					url: "/ezEmail/getUserTagList.do",
+					success: function (result) {
+						if (result.status == "error") {
+							alert(strLang321);
+							return;
+						}
+
+						var tags = result.data;
+						window.cacheTags = $.map(tags, function (ul, item) {
+							return ul.name;
+						});
+
+						for (var i = 0; i < window.cacheTags.length; i++) {
+							var li = document.createElement('li');
+							li.textContent = window.cacheTags[i];
+							li.addEventListener('click', function() {
+								var pageType = pPreviewShow_HOW == "H" ? "pre_h_" : "pre_w_";
+								
+								document.getElementById(pageType+ "tag_add").value = this.textContent;
+								onEnterPreviewTagInput();
+
+								var inputWrap = document.getElementById("input_wrap_"+type);
+
+								// 클래스에 "on"이 있으면 제거
+								if (inputWrap.classList.contains("on")) {
+									inputWrap.classList.remove("on");
+								}
+
+								document.getElementById(pageType+ "tag_add").value = "";
+							});
+							ulTag.appendChild(li);
+						}
+
+					}
+				}); //ajax
+				// } //if
+			}
+			
 		</script>	
 		<style>
 			<c:if test="${useMailTag}">
@@ -2030,8 +2085,16 @@
 				                    </li>
 									<c:if test="${useMailTag}">
 										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
-											<input id="pre_h_tag_add" type="text" maxlength="100" />
-											<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+											<span class="input_select">
+												<sapn class="input_wrap" id="input_wrap_h">
+													<input id="pre_h_tag_add" type="text" maxlength="100" />
+													<span class="input_select_arrow" onclick="$('#input_wrap_h').toggleClass('on');getTagList('h')"></span>
+												</sapn>
+												<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+												<ul class="layer_select" id="layer_select_h">
+
+												</ul>
+											</span>
 											<div id="pre_h_tag_view" style="padding-left: 60px;"></div>
 										</li>
 									</c:if>
@@ -2099,8 +2162,16 @@
 				                    </li>
 									<c:if test="${useMailTag}">
 										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
-											<input id="pre_w_tag_add" type="text" maxlength="100" />
-											<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+											<span class="input_select">
+												<sapn class="input_wrap" id="input_wrap_w" style="float: revert">
+													<input id="pre_w_tag_add" type="text" maxlength="100" />
+													<span class="input_select_arrow" onclick="$('#input_wrap_w').toggleClass('on');getTagList('w')"></span>
+												</sapn>
+												<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+												<ul class="layer_select" id="layer_select_w">
+
+												</ul>
+											</span>
 											<div id="pre_w_tag_view" style="padding-left: 60px;"></div>
 										</li>
 									</c:if>
