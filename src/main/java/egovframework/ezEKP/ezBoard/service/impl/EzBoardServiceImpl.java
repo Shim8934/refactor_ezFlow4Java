@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
+import egovframework.ezEKP.ezBoard.vo.BoardReplyAttachVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 import org.apache.commons.codec.binary.Base64;
@@ -2256,7 +2257,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String deleteOneLineReply(String userID, String replyID, String guBun, int tenantID) throws Exception {
+	public String deleteOneLineReply(String userID, String replyID, String itemID, String guBun, int tenantID) throws Exception {
 		logger.debug("deleteOneLineReply started");
 
 		String rtnValue = "";
@@ -2267,6 +2268,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_REPLYID", replyID);
 		map.put("v_GUBUN", guBun);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_ITEMID", itemID);
 		
 		try {
 			int totalCount = 0;
@@ -2278,7 +2280,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 			if (totalCount > 0 || "".equals(userID)) {
 				ezBoardDAO.deleteOneLineReply(map);
-				
+				ezBoardDAO.deleteCommentAttach(map);
 				rtnValue = "OK_DELETED";
 			} else {
 				rtnValue = "FAIL";
@@ -2371,6 +2373,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String lang, String gubun, String companyID, int tenantID, String sort) throws Exception {
 		logger.debug("readOneLineReply started");
 
+		List<BoardLineReplyVO> rtnVal = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_BoardID", boardID);
@@ -2391,8 +2394,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		}
 		
+		List<BoardLineReplyVO> tmpCmtList = ezBoardDAO.readOneLineReply(map);
+		rtnVal = mappingCommentListForAttach(tmpCmtList);
+		
 		logger.debug("readOneLineReply ended");
-		return ezBoardDAO.readOneLineReply(map);
+		return rtnVal;
 	}
 
 	/* 예약게시물 카운트 표출 시 companyID 조건 추가 */
@@ -4079,6 +4085,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        
 	        if (result.equals("OK")) {
 	        	updateMoveItem(destItemID, orgItemID, destBoardID, orgBoardID, userInfo.getTenantId());
+				updateMovedItemCommentAttach(orgItemID, destItemID, userInfo.getTenantId());
 	        	destItemIDStr.append(destItemID).append(";");
 	        	resultStr.append(result).append("|");
 	        }
@@ -5609,6 +5616,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("updateDelParentReply ended");
 		ezBoardDAO.updateDelParentReply(map);
+		ezBoardDAO.deleteCommentAttach(map);
 	}
 	
 	/* 2023-04-06 기민혁 - 싫어요 버튼 클릭시 정보 insert 메서드 */
@@ -6651,5 +6659,140 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("getUserScrapContBoardList ended");
 		return ezBoardDAO.getUserScrapContBoardList(map);
+	}
+
+	/**
+	 * 게시판 게시물 첨부파일저장 실행 Method
+	 */
+	@Override
+	public boolean saveCommentAttachment(String strAttachments, String replyID, String strItemID, String strBoardID, String realPath, int tenantID) throws Exception {
+		logger.debug("saveCommentAttachInfo started");
+
+		long fileSize = 0;
+		boolean rtnValue = false;
+		String filePathRoot = commonUtil.getUploadPath("upload_board.ROOT", tenantID);
+		String filePath = "";
+		String fileName = "";
+		String tempAttachmentPath = "";
+		String uploadAttachmentPath = "";
+
+		
+		try {
+			// 수정 대신 삭제 후 재삽입을 함
+			Map<String, Object> map = new HashMap<>();
+			map.put("v_REPLYID", replyID);
+			map.put("v_ITEMID", strItemID);
+			map.put("v_TENANTID", tenantID);
+			ezBoardDAO.deleteCommentAttach(map);
+			
+			if (!StringUtils.isBlank(strAttachments)) {
+				for (int i = 0; i < strAttachments.split("\\|").length; i++) {
+					String[] tempArr = commonUtil.detectPathTraversal(strAttachments.split("\\|")[i]).split(":");
+					fileName = tempArr[0];
+					tempAttachmentPath = tempArr[1];
+
+					boolean isKlibEncrypted = tempAttachmentPath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
+
+					if (isKlibEncrypted) {
+						uploadAttachmentPath = tempAttachmentPath.substring(0, tempAttachmentPath.lastIndexOf('.'));
+					} else {
+						uploadAttachmentPath = tempAttachmentPath;
+					}
+
+					File file = new File(realPath + commonUtil.detectPathTraversal(tempAttachmentPath));
+					fileSize = file.length();
+
+					if (tempAttachmentPath.indexOf("tempUploadFile") > -1) {
+						filePath = filePathRoot + commonUtil.separator + strBoardID + commonUtil.separator + "uploadCommentlFile" + commonUtil.separator + replyID + commonUtil.separator + uploadAttachmentPath.split("tempUploadFile" + commonUtil.separator)[1];
+
+						File fileinfo = new File(realPath + commonUtil.detectPathTraversal(filePath));
+
+						if (!fileinfo.exists()) {
+							if (isKlibEncrypted) {
+								byte[] fileBytes = FileUtils.readFileToByteArray(file);
+								fileBytes = klibUtil.decrypt(fileBytes);
+								FileUtils.writeByteArrayToFile(fileinfo, fileBytes);
+							} else {
+								FileUtils.moveFile(file, fileinfo);
+							}
+						}
+					} else {
+						filePath = tempAttachmentPath;
+					}
+
+					file = null;
+
+					saveCommentAttach(strItemID, replyID, i, filePath, fileSize, fileName, tenantID);
+				}
+			}
+			rtnValue = true;
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			rtnValue = false;
+		}
+
+		logger.debug("saveCommentAttachInfo ended");
+        return rtnValue;
+	}
+
+	public void saveCommentAttach(String itemID, String replyID, int seqNum, String filePath, long fileSize, String fileName, int tenantID) throws Exception {
+		logger.debug("saveAttachCommentInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_ITEMID", itemID);
+		map.put("v_REPLYID", replyID);
+		map.put("seqNum", seqNum);
+		map.put("v_STRATTACHMENTS", filePath);
+		map.put("v_FILESIZE", fileSize);
+		map.put("v_FILENAME", fileName);
+		map.put("v_TENANTID", tenantID);
+		
+		ezBoardDAO.saveCommentAttach(map);
+
+		logger.debug("saveCommentAttach ended");
+	}
+	
+	// 2024-10-30 전인하 - 댓글 첨부파일 맵핑 함수
+	private List<BoardLineReplyVO> mappingCommentListForAttach(List<BoardLineReplyVO> tmpCmtList) {
+		List<BoardLineReplyVO> rtnVal = new ArrayList<BoardLineReplyVO>();
+		Map<String, BoardLineReplyVO> commentIdList = new HashMap<>();
+		List<BoardReplyAttachVO> tmpAttachList = new ArrayList<>();
+
+		for (BoardLineReplyVO comment : tmpCmtList) {
+			// 이미 존재하는 댓글인지 확인
+            BoardLineReplyVO commentVO = commentIdList.get(comment.getReplyID());
+			
+			 if (commentVO == null) {
+                // 처음 본 댓글이면 새로운 댓글 객체 생성
+                commentVO = comment;
+
+                // 댓글을 리스트와 맵에 추가
+				commentIdList.put(comment.getReplyID(), commentVO);
+                rtnVal.add(commentVO);
+				tmpAttachList = new ArrayList<>();
+            }
+			 
+			 if (commentVO.getFileSN() != null) {
+				 BoardReplyAttachVO att = new BoardReplyAttachVO();
+				 att.setFileName(commonUtil.cleanValueUnescape(comment.getFileName()));
+				 att.setFilePath(comment.getFilePath());
+				 att.setFileSize(comment.getFileSize());
+				 att.setSn(comment.getFileSN());
+				 tmpAttachList.add(att);
+				 commentVO.setReplyAttach(tmpAttachList);
+			 }
+		}
+		return rtnVal;
+  	}
+	  
+	public void updateMovedItemCommentAttach(String orgItemID, String destItemID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("orgItemID", orgItemID);
+		map.put("destItemID", destItemID);
+		map.put("tenantID", tenantID);
+		
+		ezBoardDAO.updateMovedItemCommentAttach(map);
 	}
 }

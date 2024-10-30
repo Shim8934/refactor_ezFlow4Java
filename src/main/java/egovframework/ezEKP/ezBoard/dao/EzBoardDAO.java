@@ -1142,4 +1142,16 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public List<HashMap<String, Object>> getUserScrapContBoardList(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getUserScrapContBoardList", map);
 	}
+	
+	public void saveCommentAttach(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.saveCommentAttach", map);
+	}
+	
+	public void deleteCommentAttach(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteCommentAttach", map);
+	}
+
+    public void updateMovedItemCommentAttach(Map<String, Object> map) {
+		update("EzBoardDAO.updateMovedItemCommentAttach", map);
+    }
 }

@@ -500,4 +500,7 @@ public interface EzCommonService {
 	public void createTblUserScrapContList() throws Exception;
 
 	
+
+	// 2024-10-23 전인하 - 게시판 > 댓글 첨부 테이블 추가
+	public void createTblBoardCommentAttachments() throws Exception;
 }

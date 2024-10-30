@@ -2950,4 +2950,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblUserScrapContList");
 		}
 	}
+	public void createTblBoardCommentAttachments() {
+		try {
+			select("EzCommonDAO.chkTblBoardCommentAttachExist");
+		} catch (Exception e) {
+			logger.debug("tbl TBL_BOARD_COMMENT_ATTACHMENTS doesn't exist. creating the tbl...");
+
+			update("EzCommonDAO.createTblBoardCommentAttach");
+		}
+	}
 }

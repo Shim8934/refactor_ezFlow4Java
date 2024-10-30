@@ -4499,4 +4499,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblUserScrapContList() throws Exception {
 		ezCommonDAO.createTblUserScrapContList();
 	}
+
+    @Override
+    public void createTblBoardCommentAttachments() throws Exception {
+        ezCommonDAO.createTblBoardCommentAttachments();
+    }
 }

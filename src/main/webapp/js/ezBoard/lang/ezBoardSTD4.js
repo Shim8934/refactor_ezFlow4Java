@@ -104,3 +104,8 @@ var strLangKeywordJIH02 = "오류가 발생하였습니다."
 var strLangKeywordJIH03 = "해당 게시물을 그룹웨어에서 접근하지 않았거나, 해당 게시물을 접근한 그룹웨어 페이지에 변경사항이 발생하여 키워드를 검색할 수 없습니다."
 var strLangKeywordJIH04 = "보고 있는 게시물 팝업을 닫겠습니까?"
 var strLangKeywordJIH05 = "게시물 혹은 메일 보기 팝업을 통하여 열람한 게시글, 관리자 화면을 통하여 열람한 게시글에서는 키워드를 검색할 수 없습니다.";
+
+var strLangAttachJIH01 = "첨부";
+var strLangAttachJIH02 = "파일명은 ";
+var strLangAttachJIH03 = "자를 넘을 수 없습니다.";
+var strLangAttachJIH04 = "에러가 발생하였습니다.";

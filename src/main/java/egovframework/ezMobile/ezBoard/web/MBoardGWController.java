@@ -491,6 +491,8 @@ public class MBoardGWController {
 				photo.setFilePath(photo.getFilePath());
 			}
 				
+			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
+			
 			logger.debug("photoList:"+photoList);
 			
 			mBoardService.setAsRead(info, boardId, contentId);
@@ -508,6 +510,7 @@ public class MBoardGWController {
 			data.put("acScrap", acScrap);
 			data.put("myBoardScrapFlag", myBoardScrapFlag);
 			data.put("isScrap", isScrap);
+			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -919,13 +922,7 @@ public class MBoardGWController {
 	public JSONObject mFileUpload(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
 		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/fileupload] started.");
 		
-		String filePath = request.getParameter("filePath");
-		String fileName = request.getParameter("fileName");
-		String boardID = request.getParameter("boardID");
 		String serverName = request.getHeader("x-user-host");
-		
-		logger.debug("filePath = " + filePath);
-		logger.debug("serverName = " + serverName + " | fileName = " + fileName + " | boardID = " + boardID);
 		
 		JSONParser jp = new JSONParser();
 		jsonObject = (JSONObject) jp.parse(jsonObject.toJSONString());
@@ -935,6 +932,7 @@ public class MBoardGWController {
 		try {
 			JSONArray fileArray = new JSONArray();
 			
+			String boardID = "";
 			String userID = "";
 			int cnt = 0;
 			int maxSize = 0;
@@ -955,7 +953,12 @@ public class MBoardGWController {
 				userID = (String) jsonObject.get("userID");
 			}
 			
+			if (jsonObject.get("boardID") != null) {
+				boardID = (String) jsonObject.get("boardID");
+			}
+			
 			logger.debug("cnt = " + cnt + " | maxSize = " + maxSize + " | userID = " + userID);
+			logger.debug("serverName = " + serverName + " | boardID = " + boardID);
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
@@ -967,6 +970,7 @@ public class MBoardGWController {
 			Long[] fileSize = new Long[cnt];
 			String[] resultUpload = new String[cnt];
 			String[] fileLocation = new String[cnt];
+			String[] extList = new String[cnt];
 			
 			 for (int i = 0; i < cnt; i++) {
 		            resultUpload[i] = "false";
@@ -1018,16 +1022,17 @@ public class MBoardGWController {
                         resultUpload[i] = "denied";
                     } else {
                         String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator;
-                        File fTemp = new File(pAttachPath, pUploadSN[i] + "_" + pFileName[i]);
+                        File fTemp = new File(pAttachPath, sGUID[i] + "." + extStr);
                         
                         if (!file.exists()) {
                         	fTemp.mkdirs();
                         }
                         
-                        mobileBoardWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
+                        mobileBoardWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), sGUID[i] + "." + extStr, pAttachPath);
                         
-                        fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
+                        fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator + sGUID[i] + "." + extStr;
                         resultUpload[i] = "true";
+						extList[i] = extStr;
                     }
 	            }
 	        }
@@ -1037,7 +1042,7 @@ public class MBoardGWController {
 	        strXML.append("<ROOT><NODES>");
 	        
 	        for (int i = 0; i < cnt; i++) {
-	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>");
+	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "." + extList[i] + "]]></PUPLOADSN>");
 	            strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
 	            strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
 	            strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
@@ -1351,6 +1356,8 @@ public class MBoardGWController {
 				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
 			}
 			
+			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
+			
 			logger.debug("movieAttachVO : " + movieAttachVO.get(0));
 			
 			mBoardService.setAsRead(info, boardId, contentId);
@@ -1367,6 +1374,7 @@ public class MBoardGWController {
 			data.put("acScrap", acScrap);
 			data.put("myBoardScrapFlag", myBoardScrapFlag);
 			data.put("isScrap", isScrap);
+			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -2032,6 +2040,11 @@ public class MBoardGWController {
 			
 			mBoardService.saveOneLineReply(contentId, replyID, boardId, userID, info.getUserName(), info.getUserName2(), info.getTenantId(), info.getCompanyId(), content, imageContent);
 			
+			// 댓글 첨부 저장
+			String attach = request.getParameter("attach");
+			String realPath = commonUtil.getRealPath(request);
+			ezBoardService.saveCommentAttachment(attach, replyID, contentId, boardId, realPath, info.getTenantId());
+			
 	        result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");
@@ -2097,6 +2110,7 @@ public class MBoardGWController {
 			String replyLevel = request.getParameter("replyLevel");
 			String parentReplyID = request.getParameter("parentReplyID");
 			String serverName = request.getHeader("x-user-host");
+			String itemID = request.getHeader("itemID");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
 			
 			logger.debug("serverName = " + serverName + " | userId = " + userID);
@@ -2110,16 +2124,16 @@ public class MBoardGWController {
 			
 			String resStr = "";
 			if (Integer.parseInt(replyLevel) != 1) { // 최상위부모댓글이 아닌 경우
-				resStr = ezBoardService.deleteOneLineReply(userID, replyID, gubun, info.getTenantId()); // 무조건 삭제
+				resStr = ezBoardService.deleteOneLineReply(userID, replyID, itemID, gubun, info.getTenantId()); // 무조건 삭제
 				int sibilingsCnt = ezBoardService.getChildReplyCnt(contentId, boardId, parentReplyID, info.getTenantId()); // 형제댓글 갯수
 				int parentReplyExistFlag = mBoardService.checkThisReplyExist(parentReplyID, contentId, info.getTenantId()); // 부모댓글 실존여부 (존재할경우 1, 아니면 0)
 				if (sibilingsCnt == 0 && parentReplyExistFlag == 0) { // 형제댓글이 존재하지 않고, 부모댓글은 이미 지워진 상태일 때 null 삽입되어있던 부모댓글을 지운다.
-					ezBoardService.deleteOneLineReply("", parentReplyID, gubun, info.getTenantId());
+					ezBoardService.deleteOneLineReply("", parentReplyID, itemID, gubun, info.getTenantId());
 				}
 			} else { // 최상위 부모댓글인 경우 자식 댓글이 존재한다면 null 삽입, 자식댓글이 없다면 일반 삭제.
 				int childCnt = ezBoardService.getChildReplyCnt(contentId, boardId, replyID, info.getTenantId());
 				if (childCnt == 0) {
-					resStr = ezBoardService.deleteOneLineReply(userID, replyID, gubun, info.getTenantId());
+					resStr = ezBoardService.deleteOneLineReply(userID, replyID, itemID, gubun, info.getTenantId());
 				} else {
 					ezBoardService.updateDelParentReply(replyID, contentId, boardId, info.getTenantId());
 					resStr = "OK_DELETED";
@@ -2173,6 +2187,11 @@ public class MBoardGWController {
 			content = content.replace("'", "''");
 			
 			mBoardService.updateOneLineReply(contentId, replyID, content, info.getTenantId(), imageContent);
+			
+			// 댓글 첨부 저장
+			String attach = request.getParameter("attach");
+			String realPath = commonUtil.getRealPath(request);
+			ezBoardService.saveCommentAttachment(attach, replyID, contentId, boardId, realPath, info.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2220,6 +2239,11 @@ public class MBoardGWController {
 			password = EgovFileScrty.encryptPassword(rpwd, "unknown");
 			
 			mBoardService.saveOneLineReReply(contentId, boardId, replyID, parentReplyID, content, password, info, imageContent);
+			
+			// 댓글 첨부 저장
+			String attach = request.getParameter("attach");
+			String realPath = commonUtil.getRealPath(request);
+			ezBoardService.saveCommentAttachment(attach, replyID, contentId, boardId, realPath, info.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
