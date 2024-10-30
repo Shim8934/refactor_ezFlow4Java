@@ -337,9 +337,22 @@
 				var divChild1  = document.createElement("div");
 				var divRespCnt = document.createElement("div");
 				var totalCnt   = question["users"].length;
+				var imgTitle   = question["imgTitle"];
+				var imgTitleDiv = null;
 				divElemt1.className    = "response-header";
 				divElemt2.className    = "response-users";
+				if (imgTitle) {
+					imgTitleDiv = document.createElement("div");
+					imgTitleDiv.className = "imgTitleDiv";
+					var img = document.createElement("img");
+					img = document.createElement("img");
+					img.className = "imgTitle";
+					img.src = imgTitle["fpath"];
+					imgTitleDiv.appendChild(img);
+				}
+				
 				divChild1.textContent  = question["level"] + "." + question["content"];
+				
 				spanElmt.textContent   = SurveyMessages.strRespondent + " " + totalCnt;
 				divRespCnt.textContent = responsesCnt <= 999 ? responsesCnt : 999 + "+";
 				spanElmt.className     = "response-usercnt";
@@ -354,6 +367,9 @@
 				divElemt1.appendChild(divRespCnt);
 				divElemt2.appendChild(ulElmt);
 				mainDiv.appendChild(divElemt1);
+				if (imgTitle) {
+					mainDiv.appendChild(imgTitleDiv);
+				}
 				mainDiv.appendChild(divElemt2);
 				return mainDiv;
 			}

@@ -183,6 +183,8 @@ var SurveyMessages = {
 	strScheduleTxt : "Text Input",
 	strScheduleOpt : "You can add up to 20 options.",
 	strDateFormatValidation : "Please enter a valid date in the format yyyy-mm-dd (four-digit year, two-digit month, two-digit day)",
-	strDateTimeValidation : "The start date must be earlier than the end date."
-
+	strDateTimeValidation : "The start date must be earlier than the end date.",
+	strQuestionImage : "Replace question with an image",
+	strQuestionFileAttach : "Attach a file to the question",
+	strAllowedImageForTitle : "Only png, jpeg, and jpg are allowed."
 }

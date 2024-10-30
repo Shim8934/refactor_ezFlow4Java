@@ -489,7 +489,9 @@ var SurveyCreate     = function() {
 			//if (returnObj["error"]) {return returnObj;}
 		}
 		
-		document.querySelector("div[class='quesDiv']").querySelector("input[class='questnTitle']").focus();
+		if (!!document.querySelector("div[class='quesDiv']").querySelector("input[class='questnTitle']")) {
+			document.querySelector("div[class='quesDiv']").querySelector("input[class='questnTitle']").focus();
+		}
 		return returnObj;
 	}
 	
@@ -1349,11 +1351,12 @@ var SurveyCreate     = function() {
 		var qstId      = "";
 		var qstContent = "";
 		var qstAtt     = "";
-		
+		var qstImgTitle = "";
 		if (question) {
 			qstId      = question.level;
 			qstContent = question.content;
 			qstAtt     = mkImgTag(question.attach);
+			qstImgTitle = question.imgTitle;
 		}
 		
 		var wrapper      = $("<div class='qstnWrapper' id='" + qstId + "'></div>");
@@ -1361,6 +1364,7 @@ var SurveyCreate     = function() {
 		var qstnRow      = $("<div class='qstnRow'></div>");
 		var questnTitle  = $("<input class='questnTitle' value='" + escapeHtml(qstContent) + "' maxLength='250' placeholder='" + SurveyMessages.strQsContent + "' />");
 		var ulToolTip    = $("<ul class='survey_atchBtn'></ul>");
+		var fileAttToolTip = $("<div class='fileAttTooltip'><div class='fileAttTooltipContent'><div class='fileAttTooltipLine' mode='questionImg'>" + SurveyMessages.strQuestionImage +"</div><div class='fileAttTooltipDivider'></div><div class='fileAttTooltipLine' mode='fileAttach'>" + SurveyMessages.strQuestionFileAttach +"</div></div></div>")
 		var liAttImg     = $("<li class='off atchLiImg'><span class='survey_icon atchImg'></span></li>");
 		var liAttUrl     = $("<li class='off atchLiUrl'><span class=''>" + SurveyMessages.strAttUrl + "</span></li>");
 		var divRequired  = $("<div class='required'><input type='checkbox'><label>" + SurveyMessages.strRequired + "</label></div>");
@@ -1368,12 +1372,28 @@ var SurveyCreate     = function() {
 		var qstnFileInfo = $("<div class='qstnFileInfo'></div>");
 		var fileList     = $("<div class='fileList'></div>");
 		var qstUl        = $("<ul class='qstUl'></ul>");
-		var qstnImgFile  = $("<input type='file' class='qstnImgFile' accept='/*'/>");
-		
+		var qstnImgFile  = $("<input type='file' class='qstnImgFile' accept='.png, .jpeg, .jpg'/>");
+		var imgQuestionInfo = $("<div class='imgQuestionInfo noImg'></div>");
+		var imgQuestionList = $("<div class='imgQuestionList'></div>");
+		var imgQstUl        = $("<ul class='imgQstUl'></ul>");
+		var imgQuestionFile = $("<input type='file' class='imgQuestionFile' accept='/*'/>");
+		var changeQstTextBtn = $("<input type='button' class='changeQstText' value='질문 이미지 삭제'/>");
+		if (qstImgTitle) {
+			imgQuestionInfo.removeClass("noImg");
+			imgQstUl.append(makeImgTitle(question.imgTitle));
+			changeQstTextBtn.css("display", "block");
+			questnTitle.addClass("hasImg");
+		}
+		liAttImg.append(fileAttToolTip);
 		ulToolTip.append(liAttImg);
 		ulToolTip.append(liAttUrl);
+		imgQuestionList.append(imgQstUl);
+		imgQuestionList.append(imgQuestionFile);
+		imgQuestionInfo.append(imgQuestionList);
+		quesDiv.append(imgQuestionInfo);
 		
 		qstnRow.append(questnTitle);
+		qstnRow.append(changeQstTextBtn);
 		qstnRow.append(divRequired);
 		qstnRow.append(ulToolTip);
 		qstnRow.append(selectBox);
@@ -1480,11 +1500,37 @@ var SurveyCreate     = function() {
 		});
 		
 		// question 첨부파일 트리거
+		
 		$(".quesBacgr").on("click", ".atchLiImg", function() {
-			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
-			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
-			$(this).parent().parent().next().find(".qstnImgFile").click();
+			$(this).find('.fileAttTooltip').toggle();
 		});
+		
+		$(".quesBacgr").on("click", ".fileAttTooltipLine", function() {
+			var fileAttTooltipLine = $(this);
+			var quesDiv = fileAttTooltipLine.closest(".quesDiv");
+			if (fileAttTooltipLine.attr("mode") == "fileAttach") {
+				var li = quesDiv.find(".fileList").find("li");
+				if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+				quesDiv.find(".fileList").find(".qstnImgFile").click();
+			} else if (fileAttTooltipLine.attr("mode") == "questionImg") {
+				var li = quesDiv.find(".imgQuestionList").find("li");
+				if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+				quesDiv.find(".imgQuestionList").find(".imgQuestionFile").click();
+			}
+			quesDiv.find(".fileAttTooltip").hide();
+		});
+		
+		$(".quesBacgr").on("click", ".changeQstText", function() {
+			$(this).css('display', 'none');
+			questionFile.deleteFile($(this).closest(".quesDiv").find(".imgQstUl").find(".delInput").first().get(0));
+		});
+		
+		$(document).on('click', function(event) {
+	        if (!$(event.target).closest('.atchLiImg').length || $(event.target).closest('.fileAttTooltip').length) {
+	            $('.fileAttTooltip').hide();
+	        }
+			
+	    });
 		
 		$(".quesBacgr").on("click", ".atchLiVdo", function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
@@ -1509,6 +1555,7 @@ var SurveyCreate     = function() {
 		$(".quesBacgr").on("change", ".qstnImgFile", function(e) {fileUpload(this, "all");});
 		$(".quesBacgr").on("change", ".qstnVidFile", function(e) {fileUpload(this, "video");});
 		$(".quesBacgr").on("change", ".qstnAudFile", function(e) {fileUpload(this, "music");});
+		$(".quesBacgr").on("change", ".imgQuestionFile", function(e) {fileUpload(this, "imgTitle");});
 		
 		$(".quesBacgr").on("click", ".addOpttions", function() {
 			var thisEl    = $(this).parents(".qstnForm");
@@ -2147,7 +2194,11 @@ var SurveyCreate     = function() {
 				var crrQuestion = JSON.parse(JSON.stringify(questionList.filter(function(qst){return qst["level"] == crrLevel;})[0]));
 				crrQuestion["level"] = newLevel;
 				questionDivList[i].setAttribute("id", "qstn" + newLevel);
-				questionDivList[i].querySelector("div[class='question-content']").textContent = newLevel + ". " + crrQuestion["content"];
+				if (crrQuestion.imgTitle) {
+					questionDivList[i].querySelector(".question-content span").textContent = newLevel + ". "; 
+				} else {
+					questionDivList[i].querySelector("div[class='question-content']").textContent = newLevel + ". " + crrQuestion["content"];
+				}
 				newQstList.push(crrQuestion);
 			}
 			else {
@@ -2539,6 +2590,11 @@ var SurveyCreate     = function() {
 		return questionFile.mkImgTag(qstnAtt);
 	}
 	
+	function makeImgTitle(imgTitle) {
+		if (!imgTitle) {return "";}
+		return questionFile.makeImgTitle(imgTitle);
+	}
+	
 	// option 첨부파일 업로드
 	function fileUpload(thisEl, uploadMode) {questionFile.upload(thisEl, uploadMode);}
 	
@@ -2734,10 +2790,20 @@ var SurveyCreate     = function() {
 		
 		var qstnArea     = qstnWrapper.find(".quesDiv");
 		var qstnContent  = replaceAll(qstnArea.find(".questnTitle").val(), "(<(\/?)(script|applet|object)>)", "");
+		var qstnImgTitle = qstnArea.find(".imgQuestionInfo")[0].querySelector("li");
+		var qstnImgTitleFlag = qstnArea.find(".questnTitle").hasClass("hasImg");
+		if (qstnImgTitle) {
+			question["imgTitle"] = getImgTitleInfo(qstnImgTitle);
+			qstnContent = "";
+		}
+		
 		var questionList = SurveyCreate.getQs();
 		
 		//Save common question information
-		if (!qstnContent) {alert(SurveyMessages.strQsContent); return;}
+		if ((!qstnContent && !qstnImgTitleFlag) || (qstnImgTitleFlag && !qstnImgTitle)) {
+			alert(SurveyMessages.strQsContent);
+			return;
+		}
 		
 		question["content"]  = qstnContent;
 		var qstnForm         = qstnArea.next();
@@ -2985,6 +3051,7 @@ var SurveyCreate     = function() {
 		var qstnType       = question.type;
 		var required       = question.required;
 		var qstnAtt        = question.attach;
+		var imgTitle       = question.imgTitle;
 		var wrapDiv        = document.createElement("div");
 		var divPanel       = document.createElement("div");
 		var moveBttn       = document.createElement("ul");
@@ -3019,13 +3086,42 @@ var SurveyCreate     = function() {
 			strongElmt.textContent = "*";
 			divHeader.appendChild(strongElmt);
 		}
-		divQsContent.textContent = qstId + ". " + content;
-		divQsContent.className   = "question-content";
 		
+		if (!imgTitle) {
+			divQsContent.textContent = qstId + ". " + content;
+			
+			divQsContent.className   = "question-content";
+		} else {
+			var span         = document.createElement("span");
+			span.textContent = qstId +". ";
+			var attDiv       = document.createElement("div");
+			var attImg       = document.createElement("img");
+			var attachInf    = questionFile.getImage(imgTitle);
+			attImg.src       = attachInf["imageSrc"];
+			attImg.className = "titleImg";
+			attDiv.className = "question-attach questionImgTitle";
+			attDiv.appendChild(attImg);
+			attDiv.style.maxHeight = 'none';
+			attDiv.style.padding = '10px 0px 0px 0px';
+			attDiv.style.margin = '0px 35px'; 
+			
+			if (attachInf["isImage"] == 0) {
+				var spanElmt         = document.createElement("span");
+				spanElmt.textContent = qstnAtt["fname"];
+				spanElmt.setAttribute("title", qstnAtt["fname"]);
+				attDiv.appendChild(spanElmt);
+			}
+			
+			divQsContent.appendChild(span);
+			divQsContent.className   = "question-content questionImgContent";
+			divPanel.appendChild(attDiv);
+		}
+		
+		divHeader.className = "question-header";
 		//Tools div process
 		atchBtnUl.className = "survey_atchBtn";
 		divTools.className  = "tooltip-bttns";
-		divHeader.className = "question-header";
+		
 		divTools.appendChild(atchBtnUl);
 		divHeader.appendChild(divQsContent);
 		divHeader.appendChild(divTools);
@@ -3550,6 +3646,20 @@ var SurveyCreate     = function() {
 		return attchObj;
 	}
 	
+	function getImgTitleInfo(elmtObj) {
+		var imgTitleObj      = {};
+		imgTitleObj["fname"] = elmtObj.getAttribute("fname");
+		
+		if (elmtObj.getAttribute("furl")) {
+			imgTitleObj["furl"] = elmtObj.getAttribute("furl");
+		}
+		else {
+			imgTitleObj["fpath"] = elmtObj.getAttribute("path");
+		}
+		
+		return imgTitleObj;
+	}
+	
 	function isValid(value) {if (!isNaN(value) && parseFloat(value) >= 0 && value % 1 === 0) {return true;} else {return false;}}
 	
 	// 질문 생성
@@ -3621,6 +3731,7 @@ var SurveyCreate     = function() {
 		var qstnType        = question.type;
 		var required        = question.required;
 		var qstnAtt         = question.attach;
+		var imgTitle        = question.imgTitle;
 		var prevQsContent   = $("<div class='prevQsContent'></div>");
 		var questionPanel   = $("<div class='question-panel'></div>");
 		var questionHeader  = $("<div class='question-header'></div>");
@@ -3629,7 +3740,32 @@ var SurveyCreate     = function() {
 		var questionAttach  = "";
 		var imptt           = required == 1 ? "<strong class='imptt'>*</strong>" : "";
 		
-		questionContent[0].textContent = qstId + ". " + content;
+		if (imgTitle) {
+			var span         = document.createElement("span");
+			span.textContent = qstId +". ";
+			var attDiv       = document.createElement("div");
+			var attImg       = document.createElement("img");
+			var attachInf    = questionFile.getImage(imgTitle);
+			attImg.src       = attachInf["imageSrc"];
+			attImg.className = "titleImg";
+			attDiv.className = "question-attach questionImgTitle";
+			attDiv.appendChild(attImg);
+			attDiv.style.maxHeight = 'none';
+			attDiv.style.padding = '10px 0px 0px 0px';
+			attDiv.style.margin = '0px 35px'; 
+			
+			if (attachInf["isImage"] == 0) {
+				var spanElmt         = document.createElement("span");
+				spanElmt.textContent = qstnAtt["fname"];
+				spanElmt.setAttribute("title", qstnAtt["fname"]);
+				attDiv.appendChild(spanElmt);
+			}
+			
+			questionContent[0].appendChild(span);
+			questionPanel[0].appendChild(attDiv);
+		} else {
+			questionContent[0].textContent = qstId + ". " + content;
+		}
 		
 		if (step == 3) {
 			var frstBtnGrp = $("<ul id='frstBtnGrp" + qstId + "' class='srvyLogicbtn survey_atchBtn frstBtnGrp'></ul>");

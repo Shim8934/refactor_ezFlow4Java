@@ -460,6 +460,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			int requiredFlag       = ((Long)questionObj.get("required")).intValue();
 			int questionType       = ((Long)questionObj.get("type")).intValue();
 			JSONObject questionAtt = (JSONObject)questionObj.get("attach");
+			JSONObject imgTitle = (JSONObject)questionObj.get("imgTitle");
 			JSONArray options      = (JSONArray)questionObj.get("option");
 			
 			if ((options == null || options.size() == 0) && draftMode == 0) {
@@ -539,11 +540,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				saveAttachFile(realPath, questionAtt, maxQuestionId, companyId, tenantId, "question", crrSurveyId, totalAttach);
 			}
 			
+			//Add survey attach list
+			if (imgTitle != null && imgTitle.size() > 0) {
+				saveAttachFile(realPath, imgTitle, maxQuestionId, companyId, tenantId, "title", crrSurveyId, totalAttach);
+				question.setContent("HASIMGTITLE");
+			}
+			
 			//Add question
 			totalQuestions.add(question);
 		}
 		
-		//Add survey attach list
 		if (attchList != null && attchList.size() > 0) {
 			for (int i = 0; i < attchList.size(); i++) {
 				JSONObject surveyAtt = (JSONObject)attchList.get(i);
@@ -1063,7 +1069,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			map.put("questionIds", questionIds);
 			map.put("optionIds"  , optionIds);
 			List<AttachVO> attachs     = ezSurveyDAO.getAllAttachForQsAndOpt(map);
-			
 			//Clone list of attach
 			/* 2023-08-04 한태훈 : 첨부파일 다운로드 시 보안문제로 원본 파일 복사 후 복사된 파일을 다운로드 받을 수 있게 하는 코드이지만, 전자설문 페이지  
 			 열 때마다 파일이 복사되는 문제가 있음.
@@ -1092,7 +1097,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					}
 				}
 			}
-			
+			List<AttachVO> imgTitleList = attachs.stream().filter(a -> a.getTargetType().equals("title")).collect(Collectors.toList());
+			attachs.removeAll(imgTitleList); 
 			//Separate
 			List<AttachVO> qstAttch    = attachs.stream().filter(a -> a.getTargetType().equals("question")).collect(Collectors.toList());
 			attachs.removeAll(qstAttch);
@@ -1166,6 +1172,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					if (qsAttach.getTargetId() == question.getQuestionId()) {
 						question.setAttach(qsAttach);
 						qsAtIter.remove();
+					}
+				}
+				
+				ListIterator<AttachVO> imgTitleIter = imgTitleList.listIterator();
+				while (imgTitleIter.hasNext()) {
+					AttachVO imgTitle = imgTitleIter.next();
+					if (imgTitle.getTargetId() == question.getQuestionId()) {
+						question.setContent("");
+						question.setImgTitle(imgTitle);
+						imgTitleIter.remove();
 					}
 				}
 				

@@ -3332,7 +3332,7 @@ input::-ms-clear {display: none;}
 
 /* survey question type selectbox */
 .quesDiv {margin:0px; padding:0px; background:#f1f6fb; padding:20px; text-align:center; align-items:center; justify-content:center;}
-.quesDiv .qstnRow {display: flex; align-items: center;}
+.quesDiv .qstnRow {display: flex; align-items: center;justify-content:flex-end;}
 .quesDiv .qstnRow .questnTitle {flex: 1; margin:0px 10px 0px 0px; padding:10px; font-size:14px; color:#1f1f1f; background:none; border:none; border-bottom:1px solid #c5c5c5;}
 .quesDiv .qstnRow .questnTitle.focus{border-bottom:1px solid #2196f3;}
 .quesDiv .qstnRow >img {width: 36px; height: 36px; padding: 5px; cursor: pointer;}
@@ -3368,7 +3368,7 @@ input::-ms-clear {display: none;}
 
 /* attach file ul list */
 .survey_atchBtn{padding:0; margin:0; height:40px;}
-.survey_atchBtn li.atchLiImg{ margin:9px 3px 0px 0px !important;}
+.survey_atchBtn li.atchLiImg{ margin:9px 3px 0px 0px !important; position:relative;}
 .survey_atchBtn li.atchLiUrl{ margin:9px 0px 0px 0px !important;}
 .survey_atchBtn li.modifyBtnLi{margin:7px 3px 0px 0px !important;}
 .survey_atchBtn li.copyBtnLi{margin:7px 3px 0px 0px !important;}
@@ -4099,3 +4099,25 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 .qstnForm .schedule-option .dateOpt {margin-left:15px;}
 .qstnForm .schedule-option .betweenSpan {margin:0px 3px; display:none;}
 .qstnForm .schedule-option .scheduleTxt {display:none;width:200px;}
+
+/* 2024-10-25 한태훈 - 전자설문 > 질문을 이미지로 대체 */
+.qstnWrapper .quesDiv .fileAttTooltip {width:150px; position: absolute; top: 35px; left: 0; display:none;}
+.qstnWrapper .quesDiv .fileAttTooltip .fileAttTooltipContent:before {content: ''; position: absolute; border-bottom: 14px solid #fff; border-right: 8px solid transparent; border-left: 8px solid transparent; top: -12px; left: 5px; z-index: 2;}
+.qstnWrapper .quesDiv .fileAttTooltip .fileAttTooltipContent {background-color: #fff; color: #333; padding: 10px; border-radius: 5px; border: 1px solid #cccccc; white-space: pre-line; position: relative; z-index: 1;}
+.qstnWrapper .quesDiv .fileAttTooltip .fileAttTooltipLine {cursor: pointer;}
+.qstnWrapper .quesDiv .fileAttTooltip .fileAttTooltipDivider {border-top: 1px solid #ccc; margin: 3px 0px;}
+.qstnWrapper .quesDiv .imgQuestionInfo.noImg {display:none;}
+.qstnWrapper .quesDiv .imgQuestionFile {display:none;}
+.qstnWrapper .quesDiv .questnTitle.hasImg {display:none;}
+.qstnWrapper .quesDiv .questnTitle.questionImg {display:none;}
+.qstnWrapper .quesDiv .changeQstText {display:none; margin: 0px 10px; padding: 0px 7px; color: #393939; background: #fff; border: 1px solid #c7c7c7; border-bottom: 1px solid #909193; cursor: pointer;}
+.qstnWrapper .quesDiv .questDivFile {display:block; cursor:auto;}
+.qstnWrapper .quesDiv .questDivFile .questImgAva {height: auto; width: auto; overflow-x:auto; display:flex; margin:0px;}
+.qstnWrapper .quesDiv .questDivFile .questImgAva .titleImg {width:auto; height:auto; max-width:none;}
+.qstnWrapper .quesDiv .imgQstUl {padding-left : 0px;}
+.questionImgTitle {overflow-x : auto;}
+.questionImgTitle .titleImg {width: auto; height: auto; max-height:none !important;}
+.questionImgHeader .questionImgContent {padding:0px 20px; cursor: default; font-size:14px; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana'; display:flex;}
+.prevQsWrapper .prevQsContent .questionImgTitle{max-height: none; margin:0px 35px;}
+.imgTitleDiv {overflow-x: auto; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;}
+.imgTitle{width: auto; height: auto; padding: 30px;}

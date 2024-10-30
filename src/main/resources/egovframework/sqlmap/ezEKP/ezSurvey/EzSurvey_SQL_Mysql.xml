@@ -1238,6 +1238,10 @@
 					and target_type = 'question'
 				)
 			 or (
+					target_id in <iterate property="questionIds" open="(" close=")" conjunction=",">#questionIds[]#</iterate>
+					and target_type = 'title'
+				)
+			 or (
 			 		target_id in <iterate property="optionIds" open="(" close=")" conjunction=",">#optionIds[]#</iterate>
 			 		and target_type = 'option'
 				)

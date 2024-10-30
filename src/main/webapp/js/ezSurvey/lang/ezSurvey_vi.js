@@ -177,5 +177,8 @@ var SurveyMessages = {
 	strScheduleTxt : "텍스트 입력",
 	strScheduleOpt : "옵션은 최대 20개 까지 추가 가능합니다.",
 	strDateFormatValidation : "날짜는 yyyy-mm-dd(년도 네자리-월 두자리-일 두자리)형태의 유효한 날짜로 입력해주세요.",
-	strDateTimeValidation : "시작 날짜는 끝 날짜보다 이전 날짜여야 합니다."
+	strDateTimeValidation : "시작 날짜는 끝 날짜보다 이전 날짜여야 합니다.",
+	strQuestionImage : "이미지로 질문 대체",
+	strQuestionFileAttach : "질문에 파일 첨부",
+	strAllowedImageForTitle : "png, jpeg, jpg만 허용가능합니다."
 }
