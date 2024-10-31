@@ -32,7 +32,7 @@
 	        };
 
 			function btnCancel_onclick() {
-				if (ReturnFunction != null) {
+				if (typeof ReturnFunction != 'undefined' && ReturnFunction != null) {
 					ReturnFunction("cancel");
 					window.close();
 				} else {
