@@ -190,6 +190,8 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setPreviewMailImage((String)obj.get("previewMailImage"));
         		mailGeneral.setTextOption(textOption);
         		mailGeneral.setMailSearchPeriod(mailSearchPeriod);
+        		mailGeneral.setDefaultCursorPosition((String)obj.get("defaultCursorPosition"));
+        		mailGeneral.setDefaultSeparateSend((String)obj.get("defaultSeparateSend"));
         		
         		mailGeneralList.add(mailGeneral);
         	}
@@ -217,6 +219,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setPreviewMailImage("Y");
 			mailGeneral.setTextOption(textOption);
 			mailGeneral.setMailSearchPeriod("sixMonth");
+			mailGeneral.setDefaultCursorPosition("recipient");
+			mailGeneral.setDefaultSeparateSend("N");
+			mailGeneral.setMailSearchPeriod("failure");
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -248,6 +253,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String previewMailImageParam = "previewMailImage=" + URLEncoder.encode(mailGeneral.getPreviewMailImage(), "UTF-8");
 		String textOptionParam = "textOption=" + URLEncoder.encode(mailGeneral.getTextOption(), "UTF-8");
 		String mailSearchPeriodParam = "mailSearchPeriod=" + URLEncoder.encode(mailGeneral.getMailSearchPeriod(), "UTF-8");
+		String defaultCursorPositionParam = "defaultCursorPosition=" + URLEncoder.encode(mailGeneral.getDefaultCursorPosition(), "UTF-8");
+		String defaultSeparateSendParam = "defaultSeparateSend=" + URLEncoder.encode(mailGeneral.getDefaultSeparateSend(), "UTF-8");
 		
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
@@ -257,7 +264,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
 				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + textOptionParam
-				+ "&" + mailSearchPeriodParam;
+				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam;
+
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailGeneral", inputParams);

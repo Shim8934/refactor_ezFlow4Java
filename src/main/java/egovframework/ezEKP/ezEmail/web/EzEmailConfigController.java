@@ -215,6 +215,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
 		String dotnetFlag = request.getParameter("dotnetFlag");
 		String mailSearchPeriod = mailGeneralVO.getMailSearchPeriod() == null ? "sixMonth" : mailGeneralVO.getMailSearchPeriod();
+		String defaultCursorPosition = mailGeneralVO.getDefaultCursorPosition() == null ? "recipient" : mailGeneralVO.getDefaultCursorPosition();
+		String defaultSeparateSend = mailGeneralVO.getDefaultSeparateSend() == null ? "N" : mailGeneralVO.getDefaultSeparateSend();
+		String useEachMailDefault = ezCommonService.getTenantConfig("useEachMailDefault", userInfo.getTenantId()) == null ? "NO" : ezCommonService.getTenantConfig("useEachMailDefault", userInfo.getTenantId()); // 메일 개별발신 디폴트 사용 여부(YES: 개별발송 사용, NO: 사용안함)
 		
 		if (dotnetFlag != null) {
 			dotnetFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(dotnetFlag));
@@ -246,7 +249,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				 + ",previewHContentSize=" + previewHContentSize + ",previewWListSize=" + previewWListSize + ",previewWContentSize=" + previewWContentSize
 				 + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength + ",mailSendObject=" + mailSendObject
 				 + ",previewSubtree=" + previewSubtree + ",useOnlyInnerMail=" + useOnlyInnerMail + ",usePreviewSubTree=" + usePreviewSubTree
-				 + ",previewMailImage=" + previewMailImage + ",textOption=" + textOption + ",mailSearchPeriod=" + mailSearchPeriod);
+				 + ",previewMailImage=" + previewMailImage + ",textOption=" + textOption + ",mailSearchPeriod=" + mailSearchPeriod
+				 + ",defaultCursorPosition=" + defaultCursorPosition + ",defaultSeparateSend=" + defaultSeparateSend + ",useEachMailDefault=" + useEachMailDefault);
 		
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
@@ -264,6 +268,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("textOption", textOption);
 		model.addAttribute("mailSearchPeriod", mailSearchPeriod);
 		model.addAttribute("dotnetFlag", dotnetFlag);
+		model.addAttribute("defaultCursorPosition", defaultCursorPosition); // 메일쓰기창 기본 커서 위치/ recipient: 받는사람, content : 내용, subject : 제목
+		model.addAttribute("defaultSeparateSend", defaultSeparateSend);
+		model.addAttribute("useEachMailDefault", useEachMailDefault);
 		
 		logger.debug("mailGeneral ended.");
 		
@@ -355,6 +362,15 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (mode != null && mode.equals("ALL")) {
 			mailSenderNm = doc.getElementsByTagName("MAILSENDERNM").item(0).getTextContent();
 		}
+		
+		String defaultCursorPosition = doc.getElementsByTagName("DEFAULTCURSORPOSITION").item(0).getTextContent();
+		
+		// 2024.09.09 한슬기 : 개별발신 기본 여부. 관리자 > 시스템 > 패라메터 > 개별발신 디폴트 사용이 '예'일 경우 사용자 개별발송 여부를 변경하지 않음
+		String defaultSeparateSend = doc.getElementsByTagName("DEFAULTSEPARATESEND").item(0).getTextContent();
+		if (StringUtils.isBlank(defaultSeparateSend)) {
+			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+			defaultSeparateSend = StringUtils.defaultString(mailGeneralVO.getDefaultSeparateSend());
+		}
 
 		logger.debug("userId=" + userInfo.getId() + ",listCount=" + listCount + ",refreshInterval=" + refreshInterval 
 				+ ",keepDeleteLength=" + keepDeleteLength + ",previewMode=" + previewMode 
@@ -362,7 +378,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent
 				+ ",mailSenderNm=" + mailSenderNm + ",previewSubTree=" + previewSubTree
 				+ ",previewMailImage=" + previewMailImage + ",textOption=" + textOption
-				+ ",mailSearchPeriod=" + mailSearchPeriod
+				+ ",mailSearchPeriod=" + mailSearchPeriod + ",defaultCursorPosition=" + defaultCursorPosition
+				+ ",defaultSeparateSend=" + defaultSeparateSend
 				);
 
 		String rtnValue= "OK";
@@ -383,6 +400,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setPreviewMailImage(previewMailImage);
 			mailGeneral.setTextOption(textOption);
 			mailGeneral.setMailSearchPeriod(mailSearchPeriod);
+			mailGeneral.setDefaultCursorPosition(defaultCursorPosition);
+			mailGeneral.setDefaultSeparateSend(defaultSeparateSend);
 			
 			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode);
 		} catch (Exception e) {

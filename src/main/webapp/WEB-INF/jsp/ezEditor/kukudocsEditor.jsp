@@ -144,6 +144,10 @@
 	        function setCursorAtText(text) {
 	        	kukudocsEditor.InsertTextByFocus(text);
 	        }
+	        
+	        function SetEditorFocus() { // 에디터 textarea에 커서를 위치시킴
+	            kukudocsEditor.SetEditorFocus();
+	        }
 		</script> 
 	</head>
 	<body>

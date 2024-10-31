@@ -200,6 +200,7 @@
         var previewChk = false;
         var ReadMailOpenNewWin;
         var g_useAdditionalInfo = Boolean(${useAdditionalInfo});
+		var defaultCursorPosition = "${defaultCursorPosition}"; // 메일쓰기창 기본 커서 위치/ recipient: 받는사람, content : 내용
     	
     	// 웹폴더첨부용 변수
         var pickerData = "";
@@ -348,10 +349,10 @@
 			    document.getElementById("file1").multiple = false;
 			}
 			
-			if (document.getElementById("eSubject").value == "") {
-			    document.getElementById("MsgTo").focus();
-			}
-			
+// 			if (document.getElementById("eSubject").value == "") {
+// 			    document.getElementById("MsgTo").focus();
+// 			}
+
 			if (g_bodyType == "1") {
 				document.getElementById("plainTextArea").style.display = "";
 				document.getElementById("bodyType").options[1].selected = true;
@@ -1146,6 +1147,10 @@
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
 	        
 	        setOnclickFunction();
+	        
+			// 2024.10.08 한슬기 :  메일쓰기화면 기본 커서 위치 설정. (recipient : 밭는사람, content : 내용, subject : 제목 / default : recipient)
+			setDefaultCursorPosition();
+	        
 	    }
 	    
 	    /* 2020-09-11 홍승비 - 버튼에서 온클릭 이벤트를 분리하여 업무일지, ezPMS 등의 발송버튼 활성화되지 않는 오류 수정 */
@@ -1186,6 +1191,10 @@
 					"journalId" : journalId
 				},
 				success : function(result) {
+					
+					// 2024.10.08 한슬기 :  메일쓰기화면 기본 커서 위치 설정. (recipient : 밭는사람, content : 내용, subject : 제목 / default : recipient)
+					setDefaultCursorPosition();
+				
 					$("#eSubject").val("<spring:message code='ezJournal.t1' /><spring:message code='ezEmail.t674' /> : "+result.journalTitle);
 					var journalContent = "<p></p><p></p><hr>" + (result.journalContent).replace(/&#39;/gi, "\'");
 					
@@ -2458,6 +2467,32 @@
 				}
 			}
 		}
+	    
+		// 2024.10.08 한슬기 : 메일쓰기화면 기본 커서 위치 설정. (recipient : 밭는사람, content : 내용, subject : 제목 / default : recipient)
+	    function setDefaultCursorPosition(){
+			// 커서를 받는사람에 위치시킴
+			if (defaultCursorPosition == "recipient"){
+				document.getElementById("MsgTo").focus();
+			
+			} else if (defaultCursorPosition == "content") {
+				// 에디터에 커서를 위치시킴
+				message.SetEditorFocus();
+			
+				setTimeout(function() {
+					   message.SetEditorFocus();
+				   }, 50);
+			
+			} else if (defaultCursorPosition == "subject") {
+				var inputValue = document.getElementById("eSubject").value;
+			
+				// 커서가 맨 뒤로 오도록 함
+				document.getElementById("eSubject").focus();
+				document.getElementById("eSubject").value = "";
+				document.getElementById("eSubject").value = inputValue;
+			
+			}
+	    }
+	    
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  

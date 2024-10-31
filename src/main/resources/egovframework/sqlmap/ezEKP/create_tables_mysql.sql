@@ -15603,7 +15603,7 @@ CREATE TABLE `tbl_rs_fav_cat` (
 		  `COMPANYID` varchar(20) NOT NULL,
 		  `BRDYN` varchar(10) DEFAULT NULL,
 		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
-		  PRIMARY KEY (`CAT_ID`, 'TENANT_ID')
+		  PRIMARY KEY (`CAT_ID`, `TENANT_ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		
 --
