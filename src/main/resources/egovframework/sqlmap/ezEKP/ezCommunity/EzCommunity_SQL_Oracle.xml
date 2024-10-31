@@ -8316,12 +8316,39 @@
 
 	<select id="EzCommunityDAO.commuTotalSearchList"	parameterClass="Map"	resultClass="CommunityBoardListVO" remapResults="true">
 		<![CDATA[
+		SELECT
+				*
+		FROM
+				(
 			SELECT
 					*
 			FROM
 					(
 				SELECT
-						rownum AS paging_rn,
+						ROW_NUMBER() OVER (
+		]]>
+		<isEqual property="v_PSORTBY" compareValue="">
+			<![CDATA[
+				ORDER BY
+					A.parentwritedate DESC,
+					TO_CHAR(A.upperitemidtree),
+					A.itemlevel
+			]]>
+		</isEqual>
+		<isNotEqual property="v_PSORTBY" compareValue="">
+			ORDER BY
+			<isEqual property="v_orderCell" compareValue="BOARDNAME">B.BOARDNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.TITLE">A.TITLE</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERCOMPANYNAME">A.WRITERCOMPANYNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERDEPTNAME">A.WRITERDEPTNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERNAME">A.WRITERNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITEDATE">A.WRITEDATE</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.ATTACHMENTS">A.ATTACHMENTS</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.READCOUNT">A.READCOUNT</isEqual>
+			<isEqual property="v_orderSort" compareValue="DESC">DESC</isEqual>
+		</isNotEqual>
+		<![CDATA[
+						) AS paging_rn,
 						A.itemid,
 						A.writerid,
 						CASE
@@ -8452,32 +8479,12 @@
 					END) LIKE '%' || #searchMaps[].searchWord# || '%'
 			</isEqual>
 		</iterate>
-		<isEqual property="v_PSORTBY" compareValue="">
-			<![CDATA[
-				ORDER BY
-					A.parentwritedate DESC,
-					TO_CHAR(A.upperitemidtree),
-					A.itemlevel
-				)
-			]]>
-		</isEqual>
-		<isNotEqual property="v_PSORTBY" compareValue="">
-			ORDER BY
-			<isEqual property="v_orderCell" compareValue="BOARDNAME">BOARDNAME</isEqual>
-			<isEqual property="v_orderCell" compareValue="A.TITLE">A.TITLE</isEqual>
-			<isEqual property="v_orderCell" compareValue="A.WRITERCOMPANYNAME">A.WRITERCOMPANYNAME</isEqual>
-			<isEqual property="v_orderCell" compareValue="A.WRITERDEPTNAME">A.WRITERDEPTNAME</isEqual>
-			<isEqual property="v_orderCell" compareValue="A.WRITERNAME">A.WRITERNAME</isEqual>
-			<isEqual property="v_orderCell" compareValue="A.WRITEDATE">A.WRITEDATE</isEqual>
-			<isEqual property="v_orderCell" compareValue="A.ATTACHMENTS">A.ATTACHMENTS</isEqual>
-			<isEqual property="v_orderCell" compareValue="A.READCOUNT">A.READCOUNT</isEqual>
-			<isEqual property="v_orderSort" compareValue="DESC">DESC</isEqual>
-			)
-		</isNotEqual>
+			) T1
 		<![CDATA[
 			WHERE
 				paging_rn <= #endRow#
-			AND
+		) T2
+			WHERE
 				paging_rn > #startRow#
 		]]>
 	</select>
