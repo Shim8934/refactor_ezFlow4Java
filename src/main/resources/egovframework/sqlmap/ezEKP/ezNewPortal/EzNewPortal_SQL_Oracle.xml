@@ -2261,7 +2261,6 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	</select>
 
 	<select id="ezNewPortal.getApprovalDoingListCount" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
 			SELECT
 				COUNT(DISTINCT DOCINFO.docid)
 			FROM
