@@ -33,7 +33,7 @@
 		        }
 		        document.getElementById("pMessageContent").innerHTML = RetValue;
 		        document.getElementById("Submit1").focus();
-		
+				
 		        if (MACSAFARIYN()) {
 		            window.resizeTo(330, 251);
 		        }
@@ -46,14 +46,14 @@
 		    }
 		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent)) {
-		        window.resizeTo(347, 270);
+		        window.resizeTo(347, 290);
 		    }
 		
 		    if (navigator.userAgent.indexOf('Firefox') != -1) {
-		        window.resizeTo(348, 277);
+		        window.resizeTo(348, 287);
 		    }
 		    else if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
-		        window.resizeTo(348, 240);
+		        window.resizeTo(348, 250);
 		    }
 		    
 		    /* 2023-08-03 홍승비 - 일괄결재 시 중복 결재 등, 모든 알러트의 '확인'버튼 연속 클릭 동작을 방지하도록 disable 처리 */

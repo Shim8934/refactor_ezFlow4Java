@@ -19,6 +19,7 @@
 		    var previewSubTree = "${previewSubTree}";
 		    var usePreviewSubTree = "${usePreviewSubTree}";
 		    var dotnetFlag = "<c:out value='${dotnetFlag}'/>";
+			var useEachMailDefault = "${useEachMailDefault}"
 		    
 		    window.onload = function()
 		    {
@@ -106,7 +107,13 @@
 			            ExtName += ExtName == "" ? pOptionValue : "|!-@-!|" + pOptionValue;
 			        }
 			    }
-
+				
+			    // 2024.09.09 한슬기 : 개별발신 기본 여부. 관리자 > 시스템 > 패라메터 > 개별발신 디폴트 사용이 '아니요'일 경우 사용자 설정에 선택된 값을 저장
+			    var defaultSeparateSendVal = "";
+			    if (useEachMailDefault === "NO"){
+			    	defaultSeparateSendVal = document.getElementById("defaultSeparateSend").value;
+			    }
+			    
 				var xmlHTTP = createXMLHttpRequest();
 				var url = "/ezEmail/mailGeneralSave.do?MODE=ALL" ;
 			    var previewSubTreeSlb = $("#previewSubTreeSlb option:selected").val();
@@ -121,7 +128,9 @@
 				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>" +
 				                "<PREVIEWMAILIMAGE>" + document.getElementById("previewMailImage").value + "</PREVIEWMAILIMAGE>" +
 				                "<MAILSEARCHPERIOD>" + document.getElementById("searchPeriod").value + "</MAILSEARCHPERIOD>" +
-				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>";
+				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>" + 
+				                "<DEFAULTCURSORPOSITION>"+ document.getElementById("defaultCursorPosition").value + "</DEFAULTCURSORPOSITION>" +
+								"<DEFAULTSEPARATESEND>"+ defaultSeparateSendVal + "</DEFAULTSEPARATESEND>";
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
@@ -485,6 +494,30 @@
 		          </select>
 		      </td>
 		  </tr>
+		  <!-- 2024.08.06 한슬기 : 메일쓰기화면 커서 위치 설정-->
+		  <tr>
+		      <th><spring:message code="ezEmail.general.defaultCursorPosition"/></th>
+		      <td>
+		          <select id="defaultCursorPosition" style="width:100px;">
+		            <option value=recipient <c:if test="${defaultCursorPosition == 'recipient'}">selected</c:if>><spring:message code='ezEmail.t66' /></option>
+		            <option value=content <c:if test="${defaultCursorPosition == 'content'}">selected</c:if>><spring:message code='ezPersonal.t155' /></option>
+		            <option value=subject <c:if test="${defaultCursorPosition == 'subject'}">selected</c:if>><spring:message code='ezEmail.t98' /></option>
+		          </select>
+		      </td>
+		  </tr>
+		  
+		  <!-- 2024.08.06 한슬기 : 개별발신 기본 여부. 관리자 > 시스템 > 패라메터 > 개별발신 디폴트 사용이 '아니요'일 경우만 보임-->
+		  <c:if test="${useEachMailDefault eq 'NO'}">
+			  <tr>
+			      <th><spring:message code="ezEmail.general.defaultSeparateSend"/></th>
+			      <td>
+			          <select id="defaultSeparateSend" style="width:100px;">
+			            <option value="N" <c:if test="${defaultSeparateSend eq 'N' || defaultSeparateSend == null}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
+			            <option value="Y" <c:if test="${defaultSeparateSend eq 'Y'}">selected</c:if>><spring:message code="ezEmail.t808"/></option>
+			          </select>
+			      </td>
+			  </tr>
+		  </c:if>
 		</table>
 		<div align="center" style="width:680px;">
 			<div class="btnpositionJsp">

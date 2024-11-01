@@ -7859,15 +7859,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		/* 2022-02-22 홍승비 - 일괄기안 회수용 파라미터 추가 전달 (모든 안의 회수 동작을 하나의 트랙잭션으로 묶기 위해, docIDAry 배열을 @RequestParam으로 전부 전달함) */
 		String draftAllFlag = request.getParameter("draftAllFlag") != null ? request.getParameter("draftAllFlag") : "";
 		String result = "";
-		
+		String sendNotiFlag = "";
 		// 기존 단일문서 회수분기
 		if (!draftAllFlag.equals("Y")) {
-			result = ezApprovalGService.doCallBack(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
+			result = ezApprovalGService.doCallBack(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId(), sendNotiFlag);
 		}
 		// 일괄기안문서 회수분기
 		else {
 			for (int i = 1; i <= docIDAry.length -1; i++) { // 1안부터 시작
-				result = ezApprovalGService.doCallBack(docIDAry[i], userID, userInfo.getCompanyID(), userInfo.getTenantId());
+				if (i != 1) {
+					sendNotiFlag = "N"; 
+				}
+				result = ezApprovalGService.doCallBack(docIDAry[i], userID, userInfo.getCompanyID(), userInfo.getTenantId(), sendNotiFlag);
 				// 루프 도중에 하나라도 실패하면 트랙잭션에 오류를 발생시켜서 전체 DB작업을 롤백한다.
 				if (result.equals("<RESULT>FALSE</RESULT>")) {
 					logger.debug("doCancel failed in draftAll loop[" + i + "], docID = " + docIDAry[i]);
@@ -9667,7 +9670,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						} else if (aprXML.getElementsByTagName("DocFlag").item(0).getTextContent().equals("CHAMJO")) {
 							//rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo, mode);
 							//참조일때
-							rtnVal = ezApprovalGService.doApprove(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, "003", aprXML.getElementsByTagName("WRITERNAME").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), realPath + aprXML.getElementsByTagName("HREF").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent(), userInfo.getId(), orgCompanyID, userInfo.getLang(), userInfo, "", "017", "", "");
+							rtnVal = ezApprovalGService.doApprove(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, "003", aprXML.getElementsByTagName("WRITERNAME").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), realPath + aprXML.getElementsByTagName("HREF").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent(), userInfo.getId(), orgCompanyID, userInfo.getLang(), userInfo, "", "017", "", "", "");
 						} else {
 							rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, orgCompanyID, request, userInfo, mode, aprMemberSN);
 						}
@@ -9679,7 +9682,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					//rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo, mode);
 					//참조일때
 					if (aprXML.getElementsByTagName("DocFlag").item(0).getTextContent().equals("CHAMJO")) {
-						rtnVal = ezApprovalGService.doApprove(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, "003", aprXML.getElementsByTagName("WRITERNAME").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), realPath + aprXML.getElementsByTagName("HREF").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent(), userInfo.getId(), orgCompanyID, userInfo.getLang(), userInfo, "", "017", "", "");
+						rtnVal = ezApprovalGService.doApprove(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, "003", aprXML.getElementsByTagName("WRITERNAME").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), realPath + aprXML.getElementsByTagName("HREF").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent(), userInfo.getId(), orgCompanyID, userInfo.getLang(), userInfo, "", "017", "", "", "");
 					} else {
 						rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, orgCompanyID, request, userInfo, mode, aprMemberSN);
 					}

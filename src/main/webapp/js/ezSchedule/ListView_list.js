@@ -979,7 +979,7 @@ function ListView() {
             objTr.appendChild(objTd);
 
 			/* 2024-07-18 조소정 - 일정관리 > 그룹일정 작성 권한 기능 추가 */
-            if (type == "group") {
+            if (typeof type !== 'undefined' && type == "group") {
 			    var extTd = document.createElement("TD");
 			    var cb = document.createElement("INPUT");
 			    var curID = getNodeText(GetElementsByTagName(addXml, "DATA1")[0]);

@@ -1809,7 +1809,11 @@ function SaveDraftDocInfo_ilban(pState, currIdx)
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", parent.tempItemName2);
 	
 	createNodeAndInsertText(xmlpara, objNode, "PASSAPRLINE", "N");
-
+	
+	if (currIdx != 1) {
+		createNodeAndInsertText(xmlpara, objNode, "SENDNOTIFLAG", "N");
+	}
+	
 	/*
 	 * 2018-06-14 천성준
 	 * 비전자문서 데이터 세팅 메소드
