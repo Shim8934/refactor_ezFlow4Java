@@ -1070,7 +1070,6 @@
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateProperty_U" parameterClass="Map">
-		<!--<![CDATA[-->
 			UPDATE
 				TBL_DEPTMASTER
 			SET
@@ -1234,7 +1233,6 @@
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateProperty_addJob" parameterClass="Map">
-		<!--<![CDATA[-->
 			UPDATE
 				TBL_ADDJOBMASTER
 			SET

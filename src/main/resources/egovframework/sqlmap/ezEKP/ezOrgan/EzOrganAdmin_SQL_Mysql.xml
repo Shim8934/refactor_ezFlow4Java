@@ -699,12 +699,6 @@
 	</procedure> -->
 	
 	<update id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
-		<!--<![CDATA[
-			UPDATE
-				TBL_USERMASTER
-			SET
-				$v_PROPNAME$ = #v_PROPVALUE#
-		]]>-->
 		UPDATE
 			TBL_USERMASTER
 		SET

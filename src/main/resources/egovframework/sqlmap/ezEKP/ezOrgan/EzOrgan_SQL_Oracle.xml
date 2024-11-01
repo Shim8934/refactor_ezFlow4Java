@@ -190,7 +190,6 @@
 		</isEqual>
 		
 		<isNotEqual property="v_FIELD" compareValue="EXTENSIONATTRIBUTE1">
-			<!--<![CDATA[-->
 				SELECT
 					<!--$v_FIELD$-->
 					<isEqual property="v_FIELD"  compareValue="CN">
@@ -391,7 +390,6 @@
 	</select>
 	
 	<select id="EzOrganDAO.getPropertyValue_S4" parameterClass="Map" resultClass="String" remapResults="true">
-		<!--<![CDATA[-->
 			SELECT
 				<!--$v_FIELD$-->
 				<isEqual property="v_FIELD"  compareValue="CN">
@@ -594,7 +592,6 @@
 	</select>
 	
 	<select id="EzOrganDAO.getPropertyValue_S5" parameterClass="Map" resultClass="String" remapResults="true">
-		<!--<![CDATA[-->
 			SELECT
 				<!--$v_FIELD$-->
 				<isEqual property="v_FIELD"  compareValue="CN">
@@ -2317,7 +2314,6 @@
 	</select>
 
 	<update id="EzOrganDAO.updateProperty" parameterClass="Map">
-		<!--<![CDATA[-->
 			UPDATE
 				TBL_USERMASTER
 			SET
@@ -2641,7 +2637,6 @@
 	</update>
 	
 	<update id="EzOrganDAO.updateProperty_U" parameterClass="Map">
-		<!--<![CDATA[-->
 			UPDATE
 				TBL_DEPTMASTER
 			SET
@@ -2860,7 +2855,6 @@
 	</delete>
 
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
-		<!--<![CDATA[-->
 			SELECT
 				*
 			FROM
@@ -3216,7 +3210,6 @@
 							]]>
 				</isEqual>
 							<include refid="organSearchTrashDept_user"/>
-						<!--<![CDATA[-->
 						AND A.TENANT_ID = #v_TENANT_ID#
 						<!--$strSQLAddjobCom$-->
 						<isNotEmpty property="companyId">
