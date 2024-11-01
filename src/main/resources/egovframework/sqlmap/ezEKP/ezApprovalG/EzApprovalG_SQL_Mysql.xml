@@ -7403,11 +7403,11 @@
 	<select id="EzApprovalG.doApproveLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
 		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
-				APRMEMBERSN ,
-		        APRTYPE ,
-		        APRSTATE ,
-		        PROCESSDATE ,
-		        RECEIVEDDATE ,
+				APRMEMBERSN,
+		        APRTYPE,
+		        APRSTATE,
+		        PROCESSDATE,
+		        RECEIVEDDATE,
                 APRMEMBERID
 		    FROM 
 		    	TBL_APRLINEINFO 
@@ -7438,14 +7438,15 @@
 		    AND
 		    	COMPANYID = #companyID#
 		</isEqual>
-		
+		<!-- 2024-11-01 홍승비 - 전자결재 > 결재완료문서의 참조(최종결재자 이후 참조) 시 APRMEMBERID 칼럼이 누락되었던 오류 수정 -->
 		<isEqual property="v_MODE" compareValue="END">
 			SELECT 
-				APRMEMBERSN ,
-		        APRTYPE ,
-		        APRSTATE ,
-		        PROCESSDATE ,
-		        RECEIVEDDATE 
+				APRMEMBERSN,
+		        APRTYPE,
+		        APRSTATE,
+		        PROCESSDATE,
+		        RECEIVEDDATE,
+		        APRMEMBERID
 		    FROM 
 		    	TBL_ENDAPRLINEINFO 
 		    WHERE  
