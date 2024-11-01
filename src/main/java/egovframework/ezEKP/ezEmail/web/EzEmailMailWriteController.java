@@ -2275,24 +2275,53 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         }
         
         f = new File(pTempListPath + commonUtil.separator + tempFolderName + ".txt");
-		OutputStreamWriter outWrite = null;
+		// 2024.11.01 한슬기 : 기존파일에 덮어쓰기 -> 기존 파일에 업로드 된 파일에 대한 정보를 추가하여 저장하도록 로직 수정
+		if(f.exists()) {
+			OutputStreamWriter outWrite = null;
+			InputStreamReader inputRead = null;
+			BufferedReader bufferRead = null;
+			String tempXmlList = "";
 		
-    	try {
-    		outWrite = new OutputStreamWriter(new FileOutputStream(f));
-    		outWrite.write(sb.toString());
-    		String crlf = System.getProperty("line.separator");
-    		outWrite.append(crlf+crlf);
-    	} catch(IOException e) {
-    		logger.error(e.getMessage(), e);
-		} catch(Exception e) {
-    		logger.error(e.getMessage(), e);
-    	} finally {
-    		if (outWrite != null) {
-    			try { outWrite.close(); 
-				} catch (IOException e) {logger.debug("e.message=" + e.getMessage());
-				} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
-    		}
-    	}
+	    	try {
+	    		inputRead = new InputStreamReader(new FileInputStream(f));
+	    		bufferRead = new BufferedReader(inputRead);
+	    		int read = 0;
+	    		
+	    		while((read = bufferRead.read()) != -1) {
+	    			tempXmlList += (char)read;
+	    		}
+	    		
+	    		Document xmlDom = commonUtil.convertStringToDocument(tempXmlList);
+	    		Document xmlDom2 = commonUtil.convertStringToDocument(sb.toString());
+	    		
+	    		NodeList nodeList = xmlDom.getElementsByTagName("NODES");
+	    		NodeList nodeList2 = xmlDom2.getElementsByTagName("NODE");
+	    		
+	    		for (int i = 0; i < nodeList2.getLength(); i++) {
+	    			nodeList.item(0).appendChild(xmlDom.importNode(nodeList2.item(i), true));
+	    		}
+	    		
+	    		outWrite = new OutputStreamWriter(new FileOutputStream(f));
+	    		outWrite.write(commonUtil.convertDocumentToString(xmlDom));
+	    		String crlf = System.getProperty("line.separator");
+	    		outWrite.append(crlf+crlf);
+	    		
+	    	} catch(Exception e) {
+	    		logger.error(e.getMessage(), e);
+	    	} finally {
+	    		if (outWrite != null) {
+	    			try { outWrite.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
+	    		}
+	    		
+	    		if (bufferRead != null) {
+	    			bufferRead.close();
+	    		}
+	    		
+	    		if (inputRead != null) {
+	    			inputRead.close();
+	    		}
+	    	}
+		}
 		
 		logger.debug("mailInterUploadCopy ended.");
 		
