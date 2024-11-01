@@ -41,6 +41,7 @@
 	            try {
 	                window.opener.ReSend(_url, pEmail);
 	            } catch (e) {
+	                console.log(e);
 	            }
 	        } */
 	     	// 2024.05.24 한슬기 : 수신자이름 추가 및 파라미터 이름 변경 

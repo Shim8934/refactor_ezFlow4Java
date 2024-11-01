@@ -225,8 +225,8 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-31 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzCabinetDAO_h.getSearchMemberList" resultMap="deptMemberInfo">
-		<![CDATA[
 			SELECT
 				*
 			FROM
@@ -264,18 +264,30 @@
 							AND
 								TENANT_ID = #tenantId#
 							AND
-								$srchOption$ LIKE concat('%', concat(#srchValue#, '%'))
+							<isEqual property="srchOption" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+							<isEqual property="srchOption" compareValue="DISPLAYNAME2">DISPLAYNAME2</isEqual>
+							<isEqual property="srchOption" compareValue="CN">CN</isEqual>
+							<isEqual property="srchOption" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+							<isEqual property="srchOption" compareValue="DESCRIPTION2">DESCRIPTION2</isEqual>
+							<isEqual property="srchOption" compareValue="TITLE">TITLE</isEqual>
+							<isEqual property="srchOption" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+							<isEqual property="srchOption" compareValue="MOBILE">MOBILE</isEqual>
+							<isEqual property="srchOption" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+							<isEqual property="srchOption" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+							<isEqual property="srchOption" compareValue="MAIL">MAIL</isEqual>
+							<isEqual property="srchOption" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+								LIKE concat('%', concat(#srchValue#, '%'))
 						) AA
 						ORDER BY
 							EXTENSIONATTRIBUTE15 ASC,
 							DISPLAYNAME ASC
+		<![CDATA[
 				) k WHERE ROWNUM <= #startPoint# + #listCount#
 			) WHERE RNUM >= #startPoint# + 1
 		]]>
 	</select>
 	
 	<select id="EzCabinetDAO_h.getTotalSearchMembers" resultClass="Integer">
-		<![CDATA[
 			SELECT
 				COUNT(AA.CN)
 			FROM (
@@ -289,10 +301,21 @@
 					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				AND
 					TENANT_ID = #tenantId#
-				AND 
-					$srchOption$ LIKE concat('%', concat(#srchValue#, '%'))
+				AND
+				<isEqual property="srchOption" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+				<isEqual property="srchOption" compareValue="DISPLAYNAME2">DISPLAYNAME2</isEqual>
+				<isEqual property="srchOption" compareValue="CN">CN</isEqual>
+				<isEqual property="srchOption" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+				<isEqual property="srchOption" compareValue="DESCRIPTION2">DESCRIPTION2</isEqual>
+				<isEqual property="srchOption" compareValue="TITLE">TITLE</isEqual>
+				<isEqual property="srchOption" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+				<isEqual property="srchOption" compareValue="MOBILE">MOBILE</isEqual>
+				<isEqual property="srchOption" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+				<isEqual property="srchOption" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="srchOption" compareValue="MAIL">MAIL</isEqual>
+				<isEqual property="srchOption" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+					LIKE concat('%', concat(#srchValue#, '%'))
 			) AA
-		]]>
 	</select>
 	
 	<!--***********************************************************************************
@@ -347,7 +370,11 @@
 			) s2
 		]]>
 		<isNotEmpty property="searchValue">
-			where $sqlQuery$ like concat('%', concat(#searchValue#, '%'))
+			where
+			<isEqual property="sqlQuery" compareValue="DISPLAY_NAME">display_name</isEqual>
+			<isEqual property="sqlQuery" compareValue="CN">cn</isEqual>
+			<isEqual property="sqlQuery" compareValue="DEPARTMENT_NAME">department_name</isEqual>
+			like concat('%', concat(#searchValue#, '%'))
 		</isNotEmpty>
 		order by s2.share_date asc
 	</select>

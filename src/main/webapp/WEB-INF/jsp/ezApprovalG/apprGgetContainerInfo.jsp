@@ -1151,6 +1151,7 @@
 			            url = "/ezApprovalG/excelExportOut.do";
 			        }
 			
+			        // 2024-03-07 기준으로 DocListType 변수를 "DocList"로 설정하는 코드 미존재, 해당 if 분기는 의미가 없음 
 			        if (DocListType == "DocList") {
 			            url += "?listType=DOC&cont=" + encodeURI(ContainerID) + "&PN=" +
 			                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +

@@ -237,7 +237,6 @@
 							 AND TENANT_ID = #tenantID#
 							 AND DELFLAG = 0
 							 ]]>
-							<![CDATA[
 							  ) sub_rescnt ,
 						   '0' Access_Lvl
 					FROM TBL_CAR A
@@ -247,9 +246,11 @@
 					AND A.DELFLAG = 0
 					ORDER BY CAR_GB, CAR_Step)B JOIN TBL_CAR_ACL C 
 					ON B.CAR_ID = C.CAR_ID
- 					AND C.MEMBER_ID IN ($jobss$)
+ 					AND C.MEMBER_ID IN
+					<iterate property="jobss" open="(" close=")" conjunction=",">
+						#jobss[]#
+					</iterate>
  					group by car_id
-				]]>
 				</isEqual>
 				<isNotEqual property="v_P_ParentID" compareValue="1"> 
 					<![CDATA[
@@ -292,7 +293,6 @@
 			</isEqual>
 			<isNotEqual property="v_P_TreeType" compareValue="0"> 
 				<isEqual property="v_P_ParentID" compareValue="1">
-				<![CDATA[
 				SELECT B.car_id, B.car_name, B.car_name2, B.car_level, B.car_step, B.car_upper, B.car_gb, B.car_url, B.car_explain, B.car_access, B.sub_clscnt, B.sub_rescnt, B.Access_LvL
 				FROM 
 				(
@@ -329,9 +329,11 @@
 					AND A.DELFLAG = 0
 					ORDER BY Car_Step )B JOIN TBL_CAR_ACL C 
 					ON B.CAR_ID = C.CAR_ID
- 					AND C.MEMBER_ID IN ($jobss$)
+ 					AND C.MEMBER_ID IN
+					<iterate property="jobss" open="(" close=")" conjunction=",">
+						#jobss[]#
+					</iterate>
  					group by car_id
-				]]>
 				</isEqual>
 				<isNotEqual property="v_P_ParentID" compareValue="1"> 
 					<![CDATA[
@@ -1078,8 +1080,7 @@
 
 
 
-<select id="EzCarDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
-		<![CDATA[
+	<select id="EzCarDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
 			SELECT
 				DEPT_YN , 
 				SDA_YN ,
@@ -1097,11 +1098,13 @@
        		AND
        			SDA_Yn = 'Y'
        		AND
-       			MEMBER_ID in ( $v_PUSERID$ )
-		]]>
+       			MEMBER_ID IN
+				<iterate property="v_PUSERID" open="(" close=")" conjunction=",">
+					#v_PUSERID[]#
+				</iterate>
 	</select>
 
-<select id="EzCarDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
+	<select id="EzCarDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
 				member_id, min(access_lvl) as access_lvl 

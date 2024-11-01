@@ -774,45 +774,9 @@
 	            PressShiftKey = false;
 	            
 	        }
-
-	        function cnsearch_press() {
-	            if (window.event.keyCode == "13")
-	                cnsearch_click();
-	        }
-	        function cnsearch_click() {
-	            if (document.getElementById("cnkeyword").value == "") {
-	                alert("<spring:message code='ezEmail.t576' />");
-	                document.getElementById("cnkeyword").focus();
-	                return;
-	            }
-	            
-	            $.ajax({
-		        	type : "POST",
-		        	dataType : "text",
-		        	url : "/ezOrgan/getSearchList.do",
-		        	async : true,
-		        	data : {search : "displayname::" + document.getElementById("cnkeyword").value, cell : "displayName;description;title;telephoneNumber", prop : "mail", type : "user"},
-		        	success : function(result){	
-		        		pListXML_Info = loadXMLString(result);
-		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0) {
-		        		    issearch = false;
-	                        alert(strLang155);
-		        		} else {
-	                        listContentArry = new Array();
-	                        pSeach = true;
-	                        DisplayUserImageList();
-	                        makePageSelPage2();
-	                    }
-		        	},
-		        	error : function(error){
-		        		alert("<spring:message code='ezEmail.t578' />" + error);
-		        	}
-		        });
-	            
-	        }
-	        function make_searchstring(orgStr) {
-	            return ReplaceText(ReplaceText(ReplaceText(ReplaceText(orgStr, "'", "''"), "\\[", "[[]"), "%", "[%]"), "_", "[_]");
-	        }
+	        
+	        /* 2024-07-25 홍승비 - 사용하지 않는 기존 조직도 검색 함수 제거 (현재는 /ezOrgan/getSearchList.do가 아닌 /ezAttitude/getSearchList.do를 사용함) */
+	        
 	        function ReplaceText(orgStr, findStr, replaceStr) {
 	            var re = new RegExp(findStr, "gi");
 	

@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +50,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -267,6 +270,8 @@ public class EzEmailAdminController {
 
 			returnData = sb.toString();
 
+		} catch (DOMException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnData = "ERROR";
 			logger.error(e.getMessage(), e);
@@ -351,8 +356,10 @@ public class EzEmailAdminController {
 			
 			if (distributionVo != null) {	
 				distributionMail = distributionVo.getMail();
-				companyMailDomain = distributionMail.split("@")[1];
-			}		
+				if (distributionMail != null){
+					companyMailDomain = distributionMail.split("@")[1];
+				}
+			}
 		}
 		logger.debug("distributionMail=" + distributionMail + ", companyMailDomain=" + companyMailDomain);
 		
@@ -411,7 +418,7 @@ public class EzEmailAdminController {
 			auth = userVO;
 		}
 
-		Document doc = commonUtil.convertStringToDocument(bodyData);
+		Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String name = doc.getElementsByTagName("NAME").item(0).getTextContent();
@@ -532,6 +539,8 @@ public class EzEmailAdminController {
 								
 				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID, ownerId, policy, explaination, endDate, loginCookie);
 			}
+		} catch (NullPointerException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -567,7 +576,7 @@ public class EzEmailAdminController {
 				userInfo.getTenantId());
 		String userLang = userInfo.getPrimary();
  
-		Document doc = commonUtil.convertStringToDocument(bodyData);
+		Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String companyId = doc.getElementsByTagName("COMPID").item(0)
 				.getTextContent();
@@ -881,6 +890,8 @@ public class EzEmailAdminController {
 			sb.append("</DATA>");
 			returnData = sb.toString();
 
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -912,68 +923,72 @@ public class EzEmailAdminController {
 			auth = userVO;
 		}
 
-		Document doc = commonUtil.convertStringToDocument(bodyData);
-		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
-		// String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
-
-		int tenantID = auth.getTenantId();
-
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
-
 		String result = "ERROR";
-		String bizmekaResult = "ERROR";
+		if (bodyData != null) {
+			Document doc = commonUtil.convertStringToDocument(bodyData);
+			String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
+			// String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 
-		try {
-			String useBizmekaSpambox = ezCommonService.getTenantConfig(
-					"UseBizmekaSpambox", tenantID);
+			int tenantID = auth.getTenantId();
 
-			if (useBizmekaSpambox.equals("YES")) {
-				String bizmekaAdminId = ezCommonService.getTenantConfig(
-						"bizmekaAdminId", tenantID);
-				String bizmekaAdminPw = ezCommonService.getTenantConfig(
-						"bizmekaAdminPw", tenantID);
-				String bizmekaCompanyId = ezCommonService.getTenantConfig(
-						"BizmekaCompanyId", tenantID);
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 
-				bizmekaResult = ezEmailUtil.bizmekaDeleteDistributionList(
-						bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn);
+			String bizmekaResult = "ERROR";
 
-				logger.debug("bizmekaResult=" + bizmekaResult);
+			try {
+				String useBizmekaSpambox = ezCommonService.getTenantConfig(
+						"UseBizmekaSpambox", tenantID);
 
-				if (!bizmekaResult.equals("OK")) {
-					throw new Exception("bizmekaDeleteDistributionList failed");
+				if (useBizmekaSpambox.equals("YES")) {
+					String bizmekaAdminId = ezCommonService.getTenantConfig(
+							"bizmekaAdminId", tenantID);
+					String bizmekaAdminPw = ezCommonService.getTenantConfig(
+							"bizmekaAdminPw", tenantID);
+					String bizmekaCompanyId = ezCommonService.getTenantConfig(
+							"BizmekaCompanyId", tenantID);
+
+					bizmekaResult = ezEmailUtil.bizmekaDeleteDistributionList(
+							bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn);
+
+					logger.debug("bizmekaResult=" + bizmekaResult);
+
+					if (!bizmekaResult.equals("OK")) {
+						throw new Exception("bizmekaDeleteDistributionList failed");
+					}
 				}
-			}
 
-			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
-					+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
+				String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
+						+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
 
-			logger.debug("inputParams=" + inputParams);
-			
-			String requestURL = config.getProperty("config.JGwServerURL")
-					+ "/jMochaAccess/deleteDistribution";
-			
-			String response = ezEmailUtil.getWebServiceResult(requestURL,
-					inputParams);
+				logger.debug("inputParams=" + inputParams);
 
-			logger.debug("response=" + response);
-			
-			if (response != null) {
-				JSONParser jsonParser = new JSONParser();
-				JSONObject responseObj = (JSONObject) jsonParser
-						.parse(response);
-				result = (String) responseObj.get("resultCode");
-				
-				if (result.equals("OK")) {
-					logger.debug("delete Alias address.");
-					int delAliasResult = ezEmailService.deleteIndividualAlias(cn, tenantID);
-					result = delAliasResult == -100 ? "ERROR" : result;
+				String requestURL = config.getProperty("config.JGwServerURL")
+						+ "/jMochaAccess/deleteDistribution";
+
+				String response = ezEmailUtil.getWebServiceResult(requestURL,
+						inputParams);
+
+				logger.debug("response=" + response);
+
+				if (response != null) {
+					JSONParser jsonParser = new JSONParser();
+					JSONObject responseObj = (JSONObject) jsonParser
+							.parse(response);
+					result = (String) responseObj.get("resultCode");
+
+					if (result.equals("OK")) {
+						logger.debug("delete Alias address.");
+						int delAliasResult = ezEmailService.deleteIndividualAlias(cn, tenantID);
+						result = delAliasResult == -100 ? "ERROR" : result;
+					}
+
 				}
-				
-			}
 
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			} catch (UnsupportedEncodingException e) {
+				logger.error(e.getMessage(), e);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 
 		logger.debug("result=" + result);
@@ -1000,50 +1015,53 @@ public class EzEmailAdminController {
 
 		String returnData = "";
 		try {
-			Document doc = commonUtil.convertStringToDocument(bodyData);
-			// String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
-			String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
-			String searchType = doc.getElementsByTagName("SEARCHTYPE").item(0).getTextContent();
-			String searchValue = doc.getElementsByTagName("SEARCHVALUE").item(0).getTextContent();
-			int tenantID = auth.getTenantId();
-			logger.debug("companyId=" + companyId + ", searchType=" + searchType + ",searchValue=" + searchValue);
-			
-			List<MailDistributionVO> distributionTotalList = null;
-			if (searchValue == null || searchValue.equals("")) {
-				//모든 공용배포그룹
-				distributionTotalList = ezEmailService
-						.getDistributionList(companyId, auth.getTenantId());
-			} else {
-				// 공용배포그룹 조건으로 검색
-				distributionTotalList = ezEmailService
-						.getDistributionSearchListByItem(companyId, tenantID, searchValue, searchType);
+			if (bodyData != null){
+				Document doc = commonUtil.convertStringToDocument(bodyData);
+				// String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
+				String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
+				String searchType = doc.getElementsByTagName("SEARCHTYPE").item(0).getTextContent();
+				String searchValue = doc.getElementsByTagName("SEARCHVALUE").item(0).getTextContent();
+				int tenantID = auth.getTenantId();
+				logger.debug("companyId=" + companyId + ", searchType=" + searchType + ",searchValue=" + searchValue);
+
+				List<MailDistributionVO> distributionTotalList = null;
+				if (searchValue == null || searchValue.equals("")) {
+					//모든 공용배포그룹
+					distributionTotalList = ezEmailService
+							.getDistributionList(companyId, auth.getTenantId());
+				} else {
+					// 공용배포그룹 조건으로 검색
+					distributionTotalList = ezEmailService
+							.getDistributionSearchListByItem(companyId, tenantID, searchValue, searchType);
+				}
+
+				StringBuilder sb = new StringBuilder();
+				sb.append("<LISTVIEWDATA><ROWS>");
+
+				for (MailDistributionVO vo : distributionTotalList) {
+					sb.append("<ROW><CELL>");
+
+					sb.append("<VALUE>");
+					sb.append(commonUtil.cleanValue(vo.getName()));
+					sb.append("</VALUE>");
+
+					sb.append("<DATA1>");
+					sb.append(commonUtil.cleanValue(vo.getId()));
+					sb.append("</DATA1>");
+
+					sb.append("<DATA2>");
+					sb.append(commonUtil.cleanValue(vo.getMail()));
+					sb.append("</DATA2>");
+
+					sb.append("</CELL></ROW>");
+				}
+
+				sb.append("</ROWS></LISTVIEWDATA>");
+
+				returnData = sb.toString();
 			}
-			
-			StringBuilder sb = new StringBuilder();
-			sb.append("<LISTVIEWDATA><ROWS>");
-
-			for (MailDistributionVO vo : distributionTotalList) {
-				sb.append("<ROW><CELL>");
-
-				sb.append("<VALUE>");
-				sb.append(commonUtil.cleanValue(vo.getName()));
-				sb.append("</VALUE>");
-
-				sb.append("<DATA1>");
-				sb.append(commonUtil.cleanValue(vo.getId()));
-				sb.append("</DATA1>");
-
-				sb.append("<DATA2>");
-				sb.append(commonUtil.cleanValue(vo.getMail()));
-				sb.append("</DATA2>");
-
-				sb.append("</CELL></ROW>");
-			}
-
-			sb.append("</ROWS></LISTVIEWDATA>");
-
-			returnData = sb.toString();
-
+		} catch (DOMException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnData = "ERROR";
 			logger.error(e.getMessage(), e);
@@ -1301,6 +1319,8 @@ public class EzEmailAdminController {
 				outColor = mailColor.getOutmailColor();
 			}
 
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -1336,7 +1356,7 @@ public class EzEmailAdminController {
 		String returnValue = "OK";
 
 		try {
-			Document doc = commonUtil.convertStringToDocument(bodyData);
+			Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 			String importanceColor = doc.getElementsByTagName("IMPORTANCE")
 					.item(0).getTextContent();
 			String inColor = doc.getElementsByTagName("INCOLOR").item(0)
@@ -1349,6 +1369,8 @@ public class EzEmailAdminController {
 			ezEmailService.setMailColor(tenantId, importanceColor, inColor,
 					outColor);
 
+		} catch (DOMException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnValue = "ERROR:" + e.getMessage();
 			logger.error(e.getMessage(), e);
@@ -1411,11 +1433,13 @@ public class EzEmailAdminController {
 		try {
 			String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
 
-			Document doc = commonUtil.convertStringToDocument(bodyData);
+			Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 			String maxStorage = doc.getElementsByTagName("MAXSTORAGE").item(0).getTextContent();
 			String warnStorage = doc.getElementsByTagName("WARNSTORAGE").item(0).getTextContent();
 
 			ezEmailUtil.setDefaultQuota(domainName, maxStorage, warnStorage);
+		} catch (DOMException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 
@@ -1489,7 +1513,7 @@ public class EzEmailAdminController {
 		int maxItemPerPage = 20;
 		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
-		if (currPage.equals("-1")) {
+		if (currPage != null && currPage.equals("-1")) {
 			startRow = -1;
 		}
 		
@@ -1505,13 +1529,18 @@ public class EzEmailAdminController {
 				email = cn + "@" + domain;
 				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
 
-				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+				if (ia != null){
+					long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+					if (storageUsageAndLimit != null){
+						long mailboxUsage = storageUsageAndLimit[0];
+						long mailboxQuota = storageUsageAndLimit[1];
 
-				long mailboxUsage = storageUsageAndLimit[0];
-				long mailboxQuota = storageUsageAndLimit[1];
-
-				ezOrganAdminService.updateProperty(cn, "mailboxusage", String.valueOf(mailboxUsage), "user", tenantID);
-				ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
+						ezOrganAdminService.updateProperty(cn, "mailboxusage", String.valueOf(mailboxUsage), "user", tenantID);
+						ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
+					}
+				}
+			} catch (NullPointerException e) {
+				logger.error(e.getMessage(), e);
 			} catch (Exception e) {
 				logger.debug("error. user=" + email);
 				logger.error(e.getMessage(), e);
@@ -1556,9 +1585,9 @@ public class EzEmailAdminController {
 		if (currPage.equals("-1")) {
 			startRow = -1;
 		}
-		
-		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
-   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+
+		int dbName = "mysql".equals(globals.getProperty("Globals.DbType")) ? 1 : 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword != null ? searchKeyword : "", dbName);
 
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
 
@@ -1568,13 +1597,20 @@ public class EzEmailAdminController {
 		
 		// 사용률로 검색 시에 숫자가 아니면 빈 값으로 리턴하도록 처리
 		try {
-			if (searchKeycode.equals("quota")) {
+			if ("quota".equalsIgnoreCase(searchKeycode)) {
 				Double.parseDouble(searchKeyword);
 			}
-			
-			userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
-				    maxItemPerPage, searchKeycode, searchKeyword, companyId, sortColumn, sortType, searchFor);
+
+
+			userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow,
+						maxItemPerPage, (searchKeycode != null ? searchKeycode : ""), searchKeyword, companyId, (sortColumn != null ? sortColumn : ""), (sortType != null ? sortType : ""), searchFor);
+			if(userCnList == null){
+				throw new Exception("UserCnList is null");
+			}
 			itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, searchFor, companyId);
+		} catch (NullPointerException ex) {
+			userCnList = new ArrayList<>();
+			itemCnt = 0;
 		} catch (Exception ex) {
 			userCnList = new ArrayList<>();
 			itemCnt = 0;
@@ -1619,7 +1655,7 @@ public class EzEmailAdminController {
 			try {
                 String email = userId + "@" + domain;
 
-                if (searchKeycode.equalsIgnoreCase("quota")) {
+                if ("quota".equalsIgnoreCase(searchKeycode)) {
                 	// imap 과 약간의 차이가 있을 수 있으므로
                 	mailboxQuota = (long) Double.parseDouble(organUser.getMailboxQuota());
 					mailboxUsage = (long) Double.parseDouble(organUser.getMailboxUsage());
@@ -1633,19 +1669,24 @@ public class EzEmailAdminController {
 					} else {
 						ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
 						
-						long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-						
-						// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-						mailboxUsage = storageUsageAndLimit[0]; // KBs
-						mailboxQuota = storageUsageAndLimit[1]; // KBs
-						logger.debug("get IMAP, mailboxQuota=" + mailboxQuota + ", mailboxUsage=" + mailboxUsage);
+						if (ia != null){
+							long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+							if (storageUsageAndLimit != null){
+								// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
+								mailboxUsage = storageUsageAndLimit[0]; // KBs
+								mailboxQuota = storageUsageAndLimit[1]; // KBs
+								logger.debug("get IMAP, mailboxQuota=" + mailboxQuota + ", mailboxUsage=" + mailboxUsage);
+							}
+						}
 					}
 				}
 
                 quaList.add(3, String.valueOf(mailboxUsage));
                 quaList.add(4, String.valueOf(mailboxQuota));
                 userList.add((ArrayList<String>) quaList);
-            } catch (Exception e) {
+            } catch (NullPointerException e) {
+                logger.error(e.getMessage(), e);
+			} catch (Exception e) {
                 logger.error(e.getMessage(), e);
             } finally {
                 if (ia != null) {
@@ -1683,129 +1724,134 @@ public class EzEmailAdminController {
 		logger.debug("mailQuotaExcelExport started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
+
+		if (userInfo == null) return;
+
 		String companyId = request.getParameter("companyId");
 		String currPage = request.getParameter("pageNum");
 
 		int maxItemPerPage = 20;
 		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
-		if (currPage.equals("-1")) {
+		if ("-1".equalsIgnoreCase(currPage)) {
 			startRow = -1;
 		}
 		
-		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
-   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+		int dbName = "mysql".equals(globals.getProperty("Globals.DbType")) ? 1 : 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword != null ? searchKeyword : "", dbName);
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(Integer.valueOf(userInfo.getTenantId()), 
-									   startRow, maxItemPerPage, searchKeycode, searchKeyword, companyId, sortColumn, sortType, searchFor);
-		
-		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, searchFor, companyId);
-		
-		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
-		
-		boolean primaryChk = userInfo.getPrimary().equals("1") ? true : false;
+									   startRow, maxItemPerPage, (searchKeycode != null ? searchKeycode : ""), (searchKeyword != null ? searchKeyword : ""), companyId, (sortColumn != null ? sortColumn : ""), (sortType != null ? sortType : ""), searchFor);
 
-		// 각 사용자별로 처리한다.
-		for (OrganUserVO organUser : userCnList) {
-			List<String> quaList = new ArrayList<String>();
-			String userId = organUser.getCn();
-			String department = primaryChk ? organUser.getDescription() : organUser.getDescription2();
-			String displayname = primaryChk ? organUser.getDisplayName() : organUser.getDisplayName2();
-			displayname = displayname + "(" + userId + ")";	
-				
-			quaList.add(0, userId);
-			quaList.add(1, displayname);
-			quaList.add(2, department);
-				
-			String mailboxUsage = String.valueOf(Long.parseLong(organUser.getMailboxUsage()) / 1024);
-			String mailboxQuota = String.valueOf(Long.parseLong(organUser.getMailboxQuota()) / 1024);
-			
-			quaList.add(3, mailboxUsage);
-			quaList.add(4, mailboxQuota);
-			userList.add((ArrayList<String>) quaList);
-		}
-		
-		/* 엑셀 만들기 */
-		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
-			HSSFSheet sheet = workbook.createSheet("MailQuotaList");
-				
-			Row row = null;
-			Cell cell = null;
-		
-			String fileName = "";
-			fileName = "MailQuotaList";
-		
-			HSSFCellStyle headerStyle = workbook.createCellStyle();
-			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-			headerStyle.setVerticalAlignment((short) 1);
-				
-			HSSFCellStyle bodyStyle = workbook.createCellStyle();
-			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
-			HSSFFont font = workbook.createFont();
-			font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
-			headerStyle.setFont(font);
-	
-			row = sheet.createRow(0);
-			cell = row.createCell(0);
-			cell.setCellValue(egovMessageSource.getMessage("main.t252",locale) + " " + totalCount +
-							  egovMessageSource.getMessage("ezSystem.kyj2",locale));
-		
-			row = sheet.createRow(1);
-			cell = row.createCell(0);
-			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd04",locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(1);
-			cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t113",locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(2);
-			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd02",locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(3);
-			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd03",locale));
-			cell.setCellStyle(headerStyle);
-		
-			for (int i = 2; i < userList.size() + 2; i++) {
-				row = sheet.createRow(i);
-				row.setHeight((short) 300);
-				int j = 2;
+		if (userCnList != null){
+
+			int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, searchFor, companyId);
+
+			List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
+
+			boolean primaryChk = userInfo.getPrimary().equals("1") ? true : false;
+
+			// 각 사용자별로 처리한다.
+			for (OrganUserVO organUser : userCnList) {
+				List<String> quaList = new ArrayList<String>();
+				String userId = organUser.getCn();
+				String department = primaryChk ? organUser.getDescription() : organUser.getDescription2();
+				String displayname = primaryChk ? organUser.getDisplayName() : organUser.getDisplayName2();
+				displayname = displayname + "(" + userId + ")";
+
+				quaList.add(0, userId);
+				quaList.add(1, displayname);
+				quaList.add(2, department);
+
+				String mailboxUsage = String.valueOf(Long.parseLong(organUser.getMailboxUsage()) / 1024);
+				String mailboxQuota = String.valueOf(Long.parseLong(organUser.getMailboxQuota()) / 1024);
+
+				quaList.add(3, mailboxUsage);
+				quaList.add(4, mailboxQuota);
+				userList.add((ArrayList<String>) quaList);
+			}
+
+			/* 엑셀 만들기 */
+			try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+				HSSFSheet sheet = workbook.createSheet("MailQuotaList");
+
+				Row row = null;
+				Cell cell = null;
+
+				String fileName = "";
+				fileName = "MailQuotaList";
+
+				HSSFCellStyle headerStyle = workbook.createCellStyle();
+				headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+				headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+				headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+				headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+				headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+				headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+				headerStyle.setVerticalAlignment((short) 1);
+
+				HSSFCellStyle bodyStyle = workbook.createCellStyle();
+				bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+				bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+				bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+				bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+				HSSFFont font = workbook.createFont();
+				font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
+				headerStyle.setFont(font);
+
+				row = sheet.createRow(0);
 				cell = row.createCell(0);
-				cell.setCellValue((String) userList.get(i - j).get(1));
-				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(egovMessageSource.getMessage("main.t252",locale) + " " + totalCount +
+						egovMessageSource.getMessage("ezSystem.kyj2",locale));
+
+				row = sheet.createRow(1);
+				cell = row.createCell(0);
+				cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd04",locale));
+				cell.setCellStyle(headerStyle);
 				cell = row.createCell(1);
-				cell.setCellValue((String) userList.get(i - j).get(2));
-				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t113",locale));
+				cell.setCellStyle(headerStyle);
 				cell = row.createCell(2);
-				cell.setCellValue((String) userList.get(i - j).get(3));
-				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd02",locale));
+				cell.setCellStyle(headerStyle);
 				cell = row.createCell(3);
-				cell.setCellValue((String) userList.get(i - j).get(4));
-				cell.setCellStyle(bodyStyle);
-		
+				cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd03",locale));
+				cell.setCellStyle(headerStyle);
+
+				for (int i = 2; i < userList.size() + 2; i++) {
+					row = sheet.createRow(i);
+					row.setHeight((short) 300);
+					int j = 2;
+					cell = row.createCell(0);
+					cell.setCellValue((String) userList.get(i - j).get(1));
+					cell.setCellStyle(bodyStyle);
+					cell = row.createCell(1);
+					cell.setCellValue((String) userList.get(i - j).get(2));
+					cell.setCellStyle(bodyStyle);
+					cell = row.createCell(2);
+					cell.setCellValue((String) userList.get(i - j).get(3));
+					cell.setCellStyle(bodyStyle);
+					cell = row.createCell(3);
+					cell.setCellValue((String) userList.get(i - j).get(4));
+					cell.setCellStyle(bodyStyle);
+
+				}
+
+				for (int i = 0; i < 4; i++) {
+					sheet.autoSizeColumn(i);
+				}
+
+				response.setCharacterEncoding("UTF-8");
+				response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+				response.setContentType("application/vnd.ms-excel");
+
+				workbook.write(response.getOutputStream());
+				workbook.close();
+
+				logger.debug("mailQuotaExcelExport controller ended.");
 			}
-			
-			for (int i = 0; i < 4; i++) {
-				sheet.autoSizeColumn(i);
-			}
-			
-			response.setCharacterEncoding("UTF-8");
-			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
-			response.setContentType("application/vnd.ms-excel");
-		
-			workbook.write(response.getOutputStream());
-			workbook.close();
-		
-			logger.debug("mailQuotaExcelExport controller ended.");
 		}
 	}
 	
@@ -1893,6 +1939,8 @@ public class EzEmailAdminController {
 			sb.append("</ROWS></LISTVIEWDATA>");
 			
 			returnData = sb.toString();
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnData = "ERROR";
 			logger.error(e.getMessage(), e);
@@ -1930,6 +1978,8 @@ public class EzEmailAdminController {
 			MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, auth.getTenantId(), lang);
 			
 			model.addAttribute("sharedMailboxInfo", sharedMailboxInfo);
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			resultCode = "ERROR";
 			logger.error(e.getMessage(), e);
@@ -1988,7 +2038,7 @@ public class EzEmailAdminController {
 			
 			logger.debug("userExists=" + userExists);
 			
-			if (userExists == 0) { // 이메일 계정이 존재하지 않음.
+			if (userExists == 0 && shareId != null) { // 이메일 계정이 존재하지 않음.
 				// 로컬 시스템 계정을 삭제한다.
 				ezOrganAdminService.deleteDBData(shareId, "user", tenantId);
 			} else if (userExists == 1 || userExists == 2) { // 1은 유효한 이메일 계정. 2는 퇴직자 계정.
@@ -2065,7 +2115,11 @@ public class EzEmailAdminController {
 					*/
 										
 					// 로컬 시스템 계정을 삭제한다.
-					ezOrganAdminService.deleteDBData(shareId, "user", tenantId);
+					if (shareId != null){
+						ezOrganAdminService.deleteDBData(shareId, "user", tenantId);
+					}
+				} catch (RuntimeException e) {
+					logger.debug(e.getMessage(), e);
 				} catch (Exception e) {
 					if (userExists == 1) { // 유효한 이메일 계정이었으면 복구 처리를 수행한다.
 						if (distributionList != null) {
@@ -2105,6 +2159,8 @@ public class EzEmailAdminController {
 				logger.debug("removeUserAddress rc=" + rc);
 			}
 		
+		} catch (NullPointerException e) {
+			logger.debug(e.getMessage(), e);
 		} catch (Exception e) {
 			resultCode = "ERROR";
 			logger.error(e.getMessage(), e);
@@ -2270,6 +2326,8 @@ public class EzEmailAdminController {
 						ezOrganAdminService.updateProperty(deptId, "DEPTLEVEL", "2", "dept", tenantId);
 						ezOrganAdminService.updateProperty(deptId, "DEPT_CD_PATH", deptId, "dept", tenantId);
 						
+					} catch (RuntimeException e) {
+						logger.error(e.getMessage(), e);
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
 						
@@ -2398,7 +2456,8 @@ public class EzEmailAdminController {
 						if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {							
 							createDefaultFolders(loginCookie, mailAddr, locale);
 						}
-						
+					} catch (RuntimeException e){
+						logger.error(e.getMessage(), e);
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 						logger.error(e.getMessage(), e);
 						
@@ -2474,6 +2533,8 @@ public class EzEmailAdminController {
 				}
 			}
 			
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			resultCode = "ERROR";
 			logger.error(e.getMessage(), e);
@@ -2551,6 +2612,8 @@ public class EzEmailAdminController {
 				return "json";
 			}
 			
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			resultCode = "ERROR";
 			logger.error(e.getMessage(), e);
@@ -2577,6 +2640,8 @@ public class EzEmailAdminController {
 				// 해당 주소를 james_recipient_rewrite 테이블에서 제거한다.
 				ezEmailUserAdminService.removeGroup(newMailAddr);					
 			}
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -2634,6 +2699,8 @@ public class EzEmailAdminController {
 			sb.append("</ROWS></LISTVIEWDATA>");
 			
 			returnData = sb.toString();
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnData = "ERROR";
 			logger.error(e.getMessage(), e);
@@ -2658,6 +2725,8 @@ public class EzEmailAdminController {
 		try {
 			// 라이센스키를 복호화한다.
 			licenseKey = egovFileScrty.decryptAES(licenseKey);
+		} catch (IndexOutOfBoundsException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.debug("License Key Decryption failed.");
 			
@@ -2715,11 +2784,13 @@ public class EzEmailAdminController {
 		IMAPAccess ia = null;
 		
         try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-						
-			// 기본 폴더들이 없을 때 생성한다.
-			ia.getTopLevelFolders(true, false);			
+			if (ia != null){
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+				// 기본 폴더들이 없을 때 생성한다.
+				ia.getTopLevelFolders(true, false);
+			}
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2787,6 +2858,8 @@ public class EzEmailAdminController {
 		try {
 			returnJsonArr = ezEmailService.selectAllSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()));
 			logger.debug("jsonArr=" + returnJsonArr);
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.debug("e.message=" + e.getMessage());
 		}
@@ -2816,6 +2889,8 @@ public class EzEmailAdminController {
 		try {
 			returnJsonArr = ezEmailService.selectSearchSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()), search, userInfo.getPrimary());
 			logger.debug("jsonArr=" + returnJsonArr);
+		} catch (RuntimeException e) {
+			logger.debug("e.message=" + e.getMessage());
 		} catch (Exception e) {
 			logger.debug("e.message=" + e.getMessage());
 		}
@@ -2838,6 +2913,8 @@ public class EzEmailAdminController {
 
 		try {
 			ezEmailService.deleteSignatureTemplate(signNo);
+		} catch (UnsupportedEncodingException e) {
+			logger.debug(e.getMessage(), e);
 		} catch (Exception e) {
 			 logger.error(e.getMessage(), e);
 		}
@@ -2888,6 +2965,8 @@ public class EzEmailAdminController {
 				logger.debug("jsonArr=" + returnJsonArr);
 			}
 			
+		} catch (IndexOutOfBoundsException e) {
+			logger.debug("e.message=" + e.getMessage());
 		} catch (Exception e) {
 			logger.debug("e.message=" + e.getMessage());
 		}
@@ -2933,6 +3012,8 @@ public class EzEmailAdminController {
 				displayname = obj.get("displayname").toString();
 				displayname2 = obj.get("displayname2").toString();
 				
+			} catch (IndexOutOfBoundsException e) {
+				logger.debug("e.message=" + e.getMessage());
 			} catch (Exception e) {
 				logger.debug("e.message=" + e.getMessage());
 			}
@@ -2976,7 +3057,7 @@ public class EzEmailAdminController {
 		}
 		
 		try {
-			if (type.equals("add")) {
+			if (type != null && type.equals("add")) {
 				signTemplate.setCompanyId(companyId);
 				signTemplate.setTenantId(Integer.toString(userInfo.getTenantId()));
 				ezEmailService.addSignatureTemplate(signTemplate);
@@ -2984,6 +3065,8 @@ public class EzEmailAdminController {
 				ezEmailService.setSignatureTemplate(signTemplate);
 			}
 			
+		} catch (RuntimeException e) {
+			 logger.error(e.getMessage(), e);	
 		} catch (Exception e) {
 			 logger.error(e.getMessage(), e);
 		}
@@ -3236,7 +3319,7 @@ public class EzEmailAdminController {
 			String[] innerDomainArr = innerDomainList.split(";");
 			
 			for (String innerDomain : innerDomainArr) {
-				if (delDomain.equals(innerDomain)) {
+				if (delDomain != null && delDomain.equals(innerDomain)) {
 					logger.debug("companyName=" + companyName);
 					reasonCode = 1;
 					resultCompany += resultCompany.equals("") ? companyName : ", " + companyName;

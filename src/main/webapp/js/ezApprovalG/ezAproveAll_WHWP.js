@@ -1037,6 +1037,10 @@ function SaveApproveInfo(pApproveFlag, currIdx) {
 	}
 	*/
 	
+	if (currIdx != 1) {
+		createNodeAndInsertText(xmlpara, objNode, "SENDNOTIFLAG", "N");
+	}
+	
 	if (pApproveFlag == "1") {
         xmlhttp.open("POST", "/ezApprovalG/doApprov.do", false);
     } else if (pApproveFlag == "2") {

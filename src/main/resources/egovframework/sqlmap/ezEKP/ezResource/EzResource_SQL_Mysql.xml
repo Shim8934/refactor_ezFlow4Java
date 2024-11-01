@@ -953,16 +953,22 @@
 		]]>
 	</select>
 
+	<!-- 2024-07-05 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzResourceDAO.getBrdList" parameterClass="Map" resultMap="resBrdListVO">
 		<![CDATA[
 			SELECT
-				ATTACH_SIZE, BRD_ACCESS, BRD_COMPANY, BRD_COUNT, 
-                BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL, $v_PBRDNM$ AS BRD_NM, 
-                BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL, 
-                CONCAT(SUBSTR(MAKEDATE, 1, 4), '-', SUBSTR(MAKEDATE, 5, 2), '-', SUBSTR(MAKEDATE, 7, 2)) MAKEDATE, 
-                OWNDEPTID,  $v_POWNDEPTNM$  AS OWNDEPTNM, OWNERCALL, 
-                OWNERID,  $v_POWNERNM$  AS OWNERNM,  $v_POWNERPOSITION$   AS OWNERPOSITION, 
-                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG 
+				ATTACH_SIZE, BRD_ACCESS, BRD_COMPANY, BRD_COUNT,
+                BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL,
+                CASE #v_lang# WHEN '2' THEN BRD_NM2 ELSE BRD_NM END AS BRD_NM,
+                BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL,
+                CONCAT(SUBSTR(MAKEDATE, 1, 4), '-', SUBSTR(MAKEDATE, 5, 2), '-', SUBSTR(MAKEDATE, 7, 2)) MAKEDATE,
+                OWNDEPTID,
+                CASE #v_lang# WHEN '2' THEN OWNDEPTNM2 ELSE OWNDEPTNM END AS OWNDEPTNM,
+                OWNERCALL,
+                OWNERID,
+                CASE #v_lang# WHEN '2' THEN OWNERNM2 ELSE OWNERNM END AS OWNERNM,
+                CASE #v_lang# WHEN '2' THEN OWNERPOSITION2 ELSE OWNERPOSITION END AS OWNERPOSITION,
+                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG
 			FROM
 				TBL_RS_BRD  
 			WHERE
@@ -973,7 +979,8 @@
 				BRD_COMPANY = #v_PCOMPANYID#
 			AND
 				TENANT_ID = #tenantID#
-			ORDER BY BRD_STEP
+			ORDER BY
+				BRD_STEP
 			LIMIT
 				#v_PTOPCNT#
 		]]>
@@ -2397,7 +2404,6 @@
 	</select>
 	
 	<select id="EzResourceDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
-		<![CDATA[
 			SELECT
 				DEPT_YN , 
 				SDA_YN ,
@@ -2415,8 +2421,10 @@
        		AND
        			SDA_Yn = 'Y'
        		AND
-       			MEMBER_ID in ( $v_PUSERID$ )
-		]]>
+       			MEMBER_ID IN
+				<iterate property="v_PUSERID" open="(" close=")" conjunction=",">
+					#v_PUSERID[]#
+				</iterate>
 	</select>
 
 	<select id="EzResourceDAO.getResourcePortlet" parameterClass="Map" resultMap="resBrdVO">

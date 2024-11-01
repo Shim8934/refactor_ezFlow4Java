@@ -170,6 +170,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return ezSurveyDAO.getDeptMemberList(map);
 	}
 	
+	/*
 	@Override
 	public int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -178,8 +179,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("tenantId",   tenantId);
 		
 		return ezSurveyDAO.getTotalSearchMembers(map);
-	}
-	
+	}*/
+	/*
 	@Override
 	public List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listCount, String srchOption, String srchValue, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -191,7 +192,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("tenantId",   tenantId);
 		
 		return ezSurveyDAO.getSearchMemberList(map);
-	}
+	}*/
 
 	@Override
 	public List<SimpleUserVO> getSearchMemberListByAttr(String primary, String srchOption, List<String> attrList, int tenantId) throws Exception {
@@ -763,7 +764,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode) throws Exception {
+	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode) throws Exception {
 		JSONObject result   = new JSONObject();
 		String userId       = userInfo.getId();
 		int tenantId        = userInfo.getTenantId();
@@ -774,17 +775,22 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		int totalItems      = 0;
 		int totalPages      = 0;
 		
+		/* 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거, 정렬 칼럼(orderCol)과 순차(orderSort) 변수를 분리 */
+		String orderCol = "";
+		String orderSort = "";
 		if (!column.equals("") && !order.equals("")) {
+			orderSort = order;
+			
 			switch(column) {
-				case "at" : sqlQuery = "attach_flag "                                              + order; break;
-				case "cd" : sqlQuery = "create_date "                                              + order; break;
-				case "tt" : sqlQuery = "CAST(SUBSTR(title, 1, 100) AS varchar(100)) "              + order; break;
-				case "ed" : sqlQuery = "end_date "                                                 + order; break;
-				case "ut" : sqlQuery = "participate_flag "                                         + order; break;
-				case "ct" : sqlQuery = primary.equals("1") ? "user_name1 " + order : "user_name2 " + order; break;
-				case "pl" : sqlQuery = "result_public_flag "                                       + order; break;
-				case "an" : sqlQuery = "anonymous_flag "                                           + order; break;
-				default   : sqlQuery = "CAST(SUBSTR(title, 1, 100) AS varchar(100)) "              + order; break;
+				case "at" : orderCol = "attach_flag"; break;
+				case "cd" : orderCol = "create_date"; break;
+				case "tt" : orderCol = "title"; break;
+				case "ed" : orderCol = "end_date"; break;
+				case "ut" : orderCol = "participate_flag"; break;
+				case "ct" : orderCol = ("user_name" + primary); break;
+				case "pl" : orderCol = "result_public_flag"; break;
+				case "an" : orderCol = "anonymous_flag"; break;
+				default   : orderCol = "title"; break;
 			}
 		}
 		
@@ -796,7 +802,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		title       = title.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		creatorName = creatorName.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		
-		SurveyItemSearchVO searchVO = new SurveyItemSearchVO(pageMode, listCntSize, tenantId, userId, primary, offsetMinute, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, userMode);
+		SurveyItemSearchVO searchVO = new SurveyItemSearchVO(pageMode, listCntSize, tenantId, userId, primary, offsetMinute, title, creatorName, startDate, endDate, orderCol, orderSort, srchMode, srchOption, userMode);
 		
 		if (pageMode.equals("processing") || pageMode.equals("finish") || pageMode.equals("all")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);

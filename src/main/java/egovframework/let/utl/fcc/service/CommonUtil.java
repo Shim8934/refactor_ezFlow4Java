@@ -310,7 +310,9 @@ public class CommonUtil {
     
     public String stripScriptTagsAndFunctions(String src) {
     	if (src != null && !src.isEmpty()) {
-	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|confirm([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|prompt([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|window.*?location",
+			// dhlee: 20240420 - ( 뿐 아니라 ` 기호일 때도 alert 함수가 실행되어 ` 문자도 추가함
+			// dhlee: 20240718 - (가 &#40;로 변경된 경우가 있어 &#40;와 &#41;에 대한 처리를 추가함
+	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|alert([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|confirm([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|confirm([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|prompt([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|prompt([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|window.*?location",
 	        				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 	        Matcher m = p.matcher(src);
 	        src = m.replaceAll("");
@@ -326,7 +328,15 @@ public class CommonUtil {
 
 		return src;
 	}
-    
+
+	public String convertTagSymbols(String src) {
+		if (src != null && !src.isEmpty()) {
+			src = src.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+		}
+
+		return src;
+	}
+
 	public byte[] readBytesFromFile(Path path) throws IOException {
 		String pathStr = path.toString();
 
@@ -1108,13 +1118,8 @@ public class CommonUtil {
 		return value;
 	}
 	
-	public String cleanScriptValue(String htmlCode, String type) {
-        if("clean".equals(type)){
-        	//htmlCode = htmlCode.replaceAll("</?script>", "&lt;sciprt&gt;");
-        	htmlCode = stripScriptTagsAndFunctions(htmlCode);
-        }
-		
-		return htmlCode;
+	public String cleanScriptValue(String htmlCode) {
+		return stripScriptTagsAndFunctions(htmlCode);
 	}
 	
 	// 2016.09.06 by kgs: Property value의 값을 변환

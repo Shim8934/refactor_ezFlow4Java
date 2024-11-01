@@ -224,7 +224,7 @@
               	'' AS CREATEDATE,
               	A.GROUPCOLOR AS GROUPCOLOR,
               	CREATORID
-        	FROM 
+           	FROM
         		TBL_SCHEDULEGROUP A LEFT JOIN TBL_SCHEDULEGROUPMEMBER B ON A.GROUPID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
        		WHERE  
        			(CREATORID = #v_USERID# OR ( MEMBERID = #v_USERID# AND STATUS = 1 ))
@@ -272,7 +272,7 @@
 	            A.COMPANYID,
 	            B.GROUPCOLOR,
 				SHOWTOP
-			FROM 
+			FROM
 				TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
 	       	WHERE  
 	       		A.SCHEDULEID = #v_SCHEDULEID#
@@ -281,9 +281,9 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-05 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
-		<![CDATA[
-			SELECT C.* FROM
+		SELECT C.* FROM
 			(
 			SELECT 
 				SCHEDULEID,
@@ -321,7 +321,11 @@
         	FROM 
         		TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID
        		WHERE  
-       			(A.OWNERID IN ($v_INDILIST$)
+       			(A.OWNERID IN
+       				<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
+						#v_INDILIST[]#
+					</iterate>
+			<![CDATA[
             AND 
             	(            		
             		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
@@ -351,10 +355,13 @@
 						location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
 				)
 			</isNotEmpty>
-            <![CDATA[
             )
             or 
-       			(A.OWNERID IN ($v_PIDLIST$)
+       			(A.OWNERID IN
+       				<iterate property="v_PIDLIST" open="(" close=")" conjunction=",">
+						#v_PIDLIST[]#
+					</iterate>
+			<![CDATA[
        		and
         		A.companyid = #v_COMPANYID#
         	and 
@@ -1345,7 +1352,7 @@
 	<insert id="EzScheduleDAO.insertScheduleGroup" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULEGROUP(
-				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,			tenant_id,		COMPANYID, 		groupcolor
+				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,			tenant_id,		COMPANYID,		groupcolor
 			) VALUES (
 				#v_GUID#,		#v_GROUPNAME#,		#v_USERID#,		#v_DISPLAYNAME#,	#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_TENANTID#,	#v_COMPANYID#,	#v_GROUPCOLOR#
 			)
@@ -2086,9 +2093,9 @@
        		WHERE
        			(A.OWNERID IN 
 		]]>
-		<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
-			#v_INDILIST[]#
-		</iterate>
+			<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
+				#v_INDILIST[]#
+			</iterate>
 		<![CDATA[        	
        		AND
 				ispublic = #v_ISPUBLIIC#
@@ -2116,9 +2123,9 @@
             or
        			(A.OWNERID IN 
 		]]>
-		<iterate property="v_PIDLIST" open="(" close=")" conjunction=",">
-			#v_PIDLIST[]#
-		</iterate>
+			<iterate property="v_PIDLIST" open="(" close=")" conjunction=",">
+				#v_PIDLIST[]#
+			</iterate>
 		<![CDATA[
        		and
         		A.companyid = #v_COMPANYID#
@@ -2435,7 +2442,7 @@
 			)
 			VALUES (
 				#scheInfo.scheduleId#,	#v_ATTENDANTID#, #v_ATTENDANTNAME#,	#v_ATTENDANTNAME2#,	#scheInfo.creatorId#, #scheInfo.creatorName#,	#scheInfo.creatorName2#, #scheInfo.scheduleType#, #scheInfo.dateType#,
-				TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS'), #scheInfo.repetition#, #scheInfo.title#,	#v_TENANTID#, #scheInfo.companyid#, #v_REMINDERSTATUS#, #v_OFFSET#, #v_LANG#, #v_OFFSETMIN#, #scheInfo.parentId#
+				TO_DATE(#v_STARTDATE#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_ENDDATE#,'YYYY-MM-DD HH24:MI:SS'), #scheInfo.repetition#, #scheInfo.title#,	#v_TENANTID#, #scheInfo.companyid#, #v_REMINDERSTATUS#, #v_OFFSET#, #v_LANG#, #v_OFFSETMIN#, #scheInfo.parentId#
 			)
    		]]>
 	

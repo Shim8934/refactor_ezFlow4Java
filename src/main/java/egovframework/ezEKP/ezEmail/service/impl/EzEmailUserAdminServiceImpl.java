@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -589,7 +590,9 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 					}					
 				}
 			}						
-		} catch (Exception e) {
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
+        } catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 		
@@ -621,6 +624,8 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 					reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
 				}
 			}	
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

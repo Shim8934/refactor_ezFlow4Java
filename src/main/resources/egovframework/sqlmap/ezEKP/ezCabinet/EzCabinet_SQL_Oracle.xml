@@ -865,6 +865,7 @@
 		<![CDATA[select nvl(max(item_id), 0) from tbl_cb_item where tenant_id = #tenantId#]]>
 	</select>
 	
+	<!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건 쿼리에서 $ 기호 제거 -->
 	<select id="EzCabinetDAO.getItems" resultMap="cabinetItemVO2" parameterClass="CabinetItemSearchVO">
 		select
 			*
@@ -879,8 +880,17 @@
 					<include refid="cabinetItemList"/>
 						and i.cabinet_id = #cabinetId#
 					order by
-						<isEmpty property="sqlOrder">i.update_date desc, i.item_id desc</isEmpty>
-						<isNotEmpty property="sqlOrder">$sqlOrder$, i.update_date desc, i.item_id desc</isNotEmpty>
+						<isEmpty property="orderCol">i.update_date desc, i.item_id desc</isEmpty>
+						<isNotEmpty property="orderCol">
+							<isEqual property="orderCol" compareValue="item_type">item_type</isEqual>
+							<isEqual property="orderCol" compareValue="title">title</isEqual>
+							<isEqual property="orderCol" compareValue="creator_name1">creator_name1</isEqual>
+							<isEqual property="orderCol" compareValue="creator_name2">creator_name2</isEqual>
+							<isEqual property="orderCol" compareValue="create_date">create_date</isEqual>
+							<isEqual property="orderCol" compareValue="item_size">item_size</isEqual>
+							<isEqual property="orderSort" compareValue="DESC"> desc</isEqual>,
+							i.update_date desc, i.item_id desc
+						</isNotEmpty>
 				) k <![CDATA[ where rownum <= #startPoint# + #listCount#]]>
 		) where rnum >= #startPoint# + 1
 	</select>
@@ -918,8 +928,17 @@
 					]]>
 					<include refid="cabinetItemList"/>
 					order by
-						<isEmpty property="sqlOrder">i.update_date desc, i.item_id desc</isEmpty>
-						<isNotEmpty property="sqlOrder">$sqlOrder$, i.update_date desc, i.item_id desc</isNotEmpty>
+						<isEmpty property="orderCol">i.update_date desc, i.item_id desc</isEmpty>
+						<isNotEmpty property="orderCol">
+							<isEqual property="orderCol" compareValue="item_type">item_type</isEqual>
+							<isEqual property="orderCol" compareValue="title">title</isEqual>
+							<isEqual property="orderCol" compareValue="creator_name1">creator_name1</isEqual>
+							<isEqual property="orderCol" compareValue="creator_name2">creator_name2</isEqual>
+							<isEqual property="orderCol" compareValue="create_date">create_date</isEqual>
+							<isEqual property="orderCol" compareValue="item_size">item_size</isEqual>
+							<isEqual property="orderSort" compareValue="DESC"> desc</isEqual>,
+							i.update_date desc, i.item_id desc
+						</isNotEmpty>
 			) k <![CDATA[ where rownum <= #startPoint# + #listCount#]]>
 		) where rnum >= #startPoint# + 1
 	</select>

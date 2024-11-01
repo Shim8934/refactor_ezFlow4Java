@@ -1892,7 +1892,7 @@ public class EzCarController extends EgovFileMngUtil {
 			if (req.getParameter("msg") != null && !req.getParameter("msg").equals("")) {
 				accMessage = req.getParameter("msg");
 			}
-			model.addAttribute("accMessage", commonUtil.cleanScriptValue(accMessage, "clean"));
+			model.addAttribute("accMessage", commonUtil.cleanScriptValue(accMessage));
 			model.addAttribute("userInfo", userInfo); 
 			return "/ezCar/carNonResList";
 		}

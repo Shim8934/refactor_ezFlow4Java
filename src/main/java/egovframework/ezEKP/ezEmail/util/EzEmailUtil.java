@@ -20,6 +20,7 @@ import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.MalformedInputException;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -47,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -86,6 +88,7 @@ import javax.servlet.ServletContext;
 import javax.xml.bind.DatatypeConverter;
 
 import egovframework.let.utl.fcc.service.KlibUtil;
+import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -101,10 +104,12 @@ import org.bouncycastle.util.encoders.Hex;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -410,6 +415,8 @@ public class EzEmailUtil {
 	                }
 	            }		
 			}
+		} catch (IndexOutOfBoundsException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -460,34 +467,35 @@ public class EzEmailUtil {
 					}
 				} else {
 					String fromHeader = message.getHeader("From")[0];
-					
-					// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
-					if (!isPureAscii(fromHeader)) {
-						byte[] rawBytes = addressStr.getBytes("iso-8859-1");
-						
-						addressStr = decodeNonAsciiBytes(rawBytes);
-					} else {
-	                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
-	                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
-						String newFromHeader = changeCharSet(fromHeader, "gb2312", "gbk");
-						
-						// gb2312에서 gbk로 변경된 경우
-						if (!newFromHeader.equals(fromHeader)) {
-				            int endPos = newFromHeader.indexOf("?=", 2);
-				            
-				            // 주소 부분을 제외한 이름 파트만 분리한다.
-				            if (endPos > -1) {
-					            addressStr = newFromHeader.substring(0, endPos + 2);
-				            }
+					if (fromHeader != null){
+						// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
+						if (!isPureAscii(fromHeader)) {
+							byte[] rawBytes = addressStr.getBytes("iso-8859-1");
+
+							addressStr = decodeNonAsciiBytes(rawBytes);
+						} else {
+							// gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서
+							// 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.
+							String newFromHeader = changeCharSet(fromHeader, "gb2312", "gbk");
+
+							// gb2312에서 gbk로 변경된 경우
+							if (newFromHeader != null && !newFromHeader.equals(fromHeader)) {
+								int endPos = newFromHeader.indexOf("?=", 2);
+
+								// 주소 부분을 제외한 이름 파트만 분리한다.
+								if (endPos > -1) {
+									addressStr = newFromHeader.substring(0, endPos + 2);
+								}
+							}
+
+							// decoding is needed for the name part
+							// ex) =?UTF-8?B?44WC44WC?=
+							//     =?utf-8?B?Z2lzYTE=?=
+							//     =?ks_c_5601-1987?B?uei03iC1x8H2IL7KwL06IHRlc3Q=?=
+							addressStr = MimeUtility.decodeText(addressStr);
+
+							addressStr = decodeMultiLineQPEncodedName(fromHeader, addressStr);
 						}
-												
-						// decoding is needed for the name part
-						// ex) =?UTF-8?B?44WC44WC?=
-						//     =?utf-8?B?Z2lzYTE=?=
-						//     =?ks_c_5601-1987?B?uei03iC1x8H2IL7KwL06IHRlc3Q=?=
-						addressStr = MimeUtility.decodeText(addressStr);
-						
-						addressStr = decodeMultiLineQPEncodedName(fromHeader, addressStr);
 					}
 				}
 			// From 헤더가 존재하더라도 이름만 있고 유효한 이메일 주소가 없는 경우에도 이 부분이 실행될 수 있다.				
@@ -505,7 +513,9 @@ public class EzEmailUtil {
 						addressStr = MimeUtility.decodeText(fromHeader);
 					}					
 				}
-			}			
+			}
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} 
@@ -530,7 +540,7 @@ public class EzEmailUtil {
 				if (name == null) {
 					name = ia.getAddress();
 				}
-			} catch (Exception e) {
+			} catch (AddressException e) {
 //				logger.error(e.getMessage(), e);
 				
 				// 현대오일뱅크" <HyundaiOilbank@oilbankcard.com> 와 같이 "가 하나만 있는 경우
@@ -556,7 +566,7 @@ public class EzEmailUtil {
 			try {
 				InternetAddress ia = new InternetAddress(internetAddressStr);
 				address = ia.getAddress();
-			} catch (Exception e) {
+			} catch (AddressException e) {
 //				logger.error(e.getMessage(), e);
 				
 				// 현대오일뱅크" <HyundaiOilbank@oilbankcard.com> 와 같이 "가 하나만 있는 경우
@@ -616,8 +626,9 @@ public class EzEmailUtil {
 					}
 					else {					
 						name = MimeUtility.decodeText(name);
-						
-						name = decodeMultiLineQPEncodedName(fromHeader, name);
+						if (fromHeader != null){
+							name = decodeMultiLineQPEncodedName(fromHeader, name);
+						}
 					}
 					
 					addressBuilder.append(name + " <" + addressStr + ">");					
@@ -804,149 +815,153 @@ public class EzEmailUtil {
                 
 	        if (!subject.equals("")) {
 	            String[] rawHeaders = message.getHeader("subject");
-	            String rawHeader = rawHeaders[0].trim();
-	                        
-				// 제목이 줄바꿈없이 인코딩 경우가 있어 추가함.
-	            // Subject: =?ISO-2022-JP?B?GyRCIVobKEIyMDE3LzEyLzA0GyRCJE5MZEJqIVsbKEJPSlQ=?=
-	            //		 =?ISO-2022-JP?B?GyRCJEszOkV2JDkkayRiJE4kSCRPISkbKEI=?==?iso-2022-jp?B?GyRCIWMbKEJJVBskQiUtJWMlUSVBJWMhPCU4GyhCIA==?=
-	            //		 =?iso-2022-jp?B?GyRCJVkhPCU3JUMlLyFkGyhC?=                        
-				int pos = rawHeader.indexOf("?==?");
-				
-				if (pos >= 0) {
-					StringBuilder sb = new StringBuilder();
-					
-					sb.append(rawHeader.substring(0, pos + 2));
-					sb.append("\r\n ");
-					sb.append(rawHeader.substring(pos + 2));
-											
-					rawHeader = sb.toString();
-					
-					logger.debug("line broken new subject=" + rawHeader);	
-					
-					subject = MimeUtility.decodeText(rawHeader);
+				if (rawHeaders != null){
+					String rawHeader = rawHeaders[0].trim();
+					if (rawHeader != null){
+						// 제목이 줄바꿈없이 인코딩 경우가 있어 추가함.
+						// Subject: =?ISO-2022-JP?B?GyRCIVobKEIyMDE3LzEyLzA0GyRCJE5MZEJqIVsbKEJPSlQ=?=
+						//		 =?ISO-2022-JP?B?GyRCJEszOkV2JDkkayRiJE4kSCRPISkbKEI=?==?iso-2022-jp?B?GyRCIWMbKEJJVBskQiUtJWMlUSVBJWMhPCU4GyhCIA==?=
+						//		 =?iso-2022-jp?B?GyRCJVkhPCU3JUMlLyFkGyhC?=
+						int pos = rawHeader.indexOf("?==?");
+
+						if (pos >= 0) {
+							StringBuilder sb = new StringBuilder();
+
+							sb.append(rawHeader.substring(0, pos + 2));
+							sb.append("\r\n ");
+							sb.append(rawHeader.substring(pos + 2));
+
+							rawHeader = sb.toString();
+
+							logger.debug("line broken new subject=" + rawHeader);
+
+							subject = MimeUtility.decodeText(rawHeader);
+						}
+
+						// Subject: =?utf-8?q?=5b=46=65=64=45...=35=35 ?= 의 경우와 같이
+						// ?= 앞에 공백 문자가 있어 제목이 디코딩 되지 않는 경우가 발견되어 추가함
+						if (rawHeader.startsWith("=?") && rawHeader.endsWith(" ?=")) {
+							logger.debug("There is a space before ?=");
+
+							int lastNonSpaceIndex = rawHeader.length() - 4;
+
+							while (rawHeader.charAt(lastNonSpaceIndex) == ' ') {
+								lastNonSpaceIndex--;
+							}
+
+							rawHeader = rawHeader.substring(0, lastNonSpaceIndex + 1) + "?=";
+							subject = MimeUtility.decodeText(rawHeader);
+						}
+
+						// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
+						if (!isPureAscii(rawHeader)) {
+							byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+
+							subject = decodeNonAsciiBytes(rawBytes);
+						} else {
+
+							// 일부 Mailer에서 표준을 지키지 않고 큰 따옴표 두개로 감싸서
+							// Subject를 구성하여 디코딩이 안 되는 경우가 있어 추가함
+							// ex: "=?euc-kr?B?".Z3ctc25zLW5vZGUyICgyMjAuNzMuMTc4LjE4KSBbMV0gZ3ctc25zLW5vZGUyIENQVSBVc2VkICglKQ==."?="
+							if (rawHeader.startsWith("\"=?") && rawHeader.endsWith("?=\"")) {
+								rawHeader = rawHeader.substring(1, rawHeader.length() - 1);
+
+								subject = String.format("\"%s\"", MimeUtility.decodeText(rawHeader));
+							}
+
+							if (rawHeader.startsWith("=?")) {
+								int secondQuestionPos = rawHeader.indexOf("?", 2);
+								int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
+								String charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1);
+								String encoding = rawHeader.substring(secondQuestionPos + 1, thirdQuestionPos);
+
+								String charSet = rawHeader.substring(2, secondQuestionPos).toLowerCase();
+
+								// cp932는 자바에서 아예 인식되지 않는 코드여서 ms932로의 변경을 먼저 수행한다.
+								if (charSet.equals("cp932")) {
+									rawHeader = rawHeader.replace(charSet, "ms932");
+									charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1);
+
+									subject = MimeUtility.decodeText(rawHeader);
+								} else if (charSet.equals("iso-8859-8-i")){
+									rawHeader = rawHeader.replace(charSet, "iso-8859-8");
+									charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1);
+
+									subject = MimeUtility.decodeText(rawHeader);
+								}
+
+								// 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
+								// 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(Base64 인코딩을 사용하면서)
+								// 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함.
+								// 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.
+								if (subject.contains("�")
+										&& encoding != null && encoding.equalsIgnoreCase("B")) {
+									String[] sequences = rawHeader.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
+
+									if (sequences.length > 2) {
+										logger.debug("broken multiple sequences. combining them...");
+										logger.debug("original rawHeader:" + rawHeader);
+
+										StringBuilder combined = new StringBuilder();
+										combined.append(charSetAndEncoding);
+
+										ByteArrayOutputStream combinedBytes = new ByteArrayOutputStream();
+
+										for (int i = 1; i < sequences.length; i++) {
+											String sequence = sequences[i].trim();
+
+											logger.debug("sequence[" + i + "]:" + sequence);
+
+											sequence = sequence.substring(0, sequence.lastIndexOf("?"));
+											combinedBytes.write(Base64.decodeBase64(sequence));
+										}
+
+										combined.append(Base64.encodeBase64String(combinedBytes.toByteArray()));
+										combined.append("?=");
+										rawHeader = combined.toString();
+
+										logger.debug("combined rawHeader:" + rawHeader);
+
+										subject = MimeUtility.decodeText(rawHeader);
+
+										logger.debug("subject=" + subject);
+									}
+								}
+
+								// Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+								// 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.
+								if (charSet.equals("ks_c_5601-1987")) {
+									rawHeader = rawHeader.replace(charSet, "ms949");
+
+									subject = MimeUtility.decodeText(rawHeader);
+								} else if (charSet.equals("gb2312")) {
+									rawHeader = rawHeader.replace(charSet, "gbk");
+
+									subject = MimeUtility.decodeText(rawHeader);
+									// 료비에서 구자체 한문을 사용하는 메일의 경우 iso-2022-jp로 인코딩되어 있으나
+									// 표시가 제대로 되지 않아 x-windows-iso2022jp로 변경처리함
+								} else if (charSet.equals("iso-2022-jp")) {
+									rawHeader = rawHeader.replace(charSet, "x-windows-iso2022jp");
+
+									subject = MimeUtility.decodeText(rawHeader);
+								}
+
+								// 료비에서 의뢰한 메일 중 제목이
+								// Subject: =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4
+								//  10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
+								// 와 같은 경우 여전히 subject가
+								// =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4 10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
+								// 로 디코딩되지 않은 형태로 나온다. 이 때 공백 문자를 =20으로 변경하면 제대로 디코딩이 이루어진다.
+								if (subject.startsWith("=?")) {
+									if (encoding != null && encoding.equalsIgnoreCase("Q")) {
+										subject = MimeUtility.decodeText(subject.replace(" ", "=20"));
+									}
+								}
+							}
+						}
+					}
+
 				}
-				
-	            // Subject: =?utf-8?q?=5b=46=65=64=45...=35=35 ?= 의 경우와 같이 
-	            // ?= 앞에 공백 문자가 있어 제목이 디코딩 되지 않는 경우가 발견되어 추가함
-	            if (rawHeader.startsWith("=?") && rawHeader.endsWith(" ?=")) {
-	            	logger.debug("There is a space before ?=");
-	            	
-	            	int lastNonSpaceIndex = rawHeader.length() - 4;
-	            	
-	            	while (rawHeader.charAt(lastNonSpaceIndex) == ' ') {
-	            		lastNonSpaceIndex--;
-	            	}
-	            	
-	            	rawHeader = rawHeader.substring(0, lastNonSpaceIndex + 1) + "?=";
-	            	subject = MimeUtility.decodeText(rawHeader);
-	            }
-	            
-	            // 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
-	            if (!isPureAscii(rawHeader)) {
-	                byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
-	                
-	                subject = decodeNonAsciiBytes(rawBytes);
-	            } else {
-	            	
-	            	// 일부 Mailer에서 표준을 지키지 않고 큰 따옴표 두개로 감싸서
-	            	// Subject를 구성하여 디코딩이 안 되는 경우가 있어 추가함
-	            	// ex: "=?euc-kr?B?".Z3ctc25zLW5vZGUyICgyMjAuNzMuMTc4LjE4KSBbMV0gZ3ctc25zLW5vZGUyIENQVSBVc2VkICglKQ==."?="
-	            	if (rawHeader.startsWith("\"=?") && rawHeader.endsWith("?=\"")) {
-	            		rawHeader = rawHeader.substring(1, rawHeader.length() - 1);
-	            		
-	            		subject = String.format("\"%s\"", MimeUtility.decodeText(rawHeader));
-	            	}
-	            	
-	                if (rawHeader.startsWith("=?")) {
-	                    int secondQuestionPos = rawHeader.indexOf("?", 2);
-	                    int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
-	                    String charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1); 
-	                    String encoding = rawHeader.substring(secondQuestionPos + 1, thirdQuestionPos);                                        
-	                    
-	                    String charSet = rawHeader.substring(2, secondQuestionPos).toLowerCase();
-	                    
-	                    // cp932는 자바에서 아예 인식되지 않는 코드여서 ms932로의 변경을 먼저 수행한다.
-	                    if (charSet.equals("cp932")) {
-	                        rawHeader = rawHeader.replace(charSet, "ms932");
-	                        charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1);
-	                                                
-	                        subject = MimeUtility.decodeText(rawHeader);
-	                    } else if (charSet.equals("iso-8859-8-i")){
-	                    	rawHeader = rawHeader.replace(charSet, "iso-8859-8");
-	                        charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1);
-	                        
-	                        subject = MimeUtility.decodeText(rawHeader);
-	                    }	
-	                    
-	                    // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
-	                    // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(Base64 인코딩을 사용하면서) 
-	                    // 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함.  
-	                    // 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.
-	                    if (subject.contains("�")
-	                            && encoding.equalsIgnoreCase("B")) {
-	                        String[] sequences = rawHeader.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
-	                        
-	                        if (sequences.length > 2) {
-	                            logger.debug("broken multiple sequences. combining them...");
-	                            logger.debug("original rawHeader:" + rawHeader);
-	                            
-	                            StringBuilder combined = new StringBuilder();                        
-	                            combined.append(charSetAndEncoding);
-	                            
-	                            ByteArrayOutputStream combinedBytes = new ByteArrayOutputStream();
-	                            
-	                            for (int i = 1; i < sequences.length; i++) {
-	                                String sequence = sequences[i].trim();
-	                                
-	                                logger.debug("sequence[" + i + "]:" + sequence);
-	                                
-	                                sequence = sequence.substring(0, sequence.lastIndexOf("?"));
-	                                combinedBytes.write(Base64.decodeBase64(sequence));                            
-	                            }
-	                            
-	                            combined.append(Base64.encodeBase64String(combinedBytes.toByteArray()));
-	                            combined.append("?=");
-	                            rawHeader = combined.toString();
-	                            
-	                            logger.debug("combined rawHeader:" + rawHeader);
-	                            
-	                            subject = MimeUtility.decodeText(rawHeader);
-	                            
-	                            logger.debug("subject=" + subject);
-	                        }
-	                    }
-	                
-	                    // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
-	                    // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.	                    
-	                    if (charSet.equals("ks_c_5601-1987")) {
-	                        rawHeader = rawHeader.replace(charSet, "ms949");
-	                                                
-	                        subject = MimeUtility.decodeText(rawHeader);
-	                    } else if (charSet.equals("gb2312")) {
-	                        rawHeader = rawHeader.replace(charSet, "gbk");
-	                                                
-	                        subject = MimeUtility.decodeText(rawHeader);
-	                    // 료비에서 구자체 한문을 사용하는 메일의 경우 iso-2022-jp로 인코딩되어 있으나
-	                    // 표시가 제대로 되지 않아 x-windows-iso2022jp로 변경처리함
-	                    } else if (charSet.equals("iso-2022-jp")) {
-	                        rawHeader = rawHeader.replace(charSet, "x-windows-iso2022jp");
-	                                                
-	                        subject = MimeUtility.decodeText(rawHeader);
-	                    } 
-	                    
-	                    // 료비에서 의뢰한 메일 중 제목이
-	                    // Subject: =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4
-	                    //  10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
-	                    // 와 같은 경우 여전히 subject가
-	                    // =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4 10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
-	                    // 로 디코딩되지 않은 형태로 나온다. 이 때 공백 문자를 =20으로 변경하면 제대로 디코딩이 이루어진다. 
-	                    if (subject.startsWith("=?")) {
-	                    	if (encoding.equalsIgnoreCase("Q")) {
-	                    		subject = MimeUtility.decodeText(subject.replace(" ", "=20"));
-	                    	}
-	                    }
-	                }
-	            }
 	            
 	            // 제목 중간에 Unicode 0x0(NULL)이 들어가 XML 파싱시 에러가 발생하는 메일이 발견되어 추가함.
 	            subject = subject.replaceAll("[\\000]+", "");   
@@ -977,6 +992,11 @@ public class EzEmailUtil {
 	                subject = subject.replace(encData, decData);
 	            }
 	        }
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+
+			// 디코딩 도중 예외가 발생하면 원제목을 반환하여 예외가 발생하더라도 메일 목록이 아예 표시되지 않는 등의 현상이 발생하지 않도록 한다.
+			subject = originalSubject;
         } catch (Exception e) {
         	logger.error(e.getMessage(), e);
         	
@@ -1013,6 +1033,8 @@ public class EzEmailUtil {
 		
 		try {
 			decoder.decode(ByteBuffer.wrap(bytes));
+		} catch (MalformedInputException e){
+			return false;
 		} catch (Exception e){			
 			return false;
 		}
@@ -1610,7 +1632,17 @@ public class EzEmailUtil {
 						}							
 					}
 				}
-				
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+
+				InputStream is = getContentInputStream(part);
+
+				if (is.available() > 0) {
+					byte[] buf = new byte[is.available()];
+					is.read(buf);
+
+					strContent = decodeNonAsciiBytes(buf);
+				}
 			// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
 			// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
 			} catch (Exception e) {
@@ -1678,7 +1710,7 @@ public class EzEmailUtil {
 			htmlBody = styleClassTagsReplace(htmlBody);
 			
 			// XSS(Cross Site Scripting)을 방지하기 위한 처리
-			htmlBody = stripScriptTags(htmlBody);
+			htmlBody = commonUtil.stripScriptTagsAndFunctions(htmlBody);
 			
 			// 메일 본문의 링크를 누르면 별도의 창으로 표시되도록 하는 처리
 			htmlBody = addTargetBlank(htmlBody);		
@@ -1827,7 +1859,17 @@ public class EzEmailUtil {
 								}														
 							}
 						}
-						
+					} catch (IOException e) {
+						logger.error(e.getMessage(), e);
+
+						InputStream is = getContentInputStream(part);
+
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+
+							strContent = decodeNonAsciiBytes(buf);
+						}
 					// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
 					// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
 					} catch (Exception e) {
@@ -1864,7 +1906,7 @@ public class EzEmailUtil {
 				htmlBody += tempText2.toString();
 				
 				htmlBody = changeURLsToAnchorTags(htmlBody);	
-				htmlBody = stripScriptTags(htmlBody);
+				htmlBody = commonUtil.stripScriptTagsAndFunctions(htmlBody);
 				htmlBody = addTargetBlank(htmlBody);
 	        }
 		} else if(part.isMimeType("multipart/alternative")){
@@ -2109,6 +2151,34 @@ public class EzEmailUtil {
             
             try {
                 strContent = part.getContent().toString();
+			} catch (MessagingException e) {
+				logger.error(e.getMessage(), e);
+
+				InputStream is = null;
+
+				try {
+					is = part.getInputStream();
+					// Content-Transfer-Encoding 값에 문제가 있을 때, IOException이 발생할 수 있다.
+					// 예) Content-Type: Text/Html; Charset="utf-8"
+					//    Content-Transfer-Encoding:
+				} catch (IOException ioe) {
+					// gerRawInputStream()은 Content-Transfer-Encoding에 의한 Decoding을 수행하지 않은 Raw Data를 반환한다.
+					if (part instanceof MimeBodyPart) {
+						is = ((MimeBodyPart)part).getRawInputStream();
+					} else if (part instanceof MimeMessage) {
+						is = ((MimeMessage)part).getRawInputStream();
+					}
+					else {
+						throw ioe;
+					}
+				}
+
+				if (is.available() > 0) {
+					byte[] buf = new byte[is.available()];
+					is.read(buf);
+
+					strContent = decodeNonAsciiBytes(buf);
+				}
             // charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
             // 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
             } catch (Exception e) {
@@ -2265,10 +2335,10 @@ public class EzEmailUtil {
 					userAccount, password, egovMessageSource, locale, this);
 
 			callback.accept(ia);
-
+		} catch (RuntimeException e) {
+			logger.error("useIMAPAccessWithCallback exception", e);
 		} catch (Exception e) {
 			logger.error("useIMAPAccessWithCallback exception", e);
-
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2614,8 +2684,9 @@ public class EzEmailUtil {
 				            if (subject != null && subject.toLowerCase().contains(searchValue.toLowerCase())) {
 				                return true;
 				            }
-				        } 
-				        catch (Exception e) {
+						} catch (MessagingException e) {
+							logger.debug("e.message=" + e.getMessage());
+				        } catch (Exception e) {
 							logger.debug("e.message=" + e.getMessage());
 				        }
 				        
@@ -2742,8 +2813,9 @@ public class EzEmailUtil {
                                     return true;
                                 }                      
                             }
-                        } 
-                        catch (Exception e) {
+						} catch (PatternSyntaxException e) {
+							logger.debug("e.message=" + e.getMessage());
+                        } catch (Exception e) {
 							logger.debug("e.message=" + e.getMessage());
                         }
                         
@@ -2766,8 +2838,9 @@ public class EzEmailUtil {
 				            if (subjectFlag || fromFlag) {
 				                return true;
 				            }
-				        } 
-				        catch (Exception e) {
+						} catch (MessagingException e) {
+							logger.debug("e.message=" + e.getMessage());
+				        } catch (Exception e) {
 							logger.debug("e.message=" + e.getMessage());
 				        }
 				        
@@ -2790,8 +2863,9 @@ public class EzEmailUtil {
 				            if (subjectFlag || toFlag) {
 				                return true;
 				            }
-				        } 
-				        catch (Exception e) {
+						} catch (MessagingException e) {
+							logger.debug("e.message=" + e.getMessage());
+				        } catch (Exception e) {
 							logger.debug("e.message=" + e.getMessage());
 				        }
 				        
@@ -3314,7 +3388,8 @@ public class EzEmailUtil {
 				Header header = e.nextElement();
 				newMessage.setHeader(header.getName(), header.getValue());
 			}
-			
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -3956,26 +4031,28 @@ public class EzEmailUtil {
 			
 			// 입력 패러메터값이 있는 경우엔 HTTP Body로 출력한다.
 			if (inputParams != null) {
-				OutputStream os = conn.getOutputStream();
-				// UTF-8로 인코딩한다.
-				os.write(inputParams.getBytes("UTF-8"));
-				os.flush();
+				try (OutputStream os = conn.getOutputStream()) {
+					// UTF-8로 인코딩한다.
+					os.write(inputParams.getBytes("UTF-8"));
+					os.flush();
+				}
 			}
 			
 			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				// Response Body를 UTF-8로서 디코딩한다.			
-				BufferedReader br = new BufferedReader(
+				try (BufferedReader br = new BufferedReader(
 											new InputStreamReader(conn.getInputStream(),"UTF-8")
-											);
-	
-				StringBuilder sb = new StringBuilder();
-				String output;
-				
-				while ((output = br.readLine()) != null) {
-					sb.append(output);
+											)) {
+
+					StringBuilder sb = new StringBuilder();
+					String output;
+
+					while ((output = br.readLine()) != null) {
+						sb.append(output);
+					}
+
+					result = sb.toString();
 				}
-				
-				result = sb.toString();
 				
 				conn.disconnect();		
 				conn = null;
@@ -4129,6 +4206,8 @@ public class EzEmailUtil {
 				Flags setTagFlag = new Flags("$Tag-" + tagIdx);
 				message.setFlags(setTagFlag, isSet);
 			}
+		} catch (MessagingException e) {
+			throw e;
 		} catch (Exception e) {
 			throw e;
 		}
@@ -4420,7 +4499,9 @@ public class EzEmailUtil {
 		        
 		        returnData[0] = userQuota;
 		        returnData[1] = userWarn;
-	        }    	
+	        }
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
@@ -5205,7 +5286,6 @@ public class EzEmailUtil {
 	
 	// 2017.11.21 코린도 개발하면서 ZIP관련 메서드 생성 - 압축파일 풀기 
 	public void unzip( InputStream is, File destDir, String encoding) throws IOException {
-		ZipArchiveInputStream zis ;
 		ZipArchiveEntry entry ;
 		String name ;
 		File target ;
@@ -5214,27 +5294,26 @@ public class EzEmailUtil {
 
 		ensureDestDir(destDir);
 		
-		zis = new ZipArchiveInputStream(is, encoding, false);
-		
-		while ((entry = zis.getNextZipEntry()) != null){
-			name = entry.getName();
-			target = new File (destDir, name);
-			
-			if (entry.isDirectory()) {
-				ensureDestDir(target);
-			} else {
-				target.createNewFile();
+		try (ZipArchiveInputStream zis = new ZipArchiveInputStream(is, encoding, false)) {
 
-				// CWE-404 보안 취약점 대응
-				try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(target))) {				
-					while ((nWritten = zis.read(buf)) >= 0 ){
-						bos.write(buf, 0, nWritten);
-					}				
+			while ((entry = zis.getNextZipEntry()) != null) {
+				name = entry.getName();
+				target = new File(destDir, name);
+
+				if (entry.isDirectory()) {
+					ensureDestDir(target);
+				} else {
+					target.createNewFile();
+
+					// CWE-404 보안 취약점 대응
+					try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(target))) {
+						while ((nWritten = zis.read(buf)) >= 0) {
+							bos.write(buf, 0, nWritten);
+						}
+					}
 				}
 			}
 		}
-		
-		zis.close();	
 	}
 	
 	// 디렉토리확인
@@ -5295,6 +5374,8 @@ public class EzEmailUtil {
 				File dirFile = new File(folderPath + "_secure");
 				dirFile.delete();
 			}
+		} catch (ZipException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -5428,9 +5509,10 @@ public class EzEmailUtil {
 			}
 
 			rtnStr = strTxt.toString();
-
+		} catch (IndexOutOfBoundsException e) {
+			logger.debug(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.debug("{}", e);
+			logger.debug(e.getMessage(), e);
 		}
 		
 		logger.debug("rtnStr=" + rtnStr);
@@ -5512,7 +5594,9 @@ public class EzEmailUtil {
 								"", "", "", "", "", "", "", "", "", "P", "");
 					}
 				}
-				
+			} catch (PatternSyntaxException e) {
+				logger.error(e.getMessage(), e);
+				logger.debug("outerMail insert Address fail / failAddress:" + address );
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				logger.debug("outerMail insert Address fail / failAddress:" + address );
@@ -5571,6 +5655,10 @@ public class EzEmailUtil {
 					return true;
 				}
 			}
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+
+			return true;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			
@@ -5914,19 +6002,25 @@ public class EzEmailUtil {
 							userEmail, password, egovMessageSource, locale,
 							EzEmailUtil.this);
 
-					Folder sentFolder = ia.getFolder(getSentFolderId(locale));
+					if (ia != null){
+						Folder sentFolder = ia.getFolder(getSentFolderId(locale));
 
-					if (!sentFolder.exists()) {
-						ia.createFolder(sentFolder.getFullName());
+						if (sentFolder != null){
+							if (!sentFolder.exists()) {
+								ia.createFolder(sentFolder.getFullName());
+							}
+
+							message.setFlag(Flags.Flag.SEEN, true);
+							sentFolder.open(Folder.READ_WRITE);
+							sentFolder.appendMessages(new Message[] { message });
+							sentFolder.close(true);
+							logger.debug("Mail is successfully saved in sent folder.");
+						}
+
 					}
-
-					message.setFlag(Flags.Flag.SEEN, true);
-					sentFolder.open(Folder.READ_WRITE);
-					sentFolder.appendMessages(new Message[] { message });
-					sentFolder.close(true);
-					logger.debug("Mail is successfully saved in sent folder.");
 				}
-
+			} catch (MessagingException e) {
+				logger.error(e.getMessage(), e);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			} finally {
@@ -6082,7 +6176,7 @@ public class EzEmailUtil {
 				if (!externalMailServerAddr.equals("") && !externalMailServerAddr.equals("0.0.0.0")) {
 					smtpMailServer = externalMailServerAddr;
 					
-					if (!smtpMailServerPort.trim().equals("")) { // external mail SMTP port.
+					if (smtpMailServerPort != null && !smtpMailServerPort.trim().equals("")) { // external mail SMTP port.
 						smtpMailServerPort = externalMailServerPort;
 					}
 					
@@ -6108,6 +6202,10 @@ public class EzEmailUtil {
 			} else {
 				reSMTPAccess = SMTPAccess.getNotAuthInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw);
 			}
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage(), e);
+
+			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			
@@ -6427,13 +6525,15 @@ public class EzEmailUtil {
             	icalVO.setAltDesc(vEvent.getProperty("X-ALT-DESC"));
             	icalVO.setDescription(vEvent.getDescription());
             }
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
 			if (is != null) {
 				try {
 					is.close();
-				} catch (Exception e) {}
+				} catch (IOException e) {}
 			}
 		}
     	

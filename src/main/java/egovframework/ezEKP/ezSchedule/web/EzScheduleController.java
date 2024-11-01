@@ -4993,7 +4993,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		strHTML = strHTML.replace("replace_" + scheme, scheme);
 		
-		strHTML = commonUtil.cleanScriptValue(strHTML, "");
+		strHTML = commonUtil.cleanScriptValue(strHTML);
 		
 		String mhtData = ezCommonService.startHtml2Mht(strHTML, realPath, locale);
 		

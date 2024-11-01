@@ -25,8 +25,8 @@ public interface EzSurveyService {
 	void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception;
 	int getTotalDeptMembers(String deptId, int tenantId) throws Exception;
 	List<SimpleUserVO> getDeptMemberList(String deptId, List<String> deptList, String primary, int startPoint, int listcnt, int tenantId) throws Exception;
-	int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception;
-	List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listcnt, String sqlQuery, String srchValue, int tenantId) throws Exception;
+	// int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception;
+	// List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listcnt, String sqlQuery, String srchValue, int tenantId) throws Exception;
 	
 	//Check user permission + survey status
 	JSONObject checkPermission(List<Long> surveyList, int mode, LoginVO userInfo) throws Exception;
@@ -45,7 +45,7 @@ public interface EzSurveyService {
 	
 	//Save/Delete/Get survery item
 	JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int drafMode, LoginVO userInfo, int mailFlag, int popupFlag) throws Exception;
-	JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode) throws Exception;
+	JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode) throws Exception;
 	JSONObject getPopupItems(String mode, /*String startDate, String endDate,*/ LoginVO userInfo) throws Exception;
 	void deleteItems(List<Long> itemIdList, LoginVO userInfo) throws Exception;
 	JSONObject getItemInfo(Long surveyId, String mode, String realPath, LoginVO userInfo) throws Exception;

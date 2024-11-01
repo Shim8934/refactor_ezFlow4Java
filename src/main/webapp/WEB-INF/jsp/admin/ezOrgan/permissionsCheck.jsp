@@ -70,7 +70,7 @@
 		    $(document).ready(function(){
 		    	try {
 	                ReturnFunction = opener.permissions_check_dialogArguments[1];
-	            } catch (e) {}	        
+	            } catch (e) {console.log(e);}
 
 		        try {
 		            var ua = navigator.userAgent;
@@ -83,7 +83,7 @@
 		                    }
 		                }
 		            }
-		        } catch (e) {}
+		        } catch (e) {console.log(e);}
 	
 		        popupTitle();
 				var top = (type ==='c=1') ? "top" : deptTreeTopId + "/organ"
@@ -845,7 +845,7 @@
 		            		var objTr = listview.AddRow(InitTr.length);
 		        		    if (MaxCntNum != 0)
 				                MaxCntNum = MaxCntNum + 1;
-		            		SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		            		SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 		            		listview.AddDataRow(objTr, Resultxml);
 	            }
 	        	
@@ -1037,7 +1037,7 @@
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;		                
 		                var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(598, 340));
-		                try { OpenWin.focus(); } catch (e) { }
+		                try { OpenWin.focus(); } catch (e) {console.log(e);}
 		            }else{
 		                var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
 		                feature = feature + GetShowModalPosition(600, 320);
@@ -1077,7 +1077,7 @@
 		                        } else {
 		                            window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
 		                        }
-		                    } catch (e) { }
+		                    } catch (e) {console.log(e);}
 		                }
 
 		                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
@@ -1384,7 +1384,36 @@
 	        	var titleTxt_s = "<spring:message code='ezOrgan.t9904' />";	// 준법지원인
 	        	var titleTxt_v = "<spring:message code='ezOrgan.lhr01' />";
 	        	
-	        	var titleTxt = eval("titleTxt_" + delType);
+	        	var titleTxt = "";
+
+	        	if (delType == "c") {
+	        	    titleTxt = titleTxt_c;
+	        	} else if (delType == "k") {
+	        	    titleTxt = titleTxt_k;
+	        	} else if (delType == "g") {
+	        	    titleTxt = titleTxt_g;
+	        	} else if (delType == "a") {
+	        	    titleTxt = titleTxt_a;
+	        	} else if (delType == "i") {
+	        	    titleTxt = titleTxt_i;
+	        	} else if (delType == "n") {
+	        	    titleTxt = titleTxt_n;
+	        	} else if (delType == "l") {
+	        	    titleTxt = titleTxt_l;
+	        	} else if (delType == "w") {
+	        	    titleTxt = titleTxt_w;
+	        	} else if (delType == "m") {
+	        	    titleTxt = titleTxt_m;
+	        	} else if (delType == "q") {
+	        	    titleTxt = titleTxt_q;
+	        	} else if (delType == "f") {
+	        	    titleTxt = titleTxt_f;
+	        	} else if (delType == "e") {
+	        	    titleTxt = titleTxt_e;
+	        	} else if (delType == "s") {
+	        	    titleTxt = titleTxt_s;
+	        	}
+
 	        	document.getElementById("subtitle").innerText = titleTxt;
 	        	document.getElementById("PermissionStr").innerText = titleTxt;
 	        }

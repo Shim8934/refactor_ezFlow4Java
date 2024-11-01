@@ -30,7 +30,7 @@
 			try {
 	            RetValue = opener.titleInfo_dialogArguments[0];
 	        	ReturnFunction = opener.titleInfo_dialogArguments[1];
-	        } catch(e) {}
+	        } catch(e) {console.log(e);}
 	        
 	        if (RetValue[0] != "") {
 		        document.getElementById("companyName").value = RetValue[0]; 

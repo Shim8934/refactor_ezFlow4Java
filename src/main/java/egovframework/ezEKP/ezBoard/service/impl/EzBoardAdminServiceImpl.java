@@ -230,7 +230,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_STRLANG", pStrLang);
+		map.put("v_STRLANG", pStrLang); // "", 2, 3, 4
 		map.put("v_PQUERY", pQuery);
 		map.put("v_TENANTID", tenantID);
 
@@ -363,16 +363,11 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String lang, String companyID, int tenantID, boolean isCompanyAdmin) throws Exception {
 		logger.debug("get_Admin_TopBoardList started");
-
-		// 2023-11-27 조소정 - 게시판그룹이름, 게시판이름도 다국어 작업 처리 위해 사용자 설정 언어로 셋팅
-		if (lang.equals("1")) {
-			lang = "";
-		}
-
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("parentBoardID", parentBoardID);
-		map.put("lang", lang);
+		map.put("lang", lang); // "", 2, 3, 4
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("isCompanyAdmin", isCompanyAdmin);
@@ -951,8 +946,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String upperBoardList = getBoardTreePath(map);
 			// 상위 게시판이 존재할 경우.
 			if(upperBoardList != null) {
-				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
-				map.put("v_upperBoadList", upperBoardList);
+				/* 이유정 - [웹취약점] EzBoardAdminDAO.saveACLIncludeUppderBoard 관련 파라미터 수정 */
+				map.put("v_upperBoadList", upperBoardList.split(","));
 				// 상위 게시판에 접근 권한만 주기.
 				ezBoardAdminDAO.saveACLIncludeUppderBoard(map);
 			}
@@ -971,8 +966,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String upperBoardList = getBoardTreePath(map);
 			// 상위 게시판이 존재할 경우.
 			if(upperBoardList != null) {
-				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
-				map.put("v_upperBoadList", upperBoardList);
+				map.put("v_upperBoadList", upperBoardList.split(","));
 				// 상위 게시판에 접근 권한만 주기.
 				ezBoardAdminDAO.saveACLIncludeUppderBoard(map);
 			}			
@@ -1095,14 +1089,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String copyList = doc.getElementsByTagName("COPYLIST").item(0).getTextContent();
 			String[] copyListArray = copyList.split(",");
 			int copyListSize = copyListArray.length;
-			StringBuilder  buf = new StringBuilder ();
-			
-			for (String k : copyListArray) {
-				buf.append("'" + k + "',");
-			}
-			
-			String tempCopyList = buf.toString();
-			tempCopyList = tempCopyList.substring(0, tempCopyList.length() - 1);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			
@@ -1121,7 +1107,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				map.put("v_pBoardID", boardID);
 				map.put("v_PDEFAULTBOARDID", defaultBoardID);
 				map.put("v_PPARENTBOARDID", parentBoardID);
-				map.put("tempCopyList", tempCopyList);
+				/* 이유정 - [웹취약점] EzBoardAdminDAO.copyBoardAcl 관련 파라미터 수정 */
+				map.put("copyListArray", copyListArray);
 				
 				// 기존 TBL_Board_BoardManage 테이블에 존재하는 권한 레코드(테넌트+게시판ID 조건)를 삭제한다.
 				ezBoardAdminDAO.deleteBoardManage(map);

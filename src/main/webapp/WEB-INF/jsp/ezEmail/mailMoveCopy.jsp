@@ -48,7 +48,7 @@
                 try {
                     ReturnFunction = opener.mail_movecopy_cross_dialogArguments[1];
                     CancelFunction = opener.mail_movecopy_cross_dialogArguments[2];
-                } catch (e) { }
+                } catch (e) {console.log(e);}
             }
             PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
             PostTreeView.attachEvent('requestdata', requestdata);

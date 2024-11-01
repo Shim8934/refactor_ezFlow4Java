@@ -36,6 +36,7 @@
 			        try {
 			        	ReturnFunction = opener.address_group_edit_dialogArguments[0];
 			        } catch (e) {
+			            console.log(e);
 			        }
 			    }
 			    

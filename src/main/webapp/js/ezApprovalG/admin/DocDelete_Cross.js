@@ -62,11 +62,12 @@ function Add_ContType1(Name, ID) {
 }
 
 function getDocList() {
-    if (CrossYN())
+    if (CrossYN()) {
         document.getElementById("PageNum").innerHTML = "";
-    else
+    } else {
         setNodeText(document.getElementById("PageNum"),"");
-
+    }
+    
     document.getElementById('lvSDoc').innerHTML = "";
     document.getElementById('lvTDoc').innerHTML = "";
 
@@ -98,15 +99,17 @@ function getDocList() {
     var deptName = "";
     var result = "";
     
-    if (SearchCond[7] == null)
+    if (SearchCond[7] == null) {
         formID = "";
-    else
+    } else {
         formID = SearchCond[7];
-
-    if (SearchCond[9] == null)
+    }
+    
+    if (SearchCond[9] == null) {
         deptName = "";
-    else
+    } else {
         deptName = SearchCond[9];
+    }
     
 	$.ajax({
 		type : "POST",
@@ -295,6 +298,8 @@ function DocDelParser() {
     return xmlpara;
 }
 
+/* 2024-06-04 홍승비 - 현재 사용되지 않는 함수 및 URL로 확인하여 주석처리*/
+/*
 function DocDel() {
     listview.LoadFromID("lvSDocForm");
     listview2.LoadFromID("lvTDocForm");
@@ -326,7 +331,7 @@ function DocDel() {
     
     Check = false;
 }
-
+*/
 function DocTotalMove() {
     listview.LoadFromID("lvSDocForm");
     listview2.LoadFromID("lvTDocForm");

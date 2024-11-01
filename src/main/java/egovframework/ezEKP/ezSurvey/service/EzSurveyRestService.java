@@ -15,7 +15,7 @@ public interface EzSurveyRestService {
 	public JSONObject getDeptSubNodes(HttpServletRequest request, String userId, String deptId, String level) throws Exception;
 	public JSONObject getDeptMembers(HttpServletRequest request, String userId, String deptId, String currentPage) throws Exception;
 	public JSONObject getUserListType(HttpServletRequest request, String userId) throws Exception;
-	public JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception;
+	// public JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception;
 	
 	//User information
 	public JSONObject getUserInformation(HttpServletRequest request, String userId) throws Exception;

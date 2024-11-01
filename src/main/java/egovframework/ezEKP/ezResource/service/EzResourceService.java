@@ -22,8 +22,9 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzResourceService {
 	
 	public List<ResGetItemListVO> getBrdMainList(String brdID, String companyID, String lang, int tenantID) throws Exception;
-	
-	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String ownDeptNm, String ownerNm, String ownerPosition, String brdNm, int tenantID) throws Exception;
+
+	/* 2024-07-05 홍승비 - SQL Injection 수정 > 다국어 칼럼은 쿼리 내부 분기로 처리 */
+	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String lang, int tenantID) throws Exception;
 
 	public ResGetScheduleRepetitionVO getRepDateTimes(String ownerID, String companyID, int num, int tenantID) throws Exception;
 	

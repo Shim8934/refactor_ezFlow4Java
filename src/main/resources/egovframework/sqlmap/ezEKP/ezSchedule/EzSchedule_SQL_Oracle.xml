@@ -281,9 +281,9 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-05 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
-		<![CDATA[
-			SELECT C.* FROM
+		SELECT C.* FROM
 			(
 			SELECT 
 				SCHEDULEID,
@@ -321,7 +321,11 @@
         	FROM 
         		TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID
        		WHERE  
-       			(A.OWNERID IN ($v_INDILIST$)
+       			(A.OWNERID IN
+       				<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
+						#v_INDILIST[]#
+					</iterate>
+			<![CDATA[
             AND 
             	(            		
             		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
@@ -351,10 +355,13 @@
 						location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
 				)
 			</isNotEmpty>
-            <![CDATA[
             )
             or 
-       			(A.OWNERID IN ($v_PIDLIST$)
+       			(A.OWNERID IN
+       				<iterate property="v_PIDLIST" open="(" close=")" conjunction=",">
+						#v_PIDLIST[]#
+					</iterate>
+			<![CDATA[
        		and
         		A.companyid = #v_COMPANYID#
         	and 
@@ -400,22 +407,22 @@
             AND
             	A.TENANT_ID = #v_TENANTID#
             ]]>
-				<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 전체검색, 지역검색 추가 -->
-				<isNotEmpty property="v_SEARCHTITLE">
-					AND
-						a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHTITLE#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
-				</isNotEmpty>
-				<isNotEmpty property="v_SEARCHLOCATION">
-					AND
-						location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHLOCATION#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
-				</isNotEmpty>
-				<isNotEmpty property="v_SEARCHALL">
-					AND (
-							a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
-						OR
-							location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
-					)
-				</isNotEmpty>
+			<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 전체검색, 지역검색 추가 -->
+			<isNotEmpty property="v_SEARCHTITLE">
+				AND
+					a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHTITLE#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCHLOCATION">
+				AND
+					location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHLOCATION#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCHALL">
+				AND (
+						a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+					OR
+						location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+				)
+			</isNotEmpty>
         	) ) C
         	ORDER BY C.STARTDATE ASC
 	</select>

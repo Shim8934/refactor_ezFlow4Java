@@ -271,7 +271,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		int page = pageSize * (Integer.parseInt(curPage)-1);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
-		param.put("key", key);
+		param.put("key", key.toUpperCase());
 		param.put("value", value);
 		param.put("companyId", companyId);
 		param.put("lang", lang);
@@ -288,7 +288,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
-		param.put("key", key);
+		param.put("key", key.toUpperCase());
 		param.put("value", value);
 		param.put("companyId", companyId);
 		param.put("lang", lang);
@@ -489,7 +489,6 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		List<ReceiverFavoriteVO> favoriteList = ezJournalDAO.getFavoriteList(map);
-		logger.debug("favoriteList : " + favoriteList);
 		
 		logger.debug("getFavoriteList ended");
 		return favoriteList;
@@ -505,7 +504,6 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("lang", lang);
 		
 		List<JournalReceiverVO> userList = ezJournalDAO.getFavoriteUserList(map);
-		logger.debug("userList : " + userList);
 		
 		logger.debug("getFavoriteUserList ended");
 		return userList;
@@ -575,21 +573,24 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
-		map.put("tenantId",tenantId);
-		String result =ezJournalDAO.selectRecvCount(map);
+		map.put("tenantId", tenantId);
+		String result = ezJournalDAO.selectRecvCount(map);
 		
 		logger.debug("getRecvJournalCount ended");
 		return result;
 	}
 
+	/* 2024-07-17 홍승비 - SQL Injection 수정 > 알림 메일 발송을 위한 사용자명 다국어 처리 정상 동작하도록 lang 파라미터 추가 */
 	@Override
-	public JournalEnvVO getUserJournalEnv(String userId, int tenantId) throws Exception {
+	public JournalEnvVO getUserJournalEnv(String userId, String lang, int tenantId) throws Exception {
 		logger.debug("getUserJournalEnv started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
-		map.put("tenantId",tenantId);
-		JournalEnvVO result =ezJournalDAO.selectUserEnv(map);
+		map.put("tenantId", tenantId);
+		map.put("lang", lang);
+		
+		JournalEnvVO result = ezJournalDAO.selectUserEnv(map);
 		
 		logger.debug("getUserJournalEnv ended");
 		
@@ -659,7 +660,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("lang", lang);
 		param.put("offset", commonUtil.getMinuteUTC(offset));
 		
-		if(pPreviewShow_HOW != null && (pPreviewShow_HOW.equals("H") || pPreviewShow_HOW.equals("W") || pPreviewShow_HOW.equals("D"))){
+		if (pPreviewShow_HOW != null && (pPreviewShow_HOW.equals("H") || pPreviewShow_HOW.equals("W") || pPreviewShow_HOW.equals("D"))) {
 			ezJournalDAO.insertViewInfo(param);
 		}
 		JournalVO result = ezJournalDAO.selectJournal(param);
@@ -849,19 +850,11 @@ public class EzJournalServiceImpl implements EzJournalService {
 		StringBuilder formThisHtml = new StringBuilder();
 		StringBuilder formNextHtml = new StringBuilder();
 		
-		String journalIdS = "";
-		
-		for (int i = 0; i < journalIdList.size(); i++) {
-			
-			if (i == 0){
-				journalIdS = journalIdList.get(i);
-			} else {
-				journalIdS += "," + journalIdList.get(i);
-			}
-		}
-		param.put("journalIdS", journalIdS);
+		/* 2024-07-17 홍승비 - SQL Injection 수정 > 문자열이 아닌 리스트를 파라미터로 전달 */
+		param.put("journalIdS", journalIdList);
 		
 		List<JournalVO> journalList = ezJournalDAO.selectSumJournalList(param);
+		
 		try {	
 		for (JournalVO journal : journalList) {
 			String journalContent = journal.getJournalContent();
@@ -1240,13 +1233,14 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<DeptViewVO> getCheifBoss(String userId, int tenantId) throws Exception {
+	public List<DeptViewVO> getCheifBoss(String userId, String lang, int tenantId) throws Exception {
 		logger.debug("getCheifBoss started");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
-
+		param.put("lang", lang);
+		
 		List<DeptViewVO> cheifDeptList = ezJournalDAO.selectCheifBossList(param); // 부서장인 부서 리스트
 		List<DeptViewVO> subCheifDeptList = new ArrayList<DeptViewVO>();
 		

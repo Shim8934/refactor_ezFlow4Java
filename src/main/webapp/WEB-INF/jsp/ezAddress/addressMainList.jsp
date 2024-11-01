@@ -282,7 +282,7 @@
 	                    address_movecopy_dialogArguments[2] = "CLOSE";
 	                    address_movecopy_dialogArguments[3] = xmlDom;
 	                    address_movecopyOpenWin = window.open("/ezAddress/addressMoveCopy.do", "address_movecopy", GetOpenWindowfeature(500, 375));
-	                    try { address_movecopyOpenWin.focus(); } catch (e) { }
+	                    try { address_movecopyOpenWin.focus(); } catch (e) {console.log(e);}
 	                }
 	                else {
 	                    var feature = "dialogHeight:375px; dialogWidth:500px; status:no; help:no; edge:sunken";
@@ -444,7 +444,7 @@
 	                            Get_AddressList();
 	                    }
 	                }*/
-	            } catch (e) {}
+	            } catch (e) {console.log(e);}
 	        }
 	        function delete_address() {
 	        		

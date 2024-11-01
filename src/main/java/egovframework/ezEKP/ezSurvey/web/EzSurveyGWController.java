@@ -213,6 +213,8 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
+	/* 2024-07-01 홍승비 - surveyUser.js 파일 내부의 getUsers() 함수에서만 호출되는 URL로, 해당 js파일이 사용되지 않아 전체 주석처리 */
+	/*
 	@RequestMapping(value="/rest/ezsurvey/search-member", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSearchMember(Locale locale, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
@@ -263,7 +265,7 @@ public class EzSurveyGWController {
 		}
 		
 		return result;
-	}
+	}*/
 	
 	@RequestMapping(value="/rest/ezsurvey/attachfile/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
@@ -521,7 +523,6 @@ public class EzSurveyGWController {
 		int listCntSize      = request.getParameter("listCntSize") != null ? Integer.parseInt(request.getParameter("listCntSize")) : -1;
 		int currentPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
 		int userMode         = request.getParameter("userMode")    != null ? Integer.parseInt(request.getParameter("userMode"))    : -1;
-		String sqlQuery      = "";
 		JSONObject result    = new JSONObject();
 		
 		logger.debug("pageMode: " + pageMode + " || Title: " + title + " || Creator name: " + creatorName + " || Start Date: " + startDate + " || End Date: " + endDate + " || Column: " + column + " || Order: " + order + " || Search mode: " + srchMode + " || Search option: " + srchOption + " || List count: " + listCntSize + " || userMode: " + userMode);
@@ -535,7 +536,7 @@ public class EzSurveyGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, order, column, userInfo, userMode);
+			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, srchMode, srchOption, order, column, userInfo, userMode);
 		}
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);

@@ -29,7 +29,7 @@
 		                Arguments = opener.mail_select_dlmember_cross_dialogArguments[0];
 		                ReturnFunction = opener.mail_select_dlmember_cross_dialogArguments[1];
 		                CancelFunction = opener.mail_select_dlmember_cross_dialogArguments[2];
-		            } catch (e) { }
+		            } catch (e) {console.log(e);}
 		        }
 		        
 		        document.all("cmd_ok").focus();

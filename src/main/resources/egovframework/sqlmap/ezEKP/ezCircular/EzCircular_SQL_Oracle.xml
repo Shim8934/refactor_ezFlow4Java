@@ -152,23 +152,27 @@
             AND
                 A.tenantid = #tenantID#
         ]]>
+        
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-				
-            	order by  
-	            	$orderOption1$
-	           
-            ]]>
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
       	</isNotEqual>
        
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[
-		      
         		order by     
 	            	B.updatedate DESC,
 	            	totalstatus DESC,
 	            	A.regdate DESC
-        
             ]]>
         </isEqual>    
         <![CDATA[        
@@ -622,25 +626,27 @@
 	       
 	    </isNotEqual>
 	   
-		<isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[
-				
-        		ORDER BY
-            		$orderOption1$
-				
-            ]]>
-        </isNotEqual>
+		<!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
+        <isNotEqual property="orderCell" compareValue="">
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[
-			
         		ORDER BY
             		A.regdate DESC
-			
             ]]>
         </isEqual>
-	
-	        
+        
 		<![CDATA[
 	       )AAA
 	       WHERE
@@ -828,7 +834,7 @@
             AND
              	B.updatestatus IN (0, 1)
              AND
-            	A.companyid =#companyID#
+            	A.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -864,24 +870,26 @@
         
            <!--  GROUP BY
             	A.circularID -->
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-		
-        		order by 
-            	$orderOption1$
-      
-            ]]>
-        </isNotEqual>
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
-	
             	order by 	
             	A.regdate DESC
-		        
             ]]>
         </isEqual>
-              
         
        	<![CDATA[	
            )AAA
@@ -963,7 +971,6 @@
         <![CDATA[
 			SELECT 
 				*
-			
 			FROM
 			(SELECT AAA.*, rownum as rNum FROM
 			(SELECT
@@ -981,8 +988,6 @@
 				B.updatestatus,
 				NVL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount
-				
-		
 			FROM
 				TBL_CIRCULAR A
 			JOIN
@@ -1073,21 +1078,24 @@
 			
 		]]>
 		
-		<isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-	       		ORDER BY 
-				
-            		$orderOption1$
-
-            ]]>
-        </isNotEqual>
+		<!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
+        <isNotEqual property="orderCell" compareValue="">
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[
-		
         		order by 
         			A.regdate DESC
-		       
         	]]>
         </isEqual>
 		<![CDATA[ 		
@@ -1138,8 +1146,6 @@
 				NVL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
                 B.updatestatus
-                
-      
             FROM
                 TBL_CIRCULAR A
 			JOIN
@@ -1211,32 +1217,29 @@
 	        	]]>
         	</isEqual>
         </isNotEqual>
-				        
            <!--  GROUP BY
 				A.circularid -->
-        <![CDATA[
-				
-		]]>
-        
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-           
-        		order by 
-       	     		$orderOption1$
-     		
-            ]]>
-        </isNotEqual>
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
-	            
             	order by 
             		A.regdate DESC
-      		
             ]]>
         </isEqual>
        	<![CDATA[		
-				
 				
 		)AAA
 		WHERE
@@ -1466,21 +1469,24 @@
 				A.companyid = #companyID#
 		]]>
         
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-			
-        		order by 
-            		$orderOption1$
-		       
-            ]]>
-        </isNotEqual>
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
-			
         		order by 
             		A.regdate DESC
-		       
             ]]>
         </isEqual>
         

@@ -502,7 +502,7 @@ function move_mail_onclick() {
 	}
 	
     var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(322, 380));
-    try { OpenWin.focus(); } catch (e) { }
+    try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function move_mail_onclick_Complete(moveUrl) {
     if (typeof (moveUrl) == "undefined")
@@ -659,7 +659,7 @@ function refreshUnreadCount() {
     try {
         if (typeof (window.parent.frames.left) != "undefined")
             parent.frames["left"].get_unreadcount();
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 function deleteWork(bDel) {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
@@ -742,7 +742,7 @@ function receiveCheck_onClick() {
 	}
     
     var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(620, 500));
-    try { OpenWin.focus(); } catch (e) { }
+    try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function ListCount(pCount) {
     document.getElementById("MailList").setAttribute("listpageCount", pCount);
@@ -802,7 +802,7 @@ function reject_onclick() {
     denial_cross_dialogArguments[0] = params;
     denial_cross_dialogArguments[1] = reject_onclick_Complete;
     var OpenWin = window.open("/ezEmail/mailDenial.do", "denial_cross", GetOpenWindowfeature(450, 314));
-    try { OpenWin.focus(); } catch (e) { }
+    try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function reject_onclick_Complete(retVal)
 {
@@ -891,7 +891,7 @@ function prevShow() {
             xmlhttp_mailPreview.send(strQuery);
         }
 
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 function event_xmlhttp_mailPreview_Complete() {
     if (xmlhttp_mailPreview != null && xmlhttp_mailPreview.readyState == 4) {
@@ -1171,7 +1171,7 @@ function MailList_ChangeStatus(obj) {
         }
         obj.setAttribute("read", "1");
         try{
-            parent.frames["left"].get_unreadcount();}catch(e){}
+            parent.frames["left"].get_unreadcount();}catch(e){console.log(e);}
     }
 }
 function prevShow_Clear() {
@@ -1420,7 +1420,7 @@ function PreviewRayerChange(pGubun) {
         
         if (g_bPrevShow)
             prevShow();
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 
 
@@ -1567,7 +1567,7 @@ function Window_resize() {
                 }
             }
         }            
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 function CustomRandom() {
     var now = new Date();
@@ -2082,7 +2082,7 @@ function toggle_flag() {
             }
         }
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 function event_toggle_flag_end() {
     if (flagXmlHttp != null && flagXmlHttp.readyState == 4) {
@@ -2297,7 +2297,7 @@ function mailConfirm_flag_btn() {
         };
         flagXmlHttp.send(xmlDom);
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 
 function mailConfirm_line() {

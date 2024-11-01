@@ -22,7 +22,7 @@
 			    	try {
 			        	ReturnFunction = opener.companyinfo_dialogArguments[1];
 			            RetValue = opener.companyinfo_dialogArguments[0];
-			        } catch(e) {}
+			        } catch(e) {console.log(e);}
 			    } else {
 			    	RetValue = window.dialogArguments;
 			    }

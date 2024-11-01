@@ -406,6 +406,7 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	
+	/* 2024-07-29 홍승비 - 해당 URL 호출되지 않음, 현재 /admin/ezJournal/userList.do가 대신 호출됨 */
 	/**
 	 * G/W 근태관리 [GET] 부서의 사원들 조회
 	 */
@@ -1299,10 +1300,9 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			String lang = info.getLang();
+			String lang = info.getPrimary();
 			
 			AttitudeFormVO formVO = ezAttitudeService.getFormBody(attitudetypeId, companyId, tenantId, lang);
-			
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1384,7 +1384,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 근태조회
+	 * G/W 근태관리 [GET] 근태입력관리 > 근태조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/check", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject attitudeMainList2(HttpServletRequest request) {
@@ -1746,6 +1746,7 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
+			// 현재 사용자가 아닌 해당 근태권한자의 primary 언어값을 전달하고 있으므로 주의 (수정 필요)
 			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept, info.getPrimary());
 			
 			result.put("status", "ok");
@@ -1865,7 +1866,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 부서근태현황 [GET] 회사별 부서 리스트 조회
+	 * G/W 부서근태현황 [GET] 회사별 부서 리스트 조회 (2024-07-29 확인 시 해당 URL은 호출되지 않음)
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/depts", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyDeptList(@PathVariable String companyId, HttpServletRequest request) {
@@ -2002,11 +2003,12 @@ public class EzAttitudeGWController {
 				deptIdList.add(vo.getDeptId());
 			}
 			
-			if (page == null) {
+			/* 2024-07-25 홍승비 - 근태입력관리 > 근태입력대상 설정 기능의 조직도 검색 시, 페이지 값은 항상 1의 기본값을 가지므로 미사용 분기 주석처리 */
+/*			if (page == null) {
 				infoXML = ezAttitudeService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
-			} else {
+			} else {*/
 				infoXML = ezAttitudeService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, deptIdList);
-			}
+			//}
 			
 			Document doc = commonUtil.convertStringToDocument(infoXML);
 	
@@ -2243,7 +2245,7 @@ public class EzAttitudeGWController {
 			map.put("companyId", request.getParameter("companyId"));
 			map.put("flagCheck", request.getParameter("flagCheck"));
 			map.put("changeReason", request.getParameter("changeReason"));
-			map.put("annualCnt", request.getParameter("annualCnt"));
+			map.put("annualCnt", Float.parseFloat(request.getParameter("annualCnt"))); // 연차, 반차(0.5) 일수 추가를 위해 소수점 float 타입으로 파싱
 			
 			ezAttitudeService.changeAnnual(map);
 			
@@ -2383,12 +2385,12 @@ public class EzAttitudeGWController {
 			map.put("companyId", request.getParameter("companyId"));
 			map.put("tenantId", info.getTenantId());
 			
-			String Lang = userLang;
-			//String primary = info.getPrimary();
-			if (Lang.equals("1")) {
-				Lang = "";
-			}
-			map.put("primary", Lang);
+			/* String primary = info.getPrimary();
+			if (primary.equals("1")) {
+				primary = "";
+			}*/
+			
+			map.put("primary", commonUtil.getMultiData(userLang, info.getTenantId()));
 			
 			List<Map<String,Object>> resultList = ezAttitudeService.getAnnualHistoryList(map);
 			
@@ -2896,7 +2898,7 @@ public class EzAttitudeGWController {
 			
 			AttitudeAnnualVO vo = ezAttitudeService.getAnnualCnt(map);
 			
-			if(secondYear.equals("Y") || secondYear.equals("T")) {
+			if (secondYear.equals("Y") || secondYear.equals("T")) {
 				Map<String, Object> map2 = new HashMap<String, Object>();
 				map2.put("userId", userId);
 				map2.put("companyId", request.getParameter("companyId"));
@@ -2908,7 +2910,7 @@ public class EzAttitudeGWController {
 				}
 				map2.put("primary", primary);
 				
-				if(secondYear.equals("Y")) {
+				if (secondYear.equals("Y")) {
 					searchStartTime = (Integer.parseInt(startDate.substring(0, 4)) - 1) + startDate.substring(4, 10) + " 00:00:00";
 				} else {
 					searchStartTime = (Integer.parseInt(startDate.substring(0, 4)) - 2) + startDate.substring(4, 10) + " 00:00:00";
@@ -2919,7 +2921,7 @@ public class EzAttitudeGWController {
 				map2.put("searchEndTime", searchEndTime);
 				
 				double useAnnualCnt = Double.parseDouble(ezAttitudeService.getAnnualCnt(map2).getUseAnnualCnt());
-				if(useAnnualCnt > 11.0) {
+				if (useAnnualCnt > 11.0) {
 					useAnnualCnt = 11.0;
 				}
 				double totalAnnualCnt = Double.parseDouble(vo.getTotalAnnualCnt());
@@ -3175,7 +3177,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 근태 상세조회
+	 * G/W 근태관리 [GET] 근태 상세조회 (연차수정(취소)신청)
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}/aprinfo", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeAprInfo(@PathVariable String attitudeId, HttpServletRequest request) {
@@ -3183,8 +3185,7 @@ public class EzAttitudeGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		try{
-
+		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			

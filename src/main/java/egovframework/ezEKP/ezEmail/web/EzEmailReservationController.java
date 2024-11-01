@@ -685,23 +685,25 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		logger.debug("bodyData=" + bodyData);
 		
 		String returnValue = "<DATA>MAIL-NOT-EXISTS</DATA>";
-		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
-		Element root = xmlDoc.getDocumentElement();
-		String messageId  = "";
-		Node tempNode = null;
-		
-		if (root.getElementsByTagName("MESSAGEID") != null) {
-			tempNode = root.getElementsByTagName("MESSAGEID").item(0);
-			if (tempNode != null) {
-				messageId = tempNode.getTextContent();
+		if (bodyData != null){
+			Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
+			Element root = xmlDoc.getDocumentElement();
+			String messageId  = "";
+			Node tempNode = null;
+
+			if (root.getElementsByTagName("MESSAGEID") != null) {
+				tempNode = root.getElementsByTagName("MESSAGEID").item(0);
+				if (tempNode != null) {
+					messageId = tempNode.getTextContent();
+				}
 			}
-		}
-		
-		if (messageId != null && !messageId.equals("")) {
-			String reservedTime = ezEmailService.getMailReservedTime(messageId);
-			
-			if (reservedTime != null) {
-				returnValue = "<DATA>MAIL-EXISTS</DATA>";
+
+			if (messageId != null && !messageId.equals("")) {
+				String reservedTime = ezEmailService.getMailReservedTime(messageId);
+
+				if (reservedTime != null) {
+					returnValue = "<DATA>MAIL-EXISTS</DATA>";
+				}
 			}
 		}
 		

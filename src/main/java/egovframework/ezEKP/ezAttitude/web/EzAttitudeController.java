@@ -3561,10 +3561,10 @@ public class EzAttitudeController {
 	    String searchlist = request.getParameter("search").trim();
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
-		String listtype = request.getParameter("type");
+		String listtype = request.getParameter("type"); // 항상 "user"로 고정
 		String companyID = request.getParameter("companyID") == null ? userInfo.getCompanyID() : request.getParameter("companyID");
 		String lang = userInfo.getPrimary();
-		String page = request.getParameter("page");
+		String page = request.getParameter("page") == null ? "1" : request.getParameter("page");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezAttitude/getSearchList.do";
@@ -4016,7 +4016,7 @@ public class EzAttitudeController {
 	}
 	
 	/**
-	 * 연차수정신청
+	 * 연차수정(취소)신청
 	 */
 	@RequestMapping(value = "/ezAttitude/getAttitudeAprInfo.do")
 	public String getAttitudeAprInfo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -4777,6 +4777,7 @@ public class EzAttitudeController {
 		return data;
 	}
 
+	/* 2024-07-31 홍승비 - 소스코드 상에서 실제로 호출되지 않는 URL로 확인 */
 	/** 
 	* 개인 연차 총/사용연차 수 (휴가계 기안시 사용)
 	*/

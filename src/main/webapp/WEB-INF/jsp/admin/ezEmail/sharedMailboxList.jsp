@@ -228,7 +228,7 @@
 		        if (CrossYN()) {
 		            sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
 		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, "", GetOpenWindowfeature(1080, 670));
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, feature);
 		            if (typeof (rtnValue) != "undefined") {
@@ -261,7 +261,7 @@
 		        if (CrossYN()) {
 		        	sharedMailboxDialogArguments[0] = modSharedMailboxComplete;
 		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), "", GetOpenWindowfeature(1080, 690));
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), feature);
 		            
@@ -294,7 +294,7 @@
 		        inputpassword_dialogArguments[0] = strLangSharedMailbox02;
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 185));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 			}
 			
 		    function mod_password_Complete(rtnValue) {

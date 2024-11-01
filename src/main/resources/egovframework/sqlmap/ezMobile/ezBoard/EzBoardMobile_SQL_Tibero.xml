@@ -217,9 +217,9 @@
 	        <isNotEmpty property="pSearchText">
 	            <![CDATA[
 	                AND
-	                    (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                    (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                        OR
-	                    A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                    A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
 	            ]]>
 	        </isNotEmpty>
 			
@@ -296,7 +296,7 @@
 	                WHERE  
 	                    tenant_id = A.tenant_id
 	                AND
-	                    itemid = A.itemid
+	                   	itemid = A.itemid
 					AND
 						( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
 						) onelinecnt,
@@ -355,9 +355,9 @@
 	            <isNotEmpty property="pSearchText">
 	                <![CDATA[
 	                    AND
-	                        (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                        (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                            OR
-	                        A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
 	                ]]>
 	            </isNotEmpty>                
 	            
@@ -427,7 +427,7 @@
 						AND
 							itemid = A.itemid
 						AND
-						( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
+							( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
 						) onelinecnt,
 						A.upperitemidtree,
 						A.docno,
@@ -525,9 +525,9 @@
             <isNotEmpty property="pSearchText">
                 <![CDATA[
                     AND
-                        (title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+                        (title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
                             OR
-                        writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))
+                        writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))
                 ]]>
             </isNotEmpty>
 			
@@ -666,10 +666,10 @@
 	               WHERE  
 	               		TENANT_ID = A.TENANT_ID
 	               AND
-	                	itemid = A.itemid
+						itemid = A.itemid
 					AND
 						( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
-						) onelinecnt,
+					) onelinecnt,
 	              A.UPPERITEMIDTREE,
 	              A.DOCNO,
 	              '' AS NOTICE,
@@ -701,14 +701,14 @@
 	              ON 
 	                A.TENANT_ID = P.TENANT_ID
 	              AND
-	     			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+	     			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
 						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 	              AND
 	                A.BOARDID = P.BOARDID
 	              AND 
 	                A.TENANT_ID = #tenantID#
 	              AND
-	              	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+	              	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = ''
 						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 	              AND
 	                (A.APPRFLAG = 'Y' 
@@ -737,9 +737,9 @@
 	            <isNotEmpty property="pSearchText">
 	                <![CDATA[
 	                    AND
-	                        (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                        (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                            OR
-	                        A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
 	                ]]>
 	            </isNotEmpty>
 	            
@@ -813,39 +813,50 @@
   </select>
   
   <select id="MBoardDAO.getBrdItemInfo" parameterClass="Map" resultClass="MBoardItemVO">
-    <![CDATA[
           SELECT
-              ITEMID ,
-              WRITERID ,
-              WRITERNAME$lang$ WRITERNAME,
-              WRITERDEPTNAME$lang$ WRITERDEPTNAME,
-              WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
-              WRITEDATE ,
-              PARENTWRITEDATE ,
-              IMPORTANCE ,
-              TITLE ,
-              CONTENTLOCATION ,
-              STARTDATE ,
-              ENDDATE ,
-              ABSTRACT ,
-              ATTACHMENTS ,
-              UPPERITEMIDTREE ,
-              ITEMLEVEL ,
-              COPIEDITEM ,
-              EXTENSIONATTRIBUTE1 ,
-              EXTENSIONATTRIBUTE2 ,
-              EXTENSIONATTRIBUTE3$lang$ EXTENSIONATTRIBUTE3,
-              EXTENSIONATTRIBUTE4 ,
-              EXTENSIONATTRIBUTE5 ,
-              MAINCONTENT ,
-              A.APPRFLAG  ,
-              B.GUBUN ,
-              EXTENSIONATTRIBUTE6 ,
-              EXTENSIONATTRIBUTE7 ,
-              EXTENSIONATTRIBUTE8 ,
-              EXTENSIONATTRIBUTE9 ,
-              EXTENSIONATTRIBUTE10 ,
-              A.BOARDID ,
+              ITEMID,
+              WRITERID,
+			  <isEqual property="lang" compareValue="2">
+				  WRITERNAME2 AS WRITERNAME,
+				  WRITERDEPTNAME2 AS WRITERDEPTNAME,
+				  WRITERCOMPANYNAME2 AS WRITERCOMPANYNAME,
+			  </isEqual>
+			  <isNotEqual property="lang" compareValue="2">
+				  WRITERNAME,
+				  WRITERDEPTNAME,
+				  WRITERCOMPANYNAME,
+			  </isNotEqual>
+              WRITEDATE,
+              PARENTWRITEDATE,
+              IMPORTANCE,
+              TITLE,
+              CONTENTLOCATION,
+              STARTDATE,
+              ENDDATE,
+              ABSTRACT,
+              ATTACHMENTS,
+              UPPERITEMIDTREE,
+              ITEMLEVEL,
+              COPIEDITEM,
+              EXTENSIONATTRIBUTE1,
+              EXTENSIONATTRIBUTE2,
+			  <isEqual property="lang" compareValue="2">
+				  EXTENSIONATTRIBUTE32 AS EXTENSIONATTRIBUTE3,
+			  </isEqual>
+			  <isNotEqual property="lang" compareValue="2">
+				  EXTENSIONATTRIBUTE3,
+			  </isNotEqual>
+              EXTENSIONATTRIBUTE4,
+              EXTENSIONATTRIBUTE5,
+              MAINCONTENT,
+              A.APPRFLAG,
+              B.GUBUN,
+              EXTENSIONATTRIBUTE6,
+              EXTENSIONATTRIBUTE7,
+              EXTENSIONATTRIBUTE8,
+              EXTENSIONATTRIBUTE9,
+              EXTENSIONATTRIBUTE10,
+              A.BOARDID,
               A.DOCNO,
 			  NTSTARTDATE notiStart,
 			  NTENDDATE notiEnd
@@ -860,8 +871,7 @@
           WHERE
               A.TENANT_ID = #tenantID#
           AND  
-              ItemID = #itemID#
-    ]]>
+              ITEMID = #itemID#
   </select>
   
   <select id="MBoardDAO.getBoardItemRead" parameterClass="Map" resultClass="String">
@@ -951,7 +961,7 @@
             INSERT INTO TBL_Board_Item ( 
                 ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content, ntstartdate, ntenddate
             ) VALUES ( 
-                #itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #abstract#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#
+                #itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #abstract#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd# 
             )
     </isEqual>
     <isNotEqual property="parentWriteDate" compareValue="docNO">
@@ -1011,7 +1021,7 @@
             extensionAttribute10 = #extensionAttribute10#,
             content = #content#,
 	  		ntstartdate = #notiStart#,
-	  		ntenddate = #notiEnd#
+			ntenddate = #notiEnd#
         WHERE  
           TENANT_ID = #tenantID#
         AND
@@ -1724,9 +1734,9 @@
 	<isNotEmpty property="pSearchText">
 		<![CDATA[
 	        WHERE
-	            (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	            (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                OR
-	            A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))
+	            A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))
 	    ]]>
 	</isNotEmpty>
   </select>
@@ -2193,9 +2203,9 @@
 		<isNotEmpty property="pSearchText">
 		    <![CDATA[
 				AND
-					(title LIKE CONCAT('%' ,#pSearchText#, '%')
+					(title LIKE ('%' || #pSearchText# || '%')
 					OR
-		    		writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+		    		writerName LIKE ('%' || #pSearchText# || '%'))    
 			]]>
 		</isNotEmpty>
 		<isEqual property="apprFlag" compareValue="Y">
@@ -2309,9 +2319,9 @@
 	        <isNotEmpty property="pSearchText">
 	            <![CDATA[
 	                AND
-	                    (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                    (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                        OR
-	                    A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                    A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
 	            ]]>
 	        </isNotEmpty>
 	        <isNotEmpty property="parentWriteDate">
@@ -2366,7 +2376,7 @@
 	                WHERE  
 	                    tenant_id = A.tenant_id
 	                AND
-	                   itemid = A.itemid
+	                    itemid = A.itemid
 					AND
 						( CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL )
 						) onelinecnt,
@@ -2427,9 +2437,9 @@
 	            <isNotEmpty property="pSearchText">
 	                <![CDATA[
 	                    AND
-	                        (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                        (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                            OR
-	                        A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
 	                ]]>
 	            </isNotEmpty> 
 	            <isNotEmpty property="parentWriteDate">
@@ -2454,7 +2464,7 @@
             ]]>
 	</select>
 	
-	<!--  2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 / 티베로 누락 쿼리 삽입 -->
+	<!--  2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 -->
 	<insert id="MBoardDAO.saveOneLineReply" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_ONELINEREPLY (
@@ -2465,7 +2475,7 @@
         	)
 		]]>
 	</insert>
-	
+  
 	<!-- 2023-11-13 전인하 - 모바일 게시판 댓글 수정 -->
 	<update id="MBoardDAO.updateOneLineReply" parameterClass="Map">
 		<![CDATA[
@@ -2524,5 +2534,5 @@
 			TBL_BOARD_BOARDINFO
 		WHERE
 			BOARDID = #BOARDID#
-	</select>  	
+	</select>
 </sqlMap>

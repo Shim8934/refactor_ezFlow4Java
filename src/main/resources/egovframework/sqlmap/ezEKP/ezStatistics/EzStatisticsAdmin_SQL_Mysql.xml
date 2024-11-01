@@ -382,6 +382,7 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-05 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzStatisticsAdminDAO.getFormInfo" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
 		<![CDATA[
 			SELECT
@@ -416,7 +417,16 @@
    				REGDATE >= #startDate#
    			AND 
    				REGDATE <= #endDate# 
-   			$searchList$ 
+		]]>	
+		<isEqual prepend="AND" property="type" compareValue="1">
+			(DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR SUSININGCNT != 0 OR SUSINENDCNT != 0 OR RETURNCNT != 0)
+		</isEqual>
+		<isNotEqual prepend="AND" property="type" compareValue="1">
+			(DRAFTTIME != 0)
+		</isNotEqual>
+		<isNotEmpty prepend="AND" property="searchList">
+			A.FORMNAME LIKE CONCAT('%', #searchList#, '%')
+		</isNotEmpty>
    			GROUP BY 
    				A.FORMID, 
    				B.FORMNAME, 
@@ -424,7 +434,6 @@
    			ORDER BY 
    				B.FORMNAME, 
    				B.FORMNAME2
-		]]>
 	</select>
 	
 	<select id="EzStatisticsAdminDAO.getSearchList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">

@@ -512,7 +512,7 @@
 			        try {
 			            window.opener.location.reload(false);
 			        }
-			        catch (e) { }
+			        catch (e) {console.log(e);}
 
 			        window.close();
 			    }
@@ -1004,7 +1004,7 @@
 	                            objTr = listview.AddRow(0);
 	                        else
 	                            objTr = listview.AddRow(InitTr.length);
-	                        var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
+	                        var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1);
 	                        SetAttribute(objTr, "id", trid);
 	                        listview.AddDataRow(objTr, Resultxml);
 	                        document.getElementById(trid).style.whiteSpace = "nowrap";
@@ -1067,7 +1067,7 @@
 		                        MaxCntNum = MaxCntNum + 1;
 		                    }
 
-		                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 		                    getlistview.AddDataRow(objTr, Resultxml);
 		                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 
@@ -1121,7 +1121,7 @@
 		                        var objTr = listview.AddRow(InitTr.length);
 		                        if (MaxCntNum != 0)
 		                            MaxCntNum = MaxCntNum + 1;
-		                        var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
+		                        var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1);
 		                        SetAttribute(objTr, "id", trid);
 		                        listview.AddDataRow(objTr, Resultxml);
 		                        document.getElementById(trid).style.whiteSpace = "nowrap";
@@ -1203,7 +1203,7 @@
             }
 
             var objTr = listview.AddRow(InitTr.length);
-            var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
+            var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1);
             SetAttribute(objTr, "id", trid);
             listview.AddDataRow(objTr, Resultxml);
             document.getElementById(trid).style.whiteSpace = "nowrap";
@@ -2413,7 +2413,7 @@
 	                        MaxCntNum = MaxCntNum + 1;
 	                    }
 
-	                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                    getlistview.AddDataRow(objTr, Resultxml);
 	                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 

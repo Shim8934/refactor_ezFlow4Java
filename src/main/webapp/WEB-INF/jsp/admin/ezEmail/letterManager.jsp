@@ -242,6 +242,7 @@
 								closeCallback(win);
 							}
 						} catch (e) {
+						    console.log(e);
 						}
 					}, 1000);
 	

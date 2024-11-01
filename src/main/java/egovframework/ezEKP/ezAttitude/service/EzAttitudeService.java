@@ -130,7 +130,8 @@ public interface EzAttitudeService {
 		
 	public String getAttitudeHistoryCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate,	String searchEndDate, String offset, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception;
 	
-	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception;
+	/* 2024-07-25 홍승비 - 미사용 메서드 주석처리 */
+	// public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception;
 	
 	public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID, List<String> deptIdList) throws Exception;
 	

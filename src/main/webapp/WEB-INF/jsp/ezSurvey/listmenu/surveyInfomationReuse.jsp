@@ -7,7 +7,7 @@
 	<div class="survey-nminfo">
 		<div>
 			<%-- <input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>" value="${survey.title}"> --%>
-			<input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>" value="<c:out value="${survey.title}"/>"> 
+			<input id="info-input-ttl" class="info-input-ttl" maxlength="40" placeholder="<spring:message code='ezSurvey.t39'/>" value="<c:out value="${survey.title}"/>"> 
 		</div>
 		
 		<div class="survey-otherinf">

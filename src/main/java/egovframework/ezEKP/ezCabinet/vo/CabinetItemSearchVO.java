@@ -14,13 +14,15 @@ public class CabinetItemSearchVO {
 	private String creatorName;
 	private String startDate;
 	private String endDate;
-	private String sqlOrder;
+	private String orderCol;
+	private String orderSort;
 	private String searchMode;
 	private String searchOption;
 	
 	public CabinetItemSearchVO() {}
 	
-	public CabinetItemSearchVO(int cabinetId, int listCount, int tenantId, String userId, String primary, String offset, String title, String summary, String creatorName, String startDate, String endDate, String sqlOrder, String searchMode, String searhOption) {
+	/* 2024-07-01 홍승비 - SQL Injection 수정 > sqlOrder 파라미터를 orderCol + orderSort로 수정 */
+	public CabinetItemSearchVO(int cabinetId, int listCount, int tenantId, String userId, String primary, String offset, String title, String summary, String creatorName, String startDate, String endDate, String orderCol, String orderSort, String searchMode, String searhOption) {
 		this.cabinetId    = cabinetId;
 		this.listCount    = listCount;
 		this.tenantId     = tenantId;
@@ -32,7 +34,8 @@ public class CabinetItemSearchVO {
 		this.creatorName  = creatorName;
 		this.startDate    = startDate;
 		this.endDate      = endDate;
-		this.sqlOrder     = sqlOrder;
+		this.orderCol     = orderCol;
+		this.orderSort    = orderSort;
 		this.searchMode   = searchMode;
 		this.searchOption = searhOption;
 	}
@@ -116,14 +119,22 @@ public class CabinetItemSearchVO {
 		this.endDate = endDate;
 	}
 	
-	public String getSqlOrder() {
-		return sqlOrder;
+	public String getOrderCol() {
+		return orderCol;
 	}
-	
-	public void setSqlOrder(String sqlOrder) {
-		this.sqlOrder = sqlOrder;
+
+	public void setOrderCol(String orderCol) {
+		this.orderCol = orderCol;
 	}
-	
+
+	public String getOrderSort() {
+		return orderSort;
+	}
+
+	public void setOrderSort(String orderSort) {
+		this.orderSort = orderSort;
+	}
+
 	public String getSearchMode() {
 		return searchMode;
 	}

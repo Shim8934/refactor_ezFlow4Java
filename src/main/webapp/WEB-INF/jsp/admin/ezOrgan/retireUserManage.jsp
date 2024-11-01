@@ -230,7 +230,7 @@
 			        selectdept_cross_dialogArguments[0] = strLang8;
 			        selectdept_cross_dialogArguments[1] = Restore_onclick_Complete;
 			        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
-			        try { OpenWin.focus(); } catch (e) { }
+			        try { OpenWin.focus(); } catch (e) {console.log(e);}
 				}
 			}
 			
@@ -296,7 +296,7 @@
 		        inputpassword_dialogArguments[0] = length + "<spring:message code='ezOrgan.t40' />";
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 192));
-		        try { OpenWin.focus(); } catch (e) { }			    
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 			}
 			
 		    function mod_password_Complete(rtnValue) {

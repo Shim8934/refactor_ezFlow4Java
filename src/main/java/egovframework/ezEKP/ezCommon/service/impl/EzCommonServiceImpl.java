@@ -957,7 +957,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 					m_strHTML = m_strHTML.replace("')", ")");
 				}
 
-				return m_strHTML;
+                // dhlee: 20240718 - 웹취약점 대응
+                m_strHTML = commonUtil.stripScriptTagsAndFunctions(m_strHTML);
+
+                return m_strHTML;
 			}
 		} else {
 

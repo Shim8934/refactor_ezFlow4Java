@@ -226,19 +226,19 @@
 			                positionChange();
 			                
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == "Y" || SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == ""){
-			                    eval("birth_S").checked = true;
+			                    document.getElementById("birth_S").checked = true;
 			                }else{
-			                    eval("birth_N").checked = true;
+			                    document.getElementById("birth_N").checked = true;
 			                }
 			                var AclList = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").toLowerCase().trim();
 			                document.getElementById("SecurityLevel").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE6").trim();
 			                
 			                for (var i = 1; i < 13; i++) {
 			                    try {
-			                        if (AclList.indexOf(eval("Check" + i).value + "=1") > -1){
-			                            eval("Check" + i).checked = true;
+			                        if (AclList.indexOf(document.getElementById("Check" + i).value + "=1") > -1){
+			                            document.getElementById("Check" + i).checked = true;
 			                        }
-			                    } catch (e) { }
+			                    } catch (e) {console.log(e);}
 			                }
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2").trim() != ""){
 			                    document.getElementById("UserPhotoDiv").innerHTML = "<IMG style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2") + "'>";
@@ -443,7 +443,7 @@
 				}else{
 					mailNickName = MailAlias.value;
 				}				
-				if (eval("birth_S").checked == true){
+				if (document.getElementById("birth_S").checked == true){
 					birthtype = "Y";
 				}else{
 					birthtype = "N";

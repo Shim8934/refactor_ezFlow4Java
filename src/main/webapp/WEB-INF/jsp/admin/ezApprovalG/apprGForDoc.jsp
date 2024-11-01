@@ -95,9 +95,10 @@
 				
 				var toDayYear = parseInt(nowDate.substring(0,4));
 	            var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYear);
-	            for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
+	            for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
 	                AddOption(sel_year, i, i);
-                
+	            }
+	            
                 pChackYN = "INIT";
 				
 				GetDocList();
@@ -163,12 +164,21 @@
 				    for (var i = 0; i < 20; i++) {
 				        SearchCond[i] = "";
 				    }
-				} else if (pChackYN == "SEARCH") {
+				    
+				    /* 2024-03-20 홍승비 - 기존 문자열 subQuery를 신규 파라미터로 대체 (두 개의 검색조건만 사용됨) */
+				    ezStatisticsSearch_QueryMap.set("keyword", "");
+				    ezStatisticsSearch_QueryMap.set("itemcode", "");
+				}
+				else if (pChackYN == "SEARCH") {
+					// 검색을 위한 SearchCond 조건을 그대로 사용
+				}
+				else if (pChackYN == "INIT") {
+					for (var i = 0; i < 20; i++) {
+						SearchCond[i] = "";
+					}
 					
-				} else if (pChackYN == "INIT") {
-					 for (var i = 0; i < 20; i++) {
-					        SearchCond[i] = "";
-					 }
+					ezStatisticsSearch_QueryMap.set("keyword", "");
+					ezStatisticsSearch_QueryMap.set("itemcode", "");
 					 
 					var nowyear = nowDate.substring(0,4);
 			        var nowmonth = nowDate.substring(5,7);
@@ -213,11 +223,14 @@
 	            		pageNum : pageNum,
 	            		pageSize : pageSize,
 	            		docState : "",
-	            		subQuery : SearchCond[18],
+	            		//subQuery : SearchCond[18],
 	            		orderCell : "",
 	            		orderOption : "",
 	            		approvUser : SearchCond[19],
-	            		companyID : pCompanyID
+	            		companyID : pCompanyID,
+	            		/* 2024-03-20 홍승비 - 기존 문자열 subQuery를 신규 파라미터로 대체 (두 개의 검색조건만 사용됨) */
+	            		keyword : ezStatisticsSearch_QueryMap.get("keyword"),
+	            		itemcode : ezStatisticsSearch_QueryMap.get("itemcode")
 	            	},
 	            	success : function(resultXml) {
 	            		var result = JSON.parse(resultXml);
@@ -737,6 +750,7 @@
 			}
 			
 			var ezStatisticsSearch_Cross_dialogArguments = new Array();
+			var ezStatisticsSearch_QueryMap = new Map();
 			function SearchCondi_onclick() {
 				var para;
 				

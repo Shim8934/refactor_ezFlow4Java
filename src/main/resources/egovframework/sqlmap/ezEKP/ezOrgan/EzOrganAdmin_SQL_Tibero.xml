@@ -114,7 +114,6 @@
 		<result property="telephoneNumber" 						column="telephoneNumber" 				columnIndex="7"/>
 		<result property="company" 								column="company" 						columnIndex="8"/>
 	</resultMap>
-
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -126,12 +125,12 @@
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
 						DISPLAYNAME LIKE '%' || #search_keyword# || '%' ESCAPE '\'
-					OR
+					OR	
 						DISPLAYNAME2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
 						DESCRIPTION LIKE '%' || #search_keyword# || '%' ESCAPE '\'
-					OR
+					OR  
 						DESCRIPTION2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
@@ -139,6 +138,18 @@
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="quota">
 						((MAILBOXUSAGE / MAILBOXQUOTA) * 100) >= #search_keyword#
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="title">
+						(TITLE LIKE CONCAT('%', #search_keyword#,'%') || TITLE2 LIKE CONCAT('%', #search_keyword#,'%'))
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="extensionAttribute10">
+						(EXTENSIONATTRIBUTE10 LIKE CONCAT('%', #search_keyword#,'%') || EXTENSIONATTRIBUTE102 LIKE CONCAT('%', #search_keyword#,'%'))
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="telephonenumber">
+						TELEPHONENUMBER LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="mobile">
+						MOBILE LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
@@ -165,6 +176,12 @@
 			CN <isEqual property="stopped" compareValue="false"> NOT </isEqual> IN 
 				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
 		</isNotEqual>
+		<!-- 2024-09-06 김승연 공유사서함 조회 플래그 추가 -->
+		<isNotEmpty property="sharedMailBox" prepend="AND">
+			<isEqual property="sharedMailBox" compareValue="false">
+				DEPARTMENT NOT LIKE 'shared_mailbox_%'
+			</isEqual>
+		</isNotEmpty>
 	</sql>
 	
 	<sql id="EzOrganAdminDAO.searchQueryForLoginStop">
@@ -172,12 +189,12 @@
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
 						a.DISPLAYNAME LIKE '%' || #search_keyword# || '%' ESCAPE '\'
-					OR 
+					OR
 						a.DISPLAYNAME2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
 						a.DESCRIPTION LIKE '%' || #search_keyword# || '%' ESCAPE '\'
-					OR  
+					OR
 						a.DESCRIPTION2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
@@ -216,7 +233,7 @@
 			SELECT
 				EXTENSIONATTRIBUTE15
 			FROM
-			    (SELECT
+				(SELECT
 					EXTENSIONATTRIBUTE15 + 1 AS EXTENSIONATTRIBUTE15
 				FROM
 					TBL_DEPTMASTER
@@ -230,8 +247,6 @@
 					EXTENSIONATTRIBUTE15 DESC)
 			WHERE
 				ROWNUM = 1
-			ORDER BY
-				EXTENSIONATTRIBUTE15 DESC
 		]]>
 	</select>
 
@@ -267,7 +282,7 @@
 			INSERT INTO
 				TBL_USERMASTER
    				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, CREATEDT, MANUAL_FLAG, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
-                    DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, PASSWORD_UPDATEDT, FURIGANA, EXTENSIONPHONE, OFFICEMOBILE
+                    DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, PASSWORD_UPDATEDT, FURIGANA, EXTENSIONPHONE, OFFICEMOBILE, USERTREEFLAG
                 )
    			VALUES
    				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR7#, #v_EXTATTR8#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_MANUAL_FLAG#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
@@ -276,7 +291,7 @@
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
-                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_FURIGANA#, #v_EXTENSION_PHONE#, #v_OFFICE_MOBILE#     
+                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_FURIGANA#, #v_EXTENSION_PHONE#, #v_OFFICE_MOBILE#, #v_USERTREEFLAG#   
                 )
 		]]>
 	</insert>
@@ -409,7 +424,7 @@
                 EXTENSIONATTRIBUTE2 = #v_EXTENSIONATTRIBUTE2#,
                 EXTENSIONATTRIBUTE3 = #v_EXTENSIONATTRIBUTE3#,
                 COMPNM2 = #v_COMPNM2#,
-                DEPTLEVEL = DEPTLEVEL + #v_DEPTLEVEL_CHANGE#         
+                DEPTLEVEL = DEPTLEVEL + #v_DEPTLEVEL_CHANGE#          
       		WHERE
       			DEPT_CD_PATH LIKE #v_DEPT_CD_PATH_OLD# || ',%'
             AND
@@ -681,7 +696,332 @@
 	</procedure> -->
 
 	<update id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
-		<isEqual property="v_PROPNAME" compareValue="updateDT">
+		UPDATE
+			TBL_USERMASTER
+		SET
+		<isEqual property="v_PROPNAME"  compareValue="CN">
+			<![CDATA[
+             	CN = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME">
+			<![CDATA[
+             	DISPLAYNAME = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME2">
+			<![CDATA[
+             	DISPLAYNAME2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MAIL">
+			<![CDATA[
+             	MAIL = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MAILNICKNAME">
+			<![CDATA[
+             	MAILNICKNAME = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="UPNNAME">
+			<![CDATA[
+             	UPNNAME = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DEPARTMENT">
+			<![CDATA[
+             	DEPARTMENT = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION">
+			<![CDATA[
+             	DESCRIPTION = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION2">
+			<![CDATA[
+             	DESCRIPTION2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION3">
+			<![CDATA[
+             	DESCRIPTION3 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="PHYSICALDELIVERYOFFICENAME">
+			<![CDATA[
+             	PHYSICALDELIVERYOFFICENAME = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="COMPANY">
+			<![CDATA[
+             	COMPANY = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="COMPANY2">
+			<![CDATA[
+             	COMPANY2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="TITLE">
+			<![CDATA[
+             	TITLE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="TITLE2">
+			<![CDATA[
+             	TITLE2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="TELEPHONENUMBER">
+			<![CDATA[
+             	TELEPHONENUMBER = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="HOMEPHONE">
+			<![CDATA[
+             	HOMEPHONE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="FACSIMILETELEPHONENUMBER">
+			<![CDATA[
+             	FACSIMILETELEPHONENUMBER = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MOBILE">
+			<![CDATA[
+             	MOBILE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="POSTALCODE">
+			<![CDATA[
+             	POSTALCODE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="STREETADDRESS">
+			<![CDATA[
+             	STREETADDRESS = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="INFO">
+			<![CDATA[
+             	INFO = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE1">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE1 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE2">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE3">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE3 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE4">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE4 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE5">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE5 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE6">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE6 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE7">
+			<![CDATA[
+             EXTENSIONATTRIBUTE7 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE8">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE8 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE9">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE9 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE10">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE10 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE102">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE102 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE11">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE11 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE12">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE12 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE13">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE13 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE14">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE14 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="ADSPATH">
+			<![CDATA[
+             	ADSPATH = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="SIPURI">
+			<![CDATA[
+             	SIPURI = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="UPDATEDT">
+			<![CDATA[
+             	UPDATEDT = TO_DATE(#v_PROPVALUE#,'YYYY-MM-DD HH24:MI:SS')
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="CREATEDT">
+			<![CDATA[
+             	CREATEDT = TO_DATE(#v_PROPVALUE#,'YYYY-MM-DD HH24:MI:SS')
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MOBILE_ENABLE">
+			<![CDATA[
+             	MOBILE_ENABLE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MOBILE_NOTUSE">
+			<![CDATA[
+             	MOBILE_NOTUSE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MOBILE_PIN">
+			<![CDATA[
+             	MOBILE_PIN = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="POSITIONCD">
+			<![CDATA[
+             	POSITIONCD = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="BIRTH">
+			<![CDATA[
+             	BIRTH = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="BIRTHTYPE">
+			<![CDATA[
+             	BIRTHTYPE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="PASSWORD">
+			<![CDATA[
+             	PASSWORD = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="IPADDRESS">
+			<![CDATA[
+             	IPADDRESS = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="LASTLOGIN">
+			<![CDATA[
+             	LASTLOGIN = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="LOGINCNT">
+			<![CDATA[
+             	LOGINCNT = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="TENANT_ID">
+			<![CDATA[
+             	TENANT_ID = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MANUAL_FLAG">
+			<![CDATA[
+             	MANUAL_FLAG = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="LISTTYPE">
+			<![CDATA[
+             	LISTTYPE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="PASSWORD_UPDATEDT">
+			<![CDATA[
+             	PASSWORD_UPDATEDT = TO_DATE(#v_PROPVALUE#,'YYYY-MM-DD HH24:MI:SS')
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="FURIGANA">
+			<![CDATA[
+             	FURIGANA = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONPHONE">
+			<![CDATA[
+             	EXTENSIONPHONE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="OFFICEMOBILE">
+			<![CDATA[
+             	OFFICEMOBILE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MAILBOXQUOTA">
+			<![CDATA[
+             	MAILBOXQUOTA = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MAILBOXUSAGE">
+			<![CDATA[
+             	MAILBOXUSAGE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="PASSWORD2">
+			<![CDATA[
+             	PASSWORD2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="PHOTO_UPDATEDT">
+			<![CDATA[
+             	PHOTO_UPDATEDT = TO_DATE(#v_PROPVALUE#,'YYYY-MM-DD HH24:MI:SS')
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+			<![CDATA[
+				EXTENSIONATTRIBUTE15 = #v_PROPVALUE#
+				, UPDATEDT = TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isEqual>
+		<![CDATA[
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+		]]>
+		<!--<isEqual property="v_PROPNAME" compareValue="updateDT">
 			<![CDATA[
 			UPDATE
 				TBL_USERMASTER
@@ -726,15 +1066,166 @@
 					TENANT_ID = #v_TENANT_ID#
 				]]>
 			</isNotEqual>
-		</isNotEqual>
+		</isNotEqual>-->
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateProperty_U" parameterClass="Map">
-		<![CDATA[
+		<!--<![CDATA[-->
 			UPDATE
 				TBL_DEPTMASTER
 			SET
-				$v_PROPNAME$ = #v_PROPVALUE# 
+				<!--$v_PROPNAME$ = #v_PROPVALUE#-->
+				<isEqual property="v_PROPNAME"  compareValue="CN">
+					<![CDATA[
+						 CN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME">
+					<![CDATA[
+						 DISPLAYNAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME2">
+					<![CDATA[
+						 DISPLAYNAME2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="USEFLAG">
+					<![CDATA[
+						 USEFLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAIL">
+					<![CDATA[
+						 MAIL = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="COMPNM2">
+					<![CDATA[
+						 COMPNM2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPTLEVEL">
+					<![CDATA[
+						 DEPTLEVEL = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPT_CD_PATH">
+					<![CDATA[
+						 DEPT_CD_PATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPT_NM_PATH">
+					<![CDATA[
+						 DEPT_NM_PATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE1">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE1 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE2">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE3">
+					<![CDATA[
+								 EXTENSIONATTRIBUTE3 = #v_PROPVALUE#
+							]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE4">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE4 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE5">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE5 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE6">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE6 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE7">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE7 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE8">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE8 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE9">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE9 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE10">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE10 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE11">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE11 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE12">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE12 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE13">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE13 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE14">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE14 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE15">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE15 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ADFLAG">
+					<![CDATA[
+						 ADFLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ADSPATH">
+					<![CDATA[
+						 ADSPATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="UPDATEDT">
+					<![CDATA[
+						 UPDATEDT = TO_DATE(#v_PROPVALUE#, 'yyyy-MM-dd HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="CREATEDT">
+					<![CDATA[
+						 CREATEDT = TO_DATE(#v_PROPVALUE#, 'yyyy-MM-dd HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TENANT_ID">
+					<![CDATA[
+						 TENANT_ID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MANUAL_FLAG">
+					<![CDATA[
+						 MANUAL_FLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+		<![CDATA[
 			WHERE
 				CN = #v_CN#
 			AND
@@ -743,11 +1234,82 @@
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateProperty_addJob" parameterClass="Map">
-		<![CDATA[
+		<!--<![CDATA[-->
 			UPDATE
 				TBL_ADDJOBMASTER
 			SET
-				$v_PROPNAME$ = #v_PROPVALUE# 
+				<!--$v_PROPNAME$ = #v_PROPVALUE#-->
+				<isEqual property="v_PROPNAME"  compareValue="CN">
+					<![CDATA[
+						 CN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPTID">
+					<![CDATA[
+						 DEPTID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TITLE">
+					<![CDATA[
+						 TITLE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TITLE2">
+					<![CDATA[
+						 TITLE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ROLE">
+					<![CDATA[
+						 ROLE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ROLE2">
+					<![CDATA[
+						 ROLE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="POSITIONCD">
+					<![CDATA[
+						 POSITIONCD = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TENANT_ID">
+					<![CDATA[
+						 TENANT_ID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ORDERBY">
+					<![CDATA[
+						 ORDERBY = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="JOBID">
+					<![CDATA[
+						 JOBID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ROLEID">
+					<![CDATA[
+						 ROLEID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PROXY">
+					<![CDATA[
+						 PROXY = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MANUAL_FLAG">
+					<![CDATA[
+						 MANUAL_FLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ROLL_INFO">
+					<![CDATA[
+						 ROLL_INFO = #v_PROPVALUE#
+					]]>
+				</isEqual>
+		<![CDATA[
 			WHERE
 				CN = #v_CN#
 			AND
@@ -1554,7 +2116,7 @@
 			VALUES ('A17','0  ','의견종류','1','의견종류','의견종류',null,null,#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
 			VALUES ('A17','000','추가의견','1','추가의견','Add','追加','追加意见',#tenantID#, #companyID#)
-			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
+			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
 			VALUES ('A17','001','일반의견','1','일반의견','General','一般','一般意见',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A17','002','반송의견','1','반송의견','Rejection','差し戻し','退回意见',#tenantID#, #companyID#)
@@ -3390,19 +3952,19 @@
 			VALUES ('001',4,'문서번호',100,null,'CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, ''-''), SUBSTR(TBL_RECORD.RegisterNo, -6))','DispRegisterNo','Default','기록물 대장',null,'Doc. No.','登録番号','註冊號',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',5,'제목',300,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.Title','RecTitle','Default','기록물 대장',null,'Title','見出し','标题',#tenantID#, #companyID#)
-			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
+			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
 			VALUES ('001',6,'기록물철명',150,'TBL_CABINETCLASS','TBL_SEPERATEATTACH.Title','RecName','dtClassTitle','기록물 대장',null,'RecName','記録物名','档案名称',#tenantID#, #companyID#)
-			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
+			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
 			VALUES ('001',7,'기안자',70,'TBL_RECORD','TBL_RECORD.DrafterName','DrafterName','Default','기록물 대장',null,'Drafter','起案者','起草人',#tenantID#, #companyID#)
-			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
+			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
 			VALUES ('001',8,'수신자(발신자)',90,'TBL_RECORD','TBL_RECORD.ReceiptMemberName','ReceiptName','Default','기록물 대장',null,'Recipient(Sender)','受信者（起案者）','受信者(送信者)',#tenantID#, #companyID#)
-			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
+			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
 			VALUES ('001',9,'결재권자',80,'TBL_RECORD','TBL_RECORD.AprMemberTitle','AprMemberTitle','Default','기록물 대장',null,'Approval person','決裁権者','审批',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('001',10,'시행번호',180,null,null,'SihangNo','dtSihangNO','기록물 대장',null,'SihangNo','施行番号','试行编号',#tenantID#, #companyID#)
+			VALUES ('001',10,'시행번호',180,null,'ENDDOCNO.DOCNO','SihangNo','dtSihangNO','기록물 대장',null,'SihangNo','施行番号','试行编号',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',11,'첨부',40,'TBL_RECORD','TBL_RECORD.AttachFlag','AttachFlag','dtBool','기록물 대장','첨부여부','AttachFlag','添付','附件',#tenantID#, #companyID#)
-			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
+			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
 			VALUES ('001',12,'수신',40,'TBL_RECORD','CASE WHEN TBL_ENDAPRDOCINFO.DocType = ''003'' AND TBL_SEPERATEATTACH.RegisterType = ''1'' THEN ''발송'' ELSE ''없음'' END','ReSendFlag','Default','기록물 대장','수신문 발송여부','ReSendFlag','受信','接待区分',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',13,'반려',40,'TBL_RECORD','TBL_RECORD.RejectFlag','RejectFlag','dtBool','기록물 대장','반려여부','RejectFlag','差し戻し','伴侣区分',#tenantID#, #companyID#)
@@ -3742,7 +4304,7 @@
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A20', #companyID#, #tenantID#, '病休', 'sick leave', '1', 'refresh', 'A05', 9)
 		    	INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A21', #companyID#, #tenantID#, ''半半公暇'', 'half and half off', '1', 'refresh', 'A05', 4)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A21', #companyID#, #tenantID#, '半半公暇', 'half and half off', '1', 'refresh', 'A05', 4)
 		    SELECT
 		    	*
 		    FROM DUAL
@@ -3787,8 +4349,8 @@
 	    	VALUES (#companyID#, #tenantID#, 3, 6, 1, 1)
 		    INTO TBL_PORTAL_FRAME_COMP (COMPANY_ID, TENANT_ID, THEME_ID, FRAME_ID, FRAME_USED, FRAME_DEFAULT) 
 	    	VALUES (#companyID#, #tenantID#, 3, 8, 1, 0)
-			INTO TBL_PORTAL_FRAME_COMP (COMPANY_ID, TENANT_ID, THEME_ID, FRAME_ID, FRAME_USED, FRAME_DEFAULT)
-			VALUES (#companyID#, #tenantID#, 4, 9, 1, 1)
+		    INTO TBL_PORTAL_FRAME_COMP (COMPANY_ID, TENANT_ID, THEME_ID, FRAME_ID, FRAME_USED, FRAME_DEFAULT) 
+	    	VALUES (#companyID#, #tenantID#, 4, 9, 1, 1)
 		SELECT
 	    	*
 	    FROM DUAL
@@ -4108,7 +4670,7 @@
 		    VALUES (18, 3, #companyID#, #tenantID#, 'メモ帳')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 4, #companyID#, #tenantID#, '记事本')
-		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
+		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 5, #companyID#, #tenantID#, 'Notes')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 6, #companyID#, #tenantID#, 'Notes')
@@ -4168,7 +4730,7 @@
 		    VALUES (#companyID#, #tenantID#, 12, 0, 1, 11, null)
 		    INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL) 
 		    VALUES (#companyID#, #tenantID#, 14, 0, 1, 13, null)
-		    INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL) 
+		    INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
 		    VALUES (#companyID#, #tenantID#, 26, 0, 1, 14, null)
 		    INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL) 
 		    VALUES (#companyID#, #tenantID#, 34, 0, 1, 15, null)
@@ -4186,26 +4748,26 @@
 		    VALUES (#companyID#, #tenantID#, 73, 19, 1, 20, null)
 			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL) 
 		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, 23, null)
-		    INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
+			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
 		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 1, -2, '/ezNewPortal/getCustomBoardInfo.do')
 			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
 		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 1, -1, '/ezNewPortal/getCustomBoardInfo.do')
 			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
-			VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 1, 1, null)
+		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 4, 1, 1, null)
 			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
-			VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 1, 2, null)
+		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 4, 1, 2, null)
 			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
-			VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 1, 3, null)
+		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 2, 1, 3, null)
 			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
-			VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 1, 4, null)
+		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 6, 1, 4, null)
 			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
-			VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 1, 5, null)
+		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 3, 1, 5, null)
 			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
-			VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 1, 6, null)
+		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 1, 6, null)
 			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
-			VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 1, 7, null)
+		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 4, 1, 7, null)
 			INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, CONNECTION_URL)
-			VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 1, 8, null)
+		    VALUES (#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 4, 1, 8, null)
 		SELECT
 	    	*
 	    FROM DUAL
@@ -4426,7 +4988,7 @@
 		    VALUES (51, 6, 3, #tenantID#, #companyID#, '設備管理')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (51, 6, 4, #tenantID#, #companyID#, '教学资源')
-		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (51, 6, 5, #tenantID#, #companyID#, 'Resource')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (51, 6, 6, #tenantID#, #companyID#, 'Resource')
@@ -4438,7 +5000,7 @@
 		    VALUES (70, 10, 3, #tenantID#, #companyID#, 'Webフォルダ')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (70, 10, 4, #tenantID#, #companyID#, '个人文件夹')
-		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (70, 10, 5, #tenantID#, #companyID#, 'My Folder')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (70, 10, 6, #tenantID#, #companyID#, 'My Folder')
@@ -4450,7 +5012,7 @@
 		    VALUES (73, 19, 3, #tenantID#, #companyID#, '電子アンケート')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (73, 19, 4, #tenantID#, #companyID#, '电子问卷')
-			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (73, 19, 5, #tenantID#, #companyID#, 'Survey')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (73, 19, 6, #tenantID#, #companyID#, 'Survey')
@@ -4478,7 +5040,7 @@
 		    VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 5, #tenantID#, #companyID#, 'Chart')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 6, #tenantID#, #companyID#, 'Chart')
-		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
 			VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 1, #tenantID#, #companyID#, '고정 포틀릿')
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
 			VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 2, #tenantID#, #companyID#, 'fixed portlet')
@@ -4750,22 +5312,22 @@
 		    VALUES (3, #tenantID#, #companyID#, 73, 1, 20, 19, 0)
 			INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (3, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 1, 23, 4, 0)
-			INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
-			VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 1, 1, 4, 0)
-			INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
-			VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 1, 2, 4, 0)
-			INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
-			VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 1, 3, 2, 0)
-			INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
-			VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 1, 4, 6, 0)
-			INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
-			VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 1, 5, 3, 0)
-			INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
-			VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 6, 1, 0)
-			INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
-			VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 1, 7, 4, 0)
-			INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
-			VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 1, 8, 4, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		    VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), 1, 1, 4, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		    VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), 1, 2, 4, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		    VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), 1, 3, 2, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		    VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), 1, 4, 6, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		    VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), 1, 5, 3, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		    VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), 1, 6, 1, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		    VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), 1, 7, 4, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		    VALUES (4, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), 1, 8, 4, 0)
 		SELECT
 	    	*
 	    FROM DUAL
@@ -4780,8 +5342,8 @@
 		    VALUES (2, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
 		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
 		    VALUES (3, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
-			INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
-			VALUES (4, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
+		    VALUES (4, #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
 	    SELECT
 	    	*
 	    FROM DUAL
@@ -4830,22 +5392,22 @@
         VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
         INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
         VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
-		INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
-		VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
-		INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
-		VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
-		INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
-		VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
-		INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
-		VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
-		INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
-		VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
-		INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
-		VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
-		INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
-		VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
-		INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
-		VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+        INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
+        VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixTop'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+        INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
+        VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mFixBottom'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+        INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
+        VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mSchedule'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+        INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
+        VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mResource'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+        INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
+        VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mApprovallist'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+        INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
+        VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mReceivedmail'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+        INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
+        VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mNotice'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
+        INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED)
+        VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'mPhotoboard'), #companyID#, #tenantID#, #companyID#, 1, 0, 1, 'Y')
 	    SELECT
 	    	*
 	    FROM DUAL
@@ -5223,8 +5785,8 @@
 	</procedure> -->
 	
 	<select id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
-		<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/부서 별 권한 카운트 조회 -->
-		<![CDATA[
+	<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/부서 별 권한 카운트 조회 -->
+	<![CDATA[
 		SELECT
 			COUNT(*)
 		FROM
@@ -5248,37 +5810,37 @@
 			AND
 				U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
 			AND
-				U.EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+				U.EXTENSIONATTRIBUTE1 LIKE CONCAT(CONCAT('%', #v_TYPE#), '%')
 			AND
 				U.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 			AND
 				U.TENANT_ID = #v_TENANT_ID#
 			]]>
-		<isNotEmpty property="searchValue" prepend="AND">
-			<isEqual property="searchType" compareValue="cn">
-				U.cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="displayname">
-				CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="title">
-				CASE #v_LANGDATA# WHEN '1' THEN U.title ELSE U.title2 END LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="description">
-				CASE #v_LANGDATA# WHEN '1' THEN U.description ELSE U.description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="mail">
-				U.mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="telephonenumber">
-				U.telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="company">
-				CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-			</isEqual>
-		</isNotEmpty>
-		<isEqual property="permissionBasisDeptYN" compareValue="Y">
-			<![CDATA[
+			<isNotEmpty property="searchValue" prepend="AND">
+				<isEqual property="searchType" compareValue="cn">
+					U.cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+				</isEqual>
+				<isEqual property="searchType" compareValue="displayname">
+					CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+				</isEqual>
+				<isEqual property="searchType" compareValue="title">
+					CASE #v_LANGDATA# WHEN '1' THEN U.title ELSE U.title2 END LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+				</isEqual>
+				<isEqual property="searchType" compareValue="description">
+					CASE #v_LANGDATA# WHEN '1' THEN U.description ELSE U.description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+				</isEqual>
+				<isEqual property="searchType" compareValue="mail">
+					U.mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+				</isEqual>
+				<isEqual property="searchType" compareValue="telephonenumber">
+					U.telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+				</isEqual>
+				<isEqual property="searchType" compareValue="company">
+					CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+				</isEqual>
+			</isNotEmpty>
+			<isEqual property="permissionBasisDeptYN" compareValue="Y">
+				<![CDATA[
 						UNION ALL
 						SELECT
 							U.CN,
@@ -5311,37 +5873,37 @@
 						AND
 							D.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 						AND
-							J.ROLL_INFO LIKE '%$v_TYPE$%'
+							J.ROLL_INFO LIKE CONCAT(CONCAT('%', #v_TYPE#), '%')
 						AND
 							J.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                          
 						AND
 							J.TENANT_ID = #v_TENANT_ID#
 						]]>
-			<isNotEmpty property="searchValue" prepend="AND">
-				<isEqual property="searchType" compareValue="cn">
-					U.cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="displayname">
-					CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="title">
-					CASE #v_LANGDATA# WHEN '1' THEN J.title ELSE J.title2 END LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="description">
-					CASE #v_LANGDATA# WHEN '1' THEN D.displayname ELSE D.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="mail">
-					U.mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="telephonenumber">
-					U.telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="company">
-					CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-				</isEqual>
-			</isNotEmpty>
-		</isEqual>
-		) Z
+				<isNotEmpty property="searchValue" prepend="AND">
+					<isEqual property="searchType" compareValue="cn">
+						U.cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+					</isEqual>
+					<isEqual property="searchType" compareValue="displayname">
+						CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+					</isEqual>
+					<isEqual property="searchType" compareValue="title">
+						CASE #v_LANGDATA# WHEN '1' THEN J.title ELSE J.title2 END LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+					</isEqual>
+					<isEqual property="searchType" compareValue="description">
+						CASE #v_LANGDATA# WHEN '1' THEN D.displayname ELSE D.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+					</isEqual>
+					<isEqual property="searchType" compareValue="mail">
+						U.mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+					</isEqual>
+					<isEqual property="searchType" compareValue="telephonenumber">
+						U.telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+					</isEqual>
+					<isEqual property="searchType" compareValue="company">
+						CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+					</isEqual>
+				</isNotEmpty>
+			</isEqual>
+			) Z
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
@@ -5349,67 +5911,70 @@
 			{CALL EZSP_GETPERMISSIONLIST(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_PSTARTROW#, #v_PENDROW#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
-
+	
 	<select id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
 		<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/부서 별 권한 조회 -->
-		<![CDATA[
-			SELECT
-				*
-			FROM 
-                ( SELECT
-                    *
-                  FROM
-                    ( 
-                    SELECT
+			<![CDATA[
+		SELECT *
+			FROM (
+					SELECT
 						CN,
-						CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END AS DISPLAYNAME,
-						CASE #v_LANGDATA# WHEN '1' THEN DESCRIPTION ELSE DESCRIPTION2 END AS DESCRIPTION,
-						CASE #v_LANGDATA# WHEN '1' THEN TITLE ELSE TITLE2 END AS TITLE,
+						DISPLAYNAME,
+						DESCRIPTION,
+						TITLE,
 						MAIL,
 						TELEPHONENUMBER,
-						CASE #v_LANGDATA# WHEN '1' THEN COMPANY ELSE COMPANY2 END AS COMPANY,
-						UNISTR(EXTENSIONATTRIBUTE1) ,
+						COMPANY,
+						EXTENSIONATTRIBUTE1,
 						DEPARTMENT,
-						UNISTR(EXTENSIONATTRIBUTE7) ,
-						ROW_NUMBER() OVER (ORDER BY U.DISPLAYNAME, U.CN) AS ROWNUM_
-                    FROM
-						TBL_USERMASTER U 
+						EXTENSIONATTRIBUTE7,
+						ROW_NUMBER() OVER (ORDER BY DISPLAYNAME, CN) AS ROWNUM_
+					FROM (
+						SELECT
+							U.CN,
+							CASE #v_LANGDATA# WHEN '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END AS DISPLAYNAME,
+							CASE #v_LANGDATA# WHEN '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END AS DESCRIPTION,
+							CASE #v_LANGDATA# WHEN '1' THEN U.TITLE ELSE U.TITLE2 END AS TITLE,
+							U.MAIL,
+							U.TELEPHONENUMBER,
+							CASE '1' WHEN '1' THEN U.COMPANY ELSE U.COMPANY2 END AS COMPANY,
+							U.EXTENSIONATTRIBUTE1,
+							U.DEPARTMENT,
+							U.EXTENSIONATTRIBUTE7
+					FROM
+					    	TBL_USERMASTER U
 					WHERE
 						NULLIF(U.EXTENSIONATTRIBUTE1, NULL) IS NOT NULL
-					AND
-						U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
-					AND
-						U.EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
-					AND 
-						U.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
-					AND
-						U.TENANT_ID = #v_TENANT_ID#
+						AND U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+						AND U.EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+						AND U.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID =  #v_TENANT_ID#)
+						AND U.TENANT_ID = #v_TENANT_ID#
                     ]]>
-		<isNotEmpty property="searchValue" prepend="AND">
-			<isEqual property="searchType" compareValue="cn">
-				U.cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="displayname">
-				CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="title">
-				CASE #v_LANGDATA# WHEN '1' THEN U.title ELSE U.title2 END LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="description">
-				CASE #v_LANGDATA# WHEN '1' THEN U.description ELSE U.description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="mail">
-				U.mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="telephonenumber">
-				U.telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-			</isEqual>
-			<isEqual property="searchType" compareValue="company">
-				CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-			</isEqual>
-		</isNotEmpty>
-		<isEqual property="permissionBasisDeptYN" compareValue="Y">
-			<![CDATA[
+					<isNotEmpty property="searchValue" prepend="AND">
+						<isEqual property="searchType" compareValue="cn">
+							U.cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="displayname">
+							CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="title">
+							CASE #v_LANGDATA# WHEN '1' THEN U.title ELSE U.title2 END LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="description">
+								CASE #v_LANGDATA# WHEN '1' THEN U.description ELSE U.description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="mail">
+							U.mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="telephonenumber">
+							U.telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="company">
+							CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+						</isEqual>
+					</isNotEmpty>
+					<isEqual property="permissionBasisDeptYN" compareValue="Y">
+					<![CDATA[
 					UNION ALL
 					SELECT
 						U.CN,
@@ -5421,8 +5986,7 @@
 						CASE #v_LANGDATA# WHEN '1' THEN U.COMPANY ELSE U.COMPANY2 END AS COMPANY,
 						UNISTR(J.ROLL_INFO) AS EXTENSIONATTRIBUTE1,
 						D.CN AS DEPARTMENT,
-						UNISTR(J.JOBID) AS EXTENSIONATTRIBUTE7,
-						ROW_NUMBER() OVER (ORDER BY U.DISPLAYNAME, U.CN) AS ROWNUM_
+						UNISTR(J.JOBID) AS EXTENSIONATTRIBUTE7
 					FROM
 						TBL_ADDJOBMASTER J
 					INNER JOIN
@@ -5442,45 +6006,44 @@
 					AND
 						D.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 					AND
-						J.ROLL_INFO LIKE '%$v_TYPE$%'
+						J.ROLL_INFO LIKE CONCAT(CONCAT('%', #v_TYPE#), '%')
 					AND
 						J.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                          
 					AND
 						J.TENANT_ID = #v_TENANT_ID#
 					]]>
-			<isNotEmpty property="searchValue" prepend="AND">
-				<isEqual property="searchType" compareValue="cn">
-					U.cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="displayname">
-					CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="title">
-					CASE #v_LANGDATA# WHEN '1' THEN J.title ELSE J.title2 END LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="description">
-					CASE #v_LANGDATA# WHEN '1' THEN D.displayname ELSE D.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="mail">
-					U.mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="telephonenumber">
-					U.telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
-				</isEqual>
-				<isEqual property="searchType" compareValue="company">
-					CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
-				</isEqual>
-			</isNotEmpty>
-		</isEqual>
-		<![CDATA[
+					<isNotEmpty property="searchValue" prepend="AND">
+						<isEqual property="searchType" compareValue="cn">
+							U.cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="displayname">
+							CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="title">
+							CASE #v_LANGDATA# WHEN '1' THEN J.title ELSE J.title2 END LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="description">
+							CASE #v_LANGDATA# WHEN '1' THEN D.displayname ELSE D.displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="mail">
+							U.mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="telephonenumber">
+							U.telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
+						</isEqual>
+						<isEqual property="searchType" compareValue="company">
+							CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+						</isEqual>
+					</isNotEmpty>
+					</isEqual>
+					<![CDATA[
 			) A
-			 WHERE
-				A.ROWNUM_ <= #v_PENDROW#    
 		 ) X
 		WHERE
-			X.ROWNUM_ >= #v_PSTARTROW# 
+			X.ROWNUM_ BETWEEN #v_PSTARTROW# AND #v_PENDROW#
 			]]>
 	</select>
+	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZSP_DB_GETRETIRELISTCOUNT(#v_PAGE#, #v_ROWPERPAGE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -5579,7 +6142,7 @@
 		<![CDATA[
 			 INSERT INTO
 			 	TBL_USERMASTER
- 				( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, CREATEDT, TENANT_ID, MAILBOXQUOTA, MAILBOXUSAGE )
+				( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, CREATEDT, TENANT_ID )
            		( 	SELECT
            				CN ,
                     	DISPLAYNAME ,
@@ -5604,13 +6167,15 @@
 	                    STREETADDRESS ,
 	                    INFO ,
 	                    ]]>
-	                    <isNotEmpty property="initPermission">
+						<isNotEmpty property="initPermission">
 							#initPermission# AS EXTENSIONATTRIBUTE1 ,
-	                    </isNotEmpty>
+						</isNotEmpty>
 						<isEmpty property="initPermission">
-		                    (SELECT REPLACE(REPLACE(REPLACE(EXTENSIONATTRIBUTE1, 'g=1', 'g=0'), 'a=1', 'a=0'), 'm=1', 'm=0')
-		                    FROM TBL_USERMASTER WHERE CN = #v_CN# AND TENANT_ID = #v_TENANT_ID#) AS EXTENSIONATTRIBUTE1 ,
-	                    </isEmpty>
+							(SELECT REPLACE(REPLACE(REPLACE(EXTENSIONATTRIBUTE1, 'g=1', 'g=0'), 'a=1',
+							'a=0'), 'm=1', 'm=0')
+							FROM TBL_USERMASTER WHERE CN = #v_CN# AND TENANT_ID = #v_TENANT_ID#) AS
+							EXTENSIONATTRIBUTE1 ,
+						</isEmpty>
 	                    <![CDATA[
 	                    EXTENSIONATTRIBUTE1 ,
 	                    EXTENSIONATTRIBUTE2 ,
@@ -5665,7 +6230,7 @@
             SET 
                 DESCRIPTION = #displayName#,
                 DESCRIPTION2 = #displayName2#,
-                UPDATEDT = #nowDate#
+                UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
             WHERE
                 DEPARTMENT = #cn#
             AND
@@ -6180,7 +6745,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-       <delete id="EzOrganAdminDAO.deleteCompany_D11" parameterClass="Map">
+     <delete id="EzOrganAdminDAO.deleteCompany_D11" parameterClass="Map">
         DELETE FROM
             TBL_CONTAINERTODOCSTATE
         WHERE  
@@ -6260,8 +6825,8 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
      </delete>
-
-	<delete id="EzOrganAdminDAO.deleteCompany_D21" parameterClass="Map">
+	
+	 <delete id="EzOrganAdminDAO.deleteCompany_D21" parameterClass="Map">
         DELETE FROM 
         	TBL_ATTITUDE_TYPE
  		WHERE  
@@ -6368,7 +6933,7 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
      </delete>
-
+     
 	<delete id="EzOrganAdminDAO.deleteCompany_D34" parameterClass="Map">
 		DELETE FROM  
 			TBL_WEBFOLDER_FOLDER 
@@ -6376,9 +6941,9 @@
 			COMPANY_ID = #v_CN# 
 		AND 
 			TENANT_ID = #v_TENANT_ID#
-     </delete>
-     
-     <delete id="EzOrganAdminDAO.deleteCompany_D35" parameterClass="Map">
+	</delete>
+	
+	<delete id="EzOrganAdminDAO.deleteCompany_D35" parameterClass="Map">
 		DELETE FROM  
 			TBL_PORTAL_TOP_COMPANY 
 		WHERE 
@@ -6416,7 +6981,7 @@
 			BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'
      </delete>
      
-     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IJHS1" parameterClass="Map">
+	<delete id="EzOrganAdminDAO.deleteCompanyInfo_IJHS1" parameterClass="Map">
         DELETE FROM
             TBL_ATTITUDE_ANNUAL_CONF    
         WHERE  
@@ -6427,10 +6992,30 @@
      
  	<select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
  		SELECT
- 			*
+ 			CN,
+			displayName,
+			department,
+			description,
+			mailboxquota,
+			mailboxusage,
+			displayName2,
+			description2,
+			isRetire,
+			title,
+			title2,
+			EXTENSIONATTRIBUTE1,
+			EXTENSIONATTRIBUTE2,
+			EXTENSIONATTRIBUTE3,
+			EXTENSIONATTRIBUTE10,
+			EXTENSIONATTRIBUTE102,
+			TELEPHONENUMBER,
+			MOBILE,
+			COMPANY,
+			COMPANY2
  		FROM
- 			(SELECT
- 				ROW_NUMBER() OVER (order by displayName) as RNUM,
+ 			(
+ 			<isEqual property="useUserMaster" compareValue="true">
+ 			SELECT
  				CN,
  				displayName,
  				department,
@@ -6438,37 +7023,131 @@
 				to_number(mailboxquota) as mailboxquota,
 				to_number(mailboxusage) as mailboxusage,
 				displayName2,
-				description2
+				description2,
+				0 as isRetire,
+				title,
+				title2,
+				EXTENSIONATTRIBUTE1,
+				EXTENSIONATTRIBUTE2,
+				EXTENSIONATTRIBUTE3,
+				EXTENSIONATTRIBUTE10,
+				EXTENSIONATTRIBUTE102,
+				TELEPHONENUMBER,
+				MOBILE,
+				COMPANY,
+				COMPANY2
  			FROM
  				TBL_USERMASTER
  			WHERE
  				tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
- 				<include refid="EzOrganAdminDAO.searchQuery"/>
- 				<include refid="EzOrganAdminDAO.searchForQuery"/>
- 			ORDER BY
+				<include refid="EzOrganAdminDAO.searchQuery"/>
+				<include refid="EzOrganAdminDAO.searchForQuery"/>	
+ 				<isEqual property="incumbent" compareValue="false">
+				AND CN IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+				</isEqual>
+				<isEqual property="stopped" compareValue="false">
+					AND CN NOT IN
+					(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+				</isEqual>
+			</isEqual>
+			<isEqual property="retired" compareValue="true">
+			<isEqual property="useUserMaster" compareValue="true">
+				UNION
+			</isEqual>
+			SELECT
+				CN,
+				displayName,
+				department,
+				description,
+				CAST(mailboxquota AS UNSIGNED) as mailboxquota,
+				CAST(mailboxusage AS UNSIGNED) as mailboxusage,
+				displayName2,
+				description2,
+				1 as isRetire,
+				title,
+				title2,
+				EXTENSIONATTRIBUTE1,
+				EXTENSIONATTRIBUTE2,
+				EXTENSIONATTRIBUTE3,
+				EXTENSIONATTRIBUTE10,
+				EXTENSIONATTRIBUTE102,
+				TELEPHONENUMBER,
+				MOBILE,
+				COMPANY,
+				COMPANY2
+			FROM 
+		    	TBL_USERMASTER_RETIRE
+	        WHERE 
+	            tenant_id = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+			<include refid="EzOrganAdminDAO.searchForQuery"/>
+		ORDER BY
  			<isNotEmpty property="sortColumn">
-		    	$orderbyData$,
+		    	<!--$orderbyData$,-->
+				<isEqual property="orderbyData" compareValue="displayName ASC">
+					displayName ASC,
+				</isEqual>
+				<isEqual property="orderbyData" compareValue="displayName DESC">
+					displayName DESC,
+				</isEqual>
+				<isEqual property="orderbyData" compareValue="department ASC">
+					department ASC,
+				</isEqual>
+				<isEqual property="orderbyData" compareValue="department DESC">
+					department DESC,
+				</isEqual>
+				<isEqual property="orderbyData" compareValue="mailboxusage/1024 ASC">
+					mailboxusage/1024 ASC,
+				</isEqual>
+				<isEqual property="orderbyData" compareValue="mailboxusage/1024 DESC">
+					mailboxusage/1024 DESC,
+				</isEqual>
+				<isEqual property="orderbyData" compareValue="mailboxquota ASC">
+					mailboxquota ASC,
+				</isEqual>
+				<isEqual property="orderbyData" compareValue="mailboxquota DESC">
+					mailboxquota DESC,
+				</isEqual>
+				<isEqual property="orderbyData" compareValue="(MAILBOXUSAGE/MAILBOXQUOTA)*100 ASC">
+					(MAILBOXUSAGE/MAILBOXQUOTA)*100 ASC,
+				</isEqual>
+				<isEqual property="orderbyData" compareValue="(MAILBOXUSAGE/MAILBOXQUOTA)*100 DESC">
+					(MAILBOXUSAGE/MAILBOXQUOTA)*100 DESC,
+				</isEqual>
 		    </isNotEmpty>
  				displayName,cn
- 			)
+		<!-- 2024-09-13 김승연 mysql과 조회 결과를 동일하게 하기 위해 페이지네이션 처리 방식 변경 -->
  		<isNotEqual property="v_start" compareValue="-1">
- 			<![CDATA[
-	 			WHERE
-	 				RNUM >= #v_start#
-	 			AND
-	 				RNUM <= #v_end#
- 			]]>
+			OFFSET #v_start# ROWS FETCH NEXT #pageCount# ROWS ONLY
  		</isNotEqual>
  	</select>
  	
  	<select id="EzOrganAdminDAO.getUserCount" parameterClass="map" resultClass="int">
-		SELECT 	
-			COUNT(CN) 
-		FROM 
-            TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
-  		<include refid="EzOrganAdminDAO.searchQuery"/>
-  		<include refid="EzOrganAdminDAO.searchForQuery"/>
+		SELECT SUM(COUNT) AS TOTAL_COUNT
+		FROM (
+		<isEqual property="useUserMaster" compareValue="true">
+			SELECT COUNT(CN) AS COUNT 
+			FROM TBL_USERMASTER 
+			WHERE tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId# 
+		<include refid="EzOrganAdminDAO.searchQuery"/>
+		<include refid="EzOrganAdminDAO.searchForQuery"/>
+			<isEqual property="incumbent" compareValue="false">
+				AND CN IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+			</isEqual>
+			<isEqual property="stopped" compareValue="false">
+				AND CN NOT IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+			</isEqual>
+		</isEqual>
+		<isEqual property="retired" compareValue="true">
+			<isEqual property="useUserMaster" compareValue="true"> UNION </isEqual>
+				SELECT COUNT(CN) AS COUNT FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId# 
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+			<include refid="EzOrganAdminDAO.searchForQuery"/>
+		</isEqual>
+		) COUNT_TABLE
 	</select>
 	
 	<insert id="EzOrganAdminDAO.insertDelUserDBData_I" parameterClass="Map">
@@ -6788,19 +7467,19 @@
 						UNISTR(TBL_ADDJOBMASTER.JOBID),
 						UNISTR(TBL_ADDJOBMASTER.ROLEID),
 					    'addJob' AS USERTYPE,
-					    TBL_ADDJOBMASTER.USERTREEFLAG,
+						TBL_ADDJOBMASTER.USERTREEFLAG,
 						TBL_DEPTMASTER.DEPTTREEFLAG
 					FROM
 						TBL_USER_JOBMASTER
 					JOIN 
 						TBL_ADDJOBMASTER
 					ON
-		<isEqual property="v_TYPE" compareValue="001">
+				<isEqual property="v_TYPE" compareValue="001">
 						TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
-		</isEqual>
-		<isEqual property="v_TYPE" compareValue="002">
+				</isEqual>
+				<isEqual property="v_TYPE" compareValue="002">
 						TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.ROLEID
-		</isEqual>
+				</isEqual>
 					AND
 						TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
 					JOIN
@@ -6979,11 +7658,11 @@
 				WHERE
 					TBL_USER_JOBMASTER.JOBID = #v_JOBID#
 				AND
-				TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
-			<isEqual property="v_ADMINORGAN" compareValue="n" prepend="AND">
-				TBL_ADDJOBMASTER.USERTREEFLAG = 'Y'
-			AND
-				DEPTTREEFLAG = 'Y'
+					TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+				<isEqual property="v_ADMINORGAN" compareValue="n" prepend="AND">
+					TBL_ADDJOBMASTER.USERTREEFLAG = 'Y'
+				AND
+					DEPTTREEFLAG = 'Y'
 			</isEqual>
 				) AS COUNT
 			FROM
@@ -7803,7 +8482,7 @@
 				u.COMPANY2,		to_date(#authorizedTime#, 'yyyy-MM-dd HH24:MI:SS'),		#adminType#,			#status#,				#authorizerId#,
 				(SELECT ua.DISPLAYNAME 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
 				(SELECT ua.DISPLAYNAME2 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
-				#authorizerIp#
+				#authorizerIp#, u.TENANT_ID
 			FROM TBL_USERMASTER u
 			WHERE 	u.CN = #userId#
 			AND 	u.TENANT_ID = #tenant_id#
@@ -7819,7 +8498,7 @@
 					USERID,				USERNM,					USERNM2,				DEPTID,					DEPTNM,
 					DEPTNM2,			TITLE,       			TITLE2,					COMPANYID,				COMPANYNM,
 					COMPANYNM2,			AUTHORIZEDTIME,			ADMINTYPE,				STATUS,					AUTHORIZERID,
-					AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP
+					AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP, 			TENANT_ID
                  )
 			SELECT
 				SEQ_TBL_PERMISSION_CHANGE_INFO.NEXTVAL,
@@ -7868,15 +8547,15 @@
 		ON 
 			A.DEPTID = D.CN AND A.TENANT_ID = D.TENANT_ID
 		WHERE 
-			A.CN = #CN#
+			A.CN = #CN# 
 	  	AND 
-		    A.DEPTID = #DEPTID#
-	  	AND
+		    A.DEPTID = #DEPTID# 
+	  	AND 
 		    A.JOBID = #JOBID#
-		AND
-			A.ROLEID = #ROLEID#
 	  	AND
-		    A.TENANT_ID = #TENANTID#
+			A.ROLEID = #ROLEID#
+	  	AND 
+			A.TENANT_ID = #TENANTID#
 	</select>
 
 	<select id="EzOrganAdminDAO.getExportAddJobList" parameterClass="Map" resultMap="exportAddJobListInfo">
@@ -7906,7 +8585,7 @@
 
 	<select id="EzOrganAdminDAO.getExportPermissionsList" parameterClass="Map" resultMap="exportPermissionsList">
 		SELECT
-			EXTENSIONATTRIBUTE1 ,
+			EXTENSIONATTRIBUTE1,
 			CN,
 			CASE       WHEN #primary# = '1'       THEN DISPLAYNAME        ELSE DISPLAYNAME2     	 END DISPLAYNAME,
 			CASE	   WHEN #primary# = '1'       THEN TITLE              ELSE TITLE2                END TITLE,
@@ -8016,8 +8695,8 @@
 		<![CDATA[
 			SELECT
 				EXTENSIONATTRIBUTE15 + 1 AS EXTENSIONATTRIBUTE15
-			FROM
-				(
+			FROM 
+			    (
 				SELECT
 					EXTENSIONATTRIBUTE15
 				FROM
@@ -8039,11 +8718,11 @@
 									)
 					AND
 						TENANT_ID = #v_TENANT_ID#
-	
+					
 					UNION ALL
-	
+					
 					SELECT
-						 ORDERBY
+						ORDERBY
 					FROM
 						TBL_ADDJOBMASTER
 					WHERE
@@ -8102,7 +8781,6 @@
 			TENANT_ID = #v_TENANTID#
 		]]>
 	</update>
-	
 	
 	<insert id="EzOrganAdminDAO.insertConnectMenuForCompany" parameterClass="Map">
 	<![CDATA[

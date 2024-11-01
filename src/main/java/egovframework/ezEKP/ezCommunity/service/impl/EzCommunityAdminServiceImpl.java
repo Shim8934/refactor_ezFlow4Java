@@ -48,21 +48,22 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityAdminServiceImpl.class);
 
-	/* 2020-01-06 홍승비 - 폐쇄사유 검색옵션 추가 */
+	/* 2020-01-06 홍승비 - 관리자 > 폐쇄승인 커뮤니티 카운트 (폐쇄사유 검색옵션 추가) */
 	@Override
 	public int aspCloseComGet2(String searchValue, String searchType, String searchType2, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseComGet2 started.");
 		//logger.debug("v_S_RADIO=" + searchType + ", v_SEARCHTYPE2=" + searchType2);
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_KEYWORD",  searchValue);
-		map.put("v_S_RADIO",  searchType);
-		map.put("v_SEARCHTYPE2",  searchType2);
+		map.put("v_KEYWORD", searchValue);
+		map.put("v_S_RADIO", searchType);
+		map.put("v_SEARCHTYPE2", searchType2);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		int result = 0;
 		
+		// 2024-07-16 기준으로 searchType의 디폴트 값은 항상 "0"으로 전달됨 (aspCloseComGet2Select2 쿼리를 타지 않음)
 		if (!searchValue.equals("") || !searchType.equals("")) {
 			result = ezCommunityAdminDAO.aspCloseComGet2Select1(map);
 		} else {
@@ -83,7 +84,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", searchValue);
 		map.put("v_S_RADIO", searchType);
-		map.put("v_SEARCHTYPE2",  searchType2);
+		map.put("v_SEARCHTYPE2", searchType2);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_STARTROW", 10 * (pageNum - 1));
 		map.put("v_OFFSETMIN", offSetMin);
@@ -214,6 +215,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		int result = 0;
 		
+		// 2024-07-16 기준으로 searchType의 디폴트 값은 항상 "0"으로 전달됨 (aspAdmitComGet2Select2 쿼리를 타지 않음)
 		if (!searchValue.equals("") || !searchType.equals("")) { // 검색어 또는 검색용 카테고리 존재
 			result = ezCommunityAdminDAO.aspAdmitComGet2Select1(map);
 		} else { // 검색어 없음

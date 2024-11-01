@@ -190,9 +190,196 @@
 		</isEqual>
 		
 		<isNotEqual property="v_FIELD" compareValue="EXTENSIONATTRIBUTE1">
-			<![CDATA[
+			<!--<![CDATA[-->
 				SELECT
-					$v_FIELD$
+					<!--$v_FIELD$-->
+					<isEqual property="v_FIELD"  compareValue="CN">
+						CN
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DISPLAYNAME">
+						DISPLAYNAME
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DISPLAYNAME2">
+						DISPLAYNAME2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MAIL">
+						MAIL
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MAILNICKNAME">
+						MAILNICKNAME
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="UPNNAME">
+						UPNNAME
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DEPARTMENT">
+						DEPARTMENT
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DESCRIPTION">
+						DESCRIPTION
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DESCRIPTION2">
+						DESCRIPTION2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DESCRIPTION3">
+						DESCRIPTION3
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="PHYSICALDELIVERYOFFICENAME">
+						PHYSICALDELIVERYOFFICENAME
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="COMPANY">
+						COMPANY
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="COMPANY2">
+						COMPANY2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="TITLE">
+						TITLE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="TITLE2">
+						TITLE2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="TELEPHONENUMBER">
+						TELEPHONENUMBER
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="HOMEPHONE">
+						HOMEPHONE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="FACSIMILETELEPHONENUMBER">
+						FACSIMILETELEPHONENUMBER
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MOBILE">
+						MOBILE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="POSTALCODE">
+						POSTALCODE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="STREETADDRESS">
+						STREETADDRESS
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="INFO">
+						INFO
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE2">
+						EXTENSIONATTRIBUTE2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE3">
+						EXTENSIONATTRIBUTE3
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE4">
+						EXTENSIONATTRIBUTE4
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE5">
+						EXTENSIONATTRIBUTE5
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE6">
+						EXTENSIONATTRIBUTE6
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE7">
+						EXTENSIONATTRIBUTE7
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE8">
+						EXTENSIONATTRIBUTE8
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE9">
+						EXTENSIONATTRIBUTE9
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE10">
+						EXTENSIONATTRIBUTE10
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE102">
+						EXTENSIONATTRIBUTE102
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE11">
+						EXTENSIONATTRIBUTE11
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE12">
+						EXTENSIONATTRIBUTE12
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE13">
+						EXTENSIONATTRIBUTE13
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE14">
+						EXTENSIONATTRIBUTE14
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE15">
+						EXTENSIONATTRIBUTE15
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="ADSPATH">
+						ADSPATH
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="SIPURI">
+						SIPURI
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="UPDATEDT">
+						UPDATEDT
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="CREATEDT">
+						CREATEDT
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MOBILE_ENABLE">
+						MOBILE_ENABLE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MOBILE_NOTUSE">
+						MOBILE_NOTUSE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MOBILE_PIN">
+						MOBILE_PIN
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="POSITIONCD">
+						POSITIONCD
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="BIRTH">
+						BIRTH
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="BIRTHTYPE">
+						BIRTHTYPE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="PASSWORD">
+						PASSWORD
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="IPADDRESS">
+						IPADDRESS
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="LASTLOGIN">
+						LASTLOGIN
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="LOGINCNT">
+						LOGINCNT
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="TENANT_ID">
+						TENANT_ID
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MANUAL_FLAG">
+						MANUAL_FLAG
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="LISTTYPE">
+						LISTTYPE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="PASSWORD_UPDATEDT">
+						PASSWORD_UPDATEDT
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="FURIGANA">
+						FURIGANA
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONPHONE">
+						EXTENSIONPHONE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="OFFICEMOBILE">
+						OFFICEMOBILE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MAILBOXQUOTA">
+						MAILBOXQUOTA
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MAILBOXUSAGE">
+						MAILBOXUSAGE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="PASSWORD2">
+						PASSWORD2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="PHOTO_UPDATEDT">
+						PHOTO_UPDATEDT
+					</isEqual>
+				<![CDATA[
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -204,9 +391,199 @@
 	</select>
 	
 	<select id="EzOrganDAO.getPropertyValue_S4" parameterClass="Map" resultClass="String" remapResults="true">
-		<![CDATA[
+		<!--<![CDATA[-->
 			SELECT
-				$v_FIELD$
+				<!--$v_FIELD$-->
+				<isEqual property="v_FIELD"  compareValue="CN">
+					CN
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DISPLAYNAME">
+					DISPLAYNAME
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DISPLAYNAME2">
+					DISPLAYNAME2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MAIL">
+					MAIL
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MAILNICKNAME">
+					MAILNICKNAME
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="UPNNAME">
+					UPNNAME
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPARTMENT">
+					DEPARTMENT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DESCRIPTION">
+					DESCRIPTION
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DESCRIPTION2">
+					DESCRIPTION2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DESCRIPTION3">
+					DESCRIPTION3
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="PHYSICALDELIVERYOFFICENAME">
+					PHYSICALDELIVERYOFFICENAME
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="COMPANY">
+					COMPANY
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="COMPANY2">
+					COMPANY2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="TITLE">
+					TITLE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="TITLE2">
+					TITLE2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="TELEPHONENUMBER">
+					TELEPHONENUMBER
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="HOMEPHONE">
+					HOMEPHONE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="FACSIMILETELEPHONENUMBER">
+					FACSIMILETELEPHONENUMBER
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MOBILE">
+					MOBILE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="POSTALCODE">
+					POSTALCODE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="STREETADDRESS">
+					STREETADDRESS
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="INFO">
+					INFO
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE1">
+					EXTENSIONATTRIBUTE1
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE2">
+					EXTENSIONATTRIBUTE2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE3">
+					EXTENSIONATTRIBUTE3
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE4">
+					EXTENSIONATTRIBUTE4
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE5">
+					EXTENSIONATTRIBUTE5
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE6">
+					EXTENSIONATTRIBUTE6
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE7">
+					EXTENSIONATTRIBUTE7
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE8">
+					EXTENSIONATTRIBUTE8
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE9">
+					EXTENSIONATTRIBUTE9
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE10">
+					EXTENSIONATTRIBUTE10
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE102">
+					EXTENSIONATTRIBUTE102
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE11">
+					EXTENSIONATTRIBUTE11
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE12">
+					EXTENSIONATTRIBUTE12
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE13">
+					EXTENSIONATTRIBUTE13
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE14">
+					EXTENSIONATTRIBUTE14
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE15">
+					EXTENSIONATTRIBUTE15
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="ADSPATH">
+					ADSPATH
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="SIPURI">
+					SIPURI
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="UPDATEDT">
+					UPDATEDT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="CREATEDT">
+					CREATEDT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MOBILE_ENABLE">
+					MOBILE_ENABLE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MOBILE_NOTUSE">
+					MOBILE_NOTUSE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MOBILE_PIN">
+					MOBILE_PIN
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="POSITIONCD">
+					POSITIONCD
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="BIRTH">
+					BIRTH
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="BIRTHTYPE">
+					BIRTHTYPE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="PASSWORD">
+					PASSWORD
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="IPADDRESS">
+					IPADDRESS
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="LASTLOGIN">
+					LASTLOGIN
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="LOGINCNT">
+					LOGINCNT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="TENANT_ID">
+					TENANT_ID
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MANUAL_FLAG">
+					MANUAL_FLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="LISTTYPE">
+					LISTTYPE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="PASSWORD_UPDATEDT">
+					PASSWORD_UPDATEDT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="FURIGANA">
+					FURIGANA
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONPHONE">
+					EXTENSIONPHONE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="OFFICEMOBILE">
+					OFFICEMOBILE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MAILBOXQUOTA">
+					MAILBOXQUOTA
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MAILBOXUSAGE">
+					MAILBOXUSAGE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="PASSWORD2">
+					PASSWORD2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="PHOTO_UPDATEDT">
+					PHOTO_UPDATEDT
+				</isEqual>
+		<![CDATA[
 			FROM
 				TBL_USERMASTER
 			WHERE
@@ -217,9 +594,100 @@
 	</select>
 	
 	<select id="EzOrganDAO.getPropertyValue_S5" parameterClass="Map" resultClass="String" remapResults="true">
-		<![CDATA[
+		<!--<![CDATA[-->
 			SELECT
-				$v_FIELD$
+				<!--$v_FIELD$-->
+				<isEqual property="v_FIELD"  compareValue="CN">
+					CN
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DISPLAYNAME">
+					DISPLAYNAME
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DISPLAYNAME2">
+					DISPLAYNAME2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="USEFLAG">
+					USEFLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MAIL">
+					MAIL
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="COMPNM2">
+					COMPNM2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPTLEVEL">
+					DEPTLEVEL
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPT_CD_PATH">
+					DEPT_CD_PATH
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPT_NM_PATH">
+					DEPT_NM_PATH
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE1">
+					EXTENSIONATTRIBUTE1
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE2">
+					EXTENSIONATTRIBUTE2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE3">
+					EXTENSIONATTRIBUTE3
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE4">
+					EXTENSIONATTRIBUTE4
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE5">
+					EXTENSIONATTRIBUTE5
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE6">
+					EXTENSIONATTRIBUTE6
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE7">
+					EXTENSIONATTRIBUTE7
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE8">
+					EXTENSIONATTRIBUTE8
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE9">
+					EXTENSIONATTRIBUTE9
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE10">
+					EXTENSIONATTRIBUTE10
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE11">
+					EXTENSIONATTRIBUTE11
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE12">
+					EXTENSIONATTRIBUTE12
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE13">
+					EXTENSIONATTRIBUTE13
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE14">
+					EXTENSIONATTRIBUTE14
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE15">
+					EXTENSIONATTRIBUTE15
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="ADFLAG">
+					ADFLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="ADSPATH">
+					ADSPATH
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="UPDATEDT">
+					UPDATEDT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="CREATEDT">
+					CREATEDT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="TENANT_ID">
+					TENANT_ID
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MANUAL_FLAG">
+					MANUAL_FLAG
+				</isEqual>
+			<![CDATA[
 			FROM
 				TBL_DEPTMASTER
 			WHERE
@@ -1849,11 +2317,322 @@
 	</select>
 
 	<update id="EzOrganDAO.updateProperty" parameterClass="Map">
-		<![CDATA[
+		<!--<![CDATA[-->
 			UPDATE
 				TBL_USERMASTER
 			SET
-				$v_PROPNAME$ = #v_PROPVALUE#
+				<!--$v_PROPNAME$ = #v_PROPVALUE#-->
+				<isEqual property="v_PROPNAME"  compareValue="CN">
+					<![CDATA[
+						CN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME">
+					<![CDATA[
+						 DISPLAYNAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME2">
+					<![CDATA[
+						 DISPLAYNAME2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAIL">
+					<![CDATA[
+						 MAIL = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAILNICKNAME">
+					<![CDATA[
+						 MAILNICKNAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="UPNNAME">
+					<![CDATA[
+						 UPNNAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPARTMENT">
+					<![CDATA[
+						 DEPARTMENT = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION">
+					<![CDATA[
+						 DESCRIPTION = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION2">
+					<![CDATA[
+						 DESCRIPTION2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION3">
+					<![CDATA[
+						 DESCRIPTION3 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PHYSICALDELIVERYOFFICENAME">
+					<![CDATA[
+						 PHYSICALDELIVERYOFFICENAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="COMPANY">
+					<![CDATA[
+						 COMPANY = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="COMPANY2">
+					<![CDATA[
+						 COMPANY2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TITLE">
+					<![CDATA[
+						 TITLE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TITLE2">
+					<![CDATA[
+						 TITLE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TELEPHONENUMBER">
+					<![CDATA[
+						 TELEPHONENUMBER = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="HOMEPHONE">
+					<![CDATA[
+						 HOMEPHONE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="FACSIMILETELEPHONENUMBER">
+					<![CDATA[
+						 FACSIMILETELEPHONENUMBER = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MOBILE">
+					<![CDATA[
+						 MOBILE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="POSTALCODE">
+					<![CDATA[
+						 POSTALCODE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="STREETADDRESS">
+					<![CDATA[
+						 STREETADDRESS = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="INFO">
+					<![CDATA[
+						 INFO = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE1">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE1 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE2">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE3">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE3 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE4">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE4 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE5">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE5 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE6">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE6 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE7">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE7 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE8">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE8 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE9">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE9 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE10">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE10 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE102">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE102 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE11">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE11 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE12">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE12 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE13">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE13 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE14">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE14 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ADSPATH">
+					<![CDATA[
+						 ADSPATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="SIPURI">
+					<![CDATA[
+						 SIPURI = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="CREATEDT">
+					<![CDATA[
+						 CREATEDT = TO_DATE(#v_PROPVALUE#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MOBILE_ENABLE">
+					<![CDATA[
+						 MOBILE_ENABLE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MOBILE_NOTUSE">
+					<![CDATA[
+						 MOBILE_NOTUSE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MOBILE_PIN">
+					<![CDATA[
+						 MOBILE_PIN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="POSITIONCD">
+					<![CDATA[
+						 POSITIONCD = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="BIRTH">
+					<![CDATA[
+						 BIRTH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="BIRTHTYPE">
+					<![CDATA[
+						 BIRTHTYPE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PASSWORD">
+					<![CDATA[
+						 PASSWORD = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="IPADDRESS">
+					<![CDATA[
+						 IPADDRESS = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="LASTLOGIN">
+					<![CDATA[
+						 LASTLOGIN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="LOGINCNT">
+					<![CDATA[
+						 LOGINCNT = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TENANT_ID">
+					<![CDATA[
+						 TENANT_ID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MANUAL_FLAG">
+					<![CDATA[
+						 MANUAL_FLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="LISTTYPE">
+					<![CDATA[
+						 LISTTYPE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PASSWORD_UPDATEDT">
+					<![CDATA[
+						 PASSWORD_UPDATEDT = TO_DATE(#v_PROPVALUE#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="FURIGANA">
+					<![CDATA[
+						 FURIGANA = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONPHONE">
+					<![CDATA[
+						 EXTENSIONPHONE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="OFFICEMOBILE">
+					<![CDATA[
+						 OFFICEMOBILE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAILBOXQUOTA">
+					<![CDATA[
+						 MAILBOXQUOTA = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAILBOXUSAGE">
+					<![CDATA[
+						 MAILBOXUSAGE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PASSWORD2">
+					<![CDATA[
+						 PASSWORD2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PHOTO_UPDATEDT">
+					<![CDATA[
+						 PHOTO_UPDATEDT = TO_DATE(#v_PROPVALUE#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+					<![CDATA[
+						EXTENSIONATTRIBUTE15 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+		<![CDATA[
 			WHERE
 				CN = #v_CN#
 			AND
@@ -1862,11 +2641,162 @@
 	</update>
 	
 	<update id="EzOrganDAO.updateProperty_U" parameterClass="Map">
-		<![CDATA[
+		<!--<![CDATA[-->
 			UPDATE
 				TBL_DEPTMASTER
 			SET
-				$v_PROPNAME$ = #v_PROPVALUE# 
+				<!--$v_PROPNAME$ = #v_PROPVALUE#-->
+				<isEqual property="v_PROPNAME"  compareValue="CN">
+					<![CDATA[
+						 CN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME">
+					<![CDATA[
+						 DISPLAYNAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME2">
+					<![CDATA[
+						 DISPLAYNAME2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="USEFLAG">
+					<![CDATA[
+						 USEFLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAIL">
+					<![CDATA[
+						 MAIL = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="COMPNM2">
+					<![CDATA[
+						 COMPNM2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPTLEVEL">
+					<![CDATA[
+						 DEPTLEVEL = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPT_CD_PATH">
+					<![CDATA[
+						 DEPT_CD_PATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPT_NM_PATH">
+					<![CDATA[
+						 DEPT_NM_PATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE1">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE1 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE2">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE3">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE3 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE4">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE4 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE5">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE5 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE6">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE6 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE7">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE7 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE8">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE8 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE9">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE9 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE10">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE10 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE11">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE11 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE12">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE12 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE13">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE13 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE14">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE14 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE15">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE15 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ADFLAG">
+					<![CDATA[
+						 ADFLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ADSPATH">
+					<![CDATA[
+						 ADSPATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="UPDATEDT">
+					<![CDATA[
+						 UPDATEDT = TO_DATE(#v_PROPVALUE#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="CREATEDT">
+					<![CDATA[
+						 CREATEDT = TO_DATE(#v_PROPVALUE#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TENANT_ID">
+					<![CDATA[
+						 TENANT_ID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MANUAL_FLAG">
+					<![CDATA[
+						 MANUAL_FLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+		<![CDATA[
 			WHERE
 				CN = #v_CN#
 			AND
@@ -1930,17 +2860,34 @@
 	</delete>
 
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
-		<![CDATA[
+		<!--<![CDATA[-->
 			SELECT
 				*
 			FROM
 				(
 				SELECT
-					displayname$lang$ AS displayname, 
+					<isEqual property="lang"  compareValue="">
+						<![CDATA[
+							cn,
+							title AS title,
+							birth,
+							birthtype
+						]]>
+					</isEqual>
+					<isEqual property="lang"  compareValue="2">
+						<![CDATA[
+							cn,
+							title2 AS title,
+							birth,
+							birthtype
+						]]>
+					</isEqual>
+					<!--displayname$lang$ AS displayname,
 					cn,
 					title$lang$ AS title,
 					birth,
-					birthtype
+					birthtype-->
+			<![CDATA[
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -1955,13 +2902,32 @@
 					cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
 					
 				UNION ALL
-				
+			]]>
 				SELECT
-					C.displayname$lang$ AS displayname, 
+					<isEqual property="lang"  compareValue="">
+						<![CDATA[
+							C.displayname AS displayname,
+							A.cn,
+							A.title AS title,
+							C.birth,
+							C.birthtype AS birthtype
+						]]>
+					</isEqual>
+					<isEqual property="lang"  compareValue="2">
+						<![CDATA[
+							C.displayname2 AS displayname,
+							A.cn,
+							A.title2 AS title,
+							C.birth,
+							C.birthtype AS birthtype
+						]]>
+					</isEqual>
+					<!--C.displayname$lang$ AS displayname,
 					A.cn,
 					A.title$lang$ AS title,
 					C.birth,
-					C.birthtype AS birthtype
+					C.birthtype AS birthtype-->
+		<![CDATA[
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
@@ -2016,7 +2982,19 @@
             	DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\' 
 			<include refid="organSearchTrashDept_user"/>
             AND 
-                A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
+                A.TENANT_ID = #v_TENANT_ID# <!--$strSQLCom$-->
+				<isNotEmpty property="companyId">
+					<isEqual property="type" compareValue="G">
+						<![CDATA[
+							AND EXTENSIONATTRIBUTE2 = #companyId#
+						]]>
+					</isEqual>
+					<isNotEqual property="type" compareValue="G">
+						<![CDATA[
+							AND PHYSICALDELIVERYOFFICENAME = #companyId#
+						]]>
+					</isNotEqual>
+				</isNotEmpty>
 	    	<![CDATA[
 	           	AND
 	           		CN <> 'masteradmin'
@@ -2057,11 +3035,19 @@
 	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 				<include refid="organSearchTrashDept_user"/>
 	            AND A.TENANT_ID = #v_TENANT_ID#
-				$strSQLAddjobCom$
+				<!--$strSQLAddjobCom$-->
 				<isNotEmpty property="companyId">
+					<isEqual property="strSQLAddjobCom" compareValue="description">
+						AND B.PHYSICALDELIVERYOFFICENAME IN
+						(SELECT CN FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyId# AND TENANT_ID = #v_TENANT_ID#)
+					</isEqual>
+					<isNotEqual property="strSQLAddjobCom" compareValue="description">
+						AND A.DEPTID IN
+						(SELECT CN FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyId# AND TENANT_ID = #v_TENANT_ID#)
+					</isNotEqual>
 			    	AND 
 			    		A.DEPTID IN 
-		    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#) 
+		    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId# AND TENANT_ID = #v_TENANT_ID#)
 		    	</isNotEmpty>
 		    	
 		    	<!-- <isNotEqual property="class" compareValue="all">
@@ -2095,7 +3081,12 @@
 		    	</isNotEmpty>
 			</isEqual>	  
 			
-			$strSize$
+			<!--$strSize$-->
+			<isNotEqual property="pLimit" compareValue="0">
+				<![CDATA[
+					AND ROWNUM <= #pLimit#
+				]]>
+			</isNotEqual>
 			<!-- 2023-08-30 전인하 - 리스트에 겸직, 원직 함께 나타날 때 원직을 상위에, 겸직을 하위에 나타나게 함 -->
 			) ORDER BY type DESC, ISADDJOB DESC, NAME ASC
 	    </isEqual>
@@ -2119,7 +3110,19 @@
 				]]>
 			</isEqual>
 			<include refid="organSearchTrashDept_dept"/>
-            AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
+            AND TENANT_ID = #v_TENANT_ID# <!--$strSQLCom$-->
+			<isNotEmpty property="companyId">
+				<isEqual property="type" compareValue="G">
+					<![CDATA[
+					AND EXTENSIONATTRIBUTE2 = #companyId#
+				]]>
+				</isEqual>
+				<isNotEqual property="type" compareValue="G">
+					<![CDATA[
+					AND PHYSICALDELIVERYOFFICENAME = #companyId#
+				]]>
+				</isNotEqual>
+			</isNotEmpty>
 	    </isEqual>
 	</select>
 
@@ -2152,7 +3155,21 @@
 			             FROM  
 			             	TBL_USERMASTER A
                          $strSQL$
-                         $strSQLCom$
+                        ]]>
+						<!--$strSQLCom$-->
+						<isNotEmpty property="companyId">
+							<isEqual property="type" compareValue="G">
+							<![CDATA[
+								AND EXTENSIONATTRIBUTE2 = #companyId#
+							]]>
+							</isEqual>
+							<isNotEqual property="type" compareValue="G">
+								<![CDATA[
+									AND PHYSICALDELIVERYOFFICENAME = #companyId#
+								]]>
+							</isNotEqual>
+						</isNotEmpty>
+						<![CDATA[
                          AND 
                              CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                                                
                          AND 
@@ -2199,10 +3216,21 @@
 							]]>
 				</isEqual>
 							<include refid="organSearchTrashDept_user"/>
-						<![CDATA[
-							AND A.TENANT_ID = #v_TENANT_ID#
-							$strSQLAddjobCom$
+						<!--<![CDATA[-->
+						AND A.TENANT_ID = #v_TENANT_ID#
+						<!--$strSQLAddjobCom$-->
+						<isNotEmpty property="companyId">
+							<isEqual property="strSQLAddjobCom" compareValue="description">
+								AND B.PHYSICALDELIVERYOFFICENAME IN
+								(SELECT CN FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyId# AND TENANT_ID = #v_TENANT_ID#)
+							</isEqual>
+							<isNotEqual property="strSQLAddjobCom" compareValue="description">
+								AND A.DEPTID IN
+								(SELECT CN FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyId# AND TENANT_ID = #v_TENANT_ID#)
+							</isNotEqual>
+						</isNotEmpty>
 						)  A
+					<![CDATA[
 						ORDER BY
 							A.addJobflag, A.userName
 					
@@ -2268,7 +3296,9 @@
 					    '' ROLEID,
 		                '' ISADDJOB
 					FROM
-						TBL_DEPTMASTER $strSize$ 
+					]]>
+						TBL_DEPTMASTER <!--$strSize$  넘겨주는 값이 없어 주석처리만 함-->
+			  		<![CDATA[
 					AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 					]]>
 						<include refid="organSearchTrashDept_dept"/>

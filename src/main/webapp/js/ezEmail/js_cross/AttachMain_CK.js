@@ -17,7 +17,7 @@ function replace(str,s,d)
 function status_change(fileinfo){
 	try {
 		g_progresswin.document.Script.fileinfo_change(fileinfo);
-	} catch(e) {}
+	} catch(e) {console.log(e);}
 }
 
 function btn_ImgDel_onclick() {
@@ -460,6 +460,7 @@ function AttachFileList() {
         }
     }
     catch (e) {
+        console.log(e);
     }
     xmldom_attachlist = null;
     return strRet;
@@ -506,6 +507,7 @@ function beginAttachAdd_Photo() {
                 txtPhotoFile.value = "";
             }
             catch (e) {
+                console.log(e);
             }
 
             alert(g_fileList[i] + " " + strLang24 + "");

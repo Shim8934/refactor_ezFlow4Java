@@ -1807,115 +1807,102 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String pPageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
 		String pPageSize = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
 		
-		String pSubQuery = "";
+		Map<String, Object> queryMap = new HashMap<>();
 		String p_UserLang = userInfo.getLang();
-		if ( xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10) {
+		
+		if (xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10) {
             try {
             	String TempQuery = "";
-            	String ReturnQuery = "(1 = 1) ";
             	
             	xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent());
                 TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
-
+                
+				String qOptionDocNo = "";
+				String qOptionDocTitle = "";
+				String qOptionWriterName = "";
+				
                 if (TempQuery.indexOf("DOCNO;") != -1) {
-                    ReturnQuery += " AND DOCNO LIKE '%" + xmldomsub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
+					qOptionDocNo = xmldomsub.getElementsByTagName("DOCNO").item(0).getTextContent();
                 }
                 if (TempQuery.indexOf("DOCTITLE;") != -1) {
-                    ReturnQuery += " AND DocTitle LIKE '%" + xmldomsub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
+					qOptionDocTitle = xmldomsub.getElementsByTagName("DOCTITLE").item(0).getTextContent();
                 }
-                if (p_UserLang.equals("2")) {
-                    if (TempQuery.indexOf("WRITERNAME;") != -1) {
-                        ReturnQuery += " AND WRITERNAME" + p_UserLang + " LIKE '%" + xmldomsub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
-                    }
-                } else {
-                    if (TempQuery.indexOf("WRITERNAME;") != -1) {
-                        ReturnQuery += " AND WRITERNAME LIKE '%" + xmldomsub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
-                    }
+				if (TempQuery.indexOf("WRITERNAME;") != -1) { // 다국어 처리 쿼리단으로 이동
+					qOptionWriterName = xmldomsub.getElementsByTagName("WRITERNAME").item(0).getTextContent();
+				}
+				
+				queryMap.put("qOptionDocNo", qOptionDocNo);
+				queryMap.put("qOptionDocTitle", qOptionDocTitle);
+				queryMap.put("qOptionWriterName", qOptionWriterName);
+				queryMap.put("p_UserLang", p_UserLang);
+				
+				String qOptionStartDateAF = "";
+				String qOptionStartDateBF = "";
+				String qOptionEndDateAF = "";
+				String qOptionEndDateBF = "";
+				
+                if (TempQuery.indexOf("STARTDATEAF;") != -1) { // 등록일자 시작 (년-월-일 형태로 전달됨, 시:분:초 추가)
+					qOptionStartDateAF = commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true);
                 }
-                
-                if (commonUtil.getDatabaseType().equalsIgnoreCase("mysql")) {
-	                if (TempQuery.indexOf("STARTDATEAF;") != -1) {
-	                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent() + "'  ,'%Y-%m-%d %H:%i:%s') ";
-	                }
-	                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
-	                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent() + "'  ,'%Y-%m-%d %H:%i:%s')";
-	                }
-	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
-	                    ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'%Y-%m-%d %H:%i:%s')";
-	                }
-	                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
-	                    ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent(), userInfo.getOffset(), true) + "' ,'%Y-%m-%d %H:%i:%s')";
-	                }
-                } else if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle")) {
-                	if (TempQuery.indexOf("STARTDATEAF;") != -1) {
- 	                    ReturnQuery += " AND LINKDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'YYYY-MM-DD HH24:MI:SS') ";
- 	                }
- 	                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
- 	                    ReturnQuery += " AND LINKDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
- 	                }
- 	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
- 	                    ReturnQuery += " AND ENDDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
- 	                }
- 	                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
- 	                    ReturnQuery += " AND ENDDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), true) + "' ,'YYYY-MM-DD HH24:MI:SS')";
- 	                }
+                if (TempQuery.indexOf("STARTDATEBF;") != -1) { // 등록일자 종료
+					qOptionStartDateBF = commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true);
+                }
+                if (TempQuery.indexOf("ENDDATEAF;") != -1) { // 완료일자 시작
+					qOptionEndDateAF = commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), true);
+                }
+                if (TempQuery.indexOf("ENDDATEBF;") != -1) { // 완료일자 종료
+					qOptionEndDateBF = commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent(), userInfo.getOffset(), true);
                 }
                 
+				queryMap.put("qOptionStartDateAF", qOptionStartDateAF);
+				queryMap.put("qOptionStartDateBF", qOptionStartDateBF);
+				queryMap.put("qOptionEndDateAF", qOptionEndDateAF);
+				queryMap.put("qOptionEndDateBF", qOptionEndDateBF);
+				
+				String qOptionFormName = "";
+				String qOptionWriterDeptName = "";
+				String qOptionKeyword = "";
+				String qOptionItemcode = "";
+				
                 if (TempQuery.indexOf("FORMID;") != -1) {
 					//2021-08-26 김성준 개인문서함 폼양식명으로 검색하도록 수정
 					//ReturnQuery += " AND TBL_ENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
-					ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.FormName like '%" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "%' ";
+					qOptionFormName = xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent();
                 }
-                if (p_UserLang.equals("2")) {
-                    if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                        ReturnQuery += " AND WriterDeptName" + p_UserLang + " LIKE '%" + xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
-                    }
-                } else {
-                    if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                        ReturnQuery += " AND WriterDeptName LIKE '%" + xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
-                    }
-                }
+				if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) { // 다국어 처리 쿼리단으로 이동
+					qOptionWriterDeptName = xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent();
+				}
                 
                 // 2021-03-16 박기범 - 키워드 검색 추가
-				if(TempQuery.indexOf("KAPR;") != -1) {
-					ReturnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + xmldomsub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+				if (TempQuery.indexOf("KAPR;") != -1 || TempQuery.indexOf("KEND;") != -1) {
+					qOptionKeyword = xmldomsub.getElementsByTagName("KEYWORD").item(0).getTextContent();
 				}
 				
-				if (TempQuery.indexOf("KEND;") != -1) {
-					ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%" + xmldomsub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
-				}
+                if (TempQuery.indexOf("CAPR;") != -1 || TempQuery.indexOf("CEND;") != -1) {
+					qOptionItemcode = xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent();
+                }
+                
+				queryMap.put("qOptionFormName", qOptionFormName);
+				queryMap.put("qOptionWriterDeptName", qOptionWriterDeptName);
+				queryMap.put("qOptionKeyword", qOptionKeyword);
+				queryMap.put("qOptionItemcode", qOptionItemcode);
 				
-                if (TempQuery.indexOf("CAPR;") != -1) {
-                    ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
-                }
-                if (TempQuery.indexOf("CEND;") != -1) {
-                    ReturnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
-                }
-
-                pSubQuery = ReturnQuery;
             } catch (Exception Ex) {
-                pSubQuery = "";
+            	logger.error(Ex.getMessage(), Ex);
             }
         }
 
-        String oc = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
-        String oo = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
-
-        if (xmlDom.getDocumentElement().getChildNodes().getLength() > 6) {
-            if (!xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent().trim().equals("")) {
-                pSubQuery = pSubQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
-            }
-        }
-
-        String result = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getId());
-
+        String oc = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent(); // orderCell
+        String oo = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent(); // orderOption
+        String result = ezApprovalGService.getUserContList(pContID, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getId(), queryMap);
+        
 		logger.debug("getUserContList ended");
 
 		return result;
 	}
 	
 	
-	/** 전자결재 개인 문서함 리스트*/
+	/** 전자결재 개인 문서함 리스트 내보내기 (엑셀 다운로드) */
 	@RequestMapping(value = "/ezApprovalG/getUserContListSave.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public void getUserContListSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String xmlPara) throws Exception{
@@ -1923,6 +1910,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		//StringBuilder resultExcel = new StringBuilder(); //2019.03.25 천성준 - 사용안해서 일단 주석
 		String excelValue = "";
+		Map<String, Object> queryMap = new HashMap<>();
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -1937,149 +1925,94 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String pPageSize = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
 		String AllFG = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
 		
-		String pSubQuery = "";
 		String p_UserLang = userInfo.getLang();
 
 		if (xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10) {
             try {
             	String TempQuery = "";
-            	String ReturnQuery = "(1 = 1) ";
+				String qOptionDocNo = "";
+				String qOptionDocTitle = "";
+				String qOptionWriterName = "";
             	
             	xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent());
                 TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
-
+                
                 if (TempQuery.indexOf("DOCNO;") != -1) {
-                    ReturnQuery += " AND DOCNO LIKE '%"+ xmldomsub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
+					qOptionDocNo = xmldomsub.getElementsByTagName("DOCNO").item(0).getTextContent();
                 }
                 if (TempQuery.indexOf("DOCTITLE;") != -1) {
-                    ReturnQuery += " AND DocTitle LIKE '%"+ xmldomsub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
+					qOptionDocTitle = xmldomsub.getElementsByTagName("DOCTITLE").item(0).getTextContent();
                 }
-                if (p_UserLang.equals("2")) {
-                    if (TempQuery.indexOf("WRITERNAME;") != -1) {
-                        ReturnQuery += " AND WRITERNAME" + p_UserLang + " LIKE '%" + xmldomsub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
-                    }
-                } else {
-                    if (TempQuery.indexOf("WRITERNAME;") != -1) {
-                        ReturnQuery += " AND WRITERNAME LIKE '%" + xmldomsub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
-                    }
+				if (TempQuery.indexOf("WRITERNAME;") != -1) { // 다국어 처리 쿼리단으로 이동
+					qOptionWriterName = xmldomsub.getElementsByTagName("WRITERNAME").item(0).getTextContent();
+				}
+				
+				queryMap.put("qOptionDocNo", qOptionDocNo);
+				queryMap.put("qOptionDocTitle", qOptionDocTitle);
+				queryMap.put("qOptionWriterName", qOptionWriterName);
+				queryMap.put("p_UserLang", p_UserLang);
+
+				String qOptionStartDateAF = "";
+				String qOptionStartDateBF = "";
+				String qOptionEndDateAF = "";
+				String qOptionEndDateBF = "";
+				
+            	if (TempQuery.indexOf("STARTDATEAF;") != -1) { // 등록일자 시작 (년-월-일 형태로 전달됨, 시:분:초 추가)
+					qOptionStartDateAF = commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true);
                 }
-               
-                if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle")) {
-	                if (TempQuery.indexOf("STARTDATEAF;") != -1) {
-	                    ReturnQuery += " AND LINKDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + " '  ,'YYYY-MM-DD HH24:MI:SS') ";
-	                }
-	                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
-	                    ReturnQuery += " AND LINKDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + " '  ,'YYYY-MM-DD HH24:MI:SS')";
-	                }
-	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
-	                    ReturnQuery += " AND ENDDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
-	                }
-	                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
-	                    ReturnQuery += " AND ENDDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'YYYY-MM-DD HH24:MI:SS')";
-	                }
-                } else if (commonUtil.getDatabaseType().equalsIgnoreCase("mysql")) {
-                	if (TempQuery.indexOf("STARTDATEAF;") != -1) {
- 	                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
- 	                }
- 	                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
- 	                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
- 	                }
- 	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
- 	                    ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
- 	                }
- 	                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
- 	                    ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'%Y-%m-%d %H:%i:%s')";
- 	                }
+                if (TempQuery.indexOf("STARTDATEBF;") != -1) { // 등록일자 종료
+					qOptionStartDateBF = commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true);
+                }
+                if (TempQuery.indexOf("ENDDATEAF;") != -1) { // 완료일자 시작
+					qOptionEndDateAF = commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), true);
+                }
+                if (TempQuery.indexOf("ENDDATEBF;") != -1) { // 완료일자 종료
+					qOptionEndDateBF = commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent(), userInfo.getOffset(), true);
                 }
                 
+				queryMap.put("qOptionStartDateAF", qOptionStartDateAF);
+				queryMap.put("qOptionStartDateBF", qOptionStartDateBF);
+				queryMap.put("qOptionEndDateAF", qOptionEndDateAF);
+				queryMap.put("qOptionEndDateBF", qOptionEndDateBF);
+				
+				String qOptionFormName = "";
+				String qOptionWriterDeptName = "";
+				String qOptionKeyword = "";
+				String qOptionItemcode = "";
+                
                 if (TempQuery.indexOf("FORMID;") != -1) {
-                    ReturnQuery += " AND TBL_ENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+					qOptionFormName = xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent();
                 }
-                if (p_UserLang.equals("2")) {
-                    if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                        ReturnQuery += " AND WriterDeptName" + p_UserLang + " LIKE '%" + xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
-                    }
-                } else {
-                    if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                        ReturnQuery += " AND WriterDeptName LIKE '%" + xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
-                    }
+				if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) { // 다국어 처리 쿼리단으로 이동
+					qOptionWriterDeptName = xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent();
+				}
+                if (TempQuery.indexOf("KAPR;") != -1 || TempQuery.indexOf("KEND;") != -1) {
+					qOptionKeyword = xmldomsub.getElementsByTagName("KEYWORD").item(0).getTextContent();
                 }
-                if (TempQuery.indexOf("KAPR;") != -1) {
-                    ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+                if (TempQuery.indexOf("CAPR;") != -1 || TempQuery.indexOf("CEND;") != -1) {
+					qOptionItemcode = xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent();
                 }
-                if (TempQuery.indexOf("KEND;") != -1) {
-                    ReturnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
-                }
-                if (TempQuery.indexOf("CAPR;") != -1) {
-                    ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = " + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + " ";
-                }
-                if (TempQuery.indexOf("CEND;") != -1) {
-                    ReturnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = " + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + " ";
-                }
-
-                pSubQuery = ReturnQuery;
+                
+				queryMap.put("qOptionFormName", qOptionFormName);
+				queryMap.put("qOptionWriterDeptName", qOptionWriterDeptName);
+				queryMap.put("qOptionKeyword", qOptionKeyword);
+				queryMap.put("qOptionItemcode", qOptionItemcode);
+				
             } catch (Exception Ex) {
-                pSubQuery = "";
             }
         }
 
-        String oc = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
-        String oo = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
-
-        if (xmlDom.getDocumentElement().getChildNodes().getLength() > 6) {
-            if (!xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent().trim().equals("")) {
-                pSubQuery = pSubQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
-            }
-        }
+        String oc = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent(); // orderCell
+        String oo = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent(); // orderOption
         
         if (AllFG.equals("0")) {
-        	excelValue = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getId());
+        	excelValue = ezApprovalGService.getUserContList(pContID, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getId(), queryMap);
         } else if(AllFG.equals("1")) {
-        	excelValue = ezApprovalGService.getUserContListAll(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());	
+        	excelValue = ezApprovalGService.getUserContListAll(pContID, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getId(), queryMap);
         }
         
         Document objXML = commonUtil.convertStringToDocument(excelValue);
         //2018-10-16 김보미 - 개인문서함 엑셀출력 workBook 이용해서 출력하도록 변경
-/*		
-		resultExcel.append("<table><tr>");
-		
-		for (int k = 0; k < objXML.getElementsByTagName("HEADER").getLength(); k++) {
-			String headerName = objXML.getElementsByTagName("NAME").item(k).getTextContent();
-			String headerWidth = objXML.getElementsByTagName("WIDTH").item(k).getTextContent();
-			
-			int width = Integer.parseInt(headerWidth) * 2;
-			
-			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=center><STRONG>" + " " + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
-		}
-		resultExcel.append("</tr></table>");
-		
-		resultExcel.append("<table>");
-
-		NodeList objRow = objXML.getElementsByTagName("ROW");
-		
-		for (int k = 0; k < objRow.getLength(); k++) {
-			resultExcel.append("<tr>");
-			Element row = (Element) objRow.item(k);
-			NodeList objCell = row.getElementsByTagName("CELL");
-			
-			for (int p = 0; p < objCell.getLength(); p++) {
-				Element cell = (Element) objCell.item(p);
-				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
-				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
-				int width = Integer.parseInt(headerWidth) * 2;
-				
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + " </p></td>       ");
-			}
-			resultExcel.append("</tr>");
-		}
-		resultExcel.append("</table>");
-		
-//		response.getWriter().write(resultExcel.toString());
-		
-		//2018-07-13 천성준 - (#13042) 임시로 euc-kr로 해결, 추후에 왜 utf-8이 안먹는지 분석해서 utf-8로 고쳐야됨.  
-		response.getOutputStream().write(resultExcel.toString().getBytes("euc-kr"));
-*/
-        
         //엑셀시작
         // 2023-05-31 이사라 : 시큐어코딩 리소스 close
         try(HSSFWorkbook workbook = new HSSFWorkbook()){
@@ -2979,7 +2912,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	return result;
 	}
 	
-	/** 전자결재 후결 왼쪽 카운트*/
+	/** 전자결재 후결 왼쪽 카운트 (일반버전) */
 	@RequestMapping(value = "/ezApprovalG/getContDocCount.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getContDocCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
@@ -2990,6 +2923,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String contID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
         String subQuery = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
         
+        /* 2024-03-07 홍승비 - 전자결재 일반버전에서만 사용 가능한 후결 기능의 SQL Injection 수정 (G버전에서는 테스트 불가능) */
 		String result = ezApprovalGService.getContDocListS(contID, userInfo.getId(), subQuery, "1", "0", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 
 		xmlDom = commonUtil.convertStringToDocument(result);

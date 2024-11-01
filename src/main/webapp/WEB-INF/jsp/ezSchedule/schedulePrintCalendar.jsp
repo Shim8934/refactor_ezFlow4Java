@@ -1931,6 +1931,10 @@
                                         tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                                         aheadDataCell(tempData[k], k)
                                         CalWeekDataBind(tempData[k], k);
+                                        if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                                            CalWeekTopDataBind(tempData[k], k);
+                                        }
+                                        
                                         DataSDT.setDate(DataSDT.getDate() + 1);
                                         k += 1;
                                     }
@@ -1938,6 +1942,10 @@
                                     tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                                     aheadDataCell(tempData[k], k)
                                     CalWeekDataBind(tempData[k], k);
+                                    if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                                        CalWeekTopDataBind(tempData[k], k);
+                                    }
+                                    
                                     k += 1;
                                 }
                         }
@@ -2036,7 +2044,10 @@
                                             tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                                             aheadDataCell(tempData[k], k);
                                             CalDayDataBind(tempData[k], k);
-            
+                                            if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                                                CalDayTopDataBind(tempData[k], k);
+                                            }
+                                            
                                             k += 1;
                                         }
                                         DataSDT.setDate(DataSDT.getDate() + 1);
@@ -2045,6 +2056,10 @@
                                     tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                                     aheadDataCell(tempData[k], k);
                                     CalDayDataBind(tempData[k], k);
+                                    if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                                        CalDayTopDataBind(tempData[k], k);
+                                    }
+                                    
                                     k += 1;
                                 }
                         }

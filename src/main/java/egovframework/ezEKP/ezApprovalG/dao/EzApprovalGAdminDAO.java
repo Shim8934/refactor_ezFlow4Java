@@ -416,9 +416,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdminDAO.moveDocListS", map);
 	}
 	
-	public void deleteDocList(Map<String, Object> map) throws Exception {
+	/* 2024-06-04 홍승비 - 현재 사용되지 않는 쿼리로 확인하여 주석처리 */
+	/*public void deleteDocList(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdminDAO.deleteDocList", map);
-	}
+	}*/
 	
 	public void deleteDocListjson(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdminDAO.deleteDocListjson", map);
@@ -462,7 +463,9 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void deleteAutoRuleLine(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdminDAO.deleteAutoRuleLine", map);
 	}
-
+	
+	/* 2024-04-19 홍승비 - 특수문서함 관련 기능 > 호출되지 않는 URL로 확인, 관련 메서드와 쿼리 전체 주석처리 */
+	/*
 	@SuppressWarnings("unchecked")
 	public List<ApprGContInfoVO> getSpecialContList(Map<String, Object> map) throws Exception {
 		return (List<ApprGContInfoVO>) list("EzApprovalGAdminDAO.getSpecialContList", map);
@@ -500,7 +503,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void changeSpecialContSN3(ApprGContInfoVO vo) throws Exception {
 		update("EzApprovalGAdminDAO.changeSpecialContSN3", vo);
 	}
-
+	*/
+	
 	public int checkContainer(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalGAdminDAO.checkContainer", map);
 	}
@@ -667,7 +671,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<ApprGDocListVO> getSearchDocList(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalGAdminDAO.getSearchDocList", map);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getAuditApprLineList(Map<String, Object> map) throws Exception {
 		return (List<HashMap<String, Object>>) list("EzApprovalGAdmin.getAuditApprLineList", map);

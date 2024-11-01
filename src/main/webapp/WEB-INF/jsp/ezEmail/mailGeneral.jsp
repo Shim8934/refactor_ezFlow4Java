@@ -228,7 +228,7 @@
 				mailSenderNM[1] = senderNMData;
 				mailSenderNM[2] = event_mailSenderNM;
 				var OpenWin = window.open("/ezEmail/mailExtSenderNM.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(500, 392));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        
 		        
 			}
