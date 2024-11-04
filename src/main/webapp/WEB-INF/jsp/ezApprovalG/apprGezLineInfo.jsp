@@ -7,7 +7,12 @@
 		<title>
 			<c:choose>
 				<c:when test="${docState == '015'}">
-					<spring:message code='ezApprovalG.t1214'/>
+			        <c:if test="${approvalFlag == 'G'}">
+					    <spring:message code='ezApprovalG.t1214'/>
+			        </c:if>
+			        <c:if test="${approvalFlag == 'S'}">
+					    <spring:message code='ezApprovalG.sendGongram03'/>
+			        </c:if>
 				</c:when>
 				<c:otherwise>
 					<spring:message code='ezApprovalG.t1215'/>
@@ -387,22 +392,33 @@
 		    
 			// 2023-05-16 임정은 - 공람 회수 버튼 온클릭 이벤트
 		    function btnWithdraw_onclick() {
+		        // 의견탭에서 공람회수 기능 제외처리
+		        if ($('.tabon')[0].parentElement.id != "tagsub1") return;
+		        
 		 		var pAlertContent = "";
 		    	var listview = new ListView();
 		        listview.LoadFromID("AprLine");
 		        var tr = listview.GetSelectedRows();
 		        
-				if (tr.length != 0) {
-					if (tr[0].getAttribute("data12") != "002") {
-						pAlertContent = "<spring:message code='ezApprovalG.LJEAppr04'/>";
-						OpenAlertUI(pAlertContent);
-					} else {
-						count = listview.GetDataRows().length;
-						aprMemberSN = tr[0].firstChild.innerText;
-						pAlertContent = "<spring:message code='ezApprovalG.LJEAppr05'/>";
-						OpenInformationUI(pAlertContent, btnWithdraw_onclick_Complete);
-					}
-				}
+		        if (tr.length == 0) return;
+		        
+	        	if (tr[0].getAttribute("data12") != "002") {
+	        	    if ("<c:out value ='${approvalFlag}'/>" == 'G') {
+	        		    pAlertContent = "<spring:message code='ezApprovalG.LJEAppr04'/>";
+	        	    } else {
+	        		    pAlertContent = "<spring:message code='ezApprovalG.sendGongram05'/>";
+	        	    }
+	        		OpenAlertUI(pAlertContent);
+	        	} else {
+			        count = listview.GetDataRows().length;
+			        aprMemberSN = tr[0].firstChild.innerText;
+	        	    if ("<c:out value ='${approvalFlag}'/>" == 'G') {
+	        		    pAlertContent = "<spring:message code='ezApprovalG.LJEAppr05'/>";
+	        	    } else {
+	        		    pAlertContent = "<spring:message code='ezApprovalG.sendGongram06'/>";
+	        	    }
+	        		OpenInformationUI(pAlertContent, btnWithdraw_onclick_Complete);
+	        	}
 		    }
 		 	function btnWithdraw_onclick_Complete(ret) {
 		 		DivPopUpHidden();
@@ -429,7 +445,12 @@
 		<h1>
 			<c:choose>
 				<c:when test="${docState == '015'}">
-					<spring:message code='ezApprovalG.t1214'/>
+				    <c:if test="${approvalFlag == 'G'}">
+					    <spring:message code='ezApprovalG.t1214'/>
+				    </c:if>
+				    <c:if test="${approvalFlag == 'S'}">
+					    <spring:message code='ezApprovalG.sendGongram03'/>
+				    </c:if>
 				</c:when>
 				<c:otherwise>
 					<spring:message code='ezApprovalG.t1215'/>
@@ -463,7 +484,12 @@
        		<div class="portlet_tabpart01_top" style="border-bottom:0px;">
 	       		<c:choose>
 					<c:when test="${docState == '015'}">
-		       			<p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.t946'/></span></p>
+					    <c:if test="${approvalFlag == 'G'}">
+		       			    <p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.t946'/></span></p>
+                        </c:if>
+					    <c:if test="${approvalFlag == 'S'}">
+		       			    <p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.sendGongram03'/></span></p>
+                        </c:if>
 					</c:when>
 					<c:otherwise>
 		       			<p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.t1769'/></span></p>
@@ -474,7 +500,12 @@
 	       			<p id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()"><spring:message code='ezApprovalG.t946'/></span></p>
        			</c:if>
 				<c:if test="${docState == '015'}">
-       			<input type="button" id="btnWithdraw" name="btnWithdraw" value="<spring:message code='ezApprovalG.LJEAppr03'/>" style="float:right; width:80px; padding:2px; cursor:pointer;" onclick="btnWithdraw_onclick()">
+       			    <c:if test="${approvalFlag == 'G'}">
+       			        <input type="button" id="btnWithdraw" name="btnWithdraw" value="<spring:message code='ezApprovalG.LJEAppr03'/>" style="float:right; width:80px; padding:2px; cursor:pointer;" onclick="btnWithdraw_onclick()">
+       		        </c:if>
+       			    <c:if test="${approvalFlag == 'S'}">
+       			        <input type="button" id="btnWithdraw" name="btnWithdraw" value="<spring:message code='ezApprovalG.sendGongram04'/>" style="float:right; <c:if test="${lang == '2'}">width:150px;</c:if> <c:if test="${lang != '2'}">width:80px;</c:if> padding:2px; cursor:pointer;" onclick="btnWithdraw_onclick()">
+       		        </c:if>
 				</c:if>
        		</div>
        	</div>

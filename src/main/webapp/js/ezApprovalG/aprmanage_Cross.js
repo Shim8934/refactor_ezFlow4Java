@@ -1690,7 +1690,7 @@ function getAprDocAproveInfo(tr) {
     	});
     }
     else if (pDocInfoValue == "5") {
-    	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9" || pListTypeValue == "99" || pListTypeValue == "10") {
+    	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9" || pListTypeValue == "99" || pListTypeValue == "10" || pListTypeValue == "98") {
     		pDocID = GetAttribute(tr, "DATA2");
     		pFlag = "END";
     	} else if (pListTypeValue == "21") {
@@ -2409,6 +2409,13 @@ function setbuttonenable() {
             }
         } else {
             document.getElementById("tDocInfo").style.display = "none";
+        }
+        
+        if (pListTypeValue == 98) {
+            document.getElementById("tDocInfo").style.display = "";
+        	document.getElementById("tdGongRam").style.display = "";
+        } else {
+            document.getElementById("tdGongRam").style.display = "none";
         }
     } else
         document.getElementById("tDocInfo").style.display = "none";

@@ -340,7 +340,9 @@
 				else if (pListTypeValue == "97") {
 					getReceivedDocList();
 				}	
-		        
+		        else if (pListTypeValue == "98") {
+		            getDocList();
+		        }
 		        try {
 		            parent.frames["left"].getAprCount();
 		            parent.frames["left"].setPresentValue("");
@@ -730,6 +732,9 @@
 		        	getDocList();
 		        }
 				else if (pListTypeValue == "24") {
+					getDocList();
+				}
+				else if (pListTypeValue == "98") {
 					getDocList();
 				}
 		    }
@@ -2601,7 +2606,13 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 1155) / 2;
 		            var top = (parseInt(heigth) - 460) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+					var openDocID = "";
+					if (pListTypeValue == "98") {
+						openDocID = tr.getAttribute("DATA2");
+					} else {
+						openDocID = tr.getAttribute("DATA1");
+					}
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + openDocID + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    function GetBujaeFlag() {
@@ -3572,12 +3583,15 @@
 				<li id="tbtnBebuAll" style="DISPLAY:none"><span id="btnBebuAll" onclick="return btnBaeBuAll_onclick()" ><spring:message code='ezApprovalG.bebuAll01'/></span></li>
 				<li id="tbtnRegList" class="approvalG"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
-				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
 				<c:if test="${approvalFlag == 'G'}">
+					<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>
+					<li id="tdGongRam" style="display:none"><span id="GongRam" onclick="return btnSendAround_onclick()"><spring:message code='ezApprovalG.t1428'/></span></li>		
 					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
 					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL" onclick="return btnGongRamALL_onclick()" ><spring:message code='ezApprovalG.CSJBDA01'/></span></li>
 				</c:if>
 				<c:if test="${approvalFlag != 'G'}">
+					<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.sendGongram03'/></span></li>
+					<li id="tdGongRam" style="display:none"><span id="GongRam" onclick="return btnSendAround_onclick()"><spring:message code='ezApprovalG.hyj25'/></span></li>		
 					<li id="tbtnGongRam" style="DISPLAY:none"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.hyj21'/></span></li>
 					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL" onclick="return btnGongRamALL_onclick()" ><spring:message code='ezApprovalG.CSJBDA03'/></span></li>
 				</c:if>

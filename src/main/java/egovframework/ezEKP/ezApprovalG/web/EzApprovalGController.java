@@ -8077,6 +8077,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("childDocInfo", childDocInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("companyID", userInfo.getCompanyID());
+		model.addAttribute("lang", userInfo.getLang());
 		
 		logger.debug("ezLineInfo ended");
 		

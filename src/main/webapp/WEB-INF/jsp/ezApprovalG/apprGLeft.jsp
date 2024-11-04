@@ -561,6 +561,10 @@
 									parent.frames["right"].passValLeftMenu("97");
 									parent.frames["right"].checkBujaeInfo();
 								}
+								else if (listtype == "98") {
+				                    parent.frames["right"].passValLeftMenu("98");
+				                    parent.frames["right"].checkBujaeInfo();
+				                }
 				                else {
 				                    parent.frames["right"].passValLeftMenu("1");
 				                    parent.frames["right"].checkBujaeInfo();
@@ -891,7 +895,8 @@
 						"21" : "COUNT21",
 						"23" : "COUNTUNTREATED",
 						"24" : "COUNT24",
-						"99" : "COUNT99"
+						"99" : "COUNT99",
+						"98" : "COUNT98"
 					}
 
 					for (var i = 0, iLen = countList.length; i < iLen; i++) {
@@ -1056,6 +1061,27 @@
 		                count99.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
 		                count99.innerHTML = "";
+		        } catch (e) { }
+		    }
+		    
+		    var xmlhttp_98 = createXMLHttpRequest();
+		    function getAprCount98() {
+		        var strQuery = "<DATA><LISTTYPE>98</LISTTYPE></DATA>";
+		        xmlhttp_98.open("POST", "/ezApprovalG/getListCount.do", true);
+		        xmlhttp_98.onreadystatechange = getAprCount98_after;
+		        xmlhttp_98.send(strQuery);
+		    }
+		
+		    function getAprCount98_after() {
+		        if (xmlhttp_98 == null || xmlhttp_98.readyState != 4) return;
+		        try {
+		            if (xmlhttp_98.responseText == "") return;
+		            var ResultXML = xmlhttp_98.responseXML;
+		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
+		            if (cnt > 0)
+		                count98.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
+		            else
+		                count98.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -1398,6 +1424,12 @@
                    	<c:if test="${approvalFlag == 'G'}">
                            	<li><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/></span></li>
                    	</c:if>
+					<c:if test="${approvalFlag == 'S'}">
+                       	<li><span class="list_text" id="APPROVAL98" onclick="setPresentValue('<spring:message code='ezApprovalG.sendGongram02'/>');convMain('98','')"><spring:message code='ezApprovalG.sendGongram02'/><span id="COUNT98" style="display:none;"></span></span></li>
+					</c:if>
+					<c:if test="${approvalFlag == 'G'}">
+                       	<li><span class="list_text" id="APPROVAL98" onclick="setPresentValue('<spring:message code='ezApprovalG.sendGongram01'/>');convMain('98','')"><spring:message code='ezApprovalG.sendGongram01'/><span id="COUNT98" style="display:none;"></span></span></li>
+					</c:if>
 		        </ul>
 		        <h2 class="off" id="deptH2">
 		            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezApprovalG.t1755'/></span>

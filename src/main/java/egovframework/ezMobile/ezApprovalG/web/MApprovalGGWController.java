@@ -1312,4 +1312,39 @@ public class MApprovalGGWController {
 		
 		return result;
 	}
+	
+	/**
+	 * 모바일 G/W 전자결재 [POST] 공람문서 회수
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezapproval/gongram/cancel/{docId:.+}", method = RequestMethod.POST)
+	public JSONObject mCancelGongram(@PathVariable String docId, HttpServletRequest request, Locale locale) throws Exception {
+		logger.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/gongram/cancel/" + docId + "] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String aprMemberSN = request.getParameter("aprMemberSN");
+			String count = request.getParameter("count");
+			String serverName = request.getHeader("x-user-host");
+			String companyID = request.getParameter("companyID");
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			String res = mApprovalGService.gongRamCancel(docId, Integer.parseInt(count), Integer.parseInt(aprMemberSN), companyID, userInfo.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", res);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "] ended.");
+		
+		return result;
+	}
 }

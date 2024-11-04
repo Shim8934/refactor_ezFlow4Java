@@ -1554,4 +1554,49 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		logger.debug("getAprMemberBySn ended");
 		return result;
 	}
+
+	@Override
+	public String gongRamCancel(String docID, int count, int aprMemberSN, String companyID, int tenantId) throws Exception {
+		logger.debug("gongRamCancel started.");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("v_DocID", docID);
+        map.put("v_gongRamDocID", docID);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantId);
+        map.put("v_AprMemberSN", aprMemberSN);
+
+        try {
+            if (count == aprMemberSN) {
+                if (count == 1) {
+                    ezApprovalGDAO.aprDeleteDocInfo(map);
+                    ezApprovalGDAO.aprDeleteDocInfo2(map);
+                    ezApprovalGDAO.aprDeleteDocInfo5(map);
+                    ezApprovalGDAO.aprDeleteDocInfo6(map);
+                    ezApprovalGDAO.aprDeleteDocInfo7(map);
+                    ezApprovalGDAO.aprDeleteDocInfo8(map);
+                    ezApprovalGDAO.aprDeleteDocInfo9(map);
+                } else {
+                    ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
+                    ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
+                }
+            } else {
+                ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
+                ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
+
+                for (int i = aprMemberSN + 1; i <= count; i++) {
+                    map.put("v_AprMemberSN", i);
+
+                    ezApprovalGDAO.updateOtherGongRamExpAprLine(map);
+                    ezApprovalGDAO.updateOtherGongRamAprLineInfo(map);
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return "FALSE";
+        }
+        logger.debug("gongRamCancel ended.");
+        return "TRUE";
+	}
 }
