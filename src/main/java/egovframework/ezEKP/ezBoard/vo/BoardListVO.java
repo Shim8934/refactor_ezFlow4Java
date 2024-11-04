@@ -155,6 +155,10 @@ public class BoardListVO {
 	private String thumbnail;
 	/** 2023-04-06 기민혁 - 게시판 싫어요 기능 카운트 추가 */
 	private int disLikeCount;
+	/** 게시물 수정자 아이디 */
+	private String updaterID;
+	/** 게시물 수정자 이름 */
+	private String updaterName;
 
 	public int getrNum() {
 		return rNum;
@@ -617,5 +621,21 @@ public class BoardListVO {
 	}
 	public void setDisLikeCount(int disLikeCount) {
 		this.disLikeCount = disLikeCount;
+	}
+
+	public String getupdaterID() {
+		return updaterID;
+	}
+
+	public void setupdaterID(String updaterID) {
+		this.updaterID = updaterID;
+	}
+
+	public String getupdaterName() {
+		return updaterName;
+	}
+
+	public void setupdaterName(String updaterName) {
+		this.updaterName = updaterName;
 	}
 }

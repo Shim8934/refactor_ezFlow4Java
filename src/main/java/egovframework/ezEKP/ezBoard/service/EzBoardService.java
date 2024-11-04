@@ -319,7 +319,7 @@ public interface EzBoardService {
 	public String getEzTalkGateNoticeBoardId(String companyID, int tenantID) throws Exception;
 	
 	/* 2019-01-15 홍승비 - 수정일(updateDate)만을 업데이트하는 쿼리 추가 */
-	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception;
+	public void modUpdateDate(String updateDate, String itemID, String userID, int tenantID) throws Exception;
 	
 	/* 2019-04-05 홍승비 - 좋아요 삽입 */
 	public void likeInsert(String userID, String itemID, int tenantID) throws Exception;

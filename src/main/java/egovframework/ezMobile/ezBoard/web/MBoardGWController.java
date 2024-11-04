@@ -313,7 +313,7 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
-			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getPrimaryData(info.getLang(), info.getTenantId()), info.getTenantId());
 			
 			if (boardItem == null) {
 				result.put("status", "empty");
@@ -325,6 +325,7 @@ public class MBoardGWController {
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			boardItem.setNotiStart(commonUtil.getDateStringInUTC(boardItem.getNotiStart(), info.getOffSet(),false));
 			boardItem.setNotiEnd(commonUtil.getDateStringInUTC(boardItem.getNotiEnd(), info.getOffSet(),false));
+			boardItem.setUpdateDate(commonUtil.getDateStringInUTC(boardItem.getUpdateDate(), info.getOffSet(),false));
 			
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
@@ -434,6 +435,7 @@ public class MBoardGWController {
 				return result;
 			}
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
+			boardItem.setUpdateDate(commonUtil.getDateStringInUTC(boardItem.getUpdateDate(), info.getOffSet(),false));
 			
 			//boardInfo
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
@@ -1275,6 +1277,7 @@ public class MBoardGWController {
 			}
 			
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
+			boardItem.setUpdateDate(commonUtil.getDateStringInUTC(boardItem.getUpdateDate(), info.getOffSet(),false));
 			
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			

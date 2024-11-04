@@ -21,6 +21,7 @@ import java.util.StringJoiner;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
@@ -881,6 +882,13 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("itemID", boardListVO.get("itemID"));
 		/* 2018-07-04 홍승비 - content 칼럼 데이터 저장을 위한 처리 추가 */
 		map.put("content", boardListVO.get("content"));
+		
+		BoardPropertyVO board = ezBoardService.getBoardProperty(boardListVO.get("boardID").toString(), info.getTenantId());
+		map.put("guBun", board.getGuBun());
+		if (!"2".equals(board.getGuBun())) {
+			map.put("updaterID", boardListVO.get("updaterID"));
+			map.put("updateDate", commonUtil.getTodayUTCTime(""));
+		}
 		
 		//mht파일저장
 		saveMHTResult = saveMHT(mhtData, boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath);

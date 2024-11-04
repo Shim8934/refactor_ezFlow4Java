@@ -1922,8 +1922,28 @@
 							<!-- 게시 종료일 end -->
 							</c:otherwise>
 						</c:choose>
-							
-							
+						<c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
+						 <!-- 수정자, 수정일 -->
+							<tr>
+							    <c:if test="${guBun != '2'}">
+                                    <th><spring:message code='ezBoard.updateJIH01' /></th>
+                                    <td id="updaterName" style = "white-space:nowrap; padding-right:5px">
+                                        <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updaterName}</div>
+                                    </td>
+                                    <th><spring:message code='ezBoard.updateJIH02' /></th>
+                                    <td id="updateDate" style = "white-space:nowrap; padding-right:5px">
+                                        <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updateDate.substring(0, 16)}</div>
+                                    </td>
+                                </c:if>
+                                <c:if test="${guBun == '2'}">
+                                    <th><spring:message code='ezBoard.updateJIH02' /></th>
+                                    <td width="100%" id="updateDate" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+			             	            <div style="WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.updateDate.substring(0, 16)}"/></div>
+			                        </td>
+                                </c:if>
+							</tr>
+						<!-- 수정자, 수정일 end -->
+						</c:if>	
 						<c:if test="${boardAttrCount > 0}">
 							<c:forEach var="boardAttr" items="${boardAttr}">
 								<tr>

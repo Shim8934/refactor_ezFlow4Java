@@ -998,6 +998,20 @@
                              </td>
                          </tr>
                      </c:if>
+                    <c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
+                    <!-- 수정자, 수정일 -->
+                        <tr>
+                            <th style="width:10%;"><spring:message code='ezBoard.updateJIH01' /></th>
+                            <td id="updaterName" style = "white-space:nowrap; padding-right:5px; width: 40%;">
+                                <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updaterName}</div>
+                            </td>
+                            <th style="width:10%;"><spring:message code='ezBoard.updateJIH02' /></th>
+                            <td id="updateDate" style = "white-space:nowrap; padding-right:5px; width: 40%;">
+                                <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updateDate.substring(0, 16)}</div>
+                            </td>
+                        </tr>
+                    <!-- 수정자, 수정일 end -->
+                    </c:if>	
 		            <tr>
 		              <th><spring:message code='ezBoard.t291'/></th>
 		              <td id="cTitle" colspan="3">

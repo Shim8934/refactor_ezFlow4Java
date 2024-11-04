@@ -2716,7 +2716,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("COLUMN", "USEKEYWORD"); // 게시판 키워드 기능 사용여부(Y/N)
             put("TYPE_MYSQL", "VARCHAR(11)"); put("TYPE_ORACLE", "NVARCHAR2(2)");
         }});
-
+        test.add(new HashMap<String, Object>(){{ // 2024-08-01 전인하 - 게시판 > 키워드 기능
+            put("TABLE","TBL_BOARD_ITEM");
+            put("COLUMN", "UPDATERID"); // 게시판 키워드 기능 사용여부(Y/N)
+            put("TYPE_MYSQL", "VARCHAR(80)"); put("TYPE_ORACLE", "NVARCHAR2(80)");
+        }});
+        
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
         }

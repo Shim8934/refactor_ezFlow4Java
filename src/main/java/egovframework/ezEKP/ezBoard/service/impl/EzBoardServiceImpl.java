@@ -4228,6 +4228,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		if (pMode.equals("modify")) {
+			if (boardListVO.getGuBun().equals("2")) {
+				boardListVO.setupdaterID(null);
+			} else {
+				boardListVO.setupdaterID(userInfo.getId());
+			}
 			brdUpdateItem(boardListVO, "BOARD");
 		} else if (pMode.equals("temp")) {
 			brdNewItemTemp(boardListVO);
@@ -4693,7 +4698,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2019-01-15 홍승비 - 게시물의 수정일(updateDate)만을 업데이트하는 메서드 */
 	@Override
-	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception {
+	public void modUpdateDate(String updateDate, String itemID, String userID, int tenantID) throws Exception {
 		logger.debug("modUpdateDate started.");
 		
 		Map<String, Object> map = new HashMap<>();
@@ -4701,6 +4706,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("updateDate", updateDate);
 		map.put("itemID", itemID);
 		map.put("tenantID", tenantID);
+		map.put("updaterID", userID);
 		
 		ezBoardDAO.modUpdateDate(map);
 		

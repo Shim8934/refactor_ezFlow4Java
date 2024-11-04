@@ -92,6 +92,8 @@
 		<result property="notiStart" 				column="NTSTARTDATE" 			columnIndex="38"/>
 		<result property="notiEnd" 					column="NTENDDATE" 				columnIndex="39"/>
 		<result property="disLikeCount" 			column="DISLIKECOUNT" 			columnIndex="40"/>
+		<result property="updaterName" 				column="UPDATERNAME" 			columnIndex="41"/>
+		<result property="updateDate" 				column="UPDATEDATE" 			columnIndex="42"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -3511,42 +3513,42 @@
 	<select id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultMap="getBrdGetItemInfo">
 		<![CDATA[
 			SELECT
-				ITEMID ,
-            	WRITERID ,
-	            CASE WHEN #lang# = '2' THEN WRITERNAME2 ELSE WRITERNAME END AS WRITERNAME,
+				A.ITEMID ,
+            	A.WRITERID ,
+	            CASE WHEN #lang# = '2' THEN A.WRITERNAME2 ELSE A.WRITERNAME END AS WRITERNAME,
 	            WRITERDEPTID,
-	            CASE WHEN #lang# = '2' THEN WRITERDEPTNAME2 ELSE WRITERDEPTNAME END AS WRITERDEPTNAME,
+	            CASE WHEN #lang# = '2' THEN A.WRITERDEPTNAME2 ELSE A.WRITERDEPTNAME END AS WRITERDEPTNAME,
 	            WRITERCOMPANYID,
-	            CASE WHEN #lang# = '2' THEN WRITERCOMPANYNAME2 ELSE WRITERCOMPANYNAME END AS WRITERCOMPANYNAME,
-	            WRITEDATE ,
-	            PARENTWRITEDATE ,
-	            IMPORTANCE ,
-	            TITLE ,
-	            CONTENTLOCATION ,
-	            STARTDATE ,
-	            ENDDATE ,
-	            ABSTRACT ,
-	            ATTACHMENTS ,
-	            UPPERITEMIDTREE ,
-	            ITEMLEVEL ,
-	            COPIEDITEM ,
-	            EXTENSIONATTRIBUTE1 ,
-	            EXTENSIONATTRIBUTE2 ,
+	            CASE WHEN #lang# = '2' THEN A.WRITERCOMPANYNAME2 ELSE A.WRITERCOMPANYNAME END AS WRITERCOMPANYNAME,
+	            A.WRITEDATE ,
+	            A.PARENTWRITEDATE ,
+	            A.IMPORTANCE ,
+	            A.TITLE ,
+	            A.CONTENTLOCATION ,
+	            A.STARTDATE ,
+	            A.ENDDATE ,
+	            A.ABSTRACT ,
+	            A.ATTACHMENTS ,
+	            A.UPPERITEMIDTREE ,
+	            A.ITEMLEVEL ,
+	            A.COPIEDITEM ,
+	            A.EXTENSIONATTRIBUTE1 ,
+	            A.EXTENSIONATTRIBUTE2 ,
 	            CASE WHEN #lang# = '2' THEN EXTENSIONATTRIBUTE32 ELSE EXTENSIONATTRIBUTE3 END AS EXTENSIONATTRIBUTE3,
-	            EXTENSIONATTRIBUTE4 ,
-	            EXTENSIONATTRIBUTE5 ,
-	            MAINCONTENT ,
+	            A.EXTENSIONATTRIBUTE4 ,
+	            A.EXTENSIONATTRIBUTE5 ,
+	            A.MAINCONTENT ,
 	            A.APPRFLAG  ,
 	            B.GUBUN ,
-	            EXTENSIONATTRIBUTE6 ,
-	            EXTENSIONATTRIBUTE7 ,
-	            EXTENSIONATTRIBUTE8 ,
-	            EXTENSIONATTRIBUTE9 ,
-	            EXTENSIONATTRIBUTE10 ,
+	            A.EXTENSIONATTRIBUTE6 ,
+	            A.EXTENSIONATTRIBUTE7 ,
+	            A.EXTENSIONATTRIBUTE8 ,
+	            A.EXTENSIONATTRIBUTE9 ,
+	            A.EXTENSIONATTRIBUTE10 ,
 	            A.BOARDID,
 	            A.DOCNO,
-				NTSTARTDATE,
-				NTENDDATE,
+				A.NTSTARTDATE,
+				A.NTENDDATE,
 	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE,
 	            (SELECT
 					NVL(COUNT(*), 0)
@@ -3572,7 +3574,8 @@
 				 	K.TENANT_ID = A.TENANT_ID
 				AND
 				 	K.ITEMID = A.ItemID) as DISLIKECOUNT,
-	            B.ONELINEREPLY
+	            B.ONELINEREPLY,
+	            CASE WHEN #lang# = '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS UPDATERNAME
 	        FROM
 	        	TBL_Board_Item A
             JOIN
@@ -3581,6 +3584,12 @@
             	A.TENANT_ID = B.TENANT_ID
             AND
             	A.BoardID = B.BoardID
+            LEFT JOIN
+            	TBL_USERMASTER C
+            ON
+            	A.updaterID = C.CN
+            AND
+            	A.TENANT_ID = C.TENANT_ID
        		WHERE
        			A.TENANT_ID = #v_TENANTID#
        		AND
@@ -5951,14 +5960,6 @@
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,
-	          	WriterName = #writerName#,
-	          	WriterName2 = #writerName2#,
-				WRITERID = #writerID#,
-	          	WRITERDEPTID = #writerDeptID#,
-	          	WRITERDEPTNAME = #writerDeptName#,
-	          	WRITERDEPTNAME2 = #writerDeptName2#,
-	          	WRITERCOMPANYNAME = #writerCompanyName#,
-	          	WRITERCOMPANYNAME2 = #writerCompanyName2#,
 	          	ExtensionAttribute2 = #extensionAttribute2#,
 	          	ExtensionAttribute3 = #extensionAttribute3#,
 	          	ExtensionAttribute32 = #extensionAttribute32#,
@@ -5972,7 +5973,8 @@
 	          	extensionAttribute10 = #extensionAttribute10#,
 	          	content = #content#,
 				ntstartdate = #notiStart#,
-				ntenddate = #notiEnd#
+				ntenddate = #notiEnd#,
+				updaterid = #updaterID#
     		WHERE  
     			TENANT_ID = #tenantID#
     		AND
@@ -6860,7 +6862,8 @@
 		<![CDATA[
 			UPDATE TBL_Board_Item
 		    SET 
-		    	UpdateDate = #updateDate#
+		    	UpdateDate = #updateDate#,
+		    	UPDATERID = #updaterID#
 	   		WHERE  
 	   			TENANT_ID = #tenantID#
 	   		AND

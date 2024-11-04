@@ -884,52 +884,54 @@
   
   <select id="MBoardDAO.getBrdItemInfo" parameterClass="Map" resultClass="MBoardItemVO">
           SELECT
-              ITEMID,
-              WRITERID,
+              A.ITEMID,
+              A.WRITERID,
 			  <isEqual property="lang" compareValue="2">
-				  WRITERNAME2 AS WRITERNAME,
-				  WRITERDEPTNAME2 AS WRITERDEPTNAME,
-				  WRITERCOMPANYNAME2 AS WRITERCOMPANYNAME,
+				  A.WRITERNAME2 AS WRITERNAME,
+				  A.WRITERDEPTNAME2 AS WRITERDEPTNAME,
+				  A.WRITERCOMPANYNAME2 AS WRITERCOMPANYNAME,
               </isEqual>
 			  <isNotEqual property="lang" compareValue="2">
-				  WRITERNAME,
-				  WRITERDEPTNAME,
-				  WRITERCOMPANYNAME,
+				  A.WRITERNAME,
+				  A.WRITERDEPTNAME,
+				  A.WRITERCOMPANYNAME,
 			  </isNotEqual>
-              WRITEDATE,
-              PARENTWRITEDATE,
-              IMPORTANCE,
-              TITLE,
-              CONTENTLOCATION,
-              STARTDATE,
-              ENDDATE,
-              ABSTRACT,
-              ATTACHMENTS,
-              UPPERITEMIDTREE,
-              ITEMLEVEL,
-              COPIEDITEM,
-              EXTENSIONATTRIBUTE1,
-              EXTENSIONATTRIBUTE2,
+              A.WRITEDATE,
+              A.PARENTWRITEDATE,
+              A.IMPORTANCE,
+              A.TITLE,
+              A.CONTENTLOCATION,
+              A.STARTDATE,
+              A.ENDDATE,
+              A.ABSTRACT,
+              A.ATTACHMENTS,
+              A.UPPERITEMIDTREE,
+              A.ITEMLEVEL,
+              A.COPIEDITEM,
+              A.EXTENSIONATTRIBUTE1,
+              A.EXTENSIONATTRIBUTE2,
 			  <isEqual property="lang" compareValue="2">
-				  EXTENSIONATTRIBUTE32 AS EXTENSIONATTRIBUTE3,
+				  A.EXTENSIONATTRIBUTE32 AS EXTENSIONATTRIBUTE3,
 			  </isEqual>
 			  <isNotEqual property="lang" compareValue="2">
-				  EXTENSIONATTRIBUTE3,
+				  A.EXTENSIONATTRIBUTE3,
 			  </isNotEqual>
-              EXTENSIONATTRIBUTE4,
-              EXTENSIONATTRIBUTE5,
-              MAINCONTENT,
+              A.EXTENSIONATTRIBUTE4,
+              A.EXTENSIONATTRIBUTE5,
+              A.MAINCONTENT,
               A.APPRFLAG,
               B.GUBUN,
-              EXTENSIONATTRIBUTE6,
-              EXTENSIONATTRIBUTE7,
-              EXTENSIONATTRIBUTE8,
-              EXTENSIONATTRIBUTE9,
-              EXTENSIONATTRIBUTE10,
+              A.EXTENSIONATTRIBUTE6,
+              A.EXTENSIONATTRIBUTE7,
+              A.EXTENSIONATTRIBUTE8,
+              A.EXTENSIONATTRIBUTE9,
+              A.EXTENSIONATTRIBUTE10,
               A.BOARDID,
               A.DOCNO,
-			  NTSTARTDATE notiStart,
-			  NTENDDATE notiEnd
+			  A.NTSTARTDATE notiStart,
+			  A.NTENDDATE notiEnd,
+	  		  CASE WHEN #lang# = '2' THEN U.DISPLAYNAME2 ELSE U.DISPLAYNAME END AS UPDATERNAME,
+	  		  A.UPDATEDATE
           FROM 
               TBL_Board_Item A
           JOIN 
@@ -938,10 +940,16 @@
               A.TENANT_ID = B.TENANT_ID
           AND
               A.BoardID = B.BoardID
+	      LEFT JOIN 
+			  TBL_USERMASTER U
+	  	  ON
+	  	      A.UPDATERID = U.CN
+	      AND
+	          A.TENANT_ID = U.TENANT_ID
           WHERE
               A.TENANT_ID = #tenantID#
           AND  
-              ITEMID = #itemID#
+              A.ITEMID = #itemID#
   </select>
   
   <select id="MBoardDAO.getBoardItemRead" parameterClass="Map" resultClass="String">
@@ -1080,7 +1088,11 @@
             <isEqual property="guBun" compareValue="2">
                 WriterName = #writerName#,
                 WriterName2 = #writerName2#,
-              </isEqual>
+            </isEqual>
+	        <isNotEqual property="guBun" compareValue="2">
+                updaterID = #updaterID#,
+            </isNotEqual>
+	  		updateDate = #updateDate#,
             ExtensionAttribute2 = #extensionAttribute2#,
             ExtensionAttribute5 = #extensionAttribute5#,
             DocPassWord = #docPassword#,

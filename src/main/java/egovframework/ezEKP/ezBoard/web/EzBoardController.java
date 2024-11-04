@@ -75,6 +75,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -3941,6 +3942,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false));
 		boardItem.setEndDate(commonUtil.getDateStringInUTC(boardItem.getEndDate(), userInfo.getOffset(), false));
+		if (!StringUtils.isBlank(boardItem.getUpdateDate())) {
+			boardItem.setUpdateDate(commonUtil.getDateStringInUTC(boardItem.getUpdateDate(), userInfo.getOffset(), false));
+		}
 		
 		/* 2019-12-23 홍승비 - 게시만료일을 메세지로 치환하여 전달하는 부분 주석처리 (jsp단에서 영구게시 메세지 분기처리하므로) */
 /*		if (boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4).equals("9999")) {
@@ -5898,6 +5902,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false));
+		if (!StringUtils.isBlank(boardItem.getUpdateDate())) {
+			boardItem.setUpdateDate(commonUtil.getDateStringInUTC(boardItem.getUpdateDate(), userInfo.getOffset(), false));
+		}
 		
 		if (boardItem.getExtensionAttribute3() == null || boardItem.getExtensionAttribute3().equals("")) {
 			boardItem.setExtensionAttribute3(" ");
@@ -6119,6 +6126,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false));
 		boardItem.setEndDate(commonUtil.getDateStringInUTC(boardItem.getEndDate(), userInfo.getOffset(), false));
 		boardItem.setParentWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
+		if (!StringUtils.isBlank(boardItem.getUpdateDate())) {
+			boardItem.setUpdateDate(commonUtil.getDateStringInUTC(boardItem.getUpdateDate(), userInfo.getOffset(), false));
+		}
 		
 		// 2017.12.29 강민수92 댓글 갯수 구하기
 		if (boardProperty.getOneLineReply() != null && !boardProperty.getOneLineReply().equals("") && !boardProperty.getOneLineReply().equals("0")) {
@@ -7004,7 +7014,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			ezBoardService.photoListUpdate(imageID, boardID, content, file_Path, doc.getElementsByTagName("ITEMID").item(0).getTextContent(), mainFg, oFileName, userInfo.getTenantId());
-			
+			String itemID = request.getParameter("itemID");
+			ezBoardService.modUpdateDate(commonUtil.getTodayUTCTime(""), itemID, userInfo.getId(), userInfo.getTenantId());
 			return "OK";
 			
 		} else if (mod.equals("add")) {
@@ -7014,6 +7025,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
 			
 			ezBoardService.photoListAlbumEdit(boardID, itemID, title, content, userInfo.getTenantId());
+			ezBoardService.modUpdateDate(commonUtil.getTodayUTCTime(""), itemID, userInfo.getId(), userInfo.getTenantId());
 			
 			// 키워드 저장
 			List<String> keywords = new ArrayList<>();
@@ -7043,6 +7055,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			ezBoardService.setMainImageID(doc.getElementsByTagName("IMAGEID").item(0).getTextContent(), doc.getElementsByTagName("ITEMID").item(0).getTextContent(), userInfo.getTenantId());
 			ezBoardService.photoListUpdate(doc.getElementsByTagName("IMAGEID").item(0).getTextContent(), boardID, content, "", doc.getElementsByTagName("ITEMID").item(0).getTextContent(), "", "", userInfo.getTenantId());
+			
+			// 동영상게시판 > 동영상수정의 경우에도 수정시 업데이트
+			String itemID = request.getParameter("itemID");
+			ezBoardService.modUpdateDate(commonUtil.getTodayUTCTime(""), itemID, userInfo.getId(), userInfo.getTenantId());
 			
 			return "OK";
 		}
@@ -10148,6 +10164,9 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		boardItem.setParentWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
 		
+		if (!StringUtils.isBlank(boardItem.getUpdateDate())) {
+			boardItem.setUpdateDate(commonUtil.getDateStringInUTC(boardItem.getUpdateDate(), userInfo.getOffset(), false));
+		}
 		// 2017.12.29 강민수92 댓글 갯수 구하기
 		if (boardProperty.getOneLineReply() != null && !boardProperty.getOneLineReply().equals("") && !boardProperty.getOneLineReply().equals("0")) {
 			String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
@@ -10349,7 +10368,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String itemID = request.getParameter("itemID");
 		
-		ezBoardService.modUpdateDate(commonUtil.getTodayUTCTime(""), itemID, userInfo.getTenantId());
+		ezBoardService.modUpdateDate(commonUtil.getTodayUTCTime(""), itemID, userInfo.getId(), userInfo.getTenantId());
 		
 		logger.debug("modUpdateDate ended.");
 	}
