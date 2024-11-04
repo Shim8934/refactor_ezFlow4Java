@@ -190,10 +190,12 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setMailSenderNm((String)obj.get("mailSenderName"));
         		mailGeneral.setPreviewSubTree((String)obj.get("previewSubTree"));
         		mailGeneral.setPreviewMailImage((String)obj.get("previewMailImage"));
+        		mailGeneral.setPreviewMail((String)obj.get("previewMail"));
         		mailGeneral.setTextOption(textOption);
         		mailGeneral.setMailSearchPeriod(mailSearchPeriod);
         		mailGeneral.setDefaultCursorPosition((String)obj.get("defaultCursorPosition"));
         		mailGeneral.setDefaultSeparateSend((String)obj.get("defaultSeparateSend"));
+        		mailGeneral.setMailSendResult((String)obj.get("mailSendResult"));
         		
         		mailGeneralList.add(mailGeneral);
         	}
@@ -219,6 +221,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setMailSenderNm("");
 			mailGeneral.setPreviewSubTree("N");
 			mailGeneral.setPreviewMailImage("Y");
+			mailGeneral.setPreviewMail("N");
 			mailGeneral.setTextOption(textOption);
 			mailGeneral.setMailSearchPeriod("sixMonth");
 			mailGeneral.setDefaultCursorPosition("recipient");
@@ -253,10 +256,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String previewSubTreeParam = "previewSubTree=" + URLEncoder.encode(mailGeneral.getPreviewSubTree(), "UTF-8");
 		String usePreviewSubTreeParam = "usePreviewSubTree=" + usePreviewSubTree;
 		String previewMailImageParam = "previewMailImage=" + URLEncoder.encode(mailGeneral.getPreviewMailImage(), "UTF-8");
+		String previewMailParam = "previewMail=" + URLEncoder.encode(mailGeneral.getPreviewMail(), "UTF-8");
 		String textOptionParam = "textOption=" + URLEncoder.encode(mailGeneral.getTextOption(), "UTF-8");
 		String mailSearchPeriodParam = "mailSearchPeriod=" + URLEncoder.encode(mailGeneral.getMailSearchPeriod(), "UTF-8");
 		String defaultCursorPositionParam = "defaultCursorPosition=" + URLEncoder.encode(mailGeneral.getDefaultCursorPosition(), "UTF-8");
 		String defaultSeparateSendParam = "defaultSeparateSend=" + URLEncoder.encode(mailGeneral.getDefaultSeparateSend(), "UTF-8");
+		String mailSendResultParam = "mailSendResult=" + URLEncoder.encode(mailGeneral.getMailSendResult(), "UTF-8");
 		
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
@@ -265,8 +270,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
-				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + textOptionParam
-				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam;
+				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + previewMailParam + "&" + textOptionParam
+				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam + "&" + mailSendResultParam;
 
 		logger.debug("inputParams=" + inputParams);
 		
@@ -7242,8 +7247,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (전사) 승인로그 검색 (대기상태 제외) 페이지네이션
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
      * @param pageStartNum: 페이지 시작점 (1부터, 0넣으면 페이지네이션 사용안함)
      * @param listCount: 한페이지에 출력될 리스트 개수
@@ -7312,8 +7317,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (전사) 승인로그 검색 (대기상태 제외) 전체 개수
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
@@ -7345,8 +7350,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (전사) 승인로그 검색 (대기상태 제외) 사용자 데이터 개수 조회
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
@@ -7409,8 +7414,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (일반) 승인로그 검색 (대기상태 제외)
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
@@ -7477,8 +7482,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (일반) 승인로그 검색 (대기상태 제외) 전체 개수
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
@@ -7510,8 +7515,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (일반) 승인로그 검색 (대기상태 제외) 사용자 데이터 개수 조회
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override

@@ -713,6 +713,154 @@ function deleteWork(bDel) {
     }
     Mail_MoveDeletePostSend(cmd, "", szItemID)
 }
+
+function deleteUnreadWork() {
+
+    if (searchMode) {
+        deleteSearchedAndUnreadMail();
+    } else {
+        deleteUnreadMail();
+    }
+}
+
+function deleteUnreadMail() {
+    
+    try {
+        var url = g_moveUrl;
+        var trashBoxURL = pDeleteBoxID;
+        var cmd = "";
+       
+        // 지운편지함의 메일 영구삭제
+        if (url == trashBoxURL) {
+            if (confirm(strUreadDelPermenant)) {
+                cmd = "MAILREALDEL";
+            } else {
+                return;
+            }
+        }
+        // 편지함의 메일 지운편지함으로 이동 
+        else {
+            if (confirm(strUreadDelChk)) {
+                cmd = "MAILDEL";
+            } else {
+                return;
+            }
+        }
+        
+        ShowMailProgress();
+                        
+        $.ajax({
+            cache: false,
+            async: false,
+            method: 'post',
+            url: "/ezEmail/unreadMailDel.do",
+            data: { url: url, cmd: cmd, shareId: encodeURIComponent(shareId) },
+            success: function(result) {
+                if (result === "ok") {
+                    alert(strLang215);
+                } else {
+                    alert(strLang216);
+                }
+            },
+            error: function() {
+                alert(strLang216);
+            },
+            complete : function() {
+                HiddenMailProgress();
+                MailListRefresh();
+            }
+        });
+   } catch (e) {
+       console.log("unread mail delete error");
+   }
+}
+
+function deleteSearchedAndUnreadMail() {
+    var url = g_moveUrl;
+    var trashBoxURL = pDeleteBoxID;
+    var cmd = "";
+   
+    // 지운편지함의 메일 영구삭제
+    if (url == trashBoxURL) {
+        if (!confirm(strUreadDelSearchPermenant)) {
+            return;
+        }
+    }
+    // 편지함의 메일 지운편지함으로 이동 
+    else {
+        if (!confirm(strUreadDelSearch)) {
+            return;
+        }
+    }
+
+	var HeaderObject = document.getElementById("MailHeader");
+    var ContentObject = document.getElementById("MailList");
+    var pOrderyOption = p_ListorderType + " ORDER BY \"" + p_ListOrderby + "\" " + p_ListOrderOption;
+    var attachStatus = "all";
+	var andorStatus = "and";
+	var end = parseInt(document.getElementById("MailList").getAttribute("MaxCount"));
+	var secureMailFilter = document.getElementById("select").value == "SECUREMAIL" ? 1 : 0;
+	var maxCount = parseInt(document.getElementById("MailList").getAttribute("MaxCount"));
+	socketUserkey = mailbox_getUserKey();
+
+	if(mailsearchDetail == "Y"){
+		if(document.querySelector("input[name=attachment]:checked").value != null ){
+			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+		} 
+
+		if(document.querySelector("input[name=andor]:checked").value != null ){
+			andorStatus = document.querySelector("input[name=andor]:checked").value;
+		}
+	}
+
+	var jsonData = {"FOLDERID" : window.tagName ? '' : g_moveUrl,
+					"SORTTYPE" : pOrderyOption,
+					"SEARCH" : SearchKeyword,
+					"KEYWORD" : searchRequiredKeyword,
+					"CATEGORY" : searchRequiredCategory,
+					"START" : "0",
+					"STARTDATE" : startDate,
+					"ENDDATE" : endDate,
+					"ATTACHSTATUS" : attachStatus,
+					"ANDORSTATUS" : andorStatus,
+					"VIEWSELECTINDEX" : document.getElementById("select").selectedIndex.toString(),
+					"END" : end.toString(),
+					"SECUREMAILFILTER" : secureMailFilter.toString(),
+					"TAGNAME" : window.tagName ? tagName : "",
+					"SHAREDID" : shareId,
+					};
+
+ 	ShowMailProgress();
+      
+	$.ajax({
+		cache: false,
+		method: "post",
+		url: "/ezEmail/searchedAndUnreadMailDel.do",
+		data: JSON.stringify(jsonData),
+		contentType : "application/json",
+		complete: function(){
+			HiddenMailProgress();
+		},
+		success: function(result){
+			if (result == "ok") {
+				alert(strLang215);
+			} else {
+				alert(strLang216);
+			}
+		},
+		error: function() {
+			alert(strLang216);
+		},
+		complete : function() {
+        	HiddenMailProgress();
+            MailListRefresh();
+		}
+	});
+
+    GetListInfo_HeaderObject = HeaderObject;
+    GetListInfo_ContentObject = ContentObject;
+}
+
 function delAllFile() {
     if (!confirm(strLang333))
         return;	

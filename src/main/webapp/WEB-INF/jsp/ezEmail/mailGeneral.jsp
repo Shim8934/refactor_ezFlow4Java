@@ -127,10 +127,12 @@
 				                "<PREVIEWHCONTENT>" + document.getElementById("HPreUser").value + "</PREVIEWHCONTENT>" +
 				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>" +
 				                "<PREVIEWMAILIMAGE>" + document.getElementById("previewMailImage").value + "</PREVIEWMAILIMAGE>" +
+				                "<PREVIEWMAIL>" + document.getElementById("previewMail").value + "</PREVIEWMAIL>" +
 				                "<MAILSEARCHPERIOD>" + document.getElementById("searchPeriod").value + "</MAILSEARCHPERIOD>" +
 				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>" + 
 				                "<DEFAULTCURSORPOSITION>"+ document.getElementById("defaultCursorPosition").value + "</DEFAULTCURSORPOSITION>" +
 								"<DEFAULTSEPARATESEND>"+ defaultSeparateSendVal + "</DEFAULTSEPARATESEND>";
+				                "<MAILSENDRESULT>" + document.getElementById("sendResult").value + "</MAILSENDRESULT>" +
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
@@ -474,6 +476,16 @@
 		  	</td>
 		  </tr>
 		  <tr>
+            <th><spring:message code="ezEmail.preview.before.send"/></th>
+            <td>
+                <select id="previewMail" style="width:100px;">
+                    <option value="N" <c:if test="${previewMail == 'N'}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
+                    <option value="P" <c:if test="${previewMail == 'P'}">selected</c:if>><spring:message code='ezEmail.general.priority' /> </option>
+                    <option value="Y" <c:if test="${previewMail == 'Y'}">selected</c:if>><spring:message code='ezEmail.general.all' /></option>
+                </select>
+            </td>
+          </tr>
+		  <tr>
 		      <th><spring:message code="ezEmail.lhm80"/></th>
 		      <td>
 		          <select id="textOptionSlb" style="width:100px;">
@@ -518,6 +530,15 @@
 			      </td>
 			  </tr>
 		  </c:if>
+		  <tr>
+              <th><spring:message code="ezEmail.send.result"/></th>
+              <td>
+                  <select id="sendResult" style="width:100px;">
+                    <option value=failure <c:if test="${mailSendResult == 'failure'}">selected</c:if>><spring:message code="ezEmail.general.fail" /></option>
+                    <option value=always <c:if test="${mailSendResult == 'always'}">selected</c:if>><spring:message code="ezEmail.general.always" /></option>
+                  </select>
+              </td>
+          </tr>
 		</table>
 		<div align="center" style="width:680px;">
 			<div class="btnpositionJsp">
