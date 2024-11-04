@@ -131,8 +131,8 @@
 				                "<MAILSEARCHPERIOD>" + document.getElementById("searchPeriod").value + "</MAILSEARCHPERIOD>" +
 				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>" + 
 				                "<DEFAULTCURSORPOSITION>"+ document.getElementById("defaultCursorPosition").value + "</DEFAULTCURSORPOSITION>" +
-								"<DEFAULTSEPARATESEND>"+ defaultSeparateSendVal + "</DEFAULTSEPARATESEND>";
-				                "<MAILSENDRESULT>" + document.getElementById("sendResult").value + "</MAILSENDRESULT>" +
+								"<DEFAULTSEPARATESEND>"+ defaultSeparateSendVal + "</DEFAULTSEPARATESEND>" +
+				                "<MAILSENDRESULT>" + document.getElementById("sendResult").value + "</MAILSENDRESULT>";
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
