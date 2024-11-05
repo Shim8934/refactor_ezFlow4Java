@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.ChartVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -88,6 +89,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	
 	@Resource(name = "EzPollService")
 	private EzPollService ezPollService;
+	
+	@Resource(name = "EzNewPortalService")
+	private EzNewPortalService ezNewPortalService;
 	
 	/**
 	 * 포틀릿 - 공지사항
@@ -1019,7 +1023,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
 		model.addAttribute("portletName", req.getParameter("portletName"));
-
+		model.addAttribute("resPortletId", ezNewPortalService.getResportletId());
+		
 		logger.debug("portalResourcePortlet End");
 		return "/ezNewPortal/portlets/resourcePortlet";
 	}

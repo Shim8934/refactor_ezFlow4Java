@@ -22,6 +22,7 @@
 			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
 			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
 			.popup h1, .popup h2 {height:auto;}
+			div#txtContent{margin-left:0px; margin-right:0px;}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

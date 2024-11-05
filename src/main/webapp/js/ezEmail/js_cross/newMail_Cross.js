@@ -677,8 +677,47 @@ function attach_click(para) {
     ezUtil.UseUTF8 = true;
     ezUtil.ExecuteFile(para, "");
 }
+function Send_onClick_preview() {
+    // 기본 check
+    if (eSubject.value.trim() == "") {
+        alert(strNoSubject);
+        eSubject.focus();
+        return;
+    }
+
+    if (eSubject.value.length > 150) {
+        alert(strLang95);
+        eSubject.focus();
+        return;
+    }
+
+	if (window.dadiframe && dadiframe.isfileup) {
+		alert(strLang86);
+		return;
+	}
+
+	if (document.getElementById("MsgToGot").children.length == 0 &&
+        document.getElementById("MsgCCGot").children.length == 0 &&
+        document.getElementById("MsgBCCGot").children.length == 0) {
+        alert(strLang93);
+        gInvalidAddressArr = null;
+        return;
+    }
+
+	// 미리보기 or 전송
+	if (previewMail == "Y") {
+        previewChk = true;
+        Save_onClick('previewSend');
+    } else if (previewMail == "P" && importantSelect.selectedIndex.toString() == "2") { // 중요도 높음
+        previewChk = true;
+        Save_onClick('previewSend');
+    } else {
+        Send_onClick();
+    }
+}
 
 function Send_onClick() {
+    /* Send_onClick_preview 에서 체크하고 오기때문에 주석
     if (eSubject.value.trim() == "") {
         alert(strLangHSG03); // 2024.04.29 한슬기 : 제목란이 비어있습니다.
         eSubject.focus();
@@ -694,7 +733,7 @@ function Send_onClick() {
 	if (window.dadiframe && dadiframe.isfileup) {
 		alert(strLang86);
 		return;
-	}
+	}*/
 
     NameCertify_onClick(Send_onClick_Complete);
 }
@@ -1173,6 +1212,10 @@ function event_SaveonClick() {
             	g_apprMail = false;
             	g_apprMailApprover = "";
                 
+                if ("always" === mailSendResult) {
+                    alert(strSendOK);
+                }
+                
                 try {
 //                	window.opener.MailListRefreshByTimeout();
                 	/* 2018-05-07 이소담 - 왼쪽 메뉴의 '메일쓰기'로 '내게쓰기'로 메일을 발신했을때 메일 목록 자동으로 새로고침되도록 개선*/
@@ -1237,6 +1280,24 @@ function event_SaveonClick() {
                 
         		preMailRead(preview_g_url_forRead);
         	}
+        	// 정상적으로 처리된 경우(메일작성 미리보기의 임시저장인 경우)
+            else if (event_SaveonClick.savemode == "previewSend"){
+                var result = pRtnMessage;
+                var xmlID = "";
+                xmlID = loadXMLString(g_saveHttp.responseText);
+                var xmlItem = xmlID.childNodes.item(0).childNodes;
+
+                if (!CrossYN()) {
+                    preview_g_url = xmlItem.item(1).text;
+                    preview_g_url_forRead = xmlItem.item(2).text + "/" + preview_g_url;
+                }
+                else if (CrossYN()) {
+                    preview_g_url = xmlItem.item(1).textContent;
+                    preview_g_url_forRead = xmlItem.item(2).textContent + "/" + preview_g_url;
+                }
+
+                preMailReadSend(preview_g_url_forRead);
+            }
         	// 정상적으로 처리된 경우(메일 저장 or 자동임시저장인 경우)
         	else {
         		g_bDirty = false;
@@ -4342,6 +4403,34 @@ function preMailRead(Href) {
     
     ReadMailOpenNewWin = window.open(pURI, "ReadMailOpenNewWin", feature);
     
+    if (ReadMailOpenNewWin != null) {
+    	window.ReadMailOpenNewWin.focus();
+    }
+}
+
+function preMailReadSend(Href) {
+	if(event_SaveonClick.savemode != 'previewSend' && !previewChk) {return; }
+
+    var pheight = window.screen.availHeight;
+    var conHeight = pheight * 0.8;
+    var pwidth = window.screen.availWidth;
+    var conWidth = pwidth * 0.8;
+    if (conWidth > 890)
+        conWidth = 890;
+    //var pTop = (pheight - conHeight) / 2;
+    //var pLeft = (pwidth - 890) / 2;
+    var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+    var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+
+	var pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=PREVIEWSEND";
+
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	pURI += "&shareId=" + encodeURIComponent(shareId);
+    }
+
+    ReadMailOpenNewWin = window.open(pURI, "ReadMailOpenNewWin", feature);
+
     if (ReadMailOpenNewWin != null) {
     	window.ReadMailOpenNewWin.focus();
     }

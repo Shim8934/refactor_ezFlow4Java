@@ -584,6 +584,7 @@ function GetCaninetList() {
             GetCaninetListXml();
     }
     listLoading(false);	// 20201211 조진호 로딩바 display:none
+    settingResize();
 }
 
 function GetRecordList() {

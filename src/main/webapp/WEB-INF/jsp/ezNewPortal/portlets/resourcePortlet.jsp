@@ -9,7 +9,8 @@
 <script type="text/javascript">
     $(function() {
         var portletName = "<c:out value='${portletName }'/>";
-        ellipsisTitle(portletName, 51);
+        var portletId = "<c:out value='${resPortletId}'/>";
+        ellipsisTitle(portletName, portletId);
     });
 </script>
 <body>
