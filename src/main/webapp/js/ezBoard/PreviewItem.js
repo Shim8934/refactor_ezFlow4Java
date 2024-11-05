@@ -72,10 +72,10 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("MailListRayer").style.width = "100%";
             if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
             } else {
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px"; 
+                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px"; 
             }
             g_bPrevShow = false;
         }
@@ -169,10 +169,10 @@ function PreviewRayerChange(pGubun) {
             
             if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
             } else
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
             /*document.getElementById("divList").style.overflow = "auto";*/
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
             document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
@@ -230,7 +230,7 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
             /* 2019-04-11 홍승비 - 앨범형식 보기 시 사용하지 않는 div 분기처리 */
             // if (document.getElementById("BoardList_BODY") != null) {
-            // 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+            // 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
             // }
             g_bPrevShow = false;
         }
@@ -275,7 +275,7 @@ function PreviewRayerChange_photo(pGubun) {
 			document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
 			/* 2019-04-11 홍승비 - 앨범형식 보기 시 사용하지 않는 div 분기처리 */
 			// if (document.getElementById("BoardList_BODY") != null) {
-			// 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+			// 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
 			// }
 
             /*document.getElementById("divList").style.overflow = "auto";*/
@@ -965,10 +965,10 @@ function Window_resize() {
                 document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
                     document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 } else
                     document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
 
                 /*document.getElementById("divList").style.overflow = "auto";*/
                 document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
@@ -987,10 +987,10 @@ function Window_resize() {
                 document.getElementById("MailListRayer").style.width = "100%";
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
                     document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 } else
                     document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 	/*document.getElementById("divList").style.overflow = "auto";*/
             }
         }
@@ -1071,7 +1071,7 @@ function Window_resize_photo() {
                 
                 /* 2022-03-17 홍승비 - 리사이즈 시 포토게시판에만 스크롤이 발생하도록 분기처리 (썸네일, 동영상게시판은 다른 방식으로 스크롤이 발생함) */
                 if (window.location.href.indexOf("/ezBoard/boardItemListPhoto.do") > -1) {
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 }
                 document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 77) + "px";
                 
@@ -1088,7 +1088,7 @@ function Window_resize_photo() {
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
                 
                 if (window.location.href.indexOf("/ezBoard/boardItemListPhoto.do") > -1) {
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 }
             }
         }

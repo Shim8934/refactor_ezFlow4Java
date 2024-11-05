@@ -174,8 +174,8 @@
 									<tr>
 										<th><spring:message code='ezBoard.t999025' /></th>
 										<td>
-											<input type="checkbox" id="admin_OK" name="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t51' />
-											<input type="checkbox" id="admin_NO" name="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t50' />
+											<input type="checkbox" id="admin_OK" name="admin_OK" disabled onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t51' />
+											<input type="checkbox" id="admin_NO" name="admin_NO" disabled onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t50' />
 										</td>
 									</tr>
 									</tbody>
@@ -514,6 +514,9 @@
 	   		
 	   		//오른쪽 리스트에서 클릭이벤트 적용
 	   		function setMainListUserAuthorDept(elem) {
+				$("#admin_OK").removeAttr("disabled");
+				$("#admin_NO").removeAttr("disabled");
+				
 	   			if ($(elem).parent().parent().parent().attr("id") === "authList"){
 		   			$("#authList tr").removeClass("selectTR");
 	   			}

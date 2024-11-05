@@ -825,5 +825,9 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void setUserColorMode(Map<String, Object> map) {
 		update("ezNewPortal.setUserColorMode", map);
 	}
+
+	public int getResportletId() throws Exception {
+		return (int) select("ezNewPortal.getResportletId");
+	}
 	
 }

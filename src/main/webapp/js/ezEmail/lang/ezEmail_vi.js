@@ -374,6 +374,13 @@ const strLangSelectProxyApproverWarning = "Chọn một người cho cấp phó.
 
 const strLangTempSaveAttachmentsWarning = "Các tệp đính kèm sẽ bị xóa khi lưu. Bạn có muốn lưu không?";
 
+var strNoSubject = "Ô tiêu đề còn trống."; 
+var strSendOK = "Email đã được gửi thành công.";
+var strUreadDelChk = "Bạn có chắc chắn muốn xóa tất cả email chưa đọc trong hộp thư này không?"
+var strUreadDelSearch = "Bạn có chắc chắn muốn xóa tất cả email chưa đọc trong kết quả tìm kiếm không?"
+var strUreadDelPermenant = "Khi xóa, email sẽ không thể khôi phục.\nBạn có chắc chắn muốn xóa vĩnh viễn tất cả email chưa đọc trong hộp thư không?";
+var strUreadDelSearchPermenant = "Khi xóa, email sẽ không thể khôi phục.\nBạn có chắc chắn muốn xóa vĩnh viễn tất cả email chưa đọc trong kết quả tìm kiếm không?";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

@@ -1402,7 +1402,7 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 #theme3Body .birthList li .birthListDL{margin:0px; padding:0px;  overflow:hidden;cursor:pointer;}
 /* #theme3Body .birthList li .birthListDL .birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
 #theme3Body .birthList li .birthListDL .birthPic img{border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;} */
-#theme3Body .birthList li .birthListDL .birthName{margin:0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+#theme3Body .birthList li .birthListDL .birthName{margin:0px; padding:0px; font-size:12px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
 #theme3Body .birthList li .birthListDL .birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
 #theme3Body .nodata_newBirthday{height:100%; background:none;}
 

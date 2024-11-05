@@ -2360,8 +2360,8 @@
 						                	<tr>
 						                    	<th><spring:message code='ezBoard.t999025' /></th>
 						                    	<td>
-							                        <input type="checkbox" id="admin_OK" name="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t51' />
-							                        <input type="checkbox" id="admin_NO" name="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t50' />
+							                        <input type="checkbox" id="admin_OK" disabled name="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t51' />
+							                        <input type="checkbox" id="admin_NO" disabled name="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t50' />
 							                    </td>
 						                	</tr>
 						            	</tbody>

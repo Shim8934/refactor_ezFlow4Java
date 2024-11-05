@@ -4170,4 +4170,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		return jArray;
 	}
+
+	@Override
+	public int getResportletId() throws Exception {
+		return ezNewPortalDAO.getResportletId();
+	}
+	
 }
