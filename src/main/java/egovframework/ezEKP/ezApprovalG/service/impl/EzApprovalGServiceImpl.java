@@ -87,7 +87,8 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import org.apache.commons.codec.binary.Base64; 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.FileUtils; 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -14273,12 +14274,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         List<ApprGAttachInfoVO> listAprAttach = getListAprAttach(oldDocID, "APR", commonUtil.getMultiData(lang, tenantID), strLangFile, strLangDocument, "", companyID, tenantID);
         String docYear = getDocHrefYear(docID, companyID, tenantID);
 
+        // 2024-11-05 박기범 : 일괄기안시는 첨부파일을 미리 저장하여 임시저장시 중복되는 파일명이 생김. 
+        // 다른 프로세스의 경우도 첨부파일을 먼저 저장하는 경우가 있을수 있으므로, 임시 첨부 저장을 별도 폴더로 분류 && 중복될시 파일명 UUID로 처리함.
         for (ApprGAttachInfoVO aprAttach : listAprAttach) {
             String beforeHref = aprAttach.getAttachHref();
+            String afterFileName = getNDigitNum(aprAttach.getAttachSN(), 4) + aprAttach.getAttachName();
+            String extension = FilenameUtils.getExtension(afterFileName);
             String afterHref = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + sep + companyID + sep + "uploadFile" + sep + docYear + sep +
-                    getDocDir(docID) + sep + docID.trim() + getNDigitNum(aprAttach.getAttachSN(), 4) + aprAttach.getAttachName();
-            FileUtils.copyFile(new File(servletContext.getRealPath("") + beforeHref), new File(servletContext.getRealPath("") + afterHref));
-            aprAttach.setAttachHref(afterHref);
+                    getDocDir(docID) + sep + "TMP" + sep + docID.trim() + sep;
+            
+            while (new File(afterHref + afterFileName).exists()) {
+                afterFileName = UUID.randomUUID() + extension;
+            }
+            
+            FileUtils.copyFile(new File(servletContext.getRealPath("") + beforeHref), new File(servletContext.getRealPath("") + afterHref + afterFileName));
+            aprAttach.setAttachHref(afterHref + afterFileName);
         }
 		
 		String sn = "";
