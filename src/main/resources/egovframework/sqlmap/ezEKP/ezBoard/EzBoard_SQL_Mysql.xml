@@ -3523,7 +3523,7 @@
        		WHERE
        			A.TENANT_ID = #v_TENANTID#
        		AND
-       			ItemID = #v_pItemID#
+       			A.ItemID = #v_pItemID#
 		]]>
 	</select>
 	
