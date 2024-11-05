@@ -1,5 +1,5 @@
 var mainType = {
-	//mail : "메일",	
+	mail : "메일",	
 	approval : "Sự chấp thuận",	
 	board : "bảng ghi chú",	
 	schedule : "lịch trình",
@@ -14,6 +14,7 @@ var mainType = {
 }
 
 var subType = {
+	mail : {},
 	approval : {
 		arrive : "Tài liệu đến",
 		complete : "Tài liệu hoàn tất",

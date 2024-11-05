@@ -50,6 +50,11 @@ public class EzPersonalGWController {
 				}
 				
 				disableItemList.add(3);
+				
+				if (disableItemList != null && disableItemList.contains(4)) {
+					disableItemList.remove(disableItemList.indexOf(4));
+				}
+				disableItemList.add(4);
 			}
 			
 			result = Result.success(disableItemList);

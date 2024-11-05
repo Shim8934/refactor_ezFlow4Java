@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
@@ -111,7 +112,7 @@ public class EzNotificationGWController {
 			}
 			
 			String mainType = notiVO.getMainType().toUpperCase();
-			String subType = notiVO.getSubType().toUpperCase();
+			String subType = Optional.ofNullable(notiVO.getSubType()).map(String::toUpperCase).orElse(null);
 			String linkUrl = notiVO.getLinkUrl();
 			String linkUrlMobile = notiVO.getLinkUrlMobile();
 			String etcData = notiVO.getEtcData();
@@ -164,6 +165,8 @@ public class EzNotificationGWController {
 			String mainTypeForMobilePush = "";
 			String pushNotiContent = StringEscapeUtils.unescapeHtml4(notiContent);
 			switch (mainType) {
+			case "MAIL" :
+				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.ksy01", locale) + "] " + pushNotiContent;
 			case "APPROVAL":
 				pushNotiContent = "[" + egovMessageSource.getMessage("ezNotification.type.hth01", locale) + "] " + pushNotiContent;
 				mainTypeForMobilePush = "2";
@@ -221,7 +224,7 @@ public class EzNotificationGWController {
 			for (NotiRecipientVO recipientVO : recipientList) {
 				try {
 					String recipientId = recipientVO.getCn();
-					String companyId = recipientVO.getCompanyId();
+					String companyId = Optional.ofNullable(recipientVO.getCompanyId()).orElse(info.getCompanyId());
 					logger.debug("recipientId : " + recipientId);
 					
 					resultStr += recipientId + ":";
@@ -249,7 +252,7 @@ public class EzNotificationGWController {
 						resultStr += "{total:notUse,";
 					}
 					
-					if (useMobilePushCompany && useMobilePushUser) {
+					if (useMobilePushCompany && useMobilePushUser && !mainType.equals("MAIL")) {
 						boolean mobilePushSuccess = ezEmailService.addEzTalkNotification(recipientId, senderName, pushNotiContent, mainTypeForMobilePush, subTypeForMobilePush, linkUrlMobile);
 						
 						if (mobilePushSuccess) {
