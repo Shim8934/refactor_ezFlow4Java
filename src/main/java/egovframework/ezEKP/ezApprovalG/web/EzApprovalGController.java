@@ -4630,7 +4630,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		OutputStream bos = null;
 		
 		try {
-			if (docID == null | formText.equals("")) {
+			if (docID == null || formText.equals("")) {
 				ret = "FALSE";
 
 				logger.debug("<<<docID : " + docID);
@@ -4971,7 +4971,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("<<<saveDir : " + saveDir);
 
 		try {
-			if (docID == null | formText.equals("")) {
+			if (docID == null || formText.equals("")) {
 				ret = "FALSE";
 
 				logger.debug("<<<docID : " + docID);

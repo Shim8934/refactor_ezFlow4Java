@@ -1085,7 +1085,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		try {
-			if (docID == null | formText.equals("")) {
+			if (docID == null || formText.equals("")) {
 				result = "FAIL";
 				
 				logger.debug("<<<docID : " + docID);
