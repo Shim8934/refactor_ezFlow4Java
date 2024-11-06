@@ -8007,10 +8007,9 @@
 							A.tenant_id = #tenantID#
 						AND 
 							DATE_ADD(STR_TO_DATE(B.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL (#offset# / (60 * 24)) HOUR) > NOW() - INTERVAL 90 DAY
-						ORDER BY
-							B.READCOUNT DESC, B.writedate DESC
-				)
-			WHERE 
+				) AS RST
+				ORDER BY
+					RST.READCOUNT DESC, RST.writedate DESC
 			    LIMIT 5
 		]]>
 	</select>
