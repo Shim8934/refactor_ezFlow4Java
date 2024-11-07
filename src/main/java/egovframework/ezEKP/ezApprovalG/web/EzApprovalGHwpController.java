@@ -1750,8 +1750,17 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		/* 2024-06-26 조소정 - 웹한글 문서 재사용 시 양식선택창 표출 여부 테넌트 컨피그와 양식 정보 */
 		String resultXML = ezApprovalGService.getFormInfoDetail(formID, userInfo.getCompanyID(), userInfo.getTenantId());
         Document formInfo = commonUtil.convertStringToDocument(resultXML);
-        String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
-        String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
+        
+        /* 2024-11-07 홍승비 - 전자결재 (일반, G) > 완료된 웹한글 문서가 합의접수문서(FORMID = 2003000007)인 경우, TBL_FORMINFO에 레코드가 없으므로 예외처리 추가 (MHT와 동일) */
+        String formUrl = "";
+        String formDocType = "";
+        
+        if (formInfo.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
+			formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+		}
+		if (formInfo.getElementsByTagName("FORMDOCTYPE").getLength() > 0) {
+			formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+		}
         
         model.addAttribute("formUrl", formUrl);
         model.addAttribute("formDocType", formDocType);
