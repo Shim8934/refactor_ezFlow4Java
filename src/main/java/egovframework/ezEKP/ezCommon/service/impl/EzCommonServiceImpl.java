@@ -4563,4 +4563,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertRecentBoardInfo(map);
         }
     }
+    
+    @Override
+    public void addBoardAllNewBoardFlag() throws Exception {
+        ezCommonDAO.addBoardAllNewBoardFlag();
+    }
+
+    @Override
+    public void addBoardAllNewBoardListDate() throws Exception {
+        ezCommonDAO.addBoardAllNewBoardListDate();
+    }
 }

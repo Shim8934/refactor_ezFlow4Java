@@ -78,7 +78,8 @@
 				MAILFG_COMMENT,
 				USEKEYWORD,
 				ATTACHMENTFLAG,
-				PUBLICFLAG
+				PUBLICFLAG,
+				ALLNEWBOARDFLAG
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  
@@ -2992,11 +2993,20 @@
 	              ( A.APPRFLAG = 'Y'
 	                  OR A.APPRFLAG IS NULL )
 				AND 
-				  	A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+					A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL IFNULL((SELECT 
+																			ALLNEWBOARDLISTDATE 
+																		FROM 
+																			TBL_BOARD_CONFIGURATION 
+																		WHERE 
+																			USERID = #userID# 
+																		 AND 
+																			TENANT_ID = #tenantID#), 5) DAY)
 				AND 
 				  	A.STARTDATE <= #nowDate#
 				AND 
 				  	A.ENDDATE > #nowDate#
+				AND
+					P.ALLNEWBOARDFLAG = 'Y'
 		]]>
 		<isNotEmpty property="pSearchText">
 		<![CDATA[
@@ -3064,7 +3074,16 @@
                 (A.APPRFLAG = 'Y' 
                  OR A.APPRFLAG IS NULL)
               AND 
-                A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+				A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL IFNULL((SELECT 
+																		ALLNEWBOARDLISTDATE 
+																	FROM 
+																		TBL_BOARD_CONFIGURATION 
+																	WHERE 
+																		USERID = #userID# 
+																	 AND 
+																		TENANT_ID = #tenantID#), 5) DAY)
+			  AND
+				P.ALLNEWBOARDFLAG = 'Y'
             ]]>
 
 		<isNotEmpty property="lastDate">

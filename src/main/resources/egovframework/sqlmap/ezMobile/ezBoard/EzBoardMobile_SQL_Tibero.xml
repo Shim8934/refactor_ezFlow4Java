@@ -78,7 +78,8 @@
 				MAILFG_COMMENT,
 				USEKEYWORD,
 				ATTACHMENTFLAG,
-				PUBLICFLAG
+				PUBLICFLAG,
+				ALLNEWBOARDFLAG
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  
@@ -2840,11 +2841,21 @@
 	              ( A.APPRFLAG = 'Y'
 	                  OR A.APPRFLAG IS NULL )
 				AND 
-				  	A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
+					A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - NVL((SELECT
+																								 ALLNEWBOARDLISTDATE
+																							 FROM 
+																								 TBL_BOARD_CONFIGURATION 
+																							 WHERE 
+																								 userid = #userID# 
+																							 AND 
+																								 tenant_id = #tenantID#), 5)
+					, 'YYYY-MM-DD HH24:MI:SS')
 				AND 
 				  	A.STARTDATE <= #nowDate#
 				AND 
 				  	A.ENDDATE > #nowDate#
+			  	AND
+					P.ALLNEWBOARDFLAG = 'Y'
 		]]>
 		<isNotEmpty property="pSearchText">
 		<![CDATA[
@@ -2917,7 +2928,17 @@
 	                (A.APPRFLAG = 'Y' 
 	                 OR A.APPRFLAG IS NULL)
 	              AND 
-	                A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
+					A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - NVL((SELECT
+																								 ALLNEWBOARDLISTDATE
+																							 FROM 
+																								 TBL_BOARD_CONFIGURATION 
+																							 WHERE 
+																								 userid = #userID# 
+																							 AND 
+																								 tenant_id = #tenantID#), 5)
+					, 'YYYY-MM-DD HH24:MI:SS')
+				  AND
+					P.ALLNEWBOARDFLAG = 'Y'
 	            ]]>
 
 		<isNotEmpty property="lastDate">

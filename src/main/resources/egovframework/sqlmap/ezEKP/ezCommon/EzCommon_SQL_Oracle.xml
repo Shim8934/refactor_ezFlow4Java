@@ -6695,4 +6695,40 @@
 				('{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}', '최근게시물', 'Recent BoardItem', '最近の投稿', '最近的帖子', -2, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', #v_TENANTID#, 'Top')
 		]]>
     </insert>
+
+	<select id="EzCommonDAO.checkBoardAllNewBoardFlag" resultClass="String">
+        <![CDATA[
+		SELECT
+			ALLNEWBOARDFLAG
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			ROWNUM = 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addBoardAllNewBoardFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+			ADD
+				ALLNEWBOARDFLAG CHAR(1) DEFAULT 'Y'
+	</statement>
+
+	<select id="EzCommonDAO.checkAllNewBoardListDate" resultClass="String">
+        <![CDATA[
+		SELECT
+			ALLNEWBOARDLISTDATE
+		FROM
+			TBL_BOARD_CONFIGURATION
+		WHERE
+			ROWNUM = 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addBoardAllNewBoardListDate">
+		ALTER TABLE
+			TBL_BOARD_CONFIGURATION
+			ADD
+				ALLNEWBOARDLISTDATE NUMBER(10,0) DEFAULT 5
+	</statement>
 </sqlMap>

@@ -2470,7 +2470,8 @@
 	      			REACTFLAG = #v_REACTFLAG#,
 	      			USEKEYWORD = #v_USEKEYWORD#,
 		          	ATTACHMENTFLAG = #v_ATTACHMENTFLAG#,
-	      			PUBLICFLAG = #v_PUBLICFLAG#
+	      			PUBLICFLAG = #v_PUBLICFLAG#,
+	      			ALLNEWBOARDFLAG = #v_ALLNEWBOARDFLAG#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  

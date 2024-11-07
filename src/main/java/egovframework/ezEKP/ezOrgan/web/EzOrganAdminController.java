@@ -354,6 +354,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createTblBoardCommentAttachments(); // 2024-10-23 전인하 - 게시판 > 댓글 첨부 테이블 추가
 			ezCommonService.insertBoardItemListOptionAN(); // 2024-09-11 이유정 - 게시판 > 최근게시물 리스트헤더 추가
 			ezCommonService.insertRecentBoardInfo(); // 2024-09-11 이유정 - 게시판 > 최근게시물 게시판정보 추가
+			ezCommonService.addBoardAllNewBoardFlag(); // 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 포함 여부 설정(게시판 설정)
+			ezCommonService.addBoardAllNewBoardListDate(); // 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 일자 설정
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

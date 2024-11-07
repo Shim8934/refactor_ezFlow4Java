@@ -40,6 +40,7 @@
 			var useKeyword = "<c:out value='${model.useKeyword}'/>"; // 키워드 사용여부(Y/N)
 			var boardItemCnt = "<c:out value='${boardItemCnt}'/>";
 			var attachmentFlag = $.trim("<c:out value='${model.attachmentFlag}'/>");
+			var useAllNewBoard = $.trim("<c:out value='${model.allNewBoardFlag}'/>");
 			
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -468,6 +469,15 @@
 				
                 var publicFlag = $("#publicFlag").is(":checked") ? "Y" : "N" ;
                 
+
+				/* 최근게시물 여부 기능 추가 */
+				if ($("#chkAllNewBoard").is(":checked")) {
+					useAllNewBoard = "Y";
+				} else {
+					useAllNewBoard = "N";
+				}
+				
+
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
@@ -487,7 +497,7 @@
 						mailFG_Post : mailFG_Post, mailFG_Mod : mailFG_Mod, mailFG_Comment : mailFG_Comment,
 						reactFlag:useBoardReplyReact, useKeyword:useKeyword, publicFlag:publicFlag,
 						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3, 
-						attachmentFlag:attachmentFlag
+						attachmentFlag:attachmentFlag, allNewBoardFlag:useAllNewBoard
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
@@ -1441,6 +1451,18 @@
 					<spring:message code="ezBoard.t162"/>
 				</td>
 			</tr>
+			<%-- 최근게시물 설정 --%>
+			<tr id="trAllNewBoard" style="${style}">
+				<th><spring:message code="ezBoard.lyj01" /></th>
+				<td>
+					<input type="checkbox" id="chkAllNewBoard" onclick="chkAllNewBoard_onclick()"
+							<c:if test="${model.allNewBoardFlag == 'Y'}">
+								checked
+							</c:if>
+					/>
+					<spring:message code="ezBoard.t162"/>
+				</td>
+			</tr>			
 	        <%-- 첨부크기제한 --%>
 	        <tr id="attachLimitTr" style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>

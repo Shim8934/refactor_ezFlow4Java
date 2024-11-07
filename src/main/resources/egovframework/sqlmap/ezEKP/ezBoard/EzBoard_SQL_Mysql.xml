@@ -4650,7 +4650,8 @@
 			    PREVIEWWLIST ,
 			 	PREVIEWWCONTENT ,
 			 	PREVIEWHLIST ,
-              	PREVIEWHCONTENT 
+              	PREVIEWHCONTENT,
+				ALLNEWBOARDLISTDATE 
         	FROM 
         	    TBL_BOARD_CONFIGURATION 
        		WHERE  
@@ -5582,7 +5583,8 @@
             	PREVIEWWLIST = #previewWList#,
             	PREVIEWWCONTENT = #previewWContent#,
             	PREVIEWHLIST = #previewHList#,
-            	PREVIEWHCONTENT = #previewHContent#
+            	PREVIEWHCONTENT = #previewHContent#,
+				ALLNEWBOARDLISTDATE = #allNewBoardListDate#
             WHERE  
             	TENANT_ID = #tenantID#
             AND
@@ -5592,10 +5594,10 @@
 	<insert id="EzBoardDAO.setBoardList_Config_I" parameterClass="BoardConfigVO">
 		<![CDATA[
 			INSERT INTO TBL_Board_Configuration ( 
-				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT ,   TENANT_ID
+				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT, ALLNEWBOARDLISTDATE, TENANT_ID
 			)
           	VALUES ( 
-          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent# , #tenantID# 
+          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent#, #allNewBoardListDate#, #tenantID# 
           	)
 		]]>
 	</insert>
@@ -8857,11 +8859,20 @@
 			  	(A.APPRFLAG = 'Y' 
 			     OR A.APPRFLAG IS NULL)
 			AND 
-			  	A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+			  	A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL IFNULL((SELECT 
+																		ALLNEWBOARDLISTDATE 
+																  	FROM 
+																		TBL_BOARD_CONFIGURATION 
+																  	WHERE 
+																		USERID = #v_pUserID# 
+																 	 AND 
+																		TENANT_ID = #v_TENANTID#), 5) DAY)
 			AND 
 			  	A.STARTDATE <= #nowDate#
 			AND 
 			  	A.ENDDATE > #nowDate#
+			AND
+				P.ALLNEWBOARDFLAG = 'Y'
 		]]>
 		<!-- 		오류 발생시 이것으로 대체 -->
 		<!--             	A.StartDate > DATE_SUB(DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL 5 DAY) -->
@@ -8924,11 +8935,20 @@
 							(A.APPRFLAG = 'Y'
 								OR A.APPRFLAG IS NULL)
 						AND
-							A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+							A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL IFNULL((SELECT 
+																					ALLNEWBOARDLISTDATE 
+																				FROM 
+																					TBL_BOARD_CONFIGURATION 
+																				WHERE 
+																					USERID = #v_PUSERID# 
+																				 AND 
+																					TENANT_ID = #v_TENANTID#), 5) DAY)
 						AND
 							A.STARTDATE <= #nowDate#
 						AND
 							A.ENDDATE > #nowDate#
+					   	AND
+						   	P.ALLNEWBOARDFLAG = 'Y'
 		]]>
 			ORDER BY
 					<isEqual property="iv_PORDERBYCOL1" compareValue="BOARDNAME"> P.BOARDNAME </isEqual>

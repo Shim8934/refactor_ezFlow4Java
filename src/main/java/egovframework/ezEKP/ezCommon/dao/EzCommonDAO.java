@@ -3056,4 +3056,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertRecentBoardInfo", map);
 		}
 	}
+	
+	public void addBoardAllNewBoardFlag() {
+		try {
+			select("EzCommonDAO.checkBoardAllNewBoardFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info allNewBoardFlag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardAllNewBoardFlag");
+		}
+	}
+
+	public void addBoardAllNewBoardListDate() {
+		try {
+			select("EzCommonDAO.checkAllNewBoardListDate");
+		} catch (Exception e) {
+			logger.debug("tbl_board_configuration allNewBoardListDate doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardAllNewBoardListDate");
+		}
+	}
 }

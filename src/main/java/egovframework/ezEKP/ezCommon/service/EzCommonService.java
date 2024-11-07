@@ -523,4 +523,10 @@ public interface EzCommonService {
 
 	/* 2024-09-11 이유정 - 게시판 > 최근게시물 게시판정보 추가 */
 	public void insertRecentBoardInfo() throws Exception;
+
+	// 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 포함 여부 설정(게시판 설정)
+	public void addBoardAllNewBoardFlag() throws Exception;
+	// 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 일자 설정
+	public void addBoardAllNewBoardListDate() throws Exception;
+
 }

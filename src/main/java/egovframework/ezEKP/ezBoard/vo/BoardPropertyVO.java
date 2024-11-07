@@ -163,6 +163,8 @@ public class BoardPropertyVO {
 	private String attachmentFlag;
 	
 	private String publicFlag = "N";
+	/** 2024-10-22 정지은 - 최근게시물 사용여부**/
+	private String allNewBoardFlag;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -642,5 +644,12 @@ public class BoardPropertyVO {
 
 	public void setAttachmentFlag(String attachmentFlag) {
 		this.attachmentFlag = attachmentFlag;
+	}
+	public String getAllNewBoardFlag() {
+		return allNewBoardFlag;
+	}
+
+	public void setAllNewBoardFlag(String allNewBoardFlag) {
+		this.allNewBoardFlag = allNewBoardFlag;
 	}
 }
