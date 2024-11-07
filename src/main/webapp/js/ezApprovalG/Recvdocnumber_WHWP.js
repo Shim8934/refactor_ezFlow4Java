@@ -95,8 +95,12 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
             var deptName = arr_userinfo[5];
             if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
                 pDeptID = upperDeptCode;
+            
+            /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+            if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
                 deptName = upperDeptName;
             }
+        }
         
             if (LastSignSN == 1 || useReceiveDocNo != 'NO' || pDraftFlag == "HAPYUI") {
                 $.ajax({
@@ -311,7 +315,11 @@ var result = "";
 
     if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
         DeptID = upperDeptCode;
-        DeptName = upperDeptName;
+        
+        /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+        if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+        	DeptName = upperDeptName;
+        }
     }
 	
 	$.ajax({

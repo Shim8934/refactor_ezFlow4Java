@@ -4484,7 +4484,11 @@ function getDeptSymbol(DeptID, DeptName) {
         
         if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
             DeptID = upperDeptCode;
-            DeptName = upperDeptName;
+            
+            /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+            if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+            	DeptName = upperDeptName;
+            }
         }
         
 		$.ajax({
