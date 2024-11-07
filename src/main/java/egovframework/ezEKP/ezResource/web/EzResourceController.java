@@ -3169,7 +3169,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				cell.setCellStyle(headerStyle);
 				cell.setCellValue(egovMessageSource.getMessage("ezResource.header.kwc" + (i + 1), locale));
 				sheet.autoSizeColumn(i);
-				sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 4096);
+				sheet.setColumnWidth(i, Math.min(65280, sheet.getColumnWidth(i) + 4096));
 			}
 			
 			for (int i = 0; i < getResOccuList.size(); i++) {

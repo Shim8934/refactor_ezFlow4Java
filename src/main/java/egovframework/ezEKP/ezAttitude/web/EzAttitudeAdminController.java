@@ -2355,7 +2355,7 @@ public class EzAttitudeAdminController {
 		// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 연차현황관리_양식)
 		String pFileName = egovMessageSource.getMessage("ezAttitude.t237", userInfo.getLocale()) + egovMessageSource.getMessage("ezAttitude.t44", userInfo.getLocale());
 		
-		//header
+		// header
 		row.createCell(0).setCellValue(egovMessageSource.getMessage("ezAttitude.t330", userInfo.getLocale()));
 		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t331", userInfo.getLocale()));
 		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t332", userInfo.getLocale()));
@@ -2363,7 +2363,7 @@ public class EzAttitudeAdminController {
 		row.getCell(1).setCellStyle(headerStyle);
 		row.getCell(2).setCellStyle(headerStyle);
 		
-		//body
+		// body
 		Row row1 = sheet.createRow(1);
 		row1.createCell(0).setCellValue("EX)dev000");
 		row1.createCell(1).setCellValue("2019-07-11");
@@ -2372,7 +2372,7 @@ public class EzAttitudeAdminController {
 		row1.getCell(1).setCellStyle(bodyStyle);
 		row1.getCell(2).setCellStyle(bodyStyle);
 		
-		//width 조정
+		// width 조정
 		sheet.autoSizeColumn(0);
 		sheet.autoSizeColumn(1);
 		sheet.autoSizeColumn(2);
@@ -2814,7 +2814,7 @@ public class EzAttitudeAdminController {
 		// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 YYYY-MM-DD_연차현황관리)
 		String pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t237", userInfo.getLocale());
 		
-		//header
+		// header
 		row.createCell(0).setCellValue("NO");
 		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezEmail.t263", locale));
 		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
@@ -2836,7 +2836,7 @@ public class EzAttitudeAdminController {
 		row.getCell(8).setCellStyle(headerStyle);
 		row.getCell(9).setCellStyle(headerStyle);
 		
-		//body
+		// body
 		for (int i = 0 ; i < annualList.size(); i++) { 
 			AttitudeAnnualVO vo = annualList.get(i);
 			row = sheet.createRow(i + 1);
@@ -2864,10 +2864,12 @@ public class EzAttitudeAdminController {
 			row.getCell(8).setCellStyle(bodyStyle);
 			row.getCell(9).setCellStyle(bodyStyle);
 		}
-		//width 조정
-		for(int i = 0, len = 10; i < len; i++) {
+		// width 조정
+		for (int i = 0, len = 10; i < len; i++) {
 			sheet.autoSizeColumn(i);
-			sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);			
+			
+			/* 2024-11-05 홍승비 - 엑셀 파일 저장 시 동적인 너비 계산이 setColumnWidth()에서 허용하는 최대 제한을 넘지 않도록 수정 (255 * 256 = 65280) */
+			sheet.setColumnWidth(i, Math.min(65280, sheet.getColumnWidth(i) + 512));			
 		}
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" +  URLEncoder.encode(pFileName, "UTF-8") + ".xls\"");

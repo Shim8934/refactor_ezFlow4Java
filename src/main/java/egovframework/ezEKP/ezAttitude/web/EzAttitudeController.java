@@ -3389,17 +3389,19 @@ public class EzAttitudeController {
 					row.getCell(22).setCellStyle(bodyStyle);
 				}
 				
-				//width 조정
-				for(int i = 0, len = 23; i < len; i++) {
+				// width 조정
+				for (int i = 0, len = 23; i < len; i++) {
 					sheet.autoSizeColumn(i);
-					sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
+					
+					/* 2024-11-05 홍승비 - 엑셀 파일 저장 시 동적인 너비 계산이 setColumnWidth()에서 허용하는 최대 제한을 넘지 않도록 수정 (255 * 256 = 65280) */
+					sheet.setColumnWidth(i, Math.min(65280, sheet.getColumnWidth(i) + 512));
 				}			
-			} else if (reqType.equals("absent")){
+			} else if (reqType.equals("absent")) {
 	//			미입력자조회엑셀
 				// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_미입력자관리')
 				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t6", locale);
 				
-				//header
+				// header
 				row.createCell(0).setCellValue("NO");
 				row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t133", locale));
 				row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
@@ -3411,7 +3413,7 @@ public class EzAttitudeController {
 				row.getCell(3).setCellStyle(headerStyle);
 				row.getCell(4).setCellStyle(headerStyle);
 				
-				//body
+				// body
 				for (int i = 0 ; i < attitudeList.size(); i++) { 
 					AdminAttitudeVO vo = attitudeList.get(i);
 					row = sheet.createRow(i + 1);
@@ -3429,7 +3431,7 @@ public class EzAttitudeController {
 					row.getCell(4).setCellStyle(bodyStyle);
 	
 				}
-				//width 조정
+				// width 조정
 				sheet.autoSizeColumn(0);
 				sheet.autoSizeColumn(1);
 				sheet.autoSizeColumn(2);
@@ -3441,7 +3443,7 @@ public class EzAttitudeController {
 				sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
 				sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
 				
-			} else if (reqType.equals("history")){
+			} else if (reqType.equals("history")) {
 	//			관리내역조회엑셀
 				// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_관리내역')
 				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t57", locale);
@@ -3890,7 +3892,7 @@ public class EzAttitudeController {
 		String pFileName = "";
 		pFileName = EgovDateUtil.getToday("-") +"_annualReport";
 		
-		//header
+		// header
 		row.createCell(0).setCellValue("NO");
 		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t107", locale));
 		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t35", locale));
@@ -3902,7 +3904,7 @@ public class EzAttitudeController {
 		row.getCell(3).setCellStyle(headerStyle);
 		row.getCell(4).setCellStyle(headerStyle);
 		
-		//body
+		// body
 		for (int i = 0 ; i < annualList.size(); i++) { 
 			AdminAttitudeVO vo = annualList.get(i);
 			row = sheet.createRow(i + 1);
@@ -3926,7 +3928,7 @@ public class EzAttitudeController {
 			row.getCell(3).setCellStyle(bodyStyle);
 			row.getCell(4).setCellStyle(bodyStyle);
 		}
-		//width 조정
+		// width 조정
 		sheet.autoSizeColumn(0);
 		sheet.autoSizeColumn(1);
 		sheet.autoSizeColumn(2);
@@ -3936,7 +3938,7 @@ public class EzAttitudeController {
 		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
 		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
 		sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
-//		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512); //내용은 길어질 수 있으므로 하지 않는다. 최댓값을 넘을 경우 에러나기 때문
+//		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512); // 내용은 길어질 수 있으므로 하지 않는다. 최댓값을 넘을 경우 에러나기 때문
 			
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());

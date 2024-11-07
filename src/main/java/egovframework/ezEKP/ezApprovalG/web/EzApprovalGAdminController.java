@@ -3024,27 +3024,29 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			tableBodyNode = tableNode.getChildNodes().item(0);
 
 			row = sheet.createRow(0);
-
-			for (int i=0; i<tableHeadNode.getChildNodes().getLength(); i++) {
+			
+			for (int i = 0; i < tableHeadNode.getChildNodes().getLength(); i++) {
 				cell = row.createCell(i);
 				cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
 				cell.setCellStyle(headerStyle);
 
 				sheet.autoSizeColumn(i);
-				sheet.setColumnWidth(i, (sheet.getColumnWidth(i))+1024); //너비 더 넓게
+				
+				/* 2024-11-05 홍승비 - 엑셀 파일 저장 시 동적인 너비 계산이 setColumnWidth()에서 허용하는 최대 제한을 넘지 않도록 수정 (255 * 256 = 65280) */
+				sheet.setColumnWidth(i, Math.min(65280, sheet.getColumnWidth(i) + 1024)); // 너비 더 넓게
 			}
 
-			for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
+			for (int i = 0; i < tableBodyNode.getChildNodes().getLength() - 1; i++) {
 				row = sheet.createRow(i+1);
 				Node tr = tableBodyNode.getChildNodes().item(i+1);
 
-				for (int j=0; j<tr.getChildNodes().getLength(); j++) {
+				for (int j = 0; j < tr.getChildNodes().getLength(); j++) {
 					cell = row.createCell(j);
 					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
 					cell.setCellStyle(bodyStyle);
 
 					sheet.autoSizeColumn(j);
-					sheet.setColumnWidth(j, (sheet.getColumnWidth(j))+1024); //너비 더 넓게
+					sheet.setColumnWidth(j, Math.min(65280, sheet.getColumnWidth(j) + 1024)); //너비 더 넓게
 				}
 			}
 			response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");

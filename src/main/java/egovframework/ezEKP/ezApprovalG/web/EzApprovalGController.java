@@ -8801,12 +8801,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
 		
-		//엑셀시작
+		// 엑셀시작
 		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
 		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 			HSSFSheet sheet;
 	
-			//헤더 폰트 굵게
+			// 헤더 폰트 굵게
 			HSSFFont headerFont = workbook.createFont();
 			headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 			
@@ -8841,8 +8841,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				cell.setCellStyle(headerStyle);
 			    row.setHeight((short)512);
 			    sheet.autoSizeColumn(i);
-			    sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
-			}//header
+			    
+			    /* 2024-11-05 홍승비 - 엑셀 파일 저장 시 동적인 너비 계산이 setColumnWidth()에서 허용하는 최대 제한을 넘지 않도록 수정 (255 * 256 = 65280) */
+			    sheet.setColumnWidth(i, Math.min(65280, sheet.getColumnWidth(i) + 512));
+			} // header
 			
 			NodeList objRow = objXML.getElementsByTagName("ROW");
 	
@@ -8895,7 +8897,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					cell.setCellStyle(bodyStyle);
 					row.setHeight((short)384);
 					sheet.autoSizeColumn(k);
-				    sheet.setColumnWidth(k, (sheet.getColumnWidth(k)) + 512);
+				    sheet.setColumnWidth(k, Math.min(65280, sheet.getColumnWidth(k) + 512));
 				}
 			}//body
 			
