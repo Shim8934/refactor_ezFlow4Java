@@ -2745,6 +2745,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				for (int i=0; i < doc.getElementsByTagName("DATA").getLength(); i++) {
 					map.put("deptID", doc.getElementsByTagName("DEPTID").item(i).getTextContent());
 					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(i).getTextContent());
+					map.put("deptName", doc.getElementsByTagName("DEPTNAME").item(i).getTextContent());
 					
 					if (approvalFlag.equals("S")) {
 						map.put("userID", doc.getElementsByTagName("USERID").item(i).getTextContent());						

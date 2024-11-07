@@ -255,7 +255,7 @@
 	AND
 		ISREAD = #isRead#
 	</isNotEqual>
-	<isNotEmpty property="lastNotiSeq">>
+	<isNotEmpty property="lastNotiSeq">
 	<![CDATA[
 	AND
 		NOTISEQ < #lastNotiSeq#
