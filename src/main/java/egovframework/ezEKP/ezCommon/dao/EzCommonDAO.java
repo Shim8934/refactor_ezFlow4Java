@@ -2846,4 +2846,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void addBoardAttachmentFlag() {
+		try {
+			select("EzCommonDAO.checkBoardAttachmentFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info attachmentFlag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardAttachmentFlag");
+		}
+	}
 }

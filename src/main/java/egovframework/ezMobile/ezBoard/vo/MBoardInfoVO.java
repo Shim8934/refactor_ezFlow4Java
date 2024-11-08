@@ -135,6 +135,8 @@ public class MBoardInfoVO {
 	private String mailFG_Comment; // 댓글알림
 	/** 키워드 기능 사용여부 */
 	private String useKeyword;
+	/** 2024-10-23 정지은 - 첨부파일 사용여부**/
+	private String attachmentFlag;
 	
 	@Override
 	public String toString() {
@@ -574,5 +576,11 @@ public class MBoardInfoVO {
 	}
 	public void setUseKeyword(String useKeywords) {
 		this.useKeyword = useKeywords;
+	}
+	public String getAttachmentFlag() {
+		return attachmentFlag;
+	}
+	public void setAttachmentFlag(String attachmentFlag) {
+		this.attachmentFlag = attachmentFlag;
 	}
 }

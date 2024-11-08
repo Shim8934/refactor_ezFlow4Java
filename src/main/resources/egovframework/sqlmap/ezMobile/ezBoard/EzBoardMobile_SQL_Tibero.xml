@@ -76,7 +76,8 @@
 				MAILFG_POST,
 				MAILFG_MOD,
 				MAILFG_COMMENT,
-				USEKEYWORD
+				USEKEYWORD,
+				ATTACHMENTFLAG
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  

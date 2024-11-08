@@ -158,7 +158,9 @@ public class BoardPropertyVO {
 	/** 2023-04-06 기민혁 - 게시판 싫어요 기능 플래그 추가 */
 	private String disLikeFlag;
 	/** 키워드 기능 사용여부 */
-	private String useKeyword; 
+	private String useKeyword;
+	/** 2024-10-23 정지은 - 첨부파일 사용여부**/
+	private String attachmentFlag;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -626,5 +628,13 @@ public class BoardPropertyVO {
 	}
 	public void setUseKeyword(String useKeyword) {
 		this.useKeyword = useKeyword;
+	}
+	
+	public String getAttachmentFlag() {
+		return attachmentFlag;
+	}
+
+	public void setAttachmentFlag(String attachmentFlag) {
+		this.attachmentFlag = attachmentFlag;
 	}
 }

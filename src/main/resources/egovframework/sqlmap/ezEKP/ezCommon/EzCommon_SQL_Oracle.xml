@@ -6206,4 +6206,22 @@
 		    CONSTRAINT pk_tbl_rs_cat_brd PRIMARY KEY (CAT_ID, BRD_ID, USER_ID, TENANT_ID)
 		)
 	</statement>
+
+	<select id="EzCommonDAO.checkBoardAttachmentFlag" resultClass="String">
+        <![CDATA[
+		SELECT
+			ATTACHMENTFLAG
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			ROWNUM = 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addBoardAttachmentFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			ATTACHMENTFLAG CHAR(1) DEFAULT 'Y'
+	</statement>
 </sqlMap>

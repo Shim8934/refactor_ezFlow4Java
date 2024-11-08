@@ -2468,7 +2468,8 @@
 		          	MAILFG_MOD = #v_MAILFG_MOD#,
 		          	MAILFG_COMMENT = #v_MAILFG_COMMENT#,
 	      			REACTFLAG = #v_REACTFLAG#,
-	      			USEKEYWORD = #v_USEKEYWORD#
+	      			USEKEYWORD = #v_USEKEYWORD#,
+		          	ATTACHMENTFLAG = #v_ATTACHMENTFLAG#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  

@@ -4400,4 +4400,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     	ezCommonDAO.createTblRsFavCat();
     	ezCommonDAO.createTblRsCatBrd();
     }
+    
+    @Override
+    public void addBoardAttachmentFlag() throws Exception {
+        ezCommonDAO.addBoardAttachmentFlag();
+    }
 }

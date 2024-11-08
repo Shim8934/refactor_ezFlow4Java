@@ -39,6 +39,7 @@
 			var useBoardReplyReact = "<c:out value='${model.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
 			var useKeyword = "<c:out value='${model.useKeyword}'/>"; // 키워드 사용여부(Y/N)
 			var boardItemCnt = "<c:out value='${boardItemCnt}'/>";
+			var attachmentFlag = $.trim("<c:out value='${model.attachmentFlag}'/>");
 			
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -128,6 +129,7 @@
 	            if ("${style}" == "") {
 	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked") || $("#chkMovieBoard").is(":checked")) {
 	                    document.getElementById("trAttribute").style.display = "none";
+						document.getElementById("trAttachment").style.display = "none";
 	                    $("#chkNotify").prop("disabled", true);
 	                    $("#chkbackgroundimage").prop("disabled", true);
 	                    $("#chkform").prop("disabled", true);
@@ -170,6 +172,7 @@
 	                    document.getElementById("expireTr").style.display = "none";
 	                    document.getElementById("deleteAfterTr").style.display = "none";
 	                    document.getElementById("attachLimitTr").style.display = "none";
+	                    document.getElementById("trAttachment").style.display = "none";
 	                    
 	                    $("#chkNotify").prop("disabled", true);
 	                    $("#chkMailFG_Post").prop("disabled", true);
@@ -456,8 +459,14 @@
 				if ($("#chktabBoard3").is(":checked") == true) {
 					tabBoardCheck3 = "true";
 				}
-
-	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
+				
+				if ($("#chkAttachment").is(":checked")) {
+					attachmentFlag = "Y";
+				} else {
+					attachmentFlag = "N";
+				}
+				
+				/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
@@ -475,7 +484,8 @@
 						tabBoardMod1:ptabBoardMod1,tabBoardMod2:ptabBoardMod2,tabBoardMod3:ptabBoardMod3,
 						mailFG_Post : mailFG_Post, mailFG_Mod : mailFG_Mod, mailFG_Comment : mailFG_Comment,
 						reactFlag:useBoardReplyReact, useKeyword:useKeyword,
-						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3	
+						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3, 
+						attachmentFlag:attachmentFlag
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
@@ -655,6 +665,7 @@
                     document.getElementById("expireTr").style.display = "none";
                     document.getElementById("deleteAfterTr").style.display = "none";
                     document.getElementById("attachLimitTr").style.display = "none";
+                    document.getElementById("trAttachment").style.display = "none";
                     document.getElementById("trAttribute").style.display = "none";
                     
 					$("#chkNotify").prop("disabled", true);
@@ -703,6 +714,7 @@
                     document.getElementById("expireTr").style.display = "";
                     document.getElementById("deleteAfterTr").style.display = "";
                     document.getElementById("attachLimitTr").style.display = "";
+                    document.getElementById("trAttachment").style.display = "";
                     document.getElementById("trAttribute").style.display = "";
                     
                     $("#chkNotify").prop("disabled", false);
@@ -778,8 +790,10 @@
 	            
 	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkMovieBoard.checked == true) {
 	                document.getElementById("trAttribute").style.display = "none";
+	                document.getElementById("trAttachment").style.display = "none";
 	            } else if (chkURLBoard.checked == false && chkHomePageBoard.checked == false && chkCategoryBoard.checked == false) {
 	                document.getElementById("trAttribute").style.display = "";
+					document.getElementById("trAttachment").style.display = "";
 	            }
 	            
 	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkMovieBoard.checked == true || chkCategoryBoard.checked == true) {
@@ -1413,7 +1427,18 @@
 					<spring:message code="ezBoard.pgb05" />
 				</td>
 			</tr>
-			
+			<%-- 첨부 설정 --%>
+			<tr id="trAttachment" style="${style}">
+				<th><spring:message code="ezBoard.t10025" /></th>
+				<td>
+					<input type="checkbox" id="chkAttachment"
+							<c:if test="${model.attachmentFlag == 'Y'}">
+								checked
+							</c:if>
+					/>
+					<spring:message code="ezBoard.t162"/>
+				</td>
+			</tr>
 	        <%-- 첨부크기제한 --%>
 	        <tr id="attachLimitTr" style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>

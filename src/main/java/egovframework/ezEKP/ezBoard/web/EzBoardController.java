@@ -1280,7 +1280,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setOneLineReply(strProp.getOneLineReply()); // 댓글옵션정보 추가
 			boardInfo.setReactFlag(strProp.getReactFlag()); // 댓글 좋아요/싫어요 사용여부 플래그 추가
 			boardInfo.setUseKeyword(strProp.getUseKeyword()); // useKeywordFlag 플래그 추가
-
+			boardInfo.setAttachmentFlag(strProp.getAttachmentFlag()); // 첨부파일 플래그 추가
+			
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();
 			
