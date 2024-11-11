@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestReplyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -1212,5 +1213,26 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	
 	public void bbsDelOkDelAttach(Map<String, Object> map) throws Exception {
 		delete("EzCommunityDAO.bbsDelOkDelAttach", map);
+	}
+
+	public int chkGuestReplyCnt(Map<String, Object> map) {
+		return (int) select("EzCommunityDAO.chkGuestReplyCnt", map);
+	}
+
+	public void insertGuestOneLineReply(Map<String, Object> map) throws Exception{
+		insert("EzCommunityDAO.insertGuestOneLineReply", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityCClubGuestReplyVO> getGuestOneLineReply(Map<String, Object> map) throws Exception {
+		return (List<CommunityCClubGuestReplyVO>) list("EzCommunityDAO.getGuestOneLineReply", map);
+	}
+
+	public void deleteGuestOneLineReply(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.deleteGuestOneLineReply", map);
+	}
+
+	public void modifyGuestOneLineReply(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.modifyGuestOneLineReply", map);
 	}
 }

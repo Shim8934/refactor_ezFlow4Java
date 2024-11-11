@@ -393,4 +393,10 @@ public interface EzCommunityService {
 	public String popularBoardItem(LoginVO userInfo) throws Exception;
 	
 	public boolean saveHWP(String strHTML, String strFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
+
+	public void insertGuestOneLineReply(int itemID, String clubNo, String companyID, int tenantID, String content, LoginVO userInfo) throws Exception;
+
+	public void deleteGuestOneLineReply(String replyId, int tenantID) throws Exception;
+
+	public void modifyGuestOneLineReply(String replyId, String content, int tenantID) throws Exception;
 }

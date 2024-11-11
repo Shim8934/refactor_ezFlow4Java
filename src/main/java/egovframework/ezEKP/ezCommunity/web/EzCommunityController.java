@@ -73,6 +73,7 @@ import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.ezEKP.ezConn.util.EzConnUtil;
 
 /** 
  * @Description [Controller] 커뮤니티
@@ -117,6 +118,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	
 	@Autowired
 	EzPersonalService ezPersonalService;
+	
+	@Autowired
+	EzConnUtil ezConnUtil;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityController.class);
 	
@@ -2044,6 +2048,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strXML" , strXML);
 		model.addAttribute("disable" , false);
 		model.addAttribute("multiData", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("chkId" ,  ezConnUtil.encryptAES(userInfo.getId()));
 		
 		logger.debug("guestOne ended.");
 		
@@ -5219,5 +5224,56 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "/ezCommunity/communityWHWPEditor";
 	}
 	
+    // 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 추가
+    @RequestMapping(value = "/ezCommunity/guestOneLineReply.do", method = RequestMethod.POST)
+    @ResponseBody
+    public String guestOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+        logger.debug("guestOneLineReply started.");
+
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String result = "error";
+        try {
+            String cNoStr = request.getParameter("c_no");
+            int cNo = Integer.parseInt(cNoStr);
+
+            String code = request.getParameter("code");
+            String memo = URLDecoder.decode(request.getParameter("memo"), "utf-8");
+
+            ezCommunityService.insertGuestOneLineReply(cNo, code, userInfo.getCompanyID(), userInfo.getTenantId(), memo, userInfo);
+
+            result = "success";
+        } catch (Exception e) {
+            logger.debug("e: {}", e);
+        }
+
+        logger.debug("guestOneLineReply ended.");
+
+        return result;
+    }
+
+    // 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 삭제
+    @RequestMapping(value = "/ezCommunity/deleteGuestOneLineReply.do", method = RequestMethod.POST)
+    @ResponseBody
+    public void deleteGuestOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+        logger.debug("deleteGuestOneLineReply started.");
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String replyNo = request.getParameter("replyNo");
+
+        ezCommunityService.deleteGuestOneLineReply(replyNo, userInfo.getTenantId());
+        logger.debug("deleteGuestOneLineReply ended.");
+    }
+
+    // 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 수정
+    @RequestMapping(value = "/ezCommunity/modifyGuestOneLineReply.do", method = RequestMethod.POST)
+    @ResponseBody
+    public void modifyGuestOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+        logger.debug("modifyGuestOneLineReply started.");
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String replyNo = request.getParameter("replyNo");
+        String content = URLDecoder.decode(request.getParameter("content"), "utf-8");
+
+        ezCommunityService.modifyGuestOneLineReply(replyNo, content, userInfo.getTenantId());
+        logger.debug("modifyGuestOneLineReply ended.");
+    }
 }
 

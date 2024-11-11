@@ -4529,4 +4529,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addIsDeleteBlockToSytemConfig() throws Exception {
 		ezCommonDAO.addIsDeleteBlockToSytemConfig();
 	}
+
+    @Override
+    public void addTblCommunityClubguestOnelinereply() throws Exception {
+        ezCommonDAO.addTblCommunityClubguestOnelinereply();
+    }
 }

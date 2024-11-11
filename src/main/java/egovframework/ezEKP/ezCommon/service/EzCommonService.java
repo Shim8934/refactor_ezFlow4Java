@@ -512,4 +512,7 @@ public interface EzCommonService {
 	
 	// 2024-11-26 한태훈 - 시스템 컨피그 > 삭제 차단 컬럼 추가
 	public void addIsDeleteBlockToSytemConfig() throws Exception;
+
+	// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 테이블 추가
+	public void addTblCommunityClubguestOnelinereply() throws Exception;
 }

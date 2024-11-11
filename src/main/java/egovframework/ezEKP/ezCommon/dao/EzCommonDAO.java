@@ -3016,4 +3016,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createIsDeleteBlock");
 		}		
 	}
+
+	public void addTblCommunityClubguestOnelinereply() {
+		try {
+			select("EzCommonDAO.checkTblCommunityClubguestOnelinereply");
+		} catch (Exception e) {
+			logger.debug("In TBL_C_CLUBGUEST_ONELINEREPLY doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblCommunityClubguestOnelinereply");
+		}
+	}
 }

@@ -6120,4 +6120,27 @@
 		ADD
 		   ISDELETEBLOCK CHAR(1) DEFAULT 'N'
 	</statement>
+
+	<select id="EzCommonDAO.checkTblCommunityClubguestOnelinereply" resultClass="Integer">
+		SELECT
+			count(REPLYID)
+		FROM
+			TBL_C_CLUBGUEST_ONELINEREPLY
+	</select>
+
+	<statement id="EzCommonDAO.createTblCommunityClubguestOnelinereply">
+		CREATE TABLE TBL_C_CLUBGUEST_ONELINEREPLY (
+			ITEMID INT NOT NULL,
+			REPLYID VARCHAR(38) NOT NULL,
+			C_CLUBNO VARCHAR(38) NOT NULL,
+			USERID VARCHAR(50),
+			USERNAME VARCHAR(50),
+			USERNAME2 VARCHAR(50),
+			WRITEDATE DATETIME,
+			CONTENT VARCHAR(300),
+			TENANT_ID INT DEFAULT 0,
+			COMPANYID VARCHAR(80),
+			PRIMARY KEY (`ITEMID`,`REPLYID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
 </sqlMap>
