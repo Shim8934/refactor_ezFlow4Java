@@ -3489,6 +3489,22 @@ function GetAddrFormatForSend(receiveCol) {
 
             switch (childElem.getAttribute("type")) {
                 case "email":
+                    var name = childElem.getAttribute("name");
+                    var email = childElem.getAttribute("email");
+
+                    var regex = /^(.*?)<([^>]+)>$/;
+                    var match = name.match(regex);
+
+                    if (match) {
+                        name = match[1].trim(); // "<" 밖의 부분
+                        email = match[2].trim(); // "<" 안의 부분
+                    }
+
+                    retAddr += "\"" + TrimText(ReplaceText(name.replace('"', "&quot;"), ";", "")) + "\"";
+                    retAddr += " <" + email + ">";
+                    retAddr += ", "
+
+                    break;
                 case "contact":
                     retAddr += "\"" + TrimText(ReplaceText(childElem.getAttribute("name").replace('"', "&quot;"), ";", "")) + "\"";
                     retAddr += " <" + childElem.getAttribute("email") + ">";
