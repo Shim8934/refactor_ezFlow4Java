@@ -9710,12 +9710,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		String adminType = request.getParameter("adminType");
 		String buttonHidden = "N";
 		String boardName = request.getParameter("boardName");
+		String boardViewForm = request.getParameter("boardViewForm");
 		String useOneLineCount = "NO";
 		String sortBy = "";
 		int page = 0;
 		
 		if (request.getParameter("buttonHidden") != null) {
 			buttonHidden = request.getParameter("buttonHidden");
+		}
+		if (request.getParameter("boardViewForm") == null) {
+			boardViewForm = "thumbnail";
 		}
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
@@ -9772,6 +9776,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isMyBoard", isMyBoard);
 		model.addAttribute("endDateOption", endDateOption);
 		model.addAttribute("useKeyword", boardInfo.getUseKeyword());
+		model.addAttribute("boardViewForm", boardViewForm);
 
 		logger.debug("boardItemListMovie ended");
 		return "ezBoard/boardItemListMovie";

@@ -46,7 +46,7 @@
 			}
 			.boardAlbumDiv {
 				border: 1px solid #e2e3e6;
-				height: 150px;
+				height: 220px;
 				width: 290px;
 				cursor: pointer;
 				display: inline-block;
@@ -58,7 +58,7 @@
 			    line-height: 32px;
 			    margin: 0px 10px -5px 10px;
 				padding: 0px 10px;
-			    border-bottom: 2px solid #eaeaea;
+			    border-top: 2px solid #eaeaea;
 			    font-size: 13px;
 			    white-space: nowrap;
 			    overflow: hidden;
@@ -107,6 +107,13 @@
 				cursor:pointer;
 				margin-left: 3px;
 				margin-right: 3px;
+			}
+			.infoDiv {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin: 7px 10px 7px 10px;
+				padding: 0px 10px;
 			}
 		</style>
 		<script type="text/javascript">
@@ -529,23 +536,45 @@
 						var isNew = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA4")[0].textContent;
 						var imgSrc = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA5")[0].textContent;
 						var readFlag = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
-						
+
 						listXML += "<div class='boardAlbumDiv' onclick='selectAlbumDiv(this); ItemPreviewRead_AlbumClick(this);' ondblclick='ItemRead_onclick(this)' data1='" + boardID + "' data2='" + itemID + "'>";
+						listXML += "<p style='text-align:center; overflow:hidden;'><img class='albumThumbImg' src='" + imgSrc + "'/></p>";
+						listXML += "<div class='infoDiv'>";
+						listXML += "<span style='height:20px; display: flex; justify-content: space-between; align-items: center;'>";
+						listXML += "<img src='/images/icon_preview.png' style='margin-right: 5px;'>";
+						listXML += "<span style='vertical-align:top;'></span>";
+						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "READCOUNT")], "VALUE")[0].textContent;
+						listXML += "</span>";
+						listXML += "<span style='height:20px; display: flex; align-items: center;vertical-align:top;'>";
+						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
+						listXML += "</span>";
+						listXML += "</div>";
 						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
 						listXML += "<span style='font-size:13px;'>";
-						
+
 						if (readFlag == "0") {
 							listXML += "<span class='albumTitle' style='font-size:13px; font-weight:bold;'>";
 						} else {
 							listXML += "<span class='albumTitle' style='font-size:13px;'>";
 						}
-						
+
 						if (isNew == "Y") {
 							listXML+= "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px'/>";
 						}
 						listXML += title + "</span></p>";
-						
-						listXML += "<p style='text-align:center; overflow:hidden;'><img class='albumThumbImg' src='" + imgSrc + "'/></p>";
+						listXML += "<div class='infoDiv'>";
+						listXML += "<span style='font-size:13px;'>";
+						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITERNAME")], "VALUE")[0].textContent;
+						listXML += "</span>";
+						var likeCountIndex = getColNameIndex(xmlDoc, "LIKECOUNT");
+						if (likeCountIndex != -1) {
+							listXML += "<span class='likeButton' onclick='clickLikeButton()' title='좋아요' style='height:20px; display: flex; justify-content: space-between; align-items: center;'>";
+							listXML += "<img id='likeButtonImg' src='/images/like_off.png' style='margin-right: 5px;'>";
+							listXML += "<span style='vertical-align:top;'></span>";
+							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "LIKECOUNT")], "VALUE")[0].textContent;
+							listXML += "</span>";
+						}
+						listXML += "</div>";
 						listXML += "</div>";
 					} 
 				}
@@ -570,6 +599,15 @@
 				document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 		    }
 		
+			function getColNameIndex(xmlDoc, colName) {
+				var colNameNodeList = GetElementsByTagName(xmlDoc, "COLNAME");
+				for (var i = 0; i < colNameNodeList.length; i++) {
+					if (colNameNodeList[i].textContent === colName) {
+						return i;
+					}
+				}
+				return -1;
+			}
 		    var BlockSize = 10;
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
