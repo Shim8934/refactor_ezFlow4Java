@@ -464,22 +464,22 @@
 			// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글작성 버튼 이벤트
 			function replyLayerDisplay(guestNo) {
 				var replyDisplay = document.querySelectorAll(".imgbtn.replyDisplay");
-				replyDisplay.forEach(function(btn) {
-					btn.style.display = "";
-				})
+				for (var i = 0; i < replyDisplay.length; i++) {
+					replyDisplay[i].style.display = "";
+				}
 
 				var cont = document.querySelectorAll(".contText");
-				cont.forEach(function(el) {
-					el.style.display = "";
-				})
+				for (var i = 0; i < cont.length; i++) {
+					cont[i].style.display = "";
+				}
 
 				var aButton = document.getElementById('replyDisplay' + guestNo);
 				aButton.style.display = "none";
 				var writerArea = document.querySelectorAll(".mainlist.emoticonLayerStaticPosition");
 
-				writerArea.forEach(function (area){
-					area.style.display = "none";
-				})
+				for (var i = 0; i < writerArea.length; i++) {
+					writerArea[i].style.display = "none";
+				}
 
 				var relplyLayer = document.getElementById("replyLayerTable_" + guestNo);
 				relplyLayer.style.display = "table";
@@ -487,13 +487,13 @@
 				var editAreaText = document.querySelectorAll(".editReply");
 				var buttons = document.querySelectorAll(".buttonChk");
 
-				buttons.forEach(function(btn) {
-					btn.style.display = "none";
-				});
+				for (var i = 0; i < buttons.length; i++) {
+					buttons[i].style.display = "none";
+				}
 
-				editAreaText.forEach(function(el) {
-					el.remove();
-				});
+				for (var i = 0; i < editAreaText.length; i++) {
+					editAreaText[i].parentNode.removeChild(editAreaText[i]);
+				}
 
 				if (span) {
 					span.style.display = "";
@@ -531,25 +531,25 @@
 					replyArea.value = "";
 					var buttons = document.querySelectorAll(".buttonChk");
 
-					buttons.forEach(function(btn) {
-						btn.style.display = "";
-					});
+					for (var i = 0; i < buttons.length; i++) {
+						buttons[i].style.display = "";
+					}
 				} else if (mode == "edit") { // 수정 버튼
 					var buttonChk = document.querySelectorAll(".buttonChk");
 
-					buttonChk.forEach(function (el) {
-						el.style.display = "";
-					})
+					for (var i = 0; i < buttonChk.length; i++) {
+						buttonChk[i].style.display = "";
+					}
 
 					var beforeEditReplyDiv = document.querySelectorAll(".editReply");
-					beforeEditReplyDiv.forEach(function (el) {
-						el.remove();
-					})
+					for (var i = 0; i < beforeEditReplyDiv.length; i++) {
+						beforeEditReplyDiv[i].parentNode.removeChild(beforeEditReplyDiv[i]);
+					}
 
 					var beforeContText = document.querySelectorAll(".contText");
-					beforeContText.forEach(function (el) {
-						el.style.display = "";
-					})
+					for (var i = 0; i < beforeContText.length; i++) {
+						beforeContText[i].style.display = "";
+					}
 
 					var editButtons = document.querySelector('[imgbtnid="' + replyNo + '"]');
 					editButtons.style.display = "none";
@@ -622,13 +622,15 @@
 							var content = contentTd.querySelector("span");
 							content.textContent = editReplyContent;
 							content.style.display = "";
-							editReply.remove();
+
+							if (editReply && editReply.parentNode) {
+								editReply.parentNode.removeChild(editReply);
+							}
 
 							var buttons = document.querySelectorAll(".buttonChk");
-
-							buttons.forEach(function (btn) {
-								btn.style.display = "";
-							});
+							for (var i = 0; i < buttons.length; i++) {
+								buttons[i].style.display = "";
+							}
 						}
 					});
 				} else {
@@ -647,12 +649,14 @@
 				content.style.display = "";
 
 				var editArea = contentTd.querySelector("div");
-				editArea.remove();
+				if (editArea && editArea.parentNode) {
+					editArea.parentNode.removeChild(editArea);
+				}
 
 				var editReply = document.querySelectorAll(".editReply");
-				editReply.forEach(function (el) {
-					el.remove();
-				})
+				for (var i = 0; i < editReply.length; i++) {
+					editReply[i].parentNode.removeChild(editReply[i]);
+				}
 			}
 			
 		</script>
