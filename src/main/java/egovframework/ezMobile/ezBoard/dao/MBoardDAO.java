@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezBoard.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -262,5 +264,14 @@ public class MBoardDAO extends EgovAbstractDAO {
 	/* 2023-11-07 민지수 - 모바일 게시판 > 게시판 구분값 조회 추가 */
 	public String getGubun(String BoardID) throws Exception {
 		return (String) select("MBoardDAO.getGubun", BoardID);
+	}
+
+	public int getAllBoardItemListCount(Map<String, Object> map) {
+		return (int) select("MBoardDAO.getAllBoardItemListCount", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MBoardListVO> getAllBoardItemList(Map<String, Object> map) {
+		return (List<MBoardListVO>) list("MBoardDAO.getAllBoardItemList", map);
 	}
 }

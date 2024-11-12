@@ -1300,7 +1300,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || pBoardID.equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
+		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || pBoardID.equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") || pBoardID.equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
 			boardInfo.setAccess_("1");
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");

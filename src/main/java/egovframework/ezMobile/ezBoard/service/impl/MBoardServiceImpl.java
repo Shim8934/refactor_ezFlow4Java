@@ -44,6 +44,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -393,7 +394,7 @@ public class MBoardServiceImpl implements MBoardService {
 			mBoardInfoVO.setUseKeyword(orgBoardProp.getUseKeyword());
 		}
 		
-	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || mBoardInfoVO.getBoardID().equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
 	    	mBoardInfoVO.setAccess_("1");
 	    	mBoardInfoVO.setAccess_FG("1");
 	    	mBoardInfoVO.setBoardAdmin_FG("false");
@@ -461,6 +462,9 @@ public class MBoardServiceImpl implements MBoardService {
 		if (vo.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 			vo.setType("newBoardItemList");
 			vo.setBoardName(egovMessageSource.getMessage("ezBoard.t480", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
+		} else if (vo.getBoardID().equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
+			vo.setType("allBoardItemList");
+			vo.setBoardName(egovMessageSource.getMessage("ezBoard.allboard.hth01", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
 		} else {
 			vo.setType("boardItemList");
 		}
@@ -1948,4 +1952,38 @@ public class MBoardServiceImpl implements MBoardService {
 		String gubun = mBoardDAO.getGubun(BoardID);
 		return gubun;
 	}
+
+	@Override
+	public int getAllBoardItemListCount(String userId, String companyId, int tenantId) throws Exception {
+		
+		logger.debug("getAllBoardItemListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_pUserID", userId);
+		map.put("v_COMPANYID", companyId);
+		map.put("v_TENANTID", tenantId);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+
+		logger.debug("getAllBoardItemListCount ended");
+		return mBoardDAO.getAllBoardItemListCount(map);
+	}
+
+	@Override
+	public List<MBoardListVO> getAllBoardItemList(String userId, String lastDate, String deptId, String companyId, int tenantId, String offSet) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_PUSERID", userId);
+		map.put("v_COMPANYID", companyId);
+		map.put("v_TENANTID", tenantId);
+		map.put("listSize", 50);
+		map.put("lastDate", lastDate);
+		map.put("offset", commonUtil.getMinuteUTC(offSet));
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		logger.debug("getAllBoardItemList ended");
+		return mBoardDAO.getAllBoardItemList(map);
+	}
+	
+	
 }
