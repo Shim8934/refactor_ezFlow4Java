@@ -47,6 +47,8 @@ public class POP3Access {
 				properties.put("mail.pop3s.port", port);
 				properties.put("mail.pop3s.connectiontimeout", TIMEOUT);
 				properties.put("mail.pop3s.timeout", TIMEOUT);
+				properties.put("mail.pop3s.disabletop", "true");
+				properties.put("mail.pop3s.disablecapa", "true");
 				
 				Session session = Session.getDefaultInstance(properties);
 				
