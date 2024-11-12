@@ -333,7 +333,7 @@ var strLangKSA03 = "Would you like to register for the groupware personal calend
 var strLangKSA04 = "Successfully saved appointment.";
 var strLangKSA05 = "Error occured while saving appointment.";
 
-var strLangTagAlreadyUse = "이미 사용 중인 다른 태그의 이름입니다.";
+var strLangTagAlreadyUse = "This name is already in use by another tag.";
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
@@ -380,6 +380,13 @@ const strLangOrgFetchError = "An error occurred while searching organization cha
 const strLangSelectProxyApproverWarning = "Select a person for deputy.";
 
 const strLangTempSaveAttachmentsWarning = "Attached files will be deleted upon saving. Do you want to save?";
+
+var strNoSubject = "Enter title.";
+var strSendOK = "The email has been sent successfully.";
+var strUreadDelChk = "Do you want to delete all unread emails in this mailbox?";
+var strUreadDelSearch = "Do you want to delete all unread emails among the search results?";
+var strUreadDelPermenant = "Once deleted, the emails cannot be recovered.\nDo you want to permanently delete all unread emails in the mailbox?";
+var strUreadDelSearchPermenant = "Once deleted, the emails cannot be recovered.\nDo you want to permanently delete all unread emails among the search results?";
 
 function GetLocalTime(Offset , pDateTime)
 {

@@ -1117,7 +1117,7 @@ function CalWeekDataBind(oAppointment, order) {
         oDiv.style.top = "0";
         oDiv.style.overflow = "hidden";
         oDiv.style.width = "95%"
-        oDiv.style.height = hSize - 3 + "px";
+        oDiv.style.height = hSize - 5 + "px";
         oDiv.style.position = "absolute";
         oDiv.style.zIndex = "1";
         oDiv.style.textOverflow = "ellipsis";
@@ -1584,7 +1584,7 @@ function CalDayDataBind(oAppointment, order) {
         oDiv.style.top = "0";
         oDiv.style.overflow = "hidden";
         oDiv.style.width = "95%"
-        oDiv.style.height = hSize - 3 + "px";
+        oDiv.style.height = hSize - 5 + "px";
         oDiv.style.position = "absolute";
         oDiv.style.zIndex = "1";
         var sItem = document.getElementById(oAppointment.ScheduleID + "0" + order);

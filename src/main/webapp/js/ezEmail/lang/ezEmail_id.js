@@ -375,6 +375,13 @@ const strLangSelectProxyApproverWarning = "Pilih seseorang untuk wakil.";
 
 const strLangTempSaveAttachmentsWarning = "File yang dilampirkan akan dihapus saat disimpan. Apakah Anda ingin menyimpan?";
 
+var strNoSubject = "Kolom subjek kosong."; 
+var strSendOK = "Email telah berhasil dikirim.";
+var strUreadDelChk = "Apakah Anda yakin ingin menghapus semua email yang belum dibaca di kotak masuk ini?"
+var strUreadDelSearch = "Apakah Anda yakin ingin menghapus semua email yang belum dibaca di hasil pencarian?"
+var strUreadDelPermenant = "Setelah dihapus, email tidak dapat dipulihkan.\nApakah Anda yakin ingin menghapus semua email yang belum dibaca secara permanen di kotak masuk?"
+var strUreadDelSearchPermenant = "Setelah dihapus, email tidak dapat dipulihkan.\nApakah Anda yakin ingin menghapus semua email yang belum dibaca secara permanen di hasil pencarian?";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

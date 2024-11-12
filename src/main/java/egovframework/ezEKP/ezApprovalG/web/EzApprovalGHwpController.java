@@ -1085,7 +1085,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		try {
-			if (docID == null | formText.equals("")) {
+			if (docID == null || formText.equals("")) {
 				result = "FAIL";
 				
 				logger.debug("<<<docID : " + docID);
@@ -1665,7 +1665,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
                     "</DEPTNAME2></PARAMETER>";
 
             ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
-        }
+        } else {
+			// #147057 - 권한 없는 사용자가 결재선열람인 일괄기안 문서 열람할 때 빈 화면으로 표시되는 결함
+			// 2024-10-15 박기범 : 권한 없을시 받아오지 못하는 정보를 아래 로직에서 이용시 exception 발생.
+			// 권한 없을시 다른 DB조회 필요 없고 권한없음 페이지 표출하므로 바로 리턴 처리 함.
+			return "main/warning";
+		}
 		
 		if (sendType == null || sendType.equals("")) {
 			sendType = ezApprovalGService.getDocSendType(docID, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -1750,21 +1755,25 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		/* 2024-06-26 조소정 - 웹한글 문서 재사용 시 양식선택창 표출 여부 테넌트 컨피그와 양식 정보 */
 		String resultXML = ezApprovalGService.getFormInfoDetail(formID, userInfo.getCompanyID(), userInfo.getTenantId());
         Document formInfo = commonUtil.convertStringToDocument(resultXML);
-        String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
-        String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
+        
+        /* 2024-11-07 홍승비 - 전자결재 (일반, G) > 완료된 웹한글 문서가 합의접수문서(FORMID = 2003000007)인 경우, TBL_FORMINFO에 레코드가 없으므로 예외처리 추가 (MHT와 동일) */
+        String formUrl = "";
+        String formDocType = "";
+        
+        if (formInfo.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
+			formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+		}
+		if (formInfo.getElementsByTagName("FORMDOCTYPE").getLength() > 0) {
+			formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+		}
         
         model.addAttribute("formUrl", formUrl);
         model.addAttribute("formDocType", formDocType);
 		model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
 
 		logger.debug("ezViewEnd_WHWP ended");
-
-		// 2024-07-15 전인하 - 전자결재G > 완료문서 열람 권한 관련 URL 조작 웹취약점 - 권한 체크 후 권한 없을 시 warning 페이지로 이동하게 함
-		if (pass.equals("<RESULT>TRUE</RESULT>")) {
-			return "ezApprovalG/apprGviewEndWHWP";
-		} else {
-			return "main/warning";
-		}
+		
+		return "ezApprovalG/apprGviewEndWHWP";
 	}
 	
 	/**

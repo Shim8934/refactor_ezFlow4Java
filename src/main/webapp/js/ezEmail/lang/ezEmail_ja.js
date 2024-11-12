@@ -333,7 +333,7 @@ var strLangKSA03 = "グループウェアの個人カレンダーに登録しま
 var strLangKSA04 = "日程を保存しました。";
 var strLangKSA05 = "エラーが発生しました。";
 
-var strLangTagAlreadyUse = "이미 사용 중인 다른 태그의 이름입니다.";
+var strLangTagAlreadyUse = "この名前は別のタグですでに使用されています。";
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "HWP配布用文書の保存時にエラーが発生しました。もう一度お試しください。";
@@ -380,6 +380,13 @@ const strLangOrgFetchError = "エラーが発生しました。";
 const strLangSelectProxyApproverWarning = "代理決裁者として指定する人を一人だけ選択してください。";
 
 const strLangTempSaveAttachmentsWarning = "保存時に添付ファイルは削除されます。保存しますか？";
+
+var strNoSubject = "件名を入力してください。"; 
+var strSendOK = "メールが正常に送信されました。";
+var strUreadDelChk = "このメールボックスの未読メールをすべて削除しますか？";
+var strUreadDelSearch = "検索結果の中から未読メールをすべて削除しますか？";
+var strUreadDelPermenant = "削除するとメールは復元できません。\nメールボックス内の未読メールをすべて完全に削除しますか？";
+var strUreadDelSearchPermenant = "削除するとメールは復元できません。\n検索結果の中から未読メールをすべて完全に削除しますか？";
 
 function GetLocalTime(Offset , pDateTime)
 {

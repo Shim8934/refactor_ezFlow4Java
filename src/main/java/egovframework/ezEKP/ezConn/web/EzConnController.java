@@ -556,7 +556,7 @@ public class EzConnController {
 							// 2023-05-23 이사라 - 로그인 정보 저장
 							if (commonUtil.isLoginCookieExists(request, response)) {
 								Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
-								String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+								String decryptedLoginCookie = commonUtil.getDecryptedLoginCookie(loginCookie.getValue());
 
 								if (!decryptedLoginCookie.split("///")[1].equals(userId)) {
 									commonUtil.updateLoginInfo(request, user);
