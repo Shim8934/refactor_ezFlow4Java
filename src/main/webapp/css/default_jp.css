@@ -4121,3 +4121,26 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 .prevQsWrapper .prevQsContent .questionImgTitle{max-height: none; margin:0px 35px;}
 .imgTitleDiv {overflow-x: auto; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;}
 .imgTitle{width: auto; height: auto; padding: 30px;}
+
+/* 2024-11-13 김대현 - 메일함 트리구조 전체 메일함 펼치기 접기 디자인 추가 */
+.toggleTreeNode {
+	cursor: pointer;
+	padding-top: 5px;
+	font-size: 14px;
+}
+.toggleTreeNode.off .treeNode_toggle_icon {
+	background-image: url('/images/expand.png');
+	background-size: cover;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	vertical-align: middle;
+}
+.toggleTreeNode.on .treeNode_toggle_icon {
+	background-image: url('/images/collapse.png');
+	background-size: cover;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	vertical-align: middle;
+}
