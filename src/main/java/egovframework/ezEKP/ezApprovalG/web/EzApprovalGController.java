@@ -3254,22 +3254,30 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String fileDocID = xmlDom.getElementsByTagName("DATA3").item(k).getTextContent();
 			String oldYear = ezApprovalGService.getDocHrefYear(fileDocID, userInfo.getCompanyID(), userInfo.getTenantId());
 			String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator;
-			String fileName = xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/")[xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/").length - 1];
+			String beforePath = commonUtil.getRealPath(request) + commonUtil.detectPathTraversal(xmlDom.getElementsByTagName("DATA1").item(k).getTextContent());
+			String fileName = beforePath.split("/")[xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/").length - 1];
 			String deleteYN = xmlDom.getElementsByTagName("DELETE").item(k).getTextContent();
 
 			if (!(deleteYN != null && deleteYN.equals("N"))) {
-				File filePath = new File(commonUtil.detectPathTraversal(dirPath));
+				File beforeFile = new File(beforePath);
+				File afterFile = new File(commonUtil.detectPathTraversal(upd + fileName));
 
-		        if (!filePath.exists()) {
-		        	filePath.mkdirs();
-		        }
+				if (FileUtils.contentEquals(beforeFile, afterFile)) {
+					continue;
+				}
 
-				File file = new File(commonUtil.detectPathTraversal(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName));
-
-				if (file.isFile()) {
-					if (file.exists()) {
-						FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(upd + fileName)));
+				try {
+					if (beforeFile.isFile()) {
+						if (beforeFile.exists()) {
+							FileUtils.copyFile(beforeFile, afterFile);
+						} else {
+							throw new FileNotFoundException("not file:" + beforePath); 
+						}
+					} else {
+						throw new FileNotFoundException("not file:" + beforePath);
 					}
+				} catch (Exception e) {
+					logger.error("An error occurred while copying files", e);
 				}
 
 				xmlDom.getElementsByTagName("DATA1").item(k).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator + fileName);

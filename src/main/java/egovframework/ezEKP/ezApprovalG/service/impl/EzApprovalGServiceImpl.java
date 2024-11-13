@@ -14284,7 +14284,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     getDocDir(docID) + sep + "TMP" + sep + docID.trim() + sep;
             
             while (new File(afterHref + afterFileName).exists()) {
-                afterFileName = UUID.randomUUID() + extension;
+                afterFileName = UUID.randomUUID() + "." + extension;
             }
             
             FileUtils.copyFile(new File(servletContext.getRealPath("") + beforeHref), new File(servletContext.getRealPath("") + afterHref + afterFileName));
