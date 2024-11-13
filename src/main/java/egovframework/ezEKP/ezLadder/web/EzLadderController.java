@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezLadder.web;
 
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -428,13 +429,11 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		Object obj = BMUserVO.getUserIds();
-		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
 				.queryParam("bmName", BMVO.getBmName())
 				.queryParam("writerId", userInfo.getId())
-				.queryParam("userIds", obj)
+				.queryParam("userIds", (Object[]) BMUserVO.getUserIds())
 				.queryParam("userNames", (Object[]) BMUserVO.getUserNames())
 				.queryParam("userName2s", (Object[]) BMUserVO.getUserName2s())
 				.queryParam("lang", userInfo.getLang())
