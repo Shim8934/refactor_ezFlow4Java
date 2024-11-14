@@ -651,7 +651,7 @@
 	            	if (subDept == null || subDept == undefined) {
 	            		subDept = false;
 	            	} else {
-	            		if (subDept == "Y") {
+	            		if (subDept == "Y" || subDept == "true") {
 	            			subDept = true;
 	            		} else {
 	            			subDept = false
