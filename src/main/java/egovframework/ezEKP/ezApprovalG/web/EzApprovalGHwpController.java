@@ -1665,7 +1665,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
                     "</DEPTNAME2></PARAMETER>";
 
             ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
-        }
+        } else {
+			// #147057 - 권한 없는 사용자가 결재선열람인 일괄기안 문서 열람할 때 빈 화면으로 표시되는 결함
+			// 2024-10-15 박기범 : 권한 없을시 받아오지 못하는 정보를 아래 로직에서 이용시 exception 발생.
+			// 권한 없을시 다른 DB조회 필요 없고 권한없음 페이지 표출하므로 바로 리턴 처리 함.
+			return "main/warning";
+		}
 		
 		if (sendType == null || sendType.equals("")) {
 			sendType = ezApprovalGService.getDocSendType(docID, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -1767,13 +1772,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
 
 		logger.debug("ezViewEnd_WHWP ended");
-
-		// 2024-07-15 전인하 - 전자결재G > 완료문서 열람 권한 관련 URL 조작 웹취약점 - 권한 체크 후 권한 없을 시 warning 페이지로 이동하게 함
-		if (pass.equals("<RESULT>TRUE</RESULT>")) {
-			return "ezApprovalG/apprGviewEndWHWP";
-		} else {
-			return "main/warning";
-		}
+		
+		return "ezApprovalG/apprGviewEndWHWP";
 	}
 	
 	/**

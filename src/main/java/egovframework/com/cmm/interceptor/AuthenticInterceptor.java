@@ -481,15 +481,22 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			// if the number of name components is one or two(such as vertx.io, google.com) 
 			// just return the name itself
 			// else try to extract the domain part of the name
-			if (urlSplit.length > 2) {		
+			if (urlSplit.length > 2) {
+				String secondLevelDomain = urlSplit[urlSplit.length - 2];
+				
 				// such as www.name.co.kr, www.vertx.io
 				if (topLevelDomain.length() == 2) {
-					// this is not correct in case the name is like www.vertx.io, but ignore the case here
-					url = urlSplit[urlSplit.length - 3] + "." + urlSplit[urlSplit.length - 2] + "."
-							+ urlSplit[urlSplit.length - 1];
+					// such as www.vertx.io
+					if (secondLevelDomain.length() > 2) {
+						url = secondLevelDomain + "." + topLevelDomain;
+					// such as www.name.co.kr
+					} else {
+						url = urlSplit[urlSplit.length - 3] + "." + secondLevelDomain + "."
+								+ topLevelDomain;
+					}
 				// such as www.google.com, www.apache.org
 				} else if (topLevelDomain.length() == 3) {
-					url = urlSplit[urlSplit.length - 2] + "." + urlSplit[urlSplit.length - 1];
+					url = secondLevelDomain + "." + topLevelDomain;
 				}
 			}
 		} catch (Exception e) {

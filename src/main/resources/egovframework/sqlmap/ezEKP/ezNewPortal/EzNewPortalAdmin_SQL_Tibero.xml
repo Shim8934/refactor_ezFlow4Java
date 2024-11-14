@@ -631,29 +631,14 @@
 			]]>
 		<isNotEqual property="type" compareValue="mobile">
 			<![CDATA[
-				((SELECT
-					NVL(MAX(portlet_id), 0) + 1 as portlet_id
-				FROM 
-				TBL_PORTAL_PORTLET), #menuId#, #connectionUrl#, 'A', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('A', 'G')), #portletCode#)
+				(#portletId#, #menuId#, #connectionUrl#, 'A', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('A', 'G')), #portletCode#)
 			]]>
 		</isNotEqual>
 		<isEqual property="type" compareValue="mobile">
 			<![CDATA[
-				((SELECT
-					NVL(MAX(portlet_id), 0) + 1 as portlet_id
-				FROM 
-				TBL_PORTAL_PORTLET), #menuId#, #connectionUrl#, 'MA', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('MA', 'MG')), #portletCode#)
+				(#portletId#, #menuId#, #connectionUrl#, 'MA', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('MA', 'MG')), #portletCode#)
 			 ]]>
 		</isEqual>
-		
-		<selectKey keyProperty="portletId" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				NVL(MAX(portlet_id), 0) + 1 as portlet_id
-			FROM 
-				TBL_PORTAL_PORTLET
-		]]>
-		</selectKey>
 	</insert>
 	
 	<insert id="ezNewPortal.insertPortletComp" parameterClass="Map">
@@ -672,7 +657,7 @@
 		<isEqual property="type" compareValue="mobile">
 			<![CDATA[
 				(#companyId#,	#tenantId#,		#portletId#,	#menuId#,	#portletCategory#,
-				#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId# AND connection_url like '/mobile/%'),	#boardId#, #connectionId#)
+				#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId#),	#boardId#, #connectionId#)
 			]]>
 		</isEqual>
 	</insert>

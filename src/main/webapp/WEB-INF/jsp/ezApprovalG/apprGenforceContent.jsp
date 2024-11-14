@@ -18,34 +18,45 @@
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
-	        document.onselectstart = function () {
-	            var ret = false;
-	            var obj = event.srcElement;
-	            try {
-	                if (obj.nodeName == "#text")
-	                    obj = obj.parentElement;
-	
-	                if (obj.nodeName == "TD") {
-	                    if (obj.getAttribute("free") != null)
-	                        ret = true;
-	                }
-	                else if (obj.nodeName == "DIV") {
-	                    var pParentNode = obj;
-	                    for (var i = 0; i < 3; i++) {
-	                        pParentNode = pParentNode.parentElement;
-	                        if (pParentNode.nodeName == "TD") {
-	                            if (pParentNode.getAttribute("free") != null) {
-	                                ret = true; break;
-	                            }
-	                        }
-	                        else if (pParentNode.nodeName == "BODY" || pParentNode.nodeName == "HTML")
-	                            break;
-	
-	                    }
-	                }
-	            } catch (e) { }
-	            return ret;
-	        };
+			document.onselectstart = function () {
+				var ret = false;
+				var obj = event.srcElement;
+				var useAllowTextSelection = "<c:out value ='${useAllowTextSelection}'/>";
+				try {
+					if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
+						ret = true;
+					} else {
+						if (obj.nodeName == "#text")
+							obj = obj.parentElement;
+
+						if (obj.nodeName == "TD") {
+							if (obj.getAttribute("free") != null)
+								ret = true;
+						}
+						else if (obj.nodeName == "DIV") {
+							var pParentNode = obj;
+							for (var i = 0; i < 3; i++) {
+								pParentNode = pParentNode.parentElement;
+								if (pParentNode.nodeName == "TD") {
+									if (pParentNode.getAttribute("free") != null) {
+										ret = true; break;
+									}
+								}
+								else if (pParentNode.nodeName == "BODY" || pParentNode.nodeName == "HTML")
+									break;
+
+							}
+						}
+						else if (obj.nodeName == "P") {
+							ret = false;
+						}
+					}
+				} catch (e) {
+					console.log(e.message, e.stack);
+				}
+				return ret;
+
+			};
 // 	        var XmlBodyATT = createXmlDom();
 	        var BODYTag;
 	        var BODYHTML;
@@ -158,62 +169,70 @@
 	        //     else
 	        //         obj.setAttribute("check", "0");
 	        // }
-	
-	        function Conent_contentEditable(obj) {
-	            try {
-	                var TDRows = obj.getElementsByTagName("TD");
-	                for (var i = 0; i < TDRows.length; i++) {
-	                    if (TDRows.item(i).getAttribute("free") != null && TDRows.item(i).id != "doctitle") {
-	                        var isContinue = true;
-	                        if (TDRows.item(i).childNodes.length > 1) {
-	                            var ChildNodes_;
-	                            if (TDRows.item(i).childNodes.item(0).nodeName == "#text")
-	                                ChildNodes_ = TDRows.item(i).childNodes.item(1);
-	                            else
-	                                ChildNodes_ = TDRows.item(i).childNodes.item(0);
-	
-	                            if (ChildNodes_.nodeName == "TD" || ChildNodes_.nodeName == "TABLE")
-	                                continue;
-	
-	                            if (ChildNodes_.childNodes.length > 1) {
-	                                for (var Cnt = 0 ; Cnt < ChildNodes_.childNodes.length; Cnt++) {
-	                                    if (ChildNodes_.childNodes.item(Cnt).nodeName == "TD" || ChildNodes_.childNodes.item(Cnt).nodeName == "TABLE") {
-	                                        isContinue = false; break;
-	                                    }
-	                                }
-	                            }
-	                        }
-	                        if (!isContinue)
-	                            continue;
-	
-	                        var Div_ = document.createElement("DIV");
-	                        Div_.style.width = "99%";
-	                        Div_.style.overflow = "hidden";
-	                        Div_.setAttribute("contentEditable", true);
-	                        //Div_.style.textAlign = "left";
-	                        if (navigator.userAgent.indexOf('Firefox') != -1)
-	                            Div_.onkeypress = function (event) { var ret = onKeyDownEvent_Element(event, this); if (!ret) return false; };
-	                        Div_.innerHTML = TDRows.item(i).innerHTML;
-	                        TDRows.item(i).innerHTML = "";
-	                        TDRows.item(i).appendChild(Div_);
-	                    }
-	                    else if (TDRows.item(i).getAttribute("free") != null && TDRows.item(i).id == "doctitle") {
-	                        var Div_ = document.createElement("DIV");
-	                        Div_.setAttribute("id", "frame_doctitle");
-	                        Div_.setAttribute("name", "frame_doctitle");
-	                        Div_.style.width = "99%";
-	                        Div_.style.marginLeft = "2px";
-	                        Div_.style.overflow = "hidden";
-	                        Div_.setAttribute("contentEditable", true);
-	                        //Div_.style.textAlign = "left";
-	                        Div_.onkeypress = function (event) { var ret = onKeyDownEvent(event, this, 127); if (!ret) return false; };
-	                        Div_.innerHTML = TDRows.item(i).innerHTML;
-	                        TDRows.item(i).innerHTML = "";
-	                        TDRows.item(i).appendChild(Div_);
-	                    }
-	                }
-	            } catch (e) { }
-	        }
+
+			function Conent_contentEditable(obj) {
+				try {
+					var TDRows = obj.getElementsByTagName("TD");
+					for (var i = 0; i < TDRows.length; i++) {
+						if (TDRows.item(i).getAttribute("free") != null && TDRows.item(i).id != "doctitle" && TDRows.item(i).id != "body") {
+							var isContinue = true;
+							if (TDRows.item(i).childNodes.length > 1) {
+								var ChildNodes_;
+								if (TDRows.item(i).childNodes.item(0).nodeName == "#text")
+									ChildNodes_ = TDRows.item(i).childNodes.item(1);
+								else
+									ChildNodes_ = TDRows.item(i).childNodes.item(0);
+
+								if (ChildNodes_.nodeName == "TD" || ChildNodes_.nodeName == "TABLE")
+									continue;
+
+								if (ChildNodes_.childNodes.length > 1) {
+									for (var Cnt = 0 ; Cnt < ChildNodes_.childNodes.length; Cnt++) {
+										if (ChildNodes_.childNodes.item(Cnt).nodeName == "TD" || ChildNodes_.childNodes.item(Cnt).nodeName == "TABLE") {
+											isContinue = false; break;
+										}
+									}
+								}
+							}
+							if (!isContinue)
+								continue;
+
+							var Div_ = document.createElement("DIV");
+							Div_.style.width = "99%";
+							Div_.style.overflow = "hidden";
+							Div_.setAttribute("contentEditable", true);
+							//Div_.style.textAlign = "left";
+							if (navigator.userAgent.indexOf('Firefox') != -1)
+								Div_.onkeypress = function (event) { var ret = onKeyDownEvent_Element(event, this); if (!ret) return false; };
+							Div_.innerHTML = TDRows.item(i).innerHTML.replace(/(<div>|<\/div>)/gi, "");
+							TDRows.item(i).innerHTML = "";
+							TDRows.item(i).appendChild(Div_);
+						}
+						else if (TDRows.item(i).getAttribute("free") != null && TDRows.item(i).id == "doctitle") {
+							var Div_ = document.createElement("DIV");
+							Div_.setAttribute("id", "frame_doctitle");
+							Div_.setAttribute("name", "frame_doctitle");
+							Div_.style.width = "99%";
+							Div_.style.marginLeft = "2px";
+							Div_.style.overflow = "hidden";
+							Div_.setAttribute("contentEditable", true);
+							//Div_.style.textAlign = "left";
+							Div_.onkeypress = function (event) { var ret = onKeyDownEvent(event, this, 127); if (!ret) return false; };
+							Div_.innerHTML = TDRows.item(i).innerHTML;
+							TDRows.item(i).innerHTML = "";
+							TDRows.item(i).appendChild(Div_);
+						}
+					}
+				} catch (e) {
+					console.log(e.message, e.stack);
+				}
+
+				validateAllTextArea(obj);
+				var textAreaElements = obj.getElementsByTagName("textarea");
+				for (i = 0; i < textAreaElements.length; i++) {
+					textAreaElements.item(i).oninput = onInputTextarea;
+				}
+			}
 	        
 	        function Set_HtmlDocument() {
 	            try {
@@ -418,75 +437,144 @@
 	        var BODYHTML;
 	        var DocTitleObj;
 	        var OrgBodyHtml;
-	        function SetEditable(flag, editor) {
-	            try {
-	                if (flag) {
-	                    OrgBodyHtml = document.getElementById('div_Content').innerHTML;
-	                    BodyTagsEnabled(document.getElementById('div_Content'));
-	                    var Body_innerHTML = "";
-	                    if (document.getElementById("body") != null) {
-	                        if (document.getElementById("body").getAttribute("class") == "FIELD") {
-	                            Body_innerHTML = document.getElementById("body").innerHTML;
-	                            document.getElementById("body").innerHTML = "";
-	                        }
-	                    }
-	                    Conent_contentEditable(document.getElementById('div_Content'));
-	                    var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
-	                    for (var i = 0; i < SelectRows.length; i++) {
-	                        SelectRows.item(i).onchange = SelectOnchange;
-	                    }
-	                    var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
-	                    for (var i = 0; i < CheckRows.length; i++) {
-	                        if (CheckRows.item(i).type == "checkbox") {
+			function SetEditable(flag) {
+				try {
+					if (flag) {
+						OrgBodyHtml = document.getElementById('div_Content').innerHTML;
+						BodyTagsEnabled(document.getElementById('div_Content'));
+
+						var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
+						for (var i = 0; i < SelectRows.length; i++) {
+							SelectRows.item(i).onchange = SelectOnchange;
+						}
+						
+						var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
+						for (var i = 0; i < CheckRows.length; i++) {
+							if (CheckRows.item(i).type == "checkbox") {
 								CheckRows.item(i).onchange = CheckBoxOnclick;
 								CheckRows.item(i).ondblclick = CheckBoxOnDblclick;
 							} else if (CheckRows.item(i).type == "radio") {
 								CheckRows.item(i).onchange = RadioOnClick;
 							}
-	                    }
-	                    if (document.getElementById("body") != null) {
-	                        if (document.getElementById("body").getAttribute("class") == "FIELD") {
-	                            document.getElementById("body").innerHTML = Body_innerHTML;
-	                            BODYTag = document.getElementById("body");
-	                        }
-	                    }
-	                    if (document.getElementById("doctitle").getAttribute("class") == "FIELD")
-	                        DocTitleObj = document.getElementById("doctitle");
-	
-	                    DocTitleHTML = document.createElement("DIV");
-	                    var EditorHeight = 500;
-	                    if (document.getElementById("body") != null) {
-	                        if (BODYTag.getAttribute("tagfreeheight")) {
-	                            EditorHeight = BODYTag.getAttribute("tagfreeheight");
-	                        }
-	                        div_BODY.innerHTML = BODYTag.innerHTML;
-	                        parent.modifiOrgBody = BODYTag.innerHTML;
-	                    }
-	                    if (document.getElementById("body") != null) {
-	                        if (BODYTag.getAttribute("editor") == null) {
-	                            isEditor = true;
-	                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
-	                        }
-	                        else {
-	                            try {
-	                                Conent_contentEditable(document.getElementById('body'));
-	                            } catch (e) { }
-	                        }
-	                    }
-	                }
-	                else {
-	                    DocTitleObj.innerHTML = GetDocTitle();
-	                    if (document.getElementById("body") != null) {
-	                        var HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
-	                        BODYTag.innerHTML = HtmlContent;
-	                        document.getElementById("body").innerHTML = BODYTag.innerHTML;
-	                    }
-	                    BodyTagsDisabled(document.getElementById('div_Content'));
-	                    document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
-	                }
-	            } catch (e) {
-	            }
-	        }
+						}
+
+						validateAllTextArea(document.getElementById('div_Content'));
+						var textAreaElements = document.getElementById('div_Content').getElementsByTagName("textarea");
+						for (i = 0; i < textAreaElements.length; i++) {
+							textAreaElements.item(i).oninput = onInputTextarea;
+						}
+
+						var Body_innerHTML = "";
+						if (document.getElementById("body") != null) {
+							if (document.getElementById("body").getAttribute("class") == "FIELD") {
+								Body_innerHTML = document.getElementById("body").innerHTML;
+								document.getElementById("body").innerHTML = "";
+							}
+						}
+						Conent_contentEditable(document.getElementById('div_Content'));
+
+						if (document.getElementById("body") != null) {
+							if (document.getElementById("body").getAttribute("class") == "FIELD") {
+								document.getElementById("body").innerHTML = Body_innerHTML;
+								BODYTag = document.getElementById("body");
+							}
+						}
+						if (document.getElementById("doctitle").getAttribute("class") == "FIELD")
+							DocTitleObj = document.getElementById("doctitle");
+
+						DocTitleHTML = document.createElement("DIV");
+						var EditorHeight = 500;
+						if (document.getElementById("body") != null) {
+							if (BODYTag.getAttribute("tagfreeheight")) {
+								EditorHeight = BODYTag.getAttribute("tagfreeheight");
+							}
+							div_BODY.innerHTML = BODYTag.innerHTML;
+							parent.modifiOrgBody = BODYTag.innerHTML;
+						}
+						if (document.getElementById("body") != null) {
+							<c:choose>
+							<c:when test="${isReform}">
+							validateAllTextArea(BODYTag);
+							bodyInnerHtml = BODYTag.innerHTML;
+							BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/approveHtml.do?formId=" + parent.pFormID + "' frameborder='0'></ifrmae>";
+
+
+							</c:when>
+							<c:otherwise>
+							if (BODYTag.getAttribute("editor") == null) {
+								isEditor = true;
+								BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
+							}
+							else {
+								try {
+									Conent_contentEditable(document.getElementById('body'));
+								} catch (e) { }
+							}
+							</c:otherwise>
+							</c:choose>
+						}
+					} else {
+						<c:if test="${isReform}">
+						iframe_content.editComplete();
+						</c:if>
+
+						DocTitleObj.innerHTML = ConvertCharToEntityReference(GetDocTitle());
+						if (document.getElementById("body") != null) {
+// 	                        var HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
+// 	                        BODYTag.innerHTML = HtmlContent;
+// 	                        document.getElementById("body").innerHTML = BODYTag.innerHTML;
+// 	                    }
+// 	                    BodyTagsDisabled(document.getElementById('div_Content'));
+// 	                    document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
+							if (!isEditor) {
+								var _checkbox = document.getElementsByTagName("input");
+								for (var i = 0; i < _checkbox.length; i++) {
+									if (GetAttribute(_checkbox[i], "type") == "checkbox" && _checkbox[i].checked == true)
+										_checkbox[i].setAttribute("checked", "checked");
+									if (GetAttribute(_checkbox[i], "type") == "checkbox" && _checkbox[i].checked == false)
+										_checkbox[i].removeAttribute("checked");
+								}
+							}
+
+							var HtmlContent = "";
+
+							<c:choose>
+							<c:when test="${isReform}">
+							var documentCloneNode = iframe_content.document.cloneNode(true);
+							var datepickerDivElement = documentCloneNode.getElementById("ui-datepicker-div");
+
+							if (datepickerDivElement != null) {
+								datepickerDivElement.parentNode.removeChild(datepickerDivElement);
+							}
+
+							HtmlContent = documentCloneNode.body.innerHTML;
+							</c:when>
+							<c:otherwise>
+							HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
+							</c:otherwise>
+							</c:choose>
+
+							BODYTag.innerHTML = HtmlContent;
+							document.getElementById("body").innerHTML = BODYTag.innerHTML;
+						}
+						BodyTagsDisabled(document.getElementById('div_Content'));
+						document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
+
+						validateAllTextArea(document.getElementById('div_Content'));
+					}
+				}
+				catch (e) {
+					console.log(e.message, e.stack);
+				}
+			}
+			
+			function validateAllTextArea(targetElement) {
+				var textAreaElements = targetElement.getElementsByTagName("textarea");
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					validateTextArea(textAreaElements[i]);
+				}
+			}
 	
 	        function Get_HtmlBody(HTML) {
 	            var Div = document.createElement("DIV");
