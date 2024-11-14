@@ -46,7 +46,7 @@
 			}
 			.boardAlbumDiv {
 				border: 1px solid #e2e3e6;
-				height: 220px;
+				height: 100%;
 				width: 290px;
 				cursor: pointer;
 				display: inline-block;
@@ -56,7 +56,7 @@
 			.topInfoP {
 				height: 32px;
 				line-height: 32px;
-				margin: 0px 10px -5px 10px;
+				margin: 0px 10px 0px 10px;
 				padding: 0px 10px;
 				border-top: 2px solid #eaeaea;
 				font-size: 13px;
@@ -543,14 +543,16 @@
 						listXML += 	"</p>";
 						listXML += "<div class='infoDiv'>";
 						listXML += "<span style='height:20px; display: flex; justify-content: space-between; align-items: center;'>";
-						listXML += "<img src='/images/icon_preview.png' style='margin-right: 5px;'>";
-						listXML += "<span style='vertical-align:top;'></span>";
-						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "READCOUNT")], "VALUE")[0].textContent;
+						if (getColNameIndex(xmlDoc, "READCOUNT") != -1) {
+							listXML += "<img src='/images/icon_preview.png' style='margin-right: 5px;'>";
+							listXML += "<span style='vertical-align:top;'></span>";
+							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "READCOUNT")], "VALUE")[0].textContent;
+						}	
 						listXML += "</span>";
-						//listXML += "<span class='likeButton' onclick='clickLikeButton()' title='좋아요' style='height:20px; display: flex; align-items: center;'>"
 						listXML += "<span style='height:20px; display: flex; align-items: center;vertical-align:top;'>";
-						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
-						//listXML += "</span>";
+						if (getColNameIndex(xmlDoc, "WRITEDATE") != -1) {
+							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
+						}
 						listXML += "</span>";
 						listXML += "</div>";
 						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
@@ -568,7 +570,9 @@
 						listXML += title + "</span></p>";
 						listXML += "<div class='infoDiv'>";
 						listXML += "<span style='font-size:13px;'>";
-						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITERNAME")], "VALUE")[0].textContent;
+						if (getColNameIndex(xmlDoc, "WRITERNAME") != -1) {
+							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITERNAME")], "VALUE")[0].textContent;
+						}
 						listXML += "</span>";
 						var likeCountIndex = getColNameIndex(xmlDoc, "LIKECOUNT");
 						if (likeCountIndex != -1) {
