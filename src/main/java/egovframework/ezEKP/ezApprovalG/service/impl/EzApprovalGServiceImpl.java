@@ -33398,8 +33398,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     	return aprOptionInfo;
     }
     
+	/* 2024-11-14 홍승비 - 개인공유함, 부서공유함, 양식별 문서함 다국어 처리 */
 	@Override
-	public List<ApprGFormVO> getFormContainer(int tenantId, String companyId, String deptId, String userId) {
+	public List<ApprGFormVO> getFormContainer(int tenantId, String companyId, String deptId, String lang, String userId) throws Exception {
 		logger.debug("getFormContainer ended");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -33407,19 +33408,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyId", companyId);
 		map.put("deptId", deptId);
 		map.put("userId", userId);
+		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		
 		logger.debug("getFormContainer ended");
 		return ezApprovalGDAO.getFormContainer(map);
 	}
 
 	@Override
-	public List<KEDSharedUserInfo> getShareList(String userId, String deptId, String shareType, int tenantId) throws Exception {
+	public List<KEDSharedUserInfo> getShareList(String userId, String deptId, String shareType, String lang, int tenantId) throws Exception {
 		logger.debug("shareList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("deptId", deptId);
 		map.put("shareType", shareType);
+		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantId", tenantId);
 		
 		logger.debug("shareList ended.");

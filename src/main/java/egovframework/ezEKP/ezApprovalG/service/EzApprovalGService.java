@@ -728,9 +728,10 @@ public interface EzApprovalGService {
 
     public String getFormAprOptionInfo(String key, String type, String companyID, int tenantID) throws Exception;
     
-    public List<ApprGFormVO> getFormContainer(int tenantId, String companyId, String deptId, String userId);
+    /* 2024-11-14 홍승비 - 개인공유함, 부서공유함, 양식별 문서함 다국어 처리 */
+    public List<ApprGFormVO> getFormContainer(int tenantId, String companyId, String deptId, String lang, String userId) throws Exception;
 
-	public List<KEDSharedUserInfo> getShareList(String userId, String deptId, String shareType, int tenantId) throws Exception;
+	public List<KEDSharedUserInfo> getShareList(String userId, String deptId, String shareType, String lang, int tenantId) throws Exception;
 	
 	public void delOpinionsExceptHesong(String docID, String companyID, int tenantId) throws Exception;
 

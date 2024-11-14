@@ -286,17 +286,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String autoSendOfferFlag = ezCommonService.getTenantConfig("autoSendOfferFlag", userInfo.getTenantId());
 		
-		if(approvalFlag.equals("S")) {
+		if (approvalFlag.equals("S")) {
 			String useApprFormCont = ezCommonService.getTenantConfig("useApprFormCont", userInfo.getTenantId());
 			model.addAttribute("useApprFormCont", useApprFormCont);
-			if(useApprFormCont != null && useApprFormCont.equals("YES")) {
-				List<ApprGFormVO> itemList = ezApprovalGService.getFormContainer(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId());
+			if (useApprFormCont != null && useApprFormCont.equals("YES")) {
+				/* 2024-11-14 홍승비 - 양식별 문서함 다국어 처리 */
+				List<ApprGFormVO> itemList = ezApprovalGService.getFormContainer(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getLang(), userInfo.getId());
 				model.addAttribute("itemList", itemList);
 			}
 			
 			String useApprCodeCont = ezCommonService.getTenantConfig("useApprCodeCont", userInfo.getTenantId());
 			model.addAttribute("useApprCodeCont", useApprCodeCont);
-			if(useApprCodeCont != null && useApprCodeCont.equals("YES")) {
+			if (useApprCodeCont != null && useApprCodeCont.equals("YES")) {
 				List<ApprGTaskVO> taskItemList = ezApprovalGService.getCodeContainer(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID(), commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()), approvalFlag, userInfo.getLang());
 				model.addAttribute("taskItemList", taskItemList);
 			}
@@ -312,13 +313,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					subContCount += 1;
 				}
 			}
-			List<KEDSharedUserInfo> deptShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "D", userInfo.getTenantId());
+			
+			/* 2024-11-14 홍승비 - 개인공유함, 부서공유함 다국어 처리 */
+			List<KEDSharedUserInfo> deptShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "D", userInfo.getLang(), userInfo.getTenantId());
 			Map<String, List<ApprGFormVO>> shareUsersItemList = new HashMap<String, List<ApprGFormVO>>(); 
 			for (KEDSharedUserInfo kedSharedUserInfo : deptShareList) {
-				List<ApprGFormVO> shareUserItemList = ezApprovalGService.getFormContainer(userInfo.getTenantId(), "", kedSharedUserInfo.getShareId(), userInfo.getId());
+				List<ApprGFormVO> shareUserItemList = ezApprovalGService.getFormContainer(userInfo.getTenantId(), "", kedSharedUserInfo.getShareId(), userInfo.getLang(), userInfo.getId());
 				shareUsersItemList.put(kedSharedUserInfo.getShareId(), shareUserItemList);
 			}
-			List<KEDSharedUserInfo> userShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "U", userInfo.getTenantId());
+			List<KEDSharedUserInfo> userShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "U", userInfo.getLang(), userInfo.getTenantId());
 			
 			model.addAttribute("deptShareList", deptShareList);
 			model.addAttribute("userShareList", userShareList);
@@ -328,8 +331,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("subContCount", subContCount);
 			model.addAttribute("userCont", userCont);
 		} else {
-			List<KEDSharedUserInfo> deptShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "D", userInfo.getTenantId());
-			List<KEDSharedUserInfo> userShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "U", userInfo.getTenantId());
+			List<KEDSharedUserInfo> deptShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "D", userInfo.getLang(), userInfo.getTenantId());
+			List<KEDSharedUserInfo> userShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "U", userInfo.getLang(), userInfo.getTenantId());
 			
 			model.addAttribute("deptShareList", deptShareList);
 			model.addAttribute("userShareList", userShareList);

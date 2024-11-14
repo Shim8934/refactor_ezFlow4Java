@@ -30543,9 +30543,19 @@
             DOCID = #v_DOCID#
     </update>
     
+    <!-- 2024-11-14 홍승비 - 양식별 문서함 다국어 처리 -->
     <select id="EzApprovalG.getFormContainer" parameterClass="Map" resultClass="ApprGFormVO">
-		SELECT 
-			DISTINCT FORMNAME
+		SELECT DISTINCT
+			CASE
+			    WHEN (#lang# = '' OR #lang# IS NULL)
+			    THEN FORMNAME
+			    ELSE
+			    	CASE
+						WHEN (FORMNAME2 = '' OR FORMNAME2 IS NULL)
+				    	THEN FORMNAME
+				    	ELSE FORMNAME2
+				    END
+			END AS FORMNAME
 		FROM 
 			TBL_ENDAPRDOCINFO E
 		INNER JOIN 
@@ -30566,15 +30576,26 @@
         </isNotEmpty>
 	</select>
 	
+	<!-- 2024-11-14 홍승비 - 개인공유함, 부서공유함 다국어 처리 -->
 	<select id="EzApprovalG.getShareList" parameterClass="Map" resultClass="KEDSharedUserInfo">
 		SELECT DISTINCT
 			A.SHARE_ID as shareId, 
 			CASE 
 				WHEN A.SHARE_TYPE = 'U'
-		        THEN B.DISPLAYNAME
+		        THEN 
+		        	CASE
+					    WHEN (#lang# = '' OR #lang# IS NULL)
+					    THEN B.DISPLAYNAME
+					    ELSE B.DISPLAYNAME2
+					END
 		        WHEN A.SHARE_TYPE = 'D'
-		        THEN C.DISPLAYNAME
-		        END AS shareName,
+		        THEN
+		        	CASE
+					    WHEN (#lang# = '' OR #lang# IS NULL)
+					    THEN C.DISPLAYNAME
+					    ELSE C.DISPLAYNAME2
+		        	END
+			END AS shareName,
 			A.SHARE_TYPE as shareType
 		FROM
 			TBL_SHARE_DOC_DIR A
