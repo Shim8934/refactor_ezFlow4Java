@@ -469,6 +469,8 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 					}
 				}
 			}
+			List<MAttachVO> imgTitleList = attachs.stream().filter(a -> a.getTargetType().equals("title")).collect(Collectors.toList());
+			attachs.removeAll(imgTitleList); 
 			
 			//Separate
 			List<MAttachVO> qstAttch = attachs.stream().filter(a -> a.getTargetType().equals("question")).collect(Collectors.toList());
@@ -543,6 +545,16 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 					if (qsAttach.getTargetId() == question.getQuestionId()) {
 						question.setAttach(qsAttach);
 						qsAtIter.remove();
+					}
+				}
+				
+				ListIterator<MAttachVO> imgTitleIter = imgTitleList.listIterator();
+				while (imgTitleIter.hasNext()) {
+					MAttachVO imgTitle = imgTitleIter.next();
+					if (imgTitle.getTargetId() == question.getQuestionId()) {
+						question.setContent("");
+						question.setImgTitle(imgTitle);
+						imgTitleIter.remove();
 					}
 				}
 				

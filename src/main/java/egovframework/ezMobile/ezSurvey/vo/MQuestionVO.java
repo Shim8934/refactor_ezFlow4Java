@@ -19,6 +19,7 @@ public class MQuestionVO {
 	private int skipFlag;
 	private List<MOptionVO> option;
 	private MAttachVO attach;
+	private MAttachVO imgTitle;
 	private List<MResponseVO> responses;
 	
 	public List<MResponseVO> getResponses() {
@@ -155,6 +156,14 @@ public class MQuestionVO {
 	
 	public void setUnit(long unit) {
 		this.unit = unit;
+	}
+
+	public MAttachVO getImgTitle() {
+		return imgTitle;
+	}
+
+	public void setImgTitle(MAttachVO imgTitle) {
+		this.imgTitle = imgTitle;
 	}
 	
 }
