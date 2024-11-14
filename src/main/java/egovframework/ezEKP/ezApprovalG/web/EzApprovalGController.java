@@ -42,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
@@ -55,6 +56,7 @@ import kr.dogfoot.hwplib.reader.HWPReader;
 import kr.dogfoot.hwplib.tool.objectfinder.CellFinder;
 import kr.dogfoot.hwplib.tool.objectfinder.FieldFinder;
 import kr.dogfoot.hwplib.tool.textextractor.TextExtractMethod;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -95,6 +97,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -8179,6 +8182,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 if (subQuery.toUpperCase().replace(" ", "").contains("TBL_ENDAPRLINEINFO.APRTYPE='040'") && subQuery.toUpperCase().replace(" ", "").contains("TBL_ENDAPRLINEINFO.APRSTATE='002'")) {
                 	endAprType = "040";
                 	endAprState = "002";
+                }
+                
+                /* 2024-11-14 홍승비 - 서브쿼리에 포함될 수 있는 양식명 검색조건 추가 */
+                // <Param9> 태그로 전달된 formName은 상세검색에서 사용되고, 서브쿼리로 전달된 formName은 부서공유함/양식별 문서함 등에서 사용된다.
+                // 만약 상세검색 조건으로 전달된 formName이 있다면 해당 값을 우선적으로 사용하도록 한다.
+        		if (subQuery.toUpperCase().replace(" ", "").contains("TBL_EXPENDAPRDOCINFO.FORMNAME='") && (formName == null || "".equals(formName.trim()))) {
+        			Pattern pattern = Pattern.compile("(TBL_EXPENDAPRDOCINFO.FORMNAME\\s*=\\s*')(.*?)(')"); // 정규식으로 그룹핑하여 작은따옴표 안의 양식명만 추출
+        			Matcher matcher = pattern.matcher(subQuery);
+        			if (matcher.find()) {    			     
+        				formName = matcher.group(2).trim();
+        			}
                 }
             }
         }
