@@ -237,7 +237,6 @@
 		        
 		        if (g_bodyType == "1") {
 					document.getElementById("plainTextArea").style.display = "";
-					document.getElementById("bodyType").options[1].selected = true;
 		        	document.getElementById("SelMailSign").disabled = true;
 		        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
 				} else {
