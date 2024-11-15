@@ -80,21 +80,18 @@
 	</head>
 	<body class="mainbody"> 
 		<h1><spring:message code='ezSchedule.admin.hth10' /></h1>
-		<form id="Form1" method="post">
-			<table class="content" style="width: 250px;">
-			    <tr>
-			        <th><spring:message code='ezSchedule.admin.hth11' /></th>
-			        <td>
-			        	<input id="allDaySTimeForReminder" type="text" style="width:50px; ime-mode:disabled;" oninput="this.value=this.value.replace(/[^0-9.\:]/g, '')"/> 
-			        </td>
-			    </tr>
-			</table>
-			<div class="btnpositionJsp" style="width: 250px">
-			    <a class="imgbtn" onclick="saveReminderConfig()"><span><spring:message code='ezSchedule.t157' /></span></a>
-			    <a class="imgbtn" onclick="cancelClick()"><span><spring:message code='ezSchedule.t5' /></span></a>
-			</div>
-			
-		</form>
+		<table class="content" style="width: 250px;">
+		    <tr>
+		        <th><spring:message code='ezSchedule.admin.hth11' /></th>
+		        <td>
+		        	<input id="allDaySTimeForReminder" type="text" style="width:50px; ime-mode:disabled;" oninput="this.value=this.value.replace(/[^0-9.\:]/g, '')"/> 
+		        </td>
+		    </tr>
+		</table>
+		<div class="btnpositionJsp" style="width: 250px">
+		    <a class="imgbtn" onclick="saveReminderConfig()"><span><spring:message code='ezSchedule.t157' /></span></a>
+		    <a class="imgbtn" onclick="cancelClick()"><span><spring:message code='ezSchedule.t5' /></span></a>
+		</div>
 	</body>
 </html>
 
