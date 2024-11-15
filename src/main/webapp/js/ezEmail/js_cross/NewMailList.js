@@ -380,14 +380,23 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
-                            _TDColum.onclick = function (event) {
-                                event_listclick(this, event);
 
-                                if (pPreviewShow_HOW == "OFF") {
-                                    event_listDBClick(this.parentElement);
-                                }
+                            var singleClickTimer;
+                            _TDColum.onclick = function (event) {
+                                clearTimeout(singleClickTimer);
+                                singleClickTimer = setTimeout(function() {
+                                    event_listclick(this, event);
+
+                                    if (pPreviewShow_HOW == "OFF") {
+                                        event_listDBClick(this.parentElement);
+                                    }
+                                }, 200);
                             };
-                            _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
+
+                            _TDColum.ondblclick = function () {
+                                clearTimeout(singleClickTimer);
+                                event_listDBClick(this.parentElement);
+                            };
                             _TDColum.onselectstart = function () { return false; };
                             break;
                         case "receivedt":
