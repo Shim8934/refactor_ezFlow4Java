@@ -38,6 +38,8 @@ public class SurveyVO {
 	private List<AttachVO> attachList;
 	private int mailFlag;
 	private int popupFlag;
+	private int mailSentFlag;
+	private int totalNotiSentFlag;
 	
 	public int getUpdateMode() {
 		return updateMode;
@@ -294,4 +296,21 @@ public class SurveyVO {
 	public void setResultViewTarget(JSONArray resultViewTarget) {
 		this.resultViewTarget = resultViewTarget;
 	}
+
+	public int getMailSentFlag() {
+		return mailSentFlag;
+	}
+
+	public void setMailSentFlag(int mailSentFlag) {
+		this.mailSentFlag = mailSentFlag;
+	}
+
+	public int getTotalNotiSentFlag() {
+		return totalNotiSentFlag;
+	}
+
+	public void setTotalNotiSentFlag(int totalNotiSentFlag) {
+		this.totalNotiSentFlag = totalNotiSentFlag;
+	}
+	
 }

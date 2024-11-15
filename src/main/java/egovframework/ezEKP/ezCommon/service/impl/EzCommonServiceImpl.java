@@ -4430,4 +4430,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
     }
     
+	@Override
+	public void addSurveyTotalNotiSentFlag() throws Exception {
+		ezCommonDAO.addSurveyTotalNotiSentFlag();
+	}
 }

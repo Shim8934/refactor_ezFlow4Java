@@ -840,7 +840,10 @@
 				TO_date(start_date, 'yyyy-mm-dd hh24:mi:ss') + #offset# /(24*60) as startDate,
 				TO_date(end_date, 'yyyy-mm-dd hh24:mi:ss') + #offset# /(24*60)   as endDate,
 				tenant_id as tenantId,
-				company_id as companyId
+				company_id as companyId,
+				mail_flag as mailFlag,
+				mail_sent_flag as mailSentFlag,
+				totalnoti_sent_flag as totalNotiSentFlag
 			from
 				tbl_survey
 			where
@@ -850,11 +853,7 @@
 		 	and
 		 		use_status = 1
 		 	and
-		 		mail_flag = 1
-		 	and
 		 		draft_flag = 0
-		 	and 
-		 		mail_sent_flag = 0
  		]]>
 	</select>
 	
@@ -1171,6 +1170,32 @@
 			company_id = #companyId#
 		AND 
 			tenant_id = #tenantId#
+	</update>
+	
+	<select id="EzSurveyDAO.getTotalNotiSentFlag" parameterClass="SurveyVO" resultClass="Integer">
+		SELECT 
+			TOTALNOTI_SENT_FLAG
+		FROM 
+			TBL_SURVEY
+		WHERE 
+			SURVEY_ID = #surveyId#
+		AND 
+			COMPANY_ID = #companyId#
+		AND 
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<update id="EzSurveyDAO.updateTotalNotiSentFlag" parameterClass="Map">
+		UPDATE 
+			TBL_SURVEY
+		SET 
+			TOTALNOTI_SENT_FLAG = #totalNotiSentFlag#
+		WHERE 
+			SURVEY_ID = #surveyId#
+		AND 
+			COMPANY_ID = #companyId#
+		AND 
+			TENANT_ID = #tenantId#
 	</update>
 	
 	<!--***********************************************************************************

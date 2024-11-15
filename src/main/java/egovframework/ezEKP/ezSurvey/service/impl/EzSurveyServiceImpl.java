@@ -694,16 +694,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				}
 			}
 			
-			if (mode == "NEW") {
-				String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId;
-		    	String linkUrlMobile = "/mobile/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId + "&mode=all";
-		    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "SURVEY", mode, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
-			}
-			
 			//Send notice mail
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Boolean notiMailFlag = mailFlag == 1 && dateFormat.format(new Date()).equals(startDate) && draftMode == 0;
-			
+			Boolean totalNotiFlag = dateFormat.format(new Date()).equals(startDate) && draftMode == 0;
 			if (notiMailFlag) {
 				int mailSentFlag = ezSurveyDAO.getMailSentFlag(survey);
 				
@@ -715,6 +709,21 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				}
 				
 			}
+			
+			if (totalNotiFlag) {
+				int totalNotiSentFlag = ezSurveyDAO.getTotalNotiSentFlag(survey);
+				
+				if(totalNotiSentFlag == 0) {
+					logger.debug("start send noti");
+					String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId;
+			    	String linkUrlMobile = "/mobile/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId + "&mode=all";
+			    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "SURVEY", mode, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+			    	
+			    	updateTotalNotiSentFlag(crrSurveyId, 1, companyId, tenantId);
+					logger.debug("end send noti");
+				}
+			}
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -1763,6 +1772,19 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		ezSurveyDAO.updateMailSentFlag(map);
 		logger.debug("updateMailSentFlag ended.");
+	}
+	
+	@Override
+	public void updateTotalNotiSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception {
+		logger.debug("updateTotalNotiSentFlag started.");
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("totalNotiSentFlag", 1);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezSurveyDAO.updateTotalNotiSentFlag(map);
+		logger.debug("updateTotalNotiSentFlag ended.");
 	}
 
 	@SuppressWarnings("unchecked")

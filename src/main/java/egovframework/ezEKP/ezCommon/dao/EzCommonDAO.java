@@ -2875,4 +2875,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void addSurveyTotalNotiSentFlag() {
+		try {
+			select("EzCommonDAO.checkSurveyTotalNotiSentFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_survey totalnoti_sent_flag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addSurveyTotalNotiSentFlag");
+		}
+	}
 }

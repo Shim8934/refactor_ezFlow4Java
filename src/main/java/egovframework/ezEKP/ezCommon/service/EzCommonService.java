@@ -481,4 +481,6 @@ public interface EzCommonService {
 	public void insertAllBoardListOption() throws Exception;
 	/* 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가 */
 	public void insertAllBoardInfo() throws Exception;
+
+	public void addSurveyTotalNotiSentFlag() throws Exception;
 }

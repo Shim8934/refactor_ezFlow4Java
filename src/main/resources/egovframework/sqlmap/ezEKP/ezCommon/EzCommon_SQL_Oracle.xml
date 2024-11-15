@@ -6287,4 +6287,22 @@
 			    ('{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}', '전체게시물', 'ALL BoardItem', '全ての投稿 ', '所有帖子', -3, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', #v_TENANTID#, 'Top')
 		]]>
     </insert>
+    
+    <select id="EzCommonDAO.checkSurveyTotalNotiSentFlag" resultClass="String">
+        <![CDATA[
+		SELECT
+			TOTALNOTI_SENT_FLAG
+		FROM
+			TBL_SURVEY
+		WHERE
+			ROWNUM <= 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addSurveyTotalNotiSentFlag">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD
+			TOTALNOTI_SENT_FLAG NUMBER(4,0) DEFAULT 0
+	</statement>
 </sqlMap>
