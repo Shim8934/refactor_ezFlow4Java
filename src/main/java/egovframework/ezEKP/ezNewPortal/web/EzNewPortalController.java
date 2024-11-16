@@ -163,18 +163,18 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				returnUrl = "/ezNewPortal/newPortalPortalPage.do";
 			}
 		}
+
+		// 우선 포탈 사용안하면 전자결재를 기본으로 나오도록 함. 수정 필요
+		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
+		if (usePortal != null && usePortal.equals("NO")) {
+			returnUrl = "/ezApprovalG/apprGMain.do";
+		}
 		
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		
 		if (packageType.equals(CommonUtil.PT_MAIL) || packageType.equals(CommonUtil.PT_BASIC)) {
 			useMemo  = "NO";
 			returnUrl = "/ezEmail/mailMain.do";
-		}
-		
-		// 우선 포탈 사용안하면 전자결재를 기본으로 나오도록 함. 수정 필요
-		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
-		if (usePortal != null && usePortal.equals("NO")) {
-			returnUrl = "/ezApprovalG/apprGMain.do";
 		}
 		
 		model.addAttribute("useContextmenu", useContextmenu);
