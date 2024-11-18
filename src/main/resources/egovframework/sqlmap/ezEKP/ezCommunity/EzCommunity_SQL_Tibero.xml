@@ -8478,6 +8478,9 @@
 						ELSE A.writername2
 					END) LIKE '%' || #searchMaps[].searchWord# || '%'
 			</isEqual>
+			<isEqual  property="searchMaps[].searchType" compareValue="writerInfo">
+				AND A.WRITERID = #searchMaps[].searchWord#
+			</isEqual>
 		</iterate>
 			) T1
 		<![CDATA[
@@ -8594,6 +8597,9 @@
 						THEN A.writername
 						ELSE A.writername2
 					END) LIKE '%' || #searchMaps[].searchWord# || '%'
+			</isEqual>
+			<isEqual  property="searchMaps[].searchType" compareValue="writerInfo">
+				AND A.WRITERID = #searchMaps[].searchWord#
 			</isEqual>
 		</iterate>
 		)

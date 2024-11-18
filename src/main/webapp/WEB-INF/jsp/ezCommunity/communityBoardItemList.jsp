@@ -164,9 +164,9 @@
 					
 					if (gubun != '2') {
 						listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</TD>";
-                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim()) + "</div></TD>";
+						listXML += "<TD class='" + urgency + " " + bClass + "'><div class='newSelectView' style='cursor:pointer' mode='off' onclick='(function(elem){ WriterName_onclick(elem, \"" + SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE")[i], "WriterDeptID").trim() + "\") })(this)'>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE")[i], "WriterName").trim()) + "</div></TD>";
 					} else {
-                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim()) + "</div></TD>";
+                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim()) + "</div></TD>";
 					}
 					
 					listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</TD>";
@@ -675,21 +675,6 @@
     			}
     		}
 
-    		/* 2018-10-02 홍승비 - 커뮤니티 게시물 리스트 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
-			function MemberInfo_onclick(pUserID, pDeptID) {
-    			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t431' />");
-    				return;
-    			}
-    					
-    		    if (gubun == "2") {
-    		    	return;
-    		    }
-    		    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-			    feature = feature + GetOpenPosition(420, 450);
-			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
-			}
-
     		function ReservationItem_onclick() {
     			if (UserLevel == "0" || UserLevel == "9") {
     				alert("<spring:message code='ezCommunity.t431' />");
@@ -772,11 +757,6 @@
 				<li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li>
      		</ul>
 		</div>
-		
-		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script>
-		
 		<div style = "height:370px;">
 			<table  id="tblList" class="cmhomelist" style="width:100%">
 				<tr>
@@ -893,6 +873,19 @@
 		</div>	
 		<div id="tblPageRayer" style="margin-top:10px"></div>
 		<div id="ListInfo" style="DISPLAY:none">${ListInfo }</div>
-		<FONT face="<spring:message code='ezCommunity.t154' />"></FONT>	
+		<form id="totalSearchForm" method="post" target="rightfrm" action="/ezCommunity/communitySearchResult.do">
+			<input id="searchType" name="searchType" type="hidden" value="writerInfo">
+			<input name="code" type="hidden" value="<c:out value='${code }'/>">
+			<input id="searchWord" type="hidden" name="searchWord" type="text">
+			<input id="postsViewFlag" type="hidden" name="postsViewFlag" type="text" value="Y">
+			<%--<input id="searchWord2" name="searchWord2" type="text" style="margin: 5px 10px;">--%>
+		</form>
+		<div>
+			<jsp:include page="/WEB-INF/jsp/ezCommunity/communityUserOption.jsp"/>
+		</div>
+		<script type="text/javascript">
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
+		<FONT face="<spring:message code='ezCommunity.t154' />"></FONT>
 	</body>
 </html>

@@ -5285,7 +5285,7 @@ public class EzCommunityController extends EgovFileMngUtil{
     }
 
 	@RequestMapping(value = "/ezCommunity/communitySearchResult.do", method = RequestMethod.POST)
-	public String getSearchResult(@CookieValue("loginCookie") String loginCookie, String code, String searchWord, String sortBy, String pageNum, Model model, HttpServletRequest request) throws Exception {
+	public String getSearchResult(@CookieValue("loginCookie") String loginCookie, String code, String searchWord, String sortBy, String pageNum, String postsViewFlag, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("getSearchResult started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -5340,7 +5340,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pageNum", pageNum == null || "".equals(pageNum) ? 1 : pageNum);
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("totalPage", totalCount % 10 == 0 ? totalCount / 10 : totalCount / 10 + 1);
-		
+		model.addAttribute("postsViewFlag", postsViewFlag);
+
 		logger.debug("getSearchResult ended.");
 		
 		return "/ezCommunity/communitySearchResult";

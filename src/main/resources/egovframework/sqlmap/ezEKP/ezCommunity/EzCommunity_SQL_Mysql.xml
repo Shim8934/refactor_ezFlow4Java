@@ -8290,6 +8290,9 @@
 							ELSE A.writername2
 						END) LIKE CONCAT('%', #searchMaps[].searchWord#, '%')
 			</isEqual>
+			<isEqual  property="searchMaps[].searchType" compareValue="writerInfo">
+				AND A.WRITERID = #searchMaps[].searchWord#
+			</isEqual>
 		</iterate>
 		<isEqual property="v_PSORTBY" compareValue="">
 			<![CDATA[
@@ -8451,6 +8454,9 @@
 								THEN A.writername
 								ELSE A.writername2
 							END) LIKE CONCAT('%', #searchMaps[].searchWord#, '%')
+				</isEqual>
+				<isEqual  property="searchMaps[].searchType" compareValue="writerInfo">
+					AND A.WRITERID = #searchMaps[].searchWord#
 				</isEqual>
 			</iterate>
 		) as countTable
