@@ -34,7 +34,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript">
 		    var g_bdraft = false;
-		    var g_moveUrl = "<c:out value='${url}'/>";
+		    var g_moveUrl = "<c:out value='${url}' escapeXml='false'/>";
 		    var g_servername = "${serverName}";	
 			var g_expath = "exchange";
 			var g_userID = "${userId}";
