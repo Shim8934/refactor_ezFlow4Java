@@ -35,6 +35,11 @@
 				text-align: right;
 				padding: 0 20px 10px 0;
 			}
+			
+			.blankSpan{
+				margin : 0 10px;
+				color:gray;
+			}
 		</style>
 
 		<script type="text/javascript">
@@ -579,15 +584,18 @@
 					var editReplyOkDiv = document.createElement("div");
 					var editReplyOkA = document.createElement("a");
 					var editReplyCancelA = document.createElement("a");
+					var blankSpan = document.createElement("span");
 
 					editReplyOkA.setAttribute("onclick", "editReplySave('" + replyNo + "', '" + guestNo + "')");
 					editReplyCancelA.setAttribute("onclick", "editCancel('"+ replyNo +"')");
 					editReplyOkA.textContent = "<spring:message code='ezCommunity.t958' />";
 					editReplyCancelA.textContent = "<spring:message code='ezCommunity.t109' />";
 					editReplyOkDiv.className = "editSubmit";
-					editReplyCancelA.style.marginRight = "20px";
+					blankSpan.textContent = "|";
+					blankSpan.className = "blankSpan";
 
 					editReplyOkDiv.appendChild(editReplyCancelA);
+					editReplyOkDiv.appendChild(blankSpan);
 					editReplyOkDiv.appendChild(editReplyOkA);
 					editReplyTotalDiv.appendChild(editReplyOkDiv);
 				} else if (mode == "del") { // 삭제
