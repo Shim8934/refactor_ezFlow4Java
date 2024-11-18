@@ -2472,7 +2472,9 @@
              	IFNULL(A.APPROVEFLAG, '0') APPROVEFLAG ,
              	IFNULL(A.RETURNFLAG, '0') RETURNFLAG ,
 				IFNULL(A.REPEATFLAG, '1') REPEATFLAG ,
-             	A.BRD_ACCESS 
+             	A.BRD_ACCESS ,
+				A.RES_MAX_DATE ,
+				A.RES_MAX_USER_CNT
 			FROM 
 				TBL_RS_BRD A
 			JOIN
