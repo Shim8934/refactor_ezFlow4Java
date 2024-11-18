@@ -369,7 +369,11 @@
 		            return;
 		        }
 		        // 2018-07-24 천성준 - 삭제 시, 한번더 체크할수 있게
-		        var holidayName = _RowObject.getAttribute("holidayname2");
+		        var holidayName = _RowObject.getAttribute("holidayname");
+		        if (userlang != "1") {
+		        	holidayName = _RowObject.getAttribute("holidayname2");
+		        }
+		        
 		        if (confirm(holidayName + " " + "<spring:message code='ezCommunity.t333' />")) {
 			        $.ajax({
 			    		type : "POST",
