@@ -344,7 +344,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
 		boardPropertyVO.setCompanyID(boardGroupPropertyVO.getCompanyID());
-		boardPropertyVO.setTenantID(boardGroupPropertyVO.getTenantID());
+		boardPropertyVO.setTenantID(user.getTenantId());
 		
 		ezBoardAdminService.createBoard(boardPropertyVO);
 
