@@ -220,6 +220,21 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String defaultSeparateSend = mailGeneralVO.getDefaultSeparateSend() == null ? "N" : mailGeneralVO.getDefaultSeparateSend();
 		String useEachMailDefault = ezCommonService.getTenantConfig("useEachMailDefault", userInfo.getTenantId()) == null ? "NO" : ezCommonService.getTenantConfig("useEachMailDefault", userInfo.getTenantId()); // 메일 개별발신 디폴트 사용 여부(YES: 개별발송 사용, NO: 사용안함)
 		String mailSendResult = mailGeneralVO.getMailSendResult() == null ? "failure" : mailGeneralVO.getMailSendResult();
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		List<String> defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.KOREA).split(";"));
+		List<String> defaultFontSizeList = Arrays.asList("8pt,9pt,10pt,11pt,12pt,13pt,14pt,16pt,18pt,20pt,24pt,30pt,36pt,54pt,72pt".split(","));
+
+		String fontFamily = egovMessageSource.getMessage("main.t246", locale);
+		String fontSize = "13pt";
+		if (primaryLang.equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			if (!editorFontStyle.equals("")) {
+				fontFamily = editorFontStyle.split("\\|")[0];
+				fontSize = editorFontStyle.split("\\|")[1];
+			}
+		}
+		String editorFontFamily = mailGeneralVO.getEditorFontFamily() == null ? fontFamily : mailGeneralVO.getEditorFontFamily();
+		String editorFontSize = mailGeneralVO.getEditorFontSize() == null ? fontSize : mailGeneralVO.getEditorFontSize();
 		
 		if (dotnetFlag != null) {
 			dotnetFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(dotnetFlag));
@@ -253,7 +268,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				 + ",previewSubtree=" + previewSubtree + ",useOnlyInnerMail=" + useOnlyInnerMail + ",usePreviewSubTree=" + usePreviewSubTree
 				 + ",previewMailImage=" + previewMailImage + ",previewMail=" + previewMail + ",textOption=" + textOption + ",mailSearchPeriod=" + mailSearchPeriod
 				 + ",defaultCursorPosition=" + defaultCursorPosition + ",defaultSeparateSend=" + defaultSeparateSend + ",useEachMailDefault=" + useEachMailDefault
-				 + ",mailSendResult=" + mailSendResult);
+				 + ",mailSendResult=" + mailSendResult + ",primaryLang=" + primaryLang + ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize);
 		
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
@@ -276,6 +291,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("defaultCursorPosition", defaultCursorPosition); // 메일쓰기창 기본 커서 위치/ recipient: 받는사람, content : 내용, subject : 제목
 		model.addAttribute("defaultSeparateSend", defaultSeparateSend);
 		model.addAttribute("useEachMailDefault", useEachMailDefault);
+		model.addAttribute("editorFontFamily", editorFontFamily);
+		model.addAttribute("editorFontSize", editorFontSize);
+		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("defaultFontFamilyList", defaultFontFamilyList);
+		model.addAttribute("defaultFontSizeList", defaultFontSizeList);
 		
 		logger.debug("mailGeneral ended.");
 		
@@ -359,6 +379,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String mailSendResult = doc.getElementsByTagName("MAILSENDRESULT").item(0).getTextContent();
 		String mailSenderNm = "";
 		String previewSubTree = "";
+		String editorFontFamily = doc.getElementsByTagName("EDITORFONTFAMILY").item(0).getTextContent();
+		String editorFontSize = doc.getElementsByTagName("EDITORFONTSIZE").item(0).getTextContent();
 		
 		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", userInfo.getTenantId());
 
@@ -387,6 +409,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ ",previewMailImage=" + previewMailImage + ",textOption=" + textOption
 				+ ",mailSearchPeriod=" + mailSearchPeriod + ",defaultCursorPosition=" + defaultCursorPosition
 				+ ",defaultSeparateSend=" + defaultSeparateSend	+ ",mailSendResult=" + mailSendResult
+				+ ",previewMail=" +  previewMail 
+				+ ",mailSendResult=" + mailSendResult
+				+ ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize
 				);
 
 		String rtnValue= "OK";
@@ -411,7 +436,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setDefaultCursorPosition(defaultCursorPosition);
 			mailGeneral.setDefaultSeparateSend(defaultSeparateSend);
 			mailGeneral.setMailSendResult(mailSendResult);
-			
+			mailGeneral.setEditorFontFamily(editorFontFamily);
+			mailGeneral.setEditorFontSize(editorFontSize);
+
 			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode);
 		} catch (RuntimeException e) {
 			rtnValue = "ERROR:" + e.getMessage();

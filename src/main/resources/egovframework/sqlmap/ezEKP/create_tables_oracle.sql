@@ -809,7 +809,11 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"MAIL_SENDER_NAME" NVARCHAR2(255), 
 	"PREVIEW_SUBTREE" NVARCHAR2(10) DEFAULT 'N', 
 	"PREVIEW_MAIL_IMAGE" VARCHAR2(10 BYTE) DEFAULT 'Y', 
-	"TEXT_OPTION" VARCHAR2(10 BYTE)
+	"PREVIEW_MAIL" varchar(10) DEFAULT 'N',
+	"MAIL_SEND_RESULT" varchar(10) DEFAULT 'N',
+	"TEXT_OPTION" VARCHAR2(10 BYTE),
+	"EDITOR_FONT_FAMILY" varchar(50),
+	"EDITOR_FONT_SIZE" varchar(10)
    ) ;
 --------------------------------------------------------
 --  DDL for Table JMOCHA_MAIL_OUTOFOFFICE

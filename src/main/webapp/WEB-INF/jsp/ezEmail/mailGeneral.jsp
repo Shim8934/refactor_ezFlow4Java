@@ -132,7 +132,9 @@
 				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>" + 
 				                "<DEFAULTCURSORPOSITION>"+ document.getElementById("defaultCursorPosition").value + "</DEFAULTCURSORPOSITION>" +
 								"<DEFAULTSEPARATESEND>"+ defaultSeparateSendVal + "</DEFAULTSEPARATESEND>" +
-				                "<MAILSENDRESULT>" + document.getElementById("sendResult").value + "</MAILSENDRESULT>";
+				                "<MAILSENDRESULT>" + document.getElementById("sendResult").value + "</MAILSENDRESULT>" + 
+								"<EDITORFONTFAMILY>" + document.getElementById("editorFontFamily").value + "</EDITORFONTFAMILY>" +
+								"<EDITORFONTSIZE>" + document.getElementById("editorFontSize").value + "</EDITORFONTSIZE>";
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
@@ -539,6 +541,23 @@
                   </select>
               </td>
           </tr>
+		  <c:if test="${primaryLang == '1'}">
+			  <tr>
+				  <th><spring:message code="ezEmail.general.editorFontStyle"/></th>
+				  <td>
+					  <select id="editorFontFamily" style="width:150px;">
+						  <c:forEach var="font" items="${defaultFontFamilyList}">
+							  <option value="${font.trim()}" <c:if test="${editorFontFamily == font}">selected</c:if>>${font.trim()}</option>
+						  </c:forEach>
+					  </select>
+					  <select id="editorFontSize" style="width:100px;">
+						  <c:forEach var="size" items="${defaultFontSizeList}">
+							  <option value="${size}" <c:if test="${editorFontSize == size}">selected</c:if>>${size}</option>
+						  </c:forEach>
+					  </select>
+				  </td>
+			  </tr>
+		  </c:if>
 		</table>
 		<div align="center" style="width:680px;">
 			<div class="btnpositionJsp">

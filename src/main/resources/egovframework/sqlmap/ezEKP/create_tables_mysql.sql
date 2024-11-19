@@ -704,6 +704,8 @@ CREATE TABLE `jmocha_mail_general` (
   `PREVIEW_SUBTREE` varchar(10) DEFAULT 'N',
   `PREVIEW_MAIL_IMAGE` varchar(10) DEFAULT 'Y',
   `TEXT_OPTION` varchar(10) DEFAULT NULL,
+  `EDITOR_FONT_FAMILY` varchar(50) DEFAULT NULL,
+  `EDITOR_FONT_SIZE` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
