@@ -145,7 +145,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String upperDeptCode = "";
 		String upperDeptName = "";
 		Map<String, String> upDeptInfo = ezApprovalGService.getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
-		if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+		if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
 			upperDeptCode = upDeptInfo.get("upperDeptCode");
 			upperDeptName = upDeptInfo.get("upperDeptName");
 		}
@@ -982,7 +982,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String upperDeptCode = "";
 		String upperDeptName = "";
 		Map<String, String> upDeptInfo = ezApprovalGService.getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
-		if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+		if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
 			upperDeptCode = upDeptInfo.get("upperDeptCode");
 			upperDeptName = upDeptInfo.get("upperDeptName");
 		}

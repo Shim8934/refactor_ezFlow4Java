@@ -2374,6 +2374,7 @@ function openSignUI() {
             openSignUI_Complete("NAME");
         }
     } catch (e) {
+        console.log(e);
         alert("openSignUI : " + e.description);
     }
 }

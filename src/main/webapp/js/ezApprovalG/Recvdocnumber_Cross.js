@@ -326,6 +326,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
         }
         
     } catch (e) {
+        console.log(e);
         if (SN != "") {
             field.textContent = fractionsymbol + SN;
             rollbackDocNumber(pDeptID, pDocID);
