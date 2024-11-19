@@ -181,19 +181,11 @@
 	        function GetEditorBody() {
 	        	return xfe.getDom().body;
 	        }
-	        const xfeHeight = (document.documentElement.clientHeight - 1) ;
-
-			window.onresize =  function () {
-	             try {
-	                setTimeout(function(){
-                         let height = document.documentElement.clientHeight - 220;
-
-                            xfe.setWidth("100%");
-                            xfe.setHeight(height+ "px");
-	                },100);
-
-                    //xfe.setWidth("100%");
-                    //xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
+	        
+			window.onresize = function () {
+	            try {
+	                xfe.setWidth("100%");
+	                xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
 	            } catch (e) { }
 	        }
 			
@@ -251,16 +243,14 @@
 	        	lang : lang,
 	            basePath : "/js/ezEditor/tfxEditor",
 	            width : "100%",
-	            height : xfeHeight + "px",
+	            height : (document.documentElement.clientHeight - 1) + "px",
 	            initFontFamilyMenu : initFontFamilyMenu,
 	            initFontFamily : defaultFontFamily,
 	            initFontSize : defaultFontSize,
 	            skin : "classic",
 	            uploadFilePath : uploadFilePath,
 	            uploadPasteContentsPath : uploadPasteContentsPath,
-	            autoFocus : false,
-	            rootFrameId : 'tbContentElement',
-	            ignoreMinHeight : true
+	            autoFocus : false
 	        });
 	        
 	        xfe.render('xfe');

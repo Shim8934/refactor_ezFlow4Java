@@ -986,9 +986,7 @@
 										onLoad: initLoad,
 										onMouseUp: mouseUp,
 										onMouseDown: mouseDown,
-										onKeyUp: keyUp,
-                                        rootFrameId : 'tbContentElement',
-                                        ignoreMinHeight : true
+										onKeyUp: keyUp
 									});
 									
 									xfe.render('xfe_ex');
