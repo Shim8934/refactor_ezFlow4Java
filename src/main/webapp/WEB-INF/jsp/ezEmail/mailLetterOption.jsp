@@ -373,7 +373,8 @@
 				<td>
 					<input type="checkbox" name="responseRead" value="checkbox" onChange="responseRead_onClick()" id = "responseReadid">
 					<span style="vertical-align:middle;"><spring:message code='ezEmail.t370' /> </span>
-					<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none" </c:if>id="responseReadType" onChange="" style="vertical-align: middle;" <c:if test="${useReceiptExternal != 'YES'}">disabled</c:if>>
+					<%-- 2024-11-13 수신확인 외부용을 default로 함, 내부용/외부용 셀렉트박스 display:none 처리 --%>
+					<select style="display:none" id="responseReadType" onChange="" style="vertical-align: middle;" <c:if test="${useReceiptExternal != 'YES'}">disabled</c:if>>
 						<option value="1"><spring:message code='ezEmail.t371' /></option>
 						<c:if test="${useReceiptExternal == 'YES'}">
 						<option value="2"><spring:message code='ezEmail.t372' /></option>
