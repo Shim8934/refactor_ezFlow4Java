@@ -2358,8 +2358,9 @@ div.orbit img{border-radius:5px;}
 .emergency_popup .emergency_info{list-style:none; overflow:hidden; margin:0 0 15px; padding:0 0 20px; border-bottom:1px solid #E5E5E5;}
 .emergency_popup .emergency_info li{float:left; margin:0; padding:0; height:36px; line-height:36px; font-size:14px; color:#333;}
 .emergency_popup .emergency_info li span{color:#B1B1B1;}
-.emergency_popup .emergency_info li.info_img{width:36px; height:36px; border-radius:50%; overflow:hidden; border:1px solid #E9E9E9; box-sizing:border-box; margin-right:10px;}
+.emergency_popup .emergency_info li.info_img{width:36px; height:36px; border-radius:50%; overflow:hidden; border:1px solid #E9E9E9; box-sizing:border-box; margin-right:10px; cursor:pointer;}
 .emergency_popup .emergency_info li.info_img img{width:100%; height:100%;}
+.emergency_popup .emergency_info li.info_name{cursor:pointer;}
 .emergency_popup .emergency_info li.info_name:after{content:""; display:inline-block; width:4px; height:100%; vertical-align:top; background:url(../../images/ezNewPortal/emergency_dot.png) no-repeat center; margin:0 9px;}
 .emergency_popup .emergency_info li.info_name span{margin-left:4px;}
 .emergency_popup .emergency_info li.info_end:before{content:""; display:inline-block; width:4px; height:100%; vertical-align:top; background:url(../../images/ezNewPortal/emergency_dot.png) no-repeat center; margin:0 9px;}
