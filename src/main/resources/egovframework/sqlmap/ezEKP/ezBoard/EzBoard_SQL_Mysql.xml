@@ -8905,6 +8905,12 @@
   				A.TENANT_ID = D.TENANT_ID
   			AND
   				A.ITEMID = D.ITEMID
+			LEFT OUTER JOIN
+				TBL_BOARD_ITEM_ATTACHMENTS F
+			ON
+				A.ITEMID = F.ITEMID
+			AND
+				A.TENANT_ID = F.TENANT_ID
   			WHERE
   				A.TENANT_ID = #v_TENANTID#
   			AND
@@ -8931,12 +8937,6 @@
 			<isEmpty property="scrapContBoardListView_FG">
 				AND 1 = 0
 			</isEmpty>
-            LEFT OUTER JOIN
-                TBL_BOARD_ITEM_ATTACHMENTS F
-            ON
-                A.ITEMID = F.ITEMID
-            AND
-                A.TENANT_ID = F.TENANT_ID
             GROUP BY
                 A.ITEMID, A.TITLE
 			ORDER BY

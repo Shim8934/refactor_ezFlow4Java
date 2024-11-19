@@ -91,6 +91,7 @@
 		        var window_onunload_Event = false;
 				var isOpenWindow;
 				var scrapBoard = "YES";
+				var pBoardID = "";
 
 		        window.onresize = function () {
 		            var height = parseInt(document.documentElement.clientHeight - 320);

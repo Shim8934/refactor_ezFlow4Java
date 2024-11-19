@@ -9292,6 +9292,8 @@
 						A.TITLE,
 						A.READCOUNT,
 						A.ATTACHMENTS,
+						EXT,
+						FILEPATH,
 						A.ITEMLEVEL,
 						A.ABSTRACT,
 						CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -9351,6 +9353,26 @@
   				 	 	A.TENANT_ID = D.TENANT_ID
   				    AND
   					  	A.ITEMID = D.ITEMID
+					LEFT OUTER JOIN (
+						SELECT 	
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+								ELSE 'MANY'
+							END AS EXT,
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+								ELSE 'MANY'
+							END AS FILEPATH,
+							TENANT_ID,
+							itemid
+							FROM TBL_BOARD_ITEM_ATTACHMENTS
+						GROUP BY
+							ITEMID,
+							TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+					AND A.TENANT_ID = F.TENANT_ID
   				    WHERE
   					  	A.TENANT_ID = #v_TENANTID#
   				    AND
