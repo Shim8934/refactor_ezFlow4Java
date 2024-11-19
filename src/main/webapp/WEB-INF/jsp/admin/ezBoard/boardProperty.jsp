@@ -492,11 +492,11 @@
 	            		
 	            		if ("<c:out value='${adminType}'/>" == "y") {
 							if (!!parent.parent.board_menu && !!parent.parent.board_menu.refreshLeft) {
-	            				parent.parent.board_menu.refreshLeft();
+	            				//parent.parent.board_menu.refreshLeft();
 							}
 	            		} else {
 							if (!!parent.board_menu && !!parent.board_menu.refreshLeft) {
-								parent.board_menu.refreshLeft();
+								//parent.board_menu.refreshLeft();
 							}
 	            		}
 	            	}
