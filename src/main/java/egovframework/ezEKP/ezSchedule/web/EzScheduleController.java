@@ -4666,7 +4666,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 			else {
 				//일정데이터 수정
-				ezScheduleService.updateDragSchedule(dragId, loginVO.getId(), loginVO.getDisplayName1(), loginVO.getDisplayName2(), utcStartTime, utcEndTime, tenantId, companyId, info.getDateType(), info.getRepetition(),info.getTitle());
+				ezScheduleService.updateDragSchedule(dragId, loginVO.getId(), loginVO.getDisplayName1(), loginVO.getDisplayName2(), utcStartTime, utcEndTime, tenantId, companyId, info.getDateType(), info.getRepetition(), info.getTitle());
+				ezScheduleService.sendInviteModNotiForDrag(request, dragId, info, startDate, endDate, loginVO, loginCookie);
 			}
 		}
 		
