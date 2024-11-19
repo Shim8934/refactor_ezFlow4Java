@@ -871,7 +871,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         /* 상위부서의 부서문서함을 가져오도록 함 */
         String upperDeptCode = "";
         Map<String, String> upDeptInfo = getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
-        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
             upperDeptCode = upDeptInfo.get("upperDeptCode");
         }
 
@@ -3345,7 +3345,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 String upperDeptName = "";
                 if (rowNode.item(i).getChildNodes().item(5).getTextContent().equals("N")) { // 외부수신처가 아닌 경우에만 확인
                     Map<String, String> upDeptInfo = getUpperDeptInfo(receiptDeptID, tenantID);
-                    if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                    if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
                         upperDeptCode = upDeptInfo.get("upperDeptCode");
                         upperDeptName = upDeptInfo.get("upperDeptName");
                     }
@@ -9522,7 +9522,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         /* 전자결재G > 상위부서문서함 사용 > 상위부서ID 전달 */
         Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, tenantID);
-        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
             recordListVO.setupperDeptCode(upDeptInfo.get("upperDeptCode"));
         } else {
             recordListVO.setupperDeptCode(upDeptInfo.get(""));
@@ -12288,7 +12288,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         /* 전자결재G > 부서수신함 > 상위부서문서 사용 시 deptID에 상위부서ID를 사용 */
         Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, tenantID);
-        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
             deptID = upDeptInfo.get("upperDeptCode");
         }
 
@@ -17436,7 +17436,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         /* 전자결재G > 상위부서문서함 사용 > 상위부서 정보로 record 정보를 저장 */
         Map<String, String> upDeptInfo = getUpperDeptInfo(deptCode, tenantID);
-        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
             deptCode = upDeptInfo.get("upperDeptCode");
             deptName = upDeptInfo.get("upperDeptName");
         }
@@ -17848,7 +17848,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 /* 전자결재G > 상위부서문서함 사용 > 상위부서 conainerID 사용 */
                 String upperDeptCode = "";
                 Map<String, String> upDeptInfo = getUpperDeptInfo(orgDeptID, tenantID);
-                if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
                     upperDeptCode = upDeptInfo.get("upperDeptCode");
                 }
 
@@ -24824,7 +24824,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         /* 2024-07-18 양지혜 - 전자결재G > 상위부서문서함 */
         Map<String, String> upDeptInfo = getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
-        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
             cabinetListVO.setUpperDeptCode(upDeptInfo.get("upperDeptCode"));
         } else {
             cabinetListVO.setUpperDeptCode(upDeptInfo.get(""));
@@ -33810,7 +33810,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         /* 전자결재G > 상위부서문서함 사용 > 부서수신함 카운트 상위부서정보로 확인 */
         Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, tenantID);
-        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
             map.put("upperDeptCode", upDeptInfo.get("upperDeptCode"));
             String[] upperDeptIDArr = getDocManageDeptInfo(upDeptInfo.get("upperDeptCode"), tenantID).replace(" ", "").replace("\'", "").split(",");
             map.put("upperDeptIDArr", upperDeptIDArr);
@@ -38832,7 +38832,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         Map<String, String> upDeptInfo = ezApprovalGDAO.getUpperDeptInfo(map);
         
-        if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
             String upDeptUseUpperCheck = "Y";
             String upperDeptCode = upDeptInfo.get("EXTENSIONATTRIBUTE1");
             
