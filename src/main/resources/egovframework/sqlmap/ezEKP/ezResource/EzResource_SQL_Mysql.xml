@@ -1106,6 +1106,17 @@
 		]]>
 	</delete>
 	
+	<delete id="EzResourceDAO.delResDataForm" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_SCHEDULEFORM
+			WHERE
+				RESID = #v_P_Brd_ID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
 	<update id="EzResourceDAO.modifyResData" parameterClass="Map">
 		<![CDATA[
 			UPDATE
