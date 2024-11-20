@@ -3293,4 +3293,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardStarRatingFlag");
 		}
 	}
+	
+	public void createMealPlanTable() {
+		try {
+			select("EzCommonDAO.checkMealPlanTable");
+		} catch (Exception e) {
+			logger.debug("Table TBL_MEAL_PLAN doesn't exist. Creating the table...");
+			update("EzCommonDAO.createMealPlanTable");
+		}
+	}
 }

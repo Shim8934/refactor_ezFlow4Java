@@ -78,6 +78,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -91,6 +92,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -110,6 +114,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.MealDataVO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -13191,5 +13196,123 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("saveItemStarRating ended");
 		return result;
+	}
+
+	/**
+	 * 식단 조회 화면 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/mealPlanView.do", method = RequestMethod.GET)
+	public String mealPlanView(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, String selectDate) throws Exception {
+		logger.debug("mealPlanView started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("isAdmin", getBoardInfo("{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}", userInfo).getBoardAdmin_FG());
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("selectDate", (null != selectDate && !"".equals(selectDate)) ? selectDate : "");
+		
+		logger.debug("mealPlanView ended");
+		return "ezBoard/mealPlanView";
+	}
+	
+	/**
+	 * 식단 데이터 반환 Method
+	 */
+	@RequestMapping(value = "/ezBoard/getMealPlanList.do", method = RequestMethod.POST)
+	public String getMealPlanList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, String startDate) throws Exception {
+		logger.debug("getMealPlanList started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("startDate", startDate);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("tenantID", userInfo.getTenantId());
+		
+		List<MealDataVO> mealDataList = ezBoardService.getMealPlanList(map);
+		
+		model.addAttribute("mealDataList", mealDataList);
+		
+		logger.debug("getMealPlanList ended");
+		return "json";
+	}
+	
+	/**
+	 * 식단 작성 화면 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/mealPlanWrite.do", method = RequestMethod.POST)
+	public String mealPlanWrite(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, String startDate, String selectDate) throws Exception {
+		logger.debug("mealPlanWrite started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (!"true".equalsIgnoreCase(getBoardInfo("{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}", userInfo).getBoardAdmin_FG())) {
+			return "main/error";
+		}
+		
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("selectDate", selectDate);
+		model.addAttribute("companyID", userInfo.getCompanyID());
+		model.addAttribute("tenantID", userInfo.getTenantId());
+		
+		logger.debug("mealPlanWrite ended");
+		return "ezBoard/mealPlanWrite";
+	}
+	
+	/**
+	 * 식단 데이터 저장 Method
+	 */
+	@RequestMapping(value = "/ezBoard/saveMealPlan.do", method = RequestMethod.POST)
+	public String saveMealPlan(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("saveMealPlan started");
+		
+		ObjectMapper om = new ObjectMapper();
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		List<MealDataVO> mealInputList = om.readValue(request.getParameter("mealInputList"), new TypeReference<List<MealDataVO>>() {});
+		
+		if (!"true".equalsIgnoreCase(getBoardInfo("{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}", userInfo).getBoardAdmin_FG())) {
+			return "main/error";
+		}
+		
+		String result = ezBoardService.saveMealPlan(mealInputList);
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("saveMealPlan ended");
+		return "json";
+	}
+
+	/**
+	 * 협업 연계 - 오늘의 식단
+	 */
+	@CrossOrigin(origins = "*")
+	@GetMapping(value = "/rest/MenuSchedule", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public JSONObject restMenuList(HttpServletRequest request) {
+		logger.debug("restMenuList started");
+		
+		org.json.simple.JSONObject returnJson = new org.json.simple.JSONObject();
+		String companyID = request.getParameter("companyID");
+		String date = request.getParameter("date");
+		int tenantID = Integer.parseInt(request.getParameter("tenantID"));
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyID", companyID);
+		map.put("date", date);
+		map.put("tenantID", tenantID);
+
+		try {
+			returnJson = ezBoardService.getMenuSchedule(map, returnJson);
+		} catch (Exception e) {
+			logger.error("restMenuList exception : " + e.getMessage());
+			returnJson.put("RTNVALUE", "CODE_ERROR");
+		}
+
+		logger.debug("restMenuList result : " + returnJson);
+		logger.debug("restMenuList ended");
+		
+		return returnJson;
 	}
 }

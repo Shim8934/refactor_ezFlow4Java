@@ -25,6 +25,7 @@
 	<typeAlias  alias="BoardUserScrapContVO" 		type="egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO"/>
 	<typeAlias  alias="BoardUserScrapContListVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO"/>
 	<typeAlias  alias="BoardThumbnailVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO"/>
+	<typeAlias  alias="MealDataVO" 					type="egovframework.ezEKP.ezBoard.vo.MealDataVO"/>
 
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
@@ -9633,5 +9634,46 @@
 			AND 
 				S.TENANT_ID = #v_TENANTID#
 		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getMealPlanList" parameterClass="Map" resultClass="MealDataVO">
+		SELECT	MEALDATE,
+				IFNULL(ACOURSE, '') AS ACOURSE,
+				IFNULL(BCOURSE, '') AS BCOURSE,
+				IFNULL(SALADBAR, '') AS SALADBAR,
+				IFNULL(DESSERT, '') AS DESSERT,
+				IFNULL(TOTALCAL, '') AS TOTALCAL
+		FROM	TBL_MEAL_PLAN
+		WHERE	MEALDATE BETWEEN #startDate# AND DATE_ADD(#startDate#, INTERVAL 4 DAY)
+		AND		COMPANYID = #companyID#
+		AND		TENANT_ID = #tenantID#
+		ORDER BY MEALDATE ASC
+	</select>
+	
+	<insert id="EzBoardDAO.saveMealplan" parameterClass="MealDataVO">
+		INSERT INTO TBL_MEAL_PLAN
+			(MEALDATE, ACOURSE, BCOURSE, SALADBAR, DESSERT, TOTALCAL, COMPANYID, TENANT_ID)
+		VALUES
+			(#mealDate#, #aCourse#, #bCourse#, #saladBar#, #dessert#, #totalCal#, #companyID#, #tenantID#)
+		ON DUPLICATE KEY UPDATE
+			ACOURSE = #aCourse#,
+			BCOURSE = #bCourse#,
+			SALADBAR = #saladBar#,
+			DESSERT = #dessert#,
+			TOTALCAL = #totalCal#
+	</insert>
+	
+	<select id="EzBoardDAO.getTodayLunch" parameterClass="Map" resultClass="MealDataVO">
+		SELECT	MEALDATE,
+				  IFNULL(ACOURSE, '') AS ACOURSE,
+				  IFNULL(BCOURSE, '') AS BCOURSE,
+				  IFNULL(SALADBAR, '') AS SALADBAR,
+				  IFNULL(DESSERT, '') AS DESSERT,
+				  IFNULL(TOTALCAL, '') AS TOTALCAL
+		FROM	TBL_MEAL_PLAN
+		WHERE	MEALDATE = #date#
+		AND		COMPANYID = #companyID#
+		AND		TENANT_ID = #tenantID#
+		ORDER BY MEALDATE ASC
 	</select>
 </sqlMap>

@@ -25,7 +25,7 @@
 	<typeAlias  alias="BoardUserScrapContVO" 		type="egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO"/>
 	<typeAlias  alias="BoardUserScrapContListVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO"/>
 	<typeAlias  alias="BoardThumbnailVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO"/>
-	
+	<typeAlias  alias="MealDataVO" 					type="egovframework.ezEKP.ezBoard.vo.MealDataVO"/>
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
 	</resultMap>
@@ -10124,5 +10124,73 @@
 			AND 
 				S.TENANT_ID = #v_TENANTID#
 		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getMealPlanList" parameterClass="Map" resultClass="MealDataVO">
+		SELECT
+				TO_CHAR(MEALDATE, 'YYYY-MM-DD') AS MEALDATE,
+				NVL(ACOURSE, '') AS ACOURSE,
+				NVL(BCOURSE, '') AS BCOURSE,
+				NVL(SALADBAR, '') AS SALADBAR,
+				NVL(DESSERT, '') AS DESSERT,
+				NVL(TOTALCAL, '') AS TOTALCAL
+		FROM
+				TBL_MEAL_PLAN
+		WHERE
+				MEALDATE BETWEEN to_date(#startDate#) AND to_date(#startDate#) + 4
+		AND
+				COMPANYID = #companyID#
+		AND
+				TENANT_ID = #tenantID#
+		ORDER BY
+				MEALDATE ASC
+	</select>
+	
+	<insert id="EzBoardDAO.saveMealplan" parameterClass="MealDataVO">
+		MERGE INTO TBL_MEAL_PLAN target
+		USING (
+				SELECT
+					#mealDate# AS MEALDATE,
+					#aCourse# AS ACOURSE,
+					#bCourse# AS BCOURSE,
+					#saladBar# AS SALADBAR,
+					#dessert# AS DESSERT,
+					#totalCal# AS TOTALCAL,
+					#companyID# AS COMPANYID,
+					#tenantID# AS TENANT_ID
+				FROM dual) source
+		ON (target.MEALDATE = source.MEALDATE
+			AND target.COMPANYID = source.COMPANYID
+			AND target.TENANT_ID = source.TENANT_ID)
+		WHEN MATCHED THEN
+			UPDATE SET
+				target.ACOURSE = source.ACOURSE,
+				target.BCOURSE = source.BCOURSE,
+				target.SALADBAR = source.SALADBAR,
+				target.DESSERT = source.DESSERT,
+				target.TOTALCAL = source.TOTALCAL
+		WHEN NOT MATCHED THEN
+			INSERT (MEALDATE, ACOURSE, BCOURSE, SALADBAR, DESSERT, TOTALCAL, COMPANYID, TENANT_ID)
+			VALUES (source.MEALDATE, source.ACOURSE, source.BCOURSE, source.SALADBAR, source.DESSERT, source.TOTALCAL, source.COMPANYID, source.TENANT_ID)
+	</insert>
+
+	<select id="EzBoardDAO.getTodayLunch" parameterClass="Map" resultClass="MealDataVO">
+		SELECT
+				TO_CHAR(MEALDATE, 'YYYY-MM-DD') AS MEALDATE,
+				NVL(ACOURSE, '') AS ACOURSE,
+				NVL(BCOURSE, '') AS BCOURSE,
+				NVL(SALADBAR, '') AS SALADBAR,
+				NVL(DESSERT, '') AS DESSERT,
+				NVL(TOTALCAL, '') AS TOTALCAL
+		FROM
+				TBL_MEAL_PLAN
+		WHERE
+				MEALDATE = #date#
+		AND
+				COMPANYID = #companyID#
+		AND
+				TENANT_ID = #tenantID#
+		ORDER BY
+				MEALDATE ASC
 	</select>
 </sqlMap>

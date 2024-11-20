@@ -1699,4 +1699,26 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("testConnectPortletJSON End");
 		return xml;
 	}
+
+	/**
+	 * 포틀릿 - 식단 포틀릿
+	 */
+	@RequestMapping(value = "/ezNewPortal/mealPlanPortlet.do", method=RequestMethod.GET)
+	public String mealPlanPortlet(HttpServletRequest req, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("mealPlanPortlet started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = request.getParameter("portletId");
+		String portletName = request.getParameter("portletName");
+
+		model.addAttribute("portletId", portletId);
+		model.addAttribute("portletName", portletName);
+		model.addAttribute("companyID", userInfo.getCompanyID());
+		model.addAttribute("tenantID", userInfo.getTenantId());
+		
+		logger.debug("mealPlanPortlet ended.");
+		
+		return "/ezNewPortal/portlets/mealPlanPortlet";
+	}
+	
 }

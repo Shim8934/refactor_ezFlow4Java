@@ -182,6 +182,11 @@
 		            }
 		        }
 		        leftResize();
+		        
+		        if (RedirectBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
+		    		goMealPlanTable();
+		        }
+		        
 		        $(".boardListBox").mCustomScrollbar({
 	        		theme : "dark"
 	        	});	
@@ -1318,6 +1323,17 @@
 				}
 				h2Selected(h2);
 			}
+			
+			function goMealPlanTable() {
+
+				// setH2Selected('mealPlan');
+				h2Selected('mealPlan');
+				if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/mealPlanView.do";
+				} else {
+					window.parent.frames["right"].location.href = "/ezBoard/mealPlanView.do";
+				}
+			}
 	    </script>
 	</head>
 	<body class="newLeft">
@@ -1419,10 +1435,13 @@
 	                           	<span class="sub_iconLNB tree_plus"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount">(${applyCount})</span>
 	                        </h2>
                     	</c:if>
+						<h2 id="mealPlan" onclick="goMealPlanTable()">
+							<span class="h2Title"><spring:message code='ezMealPlan.jsb001' /></span>
+						</h2>
 			        </ul>
-				</div>	
-			</div>	        
-	    </div>
+				</div>
+			</div>
+		</div>
 	    <%-- 
 	<body class="leftbody" style="overflow: auto; height:100%">
 	    <div id="left" style="overflow-x: hidden; overflow-y: auto;">

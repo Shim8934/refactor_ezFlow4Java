@@ -55,6 +55,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.vo.MealDataVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
@@ -2580,6 +2581,47 @@ public class MBoardGWController {
 
 		logger.debug("saveItemStarRating ended");
 		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 게시판 [GET] 오늘의 식단 가져오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/mealPlan/{startDate}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getMealPlan(@PathVariable String startDate,HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mealPlan/{startDate}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userID");
+
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+
+			logger.debug("serverName = " + serverName + " | primary = " + primary);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("startDate", startDate);
+			map.put("companyID", request.getParameter("companyID"));
+			map.put("tenantID", request.getParameter("tenantID"));
+
+			List<MealDataVO> mealDataList = ezBoardService.getMealPlanList(map);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", mealDataList);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mealPlan/{startDate}] ended.");
+
 		return result;
 	}
 }
