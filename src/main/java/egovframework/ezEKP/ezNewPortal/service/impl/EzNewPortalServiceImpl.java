@@ -3878,6 +3878,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 				
 				data.put("portletDataStr", result);
+			} else if (connectionData.get("portletType") != null && connectionData.get("portletType").equals("custom")) {
+				// custom한 경우에는 모든 정보를 보낸다.
+				data = connectionData;
 			}
 			
 			returnObj.put("status", "ok");

@@ -571,4 +571,7 @@ public interface EzCommonService {
 	public void addMemberDeptIdScheduleGatherMember() throws Exception;
 	
 	public void createTblBoardStarRating() throws Exception;
+	
+	// 2025-01-15 조수빈 - 식단 테이블 생성
+	public void createMealPlanTable() throws Exception;
 }

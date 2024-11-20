@@ -477,6 +477,13 @@
 		       	}
 		    }
 		    
+		    function manageMealPlan() {
+				window.open('/admin/ezBoard/boardACL.do?parentNeed=Y&boardID=%7BMMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM%7D&parentBoardID=None&accessLevel=1', 'board_main');
+	            $("h2.on").attr("class","off");
+	            $("#TopBoard .lnbUL").attr("class","lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
+                $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+		    }
 	    </script>
 	</head>
 	<body class="newLeft">
@@ -492,6 +499,9 @@
 	        <div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 	        	<div class="lnb_lay">
 		        	<div id="TopBoard"></div>
+		        	<h2 id="mealPlan" onclick="manageMealPlan()">
+						<span class="h2Title"><spring:message code='ezMealPlan.jsb001' /></span>
+					</h2>
 		        	<ul class="lnbUL">
                        	<li><span class="list_text" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></li>
                        	<li><span class="list_text" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t60" /></span></li>

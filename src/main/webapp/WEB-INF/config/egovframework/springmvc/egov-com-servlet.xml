@@ -233,6 +233,7 @@
             <mvc:mapping path="/rest/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolder/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolderadmin/**"/>
+			<mvc:exclude-mapping path="/rest/MenuSchedule"/>
 		    <bean class="egovframework.com.cmm.interceptor.MAuthenticInterceptor" />
         </mvc:interceptor>    
 

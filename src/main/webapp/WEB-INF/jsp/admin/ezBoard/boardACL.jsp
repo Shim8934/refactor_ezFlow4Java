@@ -45,6 +45,10 @@
 	
 	        window.onload = function () {
 	            FillAccessList();
+	            
+	            if (pBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
+	            	PostSpan.style.display = "none";
+	            }
 	        }
 	
 	        /* 2018-07-19 홍승비 - 권한설정 정보 리스트로 표출하는 분기 스크립트 오류 수정 */
@@ -293,6 +297,10 @@
 	                reply_OK.checked = true;
 	                delete_OK.checked = true;
 	                PostSpan.style.display = "";
+	                
+		            if (pBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
+		            	PostSpan.style.display = "none";
+		            }
 	
 	                access_NO.checked = false;
 	                list_NO.checked = false;
@@ -375,6 +383,11 @@
 	            if (pSrcElementID == "admin_NO" && admin_NO.checked == false) {
 	                admin_OK.checked = true;
 	                PostSpan.style.display = "";
+	                
+		            if (pBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
+		            	PostSpan.style.display = "none";
+		            }
+		            
 	                PostNotice.checked = false;
 	            }
 	            if (pSrcElementID == "access_NO" && access_NO.checked) access_OK.checked = false;
@@ -577,6 +590,11 @@
 	            if (getNodeText(SelectNodes(xmldom, "NODES/NODE/BOARDADMIN")[0]) == "true") {
 	                admin_OK.checked = true;
 	                PostSpan.style.display = "";
+	                
+		            if (pBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
+		            	PostSpan.style.display = "none";
+		            }
+		            
 	                PostNotice.checked = false;
 	            } else {
 	                admin_NO.checked = true;

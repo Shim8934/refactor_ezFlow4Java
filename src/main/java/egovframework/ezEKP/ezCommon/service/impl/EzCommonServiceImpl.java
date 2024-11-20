@@ -4789,4 +4789,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createTblBoardStarRating() throws Exception {
         ezCommonDAO.createTblBoardStarRating();
     }
+    
+	@Override
+	public void createMealPlanTable() throws Exception {
+		ezCommonDAO.createMealPlanTable();
+	}
 }

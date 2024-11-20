@@ -17,11 +17,13 @@ import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -35,6 +37,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -83,6 +87,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.MealDataVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -95,7 +100,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
-
+import org.json.simple.JSONObject;
 import org.w3c.dom.NodeList;
 
 @Service("EzBoardService")
@@ -5686,6 +5691,44 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.updateDelParentReply(map);
 		ezBoardDAO.deleteCommentAttach(map);
 	}
+
+	@Override
+	public List<MealDataVO> getMealPlanList(Map<String, Object> map) throws Exception {
+		List<MealDataVO> resList = ezBoardDAO.getMealPlanList(map);
+		
+		if (null == resList || resList.size() < 1) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate sDate = LocalDate.parse((String) map.get("startDate"), formatter);
+			
+			for (int i  = 0; i < 5; i++) {
+				LocalDate currentDate = sDate.plusDays(i);
+				MealDataVO vo = new MealDataVO();
+				vo.setMealDate(currentDate.toString());
+				vo.setaCourse("");
+				vo.setbCourse("");
+				vo.setSaladBar("");
+				vo.setDessert("");
+				vo.setTotalCal("");
+				
+				resList.add(vo);
+			}
+		}
+		return resList;
+	}
+
+	@Override
+	public String saveMealPlan(List<MealDataVO> mealInputList) throws Exception {
+		try {
+			
+			for (MealDataVO vo : mealInputList) {
+				ezBoardDAO.saveMealplan(vo);
+			}
+			
+			return "true";
+		} catch (Exception e) {
+			return "false";
+		}
+	}
 	
 	/* 2023-04-06 기민혁 - 싫어요 버튼 클릭시 정보 insert 메서드 */
 	@Override
@@ -7236,5 +7279,33 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		result.put("averageScore", updateAverageScore);
 		
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getMenuSchedule(Map<String, Object> map, JSONObject returnJson) throws Exception {
+
+		SimpleDateFormat orgDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+		SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String orgStartDate = (String) map.get("date");
+
+		if (orgStartDate == null || "".equals(orgStartDate)) { // 값이 없으면 오늘 날짜 지정
+			orgStartDate = orgDateFormat.format(new Date());
+		}
+
+		orgStartDate = newDateFormat.format(orgDateFormat.parse(orgStartDate));
+		map.put("startDate", orgStartDate);
+		
+		MealDataVO lunch = ezBoardDAO.getTodayLunch(map);
+
+		if (lunch != null) {
+			returnJson.put("RTNVALUE", "OK");
+			returnJson.put("lunch", lunch);
+		} else {
+			returnJson.put("RTNVALUE", "NO_MENU");
+		}
+
+		return returnJson;
+
 	}
 }

@@ -30,6 +30,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO;
 import egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezBoard.vo.MealDataVO;
 import egovframework.let.user.login.vo.LoginVO;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -1218,4 +1219,16 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (HashMap<String, Object>) select("EzBoardDAO.getItemStarRating", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<MealDataVO> getMealPlanList(Map<String, Object> map) throws Exception{
+		return (List<MealDataVO>) list("EzBoardDAO.getMealPlanList", map);
+	}
+
+	public void saveMealplan(MealDataVO vo) throws Exception{
+		insert("EzBoardDAO.saveMealplan", vo);
+	}
+
+	public MealDataVO getTodayLunch(Map<String, Object> map) {
+		return (MealDataVO) select("EzBoardDAO.getTodayLunch", map);
+	}
 }

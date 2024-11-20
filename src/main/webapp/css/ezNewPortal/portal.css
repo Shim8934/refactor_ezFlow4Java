@@ -2458,3 +2458,12 @@ div.orbit img{border-radius:5px;}
 /* 게시판 공개 비공개 */
 .board_private{background:url(/images/lock_icon.png) no-repeat center; background-size:contain; width: 16px;height: 16px; display: inline-block;vertical-align: text-bottom;}
 /* 게시판 공개 비공개 */
+
+
+.mealPlan_contents{padding:10px 0 0; overflow-y:hidden !important; height:calc(100% - 53px); box-sizing:border-box;}
+.mealPlanlist{margin:0px; padding:0px 20px; list-style:none; clear:both; overflow-y:auto; height:calc(100% - 10px);}
+.mealPlan_portlet .portlet_title .portletText{width:130px;}
+.mealPlan_portlet .mealPlan_calendal{margin:0px; padding:12px 12px 0px 10px; float:right; overflow:hidden; position:relative; line-height:normal;}
+.mealPlan_portlet .mealPlan_calendal .DatePicker_class{height:30px; margin:0px; width:110px; text-align:center; vertical-align:top; border:1px solid #E2E2E2; border-radius:6px;}
+.mealPlan_portlet input{box-sizing:border-box; border:1px solid #dedede; font-size:13px; color:#444; text-decoration:none; outline:none;}
+.mealPlan_portlet .mealPlan_calendal img{position:absolute; right:18px; top:19px; margin:0px 0px 0px 0px; padding:0px 0px 0px 0px; cursor:pointer;}

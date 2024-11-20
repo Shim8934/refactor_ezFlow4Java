@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import org.json.simple.JSONObject;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
@@ -23,6 +24,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezBoard.vo.MealDataVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -569,4 +571,13 @@ public interface EzBoardService {
 	public Map<String, Object> getItemStarRating(String itemID, String userID, int tenantID) throws Exception;
 	
 	public Map<String, Object> saveItemStarRating(String itemID, String isReRated, int updateRating, LoginVO userInfo) throws Exception;
+	
+	// 2025-01-22 조수빈 - 식단 데이터 반환 메소드
+	public List<MealDataVO> getMealPlanList(Map<String, Object> map) throws Exception;
+
+	// 2025-01-22 조수빈 - 식단 데이터 저장 및 업데이트 메소드
+	public String saveMealPlan(List<MealDataVO> mealInputList) throws Exception;
+
+	public JSONObject getMenuSchedule(Map<String, Object> map, JSONObject returnJson) throws Exception;
+
 }
