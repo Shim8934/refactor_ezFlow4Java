@@ -11108,7 +11108,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
-		logger.debug("docID : " + docID);
+		logger.debug("delCirculation docID : " + docID);
 
 		ezApprovalGService.delCirculation(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -13376,6 +13376,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		userInfo.setRealPath(realPath);
 		String useOpenGov = config.getProperty("config.useOpenGov");
+		String docIDsForGongram = ""; // 일괄접수 시 공람 기능 대응 > 정상 접수된 docID 저장 변수
 		
 		if (xmlDom.getElementsByTagName("DOCID").getLength() > 0) {
 			totCnt = xmlDom.getElementsByTagName("DOCID").getLength(); // 결재 체크된 문서 갯수 확인
@@ -13449,6 +13450,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				
 				if (res.contains("TRUE")) {
 					trueCnt++;
+					
+					// 일괄접수 성공한 문서에 대하여 DOCID를 저장
+					if (res.contains("<DOCID>") && res.contains("</DOCID>")) {
+						docIDsForGongram += (res.split("<DOCID>")[1].split("</DOCID>")[0] + ";");
+					}
 				} else if (res.contains("EXCL")) {
 					exclCnt++;
 				} else {
@@ -13456,11 +13462,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			}
 			
+			/* 2024-11-18 홍승비 - 전자결재 G > 일괄접수 시에도 공람 기능이 정상 동작하도록 수정, 리턴값에 정상 접수된 docID 이어붙여 전달 */
 			// 2024-04-09 조수빈 - 성공한 건이 0, 예외도 0, 실패가 0 이상일 때에만 실패로 반환. 
 			if (trueCnt == 0 && exclCnt == 0) {
 				rtnVal = "ERR/" + totCnt + "/" + trueCnt + "/" + falseCnt + "/" + exclCnt;
 			} else {
-				rtnVal = "OK/" + totCnt + "/" + trueCnt + "/" + falseCnt + "/" + exclCnt;
+				rtnVal = "OK/" + totCnt + "/" + trueCnt + "/" + falseCnt + "/" + exclCnt + "/" + docIDsForGongram;
 			}
 		}
 		
@@ -13526,7 +13533,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return docList;
 	}
 	
-	/* 2024-10-04 홍승비 - 전자결재 버전 플래그(ApprovalFlag) 테넌트 컨피그값을 가져오는 AJAX 호출용 메서드 추가 */
+	/**
+	 * 2024-10-04 홍승비 - 전자결재 버전 플래그(ApprovalFlag) 테넌트 컨피그값을 가져오는 AJAX 호출용 메서드 추가
+	 */
 	@RequestMapping(value = "/ezApprovalG/getApprovalFlag.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String getApprovalFlag(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
@@ -13537,5 +13546,55 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("getApprovalFlag ended");
 		return approvalFlag;
+	}
+	
+	/**
+	 * 2024-11-18 홍승비 - 전자결재 G > 일괄접수 시에도 공람 기능이 정상 동작하도록 전용 메서드 분리 (일괄접수자전결 시에는 공람자 지정 불가능)
+	 */
+	@RequestMapping(value = "/ezApprovalG/gongRamSave_receiptAll.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String gongRamSave_receiptAll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("gongRamSave_receiptAll started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String[] docIDArr = request.getParameterValues("docIDArr[]"); // 공람문서를 생성할 docID 배열 (일괄접수가 정상 완료된 문서들)
+		String xmlPara = request.getParameter("xmlPara");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String result = "";
+		String docAprOrEndStr = "";
+		
+		// 전달받은 docID 배열에 대해 루프하며 공람문서 생성, 내부에서 예외가 발생하는 경우 catch 없이 상위로 예외를 throw
+		if (xmlPara.contains("<DATA name='DocID'>")) { // 태그 및 문자열 패턴은 공람정보 생성시부터 고정되므로 그대로 사용 (Lineinfo.js > APRLINEXMLParsingCC 함수 참고)
+			Pattern pattern = Pattern.compile("(<DATA name='DocID'>)(.*?)(</DATA>)"); // 정규식으로 그룹핑하여 xml 문자열에 고정된 docID 추출
+			Matcher matcher = pattern.matcher(xmlPara);
+			
+			if (matcher.find()) {
+				for (int i = 0; i < docIDArr.length; i++) {
+					if (!"".equals(docIDArr[i])) {
+	    				// docID가 아닌 다른 값을 교체하지 않도록 교체할 문자열 패턴은 엄격하게 제어 (matcher.replaceAll() 사용 시 matcher값이 초기화되므로 주의)
+	    				String tempXmlPara = xmlPara.replace(("<DATA name='DocID'>" + matcher.group(2).trim() + "</DATA>"), ("<DATA name='DocID'>" + docIDArr[i] + "</DATA>"));
+	    				
+	        			// 공람발송할 문서가 진행중인지 완료인지 확인 (APR / END) 
+	        			docAprOrEndStr = ezApprovalGService.getAprOrEndStr(docIDArr[i], userInfo.getCompanyID(), userInfo.getTenantId());
+	        			
+	        			if ("APR".equals(docAprOrEndStr)) {
+	        				result = ezApprovalGService.gongRamSaveIng(commonUtil.convertStringToDocument(tempXmlPara), dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+	        			} else {
+	        				result = ezApprovalGService.gongRamSaveEnd(commonUtil.convertStringToDocument(tempXmlPara), dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+	        			}
+					}
+				}
+			}
+		}
+		
+		logger.debug("gongRamSave_receiptAll ended, result = " + result);
+		
+		return result;
 	}
 }

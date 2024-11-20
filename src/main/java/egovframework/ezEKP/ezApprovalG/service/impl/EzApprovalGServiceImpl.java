@@ -36868,6 +36868,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+		/* 2024-11-18 홍승비 - 전자결재 G > 일괄접수 시에도 공람 기능이 정상 동작하도록 수정, 리턴값에 각 docID 이어붙여 전달 */
+		resultVal += "<DOCID>" + docID + "</DOCID>";
+		
 		logger.debug("receiptAll_HWP result: " + resultVal);
 		logger.debug("receiptAll_HWP ended");
 		
@@ -37353,6 +37356,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resetSusinDoc(orgDocID, docID, userInfo.getDeptID(), userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 			}
 		}
+		
+		/* 2024-11-18 홍승비 - 전자결재 G > 일괄접수 시에도 공람 기능이 정상 동작하도록 수정, 리턴값에 각 docID 이어붙여 전달 */
+		resultVal += "<DOCID>" + docID + "</DOCID>";
 		
 		logger.debug("receiptAll_MHT result: " + resultVal);
 		logger.debug("receiptAll_MHT ended.");
