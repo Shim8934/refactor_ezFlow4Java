@@ -2465,7 +2465,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 		for (int i=0; i<brdID.split(",").length; i++) {
 			delResData(brdID.split(",")[i], companyID, tenantID);
-			deleteAttachFiles(brdID, realPath, companyID, tenantID);
+			deleteAttachFiles(brdID.split(",")[i], realPath, companyID, tenantID);
 		}
 		return true;
 	}
