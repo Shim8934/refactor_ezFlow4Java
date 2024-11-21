@@ -2596,6 +2596,8 @@
 				A.TENANT_ID = #tenant_id#
 			AND
 				A.BRD_COMPANY = #brd_company#
+			AND
+				A.APPROVEFLAG != 2
 		]]>
 	</select>
 
