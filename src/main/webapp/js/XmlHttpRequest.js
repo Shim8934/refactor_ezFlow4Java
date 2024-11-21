@@ -2263,3 +2263,15 @@ function setColorMode() {
 document.addEventListener('DOMContentLoaded', function() {
     setColorMode();
 });
+
+// 2024-11-21 한태훈 > resize시 dim처리된 layer판넬 위에 표출 되는 알림창의 위치 가운데로 재설정
+function adjustLayerAlertPosition(alertElemId) {
+	var iframePanel = document.getElementById(alertElemId);
+	if (!!iframePanel && iframePanel.style.display != "none") {
+		var iframePanelHeight = iframePanel.offsetHeight;
+		var iframePanelWidth = iframePanel.offsetWidth;
+    	var alertPostion = DivPopUpPosition(iframePanelWidth, iframePanelHeight);
+    	iframePanel.style.top = alertPostion[0] + "px";
+    	iframePanel.style.left = alertPostion[1] + "px";
+	}
+}
