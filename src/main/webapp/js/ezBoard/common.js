@@ -1368,6 +1368,8 @@ function fileupload(mode) {
                     attachListDom.append(fileDomObj);
                 }
             }
+			// 업로드 후 file input 객체 초기화
+			document.getElementById(mode).value = null;
         },
         error : function(e) { 
             console.log(e); 
