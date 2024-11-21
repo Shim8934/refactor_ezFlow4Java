@@ -1,5 +1,5 @@
 var mainType = {
-	//mail : "メール",	
+	mail : "メール",	
 	approval : "決済",	
 	board : "掲示板",	
 	schedule : "スケジュール",
@@ -14,6 +14,7 @@ var mainType = {
 }
 
 var subType = {
+	mail : {},
 	approval : {
 		arrive : "文書到着",
 		complete : "文書完了",

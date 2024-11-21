@@ -231,7 +231,7 @@
 					if (noti.mainType.toLowerCase() == "noti" && noti.subType.toLowerCase() == "emergency") {
 						str += '<span class="emergency">' + '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] +'] </span>';
 					} else if (noti.mainType.toLowerCase() != "etc") {
-					 	str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : '';
+					 	str += (noti.subType && noti.subType.trim() !== "") ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : '';
 					}
 					str += ConvertCharToEntityReference(noti.notiContent) + '</p>';
                     str += '<span class=\"list_del blind\" onclick="updateNoti(\'delete\')"></span>';

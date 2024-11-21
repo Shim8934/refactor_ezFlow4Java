@@ -752,15 +752,28 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					messageJson.put("receivedt", receivedDateStr);
 					messageJson.put("receivedt2", receivedDateStr2);
 					
-					int mailSize = 0;
+					// size
+					String mailSize = "";
 					
-					// 메일 중요도
 					try {
-						mailSize = Integer.parseInt(mailInfo.get("MAIL_SIZE"));
+						int size = Integer.parseInt(mailInfo.get("MAIL_SIZE"));
+
+						if (size < 1000) {
+							mailSize = size + "B";
+						} else {
+							size = Math.round((float) size / 1024);
+
+							if (size > 1000) {
+								size = Math.round((float) size / 1024);
+								mailSize = size + "MB";
+							} else {
+								mailSize = size + "KB";
+							}
+						}
+
 					} catch (Exception ex) {						
 					}
 					
-					// size
 					messageJson.put("size", mailSize);
 					
 					// read/unread
@@ -949,7 +962,24 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					messageJson.put("receivedt2", receivedDateStr2);
 					
 					// size
-					messageJson.put("size", message.getSize());
+					int size = message.getSize();
+					
+					String mailSize = "";
+					
+					if (size < 1000) {
+						mailSize = size + "B";
+					} else {
+						size = Math.round((float) size / 1024);
+						
+						if (size > 1000) {
+							size = Math.round((float) size / 1024);
+							mailSize = size + "MB";
+						} else {
+							mailSize = size + "KB";
+						}
+					}
+					
+					messageJson.put("size", mailSize);
 					
 					// read/unread
 					int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
@@ -6266,8 +6296,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/quota", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object getQuotaInfo(HttpServletRequest request, @PathVariable String userId) throws Exception {
+	@RequestMapping(value={"/mobile/ezemail/users/{userId:.+}/quota", "/mobile/ezemail/users/{userId:.+}/quota/{shareId:.+}"}, method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getQuotaInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable(value = "shareId", required = false) String shareId) throws Exception {
 		logger.debug("MOBILE G/W MAIL getQuotaInfo started.");
 		logger.debug("userId=" + userId);
 			
@@ -6284,6 +6314,18 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String password = jspw;
 		
 			Locale locale = new Locale("ko");	
+	
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", info.getTenantId());
+			
+			if (useSharedMailbox.equals("YES") && shareId != null) {
+				if(!ezEmailService.checkUserShareId(info.getUserId(), shareId, info.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailGetUse ended.");
+
+					return "";
+				}
+				userEmail = shareId + "@" + domainName;
+			}
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);

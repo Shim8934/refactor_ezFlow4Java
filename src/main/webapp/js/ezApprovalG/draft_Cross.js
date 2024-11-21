@@ -4930,5 +4930,27 @@ function SReAprLineSingMapping(ret) {
 		
 		hIdx++;
 	}
-	
+}
+
+var checkJobTransferStatus = function(id, deptId, jobId) {
+    var result = false;
+    $.ajax({
+        type : "GET",
+        async : false,
+        url : "/ezApprovalG/checkJobTransferStatus.do",
+        dataType: "text",
+        data : {
+            id: id,
+            deptID : deptId,
+            jobId : jobId
+        },
+        success: function() {
+            result = true;
+        }, error : function (e) {
+            alert(e.responseText);
+            result = false;
+        }
+    });
+
+    return result;
 }

@@ -70,6 +70,7 @@
 		    var Write_FG = "${boardInfo.write_FG}";
 		    var Reply_FG = "${boardInfo.reply_FG}";
 		    var Delete_FG = "${boardInfo.delete_FG}";
+		    var Edit_FG = "${boardInfo.edit_FG}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pReservedItem = "${pReservedItem}";
 		    var g_progresswin;
@@ -704,7 +705,7 @@
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
 		        }
-		        if (strWriterID != SSUserID && gubun != "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && Edit_FG != "true") {
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
 		        }
@@ -720,7 +721,7 @@
 				}
 	            
 		        //익명게시판
-		        if (gubun == "2") {
+		        if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments = new Array();
 		                checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
@@ -728,23 +729,16 @@
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
-		                var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
-		                feature = feature + GetShowModalPosition(470, 200);
 		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		                if (ret == "NO") {
 		                    alert("<spring:message code='ezBoard.t267' />");
 		                    return;
 		                }
-		
-	                    window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
-		                window.resizeTo(785, 780);
 		            }
 		        }
-		        if (gubun != "2") {
-	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
-		            window.resizeTo(785, 780);
-		        }
+				window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
+				window.resizeTo(785, 780);
 		    }
 		    function btn_Modify_Onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
@@ -761,7 +755,7 @@
 		    /* 2018-07-11 홍승비 - 게시물 복사 시 guBun 파라미터 추가 */
 			var copyboarditem_cross_dialogArguments = new Array();
 		    function btn_Copy_Onclick() {
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && Edit_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202' />");
 				    return;
 		        }
@@ -796,7 +790,7 @@
 		    /* 2018-07-11 홍승비 - 게시물 이동 시 guBun 파라미터 추가 */
 		    var moveboarditem_cross_dialogArguments = new Array();
 		    function btn_Move_Onclick() {
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && Edit_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202' />");
 				    return;
 		        }

@@ -75,6 +75,7 @@
 				var Write_FG = "${boardInfo.write_FG}";
 				var Reply_FG = "${boardInfo.reply_FG}";
 				var Delete_FG = "${boardInfo.delete_FG}";
+				var Edit_FG = "${boardInfo.edit_FG}";
 				var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 				var g_progresswin;
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
@@ -942,7 +943,7 @@
 	        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
 	        				</c:if>
 							<!--		강민수92 end -->
-		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || boardItem.writerID == userInfo.id}">
+		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerID == userInfo.id && boardInfo.edit_FG == 'true')}">
 			                    <li ID='btn_Modify' ><span  onclick="btn_movieMod()"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t316'/></span></li>
 			                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
 			                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>

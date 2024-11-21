@@ -1556,7 +1556,6 @@
 			}
 
 			function reportHackingMessage_complete(rtn) {
-				console.log(rtn)
 				$(parent.frames["left"].document.getElementById("blockLeft")).remove();
 				var message = rtn['message'];
 				var szItemID = rtn['szItemID'];
@@ -1582,7 +1581,7 @@
 
 						if (pRtnMessage.indexOf("NO COPY processing failed.") > -1) {
 							alert(strLang241);
-						} else if ("OK") {
+						} else if (pRtnMessage.indexOf("OK") > -1) {
 							MailListRefresh();
 							prevShow_Clear();
 							alert("<spring:message code='ezEmail.zno003' />");

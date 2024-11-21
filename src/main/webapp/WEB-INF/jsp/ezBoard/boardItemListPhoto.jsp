@@ -74,6 +74,7 @@
 		    var Write_FG = "${boardInfo.write_FG}";
 		    var Reply_FG = "${boardInfo.reply_FG}";
 		    var Delete_FG = "${boardInfo.delete_FG}";
+			var Edit_FG = "${boardInfo.edit_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pSortBy = "<c:out value='${boardInfo.sortBy}'/>";
