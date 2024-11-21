@@ -188,6 +188,7 @@ function sendEmergencyNoti() {
 		success : function(result) {
 			if (result == "false") {
 				alert('<spring:message code="ezNotification.hth83"/>');
+				return;
 			}
 			alert('<spring:message code="ezNotification.hth66"/>');
 			moveToNotiMain();
