@@ -2054,6 +2054,14 @@
 		
 		    function btnSaveServer_onclick(AutoSave) //(한양대 20111117)
 		    {
+				if (!!checkJobTransferStatus &&
+						!checkJobTransferStatus("<c:out value ='${userInfo.id}'/>",
+								"<c:out value ='${userInfo.deptID}'/>",
+								"<c:out value ='${userInfo.jobId}'/>")) {
+					window.close();
+					return;
+				}
+				
 		        var fields = message.GetFieldsList();
 		        var pTmpDocTitle = trim(message.GetDocTitle());
 		
