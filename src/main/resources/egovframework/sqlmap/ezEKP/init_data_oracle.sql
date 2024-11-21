@@ -294,7 +294,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 -- 게시판 첨부파일 미리보기 옵션 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useBoardFilePrvw', '게시판 첨부파일 미리보기 기능 사용 여부', '1', '게시판 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용 (default: 0)', TO_DATE('2023-06-29 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '게시판');
 -- 권한을 겸직/사용자 기준으로 설정 옵션 컨피그 추가
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'permissionBasisDeptYN', '조직도 권한부여 기준 설정', 'N', '조직도 > 권한 설정 시 Y: 사용자/겸직부서를 기준으로 권한을 부여한다 // N: 사용자만을 기준으로 권한을 부여한다.(Default: N)', TO_DATE('2023-08-16 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '조직도')
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'permissionBasisDeptYN', '조직도 권한부여 기준 설정', 'N', '조직도 > 권한 설정 시 Y: 사용자/겸직부서를 기준으로 권한을 부여한다 // N: 사용자만을 기준으로 권한을 부여한다.(Default: N)', TO_DATE('2023-08-16 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '조직도');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useSecondaryLang', '제2 외국어 기본으로 사용여부', 'NO', '메일 부재설정회신, 용량 경고 메일 등 primarylang이 아닌 무조건 외국어 사용해야하는 컨피그(기본값:no)', TO_DATE('2023-08-03 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '메일');
 --- 메일 개별발신 티폴트 사용여부 옵션 추가
