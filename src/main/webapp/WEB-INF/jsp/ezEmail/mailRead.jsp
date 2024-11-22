@@ -690,8 +690,8 @@
 					}
 				}
 				var tagLayerElement = document.getElementById("layer_select");
-				tagLayerElement.scroll({top:0});
 				if (tagLayerElement) {
+					tagLayerElement.scroll({top:0});
 					var tagLayerStyle = getComputedStyle(tagLayerElement);
 					if (tagLayerStyle.display !== 'none') {
 						document.getElementById("input_wrap").classList.remove("on");
