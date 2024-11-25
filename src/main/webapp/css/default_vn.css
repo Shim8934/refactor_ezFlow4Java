@@ -2921,6 +2921,7 @@ h2, #menu span {font-size: 12px;}
 .surveyTbl {width: 100%; text-algin: center;}
 .surveyTbl th {cursor: pointer !important;}
 .surveyTbl .inputTh {width: 20px;}
+.surveyTbl .numTh {width: 40px;}
 .inputTh >img {vertical-align: middle;}
 .surveyTbl .statusTh {width: 80px; text-align: center;}
 .surveyTbl .noTh   {width: 20px; text-align: center;}

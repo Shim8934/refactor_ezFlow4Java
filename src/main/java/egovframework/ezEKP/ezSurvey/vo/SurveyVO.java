@@ -40,6 +40,8 @@ public class SurveyVO {
 	private int popupFlag;
 	private int mailSentFlag;
 	private int totalNotiSentFlag;
+	private String participants; // 참여자수
+	private String participation; // 참여여부 (1, 0)
 	
 	public int getUpdateMode() {
 		return updateMode;
@@ -313,4 +315,20 @@ public class SurveyVO {
 		this.totalNotiSentFlag = totalNotiSentFlag;
 	}
 	
+
+	public String getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(String participants) {
+		this.participants = participants;
+	}
+
+	public String getParticipation() {
+		return participation;
+	}
+
+	public void setParticipation(String participation) {
+		this.participation = participation;
+	}
 }
