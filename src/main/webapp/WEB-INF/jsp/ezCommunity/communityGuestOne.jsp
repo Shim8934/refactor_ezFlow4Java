@@ -40,6 +40,11 @@
 				margin : 0 10px;
 				color:gray;
 			}
+			
+			.contText {
+				word-wrap: break-word;
+				white-space: pre-wrap;
+			} 
 		</style>
 
 		<script type="text/javascript">
