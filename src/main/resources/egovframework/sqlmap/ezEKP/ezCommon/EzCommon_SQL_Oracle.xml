@@ -6561,4 +6561,22 @@
 				ATTACHMENTS NVARCHAR2(10) DEFAULT NULL
 		]]>
     </statement>
+
+	<select id="EzCommonDAO.checkIsDeleteBlock" resultClass="String">
+        <![CDATA[
+		SELECT
+			ISDELETEBLOCK
+		FROM
+			TBL_SYSTEMCONFIG
+		WHERE
+			ROWNUM <= 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.createIsDeleteBlock">
+		ALTER TABLE
+			ISDELETEBLOCK
+		ADD
+		   ISDELETEBLOCK CHAR(1) DEFAULT 'N'
+	</statement>
 </sqlMap>

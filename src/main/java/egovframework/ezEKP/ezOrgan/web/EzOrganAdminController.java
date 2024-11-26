@@ -332,7 +332,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertDotNetTotalNotificationConfig(); // 2024-08-21 유길상 닷넷 통합알림 컨피그
 			ezCommonService.updateInProcessJpCodeName3(); // 2024-08-22 유길상 - CODELIST > a04(진행) 일본어 변경 
 			ezCommonService.createServeyResultviewPermTbl(); // 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 테이블 추가
-            ezCommonService.createSystemConfig(); // 2024-07-22 한태훈 - tbl_systemconfig, tbl_systemconfig_type 
+            ezCommonService.createSystemConfig(); // 2024-07-22 한태훈 - tbl_systemconfig, tbl_systemconfig_type
+            ezCommonService.addIsDeleteBlockToSytemConfig();
             ezCommonService.createConnectionMenu(); // 2024-07-22 한태훈 - 연계메뉴 및 연계 포틀릿 기본 시스템 컨피그 추가
             ezCommonService.insertStandardSystemConfigData(); // 2024-07-22 한태훈 - 시스템 컨피그 기본 데이터 추가
             ezCommonService.createEmergencyNotiTable();

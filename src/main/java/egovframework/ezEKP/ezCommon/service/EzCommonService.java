@@ -509,4 +509,7 @@ public interface EzCommonService {
 	public void alterThumbnailExtForTPI() throws Exception;
 	
 	public void alterAttachmentsForCBoard() throws Exception;
+	
+	// 2024-11-26 한태훈 - 시스템 컨피그 > 삭제 차단 컬럼 추가
+	public void addIsDeleteBlockToSytemConfig() throws Exception;
 }

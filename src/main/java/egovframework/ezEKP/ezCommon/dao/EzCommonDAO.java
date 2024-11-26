@@ -3007,4 +3007,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterAttachmentsForCBoard");
 		}
 	}
+
+	public void addIsDeleteBlockToSytemConfig() throws Exception {
+		try {
+			select("EzCommonDAO.checkIsDeleteBlock");
+		} catch (Exception e) {
+			logger.debug("tbl_systemconfig isdeleteblock column doesn't exist. creating the column...");
+			update("EzCommonDAO.createIsDeleteBlock");
+		}		
+	}
 }

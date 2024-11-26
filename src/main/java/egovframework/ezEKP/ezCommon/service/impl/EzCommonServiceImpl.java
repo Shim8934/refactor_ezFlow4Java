@@ -4524,4 +4524,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterAttachmentsForCBoard() throws Exception {
     	ezCommonDAO.alterAttachmentsForCBoard();
     }
+
+	@Override
+	public void addIsDeleteBlockToSytemConfig() throws Exception {
+		ezCommonDAO.addIsDeleteBlockToSytemConfig();
+	}
 }
