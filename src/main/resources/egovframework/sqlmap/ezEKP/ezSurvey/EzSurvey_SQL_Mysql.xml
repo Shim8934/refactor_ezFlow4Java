@@ -216,6 +216,23 @@
 				<isNotEqual property="primary" compareValue="1">user_name2 like concat('%', concat(#creatorName#, '%'))</isNotEqual>
 			</isEqual>
 		</isEqual>
+		<isNotEmpty property="filterStatus">
+			<isNotEqual property="filterStatus" compareValue="ALL" prepend=" and ">
+				<![CDATA[
+				CASE
+					WHEN DRAFT_FLAG = 1
+					   THEN 'TMP'
+					WHEN NOW() < DATE_ADD(START_DATE, INTERVAL #offset# MINUTE)
+					   THEN 'WAIT'
+					WHEN NOW() <= DATE_ADD(END_DATE, INTERVAL #offset# MINUTE)
+					   THEN 'ING'
+					WHEN NOW() > DATE_ADD(END_DATE, INTERVAL #offset# MINUTE)
+					   THEN 'END'
+					ELSE 'END'
+				END  = #filterStatus#
+				]]>
+			</isNotEqual>
+		</isNotEmpty>
 		<isEqual property="searchMode" compareValue="2">
 			<isNotEmpty property="title"       prepend=" and ">title like concat('%', concat(#title#, '%'))</isNotEmpty>
 			<isNotEmpty property="creatorName" prepend=" and ">

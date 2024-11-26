@@ -779,7 +779,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode) throws Exception {
+	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode, String filterStatus) throws Exception {
 		JSONObject result   = new JSONObject();
 		String userId       = userInfo.getId();
 		int tenantId        = userInfo.getTenantId();
@@ -828,6 +828,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			searchVO.setSurveyResultIds(listReceivedResultSurvey);
 			searchVO.setToday(timeUTC);
 		}
+        
+        searchVO.setFilterStatus(filterStatus);
 		
 		totalItems  = ezSurveyDAO.getTotalReceivedSurveyItemsCnt(searchVO);
 		totalPages  = (totalItems + listCntSize - 1) / listCntSize;

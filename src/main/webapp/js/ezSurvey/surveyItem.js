@@ -227,6 +227,9 @@ var SurveyItem = function() {
 		document.getElementById("sltView").addEventListener("click"      , function(e) {toggleOptionView(this);}, false);
 		document.getElementById("listcount").addEventListener("change"   , function(e) {startSearchSurvey("1");}, false);
 		
+		var filterStatus = document.getElementById("filterStatus");
+		if (filterStatus) {filterStatus.addEventListener("change"   , function(e) {startSearchSurvey("1");}, false);}
+		
 		var topFrame    = window.parent.parent.document.getElementById("topFrame"); 
 		var leftFrame   = window.parent.document.getElementsByName("left")[0];
 		var topFrameWd  = topFrame.contentWindow || topFrame.contentDocument;
@@ -400,6 +403,7 @@ var SurveyItem = function() {
 		var orderInf  = surveyTable.getOrderInfo();
 		var listCnt   = document.getElementById("listcount").value;
 		var searchOpt = document.getElementById("searchCheck").value;
+		var filterStatus = document.getElementById("filterStatus") ? document.getElementById("filterStatus").value : "";
 		
 		$.ajax({
 			type: "GET",
@@ -415,7 +419,8 @@ var SurveyItem = function() {
 				order       : orderInf.ord ? orderInf.ord : "",
 				srchMode    : searchMode,
 				srchOption  : searchOpt,
-				listCntSize : listCnt
+				listCntSize : listCnt,
+				filterStatus : filterStatus
 			},
 			dataType: "JSON",
 			async: false,

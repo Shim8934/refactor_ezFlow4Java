@@ -14,6 +14,11 @@
         #ui-datepicker-div {
           width:195px;
         }
+		
+		.select_filter {
+			float: left;
+			margin-right: 3px;
+		}
         </style>
 	</head>
 	<body class="mainbody overY">
@@ -41,6 +46,7 @@
 						<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
 						<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
 						<div class="sub_frameIcon" style="float: right;">
+                            <select name="filterStatus" id="filterStatus" class="select_filter"></select>
 							<div class="sub_frameIconUL">
 								<p class="frameIconLI"><span class="icon16 ${config.previewMode == 'off' ? 'btn_onnoframe'     : 'btn_noframe'}"     id="preViewNone"  ></span></p>
 								<p class="frameIconLI"><span class="icon16 ${config.previewMode == 'h'   ? 'btn_onbottomframe' : 'btn_bottomframe'}" id="preViewBottom"></span></p>
@@ -207,6 +213,28 @@
 						window.parent.frames["left"].SurveyLeft.cancelSurvey(window.parent.frames["left"].document.querySelector('.node_selected').closest('li').id);
 					}
 				}
+
+                var filterStatus = document.getElementById('filterStatus');
+                var optionAll = document.createElement('option');
+                optionAll.value = 'ALL';
+                optionAll.innerText = "<spring:message code='ezSurvey.t81'/>";
+                filterStatus.appendChild(optionAll);
+                var optionTmp = document.createElement('option');
+                optionTmp.value = 'TMP';
+                optionTmp.innerText = SurveyMessages.strDraft;
+                filterStatus.appendChild(optionTmp);
+                var optionWait = document.createElement('option');
+                optionWait.value = 'WAIT';
+                optionWait.innerText = SurveyMessages.strWaiting;
+                filterStatus.appendChild(optionWait);
+                var optionIng = document.createElement('option');
+                optionIng.value = 'ING';
+                optionIng.innerText = SurveyMessages.strProcess;
+                filterStatus.appendChild(optionIng);
+                var optionEnd = document.createElement('option');
+                optionEnd.value = 'END';
+                optionEnd.innerText = SurveyMessages.strFinish;
+                filterStatus.appendChild(optionEnd);
 			}
 			</script>
 	</body>
