@@ -1701,6 +1701,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<PARENTWRITEDATE>" + boardListItem.get(j).get("PARENTWRITEDATE") + "</PARENTWRITEDATE>");
 					resultXML.append("<DOCNO>" + boardListItem.get(j).get("DOCNO") + "</DOCNO>");
 					resultXML.append("<PUBLICFLAG>" + boardListItem.get(j).get("PUBLICFLAG") + "</PUBLICFLAG>");
+					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardListItem.get(j).get("BOARDID"), (String)boardListItem.get(j).get("ITEMID"),
+							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
 					resultXML.append("<EXT>" + commonUtil.cleanValue((String) boardListItem.get(j).get("EXT")) + "</EXT>");
 					resultXML.append("<FILEPATH>" + commonUtil.cleanValue((String) boardListItem.get(j).get("FILEPATH")) + "</FILEPATH>");
     			}
@@ -2088,6 +2090,8 @@ public class EzBoardController extends EgovFileMngUtil{
 							resultXML.append("<DATA13>" + "N" + "</DATA13>");
 						}
 					}
+					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardListItem.get(j).get("BOARDID"), (String)boardListItem.get(j).get("ITEMID"),
+							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
 						
     			}
     			
@@ -2265,6 +2269,8 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<EXT>" + commonUtil.cleanValue((String) noticeList.get(k).get("EXT")) + "</EXT>");
 						resultXML.append("<FILEPATH>" + commonUtil.cleanValue((String) noticeList.get(k).get("FILEPATH")) + "</FILEPATH>");
                         resultXML.append("<PUBLICFLAG>").append(noticeList.get(k).get("PUBLICFLAG")).append("</PUBLICFLAG>");
+						resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)noticeList.get(k).get("BOARDID"), (String)noticeList.get(k).get("ITEMID"),
+								"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
 					}
 					
 					resultXML.append("</CELL>");
@@ -2544,6 +2550,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					/* 2019-04-09 홍승비 - 썸네일게시물 데이터에 제목 추가 */
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<PUBLICFLAG>").append(boardThumbnailList.get(j).get("PUBLICFLAG")).append("</PUBLICFLAG>");
+					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardThumbnailList.get(j).get("BOARDID"), (String)boardThumbnailList.get(j).get("ITEMID"), 
+									"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -3383,6 +3391,8 @@ public class EzBoardController extends EgovFileMngUtil{
                     resultXML.append("<PUBLICFLAG>").append(boardList.get(j).get("PUBLICFLAG")).append("</PUBLICFLAG>");
 					resultXML.append("<EXT>" + commonUtil.cleanValue((String) boardList.get(j).get("EXT")) + "</EXT>");
 					resultXML.append("<FILEPATH>" + commonUtil.cleanValue((String) boardList.get(j).get("FILEPATH")) + "</FILEPATH>");
+					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardList.get(j).get("BOARDID"), (String)boardList.get(j).get("ITEMID"),
+							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -3570,6 +3580,8 @@ public class EzBoardController extends EgovFileMngUtil{
                         resultXML.append("<PUBLICFLAG>").append(noticeList.get(k).get("PUBLICFLAG")).append("</PUBLICFLAG>");
 						resultXML.append("<EXT>" +  commonUtil.cleanValue((String)noticeList.get(k).get("EXT"))  + "</EXT>");
 						resultXML.append("<FILEPATH>" +  commonUtil.cleanValue((String)noticeList.get(k).get("FILEPATH"))  + "</FILEPATH>");
+						resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)noticeList.get(k).get("BOARDID"), (String)noticeList.get(k).get("ITEMID"),
+								"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
 					}
 					resultXML.append("</CELL>");
 				}
@@ -3688,6 +3700,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<FILEPATH>" + commonUtil.cleanValue((String) boardListItem.get(j).get("FILEPATH")) + "</FILEPATH>");
 					resultXML.append("<GUBUN>" + boardListItem.get(j).get("GUBUN") + "</GUBUN>");
 					resultXML.append("<PUBLICFLAG>").append(boardListItem.get(j).get("PUBLICFLAG")).append("</PUBLICFLAG>");
+					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardListItem.get(j).get("BOARDID"), (String)boardListItem.get(j).get("ITEMID"),
+							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
 				}
 				resultXML.append("</CELL>");
 			}

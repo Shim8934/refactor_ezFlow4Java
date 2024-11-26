@@ -858,34 +858,35 @@ function ListView() {
                     if (strValue == "1") {
                     	var fileExt = SelectSingleNodeValue(oCells[0], "EXT");
                     	var filePath = SelectSingleNodeValue(oCells[0], "FILEPATH");
+                    	var ITEMREAD_FG = SelectSingleNodeValue(oCells[0], "ITEMREAD_FG");
                     	var downURL = "/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filePath) +  "&fileName=" + javaURLEncode(fileExt);
                     	var fileExtTypes = fileExt.lastIndexOf('.');
 
                     	if (fileExt.indexOf("MANY") != -1) {
-                    		titleImage = titleImage + "<img src='/images/disk_icon.png' onclick='selectToDownloadFiles(\"" + pBoardID +"\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\")'>";
+                    		titleImage = titleImage + "<img src='/images/disk_icon.png' onclick='selectToDownloadFiles(\"" + pBoardID +"\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
                     	} else if (fileExtTypes !== -1) {
                             var fileExtType = fileExt.slice(fileExtTypes + 1); 
                             if (fileExtType.indexOf("jpg") != -1 || fileExtType.indexOf("jpeg") != -1 || fileExtType.indexOf("bmp") != -1 || fileExtType.indexOf("gif") != -1 || fileExtType.indexOf("png") != -1 || fileExtType.indexOf("tif") != -1 || fileExtType.indexOf("tiff") != -1) {
-                                titleImage = titleImage + "<img src='/images/image.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                                titleImage = titleImage + "<img src='/images/image.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExtType.indexOf("doc") != -1 || fileExtType.indexOf("docx") != -1) {
-                                titleImage = titleImage + "<img src='/images/doc.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                                titleImage = titleImage + "<img src='/images/doc.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExtType.indexOf("xls") != -1 || fileExtType.indexOf("xlsx") != -1) {
-                                titleImage = titleImage + "<img src='/images/xls.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                                titleImage = titleImage + "<img src='/images/xls.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExtType.indexOf("ppt") != -1 || fileExtType.indexOf("pptx") != -1 || fileExtType.indexOf("pps") != -1 || fileExtType.indexOf("ppsx") != -1) {
-                                titleImage = titleImage + "<img src='/images/ppt.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                                titleImage = titleImage + "<img src='/images/ppt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExtType.indexOf("txt") != -1) {
-                                titleImage = titleImage + "<img src='/images/txt.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                                titleImage = titleImage + "<img src='/images/txt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExtType.indexOf("zip") != -1) {
-                                titleImage = titleImage + "<img src='/images/zip.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                                titleImage = titleImage + "<img src='/images/zip.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             }else if (fileExtType.indexOf("pdf") != -1) {
-                                titleImage = titleImage + "<img src='/images/pdf.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                                titleImage = titleImage + "<img src='/images/pdf.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExtType.indexOf("ecm") != -1) {
-                                titleImage = titleImage + "<img src='/images/ecm.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                                titleImage = titleImage + "<img src='/images/ecm.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                     	    } else {
-        		                titleImage = titleImage + "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+        		                titleImage = titleImage + "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                     	    } 
                     	} else {
-        		            titleImage = titleImage + "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+        		            titleImage = titleImage + "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
 						}
                     	
                         strValue = "";
@@ -1807,9 +1808,9 @@ function getOriginXML(pTagetID)
     //alert(xmlHeader + "\r\n" + xmlBody);
 }
 
-function downloadBoardFile(downURL) {
+function downloadBoardFile(downURL, itemRead) {
 	
-    if (Read_FG != "true") {
+    if (Read_FG != "true" || itemRead == "N") {
     	alert(strLang175);
         return;
     }
@@ -1817,9 +1818,9 @@ function downloadBoardFile(downURL) {
 	window.location = downURL;
 }
 
-function selectToDownloadFiles(boardID, itemID) {
+function selectToDownloadFiles(boardID, itemID, itemRead) {
 	
-	if (Read_FG != "true") {
+	if (Read_FG != "true" || itemRead == "N") {
 		alert(strLang175);
 		return;
 	}
