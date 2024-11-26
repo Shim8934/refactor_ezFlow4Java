@@ -11438,14 +11438,10 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		int page = 1;
+		int page = StringUtils.isNotBlank("page") ? Integer.parseInt(request.getParameter("page")) : 1;
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
-
-		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
-			page = Integer.parseInt(request.getParameter("page"));
-		}
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
@@ -11657,16 +11653,12 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		int page = 1;
+		int page = StringUtils.isNotBlank(request.getParameter("page")) ? Integer.parseInt(request.getParameter("page")) : 1;
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String scrapContID = request.getParameter("scrapContID");
 		String scrapContTitle = request.getParameter("scrapContTitle");
-
-		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
-			page = Integer.parseInt(request.getParameter("page"));
-		}
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
@@ -11675,7 +11667,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("use_oneLineCount", "YES");
 		model.addAttribute("scrapContID",scrapContID);
-		model.addAttribute("scrapContTitle",commonUtil.cleanValue(scrapContTitle));
+		model.addAttribute("scrapContTitle", commonUtil.htmlUnescape(scrapContTitle));
 
 		logger.debug("getBoardScrapContItemListView ended");
 		return "ezBoard/boardScrapContItemListView";

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -577,7 +578,7 @@
 		        }
 		
 		        function refresh_onclick() {
-		            window.location.href = "/ezBoard/getBoardScrapContItemListView.do?scrapContID=" + scrapContID + "&scrapContTitle=" +  encodeURIComponent(scrapContTitle);
+		            window.location.href = "/ezBoard/getBoardScrapContItemListView.do?scrapContID=" + scrapContID + "&scrapContTitle=" +  encodeURIComponent(scrapContTitle) + "&page=" + CurPage;
 		        }
 
 		    function MemberInfo_onclick(pUserID, pDeptID) {
@@ -763,7 +764,7 @@
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
-	    <h1>${scrapContTitle}<span id="mailBoxInfo"></span>
+	    <h1><c:out value='${scrapContTitle}'/><span id="mailBoxInfo"></span>
 	        <span class="searchForm">
 	         	<select id="selectType" class="text" style="width:80px; height:27px; border-color: #c8c8c8;">
 					<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>

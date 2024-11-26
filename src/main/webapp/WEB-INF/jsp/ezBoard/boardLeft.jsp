@@ -1224,7 +1224,7 @@
 		         	var treeNode = new TreeNode();
 		            treeNode.LoadFromID(pNodeID);
 		            nodeIdx = pNodeID;
-		            window.parent.frames.right.document.location.href = "/ezBoard/getBoardScrapContItemListView.do?scrapContID=" + escape(treeNode.GetNodeData("DATA1")) + "&scrapContTitle=" + encodeURIComponent(treeNode.NodeName);
+		            window.parent.frames.right.location.href = "/ezBoard/getBoardScrapContItemListView.do?scrapContID=" + escape(treeNode.GetNodeData("DATA1")) + "&scrapContTitle=" + encodeURIComponent(treeNode.NodeName);
 		    }
 		    
 		    /* 2023-05-22 기민혁 - 나의 스크랩함 data 호츌 */
