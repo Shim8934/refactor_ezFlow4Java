@@ -15666,8 +15666,6 @@ CREATE TABLE `jmocha_mail_tag` (
 	) CHARSET=utf8;
 
 
-CREATE SEQUENCE `seq_jmocha_mail_tag` INCREMENT BY 1 MINVALUE 0 MAXVALUE 9999999999999999999999999999;
-
 CREATE TABLE `jmocha_mail_tag_config` (
  `user_name` VARCHAR(100),
  `enable` CHAR(1) NOT NULL,
