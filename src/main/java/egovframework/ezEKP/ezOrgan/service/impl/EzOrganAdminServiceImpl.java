@@ -423,6 +423,21 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("updateProperty ended");
 	}
+	@Override
+	public void updateJobTitleOrder(int jobId, int sortOrder, int tenantID) throws Exception {
+		logger.debug("updateJobTitleOrder started");
+		logger.debug("jobId=" + jobId + ",sortOrder=" + sortOrder + ",tenantID=" + tenantID);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_JOBID", jobId);
+		map.put("v_SORTORDER", sortOrder);
+		map.put("v_TENANTID", tenantID);
+		
+		ezOrganAdminDao.updateJobTitleOrder(map);
+
+		logger.debug("updateJobTitleOrder ended");
+	}
 	
 	@Override
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String deptID) throws Exception {
@@ -1967,7 +1982,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<DATA3>" + jobList.get(i).getSort()  + "</DATA3>");
 				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4></CELL>");
 				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE></CELL>");
-				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
 				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
 				rtnVal.append("</ROW>");
 			}

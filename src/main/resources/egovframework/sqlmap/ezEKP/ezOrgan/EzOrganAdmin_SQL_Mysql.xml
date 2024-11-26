@@ -1278,6 +1278,19 @@
 		]]>
 	</procedure> -->
 	
+	<update id="EzOrganAdminDAO.updateJobTitleOrder" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			TBL_USER_JOBMASTER
+		SET
+			SORT = #v_SORTORDER#
+		WHERE
+			JOBID = #v_JOBID#
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
+	
 	<insert id="EzOrganAdminDAO.retireDBData_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_USERMASTER_RETIRE
