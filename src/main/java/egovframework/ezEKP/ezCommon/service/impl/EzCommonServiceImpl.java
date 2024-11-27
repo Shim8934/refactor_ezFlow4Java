@@ -4439,4 +4439,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addSurveyTotalNotiSentFlag() throws Exception {
 		ezCommonDAO.addSurveyTotalNotiSentFlag();
 	}
+
+    @Override
+    public void createJmochaMailBlocked() throws Exception {
+        ezCommonDAO.createJmochaMailBlocked();
+    }
 }

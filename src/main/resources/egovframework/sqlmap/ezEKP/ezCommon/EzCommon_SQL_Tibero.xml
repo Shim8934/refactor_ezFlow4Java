@@ -6303,4 +6303,22 @@
 		ADD
 			TOTALNOTI_SENT_FLAG NUMBER(4,0) DEFAULT 0
 	</statement>
+    
+    <select id="EzCommonDAO.checkJmochaMailBlocked">
+		<![CDATA[
+		SELECT
+			MESSAGE_ID
+		FROM
+			JMOCHA_MAIL_BLOCKED
+		WHERE
+		    ROWNUM = 1
+		]]>
+	</select>
+
+    <statement id="EzCommonDAO.createJmochaMailBlocked">
+        CREATE TABLE JMOCHA_MAIL_BLOCKED
+        (   MESSAGE_ID VARCHAR(500) NOT NULL,
+            CONSTRAINT PK_JMOCHA_MAIL_BLOCKED PRIMARY KEY (MESSAGE_ID)
+        )
+    </statement>
 </sqlMap>

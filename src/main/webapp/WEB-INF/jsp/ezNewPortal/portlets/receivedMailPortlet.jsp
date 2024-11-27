@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 </head>
 <script type="text/javascript">
 	$(function() {

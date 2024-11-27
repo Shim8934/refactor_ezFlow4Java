@@ -483,4 +483,7 @@ public interface EzCommonService {
 	public void insertAllBoardInfo() throws Exception;
 
 	public void addSurveyTotalNotiSentFlag() throws Exception;
+
+    // 2024-11-14 김승연 메일 열람 차단 테이블 추가
+    public void createJmochaMailBlocked() throws Exception;
 }

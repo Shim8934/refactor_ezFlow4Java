@@ -15677,4 +15677,15 @@ CREATE TABLE `jmocha_mail_tag_config` (
  CONSTRAINT `jmocha_mail_tag_config_check` CHECK (`enable` IN ('0', '1')),
  CONSTRAINT `jmocha_mail_tag_config_check2` CHECK (`orderby` IN ('0', '1', '2'))
 ) CHARSET=utf8;
-		
+
+--
+-- Table structure for table `jmocha_mail_blocked`
+--
+
+DROP TABLE IF EXISTS jmocha_mail_blocked;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE JMOCHA_MAIL_BLOCKED (
+    MESSAGE_ID varchar(500) NOT NULL,
+     PRIMARY KEY (MESSAGE_ID)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

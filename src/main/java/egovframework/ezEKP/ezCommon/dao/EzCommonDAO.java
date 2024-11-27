@@ -2884,4 +2884,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addSurveyTotalNotiSentFlag");
 		}
 	}
+
+	public void createJmochaMailBlocked() throws Exception {
+		try {
+			select("EzCommonDAO.checkJmochaMailBlocked");
+		} catch (Exception e) {
+			logger.debug("tbl_c_board attachments column doesn't exist. creating the column...");
+			update("EzCommonDAO.createJmochaMailBlocked");
+		}
+	}
 }

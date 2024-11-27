@@ -9037,4 +9037,99 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 		return result;
 	}
+
+	/**
+	 * 모바일 G/W 이메일 [GET] 열람 차단 메일 확인
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/checkBlockedMail/folders/{folderId}/mails/{messageId}/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object checkBlockedMail(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
+		logger.debug("MOBILE G/W MAIL checkBlockedMail started.");
+		logger.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
+
+		JSONObject result = new JSONObject();
+		IMAPAccess ia = null;
+
+		int blockedMail = 0;
+		
+		try {
+			JSONObject data = new JSONObject();
+			folderId = URLDecoder.decode(folderId, "UTF-8");
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+
+			String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", info.getTenantId());
+
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
+			long uid = Long.parseLong(messageId);
+			
+			Map<String, String> mailInfo = null;
+			
+			if (useRDBOnlyMailList.equals("YES")) {
+				mailInfo = ezEmailUtil.getMailInfo(userEmail, folderId, uid);
+				
+				if (mailInfo == null) {
+					logger.error("Message not found. uid=" + uid);
+					result.put("status", "error");
+					result.put("code", 1);
+					result.put("data", "");
+					return result;
+				}
+			}
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+			
+			if (ia != null) {
+				Folder f = ia.getFolder(folderId != null ? folderId : "");
+				if (f == null || !f.exists()) {
+					logger.error("Folder not found. folderPath=" + folderId);
+				} else {
+					f.open(Folder.READ_WRITE);
+
+					logger.debug("folderId = " + folderId + ", uid = " + uid);
+
+					Message message = null;
+
+					if (f.isOpen() && f instanceof IMAPFolder) {
+						message = ((IMAPFolder) f).getMessageByUID(uid);
+						if (message != null) {
+
+							logger.debug("message=" + message);
+
+							String[] messageIds = message.getHeader("Message-ID");
+							logger.debug("Message-ID=" + messageIds[0]);
+
+							blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
+
+							logger.debug("blockedMail=" + blockedMail);
+							
+							data.put("blockedMail", blockedMail);
+							
+							result.put("status", "ok");
+							result.put("code", 0);
+							result.put("data", data);
+						}
+					}
+				}
+			}
+		} catch (Exception e){
+			logger.error(e.getMessage(), e);
+			
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		return result;
+	}
 }

@@ -4632,6 +4632,117 @@ public class EzEmailServiceImpl implements EzEmailService {
         return returnInt;
 	}
 
+	/**
+	 * 2020-09-11 김은실-(빗썸코리아)메일삭제: MessageId들에 일치하는 행 delete
+	 */
+	@Override
+	public int deleteMailsByMessageIds(String messageIds) throws Exception {
+		logger.debug("deleteMailsByMessageIds started. messageIds=" + messageIds);
+
+		int returnInt = -1;
+
+		String inputParams = "messageIds=" + URLEncoder.encode(messageIds, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String response = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteMailsByMessageIds", inputParams);
+		logger.debug("strJson=" + response);
+
+		if (response != null) {
+			// String으로 온 Json을: JSONParser를 이용해 JSONObject로 변환해준다.
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				// jgw에서 int로 보내도, Long으로 해석한다.
+				returnInt = ((Long)responseObj.get("resultInt")).intValue();
+			}
+		}
+
+		logger.debug("deleteMailsByMessageIds ended.");
+		return returnInt;
+	}
+
+	@Override
+	public int blockMailsByMessageIds(String messageIds) throws Exception {
+		logger.debug("blockMailsByMessageIds started. messageIds=" + messageIds);
+
+		int returnInt = -1;
+
+		String inputParams = "messageIds=" + URLEncoder.encode(messageIds, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String response = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/blockMailsByMessageIds", inputParams);
+		logger.debug("strJson=" + response);
+
+		if (response != null) {
+			// String으로 온 Json을: JSONParser를 이용해 JSONObject로 변환해준다.
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				// jgw에서 int로 보내도, Long으로 해석한다.
+				returnInt = ((Long)responseObj.get("resultInt")).intValue();
+			}
+		}
+
+		logger.debug("blockMailsByMessageIds ended.");
+		return returnInt;
+	}
+
+	@Override
+	public int unblockMailsByMessageIds(String messageIds) throws Exception {
+		logger.debug("unblockMailsByMessageIds started. messageIds=" + messageIds);
+
+		int returnInt = -1;
+
+		String inputParams = "messageIds=" + URLEncoder.encode(messageIds, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String response = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/unblockMailsByMessageIds", inputParams);
+		logger.debug("strJson=" + response);
+
+		if (response != null) {
+			// String으로 온 Json을: JSONParser를 이용해 JSONObject로 변환해준다.
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				// jgw에서 int로 보내도, Long으로 해석한다.
+				returnInt = ((Long)responseObj.get("resultInt")).intValue();
+			}
+		}
+
+		logger.debug("unblockMailsByMessageIds ended.");
+		return returnInt;
+	}
+
+	@Override
+	public int checkBlockedMailByMessageId(String messageId) throws Exception {
+		logger.debug("checkBlockedMailByMessageId started. messageId=" + messageId);
+
+		int returnInt = -1;
+
+		String inputParams = "messageId=" + URLEncoder.encode(messageId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String response = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/checkBlockedMailByMessageId", inputParams);
+		logger.debug("strJson=" + response);
+
+		if (response != null) {
+			// String으로 온 Json을: JSONParser를 이용해 JSONObject로 변환해준다.
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				// jgw에서 int로 보내도, Long으로 해석한다.
+				returnInt = ((Long)responseObj.get("resultInt")).intValue();
+			}
+		}
+
+		logger.debug("checkBlockedMailByMessageId ended.");
+		return returnInt;
+	}
+	
 	@Override
 	public void setMailboxProgress(String userKey, String userId, String action, int tenantId, int percent) throws Exception {
 		logger.debug("setMailboxProgress started.");

@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -75,6 +76,10 @@ public class EzStatisticsMailLogController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+
+	// 2020-09-07 김은실-(빗썸코리아)관리자의 메일 영구삭제를 위한 Autowired
+	@Autowired
+	private EzEmailService ezEmailService;
 	
 	/**
 	 * 메일 수신 내역 메인 호출 
@@ -580,5 +585,86 @@ public class EzStatisticsMailLogController {
 		}
 		
 		logger.debug("statisticsMailLogExcelExport ended.");
+	}
+
+	/**
+	 * 2020-09-11 김은실-(빗썸코리아)관리자의 메일 영구삭제: 검색되는 모든 MessageId의 (mailboxName&mailUid)를 삭제
+	 */
+	@RequestMapping(value = "/ezStatistics/adminMailDeleteWork.do", method = RequestMethod.POST)
+	public String adminMailDeleteWork(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("adminMailDeleteWork controller started.");
+
+		// 관리자 로그인 체크 
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String returnValue = "OK";
+
+		String messageIds = request.getParameter("messageIds");
+		int returnInt = (int) ezEmailService.deleteMailsByMessageIds(messageIds);
+
+		if (0 > returnInt) {
+			returnValue = "jgw sending or jgw processing error";
+		}
+
+		model.addAttribute("returnValue", returnValue);
+
+		logger.debug("adminMailDeleteWork controller ended.");
+
+		return "json";
+	}
+
+	@RequestMapping(value = "/ezStatistics/adminMailBlockWork.do", method = RequestMethod.POST)
+	public String adminMailBlockWork(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("adminMailBlockWork controller started.");
+
+		// 관리자 로그인 체크 
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String returnValue = "OK";
+
+		String messageIds = request.getParameter("messageIds");
+		int returnInt = (int) ezEmailService.blockMailsByMessageIds(messageIds);
+
+		if (0 > returnInt) {
+			returnValue = "jgw sending or jgw processing error";
+		}
+
+		model.addAttribute("returnValue", returnValue);
+
+		logger.debug("adminMailBlockWork controller ended.");
+
+		return "json";
+	}
+
+	@RequestMapping(value = "/ezStatistics/adminMailUnblockWork.do", method = RequestMethod.POST)
+	public String adminMailUnblockWork(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("adminMailUnblockWork controller started.");
+
+		// 관리자 로그인 체크 
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String returnValue = "OK";
+
+		String messageIds = request.getParameter("messageIds");
+		int returnInt = (int) ezEmailService.unblockMailsByMessageIds(messageIds);
+
+		if (0 > returnInt) {
+			returnValue = "jgw sending or jgw processing error";
+		}
+
+		model.addAttribute("returnValue", returnValue);
+
+		logger.debug("adminMailUnblockWork controller ended.");
+
+		return "json";
 	}
 }

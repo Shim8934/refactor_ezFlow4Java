@@ -5855,4 +5855,20 @@
 		ADD
 			TOTALNOTI_SENT_FLAG tinyint(4) DEFAULT 0
 	</statement>
+    <select id="EzCommonDAO.checkJmochaMailBlocked">
+		<![CDATA[
+        SELECT
+            MESSAGE_ID
+        FROM
+            JMOCHA_MAIL_BLOCKED
+                LIMIT 1
+        ]]>
+	</select>
+
+    <statement id="EzCommonDAO.createJmochaMailBlocked">
+        CREATE TABLE JMOCHA_MAIL_BLOCKED (
+                                             MESSAGE_ID varchar(500) NOT NULL,
+                                             PRIMARY KEY (MESSAGE_ID)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    </statement>
 </sqlMap>
