@@ -265,6 +265,11 @@ var strLangHTH02 = "繰り返しサイクル日数を正確に入力してくだ
 var strLangHTH03 = "繰り返し周期を正確に入力してください。";
 var strLangHTH04 = "月間隔は0より大きい整数で入力してください。";
 
+// 2024-07-03 김우철 - 관리자 > 현황조회
+var strLangKWC01 = "승인자원 현황";
+var strLangKWC02 = "승인대기자원 현황";
+var strLangKWC03 = "종료자원 현황";
+
 //2024-08-06 유길상 - 자원 즐겨찾기 메세지 표출
 var strLangFvYGS01 = "이동";
 var strLangFvYGS02 = "삭제할 자원을 선택해 주세요.";

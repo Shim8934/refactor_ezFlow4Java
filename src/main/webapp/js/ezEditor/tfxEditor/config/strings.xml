@@ -36,6 +36,14 @@
 		<ChineseT>僅支持HTML格式。</ChineseT>
 		<jp>HTML形式のみをサポートしています。</jp>
 	</string>
+
+	<string id="STRID_INSERT_FILENAME">
+		<kor>파일 이름을 입력해 주세요.</kor>
+		<eng>Please enter a file name.</eng>
+		<ChineseS>请输入文件名。</ChineseS>
+		<ChineseT>請輸入文件名。</ChineseT>
+		<jp>ファイル名を入力してください。</jp>
+	</string>
 	
 	<string id="STRID_CANNOT_MERGE">
 		<kor>병합을 진행할 수 없습니다.</kor>
@@ -83,6 +91,19 @@
 		<jp>ハイパーリンクのタイトルが入力されていません。</jp>
 	</string>
 	
+	<string id="STRID_DIFFERENT_VALUES">
+		<kor>주소(URL)와 텍스트 입력 값이 서로 다릅니다.
+다시 입력해 주세요.</kor>
+		<eng>The address (URL) and Text input values ​​are different.
+Please enter again.</eng>
+		<ChineseS>地址（URL）和文本输入值不同。
+请再次输入。</ChineseS>
+		<ChineseT>地址（URL）和文字輸入值不同。
+請再次輸入。</ChineseT>
+		<jp>アドレス（URL）とテキスト入力値が異なります。
+もう一度入力してください。</jp>
+	</string>
+	
 	<string id="STRID_FLASH_NEEDED_SELECTED">
 		<kor>플래시 파일을 선택해야 합니다.</kor>
 		<eng>A flash movie file should be selected.</eng>
@@ -91,11 +112,11 @@
 		<jp>Flashファイルを選択する必要があります。</jp>
 	</string>
 	<string id="STRID_UPLOAD_NOT_SUPPORTED_IMAGE">
-		<kor>현재 JPEG, GIF, PNG 파일만 지원됩니다.</kor>
-		<eng>Only JPEG, GIF and PNG images are supported.</eng>
-		<ChineseS>当前仅支持JPEG, GIF, PNG文件。</ChineseS>
-		<ChineseT>當前僅支持JPEG, GIF, PNG文件。</ChineseT>
-		<jp>現在JPEG、GIF、PNGファイルのみがサポートされます。</jp>
+		<kor>이미지 파일을 선택해 주세요.</kor>
+		<eng>A image file should be selected.</eng>
+		<ChineseS>应选择Image文件。</ChineseS>
+		<ChineseT>應選擇Imagae文件。</ChineseT>
+		<jp>Imageファイルを選択する必要があります。</jp>
 	</string>
 	<string id="STRID_NOT_FLASH_MOVIE">
 		<kor>선택하신 파일은 플래시 파일이 아닙니다.</kor>
@@ -105,25 +126,50 @@
 		<jp>選択したファイルは、Flashファイルがありません。</jp>
 	</string>
 	<string id="STRID_CANNOT_CUT_NOR_COPY">
-		<kor>해당 브라우저는 보안상 마우스 클릭을 통한 클립보드 접근을 제한하고 있습니다.
-
- 키보드 명령(%s)을 사용하시기 바랍니다.</kor>
+		<kor>브라우저의 보안 정책상 클립보드의 자료에 직접 접근할 수 없습니다.
+키보드 명령(%s)을 사용하시기 바랍니다.</kor>
 		<eng>It is not permitted to access the clipboard data in the security setting of this browser.
-
 You can use the keyboard command(%d) instead.</eng>
 		<ChineseS>浏览器安全设置不支持剪贴板。
-
 请更改安全设置或使用键盘命令(%s)。</ChineseS>
 		<ChineseT>流覽器安全設置不支持剪貼板。
-
 請更改安全設置或使用鍵盤命令(%s)。</ChineseT>
-
 		<jp>ブラウザのセキュリティ設定がクリップボードアクセスを許可せずにいます。
-
 セキュリティの設定を変更するか、キーボードのコマンド（％s）を使用してください。</jp>
 	</string>
+	<string id="STRID_REQUEST_CLIPBOARD_PERMISSION">
+		<kor>브라우저의 보안 정책상 클립보드의 자료에 직접 접근할 수 없습니다.
+주소창 우측의 클립보드 권한 설정 버튼을 눌러 권한을 허용해 주세요.</kor>
+		<eng>Due to the browser's security policy, you cannot directly access the clipboard data.
+Click the clipboard permission settings button on the right side of the address bar to grant permission.</eng>
+		<ChineseS>由于浏览器的安全策略，您无法直接访问剪贴板数据。
+单击地址栏右侧的剪贴板权限设置按钮即可授予权限。</ChineseS>
+		<ChineseT>由於瀏覽器的安全策略，您無法直接存取剪貼簿資料。
+點擊網址列右側的剪貼簿權限設定按鈕即可授予權限。</ChineseT>
+		<jp>ブラウザのセキュリティ ポリシーにより、クリップボード データに直接アクセスすることはできません。
+アドレスバーの右側にあるクリップボード権限設定ボタンをクリックして権限を付与します。</jp>
+	</string>	
+	<string id="STRID_REQUEST_ADMINPAGE_IP_SETTING">
+		<kor>관리자 페이지에 접근할 수 있는 IP가 설정되지 않았습니다.
+초기 설정 파일에서 설정해 주시기 바랍니다.</kor>
+		<eng>An IP to access the administrator page has not been set.
+Please set it in the initial settings file.</eng>
+		<ChineseS>尚未设置访问管理员页面的IP。
+请在初始设置文件中进行设置。</ChineseS>
+		<ChineseT>尚未設定訪問管理員頁面的IP。
+請在初始設定檔中進行設定。</ChineseT>
+		<jp>管理者ページにアクセスするためのIPが設定されていません。
+初期設定ファイルに設定してください</jp>
+	</string>	
+	<string id="STRID_NO_ACCESS_PERMISSION">
+		<kor>관리자 페이지에 접근할 수 있는 권한이 없습니다.</kor>
+		<eng>Do not have permission to access the admin page.</eng>
+		<ChineseS>没有权限访问管理页面。</ChineseS>
+		<ChineseT>沒有權限存取管理頁面。</ChineseT>
+		<jp>管理者ページにアクセスする権限がありません。</jp>
+	</string>
 	<string id="STRID_FINDSTR_NEEDED">
-		<kor>찾을 내용을 입력해주세요.</kor>
+		<kor>찾을 내용을 입력해 주세요.</kor>
 		<eng>Search string needed.</eng>
 		<ChineseS>请输入要查找的内容。</ChineseS>
 		<ChineseT>請輸入要查找的內容。</ChineseT>
@@ -171,7 +217,6 @@ Proceed?</eng>
 要进行吗？</ChineseS>
 		<ChineseT>變更文件內容，保存並初始化。
 要進行嗎？</ChineseT>
-
 		<jp>文書の内容が変更されて、保存して初期化します。
 続行しますか？</jp>
 	</string>
@@ -188,15 +233,15 @@ Proceed?</eng>
 			続行しますか？</jp>
 	</string>
 	<string id="STRID_BOTTOM_TAB">
-		<kor>디자인,HTML,미리보기</kor>
-		<eng>Design,HTML,Preview</eng>
-		<ChineseS>编辑,HTML,预览</ChineseS>
-		<ChineseT>編輯,HTML,預覽</ChineseT>
-		<jp>編集,HTML,プレビュー</jp>
+		<kor>디자인,HTML,미리보기,TEXT,PAGE</kor>
+		<eng>Design,HTML,Preview,TEXT,PAGE</eng>
+		<ChineseS>编辑,HTML,预览,TEXT,PAGE</ChineseS>
+		<ChineseT>編輯,HTML,預覽,TEXT,PAGE</ChineseT>
+		<jp>編集,HTML,プレビュー,TEXT,PAGE</jp>
 	</string>
 	
 	<string id="STRID_PROMPT_INSERT_LAYOUT">
-		<kor>작성 된 내용이 사라집니다.
+		<kor>작성된 내용이 사라집니다.
 계속 진행하시겠습니까?</kor>
 		<eng>The document will be initialized.
 Proceed?</eng>
@@ -209,7 +254,7 @@ Proceed?</eng>
 	</string>	
 		
 	<string id="STRID_CANNOT_BE_MERGED">
-		<kor>선택 된 셀을 병합 할 수 없습니다.</kor>
+		<kor>선택된 셀을 병합할 수 없습니다.</kor>
 		<eng>The selected cells cannot be merged.</eng>
 		<ChineseS>无法合并选定单元格。</ChineseS>
 		<ChineseT>無法合併選取的儲存格。</ChineseT>
@@ -218,7 +263,7 @@ Proceed?</eng>
 	
 	
 	<string id="STRID_NEED_CONTENTS">
-		<kor>내용을 입력해주세요.</kor>
+		<kor>내용을 입력해 주세요.</kor>
 		<eng>Please enter the source.</eng>
 		<ChineseS>请输入内容。</ChineseS>
 		<ChineseT>請輸入內容。</ChineseT>
@@ -226,7 +271,7 @@ Proceed?</eng>
 	</string>
 	
 	<string id="STRID_CANNOT_DELETE_ROW_COLUMN">
-		<kor>삭제할 행 또는 열을 선택해주세요.</kor>
+		<kor>삭제할 행 또는 열을 선택해 주세요.</kor>
 		<eng>Please select the row or column you want to delete.</eng>
 		<ChineseS>请选择您要删除的行或列。</ChineseS>
 		<ChineseT>請選擇您要刪除的行或列。</ChineseT>
@@ -234,7 +279,7 @@ Proceed?</eng>
 	</string>
 	
 	<string id="STRID_SELECT_ADD_ROW_COLUMN">
-		<kor>테이블의 행 또는 열을 선택해주세요.</kor>
+		<kor>테이블의 행 또는 열을 선택해 주세요.</kor>
 		<eng>Please select the row or column you want to add.</eng>
 		<ChineseS>请选择您要添加的行或列。</ChineseS>
 		<ChineseT>請選擇您要添加的行或列。</ChineseT>
@@ -242,7 +287,7 @@ Proceed?</eng>
 	</string>
 	
 	<string id="STRID_CANNOT_ACTIVE_BOTTOM_TAB">
-		<kor>서식 보호 모드에서는 탭을 사용 할 수 없습니다.</kor>
+		<kor>서식 보호 모드에서는 탭을 사용할 수 없습니다.</kor>
 		<eng>You cannot use tab in protected mode.</eng>
 		<ChineseS>在保护模式下，您不能使用格式选项卡。</ChineseS>
 		<ChineseT>在保護模式下，您不能使用格式選項卡。</ChineseT>
@@ -250,7 +295,7 @@ Proceed?</eng>
 	</string>
 	
 	<string id="STRID_CANNOT_INSERT_MEDIA_LINK">
-		<kor>iframe, object, video 또는 embed 소스를 입력해주세요.</kor>
+		<kor>iframe, object, video 또는 embed 소스를 입력해 주세요.</kor>
 		<eng>Enter iframe, object, video or embed source.</eng>
 		<ChineseS>支持iframe，object，video或embed请输入源。</ChineseS>
 		<ChineseT>請輸入iframe，object，video或者embed來源。</ChineseT>
@@ -265,4 +310,309 @@ Proceed?</eng>
 		<jp>ブックマークが選択されていません.</jp>
 	</string>
 	
+	<string id="STRID_CANNOT_INSERT_MEDIA_URL">
+		<kor>URL 형식이 잘못되었습니다.</kor>
+		<eng>Invalid URL Type.</eng>
+		<ChineseS>无效 URL 类型。</ChineseS>
+		<ChineseT>URL 類型無效。</ChineseT>
+		<jp>無効なURLタイプです。</jp>
+	</string>
+	
+	<string id="STRID_PASTE_EXCEL_DATA_AS_IMAGE">
+		<kor>해당 데이터는 이미지로 붙여 넣기 가능합니다.
+이미지로 적용하시겠습니까?</kor>
+		<eng>You can paste this data into an image.
+Do you want to proceed?</eng>
+		<ChineseS>数据可以粘贴为图像。
+您想将其作为图像应用吗？</ChineseS>
+		<ChineseT>數據可以粘貼為圖像。
+您想將其作為圖像應用嗎？</ChineseT>
+		<jp>そのデータは、画像として貼り付け可能です。
+画像に適用しますか？</jp>
+	</string>
+	
+	<string id="STRID_PAGE_HSCROLL_VALID_CHECK">
+		<kor>문서의 내용이 페이지의 가로 길이를 초과합니다.
+문서 하단의 스크롤바를 이용하여 문서의 내용을 확인하시거나 문서의 너비를 조절하시기 바랍니다.</kor>
+		<eng>The content of the document exceeds the width of the page.
+Use the scroll bar at the bottom of the document to check the contents of the document or adjust the width of the document.</eng>
+		<ChineseS>文档内容超出页面宽度。
+使用文档底部的滚动条检查文档内容或调整文档宽度。</ChineseS>
+		<ChineseT>文檔內容超出頁面寬度。
+使用文檔底部的滾動條檢查文檔內容或調整文檔寬度。</ChineseT>
+		<jp>文書の内容がページの横の長さを超えています。
+文書の下部のスクロールバーを利用して、文書の内容をご確認いただくか、ドキュメントの幅を調節してください。</jp>
+	</string>
+
+	<string id="STRID_CANNOT_ACTIVE_HTML_TAB">
+		<kor>웹 접근성 강화 기능이 활성화되어 있어, HTML 편집 탭을 사용하실 수 없습니다.</kor>
+		<eng>The HTML editing tab cannot be used because the Web Accessibility Enhancement feature is enabled.</eng>
+		<ChineseS>无法使用 HTML 编辑选项卡，因为启用了 Web 辅助功能增强功能。</ChineseS>
+		<ChineseT>無法使用 HTML 編輯選項卡，因為啟用了 Web 輔助功能增強功能。</ChineseT>
+		<jp>Web アクセシビリティ強化が有効になっているため、HTML 編集タブを使用できません。</jp>
+	</string>
+
+	<string id="STRID_CANNOT_ACTIVE_TEXT_TAB">
+		<kor>웹 접근성 강화 기능이 활성화되어 있어, TEXT 편집 탭을 사용하실 수 없습니다.</kor>
+		<eng>The TEXT editing tab cannot be used because the Web Accessibility Enhancement feature is enabled.</eng>
+		<ChineseS>无法使用 TEXT 编辑选项卡，因为启用了 Web 辅助功能增强功能。</ChineseS>
+		<ChineseT>無法使用 TEXT 編輯選項卡，因為啟用了 Web 輔助功能增強功能。</ChineseT>
+		<jp>Web アクセシビリティ強化が有効になっているため、TEXT 編集タブを使用できません。</jp>
+	</string>
+
+	<string id="STRID_PASTE_UNAVAILABLE">
+		<kor>웹 접근성 강화 기능이 활성화되어 있어, 붙여 넣기 기능을 사용하실 수 없습니다.</kor>
+		<eng>Paste function is not available because the Web Accessibility Enhancement feature is enabled.</eng>
+		<ChineseS>粘贴功能不可用，因为启用了 Web 辅助功能增强功能。</ChineseS>
+		<ChineseT>粘貼功能不可用，因為啟用了 Web 輔助功能增強功能。</ChineseT>
+		<jp>Webアクセシビリティ拡張機能が有効になっているため、貼り付け機能は使用できません。</jp>
+	</string>
+	
+	<string id="STRID_CHANGE_TO_TEXT_MODE">
+		<kor>TEXT 모드로 변경 시 스타일 및 이미지, 표 등의 내용이 삭제됩니다.
+TEXT 모드로 변경하시겠습니까?</kor>
+		<eng>When changing to TEXT mode, the contents of styles, images, tables, etc. are deleted.
+Do you want to change to TEXT mode?</eng>
+		<ChineseS>更改为 TEXT 模式时，样式、图像、表格等内容将被删除。
+是否要更改为 TEXT 模式？</ChineseS>
+		<ChineseT>更改為 TEXT 模式時，樣式、圖像、表格等內容將被刪除。
+是否要更改為 TEXT 模式？</ChineseT>
+		<jp>TEXTモードに変更すると、スタイルや画像、表などの内容が削除されます。
+TEXTモードに変更しますか？</jp>
+	</string>
+
+	<string id="STRID_REPLACE_EXPRESSION">
+		<kor>금지어로 설정된 단어가 발견되어 수정됩니다.
+금지 단어 : </kor>
+		<eng>Words set as prohibited words are found and corrected.
+Prohibited words : </eng>
+		<ChineseS>找到并更正设置为禁止词的词。
+违禁词 : </ChineseS>
+		<ChineseT>找到並更正設置為禁止詞的詞。
+違禁詞 : </ChineseT>
+		<jp>禁止語に設定された単語が見つかり、修正されます。
+禁止単語 : </jp>
+	</string>
+	
+	<string id="STRID_CANNOT_FIND_TABLE">
+		<kor>결과값을 표시할 표를 찾을 수 없습니다.</kor>
+		<eng>No table could be found to display the resulting values.</eng>
+		<ChineseS>找不到显示结果值的表。</ChineseS>
+		<ChineseT>找不到顯示結果值的表。</ChineseT>
+		<jp>結果の値を表示するテーブルが見つかりませんでした。</jp>
+	</string>
+
+	<string id="STRID_LANGUAGE_NOT_SUPPORTED">
+		<kor>영문 또는 숫자만 입력 가능합니다.</kor>
+		<eng>Language supported : English, Number</eng>
+		<ChineseS>支持的语言：英语，数字</ChineseS>
+		<ChineseT>支持的語言：英語，數字</ChineseT>
+		<jp>サポートされる言語：英語、番号</jp>
+	</string>
+
+	<string id="STRID_DUPLICATE_NAME">
+		<kor>중복된 이름입니다.</kor>
+		<eng>Duplicate name.</eng>
+		<ChineseS>重复名称。</ChineseS>
+		<ChineseT>重複名稱。</ChineseT>
+		<jp>重複した名前です。</jp>
+	</string>
+
+	<string id="STRID_ENTER_NAME">
+		<kor>이름을 입력해 주세요.</kor>
+		<eng>Please enter the name.</eng>
+		<ChineseS>请输入您的姓名。</ChineseS>
+		<ChineseT>請輸入您的姓名。</ChineseT>
+		<jp>名前を入力してください。</jp>
+	</string>
+
+	<string id="STRID_NO_FILE_SELECTED">
+		<kor>파일이 선택되지 않았습니다.</kor>
+		<eng>No file selected.</eng>
+		<ChineseS>未选择文件。</ChineseS>
+		<ChineseT>未選擇文件。</ChineseT>
+		<jp>ファイルが選択されていません。</jp>
+	</string>	
+	
+	<string id="STRID_NO_URL_ENTERED">
+		<kor>URL 이 입력되지 않았습니다.</kor>
+		<eng>No URL has been entered.</eng>
+		<ChineseS>未输入任何 URL。</ChineseS>
+		<ChineseT>未輸入任何 URL。</ChineseT>
+		<jp>URLが入力されていません。</jp>
+	</string>	
+
+	<string id="STRID_DRAG_AND_DROP_ONLY_IMAGE_FILES">
+		<kor>이미지 파일만 드래그 앤 드롭 할 수 있습니다.
+(허용 확장자 : PNG, JPG, JPEG, BMP, GIF)</kor>
+		<eng>Can drag and drop only image files.
+(Allowed extensions: PNG, JPG, JPEG, BMP, GIF)</eng>
+		<ChineseS>只能拖放图像文件。
+（允许的扩展名：PNG、JPG、JPEG、BMP、GIF）</ChineseS>
+		<ChineseT>只能拖放圖像檔。
+（允許的副檔名：PNG、JPG、JPEG、BMP、GIF）</ChineseT>
+		<jp>ドラッグ＆ドロップできるのは画像ファイルのみです。
+(使用可能な拡張子: PNG、JPG、JPEG、BMP、GIF)</jp>
+	</string>	
+	
+	<string id="STRID_CANNOT_UPLOAD">
+		<kor>파일 용량이 초과되어 업로드가 불가합니다.</kor>
+		<eng>Upload is not possible because the file size is exceeded.</eng>
+		<ChineseS>由于超出文件大小，无法上传。</ChineseS>
+		<ChineseT>由于超出文件大小，无法上传。</ChineseT>
+		<jp>ファイル容量を超えてアップロードできません。</jp>
+	</string>
+
+	<string id="STRID_UNABLE_TO_UPLOAD_IMAGE_FILE">
+		<kor>이미지 파일의 용량이 초과되어 업로드 할 수 없습니다.</kor>
+		<eng>The image file cannot be uploaded because its capacity has been exceeded.</eng>
+		<ChineseS>由于超出了图像文件的容量，因此无法上传图像文件。</ChineseS>
+		<ChineseT>由於超出了圖像檔案的容量，因此無法上傳圖像檔案。</ChineseT>
+		<jp>画像ファイルは容量を超えているためアップロードできません。</jp>
+	</string>	
+	
+	<string id="STRID_SELECT_LAYOUT">
+		<kor>적용할 레이아웃을 선택해 주세요.</kor>
+		<eng>Please select a layout to apply.</eng>
+		<ChineseS>请选择要应用的布局。</ChineseS>
+		<ChineseT>請選擇要應用的佈局。</ChineseT>
+		<jp>適用するレイアウトを選択してください。</jp>
+	</string>	
+	
+	<string id="STRID_CAPTION_NOT_ENTERED">
+		<kor>캡션이 입력되지 않았습니다.</kor>
+		<eng>Caption has not been entered.</eng>
+		<ChineseS>未输入标题。</ChineseS>
+		<ChineseT>未輸入標題。</ChineseT>
+		<jp>キャプションが入力されていません。</jp>
+	</string>	
+	
+	<string id="STRID_INFO_NOT_ENTERED">
+		<kor>요약정보가 입력되지 않았습니다.</kor>
+		<eng>Summary information has not been entered.</eng>
+		<ChineseS>未輸入摘要信息。</ChineseS>
+		<ChineseT>未输入摘要信息。</ChineseT>
+		<jp>要約情報が入力されていません。</jp>
+	</string>	
+	
+	<string id="STRID_TH_REQUIRED">
+		<kor>표 헤더 항목은 필수 입력 항목입니다.</kor>
+		<eng>Table header fields are mandatory.</eng>
+		<ChineseS>表头字段是强制性的。</ChineseS>
+		<ChineseT>表頭字段是強制性的。</ChineseT>
+		<jp>テーブルヘッダーフィールドは必須です。</jp>
+	</string>	
+	
+	<string id="STRID_UPLOAD_EXCEEDED_MAXIMUM">
+		<kor>최대 업로드 용량을 초과하였습니다.</kor>
+		<eng>The maximum upload capacity has been exceeded.</eng>
+		<ChineseS>已超过最大上传容量。</ChineseS>
+		<ChineseT>已超過最大上傳容量。</ChineseT>
+		<jp>最大アップロード容量を超えました。</jp>
+	</string>	
+
+	<string id="STRID_EXCEED_RANGE">
+		<kor>지정 가능한 범위를 벗어났습니다. ( 2 ~ 10 )</kor>
+		<eng>It is out of the specifiable range. ( 2 ~ 10 )</eng>
+		<ChineseS>它超出了可指定的范围。 ( 2 ~ 10 )</ChineseS>
+		<ChineseT>它超出了可指定的範圍。 ( 2 ~ 10 )</ChineseT>
+		<jp>指定範囲外です。 （2 ~ 10）</jp>
+	</string>
+
+	<string id="STRID_EXCEEDED_QUOTA">
+		<kor>할당량 초과!</kor>
+		<eng>Exceeded quota!</eng>
+		<ChineseS>超过配额！</ChineseS>
+		<ChineseT>超過配額！</ChineseT>
+		<jp>クォータ超過！</jp>
+	</string>
+
+	<string id="STRID_INSTALL_PLUGIN_MSG_1">
+		<kor>- 자동으로 다운로드되는 설치 파일을 실행시켜 주시기 바랍니다.</kor>
+		<eng>- Please run the installation file that is automatically downloaded.</eng>
+		<ChineseS>- 请运行自动下载的安装文件。</ChineseS>
+		<ChineseT>- 請運行自動下載的安裝文件。</ChineseT>
+		<jp>- 自動的にダウンロードされるインストールファイルを実行してください。</jp>
+	</string>
+
+	<string id="STRID_INSTALL_PLUGIN_MSG_2">
+		<kor>- 파일이 다운로드되지 않는 경우 아래의 링크를 통해 다운로드 후 설치해 주시기 바랍니다.</kor>
+		<eng>- If the file cannot be downloaded, please download and install it through the link below.</eng>
+		<ChineseS>- 如果文件无法下载，请通过以下链接下载并安装。</ChineseS>
+		<ChineseT>- 如果文件無法下載，請通過以下鏈接下載並安裝。</ChineseT>
+		<jp>- ファイルがダウンロードされない場合は、下記のリンクからダウンロード後にインストールしてください。</jp>
+	</string>
+
+	<string id="STRID_INSTALL_PLUGIN_MSG_3">
+		<kor>- 설치 파일 다운로드 : </kor>
+		<eng>- Download the installation file : </eng>
+		<ChineseS>- 下载安装文件 : </ChineseS>
+		<ChineseT>- 下載安裝文件 : </ChineseT>
+		<jp>- インストールファイルのダウンロード : </jp>
+	</string>
+
+	<string id="STRID_INSTALL_PLUGIN_MSG_4">
+		<kor>- 해당 창은 잠시 후 자동으로 닫힙니다.</kor>
+		<eng>- The window closes automatically after a while.</eng>
+		<ChineseS>- 一段时间后窗口会自动关闭。</ChineseS>
+		<ChineseT>- 一段時間後窗口會自動關閉。</ChineseT>
+		<jp>- そのウィンドウはしばらくすると自動的に閉じます。</jp>
+	</string>
+	
+	<string id="STRID_INSTALL_PLUGIN_MSG_5">
+		<kor>- 제품이 설치되는 동안 창을 닫거나 페이지를 새로고침하면 안 됩니다.</kor>
+		<eng>- Do not close the window or refresh the page while the product is being installed.</eng>
+		<ChineseS>- 安装产品时不要关闭窗口或刷新页面。</ChineseS>
+		<ChineseT>- 安裝產品時不要關閉窗口或刷新頁面。</ChineseT>
+		<jp>- 製品のインストール中にウィンドウを閉じたり、ページを更新したりしないでください。</jp>
+	</string>
+
+	<string id="STRID_LOCAL_PATH_NOT_SUPPORTED">
+		<kor>삽입된 데이터 중 로컬 경로의 이미지는 지원되지 않습니다.</kor>
+		<eng>Among the inserted data, images in the local path are not supported.</eng>
+		<ChineseS>在插入的数据中，不支持本地路径中的图像。</ChineseS>
+		<ChineseT>在插入的數據中，不支持本地路徑中的圖像。</ChineseT>
+		<jp>挿入されたデータのうち、ローカルパスのイメージはサポートされていません。</jp>
+	</string>
+
+	<string id="STRID_NOT_SUPPORT_SCREEN_CAPTURE">
+		<kor>스크린 캡쳐 기능을 지원하지 않는 브라우저입니다.</kor>
+		<eng>The browser does not support the screen capture function.</eng>
+		<ChineseS>浏览器不支持截屏功能。</ChineseS>
+		<ChineseT>瀏覽器不支持截屏功能。</ChineseT>
+		<jp>スクリーンキャプチャ機能をサポートしていないブラウザです。</jp>
+	</string>
+
+	<string id="STRID_UNTITLED">
+		<kor>제목없음</kor>
+		<eng>Untitled</eng>
+		<ChineseS>无标题</ChineseS>
+		<ChineseT>無標題</ChineseT>
+		<jp>タイトルなし</jp>
+	</string>
+
+	<string id="STRID_NOT_SUPPORT_THIS_FEATURE">
+		<kor>해당 기능을 제공하지 않는 브라우저입니다.</kor>
+		<eng>Your browser does not support this feature.</eng>
+		<ChineseS>您的浏览器不支持此功能。</ChineseS>
+		<ChineseT>您的瀏覽器不支持此功能。</ChineseT>
+		<jp>お使いのブラウザはこの機能をサポートしていません。</jp>
+	</string>
+
+	<string id="STRID_SELECT_MORE_CELLS">
+		<kor>2개 이상의 셀을 선택해 주세요.</kor>
+		<eng>Please select 2 or more cells.</eng>
+		<ChineseS>请选择 2 个或更多单元格。</ChineseS>
+		<ChineseT>請選擇 2 個或更多單元格。</ChineseT>
+		<jp>2つ以上のセルを選択してください。</jp>
+	</string>
+
+	<string id="STRID_XSS_CANNOT_USE">
+		<kor>해당 단어는 금지어로 설정되어 있어 책갈피 이름으로 사용할 수 없습니다. 다시 입력해 주세요.</kor>
+		<eng>The word is banned and cannot be used as a bookmark name. Please re-enter.</eng>
+		<ChineseS>该词被禁止，不能用作书签名称。请重新输入。</ChineseS>
+		<ChineseT>該詞被禁止，不能用作書籤名稱。請重新輸入。</ChineseT>
+		<jp>この単語は禁止語に設定されており、ブックマーク名として使用することはできません。もう一度入力してください。</jp>
+	</string>
+
 </strings>

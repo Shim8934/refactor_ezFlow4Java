@@ -70,6 +70,7 @@
 		    var Write_FG = "${boardInfo.write_FG}";
 		    var Reply_FG = "${boardInfo.reply_FG}";
 		    var Delete_FG = "${boardInfo.delete_FG}";
+		    var Edit_FG = "${boardInfo.edit_FG}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pReservedItem = "${pReservedItem}";
 		    var g_progresswin;
@@ -126,6 +127,7 @@
 			var delReplyLevel = "";
 			var parentReplyID = "";
 			var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
+			var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
 	        
 	        function Bigger(doc) {     
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -703,7 +705,7 @@
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
 		        }
-		        if (strWriterID != SSUserID && gubun != "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && Edit_FG != "true") {
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
 		        }
@@ -719,7 +721,7 @@
 				}
 	            
 		        //익명게시판
-		        if (gubun == "2") {
+		        if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments = new Array();
 		                checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
@@ -727,23 +729,16 @@
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
-		                var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
-		                feature = feature + GetShowModalPosition(470, 200);
 		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		                if (ret == "NO") {
 		                    alert("<spring:message code='ezBoard.t267' />");
 		                    return;
 		                }
-		
-	                    window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
-		                window.resizeTo(785, 780);
 		            }
 		        }
-		        if (gubun != "2") {
-	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
-		            window.resizeTo(785, 780);
-		        }
+				window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
+				window.resizeTo(785, 780);
 		    }
 		    function btn_Modify_Onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
@@ -760,7 +755,7 @@
 		    /* 2018-07-11 홍승비 - 게시물 복사 시 guBun 파라미터 추가 */
 			var copyboarditem_cross_dialogArguments = new Array();
 		    function btn_Copy_Onclick() {
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && Edit_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202' />");
 				    return;
 		        }
@@ -795,7 +790,7 @@
 		    /* 2018-07-11 홍승비 - 게시물 이동 시 guBun 파라미터 추가 */
 		    var moveboarditem_cross_dialogArguments = new Array();
 		    function btn_Move_Onclick() {
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && Edit_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202' />");
 				    return;
 		        }
@@ -1927,8 +1922,28 @@
 							<!-- 게시 종료일 end -->
 							</c:otherwise>
 						</c:choose>
-							
-							
+						<c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
+						 <!-- 수정자, 수정일 -->
+							<tr>
+							    <c:if test="${guBun != '2'}">
+                                    <th><spring:message code='ezBoard.updateJIH01' /></th>
+                                    <td id="updaterName" style = "white-space:nowrap; padding-right:5px">
+                                        <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updaterName}</div>
+                                    </td>
+                                    <th><spring:message code='ezBoard.updateJIH02' /></th>
+                                    <td id="updateDate" style = "white-space:nowrap; padding-right:5px">
+                                        <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updateDate.substring(0, 16)}</div>
+                                    </td>
+                                </c:if>
+                                <c:if test="${guBun == '2'}">
+                                    <th><spring:message code='ezBoard.updateJIH02' /></th>
+                                    <td width="100%" id="updateDate" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+			             	            <div style="WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.updateDate.substring(0, 16)}"/></div>
+			                        </td>
+                                </c:if>
+							</tr>
+						<!-- 수정자, 수정일 end -->
+						</c:if>	
 						<c:if test="${boardAttrCount > 0}">
 							<c:forEach var="boardAttr" items="${boardAttr}">
 								<tr>
@@ -2085,6 +2100,10 @@
 								</tr>
 							</c:if>
 						</table>
+						<div class="commentSort">
+						    <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+						    <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+                        </div>
 						<table id="commentList" style="width:100%;margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 					</div>
 		        </c:if>

@@ -44,6 +44,56 @@
 			#layer_Viewpopup .popupwrap3 h1 {
 				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
 			}
+			.boardAlbumDiv {
+				border: 1px solid #e2e3e6;
+				height: 100%;
+				width: 290px;
+				cursor: pointer;
+				display: inline-block;
+				margin-right: 10px;
+				margin-bottom: 10px;
+			}
+			.topInfoP {
+				height: 32px;
+				line-height: 32px;
+				margin: 0px 10px 0px 10px;
+				padding: 0px 10px;
+				border-top: 2px solid #eaeaea;
+				font-size: 13px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				color: #5b5a5a;
+			}
+			.selectedP {
+				border-bottom: 2px solid #0470e4;
+				margin: 0px 0px -5px 0px;
+				padding: 0px 20px;
+				background-color: #3d8fea;
+				color:#ffffff;
+			}
+			.topInfoP input[type="checkbox"] {
+				margin: 5px 5px 0px 0px;
+				/* width: 13px;
+				height: 13px; */
+				vertical-align: top;
+			}
+
+			.albumTitle{
+				font-weight: 500;
+			}
+
+			.albumThumbImg {
+				height: 100%;
+				max-height: 100px;
+				min-height: 100px;
+				width: auto;
+				border-radius: 3px;
+			}
+			.selectedAlbumDiv {
+				background-color: rgb(241, 248, 255);
+				border: 1px solid #0470e4;
+			}
 			<%-- 2020-06-15 홍승비 - 즐겨찾기 아이콘 스타일 추가 --%>
 			.no_yellowStar {
 				background:url(../images/ImgIcon/view-flag.gif) no-repeat;
@@ -57,6 +107,13 @@
 				cursor:pointer;
 				margin-left: 3px;
 				margin-right: 3px;
+			}
+			.infoDiv {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin: 7px 10px 7px 10px;
+				padding: 0px 10px;
 			}
 		</style>
 		<script type="text/javascript">
@@ -74,6 +131,7 @@
 		    var Write_FG = "${boardInfo.write_FG}";
 		    var Reply_FG = "${boardInfo.reply_FG}";
 		    var Delete_FG = "${boardInfo.delete_FG}";
+			var Edit_FG = "${boardInfo.edit_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pSortBy = "<c:out value='${sortBy}'/>";
@@ -122,6 +180,7 @@
 			var boardViewType = '1'; // 2024-05-24 전인하 - 기본보기(1) / 안읽은 게시물(2) / 만료게시물(3) 확인 플래그
 			var isOpenWindow;
 			var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
+			var boardViewForm = "${boardViewForm}";
 			
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
@@ -219,6 +278,7 @@
 		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+				$("#boardViewSelect").val(boardViewForm).prop("selected", true);
 		    });
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
@@ -327,7 +387,11 @@
 							 disLikeFlag : disLikeFlag
 							},
 					success: function(xml){
-						getBoardList_after(loadXMLString(xml));
+						if (boardViewForm == "thumbnail") {
+							getBoardList_after(loadXMLString(xml));
+						} else {
+							getBoardList_album(loadXMLString(xml));
+						}
 					}        			
 				});	
 		    }
@@ -416,8 +480,145 @@
 	            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 		        MailOptionHidden();
 		    }
-		
-		    var BlockSize = 10;
+
+
+			function getBoardList_album(xml) {
+				firstFlag = false;
+				var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+				var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
+				var pagenode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
+				var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
+				pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
+
+				if (listNode == null) {
+					return;
+				}
+
+				var lstCnt = getNodeText(cntNode);
+				var pageCnt = getNodeText(pagenode);
+				var perCnt = getNodeText(perNode);
+				listcount.value = perCnt;
+				totalPage = Math.ceil(new Number(pageCnt / perCnt));
+				pTotalCnt = lstCnt;
+				makePageSelPageBrd();
+
+				var xmlDoc;
+				if (CrossYN()) {
+					var xmlLIST = createXmlDom();
+					var nodeToImport = xmlLIST.importNode(listNode, true);
+					xmlLIST.appendChild(nodeToImport);
+					xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+				} else {
+					xmlDoc = createXmlDom();
+					xmlDoc.appendChild(listNode);
+				}
+				if (document.getElementById("lvBoardList").innerHTML != "") {
+					document.getElementById("lvBoardList").innerHTML = "";
+				}
+
+				var rowCnt = GetElementsByTagName(xmlDoc, "ROW").length;
+				var listXML = "";
+				if (rowCnt === 0) {
+					listXML = "<span style='display: block;text-align: center;margin-top: 50px;'><spring:message code='ezBoard.t281'/></span>";
+				} else {
+					/* 2020-05-04 홍승비 - 앨범형식 보기 시 특수문자 파싱 추가 */
+					for (var i = 0; i < rowCnt; i++) {
+						var title= GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "TITLE")[0].textContent;
+						title = MakeXMLString(title);
+						var boardID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA1")[0].textContent;
+						var itemID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA2")[0].textContent;
+						var writerID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA3")[0].textContent;
+						var isNew = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA4")[0].textContent;
+						var imgSrc = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA5")[0].textContent;
+						var readFlag = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
+						var writeDate = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
+						var Filename = imgSrc.split('/')[7];
+						imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(boardID) +
+								"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png");
+
+						listXML += "<div class='boardAlbumDiv' onclick='selectAlbumDiv(this); ItemPreviewRead_AlbumClick(this);' ondblclick='ItemRead_onclick(this)' data1='" + boardID + "' data2='" + itemID + "'>";
+						listXML += "<p style='position: relative; display: flex; justify-content: center; align-items: center;'>";
+						listXML += "<img class='albumThumbImg' src='" + imgSrc + "'/>";
+						listXML += "<img src='/images/playButton_small.png' style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>";
+						listXML += 	"</p>";
+						listXML += "<div class='infoDiv'>";
+						listXML += "<span style='height:20px; display: flex; justify-content: space-between; align-items: center;'>";
+						if (getColNameIndex(xmlDoc, "READCOUNT") != -1) {
+							listXML += "<img src='/images/icon_preview.png' style='margin-right: 5px;'>";
+							listXML += "<span style='vertical-align:top;'></span>";
+							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "READCOUNT")], "VALUE")[0].textContent;
+						}	
+						listXML += "</span>";
+						listXML += "<span style='height:20px; display: flex; align-items: center;vertical-align:top;'>";
+						if (getColNameIndex(xmlDoc, "WRITEDATE") != -1) {
+							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
+						}
+						listXML += "</span>";
+						listXML += "</div>";
+						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
+						listXML += "<span style='font-size:13px;'>";
+
+						if (readFlag == "0") {
+							listXML += "<span class='albumTitle' style='font-size:13px; font-weight:bold;'>";
+						} else {
+							listXML += "<span class='albumTitle' style='font-size:13px;'>";
+						}
+
+						if (isNew == "Y") {
+							listXML+= "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px'/>";
+						}
+						listXML += title + "</span></p>";
+						listXML += "<div class='infoDiv'>";
+						listXML += "<span style='font-size:13px;'>";
+						if (getColNameIndex(xmlDoc, "WRITERNAME") != -1) {
+							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITERNAME")], "VALUE")[0].textContent;
+						}
+						listXML += "</span>";
+						var likeCountIndex = getColNameIndex(xmlDoc, "LIKECOUNT");
+						if (likeCountIndex != -1) {
+							listXML += "<span class='likeButton' onclick='clickLikeButton()' title='좋아요' style='height:20px; display: flex; justify-content: space-between; align-items: center;'>";
+							listXML += "<img id='likeButtonImg' src='/images/like_off.png' style='margin-right: 5px;'>";
+							listXML += "<span style='vertical-align:top;'></span>";
+							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "LIKECOUNT")], "VALUE")[0].textContent;
+							listXML += "</span>";
+						}
+						listXML += "</div>";
+						listXML += "</div>";
+					}
+				}
+
+				document.getElementById("lvBoardList").innerHTML = listXML;
+
+				if (USE_OCS == "YES" && lstCnt > 0) {
+					check_presence();
+				}
+
+				if (!firstFlag) {
+					PreviewRayerChange(pPreviewShow_HOW);
+					//if (pAdminType != "y")
+					//    PreviewRayerChange(pPreviewShow_HOW);
+					//else
+					//    PreviewRayerChange("NONE");
+					if (ifrmPreViewH_photo.document.getElementById("ifrmviewEmptyText") != null)
+						ifrmPreViewH_photo.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
+					firstFlag = true;
+				}
+				endtime = new Date().getTime();
+				document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
+			}
+
+			function getColNameIndex(xmlDoc, colName) {
+				var colNameNodeList = GetElementsByTagName(xmlDoc, "COLNAME");
+				for (var i = 0; i < colNameNodeList.length; i++) {
+					if (colNameNodeList[i].textContent === colName) {
+						return i;
+					}
+				}
+				return -1;
+			}
+
+
+			var BlockSize = 10;
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
@@ -585,16 +786,21 @@
 	    	    }
 		
 	    	    /* 2018-07-09 홍승비 - 게시물 클릭 시 spn_content의 아이디를 사용해 폰트를 변경하도록 수정함 */
-	    	    if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
-		            document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
-					document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
-		        }
-	    	    for (var i = 0; i < obj.childNodes.length; i++) {
-			        if (obj.childNodes[i].style.fontWeight == "bold") {
-			            obj.childNodes[i].style.fontWeight = "normal";
+				if (boardViewForm == "thumbnail") {
+					if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
+						document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
+						document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
 					}
-		        }
-	    	    
+					for (var i = 0; i < obj.childNodes.length; i++) {
+						if (obj.childNodes[i].style.fontWeight == "bold") {
+							obj.childNodes[i].style.fontWeight = "normal";
+						}
+					}
+				} else {
+					if (obj.getElementsByClassName("albumTitle")[0].style.fontWeight == "bold") {
+						obj.getElementsByClassName("albumTitle")[0].style.fontWeight = "normal";
+					}
+				}
 	    	    isOpenWindow = window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" +  encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" +  encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		
@@ -1071,6 +1277,47 @@
 	    			return;
 	    		}
 	    	}
+
+			function selectBoardView(selectObj) {
+				var selectedOpt = selectObj.value;
+				if (selectedOpt == "thumbnail") {
+					boardViewForm = "thumbnail";
+				} else {
+					boardViewForm = "album";
+				}
+				strListInfo = "";
+				getBoardList();
+			}
+
+			function selectAlbumDiv(selectedDiv) { // DIV 전체를 클릭 > 단일선택
+				$(".boardAlbumDiv").removeClass("selectedAlbumDiv");
+				$(".boardAlbumDiv").find("input:checkbox").prop("checked", false);
+				$(".topInfoP").removeClass("selectedP");
+
+				selectedDiv.classList.add("selectedAlbumDiv");
+				selectedDiv.getElementsByClassName("topInfoP")[0].classList.add("selectedP");
+				selectedDiv.getElementsByTagName("input")[0].checked = "true";
+				strListInfo = selectedDiv.getElementsByTagName("input")[0].id;
+			}
+
+			function selectAlbumCheckBox(selectedChkBox, event) { // 체크박스만 클릭 > 다중선택
+				event.stopPropagation(); // 상위 Div의 selectAlbumDiv 이벤트를 방지
+				var parentDiv = selectedChkBox.parentNode.parentNode;
+				var parentP = selectedChkBox.parentNode;
+
+				if (selectedChkBox.checked == true) {
+					parentDiv.classList.add("selectedAlbumDiv");
+					parentP.classList.add("selectedP");
+				} else {
+					parentDiv.classList.remove("selectedAlbumDiv");
+					parentP.classList.remove("selectedP");
+				}
+
+				strListInfo = "";
+				$(".boardAlbumDiv ").find("input:checkbox:checked").each(function() {
+					strListInfo += $(this).attr("id");
+				})
+			}
 			
 		</script>
 	</head>
@@ -1155,6 +1402,12 @@
 		        <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
 		        <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
 		        <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
+				<li>
+					<select id="boardViewSelect" style="padding-left:4px;" onchange="selectBoardView(this)">
+						<option value="thumbnail"><spring:message code='ezBoard.hsbal01' /></option>
+						<option value="album"><spring:message code='ezBoard.hsbal02' /></option>
+					</select>
+				</li>
 			</ul>
 		</div>
 		<script type="text/javascript">

@@ -10,6 +10,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -111,4 +112,8 @@ public interface MBoardService {
 	public int checkThisReplyExist(String replyId, String itemId, int tenantId) throws Exception;
 	
 	public String getGubun(String BoardID) throws Exception;
+
+	public int getAllBoardItemListCount(String userId, String companyId, int tenantId) throws Exception;
+
+	List<MBoardListVO> getAllBoardItemList(String userId, String lastDate, String deptId, String companyId, int tenantId, String offSet) throws Exception;
 }

@@ -104,6 +104,7 @@
 			var delReplyLevel = "";
 			var parentReplyID = "";
 			var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
+			var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
 
 		    window.onresize = window_resize;
 		    window.onload = function () {
@@ -269,30 +270,6 @@
 	            xmlhttp.send();
 	            getOneLineReply();
 	            xmlhttp = null;
-	        }
-	
-	        function getOneLineReply() {
-	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&gubun=" + gubun, false);
-	            xmlhttp.send();
-	            var xmldom = createXmlDom();
-	            
-	            xmldom = loadXMLString(xmlhttp.responseText);
-	            xmlhttp = null;
-	            strHTML = "";
-	            var temp;
-	            for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
-	                temp = i + 1;
-	                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><p>";
-	            }
-	            if (i == 0)
-	                strHTML = "<spring:message code='ezBoard.t312'/>";
-	
-	            try {
-	                document.getElementById("onelinereplylist").innerHTML = strHTML;
-	            }
-	            catch (e) {
-	            }
 	        } */
 	
 	        function ReplaceText(orgStr, findStr, replaceStr) {
@@ -638,6 +615,10 @@
 												</th>
 											</tr>
 										</table>
+                                        <div class="commentSort">
+                                            <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+                                            <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+                                        </div>
 										<table id="commentList" style="width:100%; min-width:732px; margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 									</div>
 						        </c:if>

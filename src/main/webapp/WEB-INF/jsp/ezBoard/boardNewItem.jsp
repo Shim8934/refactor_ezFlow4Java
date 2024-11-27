@@ -169,6 +169,9 @@
 			/* 2024-08-26 김유진 - 확장컬럼 사용 여부 */
 			var pAttributeYN = "${boardInfo.attributeYN}";
 
+			/* 2024-10-24 정지은 - 글 작성 시 파일첨부 가능여부 설정 */
+			var attachmentFlag = "<c:out value='${boardInfo.attachmentFlag}'/>";
+
 		    window.onload = function () {
 		    	
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
@@ -403,6 +406,12 @@
 				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
 					document.getElementById("EdtorSize").style.height = parseInt(document.getElementById("EdtorSize").style.height, 10) + ("${boardInfo.guBun}" == "2" ? 90 : 60) - document.getElementById("tab01").parentElement.clientHeight + "PX";
 				}
+
+				if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
+					var beforeEditorSize = document.getElementById("EdtorSize").style.height;
+					document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
+				}
+				
 		        var editorW = (document.documentElement.clientWidth - 20) + "PX";
 		        document.getElementById("tab02").style.width = editorW;
 	            document.getElementById("message").style.width = editorW;
@@ -1982,6 +1991,12 @@
 				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
 					document.getElementById("EdtorSize").style.height = parseInt(document.getElementById("EdtorSize").style.height, 10) + ("${boardInfo.guBun}" == "2" ? 90 : 60) - document.getElementById("tab01").parentElement.clientHeight + "PX";
 				}
+
+				if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
+					var beforeEditorSize = document.getElementById("EdtorSize").style.height;
+					document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
+				}
+				
                 var editorW = (document.documentElement.clientWidth - 20) + "PX";
 		       	document.getElementById("tab02").style.width = editorW;
 	            document.getElementById("message").style.width = editorW;
@@ -3101,7 +3116,7 @@
 	    	<c:if test="${!isCrossBrowser}">
 				<c:choose>
 					<c:when test="${boardInfo.guBun != '3'}">
-				      <tr>
+				      <tr <c:if test="${boardInfo.attachmentFlag != 'Y'}"> style="display:none;"</c:if>>
 				        <td height="20" valign="top" style="padding-top:10px">
 				          <table class="file" style="height:100px">
 				            <form name="multicheck">
@@ -3126,7 +3141,7 @@
 	    	<c:if test="${isCrossBrowser}">
 				<c:choose>
 					<c:when test="${boardInfo.guBun != '3'}">
-				        <tr id="attachIframeTR">
+						<tr id="attachIframeTR" <c:if test="${boardInfo.attachmentFlag != 'Y'}"> style="display:none;"</c:if>>
 				            <td style="height: 145px">
 				                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
 				                <input type="hidden" name="mode" id="mode" />
@@ -3160,6 +3175,11 @@
 			var tabHeight = "${boardInfo.guBun}" == "2" ? 90 : 60;
 			var editorHeight = parseInt(document.getElementById("EdtorSize").style.height, 10) + tabHeight - document.getElementById("tab01").parentElement.clientHeight;
 			document.getElementById("EdtorSize").style.height = (editorHeight > 200 ? editorHeight : 200 ) + "PX";
+		}
+		
+		if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
+			var beforeEditorSize = document.getElementById("EdtorSize").style.height;
+			document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
 		}
 	</script>
 </html>

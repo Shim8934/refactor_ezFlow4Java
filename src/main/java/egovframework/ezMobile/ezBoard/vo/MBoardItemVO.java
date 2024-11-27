@@ -143,6 +143,10 @@ public class MBoardItemVO {
 	private String notiStart;
 	/** 2023-09-25 민지수 - 공지사항 기간설정 종료날짜 */
 	private String notiEnd;
+	/** 게시물 수정자 ID */
+	private String updaterID;
+	/** 게시물 수정자 이름 */
+	private String updaterName;
 	
 	public String getUserID() {
 		return userID;
@@ -570,5 +574,16 @@ public class MBoardItemVO {
 	public void setNotiEnd(String notiEnd) {
 		this.notiEnd = notiEnd;
 	}
-	
+	public String getUpdaterID() {
+		return updaterID;
+	}
+	public void setUpdaterID(String updaterID) {
+		this.updaterID = updaterID;
+	}
+	public String getUpdaterName() {
+		return updaterName;
+	}
+	public void setUpdaterName(String updaterName) {
+		this.updaterName = updaterName;
+	}
 }

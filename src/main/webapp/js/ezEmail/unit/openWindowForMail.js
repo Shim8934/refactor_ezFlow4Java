@@ -7,7 +7,7 @@ function openWindowForMail(url, name, featureObj) {
 
 	var minimumWidth = 890;
     var pheight = window.outerHeight;
-    var conHeight = pheight * 0.8;
+    var conHeight = pheight;
     var pwidth = window.outerWidth;
     var conWidth = pwidth * 0.8;
     if (conWidth > minimumWidth)

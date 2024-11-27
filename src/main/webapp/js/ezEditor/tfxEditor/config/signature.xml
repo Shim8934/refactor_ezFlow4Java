@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+<!-- 하나의 템플릿 파일은 하나의 template 태그입니다. -->
+<!-- template -->
+<!-- title : 서명템플릿 목록에 보여질 파일 명. -->
+<!-- show : 파일을 보여줄지 결정. (true: 보임, false: 숨김) -->
+<!-- path : 서명 템플릿(html) 파일의 경로. (기준 : 에디터가 존재하는 폴더) -->
+<!-- input -->
+<!-- type : 입력받는 input의 타입 (img, text 두가지만 존재) -->
+<!-- name : label 이름 -->
+<!-- id : html의 input id와 동일한 id값을 넣어야합니다. -->
+<templates>
+  <template title="서명1" show="true" path="/signature/example1.html">
+    <inputs>
+      <input type="img" name="로고" id="xfe_signature_logo" />
+      <input type="text" name="이름" id="xfe_signature_name" />
+      <input type="text" name="직책" id="xfe_signature_position" />
+      <input type="text" name="팀" id="xfe_signature_team" />
+      <input type="text" name="회사번호" id="xfe_signature_tel" />
+      <input type="text" name="팩스번호" id="xfe_signature_fax" />
+      <input type="text" name="핸드폰" id="xfe_signature_mobile" />
+      <input type="text" name="이메일" id="xfe_signature_email" />
+      <input type="text" name="주소" id="xfe_signature_company_address" />
+    </inputs>
+  </template>
+  <template title="서명2" show="true" path="/signature/example2.html">
+    <inputs>
+      <input type="text" name="회사명영문" id="xfe_signature_en_componey_name" />
+      <input type="text" name="사이트주소" id="xfe_signature_componey_site" />
+      <input type="text" name="직급" id="xfe_signature_position" />
+      <input type="text" name="이름" id="xfe_signature_name" />
+      <input type="text" name="영어명" id="xfe_signature_en_name" />
+      <input type="img" name="로고" id="xfe_signature_logo" />
+      <input type="text" name="회사명" id="xfe_signature_componey_name" />
+      <input type="text" name="주소" id="xfe_signature_componey_address" />
+      <input type="text" name="공장 주소" id="xfe_signature_factory_address" />
+      <input type="text" name="Tel" id="xfe_signature_tel" />
+      <input type="text" name="Fax" id="xfe_signature_fax" />
+      <input type="text" name="Mobile" id="xfe_signature_mobile" />
+      <input type="text" name="Email" id="xfe_signature_email" />
+    </inputs>
+  </template>
+  <template title="서명3" show="true" path="/signature/example3.html">
+    <inputs>
+      <input type="img" name="로고" id="xfe_signature_logo" />
+      <input type="text" name="이름" id="xfe_signature_name" />
+      <input type="text" name="팀명" id="xfe_signature_team" />
+      <input type="text" name="직급" id="xfe_signature_position" />
+      <input type="text" name="Fax" id="xfe_signature_fax" />
+      <input type="text" name="Tel" id="xfe_signature_tel" />
+      <input type="text" name="Mobile" id="xfe_signature_mobile" />
+      <input type="text" name="Email" id="xfe_signature_email" />
+      <input type="text" name="회사명" id="xfe_signature_company_name" />
+      <input type="text" name="주소" id="xfe_signature_company_address" />
+      <input type="text" name="대표메일" id="xfe_signature_company_email" />
+    </inputs>
+  </template>
+  <template title="서명4" show="true" path="/signature/example4.html">
+    <inputs>
+      <input type="text" name="이름" id="xfe_signature_name" />
+      <input type="text" name="영문이름" id="xfe_signature_en_name" />
+      <input type="text" name="직급" id="xfe_signature_position" />
+      <input type="text" name="회사번호" id="xfe_signature_tel" />
+      <input type="text" name="팩스번호" id="xfe_signature_fax" />
+      <input type="text" name="전호번호" id="xfe_signature_phone" />
+      <input type="text" name="이메일" id="xfe_signature_email" />
+      <input type="text" name="주소" id="xfe_signature_componey_address" />
+      <input type="text" name="영문주소" id="xfe_signature_en_componey_address" />
+      <input type="img" name="로고" id="xfe_signature_logo" />
+    </inputs>
+  </template>
+  <template title="서명5" show="true" path="/signature/example5.html">
+    <inputs>
+      <input type="img" name="로고" id="xfe_signature_logo" />
+      <input type="text" name="회사 이름" id="xfe_signature_componey_name" />
+      <input type="text" name="텍스트" id="xfe_signature_text" />
+      <input type="text" name="회사번호" id="xfe_signature_tel" />
+      <input type="text" name="팩스번호" id="xfe_signature_fax" />
+      <input type="text" name="이메일" id="xfe_signature_email" />
+      <input type="text" name="계좌번호" id="xfe_signature_bank" />
+      <input type="text" name="주소" id="xfe_signature_company_address" />
+    </inputs>
+  </template>
+  <template title="서명6" show="true" path="/signature/example6.html">
+    <inputs>
+      <input type="img" name="로고" id="xfe_signature_logo" />
+      <input type="text" name="회사명" id="xfe_signature_company_name" />
+      <input type="text" name="팀명" id="xfe_signature_team" />
+      <input type="text" name="Tel" id="xfe_signature_tel" />
+      <input type="text" name="Fax" id="xfe_signature_fax" />
+      <input type="text" name="Email" id="xfe_signature_company_email" />
+      <input type="text" name="주소" id="xfe_signature_company_address" />
+    </inputs>
+  </template>
+</templates>

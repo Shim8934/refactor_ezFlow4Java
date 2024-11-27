@@ -346,8 +346,18 @@ function MakeListInfoHTML(ConentObject) {
                             // 재원 수정
                             _TDColum.setAttribute("data-name", p_Sender);
                             //_TDColum.onclick = function (event) { useMailWriteSenderClick == "NO" ? event_listclick(this, event) : new_mail_onclick(this); };
-                            _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
+                            _TDColum.onclick = function (event) {
+                                clearTimeout(singleClickTimer);
+                                singleClickTimer = setTimeout(function () {
+                                    event_listclick(this, event);
+                                }.bind(this), 200);
+                            };
+
+                            _TDColum.ondblclick = function () {
+                                clearTimeout(singleClickTimer);
+                                event_listDBClick(this.parentElement);
+                            };
+                            
                             _TDColum.onselectstart = function () { return false; };
                             break;
                         case "subject":
@@ -365,6 +375,8 @@ function MakeListInfoHTML(ConentObject) {
                             }
                             
                             var p_Title  = SelectSingleNodeValue(XmlRows[Cnt], "subject");
+                            // 2024-10-29 김대현 두줄보기할때 title에 태그 들어가는 현상 수정
+                            p_Title = p_Title.replace(/<[^>]*>/g, '');
                             _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
 
                             if (useMailNewWindow == "YES") {
@@ -378,14 +390,23 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
-                            _TDColum.onclick = function (event) {
-                                event_listclick(this, event);
 
-                                if (pPreviewShow_HOW == "OFF") {
-                                    event_listDBClick(this.parentElement);
-                                }
+                            var singleClickTimer;
+                            _TDColum.onclick = function (event) {
+                                clearTimeout(singleClickTimer);
+                                singleClickTimer = setTimeout(function () {
+                                    event_listclick(this, event);
+
+                                    if (pPreviewShow_HOW == "OFF") {
+                                        event_listDBClick(this.parentElement);
+                                    }
+                                }.bind(this), 200);
                             };
-                            _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
+
+                            _TDColum.ondblclick = function () {
+                                clearTimeout(singleClickTimer);
+                                event_listDBClick(this.parentElement);
+                            };
                             _TDColum.onselectstart = function () { return false; };
                             break;
                         case "receivedt":
@@ -399,8 +420,17 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.innerHTML = p_ReceiveDT;
                             _TDColum.title = p_ReceiveDT;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
-                            _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
+                            _TDColum.onclick = function (event) {
+                                clearTimeout(singleClickTimer);
+                                singleClickTimer = setTimeout(function () {
+                                    event_listclick(this, event);
+                                }.bind(this), 200);
+                            };
+
+                            _TDColum.ondblclick = function () {
+                                clearTimeout(singleClickTimer);
+                                event_listDBClick(this.parentElement);
+                            };
                             _TDColum.onselectstart = function () { return false; };
                             break;
                         case "size":
@@ -409,8 +439,18 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = FormatSize(p_Size);
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
-                            _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
+
+                            _TDColum.onclick = function (event) {
+                                clearTimeout(singleClickTimer);
+                                singleClickTimer = setTimeout(function () {
+                                    event_listclick(this, event);
+                                }.bind(this), 200);
+                            };
+
+                            _TDColum.ondblclick = function () {
+                                clearTimeout(singleClickTimer);
+                                event_listDBClick(this.parentElement);
+                            };
                             _TDColum.onselectstart = function () { return false; };
                             break;
                         case "readdt":

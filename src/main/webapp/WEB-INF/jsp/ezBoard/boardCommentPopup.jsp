@@ -89,6 +89,7 @@
 			var delReplyLevel = "";
 			var parentReplyID = "";
 			var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
+			var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
 
 			$(document).ready(function(){
 				rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
@@ -173,7 +174,10 @@
 					</tr>
 				</c:if>
 			</table>
-			
+            <div class="commentSort">
+                <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+                <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+            </div>
 			<table id="commentList" style="width:99.5%;margin-top:10px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>

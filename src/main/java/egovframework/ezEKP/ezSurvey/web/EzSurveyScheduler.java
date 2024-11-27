@@ -76,30 +76,33 @@ public class EzSurveyScheduler {
 			long surveyId = todaySurveyList.get(i).getSurveyId();
 			String companyId = todaySurveyList.get(i).getCompanyId();
 			int tenantId = todaySurveyList.get(i).getTenantId();
-			
 			List<SurveyParticipantVO> participantList = ezSurveyService.getSurveyParticipantListForMail(surveyId, companyId, tenantId);
 			
-			ezEmailAsync.sendMail(participantList, survey, Integer.toString(offset));
-			ezSurveyService.updateMailSentFlag(surveyId, 1, companyId, tenantId);
-			
-			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
-			
-			Set<String> recipientSet = new HashSet<String> ();
-			for (SurveyParticipantVO surveyParticipant : participantList) {
-				Map<String, Object> recipientMap = new HashMap<String, Object>();
-				recipientMap.put("userType", "PERSON");
-				recipientMap.put("companyId", surveyParticipant.getCompanyId());
-				recipientMap.put("cn", surveyParticipant.getUserId());
-				if (!recipientSet.contains(surveyParticipant.getUserId())) {
-					notiRecipientList.add(recipientMap);
-					recipientSet.add(surveyParticipant.getUserId());
-				}
+			if (survey.getMailFlag() == 1 && survey.getMailSentFlag() == 0) {
+				ezEmailAsync.sendMail(participantList, survey, Integer.toString(offset));
+				ezSurveyService.updateMailSentFlag(surveyId, 1, companyId, tenantId);
 			}
 			
-			if (notiRecipientList != null && notiRecipientList.size() > 0) {
-				String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + surveyId;
-		    	String linkUrlMobile = "";
-		    	ezNotificationService.sendNoti(survey.getCreatorId(), survey.getCreatorName(), notiRecipientList, "SURVEY", "NEW", survey.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
+			if (survey.getTotalNotiSentFlag() == 0) {
+				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+				Set<String> recipientSet = new HashSet<String> ();
+				for (SurveyParticipantVO surveyParticipant : participantList) {
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+					recipientMap.put("userType", "PERSON");
+					recipientMap.put("companyId", surveyParticipant.getCompanyId());
+					recipientMap.put("cn", surveyParticipant.getUserId());
+					if (!recipientSet.contains(surveyParticipant.getUserId())) {
+						notiRecipientList.add(recipientMap);
+						recipientSet.add(surveyParticipant.getUserId());
+					}
+				}
+				
+				if (notiRecipientList != null && notiRecipientList.size() > 0) {
+					String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + surveyId;
+			    	String linkUrlMobile = "";
+			    	ezNotificationService.sendNoti(survey.getCreatorId(), survey.getCreatorName1(), notiRecipientList, "SURVEY", "NEW", survey.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
+			    	ezSurveyService.updateTotalNotiSentFlag(surveyId, 1, companyId, tenantId);
+				}
 			}
 		}
 		

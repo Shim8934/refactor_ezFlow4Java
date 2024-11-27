@@ -88,6 +88,7 @@
 				var Write_FG = "${boardInfo.write_FG}";
 				var Reply_FG = "${boardInfo.reply_FG}";
 				var Delete_FG = "${boardInfo.delete_FG}";
+				var Edit_FG = "${boardInfo.edit_FG}";
 				var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 				var g_progresswin;
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
@@ -138,6 +139,7 @@
 				var disLikeFlag = "<c:out value='${boardInfo.disLikeFlag}'/>";
 				var disLikeCount = "${boardItem.disLikeCount}";
 				var disLikeCountAfter = 0;
+				var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
 				
 		        window.onload = function () {
 		            imageViewInit();
@@ -1829,7 +1831,7 @@
 	        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
 	        				</c:if>
 							<!--		강민수92 end -->
-		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || boardItem.writerID == userInfo.id}">
+		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerID == userInfo.id && boardInfo.edit_FG == 'true')}">
 			                    <li ID='btn_Reply' ><span onclick='btn_Add_Onclick()'><spring:message code='ezBoard.t1001'/></span></li>
 			                    <li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
 			                    <li ID='btn_Delete' ><span  onclick="btn_ImgOnclick('Del')"><spring:message code='ezBoard.t1003'/></span></li>
@@ -1890,6 +1892,20 @@
                              </td>
                          </tr>
                      </c:if>
+                    <c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
+                    <!-- 수정자, 수정일 -->
+                        <tr>
+                            <th style="width:10%;"><spring:message code='ezBoard.updateJIH01' /></th>
+                            <td id="updaterName" style = "white-space:nowrap; padding-right:5px; width: 40%;">
+                                <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updaterName}</div>
+                            </td>
+                            <th style="width:10%;"><spring:message code='ezBoard.updateJIH02' /></th>
+                            <td id="updateDate" style = "white-space:nowrap; padding-right:5px; width: 40%;">
+                                <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updateDate.substring(0, 16)}</div>
+                            </td>
+                        </tr>
+                    <!-- 수정자, 수정일 end -->
+                    </c:if>	
 		            <tr>
 		              <th><spring:message code='ezBoard.t291'/></th>
 		              <td id="cTitle" colspan="3">
@@ -2074,6 +2090,10 @@
 							</th>
 						</tr>
 					</table>
+                    <div class="commentSort">
+                        <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+                        <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+                    </div>
 					<table id="commentList" style="width:100%; min-width:745px; margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 				</div>
 	        </c:if>

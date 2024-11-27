@@ -2716,7 +2716,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("COLUMN", "USEKEYWORD"); // 게시판 키워드 기능 사용여부(Y/N)
             put("TYPE_MYSQL", "VARCHAR(11)"); put("TYPE_ORACLE", "NVARCHAR2(2)");
         }});
-
+        test.add(new HashMap<String, Object>(){{ // 2024-08-01 전인하 - 게시판 > 키워드 기능
+            put("TABLE","TBL_BOARD_ITEM");
+            put("COLUMN", "UPDATERID"); // 게시판 키워드 기능 사용여부(Y/N)
+            put("TYPE_MYSQL", "VARCHAR(80)"); put("TYPE_ORACLE", "NVARCHAR2(80)");
+        }});
+        
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
         }
@@ -4400,4 +4405,38 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     	ezCommonDAO.createTblRsFavCat();
     	ezCommonDAO.createTblRsCatBrd();
     }
+    
+    @Override
+    public void addBoardAttachmentFlag() throws Exception {
+        ezCommonDAO.addBoardAttachmentFlag();
+    }
+
+    /* 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트헤더 추가 */
+    @Override
+    public void insertAllBoardListOption() throws Exception{
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertAllBoardListOption(map);
+        }
+    }
+    
+    /* 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가 */
+    @Override
+    public void insertAllBoardInfo() throws Exception{
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertAllBoardInfo(map);
+        }
+    }
+    
+	@Override
+	public void addSurveyTotalNotiSentFlag() throws Exception {
+		ezCommonDAO.addSurveyTotalNotiSentFlag();
+	}
 }

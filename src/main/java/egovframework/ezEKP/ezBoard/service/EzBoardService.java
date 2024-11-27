@@ -66,7 +66,7 @@ public interface EzBoardService {
 	
 	/* 2018-10-19 홍승비 - 익명게시물의 댓글 표출조건 gubun값 추가 */
 	/* 2018-07-02 홍승비 - 댓글 확인 시 작성자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
-	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String lang, String gubun, String companyID, int tenantID) throws Exception;
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String lang, String gubun, String companyID, int tenantID, String sort) throws Exception;
 	
 	public List<BoardListVO> getUnreadItems(String pUserID, String pBoardID, int pMaxCount, int tenantID) throws Exception;
 	
@@ -319,7 +319,7 @@ public interface EzBoardService {
 	public String getEzTalkGateNoticeBoardId(String companyID, int tenantID) throws Exception;
 	
 	/* 2019-01-15 홍승비 - 수정일(updateDate)만을 업데이트하는 쿼리 추가 */
-	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception;
+	public void modUpdateDate(String updateDate, String itemID, String userID, int tenantID) throws Exception;
 	
 	/* 2019-04-05 홍승비 - 좋아요 삽입 */
 	public void likeInsert(String userID, String itemID, int tenantID) throws Exception;
@@ -450,4 +450,8 @@ public interface EzBoardService {
 
 	/* 2024-08-23 전인하 - 게시판 > 게시물ID로 해당 게시물에 속한 키워드 반환 메소드 */
 	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(String itemID, String boardID, int tenantId) throws Exception;
+
+	public int getAllBoardItemListCount(LoginVO userInfo) throws Exception;
+
+	public List<HashMap<String, Object>> getAllBoardItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
 }

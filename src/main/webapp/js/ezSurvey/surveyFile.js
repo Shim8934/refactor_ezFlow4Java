@@ -30,8 +30,19 @@ var SurveyFile = function() {
 			if (fileList.length == 0) {return;}
 			var fileType = fileList[0]["type"].split("/")[0];
 			
+			/* 2021-12-10 홍승비 - 전자설문 모듈 질문에 파일 업로드 시 서버단에서도 유효 확장자 체크 진행 */
+			var fileName = fileList[0].name; // 각 질문 당 파일 1개만 업로드 가능
+			var extension = fileName.substring(fileName.lastIndexOf('.') + 1, fileName.lenght);
+			
 			switch(uploadMode) {
-				case "image": 
+				case "imgTitle":
+					var allowedExtensions = ['png', 'jpeg', 'jpg'];
+		            if (!allowedExtensions.includes(extension)) {
+		            	alert(SurveyMessages.strAllowedImageForTitle);
+		            	return;
+		            }
+					break;
+				case "image":
 					if (fileType != "image") {alert(SurveyMessages.strOnlyImage); return;}
 					break;
 				case "video": 
@@ -42,12 +53,15 @@ var SurveyFile = function() {
 					break;
 			}
 			
-			/* 2021-12-10 홍승비 - 전자설문 모듈 질문에 파일 업로드 시 서버단에서도 유효 확장자 체크 진행 */
-			var fileName = fileList[0].name; // 각 질문 당 파일 1개만 업로드 가능
-			var extension = fileName.substring(fileName.lastIndexOf('.') + 1, fileName.lenght);
 			var extChkResult = checkUseFileExtension(extension);
 			if (extChkResult == "UPLOAD_EXT_ERROR") {
 				alert(SurveyMessages.srtLangHSBEx01) ; // 허용하지 않는 확장자입니다.
+			} else if (uploadMode == "imgTitle"){
+				var quesDiv = $(fileElmt).closest(".quesDiv")
+				quesDiv.find(".imgQuestionInfo").removeClass("noImg");
+				quesDiv.find(".questnTitle").addClass("hasImg");
+				quesDiv.find(".changeQstText").css("display", "block");
+				fileupload(fileList[0], fileElmt);
 			} else {
 				fileupload(fileList[0], fileElmt);
 			}
@@ -114,14 +128,16 @@ var SurveyFile = function() {
 			var canvasElmt    = document.createElement("canvas");
 			var canvasSize    = fileElmt ? 80 : 40;
 			
-			canvasElmt.setAttribute("width" , canvasSize);
-			canvasElmt.setAttribute("height", canvasSize);
 			divChildElmt1.className = "attImgAva";
 			divChildElmt1.appendChild(canvasElmt);
 			divMainElmt.className   = "attDivFile";
 			divMainElmt.appendChild(divChildElmt1);
 			
 			if (fileElmt) {
+				if (fileElmt.classList.contains('imgQuestionFile')) {
+					liElmt.setAttribute("mode", "question");
+				}
+				
 				ulElmt = fileElmt.parentElement.firstElementChild;
 				
 				if (!isImage(fileName)["isImage"]) {
@@ -224,7 +240,19 @@ var SurveyFile = function() {
 			});
 		}
 		
-		function removeUploadFailFile(liElmt) {liElmt.parentElement.removeChild(liElmt);}
+		function displayInputTitle(liElmt) {
+			if (liElmt.getAttribute("mode") == "question") {
+				var quesDiv = $(liElmt).closest(".quesDiv");
+				quesDiv.find(".questnTitle").removeClass("hasImg");
+				quesDiv.find(".imgQuestionInfo").addClass("noImg");
+			}
+		}
+
+		
+		function removeUploadFailFile(liElmt) {
+			displayInputTitle(liElmt);
+			liElmt.parentElement.removeChild(liElmt);
+		}
 		
 		function afterUploadSuccessfully(liElmt, filename, filePath, fileSize) {
 			if (!isStart && uploadType == "all") {
@@ -234,15 +262,27 @@ var SurveyFile = function() {
 			
 			isStart            = true;
 			var checkImageFile = isImage(filename);
-			var delImg         = document.createElement("img");
-			delImg.src         = "/images/ezSurvey/file_del.gif";
-			delImg.addEventListener("click", function(e) {deleteFile(this, e);}, false);
-			liElmt.appendChild(delImg);
-			liElmt.setAttribute("path", filePath);
-			
 			var divChildElmt1 = liElmt.querySelector("div[class='attImgAva']");
 			var canvasElmt    = liElmt.querySelector("canvas");
 			var imgElmt       = document.createElement("img");
+			
+			if (liElmt.getAttribute("mode") == "question") {
+				divChildElmt1.parentElement.classList.add("questDivFile");
+				divChildElmt1.classList.add("questImgAva");
+				imgElmt.classList.add('titleImg');
+				var delInput = document.createElement("input");
+				delInput.type = "hidden";
+				delInput.classList.add('delInput');
+				liElmt.appendChild(delInput);
+			} else {
+				var delImg         = document.createElement("img");
+				delImg.src         = "/images/ezSurvey/file_del.gif";
+				delImg.addEventListener("click", function(e) {deleteFile(this, e);}, false);
+				liElmt.appendChild(delImg);
+			}
+			
+			liElmt.setAttribute("path", filePath);
+			
 			imgElmt.src       = checkImageFile.isImage == true ? filePath : checkImageFile.urlImage;
 			
 			divChildElmt1.removeChild(canvasElmt);
@@ -290,7 +330,10 @@ var SurveyFile = function() {
 			});
 		}
 		
-		function afterDeleteSuccessfully(liElmt) {liElmt.parentElement.removeChild(liElmt);}
+		function afterDeleteSuccessfully(liElmt) {
+			displayInputTitle(liElmt);
+			liElmt.parentElement.removeChild(liElmt);
+		}
 		
 		function getFileSize(fileSize) {
 			var result = fileSize + "B";
@@ -377,6 +420,32 @@ var SurveyFile = function() {
 			
 			li.append(attDivFile);
 			li.append(delImg);
+			return li;
+		}
+		
+		function makeImgTitle(fileObj) {
+			var fileName   = fileObj["fname"];
+			var fileSize   = fileObj["fsize"];
+			var filePath   = fileObj["fpath"];
+			var fileUrl    = fileObj["furl"];
+			var attachInf  = getAttachInfor(fileObj);
+			var li         = $("<li mode='question'></li>");
+			var attDivFile = $("<div class='attDivFile questDivFile'></div>");
+			var attImgAva  = $("<div class='attImgAva questImgAva'></div>");
+			var realImg    = $("<img class='titleImg' />");
+			var delInput     = $("<input type='hidden' class='delInput'/>");
+			
+			if (fileName) {li.attr("fname", fileName);}
+			if (fileUrl)  {li.attr("furl" , fileUrl) ;}
+			if (fileSize) {li.attr("fsize", fileSize);}
+			if (filePath) {li.attr("path" , filePath);}
+			
+			realImg.attr("src", attachInf["imageSrc"]);
+			attImgAva.append(realImg);
+			attDivFile.append(attImgAva);
+			
+			li.append(attDivFile);
+			li.append(delInput);
 			return li;
 		}
 		
@@ -476,7 +545,8 @@ var SurveyFile = function() {
 			check      : checkUploadStatus,
 			mkImgTag   : mkImgTag,
 			download   : downloadFile,
-			render     : renderAttachList
+			render     : renderAttachList,
+			makeImgTitle : makeImgTitle
 		};
 	}
 }();

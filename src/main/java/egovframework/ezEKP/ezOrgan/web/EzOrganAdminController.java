@@ -333,6 +333,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertBoardReplyCommentEmoticon(); // 2023-11-07 전인하 - 게시판 > 댓글로 이모티콘 삽입 가능 관련 테이블 컬럼 추가
 			ezCommonService.createBoardKeywordTable(); // 2024-08-23 전인하 - 게시판 > 키워드 기능 개발
 			ezCommonService.createResourceFavoriteTables(); // 2024-08-07 유길상 - 자원관리 즐겨찾기 테이블 추가
+			ezCommonService.addBoardAttachmentFlag(); // 2024-10-23 정지은 - 게시판 > 글 작성 시 파일첨부 가능여부 설정
+			ezCommonService.insertAllBoardListOption(); // 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트헤더 추가
+	    	ezCommonService.insertAllBoardInfo(); // 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가
+			ezCommonService.addSurveyTotalNotiSentFlag(); // 2024-11-15 한태훈 - 전자설문 > 설문 알림 발송 시 알림 발송 유무 확인 플래그 추가
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
@@ -4346,6 +4350,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		String mode = request.getParameter("mode");
 		String companyID = request.getParameter("companyID");
+		String maxSort = request.getParameter("maxSort");
 		
 		int jobCnt = ezOrganAdminService.getTitleListCnt(type, companyID, userInfo.getTenantId());
 		
@@ -4362,6 +4367,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("jobID", jobID);
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
+		model.addAttribute("maxSort", maxSort);
 
 		logger.debug("jobTitlePopupUI ended.");
 		return "admin/ezOrgan/jobTitlePopupUi";
@@ -4388,12 +4394,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String displayName = request.getParameter("displayName1");
 		String displayName2 = request.getParameter("displayName2");
 		String sort = request.getParameter("sort");
+		String maxSort = request.getParameter("maxSort");
 		String useFlag = request.getParameter("useFlag");
 		String companyID = request.getParameter("companyID");
 		
 		String result = "";
 		if (mode.equals("Add")) {
-			result = ezOrganAdminService.setTitle(type, "", displayName, displayName2, useFlag, Integer.parseInt(sort), companyID, userInfo.getTenantId());
+			result = ezOrganAdminService.setTitle(type, "", displayName, displayName2, useFlag, Integer.parseInt(maxSort), companyID, userInfo.getTenantId());
 		} else if (mode.equals("Mod")) {
 			result = ezOrganAdminService.updateTitle(type, jobID, displayName, displayName2, useFlag, Integer.parseInt(sort), companyID, userInfo.getTenantId());
 		}
@@ -4562,6 +4569,39 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("getUserCompanyID ended.");
 		return companyID;
+	}
+
+	/**
+	 * 직함관리 목록 표출 순서 저장하는 메서드
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/saveJobTitleListOrder.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String saveJobTitleListOrder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("saveJobTitleListOrder started.");
+		String result = "";
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		int tenantID = userInfo.getTenantId();
+		String[] jobIdArray = request.getParameter("jobID").split(",");
+
+		try {
+			for (int i = 0; i < jobIdArray.length; i++) {
+				int jobId = Integer.parseInt(jobIdArray[i]);
+				int order = i + 1;
+				ezOrganAdminService.updateJobTitleOrder(jobId, order, tenantID);
+			}
+			result = "OK"; 
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result = "ERROR";
+		}
+		
+		logger.debug("saveJobTitleListOrder ended.");
+		return result;
 	}
 	
 	@RequestMapping(value="/admin/ezOrgan/getJobOptionInfo.do", method = RequestMethod.POST, produces="application/text; charset=utf8")

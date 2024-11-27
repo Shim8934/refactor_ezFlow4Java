@@ -249,8 +249,16 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (int) select("EzSurveyDAO.getMailSentFlag", survey);
 	}
 	
+	public int getTotalNotiSentFlag(SurveyVO survey) {
+		return (int) select("EzSurveyDAO.getTotalNotiSentFlag", survey);
+	}
+	
 	public void updateMailSentFlag(Map<String, Object> map) {
 		update("EzSurveyDAO.updateMailSentFlag", map);
+	}
+	
+	public void updateTotalNotiSentFlag(Map<String, Object> map) {
+		update("EzSurveyDAO.updateTotalNotiSentFlag", map);
 	}
 	
 	public long checkRespondent(Map<String, Object> map) {

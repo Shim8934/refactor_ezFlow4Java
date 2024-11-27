@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import java.nio.charset.StandardCharsets;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -11,6 +12,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.json.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -81,11 +83,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /** 
@@ -5416,5 +5421,283 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("moveContSN ended.");
 
 		return result;
+	}
+
+	/**
+	 * 전자결재G 관리자 > 문서조회
+	 */
+	
+	@RequestMapping(value = "/admin/ezApprovalG/apprGDocListAdminIndex.do", method = RequestMethod.GET)
+	public String docListAdminIndex(HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response){
+		logger.debug("apprGMain Started");
+
+		int listType = request.getParameter("listType") != null ? Integer.parseInt(request.getParameter("listType")) : 1;
+		String selectDeptID = selectDeptID = request.getParameter("selectDeptID") != null ? request.getParameter("selectDeptID") : "";
+
+		model.addAttribute("listType", listType);
+		model.addAttribute("selectDeptID", selectDeptID);
+
+		logger.debug("docListAdminIndex ended");
+
+		return "/admin/ezApprovalG/apprGDocListAdminIndex";
+	}
+
+	/**
+	 * 전자결재G 관리자 > 문서조회 LEFT화면 호출 Method
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGDocListAdminLeft.do", method = RequestMethod.GET)
+	public String apprGDocListAdminLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("apprGDocListAdminLeft Started");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String viewLeftCount = ezCommonService.getTenantConfig("APPROVLEFTCOUNT", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String listType = request.getParameter("listType");
+		String userSendOut = "";
+		String firstContainerID = "";
+		String subTitleString = "";
+		boolean isSubTitle = false;
+		String userCont = "";
+		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", userInfo.getTenantId());
+		String hideSusin =  ezCommonService.getTenantConfig("hideSusin", userInfo.getTenantId());
+		//공유결재문서 추가개발
+		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
+		// 한글 웹기안기 사용여부
+		String useWebHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
+		//원문공개사용여부
+		String useOpenGov = config.getProperty("config.useOpenGov");
+		String howToSendOffer = ezCommonService.getTenantConfig("howToSendOffer", userInfo.getTenantId());
+		// 일괄기안 사용여부
+		String useDraftAll = ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId());
+		
+		//부서 문서 조회
+		int primaryLang = Integer.parseInt(userInfo.getPrimary());
+		String selectDeptID = request.getParameter("selectDeptID");
+		String selectDeptName = "";
+
+		OrganDeptVO deptInfo = ezOrganService.getDeptInfo(selectDeptID, userInfo.getPrimary(), userInfo.getTenantId());
+		selectDeptName = primaryLang == 1 ? deptInfo.getDisplayName() : deptInfo.getDisplayName2();
+
+		model.addAttribute("useOpenGov", useOpenGov);
+
+		if (listType == null) {
+			logger.debug("--> listType is null");
+			return "";
+		}
+
+		StringBuffer containers = new StringBuffer();
+
+		List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo, "2");
+
+		//CODELIST 에서 후결 결재선 사용여부에 따른 후결문서함 사용여부
+		String whoKyulYN = ezApprovalGService.getWhoKyulYN(userInfo);
+
+		if (apprGLeftVOList.size() > 0) {
+			firstContainerID = apprGLeftVOList.get(0).getContainerID();
+		}
+
+		for (int k = 0; k < apprGLeftVOList.size(); k++) {
+			if (k == 0) {
+				containers.append("'" + apprGLeftVOList.get(k).getContainerID() + "'");
+			} else {
+				containers.append(", '" + apprGLeftVOList.get(k).getContainerID() + "'");
+			}
+		}
+
+		String sendOutDept = ezApprovalGService.getOptionInfo("A55", "001", userInfo, "CODE");
+		String optGamsabu = ezApprovalGService.getOptionInfo("A40", "001", userInfo, "CODE");
+
+		logger.debug("apprGLeft Value : sendOutDept=" + sendOutDept + "optGamsabu=" +optGamsabu);
+
+		if (sendOutDept.toUpperCase().indexOf(userInfo.getDeptID().toUpperCase()) > -1) {
+			userSendOut = "YES";
+		}
+
+		String infoXML = ezOrganService.getPropertyValue(userInfo.getDeptID(), "extensionAttribute4", userInfo.getTenantId());
+		String relayShowFlag = "N";
+		// 개인의 심사자 권한도 체크하도록 추가해줌.
+		if (infoXML != null && infoXML.equals(config.getProperty("config.companyNum", "")) && userInfo.getRollInfo().contains("i=1")) {
+			relayShowFlag = "Y";
+		}
+
+		//List<Object> referenceTemp = new ArrayList<Object>();
+		//referenceTemp.add(subTitleString);
+		//referenceTemp.add(isSubTitle);
+
+		//getUserSubTitle(userInfo, referenceTemp);
+
+		String autoSendOfferFlag = ezCommonService.getTenantConfig("autoSendOfferFlag", userInfo.getTenantId());
+
+		if(approvalFlag.equals("S")) {
+			String useApprFormCont = ezCommonService.getTenantConfig("useApprFormCont", userInfo.getTenantId());
+			model.addAttribute("useApprFormCont", useApprFormCont);
+			if(useApprFormCont != null && useApprFormCont.equals("YES")) {
+				List<ApprGFormVO> itemList = ezApprovalGService.getFormContainer(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getLang(), userInfo.getId());
+				model.addAttribute("itemList", itemList);
+			}
+
+			String useApprCodeCont = ezCommonService.getTenantConfig("useApprCodeCont", userInfo.getTenantId());
+			model.addAttribute("useApprCodeCont", useApprCodeCont);
+			if(useApprCodeCont != null && useApprCodeCont.equals("YES")) {
+				List<ApprGTaskVO> taskItemList = ezApprovalGService.getCodeContainer(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID(), commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()), approvalFlag, userInfo.getLang());
+				model.addAttribute("taskItemList", taskItemList);
+			}
+
+			userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale());
+
+			List<ApprGContInfoVO> apprContInfoVOs2 = ezApprovalGService.getSpecialContTree(userInfo);
+
+			int subContCount = 0;
+
+			for (int k = 0; k < apprContInfoVOs2.size(); k++) {
+				if (!apprContInfoVOs2.get(k).getContType().equals("005")) { //심사할 문서만 제외
+					subContCount += 1;
+				}
+			}
+			List<KEDSharedUserInfo> deptShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "D", userInfo.getLang(), userInfo.getTenantId());
+			Map<String, List<ApprGFormVO>> shareUsersItemList = new HashMap<String, List<ApprGFormVO>>();
+			for (KEDSharedUserInfo kedSharedUserInfo : deptShareList) {
+				List<ApprGFormVO> shareUserItemList = ezApprovalGService.getFormContainer(userInfo.getTenantId(), "", kedSharedUserInfo.getShareId(), userInfo.getLang(), userInfo.getId());
+				shareUsersItemList.put(kedSharedUserInfo.getShareId(), shareUserItemList);
+			}
+			List<KEDSharedUserInfo> userShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "U", userInfo.getLang(), userInfo.getTenantId());
+
+			model.addAttribute("deptShareList", deptShareList);
+			model.addAttribute("userShareList", userShareList);
+			model.addAttribute("shareUsersItemList", shareUsersItemList);
+			model.addAttribute("specialContTreeList", apprContInfoVOs2);
+			model.addAttribute("specialContTreeCount", apprContInfoVOs2.size());
+			model.addAttribute("subContCount", subContCount);
+			model.addAttribute("userCont", userCont);
+		} else {
+			List<KEDSharedUserInfo> deptShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "D", userInfo.getLang(), userInfo.getTenantId());
+			List<KEDSharedUserInfo> userShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "U", userInfo.getLang(), userInfo.getTenantId());
+
+			model.addAttribute("deptShareList", deptShareList);
+			model.addAttribute("userShareList", userShareList);
+		}
+
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("apprGLeftVOList", apprGLeftVOList);
+		model.addAttribute("listType", commonUtil.stripScriptTags(listType));
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("containers", containers.toString());
+		model.addAttribute("viewLeftCount", viewLeftCount);
+		//model.addAttribute("subTitleString", referenceTemp.get(0));
+		//model.addAttribute("isSubTitle", referenceTemp.get(1));
+		model.addAttribute("relayShowFlag", relayShowFlag);
+		model.addAttribute("userSendOut", userSendOut);
+		model.addAttribute("optGamsabu", optGamsabu);
+		model.addAttribute("firstContainerID", firstContainerID);
+		model.addAttribute("szRoleInfo", userInfo.getRollInfo());
+		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("approvalForDoc", approvalForDoc);
+		model.addAttribute("hideSusin", hideSusin);
+		model.addAttribute("whoKyulYN", whoKyulYN);
+		model.addAttribute("useShareApproval", useShareApproval);
+		model.addAttribute("useWebHWP", useWebHWP);
+		model.addAttribute("autoSendOfferFlag", autoSendOfferFlag); // 전자결재G 미처리문서함 사용여부
+		model.addAttribute("howToSendOffer", howToSendOffer);
+		model.addAttribute("useDraftAll", useDraftAll);
+		model.addAttribute("selectDeptID", selectDeptID);
+		model.addAttribute("selectDeptName", selectDeptName);
+
+		logger.debug("apprGDocListAdminLeft Value : listType= " + listType + "containers= " + containers.toString() + "viewLeftCount= " + viewLeftCount);
+		logger.debug("apprGDocListAdminLeft Ended");
+
+		return "/admin/ezApprovalG/apprGDocListAdminLeft";
+	}
+
+	/*
+	 * 전자결재G 관리자 > 문서조회 > 기록물대장 리스트
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/cabinetMain.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	public String cabinetmain(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("cabinetMain Started");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String sFlag = (request.getParameter("sFlag") != null ? request.getParameter("sFlag") : "");
+		String shareDeptId = (request.getParameter("shareDeptId") != null ? request.getParameter("shareDeptId") : "");
+		String contType = "END";
+		String dirpath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + "doc";
+		String deptInfo = "";
+		String buJaeInfo = "";
+		String susinAdmin = "";
+		// OCS 사용 여부
+		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String userEmail = userInfo.getEmail();
+		String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
+
+		String useOpenGov = config.getProperty("config.useOpenGov");
+
+		if (useOpenGov != null && useOpenGov.equals("YES")) {
+			model.addAttribute("useOpenGov", useOpenGov);
+		}
+
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
+		Document doc = commonUtil.convertStringToDocument(result);
+
+		deptInfo  = doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
+		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent().trim();
+
+		// 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 전자결재 미리보기영역 관련 변수 추가
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String previewInfo = "OFF";
+		String useAprPreview = ezCommonService.getTenantConfig("useAprPreview", userInfo.getTenantId());
+
+		if (useAprPreview.equalsIgnoreCase("YES")) {
+			previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId());
+		}
+
+		// 2024-06-07 전인하 - 기록물대장 > 하위부서 문서함 조회
+		// 하위부서문서함은 다음과 같은 경우에 표출된다 ; 관리자 권한(전체관리자, 회사관리자, 기록물관리책임자 중 1)이 존재하면서 기록물등록대장, 기록물접수목록, 기록물발송목록, 기록물철등록부일 경우
+		String underDeptShowFlag = "FALSE";
+//		List<String> needUnderDeptsFlag = new ArrayList<>(Arrays.asList("m01", "m02", "m05", "m06"));
+//		if (needUnderDeptsFlag.contains(sFlag) && commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;m")) {
+//			underDeptShowFlag = "TRUE";
+//		}
+
+		JSONArray underDeptList = new JSONArray();
+		if (underDeptShowFlag.equals("TRUE")) {
+			List<OrganDeptVO> tempDeptList = ezApprovalGService.getUnderDeptList(userInfo);
+			for (int i = 0; i < tempDeptList.size(); i++) {
+				JSONObject json = new JSONObject();
+				json.put("id", tempDeptList.get(i).getCn());
+				json.put("name", commonUtil.cleanValue(tempDeptList.get(i).getDisplayName()));
+				underDeptList.put(json);
+			}
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("dirpath", dirpath);
+		model.addAttribute("deptInfo", deptInfo);
+		model.addAttribute("buJaeInfo", buJaeInfo);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("userEmail", userEmail);
+		model.addAttribute("use_Editor", use_Editor);
+		model.addAttribute("openYear", openYear);
+		model.addAttribute("contType", contType);
+		model.addAttribute("sFlag", sFlag);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("shareDeptId", shareDeptId);
+		model.addAttribute("previewInfo", previewInfo);
+		model.addAttribute("useAprPreview", useAprPreview);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useDraftAll", ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId()));
+		model.addAttribute("underDeptFlag", underDeptShowFlag);
+		model.addAttribute("underDeptList", underDeptList);
+
+		logger.debug("cabinetMain ended");
+
+		return "/admin/ezApprovalG/apprGDocListAdminCabinetMain";
 	}
 }

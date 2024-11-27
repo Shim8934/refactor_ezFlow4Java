@@ -2359,7 +2359,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	/* 2018-11-22 홍승비 - 그룹사게시판에서는 댓글 작성자의 deptID를 가져오지 않도록 수정 */
 	@Override
-	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String lang, String gubun, String companyID, int tenantID) throws Exception {
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String lang, String gubun, String companyID, int tenantID, String sort) throws Exception {
 		logger.debug("readOneLineReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2370,6 +2370,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_GUBUN", gubun);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_SORT", sort);
 		
 		BoardPropertyVO boardProp = getBoardProperty(boardID, tenantID);
 		
@@ -4227,6 +4228,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		if (pMode.equals("modify")) {
+			if (boardListVO.getGuBun().equals("2")) {
+				boardListVO.setupdaterID(null);
+			} else {
+				boardListVO.setupdaterID(userInfo.getId());
+			}
 			brdUpdateItem(boardListVO, "BOARD");
 		} else if (pMode.equals("temp")) {
 			brdNewItemTemp(boardListVO);
@@ -4692,7 +4698,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2019-01-15 홍승비 - 게시물의 수정일(updateDate)만을 업데이트하는 메서드 */
 	@Override
-	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception {
+	public void modUpdateDate(String updateDate, String itemID, String userID, int tenantID) throws Exception {
 		logger.debug("modUpdateDate started.");
 		
 		Map<String, Object> map = new HashMap<>();
@@ -4700,6 +4706,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("updateDate", updateDate);
 		map.put("itemID", itemID);
 		map.put("tenantID", tenantID);
+		map.put("updaterID", userID);
 		
 		ezBoardDAO.modUpdateDate(map);
 		
@@ -5694,5 +5701,52 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("saveKeyword ended.");
 		return keywordList;
+	}
+
+	@Override
+	public int getAllBoardItemListCount(LoginVO userInfo) throws Exception {
+		logger.debug("getAllBoardItemListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_pUserID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+
+		logger.debug("getAllBoardItemListCount ended");
+		return ezBoardDAO.getAllBoardItemListCount(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getAllBoardItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception {
+		logger.debug("getAllBoardItemList started");
+
+		if (orderByMap.get("orderByCol") == null || "".equals(orderByMap.get("orderByCol"))) {
+			orderByMap.put("orderByCol", "WRITEDATE");
+			orderByMap.put("orderByColDesc", "Y");
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_COMPANYID", boardListVO.getWriterCompanyID());
+		map.put("v_TENANTID", boardListVO.getTenantID());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+
+		if (orderByMap.get("orderByCol") != null) {
+			map.put("iv_PORDERBYCOL1", orderByMap.get("orderByCol"));
+			if (orderByMap.get("orderByColDesc") != null) {
+				map.put("iv_PORDERBYCOL1DESC", orderByMap.get("orderByColDesc"));
+			}
+		}
+		
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
+		
+		logger.debug("getAllBoardItemList ended");
+		return ezBoardDAO.getAllBoardItemList(map);
 	}
 }

@@ -955,4 +955,14 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(HashMap<String, Object> map) throws Exception {
 		return (List<BoardKeywordVO>) list("EzBoardDAO.selectBoardKeywordByBoardItem", map);
 	}
+
+	public int getAllBoardItemListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getAllBoardItemListCount", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getAllBoardItemList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getAllBoardItemList", map);
+	}
+
 }

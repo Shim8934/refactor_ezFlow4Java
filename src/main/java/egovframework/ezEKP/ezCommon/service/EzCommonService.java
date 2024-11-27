@@ -473,4 +473,14 @@ public interface EzCommonService {
 	
 	// 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 테이블 추가
 	public void createResourceFavoriteTables() throws Exception;
+
+	// 2024-10-23 정지은 - 게시판 > 글 작성 시 파일첨부 가능여부 설정
+	public void addBoardAttachmentFlag() throws Exception;
+	
+	/* 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트 헤더 추가 */
+	public void insertAllBoardListOption() throws Exception;
+	/* 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가 */
+	public void insertAllBoardInfo() throws Exception;
+
+	public void addSurveyTotalNotiSentFlag() throws Exception;
 }

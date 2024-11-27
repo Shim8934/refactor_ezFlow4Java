@@ -2533,8 +2533,8 @@ function onChangeTagList() {
 function hiddenMoreMenu() {
     var pageType = pPreviewShow_HOW == "H" ? "_h" : "_w";
     var tagLayerElement = document.getElementById("layer_select"+pageType);
-    tagLayerElement.scroll({top:0});
     if (tagLayerElement) {
+        tagLayerElement.scroll({top:0});
         var tagLayerStyle = getComputedStyle(tagLayerElement);
         if (tagLayerStyle.display !== 'none') {
             document.getElementById("input_wrap"+pageType).classList.remove("on");

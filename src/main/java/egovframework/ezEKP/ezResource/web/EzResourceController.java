@@ -24,6 +24,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -2444,7 +2445,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		String ownerID = xmlDom.getElementsByTagName("OWNERID").item(0).getTextContent();
-		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
+		String title = StringEscapeUtils.unescapeHtml4(xmlDom.getElementsByTagName("TITLE").item(0).getTextContent());
 		String startDateTime = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
 		String endDateTime = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
 		String num = xmlDom.getElementsByTagName("RSSCHEDULENUM").item(0).getTextContent();
@@ -2553,21 +2554,21 @@ public class EzResourceController extends EgovFileMngUtil {
      	String brdNm;
      	
      	if (userInfo.getPrimary().equals("1")) {
-     		brdNm = resInfo.getBrd_Nm();
+     		brdNm = StringEscapeUtils.unescapeHtml4(resInfo.getBrd_Nm());
      	} else {
-     		brdNm = resInfo.getBrd_Nm2();
+     		brdNm = StringEscapeUtils.unescapeHtml4(resInfo.getBrd_Nm2());
      	}
      	
      	String subject = "";
         String notiSubType = "";
         if (approve.equals("1")) {
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " : " + brdNm + "] " + StringEscapeUtils.unescapeHtml4(resInfo.getTitle());
         	notiSubType = "APPROVE";
         } else if (approve.equals("0")){
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + brdNm + "] " + StringEscapeUtils.unescapeHtml4(resInfo.getTitle());
         	notiSubType = "CANCEL";
         } else {
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900017", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900017", userInfo.getLocale()) + " : " + brdNm + "] " + StringEscapeUtils.unescapeHtml4(resInfo.getTitle());
         	notiSubType = "REJECT";
         }
 
@@ -2619,7 +2620,7 @@ public class EzResourceController extends EgovFileMngUtil {
         notiRecipientList.add(recipientMap);
 
         
-    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "RESOURCE", notiSubType, brdNm + " - " + resInfo.getTitle(), "popup", "760", "750", linkUrl, linkUrlMobile, "");
+    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "RESOURCE", notiSubType, brdNm + " - " + StringEscapeUtils.unescapeHtml4(resInfo.getTitle()), "popup", "760", "750", linkUrl, linkUrlMobile, "");
         logger.debug("sendMailToUser ended");
 	}
 	

@@ -30,6 +30,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 
@@ -61,6 +62,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -75,10 +77,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13596,5 +13600,33 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("gongRamSave_receiptAll ended, result = " + result);
 		
 		return result;
+	}
+
+	@GetMapping(value="/ezApprovalG/checkJobTransferStatus.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public ResponseEntity<String> checkJobTransferStatus(@CookieValue("loginCookie") String loginCookie, @ModelAttribute LoginVO checkVO, Locale locale) {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		ResponseEntity<String> failure =  ResponseEntity.badRequest().body(messageSource.getMessage("ezApprovalG.pgb12", locale));
+		// 가독성을 위해 실패하는 조건 분리함. checkVO의 정보도 창을 띄울때 쿠키에서 받은 정보이므로 단순 equals로 비교
+		// 호출 횟수가 많을것으로 예상되어 불일치 시에만 로그 남김.
+		if (!userInfo.getId().equals(checkVO.getId())) {
+			logger.info("checkJobTransferStatus - {} : {} / {}", "id", userInfo.getId(), checkVO.getId());
+			return failure;
+		}
+		
+		if (!userInfo.getDeptID().equals(checkVO.getDeptID())) {
+			logger.info("checkJobTransferStatus - {} : {} / {}", "deptId", userInfo.getDeptID(), checkVO.getDeptID());
+			return failure;
+		}
+
+		if (!((StringUtils.isBlank(userInfo.getJobId()) && StringUtils.isBlank(checkVO.getJobId())) || userInfo.getJobId().equals(checkVO.getJobId()))) {
+			logger.info("checkJobTransferStatus - {} : {} / {}", "jobId", userInfo.getJobId(), checkVO.getJobId());
+			return failure;
+		}
+		
+		return ResponseEntity
+				.ok()
+				.header("Vary", "Cookie")
+				.body("success");
 	}
 }

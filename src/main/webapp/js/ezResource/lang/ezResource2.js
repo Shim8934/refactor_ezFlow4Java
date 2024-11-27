@@ -265,6 +265,11 @@ var strLangHTH02 = "Please enter the number of repeat cycle days accurately.";
 var strLangHTH03 = "Please enter the repeat cycle accurately.";
 var strLangHTH04 = "Please enter the monthly interval as an integer greater than 0.";
 
+// 2024-07-03 김우철 - 관리자 > 현황조회
+var strLangKWC01 = "Approved Resource Status";
+var strLangKWC02 = "Pending Approval Resource Status";
+var strLangKWC03 = "Terminated Resource Status";
+
 //2024-08-06 유길상 - 자원 즐겨찾기 메세지 표출
 var strLangFvYGS01 = "이동";
 var strLangFvYGS02 = "삭제할 자원을 선택해 주세요.";

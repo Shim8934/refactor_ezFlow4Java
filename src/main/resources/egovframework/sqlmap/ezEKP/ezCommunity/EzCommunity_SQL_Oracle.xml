@@ -7977,4 +7977,198 @@
 		]]>
 	</select>
  	
+	<select id="EzCommunityDAO.myCommunityPopGet" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				DISTINCT c_clubno
+			FROM
+				(SELECT
+					*
+				FROM
+					(SELECT
+						T1.c_clubno,
+						writedate,
+						T1.companyid,
+						T1.tenant_id
+					FROM
+						(SELECT
+							DISTINCT TBL_C_CLUBUSER.c_clubno,
+							MAX(writedate) WRITEDATE,
+							TBL_C_CLUB.companyid,
+							TBL_C_CLUBUSER.tenant_id
+						FROM
+							TBL_C_CLUBUSER
+						JOIN
+							TBL_C_CLUB
+						ON
+							TBL_C_CLUBUSER.c_clubno = TBL_C_CLUB.c_clubno
+						AND
+							TBL_C_CLUBUSER.tenant_id = TBL_C_CLUB.tenant_id
+						JOIN
+							TBL_COMM_BOARDINFO
+						ON
+							TBL_COMM_BOARDINFO.c_clubno = TBL_C_CLUBUSER.c_clubno
+						AND
+							TBL_COMM_BOARDINFO.tenant_id = TBL_C_CLUBUSER.tenant_id
+						JOIN
+							TBL_COMM_ITEM
+						ON
+							TBL_COMM_ITEM.boardid = TBL_COMM_BOARDINFO.boardid
+						AND
+							TBL_COMM_ITEM.tenant_id = TBL_COMM_BOARDINFO.tenant_id
+						WHERE
+							RTRIM(TBL_C_CLUBUSER.c_id) = #v_USERID#
+						AND
+							TBL_C_CLUB.c_adminconfirm = 'Y'
+						AND
+							TBL_C_CLUBUSER.permit <> 0
+						AND
+							TBL_C_CLUBUSER.companyid = #companyID#
+						AND
+							TBL_C_CLUBUSER.tenant_id = #tenantID#
+						GROUP BY
+							TBL_C_CLUBUSER.c_clubno, TBL_C_CLUBUSER.tenant_id, TBL_C_CLUB.companyid
+						UNION
+						SELECT
+							TBL_C_CLUB.c_clubno,
+							TBL_COMM_ITEM.WRITEDATE,
+							TBL_C_CLUB.companyid,
+							TBL_C_CLUB.tenant_id
+						FROM
+							TBL_C_CLUB
+						JOIN
+							TBL_COMM_BOARDINFO
+						ON
+							TBL_COMM_BOARDINFO.c_clubno = TBL_C_CLUB.c_clubno
+						AND
+							TBL_COMM_BOARDINFO.tenant_id = TBL_C_CLUB.tenant_id
+						JOIN
+							TBL_COMM_ITEM
+						ON
+							TBL_COMM_ITEM.boardid = TBL_COMM_BOARDINFO.boardid
+						AND
+							TBL_COMM_ITEM.tenant_id = TBL_COMM_BOARDINFO.tenant_id
+						WHERE
+							TBL_C_CLUB.c_adminconfirm = 'Y'
+						AND
+							TBL_C_CLUB.companyid = #companyID#
+						AND
+							TBL_C_CLUB.tenant_id =#tenantID#
+						AND
+							TBL_C_CLUB.c_clubgubun = '2'
+						GROUP BY
+							TBL_C_CLUB.c_clubno, TBL_C_CLUB.tenant_id, TBL_C_CLUB.companyid, TBL_COMM_ITEM.WRITEDATE
+						) T1
+					) T2
+				WHERE
+					T2.companyid = #companyID#
+				AND
+					T2.tenant_id = #tenantID#
+			) X
+		]]>
+	</select>
+
+	<select id="EzCommunityDAO.myCommunityPopItemGet" parameterClass="Map" resultClass="CommunityMyCommunityVO">
+		<![CDATA[
+			SELECT
+				* 
+			FROM
+				(SELECT
+					a.c_clubno,
+					boardname,
+					boardname2,
+					itemid,
+					gubun,
+					writerid,
+					writername,
+					writername2,
+					writerdeptname,
+					TO_DATE(writedate, 'YYYY-MM-DD HH24:MI:SS') + (#offset#/(60*24)) AS writedate,
+					title,
+					c_clubname,
+					c_clubname2,
+					a.boardid,
+					readcount,
+					(SELECT 
+						COUNT(*)  
+					FROM 
+						tbl_comm_onelinereply
+					WHERE  
+						TENANT_ID = B.TENANT_ID
+					AND
+						ITEMID = B.ItemID) ONELINECNT
+					FROM
+						TBL_COMM_BOARDINFO A
+					JOIN
+						TBL_COMM_ITEM B
+					ON
+						A.boardid = B.boardid
+					AND
+						A.tenant_id = B.tenant_id
+					AND 
+						TO_DATE(B.writedate, 'YYYY-MM-DD HH24:MI:SS') > (SYSDATE - INTERVAL '90' DAY) + (#offset# / (60 * 24))
+					CROSS JOIN
+					(SELECT
+						NVL(COUNT(*), 0) itemcnt
+					FROM
+						TBL_COMM_BOARDINFO A
+					JOIN
+						TBL_COMM_ITEM B
+					ON
+						A.boardid = B.boardid
+					AND
+						A.tenant_id = B.tenant_id
+					]]>
+					<iterate prepend="WHERE RTRIM(A.c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+						#v_copNo[]#
+					</iterate>
+					<![CDATA[
+						AND
+							A.parentboardid != 'top'
+						AND
+							A.tenant_id = #tenantID#
+						AND 
+							TO_DATE(B.writedate, 'YYYY-MM-DD HH24:MI:SS') > (SYSDATE - INTERVAL '90' DAY) + (#offset# / (60 * 24))
+						) T1
+						CROSS JOIN
+						(SELECT
+							c_clubno,
+							c_clubname,
+							c_clubname2,
+							c_membercnt
+						FROM
+							TBL_C_CLUB
+					]]>
+					<iterate prepend="WHERE RTRIM(c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+						#v_copNo[]#
+					</iterate>
+					<![CDATA[
+						AND
+						TBL_C_CLUB.tenant_id = #tenantID#
+						) T3
+					]]>
+					<iterate prepend="WHERE RTRIM(A.c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+					#v_copNo[]#
+					</iterate>
+					<![CDATA[
+						AND
+							T3.c_clubno = A.c_clubno
+						AND
+							A.parentboardid != 'top'
+						AND
+							B.startdate <= #v_pNow#
+						AND
+							B.enddate > #v_pNow#
+						AND
+							A.tenant_id = #tenantID#
+						AND 
+							TO_DATE(B.writedate, 'YYYY-MM-DD HH24:MI:SS') > (SYSDATE - INTERVAL '90' DAY) + (#offset# / (60 * 24))
+						ORDER BY
+							B.READCOUNT DESC, B.writedate DESC
+				)
+			WHERE 
+			    ROWNUM <= 5
+		]]>
+	</select>
+	
 </sqlMap>

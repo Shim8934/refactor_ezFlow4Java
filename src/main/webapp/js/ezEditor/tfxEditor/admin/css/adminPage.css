@@ -1,0 +1,365 @@
+/**
+	@파일명 : adminPage.css
+	@만든이 : nckim
+	@파일내용 : 관리자페이지용 스타일 시트
+*/
+
+* {
+	font-size: 12px;
+	font-family: '맑은 고딕';
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	/* width: 1300px; */
+	/* width: 75%;
+	margin: 0 auto; */
+	background-color:#;
+	letter-spacing: 0.5px;
+}
+#header {
+	display: block;
+	position: relative;
+	overflow: auto;
+	height: 100%;
+	background-color: #e4e4e4;
+}
+#headerarea {
+	position: relative;
+	width: 1130px;
+	height: 100%;
+	margin: 0 auto;
+	overflow: auto;
+}
+#headerbox {
+	position: relative;
+	height: 100%;
+	padding: 15px 0px;
+}
+#h1box {
+	display: inline-block;
+	width: 20%;
+	text-align: center;
+}
+h1{
+	font-size:25px;
+	display: inline-block;
+	cursor:pointer;
+	color: #ff8b22;
+}
+#info{
+	float: right;
+	display: block;
+	position: relative;
+	padding: 40px 0px 0 0;
+	color: #444444;
+ }
+.optSelection-pnl ul{	
+	color:#afafaf;
+	border-color:#e4e4e4;	
+	width:100%;
+	/* height:42px; */
+	margin: 0 auto;
+	overflow: hidden;
+}
+.optSelection-pnl ul li{
+	font-size: 14pt !important;
+	font-weight:bold;
+	list-style:none;
+	float:left;
+	width:33.2%;
+	height:40px;
+	line-height:40px;
+	text-align:center !important;
+	background-color:#ffffff;
+	border: 1px solid #ffffff;
+	margin-left:0px;
+}
+.optSelection-pnl ul li:hover{
+	color:#ff8b22;
+	background-color:#ffffff;
+	cursor:pointer;
+}
+.optSelection-pnl ul li.active{
+	color:#ff8b22;
+	background-color:#ffffff;
+	cursor:pointer;
+}
+.xmlOptSelection-pnl{
+	position: relative;
+	display: inline;
+	overflow: auto;
+	width: 100%;
+}
+
+input, select, button{
+	border: 1px solid #adadad;
+}
+input, select, button, label{
+	vertical-align:middle;  	
+}
+input[type=checkbox]:checked{
+	 
+}
+label{
+	font-weight:bold;
+	color: #2d2d2d;
+}
+#cmbOption {
+	margin: 1px 1px 1px 1px;
+	padding: 0px 5px 4px;
+	display:none;
+}
+button {
+	font-size: 12px;
+	font-family: 'Nanum Gothic', sans-serif;
+	font-family: '맑은 고딕';
+	height: 22px;
+	background-color: #797979;
+	color: #ffffff;
+	vertical-align: middle;
+	border: 1px solid #797979;
+}
+button:hover {
+	cursor: pointer;
+	
+}
+#container {
+	position: relative;
+	width: 1130px;
+	margin: 0 auto;
+	margin-top: 5px;
+	margin-bottom: 24px;
+}
+#noticebox {
+	overflow: auto;
+	margin-bottom: 20px;
+}
+#noticeMsg {
+	color: #444444;
+	float: right;
+	display: block;
+	position: relative;
+	font-weight: bold;
+}
+.header-pnl {
+	background-color: #e4e4e4;
+	color: #444444;
+}
+
+.header-pnl table{
+	border-collapse: collapse;
+	border-bottom: 2px solid #e2e1e1;
+}
+
+.header-pnl table th {
+	text-align: center;
+	height: 24px;
+	font-size: 12px;
+}
+.langTitle{
+	width:40%;
+	text-align:center;
+	background-color:#fff;
+	color:#2d2d2d;
+	font-weight:bold;
+	border:none;
+}
+#xmlArea{
+	scrollbar-face-color: #e4e4e4;
+}
+::-webkit-scrollbar {
+	width: 18px;
+}
+
+::-webkit-scrollbar-track-piece {
+    background: #f5f5f5;
+}
+::-webkit-scrollbar-thumb {
+	background: #d2d2d2;
+}​
+#xmlArea tr:hover {
+	/*background-color: #faf785;*/
+	text-decoration:underline;
+}
+#xmlArea table{
+	border-collapse: collapse;
+}
+
+#xmlArea th {
+	text-align: center;
+	color: #2d2d2d;
+	background-color:#fff;
+	padding-left: 15px;
+}
+#xmlArea td {
+	text-align: left;
+	background-color:#fff;
+	/* padding: 20px 5px; */
+	margin: 0 auto;
+	vertical-align: top;
+}
+.remark-pnl {
+	text-align: left !important;
+	font-size: 12px;
+}
+
+ul li {
+	text-align: left !important;
+	font-size: 12px;
+	margin-left:20px;
+}
+
+#xmlArea textarea {
+	padding: 1px 1px 1px 2px;
+	line-height: 17px;
+	letter-spacing: 0.5px;
+	outline: none;
+	border: 1px solid #adadad;
+}
+
+.np {
+	width: 200px;
+	height: 20px;
+	padding-left: 3px;
+	border: 1px solid #adadad;
+}
+
+.mini_np {
+	width: 170px;
+	height: 20px;
+	padding-left: 5px;
+	border: 1px solid #adadad;
+}
+
+.applyopt_sbx {
+	width: 80px;
+	border: 1px solid #adadad;
+	height: 22px;
+}
+
+.opt_div {
+	margin-bottom: 5px;
+	text-align: left;
+}
+
+#emptyArea{
+	width:100%;
+	/*
+	height:600px;	
+	line-height: 600px;
+	*/
+	
+	/*
+	margin: 1px 1px 1px 1px !important;	
+	*/
+	font-size:20pt;
+	color:gray;
+	text-align:center;			
+	font-weight:bold;			
+	background-color:#fff;
+}
+#pathbox {
+	text-align: right;
+	display: inline-block;
+	position: absolute;
+	right: 0;
+	top: 25%;
+}
+.xmlPath {
+	
+}
+
+#btnReadXml, #btnWriteXml {
+	width: 140px;
+	height: 22px;
+	letter-spacing: 0.8px;
+}
+
+#readXmlPath, #writeXmlPath{
+	width:250px;
+	margin: 2px;
+	padding: 2px 5px 2px 3px;
+	background-color: #fbfbfb;
+}
+#topLink{
+	position:fixed; 
+	bottom:5px; 
+	right:5px;
+}
+#topLink a{
+	font-size:15px;
+	font-weight:bold;
+}
+#perspective {
+	background-color : #fff;	
+	padding: 5px;
+	border: solid 1px #e4e4e4;	
+}
+#closeColor{
+	position: absolute;
+	top: 5px;
+	right: 8px;
+	font-weight: bold;
+	cursor:pointer;
+	color:#000;
+}
+#langControlArea{
+	display:none;
+	/*
+	float:right;
+	*/
+}
+
+.mini-table-th{
+	background-color:#888888 !important;
+	color:#ffffff !important;
+	text-align:center !important;
+	padding:0px !important;
+	height: 25px;
+}
+
+.addRowBtn{
+	color: #ffffff;
+	border: 1px solid #888888 !important;
+	width: 50px;
+	margin-left: 5px;
+	height: 22px;
+	vertical-align: middle;
+	padding: 0px;
+	background-color: #888888;
+}
+.addRowBtn:hover{
+	
+}
+.btnDelete{
+	background-color: #fff;
+	color: #2d2d2d;
+	box-shadow: none;
+	border: 0px;
+	font-weight: bold;
+}
+.btnDelete:hover{
+	/* background-color: #fff;
+	color: #2d2d2d;
+	box-shadow: none;
+	font-weight:bold; */
+}
+footer{
+	background-color:#e4e4e4;
+	height: 34px;
+}
+#footerbox {
+	position: relative;
+	width: 1130px;
+	height: 100%;
+	margin: 0 auto;
+}
+#footercontents {
+	position: absolute;
+	right: 0;
+	top: 25%;
+	color: #444444;
+	font-weight: bold;
+}

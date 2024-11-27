@@ -297,6 +297,11 @@ var strLangHTH02 = "请准确输入重复周期天数。";
 var strLangHTH03 = "请准确输入重复周期。";
 var strLangHTH04 = "请输入大于 0 的整数每月间隔。";
 
+// 2024-07-03 김우철 - 관리자 > 현황조회
+var strLangKWC01 = "승인자원 현황";
+var strLangKWC02 = "승인대기자원 현황";
+var strLangKWC03 = "종료자원 현황";
+
 //2024-08-06 유길상 - 자원 즐겨찾기 메세지 표출
 var strLangFvYGS01 = "이동";
 var strLangFvYGS02 = "삭제할 자원을 선택해 주세요.";

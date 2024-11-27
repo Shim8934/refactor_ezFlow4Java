@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezConn.util.EzConnUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -86,8 +88,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 	@Autowired	
 	private CommonUtil commonUtil;
-	
-    @Autowired
+
+	@Autowired
+	private Properties config;
+
+	@Autowired
+	private EzConnUtil ezConnUtil;
+
+	@Autowired
     private EzCommonService ezCommonService;
     
     @Autowired
@@ -415,6 +423,21 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("updateProperty ended");
 	}
+	@Override
+	public void updateJobTitleOrder(int jobId, int sortOrder, int tenantID) throws Exception {
+		logger.debug("updateJobTitleOrder started");
+		logger.debug("jobId=" + jobId + ",sortOrder=" + sortOrder + ",tenantID=" + tenantID);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_JOBID", jobId);
+		map.put("v_SORTORDER", sortOrder);
+		map.put("v_TENANTID", tenantID);
+		
+		ezOrganAdminDao.updateJobTitleOrder(map);
+
+		logger.debug("updateJobTitleOrder ended");
+	}
 	
 	@Override
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String deptID) throws Exception {
@@ -582,6 +605,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String mailAddr = cn + "@" + domain;
 		
 		logger.debug("mailAddr=" + mailAddr);
+
+		// 외부메일서버 비밀번호 변경
+		String useMailServer2 = config.getProperty("config.useMailServer2");
+		if ("Y".equalsIgnoreCase(useMailServer2)) {
+			try {
+				updatePasswordForMailServer2(cn, password);
+			} catch (Exception e) {
+				throw new Exception("updatePasswordForMailServer2 failed: " + e.getMessage());
+			}
+		}
 		
 		// 기존 이메일 계정의 Encrypt된 암호를 가져온다.
 		String existingEncryptedPassword = ezEmailUserAdminService.getEncryptedUserPassword(mailAddr);
@@ -622,6 +655,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 		logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantId);
 
+		// 외부메일서버 비밀번호 변경
+		String useMailServer2 = config.getProperty("config.useMailServer2");
+		if ("Y".equalsIgnoreCase(useMailServer2)) {
+			try {
+				updatePasswordForMailServer2(cn, decryptedNewPassword);
+			} catch (Exception e) {
+				logger.debug("updatePasswordForMailServer2 failed.", e);
+				return "MAILSERVER2_ERROR";
+			}
+		}
+
 		// 이메일 계정의 암호를 새 암호로 설정한다.
 		int rc = ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedOldPassword, decryptedNewPassword);
 
@@ -645,6 +689,26 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 		logger.debug("changePasswordWithEmailSystem ended");
 		return result;
+	}
+
+	/*	외부 메일 비밀번호 변경 (useMailServer2가 Y인 경우)	*/
+	private void updatePasswordForMailServer2(String cn, String password) throws Exception {
+		logger.debug("updatePasswordForMailServer2 started.");
+
+		String mailServerURL2 = config.getProperty("config.MailServerURL2");
+		String url2 = mailServerURL2 + "/ezConn/changePassword.do";
+
+		String params = String.format("%s:%s", cn, password); // 사용자 ID와 새 비밀번호 연결
+		String encryptedParams = ezConnUtil.encryptAES(params); // AES 암호화 및 Base64 인코딩
+		String inputParams = "id=" + URLEncoder.encode(encryptedParams, "UTF-8"); // URL 인코딩
+		String response = ezEmailUtil.getWebServiceResult(url2, inputParams); // REST API 호출
+
+		if (response == null || !response.equals("OK")) {
+			throw new Exception("Failed to change password for MailServer2. user: " + cn);
+		} else {
+			logger.debug("Successfully changed password for MailServer2. user: " + cn);
+		}
+		logger.debug("updatePasswordForMailServer2 ended.");
 	}
 
 	@Override
@@ -1918,7 +1982,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<DATA3>" + jobList.get(i).getSort()  + "</DATA3>");
 				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4></CELL>");
 				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE></CELL>");
-				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
 				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
 				rtnVal.append("</ROW>");
 			}

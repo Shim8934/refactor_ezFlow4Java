@@ -2586,14 +2586,16 @@
 				TBL_RS_PERSPORTLET B
 			ON
 				A.BRD_ID = B.BRD_ID
+			AND 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BRD_COMPANY = B.BRD_COMPANY
 			WHERE
 				B.CN = #cn#
 			AND
-				B.TENANT_ID = #tenant_id#
+				A.TENANT_ID = #tenant_id#
 			AND
-				B.BRD_COMPANY = #brd_company#
-			AND
-				A.BRD_COMPANY = B.BRD_COMPANY
+				A.BRD_COMPANY = #brd_company#
 		]]>
 	</select>
 

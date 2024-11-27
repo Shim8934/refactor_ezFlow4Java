@@ -2723,6 +2723,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_tabCommunity dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
 .contents_tabCommunity dd{float:right; height:44px; margin:0px; padding:0px;}
 .contents_tabCommunity dd.btn_more{width:42px; background:url(../images/kr/community/communityPortlet_btnmore.png) center no-repeat; cursor:pointer;}
+.contents_tabCommunity .boardNewPop{cursor: pointer;}
 .contents_listCommunity{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .contents_listCommunity li{overflow:hidden; margin:0px; padding:0px; line-height:34px; color:#555555; font-size:13px; cursor:pointer;}
 .contents_listCommunity li span{display:inline-block; margin:0px; padding:0px 0px 0px 0px;}
@@ -3331,7 +3332,7 @@ input::-ms-clear {display: none;}
 
 /* survey question type selectbox */
 .quesDiv {margin:0px; padding:0px; background:#f1f6fb; padding:20px; text-align:center; align-items:center; justify-content:center;}
-.quesDiv .qstnRow {display: flex; align-items: center;}
+.quesDiv .qstnRow {display: flex; align-items: center;justify-content:flex-end;}
 .quesDiv .qstnRow .questnTitle {flex: 1; margin:0px 10px 0px 0px; padding:10px; font-size:14px; color:#1f1f1f; background:none; border:none; border-bottom:1px solid #c5c5c5;}
 .quesDiv .qstnRow .questnTitle.focus{border-bottom:1px solid #2196f3;}
 .quesDiv .qstnRow >img {width: 36px; height: 36px; padding: 5px; cursor: pointer;}
@@ -3367,7 +3368,7 @@ input::-ms-clear {display: none;}
 
 /* attach file ul list */
 .survey_atchBtn{padding:0; margin:0; height:40px;}
-.survey_atchBtn li.atchLiImg{ margin:9px 3px 0px 0px !important;}
+.survey_atchBtn li.atchLiImg{ margin:9px 3px 0px 0px !important; position:relative;}
 .survey_atchBtn li.atchLiUrl{ margin:9px 0px 0px 0px !important;}
 .survey_atchBtn li.modifyBtnLi{margin:7px 3px 0px 0px !important;}
 .survey_atchBtn li.copyBtnLi{margin:7px 3px 0px 0px !important;}
@@ -3525,6 +3526,9 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .othersLogicArea {display: flex; padding-left: 15px;}
 .prevQsOpt .othersLogicArea .prevArrow {padding: 0px 30px;}
 .prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
+.prevQsOpt .scheduleLogicArea {display: flex;}
+.prevQsOpt .scheduleLogicArea .prevScheduleArrow {padding: 0px 30px;}
+.prevQsOpt .scheduleLogicArea .logicSpan {font-size: 16px; margin-top: 1px; width: 65px;}
 .skipSelect, .logicSelect {height: 22px; padding: 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 90px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
 
 /* skip part */
@@ -4053,7 +4057,7 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 .boardComment {position: relative}
 
 ._addEmoticon {padding-left: 5px; padding-right: 5px; cursor: pointer;}
-#_addEmoticonRereply {position:absolute; top:10px; margin-left:-34px;}
+#_addEmoticonRereply {float: left;}
 #_addEmoticon {margin-bottom: 23px;}
 
 /* 2023-12-27 전인하 - 삭제된 댓글 스타일 생성 */
@@ -4078,4 +4082,65 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 #TreeCtrl_MyFavTree_ul > .lnbUL {
 	padding-top: 0px;
 	padding-left: 20px;
+}
+
+/* 2024-10-17 전인하 - 게시판 > 댓글 정렬 기준 버튼 추가 */
+.commentSort {float: left;}
+.commentSort span { padding: 10px 0px; display: inline-block; }
+.commentSort span.checked { font-weight: 700; text-decoration: underline; }
+.commentSort span:hover { font-weight: 700; cursor: pointer; text-decoration: underline; }
+.commentSort #latest { padding: 10px 0px 10px 10px; }
+.commentSort #earliest:after { display: inline-block; content: ""; width: 1px; height: 12px; background-color: black; margin-left: 10px; }
+
+/* 2024-10-22 한태훈 - 전자설문 > 일정 유형 보기 추가 */
+.qstnForm .schedule-option {display: flex; justify-content:space-between; border-width: 0px 0px 1px; border-style: dotted; border-color: #c3c3c3;}
+.qstnForm .schedule-option .schedule-input {margin: 10px 10px 0px 0px;}
+.qstnForm .schedule-option .eDate {display:none;}
+.qstnForm .schedule-option .dateOpt {margin-left:15px;}
+.qstnForm .schedule-option .betweenSpan {margin:0px 3px; display:none;}
+.qstnForm .schedule-option .scheduleTxt {display:none;width:200px;}
+
+/* 2024-10-25 한태훈 - 전자설문 > 질문을 이미지로 대체 */
+.qstnWrapper .quesDiv .fileAttTooltip {width:150px; position: absolute; top: 35px; left: 0; display:none;}
+.qstnWrapper .quesDiv .fileAttTooltip .fileAttTooltipContent:before {content: ''; position: absolute; border-bottom: 14px solid #fff; border-right: 8px solid transparent; border-left: 8px solid transparent; top: -12px; left: 5px; z-index: 2;}
+.qstnWrapper .quesDiv .fileAttTooltip .fileAttTooltipContent {background-color: #fff; color: #333; padding: 10px; border-radius: 5px; border: 1px solid #cccccc; white-space: pre-line; position: relative; z-index: 1;}
+.qstnWrapper .quesDiv .fileAttTooltip .fileAttTooltipLine {cursor: pointer;}
+.qstnWrapper .quesDiv .fileAttTooltip .fileAttTooltipDivider {border-top: 1px solid #ccc; margin: 3px 0px;}
+.qstnWrapper .quesDiv .imgQuestionInfo.noImg {display:none;}
+.qstnWrapper .quesDiv .imgQuestionFile {display:none;}
+.qstnWrapper .quesDiv .questnTitle.hasImg {display:none;}
+.qstnWrapper .quesDiv .questnTitle.questionImg {display:none;}
+.qstnWrapper .quesDiv .changeQstText {display:none; margin: 0px 10px; padding: 0px 7px; color: #393939; background: #fff; border: 1px solid #c7c7c7; border-bottom: 1px solid #909193; cursor: pointer;}
+.qstnWrapper .quesDiv .questDivFile {display:block; cursor:auto;}
+.qstnWrapper .quesDiv .questDivFile .questImgAva {height: auto; width: auto; overflow-x:auto; display:flex; margin:0px;}
+.qstnWrapper .quesDiv .questDivFile .questImgAva .titleImg {width:auto; height:auto; max-width:none;}
+.qstnWrapper .quesDiv .imgQstUl {padding-left : 0px;}
+.questionImgTitle {overflow-x : auto;}
+.questionImgTitle .titleImg {width: auto; height: auto; max-height:none !important;}
+.questionImgHeader .questionImgContent {padding:0px 20px; cursor: default; font-size:14px; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana'; display:flex;}
+.prevQsWrapper .prevQsContent .questionImgTitle{max-height: none; margin:0px 35px;}
+.imgTitleDiv {overflow-x: auto; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;}
+.imgTitle{width: auto; height: auto; padding: 30px;}
+
+/* 2024-11-13 김대현 - 메일함 트리구조 전체 메일함 펼치기 접기 디자인 추가 */
+.toggleTreeNode {
+	cursor: pointer;
+	padding-top: 5px;
+	font-size: 14px;
+}
+.toggleTreeNode.off .treeNode_toggle_icon {
+	background-image: url('/images/expand.png');
+	background-size: cover;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	vertical-align: middle;
+}
+.toggleTreeNode.on .treeNode_toggle_icon {
+	background-image: url('/images/collapse.png');
+	background-size: cover;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	vertical-align: middle;
 }

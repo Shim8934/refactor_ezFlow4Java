@@ -1,5 +1,5 @@
 var mainType = {
-	//mail : "메일",	
+	mail : "메일",	
 	approval : "Persetujuan",	
 	board : "papan peringatan",	
 	schedule : "jadwal",
@@ -14,6 +14,7 @@ var mainType = {
 }
 
 var subType = {
+	mail : {},
 	approval : {
 		arrive : "Kedatangan dokumen",
 		complete : "Dokumen selesai",

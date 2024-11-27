@@ -34,7 +34,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript">
 		    var g_bdraft = false;
-		    var g_moveUrl = "<c:out value='${url}'/>";
+		    var g_moveUrl = "<c:out value='${url}' escapeXml='false'/>";
 		    var g_servername = "${serverName}";	
 			var g_expath = "exchange";
 			var g_userID = "${userId}";
@@ -622,6 +622,8 @@
 	            createNodeAndInsertText(xmlpara, objNode, "MAILSEARCHPERIOD", mailSearchPeriod);
 	            createNodeAndInsertText(xmlpara, objNode, "MAILSENDRESULT", "${mailGeneral.mailSendResult}");
 	            createNodeAndInsertText(xmlpara, objNode, "TEXTOPTION", "${mailGeneral.textOption}");
+	            createNodeAndInsertText(xmlpara, objNode, "DEFAULTCURSORPOSITION", "${mailGeneral.defaultCursorPosition}");
+	            createNodeAndInsertText(xmlpara, objNode, "DEFAULTSEPARATESEND", "${mailGeneral.defaultSeparateSend}");
 	            
 	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", true);
 	            xmlhttp.onreadystatechange = function() {
@@ -1556,7 +1558,6 @@
 			}
 
 			function reportHackingMessage_complete(rtn) {
-				console.log(rtn)
 				$(parent.frames["left"].document.getElementById("blockLeft")).remove();
 				var message = rtn['message'];
 				var szItemID = rtn['szItemID'];
@@ -1582,7 +1583,7 @@
 
 						if (pRtnMessage.indexOf("NO COPY processing failed.") > -1) {
 							alert(strLang241);
-						} else if ("OK") {
+						} else if (pRtnMessage.indexOf("OK") > -1) {
 							MailListRefresh();
 							prevShow_Clear();
 							alert("<spring:message code='ezEmail.zno003' />");

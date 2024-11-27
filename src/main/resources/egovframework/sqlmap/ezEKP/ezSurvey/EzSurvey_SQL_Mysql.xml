@@ -874,7 +874,10 @@
 				date_add(start_date, interval #offset# minute)  as startDate,
 				date_add(end_date, interval #offset# minute)    as endDate,
 				tenant_id as tenantId,
-				company_id as companyId
+				company_id as companyId,
+				mail_flag as mailFlag,
+				mail_sent_flag as mailSentFlag,
+				totalnoti_sent_flag as totalNotiSentFlag
 			from
 				tbl_survey
 			where
@@ -884,11 +887,7 @@
 		 	and
 		 		use_status = 1
 		 	and
-		 		mail_flag = 1
-		 	and
 		 		draft_flag = 0
-		 	and 
-		 		mail_sent_flag = 0
  		]]>
 	</select>
 	
@@ -1210,6 +1209,32 @@
 			tenant_id = #tenantId#
 	</update>
 	
+	<select id="EzSurveyDAO.getTotalNotiSentFlag" parameterClass="SurveyVO" resultClass="Integer">
+		SELECT 
+			TOTALNOTI_SENT_FLAG
+		FROM 
+			TBL_SURVEY
+		WHERE 
+			SURVEY_ID = #surveyId#
+		AND 
+			COMPANY_ID = #companyId#
+		AND 
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<update id="EzSurveyDAO.updateTotalNotiSentFlag" parameterClass="Map">
+		UPDATE 
+			TBL_SURVEY
+		SET 
+			TOTALNOTI_SENT_FLAG = #totalNotiSentFlag#
+		WHERE 
+			SURVEY_ID = #surveyId#
+		AND 
+			COMPANY_ID = #companyId#
+		AND 
+			TENANT_ID = #tenantId#
+	</update>
+	
 	<!--***********************************************************************************
 	**                                Attach item process                                **
 	************************************************************************************-->
@@ -1236,6 +1261,10 @@
 				(
 					target_id in <iterate property="questionIds" open="(" close=")" conjunction=",">#questionIds[]#</iterate>
 					and target_type = 'question'
+				)
+			 or (
+					target_id in <iterate property="questionIds" open="(" close=")" conjunction=",">#questionIds[]#</iterate>
+					and target_type = 'title'
 				)
 			 or (
 			 		target_id in <iterate property="optionIds" open="(" close=")" conjunction=",">#optionIds[]#</iterate>

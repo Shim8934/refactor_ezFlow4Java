@@ -1,5 +1,5 @@
 var mainType = {
-	//mail : "邮件",	
+	mail : "邮件",	
 	approval : "赞同",	
 	board : "公告栏",	
 	schedule : "日程",
@@ -14,6 +14,7 @@ var mainType = {
 }
 
 var subType = {
+	mail : {},
 	approval : {
 		arrive : "文件到达",
 		complete : "文件完成",

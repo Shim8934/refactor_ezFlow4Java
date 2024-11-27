@@ -2846,4 +2846,42 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void addBoardAttachmentFlag() {
+		try {
+			select("EzCommonDAO.checkBoardAttachmentFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info attachmentFlag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardAttachmentFlag");
+		}
+	}
+	
+	/* 2024-10-21 한태훈 - 게시판 > 최근게시물 리스트헤더 추가 */
+	public void insertAllBoardListOption(Map<String, Object> map) {
+		String allBoardListOption = (String) select("EzCommonDAO.checkAllBoardListOption", map);
+		if (allBoardListOption == null) {
+			logger.debug("allBoardListOption doesn't exist. insert data...");
+			insert("EzCommonDAO.insertAllBoardListOption", map);
+		}
+	}
+	
+	/* 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가 */
+	public void insertAllBoardInfo(Map<String, Object> map) {
+		String allBoardInfo = (String) select("EzCommonDAO.checkAllBoardInfo", map);
+
+		if (allBoardInfo == null) {
+			logger.debug("allBoardInfo doesn't exist. insert data...");
+			insert("EzCommonDAO.insertAllBoardInfo", map);
+		}
+	}
+	
+	public void addSurveyTotalNotiSentFlag() {
+		try {
+			select("EzCommonDAO.checkSurveyTotalNotiSentFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_survey totalnoti_sent_flag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addSurveyTotalNotiSentFlag");
+		}
+	}
 }

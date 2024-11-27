@@ -76,7 +76,8 @@
 				MAILFG_POST,
 				MAILFG_MOD,
 				MAILFG_COMMENT,
-				USEKEYWORD
+				USEKEYWORD,
+				ATTACHMENTFLAG
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  
@@ -883,52 +884,54 @@
   
   <select id="MBoardDAO.getBrdItemInfo" parameterClass="Map" resultClass="MBoardItemVO">
           SELECT
-              ITEMID,
-              WRITERID,
+              A.ITEMID,
+              A.WRITERID,
 			  <isEqual property="lang" compareValue="2">
-				  WRITERNAME2 AS WRITERNAME,
-				  WRITERDEPTNAME2 AS WRITERDEPTNAME,
-				  WRITERCOMPANYNAME2 AS WRITERCOMPANYNAME,
+				  A.WRITERNAME2 AS WRITERNAME,
+				  A.WRITERDEPTNAME2 AS WRITERDEPTNAME,
+				  A.WRITERCOMPANYNAME2 AS WRITERCOMPANYNAME,
               </isEqual>
 			  <isNotEqual property="lang" compareValue="2">
-				  WRITERNAME,
-				  WRITERDEPTNAME,
-				  WRITERCOMPANYNAME,
+				  A.WRITERNAME,
+				  A.WRITERDEPTNAME,
+				  A.WRITERCOMPANYNAME,
 			  </isNotEqual>
-              WRITEDATE,
-              PARENTWRITEDATE,
-              IMPORTANCE,
-              TITLE,
-              CONTENTLOCATION,
-              STARTDATE,
-              ENDDATE,
-              ABSTRACT,
-              ATTACHMENTS,
-              UPPERITEMIDTREE,
-              ITEMLEVEL,
-              COPIEDITEM,
-              EXTENSIONATTRIBUTE1,
-              EXTENSIONATTRIBUTE2,
+              A.WRITEDATE,
+              A.PARENTWRITEDATE,
+              A.IMPORTANCE,
+              A.TITLE,
+              A.CONTENTLOCATION,
+              A.STARTDATE,
+              A.ENDDATE,
+              A.ABSTRACT,
+              A.ATTACHMENTS,
+              A.UPPERITEMIDTREE,
+              A.ITEMLEVEL,
+              A.COPIEDITEM,
+              A.EXTENSIONATTRIBUTE1,
+              A.EXTENSIONATTRIBUTE2,
 			  <isEqual property="lang" compareValue="2">
-				  EXTENSIONATTRIBUTE32 AS EXTENSIONATTRIBUTE3,
+				  A.EXTENSIONATTRIBUTE32 AS EXTENSIONATTRIBUTE3,
 			  </isEqual>
 			  <isNotEqual property="lang" compareValue="2">
-				  EXTENSIONATTRIBUTE3,
+				  A.EXTENSIONATTRIBUTE3,
 			  </isNotEqual>
-              EXTENSIONATTRIBUTE4,
-              EXTENSIONATTRIBUTE5,
-              MAINCONTENT,
+              A.EXTENSIONATTRIBUTE4,
+              A.EXTENSIONATTRIBUTE5,
+              A.MAINCONTENT,
               A.APPRFLAG,
               B.GUBUN,
-              EXTENSIONATTRIBUTE6,
-              EXTENSIONATTRIBUTE7,
-              EXTENSIONATTRIBUTE8,
-              EXTENSIONATTRIBUTE9,
-              EXTENSIONATTRIBUTE10,
+              A.EXTENSIONATTRIBUTE6,
+              A.EXTENSIONATTRIBUTE7,
+              A.EXTENSIONATTRIBUTE8,
+              A.EXTENSIONATTRIBUTE9,
+              A.EXTENSIONATTRIBUTE10,
               A.BOARDID,
               A.DOCNO,
-			  NTSTARTDATE notiStart,
-			  NTENDDATE notiEnd
+			  A.NTSTARTDATE notiStart,
+			  A.NTENDDATE notiEnd,
+	  		  CASE WHEN #lang# = '2' THEN U.DISPLAYNAME2 ELSE U.DISPLAYNAME END AS UPDATERNAME,
+	  		  A.UPDATEDATE
           FROM 
               TBL_Board_Item A
           JOIN 
@@ -937,10 +940,16 @@
               A.TENANT_ID = B.TENANT_ID
           AND
               A.BoardID = B.BoardID
+	      LEFT JOIN 
+			  TBL_USERMASTER U
+	  	  ON
+	  	      A.UPDATERID = U.CN
+	      AND
+	          A.TENANT_ID = U.TENANT_ID
           WHERE
               A.TENANT_ID = #tenantID#
           AND  
-              ITEMID = #itemID#
+              A.ITEMID = #itemID#
   </select>
   
   <select id="MBoardDAO.getBoardItemRead" parameterClass="Map" resultClass="String">
@@ -1079,7 +1088,11 @@
             <isEqual property="guBun" compareValue="2">
                 WriterName = #writerName#,
                 WriterName2 = #writerName2#,
-              </isEqual>
+            </isEqual>
+	        <isNotEqual property="guBun" compareValue="2">
+                updaterID = #updaterID#,
+            </isNotEqual>
+	  		updateDate = #updateDate#,
             ExtensionAttribute2 = #extensionAttribute2#,
             ExtensionAttribute5 = #extensionAttribute5#,
             DocPassWord = #docPassword#,
@@ -2694,4 +2707,115 @@
 		WHERE
 			BOARDID = #BOARDID#
 	</select>
+	
+	<select id="MBoardDAO.getAllBoardItemListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*) CNT
+        	FROM 
+        		TBL_BOARD_BOARDINFO P              
+			INNER JOIN 
+			  	TBL_Board_Item A 
+			ON 
+			  	A.TENANT_ID = P.TENANT_ID
+			AND
+			  	A.BOARDID = P.BOARDID
+			AND 
+			  	A.TENANT_ID = #v_TENANTID#
+	 		AND
+            	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+			AND
+			  	(A.APPRFLAG = 'Y' 
+			     OR A.APPRFLAG IS NULL)
+			AND 
+			  	A.STARTDATE <= #nowDate#
+			AND 
+			  	A.ENDDATE > #nowDate#
+		]]>
+	</select>
+	
+	<select id="MBoardDAO.getAllBoardItemList" parameterClass="Map" resultClass="MBoardListVO">
+		<![CDATA[
+			SELECT
+				A.BOARDID,
+				P.BOARDNAME AS BOARDNAME,
+				A.ITEMID,
+				A.WRITERID,
+				A.WRITERNAME,
+				A.WRITERDEPTNAME,
+				A.WRITERCOMPANYNAME,
+				DATE_ADD(DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS STARTDATE,
+			  	DATE_ADD(DATE_FORMAT(A.WRITEDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS WRITEDATE,
+				A.PARENTWRITEDATE,
+				A.IMPORTANCE,
+				A.TITLE,
+				A.ATTACHMENTS,
+				A.READCOUNT,
+				A.ITEMLEVEL,
+				A.ABSTRACT,
+				P.BOARDNAME2 AS BOARDNAME2,
+				A.WRITERNAME2,
+				A.WRITERDEPTNAME2,
+				A.WRITERCOMPANYNAME2,
+				(SELECT
+					 COUNT(*)
+				 FROM
+					 TBL_Board_OneLineReply
+				 WHERE
+					 TENANT_ID = A.TENANT_ID
+				   AND
+					 ITEMID = A.ItemID) ONELINECNT,
+				A.UPPERITEMIDTREE,
+				A.DOCNO,
+				'' AS NOTICE,
+				P.GUBUN,
+				A.MAINCONTENT,
+				P.BOARDGROUPID
+			FROM
+				TBL_BOARD_ITEM A
+					INNER JOIN
+				TBL_BOARD_BOARDINFO P
+				ON
+					A.TENANT_ID = P.TENANT_ID
+				AND
+					(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+				AND
+					A.BOARDID = P.BOARDID
+				AND
+					A.TENANT_ID = #v_TENANTID#
+				AND
+					(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+				AND
+					(A.APPRFLAG = 'Y'
+						OR A.APPRFLAG IS NULL)
+				AND
+					A.STARTDATE <= #nowDate#
+				AND
+					A.ENDDATE > #nowDate#
+		]]>
+		
+		<isNotEmpty property="lastDate">
+             <![CDATA[
+                 AND 
+                     A.WRITEDATE < #lastDate#
+                 AND 
+                     A.ENDDATE > #nowDate#
+             ]]>
+         </isNotEmpty>
+         <isEmpty property="lastDate">
+             <![CDATA[
+                 AND 
+                     A.WRITEDATE < #nowDate#
+                 AND 
+                     A.ENDDATE > #nowDate#
+             ]]>
+         </isEmpty>
+         ORDER BY
+                  A.WRITEDATE DESC
+              LIMIT #listSize#
+	</select>
+	
 </sqlMap>

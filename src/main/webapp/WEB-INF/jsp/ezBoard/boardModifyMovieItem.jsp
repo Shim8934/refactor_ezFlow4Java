@@ -134,6 +134,7 @@
                 strXML += "<NODE>";
                 strXML += "<IMAGEID>" + movieID + "</IMAGEID>"; // 기존 IMAGEID(movieID)를 조건으로 걸어 PHOTO테이블 업데이트
                 strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
+                strXML += "<ITEMID>" + pItemID + "</ITEMID>";
                 if (moviePath == undefined) {
                     strXML += "<FILEPATH></FILEPATH>";
                 }
@@ -154,7 +155,7 @@
                 xmldom.preserveWhiteSpace = true;
                 xmldom = loadXMLString(strXML);
 
-                xmlhttp.open("POST", "/ezBoard/deleteImageItem.do?mod=" + pMod + "&gubun=" + pGubun, false);
+                xmlhttp.open("POST", "/ezBoard/deleteImageItem.do?mod=" + pMod + "&gubun=" + pGubun + "&itemID=" + encodeURIComponent(pItemID), false);
                 xmlhttp.send(xmldom);
 
                 if (xmlhttp.responseText == "OK") {

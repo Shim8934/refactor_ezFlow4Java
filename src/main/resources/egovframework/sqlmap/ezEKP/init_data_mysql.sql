@@ -37,7 +37,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReform', '전자결재 폼빌더 양식 작성 가능 여부', 'NO', '전자결재 양식 추가 시에 폼빌더 작성기를 활성화할 수 있는지에 대한 여부를 설정한다. 이미 폼빌더 양식으로 추가 됐다면 옵션을 비활성화해도 폼빌더 양식으로서 동작한다. (default : NO)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReceiveInfoName', '수신부서 표기 타입', '0', '수신부서 지정 시 부서 이름 끝에 "장"을 붙인다.0: 부서이름만 표기1: 부서이름+장으로 표기 (default: 0)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReceiveDocNo', '접수 시 채번방식 설정', 'NO', '결재문서 접수 시 채번 붙이는 때를 설정한다. (전자결재G)YES: 접수/편철/전결 시 채번NO: 최종결재/편철/전결 시 채번 (default: NO)', '2017-01-06 00:00:00', '전자결재G');
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReceiptExternal', '외부메일 수신확인 지원여부', 'NO', '외부메일 수신확인을 지원한다.YES: 지원NO: 지원안함 (default: NO)', '2017-01-06 00:00:00', '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReceiptExternal', '외부메일 수신확인 지원여부', 'YES', '외부메일 수신확인을 지원한다.YES: 지원NO: 지원안함 (default: YES)', '2024-11-13 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useQuestion', '전자설문 모듈 사용여부', 'NO', 'YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '기타모듈');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'UsePreviewSubTreeForEmail', '하위 편지함 오픈 설정 사용여부', 'YES', '메일>환경설정에서 하위편지함 자동 열기 설정을 사용한다.YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'UseOnlyInnerMail', '메일 내부망만 사용여부', 'NO', '메일을 내부망에서만 사용한다. 외부메일 관련 설정은 모두 숨김. YES: 내부만 사용NO: 내부+외부 사용 (default: NO)', '2017-01-06 00:00:00', '메일');
@@ -127,7 +127,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'LangSecondary2', '멀티언어2(서브)', 'English', '', '2017-01-06 00:00:00', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'LangSecondary1', '멀티언어1(서브)', '영문', '시스템 언어에 따른 멀티언어(서브) 셋팅', '2017-01-06 00:00:00', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'JunGyulFlag', '전자결재 전결 처리 타입', '1', '전결 처리 타입을 정의한다.1: 전결자 이후 결재자들도 사인칸에 등록. 전결자가 결재하면 전결자 사인칸에 전결표시하고 최종결재자 사인칸에 전결자 서명을 입력한다.4: 전결자 이후 결재자들은 사인칸에 미등록. 전결자가 결재하면 전결자 사인칸에 전결자 서명을 입력한다. (default: 1)', '2017-01-06 00:00:00', '전자결재');
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'isDefaultReceiptExternal', '메일 수신확인 범위 기본값', 'NO', '메일쓰기>메일옵션>추적설정에서 기본값으로 사용할 타입을 설정한다.YES: 외부용을 기본값으로 사용NO: 내부용을 기본값으로 사용*useReceiptExternal 옵션이 YES 일 때 사용가능 (default: NO)', '2017-01-06 00:00:00', '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'isDefaultReceiptExternal', '메일 수신확인 범위 기본값', 'YES', '메일쓰기>메일옵션>추적설정에서 기본값으로 사용할 타입을 설정한다.YES: 외부용을 기본값으로 사용NO: 내부용을 기본값으로 사용*useReceiptExternal 옵션이 YES 일 때 사용가능 (default: YES)', '2024-11-13 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'IS_READ_DELETE', '읽은 메일 회수기능 사용여부', 'NO', '메일 회수 시 수신자가 읽은 메일도 회수가 가능하다.YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'INDIVIDUALMAILUSER', '메일 개별발신 최대 인원', '200', '명 단위로 메일 개별발신 보낼 수 있는 최대 인원 수를 지정한다.0: 개별발신 사용 안함 (default: 5)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'HWPToolbar', '한글양식기 상단툴바 사용여부', '100001', '한글양식기에서 상단 편집 툴바를 라인별로 사용하면 1 사용하지 않으면 0으로 설정한다. (default: 100001)', '2017-01-06 00:00:00', '전자결재');
@@ -3426,3 +3426,16 @@ VALUES(@tenant_id_value, 'useDotNetNoticeForReminder', 'NO', 'YES : 미리알림
 --2023.09.11 - 한태훈 - 일정관리 > 미리알림 시 하루종일 일정의 시작 시각
 INSERT INTO TBL_TENANT_CONFIG(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(@tenant_id_value, 'allDaySTimeForReminder', '09:00', 'HH24:MM 형식으로 미리알림 시 하루종일 일정의 시작 시각 설정가능(MM은 00 또는 30만 가능)', '미리알림 시 하루종일 일정의 시작 시각 세팅', '2023-09-15 00:00:00.000', '일정관리');
+
+INSERT INTO TBL_BOARD_ITEM_LISTOPTION (LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID)
+	VALUES
+('E', 0, 'CHECK', 'CHECK', 'CHECK', 'CHECK', 'ITEMID', 20, 'Y', @tenant_id_value),
+('E', 1, '첨부', 'Attachments', '添付', '附加', 'ATTACHMENTS', 30, 'Y', @tenant_id_value),
+('E', 2, '게시판명', 'Board', '掲示板名', '布告板名称', 'BOARDNAME', 100, 'Y', @tenant_id_value),
+('E', 3, '제목', 'Title', '件名', '标题', 'TITLE', 400, 'Y', @tenant_id_value),
+('E', 4, '부서', 'Department', '部署', '部门', 'WRITERDEPTNAME', 100, 'Y', @tenant_id_value),
+('E', 5, '게시자', 'Writer', '作成者', '写作者', 'WRITERNAME', 100, 'Y', @tenant_id_value),
+('E', 6, '게시일', 'Registered', '掲示日', '发布日期', 'WRITEDATE', 100, 'Y', @tenant_id_value),
+('E', 7, '조회수', 'View', 'ヒット数', '查询数', 'READCOUNT', 50, 'Y', @tenant_id_value);
+
+INSERT INTO TBL_BOARD_BOARDINFO	(BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, BOARDLEVEL, PARENTBOARDID, BOARDDESCRIPTION, ITEMEXPIRES, ATTACHSIZELIMIT, REPLYNOTIFY, BOARDGROUPID, ALERTPOSTITEM, GUBUN, URL, DELETEAFTER, BOARDCOLOR, BOARDNO, PORTLET, TENANT_ID, COMPANYID) VALUES ('{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}', '전체게시물', 'ALL BoardItem', '全ての投稿 ', '所有帖子',  -3, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', @tenant_id_value, 'Top');

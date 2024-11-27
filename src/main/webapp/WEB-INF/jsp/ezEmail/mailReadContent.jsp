@@ -103,7 +103,7 @@
 
 					document.addEventListener('click', function (e) {
 						if (window.parent.hiddenMoreMenu) {
-							parent.hiddenMoreMenu();
+							parent.hiddenMoreMenu(e);
 						}
 					})
 				}

@@ -430,7 +430,10 @@
 	            uploadFilePath : uploadFilePath,
 	            uploadPasteContentsPath : uploadPasteContentsPath,
 	            onMouseUp : CellCheckField,
-	            onKeyUp : CellCheckField
+	            onKeyUp : CellCheckField,
+	            rootFrameId : 'tbContentElement',
+                ignoreMinHeight : true
+
 	        });
 	        
 	        xfe.render('xfe');
