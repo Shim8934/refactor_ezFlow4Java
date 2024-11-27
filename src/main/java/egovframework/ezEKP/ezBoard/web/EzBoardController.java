@@ -1741,42 +1741,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		ArrayList<String> scrapBoardListView_FG = new ArrayList<String>();
 		ArrayList<String> scrapBoardListRead_FG = new ArrayList<String>();
 		if("scrap".equals(mode) && boardVO.getScrapContID() == null){
-			List<HashMap<String, Object>> userScrapBoardList = ezBoardService.getUserScrapBoardList(userInfo.getId(), userInfo.getTenantId());
-			if (userScrapBoardList != null && userScrapBoardList.size() > 0) {
-				for (HashMap<String, Object> userScrapBoard : userScrapBoardList) {
-					String boardID = (String) userScrapBoard.get("BOARDID");
-					scrapBoardInfo =  getBoardInfo(boardID, userInfo);
-					if (scrapBoardInfo.getListView_FG().equals("true")) {
-						scrapBoardListView_FG.add(boardID);
-					}
-
-					if(scrapBoardInfo.getRead_FG().equals("true")){
-						scrapBoardListRead_FG.add(boardID);
-					}
-					scrapBoardInfo = null;
-				}
-			}
+			Map<String, ArrayList<String>> scrapBoardListReadView = getScrapBoardListReadView_FG(userInfo);
+			scrapBoardListView_FG = scrapBoardListReadView.get("scrapBoardListView_FG");
+			scrapBoardListRead_FG = scrapBoardListReadView.get("scrapBoardListRead_FG");
 		}
-
-		BoardPropertyVO scrapContBoardInfo;
+		
 		ArrayList<String> scrapContBoardListView_FG = new ArrayList<String>();
 		ArrayList<String> scrapContBoardListRead_FG = new ArrayList<String>();
 		if("scrap".equals(mode) && boardVO.getScrapContID() != null){
-			List<HashMap<String, Object>> userScrapContBoardList = ezBoardService.getUserScrapContBoardList(userInfo, boardVO.getScrapContID());
-			if (userScrapContBoardList != null && userScrapContBoardList.size() > 0) {
-				for (HashMap<String, Object> userScrapContBoard : userScrapContBoardList) {
-					String boardID = (String) userScrapContBoard.get("BOARDID");
-					scrapContBoardInfo =  getBoardInfo(boardID, userInfo);
-					if (scrapContBoardInfo.getListView_FG().equals("true")) {
-						scrapContBoardListView_FG.add(boardID);
-					}
-
-					if(scrapContBoardInfo.getRead_FG().equals("true")){
-						scrapContBoardListRead_FG.add(boardID);
-					}
-					scrapContBoardInfo = null;
-				}
-			}
+			Map<String, ArrayList<String>> scrapContBoardListReadView = getScrapContBoardListReadView_FG(userInfo, boardVO);
+			scrapContBoardListView_FG = scrapContBoardListReadView.get("scrapContBoardListView_FG");
+			scrapContBoardListRead_FG = scrapContBoardListReadView.get("scrapContBoardListRead_FG");
 		}
 		
     	int noticeCount = 0;
@@ -2662,42 +2637,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		ArrayList<String> scrapBoardListView_FG = new ArrayList<String>();
 		ArrayList<String> scrapBoardListRead_FG = new ArrayList<String>();
 		if("scrap".equals(mode) && boardVO.getScrapContID() == null){
-			List<HashMap<String, Object>> userScrapBoardList = ezBoardService.getUserScrapBoardList(userInfo.getId(), userInfo.getTenantId());
-			if (userScrapBoardList != null && userScrapBoardList.size() > 0) {
-				for (HashMap<String, Object> userScrapBoard : userScrapBoardList) {
-					String boardID = (String) userScrapBoard.get("BOARDID");
-					scrapBoardInfo =  getBoardInfo(boardID, userInfo);
-					if (scrapBoardInfo.getListView_FG().equals("true")) {
-						scrapBoardListView_FG.add(boardID);
-					}
-
-					if(scrapBoardInfo.getRead_FG().equals("true")){
-						scrapBoardListRead_FG.add(boardID);
-					}
-					scrapBoardInfo = null;
-				}
-			}
+			Map<String, ArrayList<String>> scrapBoardListReadView = getScrapBoardListReadView_FG(userInfo);
+			scrapBoardListView_FG = scrapBoardListReadView.get("scrapBoardListView_FG");
+			scrapBoardListRead_FG = scrapBoardListReadView.get("scrapBoardListRead_FG");
 		}
-
-		BoardPropertyVO scrapContBoardInfo;
+		
 		ArrayList<String> scrapContBoardListView_FG = new ArrayList<String>();
 		ArrayList<String> scrapContBoardListRead_FG = new ArrayList<String>();
 		if("scrap".equals(mode) && boardVO.getScrapContID() != null){
-			List<HashMap<String, Object>> userScrapContBoardList = ezBoardService.getUserScrapContBoardList(userInfo, boardVO.getScrapContID());
-			if (userScrapContBoardList != null && userScrapContBoardList.size() > 0) {
-				for (HashMap<String, Object> userScrapContBoard : userScrapContBoardList) {
-					String boardID = (String) userScrapContBoard.get("BOARDID");
-					scrapContBoardInfo =  getBoardInfo(boardID, userInfo);
-					if (scrapContBoardInfo.getListView_FG().equals("true")) {
-						scrapContBoardListView_FG.add(boardID);
-					}
-
-					if(scrapContBoardInfo.getRead_FG().equals("true")){
-						scrapContBoardListRead_FG.add(boardID);
-					}
-					scrapContBoardInfo = null;
-				}
-			}
+			Map<String, ArrayList<String>> scrapContBoardListReadView = getScrapContBoardListReadView_FG(userInfo, boardVO);
+			scrapContBoardListView_FG = scrapContBoardListReadView.get("scrapContBoardListView_FG");
+			scrapContBoardListRead_FG = scrapContBoardListReadView.get("scrapContBoardListRead_FG");
 		}
 		
 		int boardCount = 0;
@@ -11438,7 +11388,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		int page = StringUtils.isNotBlank("page") ? Integer.parseInt(request.getParameter("page")) : 1;
+		int page = StringUtils.isNotBlank(request.getParameter("page")) ? Integer.parseInt(request.getParameter("page")) : 1;
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
@@ -11773,6 +11723,59 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 
 		logger.debug("setScrapItem ended");
+		return result;
+	}
+	
+	public Map<String, ArrayList<String>> getScrapContBoardListReadView_FG(LoginVO userInfo, BoardVO boardVO) throws Exception {
+		BoardPropertyVO scrapContBoardInfo;
+		ArrayList<String> scrapContBoardListView_FG = new ArrayList<String>();
+		ArrayList<String> scrapContBoardListRead_FG = new ArrayList<String>();
+		Map<String, ArrayList<String>> returnVal = new HashMap<>();
+		
+		List<HashMap<String, Object>> userScrapContBoardList = ezBoardService.getUserScrapContBoardList(userInfo, boardVO.getScrapContID());
+		if (userScrapContBoardList != null && userScrapContBoardList.size() > 0) {
+			for (HashMap<String, Object> userScrapContBoard : userScrapContBoardList) {
+				String boardID = (String) userScrapContBoard.get("BOARDID");
+				scrapContBoardInfo = getBoardInfo(boardID, userInfo);
+				if (scrapContBoardInfo.getListView_FG().equals("true")) {
+					scrapContBoardListView_FG.add(boardID);
+				}
+
+				if (scrapContBoardInfo.getRead_FG().equals("true")) {
+					scrapContBoardListRead_FG.add(boardID);
+				}
+				scrapContBoardInfo = null;
+			}
+		}
+		returnVal.put("scrapContBoardListView_FG", scrapContBoardListView_FG);
+		returnVal.put("scrapContBoardListRead_FG", scrapContBoardListRead_FG);
+		return returnVal;
+	}
+	
+	public Map<String, ArrayList<String>> getScrapBoardListReadView_FG(LoginVO userInfo) throws Exception {
+		BoardPropertyVO scrapBoardInfo = new BoardPropertyVO();
+		ArrayList<String> scrapBoardListView_FG = new ArrayList<String>();
+		ArrayList<String> scrapBoardListRead_FG = new ArrayList<String>();
+		Map<String, ArrayList<String>> result = new HashMap<>();
+	
+		List<HashMap<String, Object>> userScrapBoardList = ezBoardService.getUserScrapBoardList(userInfo.getId(), userInfo.getTenantId());
+		if (userScrapBoardList != null && userScrapBoardList.size() > 0) {
+			for (HashMap<String, Object> userScrapBoard : userScrapBoardList) {
+				String boardID = (String) userScrapBoard.get("BOARDID");
+				scrapBoardInfo =  getBoardInfo(boardID, userInfo);
+				if (scrapBoardInfo.getListView_FG().equals("true")) {
+					scrapBoardListView_FG.add(boardID);
+				}
+	
+				if(scrapBoardInfo.getRead_FG().equals("true")){
+					scrapBoardListRead_FG.add(boardID);
+				}
+				scrapBoardInfo = null;
+			}
+		}
+		result.put("scrapBoardListRead_FG", scrapBoardListRead_FG);
+		result.put("scrapBoardListView_FG", scrapBoardListView_FG);
+		
 		return result;
 	}
 }

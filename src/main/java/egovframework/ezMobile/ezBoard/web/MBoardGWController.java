@@ -721,6 +721,15 @@ public class MBoardGWController {
 			data.put("list", list);
 			data.put("listCount", listCount);
 			data.put("myBoardScrapFlag", myBoardScrapFlag);
+			
+			if (myBoardScrapFlag.equals("TYPE1")) {
+				/* 모바일 스크랩 게시판 게시물 카운트*/
+				Map<String, ArrayList<String>> scrapBoardListReadView_FG = mBoardService.getScrapBoardListReadView_FG(info);
+				ArrayList<String> scrapBoardListView_FG =  scrapBoardListReadView_FG.get("scrapBoardListView_FG");
+				
+				int myBoardScrapCount = mBoardService.getScrapBoardListCount(userId, info.getCompanyId(), info.getTenantId(), "", scrapBoardListView_FG);
+				data.put("myBoardScrapCount", myBoardScrapCount);
+			}
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -2184,27 +2193,10 @@ public class MBoardGWController {
 
 			boardInfo.setType("scrapBoardItemList");
 			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.kmh12", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
-
-			MBoardInfoVO scrapBoardInfo = new MBoardInfoVO();
-			ArrayList<String> scrapBoardListView_FG = new ArrayList<String>();
-			ArrayList<String> scrapBoardListRead_FG = new ArrayList<String>();
-			List<HashMap<String, Object>> scrapBoardList = ezBoardService.getUserScrapBoardList(info.getUserId(), info.getTenantId());
-		
-			if (scrapBoardList != null && scrapBoardList.size() > 0) {
-				for (HashMap<String, Object> scrapBoard : scrapBoardList) {
-					String checkBoardID = (String) scrapBoard.get("BOARDID");
-					scrapBoardInfo = mBoardService.getBoardProperty(checkBoardID, primary, info.getTenantId(), info.getUserId());
-					scrapBoardInfo = mBoardService.getBoardInfo(scrapBoardInfo, info.getRollInfo(), deptPathCode, info);
-					if (scrapBoardInfo.getListView_FG().equals("true")) {
-						scrapBoardListView_FG.add(checkBoardID);
-					}
-
-					if(scrapBoardInfo.getRead_FG().equals("true")){
-						scrapBoardListRead_FG.add(checkBoardID);
-					}
-					scrapBoardInfo = null;
-				}
-			}
+			
+			Map<String, ArrayList<String>> scrapBoardListReadView_FG = mBoardService.getScrapBoardListReadView_FG(info);
+			ArrayList<String> scrapBoardListRead_FG = scrapBoardListReadView_FG.get("scrapBoardListRead_FG");
+			ArrayList<String> scrapBoardListView_FG =  scrapBoardListReadView_FG.get("scrapBoardListView_FG");
 			
 			List<MBoardNewListVO> list = mBoardService.getScrapBoardList(userId, info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet(),pSearchText, scrapBoardListView_FG);
 

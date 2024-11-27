@@ -1914,4 +1914,34 @@ public class MBoardServiceImpl implements MBoardService {
 		logger.debug("getScrapBoardListCount ended");
 		return mBoardDAO.getScrapBoardListCount(map);
 	}
+	
+	@Override
+	public Map<String, ArrayList<String>> getScrapBoardListReadView_FG(MCommonVO info) throws Exception {
+		MBoardInfoVO scrapBoardInfo = new MBoardInfoVO();
+			ArrayList<String> scrapBoardListView_FG = new ArrayList<String>();
+			ArrayList<String> scrapBoardListRead_FG = new ArrayList<String>();
+			List<HashMap<String, Object>> scrapBoardList = ezBoardService.getUserScrapBoardList(info.getUserId(), info.getTenantId());
+			String deptPathCode = info.getUserId() + "," + getDeptPathCode(info.getDeptId(), info.getTenantId());
+			Map<String, ArrayList<String>> result = new HashMap<>();
+		
+			if (scrapBoardList != null && scrapBoardList.size() > 0) {
+				for (HashMap<String, Object> scrapBoard : scrapBoardList) {
+					String checkBoardID = (String) scrapBoard.get("BOARDID");
+					scrapBoardInfo = getBoardProperty(checkBoardID, info.getPrimary(), info.getTenantId(), info.getUserId());
+					scrapBoardInfo = getBoardInfo(scrapBoardInfo, info.getRollInfo(), deptPathCode, info);
+					if (scrapBoardInfo.getListView_FG().equals("true")) {
+						scrapBoardListView_FG.add(checkBoardID);
+					}
+
+					if(scrapBoardInfo.getRead_FG().equals("true")){
+						scrapBoardListRead_FG.add(checkBoardID);
+					}
+					scrapBoardInfo = null;
+				}
+			}
+		result.put("scrapBoardListRead_FG", scrapBoardListRead_FG);
+		result.put("scrapBoardListView_FG", scrapBoardListView_FG);
+		
+		return result;
+	}
 }
