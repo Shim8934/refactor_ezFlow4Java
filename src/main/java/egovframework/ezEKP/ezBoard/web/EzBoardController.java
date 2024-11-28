@@ -3921,7 +3921,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
-		String acScrap = request.getParameter("acScrap");
+		String scrapContID = request.getParameter("scrapContID");
 		String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
 		String showAdjacent = request.getParameter("showAdjacent");
 		String boardID = request.getParameter("boardID");
@@ -4112,7 +4112,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useBoardFilePrvw", useBoardFilePrvw);
 		model.addAttribute("isScrap", isScrap);
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
-		model.addAttribute("acScrap", acScrap);
+		model.addAttribute("scrapContID", scrapContID);
 
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -6081,7 +6081,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String location = request.getParameter("location");
-		String acScrap = request.getParameter("acScrap");
+		String scrapContID = request.getParameter("scrapContID");
 		String useOCS = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
@@ -6203,7 +6203,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useCabinet", use_cabinet);
 		model.addAttribute("isScrap", isScrap);
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
-		model.addAttribute("acScrap", acScrap);
+		model.addAttribute("scrapContID", scrapContID);
 
 		logger.debug("boardItemViewPhoto ended");
 		return "ezBoard/boardItemViewPhoto";
@@ -10035,7 +10035,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String location = request.getParameter("location");
-		String acScrap = request.getParameter("acScrap");
+		String scrapContID = request.getParameter("scrapContID");
 		String useOCS = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
@@ -10153,7 +10153,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("isScrap", isScrap);
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
-		model.addAttribute("acScrap", acScrap);
+		model.addAttribute("scrapContID", scrapContID);
 
 		logger.debug("boardItemViewMovie ended");
 		return "ezBoard/boardItemViewMovie";
@@ -11356,7 +11356,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 2023-05-03 기민혁(마이게시판 하위 스크랩 기능) - 스크랩 해제 버튼 클릭시 정보 삭제
 	 */
-	@RequestMapping(value = "/ezBoard/delScrapItem.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezBoard/delScrapItem.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String delScrapItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("delScrapItem started");

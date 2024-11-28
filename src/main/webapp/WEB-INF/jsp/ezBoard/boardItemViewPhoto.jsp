@@ -111,7 +111,7 @@
 				
                 var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // myBoardScrapFlag 테넌트컨피그값 (NONE, TYPE1_(마이게시판하위), TYPE2(스크랩함))
 		        var isScrap = "<c:out value='${isScrap}'/>"; // 이미 스크랩되었는지의 여부 (type1일때)
-		        var acScrap = "<c:out value='${acScrap}'/>"; // 스크랩함에서 접근했는지의 여부 (스크랩함에서 접근했으면 'SCRAP')
+			    var scrapContID = "<c:out value='${scrapContID}'/>"; // 개인스크랩함 ID (TYPE2, 스크랩함에서 게시물 조회했을 때 값이 들어옴)
 				
 		        window.onload = function () {
 		            imageViewInit();
@@ -1683,31 +1683,52 @@
                 }
                 
 			    
-			    /* 2023-05-03 기민혁 -  스크랩 해제 클릭시 data delete */
-			    function delScrap(){
-			    	$.ajax({
-						type : "GET",
-						dataType : "text",
-						async : false,
-						url : "/ezBoard/delScrapItem.do",
-						data : {
-							itemID : pItemID,
-							boardID : pBoardID
-						},
-						success: function(result){
-							if(result == "true"){	
-								alert("<spring:message code='ezBoard.kmh18' />");
-								document.getElementById("delScrapBtn").innerHTML ="<li id ='addScrapBtn'><span onclick='addScrap()'><spring:message code='ezBoard.kmh13'/></span></li>";
-								if(window.opener && !window.opener.closed && window.opener.location.href.indexOf("boardMyScrapList") !== -1){
-									window.close();
-									window.opener.refresh_onclick();
-								}
-							}else{
-								alert("<spring:message code='ezBoard.kmh17' />");
-							}
-						}
-					});
-				}
+			function delScrap() {
+		        var pUrl = "";
+		        var pData = new FormData();
+		        var pType;
+		        if (myBoardScrapFlag == "TYPE1") {
+		            pUrl = "/ezBoard/delScrapItem.do";
+		            pData.append("itemID", pItemID);
+		            pData.append("boardID", pBoardID);
+		        } else if (myBoardScrapFlag == "TYPE2") {
+		            pUrl = "/ezBoard/deleteScrapContItemList.do";
+		            pData.append("itemList", pItemID + ";");
+		            pData.append("scrapContID", scrapContID);
+		        } else {
+		            alert("<spring:message code='ezBoard.kmh52' />");
+		            return;
+		        }
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : pUrl,
+					data : pData,
+					contentType: false,
+					processData: false,
+                    success: function(result) {
+                        if(result == "true") {	
+                            alert("<spring:message code='ezBoard.kmh18' />");
+                            if (myBoardScrapFlag == "TYPE1") {
+                                document.getElementById("delScrapBtn").innerHTML ="<li id ='addScrapBtn'><span onclick='addScrap()'><spring:message code='ezBoard.kmh13'/></span></li>";
+                            } else if (myBoardScrapFlag == "TYPE2") {
+                                document.getElementById("delScrapBtn").replaceChildren();
+                            } else {
+                                alert("<spring:message code='ezBoard.kmh52' />");
+                                return;
+                            }
+                        
+                            if (window.opener && !window.opener.closed && (window.opener.location.href.indexOf("boardMyScrapList") !== -1 || window.opener.location.href.indexOf("BoardScrapContItemListView") !== -1)) {
+                                window.close();
+                                window.opener.refresh_onclick();
+                            } 
+                        } else {
+                            alert("<spring:message code='ezBoard.kmh17' />");
+                        }
+                    }
+                });
+			}
 			    
 		</script>
 	</head>
@@ -1754,10 +1775,14 @@
 					<c:if test="${useCabinet == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 					</c:if>
-                        <c:if test="${MyBoardScrapFlag != 'NONE' && acScrap != 'SCRAP' && apprFlag != 'N'}">
+					<c:if test="${MyBoardScrapFlag != 'NONE' && apprFlag != 'N'}">
 						<c:choose>
 							<c:when test="${MyBoardScrapFlag eq 'TYPE1' && isScrap ne 'true'}">
 								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>
+							</c:when>
+							<c:when test="${MyBoardScrapFlag eq 'TYPE2' && not empty scrapContID}">
+							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
+								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>	
 							</c:when>
 							<c:otherwise>
 							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	

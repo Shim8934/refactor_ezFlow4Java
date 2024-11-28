@@ -595,7 +595,7 @@
 		        }	
 		        // if (tr != null && oArrRows.length > 0) {
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=790,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=890,top=" + pTop + ",left=" + pLeft, "");
 		        //}       
 		    }
 		    /*  2019-04-12 홍승비 - 사용되지 않는 함수 주석처리 */
@@ -613,7 +613,7 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 790) / 2;
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=790,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=890,top=" + pTop + ",left=" + pLeft, "");
 		
 		    } */
 		    
@@ -1306,7 +1306,7 @@
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li>
 		        <c:if test="${MyBoardScrapFlag ne 'NONE'}">
-		        	<li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh42' /></span></li>
+		        	<li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh13' /></span></li>
 			    </c:if>
 			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->		        
 			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->

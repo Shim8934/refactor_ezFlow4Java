@@ -1125,7 +1125,7 @@
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li>
 		        <c:if test="${MyBoardScrapFlag ne 'NONE'}">
-		        	<li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh42' /></span></li>
+		        	<li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh13' /></span></li>
 				</c:if>
 				<div id="right" class="sub_frameIcon" style="float:right">	
 					<div class="sub_frameIconUL" style="width:57px !important">
