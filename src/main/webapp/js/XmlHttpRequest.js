@@ -1928,6 +1928,8 @@ function ReplaceHTML(str) {
     str = ReplaceAll(str, "&gt;", ">");
     str = ReplaceAll(str, "&apos;", "'");
     str = ReplaceAll(str, "&quot;", "\"");
+    str = ReplaceAll(str, '&#40;', '(');
+    str = ReplaceAll(str, '&#41;', ')');
     return str;
 }
 

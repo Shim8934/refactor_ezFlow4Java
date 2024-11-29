@@ -92,3 +92,8 @@ var strLangKeywordJIH02 = "An error occurred."
 var strLangKeywordJIH03 = "You cannot search for keyword because this post was either not accessed from the groupware or changes have been made to the groupware page from which it was accessed.";
 var strLangKeywordJIH04 = "Do you want to close the post you are currently viewing?";
 var strLangKeywordJIH05 = "You cannot search for keywords in posts viewed through the post or email view popup, or in posts viewed through the admin screen.";
+
+var strLangAttachJIH01 = "Attach";
+var strLangAttachJIH02 = "File name cannot exceed ";
+var strLangAttachJIH03 = " characters.";
+var strLangAttachJIH04 = "An error has occurred.";

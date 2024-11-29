@@ -4078,7 +4078,11 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 .uploadedFile .previewImage{display: block; position:absolute; max-height:60px; max-width:60px; min-width: 30px; min-width: 30px; top:50%; left:50%; transform: translate(-50%, -50%);}
 
 .emoticonLayerStaticPosition{position:relative}
-.boardComment {position: relative}
+.boardComment {position: relative; border-bottom: solid 1px #e2e2e2;}
+#commentListAttach {margin-right: 8px; text-align: right;}
+#commentAttach {margin-right: 8px; text-align: right;}
+a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
+.fileDeleteBtn {cursor: pointer; }
 
 ._addEmoticon {padding-left: 5px; padding-right: 5px; cursor: pointer;}
 #_addEmoticonRereply {float: left;}

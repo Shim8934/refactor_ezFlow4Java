@@ -139,7 +139,7 @@ public interface EzBoardService {
 	/* 2018-06-26 홍승비 - 승인게시물 표출 조건으로 companyID 추가 */
 	public String apprItem(String userID, String itemList, String pMod, String companyID, int tenantID) throws Exception;
 	
-	public String deleteOneLineReply(String id, String replyID, String guBun, int tenantID) throws Exception;
+	public String deleteOneLineReply(String id, String replyID, String itemID, String guBun, int tenantID) throws Exception;
 	
 	public String checkOneLineOwner(String replyID, String userID, int tenantID) throws Exception;
 	
@@ -531,4 +531,7 @@ public interface EzBoardService {
 	public List<HashMap<String, Object>> getUserScrapBoardList(String userID, int tenantID) throws Exception;
 
 	public List<HashMap<String, Object>> getUserScrapContBoardList(LoginVO userInfo, String scrapContID) throws Exception;
+	
+	// 2024-12-30 전인하 - 게시판 게시물 첨부파일저장 실행 
+	public boolean saveCommentAttachment(String strAttachments, String replyID, String strItemID, String strBoardID, String realPath, int tenantID) throws Exception;
 }

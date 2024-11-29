@@ -4672,7 +4672,11 @@
 				IF(A.PARENTREPLYID IS NOT NULL, D.WRITEDATE, A.WRITEDATE) AS GROUPDATE,
 				IFNULL(A.REPLYLEVEL, 1) AS REPLYLEVEL,
 				A.UPDATEDATE,
-				A.IMAGECONTENT
+				A.IMAGECONTENT,
+				BC.fileName,
+				BC.fileSize,
+				BC.SN as fileSN,
+				BC.filePath
 	        FROM
 	        	TBL_BOARD_ONELINEREPLY A
 	        LEFT OUTER JOIN
@@ -4734,6 +4738,14 @@
 				A.USERID = T.CN
 			AND
 				A.TENANT_ID = T.TENANT_ID
+			LEFT JOIN
+				TBL_BOARD_COMMENT_ATTACHMENTS BC
+			ON
+				A.REPLYID = BC.REPLYID
+			AND
+				A.ITEMID = BC.ITEMID
+			AND
+				A.TENANT_ID = BC.TENANT_ID
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -4741,14 +4753,14 @@
 			AND
 				A.ITEMID = #v_ItemID#
 			GROUP BY
-				A.USERID, A.REPLYID, GROUPID
+				A.USERID, A.REPLYID, GROUPID, BC.SN
 			<isEqual property="v_SORT" compareValue="earliest">
 			ORDER BY
-				GROUPDATE, GROUPID, A.WRITEDATE
+				GROUPDATE, GROUPID, A.WRITEDATE, BC.SN
 			</isEqual>
 			<isEqual property="v_SORT" compareValue="latest">
 				ORDER BY
-					GROUPDATE DESC, GROUPID ASC, A.WRITEDATE ASC
+					GROUPDATE DESC, GROUPID ASC, A.WRITEDATE ASC, BC.SN ASC
 			</isEqual>
 		</isNotEqual>
 		<!-- 2018-10-19 홍승비 - 익명댓글 표출 분기 추가 -->
@@ -4767,7 +4779,11 @@
 				IF(A.PARENTREPLYID IS NOT NULL, D.WRITEDATE, A.WRITEDATE) AS GROUPDATE,
 				IFNULL(A.REPLYLEVEL, 1) AS REPLYLEVEL,
 				A.UPDATEDATE,
-				A.IMAGECONTENT
+				A.IMAGECONTENT,
+				BC.fileName,
+				BC.fileSize,
+				BC.SN as fileSN,
+				BC.filePath
 			FROM
 				TBL_BOARD_ONELINEREPLY A
 			LEFT OUTER JOIN
@@ -4784,6 +4800,14 @@
 				A.ITEMID = R.ITEMID
 			AND
 				A.TENANT_ID = R.TENANT_ID
+			LEFT JOIN
+				TBL_BOARD_COMMENT_ATTACHMENTS BC
+			ON
+				A.REPLYID = BC.REPLYID
+			AND
+				A.ITEMID = BC.ITEMID
+			AND
+				A.TENANT_ID = BC.TENANT_ID
 			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -4791,10 +4815,11 @@
 			AND
 				A.ITEMID = #v_ItemID#
 			GROUP BY
-				A.REPLYID, GROUPID
+				A.REPLYID, GROUPID,
+				BC.fileName, BC.fileSize, BC.SN, BC.filePath
 			<isEqual property="v_SORT" compareValue="earliest">
 			ORDER BY
-				GROUPDATE, GROUPID, A.WRITEDATE
+					GROUPDATE, GROUPID, A.WRITEDATE, BC.SN
 			</isEqual>
 			<isEqual property="v_SORT" compareValue="latest">
 				ORDER BY
@@ -8833,4 +8858,39 @@
 		AND
 			USERSCRAPCONTID = #v_CONTID#
 	</select>
+	
+	<insert id="EzBoardDAO.saveCommentAttach" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_COMMENT_ATTACHMENTS ( 
+				ITEMID, REPLYID, SN, FILEPATH, FILESIZE, FILENAME, TENANT_ID 
+			)
+       		VALUES (
+       			#v_ITEMID#, #v_REPLYID#, #seqNum#, #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
+       		)
+		]]>
+	</insert>
+	
+	<delete id="EzBoardDAO.deleteCommentAttach" parameterClass="Map">
+		DELETE FROM 
+			TBL_BOARD_COMMENT_ATTACHMENTS
+		WHERE
+			ITEMID = #v_ITEMID#
+		<isNotEmpty  property="v_REPLYID">
+		AND  
+			REPLYID = #v_REPLYID#
+		</isNotEmpty>
+		AND
+			TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<update id="EzBoardDAO.updateMovedItemCommentAttach" parameterClass="Map">
+		UPDATE 
+			TBL_BOARD_COMMENT_ATTACHMENTS
+		SET 
+			ITEMID = #destItemID#
+		WHERE
+			ITEMID = #orgItemID#
+		AND 
+			TENANT_ID = #tenantID#
+	</update>
 </sqlMap>

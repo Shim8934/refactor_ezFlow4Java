@@ -4233,6 +4233,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isScrap", isScrap);
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 		model.addAttribute("scrapContID", scrapContID);
+		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
 		
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -6362,7 +6363,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isScrap", isScrap);
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 		model.addAttribute("scrapContID", scrapContID);
-
+		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
+		
 		logger.debug("boardItemViewPhoto ended");
 		return "ezBoard/boardItemViewPhoto";
 	}
@@ -7779,6 +7781,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isDisLikeChecked", isDisLikeChecked);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("itemLocation", itemLocation);
+		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
 		
 		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";
@@ -7921,7 +7924,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String parentReplyID = "";
 		String parentWriterName = "";
 		String emoticonContent = commonUtil.stripScriptTags(request.getParameter("emoticonContent"));
-
+		String commentAttach = commonUtil.stripScriptTags(request.getParameter("commentAttach"));
+		String realPath = commonUtil.getRealPath(request);
+		
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		
 		String rpwd = EgovFileScrty.decryptRsa(pk, password);
@@ -7945,6 +7950,9 @@ public class EzBoardController extends EgovFileMngUtil{
 
 			ezBoardService.saveOneLineChildReply(itemID, replyID, boardID, userInfo, content, password, parentReplyID, replyLevel, parentWriterName, emoticonContent);
 		}
+		
+		ezBoardService.saveCommentAttachment(commentAttach, replyID, itemID, boardID, realPath, userInfo.getTenantId());
+		
 		logger.debug("saveOneLineReply ended");
 	}
 	
@@ -7960,6 +7968,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String guBun = request.getParameter("guBun");
 		String replyID = request.getParameter("replyID");
+		String itemID = request.getParameter("itemID");
 
 		// 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > null로 update했던 부모 댓글을 delete하는 경우 flag가 true (부모댓글이 삭제된 뒤 자식댓글이 모두 삭제되는 경우)
 		String flag = request.getParameter("flag");
@@ -7972,7 +7981,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			guBun = "2";
 		}
 		
-		String result = ezBoardService.deleteOneLineReply(userInfo.getId(), replyID, guBun, userInfo.getTenantId());
+		String result = ezBoardService.deleteOneLineReply(userInfo.getId(), replyID, itemID, guBun, userInfo.getTenantId());
 
 		logger.debug("deleteOneLineReply ended");
 		return result;
@@ -9031,6 +9040,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("disLikeCount", disLikeCount);
 		model.addAttribute("isDisLikeChecked", isDisLikeChecked);
+		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
 				
 		logger.debug("boardItemPreViewPhotoContent ended");
 		
@@ -9194,6 +9204,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	model.addAttribute("gubun", gubun);
     	model.addAttribute("boardItemVo", boardItemVO);
     	model.addAttribute("userInfo", userInfo);
+		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
     	
     	logger.debug("boardCommentPopup ended.");
     	
@@ -10415,6 +10426,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isScrap", isScrap);
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 		model.addAttribute("scrapContID", scrapContID);
+		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
 		
 		logger.debug("boardItemViewMovie ended");
 		return "ezBoard/boardItemViewMovie";
@@ -10567,6 +10579,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("disLikeCount", disLikeCount);
 		model.addAttribute("isDisLikeChecked", isDisLikeChecked);
+		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
 				
 		logger.debug("boardItemPreViewMovieContent ended");
 		
@@ -11614,8 +11627,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		int tenantID = userInfo.getTenantId();
 		String updateDate = commonUtil.getTodayUTCTime("");
 		String imageContent = request.getParameter("imageContent");
+		String commentAttach = request.getParameter("commentAttach");
+		String realPath = commonUtil.getRealPath(request);
 
 		ezBoardService.updateOneLineReply(itemID, boardID, replyID, content, updateDate, tenantID, imageContent);
+		ezBoardService.saveCommentAttachment(commentAttach, replyID, itemID, boardID, realPath, userInfo.getTenantId());
+		
 		logger.debug("updateOneLineReply ended");
 	}
 
