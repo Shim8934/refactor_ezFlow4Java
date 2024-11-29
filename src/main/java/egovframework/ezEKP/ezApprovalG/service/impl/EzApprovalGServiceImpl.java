@@ -37025,7 +37025,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					// 현재 결재자 이후의 결재권자들의 직위 세팅
 					for (int i = 0; i < apprGAprLineList.size(); i++) {
-						
 						if (findHwpField("1jikwe" + (i + 1), hwpFile)) {
 							setHwpText("1jikwe" + (i + 1), apprGAprLineList.get(i).getAprMemberJobTitle(), hwpFile);
 						}
@@ -37033,24 +37032,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					String tempDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 					String signStr = "";
+					String signMonthDate = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
 					
 					if (findHwpField("1sign1", hwpFile)) {
-						
-						if (strXML.getElementsByTagName("RECEIPTFLAG").item(0).getTextContent().equals("R")
-							&& aprType.equals("004") && ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId()).equals("1")) {
-							signStr = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "\n";
+						/* 2024-11-29 홍승비 - 전자결재 (일반, G) > 일괄 접수자전결 시에도 "전결" 문구가 들어가도록 수정 (표준 스펙) */
+						if (aprType.equals("004") && ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId()).equals("1")) {
+							signStr = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale());
 						} else if (aprType.equals("016")) {
-							signStr = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + "\n";
+							signStr = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale());
 						}
 						
 						// 최종결재자이고 별도의 서명일자 필드가 없는 경우 결재일 추가  (mm/dd)
 						if (totalLineSN == Integer.parseInt(signNum.trim()) && !findHwpField("1seumyungdate1", hwpFile)) {
-							signStr += tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + "\n";
+							signStr += signMonthDate.replace(".", "/");
+						}
+						
+						/* 2024-11-29 홍승비 - 대결, 전결 표시와 서명일자는 같은 라인에 표시되도록 개행 수정 */
+						if (!"".equals(signStr)) {
+							signStr += "\n";
 						}
 						
 						// 서명필드가 존재할 경우 결재 순번 관계 없이 서명 일자 기입 (mm.dd)
 						if (findHwpField("1seumyungdate1", hwpFile)) {
-							setHwpText("1seumyungdate1", tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
+							setHwpText("1seumyungdate1", signMonthDate, hwpFile);
 						}
 						
 						setHwpText("1sign1", signStr + displayName, hwpFile);
@@ -37059,20 +37063,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					if (findHwpField("receiptdate", hwpFile)) {
-						setHwpText("receiptdate", tempDate.substring(0,4) + "." + tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
+						setHwpText("receiptdate", tempDate.substring(0, 4) + "." + signMonthDate, hwpFile);
 					}
 					
 					// 사인 저장
 					StringBuilder resultXML = new StringBuilder();
 					
+					/* 2024-11-20 홍승비 - 전자결재 > 일괄접수 기능과 서명데이터 재맵핑 기능이 호환되도록 수정, 일부 서명 형식 불일치 오류 함께 수정 */
 					resultXML.append("<SIGNINFOS>");
-				    resultXML.append("<SIGNINFO>");
-				    resultXML.append("<DOCID>" + docID + "</DOCID>");
-				    resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
-				    resultXML.append("<SIGNNAME>" + "1sign1" + "</SIGNNAME>");
-				    resultXML.append("<CONTENT>" + signStr + displayName + "</CONTENT>");
-				    resultXML.append("</SIGNINFO>");
-				    resultXML.append("</SIGNINFOS>");
+		            
+		            // 서명
+	                resultXML.append("<SIGNINFO>");
+	                resultXML.append("<DOCID>" + docID + "</DOCID>");
+	                resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
+	                resultXML.append("<SIGNNAME>" + "1sign1" + "</SIGNNAME>");
+	                resultXML.append("<CONTENT>" + commonUtil.cleanValue(signStr + displayName) + "</CONTENT>");
+	                resultXML.append("</SIGNINFO>");
+	                
+		            // 서명일자
+	                resultXML.append("<SIGNINFO>");
+	                resultXML.append("<DOCID>" + docID + "</DOCID>");
+	                resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
+	                resultXML.append("<SIGNNAME>" + "1seumyungdate1" + "</SIGNNAME>");
+	                resultXML.append("<CONTENT>" + commonUtil.cleanValue(signMonthDate) + "</CONTENT>");
+	                resultXML.append("</SIGNINFO>");
+		            
+		            resultXML.append("</SIGNINFOS>");
+		            
 					strSql = updateSignInfo(resultXML, companyID, "SET", userInfo.getTenantId());
 					signSaveFlag = true;
 					
@@ -37095,7 +37112,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
 					
 					if (!ret.equals("")) {
-						
 						if (aprType.equals("018") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016")) {
 							
 							if (!excuteInfoHwp("DOCNUM_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
@@ -37716,6 +37732,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					// 2023-09-18 조수빈 - 서명일자
 					String lastCnt = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
 					String signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">"  + displayName + "</P>";
+					String addBeforeSignText = ""; // 서명일자, 전결/대결 문자 등 서명 앞에 붙일 추가 텍스트
 					
 					// 참조를 제외한 결재선의 길이와 현재 결재 순번이 일치하는 경우 = 마지막 결재자인 경우
 					if (apprGAprLineList.size() == 1) {
@@ -37730,33 +37747,40 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							
 							strSign = signAdd + "sign" + lastSignNum;
 							strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
-							
-							doc.getElementById(strSign).html(signText);
-							
-							if (doc.getElementById(strSeumyungDate) != null) {
-								doc.getElementById(strSeumyungDate).html(lastCnt);
-							}
 						} else {
-							
+							/* 2024-11-29 홍승비 - 전자결재 (일반, G) > 일괄 접수자전결 시에도 "전결" 문구가 들어가도록 수정 (표준 스펙) */
 							// 전결자 표시 여부에 따라 전결인 경우 텍스트 추가
-							if (strXML.getElementsByTagName("RECEIPTFLAG").item(0).getTextContent().equals("R")
-								&& aprType.equals("004") && ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId()).equals("1")) {
-								signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "\n" + signText;
+							// 서명일자칸이 존재하지 않는 경우, 서명 상단 "전결" 또는 "대결" 문구 우측에 공백없이 서명일자를 붙여 표기
+							if (aprType.equals("004") && ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId()).equals("1")) { // 전결
+								addBeforeSignText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale());
+							} else if (aprType.equals("016")) { // 대결
+								addBeforeSignText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale());
 							}
 							
-							strSign = signAdd + "sign" + 1;
-							strSeumyungDate = signAdd + "seumyungdate" + 1;
-							
-							doc.getElementById(strSign).html(signText);
-							
-							if (doc.getElementById(strSeumyungDate) != null) {
-								doc.getElementById(strSeumyungDate).html(lastCnt);
-							}
+							strSign = signAdd + "sign1";
+							strSeumyungDate = signAdd + "seumyungdate1";
 						}
-					} else {
+						
+						/* 2024-11-27 홍승비 - 서명일자칸이 존재하지 않는 경우, 최종결재자의 서명일자는 서명칸 내부에 함께 들어가며 서명의 상단에 위치 */
+						if (doc.getElementById(strSeumyungDate) != null) {
+							// 서명일자칸에 서명일자가 들어가는 경우 > MM.DD 형식 (ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE") 참고)
+							doc.getElementById(strSeumyungDate).html(lastCnt);
+						} else {
+							// 서명칸 내부의 서명 상단에 서명일자가 들어가는 경우 > MM/DD 형식 
+							addBeforeSignText = addBeforeSignText + lastCnt.replace(".", "/");
+						}
+						
+						if (!"".equals(addBeforeSignText)) {
+							addBeforeSignText = addBeforeSignText + "<br>";
+						}
+						
+						signText = addBeforeSignText + signText;
+						doc.getElementById(strSign).html(signText);
+					}
+					else {
 						// 마지막 결재자가 아니라면 현재 순서에 서명 세팅
-						strSign = signAdd + "sign" + 1;
-						strSeumyungDate = signAdd + "seumyungdate" + 1;
+						strSign = signAdd + "sign1";
+						strSeumyungDate = signAdd + "seumyungdate1";
 						
 						doc.getElementById(strSign).html(signText);
 						
@@ -37787,14 +37811,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					//사인 저장
 					StringBuilder resultXML = new StringBuilder();
+					
+					/* 2024-11-20 홍승비 - 전자결재 > 일괄접수 기능과 서명데이터 재맵핑 기능이 호환되도록 수정, 일부 서명 형식 불일치 오류 함께 수정 */
 					resultXML.append("<SIGNINFOS>");
-				    resultXML.append("<SIGNINFO>");
-				    resultXML.append("<DOCID>" + docID + "</DOCID>");
-				    resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
-				    resultXML.append("<SIGNNAME>" + "1sign1" + "</SIGNNAME>");
-					resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText) + "</CONTENT>");
-				    resultXML.append("</SIGNINFO>");
-				    resultXML.append("</SIGNINFOS>");
+		            
+		            if (!signText.isEmpty()) { // 서명
+		                resultXML.append("<SIGNINFO>");
+		                resultXML.append("<DOCID>" + docID + "</DOCID>");
+		                resultXML.append("<SIGNTYPE>" + "HTML" + "</SIGNTYPE>");
+		                resultXML.append("<SIGNNAME>" + "1sign1" + "</SIGNNAME>"); // signAdd 값이 1로 고정된 상태
+		                resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText) + "</CONTENT>");
+		                resultXML.append("</SIGNINFO>");
+		            }
+		            if (!lastCnt.isEmpty()) { // 서명일자
+		                resultXML.append("<SIGNINFO>");
+		                resultXML.append("<DOCID>" + docID + "</DOCID>");
+		                resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
+		                resultXML.append("<SIGNNAME>" + "1seumyungdate1" + "</SIGNNAME>");
+		                resultXML.append("<CONTENT>" + commonUtil.cleanValue(lastCnt) + "</CONTENT>");
+		                resultXML.append("</SIGNINFO>");
+		            }
+		            
+		            resultXML.append("</SIGNINFOS>");
+		            
 					strSql = updateSignInfo(resultXML, companyID, "SET", userInfo.getTenantId());
 					signSaveFlag = true;
 					
@@ -38092,7 +38131,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				return resultStr;
 			}
 		} catch (Exception e) {
-			
 			resultStr = "ERROR";
 
 			logger.debug("Error occurred during receiptAllCreate_MhtFile. " + e.getMessage());
