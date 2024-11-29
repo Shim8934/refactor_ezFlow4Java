@@ -927,7 +927,6 @@
 			    	}
 			    };
 			    
-<<<<<<< Updated upstream
 			    /* 2023-05-03 기민혁 -  스크랩 추가 클릭시 data insert */
 			    function addScrapType1() {
 			    	$.ajax({
@@ -1017,7 +1016,6 @@
                     });
                 }
 
-=======
             function btn_ThumbnailModify() {
             	var swidth;
 	            var sheight;
@@ -1112,7 +1110,6 @@
 			    
 			 	return canvas.toDataURL();
 			}
->>>>>>> Stashed changes
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup">
