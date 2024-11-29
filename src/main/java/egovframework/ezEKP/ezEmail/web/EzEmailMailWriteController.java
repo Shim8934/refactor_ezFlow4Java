@@ -4998,20 +4998,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						&& (modeFlag.equalsIgnoreCase("preview") || modeFlag.equalsIgnoreCase("previewSend"))) {
 		        	pResult += "<MESSAGEID><![CDATA[" + ezEmailUtil.getDraftsFolderId(locale) + "]]></MESSAGEID>";
 		        }
-		        
-		        // useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
-				String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", userInfo.getTenantId());
-				
-				if (autoSaveAddress.equals("YES")) {
-					try {
-						ezEmailUtil.outerMailInsertAddress(addressCheck, userId, userInfo.getTenantId(), 
-								userAccount, userInfo.getDisplayName(), userInfo.getDisplayName1());
-					} catch (NullPointerException e) {
-						logger.debug("AutoEmailAddress insert fail.");
-						logger.error(e.getMessage(), e);
-					} catch (Exception e) {
-						logger.debug("AutoEmailAddress insert fail.");
-						logger.error(e.getMessage(), e);
+
+				if (!cmd.equalsIgnoreCase("SAVE")) {
+					// useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
+					String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", userInfo.getTenantId());
+
+					if (autoSaveAddress.equals("YES")) {
+						try {
+							ezEmailUtil.outerMailInsertAddress(addressCheck, userId, userInfo.getTenantId(), 
+									userAccount, userInfo.getDisplayName(), userInfo.getDisplayName1());
+						} catch (NullPointerException e) {
+							logger.debug("AutoEmailAddress insert fail.");
+							logger.error(e.getMessage(), e);
+						} catch (Exception e) {
+							logger.debug("AutoEmailAddress insert fail.");
+							logger.error(e.getMessage(), e);
+						}
 					}
 				}
 	        
@@ -6624,192 +6626,74 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String searchValue = request.getParameter("value");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		String pOrganSearchList = "displayname::" + searchValue + ";;mail::" + searchValue;
-		String pOrganCellList = "displayname";
-		String pOrganPropList = "company;description;title;mail;extensionAttribute3;displayName2";
-		String pOrganListType = "all";
-		String pDLSearchList = "displayname::" + searchValue;
-		String pAddressFilter = searchValue;
-		String pSharedMailboxSearchList = "displayname::" + searchValue;
-
 		try {
-	        String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
-			
-	        // useShowAllCompanies가 YES이고 company 패러메터가 전달된 경우에는
-	        // Company ID를 ""로 세트하여 그룹사 전체 조직도를 대상으로 검색하도록 한다.
-	        String orgCompanyId = userInfo.getCompanyID();
-	        
-	        if (useShowAllCompanies.equals("YES")) {
-				String companyId  = request.getParameter("company");
-				
-				if (companyId != null) {
-					userInfo.setCompanyID("");
-				}
-	        }
-			
-			Document organXML = commonUtil.convertStringToDocument(
-					getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo));
-			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo));			
-			
-	        if (useShowAllCompanies.equals("YES")) {
-	        	// Company ID를 본래값으로 복원한다.
-	        	userInfo.setCompanyID(orgCompanyId);
-	        }
-	        
-			Document addressXML = commonUtil.convertStringToDocument(getAddressSearch(pAddressFilter, userInfo));
-			Document sharedMailboxXML = commonUtil.convertStringToDocument(getSharedMailboxSearch(pSharedMailboxSearchList, userInfo));
-
-			HashMap<String, Object> jsonObject = null;
-
 			List<Object> jsonList = new ArrayList<Object>();
-			
-			// 20190619 조진호 - 메일 주소 검색 대상 순서 변경 추가
-			String mailAddressSearchOrder = ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
+			HashMap<String, Document> xmlMap = new HashMap<String, Document>();
+			String[] orderedKeys;
 
-			if (mailAddressSearchOrder.equals("")) {
-				NodeList organRow = organXML.getElementsByTagName("ROW");
-				for (int i = 0; i < organRow.getLength(); i++) {
-					Element row = (Element) organRow.item(i);
-					NodeList organList = row.getElementsByTagName("CELL");
-					Element organCell = (Element) organList.item(0);
-					if (organCell.getElementsByTagName("DATA6").item(0) != null 
-							&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
-						jsonObject = new HashMap<String, Object>();
-						jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
-						jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
-						jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
-						jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
-						jsonObject.put("type", "");
-						jsonObject.put("href", "");
-						jsonList.add(jsonObject);
+			// 주소 자동 완성
+				// (1. orderedKeys) 20190619 조진호 - 메일 주소 검색 대상 순서 변경 추가
+				orderedKeys = new String[]{"organ", "dl", "address", "shared"}; // [] 배열: 순서 보장됨.
+				String mailAddressSearchOrder = ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
+
+				if (StringUtils.isNotBlank(mailAddressSearchOrder)) {
+					orderedKeys = mailAddressSearchOrder.toLowerCase().split(";");
+				}
+
+				// (2. xmlMap) : organ, dl, address, shared.
+				String pOrganSearchList = "displayname::" + searchValue + ";;mail::" + searchValue;
+				String pOrganCellList = "displayname";
+				String pOrganPropList = "company;description;title;mail;extensionAttribute3;displayName2";
+				String pOrganListType = "all";
+				String pDLSearchList = "displayname::" + searchValue;
+				String pSharedMailboxSearchList = "displayname::" + searchValue;
+
+				// useShowAllCompanies가 YES이고 company 패러메터가 전달된 경우에는
+				// Company ID를 ""로 세트하여 그룹사 전체 조직도를 대상으로 검색하도록 한다.
+				String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+				String orgCompanyId = userInfo.getCompanyID();
+
+				if (useShowAllCompanies.equals("YES")) {
+					String companyId  = request.getParameter("company");
+
+					if (companyId != null) {
+						userInfo.setCompanyID("");
 					}
 				}
 
-				NodeList dlRow = dlXML.getElementsByTagName("ROW");
-				for (int i = 0; i < dlRow.getLength(); i++) {
-					Element row = (Element) dlRow.item(i);
-					NodeList dlList = row.getElementsByTagName("CELL");
-					Element dlCell = (Element) dlList.item(0);
-					if (dlCell.getElementsByTagName("DATA3").item(0) != null 
-							&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
-						jsonObject = new HashMap<String, Object>();
-						jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
-						jsonObject.put("title", "");
-						jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
-						jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
-						jsonObject.put("type", "");
-						jsonObject.put("href", "");
-						jsonList.add(jsonObject);
-					}
+				// 조직도
+				xmlMap.put("organ", commonUtil.convertStringToDocument(getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo)));
+				// 공용그룹
+				xmlMap.put("dl", commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo)));
+
+				if (useShowAllCompanies.equals("YES")) {
+					// Company ID를 본래값으로 복원한다.
+					userInfo.setCompanyID(orgCompanyId);
 				}
 
-				NodeList addressRow = addressXML.getElementsByTagName("ROW");
-				for (int i = 0; i < addressRow.getLength(); i++) {
-					Element row = (Element) addressRow.item(i);
-					if (row.getElementsByTagName("SEMAIL").item(0) != null 
-							&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")) {
-						jsonObject = new HashMap<String, Object>();
-						jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
-						jsonObject.put("title", "");
-						jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
-						jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
-						jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
-						jsonObject.put("href", row.getElementsByTagName("ADDRESSID").item(0).getTextContent() + "|!|" + row.getElementsByTagName("FOLDERTYPE").item(0).getTextContent());
-						jsonList.add(jsonObject);
-					}
-				}
-				
-				NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
-				for (int i = 0; i < sharedMailboxRow.getLength(); i++) {
-					Element row = (Element) sharedMailboxRow.item(i);
-					NodeList sharedMailboxList = row.getElementsByTagName("CELL");
-					Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
-					if (sharedMailboxCell.getElementsByTagName("DATA3").item(0) != null
-							&& !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
-						jsonObject = new HashMap<String, Object>();
-						jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
-						jsonObject.put("title", "");
-						jsonObject.put("description", egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale));
-						jsonObject.put("mail", sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent());
-						jsonObject.put("type", "");
-						jsonObject.put("href", "");
-						jsonList.add(jsonObject);
-					}
-				}
-			} else {
-				String[] mailAddressSearchOrderSplit = mailAddressSearchOrder.split(";");
+				// 주소록
+				xmlMap.put("address", commonUtil.convertStringToDocument(getAddressSearch(searchValue, userInfo)));
+				// 공유사서함
+				xmlMap.put("shared", commonUtil.convertStringToDocument(getSharedMailboxSearch(pSharedMailboxSearchList, userInfo)));
 
-				for (int j = 0; j < mailAddressSearchOrderSplit.length; j++) {
-					if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("organ")) {
-						NodeList organRow = organXML.getElementsByTagName("ROW");
-						for (int i = 0; i < organRow.getLength(); i++) {
-							Element row = (Element) organRow.item(i);
-							NodeList organList = row.getElementsByTagName("CELL");
-							Element organCell = (Element) organList.item(0);
-							if (organCell.getElementsByTagName("DATA6").item(0) != null 
-									&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
-								jsonObject = new HashMap<String, Object>();
-								jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
-								jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
-								jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
-								jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
-								jsonObject.put("type", "");
-								jsonObject.put("href", "");
-								jsonList.add(jsonObject);
-							}
-						}
-					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("address")) {
-						NodeList addressRow = addressXML.getElementsByTagName("ROW");
-						for (int i = 0; i < addressRow.getLength(); i++) {
-							Element row = (Element) addressRow.item(i);
-							if (row.getElementsByTagName("SEMAIL").item(0) != null 
-									&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")) {
-								jsonObject = new HashMap<String, Object>();
-								jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
-								jsonObject.put("title", "");
-								jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
-								jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
-								jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
-								jsonObject.put("href", row.getElementsByTagName("ADDRESSID").item(0).getTextContent() + "|!|" + row.getElementsByTagName("FOLDERTYPE").item(0).getTextContent());
-								jsonList.add(jsonObject);
-							}
-						}
-					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("dl")) {
-						NodeList dlRow = dlXML.getElementsByTagName("ROW");
-						for (int i = 0; i < dlRow.getLength(); i++) {
-							Element row = (Element) dlRow.item(i);
-							NodeList dlList = row.getElementsByTagName("CELL");
-							Element dlCell = (Element) dlList.item(0);
-							if (dlCell.getElementsByTagName("DATA3").item(0) != null 
-									&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
-								jsonObject = new HashMap<String, Object>();
-								jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
-								jsonObject.put("title", "");
-								jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
-								jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
-								jsonObject.put("type", "");
-								jsonObject.put("href", "");
-								jsonList.add(jsonObject);
-							}
-						}
-					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("shared")) {
-						NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
-						for (int i = 0; i < sharedMailboxRow.getLength(); i++) {
-							Element row = (Element) sharedMailboxRow.item(i);
-							NodeList sharedMailboxList = row.getElementsByTagName("CELL");
-							Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
-							if (sharedMailboxCell.getElementsByTagName("DATA3").item(0) != null
-									&& !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
-								jsonObject = new HashMap<String, Object>();
-								jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
-								jsonObject.put("title", "");
-								jsonObject.put("description", egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale));
-								jsonObject.put("mail", sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent());
-								jsonObject.put("type", "");
-								jsonObject.put("href", "");
-								jsonList.add(jsonObject);
-							}
-						}
+			// Cell 객체에 싸서, 각 list에 따라 적절한 속성값을 추출하도록 함.
+			for (String key : orderedKeys) {
+				NodeList row = xmlMap.get(key).getElementsByTagName("ROW");
+
+				for (int i = 0; i < row.getLength(); i++) {
+					Cell cell = new Cell(key, (Element) row.item(i), locale);
+
+					if (StringUtils.isNotBlank(cell.mail)) {
+						HashMap<String, Object> jsonObject = new HashMap<String, Object>();
+
+						jsonObject.put("name", cell.name);
+						jsonObject.put("title", cell.title);
+						jsonObject.put("description", cell.description);
+						jsonObject.put("mail", cell.mail);
+						jsonObject.put("type", cell.type);
+						jsonObject.put("href", cell.href);
+
+						jsonList.add(jsonObject);
 					}
 				}
 			}
@@ -6823,6 +6707,60 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 		logger.debug("autoCompleteList ended.");
 		return "json";
+	}
+
+	class Cell {
+		Element cell;
+		String name = "";
+		String title = "";
+		String description = "";
+		String mail = "";
+		String type = "";
+		String href = "";
+
+		public Cell(String key, Element row, Locale locale) {
+			NodeList list = row.getElementsByTagName("CELL");
+			this.cell = (list.getLength() > 0) ? (Element) list.item(0) : row;
+
+			/* [if] 순차 조건 평가. [switch] 점프 테이블 사용.
+			 * - 작은 조건문: switch와 if의 성능 차이 미미. 가독성과 관리 편의성에 따라 선택.
+			 * - 조건이 많아질수록: 예를 들어, 10개 이상의 조건이 있을 때 switch는 빠른 조건 분기가 가능. 더 효율적.
+			 */
+			switch (key) {
+				case "organ":
+					setPrimary("VALUE", "DATA6");
+					this.title = getByTag("DATA5");
+					this.description = getByTag("DATA4");
+					break;
+				case "dl":
+					setPrimary("VALUE", "DATA3");
+					setDescriptionByMsg("ezEmail.t593", locale);
+					break;
+				case "address":
+					setPrimary("SNAME", "SEMAIL");
+					setDescriptionByMsg("ezEmail.t99000041", locale);
+					this.type = getByTag("STYPE");
+					this.href = getByTag("ADDRESSID") + "|!|" + getByTag("FOLDERTYPE");
+					break;
+				case "shared":
+					setPrimary("VALUE", "DATA3");
+					setDescriptionByMsg("ezEmail.sharedMailbox02", locale);
+					break;
+			}
+		}
+
+		void setPrimary(String name, String mail) {
+			this.name = getByTag(name);
+			this.mail = getByTag(mail);
+		}
+		void setDescriptionByMsg(String code, Locale locale) {
+			this.description = egovMessageSource.getMessage(code, locale);
+		}
+
+		String getByTag(String tagName) {
+			NodeList tags = this.cell.getElementsByTagName(tagName);
+			return (tags.getLength() > 0) ? tags.item(0).getTextContent() : "";
+		}
 	}
 	
 	/**

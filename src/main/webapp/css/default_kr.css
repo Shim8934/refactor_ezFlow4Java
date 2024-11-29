@@ -4126,7 +4126,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .input_select .input_wrap.on + a + ul{display:block;}
 
 .previewmail .previewmail_info{overflow:visible;}
-.previewmailDL{overflow:visible; marging:0; padding:15px 20px;}
+.previewmailDL{overflow:visible; margin:0; padding:15px 20px;}
 .previewmailDL:after{content:""; display:block; clear:both;}
 .previewmailDL dd.pretext{overflow:visible; float:left; width:calc(100% - 55px); box-sizing:border-box;}
 .previewmailDL dd.pretext .pretextUL li.preT_list{overflow:visible;}

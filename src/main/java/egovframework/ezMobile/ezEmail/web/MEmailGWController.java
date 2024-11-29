@@ -4069,16 +4069,18 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			        pResult = "<RESULT>OK</RESULT>";
 			        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";	
 			        
-			        // useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
-					String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", info.getTenantId());
-					
-					if (autoSaveAddress.equals("YES")) {
-						try {
-							ezEmailUtil.outerMailInsertAddress(addressCheck,info.getUserId(),info.getTenantId(),
-									userEmail,info.getUserName(),info.getUserName2());
-						} catch (Exception e) {
-							logger.debug("AutoEmailUtil insert fail.");
-							logger.error(e.getMessage(), e);
+					if (!cmd.equalsIgnoreCase("SAVE")) {
+						// useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
+						String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", info.getTenantId());
+
+						if (autoSaveAddress.equals("YES")) {
+							try {
+								ezEmailUtil.outerMailInsertAddress(addressCheck,info.getUserId(),info.getTenantId(),
+										userEmail,info.getUserName(),info.getUserName2());
+							} catch (Exception e) {
+								logger.debug("AutoEmailUtil insert fail.");
+								logger.error(e.getMessage(), e);
+							}
 						}
 					}
 			        
