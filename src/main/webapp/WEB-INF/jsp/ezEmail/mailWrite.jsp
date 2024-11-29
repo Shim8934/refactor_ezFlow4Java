@@ -22,8 +22,9 @@
 		<!-- 수신인란 height 작업 -->
 		<style>
 			.viewtxtScroller {
-				min-height: 16px;
-				max-height: 16px;
+				width:calc(100% - 20px);
+				overflow-y:auto;
+				max-height: 19px;
 				margin-bottom: 3px;
 			}
 			.viewtxtWrapper {
@@ -31,8 +32,7 @@
 				height: 100%;
 			}
 			.viewtxt {
-				display: table-cell;
-				vertical-align: middle;
+				min-height: 16px;
 			}
 			.viewtxt > span {
 				display: inline-block;
@@ -47,7 +47,9 @@
 			}
 			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0px}
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
-			.mailAddressAdd { overflow-y: auto; }
+			.mailAddressAdd { position:relative; }
+			.expnd { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/expnd.gif); }
+			.cllps { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/cllps.gif); }
 		</style>
 		
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
@@ -463,6 +465,10 @@
 
 			$(window.frames['tbContentElement']).mouseup(function (e) {
 				hiddenMoreMenu(e);
+			});
+
+			$("#MsgToGot, #MsgCCGot, #MsgBCCGot").sortable({
+				connectWith: ".viewtxt"
 			});
 		}
 	    
@@ -2499,6 +2505,13 @@
 			}
 	    }
 	    
+		// 수신자칸 : 접기, 펼치기 버튼
+	    function changeMode(obj, className) {
+			var mode = { expnd: {switch: 'cllps', height: '55px'},
+						 cllps: {switch: 'expnd', height: '19px'} };
+			obj.className = mode[className].switch;
+			$(obj).siblings('.viewtxtScroller').css('max-height', mode[className].height);
+	    }
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -2659,6 +2672,7 @@
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgToGot" class="viewtxt"></div>
 	                            </div>
+	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgCC_TR">
@@ -2686,6 +2700,7 @@
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgCCGot" class="viewtxt"></div>
 	                            </div>
+	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgBCC_TR"  style="display:none;">
@@ -2710,6 +2725,7 @@
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgBCCGot" class="viewtxt"></div>
 	                            </div>
+	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr style="height:33px">

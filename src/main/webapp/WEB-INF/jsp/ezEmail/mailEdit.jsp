@@ -20,8 +20,35 @@
 		</style>
 		</c:if>
 		<style>
+			.viewtxtScroller {
+				width:calc(100% - 20px);
+				overflow-y:auto;
+				max-height: 19px;
+				margin-bottom: 3px;
+			}
+			.viewtxtWrapper {
+				display: table;
+				height: 100%;
+			}
+			.viewtxt {
+				min-height: 16px;
+			}
+			.viewtxt > span {
+				display: inline-block;
+				padding-right: 5px;
+			}
+			.viewtxt > span > span {
+				font-size: 12px;
+			}
+
+			#menu > ul:nth-child(2) > li {
+				margin: 0 2px !important;
+			}
 			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0px}
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
+			.mailAddressAdd { position:relative; }
+			.expnd { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/expnd.gif); }
+			.cllps { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/cllps.gif); }
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -231,7 +258,11 @@
 	            	$( "#MsgCC" ).autocomplete("disable");
 	            	$( "#MsgBCC" ).autocomplete("disable");
 	        	</c:if>
-	            
+
+				// 2024-10-16 김은실 : [표준모듈] 메일쓰기창 To, Cc, Bcc 간 Drag & Drop 구현
+				$("#MsgToGot, #MsgCCGot, #MsgBCCGot").sortable({
+					connectWith: ".viewtxt"
+				});
 			}
 			
 			var MailStatus = "NO";
@@ -1129,7 +1160,14 @@
 		        xmlhttp = null;
 		        isDelted = true;
 		    }
-		    
+
+			// 수신자칸 : 접기, 펼치기 버튼
+			function changeMode(obj, className) {
+				var mode = { expnd: {switch: 'cllps', height: '55px'},
+							cllps: {switch: 'expnd', height: '19px'} };
+				obj.className = mode[className].switch;
+				$(obj).siblings('.viewtxtScroller').css('max-height', mode[className].height);
+			}
 		</script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -1231,7 +1269,12 @@
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr>
-		            <td colspan="3"><div id="MsgToGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
+		            <td colspan="3" class="mailAddressAdd">
+						<div class="viewtxtScroller">
+							<div id="MsgToGot" class="viewtxt"></div>
+						</div>
+						<img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
+					</td>
 		          </tr>
 		          <tr id="MsgCC_TR">
 		            <th rowspan="2"  ><a class="imgbtn"><span onClick="SelectReceiver_onClick('CC')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t594' /></span></a>
@@ -1245,7 +1288,12 @@
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgCC_TRu">
-		            <td colspan="3"><div id="MsgCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
+		            <td colspan="3" class="mailAddressAdd">
+						<div class="viewtxtScroller">
+							<div id="MsgCCGot" class="viewtxt"></div>
+						</div>
+						<img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
+					</td>
 		          </tr>
 		          <tr id="MsgBCC_TR" style="display:none;">
 		            <th rowspan="2" ><a class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
@@ -1257,7 +1305,12 @@
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgBCC_TRu" style="display:none;">
-		            <td colspan="3"><div id="MsgBCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
+		            <td colspan="3" class="mailAddressAdd">
+						<div class="viewtxtScroller">
+							<div id="MsgBCCGot" class="viewtxt"></div>
+						</div>
+						<img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
+					</td>
 		          </tr>
 		          <tr>
 		            <th style="text-align:center"><spring:message code='ezEmail.t98' /></th>

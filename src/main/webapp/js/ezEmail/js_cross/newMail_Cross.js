@@ -3617,7 +3617,7 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     	});
     }
     
-    newElem.style.cursor = "pointer";
+    newElem.style.cursor = "move"; // [메일쓰기] TO/CC/BCC란 기입 시 MsgTo/CC/BCCGot
     newElem.setAttribute("iType", iWhich); //newElem.getAttribute("iType") = iWhich;
     newElem.setAttribute("onclick", "NameChange_onClick()");
     newElem.setAttribute("type", type);//newElem.getAttribute("type") = type;
