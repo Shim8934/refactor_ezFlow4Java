@@ -799,12 +799,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			switch(column) {
 				case "at" : orderCol = "attach_flag"; break;
 				case "cd" : orderCol = "create_date"; break;
+                case "surveyId" : orderCol = "SURVEY_ID"; break;
 				case "tt" : orderCol = "title"; break;
 				case "ed" : orderCol = "end_date"; break;
 				case "ut" : orderCol = "participate_flag"; break;
 				case "ct" : orderCol = ("user_name" + primary); break;
 				case "pl" : orderCol = "result_public_flag"; break;
 				case "an" : orderCol = "anonymous_flag"; break;
+                case "participants" : orderCol = "PARTICIPANTS"; break;
+                case "participation" : orderCol = "PARTICIPATION"; break;
 				default   : orderCol = "title"; break;
 			}
 		}

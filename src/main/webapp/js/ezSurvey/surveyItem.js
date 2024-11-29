@@ -499,7 +499,9 @@ var SurveyItem = function() {
 				var trElmt     = document.createElement("tr");
 				var tdElmt1    = document.createElement("td");
 				var tdElmt2    = document.createElement("td");
+				var tdSurveyId = document.createElement("td");
 				var tdElmt3    = document.createElement("td");
+				var tdPeriod    = document.createElement("td");
 				var tdElmt4    = document.createElement("td");
 				var tdElmt5    = document.createElement("td");
 				var tdElmt6    = document.createElement("td");
@@ -507,6 +509,10 @@ var SurveyItem = function() {
 				var tdElmt8    = document.createElement("td");
 				var tdElmt9    = document.createElement("td");
 				var tdElmt10   = document.createElement("td");
+				// 참여자수
+				var tdParticipants   = document.createElement("td");
+				// 참여여부
+				var tdParticipation   = document.createElement("td");
 //				var tdElmt11   = document.createElement("td");
 				var endDateStr = itemList[i]["endDate"].substring(0, 10);
 				var today      = new Date();
@@ -532,6 +538,9 @@ var SurveyItem = function() {
 					imgAttch.src  = "/images/newAttach.gif";
 					tdElmt2.appendChild(imgAttch);
 				}
+
+				tdSurveyId.textContent = itemList[i]["surveyId"];
+				tdPeriod.textContent = itemList[i]["startDate"].substring(0, 10) + "~" + endDateStr;
 				
 				tdElmt3.textContent  = itemList[i]["title"];
 				tdElmt4.textContent  = itemList[i]["creatorName"];
@@ -546,7 +555,15 @@ var SurveyItem = function() {
 				}
 				tdElmt8.textContent  = itemList[i]["anonymousFlag"]    == 0 ? SurveyMessages.strAnoynym1 : SurveyMessages.strAnoynym2;
 				tdElmt9.textContent  = endDateStr;
-				
+				var participantsCnt = itemList[i]["participants"] || '0';
+				tdParticipants.textContent  = participantsCnt + ' ' + SurveyMessages.strUser3;
+				var participationCnt = itemList[i]["participation"] || 0;
+				tdParticipation.textContent  = participationCnt > 0 ? SurveyMessages.strLangPGB01 : SurveyMessages.strLangPGB02;
+
+				tdSurveyId.setAttribute("title", tdSurveyId.textContent);
+				tdPeriod.setAttribute("title", tdPeriod.textContent);
+				tdParticipants.setAttribute("title", tdParticipants.textContent);
+				tdParticipation.setAttribute("title", tdParticipation.textContent);
 				tdElmt3.setAttribute("title", tdElmt3.textContent);
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
 				tdElmt5.setAttribute("title", tdElmt5.textContent);
@@ -615,25 +632,33 @@ var SurveyItem = function() {
 				tdElmt10.textContent = statusStr;
 				tdElmt1.className    = "inputTh";
 				tdElmt2.className    = "inputTh";
+				tdSurveyId.className    = "numTh";
 				tdElmt3.className    = "ttlTh";
+				tdPeriod.className 	= "createTh";
 				tdElmt4.className    = "createTh";
 				tdElmt5.className    = "endDateTh";
 				tdElmt6.className    = "targetTh";
 				tdElmt7.className    = "publicTh";
 				tdElmt8.className    = "anoynmTh";
 				tdElmt9.className    = "endDateTh";
+				tdParticipants.className   = "statusTh";
+				tdParticipation.className   = "statusTh";
 				tdElmt10.className   = "statusTh";
 //				tdElmt11.className   = "statisTh";
 				
 				trElmt.appendChild(tdElmt1);
 				trElmt.appendChild(tdElmt2);
+				trElmt.appendChild(tdSurveyId);
 				trElmt.appendChild(tdElmt3);
-				trElmt.appendChild(tdElmt4);
-				trElmt.appendChild(tdElmt5);
-				trElmt.appendChild(tdElmt6);
-				trElmt.appendChild(tdElmt7);
-				trElmt.appendChild(tdElmt8);
-				trElmt.appendChild(tdElmt9);
+				// trElmt.appendChild(tdElmt4);
+				// trElmt.appendChild(tdElmt5);
+				// trElmt.appendChild(tdElmt9);
+				trElmt.appendChild(tdPeriod);
+				// trElmt.appendChild(tdElmt6);
+				// trElmt.appendChild(tdElmt7);
+				// trElmt.appendChild(tdElmt8);
+				trElmt.appendChild(tdParticipants);
+				trElmt.appendChild(tdParticipation);
 				trElmt.appendChild(tdElmt10);
 //				trElmt.appendChild(tdElmt11);
 				

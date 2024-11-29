@@ -186,5 +186,8 @@ var SurveyMessages = {
 	strDateTimeValidation : "시작 날짜는 끝 날짜보다 이전 날짜여야 합니다.",
 	strQuestionImage : "이미지로 질문 대체",
 	strQuestionFileAttach : "질문에 파일 첨부",
-	strAllowedImageForTitle : "png, jpeg, jpg만 허용가능합니다."
+	strAllowedImageForTitle : "png, jpeg, jpg만 허용가능합니다.",
+    /* 2024-11-25 박기범 - 리스트 상태값 추가 */
+    strLangPGB01 : "참여",
+    strLangPGB02 : "미참여"
 }

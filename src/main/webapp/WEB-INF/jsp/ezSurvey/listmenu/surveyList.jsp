@@ -127,13 +127,17 @@
 						<tr>
 							<th headers=""    class="inputTh"><input type="checkbox"></th>
 							<th headers="at"  class="inputTh"><img src="/images/newAttach.gif"></th>
+							<th headers="surveyId"  class="numTh"><spring:message code='ezSurvey.listHeader.pgb03'/></th>
 							<th headers="tt"  class="ttlTh"    ><spring:message code='ezSurvey.t23'/></th>
-							<th headers="ct"  class="createTh" ><spring:message code='ezSurvey.t24'/></th>
-							<th headers="cd"  class="endDateTh"><spring:message code='ezSurvey.t99'/></th>
-							<th headers="ut"  class="targetTh" ><spring:message code='ezSurvey.t30'/></th>
-							<th headers="pl"  class="publicTh" ><spring:message code='ezSurvey.t31'/></th>
-							<th headers="an"  class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>
-							<th headers="ed"  class="endDateTh"><spring:message code='ezSurvey.t29'/></th>
+<%--							<th headers="ct"  class="createTh" ><spring:message code='ezSurvey.t24'/></th>--%>
+<%--							<th headers="cd"  class="endDateTh"><spring:message code='ezSurvey.t99'/></th>--%>
+<%--							<th headers="ed"  class="endDateTh"><spring:message code='ezSurvey.t29'/></th>--%>
+							<th headers="period"  class="endDateTh"><spring:message code='ezSurvey.t26'/></th>
+<%--							<th headers="ut"  class="targetTh" ><spring:message code='ezSurvey.t30'/></th>--%>
+<%--							<th headers="pl"  class="publicTh" ><spring:message code='ezSurvey.t31'/></th>--%>
+<%--							<th headers="an"  class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>--%>
+							<th headers="participants"    class="statusTh" ><spring:message code='ezSurvey.listHeader.pgb01'/></th>
+							<th headers="participation"    class="statusTh" ><spring:message code='ezSurvey.listHeader.pgb02'/></th>
 							<th headers=""    class="statusTh" ><spring:message code='ezSurvey.t81'/></th>
 						</tr>
 					</table>
