@@ -137,8 +137,6 @@ public class MBoardInfoVO {
 	private String useKeyword;
 	/** 2024-10-23 정지은 - 첨부파일 사용여부**/
 	private String attachmentFlag;
-	/** 첨부파일 기능 사용여부 */
-	private String attachmentFlag;
 	
 	@Override
 	public String toString() {
