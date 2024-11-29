@@ -161,6 +161,8 @@ public class BoardListVO {
 	private String updaterID;
 	/** 게시물 수정자 이름 */
 	private String updaterName;
+	private String thumbnailExt;
+	private String addThumbnail;
 
 	public int getrNum() {
 		return rNum;
@@ -647,5 +649,17 @@ public class BoardListVO {
 
 	public void setupdaterName(String updaterName) {
 		this.updaterName = updaterName;
+	}
+	public String getThumbnailExt() {
+		return thumbnailExt;
+	}
+	public void setThumbnailExt(String thumbnailExt) {
+		this.thumbnailExt = thumbnailExt;
+	}
+	public String getAddThumbnail() {
+		return addThumbnail;
+	}
+	public void setAddThumbnail(String addThumbnail) {
+		this.addThumbnail = addThumbnail;
 	}
 }

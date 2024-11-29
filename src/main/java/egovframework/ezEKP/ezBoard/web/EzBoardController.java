@@ -108,6 +108,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -2527,6 +2528,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					resultXML.append("<DATA7>" + boardThumbnailList.get(j).get("ONELINECNT") + "</DATA7>");
 					resultXML.append("<DATA8>" + boardThumbnailList.get(j).get("READFLAG") + "</DATA8>");
+					resultXML.append("<DATA9>" + boardThumbnailList.get(j).get("ADDTHUMBNAIL") + "</DATA9>");
+					resultXML.append("<DATA10>" + boardThumbnailList.get(j).get("THUMBNAILEXT") + "</DATA10>");
 					/* 2019-04-09 홍승비 - 썸네일게시물 데이터에 제목 추가 */
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<PUBLICFLAG>").append(boardThumbnailList.get(j).get("PUBLICFLAG")).append("</PUBLICFLAG>");
@@ -6668,6 +6671,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			return "DEL";
+		} else if (mode.equals("THUMBNAIL")) { 
+			multiFile = request.getFiles("file2");
+			dirPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
+			serverPath = dirPath + commonUtil.separator;
 		} else {
 			multiFile = request.getFiles("file1");
 			dirPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId());
@@ -7129,6 +7136,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String oFileName = "";
 		String rtnValue = "";
 		String gubun = "";
+		String modifyThumb = request.getParameter("modifyThumb") != null ? request.getParameter("modifyThumb") : "";
+		String modifyMovie = request.getParameter("modifyMovie") != null ? request.getParameter("modifyMovie") : "";
 		
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		
@@ -7161,6 +7170,17 @@ public class EzBoardController extends EgovFileMngUtil{
 			filePath = commonUtil.detectPathTraversal(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
 			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
 			oFileName = doc.getElementsByTagName("OFILENAME").item(0).getTextContent();
+			String addThumbnail = "";
+			
+			if (doc.getElementsByTagName("ADDTHUMBNAIL").item(0) != null && !doc.getElementsByTagName("ADDTHUMBNAIL").item(0).getTextContent().equals("")) {
+				addThumbnail = doc.getElementsByTagName("ADDTHUMBNAIL").item(0).getTextContent();
+			}
+			
+			String thumbnailExt = "png";
+			
+			if (doc.getElementsByTagName("EXT").item(0) != null && !doc.getElementsByTagName("EXT").item(0).getTextContent().equals("")) {
+				thumbnailExt = doc.getElementsByTagName("EXT").item(0).getTextContent();
+			}
 			
 			String file_Path = "";
 			
@@ -7188,19 +7208,30 @@ public class EzBoardController extends EgovFileMngUtil{
 				}
 				
 				/* 2018-11-07 홍승비 - 동영상 게시물의 경우, 동영상 수정 시 동일한 s_{GUID}로 생성된 썸네일 복사 */
-				if (gubun != null && gubun.equals("7")) {
-					String s_file_Path = "";
-					String s_tempFilePath = uploadFilePath + commonUtil.separator + filePath.replace("/{", "/s_{");
-					s_tempFilePath = s_tempFilePath.substring(0, s_tempFilePath.lastIndexOf(".")) + ".png";
-					File s_file = new File(s_tempFilePath);
-					
-					if (s_file.exists()) {
-						s_file_Path = uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + filePath.replace("tempUploadFile", "").replace("/{", "/s_{");
-						s_file_Path = s_file_Path.substring(0, s_file_Path.lastIndexOf(".")) + ".png";
+				if (!(modifyMovie.equals("Y") && addThumbnail.equals("Y"))) {
+					if (gubun != null && gubun.equals("7")) {
+						String s_file_Path = "";
+						String s_tempFilePath = uploadFilePath + commonUtil.separator + filePath.replace("/{", "/s_{");
+						s_tempFilePath = s_tempFilePath.substring(0, s_tempFilePath.lastIndexOf(".")) + "." + thumbnailExt;
+						File s_file = new File(s_tempFilePath);
+						
+						if (s_file.exists()) {
+							s_file_Path = uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + filePath.replace("tempUploadFile", "").replace("/{", "/s_{");
+							s_file_Path = s_file_Path.substring(0, s_file_Path.lastIndexOf(".")) + "." + thumbnailExt;
+						}
+						
+						FileUtils.copyFile(s_file, new File(s_file_Path));
+						deleteFile(s_tempFilePath);	
 					}
+				} else {
+					String orgThumb = doc.getElementsByTagName("ORGTHUMB").item(0).getTextContent();
+					String orgThumbPath = "s_" + orgThumb.substring(0, orgThumb.lastIndexOf(".")) + "." + thumbnailExt;
+					String thumbPath = filePath.replace("tempUploadFile", "");
+					String moveThumbPath = thumbPath.substring(0, thumbPath.lastIndexOf(".")).replace("/{", "/s_{") + "." + thumbnailExt;
+					File orgThumbFile = new File(uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + orgThumbPath);
+					File moveThumbFile = new File(uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + moveThumbPath);
 					
-					FileUtils.copyFile(s_file, new File(s_file_Path));
-					deleteFile(s_tempFilePath);	
+					FileUtils.copyFile(orgThumbFile, moveThumbFile);
 				}
 			}
 			
@@ -7210,9 +7241,15 @@ public class EzBoardController extends EgovFileMngUtil{
 				file_Path = "";
 			}
 			
-			ezBoardService.photoListUpdate(imageID, boardID, content, file_Path, doc.getElementsByTagName("ITEMID").item(0).getTextContent(), mainFg, oFileName, userInfo.getTenantId());
+			if (!modifyThumb.equals("Y")) {
+				ezBoardService.photoListUpdate(imageID, boardID, content, file_Path, doc.getElementsByTagName("ITEMID").item(0).getTextContent(), mainFg, oFileName, userInfo.getTenantId());
+			} else {
+				ezBoardService.thumbnailUpdate(imageID, boardID, userInfo.getTenantId(), thumbnailExt, oFileName, addThumbnail);
+			}
+			
 			String itemID = request.getParameter("itemID");
 			ezBoardService.modUpdateDate(commonUtil.getTodayUTCTime(""), itemID, userInfo.getId(), userInfo.getTenantId());
+			
 			return "OK";
 			
 		} else if (mod.equals("add")) {
@@ -10233,6 +10270,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String serverPath = "";
 		String resultUpload = "";		
 		String thumbFile = ""; // 썸네일을 저장한다. canvas로 저장한 문자열 형태 (toDateURL...)의 이미지 파일이 온다.
+		String addThumbnail = request.getParameter("addThumbnail") != null ? request.getParameter("addThumbnail") : "";
 		
 		thumbFile = request.getParameter("thumbnail");
 		dirPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());	
@@ -10244,29 +10282,51 @@ public class EzBoardController extends EgovFileMngUtil{
 			file.mkdirs();
 		}
 		
-		StringBuffer strXML = new StringBuffer();
-		
-		strXML.append("<ROOT><NODES>");
-		
 		if (pFileLimit != null && (pFileLimit.equals("0") || pFileLimit.equals(""))) {
 			pFileLimit = "2";
 		}
 		
-		thumbnailID = thumbnailID.substring(0, thumbnailID.lastIndexOf(".") + 1) + "png";
-		
-		File movieFile = new File(serverPath + thumbnailID);
-		BufferedImage bi = null;
-		String[] base64Arr = thumbFile.split(",");
-		byte[] imageByte = Base64.decodeBase64(base64Arr[1]);
-		
-		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-		bi = ImageIO.read(bis);
-		bis.close();
+		if (addThumbnail.equals("Y")) {
+			String ext = thumbFile.substring(thumbFile.lastIndexOf(".") + 1);
+			thumbnailID = thumbnailID.substring(0, thumbnailID.lastIndexOf(".") + 1) + ext;
+			File orgFile = new File(serverPath + thumbFile);
+			File movieFile = new File(serverPath + thumbnailID);
+			if (movieFile.exists()) {
+				movieFile.delete();
+			}
+			FileUtils.moveFile(orgFile, movieFile);
+			
+			File s_moveFile = new File(serverPath + "s_" + thumbnailID);
+			if (s_moveFile.exists()) {
+				s_moveFile.delete();
+			}
+			FileUtils.copyFile(movieFile, s_moveFile);
+			
+		} else {
+			thumbnailID = thumbnailID.substring(0, thumbnailID.lastIndexOf(".") + 1) + "png";
+			
+			File movieFile = new File(serverPath + thumbnailID);
+			BufferedImage bi = null;
+			String[] base64Arr = thumbFile.split(",");
+			byte[] imageByte = Base64.decodeBase64(base64Arr[1]);
+			
+			ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+			bi = ImageIO.read(bis);
+			bis.close();
 
-		ImageIO.write(bi, "png", movieFile);
+			ImageIO.write(bi, "png", movieFile);
+			
+			File s_moveFile = new File(serverPath + "s_" + thumbnailID);
+			if (s_moveFile.exists()) {
+				s_moveFile.delete();
+			}
+			FileUtils.copyFile(movieFile, s_moveFile);
+		}
 		
 		resultUpload = "true";
 		
+		StringBuffer strXML = new StringBuffer();
+		strXML.append("<ROOT><NODES>");
 		strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailID + "]]></THUMBNAILNAME>");
 		strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
 		strXML.append("</NODE>");
@@ -10403,6 +10463,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
 			keywordList = ezBoardService.selectBoardKeywordByBoardItem(boardItem.getItemID(), boardItem.getBoardID(), userInfo.getTenantId());
 		}
+		
+		List<BoardThumbnailVO> thumbnailInfo = ezBoardService.thumbnailViewDB(itemID, boardID, -1, 0, userInfo.getTenantId());
 
 		/* 2023-05-03 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */ 
 		String isScrap = ezBoardService.getScrapItemCount(userInfo.getId(), itemID, boardID, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -10427,7 +10489,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 		model.addAttribute("scrapContID", scrapContID);
 		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
-		
+		model.addAttribute("addThumbnail", thumbnailInfo.get(0).getAddThumbnail());
+		model.addAttribute("thumbnailExt", thumbnailInfo.get(0).getThumbnailExt());
+
 		logger.debug("boardItemViewMovie ended");
 		return "ezBoard/boardItemViewMovie";
 	}
@@ -10515,6 +10579,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String guBun = request.getParameter("guBun");
+		String addThumbnail = request.getParameter("addThumbnail");
+		String thumbnailExt = request.getParameter("thumbnailExt");
 		String movieUrl = "";
 		String moviePath = "";
 		int imageCnt = 10;
@@ -10537,6 +10603,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("guBun", guBun);
+		model.addAttribute("addThumbnail", addThumbnail);
+		model.addAttribute("thumbnailExt", thumbnailExt);
+		model.addAttribute("movieUrl", movieUrl);
 		
 		logger.debug("modifyMovieItem ended");
 		return "ezBoard/boardModifyMovieItem";
@@ -12152,6 +12221,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("getAllItemList ended");
 		return resultXML.toString();
 	}
+
 	@RequestMapping(value = "/ezBoard/boardItemWarnPage.do", method = RequestMethod.GET)
 	public String getBoardWarningPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("getBoardWarningPage started");
@@ -12177,7 +12247,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		return "/ezBoard/boardWHWPEditor";
 	}
 	
-		
 	/**
 	 * 2023-05-03 기민혁(마이게시판 하위 스크랩 기능) - 스크랩 추가 버튼 클릭시 정보 등록
 	 */
@@ -12474,7 +12543,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		return "ezBoard/boardScrapContItemListView";
 	}
 
-
 	/**
 	 * 2023-05-22 기민혁(스크랩함 스크랩 기능) - 게시판함의 게시물 List 스크랩 해제
 	 */
@@ -12628,5 +12696,108 @@ public class EzBoardController extends EgovFileMngUtil{
 		result.put("scrapBoardListView_FG", scrapBoardListView_FG);
 		
 		return result;
+	}
+	
+	/**
+	 * 동영상게시판 동영상수정
+	 */
+	@RequestMapping(value = "/ezBoard/modifyThumbnailItem.do", method = RequestMethod.GET)
+	public String modifyThumbnailItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("modifyThumbnailItem started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String movieID = request.getParameter("movieID");
+		int page = Integer.parseInt(request.getParameter("page"));
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String guBun = request.getParameter("guBun");
+		String thumbUrl = "";
+		String thumbnailPath = "";
+		int imageCnt = 10;
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), imageCnt), 1);
+		int pEndRow = Math.multiplyExact(page, imageCnt);
+		
+		List<BoardThumbnailVO> thumbnail = ezBoardService.thumbnailViewDB(itemID, boardID, pStartRow, pEndRow, userInfo.getTenantId());
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		String filePath = thumbnail.get(0).getFilePath();
+		int idx = filePath.lastIndexOf(commonUtil.separator);
+		
+		thumbUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1);
+		String movieVal = thumbUrl.split("/")[7];
+		thumbnailPath = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + "s_" + thumbUrl.split("/")[7].substring(0, thumbUrl.split("/")[7].lastIndexOf(".")) + "." + thumbnail.get(0).getThumbnailExt();
+		
+		model.addAttribute("movieID", movieID);
+		model.addAttribute("thumbnailPath", thumbnailPath);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("guBun", guBun);
+		model.addAttribute("addThumbnail", thumbnail.get(0).getAddThumbnail());
+		model.addAttribute("thumbnailExt", thumbnail.get(0).getThumbnailExt());
+		model.addAttribute("movieVal", movieVal);
+		model.addAttribute("imageName", thumbnail.get(0).getImageName());
+		
+		logger.debug("modifyThumbnailItem ended");
+		return "ezBoard/boardModifyThumbnailItem";
+	}
+	
+	@RequestMapping(value = "/ezBoard/movieViewList.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String movieViewList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("movieViewList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String itemID = request.getParameter("itemID");
+		String boardID = request.getParameter("boardID");
+		String realPath = commonUtil.getRealPath(request);
+		String g_ImageUrl = "";
+		int imageCnt = 10;
+		int page = Integer.parseInt(request.getParameter("page")); // page = 0인 경우, photoViewDB에서 분기 체크하여 모든 이미지를 가져오도록 함
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), imageCnt), 1);
+		int pEndRow = Math.multiplyExact(page, imageCnt);
+		
+		List<BoardThumbnailVO> movieViewList = ezBoardService.thumbnailViewDB(itemID, boardID, pStartRow, pEndRow, userInfo.getTenantId());
+		
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("<DATA>");
+		
+		for (int k = 0; k < movieViewList.size(); k++) {
+			int idx = movieViewList.get(k).getFilePath().lastIndexOf(commonUtil.separator);
+			g_ImageUrl = movieViewList.get(k).getFilePath().substring(0, idx + 1) + movieViewList.get(k).getFilePath().substring(idx + 1);
+			
+			sb.append("<ROW>");
+			sb.append("<IMAGEID>" + movieViewList.get(k).getImageID() + "</IMAGEID>");
+			sb.append("<FILEPATH>" + commonUtil.cleanValue(g_ImageUrl) + "</FILEPATH>");
+			sb.append("<FILECONTENT>" + commonUtil.cleanValue(movieViewList.get(k).getFileContent()) + "</FILECONTENT>");
+			sb.append("<FLAG>" + movieViewList.get(k).getFlag() + "</FLAG>");
+			sb.append("<IMAGENAME>" + commonUtil.cleanValue(movieViewList.get(k).getImageName()) + "</IMAGENAME>");
+			sb.append("<ADDTHUMBNAIL>" + commonUtil.cleanValue(movieViewList.get(k).getAddThumbnail()) + "</ADDTHUMBNAIL>");
+			sb.append("<THUMBNAILEXT>" + commonUtil.cleanValue(movieViewList.get(k).getThumbnailExt()) + "</THUMBNAILEXT>");
+			
+			String filePath = commonUtil.detectPathTraversal(movieViewList.get(k).getFilePath());
+			String orgpDirPath = realPath + filePath;
+			String despPath = orgpDirPath.replace("/files/upload_board", "/files/upload_board/tempUploadFile");
+			
+			File file = new File(orgpDirPath);
+			File file2 = new File(despPath);
+			File file3 = new File(despPath.replace("s_", ""));
+			
+			if (file.exists() && !file2.exists()) {
+				FileUtils.copyFile(file, file2);
+				FileUtils.copyFile(file, file3);
+			}
+			
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</DATA>");
+
+		logger.debug("movieViewList ended");
+		return sb.toString();
 	}
 }

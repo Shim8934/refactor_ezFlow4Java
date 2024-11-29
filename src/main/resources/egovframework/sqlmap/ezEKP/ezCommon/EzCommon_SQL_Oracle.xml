@@ -6430,7 +6430,6 @@
         VALUES (#v_TENANTID#, 'MODULEEDITOR', 'KUKUDOCS', 'CK, NAMO, TAGFREE, FORM, POLARIS, DEXT, KUKUDOCS, HWP 중 사용할 에디터를 설정한다. (default: KUKUDOCS)', '전자결재, 메일을 제외한 에디터 타입', TO_DATE('2024-09-23 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '일반')
     </insert>
 	
-	
 	<select id="EzCommonDAO.checkTblUserScrapCont" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -6502,4 +6501,27 @@
 			CONSTRAINT PK_TBL_BOARD_COMMENT_ATTACHMENTS PRIMARY KEY (ITEMID, REPLYID, SN, TENANT_ID)
 		)
 	</statement>
+	
+    <select id="EzCommonDAO.checkAddThumbnailForTPI" resultClass="String">
+		<![CDATA[
+			SELECT
+				ADDTHUMBNAIL,
+				THUMBNAILEXT
+			FROM
+				TBL_Photo_ImageItem
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterAddThumbnailForTPI">
+		<![CDATA[
+			ALTER TABLE
+				TBL_Photo_ImageItem
+			ADD (
+				ADDTHUMBNAIL NVARCHAR2(10) DEFAULT NULL,
+				THUMBNAILEXT NVARCHAR2(10) DEFAULT NULL
+				)
+		]]>
+    </statement>
 </sqlMap>

@@ -482,7 +482,6 @@
 		        MailOptionHidden();
 		    }
 
-
 			function getBoardList_album(xml) {
 				firstFlag = false;
 				var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
@@ -533,27 +532,32 @@
 						var imgSrc = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA5")[0].textContent;
 						var readFlag = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
 						var writeDate = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
+						var addThumbnail = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA9")[0].textContent;
+						var thumbnailExt = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA10")[0].textContent;
 						var Filename = imgSrc.split('/')[7];
-						imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(boardID) +
-								"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png");
+						if (addThumbnail == "Y") {
+							imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(boardID) +
+							"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + thumbnailExt);
+						} else {
+							imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(boardID) +
+							"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png");	
+						}
 
 						listXML += "<div class='boardAlbumDiv' onclick='selectAlbumDiv(this); ItemPreviewRead_AlbumClick(this);' ondblclick='ItemRead_onclick(this)' data1='" + boardID + "' data2='" + itemID + "'>";
 						listXML += "<p style='position: relative; display: flex; justify-content: center; align-items: center;'>";
 						listXML += "<img class='albumThumbImg' src='" + imgSrc + "'/>";
-						listXML += "<img src='/images/playButton_small.png' style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>";
+						if (addThumbnail != "Y") {
+							listXML += "<img src='/images/playButton_small.png' style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>";
+						}
 						listXML += 	"</p>";
 						listXML += "<div class='infoDiv'>";
 						listXML += "<span style='height:20px; display: flex; justify-content: space-between; align-items: center;'>";
-						if (getColNameIndex(xmlDoc, "READCOUNT") != -1) {
-							listXML += "<img src='/images/icon_preview.png' style='margin-right: 5px;'>";
-							listXML += "<span style='vertical-align:top;'></span>";
-							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "READCOUNT")], "VALUE")[0].textContent;
-						}	
+						listXML += "<img src='/images/icon_preview.png' style='margin-right: 5px;'>";
+						listXML += "<span style='vertical-align:top;'></span>";
+						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "READCOUNT")], "VALUE")[0].textContent;
 						listXML += "</span>";
 						listXML += "<span style='height:20px; display: flex; align-items: center;vertical-align:top;'>";
-						if (getColNameIndex(xmlDoc, "WRITEDATE") != -1) {
-							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
-						}
+						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
 						listXML += "</span>";
 						listXML += "</div>";
 						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
@@ -617,9 +621,8 @@
 				}
 				return -1;
 			}
-
-
-			var BlockSize = 10;
+			
+		    var BlockSize = 10;
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }

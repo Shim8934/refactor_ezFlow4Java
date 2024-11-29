@@ -78,6 +78,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardScrapListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO;
@@ -92,6 +93,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+
 import org.w3c.dom.NodeList;
 
 @Service("EzBoardService")
@@ -2559,7 +2561,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			strFilePath = boardListVO.getExtensionAttribute5();
 			tempFilePath = strFilePath.substring(0, strFilePath.lastIndexOf("{")) + "s_";
 			tempFilePath += strFilePath.substring(strFilePath.lastIndexOf("{"), strFilePath.length());
-			tempFilePath = tempFilePath.substring(0, tempFilePath.lastIndexOf(".") + 1) + "png";
+			tempFilePath = tempFilePath.substring(0, tempFilePath.lastIndexOf(".") + 1) + boardListVO.getThumbnailExt();
 			
 			File file = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath));
 			File s_file = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + tempFilePath));
@@ -2568,7 +2570,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().replace("tempUploadFile", "");
 			tempFilePath = strFilePath.substring(0, strFilePath.lastIndexOf("{")) + "s_";
 			tempFilePath += strFilePath.substring(strFilePath.lastIndexOf("{"), strFilePath.length());
-			tempFilePath = tempFilePath.substring(0, tempFilePath.lastIndexOf(".") + 1) + "png";
+			tempFilePath = tempFilePath.substring(0, tempFilePath.lastIndexOf(".") + 1) + boardListVO.getThumbnailExt();
 			
 			File mvFile = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + commonUtil.separator + strFilePath));
 			File s_mvfile = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + commonUtil.separator + tempFilePath));
@@ -2590,6 +2592,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			map.put("v_pWriteDate", boardListVO.getWriteDate());
 			map.put("v_TENANTID", boardListVO.getTenantID());
 			map.put("mainImageID", boardListVO.getMainImageID());
+			map.put("v_addThumbnail", boardListVO.getAddThumbnail());
+			map.put("v_thumbnailExt", boardListVO.getThumbnailExt());
 			
 			try {
 				map.put("v_pFileContent", boardListVO.getImageContent());
@@ -3453,6 +3457,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setImagePath(doc.getElementsByTagName("IMAGE_ID").item(0).getTextContent());
 			boardListVO.setImageContent(doc.getElementsByTagName("CONTENT2").item(0).getTextContent());
 			boardListVO.setImageNames(doc.getElementsByTagName("IMAGE_FILENAME").item(0).getTextContent());
+			if (doc.getElementsByTagName("THUMBNAILEXT").item(0) != null) {
+				boardListVO.setThumbnailExt(doc.getElementsByTagName("THUMBNAILEXT").item(0).getTextContent());
+			}
+			if (doc.getElementsByTagName("ADDTHUMBNAIL").item(0) != null) {
+				boardListVO.setAddThumbnail(doc.getElementsByTagName("ADDTHUMBNAIL").item(0).getTextContent());
+			}
 			
 			/* 2018-11-06 홍승비 - 포토/썸네일/동영상게시판 구분용 설정 추가 */
 			if (doc.getElementsByTagName("GUBUN").item(0).getTextContent() != null) {
@@ -6815,5 +6825,45 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("tenantID", tenantID);
 		
 		ezBoardDAO.updateMovedItemCommentAttach(map);
+	}
+	
+	@Override
+	public List<BoardThumbnailVO> thumbnailViewDB(String itemID, String boardID, int pStartRow, int pEndRow, int tenantID) throws Exception {
+		logger.debug("thumbnailViewDB started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		/* 2021-08-12 홍승비 - 임시보관함에서 접근한 경우의 분기 추가 (페이지 제한 없이 이미지 가져오도록) */
+		if (pStartRow < 0 && pEndRow == 0) {
+			map.put("v_ISTEMPITEM", "Y");
+		} else {
+			map.put("v_ISTEMPITEM", "N");
+		}
+		
+		map.put("v_pItemID", itemID);
+		map.put("v_pBoardID", boardID);
+		map.put("v_pStartRow", pStartRow);
+		map.put("v_pEndRow", pEndRow);
+		map.put("v_TENANTID", tenantID);
+		map.put("rowCount", pEndRow - (pStartRow - 1));
+		map.put("limit", pStartRow - 1);
+
+		logger.debug("thumbnailViewDB ended");
+		return ezBoardDAO.thumbnailViewDB(map);
+	}
+	
+	@Override
+	public void thumbnailUpdate(String imageID, String boardID, int tenantID, String ext, String oFileName, String addThumbnail) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pImageID", imageID);
+		map.put("v_pBoardID", boardID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_pExt", ext);
+		map.put("v_pOFileName", oFileName);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("v_AddThumbnail", addThumbnail);
+		
+		ezBoardDAO.thumbnailUpdate(map);
 	}
 }

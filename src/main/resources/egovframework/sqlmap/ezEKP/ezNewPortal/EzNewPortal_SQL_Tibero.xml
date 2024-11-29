@@ -40,6 +40,8 @@
 <result property="title" 					column="TITLE" />
 <result property="boardID" 					column="BOARDID" />
 <result property="filePath" 				column="FILEPATH" />
+<result property="addThumbnail" 			column="ADDTHUMBNAIL" />
+<result property="thumbnailExt" 			column="THUMBNAILEXT" />
 </resultMap>
 <resultMap class="PortletInfoVO" id="PortletOrderVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -984,7 +986,9 @@ AND
 			BOARDID,
 			ITEMID,
 			TITLE,
-			FILEPATH
+			FILEPATH,
+			ADDTHUMBNAIL,
+			THUMBNAILEXT
 		FROM (
 				SELECT 
 					INFO.*, ROWNUM AS RNUM
@@ -993,7 +997,9 @@ AND
 						A.BOARDID,
 						A.ITEMID,
 						A.TITLE,
-						B.FILEPATH
+						B.FILEPATH,
+						B.ADDTHUMBNAIL,
+						B.THUMBNAILEXT
 					FROM
 						TBL_BOARD_ITEM A
 					INNER JOIN

@@ -5912,7 +5912,6 @@
         VALUES (#v_TENANTID#, 'MODULEEDITOR', 'KUKUDOCS', 'CK, NAMO, TAGFREE, FORM, POLARIS, DEXT, KUKUDOCS, HWP 중 사용할 에디터를 설정한다. (default: KUKUDOCS)', '전자결재, 메일을 제외한 에디터 타입', '2024-09-23 00:00:00', '일반')
     </insert>
 	
-    
     <select id="EzCommonDAO.checkScrapTenantConfig" resultClass="String" parameterClass="Map">
 		SELECT
 			property_value
@@ -6047,4 +6046,26 @@
 		  PRIMARY KEY (ITEMID, REPLYID, SN, TENANT_ID)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '게시판 댓글 첨부파일 정보 테이블';
 	</statement>
+	
+    <select id="EzCommonDAO.checkAddThumbnailForTPI" resultClass="String">
+		<![CDATA[
+			SELECT
+				ADDTHUMBNAIL,
+				THUMBNAILEXT
+			FROM
+				TBL_Photo_ImageItem
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterAddThumbnailForTPI">
+		<![CDATA[
+			ALTER TABLE
+				TBL_Photo_ImageItem
+			ADD (
+				ADDTHUMBNAIL VARCHAR(20) DEFAULT NULL,
+				THUMBNAILEXT VARCHAR(20) DEFAULT NULL
+				)
+		]]>
+    </statement>
 </sqlMap>

@@ -24,7 +24,8 @@
 	<typeAlias  alias="BoardScrapListVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardScrapListVO"/>
 	<typeAlias  alias="BoardUserScrapContVO" 		type="egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO"/>
 	<typeAlias  alias="BoardUserScrapContListVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO"/>
-
+	<typeAlias  alias="BoardThumbnailVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO"/>
+	
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
 	</resultMap>
@@ -173,6 +174,16 @@
 		<result property="disLikeListCount" 		column="DISLIKELISTCOUNT"		columnIndex="8"/>
 		<result property="displayName2" 			column="DISPLAYNAME2"			columnIndex="9"/>
 	</resultMap>  
+	
+	<resultMap id="thumbnailViewDB" class="BoardThumbnailVO">
+		<result property="imageID" 					column="IMAGEID" 				columnIndex="1"/>
+		<result property="filePath" 				column="FILEPATH" 				columnIndex="2"/>
+		<result property="fileContent" 				column="FILECONTENT" 			columnIndex="3"		jdbcType="TEXT" javaType="String" nullValue=""/>
+		<result property="flag" 					column="FLAG" 					columnIndex="4"/>
+		<result property="imageName" 				column="IMAGENAME" 				columnIndex="5"/>
+		<result property="addThumbnail" 			column="ADDTHUMBNAIL" 			columnIndex="6"/>
+		<result property="thumbnailExt" 			column="THUMBNAILEXT" 			columnIndex="7"/>
+	</resultMap>
 	<!-- end -->
 	
 	<select id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
@@ -2393,6 +2404,8 @@
 					A.DOCNO,
 					A.MAINCONTENT,
 					B.FILEPATH,
+					B.ADDTHUMBNAIL,
+   					B.THUMBNAILEXT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
 					NVL(LIKECOUNT, 0) as LIKECOUNT,
 					NVL(DISLIKECOUNT, 0) as DISLIKECOUNT
@@ -5510,10 +5523,10 @@
 	<insert id="EzBoardDAO.photoSaveDB" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Photo_ImageItem ( 
-				ImageID, 	  ItemID, 	   BoardID, 	 WriterID, 		WriterName, 	 WriterDeptID, 		FilePath, 	   WriteDate, 	   FileContent, 	 ImageName, 	 main_flag, 											tenant_id 
+				ImageID, 	  ItemID, 	   BoardID, 	 WriterID, 		WriterName, 	 WriterDeptID, 		FilePath, 	   WriteDate, 	   FileContent, 	 ImageName, 	 main_flag, 											tenant_id,			addThumbnail, thumbnailExt 
 			)
      		VALUES ( 
-     			#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#, (CASE WHEN #v_pIMAGEID# = #mainImageID# THEN 'Y' ELSE 'N' END), #v_TENANTID# 
+     			#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#, (CASE WHEN #v_pIMAGEID# = #mainImageID# THEN 'Y' ELSE 'N' END), #v_TENANTID#, #v_addThumbnail#, #v_thumbnailExt#
      		)
 		]]>
 	</insert>
@@ -8306,6 +8319,7 @@
 		AND
 			TENANT_ID = #tenantID#
 	</select>
+	
 	<insert id="EzBoardDAO.setScrapItem" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO TBL_BOARDITEM_SCRAP (
@@ -9291,5 +9305,61 @@
 			ITEMID = #orgItemID#
 		AND 
 			TENANT_ID = #tenantID#
+	</update>
+	
+	<select id="EzBoardDAO.thumbnailViewDB" parameterClass="Map" resultMap="thumbnailViewDB" remapResults="true">
+		<![CDATA[
+			SELECT 
+				* 
+        	FROM 
+        		(SELECT 
+                    T1.*,
+                     rownum as RN
+               	  FROM 
+					(SELECT 
+               	  		IMAGEID ,
+		                FILEPATH ,
+		                FILECONTENT ,
+		                MAIN_FLAG FLAG  ,
+		                IMAGENAME ,
+		                ADDTHUMBNAIL ,
+		                THUMBNAILEXT
+               	  	  FROM
+               	  		TBL_Photo_ImageItem 
+                  	  WHERE  
+                  		TENANT_ID = #v_TENANTID#
+                      AND
+                  		ItemID = #v_pItemID#
+                      AND 
+                  		BoardID = #v_pBoardID#
+                      ORDER BY 
+                  		IMAGEID ASC ) T1
+                  	)
+		]]>
+		<isEqual property="v_ISTEMPITEM" compareValue="N">
+		<![CDATA[
+				WHERE
+                    RN <= #v_pEndRow#
+				AND
+					RN >= #v_pStartRow#
+		]]>
+		</isEqual>
+	</select>
+	
+	<update id="EzBoardDAO.thumbnailUpdate" parameterClass="Map">
+		UPDATE TBL_Photo_ImageItem
+       		SET 
+       			ThumbnailExt = #v_pExt#,
+           		ImageName = #v_pOFileName#,
+           		WriteDate = #nowDate#
+           		<isNotEmpty property="v_AddThumbnail">
+           		, AddThumbnail = #v_AddThumbnail#
+           		</isNotEmpty>
+   			WHERE
+   				tenant_id = #v_TENANTID#
+   			AND  
+   				ImageID = #v_pImageID#
+     		AND 
+     			BoardID = #v_pBoardID#
 	</update>
 </sqlMap>

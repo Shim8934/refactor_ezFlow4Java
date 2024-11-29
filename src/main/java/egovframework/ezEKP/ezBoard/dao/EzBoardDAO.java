@@ -5,14 +5,17 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
+
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
@@ -24,6 +27,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardScrapListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO;
+import egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1154,4 +1158,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
     public void updateMovedItemCommentAttach(Map<String, Object> map) {
 		update("EzBoardDAO.updateMovedItemCommentAttach", map);
     }
+    
+	@SuppressWarnings("unchecked")
+	public List<BoardThumbnailVO> thumbnailViewDB(Map<String, Object> map) throws Exception{
+		return (List<BoardThumbnailVO>) list("EzBoardDAO.thumbnailViewDB", map);
+	}
+	
+	public void thumbnailUpdate(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.thumbnailUpdate", map);
+	}
 }
