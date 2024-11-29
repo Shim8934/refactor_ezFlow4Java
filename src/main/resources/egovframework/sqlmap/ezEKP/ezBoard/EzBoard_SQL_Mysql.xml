@@ -7581,6 +7581,19 @@
 			)
 		]]>
 	</insert>
+	
+	<select id="EzBoardDAO.getContentlocation" parameterClass="map" resultClass="String">
+		SELECT
+			CONTENTLOCATION
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			ITEMID = #itemID#
+		AND
+			BOARDID = #boardID#
+		AND
+			TENANT_ID = #tenantID#
+	</select>
 
 	<!-- 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글, 답글 수정되었을 경우 업데이트하는 쿼리 -->
 	<update id="EzBoardDAO.updateOneLineReply" parameterClass="map">

@@ -201,8 +201,8 @@ var SurveyCreate     = function() {
 	// 설문 임시저장
 	function saveDraftSurvey() {
 		//Check survey information
-		var returnObj = checkStep1();
-		if (returnObj["error"]) {alert(returnObj["error"]); return;}
+		returnObj = checkStep1();
+		if (returnObj["error"]) {return returnObj;}
 		surveyObj["draft"] = 1;
 		
 		$.ajax({
@@ -281,7 +281,13 @@ var SurveyCreate     = function() {
 		var surveyInfoWrap = document.querySelector("div[class='surveyinfo-wrap']");
 		var surveyAttWrap  = document.querySelector("div[class='survey-attach']");
 		var surveyTitle    = document.getElementById("info-input-ttl").value;
-		var surveyPurpose  = replaceAll(document.getElementById("info-input-pp").contentWindow.GetEditorContent(), "(&lt;(\/?)(script|applet|object)&gt;)", "");
+		var surveyPurpose  = "";
+		if (editor != "HWP") {
+			surveyPurpose = replaceAll(document.getElementById("info-input-pp").contentWindow.GetEditorContent(), "(&lt;(\/?)(script|applet|object)&gt;)", "");
+		} else {
+			surveyPurpose = hwpHTML;
+		}
+		
 		var startDate      = document.getElementById("startDate").value;
 		var endDate        = document.getElementById("endDate").value;
 		var publicFlag     = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
@@ -358,6 +364,7 @@ var SurveyCreate     = function() {
 	}
 	// 설문 정보 입력 단계
 	function gotoFirstStep() {
+		hwpCheck = false;
 		var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
 		listTabElmt[0].className = "crust selected";
 		listTabElmt[1].className = "crust";
@@ -370,6 +377,11 @@ var SurveyCreate     = function() {
 	}
 	// 질문 생성 단계
 	function gotoSecondStep() {
+		if (editor == "HWP" && !hwpCheck) {
+			getHTML(gotoSecondStep);
+			return;
+		}
+		
 		var backFlag = "";
 		if (enterLogic == 'Y') {backFlag = deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
 
@@ -427,7 +439,8 @@ var SurveyCreate     = function() {
 		var checkObj = null;
 		var backFlag = "";
 		switch(parseInt(tabIdx)) {
-			case 1: focusonQuestionTitleStep1(); 
+			case 1: hwpCheck = false;
+					focusonQuestionTitleStep1(); 
 					toggleStep(spanElemt, crrSpan, tabIdx);
 					lastStep = 1; break;
 			case 2: if (enterLogic == 'Y') {
@@ -445,7 +458,11 @@ var SurveyCreate     = function() {
 					showSurveyQuestions(tabIdx);
 					enterLogic = 'Y';
 					lastStep = 3; break;
-			case 4: checkObj = prepareForStep4();
+			case 4: if (editor == "HWP" && !hwpCheck) {
+						getHTML4(selectStep, tabIdx, spanElemt);
+						return;
+					}
+					checkObj = prepareForStep4();
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
 					toggleStep(spanElemt, crrSpan, tabIdx);
 					showSurveyQuestions(tabIdx);
@@ -514,7 +531,12 @@ var SurveyCreate     = function() {
 		var returnObj  = {};
 		var surveyTtl  = document.getElementById("info-input-ttl");
 		var surveyPp   = document.getElementById("info-input-pp").contentWindow;
-		var ppContent  = surveyPp.GetEditorContent();
+		var ppContent  = "";
+		if (editor != "HWP") {
+			ppContent = surveyPp.GetEditorContent(); 
+		} else {
+			ppContent = hwpHTML;
+		}
 		
 		var sDate      = document.getElementById("startDate").value;
 		var eDate      = document.getElementById("endDate").value;
@@ -556,7 +578,9 @@ var SurveyCreate     = function() {
 			surveyttlList[i].textContent = replaceAll(surveyTtl.value, "(<(\/?)(script|applet|object)>)", "");
 		}
 		
-		if (lastStep == 1) {saveSurveyInformation();}
+		if (lastStep == 1) {
+			saveSurveyInformation();
+		}
 		return returnObj;
 	}
 	
@@ -4771,7 +4795,13 @@ var SurveyCreate     = function() {
 }();
 
 function Editor_Complete() {
-	document.getElementById("info-input-pp").contentWindow.SetEditorContent(SurveyCreate.getPurpose());
+	if (editor != "HWP") {
+		document.getElementById("info-input-pp").contentWindow.SetEditorContent(SurveyCreate.getPurpose());
+	} else {
+		var URL;
+        URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=";
+        document.getElementById("info-input-pp").contentWindow.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+	}
 }
 
 function addChangeEvent(obLow, obUnit, obCnt, obMax, slideMain, output) {
@@ -4807,3 +4837,63 @@ $(".date-input").keyup(function(){
 		$(this).val("");
 	}
 });
+
+function Editor_Modify_Complete() {
+	var URL;
+    URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=";
+    document.getElementById("info-input-pp").contentWindow.Open(URL, "", "", function (res) { FieldsModify(res.result) }, null);
+}
+
+function FieldsAvailable(isTrue) {
+	if (isTrue) {
+		document.getElementById("info-input-pp").contentWindow.SetMargin(3000);
+		document.getElementById("info-input-pp").contentWindow.EditMode(1);
+		document.getElementById("info-input-pp").contentWindow.SetViewProperties(2, 100);
+        document.getElementById("info-input-pp").contentWindow.ScrollPosInfo(0, 0);
+        document.getElementById("info-input-pp").contentWindow.ShowToolBar(true);
+        document.getElementById("info-input-pp").contentWindow.ShowRibbon(true);
+        document.getElementById("info-input-pp").contentWindow.FoldRibbon(true);
+        window.onresize();
+	}
+}
+
+function FieldsModify(isTrue) {
+	if (isTrue) {
+		var html = SurveyCreate.getPurpose();
+		document.getElementById("info-input-pp").contentWindow.SetTextFile(html, "HTML", "", function() {
+			document.getElementById("info-input-pp").contentWindow.SetMargin(3000);
+			document.getElementById("info-input-pp").contentWindow.EditMode(1);
+			document.getElementById("info-input-pp").contentWindow.SetViewProperties(2, 100);
+	        document.getElementById("info-input-pp").contentWindow.ScrollPosInfo(0, 0);
+	        document.getElementById("info-input-pp").contentWindow.ShowToolBar(true);
+	        document.getElementById("info-input-pp").contentWindow.ShowRibbon(true);
+	        document.getElementById("info-input-pp").contentWindow.FoldRibbon(true);
+        	window.onresize();
+		});
+	}
+}
+
+window.onresize = function () {
+	if (editor == "HWP") {
+		var mHeight = document.getElementById("editorWrap").clientHeight - 5 + "px";
+   		document.getElementById("info-input-pp").contentWindow.Resize(mHeight);
+	}
+};
+
+function getHTML(callBack) {
+	document.getElementById("info-input-pp").contentWindow.GetTextFile("HTML", "",
+		function(data){
+			hwpCheck = true;
+			hwpHTML = data;
+			callBack();
+		});
+}
+
+function getHTML4(callBack, param1, param2) {
+	document.getElementById("info-input-pp").contentWindow.GetTextFile("HTML", "",
+		function(data){
+			hwpCheck = true;
+			hwpHTML = data;
+			callBack(param1, param2);
+		});
+}

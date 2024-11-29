@@ -273,6 +273,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", loginInfo.getTenantId());
 		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", loginInfo.getTenantId());
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", loginInfo.getTenantId());
+		Message message = null;
 		
 		try {
 			Map<String, String> mailInfo = null;
@@ -301,6 +302,40 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						recipientHasAllRecipientTypes = true;
 					}
 				}				
+			}
+
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+			
+			if (ia != null){
+				
+				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+				if (f == null || !f.exists()) {
+					logger.error("Folder not found. folderPath=" + folderPath);
+					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+					return "ezCommon/error";
+				} else {
+					f.open(Folder.READ_WRITE);
+					
+					if (f.isOpen() && f instanceof IMAPFolder) {
+						message = ((IMAPFolder)f).getMessageByUID(uid);
+						if (message != null) {
+							
+							logger.debug("message=" + message);
+		
+							String[] messageIds = message.getHeader("Message-ID");
+							logger.debug("Message-ID=" + messageIds[0]);
+		
+							int blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
+						
+							if (blockedMail == 1) {
+								return "ezEmail/blockedMail";
+							}
+						}
+					}
+				}
 			}
 			
 			if (useRDBOnlyMailList.equals("YES") && recipientHasAllRecipientTypes) {
@@ -542,9 +577,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						.orElse("");
 				
 			} else {
-				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userEmail, password, egovMessageSource, locale, ezEmailUtil);
-
 				if (ia != null){
 					Folder f = ia.getFolder(folderPath != null ? folderPath : "");
 					if (f == null || !f.exists()) {
@@ -554,13 +586,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
 						return "ezCommon/error";
 					} else {
-						f.open(Folder.READ_WRITE);
-
-						Message message = null;
-						if(f.isOpen() && f instanceof IMAPFolder){
-							message = ((IMAPFolder)f).getMessageByUID(uid);
-						}
-
+						
 						if (message == null) {
 							logger.error("Message not found. uid=" + uid);
 							model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
@@ -2961,6 +2987,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String fromId = "";
 		String senderProfileImageName = "";
 		Boolean emptyFlag = false;
+		int blockedMail = 0;
 		
 		// 읽기 화면에서 리스트 출력 위한 데이터
 		String countryName = "";
@@ -2970,7 +2997,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginInfo.getTenantId());
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", loginInfo.getTenantId());
 		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", loginInfo.getTenantId());
-		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", loginInfo.getTenantId());		
+		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", loginInfo.getTenantId());
+		Message message = null;
 		
 		try {
 			Map<String, String> mailInfo = null;
@@ -2994,6 +3022,39 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						if (recipientsArr.length > 1) {
 							recipientHasAllRecipientTypes = true;
 						}
+					}
+				}
+			}
+
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+			if (ia != null){
+
+				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+				if (f == null || !f.exists()) {
+					logger.error("Folder not found. folderPath=" + folderPath);
+					emptyFlag = true;
+				} else {
+					f.open(Folder.READ_WRITE);
+
+					if (f.isOpen() && f instanceof IMAPFolder) {
+						message = ((IMAPFolder)f).getMessageByUID(uid);
+						if (message != null) {
+
+							logger.debug("message=" + message);
+
+							String[] messageIds = message.getHeader("Message-ID");
+							
+							logger.debug("Message-ID=" + messageIds[0]);
+							blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
+
+							if (blockedMail == 1) {
+								emptyFlag = true;
+							}
+						} else {
+							logger.error("Message not found. uid=" + uid);
+							emptyFlag = true;
 					}
 				}
 			}
@@ -3082,28 +3143,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
 				tags = commonUtil.cleanValue(mailInfo.get("TAGS"));
 			} else {
-				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userEmail, password, egovMessageSource, locale, ezEmailUtil);
-
-				if (ia != null){
-					Folder f = ia.getFolder(folderPath != null ? folderPath : "");
-
-					if (f == null || !f.exists()) {
-						logger.error("Folder not found. folderPath=" + folderPath);
-						emptyFlag = true;
-					} else {
-						f.open(Folder.READ_WRITE);
-						Message message = null;
-
-						if (f.isOpen() && f instanceof IMAPFolder) {
-							message = ((IMAPFolder)f).getMessageByUID(uid);
-						}
-
-						if (message == null) {
-							logger.error("Message not found. uid=" + uid);
-							emptyFlag = true;
-						} else {
-							FetchProfile fp = new FetchProfile();
+				FetchProfile fp = new FetchProfile();
 
 							fp.add(FetchProfile.Item.ENVELOPE);
 							fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
@@ -3430,8 +3470,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						}
 						f.close(true);
 					}
-				}
-			}
 		} catch (MessagingException e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -3511,6 +3549,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		sb.append("<USESHOWSYSTEMCOUNTRY><![CDATA[" + useShowSystemCountry + "]]></USESHOWSYSTEMCOUNTRY>");
 		sb.append("<TAGS><![CDATA[" + tags + "]]></TAGS>");
 		sb.append("<MAIL_ID><![CDATA[" + tags + "]]></MAIL_ID>");
+		sb.append("<BLOCKEDMAIL><![CDATA[" + blockedMail + "]]></BLOCKEDMAIL>");
 		sb.append("</DATA>");
 
 		response.setContentType("text/xml; charset=utf-8");

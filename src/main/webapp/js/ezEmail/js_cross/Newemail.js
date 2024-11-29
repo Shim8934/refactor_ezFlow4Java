@@ -312,6 +312,10 @@ function reply_mail_onclick() {
         var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
         var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
         
+        if (checkBlockedMail(pSelectItem.getAttribute('_href')) == '1') {
+            alert(strLangLDH07);
+            return;        
+        }
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
     	if (typeof(shareId) != "undefined" && shareId != "") {
@@ -355,6 +359,12 @@ function all_reply_mail_onclick() {
             conWidth = minimumWidth;
         var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
         var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
+        
+        if (checkBlockedMail(pSelectItem.getAttribute('_href')) == '1') {
+            alert(strLangLDH07);
+            return;        
+        }
+        
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
         if (typeof(shareId) != "undefined" && shareId != "") {
@@ -397,6 +407,42 @@ function reSend_onClick() {
 
 }
 
+function rewrite_onClick() {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
+        alert(strLang42);
+    }
+
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang44);
+        return;
+    } else {
+        var pSelectItem;
+
+        if (listContentArry.length > 0) {
+            pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
+        } else if (listSubContentArry.length > 0) {
+            pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        } else {
+            pSelectItem = currentFixingId;
+        }
+
+        if (checkBlockedMail(pSelectItem.getAttribute('_href')) == '1') {
+            alert(strLangLDH07);
+            return;        
+        }
+
+        var pURI = "/ezEmail/mailWrite.do?cmd=REWRITE&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+
+        if (typeof(shareId) != "undefined" && shareId != "") {
+        	pURI += "&shareId=" + encodeURIComponent(shareId);
+    	}
+        
+        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
+        newwin.focus();
+    }
+
+}
+
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
@@ -424,6 +470,11 @@ function transmission_mail_onclick() {
         
         var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
         var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
+        
+        if (checkBlockedMail(pSelectItem.getAttribute('_href')) == '1') {
+            alert(strLangLDH07);
+            return;        
+        }
         
         var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
@@ -1056,6 +1107,7 @@ function event_xmlhttp_mailPreview_Complete() {
             var pSubject = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/SUBJECT")[0]);
             var pHtml = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/HTMLDESCRIPTION")[0]);
             var pImportance = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/IMPORTANCE")[0]);
+            var pBlockedMail = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/BLOCKEDMAIL")[0]);
             var pSensitivity = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/SENSITIVITY")[0]);
             var pHasembed = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/HASEMBEDED")[0]);
             var pItemid = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/ITEMID")[0]);
@@ -1065,6 +1117,11 @@ function event_xmlhttp_mailPreview_Complete() {
             var pMailIP =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYIP")[0]);
             var pCountryName =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYNAME")[0]);
             var pTags =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/TAGS")[0]);
+            
+            if (pBlockedMail == '1') {
+                alert(strLangLDH07);
+                return;
+            }
             
             if (pPreviewShow_HOW == "H") {
                 PrevViewFormH.iptURL.value = pItemid;

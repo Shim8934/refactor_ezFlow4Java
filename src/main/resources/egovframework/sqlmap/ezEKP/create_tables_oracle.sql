@@ -9051,7 +9051,7 @@ CREATE TABLE "JMOCHA_APPR_COMP_HISTORY" (
 
   CREATE UNIQUE INDEX "IDX_JAMES_MAIL_BLOB" ON "JAMES_MAIL_BLOB" ("MAILBOX_ID", "MAIL_UID") 
   ;
-  CREATE UNIQUE INDEX "JAMES_MAIL_BLOB_DISK_ID_IDX" ON "JAMES_MAIL_BLOB" ("DISK_ID")
+  CREATE INDEX "JAMES_MAIL_BLOB_DISK_ID_IDX" ON "JAMES_MAIL_BLOB" ("DISK_ID")
   ;
 --------------------------------------------------------
 --  DDL for Index IDX_JAMES_MAIL_USERFLAG
@@ -13173,7 +13173,8 @@ AFTER UPDATE ON tbl_deptmaster
 FOR EACH ROW
 WHEN (NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2)
 BEGIN
-    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
+    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2
+    WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D') AND TENANT_ID = :NEW.TENANT_ID;
 END;
 /
 
@@ -13182,7 +13183,8 @@ AFTER UPDATE ON tbl_usermaster
 FOR EACH ROW
 WHEN (NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2)
 BEGIN
-    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
+    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 
+    WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('U') AND TENANT_ID = :NEW.TENANT_ID;
 END;
 /
 
@@ -19386,3 +19388,12 @@ CREATE TABLE JMOCHA_MAIL_TAG_CONFIG (
  CONSTRAINT JMOCHA_MAIL_TAG_CONFIG_CHECK CHECK (ENABLE IN ('0', '1')),
  CONSTRAINT JMOCHA_MAIL_TAG_CONFIG_CHECK2 CHECK (ORDERBY IN ('0', '1', '2'))
 );	
+
+--------------------------------------------------------
+--  DDL for Table JMOCHA_MAIL_BLOCKED
+--------------------------------------------------------
+
+CREATE TABLE JMOCHA_MAIL_BLOCKED
+(   MESSAGE_ID VARCHAR(500) NOT NULL,
+    CONSTRAINT PK_JMOCHA_MAIL_BLOCKED PRIMARY KEY (MESSAGE_ID)
+);

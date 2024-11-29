@@ -2351,12 +2351,17 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 //        var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
-        tempStr = ConvertMHTtoHTML(fullPath);
+        var htmlData = "";
+        
+        if (moduleEditor != "HWP" && fullPath.substr(fullPath.length - 3, fullPath.length).toLowerCase() != "hwp") {
+        	tempStr = ConvertMHTtoHTML(fullPath);
 
-        tempXML = loadXMLString(tempStr);
-//        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
-        XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-        var htmlData = getNodeText(XmlBodyDATA);
+	        tempXML = loadXMLString(tempStr);
+//      	XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+	        XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+	        htmlData = getNodeText(XmlBodyDATA);
+	        htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
+        }
 
         eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
         var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriteDate")[0]);
@@ -2366,8 +2371,6 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterCompanyName")[0]) + ")";
 
         if (Sender.indexOf("(,,)") > -1) Sender = Sender.split("(")[0];
-
-        htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
 
         if (pRetransType != "boardAttach") {
             document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
@@ -2392,6 +2395,9 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
             var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
             var filename = filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length);
+            if (SelectSingleNodeValue(AttachRows[i], "FileName") != "") {
+            	filename = SelectSingleNodeValue(AttachRows[i], "FileName") + "." + filename.substr(filename.length - 3, filename.length).toLowerCase();
+			}
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
 
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
@@ -2455,11 +2461,15 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
 //        var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
-        tempStr = ConvertMHTtoHTML(fullPath);
-        tempXML = loadXMLString(tempStr);
-//        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
-        XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-        var htmlData = getNodeText(XmlBodyDATA);
+        var htmlData = "";
+        
+        if (moduleEditor != "HWP" && fullPath.substr(fullPath.length - 3, fullPath.length).toLowerCase() != "hwp") {
+        	tempStr = ConvertMHTtoHTML(fullPath);
+	        tempXML = loadXMLString(tempStr);
+//      	XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+	        XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+	        htmlData = getNodeText(XmlBodyDATA);
+        }	
         
         eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
         var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/StartDate")[0]);
@@ -2475,7 +2485,7 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
         	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
         	"<br><B>" + strLang120 + "</B>" + MakeXMLString(eSubject.value) + "<br><br></DIV>" + htmlData;
 
-        xmlHTTP.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID), false);
+        xmlHTTP.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID) + "&mode=mail", false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -2493,7 +2503,11 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
             
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
             pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
-            pstrXML += "<DATA2><![CDATA[" + uploadCommunityPath + "/" + filepath + "]]></DATA2>";
+            if (SelectSingleNodeValue(AttachRows[i], "HwpItem") == "Y") {
+            	pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+            } else {
+            	pstrXML += "<DATA2><![CDATA[" + uploadCommunityPath + "/" + filepath + "]]></DATA2>";
+            }
             pstrXML += "<DATA3></DATA3>";
             pstrXML += "<DATA4>BOARD</DATA4>";
             pstrXML += "<DATA5>N</DATA5>";
@@ -3603,7 +3617,7 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     	});
     }
     
-    newElem.style.cursor = "pointer";
+    newElem.style.cursor = "move"; // [메일쓰기] TO/CC/BCC란 기입 시 MsgTo/CC/BCCGot
     newElem.setAttribute("iType", iWhich); //newElem.getAttribute("iType") = iWhich;
     newElem.setAttribute("onclick", "NameChange_onClick()");
     newElem.setAttribute("type", type);//newElem.getAttribute("type") = type;

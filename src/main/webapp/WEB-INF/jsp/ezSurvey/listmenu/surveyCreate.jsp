@@ -42,6 +42,9 @@
 		<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}              "></script>
 		<script type="text/javascript">
 			var maxPeriod = Number("${maxPeriod}");
+			var editor = "<c:out value='${editor}'/>";
+			var hwpHTML;
+			var hwpCheck = false;
 		</script>
 	</head>
 	

@@ -7,6 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
+        <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -578,6 +579,15 @@
 	    	return;
 	    }
 	    
+        if (mainType.toLowerCase() == 'mail') {
+            var url = (linkUrl.match(/iptURL=([^&]+)/) || [])[1];
+            
+            if (checkBlockedMail(url) == '1') {
+                alert(strLangLDH07);
+                return;
+            }
+        }
+        
 	    var paramObj = null;
 	    var windowName = "";
 	    if (linkUrl.indexOf("/ezApprovalG/reDraftByLink.do") >= 0) {
@@ -1215,6 +1225,25 @@
 		
 		searchNoti('first');
 	}
+    
+    function checkBlockedMail(url){
+        
+        var strQuery = "<URL>" + decodeURIComponent(url) + "</URL>";
+        xmlhttp_mailCheckBlock = createXMLHttpRequest();
+
+        var previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
+
+        xmlhttp_mailCheckBlock.open("POST", previewUrl, false);
+        xmlhttp_mailCheckBlock.send(strQuery);
+
+        var pBlockedMail = 1;
+
+        if (xmlhttp_mailCheckBlock.status == 200) {
+            pBlockedMail = getNodeText(SelectNodes(xmlhttp_mailCheckBlock.responseXML, "DATA/BLOCKEDMAIL")[0]);
+        }
+
+        return pBlockedMail;
+    }
 	
 </script>
 </body>

@@ -4439,4 +4439,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addSurveyTotalNotiSentFlag() throws Exception {
 		ezCommonDAO.addSurveyTotalNotiSentFlag();
 	}
+
+    @Override
+    public void createJmochaMailBlocked() throws Exception {
+        ezCommonDAO.createJmochaMailBlocked();
+    }
+    
+    @Override
+    public void insertModuleEditor() throws Exception {
+    	List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+    	for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertModuleEditor(map);
+        }
+    }
 }

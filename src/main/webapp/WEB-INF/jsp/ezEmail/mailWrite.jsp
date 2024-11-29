@@ -22,8 +22,9 @@
 		<!-- 수신인란 height 작업 -->
 		<style>
 			.viewtxtScroller {
-				min-height: 16px;
-				max-height: 16px;
+				width:calc(100% - 20px);
+				overflow-y:auto;
+				max-height: 19px;
 				margin-bottom: 3px;
 			}
 			.viewtxtWrapper {
@@ -31,8 +32,7 @@
 				height: 100%;
 			}
 			.viewtxt {
-				display: table-cell;
-				vertical-align: middle;
+				min-height: 16px;
 			}
 			.viewtxt > span {
 				display: inline-block;
@@ -47,7 +47,9 @@
 			}
 			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0px}
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
-			.mailAddressAdd { overflow-y: auto; }
+			.mailAddressAdd { position:relative; }
+			.expnd { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/expnd.gif); }
+			.cllps { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/cllps.gif); }
 		</style>
 		
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
@@ -222,6 +224,9 @@
 		/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		var useHWP = "<c:out value='${useHWP}'/>";
+		
+		var moduleEditor = "<c:out value='${moduleEditor}'/>";
+		
 		<% // 승인메일 %>
 		<c:if test="${useApprMail eq 'YES'}">
 		var g_apprMail = false;
@@ -357,7 +362,6 @@
 
 			if (g_bodyType == "1") {
 				document.getElementById("plainTextArea").style.display = "";
-				document.getElementById("bodyType").options[1].selected = true;
 	        	document.getElementById("SelMailSign").disabled = true;
 	        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
 	        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
@@ -460,6 +464,22 @@
 
 			$(window.frames['tbContentElement']).mouseup(function (e) {
 				hiddenMoreMenu(e);
+			});
+
+			// 2024-10-16 김은실 : [표준모듈] 메일쓰기창 To, Cc, Bcc 간 Drag & Drop 구현
+			$("#MsgToGot, #MsgCCGot, #MsgBCCGot").sortable({
+				connectWith: ".viewtxt",
+				// helper, stop 옵션 사용한 이유에 대해서는 commit message 참고 바람.
+				helper: function(event,ui) {
+					var width = parseFloat(window.getComputedStyle(ui.get(0)).width); // 또는, ui.css('width', ui.width() + 1); 가능함.
+				    console.debug("origin width: %s", width); // 개발자도구에서 Default levels → Vervose 변경하면 확인 가능.
+
+				    ui.css('width', Math.ceil(width));
+					return ui;
+				},
+				stop: function(event,ui) {
+					ui.item.css('width', ""); // helper에서 셋팅한 width값이 inline으로 남아있어서 원복함. 하지만 반드시 필요한 절차는 아니다. (ui.width() + 1 하면 반드시 필요한 절차)
+				}
 			});
 		}
 	    
@@ -2496,6 +2516,13 @@
 			}
 	    }
 	    
+		// 수신자칸 : 접기, 펼치기 버튼
+	    function changeMode(obj, className) {
+			var mode = { expnd: {switch: 'cllps', height: '55px'},
+						 cllps: {switch: 'expnd', height: '19px'} };
+			obj.className = mode[className].switch;
+			$(obj).siblings('.viewtxtScroller').css('max-height', mode[className].height);
+	    }
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -2656,6 +2683,7 @@
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgToGot" class="viewtxt"></div>
 	                            </div>
+	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgCC_TR">
@@ -2683,6 +2711,7 @@
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgCCGot" class="viewtxt"></div>
 	                            </div>
+	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgBCC_TR"  style="display:none;">
@@ -2707,6 +2736,7 @@
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgBCCGot" class="viewtxt"></div>
 	                            </div>
+	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr style="height:33px">

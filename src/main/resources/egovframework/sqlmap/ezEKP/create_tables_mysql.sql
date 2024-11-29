@@ -14841,7 +14841,8 @@ AFTER UPDATE ON tbl_deptmaster
 FOR EACH ROW
 BEGIN
     IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
-        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
+        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2
+        WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D') AND TENANT_ID = NEW.TENANT_ID;
     END IF;
 END; //
 
@@ -14850,7 +14851,8 @@ AFTER UPDATE ON tbl_usermaster
 FOR EACH ROW
 BEGIN
     IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
-        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
+        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2
+        WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('U') AND TENANT_ID = NEW.TENANT_ID;
     END IF;
 END; //
 
@@ -15677,4 +15679,15 @@ CREATE TABLE `jmocha_mail_tag_config` (
  CONSTRAINT `jmocha_mail_tag_config_check` CHECK (`enable` IN ('0', '1')),
  CONSTRAINT `jmocha_mail_tag_config_check2` CHECK (`orderby` IN ('0', '1', '2'))
 ) CHARSET=utf8;
-		
+
+--
+-- Table structure for table `jmocha_mail_blocked`
+--
+
+DROP TABLE IF EXISTS jmocha_mail_blocked;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE JMOCHA_MAIL_BLOCKED (
+    MESSAGE_ID varchar(500) NOT NULL,
+     PRIMARY KEY (MESSAGE_ID)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

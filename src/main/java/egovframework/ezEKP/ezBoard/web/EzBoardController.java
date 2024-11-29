@@ -946,7 +946,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
-		String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); 
+		String use_Editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()); 
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String use_oneLineCount = "";
 		String pBoardID = boardPropertyVO.getBoardID() != null ? boardPropertyVO.getBoardID() : "";
@@ -3859,7 +3859,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String extenLang = "1";
 		String location = "";
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
@@ -4137,7 +4137,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String extenLang = "1";
-		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
@@ -5723,7 +5723,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String guBun = request.getParameter("guBun");
 		String boardID = request.getParameter("boardID");
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String extenLang = "1";
 		String strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
@@ -5940,6 +5940,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			keywordList = ezBoardService.selectBoardKeywordByBoardItem(boardItem.getItemID(), boardItem.getBoardID(), userInfo.getTenantId());
 		}
 		
+		String use_Editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
+		
 		model.addAttribute("boardItem", boardItem);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
@@ -5954,6 +5956,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardAttr", boardAttr);
 		model.addAttribute("boardAttrCount", boardAttrCount);
 		model.addAttribute("keywordList", keywordList);
+		model.addAttribute("use_Editor", use_Editor);
 
 		logger.debug("boardItemViewPrint ended");
 		return "ezBoard/boardItemViewPrint";
@@ -6365,7 +6368,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = "";
-		String userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String userEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String boardID = request.getParameter("boardID");
 		String url = request.getParameter("url");
 		String boardType = request.getParameter("bType");
@@ -7192,7 +7195,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		int page = 1;
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		
 		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
@@ -7220,7 +7223,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		
 		model.addAttribute("useEditor", useEditor);
 
@@ -7235,7 +7238,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String writeBoardSelectModalDotNet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", userInfo.getTenantId());
 		
 		model.addAttribute("useEditor", useEditor);
@@ -7253,7 +7256,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		
 		model.addAttribute("useEditor", useEditor);
 
@@ -7308,7 +7311,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String orgBoardParameters = "";
 		String sortBy = "";
@@ -7408,7 +7411,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		int page = 1;
@@ -7558,6 +7561,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			useBoardFilePrvw = "0";
 		}
+		
+		String itemLocation = "";
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
+		if (useEditor.equals("HWP")) {
+			itemLocation = ezBoardService.getContentlocation(boardID, itemID, userInfo.getTenantId());
+		}
 				 
 		/* 2022-04-06 기민혁 - 해당 게시물에 대해 사용자가 싫어요를 표시했는지 체크 */
 		String isDisLikeChecked = ezBoardService.disLikeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
@@ -7576,7 +7585,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("displayName", userInfo.getDisplayName1());
 		model.addAttribute("disLikeCount", disLikeCount);
 		model.addAttribute("isDisLikeChecked", isDisLikeChecked);
-
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("itemLocation", itemLocation);
+		
 		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";
 	}
@@ -7639,7 +7650,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		int page = 1;
 		
@@ -8107,7 +8118,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardSelect started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		
 		/* 2019-06-03 홍승비 - 결과가 항상 NO인 게시판그룹 관리자권한 체크 동작 제거 (boardGroupID 또는 boardID가 'top'인 게시판은 존재하지 않음) */
 		String pRootBoardID = "top";
@@ -9815,7 +9826,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = "";
-		String userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String userEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String boardID = request.getParameter("boardID");
 		String url = request.getParameter("url");
 		String boardType = request.getParameter("bType");
@@ -11912,5 +11923,19 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		logger.debug("getBoardWarningPage ended");
 		return "main/warning";
+	}
+	
+	@RequestMapping(value="/ezBoard/WHWPEditor.do", method = RequestMethod.GET)
+	public String WHWPEditor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("WHWPEditor started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String type = request.getParameter("type");
+		
+		model.addAttribute("webHWPUrl", ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId()));
+		model.addAttribute("type", type);
+		
+		logger.debug("WHWPEditor ended.");
+		return "/ezBoard/boardWHWPEditor";
 	}
 }

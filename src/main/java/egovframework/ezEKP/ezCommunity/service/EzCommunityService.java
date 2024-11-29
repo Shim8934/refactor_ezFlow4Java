@@ -185,7 +185,7 @@ public interface EzCommunityService {
 
 	public String newItem(Document xmlData, String pMode, String realPath, LoginVO userInfo) throws Exception;
 	
-	public String getItemAttachmentXML(String itemID, int tenantID) throws Exception;
+	public String getItemAttachmentXML(String itemID, int tenantID, String realPath, String pMode) throws Exception;
 	
 	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String primary, int tenantID, String offset) throws Exception;
 
@@ -391,4 +391,6 @@ public interface EzCommunityService {
 	public String encodeURIComponent(String url) throws Exception; 
 
 	public String popularBoardItem(LoginVO userInfo) throws Exception;
+	
+	public boolean saveHWP(String strHTML, String strFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
 }

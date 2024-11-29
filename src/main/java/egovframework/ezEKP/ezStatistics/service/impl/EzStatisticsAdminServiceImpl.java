@@ -374,6 +374,10 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 					map.put("attachedFileName", obj.get("attachedFileName"));
 					map.put("subject", obj.get("subject"));
 					map.put("mailSize", obj.get("mailSize"));
+					// 2020-09-04 김은실-(빗썸코리아)메일삭제를 위한 messageId 추가
+					map.put("messageId", obj.get("messageId"));
+					map.put("isNullInSearchId", obj.get("isNullInSearchId"));
+					map.put("isBlocked", obj.get("isBlocked"));
 					
 					mailLogList.add(map);
 					

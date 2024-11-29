@@ -176,6 +176,11 @@ public interface EzEmailService {
 	public void deleteBigAttachCountInfo(String[] fileIdArr, int tenantId) throws Exception;
 	public int deleteMailDeleteForUser(String pUserEmail) throws Exception;
 
+	public int deleteMailsByMessageIds(String messageIds) throws Exception;
+	public int blockMailsByMessageIds(String messageIds) throws Exception;
+	public int unblockMailsByMessageIds(String messageIds) throws Exception;
+	public int checkBlockedMailByMessageId(String messageId) throws Exception;
+	
 	public void setMailboxProgress(String userKey, String userId, String action, int tenantId, int percent) throws Exception;
 	public int updateMailboxProgress(String userKey, int percent) throws Exception;
 	public int getMailboxProgress(String userKey) throws Exception;

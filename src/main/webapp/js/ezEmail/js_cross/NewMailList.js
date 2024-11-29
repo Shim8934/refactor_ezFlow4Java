@@ -2110,7 +2110,35 @@ function event_SublistCheckboxclick(obj) {
     }
     listSubEventCheckbox = true;
 }
+
+function checkBlockedMail(url) {
+    var strQuery = "<URL>" + url + "</URL>";
+    xmlhttp_mailCheckBlock = createXMLHttpRequest();
+    
+    var previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+        previewUrl += "&shareId=" + encodeURIComponent(shareId);
+    }
+    
+    xmlhttp_mailCheckBlock.open("POST", previewUrl, false);
+    xmlhttp_mailCheckBlock.send(strQuery);
+
+    var pBlockedMail = 1;
+    
+    if (xmlhttp_mailCheckBlock.status == 200) {
+        pBlockedMail = getNodeText(SelectNodes(xmlhttp_mailCheckBlock.responseXML, "DATA/BLOCKEDMAIL")[0]);        
+    }
+    
+    return pBlockedMail;
+}
+
 function event_listDBClick(obj) {
+    if (checkBlockedMail(obj.getAttribute("_href")) == '1') {
+        alert(strLangLDH07);
+        return;        
+    }
+    
     callMsgDlg(obj.getAttribute("_contentclass"), obj.getAttribute("_href"), obj.getAttribute("_isdraft"));
     MailList_ChangeStatus(obj);
 }

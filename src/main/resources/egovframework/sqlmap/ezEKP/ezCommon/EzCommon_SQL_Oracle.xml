@@ -6305,4 +6305,39 @@
 		ADD
 			TOTALNOTI_SENT_FLAG NUMBER(4,0) DEFAULT 0
 	</statement>
+    
+    <select id="EzCommonDAO.checkJmochaMailBlocked">
+		<![CDATA[
+		SELECT
+			MESSAGE_ID
+		FROM
+			JMOCHA_MAIL_BLOCKED
+		WHERE 
+			ROWNUM = 1 
+		]]>
+	</select>
+
+    <statement id="EzCommonDAO.createJmochaMailBlocked">
+        CREATE TABLE JMOCHA_MAIL_BLOCKED
+        (   MESSAGE_ID VARCHAR(500) NOT NULL,
+            CONSTRAINT PK_JMOCHA_MAIL_BLOCKED PRIMARY KEY (MESSAGE_ID)
+        )
+    </statement>
+    
+	<select id="EzCommonDAO.checkModuleEditor" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'MODULEEDITOR'
+		AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertModuleEditor">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (#v_TENANTID#, 'MODULEEDITOR', 'KUKUDOCS', 'CK, NAMO, TAGFREE, FORM, POLARIS, DEXT, KUKUDOCS, HWP 중 사용할 에디터를 설정한다. (default: KUKUDOCS)', '전자결재, 메일을 제외한 에디터 타입', TO_DATE('2024-09-23 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '일반')
+    </insert>
+	
 </sqlMap>

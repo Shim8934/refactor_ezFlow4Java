@@ -95,6 +95,7 @@
 		 	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 사용 여부
 	        var useBoardFilePrvw = "<c:out value='${useBoardFilePrvw}'/>";
 			var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
+			
 			/* 2023-04-12 이가은 - 답글 기능을 위한 변수 추가 */
 	        var userInfoName = "${displayName}";
 			var replyOpenFlag = 0;
@@ -107,10 +108,17 @@
 			var parentReplyID = "";
 			var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
 			var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
+			
+			var useEditor = "<c:out value='${useEditor}'/>";
+			var strContentLocation = "<c:out value='${itemLocation}'/>";
 
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
-	            window.parent.previewItemSet();
+	            
+	            if (useEditor != "HWP") {
+	            	window.parent.previewItemSet();
+	            }
+	            
 	            makeEmoticonPanel();
 	            
             	/* 2019-11-06 홍승비 - 본문 하단에 댓글영역 표출 */
@@ -609,6 +617,21 @@
 			    	}
 		    	}
 		    };
+		    
+		    function Editor_Preview_Complete() {
+		    	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(strContentLocation);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+		    }
+		    
+		    function FieldsAvailable(isTrue) {
+	        	if (isTrue) {
+	        		message.GetTextFile("HTML", "", function(data) {
+	        			parent.event_downContent(data, parent.xmlhttp2.responseText);
+	        		});
+	        	}
+	        }
+		    
 	    </script>
 	</head>
 	<body>
@@ -709,6 +732,9 @@
         </c:if>
         <%-- 본문하단 댓글영역 끝 --%>
 		<%-- 2018-10-11 - 홍승비 - 모두저장 기능 추가 --%>
+		<c:if test="${useEditor eq 'HWP'}">
+			<iframe id="message" class="viewbox"  src="/ezBoard/WHWPEditor.do?type=preview" name="message" frameborder="0" style="padding:0; overflow:auto; display:none;"></iframe>
+		</c:if>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" style="display:none"></iframe>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>

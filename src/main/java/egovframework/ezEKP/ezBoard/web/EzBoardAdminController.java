@@ -1634,7 +1634,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("tabID", tabID);		
-		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()));
+		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()));
 		model.addAttribute("useFormFlag", useFormFlag);
 
 		logger.debug("boardConfig ended");
@@ -1663,7 +1663,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("checkForm", checkForm);
-		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()));
+		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()));
 
 		logger.debug("boardFormSave ended");
 		return "admin/ezBoard/boardFormSave";
@@ -1682,8 +1682,14 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		String formContent = request.getParameter("formContent");
 		String realPath = commonUtil.getRealPath(request);
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
+		String formLocation = "";
 		
-		String formLocation = ezBoardAdminService.saveMHT(boardID, formContent, realPath, userInfo.getTenantId());		
+		if (!editor.equals("HWP")) {
+			formLocation = ezBoardAdminService.saveMHT(boardID, formContent, realPath, userInfo.getTenantId());		
+		} else {
+			formLocation = ezBoardAdminService.saveHWP(boardID, formContent, realPath, userInfo.getTenantId());
+		}
 		
 		ezBoardAdminService.setBoardForm(boardID, formLocation, userInfo.getTenantId());
 
