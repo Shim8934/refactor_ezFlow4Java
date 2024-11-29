@@ -181,6 +181,7 @@
 			var isOpenWindow;
 			var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
 			var boardViewForm = "${boardViewForm}";
+			var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // 스크랩 테넌트 컨피그 (TYPE1 / TYPE2 /NONE)
 			
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
@@ -1319,6 +1320,65 @@
 				})
 			}
 			
+		    /*  2023-05-22 기민혁 - 나의스크랩함 나의스크랩 추가 버튼 클릭시 동작 */
+    	    function SaveScrapMyBoard() {
+    	    	var arrList = new Array();
+	            var strItemList = "";
+	            var i = 0;
+	            arrList = strListInfo.split(";");
+
+				if (Read_FG != "true") {
+					alert("<spring:message code='ezBoard.t202' />");
+					return;
+				}
+
+	            if(arrList.length == "1"){
+	            	alert("<spring:message code='ezBoard.kmh15'/>");
+	            	return;
+	            }
+
+	            for (i = 0; i < arrList.length - 1; i++) {
+		            strItemList += arrList[i].split(",")[0] + ";";
+		        }
+
+                if (myBoardScrapFlag == "TYPE1") {
+                    $.ajax({
+                        type : "GET",
+                        dataType : "json",
+                        async : false,
+                        url : "/ezBoard/setScrapItemAll.do",
+                        data : { 
+                                itemIDList  : strItemList,
+                                boardID     : pBoardID
+                                },
+                        success: function(result) {
+                            if (result.status != "error") {
+                                if (result.failCount > 0) {
+                                    var pAlertContent = "<spring:message code='ezBoard.kmh44'/> " + result.failCount + "<spring:message code='ezBoard.kmh45'/>";
+                                    alert(pAlertContent);
+                                } else {
+                                    alert("<spring:message code='ezBoard.kmh47' />");
+                                }
+                            } else {
+                                alert("<spring:message code='ezBoard.kmh46' />");
+                            }
+                        },
+                        error : function(error) {
+                            console.log(error);
+                        }			
+                    });
+                
+                } else if (myBoardScrapFlag == "TYPE2") {
+                    var url = "/ezBoard/selUserScrapCont.do";
+                    ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+                    try { 
+                        ContOpen.focus()
+                    } catch (e) { 
+                        console.log(e);
+                    }
+                }
+    	    }
+
 		</script>
 	</head>
 	<c:choose>
@@ -1376,6 +1436,9 @@
 		        <c:if test="${boardInfo.boardAdmin_FG == true && (boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag == 'Y')}">
 		        	<li id="likeAndDisLikeBtn" ><span onClick="likeAndDisLikeList()"><spring:message code='ezBoard.kmh09' /></span></li> 
 		        </c:if>
+		        <c:if test="${MyBoardScrapFlag ne 'NONE'}">
+		        	<li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh13' /></span></li>
+				</c:if>
 				<div id="right" class="sub_frameIcon" style="float:right">	
 					<div class="sub_frameIconUL" style="width:57px !important">
 					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>

@@ -2818,4 +2818,150 @@
               LIMIT #listSize#
 	</select>
 	
+	<select id="MBoardDAO.getScrapBoardList" parameterClass="Map" resultClass="MBoardNewListVO">
+		<![CDATA[
+          	SELECT
+				A.BOARDID,
+				A.ITEMID,
+				A.WRITERID,
+				A.WRITERNAME,
+				A.WRITERDEPTNAME,
+				A.WRITERCOMPANYNAME,
+				DATE_ADD(DATE_FORMAT(A.startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS startdate,
+				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
+				A.PARENTWRITEDATE,
+				A.IMPORTANCE,
+				A.TITLE,
+				A.ATTACHMENTS,
+				A.READCOUNT,
+				A.ITEMLEVEL,
+				A.ABSTRACT,
+				A.WRITERNAME2,
+				A.WRITERDEPTNAME2,
+				A.WRITERCOMPANYNAME2,
+				(SELECT
+					COUNT(*)
+				FROM
+					TBL_BOARD_ONELINEREPLY
+				WHERE
+					TENANT_ID = A.TENANT_ID
+				AND
+					ITEMID = A.ItemID) ONELINECNT,
+				A.UPPERITEMIDTREE,
+				A.DOCNO,
+				'' AS NOTICE,
+				P.GUBUN,
+				A.MAINCONTENT
+            FROM
+                TBL_BOARD_ITEM A
+            INNER JOIN
+				TBL_BOARDITEM_SCRAP E
+  			ON
+				A.BOARDID = E.BOARDID
+			AND
+				A.ITEMID = E.ITEMID
+            INNER JOIN
+               	TBL_BOARD_BOARDINFO P
+            ON
+                A.TENANT_ID = P.TENANT_ID
+			AND
+     			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+            AND
+                A.BOARDID = P.BOARDID
+			AND
+				A.TENANT_ID = #tenantID#
+			AND
+				E.USERID = #userID#
+			AND
+				(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+			AND
+				(
+					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+					 OR
+					 A.APPRFLAG IS NULL
+				)
+			AND
+				A.STARTDATE <= #nowDate#
+			AND
+				A.ENDDATE > #nowDate#
+		]]>
+        <isNotEmpty property="scrapBoardListView_FG">
+            AND E.BOARDID IN
+            <iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+        </isNotEmpty>
+        <isEmpty property="scrapBoardListView_FG">
+            AND 1 = 0
+        </isEmpty>
+		<isNotEmpty property="pSearchText">
+			<![CDATA[
+			AND
+				(A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+				 OR
+				 A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))
+            ]]>
+		</isNotEmpty>
+		<![CDATA[
+            ORDER BY
+                E.scrapdate DESC
+            LIMIT
+                #listSize#
+		]]>
+	</select>
+
+	<select id="MBoardDAO.getScrapBoardListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(A.ITEMID)
+			FROM
+				TBL_Board_Item A
+			INNER JOIN
+				TBL_BOARDITEM_SCRAP B
+			ON
+				A.BOARDID = B.BOARDID
+			AND
+				A.ITEMID = B.ITEMID
+			WHERE
+				B.TENANT_ID = #tenantID#
+		  	AND
+				B.USERID = #userID#
+		  	AND
+				B.COMPANYID = #companyID#
+		  	AND (
+					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+					 OR
+					 A.APPRFLAG IS NULL
+				)
+		  	AND
+				A.STARTDATE <= #nowDate#
+		  	AND
+				A.ENDDATE > #nowDate#
+		]]>
+        <isNotEmpty property="scrapBoardListView_FG">
+            AND B.BOARDID IN
+            <iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+        </isNotEmpty>
+        <isEmpty property="scrapBoardListView_FG">
+            AND 1 = 0
+        </isEmpty>
+		<isNotEmpty property="pSearchText">
+			<![CDATA[
+			AND
+				(A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+				 OR
+				 A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))
+			]]>
+		</isNotEmpty>
+	</select>
+
+	<delete id="MBoardDAO.deleteScrapBoardItem" parameterClass="Map">
+    	<![CDATA[
+			DELETE FROM
+				TBL_BOARDITEM_SCRAP
+			WHERE
+				ITEMID = #itemID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+  </delete>
+
 </sqlMap>

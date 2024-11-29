@@ -129,6 +129,7 @@
             var boardViewType = '1'; // 2024-05-24 전인하 - 기본보기(1) / 안읽은 게시물(2) / 만료게시물(3) 확인 플래그
 		    var isOpenWindow;
             var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
+            var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // 스크랩 테넌트 컨피그 (TYPE1 / TYPE2 /NONE)
 		    
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
@@ -604,7 +605,7 @@
 		        }	
 		        // if (tr != null && oArrRows.length > 0) {
 		
-		        isOpenWindow = window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=790,top=" + pTop + ",left=" + pLeft, "");
+		        isOpenWindow = window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=890,top=" + pTop + ",left=" + pLeft, "");
 		        //}       
 		    }
 		    /*  2019-04-12 홍승비 - 사용되지 않는 함수 주석처리 */
@@ -622,7 +623,7 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 790) / 2;
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=790,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=890,top=" + pTop + ",left=" + pLeft, "");
 		
 		    } */
 		    
@@ -1255,6 +1256,65 @@
 	    		}
 	    	}
 	    	
+		    /*  2023-05-22 기민혁 - 나의스크랩함 나의스크랩 추가 버튼 클릭시 동작 */
+    	    function SaveScrapMyBoard() {
+    	    	var arrList = new Array();
+	            var strItemList = "";
+	            var i = 0;
+	            arrList = strListInfo.split(";");
+
+				if (Read_FG != "true") {
+					alert("<spring:message code='ezBoard.t202' />");
+					return;
+				}
+	            
+	            if(arrList.length == "1"){
+	            	alert("<spring:message code='ezBoard.kmh15'/>");
+	            	return;
+	            }
+	            
+	            for (i = 0; i < arrList.length - 1; i++) {
+		            strItemList += arrList[i].split(",")[0] + ";";
+		        }
+	            
+               if (myBoardScrapFlag == "TYPE1") {
+                   $.ajax({
+                       type : "GET",
+                       dataType : "json",
+                       async : false,
+                       url : "/ezBoard/setScrapItemAll.do",
+                       data : { 
+                               itemIDList  : strItemList,
+                               boardID     : pBoardID
+                               },
+                       success: function(result) {
+                            if (result.status != "error") {
+                                if (result.failCount > 0) {
+                                    var pAlertContent = "<spring:message code='ezBoard.kmh44'/> " + result.failCount + "<spring:message code='ezBoard.kmh45'/>";
+                                    alert(pAlertContent);
+                                } else {
+                                    alert("<spring:message code='ezBoard.kmh47' />");
+                                }
+                            } else {
+                                alert("<spring:message code='ezBoard.kmh46' />");
+                            }
+                       },
+                       error : function(error) {
+                           console.log(error);
+                       }			
+                   });
+               
+               } else if (myBoardScrapFlag == "TYPE2") {
+                   var url = "/ezBoard/selUserScrapCont.do";
+                   ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+                   try { 
+                       ContOpen.focus()
+                   } catch (e) { 
+                       console.log(e);
+                   }
+               }
+    	    }
+	    	
 		</script>
 	</head>
 	<c:choose>
@@ -1312,6 +1372,9 @@
 		        <c:if test="${boardInfo.boardAdmin_FG == true && (boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag == 'Y')}">
 		        	<li id="likeAndDisLikeBtn" ><span onClick="likeAndDisLikeList()"><spring:message code='ezBoard.kmh09' /></span></li> 
 		        </c:if>
+		        <c:if test="${MyBoardScrapFlag ne 'NONE'}">
+		        	<li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh13' /></span></li>
+			    </c:if>
 			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->		        
 			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
 			    <c:if test="${boardInfo.boardAdmin_FG == 'true'}">

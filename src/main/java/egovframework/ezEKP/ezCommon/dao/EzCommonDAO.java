@@ -2902,4 +2902,52 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertModuleEditor", map);
 		}
 	}
+	
+	public void insertScrapTenantConfig(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.checkScrapTenantConfig", map);
+		
+		if (propertyValue == null) {
+			logger.debug("Scrap tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertScrapTenantConfig",map);
+		}
+	}
+
+	public void insertScrapTableHeader(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.insertScrapTableHeaderCheck", map);
+
+		if (propertyValue == null) {
+			logger.debug("ScrapTableHeader doesn't exist. insert data...");
+			insert("EzCommonDAO.insertScrapTableHeader",map);
+		}
+	}
+	
+	public void createTblBoardScrap() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardScrap");
+		} catch (Exception e) {
+			logger.debug("tbl_boarditem_scrap doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblBoardScrap");
+		}
+	}
+	
+	public void createTblUserScrapCont() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblUserScrapCont");
+		} catch (Exception e) {
+			logger.debug("tbl_userscrapcont doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblUserScrapCont");
+		}
+	}
+	
+	public void createTblUserScrapContList() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblUserScrapContList");
+		} catch (Exception e) {
+			logger.debug("tbl_userscrapcontlist doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblUserScrapContList");
+		}
+	}
 }

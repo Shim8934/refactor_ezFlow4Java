@@ -108,6 +108,10 @@
 			var disLikeCount = "${boardItem.disLikeCount}";
 			var disLikeCountAfter = 0;
 
+            var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // myBoardScrapFlag 테넌트컨피그값 (NONE, TYPE1_(마이게시판하위), TYPE2(스크랩함))
+			var isScrap = "<c:out value='${isScrap}'/>"; // 이미 스크랩되었는지의 여부 (type1일때)
+			var scrapContID = "<c:out value='${scrapContID}'/>"; // 개인스크랩함 ID (TYPE2, 스크랩함에서 게시물 조회했을 때만 값이 삽입되는 변수)
+
 		    // 수정 수아 재은	    
 		    var nowZoom = 100;
 	        var maxZoom = 200;
@@ -1728,6 +1732,97 @@
 	        	}
 	        }
 	        
+		   
+		    /* 2023-05-03 기민혁 -  스크랩 추가 클릭시 data insert */
+		    function addScrapType1() {
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/setScrapItem.do",
+					data : {
+						itemID : pItemID,
+						boardID : pBoardID
+					},
+					success: function(result){
+						if(result == "true"){
+							alert("<spring:message code='ezBoard.t269' />");
+							document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+						} else if(result == "false"){
+							alert("<spring:message code='ezBoard.kmh001' />");
+							document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+						} else if(result == "error"){
+							alert("<spring:message code='ezBoard.kmh17' />");
+						}
+					}
+				});
+			}
+			
+			function addScrapType2() {
+    	        var url = "/ezBoard/selUserScrapCont.do";
+    	        ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+    	        try { ContOpen.focus() } catch (e) { }
+			}
+			
+			function addScrap() {
+			    if (myBoardScrapFlag == "TYPE1") {
+			        addScrapType1();
+			    } else if (myBoardScrapFlag == "TYPE2") {
+			        addScrapType2();
+			    } else {
+			        alert("오류발생");
+			    }
+			}
+		    
+		    /* 2023-05-03 기민혁 -  스크랩 해제 클릭시 data delete */
+		    function delScrap() {
+		        var pUrl = "";
+		        var pData = new FormData();
+		        var pType;
+		        if (myBoardScrapFlag == "TYPE1") {
+		            pUrl = "/ezBoard/delScrapItem.do";
+		            pData.append("itemID", pItemID);
+		            pData.append("boardID", pBoardID);
+		        } else if (myBoardScrapFlag == "TYPE2") {
+		            pUrl = "/ezBoard/deleteScrapContItemList.do";
+		            pData.append("itemList", pItemID + ";");
+		            pData.append("scrapContID", scrapContID);
+		        } else {
+		            alert("<spring:message code='ezBoard.kmh52' />");
+		            return;
+		        }
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : pUrl,
+					data : pData,
+					contentType: false,
+					processData: false,
+					success: function(result) {
+						if (result == "true") {
+							alert("<spring:message code='ezBoard.kmh18' />");
+							
+							if (myBoardScrapFlag == "TYPE1") {
+							    document.getElementById("delScrapBtn").innerHTML ="<li id ='addScrapBtn'><span onclick='addScrap()'><spring:message code='ezBoard.kmh13'/></span></li>";
+							} else if (myBoardScrapFlag == "TYPE2") {
+							    document.getElementById("delScrapBtn").replaceChildren();
+							} else {
+								alert("<spring:message code='ezBoard.kmh52' />");
+		                        return;
+							}
+							
+							if (window.opener && !window.opener.closed && (window.opener.location.href.indexOf("boardMyScrapList") !== -1 || window.opener.location.href.indexOf("BoardScrapContItemListView") !== -1)) {
+								window.close();
+								window.opener.refresh_onclick();
+							} 
+						} else {
+						     alert("<spring:message code='ezBoard.kmh17' />");
+						}
+					}
+				});
+			}
+
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">
@@ -1822,6 +1917,20 @@
 					<%-- 2024-02-02- 홍승비 - 게시물 승인 > 승인되지 않은 게시물 팝업창에서 캐비넷등록 버튼이 표출되는 오류 수정 (apprFlag값이 'W'인 경우는 승인게시판인데도 승인자가 없는 경우임) --%>
 					<c:if test="${useCabinet == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+					</c:if>
+					<c:if test="${MyBoardScrapFlag != 'NONE' && apprFlag != 'N'}">
+						<c:choose>
+							<c:when test="${MyBoardScrapFlag eq 'TYPE1' && isScrap ne 'true'}">
+								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>
+							</c:when>
+							<c:when test="${MyBoardScrapFlag eq 'TYPE2' && not empty scrapContID}">
+								<li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>
+								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>	
+							</c:when>
+							<c:otherwise>
+							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
+							</c:otherwise>
+						</c:choose>
 					</c:if>
 		        </ul>
 		      </div>    

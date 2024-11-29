@@ -21,7 +21,10 @@
 	<typeAlias  alias="BoardDisLikeListVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO"/> 
 	<typeAlias  alias="BoardItemVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardItemVO"/> 
 	<typeAlias  alias="BoardKeywordVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardKeywordVO"/>
-	
+	<typeAlias  alias="BoardScrapListVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardScrapListVO"/>
+	<typeAlias  alias="BoardUserScrapContVO" 		type="egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO"/>
+	<typeAlias  alias="BoardUserScrapContListVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO"/>
+
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
 	</resultMap>
@@ -6335,7 +6338,71 @@
   				TBL_BOARD_DELETERESERVEDITEM
 		]]>
   </select>
-  
+
+  <select id="EzBoardDAO.deleteItemsScrapList" resultClass="BoardDeleteItemVO">
+	  <![CDATA[
+		  SELECT
+			  DISTINCT A.BOARDID,
+					   A.ITEMID,
+					   A.TENANT_ID
+		  FROM
+				TBL_BOARDITEM_SCRAP A
+		  LEFT OUTER JOIN
+		      	TBL_BOARD_ITEM B
+		  ON
+				A.BOARDID = B.BOARDID
+		  AND
+			  	A.ITEMID = B.ITEMID
+		  WHERE
+		        B.ITEMID IS NULL
+	  ]]>
+  </select>
+
+  <delete id="EzBoardDAO.deleteItemsScrap" parameterClass="BoardDeleteItemVO">
+	  <![CDATA[
+		  DELETE FROM
+			   TBL_BOARDITEM_SCRAP
+		  WHERE
+			   TENANT_ID = #tenantID#
+		  AND
+			   BOARDID = #boardID#
+		  AND
+			   itemID = #itemID#
+	  ]]>
+  </delete>
+
+  <select id="EzBoardDAO.deleteItemsScrapContList" resultClass="BoardDeleteItemVO">
+	  	<![CDATA[
+			SELECT
+				DISTINCT A.BOARDID,
+						 A.ITEMID,
+						 A.TENANT_ID
+			FROM
+				TBL_USERSCRAPCONTLIST A
+			LEFT OUTER JOIN
+				TBL_BOARD_ITEM B
+			ON
+				A.BOARDID = B.BOARDID
+			AND
+				A.ITEMID = B.ITEMID
+			WHERE
+				B.ITEMID IS NULL
+	 	]]>
+  </select>
+
+  <delete id="EzBoardDAO.deleteItemsScrapCont" parameterClass="BoardDeleteItemVO">
+	 	<![CDATA[
+			DELETE FROM
+				TBL_USERSCRAPCONTLIST
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				BOARDID = #boardID#
+			AND
+				itemID = #itemID#
+	 	]]>
+  </delete>
+
   <select id="EzBoardDAO.getPhotoCount" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
       <![CDATA[
         SELECT 
@@ -8193,5 +8260,956 @@
 			BOARDID = #boardID#
 		AND
 			TENANT_ID = #tenantID#
+	</select>
+	<insert id="EzBoardDAO.setScrapItem" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO TBL_BOARDITEM_SCRAP (
+					USERID, BOARDID, ITEMID, COMPANYID, TENANT_ID,SCRAPDATE
+				)
+			VALUES (
+					#v_userID#, #v_boardID#, #v_itemID#, #v_companyID#, #v_tenantID#, #v_nowDate#
+				)
+		]]>
+	</insert>
+	
+	<select id="EzBoardDAO.getScrapItemCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+			    COUNT(*)
+			FROM
+				TBL_BOARDITEM_SCRAP A
+			INNER JOIN
+				TBL_BOARD_ITEM E
+			ON
+				A.BOARDID = E.BOARDID
+			AND
+				A.ITEMID = E.ITEMID
+			WHERE
+			    A.USERID = #v_userID#
+			AND
+				A.ITEMID = #v_itemID#
+			AND
+				A.BOARDID = #v_boardID#
+			AND
+				A.COMPANYID = #v_companyID#
+			AND
+				A.TENANT_ID = #v_tenantID#
+		]]>
+	</select>
+	
+	<delete id="EzBoardDAO.deleteScrapItem" parameterClass="BoardScrapListVO">
+		<![CDATA[
+			DELETE FROM
+			    TBL_BOARDITEM_SCRAP
+            WHERE	
+            	ITEMID = #ItemID#
+			AND
+				TENANT_ID = #tenant_ID#
+			AND
+				USERID = #userID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardDAO.delScrapItem" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+			    TBL_BOARDITEM_SCRAP
+            WHERE	
+            	ITEMID = #v_itemID#
+			AND
+				TENANT_ID = #v_tenantID#
+			AND
+				USERID = #v_userID#
+			AND
+				BOARDID = #v_boardID#
+			AND
+				COMPANYID = #v_companyID#		
+		]]>
+	</delete>
+	
+	<select id="EzBoardDAO.getMyBoardListItemScrap" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT 
+				* 
+			FROM 
+				( SELECT 
+					* 
+				  FROM 
+					( SELECT
+						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+						A.BOARDID,
+		   				A.ITEMID,
+		   				A.WRITERID,
+		   				A.WRITERNAME,
+		   				A.WRITERDEPTNAME,
+		   				A.WRITERCOMPANYNAME,
+		   				A.STARTDATE,
+		   				A.WRITEDATE,
+		   				A.PARENTWRITEDATE,
+		   				A.IMPORTANCE,
+		   				A.TITLE,
+		   				A.READCOUNT,
+		   				A.ATTACHMENTS,
+		   				A.ITEMLEVEL,
+		   				A.ABSTRACT,
+		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+		   				A.EXTENSIONATTRIBUTE5,
+		   				A.WRITERNAME2,
+		   				A.WRITERDEPTNAME2,
+		   				A.WRITERCOMPANYNAME2,
+						B.ATTRIBUTEYN,
+		   				(SELECT
+		                	COUNT(*)
+	     				FROM
+	     					TBL_Board_OneLineReply
+	    				WHERE
+	    					TENANT_ID = A.TENANT_ID
+	    				AND
+	    					ITEMID = A.ItemID) ONELINECNT  ,
+		   				A.UPPERITEMIDTREE,
+		   				A.DOCNO,
+		   				CASE WHEN (
+								(CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END) = '' OR
+								(CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END) IS NULL
+							) THEN B.BOARDNAME
+							ELSE (CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END)
+						END BOARDNAME,
+		   				B.GUBUN  AS GUBUN,
+		   			    '' AS NOTICE,
+						A.APPRFLAG AS APPRFLAG
+	   				FROM
+	   				  	TBL_BOARD_ITEM A
+	   				INNER JOIN
+						TBL_BOARDITEM_SCRAP E
+  				  	ON
+						A.BOARDID = E.BOARDID
+				  	AND
+						A.ITEMID = E.ITEMID
+	   				INNER JOIN
+	   				  	TBL_BOARD_BOARDINFO B
+	   				ON
+	   				  	A.TENANT_ID = B.TENANT_ID
+	   				AND
+	   				  	A.BoardID = B.BoardID
+	   				LEFT OUTER JOIN
+	   				  	( SELECT
+	   				  		COUNT(USERID) AS TOTALCOUNT,
+	   				  		ITEMID,
+	   				  		TENANT_ID
+	   					 FROM
+	   					  	TBL_BOARD_ITEM_READ
+	   					 WHERE
+	   					  	TENANT_ID = #v_TENANTID#
+	   					 AND
+	   					  	USERID = #v_PUSERID#
+	   					 GROUP BY
+	   					  	ITEMID,
+	   					  	TENANT_ID ) D
+	   				ON
+	   				  	A.TENANT_ID = D.TENANT_ID
+	   				AND
+	   				  	A.ITEMID = D.ITEMID
+	   				WHERE
+	   				  	A.TENANT_ID = #v_TENANTID#
+	   				AND
+  				  		E.USERID = #v_PUSERID#
+	   				AND
+  					  	(A.WritercompanyID = #v_COMPANYID# OR TRIM(B.COMPANYID) = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+					AND
+						A.STARTDATE <= #nowDate#
+					AND
+						A.ENDDATE > #nowDate#
+	   				AND
+	   				 	(
+	   						(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+			        		 OR
+	        		  		 A.APPRFLAG IS NULL
+	        		 	)
+		]]>
+	   				<isNotEmpty property="scrapBoardListView_FG">
+						AND E.BOARDID IN
+						<iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+					</isNotEmpty>
+					<isEmpty property="scrapBoardListView_FG">
+						AND 1 = 0 
+					</isEmpty>
+		<![CDATA[
+	   				) T1
+	   			WHERE
+	   				  ROWNUM_ <= #v_PENDROW# ) T2
+   			WHERE
+   				ROWNUM_ >= #v_PSTARTROW#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getMyBoardTotalItemCountScrap" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+			FROM 
+				TBL_Board_Item A
+			INNER JOIN
+				TBL_BOARDITEM_SCRAP B
+			ON 
+				A.BOARDID = B.BOARDID
+			AND
+				A.ITEMID = B.ITEMID
+			WHERE
+				B.USERID = #v_userID#
+			AND
+				B.COMPANYID = #v_companyID#
+			AND
+				B.TENANT_ID = #v_tenantID#
+			AND
+				A.STARTDATE <= #nowDate#
+			AND
+				A.ENDDATE > #nowDate#
+			AND (
+					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+					 OR
+					 A.APPRFLAG IS NULL
+				)
+		]]>
+			<isNotEmpty property="scrapBoardListView_FG">
+				AND B.BOARDID IN
+				<iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+			</isNotEmpty>
+			<isEmpty property="scrapBoardListView_FG">
+				AND 1 = 0
+			</isEmpty>
+	</select>
+	
+	<select id="EzBoardDAO.getSearchMyBoardItemCountScrap" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(A.ITEMID)
+   			FROM 
+   				TBL_Board_Item A
+			INNER JOIN 
+				TBL_BOARDITEM_SCRAP B
+			ON 
+				A.BOARDID = B.BOARDID
+            AND
+				A.ITEMID = B.ITEMID
+   			WHERE
+   				B.TENANT_ID = #v_TENANTID#
+            AND
+                B.USERID = #v_PUSERID#
+   			AND
+				B.COMPANYID = #v_COMPANYID#
+			AND
+				A.STARTDATE <= #nowDate#
+			AND
+				A.ENDDATE > #nowDate#
+			AND (
+					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+					 OR
+					 A.APPRFLAG IS NULL
+				)
+   			$v_PSUBQUERY$
+		]]>
+			<isNotEmpty property="scrapBoardListView_FG">
+				AND B.BOARDID IN
+				<iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+			</isNotEmpty>
+			<isEmpty property="scrapBoardListView_FG">
+				AND 1 = 0
+			</isEmpty>
+	</select>
+	
+	<select id="EzBoardDAO.getSearchMyBoardItemListScrap" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT 
+				* 
+			FROM 
+				( SELECT 
+					* 
+				  FROM 
+					( SELECT 
+						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+	   					A.BOARDID,
+	   					A.ITEMID,
+	   					A.WRITERID,
+	   					A.WRITERNAME,
+	   					A.WRITERDEPTNAME,
+	   					A.WRITERCOMPANYNAME,
+	   					A.STARTDATE,
+	   					A.WRITEDATE,
+	   					A.PARENTWRITEDATE,
+	   					A.IMPORTANCE,
+	   					A.TITLE,
+	   					A.READCOUNT,
+	   					A.ATTACHMENTS,
+	   					A.ITEMLEVEL,
+	   					A.ABSTRACT,
+	   					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+	   					A.EXTENSIONATTRIBUTE5,
+	   					A.WRITERNAME2,
+	   					A.WRITERDEPTNAME2,
+	   					A.WRITERCOMPANYNAME2,
+						I.ATTRIBUTEYN,
+	   					(SELECT 
+		                	COUNT(*)  
+		    			FROM 
+		    				TBL_Board_OneLineReply 
+		   				WHERE  
+		   					TENANT_ID = A.TENANT_ID
+		   				AND
+		   					ITEMID = A.ItemID) ONELINECNT,
+	   					A.UPPERITEMIDTREE,
+	   					A.DOCNO,
+	   			    	'' AS NOTICE,
+						CASE WHEN (
+								(CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) = '' OR
+								(CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) IS NULL
+							) THEN I.BOARDNAME
+							ELSE (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END)
+						END BOARDNAME,	   					
+					    I.GUBUN AS GUBUN,
+						A.APPRFLAG AS APPRFLAG
+	   				 FROM 
+	   					TBL_BOARD_ITEM A
+	   				 INNER JOIN
+  		     			TBL_BOARDITEM_SCRAP S
+  		     		 ON
+  		     	    	A.BOARDID = S.BOARDID
+  		     		 AND    
+  		     	    	A.ITEMID = S.ITEMID	 
+	   				 LEFT OUTER JOIN 
+	   					( SELECT 
+	   						COUNT(USERID) AS TOTALCOUNT, 
+	   						ITEMID,
+	   						TENANT_ID
+	   					  FROM 
+	   					  	TBL_BOARD_ITEM_READ 
+	   					  WHERE
+	   					  	TENANT_ID = #v_TENANTID#
+	   					  AND 
+	   					  	USERID = #v_PUSERID# 
+	   					  GROUP BY 
+	   					  	ITEMID,
+	   					  	TENANT_ID) D 
+	   				 ON 
+	   					A.TENANT_ID = D.TENANT_ID
+	   				 AND
+	   					A.ITEMID = D.ITEMID
+	   				 INNER JOIN 
+	   					TBL_BOARD_BOARDINFO I 
+	   				 ON
+	   					A.TENANT_ID = I.TENANT_ID
+	   				 AND 
+	   					A.BOARDID = I.BOARDID 
+	   				 WHERE
+	   					A.TENANT_ID = #v_TENANTID#
+	   				 AND
+						S.USERID = #v_PUSERID#	
+					 AND
+						(A.WritercompanyID = #v_COMPANYID# OR TRIM(I.COMPANYID) = #v_COMPANYID# OR TRIM(I.COMPANYID) = '' OR I.COMPANYID IS NULL)
+					 AND
+						 A.STARTDATE <= #nowDate#
+					 AND
+						 A.ENDDATE > #nowDate#
+	   				 AND (
+							(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+							 OR
+							 A.APPRFLAG IS NULL
+					     )	
+					]]> 
+					<isNotEmpty property="scrapBoardListView_FG">
+						AND S.BOARDID IN
+						<iterate property="scrapBoardListView_FG" open="(" close=")" conjunction=","> #scrapBoardListView_FG[]# </iterate>
+					</isNotEmpty>
+					<isEmpty property="scrapBoardListView_FG">
+						AND 1 = 0
+					</isEmpty>
+					<![CDATA[
+	   				 $v_PSUBQUERY$ ) T1
+	   			WHERE
+	   				  ROWNUM_ <= #v_PENDROW# ) T2
+   			WHERE 
+   				ROWNUM_ >= #v_PSTARTROW#
+		]]>
+	</select>
+	
+	<delete id="EzBoardDAO.deleteBoardScrapItem" parameterClass="BoardScrapListVO">
+		<![CDATA[
+			DELETE FROM
+			    TBL_BOARDITEM_SCRAP
+            WHERE	
+            	ITEMID = #ItemID#
+			AND
+				TENANT_ID = #tenant_ID#
+		]]>
+	</delete>
+	
+	<select id="EzBoardDAO.isScrapitemCount" parameterClass="BoardScrapListVO" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(ITEMID)
+			FROM
+				TBL_BOARDITEM_SCRAP
+			WHERE
+				ITEMID = #ItemID#
+			AND
+				TENANT_ID = #tenant_ID#
+		]]>
+	</select>
+
+	<select id="EzBoardDAO.getUserScrapContTree" parameterClass="Map" resultClass="BoardUserScrapContVO">
+	   	<![CDATA[
+	   		SELECT
+	   			 USERSCRAPCONTID ,
+	             USERSCRAPCONTNAME ,
+	             DESCRIPTION
+	        FROM
+	        	TBL_USERSCRAPCONT
+	        WHERE
+	        	TENANT_ID = #v_TENANTID#
+	        AND
+	        	COMPANYID = #v_COMPANYID#
+	        AND
+	        	PARENTSCRAPCONTID = #v_ParentScrapContID#
+	        AND
+	        	USERID = #v_USERID#
+	        ORDER BY
+	        	USERSCRAPCONTNAME
+	     ]]>
+   	</select>
+
+   	<select id="EzBoardDAO.getUserScrapContMaxID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+   			SELECT
+   		 		SUBSTR(CONCAT('0000000000' , ((CASE WHEN MAX(USERSCRAPCONTID) IS NULL THEN '0000000000'  ELSE MAX(USERSCRAPCONTID)  END) + 1 )), -10, 10)
+        	FROM
+         		TBL_USERSCRAPCONT
+        	WHERE
+         		TENANT_ID = #v_TENANTID#
+		]]>
+   	</select>
+
+   	<insert id="EzBoardDAO.insertUserScrapCont" parameterClass="Map">
+		<![CDATA[
+   			INSERT INTO TBL_USERSCRAPCONT (
+   		    	USERSCRAPCONTID, USERSCRAPCONTNAME, PARENTSCRAPCONTID, DESCRIPTION, USERID, TENANT_ID, COMPANYID )
+     		VALUES (
+     	    	#v_PMAXSCRAPCONTAINERID#, #v_USERSCRAPCONTNAME#, #v_PARENTSCRAPCONTID#, #v_DESCRIPTION#, #v_USERID#, #v_TENANTID#, #companyID#
+     	    )
+		]]>
+   	</insert>
+
+	<select id="EzBoardDAO.getUserScrapContTreeLeaf" parameterClass="Map" resultClass="BoardUserScrapContVO">
+   		<![CDATA[
+			SELECT
+				USERSCRAPCONTID ,
+				USERSCRAPCONTNAME
+			FROM
+				TBl_USERSCRAPCONT
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				PARENTSCRAPCONTID = #v_USERSCRAPCONTID#
+			ORDER BY
+				USERSCRAPCONTID
+		]]>
+   	</select>
+
+   	<update id="EzBoardDAO.updateUserScrapCont" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_USERSCRAPCONT
+			SET
+				DESCRIPTION   = #v_PDESCRIPTION#
+		]]>
+   		<isNotEmpty property="v_POWNUSERID">
+			<![CDATA[
+				, USERID   = #v_POWNUSERID#
+			]]>
+   		</isNotEmpty>
+   		<isNotEmpty property="v_PUSERSCRAPCONTNAME">
+			<![CDATA[
+   				, USERSCRAPCONTNAME   = #v_PUSERSCRAPCONTNAME#
+   			]]>
+   		</isNotEmpty>
+   		<isNotEmpty property="v_PPARENTSCRAPCONTID">
+			<![CDATA[
+   				, PARENTSCRAPCONTID   = #v_PPARENTSCRAPCONTID#
+   			]]>
+   		</isNotEmpty>
+		<![CDATA[
+			WHERE
+				USERSCRAPCONTID = #v_PSCRAPCONTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+   	</update>
+
+   	<select id="EzBoardDAO.getUserScrapContSubCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_USERSCRAPCONT
+			WHERE
+				PARENTSCRAPCONTID = #v_PSCRAPCONTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+	</select>
+
+	<select id="EzBoardDAO.delUserScrapContItemCnt" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(ITEMID)
+			FROM
+				TBL_USERSCRAPCONTLIST
+			WHERE
+				USERSCRAPCONTID = #v_PSCRAPCONTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+   	</select>
+
+   	<delete id="EzBoardDAO.delUserScrapContList" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_USERSCRAPCONTLIST
+			WHERE
+				USERSCRAPCONTID = #v_PSCRAPCONTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+   	</delete>
+
+   	<delete id="EzBoardDAO.delUserScrapCont" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_USERSCRAPCONT
+			WHERE
+				USERSCRAPCONTID = #v_PSCRAPCONTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+   	</delete>
+
+   	<select id="EzBoardDAO.getOverlapItemCount" parameterClass="BoardUserScrapContListVO" resultClass = "Integer">
+	   	<![CDATA[
+			SELECT
+				COUNT(ITEMID)
+			FROM
+				TBL_USERSCRAPCONTLIST
+			WHERE
+				ITEMID = #itemID#
+			AND
+				BOARDID = #boardID#
+			AND
+				USERID = #userID#
+			AND
+				USERSCRAPCONTID = #userScrapContID#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		 ]]>
+	 </select>
+
+	 <insert id = "EzBoardDAO.setUserScrapContItem" parameterClass="BoardUserScrapContListVO">
+		 <![CDATA[
+			MERGE INTO TBL_USERSCRAPCONTLIST
+			USING dual
+			ON (ITEMID = #itemID# AND USERID = #userID# AND USERSCRAPCONTID = #userScrapContID#)
+			WHEN NOT MATCHED THEN
+			INSERT (
+				BOARDID, ITEMID, USERID, USERSCRAPCONTID, DESCRIPTION, SCRAPDATE, TENANT_ID, COMPANYID
+			)
+			VALUES (
+				#boardID#, #itemID#, #userID#, #userScrapContID#, #description#, #scrapDate#, #tenantID#, #companyID#
+			)
+		 ]]>
+	 </insert>
+
+	 <delete id="EzBoardDAO.deleteScrapContItemList" parameterClass="BoardScrapListVO">
+		<![CDATA[
+			DELETE FROM
+			    TBL_UserScrapContList
+            WHERE
+            	ITEMID = #ItemID#
+			AND
+				TENANT_ID = #tenant_ID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				USERID = #userID#
+			AND
+				USERSCRAPCONTID = #scrapContID#
+		]]>
+	</delete>
+
+	<select id="EzBoardDAO.getUserScrapContlistCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_Board_Item A
+			INNER JOIN
+				TBL_UserScrapContList B
+			ON
+				A.BOARDID = B.BOARDID
+			AND
+				A.ITEMID = B.ITEMID
+			WHERE
+				B.USERID = #v_userID#
+			AND
+				B.USERSCRAPCONTID = #v_scrapContID#
+			AND
+				B.COMPANYID = #v_companyID#
+			AND
+				B.TENANT_ID = #v_tenantID#
+			AND
+				A.STARTDATE <= #nowDate#
+			AND
+				A.ENDDATE > #nowDate#
+			AND (
+					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+					 OR
+					 A.APPRFLAG IS NULL
+				)
+		]]>
+			<isNotEmpty property="scrapContBoardListView_FG">
+				AND B.BOARDID IN
+				<iterate property="scrapContBoardListView_FG" open="(" close=")" conjunction=","> #scrapContBoardListView_FG[]# </iterate>
+			</isNotEmpty>
+			<isEmpty property="scrapContBoardListView_FG">
+				AND 1 = 0
+			</isEmpty>
+	</select>
+
+	<select id="EzBoardDAO.getScrapContItemList" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			 SELECT
+			   *
+			 FROM
+				( SELECT
+					*
+				  FROM
+					( SELECT
+						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+						A.BOARDID,
+						A.ITEMID,
+						A.WRITERID,
+						A.WRITERNAME,
+						A.WRITERDEPTNAME,
+						A.WRITERCOMPANYNAME,
+						A.STARTDATE,
+						A.WRITEDATE,
+						A.PARENTWRITEDATE,
+						A.IMPORTANCE,
+						A.TITLE,
+						A.READCOUNT,
+						A.ATTACHMENTS,
+						A.ITEMLEVEL,
+						A.ABSTRACT,
+						CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+						A.EXTENSIONATTRIBUTE5,
+						A.WRITERNAME2,
+						A.WRITERDEPTNAME2,
+						A.WRITERCOMPANYNAME2,
+						B.ATTRIBUTEYN,
+						(SELECT
+							COUNT(*)
+						FROM
+							TBL_Board_OneLineReply
+						WHERE
+							TENANT_ID = A.TENANT_ID
+						AND
+							ITEMID = A.ItemID) ONELINECNT  ,
+						A.UPPERITEMIDTREE,
+						A.DOCNO,
+						CASE WHEN (
+								(CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END) = '' OR
+								(CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END) IS NULL
+							) THEN B.BOARDNAME
+							ELSE (CASE WHEN #lang# = '1' THEN B.BOARDNAME WHEN #lang# = '2' THEN B.BOARDNAME2 WHEN #lang# = '3' THEN B.BOARDNAME3 WHEN #lang# = '4' THEN B.BOARDNAME4 ELSE B.BOARDNAME END)
+						END BOARDNAME,
+						B.GUBUN  AS GUBUN,
+						'' AS NOTICE,
+						A.APPRFLAG AS APPRFLAG
+   			        FROM
+   			  			TBL_BOARD_ITEM A
+   				    INNER JOIN
+						TBL_USERSCRAPCONTLIST E
+  				    ON
+						A.BOARDID = E.BOARDID
+				    AND
+						A.ITEMID = E.ITEMID
+   				    INNER JOIN
+   					  	TBL_BOARD_BOARDINFO B
+  			   	    ON
+  					  	A.TENANT_ID = B.TENANT_ID
+  			    	AND
+  					  	A.BoardID = B.BoardID
+  				    LEFT OUTER JOIN
+						( SELECT
+							COUNT(USERID) AS TOTALCOUNT,
+							ITEMID,
+							TENANT_ID
+						  FROM
+							TBL_BOARD_ITEM_READ
+						  WHERE
+							TENANT_ID = #v_TENANTID#
+						  AND
+							USERID = #v_PUSERID#
+						  GROUP BY
+							ITEMID,
+							TENANT_ID ) D
+  				    ON
+  				 	 	A.TENANT_ID = D.TENANT_ID
+  				    AND
+  					  	A.ITEMID = D.ITEMID
+  				    WHERE
+  					  	A.TENANT_ID = #v_TENANTID#
+  				    AND
+  					  	E.USERSCRAPCONTID = #scrapContID#
+  				    AND
+  					  	E.USERID = #v_PUSERID#
+  				    AND
+  					  	(A.WritercompanyID = #v_COMPANYID# OR TRIM(B.COMPANYID) = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+					AND
+						A.STARTDATE <= #nowDate#
+					AND
+						A.ENDDATE > #nowDate#
+  				    AND
+	   					(
+	   						(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+			  		      	 OR
+	        			  	 A.APPRFLAG IS NULL
+	        			) 
+		 ]]>
+					<isNotEmpty property="scrapContBoardListView_FG">
+						AND E.BOARDID IN
+						<iterate property="scrapContBoardListView_FG" open="(" close=")" conjunction=","> #scrapContBoardListView_FG[]# </iterate>
+					</isNotEmpty>
+					<isEmpty property="scrapContBoardListView_FG">
+						AND 1 = 0
+					</isEmpty>
+		<![CDATA[   
+  				    ) T1
+  				WHERE
+	   				ROWNUM_ <= #v_PENDROW# ) T2
+   			WHERE
+   				ROWNUM_ >= #v_PSTARTROW#
+		]]>
+	</select>
+
+	<select id="EzBoardDAO.getSearchScrapContItemListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_Board_Item A
+			INNER JOIN
+				TBL_UserScrapContList B
+			ON
+				A.BOARDID = B.BOARDID
+			AND
+				A.ITEMID = B.ITEMID
+			WHERE
+				B.USERID = #v_userID#
+			AND
+				B.USERSCRAPCONTID = #v_scrapContID#
+			AND
+				B.COMPANYID = #v_companyID#
+			AND
+				B.TENANT_ID = #v_tenantID#
+			AND
+				A.STARTDATE <= #nowDate#
+			AND
+				A.ENDDATE > #nowDate#
+			AND (
+					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+					 OR
+					 A.APPRFLAG IS NULL
+				)
+		]]>
+			<isNotEmpty property="scrapContBoardListView_FG">
+				AND B.BOARDID IN
+				<iterate property="scrapContBoardListView_FG" open="(" close=")" conjunction=","> #scrapContBoardListView_FG[]# </iterate>
+			</isNotEmpty>
+			<isEmpty property="scrapContBoardListView_FG">
+				AND 1 = 0
+			</isEmpty>
+	</select>
+
+	<select id="EzBoardDAO.getSearchScrapContItemList" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+			  *
+			FROM
+			   ( SELECT
+					*
+				  FROM
+				    ( SELECT
+						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+						A.BOARDID,
+						A.ITEMID,
+						A.WRITERID,
+						A.WRITERNAME,
+						A.WRITERDEPTNAME,
+						A.WRITERCOMPANYNAME,
+						A.STARTDATE,
+						A.WRITEDATE,
+						A.PARENTWRITEDATE,
+						A.IMPORTANCE,
+						A.TITLE,
+						A.READCOUNT,
+						A.ATTACHMENTS,
+						A.ITEMLEVEL,
+						A.ABSTRACT,
+						CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+						A.EXTENSIONATTRIBUTE5,
+						A.WRITERNAME2,
+						A.WRITERDEPTNAME2,
+						A.WRITERCOMPANYNAME2,
+						I.ATTRIBUTEYN,
+						(SELECT
+							COUNT(*)
+						FROM
+							TBL_Board_OneLineReply
+						WHERE
+							TENANT_ID = A.TENANT_ID
+						AND
+							ITEMID = A.ItemID) ONELINECNT,
+						A.UPPERITEMIDTREE,
+						A.DOCNO,
+						'' AS NOTICE,
+						CASE WHEN (
+								(CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) = '' OR
+								(CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) IS NULL
+							) THEN I.BOARDNAME
+							ELSE (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END)
+						END BOARDNAME,	   							
+				        I.GUBUN AS GUBUN,
+						A.APPRFLAG AS APPRFLAG
+					FROM
+						TBL_BOARD_ITEM A
+					INNER JOIN
+						TBL_UserScrapContList S
+					ON
+						A.BOARDID = S.BOARDID
+					AND
+						A.ITEMID = S.ITEMID
+					LEFT OUTER JOIN
+						( SELECT
+							COUNT(USERID) AS TOTALCOUNT,
+							ITEMID,
+							TENANT_ID
+						  FROM
+							TBL_BOARD_ITEM_READ
+						  WHERE
+							TENANT_ID = #v_TENANTID#
+						  AND
+							USERID = #v_PUSERID#
+						  GROUP BY
+							ITEMID,
+							TENANT_ID) D
+					ON
+						A.TENANT_ID = D.TENANT_ID
+					AND
+						A.ITEMID = D.ITEMID
+					INNER JOIN
+						TBL_BOARD_BOARDINFO I
+					ON
+						A.TENANT_ID = I.TENANT_ID
+					AND
+						A.BOARDID = I.BOARDID
+					WHERE
+						A.TENANT_ID = #v_TENANTID#
+					AND
+						S.USERID = #v_PUSERID#
+					AND
+						S.USERSCRAPCONTID = #v_SCRAPCONTID#
+					AND
+						(A.WritercompanyID = #v_COMPANYID# OR TRIM(I.COMPANYID) = #v_COMPANYID# OR TRIM(I.COMPANYID) = '' OR I.COMPANYID IS NULL)
+					AND
+						A.STARTDATE <= #nowDate#
+					AND
+						A.ENDDATE > #nowDate#
+					AND (
+							(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+							 OR
+		   					 A.APPRFLAG IS NULL
+						)
+		]]>
+					<isNotEmpty property="scrapContBoardListView_FG">
+						AND S.BOARDID IN
+						<iterate property="scrapContBoardListView_FG" open="(" close=")" conjunction=","> #scrapContBoardListView_FG[]# </iterate>
+					</isNotEmpty>
+					<isEmpty property="scrapContBoardListView_FG">
+						AND 1 = 0
+					</isEmpty>
+		<![CDATA[		 
+					$v_PSUBQUERY$) T1
+				WHERE
+					ROWNUM_ <= #v_PENDROW# ) T2
+			WHERE
+				ROWNUM_ >= #v_PSTARTROW#
+		]]>
+	</select>
+
+	<delete id="EzBoardDAO.deleteBoardScrapContItem" parameterClass="BoardUserScrapContListVO">
+		<![CDATA[
+			DELETE FROM
+				TBL_USERSCRAPCONTLIST
+            WHERE
+            	ITEMID = #itemID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
+
+	<select id="EzBoardDAO.isScrapContItemCount" parameterClass="BoardUserScrapContListVO" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(ITEMID)
+            FROM
+        		TBL_USERSCRAPCONTLIST
+         	WHERE
+        		ITEMID = #itemID#
+		  	AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getUserScrapBoardList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			DISTINCT BOARDID
+		FROM
+			TBL_BOARDITEM_SCRAP
+		WHERE
+			TENANT_ID = #v_TENANTID#
+	  	AND
+			USERID = #v_PUSERID#
+	</select>
+
+	<select id="EzBoardDAO.getUserScrapContBoardList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			DISTINCT BOARDID
+		FROM
+			TBL_USERSCRAPCONTLIST
+		WHERE
+			TENANT_ID = #v_TENANTID#
+	  	AND
+			USERID = #v_PUSERID#
+	  	AND
+			USERSCRAPCONTID = #v_CONTID#
 	</select>
 </sqlMap>

@@ -393,4 +393,12 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public int getBoardItemCnt(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardAdminDAO.getBoardItemCnt", map);
 	}
+	public void deleteScrapBoard(String boardID) throws Exception {
+		delete("EzBoardAdminDAO.deleteScrapBoard", boardID);
+	}
+
+	public void deleteScrapContBoard(String boardID) throws Exception {
+		delete("EzBoardAdminDAO.deleteScrapContBoard", boardID);
+	}
+
 }

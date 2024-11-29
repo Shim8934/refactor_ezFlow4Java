@@ -309,6 +309,7 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String serverName = request.getHeader("x-user-host");
+			String acScrap = request.getParameter("acScrapBoard");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
@@ -383,6 +384,10 @@ public class MBoardGWController {
 				List<BoardKeywordVO> keywordsObj = ezBoardService.selectBoardKeywordByBoardItem(contentId, boardId, info.getTenantId());
 				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
 			}
+			/* 2023-11-22 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */
+			String isScrap = ezBoardService.getScrapItemCount(userID, contentId, boardId, info.getCompanyId(), info.getTenantId());
+			String myBoardScrapFlag = ezCommonService.getTenantConfig("MyBoardScrapFlag", info.getTenantId());
+			
         	logger.debug("realPath = " + realPath + " | domain = " + domain + " | scheme = " + scheme + " | useMobileViewer = " + useMobileViewer);
         	
         	data.put("useMobileViewer", useMobileViewer);
@@ -392,6 +397,9 @@ public class MBoardGWController {
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
 			data.put("commentCount", commentCount);
 			data.put("keywords", keywords);
+			data.put("acScrap", acScrap);
+			data.put("myBoardScrapFlag", myBoardScrapFlag);
+			data.put("isScrap", isScrap);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -422,6 +430,7 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String serverName = request.getHeader("x-user-host");
+			String acScrap = request.getParameter("acScrapBoard");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
@@ -485,12 +494,20 @@ public class MBoardGWController {
 			logger.debug("photoList:"+photoList);
 			
 			mBoardService.setAsRead(info, boardId, contentId);
-			
+
+			/* 2023-11-22 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */
+			String isScrap = ezBoardService.getScrapItemCount(userID, contentId, boardId, info.getCompanyId(), info.getTenantId());
+			String myBoardScrapFlag = ezCommonService.getTenantConfig("MyBoardScrapFlag", info.getTenantId());
+
+
 			data.put("boardItem", boardItem);
 			data.put("boardInfo", boardInfo);
 			data.put("photoList", photoList);
 			data.put("commentCount", commentCount);
 			data.put("keywords", keywords);
+			data.put("acScrap", acScrap);
+			data.put("myBoardScrapFlag", myBoardScrapFlag);
+			data.put("isScrap", isScrap);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -721,7 +738,7 @@ public class MBoardGWController {
 			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
 			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 새게시물 카운트 표시 시 companyID 조건 추가 */
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
-			
+
 			int allListCount = mBoardService.getAllBoardItemListCount(userId, info.getCompanyId(), info.getTenantId()); 
 			
 			// rootBoardId의 guBun 값 전달 > 카테고리게시판인 경우 동작을 막기위함
@@ -730,10 +747,22 @@ public class MBoardGWController {
 				result.put("guBun",guBun);
 			}
 			
+			String myBoardScrapFlag = ezCommonService.getTenantConfig("MyBoardScrapFlag", info.getTenantId());
+
 			data.put("list", list);
 			data.put("listCount", listCount);
 			data.put("allListCount", allListCount);
+			data.put("myBoardScrapFlag", myBoardScrapFlag);
 			
+			if (myBoardScrapFlag.equals("TYPE1")) {
+				/* 모바일 스크랩 게시판 게시물 카운트*/
+				Map<String, ArrayList<String>> scrapBoardListReadView_FG = mBoardService.getScrapBoardListReadView_FG(info);
+				ArrayList<String> scrapBoardListView_FG =  scrapBoardListReadView_FG.get("scrapBoardListView_FG");
+				
+				int myBoardScrapCount = mBoardService.getScrapBoardListCount(userId, info.getCompanyId(), info.getTenantId(), "", scrapBoardListView_FG);
+				data.put("myBoardScrapCount", myBoardScrapCount);
+			}
+
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -1038,6 +1067,7 @@ public class MBoardGWController {
 	/**
      * 첨부파일을 서버에 저장한다.
      *
+     * @param bytearray
      * @param newName
      * @param stordFilePath
      * @throws Exception
@@ -1263,6 +1293,7 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String serverName = request.getHeader("x-user-host");
+			String acScrap = request.getParameter("acScrapBoard");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
@@ -1323,12 +1354,19 @@ public class MBoardGWController {
 			logger.debug("movieAttachVO : " + movieAttachVO.get(0));
 			
 			mBoardService.setAsRead(info, boardId, contentId);
-			
+
+			/* 2023-11-22 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */
+			String isScrap = ezBoardService.getScrapItemCount(userID, contentId, boardId, info.getCompanyId(), info.getTenantId());
+			String myBoardScrapFlag = ezCommonService.getTenantConfig("MyBoardScrapFlag", info.getTenantId());
+
 			data.put("boardItem", boardItem);
 			data.put("boardInfo", boardInfo);
 			data.put("movieAttachVO", movieAttachVO.get(0));
 			data.put("commentCount", commentCount);
 			data.put("keywords", keywords);
+			data.put("acScrap", acScrap);
+			data.put("myBoardScrapFlag", myBoardScrapFlag);
+			data.put("isScrap", isScrap);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -2113,7 +2151,7 @@ public class MBoardGWController {
                          .replaceAll("\\%28", "(")
                          .replaceAll("\\%29", ")")
                          .replaceAll("\\%7E", "~");
-	    return result;
+		return result;
 	}
 
 	/* 2023-11-13 전인하 - 모바일 게시판 댓글 수정 */
@@ -2250,4 +2288,133 @@ public class MBoardGWController {
 		return result;
 	}
 	
+	/**
+	 * 모바일 G/W 게시판 [POST] 스크랩 설정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject insertScrap(@PathVariable String boardId,@PathVariable String itemId,HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+
+			logger.debug("serverName = " + serverName + " | userId = " + userId);
+
+			String ScrapCheck = ezBoardService.getScrapItemCount(info.getUserId(),itemId,boardId,info.getCompanyId(),info.getTenantId());
+
+			if(ScrapCheck == "true"){
+				ScrapCheck = ezBoardService.setScrapItem(info.getUserId(),itemId,boardId,info.getCompanyId(),info.getTenantId());
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+
+		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap] ended.");
+
+		return result;
+	}
+
+	/**
+	 * 모바일 G/W 게시판 [DELETE] 스크랩 해제
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteScrap(@PathVariable String boardId,@PathVariable String itemId,HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+
+			logger.debug("serverName = " + serverName + " | userId = " + userId);
+
+			String ScrapCheck = ezBoardService.getScrapItemCount(info.getUserId(),itemId,boardId,info.getCompanyId(),info.getTenantId());
+
+			if(ScrapCheck == "false"){
+				ScrapCheck = ezBoardService.delScrapItem(info.getUserId(),itemId,boardId,info.getCompanyId(),info.getTenantId());
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+
+		logger.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap] ended.");
+
+		return result;
+	}
+
+	/**
+	 * 모바일 G/W 게시판 [GET] 스크랩 리스트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/scrap/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getBoardScrapList(@PathVariable String userId, HttpServletRequest request, Model model) {
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/scrap/{userId}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String boardId = request.getParameter("boardID");
+			String pSearchText = request.getParameter("pSearchText");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+
+			logger.debug("deptPathCode = " + deptPathCode);
+
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+
+			boardInfo.setType("scrapBoardItemList");
+			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.kmh12", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
+			
+			Map<String, ArrayList<String>> scrapBoardListReadView_FG = mBoardService.getScrapBoardListReadView_FG(info);
+			ArrayList<String> scrapBoardListRead_FG = scrapBoardListReadView_FG.get("scrapBoardListRead_FG");
+			ArrayList<String> scrapBoardListView_FG =  scrapBoardListReadView_FG.get("scrapBoardListView_FG");
+			
+			List<MBoardNewListVO> list = mBoardService.getScrapBoardList(userId, info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet(),pSearchText, scrapBoardListView_FG);
+
+			int listCount = mBoardService.getScrapBoardListCount(userId, info.getCompanyId(), info.getTenantId(), pSearchText, scrapBoardListView_FG);
+
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("boardInfo", boardInfo);
+			data.put("listCount", listCount);
+			data.put("scrapBoardListRead_FG", scrapBoardListRead_FG);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/scrap/{userId}] ended.");
+
+		return result;
+	}
 }

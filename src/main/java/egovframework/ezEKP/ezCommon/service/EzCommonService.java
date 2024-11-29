@@ -488,4 +488,16 @@ public interface EzCommonService {
     public void createJmochaMailBlocked() throws Exception;
 	
 	public void insertModuleEditor() throws Exception;
+	
+	public void insertScrapTenantConfig() throws Exception;
+	
+	public void insertScrapTableHeader() throws Exception;
+	
+	public void createTblBoardScrap() throws Exception;
+	
+	public void createTblUserScrapCont() throws Exception;
+	
+	public void createTblUserScrapContList() throws Exception;
+
+	
 }

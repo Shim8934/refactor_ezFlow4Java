@@ -4455,4 +4455,48 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertModuleEditor(map);
         }
     }
+	
+	@Override
+	public void insertScrapTenantConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("propertyName", "MyBoardScrapFlag");
+            map.put("propertyValue", "TYPE1");
+            map.put("description", "NONE: 사용안함 / TYPE1: 마이게시판 하위 스크랩함 / TYPE2: 게시판 트리 하위 개인화 스크랩함 (default: TYPE1)");
+            map.put("configName", "게시판 스크랩 기능 사용 여부");
+            map.put("configType", "게시판");
+            map.put("regdate", "2023-06-14 00:00:00");
+
+            ezCommonDAO.insertScrapTenantConfig(map);
+        }
+	}
+
+    @Override
+    public void insertScrapTableHeader() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("listType", "S");
+
+            ezCommonDAO.insertScrapTableHeader(map);
+        }
+    }
+	
+	@Override
+	public void createTblBoardScrap() throws Exception {
+		ezCommonDAO.createTblBoardScrap();
+	}
+	
+	@Override
+	public void createTblUserScrapCont() throws Exception {
+		ezCommonDAO.createTblUserScrapCont();
+	}
+	
+	@Override
+	public void createTblUserScrapContList() throws Exception {
+		ezCommonDAO.createTblUserScrapContList();
+	}
 }

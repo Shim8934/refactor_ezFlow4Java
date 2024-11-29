@@ -5889,4 +5889,118 @@
         VALUES (#v_TENANTID#, 'MODULEEDITOR', 'KUKUDOCS', 'CK, NAMO, TAGFREE, FORM, POLARIS, DEXT, KUKUDOCS, HWP 중 사용할 에디터를 설정한다. (default: KUKUDOCS)', '전자결재, 메일을 제외한 에디터 타입', '2024-09-23 00:00:00', '일반')
     </insert>
 	
+    
+    <select id="EzCommonDAO.checkScrapTenantConfig" resultClass="String" parameterClass="Map">
+		SELECT
+			property_value
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			property_name = 'MyBoardScrapFlag'
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertScrapTenantConfig" parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+
+	<select id="EzCommonDAO.insertScrapTableHeaderCheck" resultClass="String" parameterClass="Map">
+		SELECT 
+		    LISTTYPE
+		FROM 
+		    TBL_BOARD_ITEM_LISTOPTION
+		WHERE
+		    LISTTYPE = #listType#
+	  	AND
+		    TENANT_ID = #tenantId#
+		LIMIT 1
+	</select>
+
+	<insert id="EzCommonDAO.insertScrapTableHeader" parameterClass="Map">
+		INSERT INTO TBL_BOARD_ITEM_LISTOPTION
+			(LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID)
+		VALUES
+			(#listType#, 0, 'CHECK', 'CHECK', 'CHECK', 'CHECK', 'ITEMID', 20, 'Y', #tenantId#),
+			(#listType#, 1, '첨부', 'Attachments', '添付', '附加', 'ATTACHMENTS', 20, 'Y', #tenantId#),
+			(#listType#, 2, '제목', 'Title', '件名', '标题', 'TITLE', 400, 'Y', #tenantId#),
+			(#listType#, 3, '부서', 'Department', '部署', '部门', 'WRITERDEPTNAME', 100, 'Y', #tenantId#),
+			(#listType#, 4, '게시자', 'Writer', '作成者', '写作者', 'WRITERNAME', 100, 'Y', #tenantId#),
+			(#listType#, 5, '게시일', 'Registered', '掲示日', '发布日期', 'WRITEDATE', 100, 'Y', #tenantId#),
+			(#listType#, 6, '조회수', 'View', 'ヒット数', '查询数', 'READCOUNT', 50, 'Y', #tenantId#)
+	</insert>
+	
+	<select id="EzCommonDAO.checkTblBoardScrap" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARDITEM_SCRAP
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardScrap"> 
+		CREATE TABLE `tbl_boarditem_scrap` (
+		  `USERID` varchar(100) NOT NULL,
+		  `BOARDID` varchar(76) NOT NULL,
+		  `ITEMID` varchar(76) NOT NULL,
+		  `SCRAPDATE` varchar(40) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERID`,`BOARDID`,`ITEMID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblUserScrapCont" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USERSCRAPCONTID
+			FROM 
+				TBL_USERSCRAPCONT
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserScrapCont"> 
+		CREATE TABLE `tbl_userscrapcont` (
+		  `USERSCRAPCONTID` varchar(20) NOT NULL,
+		  `USERSCRAPCONTNAME` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+		  `PARENTSCRAPCONTID` varchar(20) DEFAULT NULL,
+		  `DESCRIPTION` varchar(255) DEFAULT NULL,
+		  `USERID` varchar(100) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERSCRAPCONTID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblUserScrapContList" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USERSCRAPCONTID
+			FROM 
+				TBL_USERSCRAPCONTLIST
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserScrapContList"> 
+		CREATE TABLE `tbl_userscrapcontlist` (
+		  `BOARDID` varchar(76) NOT NULL,
+		  `ITEMID` varchar(76) NOT NULL,
+  		  `USERID` varchar(100) DEFAULT NULL,
+		  `USERSCRAPCONTID` varchar(20) NOT NULL,
+		  `SCRAPDATE` varchar(40) DEFAULT NULL,
+		  `DESCRIPTION` varchar(255) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`USERSCRAPCONTID`,`ITEMID`,`USERID`, `COMPANYID`),
+		  CONSTRAINT `PK_USERSCRAPCONT` FOREIGN KEY (`TENANT_ID`, `COMPANYID`, `USERSCRAPCONTID`) REFERENCES `tbl_userscrapcont` (`TENANT_ID`, `COMPANYID`, `USERSCRAPCONTID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
 </sqlMap>
