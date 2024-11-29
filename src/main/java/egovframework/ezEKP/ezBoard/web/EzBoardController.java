@@ -11575,7 +11575,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String replyID = request.getParameter("replyID");
 		String content = request.getParameter("content");
-	z	int tenantID = userInfo.getTenantId();
+		int tenantID = userInfo.getTenantId();
 		String updateDate = commonUtil.getTodayUTCTime("");
 		String imageContent = request.getParameter("imageContent");
 
