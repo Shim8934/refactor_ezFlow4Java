@@ -5,13 +5,13 @@
  *      1. 최근 사용 주소 (lastSent)
  *      2. 주소 자동 완성 (auto)
  * @author 솔루션1팀 김은실
- * @version 1.0.0
- * @date 2024-11-29
+ * @version 1.1.0
+ * @date 2024-12-02
  *
  * @description (outline)
  * 변수:
  *  - IsInsert[]
- *  - mode : mode에 따라 다르게 처리
+ *  - mode : 객체 저장. (mode에 따라 다르게 처리)
  *  - emailToDelete : 삭제할 메일 주소
  *  - checkKeyEvent : isDuble, prev, setIsDuble()
  *
@@ -25,8 +25,9 @@
  *  - 3. focus
  *  - 4. search
  *
- * 클래스/객체:
- *  - Mode 생성자 : isLastSent, getSource() → getList → fetchServerList
+ * 클래스:
+ *  - class Mode : constructor → getSource() → getList → fetchServerList
+ *      - lastSentStash : lastSent list 저장
  *      - 1. 최근 사용 주소 (lastSent)  : getList(), tr(), ulCss()
  *      - 2. 주소 자동 완성 (auto)      : tr(), ulCss()
  *
@@ -75,12 +76,10 @@ function setupAutocomplete(selector, iType, element) {
     $(selector).autocomplete({
         source : function(request, response) {
             if (request.term.length < 2) { // 기존(auto) minLength : 2
-                mode = lastSent;
+                mode = new LastSent(request, response);
             } else {
-                mode = auto;
+                mode = new Auto(request, response);
             }
-
-            mode.getSource(request, response);
         },
         minLength : 0,
         /*
@@ -146,13 +145,13 @@ function setupAutocomplete(selector, iType, element) {
 
             // 초기화
             emailToDelete = null;
-            lastSent.list = null;
+            lastSentStash = null;
             $(selector).autocomplete("search", "");
             /*
              * 새로 받아오는 것이 너무 느리거나 성능상 문제가 된다면, 다음과 같이 간이처리로 수정해주세요.
              * this.active.remove(); // 1. 해당 li 삭제.
-             * lastSent.list = lastSent.list.filter(item => item.mail != emailToDelete); // 2. list 재구성.
-             * if (lastSent.list.length == 0) { // 3. list 없을 시 초기화 및 닫음.
+             * lastSentStash = lastSentStash.filter(item => item.mail != emailToDelete); // 2. lastSentStash 재구성.
+             * if (lastSentStash.length == 0) { // 3. lastSentStash 없을 시 초기화 및 닫음.
              *     $(selector).autocomplete("close");
              * }
              * emailToDelete = null;
@@ -168,7 +167,7 @@ function setupAutocomplete(selector, iType, element) {
     // 클릭 시 Autocomplete 목록을 열거나 닫기
     $(selector + ', ' + btn_AutoCompleteResults).on("click", function() {
         // 최근 사용 주소이면서 + 이미 목록이 열려 있으면 닫고,
-        if($(selector).autocomplete("widget").is(":visible") && mode.isLastSent) {
+        if($(selector).autocomplete("widget").is(":visible") && mode instanceof LastSent) {
             $(selector).autocomplete("close");
         // 그 외 클릭 시 최근 사용 주소
         } else {
@@ -189,7 +188,7 @@ function setupAutocomplete(selector, iType, element) {
 $.ui.autocomplete.prototype._renderMenu = function(ul, items) {
     items.forEach(function (item, index) {
         // theadTr
-        if (index == 0 && !mode.isLastSent) {
+        if (index == 0 && mode instanceof Auto) {
             ul.append(theadTr);
         }
 
@@ -227,12 +226,22 @@ $.ui.autocomplete.prototype.search = function(value) {
     originalSearch.call(this, value);
 };
 
-// 다형성을 구현하고 싶었음. 공통메소드라는게 사실 상속인건데.. 더 좋은 방법이 있다면 추천바람!
-function Mode(isLastSent) {
-    this.isLastSent = isLastSent;
+/**
+ * JS Class는 ES6(ECMAScript 2015) 이상에서 사용 가능. (오.. email.rowselector.js에서도 Class 사용중!)
+ * 다형성을 구현하고 싶었음.. 더 좋은 방법이 있다면 추천바람!
+ * 만약 버전 관련 문제 발생시 revert바람!
+ */
+class Mode {
+    /**
+     * @param request
+     * @param response
+     */
+    constructor(request, response) {
+        this.getSource(request, response);
+    }
 
     // 공통메소드 1. list를 response에 셋팅.
-    this.getSource = async function(request, response) {
+    async getSource(request, response) {
         var list = await this.getList(request);
 
         response($.map(list, function(ul, item) {
@@ -251,12 +260,12 @@ function Mode(isLastSent) {
         }));
     };
 
-    this.getList = async function(request) {
+    async getList(request) {
         return await this.fetchServerList(request); // lastSent에서 재정의됨.
     };
 
     // 공통메소드 2. server에서 list 가져오기.
-    this.fetchServerList = async function(request) {
+    async fetchServerList(request) {
         var response = await fetchResponse("/ezEmail/autoCompleteList.do", {
             value : request.term,
             shareId : shareId,
@@ -267,14 +276,17 @@ function Mode(isLastSent) {
     };
 }
 
+var lastSentStash = null;
+
 // 1. 최근 사용 주소
-var lastSent = new Mode(true);
+class LastSent extends Mode {
     // 절감 목적 : lastSent list는 데이터가 일정한데 비해, 빈번하게 발생할 것으로 예상된다. (term.length: 0-1)
-    lastSent.getList = async function(request) {
+    async getList(request) {
         // length = 0 인것도 결과임. if null, DB에서 데이터 가져올 것.(fetchServerList)
-        return this.list? this.list : await this.fetchServerList(request);
+        return lastSentStash? lastSentStash : super.fetchServerList(request);
     };
-    lastSent.tr = function(item) {
+
+    tr(item) {
         return "<span class='flex_autocomplete'>"
             + "<span class='name'>" + item.value + "</span>" // max-width:200px;
             + "<span class='mail'>" + item.email + "</span>" // width:calc(100% - 255px);
@@ -282,16 +294,18 @@ var lastSent = new Mode(true);
             + "<span class='delete' onclick=\"emailToDelete = '" + item.email + "';\"></span>" // width:10px;
         + "</span>";
     };
-    lastSent.ulCss = function(ul, inputW) {
+
+    ulCss(ul, inputW) {
         // [max-width: inputW-2] outerWidth는= (css) width, padding, border의 합으로, auto: ul.outerWidth(inputW);와 같으려면 현재 border가 1px이어서 -2px 차감해줬다.
         // name이 max-width:200이라 어차피 최대 510px임.
         ul.css({ 'max-width': inputW-2, 'min-width': (inputW < 400)? 0 : 400 });
         ul.outerWidth('');
     };
+}
 
 // 2. 주소 자동 완성
-var auto = new Mode(false);
-    auto.tr = function(item) {
+class Auto extends Mode {
+    tr(item) {
         return "<table class='width100percent' width='100%' height='100%' style='display:inline-table;'>"
             + "<tr>" // inline style
                 + "<td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>" + item.value + "</td>"
@@ -301,10 +315,12 @@ var auto = new Mode(false);
             + "</tr>"
         + "</table>";
     };
-    auto.ulCss = function(ul, inputW) {
+
+    ulCss(ul, inputW) {
         ul.css({ 'max-width': '', 'min-width': ''}); //ul[0].style.removeProperty('max-width');
         ul.outerWidth(inputW);
     };
+}
 
 /**
  * fetch util
