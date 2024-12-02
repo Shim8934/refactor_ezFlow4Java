@@ -2802,7 +2802,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTables() throws Exception {
 		// 생성할 테이블 명
 		String[] tableArr = new String[] 
-				{"jmocha_appr_allowed_domain", "jmocha_appr_user", "jmocha_appr_history", "jmocha_appr_comp_history"};
+				{"jmocha_appr_allowed_domain", "jmocha_appr_user", "jmocha_appr_history", "jmocha_appr_comp_history", "jmocha_address_last_sent"};
 		
 		for (String t : tableArr) {
 			try {

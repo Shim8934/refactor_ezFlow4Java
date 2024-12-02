@@ -4541,6 +4541,17 @@
 		)
 	</statement>
 	
+	<statement id="EzCommonDAO.createJmochaAddressLastSent">
+		CREATE TABLE jmocha_address_last_sent (
+		  SEQUENCE NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+		  TENANT_ID NUMBER(5,0) DEFAULT 0,
+		  CN NVARCHAR2(80),
+		  NAME NVARCHAR2(100),
+		  EMAIL NVARCHAR2(100),
+		  SENT_DATE DATE DEFAULT SYS_EXTRACT_UTC(SYSTIMESTAMP)
+		)
+	</statement>
+
 	<select id="EzCommonDAO.checkTable" resultClass="String" parameterClass="Map">
 		SELECT 
 			#v_COLUMN#
@@ -4549,6 +4560,7 @@
 			<isEqual property="v_TABLE" compareValue="jmocha_appr_user">jmocha_appr_user</isEqual>
 			<isEqual property="v_TABLE" compareValue="jmocha_appr_history">jmocha_appr_history</isEqual>
 			<isEqual property="v_TABLE" compareValue="jmocha_appr_comp_history">jmocha_appr_comp_history</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_address_last_sent">jmocha_address_last_sent</isEqual>
 		WHERE
 			ROWNUM = 1
 	</select>

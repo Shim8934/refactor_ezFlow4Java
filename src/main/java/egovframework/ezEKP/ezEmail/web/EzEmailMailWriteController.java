@@ -5000,6 +5000,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        }
 
 				if (!cmd.equalsIgnoreCase("SAVE")) {
+					// 2024-11-13 김은실 : 최근 사용 주소 테이블에(jmocha_address_last_sent) insert.
+					try {
+						ezAddressService.insertLastSentEmailAddresses(addressCheck, userInfo.getTenantId(), StringUtils.defaultIfBlank(shareId, userId));
+					} catch (NullPointerException e) {
+						logger.debug("insertLastSentEmailAddresses insert fail.");
+						logger.error(e.getMessage(), e);
+					} catch (Exception e) {
+						logger.debug("insertLastSentEmailAddresses insert fail.");
+						logger.error(e.getMessage(), e);
+					}
+
 					// useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
 					String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", userInfo.getTenantId());
 
@@ -6343,6 +6354,39 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	}
 
 	/**
+	 * 최근 사용 주소 호출 함수
+	 */
+	private String getLastSentAddrSearch(int tenantId, String cn) {
+		String returnValue = "";
+		try {
+			List<AddressVO> lastSentEmailAddresses = ezAddressService.getLastSentEmailAddresses(tenantId, cn);
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (AddressVO a : lastSentEmailAddresses) {
+				sb.append("<ROW>");
+				sb.append("<NAME>" + commonUtil.cleanValue(a.getsName()) + "</NAME>");
+				sb.append("<EMAIL>" + commonUtil.cleanValue(a.getsEmail()) + "</EMAIL>");
+				sb.append("<SENTDATE>" + commonUtil.cleanValue(a.getCreateDate()) + "</SENTDATE>");
+				sb.append("</ROW>");
+			}
+
+			sb.append("</ROWS></LISTVIEWDATA>");
+			returnValue = sb.toString();
+
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
+			returnValue = "EXCEPTION";
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			returnValue = "EXCEPTION";
+		}
+		return returnValue;
+	}
+
+	/**
 	 * 사원 Organ 정보 호출 함수
 	 */
 	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, LoginVO userInfo) {
@@ -6618,20 +6662,39 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 받는사람, 참조, 숨은참조 등 자동완성 기능
 	 */
-	@RequestMapping(value = "/ezEmail/autoCompleteList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezEmail/autoCompleteList.do", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
 	public String autoCompleteList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model,
-			HttpServletRequest request) throws Exception {
+		@RequestBody Map<String, Object> requestBody, HttpServletRequest request) throws Exception {
 		logger.debug("autoCompleteList started.");
-
-		String searchValue = request.getParameter("value");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String searchValue = StringUtils.defaultString((String) requestBody.get("value"));
+		String lastSentCn = StringUtils.defaultIfBlank((String) requestBody.get("shareId"), userInfo.getId());
+		SimpleDateFormat utcFormatter = null;
+		TimeZone timeZone = null;
+		long aDayAgo = 0;
 
 		try {
 			List<Object> jsonList = new ArrayList<Object>();
 			HashMap<String, Document> xmlMap = new HashMap<String, Document>();
 			String[] orderedKeys;
 
+			// 최근 사용 주소
+			if (searchValue.length() < 2) {
+				orderedKeys = new String[]{"lastSent"};
+				xmlMap.put("lastSent", commonUtil.convertStringToDocument(getLastSentAddrSearch(userInfo.getTenantId(), lastSentCn)));
+
+				// utcFormatter
+				utcFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+				utcFormatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+				// timeZone
+				String offset = StringUtils.defaultIfBlank(userInfo.getOffset(), "|");
+				timeZone = TimeZone.getTimeZone("GMT" + offset.split("\\|", 2)[1]);
+				// aDayAgo
+				aDayAgo = new Date().getTime() - 24*3600000;
+
 			// 주소 자동 완성
+			} else {
 				// (1. orderedKeys) 20190619 조진호 - 메일 주소 검색 대상 순서 변경 추가
 				orderedKeys = new String[]{"organ", "dl", "address", "shared"}; // [] 배열: 순서 보장됨.
 				String mailAddressSearchOrder = ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
@@ -6654,7 +6717,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				String orgCompanyId = userInfo.getCompanyID();
 
 				if (useShowAllCompanies.equals("YES")) {
-					String companyId  = request.getParameter("company");
+					String companyId  = (String) requestBody.get("company");
 
 					if (companyId != null) {
 						userInfo.setCompanyID("");
@@ -6675,13 +6738,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				xmlMap.put("address", commonUtil.convertStringToDocument(getAddressSearch(searchValue, userInfo)));
 				// 공유사서함
 				xmlMap.put("shared", commonUtil.convertStringToDocument(getSharedMailboxSearch(pSharedMailboxSearchList, userInfo)));
+			}
 
 			// Cell 객체에 싸서, 각 list에 따라 적절한 속성값을 추출하도록 함.
 			for (String key : orderedKeys) {
 				NodeList row = xmlMap.get(key).getElementsByTagName("ROW");
 
 				for (int i = 0; i < row.getLength(); i++) {
-					Cell cell = new Cell(key, (Element) row.item(i), locale);
+					Cell cell = new Cell(key, (Element) row.item(i), locale, utcFormatter, timeZone, aDayAgo);
 
 					if (StringUtils.isNotBlank(cell.mail)) {
 						HashMap<String, Object> jsonObject = new HashMap<String, Object>();
@@ -6692,6 +6756,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						jsonObject.put("mail", cell.mail);
 						jsonObject.put("type", cell.type);
 						jsonObject.put("href", cell.href);
+						jsonObject.put("sentDate", cell.sentDate);
 
 						jsonList.add(jsonObject);
 					}
@@ -6717,8 +6782,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String mail = "";
 		String type = "";
 		String href = "";
+		String sentDate = "";
 
-		public Cell(String key, Element row, Locale locale) {
+		public Cell(String key, Element row, Locale locale, SimpleDateFormat utcFormatter, TimeZone timeZone, long aDayAgo) throws Exception {
 			NodeList list = row.getElementsByTagName("CELL");
 			this.cell = (list.getLength() > 0) ? (Element) list.item(0) : row;
 
@@ -6727,6 +6793,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			 * - 조건이 많아질수록: 예를 들어, 10개 이상의 조건이 있을 때 switch는 빠른 조건 분기가 가능. 더 효율적.
 			 */
 			switch (key) {
+				case "lastSent":
+					setPrimary("NAME", "EMAIL");
+					setSentDate(utcFormatter, timeZone, aDayAgo);
+					break;
+
 				case "organ":
 					setPrimary("VALUE", "DATA6");
 					this.title = getByTag("DATA5");
@@ -6755,6 +6826,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 		void setDescriptionByMsg(String code, Locale locale) {
 			this.description = egovMessageSource.getMessage(code, locale);
+		}
+
+		void setSentDate(SimpleDateFormat utcFormatter, TimeZone timeZone, long aDayAgo) throws Exception {
+			String sentDateStr = getByTag("SENTDATE");
+			Date sentDate = utcFormatter.parse(sentDateStr); //throws ParseException
+
+			boolean within24h = sentDate.getTime() > aDayAgo;
+			SimpleDateFormat localFormatter = new SimpleDateFormat(within24h? "HH:mm" : "MM.dd");
+			localFormatter.setTimeZone(timeZone);
+
+			this.sentDate = localFormatter.format(sentDate);
 		}
 
 		String getByTag(String tagName) {

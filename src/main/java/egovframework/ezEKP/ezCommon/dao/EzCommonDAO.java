@@ -2161,6 +2161,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			case "jmocha_appr_user": 					queryId = "EzCommonDAO.createJmochaApprUser"; break;
 			case "jmocha_appr_history": 				queryId = "EzCommonDAO.createJmochaApprHistory"; break;
 			case "jmocha_appr_comp_history": 			queryId = "EzCommonDAO.createJmochaApprCompHistory"; break;
+			case "jmocha_address_last_sent": 			queryId = "EzCommonDAO.createJmochaAddressLastSent"; break;
 		}
 		
 		try {
