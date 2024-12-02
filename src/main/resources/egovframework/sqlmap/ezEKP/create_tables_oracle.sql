@@ -608,6 +608,14 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"ALIAS_ADDRESS" NVARCHAR2(100)
    ) ;
 --------------------------------------------------------
+--  DDL for Table JMOCHA_ALIAS_RETIRE
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_ALIAS_RETIRE" 
+   (	"TARGET_ADDRESS" NVARCHAR2(100), 
+	"ALIAS_ADDRESS" NVARCHAR2(100)
+   ) ;
+--------------------------------------------------------
 --  DDL for Table JMOCHA_BIGATTACH_DOWN_LIMIT
 --------------------------------------------------------
 
@@ -9407,6 +9415,12 @@ CREATE TABLE "JMOCHA_APPR_COMP_HISTORY" (
   CREATE UNIQUE INDEX "PK_JMOCHA_ALIAS" ON "JMOCHA_ALIAS" ("TARGET_ADDRESS", "ALIAS_ADDRESS") 
   ;
 --------------------------------------------------------
+--  DDL for Index PK_JMOCHA_ALIAS_RETIRE
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_JMOCHA_ALIAS_RETIRE" ON "JMOCHA_ALIAS_RETIRE" ("TARGET_ADDRESS", "ALIAS_ADDRESS") 
+  ;
+--------------------------------------------------------
 --  DDL for Index PK_JMOCHA_CONNECTION_INFO
 --------------------------------------------------------
 
@@ -13411,6 +13425,14 @@ END;
   USING INDEX;
   ALTER TABLE "JMOCHA_ALIAS" MODIFY ("ALIAS_ADDRESS" NOT NULL ENABLE);
   ALTER TABLE "JMOCHA_ALIAS" MODIFY ("TARGET_ADDRESS" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table JMOCHA_ALIAS_RETIRE
+--------------------------------------------------------
+
+  ALTER TABLE "JMOCHA_ALIAS_RETIRE" ADD CONSTRAINT "PK_JMOCHA_ALIAS_RETIRE" PRIMARY KEY ("TARGET_ADDRESS", "ALIAS_ADDRESS")
+  USING INDEX;
+  ALTER TABLE "JMOCHA_ALIAS_RETIRE" MODIFY ("ALIAS_ADDRESS" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_ALIAS_RETIRE" MODIFY ("TARGET_ADDRESS" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_BIGATTACH_DOWN_LIMIT
 --------------------------------------------------------

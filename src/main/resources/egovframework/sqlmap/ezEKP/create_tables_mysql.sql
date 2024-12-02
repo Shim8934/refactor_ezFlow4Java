@@ -397,6 +397,20 @@ CREATE TABLE `jmocha_alias` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_alias_retire`
+--
+
+DROP TABLE IF EXISTS `jmocha_alias_retire`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_alias_retire` (
+  `target_address` varchar(100) NOT NULL,
+  `alias_address` varchar(100) NOT NULL,
+  PRIMARY KEY (`target_address`,`alias_address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_bigattach_down_limit`
 --
 
