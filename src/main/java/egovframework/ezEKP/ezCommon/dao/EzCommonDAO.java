@@ -2989,6 +2989,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterAddThumbnailForTPI");
 		}
 	}
+	
+	public void alterThumbnailExtForTPI() throws Exception {
+		try {
+			select(("EzCommonDAO.checkThumbnailExtForTPI"));
+		} catch (Exception e) {
+			logger.debug("tbl_photo_imageitem thumbnailExt column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterThumbnailExtForTPI");
+		}
+	}
 		
 	public void alterAttachmentsForCBoard() throws Exception {
 		try {

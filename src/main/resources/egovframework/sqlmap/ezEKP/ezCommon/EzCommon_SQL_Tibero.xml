@@ -6500,10 +6500,29 @@
 		)
 	</statement>
 	
-    <select id="EzCommonDAO.checkAddThumbnailForTPI" resultClass="String">
+	<select id="EzCommonDAO.checkAddThumbnailForTPI" resultClass="String">
 		<![CDATA[
 			SELECT
-				ADDTHUMBNAIL,
+				ADDTHUMBNAIL
+			FROM
+				TBL_Photo_ImageItem
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.alterAddThumbnailForTPI">
+		<![CDATA[
+			ALTER TABLE
+				TBL_Photo_ImageItem
+			ADD
+				ADDTHUMBNAIL NVARCHAR2(10) DEFAULT NULL
+		]]>
+    </select>
+    
+    <select id="EzCommonDAO.checkThumbnailExtForTPI" resultClass="String">
+		<![CDATA[
+			SELECT
 				THUMBNAILEXT
 			FROM
 				TBL_Photo_ImageItem
@@ -6511,15 +6530,13 @@
 				ROWNUM <= 1
 		]]>
 	</select>
-
-	<statement id="EzCommonDAO.alterAddThumbnailForTPI">
+	
+	<statement id="EzCommonDAO.alterThumbnailExtForTPI">
 		<![CDATA[
 			ALTER TABLE
 				TBL_Photo_ImageItem
-			ADD (
-				ADDTHUMBNAIL NVARCHAR2(10) DEFAULT NULL,
+			ADD
 				THUMBNAILEXT NVARCHAR2(10) DEFAULT NULL
-				)
 		]]>
     </select>
 
