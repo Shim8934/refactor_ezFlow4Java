@@ -6518,7 +6518,7 @@
 			ADD
 				ADDTHUMBNAIL NVARCHAR2(10) DEFAULT NULL
 		]]>
-    </select>
+    </statement>
     
     <select id="EzCommonDAO.checkThumbnailExtForTPI" resultClass="String">
 		<![CDATA[
@@ -6538,7 +6538,7 @@
 			ADD
 				THUMBNAILEXT NVARCHAR2(10) DEFAULT NULL
 		]]>
-    </select>
+    </statement>
 
 	<select id="EzCommonDAO.checkAttachmentsForCBoard" resultClass="String">
 		<![CDATA[
