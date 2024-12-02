@@ -491,6 +491,8 @@ public interface EzCommonService {
 	
 	public void insertModuleEditor() throws Exception;
 	
+	public void insertServername() throws Exception;
+	
 	public void insertScrapTenantConfig() throws Exception;
 	
 	public void insertScrapTableHeader() throws Exception;

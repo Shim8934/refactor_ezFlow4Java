@@ -278,7 +278,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertUseReceiptDeptFileAttach(); // 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부 테넌트 컨피그 추가
 			ezCommonService.insertNonUseDocAttachYN(); // 2024-07-02 민지수 - 전자결재 > 비전자문서등록 > 본문첨부 기능 사용여부 테넌트 컨피그 추가
 			ezCommonService.insertModuleEditor(); // 2024-09-23 김우철 - 전자결재, 메일을 제외한 에디터 테넌트 컨피그 추가
-
+			ezCommonService.insertServername(); // 2024-12-02 김승연 - servername에 127.0.0.1 값 추가
+			
 	    	ezCommonService.insertPortalThemePortletInitdata();
 	    	ezCommonService.updateTaskUrl();
 	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문

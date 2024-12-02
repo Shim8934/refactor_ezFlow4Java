@@ -2924,6 +2924,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void insertServername() throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkServername");
+
+		if (propertyValue == null) {
+			logger.debug("127.0.0.1 tenant servername doesn't exist. insert data...");
+			insert("EzCommonDAO.insertServername");
+		}
+	}
+	
 	public void insertScrapTenantConfig(Map<String, Object> map) throws Exception{
 		String propertyValue = (String) select("EzCommonDAO.checkScrapTenantConfig", map);
 		
