@@ -506,5 +506,7 @@ public interface EzCommonService {
     
 	public void alterAddThumbnailForTPI() throws Exception;
 	
+	public void alterThumbnailExtForTPI() throws Exception;
+	
 	public void alterAttachmentsForCBoard() throws Exception;
 }
