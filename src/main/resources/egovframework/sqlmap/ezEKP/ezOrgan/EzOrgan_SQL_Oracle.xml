@@ -690,9 +690,6 @@
 				<isEqual property="v_FIELD"  compareValue="MANUAL_FLAG">
 					MANUAL_FLAG
 				</isEqual>
-				<isEqual property="v_FIELD"  compareValue="USERTREEFLAG">
-					USERTREEFLAG
-				</isEqual>
 				<isEqual property="v_FIELD"  compareValue="DEPTTREEFLAG">
 					DEPTTREEFLAG
 				</isEqual>
