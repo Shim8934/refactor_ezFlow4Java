@@ -1386,7 +1386,7 @@ function tableListControl_today() {
                                     _TD.setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
                                     _TD.setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
                                     _TD.setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
-                                    _TD.setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[j]));
+                                    _TD.setAttribute("subject", replaceEntityCodeToStr(getNodeText(xmldom.getElementsByTagName("subject")[j])));
                                     _TD.setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
                                     _TD.setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
                                     _TD.setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
@@ -1440,7 +1440,7 @@ function tableListControl_today() {
                             _TD.setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
                             _TD.setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
                             _TD.setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
-                            _TD.setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[j]));
+                            _TD.setAttribute("subject", replaceEntityCodeToStr(getNodeText(xmldom.getElementsByTagName("subject")[j])));
                             _TD.setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
                             _TD.setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
                             _TD.setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
