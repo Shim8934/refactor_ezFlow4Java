@@ -578,9 +578,6 @@
 				<isEqual property="v_FIELD"  compareValue="PASSWORD2">
 					PASSWORD2
 				</isEqual>
-				<isEqual property="v_FIELD"  compareValue="USERTREEFLAG">
-					USERTREEFLAG
-				</isEqual>
 				<isEqual property="v_FIELD"  compareValue="PHOTO_UPDATEDT">
 					PHOTO_UPDATEDT
 				</isEqual>
@@ -683,9 +680,6 @@
 				</isEqual>
 				<isEqual property="v_FIELD"  compareValue="TENANT_ID">
 					TENANT_ID
-				</isEqual>
-				<isEqual property="v_FIELD"  compareValue="DEPTTREEFLAG">
-					DEPTTREEFLAG
 				</isEqual>
 				<isEqual property="v_FIELD"  compareValue="MANUAL_FLAG">
 					MANUAL_FLAG
