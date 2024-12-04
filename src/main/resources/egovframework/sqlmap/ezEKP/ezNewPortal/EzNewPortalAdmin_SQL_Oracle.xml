@@ -1131,7 +1131,8 @@
 			C.portlet_name as portletname,
 			A.is_fixed as isFixed,
 			PORTLET.portletcode,
-			MENU.menucode
+			MENU.menucode,
+			PCS.CLASS_SIZE AS classSize
 		FROM
 			TBL_PORTAL_THEME_PORTLET A
 		JOIN
@@ -1162,6 +1163,15 @@
 			A.tenant_id = C.tenant_id
 		AND
 			C.portlet_lang = #lang#
+		LEFT JOIN (SELECT CS.*, PS.CLASS_SIZE
+                    FROM TBL_PORTAL_PORTLET_COMPANY_SIZE CS
+                             JOIN TBL_PORTAL_PORTLET_SIZE PS
+                                  ON CS.SIZE_ID = PS.SIZE_ID
+                    WHERE DEFAULT_FLAG = 1) PCS
+                   ON PCS.TENANT_ID = A.TENANT_ID
+                       AND PCS.COMPANY_ID = A.COMPANY_ID
+                       AND PCS.THEME_ID = A.THEME_ID
+                       AND PCS.PORTLET_ID = A.PORTLET_ID
 		WHERE
 			A.theme_id = #themeId#
 		AND
